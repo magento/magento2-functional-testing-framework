@@ -6,5 +6,7 @@ namespace Helper;
 
 class Acceptance extends \Codeception\Module
 {
-    
+    public function changeConfiguration($config, $value) {
+        $this->getModule('WebDriver')->_reconfigure(array($config => $value));
+    }
 }

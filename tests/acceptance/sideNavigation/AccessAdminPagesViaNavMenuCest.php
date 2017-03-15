@@ -3,10 +3,7 @@
 use Page\Acceptance\SideNavigation as SideNav;
 
 /**
- * @env chrome
- * @env firefox
- * @group slow
- * @group new
+ * @group navmenu
  */
 class AccessAdminPagesViaNavMenuCest
 {

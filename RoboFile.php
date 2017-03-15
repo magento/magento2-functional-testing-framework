@@ -32,26 +32,30 @@ class RoboFile extends \Robo\Tasks
     }
 
     function example() {
-        $this->_exec('codecept run --env chrome --group example');
+        $this->_exec('codecept run --env chrome --group example --skip-group navmenu');
         $this->allureReport();
     }
 
     function group($args = '') {
-        $this->taskExec('codecept run --env chrome --group')->args($args)->run();
+        $this->taskExec('codecept run --env chrome --skip-group navmenu --group')->args($args)->run();
     }
 
     function chrome() {
-        $this->_exec('codecept run --env chrome');
+        $this->_exec('codecept run --env chrome --skip-group navmenu');
         $this->allureReport();
     }
 
     function firefox() {
-        $this->_exec('codecept run --env chrome');
+        $this->_exec('codecept run --env chrome --skip-group navmenu');
         $this->allureReport();
     }
 
     function phantomjs() {
-        $this->_exec('codecept run --env phantomjs');
+        $this->_exec('codecept run --env phantomjs --skip-group navmenu');
         $this->allureReport();
+    }
+
+    function console() {
+        $this->_exec('codecept console acceptance');
     }
 }

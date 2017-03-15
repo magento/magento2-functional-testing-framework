@@ -1159,10 +1159,11 @@ class Admin extends \AcceptanceTester
         $I = $this;
 
         try {
-            $I->dontSee('._show .action-close');
-        } catch (\Exception $e) {
+            $I->waitForElementVisible('._show .action-close', 1);
             $I->click('._show .action-close');
-            $I->wait(1);
+            $I->waitForElementNotVisible('._show .action-close', 1);
+        } catch (\Exception $e) {
+            return false;
         }
     }
 
@@ -1171,8 +1172,8 @@ class Admin extends \AcceptanceTester
         $I->fillField('login[username]', $username);
         $I->fillField('login[password]', $password);
         $I->click('Sign in');
-
-        if ($I->seeElement('._show .action-close')) {
+        
+        if ($I->seeElement('._show')) {
             $I->closeAdminNotification();
         }
     }
@@ -1183,7 +1184,6 @@ class Admin extends \AcceptanceTester
         $I->fillField('login[password]', 'admin123');
         $I->click('Sign in');
 
-        codecept_debug($I->seeElement('._show .action-close'));
         $I->closeAdminNotification();
     }
 }
