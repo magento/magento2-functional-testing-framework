@@ -18,7 +18,6 @@ class TestCest
     {
         $I->goToTheAdminSalesOrdersPage();
         $I->shouldBeOnTheAdminSalesOrdersPage();
-        $I->see('Orders');
     }
 
     /**
@@ -30,6 +29,5 @@ class TestCest
     {
         $I->goToTheAdminProductsCatalogPage();
         $I->shouldBeOnTheAdminProductsCatalogPage();
-        $I->see('Catalog');
     }
 }
