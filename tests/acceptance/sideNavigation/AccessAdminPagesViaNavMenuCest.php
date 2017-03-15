@@ -3,7 +3,7 @@
 use Page\Acceptance\SideNavigation as SideNav;
 
 /**
- * @group navmenu
+ * @group skip
  */
 class AccessAdminPagesViaNavMenuCest
 {

@@ -6,7 +6,6 @@ require_once __DIR__.'/../../Helper/URL_List.php';
 
 class Admin extends \AcceptanceTester
 {
-
     public function goToTheAdminLoginPage()
     {
         $I = $this;
@@ -1172,8 +1171,8 @@ class Admin extends \AcceptanceTester
         $I->fillField('login[username]', $username);
         $I->fillField('login[password]', $password);
         $I->click('Sign in');
-        
-        if ($I->seeElement('._show')) {
+
+        if ($I->canSeeElement('._show')) {
             $I->closeAdminNotification();
         }
     }
