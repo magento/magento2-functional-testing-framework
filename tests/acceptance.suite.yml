@@ -26,11 +26,11 @@ env:
         modules:
             config:
                 WebDriver:
-                    browser: 'chrome'
+                    browser: chrome
                     window_size: maximize
     phantomjs:
         modules:
             config:
                 WebDriver:
-                    browser: 'phantomjs'
+                    browser: phantomjs
                     window_size: 1920x1080

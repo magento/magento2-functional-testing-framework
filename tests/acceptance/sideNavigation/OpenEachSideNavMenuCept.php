@@ -13,26 +13,26 @@ $I->wantTo('see if I can open each of the Side Nav Menus');
 $I->goToTheAdminLoginPage();
 $I->loginAsAnExistingAdmin();
 
-$sideNavMenu->iClickOnSalesInTheSideNavMenu($I);
-$sideNavMenu->iShouldSeeTheSalesNavMenu($I);
+$sideNavMenu->clickOnSalesInTheSideNavMenu($I);
+$sideNavMenu->shouldSeeTheSalesNavMenu($I);
 
-$sideNavMenu->iClickOnProductsInTheSideNavMenu($I);
-$sideNavMenu->iShouldSeeTheProductNavMenu($I);
+$sideNavMenu->clickOnProductsInTheSideNavMenu($I);
+$sideNavMenu->shouldSeeTheProductNavMenu($I);
 
-$sideNavMenu->iClickOnCustomersInTheSideNavMenu($I);
-$sideNavMenu->iShouldSeeTheCustomersNavMenu($I);
+$sideNavMenu->clickOnCustomersInTheSideNavMenu($I);
+$sideNavMenu->shouldSeeTheCustomersNavMenu($I);
 
-$sideNavMenu->iClickOnMarketingInTheSideNavMenu($I);
-$sideNavMenu->iShouldSeeTheMarketingNavMenu($I);
+$sideNavMenu->clickOnMarketingInTheSideNavMenu($I);
+$sideNavMenu->shouldSeeTheMarketingNavMenu($I);
 
-$sideNavMenu->iClickOnContentInTheSideNavMenu($I);
-$sideNavMenu->iShouldSeeTheContentNavMenu($I);
+$sideNavMenu->clickOnContentInTheSideNavMenu($I);
+$sideNavMenu->shouldSeeTheContentNavMenu($I);
 
-$sideNavMenu->iClickOnReportsInTheSideNavMenu($I);
-$sideNavMenu->iShouldSeeTheReportsNavMenu($I);
+$sideNavMenu->clickOnReportsInTheSideNavMenu($I);
+$sideNavMenu->shouldSeeTheReportsNavMenu($I);
 
-$sideNavMenu->iClickOnStoresInTheSideNavMenu($I);
-$sideNavMenu->iShouldSeeTheStoresNavMenu($I);
+$sideNavMenu->clickOnStoresInTheSideNavMenu($I);
+$sideNavMenu->shouldSeeTheStoresNavMenu($I);
 
-$sideNavMenu->iClickOnSystemInTheSideNavMenu($I);
-$sideNavMenu->iShouldSeeTheSystemNavMenu($I);
+$sideNavMenu->clickOnSystemInTheSideNavMenu($I);
+$sideNavMenu->shouldSeeTheSystemNavMenu($I);
