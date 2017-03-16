@@ -6,7 +6,8 @@
         "symfony/filesystem": "~2.6",
         "symfony/finder": "~2.6",
         "consolidation/robo": "^1.0.0",
-        "allure-framework/allure-codeception": "~1.2.3"
+        "allure-framework/allure-codeception": "~1.2.3",
+        "flow/jsonpath": ">0.2"
     },
     "autoload": {
         "psr-0": {

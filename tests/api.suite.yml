@@ -1,0 +1,35 @@
+class_name: ApiTester
+modules:
+    enabled:
+        - REST:
+            url: http://magento2.loc/index.php/rest/default/V1/
+            depends: PhpBrowser
+            part: Json
+        - Sequence
+        - WebDriver
+        - \Helper\Acceptance
+    config:
+        WebDriver:
+            url: 'http://magento2.loc/index.php'
+            browser: chrome
+            window_size: maximize
+
+env:
+    firefox:
+        modules:
+            config:
+                WebDriver:
+                    browser: firefox
+                    window_size: maximize
+    chrome:
+        modules:
+            config:
+                WebDriver:
+                    browser: 'chrome'
+                    window_size: maximize
+    phantomjs:
+        modules:
+            config:
+                WebDriver:
+                    browser: 'phantomjs'
+                    window_size: 1920x1080
