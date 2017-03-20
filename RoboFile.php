@@ -26,6 +26,11 @@ class RoboFile extends \Robo\Tasks
         }
     }
 
+    function code(array $args) {
+        $this->_exec('codecept run ' . implode(' ', $args));
+        $this->allureReport();
+    }
+
     function test() {
         $this->chrome();
         $this->allureReport();
@@ -37,21 +42,21 @@ class RoboFile extends \Robo\Tasks
     }
 
     function group($args = '') {
-        $this->taskExec('codecept run --env chrome --skip-group skip --group')->args($args)->run();
+        $this->taskExec('codecept run acceptance --env chrome --skip-group skip --group')->args($args)->run();
     }
 
     function chrome() {
-        $this->_exec('codecept run --env chrome --skip-group skip');
+        $this->_exec('codecept run acceptance --env chrome --skip-group skip');
         $this->allureReport();
     }
 
     function firefox() {
-        $this->_exec('codecept run --env chrome --skip-group skip');
+        $this->_exec('codecept run acceptance --env firefox --skip-group skip');
         $this->allureReport();
     }
 
     function phantomjs() {
-        $this->_exec('codecept run --env phantomjs');
+        $this->_exec('codecept run acceptance --env phantomjs');
         $this->allureReport();
     }
 

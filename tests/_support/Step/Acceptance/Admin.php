@@ -1159,7 +1159,7 @@ class Admin extends \AcceptanceTester
         $I = $this;
 
         // Cheating here for the minute. Still working on the best method to deal with this issue.
-        $I->executeJS("jQuery('.modal-popup').hide(); jQuery('.modals-overlay').hide();");
+        $I->executeJS("jQuery('.modal-popup').remove(); jQuery('.modals-overlay').remove();");
 
 //        try {
 //            $I->waitForElementVisible('._show .action-close', 1);
