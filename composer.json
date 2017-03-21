@@ -1,5 +1,5 @@
 {
-    "name": "codeception-allure-example",
+    "name": "tooling-demo",
     "require": {
 	    "php": ">=5.4.0",
         "codeception/codeception": "~2.1.0",
@@ -11,7 +11,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Yandex": "src/"
+            "Yandex": "vendor/allure-framework/allure-codeception/src/"
         }
     }
 }
