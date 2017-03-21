@@ -5,6 +5,7 @@ use Page\Acceptance\SideNavigation as SideNav;
 // @env firefox
 // @env chrome
 // @group slow
+// @group skip
 $I = new AdminTester($scenario);
 $sideNavMenu = new SideNav($I);
 
