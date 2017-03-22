@@ -15,5 +15,6 @@ class AccessAdminLoginPageCest
 
         $I->goToTheAdminLoginPage();
         $I->shouldBeOnTheAdminLoginPage();
+        $I->lookForwardTo('being on the Admin Login page');
     }
 }

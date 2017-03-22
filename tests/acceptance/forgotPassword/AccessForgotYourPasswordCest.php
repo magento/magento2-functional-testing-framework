@@ -5,10 +5,13 @@ use Yandex\Allure\Adapter\Annotation\Title;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
 use Yandex\Allure\Adapter\Annotation\Severity;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  * @Features("Admin Login")
  * @Stories("Forgot Your Password")
+ * @TestCaseId("ZEP-1")
+ * @group test
  */
 class AccessForgotYourPasswordCest
 {
