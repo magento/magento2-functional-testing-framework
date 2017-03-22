@@ -6,6 +6,7 @@ use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
 use Yandex\Allure\Adapter\Annotation\Severity;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
+use Yandex\Allure\Adapter\Annotation\Parameter;
 
 /**
  * @Features("Admin Login")
@@ -26,6 +27,7 @@ class AccessForgotYourPasswordCest
      * @env phantomjs
      * @Title("You should land on the Forgot Your Password page.")
      * @Severity("critical")
+     * @Parameter("My Param")
      */
     public function shouldLandOnTheForgotYourPasswordPage(\Step\Acceptance\Admin $I, AdminLogin $adminLogin)
     {
