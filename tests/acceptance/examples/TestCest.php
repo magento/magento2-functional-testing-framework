@@ -1,6 +1,8 @@
 <?php
 
-
+/**
+ * @group skip
+ */
 class TestCest
 {
     public function _before(\Step\Acceptance\Admin $I)

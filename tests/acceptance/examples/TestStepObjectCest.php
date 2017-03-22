@@ -8,6 +8,7 @@ class AdminCest
      * @env chrome
      * @env firefox
      * @env phantomjs
+     * @group skip
      * @param Scenario $scenario
      * @param Admin $I
      * @return void
