@@ -110,6 +110,13 @@ class Admin extends \AcceptanceTester
         return $admin_url_list[$random_admin_url];
     }
 
+    public function waitForSpinnerToDisappear()
+    {
+        $I = $this;
+        $I->wait(1);
+        $I->waitForElementNotVisible('.admin__data-grid-loading-mask', 15);
+    }
+
     // Sales
     public function goToTheAdminSalesOrdersPage()
     {
