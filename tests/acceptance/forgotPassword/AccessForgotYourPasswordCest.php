@@ -1,7 +1,15 @@
 <?php
 
 use Page\Acceptance\AdminLogin as AdminLogin;
+use Yandex\Allure\Adapter\Annotation\Title;
+use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
+use Yandex\Allure\Adapter\Annotation\Severity;
 
+/**
+ * @Features("Admin Login")
+ * @Stories("Forgot Your Password")
+ */
 class AccessForgotYourPasswordCest
 {
     public function _before(\Step\Acceptance\Admin $I)
@@ -13,6 +21,8 @@ class AccessForgotYourPasswordCest
      * @env chrome
      * @env firefox
      * @env phantomjs
+     * @Title("You should land on the Forgot Your Password page.")
+     * @Severity("critical")
      */
     public function shouldLandOnTheForgotYourPasswordPage(\Step\Acceptance\Admin $I, AdminLogin $adminLogin)
     {
@@ -27,6 +37,8 @@ class AccessForgotYourPasswordCest
      * @env chrome
      * @env firefox
      * @env phantomjs
+     * @Title("You should land on the Login page after clicking on 'Back to Sign In'.")
+     * @Severity("trivial")
      */
     public function shouldLandOnTheLoginPageWhenBackToSignInIsClicked(\Step\Acceptance\Admin $I, AdminLogin $adminLogin)
     {
@@ -40,6 +52,8 @@ class AccessForgotYourPasswordCest
      * @env chrome
      * @env firefox
      * @env phantomjs
+     * @Title("You should land on the Login page after clicking on the Logo.")
+     * @Severity("normal")
      */
     public function shouldLandOnTheLoginPageWhenTheLogoIsClicked(\Step\Acceptance\Admin $I, AdminLogin $adminLogin)
     {
