@@ -1,7 +1,7 @@
 <?php
 namespace Magento\Xxyyzz\Step\Backend;
 
-require_once __DIR__ . '/../../../../../Helper/Magento/Xxyyzz/Helper/AdminUrlList.php';
+require_once __DIR__ . '/../../Helper/AdminUrlList.php';
 
 class Admin extends \AcceptanceTester
 {
