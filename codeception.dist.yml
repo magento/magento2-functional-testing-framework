@@ -3,7 +3,7 @@ paths:
     tests: tests
     log: tests/_output
     data: tests/_data
-    support: tests/_support
+    support: tests/_support/Magento/Xxyyzz
     envs: tests/_envs
 settings:
     bootstrap: _bootstrap.php
