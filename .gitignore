@@ -6,3 +6,5 @@ vendor/*
 tests/_output/*
 allure-report/*
 /tests/_support/_generated/
+codeception.yml
+tests/acceptance.suite.yml

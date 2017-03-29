@@ -1,0 +1,28 @@
+# Codeception Test Suite Configuration
+#
+# Suite for acceptance tests.
+# Perform tests in browser using the WebDriver or PhpBrowser.
+# If you need both WebDriver and PHPBrowser tests - create a separate suite.
+
+class_name: AcceptanceTester
+modules:
+    enabled:
+        - WebDriver
+        - \Magento\Xxyyzz\Helper\Acceptance
+        - \Magento\Xxyyzz\Helper\AdminUiHelper
+        - \Magento\Xxyyzz\Helper\WebapiHelper
+        - REST:
+            url: http://magento.loc/index.php/rest/default/V1/
+            depends: PhpBrowser
+            part: Json
+        - Sequence
+    config:
+        WebDriver:
+            url: http://magento.loc/index.php
+            browser: chrome
+            window_size: maximize
+data:
+    magento:
+        url: http://magento.loc/index.php
+        admin_username: admin
+        admin_password: 123123q

@@ -2,7 +2,9 @@
 modules:
     enabled:
         - WebDriver
-        - \Helper\Acceptance
+        - \Magento\Xxyyzz\Helper\Acceptance
+        - \Magento\Xxyyzz\Helper\AdminUiHelper
+        - \Magento\Xxyyzz\Helper\WebapiHelper
     config:
         WebDriver:
             browser: phantomjs
