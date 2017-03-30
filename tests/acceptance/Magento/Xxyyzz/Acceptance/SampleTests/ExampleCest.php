@@ -1,4 +1,5 @@
 <?php
+namespace Magento\Xxyyzz\Acceptance\SampleTests;
 
 use Magento\Xxyyzz\AcceptanceTester;
 
