@@ -1,5 +1,5 @@
 <?php
-namespace Magento\Xxyyzz\Catalog;
+namespace Magento\Xxyyzz\Acceptance\Catalog;
 
 use Magento\Xxyyzz\Step\Backend\Admin;
 use Magento\Xxyyzz\Page\Catalog\Admin\AdminProductGridPage;

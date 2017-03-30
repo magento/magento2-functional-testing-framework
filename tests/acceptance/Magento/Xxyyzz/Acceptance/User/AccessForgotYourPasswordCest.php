@@ -1,5 +1,5 @@
 <?php
-namespace Magento\Xxyyzz\User;
+namespace Magento\Xxyyzz\Acceptance\User;
 
 use Magento\Xxyyzz\Page\Backend\Admin\AdminLogin;
 use Magento\Xxyyzz\Step\Backend\Admin;

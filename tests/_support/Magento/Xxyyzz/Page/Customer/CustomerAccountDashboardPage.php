@@ -1,6 +1,8 @@
 <?php
 namespace Magento\Xxyyzz\Page\Customer;
 
+use Magento\Xxyyzz\AcceptanceTester;
+
 class CustomerAccountDashboardPage
 {
     // include url of current page
@@ -27,13 +29,13 @@ class CustomerAccountDashboardPage
         return static::$URL . $param;
     }
 
-    public function amOnCustomerAccountLoginPage(\AcceptanceTester $I)
+    public function amOnCustomerAccountLoginPage(AcceptanceTester $I)
     {
         $I->amOnPage(self::$URL);
         $I->waitForElementVisible(self::$customerLoginForm, 30);
     }
 
-    public function signInWithCredentials(\AcceptanceTester $I, $email, $password)
+    public function signInWithCredentials(AcceptanceTester $I, $email, $password)
     {
         $I->fillField(self::$customerEmailField, $email);
         $I->fillField(self::$customerPasswordField, $password);

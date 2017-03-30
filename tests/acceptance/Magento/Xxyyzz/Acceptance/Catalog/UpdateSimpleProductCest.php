@@ -1,5 +1,5 @@
 <?php
-namespace Magento\Xxyyzz\Catalog;
+namespace Magento\Xxyyzz\Acceptance\Catalog;
 
 use Codeception\Scenario;
 use Magento\Xxyyzz\Helper\DataHelper;
@@ -105,12 +105,12 @@ class UpdateSimpleProductCest
         $adminProductPage->saveProduct($I);
         $I->wantTo('verify product created visible in product form in admin');
         $adminProductPage->amOnAdminProductPageById($I, $this->product['id']);
-        $adminProductPage->seeProductNameInPageTitle($I, $this->product['name']);
+        $adminProductPage->seeProductNameInPageTitle($I, $this->product['name']. '-updated');
         $adminProductPage->seeProductAttributeSet($I, 'Default');
-        $adminProductPage->seeProductName($I, $this->product['name']);
-        $adminProductPage->seeProductSku($I, $this->product['sku']);
-        $adminProductPage->seeProductPrice($I, $this->product['price']);
-        $adminProductPage->seeProductQuantity($I, $this->product['extension_attributes']['stock_item']['qty']);
+        $adminProductPage->seeProductName($I, $this->product['name']. '-updated');
+        $adminProductPage->seeProductSku($I, $this->product['sku']. '-updated');
+        $adminProductPage->seeProductPrice($I, $this->product['price']+10);
+        $adminProductPage->seeProductQuantity($I, $this->product['extension_attributes']['stock_item']['qty']+100);
         $adminProductPage->seeProductStockStatus(
             $I,
             $this->product['extension_attributes']['stock_item']['is_in_stock'] !== 0 ? 'In Stock' : 'Out of Stock'

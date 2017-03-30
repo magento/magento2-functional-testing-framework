@@ -1,5 +1,7 @@
 <?php
 
+use Magento\Xxyyzz\AcceptanceTester;
+
 /**
  * @group skip
  */

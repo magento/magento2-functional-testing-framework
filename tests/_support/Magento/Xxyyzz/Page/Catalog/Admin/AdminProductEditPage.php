@@ -1,6 +1,8 @@
 <?php
 namespace Magento\Xxyyzz\Page\Catalog\Admin;
 
+use Magento\Xxyyzz\AcceptanceTester;
+
 class AdminProductEditPage
 {
     // include url of current page
@@ -31,49 +33,49 @@ class AdminProductEditPage
         return static::$URL . $param;
     }
 
-    public function amOnAdminProductPageById(\AcceptanceTester $I, $id)
+    public function amOnAdminProductPageById(AcceptanceTester $I, $id)
     {
         $I->amOnPage(self::$URL . 'id/' . $id);
         $I->waitForElementNotVisible(self::$productFormSpinner, 30); // secs
 
     }
 
-    public function seeProductNameInPageTitle(\AcceptanceTester $I, $name)
+    public function seeProductNameInPageTitle(AcceptanceTester $I, $name)
     {
         $I->see($name, self::$pageTitle);
     }
 
-    public function seeProductAttributeSet(\AcceptanceTester $I, $name)
+    public function seeProductAttributeSet(AcceptanceTester $I, $name)
     {
         $I->seeOptionIsSelected(self::$producAttributeSet, $name);
     }
 
-    public function seeProductName(\AcceptanceTester $I, $name)
+    public function seeProductName(AcceptanceTester $I, $name)
     {
         $I->seeInField(self::$productName, $name);
     }
 
-    public function seeProductSku(\AcceptanceTester $I, $name)
+    public function seeProductSku(AcceptanceTester $I, $name)
     {
         $I->seeInField(self::$productSku, $name);
     }
 
-    public function seeProductPrice(\AcceptanceTester $I, $name)
+    public function seeProductPrice(AcceptanceTester $I, $name)
     {
         $I->seeInField(self::$productPrice, $name);
     }
 
-    public function seeProductQuantity(\AcceptanceTester $I, $name)
+    public function seeProductQuantity(AcceptanceTester $I, $name)
     {
         $I->seeInField(self::$productQuantity, $name);
     }
 
-    public function seeProductStockStatus(\AcceptanceTester $I, $name)
+    public function seeProductStockStatus(AcceptanceTester $I, $name)
     {
         $I->seeOptionIsSelected(self::$productStockStatus, $name);
     }
 
-    public function seeProductCategories(\AcceptanceTester $I, $name)
+    public function seeProductCategories(AcceptanceTester $I, $name)
     {
         $I->seeInFormFields(self::$productCategories, ['multiselect' => [$name]]);
     }

@@ -14,9 +14,8 @@
             "Yandex": "vendor/allure-framework/allure-codeception/src/"
         },
         "psr-4": {
-            "Magento\\Xxyyzz\\Helper\\": "tests/_support/Magento/Xxyyzz/Helper",
-            "Magento\\Xxyyzz\\Page\\": "tests/_support/Magento/Xxyyzz/Page",
-            "Magento\\Xxyyzz\\Step\\": "tests/_support/Magento/Xxyyzz/Step"
+            "Magento\\Xxyyzz\\": "tests/_support/Magento/Xxyyzz",
+            "Magento\\Xxyyzz\\Acceptance\\": "tests/acceptance/Magento/Xxyyzz/Acceptance"
         }
     }
 }

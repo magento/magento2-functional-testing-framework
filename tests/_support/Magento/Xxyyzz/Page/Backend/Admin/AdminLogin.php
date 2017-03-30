@@ -1,6 +1,8 @@
 <?php
 namespace Magento\Xxyyzz\Page\Backend\Admin;
 
+use Magento\Xxyyzz\AcceptanceTester;
+
 class AdminLogin
 {
     // include url of current page
@@ -39,102 +41,102 @@ class AdminLogin
     }
 
     /**
-     * @var \AcceptanceTester;
+     * @var AcceptanceTester;
      */
     protected $acceptanceTester;
 
-    public function __construct(\AcceptanceTester $I)
+    public function __construct(AcceptanceTester $I)
     {
         $this->acceptanceTester = $I;
     }
 
-    public function clickOnMagentoLogo(\AcceptanceTester $I)
+    public function clickOnMagentoLogo(AcceptanceTester $I)
     {
         $I->click(self::$logoImage);
     }
 
-    public function clickOnForgotYourPassword(\AcceptanceTester $I)
+    public function clickOnForgotYourPassword(AcceptanceTester $I)
     {
         $I->click(self::$forgotYourPassword);
     }
 
-    public function clickOnSignIn(\AcceptanceTester $I)
+    public function clickOnSignIn(AcceptanceTester $I)
     {
         $I->click(self::$signIn);
     }
 
-    public function enterTheUsername(\AcceptanceTester $I, $username)
+    public function enterTheUsername(AcceptanceTester $I, $username)
     {
         $I->fillField(self::$username, $username);
     }
 
-    public function enterThePassword(\AcceptanceTester $I, $password)
+    public function enterThePassword(AcceptanceTester $I, $password)
     {
         $I->fillField(self::$password, $password);
     }
 
-    public function enterTheLoginCredentials(\AcceptanceTester $I, $username, $password)
+    public function enterTheLoginCredentials(AcceptanceTester $I, $username, $password)
     {
         $this->enterTheUsername($I, $username);
         $this->enterThePassword($I, $password);
     }
 
-    public function shouldSeeTheLoginMainArea(\AcceptanceTester $I)
+    public function shouldSeeTheLoginMainArea(AcceptanceTester $I)
     {
         $I->seeElement(self::$mainArea);
     }
 
-    public function shouldSeeTheLoginLogoLink(\AcceptanceTester $I)
+    public function shouldSeeTheLoginLogoLink(AcceptanceTester $I)
     {
         $I->seeElement(self::$logoLink);
     }
 
-    public function shouldSeeTheLoginLogoImage(\AcceptanceTester $I)
+    public function shouldSeeTheLoginLogoImage(AcceptanceTester $I)
     {
         $I->seeElement(self::$logoImage);
     }
 
-    public function shouldSeeTheLoginTitle(\AcceptanceTester $I)
+    public function shouldSeeTheLoginTitle(AcceptanceTester $I)
     {
         $I->seeElement(self::$title);
     }
 
-    public function shouldSeeTheLoginUsernameTitle(\AcceptanceTester $I)
+    public function shouldSeeTheLoginUsernameTitle(AcceptanceTester $I)
     {
         $I->seeElement(self::$usernameTitle);
     }
 
-    public function shouldSeeTheLoginUsernameField(\AcceptanceTester $I)
+    public function shouldSeeTheLoginUsernameField(AcceptanceTester $I)
     {
         $I->seeElement(self::$username);
     }
 
-    public function shouldSeeTheLoginPasswordTitle(\AcceptanceTester $I)
+    public function shouldSeeTheLoginPasswordTitle(AcceptanceTester $I)
     {
         $I->seeElement(self::$passwordTitle);
     }
 
-    public function shouldSeeTheLoginPasswordField(\AcceptanceTester $I)
+    public function shouldSeeTheLoginPasswordField(AcceptanceTester $I)
     {
         $I->seeElement(self::$password);
     }
 
-    public function shouldSeeTheLoginForgotPasswordLink(\AcceptanceTester $I)
+    public function shouldSeeTheLoginForgotPasswordLink(AcceptanceTester $I)
     {
         $I->seeElement(self::$forgotYourPassword);
     }
 
-    public function shouldSeeTheLoginSignInButton(\AcceptanceTester $I)
+    public function shouldSeeTheLoginSignInButton(AcceptanceTester $I)
     {
         $I->seeElement(self::$signIn);
     }
 
-    public function shouldSeeTheLoginCopyrightText(\AcceptanceTester $I)
+    public function shouldSeeTheLoginCopyrightText(AcceptanceTester $I)
     {
         $I->seeElement(self::$copyRight);
     }
 
-    public function shouldSeeTheLoginPageFields(\AcceptanceTester $I)
+    public function shouldSeeTheLoginPageFields(AcceptanceTester $I)
     {
         $this->shouldSeeTheLoginMainArea($I);
         $this->shouldSeeTheLoginLogoLink($I);
@@ -149,22 +151,22 @@ class AdminLogin
         $this->shouldSeeTheLoginCopyrightText($I);
     }
 
-    public function enterTheEmailAddress(\AcceptanceTester $I, $emailAddress)
+    public function enterTheEmailAddress(AcceptanceTester $I, $emailAddress)
     {
         $I->fillField(self::$emailAddress, $emailAddress);
     }
 
-    public function clickOnRetrievePassword(\AcceptanceTester $I)
+    public function clickOnRetrievePassword(AcceptanceTester $I)
     {
         $I->click(self::$retrievePassword);
     }
 
-    public function clickOnBackToSignIn(\AcceptanceTester $I)
+    public function clickOnBackToSignIn(AcceptanceTester $I)
     {
         $I->click(self::$backToSignIn);
     }
 
-    public function shouldSeeTheForgotYourPasswordFields(\AcceptanceTester $I)
+    public function shouldSeeTheForgotYourPasswordFields(AcceptanceTester $I)
     {
         $I->seeElement(self::$forgotPasswordMain);
         $I->seeElement(self::$logoLink);

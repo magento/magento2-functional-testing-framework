@@ -1,6 +1,8 @@
 <?php
 namespace Magento\Xxyyzz\Page\Catalog\Admin;
 
+use Magento\Xxyyzz\AcceptanceTester;
+
 class AdminProductGridPage
 {
     // include url of current page
@@ -34,19 +36,19 @@ class AdminProductGridPage
         return static::$URL . $param;
     }
 
-    public function amOnAdminProductGridPage(\AcceptanceTester $I)
+    public function amOnAdminProductGridPage(AcceptanceTester $I)
     {
         $I->amOnPage(self::$URL);
         $I->waitForElementNotVisible(self::$productGridLoadingSpinner, 30); // secs
 
     }
 
-    public function goToAddNewProductPage(\AcceptanceTester $I)
+    public function goToAddNewProductPage(AcceptanceTester $I)
     {
         $I->click(self::$addNewProductButton);
     }
 
-    public function searchBySku(\AcceptanceTester $I, $sku)
+    public function searchBySku(AcceptanceTester $I, $sku)
     {
         try {
             $I->waitForElementNotVisible(self::$productGridLoadingSpinner, 30);
@@ -66,7 +68,7 @@ class AdminProductGridPage
         $I->waitForElementNotVisible(self::$productGridLoadingSpinner, 30); // secs
     }
 
-    public function containsInNthRow(\AcceptanceTester $I, $n, $text)
+    public function containsInNthRow(AcceptanceTester $I, $n, $text)
     {
         return $I->see($text, sprintf(self::$gridNthRow, $n));
     }

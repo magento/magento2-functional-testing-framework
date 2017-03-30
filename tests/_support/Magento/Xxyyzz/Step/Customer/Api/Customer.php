@@ -1,7 +1,7 @@
 <?php
 namespace Magento\Xxyyzz\Step\Customer\Api;
 
-class Customer extends \AcceptanceTester
+class Customer extends \Magento\Xxyyzz\AcceptanceTester
 {
     protected $endpoint = 'customers';
 

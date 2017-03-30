@@ -1,7 +1,7 @@
 <?php
 namespace Magento\Xxyyzz\Step\Catalog\Api;
 
-class Category extends \AcceptanceTester
+class Category extends \Magento\Xxyyzz\AcceptanceTester
 {
     protected $endpoint = 'categories';
 

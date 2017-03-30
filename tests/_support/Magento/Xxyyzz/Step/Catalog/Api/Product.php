@@ -1,7 +1,7 @@
 <?php
 namespace Magento\Xxyyzz\Step\Catalog\Api;
 
-class Product extends \AcceptanceTester
+class Product extends \Magento\Xxyyzz\AcceptanceTester
 {
     protected $endpoint = 'products';
 

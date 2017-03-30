@@ -1,5 +1,5 @@
 <?php
-namespace Magento\Xxyyzz\Backend;
+namespace Magento\Xxyyzz\Acceptance\Backend;
 
 use Magento\Xxyyzz\Page\Backend\Admin\SideNavigation as SideNav;
 use Magento\Xxyyzz\Step\Backend\Admin;

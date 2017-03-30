@@ -1,6 +1,8 @@
 <?php
 namespace Magento\Xxyyzz\Page\Catalog\Admin;
 
+use Magento\Xxyyzz\AcceptanceTester;
+
 class AdminProductPage
 {
     // include url of current page
@@ -36,91 +38,91 @@ class AdminProductPage
         return static::$URL . $param;
     }
 
-    public function amOnAdminNewProductPage(\AcceptanceTester $I)
+    public function amOnAdminNewProductPage(AcceptanceTester $I)
     {
         $I->seeInCurrentUrl(static::$URL . 'new');
         $I->waitForElementNotVisible(self::$productFormLoadingSpinner, 30); // secs
     }
 
-    public function amOnAdminProductPageById(\AcceptanceTester $I, $id)
+    public function amOnAdminProductPageById(AcceptanceTester $I, $id)
     {
         $I->amOnPage(self::route('edit/id/' . $id));
         $I->waitForElementNotVisible(self::$productFormLoadingSpinner, 30); // secs
     }
 
     // Assert existing product
-    public function seeProductNameInPageTitle(\AcceptanceTester $I, $name)
+    public function seeProductNameInPageTitle(AcceptanceTester $I, $name)
     {
         $I->see($name, self::$pageTitle);
     }
 
-    public function seeProductAttributeSet(\AcceptanceTester $I, $name)
+    public function seeProductAttributeSet(AcceptanceTester $I, $name)
     {
         $I->seeOptionIsSelected(self::$producAttributeSet, $name);
     }
 
-    public function seeProductName(\AcceptanceTester $I, $name)
+    public function seeProductName(AcceptanceTester $I, $name)
     {
         $I->seeInField(self::$productName, $name);
     }
 
-    public function seeProductSku(\AcceptanceTester $I, $name)
+    public function seeProductSku(AcceptanceTester $I, $name)
     {
         $I->seeInField(self::$productSku, $name);
     }
 
-    public function seeProductPrice(\AcceptanceTester $I, $name)
+    public function seeProductPrice(AcceptanceTester $I, $name)
     {
         $I->seeInField(self::$productPrice, $name);
     }
 
-    public function seeProductQuantity(\AcceptanceTester $I, $name)
+    public function seeProductQuantity(AcceptanceTester $I, $name)
     {
         $I->seeInField(self::$productQuantity, $name);
     }
 
-    public function seeProductStockStatus(\AcceptanceTester $I, $name)
+    public function seeProductStockStatus(AcceptanceTester $I, $name)
     {
         $I->seeOptionIsSelected(self::$productStockStatus, $name);
     }
 
-    public function seeProductCategories(\AcceptanceTester $I, $name)
+    public function seeProductCategories(AcceptanceTester $I, $name)
     {
         $I->seeInFormFields(self::$productCategories, ['multiselect' => [$name]]);
     }
 
     // Fill new product
-    public function fillFieldProductName(\AcceptanceTester $I, $name)
+    public function fillFieldProductName(AcceptanceTester $I, $name)
     {
         $I->fillField(self::$productName, $name);
     }
 
-    public function fillFieldProductSku(\AcceptanceTester $I, $name)
+    public function fillFieldProductSku(AcceptanceTester $I, $name)
     {
         $I->fillField(self::$productSku, $name);
     }
 
-    public function fillFieldProductPrice(\AcceptanceTester $I, $name)
+    public function fillFieldProductPrice(AcceptanceTester $I, $name)
     {
         $I->fillField(self::$productPrice, $name);
     }
 
-    public function fillFieldProductQuantity(\AcceptanceTester $I, $name)
+    public function fillFieldProductQuantity(AcceptanceTester $I, $name)
     {
         $I->fillField(self::$productQuantity, $name);
     }
 
-    public function selectProductStockStatus(\AcceptanceTester $I, $name)
+    public function selectProductStockStatus(AcceptanceTester $I, $name)
     {
         $I->selectOption(self::$productStockStatus, $name);
     }
 
-    public function fillFieldProductCategories(\AcceptanceTester $I, $name)
+    public function fillFieldProductCategories(AcceptanceTester $I, $name)
     {
         $I->seeInFormFields(self::$productCategories, ['multiselect' => [$name]]);
     }
 
-    public function saveProduct(\AcceptanceTester $I)
+    public function saveProduct(AcceptanceTester $I)
     {
         $I->click(self::$productSaveButton);
         $I->waitForElementNotVisible(self::$productSavedSpinner);

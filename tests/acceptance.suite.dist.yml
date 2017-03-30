@@ -5,6 +5,7 @@
 # If you need both WebDriver and PHPBrowser tests - create a separate suite.
 
 class_name: AcceptanceTester
+namespace: Magento\Xxyyzz
 modules:
     enabled:
         - WebDriver

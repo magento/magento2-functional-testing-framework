@@ -1,6 +1,8 @@
 <?php
 namespace Magento\Xxyyzz\Page\Catalog\Admin;
 
+use Magento\Xxyyzz\AcceptanceTester;
+
 class AdminCategoryPage
 {
     // include url of current page
@@ -35,40 +37,40 @@ class AdminCategoryPage
         return static::$URL.$param;
     }
 
-    public function amOnAdminCategoryPage(\AcceptanceTester $I, $param = '')
+    public function amOnAdminCategoryPage(AcceptanceTester $I, $param = '')
     {
         $I->amOnPage(self::route($param));
         $I->waitForElementNotVisible(self::$categoryFormLoadingSpinner, 30); // secs
     }
 
-    public function amOnAdminCategoryPageById(\AcceptanceTester $I, $id)
+    public function amOnAdminCategoryPageById(AcceptanceTester $I, $id)
     {
         $I->amOnPage(self::$URL . 'edit/id/' . $id);
         $I->waitForElementNotVisible(self::$categoryFormLoadingSpinner, 30); // secs
     }
 
-    public function seeCategoryNameInPageTitle(\AcceptanceTester $I, $name)
+    public function seeCategoryNameInPageTitle(AcceptanceTester $I, $name)
     {
         $I->see($name, self::$pageTitle);
     }
 
-    public function addRootCategory(\AcceptanceTester $I)
+    public function addRootCategory(AcceptanceTester $I)
     {
         $I->click(self::$addRootCategoryButton);
     }
 
-    public function addSubCategory(\AcceptanceTester $I)
+    public function addSubCategory(AcceptanceTester $I)
     {
         $I->click(self::$addSubCategoryButton);
         $I->waitForElementNotVisible(self::$categoryFormLoadingSpinner, 30); // secs
     }
 
-    public function fillFieldCategoryName(\AcceptanceTester $I, $name)
+    public function fillFieldCategoryName(AcceptanceTester $I, $name)
     {
         $I->fillField(self::$categoryName, $name);
     }
 
-    public function fillFieldCategoryUrlKey(\AcceptanceTester $I, $name)
+    public function fillFieldCategoryUrlKey(AcceptanceTester $I, $name)
     {
         try {
             $I->click(sprintf(self::$categorySearchEngineOptimToggle, 'closed'));
@@ -77,7 +79,7 @@ class AdminCategoryPage
         $I->fillField(self::$categoryUrlKey, $name);
     }
 
-    public function saveCategory(\AcceptanceTester $I)
+    public function saveCategory(AcceptanceTester $I)
     {
         $I->click(self::$saveCategoryButton);
         $I->waitForElementNotVisible(self::$catagorySavedSpinner);
