@@ -1,7 +1,6 @@
 *.iml
 .idea
 composer.phar
-composer.lock
 vendor/*
 tests/_output/*
 allure-report/*
