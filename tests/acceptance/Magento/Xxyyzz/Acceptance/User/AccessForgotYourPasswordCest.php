@@ -2,7 +2,7 @@
 namespace Magento\Xxyyzz\Acceptance\User;
 
 use Magento\Xxyyzz\Page\Backend\Admin\AdminLogin;
-use Magento\Xxyyzz\Step\Backend\Admin;
+use Magento\Xxyyzz\Step\Backend\AdminStep;
 use Yandex\Allure\Adapter\Annotation\Title;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -18,7 +18,7 @@ use Yandex\Allure\Adapter\Annotation\Parameter;
  */
 class AccessForgotYourPasswordCest
 {
-    public function _before(Admin $I)
+    public function _before(AdminStep $I)
     {
         $I->goToTheAdminLoginPage();
     }
@@ -31,7 +31,7 @@ class AccessForgotYourPasswordCest
      * @Severity("critical")
      * @Parameter("My Param")
      */
-    public function shouldLandOnTheForgotYourPasswordPage(Admin $I, AdminLogin $adminLogin)
+    public function shouldLandOnTheForgotYourPasswordPage(AdminStep $I, AdminLogin $adminLogin)
     {
         $I->wantTo('see if I can access the Forgot Your Password page');
         $adminLogin->clickOnForgotYourPassword($I);
@@ -47,7 +47,7 @@ class AccessForgotYourPasswordCest
      * @Title("You should land on the Login page after clicking on 'Back to Sign In'.")
      * @Severity("trivial")
      */
-    public function shouldLandOnTheLoginPageWhenBackToSignInIsClicked(Admin $I, AdminLogin $adminLogin)
+    public function shouldLandOnTheLoginPageWhenBackToSignInIsClicked(AdminStep $I, AdminLogin $adminLogin)
     {
         $I->wantTo('see if I can access the Login page from the Forgot Your Password page');
         $adminLogin->clickOnForgotYourPassword($I);
@@ -62,7 +62,7 @@ class AccessForgotYourPasswordCest
      * @Title("You should land on the Login page after clicking on the Logo.")
      * @Severity("normal")
      */
-    public function shouldLandOnTheLoginPageWhenTheLogoIsClicked(Admin $I, AdminLogin $adminLogin)
+    public function shouldLandOnTheLoginPageWhenTheLogoIsClicked(AdminStep $I, AdminLogin $adminLogin)
     {
         $I->wantTo('see if I can access the Login page by clicking on the Logo');
         $adminLogin->clickOnMagentoLogo($I);

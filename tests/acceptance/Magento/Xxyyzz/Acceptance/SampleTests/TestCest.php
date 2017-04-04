@@ -1,14 +1,14 @@
 <?php
 namespace Magento\Xxyyzz\Acceptance\SampleTests;
 
-use Magento\Xxyyzz\Step\Backend\Admin;
+use Magento\Xxyyzz\Step\Backend\AdminStep;
 
 /**
  * group skip
  */
 class TestCest
 {
-    public function _before(Admin $I)
+    public function _before(AdminStep $I)
     {
         $I->goToTheAdminLoginPage();
         $I->loginAsAdmin();
@@ -19,7 +19,7 @@ class TestCest
      * @env chrome
      * @group example
      */
-    public function accessTheSalesOrdersPage(Admin $I)
+    public function accessTheSalesOrdersPage(AdminStep $I)
     {
         $I->goToTheAdminSalesOrdersPage();
         $I->shouldBeOnTheAdminSalesOrdersPage();
@@ -30,7 +30,7 @@ class TestCest
      * @env chrome
      * @group example
      */
-    public function accessTheProductsCatalogPage(Admin $I)
+    public function accessTheProductsCatalogPage(AdminStep $I)
     {
         $I->goToTheAdminProductsCatalogPage();
         $I->shouldBeOnTheAdminProductsCatalogPage();

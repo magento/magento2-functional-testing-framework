@@ -1,7 +1,7 @@
 <?php
 namespace Magento\Xxyyzz\Acceptance\Catalog;
 
-use Magento\Xxyyzz\Step\Backend\Admin;
+use Magento\Xxyyzz\Step\Backend\AdminStep;
 use Magento\Xxyyzz\Page\Catalog\Admin\AdminCategoryPage;
 use Magento\Xxyyzz\Helper\DataHelper;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -22,13 +22,13 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
  */
 class CreateCategoryCest
 {
-    public function _before(Admin $I)
+    public function _before(AdminStep $I)
     {
         $I->goToTheAdminLoginPage();
         $I->loginAsAdmin();
     }
 
-    public function _after(Admin $I)
+    public function _after(AdminStep $I)
     {
         $I->goToTheAdminLogoutPage();
     }
@@ -49,13 +49,13 @@ class CreateCategoryCest
      * @env firefox
      * @env phantomjs
      *
-     * @param Admin $I
+     * @param AdminStep $I
      * @param AdminCategoryPage $adminCategoryPage
      * @param DataHelper $dataHelper
      * @return void
      */
     public function createCategoryTest(
-        Admin $I,
+        AdminStep $I,
         AdminCategoryPage $adminCategoryPage,
         DataHelper $dataHelper
     ) {

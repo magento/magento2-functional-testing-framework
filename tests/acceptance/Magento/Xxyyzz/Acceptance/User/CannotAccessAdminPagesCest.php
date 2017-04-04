@@ -1,7 +1,7 @@
 <?php
 namespace Magento\Xxyyzz\Acceptance\User;
 
-use Magento\Xxyyzz\Step\Backend\Admin;
+use Magento\Xxyyzz\Step\Backend\AdminStep;
 
 /**
  * @env chrome
@@ -10,7 +10,7 @@ use Magento\Xxyyzz\Step\Backend\Admin;
  */
 class CannotAccessAdminPagesCest
 {
-    public function shouldNotBeAbleToAccessAdminPagesWhenNotLoggedIn(Admin $I)
+    public function shouldNotBeAbleToAccessAdminPagesWhenNotLoggedIn(AdminStep $I)
     {
         $I->wantTo('make sure you cannot access Admin pages when NOT logged in');
         $I->goToTheAdminLoginPage();

@@ -1,7 +1,7 @@
 <?php
 namespace Magento\Xxyyzz\Acceptance\Catalog;
 
-use Magento\Xxyyzz\Step\Backend\Admin;
+use Magento\Xxyyzz\Step\Backend\AdminStep;
 use Magento\Xxyyzz\Page\Catalog\Admin\AdminProductGridPage;
 use Magento\Xxyyzz\Page\Catalog\Admin\AdminProductPage;
 use Magento\Xxyyzz\Helper\DataHelper;
@@ -22,13 +22,13 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
  */
 class CreateSimpleProductCest
 {
-    public function _before(Admin $I)
+    public function _before(AdminStep $I)
     {
         $I->goToTheAdminLoginPage();
         $I->loginAsAdmin();
     }
 
-    public function _after(Admin $I)
+    public function _after(AdminStep $I)
     {
         $I->goToTheAdminLogoutPage();
     }
@@ -49,14 +49,14 @@ class CreateSimpleProductCest
      * @env firefox
      * @env phantomjs
      *
-     * @param Admin $I
+     * @param AdminStep $I
      * @param AdminProductGridPage $adminProductGridPage
      * @param AdminProductPage $adminProductPage
      * @param DataHelper $dataHelper
      * @return void
      */
     public function createSimpleProductTest(
-        Admin $I,
+        AdminStep $I,
         AdminProductGridPage $adminProductGridPage,
         AdminProductPage $adminProductPage,
         DataHelper $dataHelper

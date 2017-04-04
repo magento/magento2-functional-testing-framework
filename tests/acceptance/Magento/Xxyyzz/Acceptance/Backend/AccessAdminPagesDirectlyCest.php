@@ -1,14 +1,14 @@
 <?php
 namespace Magento\Xxyyzz\Acceptance\Backend;
 
-use Magento\Xxyyzz\Step\Backend\Admin;
+use Magento\Xxyyzz\Step\Backend\AdminStep;
 
 /**
  * @group skip
  */
 class AccessAdminPagesDirectlyCest
 {
-    public function _before(Admin $I)
+    public function _before(AdminStep $I)
     {
         $I->goToTheAdminLoginPage();
         $I->loginAsAdmin();
@@ -20,7 +20,7 @@ class AccessAdminPagesDirectlyCest
      * @env phantomjs
      * @group slow
      */
-    public function shouldBeAbleToAccessEachAdminPageDirectly(Admin $I)
+    public function shouldBeAbleToAccessEachAdminPageDirectly(AdminStep $I)
     {
         $I->goToTheAdminSalesOrdersPage();
         $I->shouldBeOnTheAdminSalesOrdersPage();

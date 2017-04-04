@@ -3,8 +3,8 @@ namespace Magento\Xxyyzz\Acceptance\Catalog;
 
 use Codeception\Scenario;
 use Magento\Xxyyzz\Helper\DataHelper;
-use Magento\Xxyyzz\Step\Backend\Admin;
-use Magento\Xxyyzz\Step\Catalog\Api\Product;
+use Magento\Xxyyzz\Step\Backend\AdminStep;
+use Magento\Xxyyzz\Step\Catalog\Api\ProductApiStep;
 use Magento\Xxyyzz\Page\Catalog\Admin\AdminProductGridPage;
 use Magento\Xxyyzz\Page\Catalog\Admin\AdminProductPage;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -26,7 +26,7 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 class UpdateSimpleProductCest
 {
     /**
-     * @var \Magento\Xxyyzz\Step\Backend\Admin
+     * @var \Magento\Xxyyzz\Step\Backend\AdminStep
      */
     protected $admin;
 
@@ -42,12 +42,12 @@ class UpdateSimpleProductCest
 
     public function _before(Scenario $scenario, DataHelper $dataHelper)
     {
-        $this->admin = new Admin($scenario);
+        $this->admin = new AdminStep($scenario);
         $I = $this->admin;
         $I->goToTheAdminLoginPage();
         $I->loginAsAdmin();
         $this->product = $dataHelper->getSimpleProductData();
-        $apiHandler = new Product($scenario);
+        $apiHandler = new ProductApiStep($scenario);
         $this->product = array_merge($this->product, ['id' => $apiHandler->createProduct(['product' => $this->product])]);
     }
 
@@ -72,13 +72,13 @@ class UpdateSimpleProductCest
      * @env firefox
      * @env phantomjs
      *
-     * @param Admin $I
+     * @param AdminStep $I
      * @param AdminProductGridPage $adminProductGridPage
      * @param AdminProductPage $adminProductPage
      * @return void
      */
     public function updateSimpleProductTest(
-        Admin $I,
+        AdminStep $I,
         AdminProductGridPage $adminProductGridPage,
         AdminProductPage $adminProductPage
     ) {

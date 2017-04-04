@@ -2,14 +2,14 @@
 namespace Magento\Xxyyzz\Acceptance\Backend;
 
 use Magento\Xxyyzz\Page\Backend\Admin\SideNavigation as SideNav;
-use Magento\Xxyyzz\Step\Backend\Admin;
+use Magento\Xxyyzz\Step\Backend\AdminStep;
 
 /**
  * @group skip
  */
 class OpenEachSideNavMenuCest
 {
-    public function _before(Admin $I)
+    public function _before(AdminStep $I)
     {
         $I->goToTheAdminLoginPage();
         $I->loginAsAdmin();
@@ -20,7 +20,7 @@ class OpenEachSideNavMenuCest
      * @env firefox
      * @group slow
      */
-    public function shouldBeAbleToOpenEachSideNavMenu(Admin $I, SideNav $sideNavMenu)
+    public function shouldBeAbleToOpenEachSideNavMenu(AdminStep $I, SideNav $sideNavMenu)
     {
         $sideNavMenu->clickOnSalesInTheSideNavMenu($I);
         $sideNavMenu->shouldSeeTheSalesNavMenu($I);

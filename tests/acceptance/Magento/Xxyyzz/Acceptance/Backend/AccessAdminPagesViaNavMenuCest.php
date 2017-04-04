@@ -2,14 +2,14 @@
 namespace Magento\Xxyyzz\Acceptance\Backend;
 
 use Magento\Xxyyzz\Page\Backend\Admin\SideNavigation as SideNav;
-use Magento\Xxyyzz\Step\Backend\Admin;
+use Magento\Xxyyzz\Step\Backend\AdminStep;
 
 /**
  * @group skip
  */
 class AccessAdminPagesViaNavMenuCest
 {
-    public function _before(Admin $I)
+    public function _before(AdminStep $I)
     {
         $I->goToTheAdminLoginPage();
         $I->loginAsAdmin();
@@ -21,7 +21,7 @@ class AccessAdminPagesViaNavMenuCest
      * @env firefox
      * @group slow
      */
-    public function shouldLandOnTheDashboardPage(Admin $I, SideNav $sideNavMenu)
+    public function shouldLandOnTheDashboardPage(AdminStep $I, SideNav $sideNavMenu)
     {
         $I->wantTo('see if I can access the DASHBOARD Page using the Side Nav Menus');
         $I->goToRandomAdminPage();
@@ -35,7 +35,7 @@ class AccessAdminPagesViaNavMenuCest
      * @env firefox
      * @group slow
      */
-    public function shouldLandOnEachOfTheSalesPages(Admin $I, SideNav $sideNavMenu)
+    public function shouldLandOnEachOfTheSalesPages(AdminStep $I, SideNav $sideNavMenu)
     {
         $I->wantTo('see if I can access each of the SALES Admin Pages using the Side Nav Menus');
         $sideNavMenu->clickOnSalesInTheSideNavMenu($I);
@@ -69,7 +69,7 @@ class AccessAdminPagesViaNavMenuCest
      * @env firefox
      * @group slow
      */
-    public function shouldLandOnEachOfTheProductsPages(Admin $I, SideNav $sideNavMenu)
+    public function shouldLandOnEachOfTheProductsPages(AdminStep $I, SideNav $sideNavMenu)
     {
         $I->wantTo('see if I can access each of the PRODUCTS Admin Pages using the Side Nav Menus');
         $sideNavMenu->clickOnProductsInTheSideNavMenu($I);
@@ -87,7 +87,7 @@ class AccessAdminPagesViaNavMenuCest
      * @env firefox
      * @group slow
      */
-    public function shouldLanOnEachOfTheCustomersPages(Admin $I, SideNav $sideNavMenu)
+    public function shouldLanOnEachOfTheCustomersPages(AdminStep $I, SideNav $sideNavMenu)
     {
         $I->wantTo('see if I can access each of the CUSTOMERS Admin Pages using the Side Nav Menus');
         $sideNavMenu->clickOnCustomersInTheSideNavMenu($I);
@@ -105,7 +105,7 @@ class AccessAdminPagesViaNavMenuCest
      * @env firefox
      * @group slow
      */
-    public function shouldLandOnEachOfTheMarketingPages(Admin $I, SideNav $sideNavMenu)
+    public function shouldLandOnEachOfTheMarketingPages(AdminStep $I, SideNav $sideNavMenu)
     {
         $I->wantTo('see if I can access each of the MARKETING Admin Pages using the Side Nav Menus');
         $sideNavMenu->clickOnMarketingInTheSideNavMenu($I);
@@ -159,7 +159,7 @@ class AccessAdminPagesViaNavMenuCest
      * @env firefox
      * @group slow
      */
-    public function shouldLandOnEachOfTheContentPages(Admin $I, SideNav $sideNavMenu)
+    public function shouldLandOnEachOfTheContentPages(AdminStep $I, SideNav $sideNavMenu)
     {
         $I->wantTo('see if I can access each of the CONTENT Admin Pages using the Side Nav Menus');
         $sideNavMenu->clickOnContentInTheSideNavMenu($I);
@@ -193,7 +193,7 @@ class AccessAdminPagesViaNavMenuCest
      * @env firefox
      * @group slow
      */
-    public function shouldLandOnEachOfTheReportsPages(Admin $I, SideNav $sideNavMenu)
+    public function shouldLandOnEachOfTheReportsPages(AdminStep $I, SideNav $sideNavMenu)
     {
         $I->wantTo('see if I can access each of the REPORTS Admin Pages using the Side Nav Menu');
         $sideNavMenu->clickOnReportsInTheSideNavMenu($I);
@@ -295,7 +295,7 @@ class AccessAdminPagesViaNavMenuCest
      * @env firefox
      * @group slow
      */
-    public function shouldLandOnEachOfTheStoresPages(Admin $I, SideNav $sideNavMenu)
+    public function shouldLandOnEachOfTheStoresPages(AdminStep $I, SideNav $sideNavMenu)
     {
         $I->wantTo('see if I can access each of the STORES Admin Pages using the Side Nav Menu');
         $sideNavMenu->clickOnStoresInTheSideNavMenu($I);
@@ -353,7 +353,7 @@ class AccessAdminPagesViaNavMenuCest
      * @env firefox
      * @group slow
      */
-    public function shouldLandOnEachOfTheSystemPages(Admin $I, SideNav $sideNavMenu)
+    public function shouldLandOnEachOfTheSystemPages(AdminStep $I, SideNav $sideNavMenu)
     {
         $I->wantTo('see if I can access each of the SYSTEM Admin Pages using the Side Nav Menu');
         $sideNavMenu->clickOnSystemInTheSideNavMenu($I);
@@ -418,7 +418,7 @@ class AccessAdminPagesViaNavMenuCest
      * @env firefox
      * @group slow
      */
-    public function shouldLandOnTheWebSetupWizardPage(Admin $I, SideNav $sideNavMenu)
+    public function shouldLandOnTheWebSetupWizardPage(AdminStep $I, SideNav $sideNavMenu)
     {
         $I->wantTo('see if I can access the Web Setup Wizard Admin Page using the Side Nav Menu');
         $sideNavMenu->clickOnSystemInTheSideNavMenu($I);
@@ -432,7 +432,7 @@ class AccessAdminPagesViaNavMenuCest
      * @env firefox
      * @group slow
      */
-    public function shouldLandOnThePartnersAndExtensionsPage(Admin $I, SideNav $sideNavMenu)
+    public function shouldLandOnThePartnersAndExtensionsPage(AdminStep $I, SideNav $sideNavMenu)
     {
         $I->wantTo('see if I can access the Partners and Extensions Admin Page using the Side Nav Menu');
         $sideNavMenu->clickOnFindPartnersAndExtensionsInTheSideNavMenu($I);

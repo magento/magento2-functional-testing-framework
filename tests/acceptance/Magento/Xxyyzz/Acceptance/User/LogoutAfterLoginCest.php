@@ -1,7 +1,7 @@
 <?php
 namespace Magento\Xxyyzz\Acceptance\User;
 
-use Magento\Xxyyzz\Step\Backend\Admin;
+use Magento\Xxyyzz\Step\Backend\AdminStep;
 
 /**
  * @env chrome
@@ -10,7 +10,7 @@ use Magento\Xxyyzz\Step\Backend\Admin;
  */
 class LogoutAfterLoginCest
 {
-    public function shouldBeAbleToLogout(Admin $I)
+    public function shouldBeAbleToLogout(AdminStep $I)
     {
         $I->wantTo('logout of the Admin area and land on the Login page');
 

@@ -3,7 +3,7 @@ namespace Magento\Xxyyzz\Step\Backend;
 
 require_once __DIR__ . '/../../Helper/AdminUrlList.php';
 
-class Admin extends \Magento\Xxyyzz\AcceptanceTester
+class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
 {
     public function goToTheAdminLoginPage()
     {

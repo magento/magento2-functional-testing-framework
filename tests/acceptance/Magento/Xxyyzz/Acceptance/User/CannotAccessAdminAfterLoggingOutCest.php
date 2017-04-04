@@ -1,7 +1,7 @@
 <?php
 namespace Magento\Xxyyzz\Acceptance\User;
 
-use Magento\Xxyyzz\Step\Backend\Admin;
+use Magento\Xxyyzz\Step\Backend\AdminStep;
 
 /**
  * @env chrome
@@ -11,7 +11,7 @@ use Magento\Xxyyzz\Step\Backend\Admin;
  */
 class CannotAccessAdminAfterLoggingOutCest
 {
-    public function shouldNotBeAbleToAccessAdminAfterLogout(Admin $I)
+    public function shouldNotBeAbleToAccessAdminAfterLogout(AdminStep $I)
     {
         $I->wantTo('make sure you cannot access Admin pages after logging out');
 

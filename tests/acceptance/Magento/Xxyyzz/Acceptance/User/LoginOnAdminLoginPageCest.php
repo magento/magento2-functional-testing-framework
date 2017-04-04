@@ -1,7 +1,7 @@
 <?php
 namespace Magento\Xxyyzz\Acceptance\User;
 
-use Magento\Xxyyzz\Step\Backend\Admin;
+use Magento\Xxyyzz\Step\Backend\AdminStep;
 
 /**
  * @env chrome
@@ -10,7 +10,7 @@ use Magento\Xxyyzz\Step\Backend\Admin;
  */
 class LoginOnAdminLoginPageCest
 {
-    public function shouldBeAbleToLogin(Admin $I)
+    public function shouldBeAbleToLogin(AdminStep $I)
     {
         $I->wantTo('verify that I can login via the Admin Login page');
 

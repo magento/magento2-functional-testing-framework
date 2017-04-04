@@ -1,17 +1,17 @@
 <?php
 namespace Magento\Xxyyzz\Step\Catalog\Api;
 
-class Product extends \Magento\Xxyyzz\AcceptanceTester
+class CategoryApiStep extends \Magento\Xxyyzz\AcceptanceTester
 {
-    protected $endpoint = 'products';
+    protected $endpoint = 'categories';
 
     /**
-     * Create Magento Product by REST API.
+     * Create Magento Category by REST API.
      *
      * @param array $params
      * @return string
      */
-    public function createProduct(array $params)
+    public function createCategory(array $params)
     {
         $this->amBearerAuthenticated($this->getAdminAuthToken());
         $this->haveHttpHeader('Content-Type', 'application/json');
@@ -21,17 +21,17 @@ class Product extends \Magento\Xxyyzz\AcceptanceTester
     }
 
     /**
-     * Get Magento Product Data by REST API.
+     * Get Magento Category Data by REST API.
      *
-     * @param string $sku
+     * @param string $id
      * @return string
      */
-    public function getProduct($sku)
+    public function getCategory($id)
     {
         $this->amBearerAuthenticated($this->getAdminAuthToken());
         $this->haveHttpHeader('Content-Type', 'application/json');
-        $this->sendGET($this->endpoint . "/$sku");
+        $this->sendGET($this->endpoint . "/$id");
         $this->seeResponseCodeIs(200);
-        return $this->grabDataFromResponseByJsonPath('$..*');
+        return $this->grabResponse();
     }
 }
