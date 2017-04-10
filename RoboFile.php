@@ -59,4 +59,10 @@ class RoboFile extends \Robo\Tasks
         $this->_exec('codecept run acceptance --env phantomjs');
         $this->allureReport();
     }
+
+    function catalog()
+    {
+        $this->_exec('codecept run --env chrome --group catalog');
+        $this->allureReport();
+    }
 }
