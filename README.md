@@ -3,7 +3,7 @@
 * **Codeception**, **Allure** and **Robo** are PHP based applications installed via **Composer**, so you will need to have **Composer** installed in order to run the following. Please visit the [Composer](https://getcomposer.org/) homepage for installation instructions.
 * Some settings need to be adjusted to meet the build environment settings in the appropriate `XXX.suite.yml` file in the `[PROJECT_ROOT]/tests/` directory: `[PROJECT_ROOT]/tests/XXXXXXX.suite.yml`
 ### Configuration
-* Create .env file by copying existing .env.example file at project root directory
+* Create .env file by copying existing .env.example file at project root directory.
 
     ```
     cp .env.example .env 
@@ -34,11 +34,11 @@
     cd [LOCATION_OF_GITHUB_REPO]
     composer install
     ```
-* Build
+* Build the project:
     ```
     vendor/bin/codecept build
     ```
-* **You will need to install Allure's CLI tool to generate the reports, please visit this page for instructions**: http://wiki.qatools.ru/display/AL/Allure+Commandline
+* **You will need to install Allure's CLI tool to generate the reports, please visit this page for instructions**: http://wiki.qatools.ru/display/AL/Allure+Commandline.
 
 * Next you will need to start a Selenium server so we can run the tests (This will vary based on your local setup).
 
