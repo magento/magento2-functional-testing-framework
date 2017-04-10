@@ -13,10 +13,10 @@ class CustomerApiStep extends \Magento\Xxyyzz\AcceptanceTester
      */
     public function createCustomer(array $params)
     {
-        $this->amBearerAuthenticated($this->getAdminAuthToken());
-        $this->haveHttpHeader('Content-Type', 'application/json');
-        $this->sendPOST($this->endpoint, $params);
-        $this->seeResponseCodeIs(200);
-        return $this->grabDataFromResponseByJsonPath('$.id')[0];
+        $I = $this;
+        $I->amAdminTokenAuthenticated();
+        $I->sendPOST($this->endpoint, $params);
+        $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+        return $I->grabDataFromResponseByJsonPath('$.id')[0];
     }
 }

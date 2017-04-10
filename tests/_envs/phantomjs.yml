@@ -1,10 +1,8 @@
 # `phantomjs` environment config goes here
 modules:
     enabled:
-        - WebDriver
+        - \Magento\Xxyyzz\Module\MagentoWebDriver
         - \Magento\Xxyyzz\Helper\Acceptance
-        - \Magento\Xxyyzz\Helper\AdminUiHelper
-        - \Magento\Xxyyzz\Helper\WebapiHelper
     config:
-        WebDriver:
+        \Magento\Xxyyzz\Module\MagentoWebDriver:
             browser: phantomjs

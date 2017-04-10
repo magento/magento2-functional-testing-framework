@@ -3,7 +3,6 @@ namespace Magento\Xxyyzz\Acceptance\Catalog;
 
 use Magento\Xxyyzz\Step\Backend\AdminStep;
 use Magento\Xxyyzz\Page\Catalog\Admin\AdminCategoryPage;
-use Magento\Xxyyzz\Helper\DataHelper;
 use Yandex\Allure\Adapter\Annotation\Stories;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Title;
@@ -51,16 +50,14 @@ class CreateCategoryCest
      *
      * @param AdminStep $I
      * @param AdminCategoryPage $adminCategoryPage
-     * @param DataHelper $dataHelper
      * @return void
      */
     public function createCategoryTest(
         AdminStep $I,
-        AdminCategoryPage $adminCategoryPage,
-        DataHelper $dataHelper
+        AdminCategoryPage $adminCategoryPage
     ) {
         $I->wantTo('verify category creation in admin');
-        $category = $dataHelper->getCategoryData();
+        $category = $I->getCategoryData();
         $adminCategoryPage->amOnAdminCategoryPage($I);
         $adminCategoryPage->addSubCategory($I);
         $adminCategoryPage->fillFieldCategoryName($I, $category['name']);

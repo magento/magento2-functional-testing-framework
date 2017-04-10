@@ -1,9 +1,9 @@
 <?php
-namespace Magento\Xxyyzz\Helper;
+namespace Magento\Xxyyzz\Module;
 
 use Codeception\Module\Sequence;
 
-class DataHelper extends Sequence
+class MagentoDataSequence extends Sequence
 {
     /**
      * Get category data.

@@ -13,11 +13,11 @@ class CategoryApiStep extends \Magento\Xxyyzz\AcceptanceTester
      */
     public function createCategory(array $params)
     {
-        $this->amBearerAuthenticated($this->getAdminAuthToken());
-        $this->haveHttpHeader('Content-Type', 'application/json');
-        $this->sendPOST($this->endpoint, $params);
-        $this->seeResponseCodeIs(200);
-        return $this->grabDataFromResponseByJsonPath('$.id')[0];
+        $I = $this;
+        $I->amAdminTokenAuthenticated();
+        $I->sendPOST($this->endpoint, $params);
+        $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+        return $I->grabDataFromResponseByJsonPath('$.id')[0];
     }
 
     /**
@@ -28,10 +28,10 @@ class CategoryApiStep extends \Magento\Xxyyzz\AcceptanceTester
      */
     public function getCategory($id)
     {
-        $this->amBearerAuthenticated($this->getAdminAuthToken());
-        $this->haveHttpHeader('Content-Type', 'application/json');
-        $this->sendGET($this->endpoint . "/$id");
-        $this->seeResponseCodeIs(200);
-        return $this->grabResponse();
+        $I = $this;
+        $I->amAdminTokenAuthenticated();
+        $I->sendGET($this->endpoint . "/$id");
+        $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+        return $I->grabResponse();
     }
 }

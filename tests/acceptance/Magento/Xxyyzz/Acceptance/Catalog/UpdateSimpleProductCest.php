@@ -2,7 +2,6 @@
 namespace Magento\Xxyyzz\Acceptance\Catalog;
 
 use Codeception\Scenario;
-use Magento\Xxyyzz\Helper\DataHelper;
 use Magento\Xxyyzz\Step\Backend\AdminStep;
 use Magento\Xxyyzz\Step\Catalog\Api\ProductApiStep;
 use Magento\Xxyyzz\Page\Catalog\Admin\AdminProductGridPage;
@@ -36,24 +35,20 @@ class UpdateSimpleProductCest
     protected $product;
 
     /**
-     * @param Scenario $scenario
-     * @param DataHelper $dataHelper
+     * @param AdminStep $I
      */
 
-    public function _before(Scenario $scenario, DataHelper $dataHelper)
+    public function _before(AdminStep $I, ProductApiStep $api)
     {
-        $this->admin = new AdminStep($scenario);
-        $I = $this->admin;
         $I->goToTheAdminLoginPage();
         $I->loginAsAdmin();
-        $this->product = $dataHelper->getSimpleProductData();
-        $apiHandler = new ProductApiStep($scenario);
-        $this->product = array_merge($this->product, ['id' => $apiHandler->createProduct(['product' => $this->product])]);
+        $this->product = $I->getSimpleProductData();
+        $api->amAdminTokenAuthenticated();
+        $this->product = array_merge($this->product, ['id' => $api->createProduct(['product' => $this->product])]);
     }
 
-    public function _after()
+    public function _after(AdminStep $I)
     {
-        $I = $this->admin;
         $I->goToTheAdminLogoutPage();
     }
 

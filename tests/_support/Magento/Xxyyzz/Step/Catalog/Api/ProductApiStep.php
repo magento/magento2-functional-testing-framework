@@ -13,11 +13,11 @@ class ProductApiStep extends \Magento\Xxyyzz\AcceptanceTester
      */
     public function createProduct(array $params)
     {
-        $this->amBearerAuthenticated($this->getAdminAuthToken());
-        $this->haveHttpHeader('Content-Type', 'application/json');
-        $this->sendPOST($this->endpoint, $params);
-        $this->seeResponseCodeIs(200);
-        return $this->grabDataFromResponseByJsonPath('$.id')[0];
+        $I = $this;
+        $I->amAdminTokenAuthenticated();
+        $I->sendPOST($this->endpoint, $params);
+        $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+        return $I->grabDataFromResponseByJsonPath('$.id')[0];
     }
 
     /**
@@ -28,10 +28,10 @@ class ProductApiStep extends \Magento\Xxyyzz\AcceptanceTester
      */
     public function getProduct($sku)
     {
-        $this->amBearerAuthenticated($this->getAdminAuthToken());
-        $this->haveHttpHeader('Content-Type', 'application/json');
-        $this->sendGET($this->endpoint . "/$sku");
-        $this->seeResponseCodeIs(200);
-        return $this->grabDataFromResponseByJsonPath('$..*');
+        $I = $this;
+        $I->amAdminTokenAuthenticated();
+        $I->sendGET($this->endpoint . "/$sku");
+        $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+        return $I->grabDataFromResponseByJsonPath('$..*');
     }
 }

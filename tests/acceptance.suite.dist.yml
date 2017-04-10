@@ -8,22 +8,20 @@ class_name: AcceptanceTester
 namespace: Magento\Xxyyzz
 modules:
     enabled:
-        - WebDriver
+        - \Magento\Xxyyzz\Module\MagentoWebDriver
         - \Magento\Xxyyzz\Helper\Acceptance
-        - \Magento\Xxyyzz\Helper\AdminUiHelper
-        - \Magento\Xxyyzz\Helper\WebapiHelper
-        - REST:
-            url: http://magento.loc/index.php/rest/default/V1/
+        - \Magento\Xxyyzz\Module\MagentoRESTDriver:
+            url: "%MAGENTO_BASE_URL%/rest/default/V1/"
+            username: "%MAGENTO_ADMIN_USERNAME%"
+            password: "%MAGENTO_ADMIN_PASSWORD%"
             depends: PhpBrowser
             part: Json
-        - Sequence
+        - \Magento\Xxyyzz\Module\MagentoDataSequence
     config:
-        WebDriver:
-            url: http://magento.loc/index.php
+        \Magento\Xxyyzz\Module\MagentoWebDriver:
+            url: "%MAGENTO_BASE_URL%"
+            backend_name: admin
             browser: chrome
             window_size: maximize
-data:
-    magento:
-        url: http://magento.loc/index.php
-        admin_username: admin
-        admin_password: 123123q
+            username: "%MAGENTO_ADMIN_USERNAME%"
+            password: "%MAGENTO_ADMIN_PASSWORD%"

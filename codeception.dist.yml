@@ -20,10 +20,12 @@ extensions:
             ignoredAnnotations:
                 - env
                 - zephyrId
+params:
+    - .env
 modules:
     config:
         Db:
-            dsn: ''
-            user: ''
-            password: ''
+            dsn: "%DB_DSN%"
+            user: "%DB_USERNAME%"
+            password: "%DB_PASSWORD%"
             dump: tests/_data/dump.sql
