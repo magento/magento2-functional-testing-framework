@@ -14,13 +14,14 @@ use Codeception\Util\Uri;
  * ```
  * modules:
  *     enabled:
- *         - MagentoWebDriver
+ *         - \Magento\Xxyyzz\Module\MagentoWebDriver
  *     config:
- *         MagentoWebDriver:
+ *         \Magento\Xxyyzz\Module\MagentoWebDriver:
  *             url: magento_base_url
  *             backend_name: magento_backend_name
  *             username: admin_username
  *             password: admin_password
+ *             browser: chrome
  * ```
  */
 class MagentoWebDriver extends WebDriver

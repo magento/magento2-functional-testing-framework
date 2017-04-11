@@ -39,8 +39,6 @@ class CreateSimpleProductCest
      * @Description("Method Description: Create simple product with required fields")
      * @Severity(level = SeverityLevel::CRITICAL)
      * @Parameter(name = "Admin", value = "$I")
-     * @Parameter(name = "AdminProductGridPage", value = "$adminProductGridPage")
-     * @Parameter(name = "AdminProductPage", value = "$adminProductPage")
      *
      * Codeception annotations
      * @group catalog
@@ -49,30 +47,25 @@ class CreateSimpleProductCest
      * @env phantomjs
      *
      * @param AdminStep $I
-     * @param AdminProductGridPage $adminProductGridPage
-     * @param AdminProductPage $adminProductPage
      * @return void
      */
     public function createSimpleProductTest(
-        AdminStep $I,
-        AdminProductGridPage $adminProductGridPage,
-        AdminProductPage $adminProductPage
+        AdminStep $I
     ) {
-        $I->wantTo('verify simple product creation in admin');
+        $I->wantTo('create simple product with required fields in admin product page.');
         $product = $I->getSimpleProductData();
-        $adminProductGridPage->amOnAdminProductGridPage($I);
-        $adminProductGridPage->goToAddNewProductPage($I);
-        $adminProductPage->amOnAdminNewProductPage($I);
+        AdminProductGridPage::of($I)->amOnAdminProductGridPage();
+        AdminProductGridPage::of($I)->goToAddNewProductPage();
+        AdminProductPage::of($I)->amOnAdminNewProductPage();
 
-        $adminProductPage->fillFieldProductName($I, $product['name']);
-        $adminProductPage->fillFieldProductSku($I, $product['sku']);
-        $adminProductPage->fillFieldProductPrice($I, $product['price']);
-        $adminProductPage->fillFieldProductQuantity($I, $product['extension_attributes']['stock_item']['qty']);
-        $adminProductPage->selectProductStockStatus(
-            $I,
+        AdminProductPage::of($I)->fillFieldProductName($product['name']);
+        AdminProductPage::of($I)->fillFieldProductSku($product['sku']);
+        AdminProductPage::of($I)->fillFieldProductPrice($product['price']);
+        AdminProductPage::of($I)->fillFieldProductQuantity($product['extension_attributes']['stock_item']['qty']);
+        AdminProductPage::of($I)->selectProductStockStatus(
             $product['extension_attributes']['stock_item']['is_in_stock'] !== 0 ? 'In Stock' : 'Out of Stock'
         );
-        $adminProductPage->saveProduct($I);
-        $I->seeElement(AdminProductPage::$productSaveSuccessMessage);
+        AdminProductPage::of($I)->saveProduct();
+        $I->seeElement(AdminProductPage::$successMessage);
     }
 }

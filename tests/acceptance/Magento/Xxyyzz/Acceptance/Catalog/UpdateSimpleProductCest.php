@@ -77,37 +77,37 @@ class UpdateSimpleProductCest
         AdminProductGridPage $adminProductGridPage,
         AdminProductPage $adminProductPage
     ) {
-        $I->wantTo('verify product updated in admin');
-        $adminProductGridPage->amOnAdminProductGridPage($I);
+        $I->wantTo('update simple product in admin');
+        AdminProductGridPage::of($I)->amOnAdminProductGridPage();
         //$adminProductGridPage->searchBySku($I, $this->product['sku']);
         $I->wantTo('verify product created visible in product form in admin');
-        $adminProductPage->amOnAdminProductPageById($I, $this->product['id']);
-        $adminProductPage->seeProductNameInPageTitle($I, $this->product['name']);
-        $adminProductPage->seeProductAttributeSet($I, 'Default');
-        $adminProductPage->seeProductName($I, $this->product['name']);
-        $adminProductPage->seeProductSku($I, $this->product['sku']);
-        $adminProductPage->seeProductPrice($I, $this->product['price']);
-        $adminProductPage->seeProductQuantity($I, $this->product['extension_attributes']['stock_item']['qty']);
-        $adminProductPage->seeProductStockStatus(
-            $I,
+        AdminProductPage::of($I)->amOnAdminEditProductPageById($this->product['id']);
+        AdminProductPage::of($I)->seeInPageTitle($this->product['name']);
+        AdminProductPage::of($I)->seeProductAttributeSet('Default');
+        AdminProductPage::of($I)->seeProductName($this->product['name']);
+        AdminProductPage::of($I)->seeProductSku($this->product['sku']);
+        AdminProductPage::of($I)->seeProductPrice($this->product['price']);
+        AdminProductPage::of($I)->seeProductQuantity($this->product['extension_attributes']['stock_item']['qty']);
+        AdminProductPage::of($I)->seeProductStockStatus(
             $this->product['extension_attributes']['stock_item']['is_in_stock'] !== 0 ? 'In Stock' : 'Out of Stock'
         );
         $I->wantTo('verify product updated in admin');
-        $adminProductPage->fillFieldProductName($I, $this->product['name'] . '-updated');
-        $adminProductPage->fillFieldProductSku($I, $this->product['sku'] . '-updated');
-        $adminProductPage->fillFieldProductPrice($I, $this->product['price']+10);
-        $adminProductPage->fillFieldProductQuantity($I, $this->product['extension_attributes']['stock_item']['qty']+100);
-        $adminProductPage->saveProduct($I);
+        AdminProductPage::of($I)->fillFieldProductName($this->product['name'] . '-updated');
+        AdminProductPage::of($I)->fillFieldProductSku($this->product['sku'] . '-updated');
+        AdminProductPage::of($I)->fillFieldProductPrice($this->product['price']+10);
+        AdminProductPage::of($I)->fillFieldProductQuantity(
+            $this->product['extension_attributes']['stock_item']['qty']+100
+        );
+        AdminProductPage::of($I)->saveProduct();
         $I->wantTo('verify product created visible in product form in admin');
-        $adminProductPage->amOnAdminProductPageById($I, $this->product['id']);
-        $adminProductPage->seeProductNameInPageTitle($I, $this->product['name']. '-updated');
-        $adminProductPage->seeProductAttributeSet($I, 'Default');
-        $adminProductPage->seeProductName($I, $this->product['name']. '-updated');
-        $adminProductPage->seeProductSku($I, $this->product['sku']. '-updated');
-        $adminProductPage->seeProductPrice($I, $this->product['price']+10);
-        $adminProductPage->seeProductQuantity($I, $this->product['extension_attributes']['stock_item']['qty']+100);
-        $adminProductPage->seeProductStockStatus(
-            $I,
+        AdminProductPage::of($I)->amOnAdminEditProductPageById($this->product['id']);
+        AdminProductPage::of($I)->seeInPageTitle($this->product['name']. '-updated');
+        AdminProductPage::of($I)->seeProductAttributeSet('Default');
+        AdminProductPage::of($I)->seeProductName($this->product['name']. '-updated');
+        AdminProductPage::of($I)->seeProductSku($this->product['sku']. '-updated');
+        AdminProductPage::of($I)->seeProductPrice($this->product['price']+10);
+        AdminProductPage::of($I)->seeProductQuantity($this->product['extension_attributes']['stock_item']['qty']+100);
+        AdminProductPage::of($I)->seeProductStockStatus(
             $this->product['extension_attributes']['stock_item']['is_in_stock'] !== 0 ? 'In Stock' : 'Out of Stock'
         );
     }

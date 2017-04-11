@@ -39,8 +39,6 @@ class CreateCategoryCest
      * @Description("Method Description: Create sub category with required fields")
      * @Severity(level = SeverityLevel::CRITICAL)
      * @Parameter(name = "Admin", value = "$I")
-     * @Parameter(name = "AdminCategoryPage", value = "$adminCategoryPage")
-     * @Parameter(name = "DataHelper", value = "$dataHelper")
      *
      * Codeception annotations
      * @group catalog
@@ -49,20 +47,18 @@ class CreateCategoryCest
      * @env phantomjs
      *
      * @param AdminStep $I
-     * @param AdminCategoryPage $adminCategoryPage
      * @return void
      */
     public function createCategoryTest(
-        AdminStep $I,
-        AdminCategoryPage $adminCategoryPage
+        AdminStep $I
     ) {
-        $I->wantTo('verify category creation in admin');
+        $I->wantTo('create sub category with required fields in admin Category page.');
         $category = $I->getCategoryData();
-        $adminCategoryPage->amOnAdminCategoryPage($I);
-        $adminCategoryPage->addSubCategory($I);
-        $adminCategoryPage->fillFieldCategoryName($I, $category['name']);
-        $adminCategoryPage->fillFieldCategoryUrlKey($I, $category['custom_attributes'][0]['value']);
-        $adminCategoryPage->saveCategory($I);
-        $I->seeElement(AdminCategoryPage::$catagorySaveSuccessMessage);
+        AdminCategoryPage::of($I)->amOnAdminCategoryPage();
+        AdminCategoryPage::of($I)->addSubCategory();
+        AdminCategoryPage::of($I)->fillFieldCategoryName($category['name']);
+        AdminCategoryPage::of($I)->fillFieldCategoryUrlKey($category['custom_attributes'][0]['value']);
+        AdminCategoryPage::of($I)->saveCategory();
+        $I->seeElement(AdminCategoryPage::$successMessage);
     }
 }

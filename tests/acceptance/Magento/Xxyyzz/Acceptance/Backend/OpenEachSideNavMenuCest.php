@@ -20,30 +20,30 @@ class OpenEachSideNavMenuCest
      * @env firefox
      * @group slow
      */
-    public function shouldBeAbleToOpenEachSideNavMenu(AdminStep $I, SideNav $sideNavMenu)
+    public function shouldBeAbleToOpenEachSideNavMenu(SideNav $sideNavMenu)
     {
-        $sideNavMenu->clickOnSalesInTheSideNavMenu($I);
-        $sideNavMenu->shouldSeeTheSalesNavMenu($I);
+        $sideNavMenu->clickOnSalesInTheSideNavMenu();
+        $sideNavMenu->shouldSeeTheSalesNavMenu();
 
-        $sideNavMenu->clickOnProductsInTheSideNavMenu($I);
-        $sideNavMenu->shouldSeeTheProductNavMenu($I);
+        $sideNavMenu->clickOnProductsInTheSideNavMenu();
+        $sideNavMenu->shouldSeeTheProductNavMenu();
 
-        $sideNavMenu->clickOnCustomersInTheSideNavMenu($I);
-        $sideNavMenu->shouldSeeTheCustomersNavMenu($I);
+        $sideNavMenu->clickOnCustomersInTheSideNavMenu();
+        $sideNavMenu->shouldSeeTheCustomersNavMenu();
 
-        $sideNavMenu->clickOnMarketingInTheSideNavMenu($I);
-        $sideNavMenu->shouldSeeTheMarketingNavMenu($I);
+        $sideNavMenu->clickOnMarketingInTheSideNavMenu();
+        $sideNavMenu->shouldSeeTheMarketingNavMenu();
 
-        $sideNavMenu->clickOnContentInTheSideNavMenu($I);
-        $sideNavMenu->shouldSeeTheContentNavMenu($I);
+        $sideNavMenu->clickOnContentInTheSideNavMenu();
+        $sideNavMenu->shouldSeeTheContentNavMenu();
 
-        $sideNavMenu->clickOnReportsInTheSideNavMenu($I);
-        $sideNavMenu->shouldSeeTheReportsNavMenu($I);
+        $sideNavMenu->clickOnReportsInTheSideNavMenu();
+        $sideNavMenu->shouldSeeTheReportsNavMenu();
 
-        $sideNavMenu->clickOnStoresInTheSideNavMenu($I);
-        $sideNavMenu->shouldSeeTheStoresNavMenu($I);
+        $sideNavMenu->clickOnStoresInTheSideNavMenu();
+        $sideNavMenu->shouldSeeTheStoresNavMenu();
 
-        $sideNavMenu->clickOnSystemInTheSideNavMenu($I);
-        $sideNavMenu->shouldSeeTheSystemNavMenu($I);
+        $sideNavMenu->clickOnSystemInTheSideNavMenu();
+        $sideNavMenu->shouldSeeTheSystemNavMenu();
     }
 }

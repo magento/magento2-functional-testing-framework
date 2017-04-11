@@ -1,13 +1,10 @@
 <?php
 namespace Magento\Xxyyzz\Page\Backend\Admin;
 
-use Magento\Xxyyzz\AcceptanceTester;
+use Magento\Xxyyzz\Page\AbstractAdminPage;
 
-class AdminLogin
+class AdminLogin extends AbstractAdminPage
 {
-    // include url of current page
-    public static $URL = '/admin/admin/';
-
     /**
      * Declare UI map for this page here. CSS or XPath allowed.
      */
@@ -30,144 +27,144 @@ class AdminLogin
     public static $retrievePassword   = '.actions .action-primary';
     public static $backToSignIn       = '.action-back';
 
-    /**
-     * Basic route example for your current URL
-     * You can append any additional parameter to URL
-     * and use it in tests like: Page\Edit::route('/123-post');
-     */
-    public static function route($param)
+    public function clickOnMagentoLogo()
     {
-        return static::$URL.$param;
-    }
-
-    /**
-     * @var AcceptanceTester;
-     */
-    protected $acceptanceTester;
-
-    public function __construct(AcceptanceTester $I)
-    {
-        $this->acceptanceTester = $I;
-    }
-
-    public function clickOnMagentoLogo(AcceptanceTester $I)
-    {
+        $I = $this->acceptanceTester;
         $I->click(self::$logoImage);
     }
 
-    public function clickOnForgotYourPassword(AcceptanceTester $I)
+    public function clickOnForgotYourPassword()
     {
+        $I = $this->acceptanceTester;
         $I->click(self::$forgotYourPassword);
     }
 
-    public function clickOnSignIn(AcceptanceTester $I)
+    public function clickOnSignIn()
     {
+        $I = $this->acceptanceTester;
         $I->click(self::$signIn);
     }
 
-    public function enterTheUsername(AcceptanceTester $I, $username)
+    public function enterTheUsername($username)
     {
+        $I = $this->acceptanceTester;
         $I->fillField(self::$username, $username);
     }
 
-    public function enterThePassword(AcceptanceTester $I, $password)
+    public function enterThePassword($password)
     {
+        $I = $this->acceptanceTester;
         $I->fillField(self::$password, $password);
     }
 
-    public function enterTheLoginCredentials(AcceptanceTester $I, $username, $password)
+    public function enterTheLoginCredentials($username, $password)
     {
-        $this->enterTheUsername($I, $username);
-        $this->enterThePassword($I, $password);
+        $I = $this->acceptanceTester;
+        $this->enterTheUsername($username);
+        $this->enterThePassword($password);
     }
 
-    public function shouldSeeTheLoginMainArea(AcceptanceTester $I)
+    public function shouldSeeTheLoginMainArea()
     {
+        $I = $this->acceptanceTester;
         $I->seeElement(self::$mainArea);
     }
 
-    public function shouldSeeTheLoginLogoLink(AcceptanceTester $I)
+    public function shouldSeeTheLoginLogoLink()
     {
+        $I = $this->acceptanceTester;
         $I->seeElement(self::$logoLink);
     }
 
-    public function shouldSeeTheLoginLogoImage(AcceptanceTester $I)
+    public function shouldSeeTheLoginLogoImage()
     {
+        $I = $this->acceptanceTester;
         $I->seeElement(self::$logoImage);
     }
 
-    public function shouldSeeTheLoginTitle(AcceptanceTester $I)
+    public function shouldSeeTheLoginTitle()
     {
+        $I = $this->acceptanceTester;
         $I->seeElement(self::$title);
     }
 
-    public function shouldSeeTheLoginUsernameTitle(AcceptanceTester $I)
+    public function shouldSeeTheLoginUsernameTitle()
     {
+        $I = $this->acceptanceTester;
         $I->seeElement(self::$usernameTitle);
     }
 
-    public function shouldSeeTheLoginUsernameField(AcceptanceTester $I)
+    public function shouldSeeTheLoginUsernameField()
     {
+        $I = $this->acceptanceTester;
         $I->seeElement(self::$username);
     }
 
-    public function shouldSeeTheLoginPasswordTitle(AcceptanceTester $I)
+    public function shouldSeeTheLoginPasswordTitle()
     {
+        $I = $this->acceptanceTester;
         $I->seeElement(self::$passwordTitle);
     }
 
-    public function shouldSeeTheLoginPasswordField(AcceptanceTester $I)
+    public function shouldSeeTheLoginPasswordField()
     {
+        $I = $this->acceptanceTester;
         $I->seeElement(self::$password);
     }
 
-    public function shouldSeeTheLoginForgotPasswordLink(AcceptanceTester $I)
+    public function shouldSeeTheLoginForgotPasswordLink()
     {
         $I->seeElement(self::$forgotYourPassword);
     }
 
-    public function shouldSeeTheLoginSignInButton(AcceptanceTester $I)
+    public function shouldSeeTheLoginSignInButton()
     {
+        $I = $this->acceptanceTester;
         $I->seeElement(self::$signIn);
     }
 
-    public function shouldSeeTheLoginCopyrightText(AcceptanceTester $I)
+    public function shouldSeeTheLoginCopyrightText()
     {
+        $I = $this->acceptanceTester;
         $I->seeElement(self::$copyRight);
     }
 
-    public function shouldSeeTheLoginPageFields(AcceptanceTester $I)
+    public function shouldSeeTheLoginPageFields()
     {
-        $this->shouldSeeTheLoginMainArea($I);
-        $this->shouldSeeTheLoginLogoLink($I);
-        $this->shouldSeeTheLoginLogoImage($I);
-        $this->shouldSeeTheLoginTitle($I);
-        $this->shouldSeeTheLoginUsernameTitle($I);
-        $this->shouldSeeTheLoginUsernameField($I);
-        $this->shouldSeeTheLoginPasswordTitle($I);
-        $this->shouldSeeTheLoginPasswordField($I);
-        $this->shouldSeeTheLoginForgotPasswordLink($I);
-        $this->shouldSeeTheLoginSignInButton($I);
-        $this->shouldSeeTheLoginCopyrightText($I);
+        $this->shouldSeeTheLoginMainArea();
+        $this->shouldSeeTheLoginLogoLink();
+        $this->shouldSeeTheLoginLogoImage();
+        $this->shouldSeeTheLoginTitle();
+        $this->shouldSeeTheLoginUsernameTitle();
+        $this->shouldSeeTheLoginUsernameField();
+        $this->shouldSeeTheLoginPasswordTitle();
+        $this->shouldSeeTheLoginPasswordField();
+        $this->shouldSeeTheLoginForgotPasswordLink();
+        $this->shouldSeeTheLoginSignInButton();
+        $this->shouldSeeTheLoginCopyrightText();
     }
 
-    public function enterTheEmailAddress(AcceptanceTester $I, $emailAddress)
+    public function enterTheEmailAddress($emailAddress)
     {
+        $I = $this->acceptanceTester;
         $I->fillField(self::$emailAddress, $emailAddress);
     }
 
-    public function clickOnRetrievePassword(AcceptanceTester $I)
+    public function clickOnRetrievePassword()
     {
+        $I = $this->acceptanceTester;
         $I->click(self::$retrievePassword);
     }
 
-    public function clickOnBackToSignIn(AcceptanceTester $I)
+    public function clickOnBackToSignIn()
     {
+        $I = $this->acceptanceTester;
         $I->click(self::$backToSignIn);
     }
 
-    public function shouldSeeTheForgotYourPasswordFields(AcceptanceTester $I)
+    public function shouldSeeTheForgotYourPasswordFields()
     {
+        $I = $this->acceptanceTester;
         $I->seeElement(self::$forgotPasswordMain);
         $I->seeElement(self::$logoLink);
         $I->seeElement(self::$logoImage);

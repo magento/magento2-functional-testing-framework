@@ -1,19 +1,23 @@
 <?php
 namespace Magento\Xxyyzz\Page\Catalog\Admin;
 
-use Magento\Xxyyzz\AcceptanceTester;
+use Magento\Xxyyzz\Page\AbstractAdminPage;
 
-class AdminProductPage
+class AdminProductPage extends AbstractAdminPage
 {
-    // include url of current page
+    /**
+     * Include url of current page.
+     */
     public static $URL = '/admin/catalog/product/';
 
     /**
-     * Declare UI map for this page here. CSS or XPath allowed.
+     * Buttons in product page.
      */
-    public static $pageTitle                    = '.page-title';
-    public static $productFormLoadingSpinner    =
-        '.admin__form-loading-mask[data-component="product_form.product_form"] .spinner';
+    public static $productSaveButton            = '#save-button';
+
+    /**
+     * Product data fields.
+     */
     public static $producAttributeSet           =
         '.admin__field[data-index=attribute_set_id] .admin__action-multiselect-text';
     public static $productName                  = '.admin__field[data-index=name] input';
@@ -24,108 +28,112 @@ class AdminProductPage
     public static $productCategories            =
         '.admin__field[data-index=category_ids] .admin__action-multiselect-text';
     public static $productTaxClass              = '.admin__field[data-index=tax_class_id] select';
-    public static $productSaveButton            = '#save-button';
-    public static $productSavedSpinner          = '.popup.popup-loading';
-    public static $productSaveSuccessMessage    = '.message.message-success.success';
 
     /**
-     * Basic route example for your current URL
-     * You can append any additional parameter to URL
-     * and use it in tests like: Page\Edit::route('/123-post');
+     * Product form loading spinner.
      */
-    public static function route($param)
-    {
-        return static::$URL . $param;
-    }
+    public static $productFormLoadingSpinner    =
+        '.admin__form-loading-mask[data-component="product_form.product_form"] .spinner';
 
-    public function amOnAdminNewProductPage(AcceptanceTester $I)
+    public function amOnAdminNewProductPage()
     {
+        $I = $this->acceptanceTester;
         $I->seeInCurrentUrl(static::$URL . 'new');
-        $I->waitForElementNotVisible(self::$productFormLoadingSpinner, 30); // secs
+        $I->waitForElementNotVisible(self::$productFormLoadingSpinner, $this->pageloadTimeout);
     }
 
-    public function amOnAdminProductPageById(AcceptanceTester $I, $id)
+    public function amOnAdminEditProductPageById($id)
     {
+        $I = $this->acceptanceTester;
         $I->amOnPage(self::route('edit/id/' . $id));
-        $I->waitForElementNotVisible(self::$productFormLoadingSpinner, 30); // secs
+        $I->waitForElementNotVisible(self::$productFormLoadingSpinner, $this->pageloadTimeout);
     }
 
-    // Assert existing product
-    public function seeProductNameInPageTitle(AcceptanceTester $I, $name)
+    public function seeProductAttributeSet($name)
     {
-        $I->see($name, self::$pageTitle);
-    }
-
-    public function seeProductAttributeSet(AcceptanceTester $I, $name)
-    {
+        $I = $this->acceptanceTester;
         $I->seeOptionIsSelected(self::$producAttributeSet, $name);
     }
 
-    public function seeProductName(AcceptanceTester $I, $name)
+    public function seeProductName($name)
     {
+        $I = $this->acceptanceTester;
         $I->seeInField(self::$productName, $name);
     }
 
-    public function seeProductSku(AcceptanceTester $I, $name)
+    public function seeProductSku($name)
     {
+        $I = $this->acceptanceTester;
         $I->seeInField(self::$productSku, $name);
     }
 
-    public function seeProductPrice(AcceptanceTester $I, $name)
+    public function seeProductPrice($name)
     {
+        $I = $this->acceptanceTester;
         $I->seeInField(self::$productPrice, $name);
     }
 
-    public function seeProductQuantity(AcceptanceTester $I, $name)
+    public function seeProductQuantity($name)
     {
+        $I = $this->acceptanceTester;
         $I->seeInField(self::$productQuantity, $name);
     }
 
-    public function seeProductStockStatus(AcceptanceTester $I, $name)
+    public function seeProductStockStatus($name)
     {
+        $I = $this->acceptanceTester;
         $I->seeOptionIsSelected(self::$productStockStatus, $name);
     }
 
-    public function seeProductCategories(AcceptanceTester $I, $name)
+    public function seeProductCategories($name)
     {
+        $I = $this->acceptanceTester;
         $I->seeInFormFields(self::$productCategories, ['multiselect' => [$name]]);
     }
 
     // Fill new product
-    public function fillFieldProductName(AcceptanceTester $I, $name)
+    public function fillFieldProductName($name)
     {
+        $I = $this->acceptanceTester;
         $I->fillField(self::$productName, $name);
     }
 
-    public function fillFieldProductSku(AcceptanceTester $I, $name)
+    public function fillFieldProductSku($name)
     {
+        $I = $this->acceptanceTester;
         $I->fillField(self::$productSku, $name);
     }
 
-    public function fillFieldProductPrice(AcceptanceTester $I, $name)
+    public function fillFieldProductPrice($name)
     {
+        $I = $this->acceptanceTester;
         $I->fillField(self::$productPrice, $name);
     }
 
-    public function fillFieldProductQuantity(AcceptanceTester $I, $name)
+    public function fillFieldProductQuantity($name)
     {
+        $I = $this->acceptanceTester;
         $I->fillField(self::$productQuantity, $name);
     }
 
-    public function selectProductStockStatus(AcceptanceTester $I, $name)
+    public function selectProductStockStatus($name)
     {
+        $I = $this->acceptanceTester;
         $I->selectOption(self::$productStockStatus, $name);
     }
 
-    public function fillFieldProductCategories(AcceptanceTester $I, $name)
+    public function fillFieldProductCategories($name)
     {
+        $I = $this->acceptanceTester;
         $I->seeInFormFields(self::$productCategories, ['multiselect' => [$name]]);
     }
 
-    public function saveProduct(AcceptanceTester $I)
+    public function saveProduct()
     {
+        $I = $this->acceptanceTester;
         $I->click(self::$productSaveButton);
-        $I->waitForElementNotVisible(self::$productSavedSpinner);
-        $I->waitForElementVisible(self::$productSaveSuccessMessage);
+        $I->waitForElementNotVisible(self::$popupLoadingSpinner);
+        $I->waitForElementNotVisible(self::$productFormLoadingSpinner);
+        $I->waitForElementVisible(self::$successMessage);
     }
 }

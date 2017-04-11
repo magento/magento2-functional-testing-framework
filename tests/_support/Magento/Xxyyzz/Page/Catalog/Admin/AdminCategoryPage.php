@@ -1,77 +1,75 @@
 <?php
 namespace Magento\Xxyyzz\Page\Catalog\Admin;
 
-use Magento\Xxyyzz\AcceptanceTester;
+use Magento\Xxyyzz\Page\AbstractAdminPage;
 
-class AdminCategoryPage
+class AdminCategoryPage extends AbstractAdminPage
 {
-    // include url of current page
+    /**
+     * Include url of current page.
+     */
     public static $URL = '/admin/catalog/category/';
 
     /**
-     * Declare UI map for this page here. CSS or XPath allowed.
+     * Buttons in category page.
      */
-    public static $pageTitle                        = '.page-title';
-    public static $categoryFormLoadingSpinner       =
-        '.admin__form-loading-mask[data-component="category_form.category_form"] .spinner';
-    public static $scheduleNewUpdateButton          = '#staging_update_new';
     public static $addRootCategoryButton            = '#add_root_category_button';
     public static $addSubCategoryButton             = '#add_subcategory_button';
-    public static $categoryName                     = '.admin__field[data-index=name] input';
-    public static $categoryUrlKey                   = '.admin__field[data-index=url_key] input';
+    public static $scheduleNewUpdateButton          = '#staging_update_new';
+    public static $saveCategoryButton               = '#save';
     public static $categoryContentToggle            =
         '.fieldset-wrapper[data-index=content] .fieldset-wrapper-title[data-state-collapsible=%s]';
     public static $categorySearchEngineOptimToggle  =
         '.fieldset-wrapper[data-index=search_engine_optimization] .fieldset-wrapper-title[data-state-collapsible=%s]';
-    public static $saveCategoryButton               = '#save';
-    public static $catagorySavedSpinner          = '.popup.popup-loading';
-    public static $catagorySaveSuccessMessage    = '.message.message-success.success';
 
     /**
-     * Basic route example for your current URL
-     * You can append any additional parameter to URL
-     * and use it in tests like: Page\Edit::route('/123-post');
+     * Category data fields.
      */
-    public static function route($param)
-    {
-        return static::$URL.$param;
-    }
+    public static $categoryName                     = '.admin__field[data-index=name] input';
+    public static $categoryUrlKey                   = '.admin__field[data-index=url_key] input';
 
-    public function amOnAdminCategoryPage(AcceptanceTester $I, $param = '')
+    /**
+     * Category form loading spinner.
+     */
+    public static $categoryFormLoadingSpinner       =
+        '.admin__form-loading-mask[data-component="category_form.category_form"] .spinner';
+
+    public function amOnAdminCategoryPage($param = '')
     {
+        $I = $this->acceptanceTester;
         $I->amOnPage(self::route($param));
-        $I->waitForElementNotVisible(self::$categoryFormLoadingSpinner, 30); // secs
+        $I->waitForElementNotVisible(self::$categoryFormLoadingSpinner, $this->pageloadTimeout);
     }
 
-    public function amOnAdminCategoryPageById(AcceptanceTester $I, $id)
+    public function amOnAdminCategoryPageById($id)
     {
+        $I = $this->acceptanceTester;
         $I->amOnPage(self::$URL . 'edit/id/' . $id);
-        $I->waitForElementNotVisible(self::$categoryFormLoadingSpinner, 30); // secs
+        $I->waitForElementNotVisible(self::$categoryFormLoadingSpinner, $this->pageloadTimeout);
     }
 
-    public function seeCategoryNameInPageTitle(AcceptanceTester $I, $name)
+    public function addRootCategory()
     {
-        $I->see($name, self::$pageTitle);
-    }
-
-    public function addRootCategory(AcceptanceTester $I)
-    {
+        $I = $this->acceptanceTester;
         $I->click(self::$addRootCategoryButton);
     }
 
-    public function addSubCategory(AcceptanceTester $I)
+    public function addSubCategory()
     {
+        $I = $this->acceptanceTester;
         $I->click(self::$addSubCategoryButton);
-        $I->waitForElementNotVisible(self::$categoryFormLoadingSpinner, 30); // secs
+        $I->waitForElementNotVisible(self::$categoryFormLoadingSpinner, $this->pageloadTimeout);
     }
 
-    public function fillFieldCategoryName(AcceptanceTester $I, $name)
+    public function fillFieldCategoryName($name)
     {
+        $I = $this->acceptanceTester;
         $I->fillField(self::$categoryName, $name);
     }
 
-    public function fillFieldCategoryUrlKey(AcceptanceTester $I, $name)
+    public function fillFieldCategoryUrlKey($name)
     {
+        $I = $this->acceptanceTester;
         try {
             $I->click(sprintf(self::$categorySearchEngineOptimToggle, 'closed'));
         } catch (\Exception $e) {
@@ -79,10 +77,12 @@ class AdminCategoryPage
         $I->fillField(self::$categoryUrlKey, $name);
     }
 
-    public function saveCategory(AcceptanceTester $I)
+    public function saveCategory()
     {
+        $I = $this->acceptanceTester;
         $I->click(self::$saveCategoryButton);
-        $I->waitForElementNotVisible(self::$catagorySavedSpinner);
-        $I->waitForElementVisible(self::$catagorySaveSuccessMessage);
+        $I->waitForElementNotVisible(self::$popupLoadingSpinner);
+        $I->waitForElementNotVisible(self::$categoryFormLoadingSpinner);
+        $I->waitForElementVisible(self::$successMessage);
     }
 }

@@ -25,3 +25,4 @@ modules:
             window_size: maximize
             username: "%MAGENTO_ADMIN_USERNAME%"
             password: "%MAGENTO_ADMIN_PASSWORD%"
+            pageload_timeout: 30

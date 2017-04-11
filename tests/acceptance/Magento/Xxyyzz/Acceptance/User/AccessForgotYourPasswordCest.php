@@ -34,9 +34,9 @@ class AccessForgotYourPasswordCest
     public function shouldLandOnTheForgotYourPasswordPage(AdminStep $I, AdminLogin $adminLogin)
     {
         $I->wantTo('see if I can access the Forgot Your Password page');
-        $adminLogin->clickOnForgotYourPassword($I);
+        $adminLogin->clickOnForgotYourPassword();
         $I->shouldBeOnTheForgotYourPasswordPage();
-        $adminLogin->shouldSeeTheForgotYourPasswordFields($I);
+        $adminLogin->shouldSeeTheForgotYourPasswordFields();
         $I->see('Password Help');
     }
 
@@ -50,8 +50,8 @@ class AccessForgotYourPasswordCest
     public function shouldLandOnTheLoginPageWhenBackToSignInIsClicked(AdminStep $I, AdminLogin $adminLogin)
     {
         $I->wantTo('see if I can access the Login page from the Forgot Your Password page');
-        $adminLogin->clickOnForgotYourPassword($I);
-        $adminLogin->clickOnBackToSignIn($I);
+        $adminLogin->clickOnForgotYourPassword();
+        $adminLogin->clickOnBackToSignIn();
         $I->shouldBeOnTheAdminLoginPage();
     }
 
@@ -65,11 +65,11 @@ class AccessForgotYourPasswordCest
     public function shouldLandOnTheLoginPageWhenTheLogoIsClicked(AdminStep $I, AdminLogin $adminLogin)
     {
         $I->wantTo('see if I can access the Login page by clicking on the Logo');
-        $adminLogin->clickOnMagentoLogo($I);
+        $adminLogin->clickOnMagentoLogo();
         $I->shouldBeOnTheAdminLoginPage();
 
-        $adminLogin->clickOnForgotYourPassword($I);
-        $adminLogin->clickOnMagentoLogo($I);
+        $adminLogin->clickOnForgotYourPassword();
+        $adminLogin->clickOnMagentoLogo();
         $I->shouldBeOnTheAdminLoginPage();
     }
 }

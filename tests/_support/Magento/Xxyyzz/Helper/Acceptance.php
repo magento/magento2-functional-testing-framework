@@ -18,6 +18,17 @@ class Acceptance extends \Codeception\Module
      */
     public function changeConfiguration($config, $value)
     {
-        $this->getModule('MagentoWebDriver')->_reconfigure(array($config => $value));
+        $this->getModule('\Magento\Xxyyzz\Module\MagentoWebDriver')->_reconfigure(array($config => $value));
+    }
+
+    /**
+     * Get WebDriver configuration.
+     *
+     * @param string $config
+     * @return string
+     */
+    public function getConfiguration($config)
+    {
+        return $this->getModule('\Magento\Xxyyzz\Module\MagentoWebDriver')->_getConfig($config);
     }
 }
