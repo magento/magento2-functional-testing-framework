@@ -39,14 +39,14 @@ class AdminProductPage extends AbstractAdminPage
     {
         $I = $this->acceptanceTester;
         $I->seeInCurrentUrl(static::$URL . 'new');
-        $I->waitForElementNotVisible(self::$productFormLoadingSpinner, $this->pageloadTimeout);
+        $I->waitForElementNotVisible(self::$productFormLoadingSpinner, $this->pageLoadTimeout);
     }
 
     public function amOnAdminEditProductPageById($id)
     {
         $I = $this->acceptanceTester;
         $I->amOnPage(self::route('edit/id/' . $id));
-        $I->waitForElementNotVisible(self::$productFormLoadingSpinner, $this->pageloadTimeout);
+        $I->waitForElementNotVisible(self::$productFormLoadingSpinner, $this->pageLoadTimeout);
     }
 
     public function seeProductAttributeSet($name)

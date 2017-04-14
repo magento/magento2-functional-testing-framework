@@ -96,14 +96,8 @@ class MagentoWebDriver extends WebDriver
     public function closeAdminNotification()
     {
         // Cheating here for the minute. Still working on the best method to deal with this issue.
-        $this->executeJS("jQuery('.modal-popup').remove(); jQuery('.modals-overlay').remove();");
-
-//        try {
-//            $I->waitForElementVisible('._show .action-close', 1);
-//            $I->click('._show .action-close');
-//            $I->waitForElementNotVisible('._show .action-close', 1);
-//        } catch (\Exception $e) {
-//            return false;
-//        }
+        try {
+            $this->executeJS("jQuery('.modal-popup').remove(); jQuery('.modals-overlay').remove();");
+        } catch (\Exception $e) {}
     }
 }

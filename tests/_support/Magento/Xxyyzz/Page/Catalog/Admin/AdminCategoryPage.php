@@ -38,14 +38,14 @@ class AdminCategoryPage extends AbstractAdminPage
     {
         $I = $this->acceptanceTester;
         $I->amOnPage(self::route($param));
-        $I->waitForElementNotVisible(self::$categoryFormLoadingSpinner, $this->pageloadTimeout);
+        $I->waitForElementNotVisible(self::$categoryFormLoadingSpinner, $this->pageLoadTimeout);
     }
 
     public function amOnAdminCategoryPageById($id)
     {
         $I = $this->acceptanceTester;
         $I->amOnPage(self::$URL . 'edit/id/' . $id);
-        $I->waitForElementNotVisible(self::$categoryFormLoadingSpinner, $this->pageloadTimeout);
+        $I->waitForElementNotVisible(self::$categoryFormLoadingSpinner, $this->pageLoadTimeout);
     }
 
     public function addRootCategory()
@@ -58,7 +58,7 @@ class AdminCategoryPage extends AbstractAdminPage
     {
         $I = $this->acceptanceTester;
         $I->click(self::$addSubCategoryButton);
-        $I->waitForElementNotVisible(self::$categoryFormLoadingSpinner, $this->pageloadTimeout);
+        $I->waitForElementNotVisible(self::$categoryFormLoadingSpinner, $this->pageLoadTimeout);
     }
 
     public function fillFieldCategoryName($name)

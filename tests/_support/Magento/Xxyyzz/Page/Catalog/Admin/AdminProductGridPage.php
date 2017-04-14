@@ -41,7 +41,7 @@ class AdminProductGridPage extends AbstractAdminPage
     {
         $I = $this->acceptanceTester;
         $I->amOnPage(self::$URL);
-        $I->waitForElementNotVisible(self::$productGridLoadingSpinner, $this->pageloadTimeout);
+        $I->waitForElementNotVisible(self::$productGridLoadingSpinner, $this->pageLoadTimeout);
 
     }
 
@@ -55,21 +55,21 @@ class AdminProductGridPage extends AbstractAdminPage
     {
         $I = $this->acceptanceTester;
         try {
-            $I->waitForElementNotVisible(self::$productGridLoadingSpinner, $this->pageloadTimeout);
+            $I->waitForElementNotVisible(self::$productGridLoadingSpinner, $this->pageLoadTimeout);
             $I->click(self::$filterClearAllButton);
         } catch (\Codeception\Exception\ElementNotFound $e) {
         }
         try {
             $I->wait(5);
-            $I->waitForElementNotVisible(self::$productGridLoadingSpinner, $this->pageloadTimeout);
+            $I->waitForElementNotVisible(self::$productGridLoadingSpinner, $this->pageLoadTimeout);
             $I->click(self::$filterExpandButton);
-            $I->waitForElementNotVisible(self::$productGridLoadingSpinner, $this->pageloadTimeout);
+            $I->waitForElementNotVisible(self::$productGridLoadingSpinner, $this->pageLoadTimeout);
         } catch (\Codeception\Exception\ElementNotFound $e) {
         }
 
         $I->fillField(self::$filterProductSku, $sku);
         $I->click(self::$filterApplyButton);
-        $I->waitForElementNotVisible(self::$productGridLoadingSpinner, $this->pageloadTimeout);
+        $I->waitForElementNotVisible(self::$productGridLoadingSpinner, $this->pageLoadTimeout);
     }
 
     public function containsInNthRow($n, $text)
