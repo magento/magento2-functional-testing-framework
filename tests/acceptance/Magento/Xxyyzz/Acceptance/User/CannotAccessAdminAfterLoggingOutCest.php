@@ -14,8 +14,7 @@ class CannotAccessAdminAfterLoggingOutCest
     public function shouldNotBeAbleToAccessAdminAfterLogout(AdminStep $I)
     {
         $I->wantTo('make sure you cannot access Admin pages after logging out');
-
-        $I->goToTheAdminLoginPage();
+        
         $I->loginAsAdmin();
         $I->goToTheAdminLogoutPage();
 

@@ -40,7 +40,6 @@ class UpdateSimpleProductCest
 
     public function _before(AdminStep $I, ProductApiStep $api)
     {
-        $I->goToTheAdminLoginPage();
         $I->loginAsAdmin();
         $this->product = $I->getSimpleProductData();
         $api->amAdminTokenAuthenticated();

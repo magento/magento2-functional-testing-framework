@@ -18,7 +18,6 @@ class AdminCest
     public function amStepObject(Scenario $scenario, AdminStep $I)
     {
         $I->wantTo('demo the usage of StepObject in Cest');
-        $I->goToTheAdminLoginPage();
         $I->loginAsAdmin();
     }
 }

@@ -10,7 +10,6 @@ class AccessAdminPagesDirectlyCest
 {
     public function _before(AdminStep $I)
     {
-        $I->goToTheAdminLoginPage();
         $I->loginAsAdmin();
     }
 
