@@ -113,6 +113,31 @@ class MagentoDataSequence extends Sequence
     }
 
     /**
+     * Get Content Page Data.
+     *
+     * @return array
+     */
+    public function getContentPage()
+    {
+        $faker = \Faker\Factory::create();
+
+        $pageContent = [
+            'pageTitle' => $faker->sentence($nbWords = 3, $variableNbWords = true),
+            'contentHeading' => $faker->sentence($nbWords = 3, $variableNbWords = true),
+            'contentBody' => $faker->sentence($nbWords = 10, $variableNbWords = true),
+            'urlKey' => $faker->uuid,
+            'metaTitle' => $faker->word,
+            'metaKeywords' => $faker->sentence($nbWords = 5, $variableNbWords = true),
+            'metaDescription' => $faker->sentence($nbWords = 10, $variableNbWords = true),
+            'layoutUpdateXml' => '',
+            'from' => $faker->date($format = 'm-d-Y', $max = 'now'),
+            'to' => $faker->date($format = 'm-d-Y')
+        ];
+
+        return $pageContent;
+    }
+
+    /**
      * Get a unique sequence across suite.
      *
      * @return string

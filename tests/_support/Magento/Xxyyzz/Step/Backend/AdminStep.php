@@ -5,6 +5,14 @@ require_once __DIR__ . '/../../Helper/AdminUrlList.php';
 
 class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
 {
+    public function openNewTabGoToVerify($url)
+    {
+        $I = $this;
+        $I->openNewTab();
+        $I->amOnPage($url);
+        $I->seeInCurrentUrl($url);
+    }
+    
     public function goToTheAdminLoginPage()
     {
         $I = $this;

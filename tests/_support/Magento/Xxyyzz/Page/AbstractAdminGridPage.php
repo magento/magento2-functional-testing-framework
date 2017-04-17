@@ -25,7 +25,7 @@ class AbstractAdminGridPage
     public static $columnsButton       = '.admin__data-grid-action-columns';
     public static $columnsCurrentCount = '.admin__data-grid-action-columns .admin__action-dropdown-menu-header';
     public static $columnCheckbox      = '';
-    public static $columnName          = '.admin__data-grid-action-columns .admin__field-label';
+    public static $columnHeaderName    = '.admin__data-grid-action-columns .admin__field-label';
     public static $columnsResetButton  = '.admin__data-grid-action-columns .admin__action-dropdown-footer-secondary-actions';
     public static $columnsCancelButton = '.admin__data-grid-action-columns .admin__action-dropdown-footer-main-actions';
 
@@ -145,7 +145,7 @@ class AbstractAdminGridPage
     public function clickOnSpecificColumnName($columnName)
     {
         $I = $this->acceptanceTester;
-        $I->click(self::$columnName, $columnName);
+        $I->click($columnName);
     }
 
     public function clickOnColumnReset()

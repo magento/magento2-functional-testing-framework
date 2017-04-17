@@ -8,7 +8,8 @@
         "consolidation/robo": "^1.0.0",
         "allure-framework/allure-codeception": "dev-master",
         "flow/jsonpath": ">0.2",
-        "vlucas/phpdotenv": "~2.4"
+        "vlucas/phpdotenv": "~2.4",
+        "fzaninotto/faker": "^1.6"
     },
     "autoload": {
         "psr-0": {
