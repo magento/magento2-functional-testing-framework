@@ -38,6 +38,10 @@ abstract class AbstractAdminPage
     public static $pageMainActionsReset           = '#reset';
     public static $pageMainActionsSaveAndContinue = '#save_and_continue';
     public static $pageMainActionsSave            = '#save';
+    public static $pageMainActionsAdd             = '#add';
+
+    public static $loadingMask                    = '.loading-mask';
+    public static $gridLoadingMask                = '.admin__data-grid-loading-mask';
 
     /**
      * @var AcceptanceTester
@@ -70,6 +74,13 @@ abstract class AbstractAdminPage
     public static function route($param)
     {
         return static::$URL.$param;
+    }
+
+    public function waitForLoadingMaskToDisappear()
+    {
+        $I = $this->acceptanceTester;
+        $I->waitForElementNotVisible(self::$loadingMask, 30);
+        $I->waitForElementNotVisible(self::$gridLoadingMask, 30);
     }
 
     public function openTabGoToAndVerifyUrl($pageUrl)
@@ -133,5 +144,37 @@ abstract class AbstractAdminPage
     {
         $I = $this->acceptanceTester;
         $I->click(self::$adminSignOut);
+    }
+
+    public function clickOnAdminBackButton()
+    {
+        $I = $this->acceptanceTester;
+        $I->click(self::$pageMainActionsBack);
+    }
+
+    public function clickOnAdminResetButton()
+    {
+        $I = $this->acceptanceTester;
+        $I->click(self::$pageMainActionsReset);
+    }
+
+    public function clickOnAdminSaveAndContinueEdit()
+    {
+        $I = $this->acceptanceTester;
+        $I->click(self::$pageMainActionsSaveAndContinue);
+        self::waitForLoadingMaskToDisappear();
+    }
+
+    public function clickOnAdminSaveButton()
+    {
+        $I = $this->acceptanceTester;
+        $I->click(self::$pageMainActionsSave);
+        self::waitForLoadingMaskToDisappear();
+    }
+
+    public function clickOnAdminAddButton()
+    {
+        $I = $this->acceptanceTester;
+        $I->click(self::$pageMainActionsAdd);
     }
 }

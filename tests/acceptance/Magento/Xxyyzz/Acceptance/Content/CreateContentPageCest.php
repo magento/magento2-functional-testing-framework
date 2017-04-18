@@ -50,8 +50,8 @@ class CreateContentPageCest
      * Allure annotations
      * @Title("Enter text into every field on the Content - Page.")
      * @Description("Enter text into ALL fields and verify the contents of the fields.")
-     * @Parameter(name = "Admin", value = "$I")
-     * @Parameter(name = "AdminCategoryPage", value = "$adminCategoryPage")
+     * @Parameter(name = "AdminStep", value = "$I")
+     * @Parameter(name = "AdminCMSPage", value = "$adminCMSPage")
      *
      * Codeception annotations
      * @param AdminStep $I
@@ -85,11 +85,11 @@ class CreateContentPageCest
 
         $adminCMSPage->clickOnPageDesign();
         $adminCMSPage->selectLayout1Column();
-        $adminCMSPage->enterLayoutUpdateXml('fasdfasdf');
+        $adminCMSPage->enterLayoutUpdateXml($pageData['layoutUpdateXml']);
 
         $adminCMSPage->clickOnPageCustomDesignUpdate();
-        $adminCMSPage->enterFrom('04/30/2017');
-        $adminCMSPage->enterTo('04/30/2017');
+        $adminCMSPage->enterFrom($pageData['from']);
+        $adminCMSPage->enterTo($pageData['to']);
         $adminCMSPage->selectNewThemeMagentoLuma();
         $adminCMSPage->selectNewLayout3Columns();
         
@@ -106,9 +106,10 @@ class CreateContentPageCest
         $adminCMSPage->verifyDefaultStoreView();
 
         $adminCMSPage->verifyLayout1Column();
-        $adminCMSPage->verifyLayoutUpdateXml('fasdfasdf');
-        $adminCMSPage->verifyFrom('04/30/2017');
-        $adminCMSPage->verifyTo('04/30/2017');
+        $adminCMSPage->verifyLayoutUpdateXml($pageData['layoutUpdateXml']);
+
+        $adminCMSPage->verifyFrom($pageData['from']);
+        $adminCMSPage->verifyTo($pageData['to']);
         $adminCMSPage->verifyNewThemeMagentoLuma();
         $adminCMSPage->verifyNewLayout3Columns();
     }
@@ -118,8 +119,9 @@ class CreateContentPageCest
      * @Title("Create a new Content - Page using the REQUIRED fields only.")
      * @Description("Enter text into the REQUIRED fields, SAVE the content and VERIFY it on the Storefront.")
      * @Severity(level = SeverityLevel::CRITICAL)
-     * @Parameter(name = "Admin", value = "$I")
-     * @Parameter(name = "AdminCategoryPage", value = "$adminCategoryPage")
+     * @Parameter(name = "AdminStep", value = "$I")
+     * @Parameter(name = "AdminCMSPage", value = "$adminCMSPage")
+     * @Parameter(name = "StorefrontCMSPage", value = "$storefrontCMSPage")
      *
      * Codeception annotations
      * @param AdminStep $I

@@ -81,14 +81,17 @@ class MagentoDataSequence extends Sequence
      */
     public function getCustomerData(array $additional = [])
     {
-        $sq = $this->getSqs();
+        $faker = \Faker\Factory::create();
         $customerData = [
-            'firstname' => 'firstname'.$sq,
-            'lastname' => 'lastname'.$sq,
-            'email' => 'email'.$sq.'@example.com',
+            'prefix' => $faker->title,
+            'firstName' => $faker->firstName,
+            'middleName' => $faker->firstName,
+            'lastName' => $faker->lastName,
+            'suffix' => \Faker\Provider\en_US\Person::suffix(),
+            'email' => $faker->email,
+            'dateOfBirth' => $faker->date($format = 'm/d/Y', $max = 'now'),
             'gender' => rand(0, 1),
             'group_id' => 1,
-            'middlename' => 'middlename'.$sq,
             'store_id' => 1,
             'website_id' => 1,
             'custom_attributes' => [
@@ -97,6 +100,7 @@ class MagentoDataSequence extends Sequence
                     'value' => '0',
                 ],
             ],
+            'taxVatNumber' => \Faker\Provider\at_AT\Payment::vat()
         ];
         return array_merge($customerData, $additional);
     }
@@ -129,9 +133,9 @@ class MagentoDataSequence extends Sequence
             'metaTitle' => $faker->word,
             'metaKeywords' => $faker->sentence($nbWords = 5, $variableNbWords = true),
             'metaDescription' => $faker->sentence($nbWords = 10, $variableNbWords = true),
-            'layoutUpdateXml' => '',
-            'from' => $faker->date($format = 'm-d-Y', $max = 'now'),
-            'to' => $faker->date($format = 'm-d-Y')
+            'layoutUpdateXml' => "<note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Don't forget me this weekend!</body></note>",
+            'from' => $faker->date($format = 'm/d/Y', $max = 'now'),
+            'to' => $faker->date($format = 'm/d/Y')
         ];
 
         return $pageContent;
