@@ -1,11 +1,13 @@
 <?php
 namespace Magento\Xxyyzz\Acceptance\Catalog;
 
-use Codeception\Scenario;
 use Magento\Xxyyzz\Step\Backend\AdminStep;
+use Magento\Xxyyzz\Step\Catalog\Api\CategoryApiStep;
 use Magento\Xxyyzz\Step\Catalog\Api\ProductApiStep;
 use Magento\Xxyyzz\Page\Catalog\Admin\AdminProductGridPage;
 use Magento\Xxyyzz\Page\Catalog\Admin\AdminProductPage;
+use Magento\Xxyyzz\Page\Catalog\CategoryPage;
+use Magento\Xxyyzz\Page\Catalog\ProductPage;
 use Yandex\Allure\Adapter\Annotation\Stories;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Title;
@@ -25,9 +27,9 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 class UpdateSimpleProductCest
 {
     /**
-     * @var \Magento\Xxyyzz\Step\Backend\AdminStep
+     * @var array
      */
-    protected $admin;
+    protected $category;
 
     /**
      * @var array
@@ -37,13 +39,30 @@ class UpdateSimpleProductCest
     /**
      * @param AdminStep $I
      */
-
-    public function _before(AdminStep $I, ProductApiStep $api)
+    public function _before(AdminStep $I, CategoryApiStep $categoryApi, ProductApiStep $productApi)
     {
         $I->loginAsAdmin();
+        $this->category = $I->getCategoryData();
+        $categoryApi->amAdminTokenAuthenticated();
+        $this->category = array_merge(
+            $this->category,
+            ['id' => $categoryApi->createCategory(['category' => $this->category])]
+        );
+        $this->category['url_key'] = $this->category['custom_attributes'][0]['value'];
         $this->product = $I->getSimpleProductData();
-        $api->amAdminTokenAuthenticated();
-        $this->product = array_merge($this->product, ['id' => $api->createProduct(['product' => $this->product])]);
+        $this->product['custom_attributes'][2]['value'] = $this->category['id'];
+        $productApi->amAdminTokenAuthenticated();
+        $this->product = array_merge(
+            $this->product,
+            ['id' => $productApi->createProduct(['product' => $this->product])]
+        );
+        if ($this->product['extension_attributes']['stock_item']['is_in_stock'] !== 0) {
+            $this->product['stock_status'] = 'In Stock';
+            $this->product['qty'] = $this->product['extension_attributes']['stock_item']['qty'];
+        } else {
+            $this->product['stock_status'] = 'Out of Stock';
+        }
+        $this->product['url_key'] = $this->product['custom_attributes'][0]['value'];
     }
 
     public function _after(AdminStep $I)
@@ -57,8 +76,6 @@ class UpdateSimpleProductCest
      * Allure annotations
      * @Severity(level = SeverityLevel::CRITICAL)
      * @Parameter(name = "Admin", value = "$I")
-     * @Parameter(name = "AdminProductGridPage", value = "$adminProductGridPage")
-     * @Parameter(name = "AdminProductPage", value = "$adminProductPage")
      *
      * Codeception annotations
      * @group catalog
@@ -67,47 +84,49 @@ class UpdateSimpleProductCest
      * @env phantomjs
      *
      * @param AdminStep $I
-     * @param AdminProductGridPage $adminProductGridPage
-     * @param AdminProductPage $adminProductPage
      * @return void
      */
-    public function updateSimpleProductTest(
-        AdminStep $I,
-        AdminProductGridPage $adminProductGridPage,
-        AdminProductPage $adminProductPage
-    ) {
-        $I->wantTo('update simple product in admin');
+    public function updateSimpleProductTest(AdminStep $I)
+    {
+        $I->wantTo('update simple product in admin.');
         AdminProductGridPage::of($I)->amOnAdminProductGridPage();
-        //$adminProductGridPage->searchBySku($I, $this->product['sku']);
-        $I->wantTo('verify product created visible in product form in admin');
+        AdminProductGridPage::of($I)->searchBySku($this->product['sku']);
+
+        $I->wantTo('open product created from precondition.');
         AdminProductPage::of($I)->amOnAdminEditProductPageById($this->product['id']);
-        AdminProductPage::of($I)->seeInPageTitle($this->product['name']);
-        AdminProductPage::of($I)->seeProductAttributeSet('Default');
-        AdminProductPage::of($I)->seeProductName($this->product['name']);
-        AdminProductPage::of($I)->seeProductSku($this->product['sku']);
-        AdminProductPage::of($I)->seeProductPrice($this->product['price']);
-        AdminProductPage::of($I)->seeProductQuantity($this->product['extension_attributes']['stock_item']['qty']);
-        AdminProductPage::of($I)->seeProductStockStatus(
-            $this->product['extension_attributes']['stock_item']['is_in_stock'] !== 0 ? 'In Stock' : 'Out of Stock'
-        );
-        $I->wantTo('verify product updated in admin');
+
+        $I->wantTo('update product data fields.');
         AdminProductPage::of($I)->fillFieldProductName($this->product['name'] . '-updated');
         AdminProductPage::of($I)->fillFieldProductSku($this->product['sku'] . '-updated');
         AdminProductPage::of($I)->fillFieldProductPrice($this->product['price']+10);
         AdminProductPage::of($I)->fillFieldProductQuantity(
             $this->product['extension_attributes']['stock_item']['qty']+100
         );
+        $I->wantTo('save product data change.');
         AdminProductPage::of($I)->saveProduct();
-        $I->wantTo('verify product created visible in product form in admin');
+        $I->seeElement(AdminProductPage::$successMessage);
+
+        $I->wantTo('see updated product data.');
         AdminProductPage::of($I)->amOnAdminEditProductPageById($this->product['id']);
-        AdminProductPage::of($I)->seeInPageTitle($this->product['name']. '-updated');
+        AdminProductPage::of($I)->seeInPageTitle($this->product['name'] . '-updated');
         AdminProductPage::of($I)->seeProductAttributeSet('Default');
-        AdminProductPage::of($I)->seeProductName($this->product['name']. '-updated');
-        AdminProductPage::of($I)->seeProductSku($this->product['sku']. '-updated');
+        AdminProductPage::of($I)->seeProductName($this->product['name'] . '-updated');
+        AdminProductPage::of($I)->seeProductSku($this->product['sku'] . '-updated');
         AdminProductPage::of($I)->seeProductPrice($this->product['price']+10);
         AdminProductPage::of($I)->seeProductQuantity($this->product['extension_attributes']['stock_item']['qty']+100);
         AdminProductPage::of($I)->seeProductStockStatus(
             $this->product['extension_attributes']['stock_item']['is_in_stock'] !== 0 ? 'In Stock' : 'Out of Stock'
         );
+
+        $I->wantTo('verify simple product data in frontend category page.');
+        CategoryPage::of($I)->amOnCategoryPage($this->category['url_key']);
+        CategoryPage::of($I)->seeProductNameInPage($this->product['name'] . '-updated');
+        CategoryPage::of($I)->seeProductPriceInPage($this->product['name'] . '-updated', $this->product['price'] + 10);
+
+        $I->wantTo('verify simple product data in frontend product page.');
+        ProductPage::of($I)->amOnProductPage(str_replace('_', '-', $this->product['url_key']));
+        ProductPage::of($I)->seeProductNameInPage($this->product['name'] . '-updated');
+        ProductPage::of($I)->seeProductPriceInPage($this->product['price'] + 10);
+        ProductPage::of($I)->seeProductSkuInPage($this->product['sku'] . '-updated');
     }
 }

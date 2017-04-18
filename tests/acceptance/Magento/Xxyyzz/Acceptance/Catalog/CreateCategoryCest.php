@@ -3,6 +3,7 @@ namespace Magento\Xxyyzz\Acceptance\Catalog;
 
 use Magento\Xxyyzz\Step\Backend\AdminStep;
 use Magento\Xxyyzz\Page\Catalog\Admin\AdminCategoryPage;
+use Magento\Xxyyzz\Page\Catalog\CategoryPage;
 use Yandex\Allure\Adapter\Annotation\Stories;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Title;
@@ -48,9 +49,8 @@ class CreateCategoryCest
      * @param AdminStep $I
      * @return void
      */
-    public function createCategoryTest(
-        AdminStep $I
-    ) {
+    public function createCategoryTest(AdminStep $I)
+    {
         $I->wantTo('create sub category with required fields in admin Category page.');
         $category = $I->getCategoryData();
         AdminCategoryPage::of($I)->amOnAdminCategoryPage();
@@ -59,5 +59,9 @@ class CreateCategoryCest
         AdminCategoryPage::of($I)->fillFieldCategoryUrlKey($category['custom_attributes'][0]['value']);
         AdminCategoryPage::of($I)->saveCategory();
         $I->seeElement(AdminCategoryPage::$successMessage);
+
+        $I->wantTo('verify created category in frontend category page.');
+        CategoryPage::of($I)->amOnCategoryPage(str_replace('_', '-', $category['custom_attributes'][0]['value']));
+        CategoryPage::of($I)->seeCategoryNameInTitleHeading($category['name']);
     }
 }

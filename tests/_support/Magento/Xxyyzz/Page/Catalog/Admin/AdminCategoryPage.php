@@ -15,8 +15,10 @@ class AdminCategoryPage extends AbstractAdminPage
      */
     public static $addRootCategoryButton            = '#add_root_category_button';
     public static $addSubCategoryButton             = '#add_subcategory_button';
+
     public static $scheduleNewUpdateButton          = '#staging_update_new';
     public static $saveCategoryButton               = '#save';
+
     public static $categoryContentToggle            =
         '.fieldset-wrapper[data-index=content] .fieldset-wrapper-title[data-state-collapsible=%s]';
     public static $categorySearchEngineOptimToggle  =

@@ -19,6 +19,8 @@ abstract class AbstractFrontendPage
 
     public static $createAccountLink                = '.header.links>li:nth-child(4)';
 
+    public static $pageFooterContent                = '.footer.content';
+
     /**
      * @var AcceptanceTester
      */
