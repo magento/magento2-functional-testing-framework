@@ -63,9 +63,9 @@ class CreateCustomerCest
         $customerPage->selectAssociateToWebsiteMainWebsite();
         $customerPage->selectGroupWholesale();
         $customerPage->enterPrefix($customerData['prefix']);
-        $customerPage->enterFirstName($customerData['firstName']);
-        $customerPage->enterMiddleName($customerData['middleName']);
-        $customerPage->enterLastName($customerData['lastName']);
+        $customerPage->enterFirstName($customerData['firstname']);
+        $customerPage->enterMiddleName($customerData['middlename']);
+        $customerPage->enterLastName($customerData['lastname']);
         $customerPage->enterSuffix($customerData['suffix']);
         $customerPage->enterEmailAddress($customerData['email']);
         $customerPage->enterDateOfBirth($customerData['dateOfBirth']);
@@ -76,9 +76,9 @@ class CreateCustomerCest
         $customerPage->verifyAssociateToWebsiteMainWebsite();
         $customerPage->verifyGroupWholesale();
         $customerPage->verifyPrefix($customerData['prefix']);
-        $customerPage->verifyFirstName($customerData['firstName']);
-        $customerPage->verifyMiddleName($customerData['middleName']);
-        $customerPage->verifyLastName($customerData['lastName']);
+        $customerPage->verifyFirstName($customerData['firstname']);
+        $customerPage->verifyMiddleName($customerData['middlename']);
+        $customerPage->verifyLastName($customerData['lastname']);
         $customerPage->verifySuffix($customerData['suffix']);
         $customerPage->verifyEmailAddress($customerData['email']);
         $customerPage->verifyDateOfBirth($customerData['dateOfBirth']);
@@ -111,8 +111,8 @@ class CreateCustomerCest
         $I->wantTo('verify Customer account in admin');
         $customer = $I->getCustomerData();
 
-        $customerPage->enterFirstName($customer['firstName']);
-        $customerPage->enterLastName($customer['lastName']);
+        $customerPage->enterFirstName($customer['firstname']);
+        $customerPage->enterLastName($customer['lastname']);
         $customerPage->enterEmailAddress($customer['email']);
         $customerPage->selectAssociateToWebsiteMainWebsite();
         $customerPage->selectGroupGeneral();
@@ -120,8 +120,8 @@ class CreateCustomerCest
         $customerPage->clickOnAdminSaveAndContinueEdit();
         $customerPage->clickOnAccountInformationLink();
 
-        $customerPage->verifyFirstName($customer['firstName']);
-        $customerPage->verifyLastName($customer['lastName']);
+        $customerPage->verifyFirstName($customer['firstname']);
+        $customerPage->verifyLastName($customer['lastname']);
         $customerPage->verifyEmailAddress($customer['email']);
         $customerPage->verifyAssociateToWebsiteMainWebsite();
         $customerPage->verifyGroupGeneral();

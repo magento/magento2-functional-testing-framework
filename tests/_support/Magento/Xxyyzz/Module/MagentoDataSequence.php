@@ -84,9 +84,9 @@ class MagentoDataSequence extends Sequence
         $faker = \Faker\Factory::create();
         $customerData = [
             'prefix' => $faker->title,
-            'firstName' => $faker->firstName,
-            'middleName' => $faker->firstName,
-            'lastName' => $faker->lastName,
+            'firstname' => $faker->firstName,
+            'middlename' => $faker->firstName,
+            'lastname' => $faker->lastName,
             'suffix' => \Faker\Provider\en_US\Person::suffix(),
             'email' => $faker->email,
             'dateOfBirth' => $faker->date($format = 'm/d/Y', $max = 'now'),
