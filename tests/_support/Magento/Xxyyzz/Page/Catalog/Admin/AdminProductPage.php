@@ -46,7 +46,7 @@ class AdminProductPage extends AbstractAdminPage
     public function amOnAdminNewProductPage()
     {
         $I = $this->acceptanceTester;
-        $I->waitForElementVisible(self::$productName, $this->pageloadTimeout);
+        $I->waitForElementVisible(self::$productName, $this->pageLoadTimeout);
         $I->seeInCurrentUrl(static::$URL . 'new');
     }
 
@@ -54,7 +54,7 @@ class AdminProductPage extends AbstractAdminPage
     {
         $I = $this->acceptanceTester;
         $I->amOnPage(self::route('edit/id/' . $id));
-        $I->waitForElementVisible(self::$productName, $this->pageloadTimeout);
+        $I->waitForElementVisible(self::$productName, $this->pageLoadTimeout);
     }
 
     public function seeProductAttributeSet($name)

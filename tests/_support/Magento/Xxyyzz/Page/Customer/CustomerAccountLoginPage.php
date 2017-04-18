@@ -24,7 +24,7 @@ class CustomerAccountLoginPage extends AbstractFrontendPage
     {
         $I = $this->acceptanceTester;
         $I->amOnPage(self::$URL);
-        $I->waitForElementVisible(self::$customerLoginForm, $this->pageloadTimeout);
+        $I->waitForElementVisible(self::$customerLoginForm, $this->pageLoadTimeout);
     }
 
     public function signInWithCredentials($email, $password)

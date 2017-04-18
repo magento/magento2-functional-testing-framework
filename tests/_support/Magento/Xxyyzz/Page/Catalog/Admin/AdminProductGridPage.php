@@ -49,7 +49,7 @@ class AdminProductGridPage extends AbstractAdminPage
     {
         $I = $this->acceptanceTester;
         $I->amOnPage(self::$URL);
-        $I->waitForElementNotVisible(self::$productGridProductListingLoadingSpinner, $this->pageloadTimeout);
+        $I->waitForElementNotVisible(self::$productGridProductListingLoadingSpinner, $this->pageLoadTimeout);
     }
 
     public function clickAddNewProductPage()
@@ -62,21 +62,21 @@ class AdminProductGridPage extends AbstractAdminPage
     {
         $I = $this->acceptanceTester;
         try {
-            $I->waitForElementNotVisible(self::$productGridProductListingLoadingSpinner, $this->pageloadTimeout);
+            $I->waitForElementNotVisible(self::$productGridProductListingLoadingSpinner, $this->pageLoadTimeout);
             $I->click(self::$filterClearAllButton);
         } catch (\Codeception\Exception\ElementNotFound $e) {
         }
         try {
-            $I->waitForElementNotVisible(self::$productGridNotificationLoadingSpinner, $this->pageloadTimeout);
-            $I->waitForElementNotVisible(self::$productGridProductListingLoadingSpinner, $this->pageloadTimeout);
+            $I->waitForElementNotVisible(self::$productGridNotificationLoadingSpinner, $this->pageLoadTimeout);
+            $I->waitForElementNotVisible(self::$productGridProductListingLoadingSpinner, $this->pageLoadTimeout);
             $I->click(self::$filterExpandButton);
-            $I->waitForElementNotVisible(self::$productGridProductListingLoadingSpinner, $this->pageloadTimeout);
+            $I->waitForElementNotVisible(self::$productGridProductListingLoadingSpinner, $this->pageLoadTimeout);
         } catch (\Codeception\Exception\ElementNotFound $e) {
         }
 
         $I->fillField(self::$filterProductSku, $sku);
         $I->click(self::$filterApplyButton);
-        $I->waitForElementNotVisible(self::$productGridProductListingLoadingSpinner, $this->pageloadTimeout);
+        $I->waitForElementNotVisible(self::$productGridProductListingLoadingSpinner, $this->pageLoadTimeout);
     }
 
     public function containsInNthRow($n, $text)

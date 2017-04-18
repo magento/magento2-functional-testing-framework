@@ -31,12 +31,12 @@ abstract class AbstractFrontendPage
      *
      * @var string
      */
-    protected $pageloadTimeout;
+    protected $pageLoadTimeout;
 
     public function __construct(AcceptanceTester $I)
     {
         $this->acceptanceTester = $I;
-        $this->pageloadTimeout = $I->getConfiguration('pageload_timeout');
+        $this->pageLoadTimeout = $I->getConfiguration('pageload_timeout');
     }
 
     public static function of(AcceptanceTester $I)
