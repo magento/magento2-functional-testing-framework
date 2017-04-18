@@ -2,9 +2,14 @@
 namespace Magento\Xxyyzz\Module;
 
 use Codeception\Module\WebDriver;
+use Facebook\WebDriver\WebDriverSelect;
+use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\Exception\NoSuchElementException;
+use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Util\Uri;
+use Codeception\Util\ActionSequence;
 
 /**
  * MagentoWebDriver module provides common Magento web actions through Selenium WebDriver.
@@ -99,5 +104,60 @@ class MagentoWebDriver extends WebDriver
         try {
             $this->executeJS("jQuery('.modal-popup').remove(); jQuery('.modals-overlay').remove();");
         } catch (\Exception $e) {}
+    }
+
+
+    /**
+     * @param $select
+     * @param array $options
+     * @param bool $requireAction
+     */
+    public function searchAndMultiSelectOption($select, array $options, $requireAction = false)
+    {
+        $selectDropdown     = $select . ' .action-select.admin__action-multiselect';
+        $selectSearchText   = $select
+            . ' .admin__action-multiselect-search-wrap>input[data-role="advanced-select-text"]';
+        $selectSearchResult = $select . ' .admin__action-multiselect-label>span';
+
+        $this->waitPageLoad();
+        $this->waitForElementVisible($selectDropdown);
+        $this->click($selectDropdown);
+        foreach ($options as $option) {
+            $this->waitPageLoad();
+            $this->fillField($selectSearchText, '');
+            $this->waitPageLoad();
+            $this->fillField($selectSearchText, $option);
+            $this->waitPageLoad();
+            $this->click($selectSearchResult);
+        }
+        if ($requireAction) {
+            $selectAction = $select . ' button[class=action-default]';
+            $this->waitPageLoad();
+            $this->click($selectAction);
+        }
+    }
+
+    public function waitAjaxLoad($timeout = 15)
+    {
+        $this->waitForJS('return !!window.jQuery && window.jQuery.active == 0;', $timeout);
+        $this->wait(1);
+        $this->dontSeeJsError();
+    }
+
+    public function waitPageLoad($timeout = 15)
+    {
+        $this->waitForJS('return document.readyState == "complete"', $timeout);
+        $this->waitAjaxLoad($timeout);
+        $this->dontSeeJsError();
+    }
+
+    public function dontSeeJsError()
+    {
+        $logs = $this->webDriver->manage()->getLog('browser');
+        foreach ($logs as $log) {
+            if ($log['level'] == 'SEVERE') {
+                throw new ModuleException($this, 'Errors in JavaScript: ' . json_encode($log));
+            }
+        }
     }
 }

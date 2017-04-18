@@ -65,8 +65,8 @@ class MagentoDataSequence extends Sequence
                 'stock_item' => ['is_in_stock' => 1, 'qty' => 1000]
             ],
             'custom_attributes' => [
-                ['attribute_code' => 'url_key', 'value' => isset($productData['sku'])
-                    ? $productData['sku'] : 'sku'.$sq],
+                ['attribute_code' => 'url_key', 'value' => isset($productData['name'])
+                    ? $productData['name'] : 'simple_product'.$sq,],
                 ['attribute_code' => 'tax_class_id', 'value' => 2],
                 ['attribute_code' => 'category_ids', 'value' => $categoryId],
             ],
