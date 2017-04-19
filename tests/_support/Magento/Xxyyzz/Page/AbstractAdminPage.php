@@ -176,5 +176,6 @@ abstract class AbstractAdminPage
     {
         $I = $this->acceptanceTester;
         $I->click(self::$pageMainActionsAdd);
+        self::waitForLoadingMaskToDisappear();
     }
 }

@@ -3,8 +3,13 @@ namespace Magento\Xxyyzz\Page;
 
 use Magento\Xxyyzz\AcceptanceTester;
 
-class AbstractAdminGridPage
+abstract class AbstractAdminGridPage
 {
+    /**
+     * Include url of current page.
+     */
+    public static $URL = '/admin/customer/index/';
+
     /**
      * Declare UI map for this page here. CSS or XPath allowed.
      */
@@ -14,6 +19,7 @@ class AbstractAdminGridPage
     public static $filtersButton       = '.data-grid-filters-action-wrap .action-default';
 
     // TODO: Add Filter selectors
+    public static $clearAllFiltersLink = '.action-clear[data-action="grid-filter-reset"]';
 
     public static $viewButton          = '.admin__data-grid-action-bookmarks .admin__action-dropdown';
     public static $viewDropDownMenu    = '.admin__data-grid-action-bookmarks .admin__action-dropdown-menu';
@@ -30,7 +36,7 @@ class AbstractAdminGridPage
     public static $columnsCancelButton = '.admin__data-grid-action-columns .admin__action-dropdown-footer-main-actions';
 
     public static $exportButton        = '.admin__data-grid-action-export';
-    public static $exportDropDownMenu  = '..admin__data-grid-action-export-menu';
+    public static $exportDropDownMenu  = '.admin__data-grid-action-export-menu';
     public static $exportLinks         = '.admin__data-grid-action-export-menu .admin__field-label';
     public static $exportCancelButton  = '.admin__data-grid-action-export-menu .action-tertiary';
     public static $exportExportButton  = '.admin__data-grid-action-export-menu .action-secondary';
@@ -56,6 +62,9 @@ class AbstractAdminGridPage
     public static $gridMainArea        = '.admin__data-grid-wrap';
     public static $gridHeaderName      = '.data-grid-th';
 
+    public static $loadingMask         = '.loading-mask';
+    public static $gridLoadingMask     = '.admin__data-grid-loading-mask';
+
     /**
      * @var AcceptanceTester
      */
@@ -70,6 +79,18 @@ class AbstractAdminGridPage
     public static function of(AcceptanceTester $I)
     {
         return new static($I);
+    }
+
+    public static function route($param)
+    {
+        return static::$URL.$param;
+    }
+
+    public function waitForLoadingMaskToDisappear()
+    {
+        $I = $this->acceptanceTester;
+        $I->waitForElementNotVisible(self::$loadingMask, 30);
+        $I->waitForElementNotVisible(self::$gridLoadingMask, 30);
     }
 
     public function enterSearchKeyword($searchKeyboard)
@@ -88,6 +109,7 @@ class AbstractAdminGridPage
     {
         self::enterSearchKeyword($searchKeyword);
         self::clickOnTheSearchButton();
+        self::waitForLoadingMaskToDisappear();
     }
 
     public function clickOnFiltersButton()
@@ -255,5 +277,22 @@ class AbstractAdminGridPage
     {
         $I = $this->acceptanceTester;
         $I->click(self::$gridHeaderName, $columnHeaderName);
+    }
+
+    public function determineIndexBasedOnThisText($keyText)
+    {
+        $I = $this->acceptanceTester;
+        $selector = "//div[contains(@class, 'data-grid-cell-content')][contains(., '" . $keyText . "')]/parent::td/parent::tr";
+        $number = $I->grabAttributeFrom($selector, 'data-repeat-index');
+        return $number;
+    }
+
+    public function clickOnActionLinkFor($keyText)
+    {
+        $I = $this->acceptanceTester;
+        $actionLinkSelector = '.data-row[data-repeat-index="' . self::determineIndexBasedOnThisText($keyText) . '"] .action-menu-item';
+
+        $I->click($actionLinkSelector);
+        self::waitForLoadingMaskToDisappear();
     }
 }

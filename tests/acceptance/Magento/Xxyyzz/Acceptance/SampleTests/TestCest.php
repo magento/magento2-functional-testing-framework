@@ -4,7 +4,7 @@ namespace Magento\Xxyyzz\Acceptance\SampleTests;
 use Magento\Xxyyzz\Step\Backend\AdminStep;
 
 /**
- * group skip
+ * @group skip
  */
 class TestCest
 {

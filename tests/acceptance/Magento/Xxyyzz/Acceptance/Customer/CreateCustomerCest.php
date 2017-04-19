@@ -2,6 +2,7 @@
 namespace Magento\Xxyyzz\Acceptance\Customer;
 
 use Magento\Xxyyzz\Page\Customer\AdminCustomerPage;
+use Magento\Xxyyzz\Page\Customer\AdminCustomerGrid;
 use Magento\Xxyyzz\Step\Backend\AdminStep;
 use Magento\Xxyyzz\Page\Cms\AdminCmsPage;
 use Magento\Xxyyzz\Page\AbstractFrontendPage;
@@ -96,32 +97,37 @@ class CreateCustomerCest
      * @Parameter(name = "AdminCustomerPage", value = "$customerPage")
      *
      * Codeception annotations
-     * @param AdminStep $I
-     * @param AdminCustomerPage $customerPage
      * @group banana
+     * @param AdminStep $I
+     * @param AdminCustomerPage $adminCustomerPage
+     * @param AdminCustomerGrid $adminCustomerGrid
      * @return void
      */
     public function createCustomerAccountTest(
         AdminStep $I,
-        AdminCustomerPage $customerPage
+        AdminCustomerPage $adminCustomerPage,
+        AdminCustomerGrid $adminCustomerGrid
     )
     {
         $I->wantTo('verify Customer account in admin');
         $customer = $I->getCustomerApiData();
 
-        $customerPage->enterFirstName($customer['firstname']);
-        $customerPage->enterLastName($customer['lastname']);
-        $customerPage->enterEmailAddress($customer['email']);
-        $customerPage->selectAssociateToWebsiteMainWebsite();
-        $customerPage->selectGroupGeneral();
-        
-        $customerPage->clickOnAdminSaveAndContinueEdit();
-        $customerPage->clickOnAccountInformationLink();
+        $adminCustomerPage->enterFirstName($customer['firstname']);
+        $adminCustomerPage->enterLastName($customer['lastname']);
+        $adminCustomerPage->enterEmailAddress($customer['email']);
+        $adminCustomerPage->selectAssociateToWebsiteMainWebsite();
+        $adminCustomerPage->selectGroupGeneral();
 
-        $customerPage->verifyFirstName($customer['firstname']);
-        $customerPage->verifyLastName($customer['lastname']);
-        $customerPage->verifyEmailAddress($customer['email']);
-        $customerPage->verifyAssociateToWebsiteMainWebsite();
-        $customerPage->verifyGroupGeneral();
+        $adminCustomerPage->clickOnAdminSaveButton();
+        $adminCustomerGrid->performSearchByKeyword($customer['email']);
+        
+        $adminCustomerGrid->clickOnActionLinkFor($customer['email']);
+        $adminCustomerPage->clickOnAccountInformationLink();
+
+        $adminCustomerPage->verifyFirstName($customer['firstname']);
+        $adminCustomerPage->verifyLastName($customer['lastname']);
+        $adminCustomerPage->verifyEmailAddress($customer['email']);
+        $adminCustomerPage->verifyAssociateToWebsiteMainWebsite();
+        $adminCustomerPage->verifyGroupGeneral();
     }
 }
