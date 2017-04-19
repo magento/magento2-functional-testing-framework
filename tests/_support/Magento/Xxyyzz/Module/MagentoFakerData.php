@@ -117,6 +117,41 @@ class MagentoFakerData extends Sequence
     }
 
     /**
+     * Get Customer Api data.
+     *
+     * @param array $additional
+     * @return array
+     */
+    public function getCustomerData(array $additional = [])
+    {
+        $faker = \Faker\Factory::create();
+        $customerData = [
+            'prefix' => $faker->title,
+            'firstname' => $faker->firstName,
+            'middlename' => $faker->firstName,
+            'lastname' => $faker->lastName,
+            'suffix' => \Faker\Provider\en_US\Person::suffix(),
+            'email' => $faker->email,
+            'dateOfBirth' => $faker->date($format = 'm/d/Y', $max = 'now'),
+            'gender' => rand(0, 1),
+            'group_id' => 1,
+            'store_id' => 1,
+            'website_id' => 1,
+            'taxVatNumber' => \Faker\Provider\at_AT\Payment::vat(),
+            'company' => $faker->company,
+            'address' => [
+                'address1' => $faker->address,
+                'address2' => $faker->address,
+                'city' => $faker->city,
+                'country' => $faker->country,
+                'state' => \Faker\Provider\en_US\Address::state(),
+                'zipCode' => $faker->postcode
+            ]
+        ];
+        return array_merge($customerData, $additional);
+    }
+
+    /**
      * Get Content Page Data.
      *
      * @return array
