@@ -6,7 +6,7 @@ use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\Exception\WebDriverException;
 
-class CategoryPage extends AbstractFrontendPage
+class StorefrontCategoryPage extends AbstractFrontendPage
 {
     /**
      * Declare UI map for this page here. CSS or XPath allowed.

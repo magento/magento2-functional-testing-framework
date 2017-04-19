@@ -13,6 +13,7 @@ class MagentoFakerData extends Sequence
      */
     public function getCategoryApiData($categoryData = [])
     {
+        $faker = \Faker\Factory::create();
         $sq = $this->getSqs();
         return [
             'parent_id' => '2',
@@ -24,18 +25,18 @@ class MagentoFakerData extends Sequence
             'custom_attributes' => [
                 ['attribute_code' => 'url_key', 'value' => isset($categoryData['name'])
                     ? $categoryData['name'] : 'category'.$sq],
-                ['attribute_code' => 'description', 'value' => 'Custom description'],
-                ['attribute_code' => 'meta_title', 'value' => ''],
-                ['attribute_code' => 'meta_keywords', 'value' => ''],
-                ['attribute_code' => 'meta_description', 'value' => ''],
+                ['attribute_code' => 'description', 'value' => $faker->text(20)],
+                ['attribute_code' => 'meta_title', 'value' => $faker->text(20)],
+                ['attribute_code' => 'meta_keywords', 'value' => $faker->text(20)],
+                ['attribute_code' => 'meta_description', 'value' => $faker->text(20)],
                 ['attribute_code' => 'display_mode', 'value' => 'PRODUCTS'],
                 ['attribute_code' => 'landing_page', 'value' => ''],
                 ['attribute_code' => 'is_anchor', 'value' => '0'],
                 ['attribute_code' => 'custom_use_parent_settings', 'value' => '0'],
                 ['attribute_code' => 'custom_apply_to_products', 'value' => '0'],
                 ['attribute_code' => 'custom_design', 'value' => ''],
-                ['attribute_code' => 'custom_design_from', 'value' => ''],
-                ['attribute_code' => 'custom_design_to', 'value' => ''],
+                ['attribute_code' => 'custom_design_from', 'value' => $faker->date($format = 'm/d/Y', $max = 'now')],
+                ['attribute_code' => 'custom_design_to', 'value' => $faker->date($format = 'm/d/Y')],
                 ['attribute_code' => 'page_layout', 'value' => ''],
             ]
         ];
@@ -50,6 +51,7 @@ class MagentoFakerData extends Sequence
      */
     public function getSimpleProductApiData($categoryId = 0, $productData = [])
     {
+        $faker = \Faker\Factory::create();
         $sq = $this->getSqs();
         return [
             'sku' => isset($productData['sku'])
@@ -58,11 +60,11 @@ class MagentoFakerData extends Sequence
                 ? $productData['name'] : 'simple_product'.$sq,
             'visibility' => 4,
             'type_id' => 'simple',
-            'price' => 17.71,
+            'price' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 999),
             'status' => 1,
             'attribute_set_id' => 4,
             'extension_attributes' => [
-                'stock_item' => ['is_in_stock' => 1, 'qty' => 1000]
+                'stock_item' => ['is_in_stock' => 1, 'qty' => $faker->randomDigit]
             ],
             'custom_attributes' => [
                 ['attribute_code' => 'url_key', 'value' => isset($productData['name'])
@@ -83,13 +85,10 @@ class MagentoFakerData extends Sequence
     {
         $faker = \Faker\Factory::create();
         $customerData = [
-            'prefix' => $faker->title,
             'firstname' => $faker->firstName,
             'middlename' => $faker->firstName,
             'lastname' => $faker->lastName,
-            'suffix' => \Faker\Provider\en_US\Person::suffix(),
             'email' => $faker->email,
-            'dateOfBirth' => $faker->date($format = 'm/d/Y', $max = 'now'),
             'gender' => rand(0, 1),
             'group_id' => 1,
             'store_id' => 1,
@@ -100,7 +99,6 @@ class MagentoFakerData extends Sequence
                     'value' => '0',
                 ],
             ],
-            'taxVatNumber' => \Faker\Provider\at_AT\Payment::vat()
         ];
         return array_merge($customerData, $additional);
     }

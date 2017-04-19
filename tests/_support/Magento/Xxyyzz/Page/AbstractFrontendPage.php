@@ -15,8 +15,8 @@ abstract class AbstractFrontendPage
      */
     public static $pageTitle                        = '.page-title';
 
+    public static $welcomeMessage                   = '.greet.welcome>span';
     public static $signInLink                       = '.authorization-link a';
-
     public static $createAccountLink                = '.header.links>li:nth-child(4)';
 
     public static $pageFooterContent                = '.footer.content';
@@ -58,5 +58,23 @@ abstract class AbstractFrontendPage
     {
         $I = $this->acceptanceTester;
         $I->see($name, self::$pageTitle);
+    }
+
+    public function clickSignInLink()
+    {
+        $I = $this->acceptanceTester;
+        $I->click(self::$signInLink);
+    }
+
+    public function clickCreateAccountLink()
+    {
+        $I = $this->acceptanceTester;
+        $I->click(self::$createAccountLink);
+    }
+
+    public function seeWelcomeMessage($msg)
+    {
+        $I = $this->acceptanceTester;
+        $I->see($msg, self::$welcomeMessage);
     }
 }

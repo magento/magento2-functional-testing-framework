@@ -3,7 +3,7 @@ namespace Magento\Xxyyzz\Page\Catalog;
 
 use Magento\Xxyyzz\Page\AbstractFrontendPage;
 
-class ProductPage extends AbstractFrontendPage
+class StorefrontProductPage extends AbstractFrontendPage
 {
     /**
      * Declare UI map for this page here. CSS or XPath allowed.

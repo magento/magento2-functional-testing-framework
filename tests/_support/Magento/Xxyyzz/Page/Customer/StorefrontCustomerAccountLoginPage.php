@@ -3,7 +3,7 @@ namespace Magento\Xxyyzz\Page\Customer;
 
 use Magento\Xxyyzz\Page\AbstractFrontendPage;
 
-class CustomerAccountLoginPage extends AbstractFrontendPage
+class StorefrontCustomerAccountLoginPage extends AbstractFrontendPage
 {
     /**
      * Include url of current page.
@@ -11,7 +11,7 @@ class CustomerAccountLoginPage extends AbstractFrontendPage
     public static $URL = '/customer/account/login/';
 
     /**
-     * Declare UI map for this page here. CSS or XPath allowed.
+     * Declare UI map for customer login page.
      */
     public static $customerLoginForm            = '#login-form';
     public static $customerEmailField           = '#email';
@@ -24,14 +24,41 @@ class CustomerAccountLoginPage extends AbstractFrontendPage
     {
         $I = $this->acceptanceTester;
         $I->amOnPage(self::$URL);
-        $I->waitForElementVisible(self::$customerLoginForm, $this->pageLoadTimeout);
+        $I->waitPageLoad();
+    }
+
+    public function fillFieldCustomerEmail($email)
+    {
+        $I = $this->acceptanceTester;
+        $I->fillField(self::$customerEmailField, $email);
+    }
+
+    public function fillFieldCustomerPassword($password)
+    {
+        $I = $this->acceptanceTester;
+        $I->fillField(self::$customerPasswordField, $password);
+    }
+
+    public function clickSignInButton()
+    {
+        $I = $this->acceptanceTester;
+        $I->click(self::$customerSignInButton);
+        $I->waitPageLoad();
+        $I->seeInCurrentUrl('customer/account');
+    }
+
+    public function clickCreateAccountButton()
+    {
+        $I = $this->acceptanceTester;
+        $I->click(self::$createNewAccountLink);
+        $I->waitPageLoad();
+        $I->seeInCurrentUrl('customer/account/create');
     }
 
     public function signInWithCredentials($email, $password)
     {
-        $I = $this->acceptanceTester;
-        $I->fillField(self::$customerEmailField, $email);
-        $I->fillField(self::$customerPasswordField, $password);
-        $I->click(self::$customerSignInButton);
+        $this->fillFieldCustomerEmail($email);
+        $this->fillFieldCustomerPassword($password);
+        $this->clickSignInButton();
     }
 }

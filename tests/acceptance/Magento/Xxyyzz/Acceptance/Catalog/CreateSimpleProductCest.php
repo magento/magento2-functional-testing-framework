@@ -4,8 +4,8 @@ namespace Magento\Xxyyzz\Acceptance\Catalog;
 use Magento\Xxyyzz\Step\Backend\AdminStep;
 use Magento\Xxyyzz\Page\Catalog\AdminProductGridPage;
 use Magento\Xxyyzz\Page\Catalog\AdminProductPage;
-use Magento\Xxyyzz\Page\Catalog\CategoryPage;
-use Magento\Xxyyzz\Page\Catalog\ProductPage;
+use Magento\Xxyyzz\Page\Catalog\StorefrontCategoryPage;
+use Magento\Xxyyzz\Page\Catalog\StorefrontProductPage;
 use Magento\Xxyyzz\Step\Catalog\Api\CategoryApiStep;
 use Yandex\Allure\Adapter\Annotation\Stories;
 use Yandex\Allure\Adapter\Annotation\Features;
@@ -109,19 +109,19 @@ class CreateSimpleProductCest
         AdminProductPage::of($I)->seeProductUrlKey(str_replace('_', '-', $this->product['url_key']));
 
         $I->wantTo('verify simple product data in frontend category page.');
-        CategoryPage::of($I)->amOnCategoryPage($this->category['url_key']);
-        CategoryPage::of($I)->seeProductLinksInPage(
+        StorefrontCategoryPage::of($I)->amOnCategoryPage($this->category['url_key']);
+        StorefrontCategoryPage::of($I)->seeProductLinksInPage(
             $this->product['name'],
             str_replace('_', '-', $this->product['url_key'])
         );
-        CategoryPage::of($I)->seeProductNameInPage($this->product['name']);
-        CategoryPage::of($I)->seeProductPriceInPage($this->product['name'], $this->product['price']);
+        StorefrontCategoryPage::of($I)->seeProductNameInPage($this->product['name']);
+        StorefrontCategoryPage::of($I)->seeProductPriceInPage($this->product['name'], $this->product['price']);
 
         $I->wantTo('verify simple product data in frontend product page.');
-        ProductPage::of($I)->amOnProductPage(str_replace('_', '-', $this->product['url_key']));
-        ProductPage::of($I)->seeProductNameInPage($this->product['name']);
-        ProductPage::of($I)->seeProductPriceInPage($this->product['price']);
-        ProductPage::of($I)->seeProductStockStatusInPage($this->product['stock_status']);
-        ProductPage::of($I)->seeProductSkuInPage($this->product['sku']);
+        StorefrontProductPage::of($I)->amOnProductPage(str_replace('_', '-', $this->product['url_key']));
+        StorefrontProductPage::of($I)->seeProductNameInPage($this->product['name']);
+        StorefrontProductPage::of($I)->seeProductPriceInPage($this->product['price']);
+        StorefrontProductPage::of($I)->seeProductStockStatusInPage($this->product['stock_status']);
+        StorefrontProductPage::of($I)->seeProductSkuInPage($this->product['sku']);
     }
 }

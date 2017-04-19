@@ -3,7 +3,7 @@ namespace Magento\Xxyyzz\Acceptance\Catalog;
 
 use Magento\Xxyyzz\Step\Backend\AdminStep;
 use Magento\Xxyyzz\Page\Catalog\AdminCategoryPage;
-use Magento\Xxyyzz\Page\Catalog\CategoryPage;
+use Magento\Xxyyzz\Page\Catalog\StorefrontCategoryPage;
 use Yandex\Allure\Adapter\Annotation\Stories;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Title;
@@ -61,7 +61,7 @@ class CreateCategoryCest
         $I->seeElement(AdminCategoryPage::$successMessage);
 
         $I->wantTo('verify created category in frontend category page.');
-        CategoryPage::of($I)->amOnCategoryPage(str_replace('_', '-', $category['custom_attributes'][0]['value']));
-        CategoryPage::of($I)->seeCategoryNameInTitleHeading($category['name']);
+        StorefrontCategoryPage::of($I)->amOnCategoryPage(str_replace('_', '-', $category['custom_attributes'][0]['value']));
+        StorefrontCategoryPage::of($I)->seeCategoryNameInTitleHeading($category['name']);
     }
 }

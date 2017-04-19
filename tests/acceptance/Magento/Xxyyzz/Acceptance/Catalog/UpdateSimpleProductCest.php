@@ -6,8 +6,8 @@ use Magento\Xxyyzz\Step\Catalog\Api\CategoryApiStep;
 use Magento\Xxyyzz\Step\Catalog\Api\ProductApiStep;
 use Magento\Xxyyzz\Page\Catalog\AdminProductGridPage;
 use Magento\Xxyyzz\Page\Catalog\AdminProductPage;
-use Magento\Xxyyzz\Page\Catalog\CategoryPage;
-use Magento\Xxyyzz\Page\Catalog\ProductPage;
+use Magento\Xxyyzz\Page\Catalog\StorefrontCategoryPage;
+use Magento\Xxyyzz\Page\Catalog\StorefrontProductPage;
 use Yandex\Allure\Adapter\Annotation\Stories;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Title;
@@ -119,14 +119,14 @@ class UpdateSimpleProductCest
         );
 
         $I->wantTo('verify simple product data in frontend category page.');
-        CategoryPage::of($I)->amOnCategoryPage($this->category['url_key']);
-        CategoryPage::of($I)->seeProductNameInPage($this->product['name'] . '-updated');
-        CategoryPage::of($I)->seeProductPriceInPage($this->product['name'] . '-updated', $this->product['price'] + 10);
+        StorefrontCategoryPage::of($I)->amOnCategoryPage($this->category['url_key']);
+        StorefrontCategoryPage::of($I)->seeProductNameInPage($this->product['name'] . '-updated');
+        StorefrontCategoryPage::of($I)->seeProductPriceInPage($this->product['name'] . '-updated', $this->product['price'] + 10);
 
         $I->wantTo('verify simple product data in frontend product page.');
-        ProductPage::of($I)->amOnProductPage(str_replace('_', '-', $this->product['url_key']));
-        ProductPage::of($I)->seeProductNameInPage($this->product['name'] . '-updated');
-        ProductPage::of($I)->seeProductPriceInPage($this->product['price'] + 10);
-        ProductPage::of($I)->seeProductSkuInPage($this->product['sku'] . '-updated');
+        StorefrontProductPage::of($I)->amOnProductPage(str_replace('_', '-', $this->product['url_key']));
+        StorefrontProductPage::of($I)->seeProductNameInPage($this->product['name'] . '-updated');
+        StorefrontProductPage::of($I)->seeProductPriceInPage($this->product['price'] + 10);
+        StorefrontProductPage::of($I)->seeProductSkuInPage($this->product['sku'] . '-updated');
     }
 }

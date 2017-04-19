@@ -21,7 +21,7 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
  * @Features({"Pages"})
  *
  * Codeception annotations
- * @group content
+ * @group cms
  * @group pages
  * @env chrome
  * @env firefox

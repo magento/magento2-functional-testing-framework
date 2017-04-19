@@ -3,7 +3,7 @@ namespace Magento\Xxyyzz\Page\Backend;
 
 use Magento\Xxyyzz\Page\AbstractAdminPage;
 
-class SideNavigation extends AbstractAdminPage
+class AdminSideNavigation extends AbstractAdminPage
 {
     /**
      * Declare UI map for this page here. CSS or XPath allowed.
