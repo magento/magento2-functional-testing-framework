@@ -1,9 +1,9 @@
 <?php
-namespace Magento\Xxyyzz\Page\Content\Storefront;
+namespace Magento\Xxyyzz\Page\Cms;
 
 use Magento\Xxyyzz\Page\AbstractFrontendPage;
 
-class StorefrontCMSPage extends AbstractFrontendPage
+class StorefrontCmsPage extends AbstractFrontendPage
 {
     /**
      * Declare UI map for this page here. CSS or XPath allowed.

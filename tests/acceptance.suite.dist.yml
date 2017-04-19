@@ -16,7 +16,7 @@ modules:
             password: "%MAGENTO_ADMIN_PASSWORD%"
             depends: PhpBrowser
             part: Json
-        - \Magento\Xxyyzz\Module\MagentoDataSequence
+        - \Magento\Xxyyzz\Module\MagentoFakerData
         - Asserts
     config:
         \Magento\Xxyyzz\Module\MagentoWebDriver:

@@ -1,7 +1,7 @@
 <?php
 namespace Magento\Xxyyzz\Acceptance\User;
 
-use Magento\Xxyyzz\Page\Backend\Admin\AdminLogin;
+use Magento\Xxyyzz\Page\Backend\AdminLogin;
 use Magento\Xxyyzz\Step\Backend\AdminStep;
 use Yandex\Allure\Adapter\Annotation\Title;
 use Yandex\Allure\Adapter\Annotation\Features;

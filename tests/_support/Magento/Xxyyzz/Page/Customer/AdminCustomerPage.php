@@ -1,9 +1,9 @@
 <?php
-namespace Magento\Xxyyzz\Page\Customer\Admin;
+namespace Magento\Xxyyzz\Page\Customer;
 
 use Magento\Xxyyzz\Page\AbstractAdminPage;
 
-class CustomerPage extends AbstractAdminPage
+class AdminCustomerPage extends AbstractAdminPage
 {
     /**
      * Include url of current page.

@@ -3,15 +3,15 @@ namespace Magento\Xxyyzz\Module;
 
 use Codeception\Module\Sequence;
 
-class MagentoDataSequence extends Sequence
+class MagentoFakerData extends Sequence
 {
     /**
-     * Get category data.
+     * Get category api data.
      *
      * @param array $categoryData
      * @return array
      */
-    public function getCategoryData($categoryData = [])
+    public function getCategoryApiData($categoryData = [])
     {
         $sq = $this->getSqs();
         return [
@@ -42,13 +42,13 @@ class MagentoDataSequence extends Sequence
     }
 
     /**
-     * Get simple product data.
+     * Get simple product api data.
      *
      * @param integer $categoryId
      * @param array $productData
      * @return array
      */
-    public function getSimpleProductData($categoryId = 0, $productData = [])
+    public function getSimpleProductApiData($categoryId = 0, $productData = [])
     {
         $sq = $this->getSqs();
         return [
@@ -74,12 +74,12 @@ class MagentoDataSequence extends Sequence
     }
 
     /**
-     * Get Customer Data.
+     * Get Customer Api data.
      *
      * @param array $additional
      * @return array
      */
-    public function getCustomerData(array $additional = [])
+    public function getCustomerApiData(array $additional = [])
     {
         $faker = \Faker\Factory::create();
         $customerData = [
@@ -111,9 +111,9 @@ class MagentoDataSequence extends Sequence
      * @param string $password
      * @return array
      */
-    public function getCustomerDataWithPassword($password = '')
+    public function getCustomerApiDataWithPassword($password = '')
     {
-        return ['customer' => self::getCustomerData(), 'password' => ($password !== '') ? $password : '123123qW'];
+        return ['customer' => self::getCustomerApiData(), 'password' => ($password !== '') ? $password : '123123qW'];
     }
 
     /**

@@ -2,8 +2,8 @@
 namespace Magento\Xxyyzz\Acceptance\Catalog;
 
 use Magento\Xxyyzz\Step\Backend\AdminStep;
-use Magento\Xxyyzz\Page\Catalog\Admin\AdminProductGridPage;
-use Magento\Xxyyzz\Page\Catalog\Admin\AdminProductPage;
+use Magento\Xxyyzz\Page\Catalog\AdminProductGridPage;
+use Magento\Xxyyzz\Page\Catalog\AdminProductPage;
 use Magento\Xxyyzz\Page\Catalog\CategoryPage;
 use Magento\Xxyyzz\Page\Catalog\ProductPage;
 use Magento\Xxyyzz\Step\Catalog\Api\CategoryApiStep;
@@ -40,11 +40,11 @@ class CreateSimpleProductCest
     public function _before(AdminStep $I, CategoryApiStep $api)
     {
         $I->loginAsAdmin();
-        $this->category = $I->getCategoryData();
+        $this->category = $I->getCategoryApiData();
         $api->amAdminTokenAuthenticated();
         $this->category = array_merge($this->category, ['id' => $api->createCategory(['category' => $this->category])]);
         $this->category['url_key'] = $this->category['custom_attributes'][0]['value'];
-        $this->product = $I->getSimpleProductData();
+        $this->product = $I->getSimpleProductApiData();
         if ($this->product['extension_attributes']['stock_item']['is_in_stock'] !== 0) {
             $this->product['stock_status'] = 'In Stock';
             $this->product['qty'] = $this->product['extension_attributes']['stock_item']['qty'];

@@ -1,7 +1,7 @@
 <?php
 namespace Magento\Xxyyzz\Acceptance\Backend;
 
-use Magento\Xxyyzz\Page\Backend\Admin\SideNavigation as SideNav;
+use Magento\Xxyyzz\Page\Backend\SideNavigation as SideNav;
 use Magento\Xxyyzz\Step\Backend\AdminStep;
 
 /**

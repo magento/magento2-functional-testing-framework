@@ -4,8 +4,8 @@ namespace Magento\Xxyyzz\Acceptance\Catalog;
 use Magento\Xxyyzz\Step\Backend\AdminStep;
 use Magento\Xxyyzz\Step\Catalog\Api\CategoryApiStep;
 use Magento\Xxyyzz\Step\Catalog\Api\ProductApiStep;
-use Magento\Xxyyzz\Page\Catalog\Admin\AdminProductGridPage;
-use Magento\Xxyyzz\Page\Catalog\Admin\AdminProductPage;
+use Magento\Xxyyzz\Page\Catalog\AdminProductGridPage;
+use Magento\Xxyyzz\Page\Catalog\AdminProductPage;
 use Magento\Xxyyzz\Page\Catalog\CategoryPage;
 use Magento\Xxyyzz\Page\Catalog\ProductPage;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -42,14 +42,14 @@ class UpdateSimpleProductCest
     public function _before(AdminStep $I, CategoryApiStep $categoryApi, ProductApiStep $productApi)
     {
         $I->loginAsAdmin();
-        $this->category = $I->getCategoryData();
+        $this->category = $I->getCategoryApiData();
         $categoryApi->amAdminTokenAuthenticated();
         $this->category = array_merge(
             $this->category,
             ['id' => $categoryApi->createCategory(['category' => $this->category])]
         );
         $this->category['url_key'] = $this->category['custom_attributes'][0]['value'];
-        $this->product = $I->getSimpleProductData();
+        $this->product = $I->getSimpleProductApiData();
         $this->product['custom_attributes'][2]['value'] = $this->category['id'];
         $productApi->amAdminTokenAuthenticated();
         $this->product = array_merge(

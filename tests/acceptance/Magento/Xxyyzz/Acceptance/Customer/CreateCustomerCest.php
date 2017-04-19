@@ -1,9 +1,9 @@
 <?php
 namespace Magento\Xxyyzz\Acceptance\Customer;
 
-use Magento\Xxyyzz\Page\Customer\Admin\CustomerPage;
+use Magento\Xxyyzz\Page\Customer\AdminCustomerPage;
 use Magento\Xxyyzz\Step\Backend\AdminStep;
-use Magento\Xxyyzz\Page\Content\Admin\AdminCMSPage;
+use Magento\Xxyyzz\Page\Cms\AdminCmsPage;
 use Magento\Xxyyzz\Page\AbstractFrontendPage;
 use Yandex\Allure\Adapter\Annotation\Stories;
 use Yandex\Allure\Adapter\Annotation\Features;
@@ -30,7 +30,7 @@ class CreateCustomerCest
 {
     public function _before(
         AdminStep $I,
-        CustomerPage $customerPage
+        AdminCustomerPage $customerPage
     )
     {
         $I->am('an Admin');
@@ -45,20 +45,20 @@ class CreateCustomerCest
      * @Title("Enter text into every field on the Customer - Page.")
      * @Description("Enter text into ALL fields and verify the contents of the fields.")
      * @Parameter(name = "AdminStep", value = "$I")
-     * @Parameter(name = "CustomerPage", value = "$customerPage")
+     * @Parameter(name = "AdminCustomerPage", value = "$customerPage")
      *
      * Codeception annotations
      * @param AdminStep $I
-     * @param CustomerPage $customerPage
+     * @param AdminCustomerPage $customerPage
      * @return void
      */
     public function verifyThatEachFieldOnTheCustomerAddPageWorks(
         AdminStep $I,
-        CustomerPage $customerPage
+        AdminCustomerPage $customerPage
     )
     {
         $I->wantTo('verify that I can use all of the fields on the page.');
-        $customerData = $I->getCustomerData();
+        $customerData = $I->getCustomerApiData();
 
         $customerPage->selectAssociateToWebsiteMainWebsite();
         $customerPage->selectGroupWholesale();
@@ -93,23 +93,21 @@ class CreateCustomerCest
      * @Description("Enter text into the REQUIRED fields, SAVE the content and VERIFY it on the Admin page.")
      * @Severity(level = SeverityLevel::CRITICAL)
      * @Parameter(name = "AdminStep", value = "$I")
-     * @Parameter(name = "AdminCMSPage", value = "$adminCMSPage")
-     * @Parameter(name = "CustomerPage", value = "$customerPage")
+     * @Parameter(name = "AdminCustomerPage", value = "$customerPage")
      *
      * Codeception annotations
      * @param AdminStep $I
-     * @param AdminCMSPage $adminCMSPage
-     * @param CustomerPage $customerPage
+     * @param AdminCustomerPage $customerPage
      * @group banana
      * @return void
      */
     public function createCustomerAccountTest(
         AdminStep $I,
-        CustomerPage $customerPage
+        AdminCustomerPage $customerPage
     )
     {
         $I->wantTo('verify Customer account in admin');
-        $customer = $I->getCustomerData();
+        $customer = $I->getCustomerApiData();
 
         $customerPage->enterFirstName($customer['firstname']);
         $customerPage->enterLastName($customer['lastname']);

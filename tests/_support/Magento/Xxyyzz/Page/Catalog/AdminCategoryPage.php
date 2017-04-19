@@ -1,5 +1,5 @@
 <?php
-namespace Magento\Xxyyzz\Page\Catalog\Admin;
+namespace Magento\Xxyyzz\Page\Catalog;
 
 use Magento\Xxyyzz\Page\AbstractAdminPage;
 

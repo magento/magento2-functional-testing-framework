@@ -2,7 +2,7 @@
 namespace Magento\Xxyyzz\Acceptance\Catalog;
 
 use Magento\Xxyyzz\Step\Backend\AdminStep;
-use Magento\Xxyyzz\Page\Catalog\Admin\AdminCategoryPage;
+use Magento\Xxyyzz\Page\Catalog\AdminCategoryPage;
 use Magento\Xxyyzz\Page\Catalog\CategoryPage;
 use Yandex\Allure\Adapter\Annotation\Stories;
 use Yandex\Allure\Adapter\Annotation\Features;
@@ -52,7 +52,7 @@ class CreateCategoryCest
     public function createCategoryTest(AdminStep $I)
     {
         $I->wantTo('create sub category with required fields in admin Category page.');
-        $category = $I->getCategoryData();
+        $category = $I->getCategoryApiData();
         AdminCategoryPage::of($I)->amOnAdminCategoryPage();
         AdminCategoryPage::of($I)->addSubCategory();
         AdminCategoryPage::of($I)->fillFieldCategoryName($category['name']);

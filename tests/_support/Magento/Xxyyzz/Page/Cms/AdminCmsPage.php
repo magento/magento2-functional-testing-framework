@@ -1,9 +1,9 @@
 <?php
-namespace Magento\Xxyyzz\Page\Content\Admin;
+namespace Magento\Xxyyzz\Page\Cms;
 
 use Magento\Xxyyzz\Page\AbstractAdminPage;
 
-class AdminCMSPage extends AbstractAdminPage
+class AdminCmsPage extends AbstractAdminPage
 {
     /**
      * Include url of current page.
@@ -47,7 +47,7 @@ class AdminCMSPage extends AbstractAdminPage
     public static $newThemeButton           = '.admin__control-select[name="custom_theme"]';
     public static $newLayoutButton          = '.admin__control-select[name="custom_root_template"]';
 
-    public function amOnAdminCMSPage($param = '')
+    public function amOnAdminCmsPage($param = '')
     {
         $I = $this->acceptanceTester;
         $I->amOnPage(self::route($param));
