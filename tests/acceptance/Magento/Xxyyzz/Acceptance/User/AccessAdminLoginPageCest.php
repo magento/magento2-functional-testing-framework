@@ -2,15 +2,40 @@
 namespace Magento\Xxyyzz\Acceptance\User;
 
 use Magento\Xxyyzz\Step\Backend\AdminStep;
+use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
+use Yandex\Allure\Adapter\Annotation\Title;
+use Yandex\Allure\Adapter\Annotation\Description;
+use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
+use Yandex\Allure\Adapter\Model\SeverityLevel;
 
 /**
+ * Class LogoutAfterLoginCest
+ *
+ * Allure annotations
+ * @Features({"Admin Login"})
+ * @Stories({"Access Admin Login Page"})
+ *
+ * Codeception annotations
  * @env chrome
  * @env firefox
  * @env phantomjs
- * @group smoke
  */
 class AccessAdminLoginPageCest
 {
+    /**
+     * Allure annotations
+     * @Title("You should be able to access the Admin Login Page")
+     * @Description("You should land on the Admin Login Page when you attempt to access it.")
+     * @Severity(level = SeverityLevel::CRITICAL)
+     * @TestCaseId("")
+     * @Parameter(name = "AdminStep", value = "$I")
+     *
+     * Codeception annotations
+     * @param AdminStep $I
+     * @return void
+     */
     public function shouldBeAbleToAccessTheAdminLoginPage(AdminStep $I)
     {
         $I->am('an Admin');

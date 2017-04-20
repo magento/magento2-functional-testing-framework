@@ -7,20 +7,27 @@ use Magento\Xxyyzz\Page\Catalog\AdminProductPage;
 use Magento\Xxyyzz\Page\Catalog\StorefrontCategoryPage;
 use Magento\Xxyyzz\Page\Catalog\StorefrontProductPage;
 use Magento\Xxyyzz\Step\Catalog\Api\CategoryApiStep;
-use Yandex\Allure\Adapter\Annotation\Stories;
 use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
 use Yandex\Allure\Adapter\Annotation\Title;
 use Yandex\Allure\Adapter\Annotation\Description;
-use Yandex\Allure\Adapter\Annotation\Severity;
 use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
 use Yandex\Allure\Adapter\Model\SeverityLevel;
 
 /**
  * Class CreateSimpleProductCest
- * @Stories({"Create simple product"})
- * @Features({"Create simple product"})
- * @Title("Create simple product with required fields")
- * @Description("Create simple product with required fields")
+ *
+ * Allure annotations
+ * @Features({"Catalog"})
+ * @Stories({"Create a basic Product"})
+ *
+ * Codeception annotations
+ * @group catalog
+ * @group add
+ * @env chrome
+ * @env firefox
+ * @env phantomjs
  */
 class CreateSimpleProductCest
 {
@@ -34,9 +41,6 @@ class CreateSimpleProductCest
      */
     protected $product;
 
-    /**
-     * @param AdminStep $I
-     */
     public function _before(AdminStep $I, CategoryApiStep $api)
     {
         $I->loginAsAdmin();
@@ -60,19 +64,14 @@ class CreateSimpleProductCest
     }
 
     /**
-     * Create simple product in admin.
-     *
      * Allure annotations
-     * @Description("Method Description: Create simple product with required fields")
+     * @Title("Create a basic Product and verify on the Storefront")
+     * @Description("Create a basic Product in the Admin and verify the content on the Storefront.")
      * @Severity(level = SeverityLevel::CRITICAL)
+     * @TestCaseId("")
      * @Parameter(name = "Admin", value = "$I")
      *
      * Codeception annotations
-     * @group catalog
-     * @env chrome
-     * @env firefox
-     * @env phantomjs
-     *
      * @param AdminStep $I
      * @return void
      */

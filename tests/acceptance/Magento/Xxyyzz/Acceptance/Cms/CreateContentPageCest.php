@@ -2,23 +2,25 @@
 namespace Magento\Xxyyzz\Acceptance\Cms;
 
 use Magento\Xxyyzz\Page\Cms\StorefrontCmsPage;
+use Magento\Xxyyzz\Page\Cms\AdminCmsGrid;
 use Magento\Xxyyzz\Step\Backend\AdminStep;
 use Magento\Xxyyzz\Page\Cms\AdminCmsPage;
-use Magento\Xxyyzz\Page\AbstractFrontendPage;
-use Yandex\Allure\Adapter\Annotation\Stories;
 use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
 use Yandex\Allure\Adapter\Annotation\Title;
 use Yandex\Allure\Adapter\Annotation\Description;
-use Yandex\Allure\Adapter\Annotation\Severity;
 use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
 use Yandex\Allure\Adapter\Model\SeverityLevel;
 
 /**
  * Class CreateContentPageCest
  *
  * Allure annotations
- * @Stories({"Content - Page"})
- * @Features({"Pages"})
+ * @Features({"Content"})
+ * @Stories({"Exercise all Content Page fields", "Create a basic Content Page"})
+ * @Title("Exercise all fields and create basic Content Page")
+ * @Description("Attempt to enter Text into all fields and then create a basic Content Page.")
  *
  * Codeception annotations
  * @group cms
@@ -48,12 +50,15 @@ class CreateContentPageCest
 
     /**
      * Allure annotations
-     * @Title("Enter text into every field on the Content - Page.")
-     * @Description("Enter text into ALL fields and verify the contents of the fields.")
+     * @Title("Enter text into every field on the ADD Content Page.")
+     * @Description("Enter text into ALL fields on the ADD Content Page and verify the content of the fields.")
+     * @Severity(level = SeverityLevel::NORMAL)
+     * @TestCaseId("")
      * @Parameter(name = "AdminStep", value = "$I")
      * @Parameter(name = "AdminCmsPage", value = "$adminCmsPage")
      *
      * Codeception annotations
+     * @group fields
      * @param AdminStep $I
      * @param AdminCmsPage $adminCmsPage
      * @return void
@@ -116,40 +121,57 @@ class CreateContentPageCest
 
     /**
      * Allure annotations
-     * @Title("Create a new Content - Page using the REQUIRED fields only.")
+     * @Title("Create a basic Content Page")
      * @Description("Enter text into the REQUIRED fields, SAVE the content and VERIFY it on the Storefront.")
      * @Severity(level = SeverityLevel::CRITICAL)
+     * @TestCaseId("")
      * @Parameter(name = "AdminStep", value = "$I")
      * @Parameter(name = "AdminCmsPage", value = "$adminCmsPage")
      * @Parameter(name = "StorefrontCmsPage", value = "$storefrontCmsPage")
      *
      * Codeception annotations
+     * @group add
      * @param AdminStep $I
+     * @param AdminCmsGrid $adminCmsGrid
      * @param AdminCmsPage $adminCmsPage
      * @param StorefrontCmsPage $storefrontCmsPage
      * @return void
      */
     public function createContentPageTest(
         AdminStep $I,
+        AdminCmsGrid $adminCmsGrid,
         AdminCmsPage $adminCmsPage,
         StorefrontCmsPage $storefrontCmsPage
-    ) 
+    )
     {
         $I->wantTo('verify content page in admin');
-        $page = $I->getContentPage();
+        $pageData = $I->getContentPage();
 
         $adminCmsPage->clickOnPageContent();
-        $adminCmsPage->enterPageTitle($page['pageTitle']);
-        $adminCmsPage->enterPageContentHeading($page['contentHeading']);
-        $adminCmsPage->enterPageContentBody($page['contentBody']);
+        $adminCmsPage->enterPageTitle($pageData['pageTitle']);
+        $adminCmsPage->enterPageContentHeading($pageData['contentHeading']);
+        $adminCmsPage->enterPageContentBody($pageData['contentBody']);
+
         $adminCmsPage->clickOnPageSearchEngineOptimisation();
-        $adminCmsPage->enterUrlKey($page['urlKey']);
+        $adminCmsPage->enterUrlKey($pageData['urlKey']);
 
         $adminCmsPage->savePage();
         $adminCmsPage->seeSaveSuccessMessage();
-        
-        $I->openNewTabGoToVerify($page['urlKey']);
-        $storefrontCmsPage->verifyPageContentTitle($page['contentHeading']);
-        $storefrontCmsPage->verifyPageContentBody($page['contentBody']);
+
+        $I->openNewTabGoToVerify($pageData['urlKey']);
+        $storefrontCmsPage->verifyPageContentTitle($pageData['contentHeading']);
+        $storefrontCmsPage->verifyPageContentBody($pageData['contentBody']);
+        $I->closeNewTab();
+
+        $adminCmsGrid->performSearchByKeyword($pageData['urlKey']);
+        $adminCmsGrid->clickOnActionEditFor($pageData['urlKey']);
+        $adminCmsPage->clickOnPageContent();
+        $adminCmsPage->clickOnPageSearchEngineOptimisation();
+
+        $adminCmsPage->verifyPageTitle($pageData['pageTitle']);
+
+        $adminCmsPage->verifyPageContentHeading($pageData['contentHeading']);
+        $adminCmsPage->verifyPageContentBody($pageData['contentBody']);
+        $adminCmsPage->verifyUrlKey($pageData['urlKey']);
     }
 }

@@ -5,24 +5,25 @@ use Magento\Xxyyzz\Page\Customer\AdminCustomerPage;
 use Magento\Xxyyzz\Page\Customer\AdminCustomerGrid;
 use Magento\Xxyyzz\Step\Backend\AdminStep;
 use Magento\Xxyyzz\Page\Cms\AdminCmsPage;
-use Magento\Xxyyzz\Page\AbstractFrontendPage;
-use Yandex\Allure\Adapter\Annotation\Stories;
 use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
 use Yandex\Allure\Adapter\Annotation\Title;
 use Yandex\Allure\Adapter\Annotation\Description;
-use Yandex\Allure\Adapter\Annotation\Severity;
 use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
 use Yandex\Allure\Adapter\Model\SeverityLevel;
 
 /**
  * Class CreateCustomerCest
  *
  * Allure annotations
- * @Stories({"Customers - All Customers"})
- * @Features({"Customers"})
+ * @Features({"Customer"})
+ * @Stories({"Exercise all Customer fields", "Create a basic Customer", "Create a basic Customer with an Address"})
+ * @Title("Exercise all fields, create basic Customer and basic Customer with an Address")
+ * @Description("Attempt to enter Text into all fields, create a basic Customer and create a basic Customer with an Address.")
  *
  * Codeception annotations
- * @group customers
+ * @group customer
  * @env chrome
  * @env firefox
  * @env phantomjs
@@ -43,12 +44,15 @@ class CreateCustomerCest
 
     /**
      * Allure annotations
-     * @Title("Enter text into every field on the Customer - Page.")
-     * @Description("Enter text into ALL fields and verify the contents of the fields.")
+     * @Title("Enter text into every field on the ADD Customer page.")
+     * @Description("Enter text into ALL fields on the ADD Customer page and verify the contents of the fields.")
+     * @Severity(level = SeverityLevel::NORMAL)
+     * @TestCaseId("")
      * @Parameter(name = "AdminStep", value = "$I")
      * @Parameter(name = "AdminCustomerPage", value = "$customerPage")
      *
      * Codeception annotations
+     * @group fields
      * @param AdminStep $I
      * @param AdminCustomerPage $customerPage
      * @return void
@@ -59,7 +63,7 @@ class CreateCustomerCest
     )
     {
         $I->wantTo('verify that I can use all of the fields on the page.');
-        $customerData = $I->getCustomerApiData();
+        $customerData = $I->getCustomerData();
 
         $customerPage->selectAssociateToWebsiteMainWebsite();
         $customerPage->selectGroupWholesale();
@@ -93,24 +97,26 @@ class CreateCustomerCest
      * @Title("Create a new Customer account using the REQUIRED fields only.")
      * @Description("Enter text into the REQUIRED fields, SAVE the content and VERIFY it on the Admin page.")
      * @Severity(level = SeverityLevel::CRITICAL)
+     * @TestCaseId("")
      * @Parameter(name = "AdminStep", value = "$I")
-     * @Parameter(name = "AdminCustomerPage", value = "$customerPage")
+     * @Parameter(name = "AdminCustomerPage", value = "$adminCustomerPage")
+     * @Parameter(name = "AdminCustomerGrid", value = "$adminCustomerGrid")
      *
      * Codeception annotations
-     * @group banana
+     * @group add
      * @param AdminStep $I
      * @param AdminCustomerPage $adminCustomerPage
      * @param AdminCustomerGrid $adminCustomerGrid
      * @return void
      */
-    public function createCustomerAccountTest(
+    public function createBasicCustomerAccountTest(
         AdminStep $I,
         AdminCustomerPage $adminCustomerPage,
         AdminCustomerGrid $adminCustomerGrid
     )
     {
-        $I->wantTo('verify Customer account in admin');
-        $customer = $I->getCustomerApiData();
+        $I->wantTo('verify basic Customer creation in admin');
+        $customer = $I->getCustomerData();
 
         $adminCustomerPage->enterFirstName($customer['firstname']);
         $adminCustomerPage->enterLastName($customer['lastname']);
@@ -120,7 +126,7 @@ class CreateCustomerCest
 
         $adminCustomerPage->clickOnAdminSaveButton();
         $adminCustomerGrid->performSearchByKeyword($customer['email']);
-        
+
         $adminCustomerGrid->clickOnActionLinkFor($customer['email']);
         $adminCustomerPage->clickOnAccountInformationLink();
 
@@ -129,5 +135,65 @@ class CreateCustomerCest
         $adminCustomerPage->verifyEmailAddress($customer['email']);
         $adminCustomerPage->verifyAssociateToWebsiteMainWebsite();
         $adminCustomerPage->verifyGroupGeneral();
+    }
+
+    /**
+     * Allure annotations
+     * @Title("Create a new Customer account using the REQUIRED fields with an Address.")
+     * @Description("Enter text into the REQUIRED fields, SAVE the content and VERIFY it on the Admin page.")
+     * @Severity(level = SeverityLevel::CRITICAL)
+     * @TestCaseId("")
+     * @Parameter(name = "AdminStep", value = "$I")
+     * @Parameter(name = "AdminCustomerPage", value = "$adminCustomerPage")
+     * @Parameter(name = "AdminCustomerGrid", value = "$adminCustomerGrid")
+     *
+     * Codeception annotations
+     * @group skip
+     * @group add
+     * @param AdminStep $I
+     * @param AdminCustomerPage $adminCustomerPage
+     * @param AdminCustomerGrid $adminCustomerGrid
+     * @return void
+     */
+    public function createBasicCustomerAccountWithAddressTest(
+        AdminStep $I,
+        AdminCustomerPage $adminCustomerPage,
+        AdminCustomerGrid $adminCustomerGrid
+    )
+    {
+        $I->wantTo('verify basic Customer creation in admin');
+        $customer = $I->getCustomerData();
+
+        $adminCustomerPage->enterFirstName($customer['firstname']);
+        $adminCustomerPage->enterLastName($customer['lastname']);
+        $adminCustomerPage->enterEmailAddress($customer['email']);
+        $adminCustomerPage->selectAssociateToWebsiteMainWebsite();
+        $adminCustomerPage->selectGroupGeneral();
+        
+        $adminCustomerPage->clickOnAddressesLink();
+        $adminCustomerPage->clickOnAddNewAddressButton();
+        
+        $adminCustomerPage->enterAddAddressPrefix($customer['prefix']);
+        $adminCustomerPage->enterAddAddressFirstName($customer['firstname']);
+        $adminCustomerPage->enterAddAddressMiddleName($customer['middlename']);
+        $adminCustomerPage->enterAddAddressLastName($customer['lastname']);
+        $adminCustomerPage->enterAddAddressSuffix($customer['suffix']);
+        $adminCustomerPage->enterAddAddressCompany($customer['company']);
+        $adminCustomerPage->enterAddAddressAddress1($customer['address']['address1']);
+        $adminCustomerPage->enterAddAddressAddress2($customer['address']['address2']);
+        $adminCustomerPage->enterAddAddressCity($customer['address']['city']);
+        $adminCustomerPage->enterAddAddressCountry($customer['address']['country']);
+        $adminCustomerPage->enterAddAddressStateProvince($customer['address']['state']);
+        $adminCustomerPage->enterAddAddressZipPostalCode($customer['address']['zipCode']);
+        $adminCustomerPage->enterAddAddressPhoneNumber($customer['phoneNumber']);
+        $adminCustomerPage->enterAddAddressVatNumber($customer['taxVatNumber']);
+
+        $adminCustomerPage->clickOnAdminSaveButton();
+        $adminCustomerGrid->performSearchByKeyword($customer['email']);
+
+        $adminCustomerGrid->clickOnActionLinkFor($customer['email']);
+        $adminCustomerPage->clickOnAccountInformationLink();
+
+        
     }
 }

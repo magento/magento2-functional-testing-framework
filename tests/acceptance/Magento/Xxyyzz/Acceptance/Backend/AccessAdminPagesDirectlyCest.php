@@ -2,9 +2,30 @@
 namespace Magento\Xxyyzz\Acceptance\Backend;
 
 use Magento\Xxyyzz\Step\Backend\AdminStep;
+use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
+use Yandex\Allure\Adapter\Annotation\Title;
+use Yandex\Allure\Adapter\Annotation\Description;
+use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
+use Yandex\Allure\Adapter\Model\SeverityLevel;
 
 /**
+ * Class AccessAdminPagesDirectlyCest
+ *
+ * Allure annotations
+ * @Features({"Login"})
+ * @Stories({"Direct Admin Access"})
+ * @Title("Access each Admin page directly")
+ * @Description("Attempt to access all Main Admin pages directly after logging in as an Admin.")
+ *
+ * Codeception annotations
  * @group skip
+ * @group slow
+ * @group admin-direct-access
+ * @env chrome
+ * @env firefox
+ * @env phantomjs
  */
 class AccessAdminPagesDirectlyCest
 {
@@ -14,10 +35,14 @@ class AccessAdminPagesDirectlyCest
     }
 
     /**
-     * @env chrome
-     * @env firefox
-     * @env phantomjs
-     * @group slow
+     * Allure annotations
+     * @Severity(level = SeverityLevel::CRITICAL)
+     * @Parameter(name = "AdminStep", value = "$I")
+     * @TestCaseId("")
+     *
+     * Codeception annotations
+     * @param AdminStep $I
+     * @return void
      */
     public function shouldBeAbleToAccessEachAdminPageDirectly(AdminStep $I)
     {

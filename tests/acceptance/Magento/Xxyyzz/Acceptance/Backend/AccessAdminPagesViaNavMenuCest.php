@@ -3,9 +3,29 @@ namespace Magento\Xxyyzz\Acceptance\Backend;
 
 use Magento\Xxyyzz\Page\Backend\AdminSideNavigation as SideNav;
 use Magento\Xxyyzz\Step\Backend\AdminStep;
+use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
+use Yandex\Allure\Adapter\Annotation\Title;
+use Yandex\Allure\Adapter\Annotation\Description;
+use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
+use Yandex\Allure\Adapter\Model\SeverityLevel;
 
 /**
+ * Class AccessAdminPagesViaNavMenuCest
+ * 
+ * Allure annotations
+ * @Features({"Admin Nav Menu"})
+ * @Stories({"Access Admin pages via the Admin Nav Menu"})
+ * @Title("Access each Admin page via Nav Menu")
+ * @Description("Attempt to access all Main Admin pages using the Nav Menu after logging in as an Admin.")
+ *
+ * Codeception annotations
  * @group skip
+ * @group slow
+ * @group nav-menu-access
+ * @env chrome
+ * @env firefox
  */
 class AccessAdminPagesViaNavMenuCest
 {
@@ -14,25 +34,41 @@ class AccessAdminPagesViaNavMenuCest
         $I->loginAsAdmin();
     }
 
-    // Dashboard Menu Test
     /**
-     * @env chrome
-     * @env firefox
-     * @group slow
+     * Allure annotations
+     * @Title("DASHBOARD Menu Test")
+     * @Description("Attempt to access the DASHBOARD via the Nav Menu.")
+     * @Severity(level = SeverityLevel::CRITICAL)
+     * @TestCaseId("")
+     * @Parameter(name = "AdminStep", value = "$I")
+     * @Parameter(name = "SideNav", value = "$sideNavMenu")
+     *
+     * Codeception annotations
+     * @param AdminStep $I
+     * @param SideNav $sideNavMenu
+     * @return void
      */
     public function shouldLandOnTheDashboardPage(AdminStep $I, SideNav $sideNavMenu)
     {
-        $I->wantTo('see if I can access the DASHBOARD Page using the Side Nav Menus');
+        $I->wantTo('see if I can access the DASHBOARD Page using the Side Nav Menu.');
         $I->goToRandomAdminPage();
         $sideNavMenu->clickOnDashboardInTheSideNavMenu();
         $I->shouldBeOnTheAdminDashboardPage();
     }
 
-    // Sales Menu Tests
     /**
-     * @env chrome
-     * @env firefox
-     * @group slow
+     * Allure annotations
+     * @Title("SALES Menu Tests")
+     * @Description("Attempt to access all of the SALES pages using the Side Nav Menu.")
+     * @Severity(level = SeverityLevel::CRITICAL)
+     * @TestCaseId("")
+     * @Parameter(name = "AdminStep", value = "$I")
+     * @Parameter(name = "SideNav", value = "$sideNavMenu")
+     *
+     * Codeception annotations
+     * @param AdminStep $I
+     * @param SideNav $sideNavMenu
+     * @return void
      */
     public function shouldLandOnEachOfTheSalesPages(AdminStep $I, SideNav $sideNavMenu)
     {
@@ -62,15 +98,23 @@ class AccessAdminPagesViaNavMenuCest
         $I->shouldBeOnTheAdminSalesTransactionsPage();
     }
 
-    // Products Menu Tests
     /**
-     * @env chrome
-     * @env firefox
-     * @group slow
+     * Allure annotations
+     * @Title("PRODUCT Menu Tests")
+     * @Description("Attempt to access all of the PRODUCT pages using the Side Nav Menu.")
+     * @Severity(level = SeverityLevel::CRITICAL)
+     * @TestCaseId("")
+     * @Parameter(name = "AdminStep", value = "$I")
+     * @Parameter(name = "SideNav", value = "$sideNavMenu")
+     *
+     * Codeception annotations
+     * @param AdminStep $I
+     * @param SideNav $sideNavMenu
+     * @return void
      */
     public function shouldLandOnEachOfTheProductsPages(AdminStep $I, SideNav $sideNavMenu)
     {
-        $I->wantTo('see if I can access each of the PRODUCTS Admin Pages using the Side Nav Menus');
+        $I->wantTo('see if I can access each of the PRODUCT Admin Pages using the Side Nav Menus');
         $sideNavMenu->clickOnProductsInTheSideNavMenu();
         $sideNavMenu->clickOnCatalogInTheProductNavMenu();
         $I->shouldBeOnTheAdminProductsCatalogPage();
@@ -80,15 +124,23 @@ class AccessAdminPagesViaNavMenuCest
         $I->shouldBeOnTheAdminProductsCategoriesPage();
     }
 
-    // Customers Menu Tests
     /**
-     * @env chrome
-     * @env firefox
-     * @group slow
+     * Allure annotations
+     * @Title("CUSTOMER Menu Tests")
+     * @Description("Attempt to access all of the CUSTOMER pages using the Side Nav Menu.")
+     * @Severity(level = SeverityLevel::CRITICAL)
+     * @TestCaseId("")
+     * @Parameter(name = "AdminStep", value = "$I")
+     * @Parameter(name = "SideNav", value = "$sideNavMenu")
+     *
+     * Codeception annotations
+     * @param AdminStep $I
+     * @param SideNav $sideNavMenu
+     * @return void
      */
     public function shouldLanOnEachOfTheCustomersPages(AdminStep $I, SideNav $sideNavMenu)
     {
-        $I->wantTo('see if I can access each of the CUSTOMERS Admin Pages using the Side Nav Menus');
+        $I->wantTo('see if I can access each of the CUSTOMER Admin Pages using the Side Nav Menus');
         $sideNavMenu->clickOnCustomersInTheSideNavMenu();
         $sideNavMenu->clickOnAllCustomersInTheCustomersNavMenu();
         $I->shouldBeOnTheAdminCustomersAllCustomersPage();
@@ -100,9 +152,18 @@ class AccessAdminPagesViaNavMenuCest
 
     // Marketing Menu Tests
     /**
-     * @env chrome
-     * @env firefox
-     * @group slow
+     * Allure annotations
+     * @Title("MARKETING Menu Tests")
+     * @Description("Attempt to access all of the MARKETING pages using the Side Nav Menu.")
+     * @Severity(level = SeverityLevel::CRITICAL)
+     * @TestCaseId("")
+     * @Parameter(name = "AdminStep", value = "$I")
+     * @Parameter(name = "SideNav", value = "$sideNavMenu")
+     *
+     * Codeception annotations
+     * @param AdminStep $I
+     * @param SideNav $sideNavMenu
+     * @return void
      */
     public function shouldLandOnEachOfTheMarketingPages(AdminStep $I, SideNav $sideNavMenu)
     {
@@ -154,9 +215,18 @@ class AccessAdminPagesViaNavMenuCest
 
     // Content Menu Tests
     /**
-     * @env chrome
-     * @env firefox
-     * @group slow
+     * Allure annotations
+     * @Title("CONTENT Menu Tests")
+     * @Description("Attempt to access all of the CONTENT pages using the Side Nav Menu.")
+     * @Severity(level = SeverityLevel::CRITICAL)
+     * @TestCaseId("")
+     * @Parameter(name = "AdminStep", value = "$I")
+     * @Parameter(name = "SideNav", value = "$sideNavMenu")
+     *
+     * Codeception annotations
+     * @param AdminStep $I
+     * @param SideNav $sideNavMenu
+     * @return void
      */
     public function shouldLandOnEachOfTheContentPages(AdminStep $I, SideNav $sideNavMenu)
     {
@@ -186,15 +256,23 @@ class AccessAdminPagesViaNavMenuCest
         $I->shouldBeOnTheAdminContentSchedulePage();
     }
 
-    // Reports Menu Tests
     /**
-     * @env chrome
-     * @env firefox
-     * @group slow
+     * Allure annotations
+     * @Title("REPORT Menu Tests")
+     * @Description("Attempt to access all of the REPORT pages using the Side Nav Menu.")
+     * @Severity(level = SeverityLevel::CRITICAL)
+     * @TestCaseId("")
+     * @Parameter(name = "AdminStep", value = "$I")
+     * @Parameter(name = "SideNav", value = "$sideNavMenu")
+     *
+     * Codeception annotations
+     * @param AdminStep $I
+     * @param SideNav $sideNavMenu
+     * @return void
      */
     public function shouldLandOnEachOfTheReportsPages(AdminStep $I, SideNav $sideNavMenu)
     {
-        $I->wantTo('see if I can access each of the REPORTS Admin Pages using the Side Nav Menu');
+        $I->wantTo('see if I can access each of the REPORT Admin Pages using the Side Nav Menu');
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnProductsInCartInTheReportsNavMenu();
         $I->shouldBeOnTheAdminReportsProductsInCartPage();
@@ -288,15 +366,23 @@ class AccessAdminPagesViaNavMenuCest
         $I->shouldBeOnTheAdminReportRefreshStatisticsPage();
     }
 
-    // Stores Menu Tests
     /**
-     * @env chrome
-     * @env firefox
-     * @group slow
+     * Allure annotations
+     * @Title("STORE Menu Tests")
+     * @Description("Attempt to access all of the STORE pages using the Side Nav Menu.")
+     * @Severity(level = SeverityLevel::CRITICAL)
+     * @TestCaseId("")
+     * @Parameter(name = "AdminStep", value = "$I")
+     * @Parameter(name = "SideNav", value = "$sideNavMenu")
+     *
+     * Codeception annotations
+     * @param AdminStep $I
+     * @param SideNav $sideNavMenu
+     * @return void
      */
     public function shouldLandOnEachOfTheStoresPages(AdminStep $I, SideNav $sideNavMenu)
     {
-        $I->wantTo('see if I can access each of the STORES Admin Pages using the Side Nav Menu');
+        $I->wantTo('see if I can access each of the STORE Admin Pages using the Side Nav Menu');
         $sideNavMenu->clickOnStoresInTheSideNavMenu();
         $sideNavMenu->clickOnAllStoresInTheStoresNavMenu();
         $I->shouldBeOnTheAdminStoresAllStoresPage();
@@ -348,9 +434,18 @@ class AccessAdminPagesViaNavMenuCest
 
     // System Menu Tests
     /**
-     * @env chrome
-     * @env firefox
-     * @group slow
+     * Allure annotations
+     * @Title("SYSTEM Menu Tests")
+     * @Description("Attempt to access all of the SYSTEM pages using the Side Nav Menu.")
+     * @Severity(level = SeverityLevel::CRITICAL)
+     * @TestCaseId("")
+     * @Parameter(name = "AdminStep", value = "$I")
+     * @Parameter(name = "SideNav", value = "$sideNavMenu")
+     *
+     * Codeception annotations
+     * @param AdminStep $I
+     * @param SideNav $sideNavMenu
+     * @return void
      */
     public function shouldLandOnEachOfTheSystemPages(AdminStep $I, SideNav $sideNavMenu)
     {
@@ -413,13 +508,22 @@ class AccessAdminPagesViaNavMenuCest
     }
 
     /**
-     * @env chrome
-     * @env firefox
-     * @group slow
+     * Allure annotations
+     * @Title("WEB SETUP WIZARD Menu Test")
+     * @Description("Attempt to access all of the WEB SETUP WIZARD page using the Side Nav Menu.")
+     * @Severity(level = SeverityLevel::CRITICAL)
+     * @TestCaseId("")
+     * @Parameter(name = "AdminStep", value = "$I")
+     * @Parameter(name = "SideNav", value = "$sideNavMenu")
+     *
+     * Codeception annotations
+     * @param AdminStep $I
+     * @param SideNav $sideNavMenu
+     * @return void
      */
     public function shouldLandOnTheWebSetupWizardPage(AdminStep $I, SideNav $sideNavMenu)
     {
-        $I->wantTo('see if I can access the Web Setup Wizard Admin Page using the Side Nav Menu');
+        $I->wantTo('see if I can access the WEB SETUP WIZARD Admin Page using the Side Nav Menu');
         $sideNavMenu->clickOnSystemInTheSideNavMenu();
         $sideNavMenu->clickOnWebSetupWizardInTheSystemNavMenu();
         $I->shouldBeOnTheAdminSystemWebSetupWizardPage();
@@ -427,9 +531,18 @@ class AccessAdminPagesViaNavMenuCest
     }
 
     /**
-     * @env chrome
-     * @env firefox
-     * @group slow
+     * Allure annotations
+     * @Title("PARTNERS & EXTENSIONS Menu Test")
+     * @Description("Attempt to access all of the PARTNERS & EXTENSIONS page using the Side Nav Menu.")
+     * @Severity(level = SeverityLevel::CRITICAL)
+     * @TestCaseId("")
+     * @Parameter(name = "AdminStep", value = "$I")
+     * @Parameter(name = "SideNav", value = "$sideNavMenu")
+     *
+     * Codeception annotations
+     * @param AdminStep $I
+     * @param SideNav $sideNavMenu
+     * @return void
      */
     public function shouldLandOnThePartnersAndExtensionsPage(AdminStep $I, SideNav $sideNavMenu)
     {

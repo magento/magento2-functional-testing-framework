@@ -15,10 +15,18 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 /**
  * Class CreateSubCategoryCest
  *
- * @Stories({"Create sub category"})
- * @Features({"Create sub category"})
+ * Allure annotations
+ * @Features({"Category"})
+ * @Stories({"Create sub Category"})
  * @Title("Create sub category with required fields")
  * @Description("Create sub category with required fields")
+ *
+ * Codeception annotations
+ * @group catalog
+ * @group add
+ * @env chrome
+ * @env firefox
+ * @env phantomjs
  */
 class CreateCategoryCest
 {
@@ -36,15 +44,11 @@ class CreateCategoryCest
      * Create sub category in admin.
      *
      * Allure annotations
+     * @Title("Method Title: Create sub category with required fields")
      * @Description("Method Description: Create sub category with required fields")
      * @Severity(level = SeverityLevel::CRITICAL)
+     * @TestCaseId("")
      * @Parameter(name = "Admin", value = "$I")
-     *
-     * Codeception annotations
-     * @group catalog
-     * @env chrome
-     * @env firefox
-     * @env phantomjs
      *
      * @param AdminStep $I
      * @return void

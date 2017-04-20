@@ -19,10 +19,17 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 /**
  * Class UpdateSimpleProductCest
  *
+ * Allure annotations
+ * @Features({"Catalog"})
  * @Stories({"Update simple product"})
- * @Features({"Update simple product"})
  * @Title("Update simple product with required fields")
  * @Description("Update simple product with required fields")
+ *
+ * Codeception Annotations
+ * @group catalog
+ * @env chrome
+ * @env firefox
+ * @env phantomjs
  */
 class UpdateSimpleProductCest
 {
@@ -38,6 +45,8 @@ class UpdateSimpleProductCest
 
     /**
      * @param AdminStep $I
+     * @param CategoryApiStep $categoryApi
+     * @param ProductApiStep $productApi
      */
     public function _before(AdminStep $I, CategoryApiStep $categoryApi, ProductApiStep $productApi)
     {
@@ -74,14 +83,11 @@ class UpdateSimpleProductCest
      * Update simple product in admin.
      *
      * Allure annotations
+     * @Title("Mathod Title: Update simple product with required fields")
+     * @Description("Method Description: Update simple product with required fields")
      * @Severity(level = SeverityLevel::CRITICAL)
-     * @Parameter(name = "Admin", value = "$I")
-     *
-     * Codeception annotations
-     * @group catalog
-     * @env chrome
-     * @env firefox
-     * @env phantomjs
+     * @TestCaseId("")
+     * @Parameter(name = "AdminStep", value = "$I")
      *
      * @param AdminStep $I
      * @return void
