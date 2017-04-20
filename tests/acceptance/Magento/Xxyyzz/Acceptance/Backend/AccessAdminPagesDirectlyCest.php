@@ -9,6 +9,7 @@ use Yandex\Allure\Adapter\Annotation\Description;
 use Yandex\Allure\Adapter\Annotation\Parameter;
 use Yandex\Allure\Adapter\Annotation\Severity;
 use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  * Class AccessAdminPagesDirectlyCest
@@ -16,8 +17,6 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
  * Allure annotations
  * @Features({"Login"})
  * @Stories({"Direct Admin Access"})
- * @Title("Access each Admin page directly")
- * @Description("Attempt to access all Main Admin pages directly after logging in as an Admin.")
  *
  * Codeception annotations
  * @group skip

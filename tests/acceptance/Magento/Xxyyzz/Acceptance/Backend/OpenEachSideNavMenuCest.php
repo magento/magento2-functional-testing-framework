@@ -10,6 +10,7 @@ use Yandex\Allure\Adapter\Annotation\Description;
 use Yandex\Allure\Adapter\Annotation\Parameter;
 use Yandex\Allure\Adapter\Annotation\Severity;
 use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  * Class OpenEachSideNavMenuCest

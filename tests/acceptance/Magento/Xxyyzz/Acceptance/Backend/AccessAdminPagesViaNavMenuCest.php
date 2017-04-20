@@ -10,6 +10,7 @@ use Yandex\Allure\Adapter\Annotation\Description;
 use Yandex\Allure\Adapter\Annotation\Parameter;
 use Yandex\Allure\Adapter\Annotation\Severity;
 use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  * Class AccessAdminPagesViaNavMenuCest
@@ -17,8 +18,6 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
  * Allure annotations
  * @Features({"Admin Nav Menu"})
  * @Stories({"Access Admin pages via the Admin Nav Menu"})
- * @Title("Access each Admin page via Nav Menu")
- * @Description("Attempt to access all Main Admin pages using the Nav Menu after logging in as an Admin.")
  *
  * Codeception annotations
  * @group skip

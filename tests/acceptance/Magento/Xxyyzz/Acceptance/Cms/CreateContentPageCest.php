@@ -12,6 +12,7 @@ use Yandex\Allure\Adapter\Annotation\Description;
 use Yandex\Allure\Adapter\Annotation\Parameter;
 use Yandex\Allure\Adapter\Annotation\Severity;
 use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  * Class CreateContentPageCest
@@ -19,8 +20,6 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
  * Allure annotations
  * @Features({"Content"})
  * @Stories({"Exercise all Content Page fields", "Create a basic Content Page"})
- * @Title("Exercise all fields and create basic Content Page")
- * @Description("Attempt to enter Text into all fields and then create a basic Content Page.")
  *
  * Codeception annotations
  * @group cms
