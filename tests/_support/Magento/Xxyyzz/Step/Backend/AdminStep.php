@@ -12,6 +12,12 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->amOnPage($url);
         $I->seeInCurrentUrl($url);
     }
+
+    public function closeNewTab()
+    {
+        $I = $this;
+        $I->closeTab();
+    }
     
     public function goToTheAdminLoginPage()
     {

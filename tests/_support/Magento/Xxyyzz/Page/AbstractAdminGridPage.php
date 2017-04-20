@@ -19,7 +19,6 @@ abstract class AbstractAdminGridPage
     public static $filtersButton       = '.data-grid-filters-action-wrap .action-default';
 
     // TODO: Add Filter selectors
-    public static $clearAllFiltersLink = '.action-clear[data-action="grid-filter-reset"]';
 
     public static $viewButton          = '.admin__data-grid-action-bookmarks .admin__action-dropdown';
     public static $viewDropDownMenu    = '.admin__data-grid-action-bookmarks .admin__action-dropdown-menu';
@@ -86,13 +85,6 @@ abstract class AbstractAdminGridPage
         return static::$URL.$param;
     }
 
-    public function waitForLoadingMaskToDisappear()
-    {
-        $I = $this->acceptanceTester;
-        $I->waitForElementNotVisible(self::$loadingMask, 30);
-        $I->waitForElementNotVisible(self::$gridLoadingMask, 30);
-    }
-
     public function enterSearchKeyword($searchKeyboard)
     {
         $I = $this->acceptanceTester;
@@ -107,9 +99,11 @@ abstract class AbstractAdminGridPage
 
     public function performSearchByKeyword($searchKeyword)
     {
+        $I = $this->acceptanceTester;
         self::enterSearchKeyword($searchKeyword);
+        $I->waitForLoadingMaskToDisappear();
         self::clickOnTheSearchButton();
-        self::waitForLoadingMaskToDisappear();
+        $I->waitForLoadingMaskToDisappear();
     }
 
     public function clickOnFiltersButton()
@@ -228,7 +222,6 @@ abstract class AbstractAdminGridPage
     {
         $I = $this->acceptanceTester;
         $I->click(self::$perPageCountButton);
-        $I->wait(1);
     }
 
     public function clickOnSpecificPerPageCount($itemsPerPage)
@@ -293,6 +286,6 @@ abstract class AbstractAdminGridPage
         $actionLinkSelector = '.data-row[data-repeat-index="' . self::determineIndexBasedOnThisText($keyText) . '"] .action-menu-item';
 
         $I->click($actionLinkSelector);
-        self::waitForLoadingMaskToDisappear();
+        $I->waitForLoadingMaskToDisappear();
     }
 }
