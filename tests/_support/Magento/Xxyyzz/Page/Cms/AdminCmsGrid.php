@@ -27,7 +27,7 @@ class AdminCmsGrid extends AbstractAdminGridPage
 
         self::clickOnActionSelectLinkFor($keyText);
         $I->click($selector);
-        self::waitForLoadingMaskToDisappear();
+        $I->waitForLoadingMaskToDisappear();
     }
 
     public function clickOnActionDeleteFor($keyText)
@@ -37,7 +37,7 @@ class AdminCmsGrid extends AbstractAdminGridPage
 
         self::clickOnActionSelectLinkFor($keyText);
         $I->click($selector);
-        self::waitForLoadingMaskToDisappear();
+        $I->waitForLoadingMaskToDisappear();
     }
 
     public function clickOnActionViewFor($keyText)
@@ -47,6 +47,6 @@ class AdminCmsGrid extends AbstractAdminGridPage
 
         self::clickOnActionSelectLinkFor($keyText);
         $I->click($selector);
-        self::waitForLoadingMaskToDisappear();
+        $I->waitForLoadingMaskToDisappear();
     }
 }

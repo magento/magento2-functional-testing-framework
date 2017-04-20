@@ -162,20 +162,20 @@ abstract class AbstractAdminPage
     {
         $I = $this->acceptanceTester;
         $I->click(self::$pageMainActionsSaveAndContinue);
-        self::waitForLoadingMaskToDisappear();
+        $I->waitForLoadingMaskToDisappear();
     }
 
     public function clickOnAdminSaveButton()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$pageMainActionsSave);
-        self::waitForLoadingMaskToDisappear();
+        $I->waitForLoadingMaskToDisappear();
     }
 
     public function clickOnAdminAddButton()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$pageMainActionsAdd);
-        self::waitForLoadingMaskToDisappear();
+        $I->waitForLoadingMaskToDisappear();
     }
 }

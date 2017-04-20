@@ -31,6 +31,8 @@ class AdminCustomerPage extends AbstractAdminPage
 
     public static $sectionTitle                  = '.page-title';
 
+    // TODO: Add Selectors for the "Customer View" section and controls
+
     public static $associateToWebsiteDropDown    = '.admin__control-select[name="customer[website_id]"]';
     public static $groupDropDown                 = '.admin__control-select[name="customer[group_id]"]';
     public static $disableAutomaticGroupCheckbox = '.admin__field[data-index="disable_auto_group_change"] .admin__field-label';
@@ -66,6 +68,12 @@ class AdminCustomerPage extends AbstractAdminPage
     public static $addZipPostalCodeField         = '.address-item-edit-content .admin__control-text[name*="[postcode]"]';
     public static $addPhoneNumberField           = '.address-item-edit-content .admin__control-text[name*="[telephone]"]';
     public static $addVatNumberField             = '.address-item-edit-content .admin__control-text[name*="[vat_id]"]';
+
+    // TODO: Add Selectors for the "Orders" section and controls
+    // TODO: Add Selectors for the "Billing Agreements" section and controls
+    // TODO: Add Selectors for the "Newsletter" section and controls
+    // TODO: Add Selectors for the "Product Reviews" section and controls
+    // TODO: Add Selectors for the "Wish List" section and controls
 
     public function clickOnAddCustomerButton()
     {
@@ -145,6 +153,8 @@ class AdminCustomerPage extends AbstractAdminPage
         $I = $this->acceptanceTester;
         $I->click(self::$wishListLink);
     }
+
+    // TODO: Add Methods for the "Customer View" section and controls
 
     public function selectAssociateToWebsite($associateWebsite)
     {
@@ -423,24 +433,16 @@ class AdminCustomerPage extends AbstractAdminPage
         $I->seeInField(self::$addPrefixField, $prefix);
     }
 
-    public function clickAndSendKeys($selector)
-    {
-        $I = $this->acceptanceTester;
-        $I->click($selector);
-        $I->pressKey($selector, WebDriverKeys::SPACE);
-        $I->pressKey($selector, WebDriverKeys::BACKSPACE);
-    }
+    // TODO: Find better solution for the First/Last Name field validation issue.
 
     public function enterAddAddressFirstName($firstName)
     {
         $I = $this->acceptanceTester;
         $I->fillField(self::$addFirstNameField, $firstName);
-        self::clickAndSendKeys(self::$addFirstNameField);
     }
 
     public function verifyAddAddressFirstName($firstName)
     {
-        // TODO: Find better solution for the Field Validation issue.
         $I = $this->acceptanceTester;
         $I->seeInField(self::$addFirstNameField, $firstName);
     }
@@ -460,8 +462,6 @@ class AdminCustomerPage extends AbstractAdminPage
     public function enterAddAddressLastName($lastName)
     {
         $I = $this->acceptanceTester;
-        self::clickAndSendKeys(self::$addLastNameField);
-        $I->click(self::$addLastNameField);
         $I->fillField(self::$addLastNameField, $lastName);
     }
 
@@ -602,4 +602,10 @@ class AdminCustomerPage extends AbstractAdminPage
         $I = $this->acceptanceTester;
         $I->seeInField(self::$addVatNumberField, $vatNumber);
     }
+
+    // TODO: Add Methods for the "Orders" section and controls
+    // TODO: Add Methods for the "Billing Agreements" section and controls
+    // TODO: Add Methods for the "Newsletter" section and controls
+    // TODO: Add Methods for the "Product Reviews" section and controls
+    // TODO: Add Methods for the "Wish List" section and controls
 }

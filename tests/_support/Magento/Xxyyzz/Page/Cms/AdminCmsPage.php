@@ -27,8 +27,14 @@ class AdminCmsPage extends AbstractAdminPage
     public static $pageTitleField           = '.admin__control-text[name="title"]';
     public static $contentHeadingField      = '.admin__control-text[name="content_heading"]';
     public static $insertWidgetButton       = '.action-add-widget';
+    // TODO: Add Selectors for the "Insert Widget" section and controls
+
     public static $insertImageButton        = '.action-add-image';
+    // TODO: Add Selectors for the "Insert Image" section and controls
+
     public static $insertVariableButton     = '.add-variable';
+    // TODO: Add Selectors for the "Insert Variable" section and controls
+
     public static $contentBodyField         = '#cms_page_form_content';
 
     public static $urlKeyField              = '.admin__control-text[name="identifier"]';
@@ -116,17 +122,23 @@ class AdminCmsPage extends AbstractAdminPage
         $I->click(self::$insertWidgetButton);
     }
 
+    // TODO: Add Methods for the "Insert Widget" section and controls
+
     public function clickOnInsertImageButton()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$insertImageButton);
     }
 
+    // TODO: Add Methods for the "Insert Image" section and controls
+
     public function clickOnInsertVariableButton()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$insertVariableButton);
     }
+
+    // TODO: Add Methods for the "Insert Variable" section and controls
 
     public function enterPageContentBody($pageContentBody)
     {
@@ -219,11 +231,7 @@ class AdminCmsPage extends AbstractAdminPage
     public function selectMultipleStoreViews($storeViews)
     {
         $I = $this->acceptanceTester;
-        // TODO: Add multiselect support
-        foreach ($storeViews as &$value) {
-            self::pressShiftOnTheKeyboard();
-            $I->selectOption(self::$storeViewMainArea, $value);
-        }
+        // TODO: Add multi-select support for the "Store View" setting
     }
 
     public function selectLayout($layout)
@@ -290,18 +298,17 @@ class AdminCmsPage extends AbstractAdminPage
         $I->seeInField(self::$layoutUpdateXmlField, $layoutXml);
     }
 
+    // TODO: Add calendar modal support
     public function enterFrom($fromDate)
     {
         $I = $this->acceptanceTester;
         $I->fillField(self::$fromField, $fromDate);
-        // TODO: Add calendar support
     }
 
     public function verifyFrom($fromDate)
     {
         $I = $this->acceptanceTester;
         $I->seeInField(self::$fromField, $fromDate);
-        // TODO: Add calendar support
     }
 
     public function enterTo($toDate)
