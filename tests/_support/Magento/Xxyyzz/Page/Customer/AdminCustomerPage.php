@@ -1,6 +1,7 @@
 <?php
 namespace Magento\Xxyyzz\Page\Customer;
 
+use Facebook\WebDriver\WebDriverKeys;
 use Magento\Xxyyzz\Page\AbstractAdminPage;
 
 class AdminCustomerPage extends AbstractAdminPage
@@ -45,7 +46,26 @@ class AdminCustomerPage extends AbstractAdminPage
     public static $sendWelcomeEmailFromDropDown  = '.admin__control-select[name="customer[sendemail_store_id]"]';
 
     public static $addNewAddressesButton         = '.add';
-    
+
+    public static $newAddressTypeMainArea        = '.address-list-item.ui-state-active';
+    public static $newAddressDefaultBilling      = '.admin__control-checkbox[name*="[default_billing]"]';
+    public static $newAddressDefaultShipping     = '.admin__control-checkbox[name*="[default_shipping]"]';
+
+    public static $addPrefixField                = '.address-item-edit-content .admin__control-text[name*="[prefix]"]';
+    public static $addFirstNameField             = '.address-item-edit-content .admin__control-text[name*="[firstname]"]';
+    public static $addMiddleNameField            = '.address-item-edit-content .admin__control-text[name*="[middlename]"]';
+    public static $addLastNameField              = '.address-item-edit-content .admin__control-text[name*="[lastname]"]';
+    public static $addSuffixField                = '.address-item-edit-content .admin__control-text[name*="[suffix]"]';
+    public static $addCompanyField               = '.address-item-edit-content .admin__control-text[name*="[company]"]';
+    public static $addAddress1Field              = '.address-item-edit-content .admin__control-text[name*="[street][0]"]';
+    public static $addAddress2Field              = '.address-item-edit-content .admin__control-text[name*="[street][1]"]';
+    public static $addCityField                  = '.address-item-edit-content .admin__control-text[name*="[city]"]';
+    public static $addCountryDropDown            = '.address-item-edit-content .admin__control-select[name*="[country_id]"]';
+    public static $addStateDropDown              = '.address-item-edit-content .admin__control-select[name*="[region_id]"]';
+    public static $addProvinceField              = '.address-item-edit-content .admin__control-text[name*="[region]"]';
+    public static $addZipPostalCodeField         = '.address-item-edit-content .admin__control-text[name*="[postcode]"]';
+    public static $addPhoneNumberField           = '.address-item-edit-content .admin__control-text[name*="[telephone]"]';
+    public static $addVatNumberField             = '.address-item-edit-content .admin__control-text[name*="[vat_id]"]';
 
     public function clickOnAddCustomerButton()
     {
@@ -85,12 +105,14 @@ class AdminCustomerPage extends AbstractAdminPage
     public function clickOnAccountInformationLink()
     {
         $I = $this->acceptanceTester;
+        $I->scrollToTopOfPage();
         $I->click(self::$accountInformationLink);
     }
 
     public function clickOnAddressesLink()
     {
         $I = $this->acceptanceTester;
+        $I->scrollToTopOfPage();
         $I->click(self::$addressesLink);
     }
 
@@ -349,5 +371,235 @@ class AdminCustomerPage extends AbstractAdminPage
     public function verifySendWelcomeEmailFromDefaultStoreView()
     {
         self::verifySendWelcomeEmailFrom('Default Store View');
+    }
+
+    public function clickOnAddNewAddressButton()
+    {
+        $I = $this->acceptanceTester;
+        $I->click(self::$addNewAddressesButton);
+    }
+
+    public function clickOnAddNewAddressDefaultBillingAddress()
+    {
+        $I = $this->acceptanceTester;
+        $I->click(self::$newAddressDefaultBilling);
+    }
+
+    public function verifyAddAddressDefaultBillingAddress($expectedState)
+    {
+        $I = $this->acceptanceTester;
+        if ($expectedState) {
+            $I->seeCheckboxIsChecked(self::$newAddressDefaultBilling);
+        } else {
+            $I->dontSeeCheckboxIsChecked(self::$newAddressDefaultBilling);
+        }
+    }
+
+    public function verifyAddAddressDefaultShippingAddress($expectedState)
+    {
+        $I = $this->acceptanceTester;
+        if ($expectedState) {
+            $I->seeCheckboxIsChecked(self::$newAddressDefaultShipping);
+        } else {
+            $I->dontSeeCheckboxIsChecked(self::$newAddressDefaultShipping);
+        }
+    }
+
+    public function clickOnAddNewAddressDefaultShippingAddress()
+    {
+        $I = $this->acceptanceTester;
+        $I->click(self::$newAddressDefaultShipping);
+    }
+
+    public function enterAddAddressPrefix($prefix)
+    {
+        $I = $this->acceptanceTester;
+        $I->fillField(self::$addPrefixField, $prefix);
+    }
+
+    public function verifyAddAddressPrefix($prefix)
+    {
+        $I = $this->acceptanceTester;
+        $I->seeInField(self::$addPrefixField, $prefix);
+    }
+
+    public function clickAndSendKeys($selector)
+    {
+        $I = $this->acceptanceTester;
+        $I->click($selector);
+        $I->pressKey($selector, WebDriverKeys::SPACE);
+        $I->pressKey($selector, WebDriverKeys::BACKSPACE);
+    }
+
+    public function enterAddAddressFirstName($firstName)
+    {
+        $I = $this->acceptanceTester;
+        $I->fillField(self::$addFirstNameField, $firstName);
+        self::clickAndSendKeys(self::$addFirstNameField);
+    }
+
+    public function verifyAddAddressFirstName($firstName)
+    {
+        // TODO: Find better solution for the Field Validation issue.
+        $I = $this->acceptanceTester;
+        $I->seeInField(self::$addFirstNameField, $firstName);
+    }
+
+    public function enterAddAddressMiddleName($middleName)
+    {
+        $I = $this->acceptanceTester;
+        $I->fillField(self::$addMiddleNameField, $middleName);
+    }
+
+    public function verifyAddAddressMiddleName($middleName)
+    {
+        $I = $this->acceptanceTester;
+        $I->seeInField(self::$addMiddleNameField, $middleName);
+    }
+
+    public function enterAddAddressLastName($lastName)
+    {
+        $I = $this->acceptanceTester;
+        self::clickAndSendKeys(self::$addLastNameField);
+        $I->click(self::$addLastNameField);
+        $I->fillField(self::$addLastNameField, $lastName);
+    }
+
+    public function verifyAddAddressLastName($lastName)
+    {
+        $I = $this->acceptanceTester;
+        $I->seeInField(self::$addLastNameField, $lastName);
+    }
+
+    public function enterAddAddressSuffix($suffix)
+    {
+        $I = $this->acceptanceTester;
+        $I->fillField(self::$addSuffixField, $suffix);
+    }
+
+    public function verifyAddAddressSuffix($suffix)
+    {
+        $I = $this->acceptanceTester;
+        $I->seeInField(self::$addSuffixField, $suffix);
+    }
+
+    public function enterAddAddressCompany($company)
+    {
+        $I = $this->acceptanceTester;
+        $I->fillField(self::$addCompanyField, $company);
+    }
+
+    public function verifyAddAddressCompany($company)
+    {
+        $I = $this->acceptanceTester;
+        $I->seeInField(self::$addCompanyField, $company);
+    }
+
+    public function enterAddAddressAddress1($address1)
+    {
+        $I = $this->acceptanceTester;
+        $I->fillField(self::$addAddress1Field, $address1);
+    }
+
+    public function verifyAddAddressAddress1($address1)
+    {
+        $I = $this->acceptanceTester;
+        $I->seeInField(self::$addAddress1Field, $address1);
+    }
+
+    public function enterAddAddressAddress2($address2)
+    {
+        $I = $this->acceptanceTester;
+        $I->fillField(self::$addAddress2Field, $address2);
+    }
+
+    public function verifyAddAddressAddress2($address2)
+    {
+        $I = $this->acceptanceTester;
+        $I->seeInField(self::$addAddress2Field, $address2);
+    }
+
+    public function enterAddAddressCity($city)
+    {
+        $I = $this->acceptanceTester;
+        $I->fillField(self::$addCityField, $city);
+    }
+
+    public function verifyAddAddressCity($city)
+    {
+        $I = $this->acceptanceTester;
+        $I->seeInField(self::$addCityField, $city);
+    }
+
+    public function enterAddAddressCountry($country)
+    {
+        $I = $this->acceptanceTester;
+        $I->selectOption(self::$addCountryDropDown, $country);
+    }
+
+    public function verifyAddAddressCountry($country)
+    {
+        $I = $this->acceptanceTester;
+        $I->seeOptionIsSelected(self::$addCountryDropDown, $country);
+    }
+
+    public function enterAddAddressState($stateProvince)
+    {
+        $I = $this->acceptanceTester;
+        $I->selectOption(self::$addStateDropDown, $stateProvince);
+    }
+
+    public function enterAddAddressProvince($province)
+    {
+        $I = $this->acceptanceTester;
+        $I->fillField(self::$addProvinceField, $province);
+    }
+
+    public function verifyAddAddressState($state)
+    {
+        $I = $this->acceptanceTester;
+        $I->seeOptionIsSelected(self::$addStateDropDown, $state);
+    }
+
+    public function verifyAddAddressProvince($province)
+    {
+        $I = $this->acceptanceTester;
+        $I->seeInField(self::$addProvinceField, $province);
+    }
+
+    public function enterAddAddressZipPostalCode($zipCode)
+    {
+        $I = $this->acceptanceTester;
+        $I->fillField(self::$addZipPostalCodeField, $zipCode);
+    }
+
+    public function verifyAddAddressZipPostalCode($zipCode)
+    {
+        $I = $this->acceptanceTester;
+        $I->seeInField(self::$addZipPostalCodeField, $zipCode);
+    }
+
+    public function enterAddAddressPhoneNumber($phoneNumber)
+    {
+        $I = $this->acceptanceTester;
+        $I->fillField(self::$addPhoneNumberField, $phoneNumber);
+    }
+
+    public function verifyAddAddressPhoneNumber($phoneNumber)
+    {
+        $I = $this->acceptanceTester;
+        $I->seeInField(self::$addPhoneNumberField, $phoneNumber);
+    }
+
+    public function enterAddAddressVatNumber($vatNumber)
+    {
+        $I = $this->acceptanceTester;
+        $I->fillField(self::$addVatNumberField, $vatNumber);
+    }
+
+    public function verifyAddAddressVatNumber($vatNumber)
+    {
+        $I = $this->acceptanceTester;
+        $I->seeInField(self::$addVatNumberField, $vatNumber);
     }
 }
