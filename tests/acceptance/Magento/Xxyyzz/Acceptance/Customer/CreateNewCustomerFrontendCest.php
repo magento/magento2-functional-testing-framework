@@ -15,10 +15,15 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 /**
  * Class SignInCustomerFrontendCest
  *
- * @Stories({"Create customer"})
- * @Features({"Create customer"})
- * @Title("Create customer")
- * @Description("Create customer")
+ * Allure annotations
+ * @Features({"Customer"})
+ * @Stories({"Create new customer storefront"})
+ *
+ * Codeception annotations
+ * @group customer
+ * @env chrome
+ * @env firefox
+ * @env phantomjs
  */
 class CreateNewCustomerFrontendCest
 {
@@ -41,15 +46,11 @@ class CreateNewCustomerFrontendCest
      * Create customer.
      *
      * Allure annotations
-     * @Description("Method Description: Create customer")
+     * @Title("Method Title: Create new customer storefront")
+     * @Description("Method Description: Create new customer storefront")
+     * @TestCaseId("")
      * @Severity(level = SeverityLevel::CRITICAL)
-     * @Parameter(name = "Admin", value = "$I")
-     *
-     * Codeception annotations
-     * @group customer
-     * @env chrome
-     * @env firefox
-     * @env phantomjs
+     * @Parameter(name = "AcceptanceTester", value = "$I")
      *
      * @param AcceptanceTester $I
      * @return void

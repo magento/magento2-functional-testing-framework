@@ -68,8 +68,8 @@ class CreateSimpleProductCest
      * Allure annotations
      * @Title("Create a basic Product and verify on the Storefront")
      * @Description("Create a basic Product in the Admin and verify the content on the Storefront.")
-     * @Severity(level = SeverityLevel::CRITICAL)
      * @TestCaseId("")
+     * @Severity(level = SeverityLevel::CRITICAL)
      * @Parameter(name = "Admin", value = "$I")
      *
      * Codeception annotations

@@ -19,8 +19,6 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
  * Allure annotations
  * @Features({"Category"})
  * @Stories({"Create sub Category"})
- * @Title("Create sub category with required fields")
- * @Description("Create sub category with required fields")
  *
  * Codeception annotations
  * @group catalog
@@ -47,8 +45,8 @@ class CreateCategoryCest
      * Allure annotations
      * @Title("Method Title: Create sub category with required fields")
      * @Description("Method Description: Create sub category with required fields")
-     * @Severity(level = SeverityLevel::CRITICAL)
      * @TestCaseId("")
+     * @Severity(level = SeverityLevel::CRITICAL)
      * @Parameter(name = "Admin", value = "$I")
      *
      * @param AdminStep $I
