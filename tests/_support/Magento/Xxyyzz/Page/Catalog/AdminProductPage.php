@@ -20,6 +20,7 @@ class AdminProductPage extends AbstractAdminPage
      */
     public static $productName                  = '.admin__field[data-index=name] input';
     public static $productSku                   = '.admin__field[data-index=sku] input';
+    public static $productPricePrefix           = '.admin__field[data-index=price] .admin__addon-prefix>span';
     public static $productPrice                 = '.admin__field[data-index=price] input';
     public static $productQuantity              = '.admin__field[data-index=quantity_and_stock_status_qty] input';
     public static $productStockStatus           = '.admin__field[data-index=quantity_and_stock_status] select';
@@ -69,28 +70,28 @@ class AdminProductPage extends AbstractAdminPage
         $I->seeInField(self::$productName, $name);
     }
 
-    public function seeProductSku($name)
+    public function seeProductSku($sku)
     {
         $I = $this->acceptanceTester;
-        $I->seeInField(self::$productSku, $name);
+        $I->seeInField(self::$productSku, $sku);
     }
 
-    public function seeProductPrice($name)
+    public function seeProductPrice($price)
     {
         $I = $this->acceptanceTester;
-        $I->seeInField(self::$productPrice, $name);
+        $I->seeInField(self::$productPrice, $I->formatMoney($price)['number']);
     }
 
-    public function seeProductQuantity($name)
+    public function seeProductQuantity($qty)
     {
         $I = $this->acceptanceTester;
-        $I->seeInField(self::$productQuantity, $name);
+        $I->seeInField(self::$productQuantity, $qty);
     }
 
-    public function seeProductStockStatus($name)
+    public function seeProductStockStatus($status)
     {
         $I = $this->acceptanceTester;
-        $I->seeOptionIsSelected(self::$productStockStatus, $name);
+        $I->seeOptionIsSelected(self::$productStockStatus, $status);
     }
 
     /**
@@ -106,14 +107,14 @@ class AdminProductPage extends AbstractAdminPage
         }
     }
 
-    public function seeProductUrlKey($name)
+    public function seeProductUrlKey($urlKey)
     {
         $I = $this->acceptanceTester;
         try {
             $I->click(sprintf(self::$productSearchEngineOptimToggle, 'closed'));
         } catch (\Exception $e) {
         }
-        $I->seeInField(self::$productUrlKey, $name);
+        $I->seeInField(self::$productUrlKey, $urlKey);
     }
 
     // Fill new product
@@ -129,38 +130,38 @@ class AdminProductPage extends AbstractAdminPage
         $I->fillField(self::$productName, $name);
     }
 
-    public function fillFieldProductSku($name)
+    public function fillFieldProductSku($sku)
     {
         $I = $this->acceptanceTester;
-        $I->fillField(self::$productSku, $name);
+        $I->fillField(self::$productSku, $sku);
     }
 
-    public function fillFieldProductPrice($name)
+    public function fillFieldProductPrice($price)
     {
         $I = $this->acceptanceTester;
-        $I->fillField(self::$productPrice, $name);
+        $I->fillField(self::$productPrice, $price);
     }
 
-    public function fillFieldProductQuantity($name)
+    public function fillFieldProductQuantity($qty)
     {
         $I = $this->acceptanceTester;
-        $I->fillField(self::$productQuantity, $name);
+        $I->fillField(self::$productQuantity, $qty);
     }
 
-    public function selectProductStockStatus($name)
+    public function selectProductStockStatus($status)
     {
         $I = $this->acceptanceTester;
-        $I->selectOption(self::$productStockStatus, $name);
+        $I->selectOption(self::$productStockStatus, $status);
     }
 
-    public function fillFieldProductUrlKey($name)
+    public function fillFieldProductUrlKey($urlKey)
     {
         $I = $this->acceptanceTester;
         try {
             $I->click(sprintf(self::$productSearchEngineOptimToggle, 'closed'));
         } catch (\Exception $e) {
         }
-        $I->fillField(self::$productUrlKey, $name);
+        $I->fillField(self::$productUrlKey, $urlKey);
     }
 
     /**

@@ -64,12 +64,8 @@ class StorefrontCategoryPage extends AbstractFrontendPage
     {
         $this->goToPageForProduct($name);
         $I = $this->acceptanceTester;
-        $actualPrice = $I->grabTextFrom(sprintf(self::$productPrice, $name));
-        $pos = strpos($actualPrice, '.');
-        if ( $pos !== false) {
-            $actualPrice = substr($actualPrice, 1, $pos+2);
-        }
-        $I->assertEquals($price, $actualPrice);
+        $actualPrice = substr($I->grabTextFrom(sprintf(self::$productPrice, $name)), 1);
+        $I->assertEquals(floatval($price), floatval($actualPrice), '', 0.01);
     }
 
     public function goToPageForProduct($name)

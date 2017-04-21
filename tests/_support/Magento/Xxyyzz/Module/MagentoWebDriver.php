@@ -45,6 +45,18 @@ class MagentoWebDriver extends WebDriver
     ];
 
     /**
+     * @var array $localeAll
+     */
+    protected static $localeAll = [
+        LC_COLLATE => null,
+        LC_CTYPE => null,
+        LC_MONETARY => null,
+        LC_NUMERIC => null,
+        LC_TIME => null,
+        LC_MESSAGES => null,
+    ];
+
+    /**
      * Returns URL of a host.
      * @api
      * @return mixed
@@ -157,6 +169,46 @@ class MagentoWebDriver extends WebDriver
         foreach ($logs as $log) {
             if ($log['level'] == 'SEVERE') {
                 throw new ModuleException($this, 'Errors in JavaScript: ' . json_encode($log));
+            }
+        }
+    }
+
+    /**
+     * @param float $money
+     * @param string $locale
+     * @return array
+     */
+    public function formatMoney(float $money, $locale = 'en_US.UTF-8')
+    {
+        $this->mSetLocale(LC_MONETARY, $locale);
+        $money = money_format('%.2n', $money);
+        $this->mResetLocale();
+        $prefix = substr($money, 0, 1);
+        $number = substr($money, 1);
+        return ['prefix' => $prefix, 'number' => $number];
+    }
+
+    /**
+     * @param int $category
+     * @param string $locale
+    */
+    public function mSetLocale(int $category, $locale)
+    {
+        if (self::$localeAll[$category] == $locale) {
+            return;
+        }
+        foreach (self::$localeAll as $c => $l) {
+            self::$localeAll[$c] = setlocale($c, 0);
+        }
+        setlocale($category, $locale);
+    }
+
+    public function mResetLocale()
+    {
+        foreach (self::$localeAll as $c => $l) {
+            if (!is_null($l)) {
+                setlocale($c, $l);
+                self::$localeAll[$c] = null;
             }
         }
     }

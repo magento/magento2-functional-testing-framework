@@ -60,11 +60,11 @@ class MagentoFakerData extends Sequence
                 ? $productData['name'] : 'simple_product'.$sq,
             'visibility' => 4,
             'type_id' => 'simple',
-            'price' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 999),
+            'price' => $faker->randomFloat(2, 1),
             'status' => 1,
             'attribute_set_id' => 4,
             'extension_attributes' => [
-                'stock_item' => ['is_in_stock' => 1, 'qty' => $faker->randomDigit]
+                'stock_item' => ['is_in_stock' => 1, 'qty' => $faker->numberBetween(100, 9000)]
             ],
             'custom_attributes' => [
                 ['attribute_code' => 'url_key', 'value' => isset($productData['name'])
