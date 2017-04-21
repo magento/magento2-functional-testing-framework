@@ -178,4 +178,10 @@ abstract class AbstractAdminPage
         $I->click(self::$pageMainActionsAdd);
         $I->waitForLoadingMaskToDisappear();
     }
+
+    public function clickOnCollapsibleArea($areaName)
+    {
+        $I = $this->acceptanceTester;
+        $I->click('//div[@class="fieldset-wrapper-title"]/strong/span[contains(text(), "' . $areaName . '")]');
+    }
 }

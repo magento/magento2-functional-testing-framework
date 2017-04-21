@@ -23,19 +23,4 @@ class AcceptanceTester extends \Codeception\Actor
    /**
     * Define custom actions here
     */
-    public static $loadingMask     = '.loading-mask';
-    public static $gridLoadingMask = '.admin__data-grid-loading-mask';
-
-    public function waitForLoadingMaskToDisappear()
-    {
-        $I = $this;
-        $I->waitForElementNotVisible(self::$loadingMask, 30);
-        $I->waitForElementNotVisible(self::$gridLoadingMask, 30);
-    }
-
-    public function scrollToTopOfPage()
-    {
-        $I = $this;
-        $I->executeJS('window.scrollTo(0,0);');
-    }
 }
