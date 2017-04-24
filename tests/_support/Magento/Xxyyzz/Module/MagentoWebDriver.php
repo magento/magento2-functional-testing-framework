@@ -31,6 +31,9 @@ use Codeception\Util\ActionSequence;
  */
 class MagentoWebDriver extends WebDriver
 {
+    public static $loadingMask     = '.loading-mask';
+    public static $gridLoadingMask = '.admin__data-grid-loading-mask';
+
     /**
      * The module required fields, to be set in the suite .yml configuration file.
      *
@@ -101,6 +104,7 @@ class MagentoWebDriver extends WebDriver
         $this->fillField('login[username]', !is_null($username) ? $username : $this->config['username']);
         $this->fillField('login[password]', !is_null($password) ? $password : $this->config['password']);
         $this->click('Sign in');
+        $this->waitForPageLoad();
 
         $this->closeAdminNotification();
     }
@@ -131,20 +135,20 @@ class MagentoWebDriver extends WebDriver
             . ' .admin__action-multiselect-search-wrap>input[data-role="advanced-select-text"]';
         $selectSearchResult = $select . ' .admin__action-multiselect-label>span';
 
-        $this->waitPageLoad();
+        $this->waitForPageLoad();
         $this->waitForElementVisible($selectDropdown);
         $this->click($selectDropdown);
         foreach ($options as $option) {
-            $this->waitPageLoad();
+            $this->waitForPageLoad();
             $this->fillField($selectSearchText, '');
-            $this->waitPageLoad();
+            $this->waitForPageLoad();
             $this->fillField($selectSearchText, $option);
-            $this->waitPageLoad();
+            $this->waitForPageLoad();
             $this->click($selectSearchResult);
         }
         if ($requireAction) {
             $selectAction = $select . ' button[class=action-default]';
-            $this->waitPageLoad();
+            $this->waitForPageLoad();
             $this->click($selectAction);
         }
     }
@@ -153,14 +157,12 @@ class MagentoWebDriver extends WebDriver
     {
         $this->waitForJS('return !!window.jQuery && window.jQuery.active == 0;', $timeout);
         $this->wait(1);
-        $this->dontSeeJsError();
     }
 
-    public function waitPageLoad($timeout = 15)
+    public function waitForPageLoad($timeout = 15)
     {
         $this->waitForJS('return document.readyState == "complete"', $timeout);
         $this->waitAjaxLoad($timeout);
-        $this->dontSeeJsError();
     }
 
     public function dontSeeJsError()
@@ -211,5 +213,18 @@ class MagentoWebDriver extends WebDriver
                 self::$localeAll[$c] = null;
             }
         }
+    }
+
+    public function waitForLoadingMaskToDisappear()
+    {
+        $I = $this;
+        $I->waitForElementNotVisible(self::$loadingMask, 30);
+        $I->waitForElementNotVisible(self::$gridLoadingMask, 30);
+    }
+
+    public function scrollToTopOfPage()
+    {
+        $I = $this;
+        $I->executeJS('window.scrollTo(0,0);');
     }
 }

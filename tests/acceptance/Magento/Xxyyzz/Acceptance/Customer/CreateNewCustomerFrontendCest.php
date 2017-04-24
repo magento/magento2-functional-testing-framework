@@ -11,6 +11,7 @@ use Yandex\Allure\Adapter\Annotation\Description;
 use Yandex\Allure\Adapter\Annotation\Severity;
 use Yandex\Allure\Adapter\Annotation\Parameter;
 use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  * Class SignInCustomerFrontendCest
@@ -21,6 +22,7 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
  *
  * Codeception annotations
  * @group customer
+ * @group add
  * @env chrome
  * @env firefox
  * @env phantomjs
@@ -46,8 +48,8 @@ class CreateNewCustomerFrontendCest
      * Create customer.
      *
      * Allure annotations
-     * @Title("Method Title: Create new customer storefront")
-     * @Description("Method Description: Create new customer storefront")
+     * @Title("Create new customer storefront")
+     * @Description("Create new customer storefront")
      * @TestCaseId("")
      * @Severity(level = SeverityLevel::CRITICAL)
      * @Parameter(name = "AcceptanceTester", value = "$I")

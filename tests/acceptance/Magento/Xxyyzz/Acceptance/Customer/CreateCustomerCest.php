@@ -37,7 +37,6 @@ class CreateCustomerCest
         $I->loginAsAdmin();
         $I->goToTheAdminCustomersAllCustomersPage();
         $customerPage->clickOnAddCustomerButton();
-        $I->waitForSpinnerToDisappear();
     }
 
     /**

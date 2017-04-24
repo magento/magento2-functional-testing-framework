@@ -82,8 +82,8 @@ class UpdateSimpleProductCest
      * Update simple product in admin.
      *
      * Allure annotations
-     * @Title("Mathod Title: Update simple product with required fields")
-     * @Description("Method Description: Update simple product with required fields")
+     * @Title("Update simple product with required fields")
+     * @Description("Update simple product with required fields")
      * @TestCaseId("")
      * @Severity(level = SeverityLevel::CRITICAL)
      * @Parameter(name = "AdminStep", value = "$I")

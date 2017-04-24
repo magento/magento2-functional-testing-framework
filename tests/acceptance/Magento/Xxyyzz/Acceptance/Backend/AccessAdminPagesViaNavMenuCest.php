@@ -548,5 +548,6 @@ class AccessAdminPagesViaNavMenuCest
         $I->wantTo('see if I can access the Partners and Extensions Admin Page using the Side Nav Menu');
         $sideNavMenu->clickOnFindPartnersAndExtensionsInTheSideNavMenu();
         $I->shouldBeOnTheAdminFindPartnersAndExtensionsPage();
+        $I->goToTheAdminLogoutPage();
     }
 }

@@ -10,6 +10,12 @@ class RoboFile extends \Robo\Tasks
     use Robo\Task\Base\loadShortcuts;
 
     // define public methods as commands
+    function cloneFiles() {
+        $this->_exec('cp -vn .env.example .env');
+        $this->_exec('cp -vn codeception.dist.yml codeception.yml');
+        $this->_exec('cp -vn tests/acceptance.suite.dist.yml tests/acceptance.suite.yml');
+    }
+
     function allureGenerate() {
         return $this->_exec('allure generate tests/_output/allure-results/ -o tests/_output/allure-report/');
     }
@@ -42,7 +48,7 @@ class RoboFile extends \Robo\Tasks
     }
 
     function group($args = '') {
-        $this->taskExec('codecept run acceptance --env chrome --skip-group skip --group')->args($args)->run();
+        $this->taskExec('codecept run acceptance --verbose --steps --env chrome --skip-group skip --group')->args($args)->run();
     }
 
     function chrome() {

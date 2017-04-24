@@ -49,8 +49,8 @@ class SignInCustomerFrontendCest
      * Sign in existing customer.
      *
      * Allure annotations
-     * @Title("Method Title: Sign in existing customer storefront")
-     * @Description("Method Description: Sign in existing customer storefront")
+     * @Title("Sign in existing customer storefront")
+     * @Description("Sign in existing customer storefront")
      * @TestCaseId("")
      * @Severity(level = SeverityLevel::CRITICAL)
      * @Parameter(name = "AcceptanceTester", value = "$I")

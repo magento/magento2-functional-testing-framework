@@ -13,6 +13,7 @@ class AdminProductPage extends AbstractAdminPage
     /**
      * Buttons in product page.
      */
+    public static $productAddProductButton      = '#add_new_product-button';
     public static $productSaveButton            = '#save-button';
 
     /**
@@ -47,7 +48,7 @@ class AdminProductPage extends AbstractAdminPage
     public function amOnAdminNewProductPage()
     {
         $I = $this->acceptanceTester;
-        $I->waitForElementVisible(self::$productName, $this->pageLoadTimeout);
+        $I->waitForPageLoad();
         $I->seeInCurrentUrl(static::$URL . 'new');
     }
 
@@ -55,7 +56,14 @@ class AdminProductPage extends AbstractAdminPage
     {
         $I = $this->acceptanceTester;
         $I->amOnPage(self::route('edit/id/' . $id));
-        $I->waitForElementVisible(self::$productName, $this->pageLoadTimeout);
+        $I->waitForPageLoad();
+    }
+
+    public function clickOnAddProductButton()
+    {
+        $I = $this->acceptanceTester;
+        $I->click(self::$productAddProductButton);
+        $I->waitForPageLoad();
     }
 
     public function seeProductAttributeSet($name)
@@ -177,8 +185,18 @@ class AdminProductPage extends AbstractAdminPage
     {
         $I = $this->acceptanceTester;
         $I->performOn(self::$productSaveButton, ['click' => self::$productSaveButton]);
-        $I->waitForElementNotVisible(self::$popupLoadingSpinner);
-        $I->waitForElementNotVisible(self::$productFormLoadingSpinner);
-        $I->waitForElementVisible(self::$successMessage);
+        $I->waitForPageLoad();
+    }
+
+    public function addBasicProductUnderCategory($productData, $categoryData)
+    {
+        self::clickOnAddProductButton();
+
+        self::fillFieldProductName($productData['productName']);
+        self::fillFieldProductSku($productData['sku']);
+        self::fillFieldProductPrice($productData['price']);
+        self::selectProductCategories(array($categoryData['categoryName']));
+
+        self::saveProduct();
     }
 }

@@ -173,537 +173,616 @@ class AdminSideNavigation extends AbstractAdminPage
     {
         $I = $this->acceptanceTester;
         $I->click(self::$dashboardButton);
+        $I->waitForPageLoad();
     }
 
     public function clickOnSalesInTheSideNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$salesButton);
-        $I->wait(1);
+        $I->waitForPageLoad();
     }
 
     public function clickOnOrdersInTheSalesNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$salesNavOrders);
+        $I->waitForPageLoad();
     }
 
     public function clickOnInvoicesInTheSalesNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$salesNavInvoices);
+        $I->waitForPageLoad();
     }
 
     public function clickOnShipmentsInTheSalesNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$salesNavShipments);
+        $I->waitForPageLoad();
     }
 
     public function clickOnCreditMemosInTheSalesNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$salesNavCreditMemos);
+        $I->waitForPageLoad();
     }
 
     public function clickOnBillingAgreementsInTheSalesNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$salesNavBillingAgreements);
+        $I->waitForPageLoad();
     }
 
     public function clickOnTransactionsInTheSalesNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$salesNavTransactions);
+        $I->waitForPageLoad();
     }
 
     public function clickOnProductsInTheSideNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$productsButton);
-        $I->wait(1);
+        $I->waitForPageLoad();
     }
 
     public function clickOnCatalogInTheProductNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$productNavCatalog);
+        $I->waitForPageLoad();
     }
 
     public function clickOnCategoriesInTheProductNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$productNavCategories);
+        $I->waitForPageLoad();
     }
 
     public function clickOnCustomersInTheSideNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$customersButton);
-        $I->wait(1);
+        $I->waitForPageLoad();
     }
 
     public function clickOnAllCustomersInTheCustomersNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$customersNavAllCustomers);
+        $I->waitForPageLoad();
     }
 
     public function clickOnNowOnlineInTheCustomersNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$customersNavNowOnline);
+        $I->waitForPageLoad();
     }
 
     public function clickOnMarketingInTheSideNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$marketingButton);
-        $I->wait(1);
+        $I->waitForPageLoad();
     }
 
     public function clickOnCatalogPriceRulesInTheMarketingNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$marketingNavPromotionsCatalogPriceRule);
+        $I->waitForPageLoad();
     }
 
     public function clickOnCartPriceRulesInTheMarketingNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$marketingNavPromotionsCartPriceRules);
+        $I->waitForPageLoad();
     }
 
     public function clickOnEmailTemplatesInTheMarketingNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$marketingNavCommunicationsEmailTemplates);
+        $I->waitForPageLoad();
     }
 
     public function clickOnNewsletterTemplatesInTheMarketingNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$marketingNavCommunicationsNewsletterTemplates);
+        $I->waitForPageLoad();
     }
 
     public function clickOnNewsletterQueueInTheMarketingNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$marketingNavCommunicationsNewsletterQueue);
+        $I->waitForPageLoad();
     }
 
     public function clickOnNewsletterSubscribersInTheMarketingNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$marketingNavCommunicationsNewsletterSubscribers);
+        $I->waitForPageLoad();
     }
 
     public function clickOnURLRewritesInTheMarketingNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$marketingNavSEOSearchURLRewrites);
+        $I->waitForPageLoad();
     }
 
     public function clickOnSearchTermsInTheMarketingNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$marketingNavSEOSearchTerms);
+        $I->waitForPageLoad();
     }
 
     public function clickOnSearchSynonymsInTheMarketingNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$marketingNavSEOSearchSynonyms);
+        $I->waitForPageLoad();
     }
 
     public function clickOnSiteMapInTheMarketingNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$marketingNavSEOSearchSiteMap);
+        $I->waitForPageLoad();
     }
 
     public function clickOnContentReviewsInTheMarketingNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$marketingNavUserContentReviews);
+        $I->waitForPageLoad();
     }
 
     public function clickOnContentInTheSideNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$contentButton);
-        $I->wait(1);
+        $I->waitForPageLoad();
     }
 
     public function clickOnPagesInTheContentNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$contentNavElementsPages);
+        $I->waitForPageLoad();
     }
 
     public function clickOnBlocksInTheContentNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$contentNavElementsBlocks);
+        $I->waitForPageLoad();
     }
 
     public function clickOnWidgetsInTheContentNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$contentNavElementsWidgets);
+        $I->waitForPageLoad();
     }
 
     public function clickOnConfigurationInTheContentNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$contentNavDesignConfiguration);
+        $I->waitForPageLoad();
     }
 
     public function clickOnThemesInTheContentNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$contentNavDesignThemes);
+        $I->waitForPageLoad();
     }
 
     public function clickOnScheduleInTheContentNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$contentNavDesignSchedule);
+        $I->waitForPageLoad();
     }
 
     public function clickOnReportsInTheSideNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsButton);
-        $I->wait(1);
+        $I->waitForPageLoad();
     }
 
     public function clickOnProductsInCartInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavMarketingProductsInCart);
+        $I->waitForPageLoad();
     }
 
     public function clickOnSearchTermsInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavMarketingSearchTerms);
+        $I->waitForPageLoad();
     }
 
     public function clickOnAbandonedCartsInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavMarketingAbandonedCarts);
+        $I->waitForPageLoad();
     }
 
     public function clickOnNewsletterProblemReportsInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavMarketingNewsletterProblemReports);
+        $I->waitForPageLoad();
     }
 
     public function clickOnByCustomersInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavReviewsByCustomers);
+        $I->waitForPageLoad();
     }
 
     public function clickOnByProductsInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavReviewsByProducts);
+        $I->waitForPageLoad();
     }
 
     public function clickOnOrdersInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavSalesOrders);
+        $I->waitForPageLoad();
     }
 
     public function clickOTaxInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavSalesTax);
+        $I->waitForPageLoad();
     }
 
     public function clickOnInvoicedInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavSalesInvoiced);
+        $I->waitForPageLoad();
     }
 
     public function clickOnShippingInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavSalesShipping);
+        $I->waitForPageLoad();
     }
 
     public function clickOnRefundsInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavSalesRefunds);
+        $I->waitForPageLoad();
     }
 
     public function clickOnCouponsInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavSalesCoupons);
+        $I->waitForPageLoad();
     }
 
     public function clickOnPayPalSettlementInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavSalesPayPalSettlement);
+        $I->waitForPageLoad();
     }
 
     public function clickOnBraintreeSettlementInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavSalesBraintreeSettlement);
+        $I->waitForPageLoad();
     }
 
     public function clickOnOrderTotalInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavCustomersOrderTotal);
+        $I->waitForPageLoad();
     }
 
     public function clickOnOrderCountInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavCustomersOrderCount);
+        $I->waitForPageLoad();
     }
 
     public function clickOnNewInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavCustomersNew);
+        $I->waitForPageLoad();
     }
 
     public function clickOnViewsInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavProductsViews);
+        $I->waitForPageLoad();
     }
 
     public function clickOnBestSellersInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavProductsBestsellers);
+        $I->waitForPageLoad();
     }
 
     public function clickOnLowStockInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavProductsLowStock);
+        $I->waitForPageLoad();
     }
 
     public function clickOnOrderedInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavProductsOrdered);
+        $I->waitForPageLoad();
     }
 
     public function clickOnDownloadsInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavProductsDownloads);
+        $I->waitForPageLoad();
     }
 
     public function clickOnRefreshStatisticsInTheReportsNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$reportsNavStatisticsRefreshStatistics);
+        $I->waitForPageLoad();
     }
 
     public function clickOnStoresInTheSideNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$storesButton);
-        $I->wait(1);
+        $I->waitForPageLoad();
     }
 
     public function clickOnAllStoresInTheStoresNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$storesNavSettingsAllStores);
+        $I->waitForPageLoad();
     }
 
     public function clickOnConfigurationInTheStoresNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$storesNavSettingsConfiguration);
+        $I->waitForPageLoad();
     }
 
     public function clickOnTermsAndConditionsInTheStoresNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$storesNavSettingsTermsAndConditions);
+        $I->waitForPageLoad();
     }
 
     public function clickOnOrderStatusInTheStoresNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$storesNavSettingsOrderStatus);
+        $I->waitForPageLoad();
     }
 
     public function clickOnTaxRuleInTheStoresNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$storesNavTaxesTaxRules);
+        $I->waitForPageLoad();
     }
 
     public function clickOnTaxZonesAndRatesInTheStoresNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$storesNavTaxesTaxZonesAndRates);
+        $I->waitForPageLoad();
     }
 
     public function clickOnTaxRatesInTheStoresNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$storesNavCurrencyRates);
+        $I->waitForPageLoad();
     }
 
     public function clickOnTaxSymbolsInTheStoresNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$storesNavCurrencySymbols);
+        $I->waitForPageLoad();
     }
 
     public function clickOnCurrencyRatesInTheStoresNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$storesNavCurrencyRates);
+        $I->waitForPageLoad();
     }
 
     public function clickOnCurrencySymbolsInTheStoresNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$storesNavCurrencySymbols);
+        $I->waitForPageLoad();
     }
 
     public function clickOnProductInTheStoresNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$storesNavAttributesProduct);
+        $I->waitForPageLoad();
     }
 
     public function clickOnAttributesSetInTheStoresNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$storesNavAttributesSet);
+        $I->waitForPageLoad();
     }
 
     public function clickOnRatingsInTheStoresNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$storesNavAttributesRating);
+        $I->waitForPageLoad();
     }
 
     public function clickOnCustomerGroupInTheStoresNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$storesNavOtherSettingsCustomerGroups);
+        $I->waitForPageLoad();
     }
 
     public function clickOnSystemInTheSideNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$systemButton);
-        $I->wait(1);
+        $I->waitForPageLoad();
     }
 
     public function clickOnImportInTheSystemNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$systemNavDataTransferImport);
+        $I->waitForPageLoad();
     }
 
     public function clickOnExportInTheSystemNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$systemNavDataTransferExport);
+        $I->waitForPageLoad();
     }
 
     public function clickOnImportExportTaxRatesInTheSystemNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$systemNavDataTransferImportExportTaxRates);
+        $I->waitForPageLoad();
     }
 
     public function clickOnImportHistoryInTheSystemNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$systemNavDataTransferImportHistory);
+        $I->waitForPageLoad();
     }
 
     public function clickOnIntegrationsInTheSystemNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$systemNavExtensionsIntegrations);
+        $I->waitForPageLoad();
     }
 
     public function clickOnCacheManagementInTheSystemNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$systemNavToolsCacheManagement);
+        $I->waitForPageLoad();
     }
 
     public function clickOnBackupsInTheSystemNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$systemNavToolsBackups);
+        $I->waitForPageLoad();
     }
 
     public function clickOnIndexManagementInTheSystemNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$systemNavToolsIndexManagement);
+        $I->waitForPageLoad();
     }
 
     public function clickOnWebSetupWizardInTheSystemNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$systemNavToolsWebSetupWizard);
-        $I->wait(1);
+        $I->waitForLoadingMaskToDisappear();
     }
 
     public function clickOnAllUsersInTheSystemNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$systemNavPermissionsAllUsers);
+        $I->waitForPageLoad();
     }
 
     public function clickOnLockedUsersInTheSystemNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$systemNavPermissionsLockedUsers);
+        $I->waitForPageLoad();
     }
 
     public function clickOnUserRolesInTheSystemNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$systemNavPermissionsUserRoles);
+        $I->waitForPageLoad();
     }
 
     public function clickOnNotificationsInTheSystemNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$systemNavOtherSettingsNotifications);
+        $I->waitForPageLoad();
     }
 
     public function clickOnCustomVariablesInTheSystemNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$systemNavOtherSettingsCustomVariables);
+        $I->waitForPageLoad();
     }
 
     public function clickOnManageEncryptionKeyInTheSystemNavMenu()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$systemNavOtherSettingsManageEncryptionKey);
+        $I->waitForPageLoad();
     }
 
     public function clickOnFindPartnersAndExtensionsInTheSideNavMenu()

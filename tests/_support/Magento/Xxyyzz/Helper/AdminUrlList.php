@@ -89,7 +89,7 @@ class AdminUrlList
     public static $adminSystemCacheManagement           = '/admin/admin/cache/';
     public static $adminSystemBackups                   = '/admin/backup/index/';
     public static $adminSystemIndexManagement           = '/admin/indexer/indexer/list/';
-    public static $adminSystemWebSetupWizard            = '/setup/#/home';
+    public static $adminSystemWebSetupWizard            = '/setup/';
     public static $adminSystemAllUsers                  = '/admin/admin/user/';
     public static $adminSystemLockedUsers               = '/admin/admin/locks/';
     public static $adminSystemUserRoles                 = '/admin/admin/user_role/';

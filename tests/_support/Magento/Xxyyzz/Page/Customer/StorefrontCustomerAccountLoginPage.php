@@ -24,7 +24,7 @@ class StorefrontCustomerAccountLoginPage extends AbstractFrontendPage
     {
         $I = $this->acceptanceTester;
         $I->amOnPage(self::$URL);
-        $I->waitPageLoad();
+        $I->waitForPageLoad();
     }
 
     public function fillFieldCustomerEmail($email)
@@ -43,7 +43,7 @@ class StorefrontCustomerAccountLoginPage extends AbstractFrontendPage
     {
         $I = $this->acceptanceTester;
         $I->click(self::$customerSignInButton);
-        $I->waitPageLoad();
+        $I->waitForPageLoad();
         $I->seeInCurrentUrl('customer/account');
     }
 
@@ -51,7 +51,7 @@ class StorefrontCustomerAccountLoginPage extends AbstractFrontendPage
     {
         $I = $this->acceptanceTester;
         $I->click(self::$createNewAccountLink);
-        $I->waitPageLoad();
+        $I->waitForPageLoad();
         $I->seeInCurrentUrl('customer/account/create');
     }
 

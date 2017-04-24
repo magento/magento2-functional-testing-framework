@@ -10,6 +10,7 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I = $this;
         $I->openNewTab();
         $I->amOnPage($url);
+        $I->waitForPageLoad();
         $I->seeInCurrentUrl($url);
     }
 
@@ -23,6 +24,7 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminLogin);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminLogoutPage()
@@ -118,15 +120,9 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $random_admin_url = array_rand($admin_url_list, 1);
         
         $I->amOnPage($admin_url_list[$random_admin_url]);
+        $I->waitForPageLoad();
 
         return $admin_url_list[$random_admin_url];
-    }
-
-    public function waitForSpinnerToDisappear()
-    {
-        $I = $this;
-        $I->wait(1);
-        $I->waitForElementNotVisible('.admin__data-grid-loading-mask', 15);
     }
 
     // Sales
@@ -134,36 +130,42 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSalesOrders);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminSalesInvoicesPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSalesInvoices);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminSalesShipmentsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSalesShipments);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminSalesCreditMemosPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSalesCreditMemos);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminSalesBillingAgreementsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSalesBillingAgreements);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminSalesTransactionsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSalesTransactions);
+        $I->waitForPageLoad();
     }
 
     // Products
@@ -171,12 +173,14 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductsCatalog);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminProductsCategoriesPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductsCategories);
+        $I->waitForPageLoad();
     }
 
     // Customers
@@ -184,12 +188,14 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomersAllCustomers);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminCustomersNowOnlinePage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomersNowOnline);
+        $I->waitForPageLoad();
     }
 
     // Marketing
@@ -197,66 +203,77 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingCatalogPriceRule);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminMarketingCartPriceRulePage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingCartPriceRules);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminMarketingEmailTemplatesPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingEmailTemplates);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminMarketingNewsletterTemplatePage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingNewsletterTemplate);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminMarketingNewsletterQueuePage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingNewsletterQueue);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminMarketingNewsletterSubscribersPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingNewsletterSubscribers);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminMarketingURLRewritesPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingURLRewrites);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminMarketingSearchTermsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingSearchTerms);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminMarketingSearchSynonymsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingSearchSynonyms);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminMarketingSiteMapPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingSiteMap);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminMarketingReviewsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingReviews);
+        $I->waitForPageLoad();
     }
 
     // Content
@@ -264,36 +281,42 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminContentPages);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminContentBlocksPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminContentBlocks);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminContentWidgetsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminContentWidgets);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminContentConfigurationPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminContentConfiguration);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminContentThemesPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminContentThemes);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminContentSchedulePage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminContentSchedule);
+        $I->waitForPageLoad();
     }
 
     // Reports
@@ -301,138 +324,161 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsProductsInCart);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportsSearchTermsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsSearchTerms);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportsAbandonedCartsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsAbandonedCArts);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportsNewsletterProblemReportsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsNewsletterProblemReports);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportsByCustomersPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsByCustomers);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportsByProductsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsByProducts);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportsOrdersPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsOrders);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportsTaxPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsTax);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportsInvoicedPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsInvoiced);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportsShippingPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsShipping);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportsRefundsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsRefunds);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportsCouponsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsCoupons);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportsPayPalSettlementPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsPayPalSettlement);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportsBraintreeSettlementPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsBraintreeSettlement);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportsOrderTotalPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsOrderTotal);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportsOrderCountPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsOrderCount);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportsNewPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsNew);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportsViewsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsViews);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportsBestsellersPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsBestsellers);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportsLowStockPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsLowStock);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportsOrderedPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsOrdered);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportsDownloadsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsDownloads);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminReportRefreshStatisticsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsRefreshStatistics);
+        $I->waitForPageLoad();
     }
 
     // Stores
@@ -440,72 +486,84 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresAllStores);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminStoresConfigurationPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresConfiguration);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminStoresTermsAndConditionsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresTermsAndConditions);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminStoresOrderStatusPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresOrderStatus);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminStoresTaxRulesPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresTaxRules);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminStoresTaxZonesAndRatesPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresTaxZonesAndRates);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminStoresCurrencyRatesPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresCurrencyRates);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminStoresCurrencySymbolsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresCurrencySymbols);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminStoresProductPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresProduct);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminStoresAttributeSetPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresAttributeSet);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminStoresRatingPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresRating);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminStoresCustomerGroupsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresCustomerGroups);
+        $I->waitForPageLoad();
     }
 
     // System
@@ -513,96 +571,112 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemImport);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminSystemExportPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemExport);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminSystemImportExportTaxRatesPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemImportExportTaxRates);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminSystemImportHistoryPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemImportHistory);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminSystemIntegrationsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemIntegrations);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminSystemCacheManagementPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemCacheManagement);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminSystemBackupsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemBackups);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminSystemIndexManagementPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemIndexManagement);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminSystemWebSetupWizardPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemWebSetupWizard);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminSystemAllUsersPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemAllUsers);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminSystemLockedUsersPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemLockedUsers);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminSystemUserRolesPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemUserRoles);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminSystemNotificationsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemNotifications);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminSystemCustomVariablesPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemCustomVariables);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminSystemManageEncryptionKeyPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemManageEncryptionKey);
+        $I->waitForPageLoad();
     }
 
     public function goToTheAdminFindPartnersAndExtensionsPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminFindPartnersAndExtensions);
+        $I->waitForPageLoad();
     }
 
     public function shouldBeOnTheAdminLoginPage()

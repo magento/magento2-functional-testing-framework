@@ -101,9 +101,9 @@ abstract class AbstractAdminGridPage
     {
         $I = $this->acceptanceTester;
         self::enterSearchKeyword($searchKeyword);
-        $I->waitForLoadingMaskToDisappear();
+        $I->waitForPageLoad();
         self::clickOnTheSearchButton();
-        $I->waitForLoadingMaskToDisappear();
+        $I->waitForPageLoad();
     }
 
     public function clickOnFiltersButton()
@@ -286,6 +286,6 @@ abstract class AbstractAdminGridPage
         $actionLinkSelector = '.data-row[data-repeat-index="' . self::determineIndexBasedOnThisText($keyText) . '"] .action-menu-item';
 
         $I->click($actionLinkSelector);
-        $I->waitForLoadingMaskToDisappear();
+        $I->waitForPageLoad();
     }
 }

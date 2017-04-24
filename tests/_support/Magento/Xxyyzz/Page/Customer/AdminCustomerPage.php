@@ -1,7 +1,6 @@
 <?php
 namespace Magento\Xxyyzz\Page\Customer;
 
-use Facebook\WebDriver\WebDriverKeys;
 use Magento\Xxyyzz\Page\AbstractAdminPage;
 
 class AdminCustomerPage extends AbstractAdminPage
@@ -77,7 +76,9 @@ class AdminCustomerPage extends AbstractAdminPage
 
     public function clickOnAddCustomerButton()
     {
+        $I = $this->acceptanceTester;
         self::clickOnAdminAddButton();
+        $I->waitForPageLoad();
     }
     
     public function clickOnDeleteCustomerButton()
@@ -608,4 +609,40 @@ class AdminCustomerPage extends AbstractAdminPage
     // TODO: Add Methods for the "Newsletter" section and controls
     // TODO: Add Methods for the "Product Reviews" section and controls
     // TODO: Add Methods for the "Wish List" section and controls
+
+    public function addBasicCustomerWithAddress($customerDetails)
+    {
+        self::clickOnAddCustomerButton();
+
+        self::clickOnAddressesLink();
+        self::clickOnAddNewAddressButton();
+
+        self::clickOnAddNewAddressDefaultBillingAddress();
+        self::clickOnAddNewAddressDefaultShippingAddress();
+
+        self::enterAddAddressPrefix($customerDetails['prefix']);
+        self::enterAddAddressFirstName($customerDetails['firstname']);
+        self::enterAddAddressMiddleName($customerDetails['middlename']);
+        self::enterAddAddressLastName($customerDetails['lastname']);
+        self::enterAddAddressSuffix($customerDetails['suffix']);
+        self::enterAddAddressCompany($customerDetails['company']);
+        self::enterAddAddressAddress1($customerDetails['address']['address1']);
+        self::enterAddAddressAddress2($customerDetails['address']['address2']);
+        self::enterAddAddressCity($customerDetails['address']['city']);
+        self::enterAddAddressCountry($customerDetails['address']['country']);
+        self::enterAddAddressState($customerDetails['address']['state']);
+        self::enterAddAddressZipPostalCode($customerDetails['address']['zipCode']);
+        self::enterAddAddressPhoneNumber($customerDetails['phoneNumber']);
+        self::enterAddAddressVatNumber($customerDetails['taxVatNumber']);
+
+        self::clickOnAccountInformationLink();
+
+        self::enterFirstName($customerDetails['firstname']);
+        self::enterLastName($customerDetails['lastname']);
+        self::enterEmailAddress($customerDetails['email']);
+        self::selectAssociateToWebsiteMainWebsite();
+        self::selectGroupGeneral();
+
+        self::clickOnAdminSaveButton();
+    }
 }
