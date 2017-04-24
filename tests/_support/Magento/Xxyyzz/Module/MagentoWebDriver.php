@@ -32,7 +32,6 @@ use Codeception\Util\ActionSequence;
 class MagentoWebDriver extends WebDriver
 {
     public static $loadingMask     = '.loading-mask';
-    public static $gridLoadingMask = '.admin__data-grid-loading-mask';
 
     /**
      * The module required fields, to be set in the suite .yml configuration file.
@@ -217,14 +216,11 @@ class MagentoWebDriver extends WebDriver
 
     public function waitForLoadingMaskToDisappear()
     {
-        $I = $this;
-        $I->waitForElementNotVisible(self::$loadingMask, 30);
-        $I->waitForElementNotVisible(self::$gridLoadingMask, 30);
+        $this->waitForElementNotVisible(self::$loadingMask, 30);
     }
 
     public function scrollToTopOfPage()
     {
-        $I = $this;
-        $I->executeJS('window.scrollTo(0,0);');
+        $this->executeJS('window.scrollTo(0,0);');
     }
 }

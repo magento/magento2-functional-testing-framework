@@ -288,4 +288,10 @@ abstract class AbstractAdminGridPage
         $I->click($actionLinkSelector);
         $I->waitForPageLoad();
     }
+
+    public function waitForGridLoadingMaskToDisappear()
+    {
+        $I = $this->acceptanceTester;
+        $I->waitForElementNotVisible(self::$gridLoadingMask, 30);
+    }
 }
