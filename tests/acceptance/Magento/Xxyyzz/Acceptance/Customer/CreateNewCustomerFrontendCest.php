@@ -53,25 +53,32 @@ class CreateNewCustomerFrontendCest
      * @TestCaseId("")
      * @Severity(level = SeverityLevel::CRITICAL)
      * @Parameter(name = "AcceptanceTester", value = "$I")
+     * @Parameter(name = "StorefrontCustomerAccountCreatePage", value = "$customerAccountCreatePage")
+     * @Parameter(name = "StorefrontCustomerAccountDashboardPage", value = "$customerAccountDashboardPage")
      *
      * @param AcceptanceTester $I
+     * @param StorefrontCustomerAccountCreatePage $customerAccountCreatePage
+     * @param StorefrontCustomerAccountDashboardPage $customerAccountDashboardPage
      * @return void
      */
-    public function createCustomerTest(AcceptanceTester $I)
-    {
+    public function createCustomerTest(
+        AcceptanceTester $I,
+        StorefrontCustomerAccountCreatePage $customerAccountCreatePage,
+        StorefrontCustomerAccountDashboardPage $customerAccountDashboardPage
+    ) {
         $I->wantTo('create customer in frontend page.');
-        StorefrontCustomerAccountCreatePage::of($I)->amOnCustomerAccountCreatePage();
-        StorefrontCustomerAccountCreatePage::of($I)->fillFieldFirstName($this->customer['firstname']);
-        StorefrontCustomerAccountCreatePage::of($I)->fillFieldLastName($this->customer['lastname']);
-        StorefrontCustomerAccountCreatePage::of($I)->setNewsletterSubscribe(true);
-        StorefrontCustomerAccountCreatePage::of($I)->fillFieldEmail($this->customer['email']);
-        StorefrontCustomerAccountCreatePage::of($I)->fillFieldPassword($this->customer['password']);
-        StorefrontCustomerAccountCreatePage::of($I)->fillFieldConfirmPassword($this->customer['password']);
-        StorefrontCustomerAccountCreatePage::of($I)->clickCreateAccountButton();
-        StorefrontCustomerAccountDashboardPage::of($I)->seeContactInformationName(
+        $customerAccountCreatePage->amOnCustomerAccountCreatePage();
+        $customerAccountCreatePage->fillFieldFirstName($this->customer['firstname']);
+        $customerAccountCreatePage->fillFieldLastName($this->customer['lastname']);
+        $customerAccountCreatePage->setNewsletterSubscribe(true);
+        $customerAccountCreatePage->fillFieldEmail($this->customer['email']);
+        $customerAccountCreatePage->fillFieldPassword($this->customer['password']);
+        $customerAccountCreatePage->fillFieldConfirmPassword($this->customer['password']);
+        $customerAccountCreatePage->clickCreateAccountButton();
+        $customerAccountDashboardPage->seeContactInformationName(
             $this->customer['firstname'] . ' ' .  $this->customer['lastname']
         );
-        StorefrontCustomerAccountDashboardPage::of($I)->seeContactInformationEmail($this->customer['email']);
-        StorefrontCustomerAccountDashboardPage::of($I)->seeNewsletterText('subscribed');
+        $customerAccountDashboardPage->seeContactInformationEmail($this->customer['email']);
+        $customerAccountDashboardPage->seeNewsletterText('subscribed');
     }
 }

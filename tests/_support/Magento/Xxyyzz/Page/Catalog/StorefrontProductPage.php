@@ -32,9 +32,11 @@ class StorefrontProductPage extends AbstractFrontendPage
     {
         $I = $this->acceptanceTester;
         $actualPrice = $I->grabTextFrom(sprintf(self::$productPrice));
+        $actualPrice = $I->parseFloat(substr($actualPrice, 1));
+        $price = $I->parseFloat($price);
         $pos = strpos($actualPrice, '.');
         if ( $pos !== false) {
-            $actualPrice = substr($actualPrice, 1, $pos+2);
+            $actualPrice = substr($actualPrice, 0, $pos+3);
         }
         $I->assertEquals($price, $actualPrice);
     }

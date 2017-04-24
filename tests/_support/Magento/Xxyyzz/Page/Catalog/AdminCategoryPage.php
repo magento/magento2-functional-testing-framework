@@ -13,28 +13,28 @@ class AdminCategoryPage extends AbstractAdminPage
     /**
      * Buttons in category page.
      */
-    public static $addRootCategoryButton            = '#add_root_category_button';
-    public static $addSubCategoryButton             = '#add_subcategory_button';
+    public static $addRootCategoryButton    = '#add_root_category_button';
+    public static $addSubCategoryButton     = '#add_subcategory_button';
 
-    public static $scheduleNewUpdateButton          = '#staging_update_new';
-    public static $saveCategoryButton               = '#save';
+    public static $scheduleNewUpdateButton  = '#staging_update_new';
+    public static $saveCategoryButton       = '#save';
 
-    public static $categoryContentToggle            =
-        '.fieldset-wrapper[data-index=content] .fieldset-wrapper-title[data-state-collapsible=%s]';
-    public static $categorySearchEngineOptimToggle  =
-        '.fieldset-wrapper[data-index=search_engine_optimization] .fieldset-wrapper-title[data-state-collapsible=%s]';
+    public static $categoryContentToggle
+        = '.fieldset-wrapper[data-index=content] .fieldset-wrapper-title[data-state-collapsible=%s]';
+    public static $categorySearchEngineOptimToggle
+        = '.fieldset-wrapper[data-index=search_engine_optimization] .fieldset-wrapper-title[data-state-collapsible=%s]';
 
     /**
      * Category data fields.
      */
-    public static $categoryName                     = '.admin__control-text[name=name]';
-    public static $categoryUrlKey                   = '.admin__control-text[name=url_key]';
+    public static $categoryName             = '.admin__control-text[name=name]';
+    public static $categoryUrlKey           = '.admin__control-text[name=url_key]';
 
     /**
      * Category form loading spinner.
      */
-    public static $categoryFormLoadingSpinner       =
-        '.admin__form-loading-mask[data-component="category_form.category_form"] .spinner';
+    public static $categoryFormLoadingSpinner
+        = '.admin__form-loading-mask[data-component="category_form.category_form"] .spinner';
 
     public function amOnAdminCategoryPage($param = '')
     {

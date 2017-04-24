@@ -223,4 +223,14 @@ class MagentoWebDriver extends WebDriver
     {
         $this->executeJS('window.scrollTo(0,0);');
     }
+
+    /**
+     * Parse float number with thousands_sep.
+     * @param $floatString
+     * @return float
+     */
+    function parseFloat($floatString){
+        $floatString = str_replace(',', '', $floatString);
+        return floatval($floatString);
+    }
 }

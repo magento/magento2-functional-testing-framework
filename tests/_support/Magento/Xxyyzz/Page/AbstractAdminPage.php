@@ -174,4 +174,10 @@ abstract class AbstractAdminPage
         $I = $this->acceptanceTester;
         $I->click('//div[@class="fieldset-wrapper-title"]/strong/span[contains(text(), "' . $areaName . '")]');
     }
+
+    public function seeSuccessMessage()
+    {
+        $I = $this->acceptanceTester;
+        $I->seeElement(self::$successMessage);
+    }
 }

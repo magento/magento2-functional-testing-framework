@@ -47,26 +47,33 @@ class CreateCategoryCest
      * @TestCaseId("")
      * @Severity(level = SeverityLevel::CRITICAL)
      * @Parameter(name = "Admin", value = "$I")
+     * @Parameter(name = "AdminCategoryPage", value = "$adminCategoryPage")
+     * @Parameter(name = "StorefrontCategoryPage", value = "$storefrontCategoryPage")
      *
      * @param AdminStep $I
+     * @param AdminCategoryPage $adminCategoryPage
+     * @param StorefrontCategoryPage $storefrontCategoryPage
      * @return void
      */
-    public function createCategoryTest(AdminStep $I)
-    {
+    public function createCategoryTest(
+        AdminStep $I,
+        AdminCategoryPage $adminCategoryPage,
+        StorefrontCategoryPage $storefrontCategoryPage
+    ) {
         $I->wantTo('create sub category with required fields in admin Category page.');
         $category = $I->getCategoryApiData();
 
-        AdminCategoryPage::of($I)->amOnAdminCategoryPage();
-        AdminCategoryPage::of($I)->addSubCategory();
-        AdminCategoryPage::of($I)->fillFieldCategoryName($category['name']);
+        $adminCategoryPage->amOnAdminCategoryPage();
+        $adminCategoryPage->addSubCategory();
+        $adminCategoryPage->fillFieldCategoryName($category['name']);
 
-        AdminCategoryPage::of($I)->clickOnSearchEngineOptimization();
-        AdminCategoryPage::of($I)->fillFieldCategoryUrlKey($category['custom_attributes'][0]['value']);
-        AdminCategoryPage::of($I)->saveCategory();
-        $I->seeElement(AdminCategoryPage::$successMessage);
+        $adminCategoryPage->clickOnSearchEngineOptimization();
+        $adminCategoryPage->fillFieldCategoryUrlKey($category['custom_attributes'][0]['value']);
+        $adminCategoryPage->saveCategory();
+        $adminCategoryPage->seeSuccessMessage();
 
         $I->wantTo('verify created category in frontend category page.');
-        StorefrontCategoryPage::of($I)->amOnCategoryPage(str_replace('_', '-', $category['custom_attributes'][0]['value']));
-        StorefrontCategoryPage::of($I)->seeCategoryNameInTitleHeading($category['name']);
+        $storefrontCategoryPage->amOnCategoryPage(str_replace('_', '-', $category['custom_attributes'][0]['value']));
+        $storefrontCategoryPage->seeCategoryNameInTitleHeading($category['name']);
     }
 }

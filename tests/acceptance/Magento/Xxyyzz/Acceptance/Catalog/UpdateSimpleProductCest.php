@@ -86,52 +86,65 @@ class UpdateSimpleProductCest
      * @Description("Update simple product with required fields")
      * @TestCaseId("")
      * @Severity(level = SeverityLevel::CRITICAL)
-     * @Parameter(name = "AdminStep", value = "$I")
+     * @Parameter(name = "Admin", value = "$I")
+     * @Parameter(name = "AdminProductGridPage", value = "$adminProductGridPage")
+     * @Parameter(name = "AdminProductPage", value = "$adminProductPage")
+     * @Parameter(name = "StorefrontCategoryPage", value = "$storefrontCategoryPage")
+     * @Parameter(name = "StorefrontProductPage", value = "$storefrontProductPage")
      *
      * @param AdminStep $I
+     * @param AdminProductGridPage $adminProductGridPage
+     * @param AdminProductPage $adminProductPage
+     * @param StorefrontCategoryPage $storefrontCategoryPage
+     * @param StorefrontProductPage $storefrontProductPage
      * @return void
      */
-    public function updateSimpleProductTest(AdminStep $I)
-    {
+    public function updateSimpleProductTest(
+        AdminStep $I,
+        AdminProductGridPage $adminProductGridPage,
+        AdminProductPage $adminProductPage,
+        StorefrontCategoryPage $storefrontCategoryPage,
+        StorefrontProductPage $storefrontProductPage
+    ) {
         $I->wantTo('update simple product in admin.');
-        AdminProductGridPage::of($I)->amOnAdminProductGridPage();
-        AdminProductGridPage::of($I)->searchBySku($this->product['sku']);
+        $adminProductGridPage->amOnAdminProductGridPage();
+        $adminProductGridPage->searchBySku($this->product['sku']);
 
         $I->wantTo('open product created from precondition.');
-        AdminProductPage::of($I)->amOnAdminEditProductPageById($this->product['id']);
+        $adminProductPage->amOnAdminEditProductPageById($this->product['id']);
 
         $I->wantTo('update product data fields.');
-        AdminProductPage::of($I)->fillFieldProductName($this->product['name'] . '-updated');
-        AdminProductPage::of($I)->fillFieldProductSku($this->product['sku'] . '-updated');
-        AdminProductPage::of($I)->fillFieldProductPrice($this->product['price']+10);
-        AdminProductPage::of($I)->fillFieldProductQuantity(
+        $adminProductPage->fillFieldProductName($this->product['name'] . '-updated');
+        $adminProductPage->fillFieldProductSku($this->product['sku'] . '-updated');
+        $adminProductPage->fillFieldProductPrice($this->product['price']+10);
+        $adminProductPage->fillFieldProductQuantity(
             $this->product['extension_attributes']['stock_item']['qty']+100
         );
         $I->wantTo('save product data change.');
-        AdminProductPage::of($I)->saveProduct();
-        $I->seeElement(AdminProductPage::$successMessage);
+        $adminProductPage->saveProduct();
+        $adminProductPage->seeSuccessMessage();
 
         $I->wantTo('see updated product data.');
-        AdminProductPage::of($I)->amOnAdminEditProductPageById($this->product['id']);
-        AdminProductPage::of($I)->seeInPageTitle($this->product['name'] . '-updated');
-        AdminProductPage::of($I)->seeProductAttributeSet('Default');
-        AdminProductPage::of($I)->seeProductName($this->product['name'] . '-updated');
-        AdminProductPage::of($I)->seeProductSku($this->product['sku'] . '-updated');
-        AdminProductPage::of($I)->seeProductPrice($this->product['price']+10);
-        AdminProductPage::of($I)->seeProductQuantity($this->product['extension_attributes']['stock_item']['qty']+100);
-        AdminProductPage::of($I)->seeProductStockStatus(
+        $adminProductPage->amOnAdminEditProductPageById($this->product['id']);
+        $adminProductPage->seeInPageTitle($this->product['name'] . '-updated');
+        $adminProductPage->seeProductAttributeSet('Default');
+        $adminProductPage->seeProductName($this->product['name'] . '-updated');
+        $adminProductPage->seeProductSku($this->product['sku'] . '-updated');
+        $adminProductPage->seeProductPrice($this->product['price']+10);
+        $adminProductPage->seeProductQuantity($this->product['extension_attributes']['stock_item']['qty']+100);
+        $adminProductPage->seeProductStockStatus(
             $this->product['extension_attributes']['stock_item']['is_in_stock'] !== 0 ? 'In Stock' : 'Out of Stock'
         );
 
         $I->wantTo('verify simple product data in frontend category page.');
-        StorefrontCategoryPage::of($I)->amOnCategoryPage($this->category['url_key']);
-        StorefrontCategoryPage::of($I)->seeProductNameInPage($this->product['name'] . '-updated');
-        StorefrontCategoryPage::of($I)->seeProductPriceInPage($this->product['name'] . '-updated', $this->product['price'] + 10);
+        $storefrontCategoryPage->amOnCategoryPage($this->category['url_key']);
+        $storefrontCategoryPage->seeProductNameInPage($this->product['name'] . '-updated');
+        $storefrontCategoryPage->seeProductPriceInPage($this->product['name'] . '-updated', $this->product['price'] + 10);
 
         $I->wantTo('verify simple product data in frontend product page.');
-        StorefrontProductPage::of($I)->amOnProductPage(str_replace('_', '-', $this->product['url_key']));
-        StorefrontProductPage::of($I)->seeProductNameInPage($this->product['name'] . '-updated');
-        StorefrontProductPage::of($I)->seeProductPriceInPage($this->product['price'] + 10);
-        StorefrontProductPage::of($I)->seeProductSkuInPage($this->product['sku'] . '-updated');
+        $storefrontProductPage->amOnProductPage(str_replace('_', '-', $this->product['url_key']));
+        $storefrontProductPage->seeProductNameInPage($this->product['name'] . '-updated');
+        $storefrontProductPage->seeProductPriceInPage($this->product['price'] + 10);
+        $storefrontProductPage->seeProductSkuInPage($this->product['sku'] . '-updated');
     }
 }

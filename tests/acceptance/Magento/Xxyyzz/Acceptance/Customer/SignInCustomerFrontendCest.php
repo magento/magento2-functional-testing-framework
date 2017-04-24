@@ -54,22 +54,29 @@ class SignInCustomerFrontendCest
      * @TestCaseId("")
      * @Severity(level = SeverityLevel::CRITICAL)
      * @Parameter(name = "AcceptanceTester", value = "$I")
+     * @Parameter(name = "StorefrontCustomerAccountLoginPage", value = "$customerAccountLoginPage")
+     * @Parameter(name = "StorefrontCustomerAccountDashboardPage", value = "$customerAccountDashboardPage")
      *
      * @param AcceptanceTester $I
+     * @param StorefrontCustomerAccountLoginPage $customerAccountLoginPage
+     * @param StorefrontCustomerAccountDashboardPage $customerAccountDashboardPage
      * @return void
      */
-    public function createCustomerTest(AcceptanceTester $I)
-    {
+    public function createCustomerTest(
+        AcceptanceTester $I,
+        StorefrontCustomerAccountLoginPage $customerAccountLoginPage,
+        StorefrontCustomerAccountDashboardPage $customerAccountDashboardPage
+    ) {
         $I->wantTo('create customer in frontend page.');
-        StorefrontCustomerAccountLoginPage::of($I)->amOnCustomerAccountLoginPage();
-        StorefrontCustomerAccountLoginPage::of($I)->fillFieldCustomerEmail($this->customer['email']);
-        StorefrontCustomerAccountLoginPage::of($I)->fillFieldCustomerPassword($this->customer['password']);
-        StorefrontCustomerAccountLoginPage::of($I)->clickSignInButton();
+        $customerAccountLoginPage->amOnCustomerAccountLoginPage();
+        $customerAccountLoginPage->fillFieldCustomerEmail($this->customer['email']);
+        $customerAccountLoginPage->fillFieldCustomerPassword($this->customer['password']);
+        $customerAccountLoginPage->clickSignInButton();
 
-        StorefrontCustomerAccountDashboardPage::of($I)->seeContactInformationName(
+        $customerAccountDashboardPage->seeContactInformationName(
             $this->customer['firstname'] . ' ' .  $this->customer['lastname']
         );
-        StorefrontCustomerAccountDashboardPage::of($I)->seeContactInformationEmail($this->customer['email']);
-        StorefrontCustomerAccountDashboardPage::of($I)->seeNewsletterText('subscribed to');
+        $customerAccountDashboardPage->seeContactInformationEmail($this->customer['email']);
+        $customerAccountDashboardPage->seeNewsletterText('subscribed to');
     }
 }
