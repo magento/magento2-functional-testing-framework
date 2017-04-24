@@ -16,10 +16,9 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 /**
  * Class SignInCustomerFrontendCest
  *
+ * Allure annotations
  * @Stories({"Create customer"})
  * @Features({"Create customer"})
- * @Title("Create customer")
- * @Description("Create customer")
  */
 class SignInCustomerFrontendCest
 {
@@ -44,6 +43,7 @@ class SignInCustomerFrontendCest
      * Create customer.
      *
      * Allure annotations
+     * @Title("Create Customer")
      * @Description("Method Description: Create customer")
      * @Severity(level = SeverityLevel::CRITICAL)
      * @Parameter(name = "Admin", value = "$I")

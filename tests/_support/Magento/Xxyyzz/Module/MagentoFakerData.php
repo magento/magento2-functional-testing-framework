@@ -151,6 +151,54 @@ class MagentoFakerData extends Sequence
     }
 
     /**
+     * Get category data.
+     *
+     * @return array
+     */
+    public function getCategoryData()
+    {
+        $faker = \Faker\Factory::create();
+        
+        return [
+            'enableCategory' => $faker->boolean(),
+            'includeInMenu' => $faker->boolean(),
+            'categoryName' => $faker->md5,
+            'categoryImage' => '',
+            'description' => $faker->sentence($nbWords = 10, $variableNbWords = true),
+            'addCMSBlock' => '',
+
+            'urlKey' => $faker->uuid,
+            'metaTitle' => $faker->word,
+            'metaKeywords' => $faker->sentence($nbWords = 5, $variableNbWords = true),
+            'metaDescription' => $faker->sentence($nbWords = 10, $variableNbWords = true),
+        ];
+    }
+
+    /**
+     * Get simple product api data.
+     *
+     * @param integer $categoryId
+     * @param array $productData
+     * @return array
+     */
+    public function getProductData($categoryId = 0, $productData = [])
+    {
+        $faker = \Faker\Factory::create();
+        return [
+            'enableProduct' => $faker->boolean(),
+            'attributeSet' => '',
+            'productName' => $faker->text($maxNbChars = 20),
+            'sku' => $faker->uuid,
+            'price' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 999),
+
+            'urlKey' => $faker->uuid,
+            'metaTitle' => $faker->word,
+            'metaKeywords' => $faker->sentence($nbWords = 5, $variableNbWords = true),
+            'metaDescription' => $faker->sentence($nbWords = 10, $variableNbWords = true)
+        ];
+    }
+
+    /**
      * Get Content Page Data.
      *
      * @return array

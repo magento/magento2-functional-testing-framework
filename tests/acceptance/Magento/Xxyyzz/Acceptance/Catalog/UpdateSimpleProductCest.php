@@ -23,8 +23,6 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
  * Allure annotations
  * @Features({"Catalog"})
  * @Stories({"Update simple product"})
- * @Title("Update simple product with required fields")
- * @Description("Update simple product with required fields")
  *
  * Codeception Annotations
  * @group catalog
@@ -81,11 +79,9 @@ class UpdateSimpleProductCest
     }
 
     /**
-     * Update simple product in admin.
-     *
      * Allure annotations
-     * @Title("Mathod Title: Update simple product with required fields")
-     * @Description("Method Description: Update simple product with required fields")
+     * @Title("Update simple product with required fields")
+     * @Description("Update simple product with required fields")
      * @Severity(level = SeverityLevel::CRITICAL)
      * @TestCaseId("")
      * @Parameter(name = "AdminStep", value = "$I")
