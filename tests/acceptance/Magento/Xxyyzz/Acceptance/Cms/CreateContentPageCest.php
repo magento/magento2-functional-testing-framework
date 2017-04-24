@@ -39,7 +39,6 @@ class CreateContentPageCest
         $I->loginAsAdmin();
         $adminCmsPage->amOnAdminCmsPage();
         $adminCmsPage->clickOnAddNewPageButton();
-        $I->waitForSpinnerToDisappear();
     }
 
     public function _after(AdminStep $I)

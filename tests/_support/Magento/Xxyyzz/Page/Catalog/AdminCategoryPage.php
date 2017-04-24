@@ -27,8 +27,8 @@ class AdminCategoryPage extends AbstractAdminPage
     /**
      * Category data fields.
      */
-    public static $categoryName                     = '.admin__field[data-index=name] input';
-    public static $categoryUrlKey                   = '.admin__field[data-index=url_key] input';
+    public static $categoryName                     = '.admin__control-text[name=name]';
+    public static $categoryUrlKey                   = '.admin__control-text[name=url_key]';
 
     /**
      * Category form loading spinner.
@@ -40,27 +40,58 @@ class AdminCategoryPage extends AbstractAdminPage
     {
         $I = $this->acceptanceTester;
         $I->amOnPage(self::route($param));
-        $I->waitForElementNotVisible(self::$categoryFormLoadingSpinner, $this->pageLoadTimeout);
+        $I->waitForPageLoad();
     }
 
     public function amOnAdminCategoryPageById($id)
     {
         $I = $this->acceptanceTester;
         $I->amOnPage(self::$URL . 'edit/id/' . $id);
-        $I->waitForElementNotVisible(self::$categoryFormLoadingSpinner, $this->pageLoadTimeout);
+        $I->waitForPageLoad();
     }
 
     public function addRootCategory()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$addRootCategoryButton);
+        $I->waitForPageLoad();
     }
 
     public function addSubCategory()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$addSubCategoryButton);
-        $I->waitForElementNotVisible(self::$categoryFormLoadingSpinner, $this->pageLoadTimeout);
+        $I->waitForPageLoad();
+    }
+
+    public function clickOnContent()
+    {
+        self::clickOnCollapsibleArea('Content');
+    }
+
+    public function clickOnDisplaySettings()
+    {
+        self::clickOnCollapsibleArea('Display Settings');
+    }
+
+    public function clickOnSearchEngineOptimization()
+    {
+        self::clickOnCollapsibleArea('Search Engine Optimization');
+    }
+
+    public function clickOnProductsInCategory()
+    {
+        self::clickOnCollapsibleArea('Products in Category');
+    }
+
+    public function clickOnDesign()
+    {
+        self::clickOnCollapsibleArea('Design');
+    }
+
+    public function clickOnScheduleDesignUpdate()
+    {
+        self::clickOnCollapsibleArea('Schedule Design Update');
     }
 
     public function fillFieldCategoryName($name)
@@ -72,10 +103,6 @@ class AdminCategoryPage extends AbstractAdminPage
     public function fillFieldCategoryUrlKey($name)
     {
         $I = $this->acceptanceTester;
-        try {
-            $I->click(sprintf(self::$categorySearchEngineOptimToggle, 'closed'));
-        } catch (\Exception $e) {
-        }
         $I->fillField(self::$categoryUrlKey, $name);
     }
 
@@ -83,8 +110,18 @@ class AdminCategoryPage extends AbstractAdminPage
     {
         $I = $this->acceptanceTester;
         $I->click(self::$saveCategoryButton);
-        $I->waitForElementNotVisible(self::$popupLoadingSpinner);
-        $I->waitForElementNotVisible(self::$categoryFormLoadingSpinner);
-        $I->waitForElementVisible(self::$successMessage);
+        $I->waitForPageLoad();
+    }
+
+    public function addBasicCategory($categoryDetails)
+    {
+        self::addRootCategory();
+
+        self::fillFieldCategoryName($categoryDetails['categoryName']);
+
+        self::clickOnSearchEngineOptimization();
+        self::fillFieldCategoryUrlKey($categoryDetails['urlKey']);
+
+        self::saveCategory();
     }
 }

@@ -27,7 +27,7 @@ class StorefrontCustomerAccountDashboardPage extends AbstractFrontendPage
     {
         $I = $this->acceptanceTester;
         $I->amOnPage(self::$URL);
-        $I->waitPageLoad();
+        $I->waitForPageLoad();
         $this->setCustomerContactInformation();
     }
 
@@ -55,7 +55,7 @@ class StorefrontCustomerAccountDashboardPage extends AbstractFrontendPage
     {
         $I = $this->acceptanceTester;
         $I->click(self::$contactInfomationEditLink);
-        $I->waitPageLoad();
+        $I->waitForPageLoad();
         $I->seeInCurrentUrl('customer/account/edit');
     }
 
@@ -63,7 +63,7 @@ class StorefrontCustomerAccountDashboardPage extends AbstractFrontendPage
     {
         $I = $this->acceptanceTester;
         $I->click(self::$contactInfomationForgotPwdLink);
-        $I->waitPageLoad();
+        $I->waitForPageLoad();
         $I->seeInCurrentUrl('customer/account/edit/changepass');
     }
 
@@ -71,7 +71,7 @@ class StorefrontCustomerAccountDashboardPage extends AbstractFrontendPage
     {
         $I = $this->acceptanceTester;
         $I->click(self::$newsletterEditLink);
-        $I->waitPageLoad();
+        $I->waitForPageLoad();
         $I->seeInCurrentUrl('newsletter/manage');
     }
 

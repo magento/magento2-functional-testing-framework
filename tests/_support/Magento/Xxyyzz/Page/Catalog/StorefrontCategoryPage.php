@@ -37,7 +37,7 @@ class StorefrontCategoryPage extends AbstractFrontendPage
     {
         $I = $this->acceptanceTester;
         $I->amOnPage(self::route($categoryUrlKey . '.html' . $params));
-        $I->waitPageLoad();
+        $I->waitForPageLoad();
     }
 
     public function seeCategoryNameInTitleHeading($name)
@@ -81,7 +81,7 @@ class StorefrontCategoryPage extends AbstractFrontendPage
             } catch (WebDriverException $e) {
                 try {
                     $I->click(self::$pageNextButton);
-                    $I->waitPageLoad();
+                    $I->waitForPageLoad();
                 } catch (WebDriverException $e) {
                 }
             }

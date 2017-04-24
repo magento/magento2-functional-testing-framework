@@ -40,9 +40,6 @@ abstract class AbstractAdminPage
     public static $pageMainActionsSave            = '#save';
     public static $pageMainActionsAdd             = '#add';
 
-    public static $loadingMask                    = '.loading-mask';
-    public static $gridLoadingMask                = '.admin__data-grid-loading-mask';
-
     /**
      * @var AcceptanceTester
      */
@@ -74,13 +71,6 @@ abstract class AbstractAdminPage
     public static function route($param)
     {
         return static::$URL.$param;
-    }
-
-    public function waitForLoadingMaskToDisappear()
-    {
-        $I = $this->acceptanceTester;
-        $I->waitForElementNotVisible(self::$loadingMask, 30);
-        $I->waitForElementNotVisible(self::$gridLoadingMask, 30);
     }
 
     public function openTabGoToAndVerifyUrl($pageUrl)
@@ -162,21 +152,21 @@ abstract class AbstractAdminPage
     {
         $I = $this->acceptanceTester;
         $I->click(self::$pageMainActionsSaveAndContinue);
-        $I->waitForLoadingMaskToDisappear();
+        $I->waitForPageLoad();
     }
 
     public function clickOnAdminSaveButton()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$pageMainActionsSave);
-        $I->waitForLoadingMaskToDisappear();
+        $I->waitForPageLoad();
     }
 
     public function clickOnAdminAddButton()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$pageMainActionsAdd);
-        $I->waitForLoadingMaskToDisappear();
+        $I->waitForPageLoad();
     }
 
     public function clickOnCollapsibleArea($areaName)

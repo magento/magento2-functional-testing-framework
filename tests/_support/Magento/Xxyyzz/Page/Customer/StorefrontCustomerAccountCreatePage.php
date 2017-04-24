@@ -25,7 +25,7 @@ class StorefrontCustomerAccountCreatePage extends AbstractFrontendPage
     {
         $I = $this->acceptanceTester;
         $I->amOnPage(self::$URL);
-        $I->waitPageLoad();
+        $I->waitForPageLoad();
     }
 
     public function fillFieldFirstName($firstName)
@@ -58,7 +58,7 @@ class StorefrontCustomerAccountCreatePage extends AbstractFrontendPage
         $I->fillField(self::$customerConfirmPassword, $password);
     }
 
-    public function setNewsletterSubscribe(bool $checked)
+    public function setNewsletterSubscribe($checked)
     {
         $I = $this->acceptanceTester;
         try {
@@ -78,7 +78,7 @@ class StorefrontCustomerAccountCreatePage extends AbstractFrontendPage
     {
         $I = $this->acceptanceTester;
         $I->click(self::$createAccountSubmitButton);
-        $I->waitPageLoad();
+        $I->waitForPageLoad();
         $I->seeInCurrentUrl('customer/account');
     }
 }

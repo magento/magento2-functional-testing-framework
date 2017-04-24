@@ -19,7 +19,7 @@ class StorefrontProductPage extends AbstractFrontendPage
     {
         $I = $this->acceptanceTester;
         $I->amOnPage(self::route($categoryUrlKey . '.html'));
-        $I->waitPageLoad();
+        $I->waitForPageLoad();
     }
 
     public function seeProductNameInPage($name)

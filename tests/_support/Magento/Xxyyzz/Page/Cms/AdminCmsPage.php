@@ -27,12 +27,15 @@ class AdminCmsPage extends AbstractAdminPage
     public static $pageTitleField           = '.admin__control-text[name="title"]';
     public static $contentHeadingField      = '.admin__control-text[name="content_heading"]';
     public static $insertWidgetButton       = '.action-add-widget';
+
     // TODO: Add Selectors for the "Insert Widget" section and controls
 
     public static $insertImageButton        = '.action-add-image';
+
     // TODO: Add Selectors for the "Insert Image" section and controls
 
     public static $insertVariableButton     = '.add-variable';
+
     // TODO: Add Selectors for the "Insert Variable" section and controls
 
     public static $contentBodyField         = '#cms_page_form_content';
@@ -57,14 +60,14 @@ class AdminCmsPage extends AbstractAdminPage
     {
         $I = $this->acceptanceTester;
         $I->amOnPage(self::route($param));
-        $I->waitForElementNotVisible('.admin__data-grid-loading-mask', 30); // secs
+        $I->waitForPageLoad();
     }
 
     public function amOnAdminCmsPageById($id)
     {
         $I = $this->acceptanceTester;
         $I->amOnPage(self::$URL . 'edit/page_id/' . $id);
-        $I->waitForElementNotVisible(self::$cmsFormLoadingSpinner, 30); // secs
+        $I->waitForPageLoad();
     }
 
     public function seePageNameInPageTitle($name)
@@ -77,7 +80,7 @@ class AdminCmsPage extends AbstractAdminPage
     {
         $I = $this->acceptanceTester;
         $I->click(self::$cmsAddNewPageButton);
-        $I->waitForElementNotVisible(self::$cmsFormLoadingSpinner, 30); // secs
+        $I->waitForPageLoad();
     }
 
     public function clickOnEnablePageToggle()
@@ -230,7 +233,6 @@ class AdminCmsPage extends AbstractAdminPage
 
     public function selectMultipleStoreViews($storeViews)
     {
-        $I = $this->acceptanceTester;
         // TODO: Add multi-select support for the "Store View" setting
     }
 
@@ -299,6 +301,7 @@ class AdminCmsPage extends AbstractAdminPage
     }
 
     // TODO: Add calendar modal support
+
     public function enterFrom($fromDate)
     {
         $I = $this->acceptanceTester;
@@ -421,20 +424,13 @@ class AdminCmsPage extends AbstractAdminPage
     {
         $I = $this->acceptanceTester;
         $I->click(self::$savePageButton);
-        $I->waitForElementNotVisible(self::$pageSavedSpinner);
-        $I->waitForElementVisible(self::$pageSaveSuccessMessage);
+        $I->waitForPageLoad();
     }
 
     public function seeSaveSuccessMessage()
     {
         $I = $this->acceptanceTester;
         $I->seeElement(self::$pageSaveSuccessMessage);
-    }
-
-    public function clickOnCollapsibleArea($areaName)
-    {
-        $I = $this->acceptanceTester;
-        $I->click('//div[@class="fieldset-wrapper-title"]/strong/span[contains(text(), "' . $areaName . '")]');
     }
 
     public function clickOnPageContent()
@@ -460,5 +456,21 @@ class AdminCmsPage extends AbstractAdminPage
     public function clickOnPageCustomDesignUpdate()
     {
         self::clickOnCollapsibleArea('Custom Design Update');
+    }
+
+    public function addBasicPage($pageDetails)
+    {
+        self::clickOnAddNewPageButton();
+
+        self::clickOnPageContent();
+
+        self::enterPageTitle($pageDetails['pageTitle']);
+        self::enterPageContentHeading($pageDetails['contentHeading']);
+        self::enterPageContentBody($pageDetails['contentBody']);
+
+        self::clickOnPageSearchEngineOptimisation();
+        self::enterUrlKey($pageDetails['urlKey']);
+
+        self::savePage();
     }
 }
