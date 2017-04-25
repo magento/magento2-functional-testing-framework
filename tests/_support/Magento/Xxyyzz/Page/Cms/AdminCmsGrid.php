@@ -1,9 +1,9 @@
 <?php
 namespace Magento\Xxyyzz\Page\Cms;
 
-use Magento\Xxyyzz\Page\AbstractAdminGridPage;
+use Magento\Xxyyzz\Page\AdminGridPage;
 
-class AdminCmsGrid extends AbstractAdminGridPage
+class AdminCmsGrid extends AdminGridPage
 {
     /**
      * Declare UI map for this page here. CSS or XPath allowed.

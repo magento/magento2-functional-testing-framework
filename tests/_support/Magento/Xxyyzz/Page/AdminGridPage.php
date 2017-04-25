@@ -2,23 +2,31 @@
 namespace Magento\Xxyyzz\Page;
 
 use Magento\Xxyyzz\AcceptanceTester;
+use Codeception\Exception\ElementNotFound;
 
-abstract class AbstractAdminGridPage
+class AdminGridPage
 {
     /**
-     * Include url of current page.
+     * Include url of
+     *
+     * current page.
      */
-    public static $URL = '/admin/customer/index/';
+    public static $URL = '/admin/admin/';
 
     /**
      * Declare UI map for this page here. CSS or XPath allowed.
      */
-    public static $searchByField       = '.data-grid-search-control';
-    public static $searchByButton      = '.data-grid-search-control-wrap .action-submit';
+    public static $searchByField            = '.data-grid-search-control';
+    public static $searchByButton           = '.data-grid-search-control-wrap .action-submit';
 
-    public static $filtersButton       = '.data-grid-filters-action-wrap .action-default';
-
-    // TODO: Add Filter selectors
+    //public static $filtersButton            = 'button[data-action=grid-filter-expand]';
+    public static $filtersButton
+        = '.admin__data-grid-outer-wrap>.admin__data-grid-header button[data-action=grid-filter-expand]';
+    public static $filtersExpanded          = '.admin__data-grid-filters-wrap._show';
+    public static $filtersApplyButton       = 'button[data-action=grid-filter-apply]';
+    public static $filtersCancelButton      = 'button[data-action=grid-filter-cancel]';
+    //public static $filtersClearAllButton    = 'button[data-action=grid-filter-reset]';
+    public static $filtersClearAllButton    = '.admin__data-grid-header button[data-action=grid-filter-reset]';
 
     public static $viewButton          = '.admin__data-grid-action-bookmarks .admin__action-dropdown';
     public static $viewDropDownMenu    = '.admin__data-grid-action-bookmarks .admin__action-dropdown-menu';
@@ -64,6 +72,9 @@ abstract class AbstractAdminGridPage
     public static $loadingMask         = '.loading-mask';
     public static $gridLoadingMask     = '.admin__data-grid-loading-mask';
 
+    public static $gridNthRow
+        = '.admin__data-grid-outer-wrap>.admin__data-grid-wrap tbody tr:nth-child(%s)';
+
     /**
      * @var AcceptanceTester
      */
@@ -106,13 +117,77 @@ abstract class AbstractAdminGridPage
         $I->waitForPageLoad();
     }
 
-    public function clickOnFiltersButton()
+    public function clickOnFiltersButtonToExpand()
     {
         $I = $this->acceptanceTester;
-        $I->click(self::$filtersButton);
+        try {
+            $I->waitForPageLoad();
+            $I->dontSeeElement(self::$filtersExpanded);
+            $I->click(self::$filtersButton);
+            $I->waitForPageLoad();
+        } catch (ElementNotFound $e) {
+        }
     }
 
-    // TODO: Add Filter methods
+    public function clickOnFiltersButtonToClose()
+    {
+        $I = $this->acceptanceTester;
+        try {
+            $I->waitForPageLoad();
+            $I->seeElement(self::$filtersExpanded);
+            $I->click(self::$filtersButton);
+            $I->waitForPageLoad();
+        } catch (ElementNotFound $e) {
+        }
+    }
+
+    public function clickOnFiltersClearAllButton()
+    {
+        $I = $this->acceptanceTester;
+        try {
+            $I->waitForPageLoad();
+            $I->click(self::$filtersClearAllButton);
+        } catch (ElementNotFound $e) {
+        }
+    }
+
+    /**
+     * Search and filter by value.
+     *
+     * @param string $value
+     * @param string $selector
+     * @param string $type
+     */
+    public function searchAndFiltersByValue($value, $selector, $type = 'textfield')
+    {
+        $I = $this->acceptanceTester;
+        $this->clickOnFiltersClearAllButton();
+        $this->clickOnFiltersButtonToExpand();
+
+        switch ($type) {
+            case 'dropdown':
+                $I->selectOption($selector, $value);
+                break;
+            case 'textfield':
+            default:
+            $I->fillField($selector, $value);
+        }
+        $I->click(self::$filtersApplyButton);
+        $I->waitForPageLoad();
+    }
+
+    /**
+     * @see text in grid nth row.
+     *
+     * @param int $n
+     * @param string $text
+     */
+    public function seeInNthRow(int $n, $text)
+    {
+        $I = $this->acceptanceTester;
+        $I->waitForPageLoad();
+        $I->see($text, sprintf(self::$gridNthRow, $n));
+    }
 
     public function clickOnViewButton()
     {

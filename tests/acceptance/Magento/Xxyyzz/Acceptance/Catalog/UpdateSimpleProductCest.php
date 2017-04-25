@@ -109,6 +109,7 @@ class UpdateSimpleProductCest
         $I->wantTo('update simple product in admin.');
         $adminProductGridPage->amOnAdminProductGridPage();
         $adminProductGridPage->searchBySku($this->product['sku']);
+        $adminProductGridPage->seeInNthRow(1, $this->product['sku']);
 
         $I->wantTo('open product created from precondition.');
         $adminProductPage->amOnAdminEditProductPageById($this->product['id']);
