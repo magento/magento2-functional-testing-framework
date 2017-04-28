@@ -420,7 +420,7 @@ class AdminCmsPage extends AbstractAdminPage
         self::verifyNewLayout('3 columns');
     }
 
-    public function savePage()
+    public function clickOnSavePageButton()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$savePageButton);
@@ -471,6 +471,6 @@ class AdminCmsPage extends AbstractAdminPage
         self::clickOnPageSearchEngineOptimisation();
         self::enterUrlKey($pageDetails['urlKey']);
 
-        self::savePage();
+        self::clickOnSavePageButton();
     }
 }

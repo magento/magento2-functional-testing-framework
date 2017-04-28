@@ -30,13 +30,13 @@ class CreateCustomerCest
 {
     public function _before(
         AdminStep $I,
-        AdminCustomerPage $customerPage
+        AdminCustomerGrid $customerPageGrid
     )
     {
         $I->am('an Admin');
         $I->loginAsAdmin();
         $I->goToTheAdminCustomersAllCustomersPage();
-        $customerPage->clickOnAddCustomerButton();
+        $customerPageGrid->clickOnAddNewCustomerButton();
     }
 
     /**
@@ -184,12 +184,12 @@ class CreateCustomerCest
         $adminCustomerPage->selectAssociateToWebsiteMainWebsite();
         $adminCustomerPage->selectGroupGeneral();
 
-        $adminCustomerPage->clickOnAdminSaveButton();
+        $adminCustomerPage->clickOnSaveCustomerButton();
+
         $adminCustomerGrid->performSearchByKeyword($customerData['email']);
-
         $adminCustomerGrid->clickOnActionLinkFor($customerData['email']);
-        $adminCustomerPage->clickOnAccountInformationLink();
 
+        $adminCustomerPage->clickOnAccountInformationLink();
         $adminCustomerPage->verifyFirstName($customerData['firstname']);
         $adminCustomerPage->verifyLastName($customerData['lastname']);
         $adminCustomerPage->verifyEmailAddress($customerData['email']);
@@ -252,12 +252,12 @@ class CreateCustomerCest
         $adminCustomerPage->selectAssociateToWebsiteMainWebsite();
         $adminCustomerPage->selectGroupGeneral();
 
-        $adminCustomerPage->clickOnAdminSaveButton();
+        $adminCustomerPage->clickOnSaveCustomerButton();
+
         $adminCustomerGrid->performSearchByKeyword($customerData['email']);
-
         $adminCustomerGrid->clickOnActionLinkFor($customerData['email']);
-        $adminCustomerPage->clickOnAddressesLink();
 
+        $adminCustomerPage->clickOnAddressesLink();
         $adminCustomerPage->verifyAddAddressDefaultBillingAddress(true);
         $adminCustomerPage->verifyAddAddressDefaultShippingAddress(true);
 

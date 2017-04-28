@@ -32,13 +32,14 @@ class CreateContentPageCest
 {
     public function _before(
         AdminStep $I,
-        AdminCmsPage $adminCmsPage
+        AdminCmsGrid $adminCmsGrid
     )
     {
         $I->am('an Admin');
         $I->loginAsAdmin();
-        $adminCmsPage->amOnAdminCmsPage();
-        $adminCmsPage->clickOnAddNewPageButton();
+        $I->goToTheAdminContentPagesPage();
+        
+        $adminCmsGrid->clickOnAddPageButton();
     }
 
     public function _after(AdminStep $I)
@@ -153,7 +154,7 @@ class CreateContentPageCest
         $adminCmsPage->clickOnPageSearchEngineOptimisation();
         $adminCmsPage->enterUrlKey($pageData['urlKey']);
 
-        $adminCmsPage->savePage();
+        $adminCmsPage->clickOnSavePageButton();
         $adminCmsPage->seeSaveSuccessMessage();
 
         $I->openNewTabGoToVerify($pageData['urlKey']);
@@ -163,6 +164,7 @@ class CreateContentPageCest
 
         $adminCmsGrid->performSearchByKeyword($pageData['urlKey']);
         $adminCmsGrid->clickOnActionEditFor($pageData['urlKey']);
+        
         $adminCmsPage->clickOnPageContent();
         $adminCmsPage->clickOnPageSearchEngineOptimisation();
 
