@@ -188,8 +188,9 @@ class MagentoFakerData extends Sequence
             'enableProduct' => $faker->boolean(),
             'attributeSet' => '',
             'productName' => $faker->text($maxNbChars = 20),
-            'sku' => $faker->uuid,
+            'sku' => \Faker\Provider\DateTime::unixTime($max = 'now'),
             'price' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 999),
+            'quantity' => $faker->numberBetween($min = 1, $max = 999),
 
             'urlKey' => $faker->uuid,
             'metaTitle' => $faker->word,
