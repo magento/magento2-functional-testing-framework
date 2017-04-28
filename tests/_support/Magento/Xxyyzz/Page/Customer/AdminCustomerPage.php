@@ -13,6 +13,7 @@ class AdminCustomerPage extends AbstractAdminPage
     /**
      * Declare UI map for this page here. CSS or XPath allowed.
      */
+    public static $saveCustomerButton            = '#save';
     public static $deleteCustomerButton          = '#customer-edit-delete-button';
     public static $createOrderButton             = '#customer-edit-delete-button';
     public static $resetPasswordButton           = '#resetPassword';
@@ -78,6 +79,13 @@ class AdminCustomerPage extends AbstractAdminPage
     {
         $I = $this->acceptanceTester;
         self::clickOnAdminAddButton();
+        $I->waitForPageLoad();
+    }
+
+    public function clickOnSaveCustomerButton()
+    {
+        $I = $this->acceptanceTester;
+        $I->click(self::$saveCustomerButton);
         $I->waitForPageLoad();
     }
     
