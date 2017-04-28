@@ -45,6 +45,8 @@ class CreateSimpleProductCest
     public function _before(AdminStep $I, CategoryApiStep $api)
     {
         $I->loginAsAdmin();
+        $I->goToTheAdminProductsCatalogPage();
+        
         $this->category = $I->getCategoryApiData();
         $api->amAdminTokenAuthenticated();
         $this->category = array_merge($this->category, ['id' => $api->createCategory(['category' => $this->category])]);
@@ -91,7 +93,6 @@ class CreateSimpleProductCest
         StorefrontProductPage $storefrontProductPage
     ) {
         $I->wantTo('create simple product with required fields in admin product page.');
-        $adminProductGridPage->amOnAdminProductGridPage();
         $adminProductGridPage->clickAddNewProductPage();
         $adminProductPage->amOnAdminNewProductPage();
         $adminProductPage->fillFieldProductName($this->product['name']);

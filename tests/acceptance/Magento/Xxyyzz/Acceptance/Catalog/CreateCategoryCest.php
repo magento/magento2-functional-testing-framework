@@ -19,6 +19,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
  * Allure annotations
  * @Features({"Category"})
  * @Stories({"Create a sub-Category"})
+ *
  * Codeception annotations
  * @group catalog
  * @group add
@@ -39,8 +40,6 @@ class CreateCategoryCest
     }
 
     /**
-     * Create sub category in admin.
-     *
      * Allure annotations
      * @Title("Create sub category with required fields")
      * @Description("Create sub category with required fields")
@@ -50,6 +49,7 @@ class CreateCategoryCest
      * @Parameter(name = "AdminCategoryPage", value = "$adminCategoryPage")
      * @Parameter(name = "StorefrontCategoryPage", value = "$storefrontCategoryPage")
      *
+     * Codeception annotations
      * @param AdminStep $I
      * @param AdminCategoryPage $adminCategoryPage
      * @param StorefrontCategoryPage $storefrontCategoryPage
@@ -63,7 +63,7 @@ class CreateCategoryCest
         $I->wantTo('create sub category with required fields in admin Category page.');
         $category = $I->getCategoryApiData();
 
-        $adminCategoryPage->amOnAdminCategoryPage();
+        $I->goToTheAdminProductsCategoriesPage();
         $adminCategoryPage->addSubCategory();
         $adminCategoryPage->fillFieldCategoryName($category['name']);
 

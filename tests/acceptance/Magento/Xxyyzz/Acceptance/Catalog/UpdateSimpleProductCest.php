@@ -50,6 +50,8 @@ class UpdateSimpleProductCest
     public function _before(AdminStep $I, CategoryApiStep $categoryApi, ProductApiStep $productApi)
     {
         $I->loginAsAdmin();
+        $I->goToTheAdminProductsCatalogPage();
+        
         $this->category = $I->getCategoryApiData();
         $categoryApi->amAdminTokenAuthenticated();
         $this->category = array_merge(
@@ -107,7 +109,6 @@ class UpdateSimpleProductCest
         StorefrontProductPage $storefrontProductPage
     ) {
         $I->wantTo('update simple product in admin.');
-        $adminProductGridPage->amOnAdminProductGridPage();
         $adminProductGridPage->searchBySku($this->product['sku']);
         $adminProductGridPage->seeInNthRow(1, $this->product['sku']);
 
