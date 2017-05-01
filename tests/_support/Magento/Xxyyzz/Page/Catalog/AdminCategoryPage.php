@@ -6,6 +6,11 @@ use Magento\Xxyyzz\Page\AbstractAdminPage;
 class AdminCategoryPage extends AbstractAdminPage
 {
     /**
+     * Include url of current page.
+     */
+    public static $URL = '/admin/catalog/category/';
+
+    /**
      * Buttons in category page.
      */
     public static $addRootCategoryButton    = '#add_root_category_button';
@@ -24,6 +29,13 @@ class AdminCategoryPage extends AbstractAdminPage
      */
     public static $categoryName             = '.admin__control-text[name=name]';
     public static $categoryUrlKey           = '.admin__control-text[name=url_key]';
+
+    public function amOnAdminCategoryPage($param = '')
+    {
+        $I = $this->acceptanceTester;
+        $I->amOnPage(self::route($param));
+        $I->waitForPageLoad();
+    }
 
     public function amOnAdminCategoryPageById($id)
     {

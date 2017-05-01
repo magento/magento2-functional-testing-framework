@@ -6,6 +6,11 @@ use Magento\Xxyyzz\Page\AdminGridPage;
 class AdminProductGridPage extends AdminGridPage
 {
     /**
+     * Include url of current page.
+     */
+    public static $URL = '/admin/catalog/product';
+
+    /**
      * Declare UI map for this page here. CSS or XPath allowed.
      */
     public static $addNewProductButton               = '#add_new_product-button';
@@ -35,10 +40,18 @@ class AdminProductGridPage extends AdminGridPage
     public static $filterProductVisibilityDropDown   = '.admin__control-select[name="visibility"]';
     public static $filterProductStatusDropDown       = '.admin__control-select[name="status"]';
 
-    public function clickAddNewProductPage()
+    public function amOnAdminProductGridPage()
+    {
+        $I = $this->acceptanceTester;
+        $I->amOnPage(self::$URL);
+        $I->waitForPageLoad();
+    }
+
+    public function clickAddNewProductButton()
     {
         $I = $this->acceptanceTester;
         $I->click(self::$addNewProductButton);
+        $I->waitForPageLoad();
     }
 
     public function clickOnAddNewProductDropDown()

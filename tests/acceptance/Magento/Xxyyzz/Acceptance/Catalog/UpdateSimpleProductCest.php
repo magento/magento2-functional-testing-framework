@@ -59,8 +59,7 @@ class UpdateSimpleProductCest
             ['id' => $categoryApi->createCategory(['category' => $this->category])]
         );
         $this->category['url_key'] = $this->category['custom_attributes'][0]['value'];
-        $this->product = $I->getSimpleProductApiData();
-        $this->product['custom_attributes'][2]['value'] = $this->category['id'];
+        $this->product = $I->getProductApiData('simple', $this->category['id']);
         $productApi->amAdminTokenAuthenticated();
         $this->product = array_merge(
             $this->product,
@@ -88,7 +87,7 @@ class UpdateSimpleProductCest
      * @Description("Update simple product with required fields")
      * @TestCaseId("")
      * @Severity(level = SeverityLevel::CRITICAL)
-     * @Parameter(name = "Admin", value = "$I")
+     * @Parameter(name = "AdminStep", value = "$I")
      * @Parameter(name = "AdminProductGridPage", value = "$adminProductGridPage")
      * @Parameter(name = "AdminProductPage", value = "$adminProductPage")
      * @Parameter(name = "StorefrontCategoryPage", value = "$storefrontCategoryPage")
@@ -110,7 +109,7 @@ class UpdateSimpleProductCest
     ) {
         $I->wantTo('update simple product in admin.');
         $adminProductGridPage->searchBySku($this->product['sku']);
-        $adminProductGridPage->seeInNthRow(1, $this->product['sku']);
+        $adminProductGridPage->seeInCurrentGridNthRow(1, [$this->product['sku']]);
 
         $I->wantTo('open product created from precondition.');
         $adminProductPage->amOnAdminEditProductPageById($this->product['id']);

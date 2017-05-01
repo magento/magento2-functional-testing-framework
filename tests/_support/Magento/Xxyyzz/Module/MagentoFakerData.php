@@ -49,17 +49,17 @@ class MagentoFakerData extends Sequence
      * @param array $productData
      * @return array
      */
-    public function getSimpleProductApiData($categoryId = 0, $productData = [])
+    public function getProductApiData($type = 'simple', $categoryId = 0, $productData = [])
     {
         $faker = \Faker\Factory::create();
         $sq = $this->getSqs();
         return [
             'sku' => isset($productData['sku'])
-                ? $productData['sku'] : 'simple_product_sku'.$sq,
+                ? $productData['sku'] : $type . '_product_sku'.$sq,
             'name' => isset($productData['name'])
-                ? $productData['name'] : 'simple_product'.$sq,
+                ? $productData['name'] : $type . '_product'.$sq,
             'visibility' => 4,
-            'type_id' => 'simple',
+            'type_id' => $type,
             'price' => $faker->randomFloat(2, 1),
             'status' => 1,
             'attribute_set_id' => 4,

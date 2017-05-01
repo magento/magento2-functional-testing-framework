@@ -72,9 +72,15 @@ class AdminGridPage
     public static $loadingMask         = '.loading-mask';
     public static $gridLoadingMask     = '.admin__data-grid-loading-mask';
 
+    public static $grid
+        = '.admin__data-grid-outer-wrap>.admin__data-grid-wrap';
+
     public static $gridNthRow
         = '.admin__data-grid-outer-wrap>.admin__data-grid-wrap tbody tr:nth-child(%s)';
 
+    public static $checkboxInGridNthRow
+        = '.admin__data-grid-outer-wrap>.admin__data-grid-wrap tbody tr:nth-child(%s) .admin__control-checkbox';
+    
     /**
      * @var AcceptanceTester
      */
@@ -177,16 +183,48 @@ class AdminGridPage
     }
 
     /**
-     * @see text in grid nth row.
+     * @see texts in currently visible grid's nth row.
      *
      * @param int $n
-     * @param string $text
+     * @param array $texts
      */
-    public function seeInNthRow(int $n, $text)
+    public function seeInCurrentGridNthRow(int $n, array $texts)
     {
         $I = $this->acceptanceTester;
         $I->waitForPageLoad();
-        $I->see($text, sprintf(self::$gridNthRow, $n));
+        foreach ($texts as $text) {
+            $I->see($text, sprintf(self::$gridNthRow, $n));
+        }
+    }
+
+    /**
+     * @see texts in currently visible grid.
+     *
+     * @param array $texts
+     */
+    public function seeInCurrentGrid(array $texts)
+    {
+        $I = $this->acceptanceTester;
+        $I->waitForPageLoad();
+        foreach ($texts as $text) {
+            $I->see($text, self::$grid);
+        }
+    }
+
+    /**
+     * Check the checkbox in currently visible grid's nth row.
+     *
+     * @param int $n
+     */
+    public function checkCheckboxInCurrentNthRow(int $n)
+    {
+        $I = $this->acceptanceTester;
+        $I->waitForPageLoad();
+        try {
+            $I->dontSeeCheckboxIsChecked(sprintf(self::$checkboxInGridNthRow, 1));
+            $I->click(sprintf(self::$checkboxInGridNthRow, 1));
+        } catch (ElementNotFound $e) {
+        }
     }
 
     public function clickOnViewButton()

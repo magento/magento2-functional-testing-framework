@@ -34,10 +34,6 @@ class AdminProductPage extends AbstractAdminPage
     public static $producCategoriesMultiSelectText
         = '.admin__field[data-index=category_ids] .admin__action-multiselect-crumb:nth-child(%s)>span';
 
-    public static $productContentToggle            =
-        '.fieldset-wrapper[data-index=content] .fieldset-wrapper-title[data-state-collapsible=%s]';
-    public static $productSearchEngineOptimToggle  =
-        '.fieldset-wrapper[data-index=search-engine-optimization] .fieldset-wrapper-title[data-state-collapsible=%s]';
     /**
      * Product form loading spinner.
      */
@@ -119,10 +115,7 @@ class AdminProductPage extends AbstractAdminPage
     public function seeProductUrlKey($urlKey)
     {
         $I = $this->acceptanceTester;
-        try {
-            $I->click(sprintf(self::$productSearchEngineOptimToggle, 'closed'));
-        } catch (\Exception $e) {
-        }
+        $this->expandCollapsibleArea('search-engine-optimization');
         $I->seeInField(self::$productUrlKey, $urlKey);
     }
 
@@ -165,11 +158,8 @@ class AdminProductPage extends AbstractAdminPage
 
     public function fillFieldProductUrlKey($urlKey)
     {
+        $this->expandCollapsibleArea('search-engine-optimization');
         $I = $this->acceptanceTester;
-        try {
-            $I->click(sprintf(self::$productSearchEngineOptimToggle, 'closed'));
-        } catch (\Exception $e) {
-        }
         $I->fillField(self::$productUrlKey, $urlKey);
     }
 

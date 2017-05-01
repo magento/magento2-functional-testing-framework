@@ -175,6 +175,28 @@ abstract class AbstractAdminPage
         $I->click('//div[@class="fieldset-wrapper-title"]/strong/span[contains(text(), "' . $areaName . '")]');
     }
 
+    public function expandCollapsibleArea($areaIndex)
+    {
+        $I = $this->acceptanceTester;
+        $context = sprintf('.fieldset-wrapper[data-index=%s]', $areaIndex);
+        try {
+            $I->seeElement($context . ' .fieldset-wrapper-title[data-state-collapsible=closed]');
+            $I->click($context . ' .admin__collapsible-title>span');
+        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+        }
+    }
+
+    public function closeCollapsibleArea($areaIndex)
+    {
+        $I = $this->acceptanceTester;
+        $context = sprintf('.fieldset-wrapper[data-index=%s]', $areaIndex);
+        try {
+            $I->seeElement($context . ' .fieldset-wrapper-title[data-state-collapsible=open]');
+            $I->click($context . ' .admin__collapsible-title>span');
+        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+        }
+    }
+
     public function seeSuccessMessage()
     {
         $I = $this->acceptanceTester;

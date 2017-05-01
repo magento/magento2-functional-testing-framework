@@ -21,7 +21,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
  *
  * Allure annotations
  * @Features({"Catalog"})
- * @Stories({"Create a basic Product"})
+ * @Stories({"Create simple product"})
  *
  * Codeception annotations
  * @group catalog
@@ -51,7 +51,7 @@ class CreateSimpleProductCest
         $api->amAdminTokenAuthenticated();
         $this->category = array_merge($this->category, ['id' => $api->createCategory(['category' => $this->category])]);
         $this->category['url_key'] = $this->category['custom_attributes'][0]['value'];
-        $this->product = $I->getSimpleProductApiData();
+        $this->product = $I->getProductApiData();
         if ($this->product['extension_attributes']['stock_item']['is_in_stock'] !== 0) {
             $this->product['stock_status'] = 'In Stock';
             $this->product['qty'] = $this->product['extension_attributes']['stock_item']['qty'];
@@ -68,11 +68,11 @@ class CreateSimpleProductCest
 
     /**
      * Allure annotations
-     * @Title("Create a basic Product and verify on the Storefront")
-     * @Description("Create a basic Product in the Admin and verify the content on the Storefront.")
+     * @Title("Create a simple product and verify on the Storefront")
+     * @Description("Create a simple product in the Admin and verify the content on the Storefront.")
      * @TestCaseId("")
      * @Severity(level = SeverityLevel::CRITICAL)
-     * @Parameter(name = "Admin", value = "$I")
+     * @Parameter(name = "AdminStep", value = "$I")
      * @Parameter(name = "AdminProductGridPage", value = "$adminProductGridPage")
      * @Parameter(name = "AdminProductPage", value = "$adminProductPage")
      * @Parameter(name = "StorefrontCategoryPage", value = "$storefrontCategoryPage")
@@ -93,7 +93,7 @@ class CreateSimpleProductCest
         StorefrontProductPage $storefrontProductPage
     ) {
         $I->wantTo('create simple product with required fields in admin product page.');
-        $adminProductGridPage->clickAddNewProductPage();
+        $adminProductGridPage->clickAddNewProductButton();
         $adminProductPage->amOnAdminNewProductPage();
         $adminProductPage->fillFieldProductName($this->product['name']);
         $adminProductPage->fillFieldProductSku($this->product['sku']);

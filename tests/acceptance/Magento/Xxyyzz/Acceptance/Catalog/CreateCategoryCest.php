@@ -45,7 +45,7 @@ class CreateCategoryCest
      * @Description("Create sub category with required fields")
      * @TestCaseId("")
      * @Severity(level = SeverityLevel::CRITICAL)
-     * @Parameter(name = "Admin", value = "$I")
+     * @Parameter(name = "AdminStep", value = "$I")
      * @Parameter(name = "AdminCategoryPage", value = "$adminCategoryPage")
      * @Parameter(name = "StorefrontCategoryPage", value = "$storefrontCategoryPage")
      *
