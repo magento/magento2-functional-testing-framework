@@ -74,27 +74,27 @@ class AccessAdminPagesViaNavMenuCest
         $I->wantTo('see if I can access each of the SALES Admin Pages using the Side Nav Menus');
         $sideNavMenu->clickOnSalesInTheSideNavMenu();
         $sideNavMenu->clickOnOrdersInTheSalesNavMenu();
-        $I->shouldBeOnTheAdminSalesOrdersPage();
+        $I->shouldBeOnTheAdminOrdersGrid();
 
         $sideNavMenu->clickOnSalesInTheSideNavMenu();
         $sideNavMenu->clickOnInvoicesInTheSalesNavMenu();
-        $I->shouldBeOnTheAdminSalesInvoicesPage();
+        $I->shouldBeOnTheAdminInvoicesGrid();
 
         $sideNavMenu->clickOnSalesInTheSideNavMenu();
         $sideNavMenu->clickOnShipmentsInTheSalesNavMenu();
-        $I->shouldBeOnTheAdminSalesShipmentsPage();
+        $I->shouldBeOnTheAdminShipmentsGrid();
 
         $sideNavMenu->clickOnSalesInTheSideNavMenu();
         $sideNavMenu->clickOnCreditMemosInTheSalesNavMenu();
-        $I->shouldBeOnTheAdminSalesCreditMemosPage();
+        $I->shouldBeOnTheAdminCreditMemosGrid();
 
         $sideNavMenu->clickOnSalesInTheSideNavMenu();
         $sideNavMenu->clickOnBillingAgreementsInTheSalesNavMenu();
-        $I->shouldBeOnTheAdminSalesBillingAgreementsPage();
+        $I->shouldBeOnTheAdminBillingAgreementsGrid();
 
         $sideNavMenu->clickOnSalesInTheSideNavMenu();
         $sideNavMenu->clickOnTransactionsInTheSalesNavMenu();
-        $I->shouldBeOnTheAdminSalesTransactionsPage();
+        $I->shouldBeOnTheAdminTransactionsGrid();
     }
 
     /**
@@ -116,11 +116,11 @@ class AccessAdminPagesViaNavMenuCest
         $I->wantTo('see if I can access each of the PRODUCT Admin Pages using the Side Nav Menus');
         $sideNavMenu->clickOnProductsInTheSideNavMenu();
         $sideNavMenu->clickOnCatalogInTheProductNavMenu();
-        $I->shouldBeOnTheAdminProductsCatalogPage();
+        $I->shouldBeOnTheAdminCatalogGrid();
 
         $sideNavMenu->clickOnProductsInTheSideNavMenu();
         $sideNavMenu->clickOnCategoriesInTheProductNavMenu();
-        $I->shouldBeOnTheAdminProductsCategoriesPage();
+        $I->shouldBeOnTheAdminCategoryPage();
     }
 
     /**
@@ -142,11 +142,11 @@ class AccessAdminPagesViaNavMenuCest
         $I->wantTo('see if I can access each of the CUSTOMER Admin Pages using the Side Nav Menus');
         $sideNavMenu->clickOnCustomersInTheSideNavMenu();
         $sideNavMenu->clickOnAllCustomersInTheCustomersNavMenu();
-        $I->shouldBeOnTheAdminCustomersAllCustomersPage();
+        $I->shouldBeOnTheAdminAllCustomersGrid();
 
         $sideNavMenu->clickOnCustomersInTheSideNavMenu();
         $sideNavMenu->clickOnNowOnlineInTheCustomersNavMenu();
-        $I->shouldBeOnTheAdminCustomersNowOnlinePage();
+        $I->shouldBeOnTheAdminCustomersNowOnlineGrid();
     }
 
     // Marketing Menu Tests
@@ -169,47 +169,47 @@ class AccessAdminPagesViaNavMenuCest
         $I->wantTo('see if I can access each of the MARKETING Admin Pages using the Side Nav Menus');
         $sideNavMenu->clickOnMarketingInTheSideNavMenu();
         $sideNavMenu->clickOnCatalogPriceRulesInTheMarketingNavMenu();
-        $I->shouldBeOnTheAdminMarketingCatalogPriceRulePage();
+        $I->shouldBeOnTheAdminCatalogPriceRuleGrid();
 
         $sideNavMenu->clickOnMarketingInTheSideNavMenu();
         $sideNavMenu->clickOnCartPriceRulesInTheMarketingNavMenu();
-        $I->shouldBeOnTheAdminMarketingCartPriceRulePage();
+        $I->shouldBeOnTheAdminCartPriceRulesGrid();
 
         $sideNavMenu->clickOnMarketingInTheSideNavMenu();
         $sideNavMenu->clickOnEmailTemplatesInTheMarketingNavMenu();
-        $I->shouldBeOnTheAdminMarketingEmailTemplatesPage();
+        $I->shouldBeOnTheAdminEmailTemplatesGrid();
 
         $sideNavMenu->clickOnMarketingInTheSideNavMenu();
         $sideNavMenu->clickOnNewsletterTemplatesInTheMarketingNavMenu();
-        $I->shouldBeOnTheAdminMarketingNewsletterTemplatePage();
+        $I->shouldBeOnTheAdminNewsletterTemplateGrid();
 
         $sideNavMenu->clickOnMarketingInTheSideNavMenu();
         $sideNavMenu->clickOnNewsletterQueueInTheMarketingNavMenu();
-        $I->shouldBeOnTheAdminMarketingNewsletterQueuePage();
+        $I->shouldBeOnTheAdminNewsletterQueueGrid();
 
         $sideNavMenu->clickOnMarketingInTheSideNavMenu();
         $sideNavMenu->clickOnNewsletterSubscribersInTheMarketingNavMenu();
-        $I->shouldBeOnTheAdminMarketingNewsletterSubscribersPage();
+        $I->shouldBeOnTheAdminNewsletterSubscribersGrid();
 
         $sideNavMenu->clickOnMarketingInTheSideNavMenu();
         $sideNavMenu->clickOnURLRewritesInTheMarketingNavMenu();
-        $I->shouldBeOnTheAdminMarketingURLRewritesPage();
+        $I->shouldBeOnTheAdminURLRewritesGrid();
 
         $sideNavMenu->clickOnMarketingInTheSideNavMenu();
         $sideNavMenu->clickOnSearchTermsInTheMarketingNavMenu();
-        $I->shouldBeOnTheAdminMarketingSearchTermsPage();
+        $I->shouldBeOnTheAdminSearchTermsGrid();
 
         $sideNavMenu->clickOnMarketingInTheSideNavMenu();
         $sideNavMenu->clickOnSearchSynonymsInTheMarketingNavMenu();
-        $I->shouldBeOnTheAdminMarketingSearchSynonymsPage();
+        $I->shouldBeOnTheAdminSearchSynonymsGrid();
 
         $sideNavMenu->clickOnMarketingInTheSideNavMenu();
         $sideNavMenu->clickOnSiteMapInTheMarketingNavMenu();
-        $I->shouldBeOnTheAdminMarketingSiteMapPage();
+        $I->shouldBeOnTheAdminSiteMapGrid();
 
         $sideNavMenu->clickOnMarketingInTheSideNavMenu();
         $sideNavMenu->clickOnContentReviewsInTheMarketingNavMenu();
-        $I->shouldBeOnTheAdminMarketingReviewsPage();
+        $I->shouldBeOnTheAdminReviewsGrid();
     }
 
     // Content Menu Tests
@@ -232,27 +232,27 @@ class AccessAdminPagesViaNavMenuCest
         $I->wantTo('see if I can access each of the CONTENT Admin Pages using the Side Nav Menus');
         $sideNavMenu->clickOnContentInTheSideNavMenu();
         $sideNavMenu->clickOnPagesInTheContentNavMenu();
-        $I->shouldBeOnTheAdminContentPagesPage();
+        $I->shouldBeOnTheAdminPagesGrid();
 
         $sideNavMenu->clickOnContentInTheSideNavMenu();
         $sideNavMenu->clickOnBlocksInTheContentNavMenu();
-        $I->shouldBeOnTheAdminContentBlocksPage();
+        $I->shouldBeOnTheAdminBlocksGrid();
 
         $sideNavMenu->clickOnContentInTheSideNavMenu();
         $sideNavMenu->clickOnWidgetsInTheContentNavMenu();
-        $I->shouldBeOnTheAdminContentWidgetsPage();
+        $I->shouldBeOnTheAdminWidgetsGrid();
 
         $sideNavMenu->clickOnContentInTheSideNavMenu();
         $sideNavMenu->clickOnConfigurationInTheContentNavMenu();
-        $I->shouldBeOnTheAdminContentConfigurationPage();
+        $I->shouldBeOnTheAdminDesignConfigurationGrid();
 
         $sideNavMenu->clickOnContentInTheSideNavMenu();
         $sideNavMenu->clickOnThemesInTheContentNavMenu();
-        $I->shouldBeOnTheAdminContentThemesPage();
+        $I->shouldBeOnTheAdminThemesGrid();
 
         $sideNavMenu->clickOnContentInTheSideNavMenu();
         $sideNavMenu->clickOnScheduleInTheContentNavMenu();
-        $I->shouldBeOnTheAdminContentSchedulePage();
+        $I->shouldBeOnTheAdminStoreContentScheduleGrid();
     }
 
     /**
@@ -274,95 +274,95 @@ class AccessAdminPagesViaNavMenuCest
         $I->wantTo('see if I can access each of the REPORT Admin Pages using the Side Nav Menu');
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnProductsInCartInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsProductsInCartPage();
+        $I->shouldBeOnTheAdminProductsInCartGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnSearchTermsInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsSearchTermsPage();
+        $I->shouldBeOnTheAdminSearchTermsReportGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnAbandonedCartsInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsAbandonedCartsPage();
+        $I->shouldBeOnTheAdminAbandonedCartsGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnNewsletterProblemReportsInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsNewsletterProblemReportsPage();
+        $I->shouldBeOnTheAdminNewsletterProblemsReportGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnByCustomersInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsByCustomersPage();
+        $I->shouldBeOnTheAdminCustomerReviewsReportGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnByProductsInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsByProductsPage();
+        $I->shouldBeOnTheAdminProductReviewsReportGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnOrdersInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsOrdersPage();
+        $I->shouldBeOnTheAdminOrdersReportGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOTaxInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsTaxPage();
+        $I->shouldBeOnTheAdminTaxReportGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnInvoicedInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsInvoicedPage();
+        $I->shouldBeOnTheAdminInvoiceReportGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnShippingInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsShippingPage();
+        $I->shouldBeOnTheAdminShippingReportGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnRefundsInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsRefundsPage();
+        $I->shouldBeOnTheAdminRefundsReportGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnCouponsInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsCouponsPage();
+        $I->shouldBeOnTheAdminCouponsReportGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnPayPalSettlementInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsPayPalSettlementPage();
+        $I->shouldBeOnTheAdminPayPalSettlementReportsGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnBraintreeSettlementInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsBraintreeSettlementPage();
+        $I->shouldBeOnTheAdminBraintreeSettlementReportGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnOrderTotalInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsOrderTotalPage();
+        $I->shouldBeOnTheAdminOrderTotalReportGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnOrderCountInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsOrderCountPage();
+        $I->shouldBeOnTheAdminOrderCountReportGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnNewInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsNewPage();
+        $I->shouldBeOnTheAdminNewAccountsReportGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnViewsInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsViewsPage();
+        $I->shouldBeOnTheAdminProductViewsReportGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnBestSellersInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsBestsellersPage();
+        $I->shouldBeOnTheAdminBestsellersReportGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnLowStockInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsLowStockPage();
+        $I->shouldBeOnTheAdminLowStockReportGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnOrderedInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsOrderedPage();
+        $I->shouldBeOnTheAdminOrderedProductsGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnDownloadsInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportsDownloadsPage();
+        $I->shouldBeOnTheAdminDownloadsReportGrid();
 
         $sideNavMenu->clickOnReportsInTheSideNavMenu();
         $sideNavMenu->clickOnRefreshStatisticsInTheReportsNavMenu();
-        $I->shouldBeOnTheAdminReportRefreshStatisticsPage();
+        $I->shouldBeOnTheAdminRefreshStatisticsGrid();
     }
 
     /**
@@ -384,51 +384,51 @@ class AccessAdminPagesViaNavMenuCest
         $I->wantTo('see if I can access each of the STORE Admin Pages using the Side Nav Menu');
         $sideNavMenu->clickOnStoresInTheSideNavMenu();
         $sideNavMenu->clickOnAllStoresInTheStoresNavMenu();
-        $I->shouldBeOnTheAdminStoresAllStoresPage();
+        $I->shouldBeOnTheAdminAllStoresGrid();
 
         $sideNavMenu->clickOnStoresInTheSideNavMenu();
         $sideNavMenu->clickOnConfigurationInTheStoresNavMenu();
-        $I->shouldBeOnTheAdminStoresConfigurationPage();
+        $I->shouldBeOnTheAdminConfigurationGrid();
 
         $sideNavMenu->clickOnStoresInTheSideNavMenu();
         $sideNavMenu->clickOnTermsAndConditionsInTheStoresNavMenu();
-        $I->shouldBeOnTheAdminStoresTermsAndConditionsPage();
+        $I->shouldBeOnTheAdminTermsAndConditionsGrid();
 
         $sideNavMenu->clickOnStoresInTheSideNavMenu();
         $sideNavMenu->clickOnOrderStatusInTheStoresNavMenu();
-        $I->shouldBeOnTheAdminStoresOrderStatusPage();
+        $I->shouldBeOnTheAdminOrderStatusGrid();
 
         $sideNavMenu->clickOnStoresInTheSideNavMenu();
         $sideNavMenu->clickOnTaxRuleInTheStoresNavMenu();
-        $I->shouldBeOnTheAdminStoresTaxRulesPage();
+        $I->shouldBeOnTheAdminTaxRulesGrid();
 
         $sideNavMenu->clickOnStoresInTheSideNavMenu();
         $sideNavMenu->clickOnTaxZonesAndRatesInTheStoresNavMenu();
-        $I->shouldBeOnTheAdminStoresTaxZonesAndRatesPage();
+        $I->shouldBeOnTheAdminTaxZonesAndRatesGrid();
 
         $sideNavMenu->clickOnStoresInTheSideNavMenu();
         $sideNavMenu->clickOnCurrencyRatesInTheStoresNavMenu();
-        $I->shouldBeOnTheAdminStoresCurrencyRatesPage();
+        $I->shouldBeOnTheAdminCurrencyRatesPage();
 
         $sideNavMenu->clickOnStoresInTheSideNavMenu();
         $sideNavMenu->clickOnCurrencySymbolsInTheStoresNavMenu();
-        $I->shouldBeOnTheAdminStoresCurrencySymbolsPage();
+        $I->shouldBeOnTheAdminCurrencySymbolsPage();
 
         $sideNavMenu->clickOnStoresInTheSideNavMenu();
         $sideNavMenu->clickOnProductInTheStoresNavMenu();
-        $I->shouldBeOnTheAdminStoresProductPage();
+        $I->shouldBeOnTheAdminProductAttributesGrid();
 
         $sideNavMenu->clickOnStoresInTheSideNavMenu();
         $sideNavMenu->clickOnAttributesSetInTheStoresNavMenu();
-        $I->shouldBeOnTheAdminStoresAttributeSetPage();
+        $I->shouldBeOnTheAdminAttributeSetsGrid();
 
         $sideNavMenu->clickOnStoresInTheSideNavMenu();
         $sideNavMenu->clickOnRatingsInTheStoresNavMenu();
-        $I->shouldBeOnTheAdminStoresRatingPage();
+        $I->shouldBeOnTheAdminRatingsGrid();
 
         $sideNavMenu->clickOnStoresInTheSideNavMenu();
         $sideNavMenu->clickOnCustomerGroupInTheStoresNavMenu();
-        $I->shouldBeOnTheAdminStoresCustomerGroupsPage();
+        $I->shouldBeOnTheAdminCustomerGroupsGrid();
     }
 
     // System Menu Tests
@@ -451,59 +451,59 @@ class AccessAdminPagesViaNavMenuCest
         $I->wantTo('see if I can access each of the SYSTEM Admin Pages using the Side Nav Menu');
         $sideNavMenu->clickOnSystemInTheSideNavMenu();
         $sideNavMenu->clickOnImportInTheSystemNavMenu();
-        $I->shouldBeOnTheAdminSystemImportPage();
+        $I->shouldBeOnTheAdminImportPage();
 
         $sideNavMenu->clickOnSystemInTheSideNavMenu();
         $sideNavMenu->clickOnExportInTheSystemNavMenu();
-        $I->shouldBeOnTheAdminSystemExportPage();
+        $I->shouldBeOnTheAdminExportPage();
 
         $sideNavMenu->clickOnSystemInTheSideNavMenu();
         $sideNavMenu->clickOnImportExportTaxRatesInTheSystemNavMenu();
-        $I->shouldBeOnTheAdminSystemImportExportTaxRatesPage();
+        $I->shouldBeOnTheAdminImportAndExportTaxRatesPage();
 
         $sideNavMenu->clickOnSystemInTheSideNavMenu();
         $sideNavMenu->clickOnImportHistoryInTheSystemNavMenu();
-        $I->shouldBeOnTheAdminSystemImportHistoryPage();
+        $I->shouldBeOnTheAdminImportHistoryGrid();
 
         $sideNavMenu->clickOnSystemInTheSideNavMenu();
         $sideNavMenu->clickOnIntegrationsInTheSystemNavMenu();
-        $I->shouldBeOnTheAdminSystemIntegrationsPage();
+        $I->shouldBeOnTheAdminIntegrationsGrid();
 
         $sideNavMenu->clickOnSystemInTheSideNavMenu();
         $sideNavMenu->clickOnCacheManagementInTheSystemNavMenu();
-        $I->shouldBeOnTheAdminSystemCacheManagementPage();
+        $I->shouldBeOnTheAdminCacheManagementGrid();
 
         $sideNavMenu->clickOnSystemInTheSideNavMenu();
         $sideNavMenu->clickOnBackupsInTheSystemNavMenu();
-        $I->shouldBeOnTheAdminSystemBackupsPage();
+        $I->shouldBeOnTheAdminBackupsGrid();
 
         $sideNavMenu->clickOnSystemInTheSideNavMenu();
         $sideNavMenu->clickOnIndexManagementInTheSystemNavMenu();
-        $I->shouldBeOnTheAdminSystemIndexManagementPage();
+        $I->shouldBeOnTheAdminIndexManagementGrid();
 
         $sideNavMenu->clickOnSystemInTheSideNavMenu();
         $sideNavMenu->clickOnAllUsersInTheSystemNavMenu();
-        $I->shouldBeOnTheAdminSystemAllUsersPage();
+        $I->shouldBeOnTheAdminAllUsersGrid();
 
         $sideNavMenu->clickOnSystemInTheSideNavMenu();
         $sideNavMenu->clickOnLockedUsersInTheSystemNavMenu();
-        $I->shouldBeOnTheAdminSystemLockedUsersPage();
+        $I->shouldBeOnTheAdminLockedUsersGrid();
 
         $sideNavMenu->clickOnSystemInTheSideNavMenu();
         $sideNavMenu->clickOnUserRolesInTheSystemNavMenu();
-        $I->shouldBeOnTheAdminSystemUserRolesPage();
+        $I->shouldBeOnTheAdminUserRolesGrid();
 
         $sideNavMenu->clickOnSystemInTheSideNavMenu();
         $sideNavMenu->clickOnNotificationsInTheSystemNavMenu();
-        $I->shouldBeOnTheAdminSystemNotificationsPage();
+        $I->shouldBeOnTheAdminNotificationsGrid();
 
         $sideNavMenu->clickOnSystemInTheSideNavMenu();
         $sideNavMenu->clickOnCustomVariablesInTheSystemNavMenu();
-        $I->shouldBeOnTheAdminSystemCustomVariablesPage();
+        $I->shouldBeOnTheAdminCustomVariablesGrid();
 
         $sideNavMenu->clickOnSystemInTheSideNavMenu();
         $sideNavMenu->clickOnManageEncryptionKeyInTheSystemNavMenu();
-        $I->shouldBeOnTheAdminSystemManageEncryptionKeyPage();
+        $I->shouldBeOnTheAdminEncryptionKeyPage();
     }
 
     /**
@@ -525,7 +525,7 @@ class AccessAdminPagesViaNavMenuCest
         $I->wantTo('see if I can access the WEB SETUP WIZARD Admin Page using the Side Nav Menu');
         $sideNavMenu->clickOnSystemInTheSideNavMenu();
         $sideNavMenu->clickOnWebSetupWizardInTheSystemNavMenu();
-        $I->shouldBeOnTheAdminSystemWebSetupWizardPage();
+        $I->shouldBeOnTheAdminWebSetupWizardPage();
         $I->goToTheAdminLogoutPage();
     }
 

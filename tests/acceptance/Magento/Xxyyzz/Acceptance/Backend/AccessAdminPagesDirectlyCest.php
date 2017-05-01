@@ -45,232 +45,232 @@ class AccessAdminPagesDirectlyCest
      */
     public function shouldBeAbleToAccessEachAdminPageDirectly(AdminStep $I)
     {
-        $I->goToTheAdminSalesOrdersPage();
-        $I->shouldBeOnTheAdminSalesOrdersPage();
+        $I->goToTheAdminOrdersGrid();
+        $I->shouldBeOnTheAdminOrdersGrid();
 
-        $I->goToTheAdminSalesInvoicesPage();
-        $I->shouldBeOnTheAdminSalesInvoicesPage();
+        $I->goToTheAdminInvoicesGrid();
+        $I->shouldBeOnTheAdminInvoicesGrid();
 
-        $I->goToTheAdminSalesShipmentsPage();
-        $I->shouldBeOnTheAdminSalesShipmentsPage();
+        $I->goToTheAdminShipmentsGrid();
+        $I->shouldBeOnTheAdminShipmentsGrid();
 
-        $I->goToTheAdminSalesCreditMemosPage();
-        $I->shouldBeOnTheAdminSalesCreditMemosPage();
+        $I->goToTheAdminCreditMemosGrid();
+        $I->shouldBeOnTheAdminCreditMemosGrid();
 
-        $I->goToTheAdminSalesBillingAgreementsPage();
-        $I->shouldBeOnTheAdminSalesBillingAgreementsPage();
+        $I->goToTheAdminBillingAgreementsGrid();
+        $I->shouldBeOnTheAdminBillingAgreementsGrid();
 
-        $I->goToTheAdminSalesTransactionsPage();
-        $I->shouldBeOnTheAdminSalesTransactionsPage();
+        $I->goToTheAdminTransactionsGrid();
+        $I->shouldBeOnTheAdminTransactionsGrid();
 
-        $I->goToTheAdminProductsCatalogPage();
-        $I->shouldBeOnTheAdminProductsCatalogPage();
+        $I->goToTheAdminCatalogPage();
+        $I->shouldBeOnTheAdminCatalogGrid();
 
-        $I->goToTheAdminProductsCategoriesPage();
-        $I->shouldBeOnTheAdminProductsCategoriesPage();
+        $I->goToTheAdminCategoriesPage();
+        $I->shouldBeOnTheAdminCategoryPage();
 
-        $I->goToTheAdminCustomersAllCustomersPage();
-        $I->shouldBeOnTheAdminCustomersAllCustomersPage();
+        $I->goToTheAdminAllCustomersGrid();
+        $I->shouldBeOnTheAdminAllCustomersGrid();
 
-        $I->goToTheAdminCustomersNowOnlinePage();
-        $I->shouldBeOnTheAdminCustomersNowOnlinePage();
+        $I->goToTheAdminCustomersNowOnlineGrid();
+        $I->shouldBeOnTheAdminCustomersNowOnlineGrid();
 
-        $I->goToTheAdminMarketingCatalogPriceRulePage();
-        $I->shouldBeOnTheAdminMarketingCatalogPriceRulePage();
+        $I->goToTheAdminCatalogPriceRuleGrid();
+        $I->shouldBeOnTheAdminCatalogPriceRuleGrid();
 
-        $I->goToTheAdminMarketingCartPriceRulePage();
-        $I->shouldBeOnTheAdminMarketingCartPriceRulePage();
+        $I->goToTheAdminCartPriceRulesGrid();
+        $I->shouldBeOnTheAdminCartPriceRulesGrid();
 
-        $I->goToTheAdminMarketingEmailTemplatesPage();
-        $I->shouldBeOnTheAdminMarketingEmailTemplatesPage();
+        $I->goToTheAdminEmailTemplatesGrid();
+        $I->shouldBeOnTheAdminEmailTemplatesGrid();
 
-        $I->goToTheAdminMarketingNewsletterTemplatePage();
-        $I->shouldBeOnTheAdminMarketingNewsletterTemplatePage();
+        $I->goToTheAdminNewsletterTemplateGrid();
+        $I->shouldBeOnTheAdminNewsletterTemplateGrid();
 
-        $I->goToTheAdminMarketingNewsletterQueuePage();
-        $I->shouldBeOnTheAdminMarketingNewsletterQueuePage();
+        $I->goToTheAdminNewsletterQueueGrid();
+        $I->shouldBeOnTheAdminNewsletterQueueGrid();
 
-        $I->goToTheAdminMarketingNewsletterSubscribersPage();
-        $I->shouldBeOnTheAdminMarketingNewsletterSubscribersPage();
+        $I->goToTheAdminNewsletterSubscribersGrid();
+        $I->shouldBeOnTheAdminNewsletterSubscribersGrid();
 
-        $I->goToTheAdminMarketingURLRewritesPage();
-        $I->shouldBeOnTheAdminMarketingURLRewritesPage();
+        $I->goToTheAdminURLRewritesGrid();
+        $I->shouldBeOnTheAdminURLRewritesGrid();
 
-        $I->goToTheAdminMarketingSearchTermsPage();
-        $I->shouldBeOnTheAdminMarketingSearchTermsPage();
+        $I->goToTheAdminSearchTermsGrid();
+        $I->shouldBeOnTheAdminSearchTermsGrid();
 
-        $I->goToTheAdminMarketingSearchSynonymsPage();
-        $I->shouldBeOnTheAdminMarketingSearchSynonymsPage();
+        $I->goToTheAdminSearchSynonymsGrid();
+        $I->shouldBeOnTheAdminSearchSynonymsGrid();
 
-        $I->goToTheAdminMarketingSiteMapPage();
-        $I->shouldBeOnTheAdminMarketingSiteMapPage();
+        $I->goToTheAdminSiteMapGrid();
+        $I->shouldBeOnTheAdminSiteMapGrid();
 
-        $I->goToTheAdminMarketingReviewsPage();
-        $I->shouldBeOnTheAdminMarketingReviewsPage();
+        $I->goToTheAdminReviewsGrid();
+        $I->shouldBeOnTheAdminReviewsGrid();
 
-        $I->goToTheAdminContentPagesPage();
-        $I->shouldBeOnTheAdminContentPagesPage();
+        $I->goToTheAdminPagesGrid();
+        $I->shouldBeOnTheAdminPagesGrid();
 
-        $I->goToTheAdminContentBlocksPage();
-        $I->shouldBeOnTheAdminContentBlocksPage();
+        $I->goToTheAdminBlocksGrid();
+        $I->shouldBeOnTheAdminBlocksGrid();
 
-        $I->goToTheAdminContentWidgetsPage();
-        $I->shouldBeOnTheAdminContentWidgetsPage();
+        $I->goToTheAdminWidgetsGrid();
+        $I->shouldBeOnTheAdminWidgetsGrid();
 
-        $I->goToTheAdminContentConfigurationPage();
-        $I->shouldBeOnTheAdminContentConfigurationPage();
+        $I->goToTheAdminDesignConfigurationGrid();
+        $I->shouldBeOnTheAdminDesignConfigurationGrid();
 
-        $I->goToTheAdminContentThemesPage();
-        $I->shouldBeOnTheAdminContentThemesPage();
+        $I->goToTheAdminThemesGrid();
+        $I->shouldBeOnTheAdminThemesGrid();
 
-        $I->goToTheAdminContentSchedulePage();
-        $I->shouldBeOnTheAdminContentSchedulePage();
+        $I->goToTheAdminStoreContentScheduleGrid();
+        $I->shouldBeOnTheAdminStoreContentScheduleGrid();
 
-        $I->goToTheAdminReportsProductsInCartPage();
-        $I->shouldBeOnTheAdminReportsProductsInCartPage();
+        $I->goToTheAdminProductsInCartGrid();
+        $I->shouldBeOnTheAdminProductsInCartGrid();
 
-        $I->goToTheAdminReportsSearchTermsPage();
-        $I->shouldBeOnTheAdminReportsSearchTermsPage();
+        $I->goToTheAdminSearchTermsReportGrid();
+        $I->shouldBeOnTheAdminSearchTermsReportGrid();
 
-        $I->goToTheAdminReportsAbandonedCartsPage();
-        $I->shouldBeOnTheAdminReportsAbandonedCartsPage();
+        $I->goToTheAdminAbandonedCartsGrid();
+        $I->shouldBeOnTheAdminAbandonedCartsGrid();
 
-        $I->goToTheAdminReportsNewsletterProblemReportsPage();
-        $I->shouldBeOnTheAdminReportsNewsletterProblemReportsPage();
+        $I->goToTheAdminNewsletterProblemsReportGrid();
+        $I->shouldBeOnTheAdminNewsletterProblemsReportGrid();
 
-        $I->goToTheAdminReportsByCustomersPage();
-        $I->shouldBeOnTheAdminReportsByCustomersPage();
+        $I->goToTheAdminCustomerReviewsReportGrid();
+        $I->shouldBeOnTheAdminCustomerReviewsReportGrid();
 
-        $I->goToTheAdminReportsByProductsPage();
-        $I->shouldBeOnTheAdminReportsByProductsPage();
+        $I->goToTheAdminProductReviewsReportGrid();
+        $I->shouldBeOnTheAdminProductReviewsReportGrid();
 
-        $I->goToTheAdminReportsOrdersPage();
-        $I->shouldBeOnTheAdminReportsOrdersPage();
+        $I->goToTheAdminOrdersReportGrid();
+        $I->shouldBeOnTheAdminOrdersReportGrid();
 
-        $I->goToTheAdminReportsTaxPage();
-        $I->shouldBeOnTheAdminReportsTaxPage();
+        $I->goToTheAdminTaxReportGrid();
+        $I->shouldBeOnTheAdminTaxReportGrid();
 
-        $I->goToTheAdminReportsInvoicedPage();
-        $I->shouldBeOnTheAdminReportsInvoicedPage();
+        $I->goToTheAdminInvoiceReportGrid();
+        $I->shouldBeOnTheAdminInvoiceReportGrid();
 
-        $I->goToTheAdminReportsShippingPage();
-        $I->shouldBeOnTheAdminReportsShippingPage();
+        $I->goToTheAdminShippingReportGrid();
+        $I->shouldBeOnTheAdminShippingReportGrid();
 
-        $I->goToTheAdminReportsRefundsPage();
-        $I->shouldBeOnTheAdminReportsRefundsPage();
+        $I->goToTheAdminRefundsReportGrid();
+        $I->shouldBeOnTheAdminRefundsReportGrid();
 
-        $I->goToTheAdminReportsCouponsPage();
-        $I->shouldBeOnTheAdminReportsCouponsPage();
+        $I->goToTheAdminCouponsReportGrid();
+        $I->shouldBeOnTheAdminCouponsReportGrid();
 
-        $I->goToTheAdminReportsPayPalSettlementPage();
-        $I->shouldBeOnTheAdminReportsPayPalSettlementPage();
+        $I->goToTheAdminPayPalSettlementReportsGrid();
+        $I->shouldBeOnTheAdminPayPalSettlementReportsGrid();
 
-        $I->goToTheAdminReportsBraintreeSettlementPage();
-        $I->shouldBeOnTheAdminReportsBraintreeSettlementPage();
+        $I->goToTheAdminBraintreeSettlementReportGrid();
+        $I->shouldBeOnTheAdminBraintreeSettlementReportGrid();
 
-        $I->goToTheAdminReportsOrderTotalPage();
-        $I->shouldBeOnTheAdminReportsOrderTotalPage();
+        $I->goToTheAdminOrderTotalReportGrid();
+        $I->shouldBeOnTheAdminOrderTotalReportGrid();
 
-        $I->goToTheAdminReportsOrderCountPage();
-        $I->shouldBeOnTheAdminReportsOrderCountPage();
+        $I->goToTheAdminOrderCountReportGrid();
+        $I->shouldBeOnTheAdminOrderCountReportGrid();
 
-        $I->goToTheAdminReportsNewPage();
-        $I->shouldBeOnTheAdminReportsNewPage();
+        $I->goToTheAdminNewAccountsReportGrid();
+        $I->shouldBeOnTheAdminNewAccountsReportGrid();
 
-        $I->goToTheAdminReportsViewsPage();
-        $I->shouldBeOnTheAdminReportsViewsPage();
+        $I->goToTheAdminProductViewsReportGrid();
+        $I->shouldBeOnTheAdminProductViewsReportGrid();
 
-        $I->goToTheAdminReportsBestsellersPage();
-        $I->shouldBeOnTheAdminReportsBestsellersPage();
+        $I->goToTheAdminBestsellersReportGrid();
+        $I->shouldBeOnTheAdminBestsellersReportGrid();
 
-        $I->goToTheAdminReportsLowStockPage();
-        $I->shouldBeOnTheAdminReportsLowStockPage();
+        $I->goToTheAdminLowStockReportGrid();
+        $I->shouldBeOnTheAdminLowStockReportGrid();
 
-        $I->goToTheAdminReportsOrderedPage();
-        $I->shouldBeOnTheAdminReportsOrderedPage();
+        $I->goToTheAdminOrderedProductsReportGrid();
+        $I->shouldBeOnTheAdminOrderedProductsGrid();
 
-        $I->goToTheAdminReportsDownloadsPage();
-        $I->shouldBeOnTheAdminReportsDownloadsPage();
+        $I->goToTheAdminDownloadsReportGrid();
+        $I->shouldBeOnTheAdminDownloadsReportGrid();
 
-        $I->goToTheAdminReportRefreshStatisticsPage();
-        $I->shouldBeOnTheAdminReportRefreshStatisticsPage();
+        $I->goToTheAdminRefreshStatisticsGrid();
+        $I->shouldBeOnTheAdminRefreshStatisticsGrid();
 
-        $I->goToTheAdminStoresAllStoresPage();
-        $I->shouldBeOnTheAdminStoresAllStoresPage();
+        $I->goToTheAdminAllStoresGrid();
+        $I->shouldBeOnTheAdminAllStoresGrid();
 
-        $I->goToTheAdminStoresConfigurationPage();
-        $I->shouldBeOnTheAdminStoresConfigurationPage();
+        $I->goToTheAdminConfigurationGrid();
+        $I->shouldBeOnTheAdminConfigurationGrid();
 
-        $I->goToTheAdminStoresTermsAndConditionsPage();
-        $I->shouldBeOnTheAdminStoresTermsAndConditionsPage();
+        $I->goToTheAdminTermsAndConditionsGrid();
+        $I->shouldBeOnTheAdminTermsAndConditionsGrid();
 
-        $I->goToTheAdminStoresOrderStatusPage();
-        $I->shouldBeOnTheAdminStoresOrderStatusPage();
+        $I->goToTheAdminOrderStatusGrid();
+        $I->shouldBeOnTheAdminOrderStatusGrid();
 
-        $I->goToTheAdminStoresTaxRulesPage();
-        $I->shouldBeOnTheAdminStoresTaxRulesPage();
+        $I->goToTheAdminTaxRulesGrid();
+        $I->shouldBeOnTheAdminTaxRulesGrid();
 
-        $I->goToTheAdminStoresTaxZonesAndRatesPage();
-        $I->shouldBeOnTheAdminStoresTaxZonesAndRatesPage();
+        $I->goToTheAdminTaxZonesAndRatesGrid();
+        $I->shouldBeOnTheAdminTaxZonesAndRatesGrid();
 
-        $I->goToTheAdminStoresCurrencyRatesPage();
-        $I->shouldBeOnTheAdminStoresCurrencyRatesPage();
+        $I->goToTheAdminCurrencyRatesPage();
+        $I->shouldBeOnTheAdminCurrencyRatesPage();
 
-        $I->goToTheAdminStoresCurrencySymbolsPage();
-        $I->shouldBeOnTheAdminStoresCurrencySymbolsPage();
+        $I->goToTheAdminCurrencySymbolsPage();
+        $I->shouldBeOnTheAdminCurrencySymbolsPage();
 
-        $I->goToTheAdminStoresProductPage();
-        $I->shouldBeOnTheAdminStoresProductPage();
+        $I->goToTheAdminProductAttributesGrid();
+        $I->shouldBeOnTheAdminProductAttributesGrid();
 
-        $I->goToTheAdminStoresAttributeSetPage();
-        $I->shouldBeOnTheAdminStoresAttributeSetPage();
+        $I->goToTheAdminAttributeSetGrid();
+        $I->shouldBeOnTheAdminAttributeSetsGrid();
 
-        $I->goToTheAdminStoresRatingPage();
-        $I->shouldBeOnTheAdminStoresRatingPage();
+        $I->goToTheAdminRatingGrid();
+        $I->shouldBeOnTheAdminRatingsGrid();
 
-        $I->goToTheAdminStoresCustomerGroupsPage();
-        $I->shouldBeOnTheAdminStoresCustomerGroupsPage();
+        $I->goToTheAdminCustomerGroupsGrid();
+        $I->shouldBeOnTheAdminCustomerGroupsGrid();
 
-        $I->goToTheAdminSystemImportPage();
-        $I->shouldBeOnTheAdminSystemImportPage();
+        $I->goToTheAdminImportPage();
+        $I->shouldBeOnTheAdminImportPage();
 
-        $I->goToTheAdminSystemExportPage();
-        $I->shouldBeOnTheAdminSystemExportPage();
+        $I->goToTheAdminExportPage();
+        $I->shouldBeOnTheAdminExportPage();
 
-        $I->goToTheAdminSystemImportExportTaxRatesPage();
-        $I->shouldBeOnTheAdminSystemImportExportTaxRatesPage();
+        $I->goToTheAdminImportAndExportTaxRatesPage();
+        $I->shouldBeOnTheAdminImportAndExportTaxRatesPage();
 
-        $I->goToTheAdminSystemImportHistoryPage();
-        $I->shouldBeOnTheAdminSystemImportHistoryPage();
+        $I->goToTheAdminImportHistoryGrid();
+        $I->shouldBeOnTheAdminImportHistoryGrid();
 
-        $I->goToTheAdminSystemIntegrationsPage();
-        $I->shouldBeOnTheAdminSystemIntegrationsPage();
+        $I->goToTheAdminIntegrationsGrid();
+        $I->shouldBeOnTheAdminIntegrationsGrid();
 
-        $I->goToTheAdminSystemCacheManagementPage();
-        $I->shouldBeOnTheAdminSystemCacheManagementPage();
+        $I->goToTheAdminCacheManagementGrid();
+        $I->shouldBeOnTheAdminCacheManagementGrid();
 
-        $I->goToTheAdminSystemBackupsPage();
-        $I->shouldBeOnTheAdminSystemBackupsPage();
+        $I->goToTheAdminBackupsGrid();
+        $I->shouldBeOnTheAdminBackupsGrid();
 
-        $I->goToTheAdminSystemIndexManagementPage();
-        $I->shouldBeOnTheAdminSystemIndexManagementPage();
+        $I->goToTheAdminIndexManagementGrid();
+        $I->shouldBeOnTheAdminIndexManagementGrid();
 
-        $I->goToTheAdminSystemAllUsersPage();
-        $I->shouldBeOnTheAdminSystemAllUsersPage();
+        $I->goToTheAdminAllUsersGrid();
+        $I->shouldBeOnTheAdminAllUsersGrid();
 
-        $I->goToTheAdminSystemLockedUsersPage();
-        $I->shouldBeOnTheAdminSystemLockedUsersPage();
+        $I->goToTheAdminLockedUsersGrid();
+        $I->shouldBeOnTheAdminLockedUsersGrid();
 
-        $I->goToTheAdminSystemUserRolesPage();
-        $I->shouldBeOnTheAdminSystemUserRolesPage();
+        $I->goToTheAdminUserRolesGrid();
+        $I->shouldBeOnTheAdminUserRolesGrid();
 
-        $I->goToTheAdminSystemNotificationsPage();
-        $I->shouldBeOnTheAdminSystemNotificationsPage();
+        $I->goToTheAdminNotificationsGrid();
+        $I->shouldBeOnTheAdminNotificationsGrid();
 
-        $I->goToTheAdminSystemCustomVariablesPage();
-        $I->shouldBeOnTheAdminSystemCustomVariablesPage();
+        $I->goToTheAdminCustomVariablesGrid();
+        $I->shouldBeOnTheAdminCustomVariablesGrid();
 
-        $I->goToTheAdminSystemManageEncryptionKeyPage();
-        $I->shouldBeOnTheAdminSystemManageEncryptionKeyPage();
+        $I->goToTheAdminEncryptionKeyPage();
+        $I->shouldBeOnTheAdminEncryptionKeyPage();
     }
 }

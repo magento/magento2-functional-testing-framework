@@ -21,8 +21,8 @@ class TestCest
      */
     public function accessTheSalesOrdersPage(AdminStep $I)
     {
-        $I->goToTheAdminSalesOrdersPage();
-        $I->shouldBeOnTheAdminSalesOrdersPage();
+        $I->goToTheAdminOrdersGrid();
+        $I->shouldBeOnTheAdminOrdersGrid();
     }
 
     /**
@@ -32,7 +32,7 @@ class TestCest
      */
     public function accessTheProductsCatalogPage(AdminStep $I)
     {
-        $I->goToTheAdminProductsCatalogPage();
-        $I->shouldBeOnTheAdminProductsCatalogPage();
+        $I->goToTheAdminCatalogPage();
+        $I->shouldBeOnTheAdminCatalogGrid();
     }
 }

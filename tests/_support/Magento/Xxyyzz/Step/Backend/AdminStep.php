@@ -5,6 +5,8 @@ require_once __DIR__ . '/../../Helper/AdminUrlList.php';
 
 class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
 {
+    public static $adminPageTitle = '.page-title';
+
     public function openNewTabGoToVerify($url)
     {
         $I = $this;
@@ -19,20 +21,8 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I = $this;
         $I->closeTab();
     }
-    
-    public function goToTheAdminLoginPage()
-    {
-        $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminLogin);
-        $I->waitForPageLoad();
-    }
 
-    public function goToTheAdminLogoutPage()
-    {
-        $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminLogout);
-    }
-
+    // Key Admin Pages
     public function goToRandomAdminPage()
     {
         $I = $this;
@@ -125,550 +115,563 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         return $admin_url_list[$random_admin_url];
     }
 
+    public function goToTheAdminLoginPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminLoginPage);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminLogoutPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminLogoutPage);
+    }
+
     // Sales
-    public function goToTheAdminSalesOrdersPage()
+    public function goToTheAdminOrdersGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSalesOrders);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminOrdersGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminSalesInvoicesPage()
+    public function goToTheAdminInvoicesGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSalesInvoices);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminInvoicesGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminSalesShipmentsPage()
+    public function goToTheAdminShipmentsGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSalesShipments);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminShipmentsGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminSalesCreditMemosPage()
+    public function goToTheAdminCreditMemosGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSalesCreditMemos);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCreditMemosGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminSalesBillingAgreementsPage()
+    public function goToTheAdminBillingAgreementsGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSalesBillingAgreements);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminBillingAgreementsGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminSalesTransactionsPage()
+    public function goToTheAdminTransactionsGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSalesTransactions);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminTransactionsGrid);
         $I->waitForPageLoad();
     }
 
     // Products
-    public function goToTheAdminProductsCatalogPage()
+    public function goToTheAdminCatalogPage()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductsCatalog);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCatalogGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminProductsCategoriesPage()
+    public function goToTheAdminCategoriesPage()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductsCategories);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCategoriesPage);
         $I->waitForPageLoad();
     }
 
     // Customers
-    public function goToTheAdminCustomersAllCustomersPage()
+    public function goToTheAdminAllCustomersGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomersAllCustomers);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAllCustomersGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminCustomersNowOnlinePage()
+    public function goToTheAdminCustomersNowOnlineGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomersNowOnline);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomersNowOnlineGrid);
         $I->waitForPageLoad();
     }
 
     // Marketing
-    public function goToTheAdminMarketingCatalogPriceRulePage()
+    public function goToTheAdminCatalogPriceRuleGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingCatalogPriceRule);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCatalogPriceRuleGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminMarketingCartPriceRulePage()
+    public function goToTheAdminCartPriceRulesGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingCartPriceRules);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCartPriceRulesGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminMarketingEmailTemplatesPage()
+    public function goToTheAdminEmailTemplatesGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingEmailTemplates);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminEmailTemplatesGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminMarketingNewsletterTemplatePage()
+    public function goToTheAdminNewsletterTemplateGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingNewsletterTemplate);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminNewsletterTemplateGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminMarketingNewsletterQueuePage()
+    public function goToTheAdminNewsletterQueueGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingNewsletterQueue);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminNewsletterQueueGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminMarketingNewsletterSubscribersPage()
+    public function goToTheAdminNewsletterSubscribersGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingNewsletterSubscribers);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminNewsletterSubscribersGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminMarketingURLRewritesPage()
+    public function goToTheAdminURLRewritesGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingURLRewrites);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminURLRewritesGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminMarketingSearchTermsPage()
+    public function goToTheAdminSearchTermsGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingSearchTerms);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSearchTermsGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminMarketingSearchSynonymsPage()
+    public function goToTheAdminSearchSynonymsGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingSearchSynonyms);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSearchSynonymsGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminMarketingSiteMapPage()
+    public function goToTheAdminSiteMapGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingSiteMap);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSiteMapGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminMarketingReviewsPage()
+    public function goToTheAdminReviewsGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingReviews);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReviewsGrid);
         $I->waitForPageLoad();
     }
 
     // Content
-    public function goToTheAdminContentPagesPage()
+    public function goToTheAdminPagesGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminContentPages);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminPagesGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminContentBlocksPage()
+    public function goToTheAdminBlocksGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminContentBlocks);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminBlocksGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminContentWidgetsPage()
+    public function goToTheAdminWidgetsGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminContentWidgets);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminWidgetsGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminContentConfigurationPage()
+    public function goToTheAdminDesignConfigurationGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminContentConfiguration);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminDesignConfigurationGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminContentThemesPage()
+    public function goToTheAdminThemesGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminContentThemes);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminThemesGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminContentSchedulePage()
+    public function goToTheAdminStoreContentScheduleGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminContentSchedule);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoreContentScheduleGrid);
         $I->waitForPageLoad();
     }
 
     // Reports
-    public function goToTheAdminReportsProductsInCartPage()
+    public function goToTheAdminProductsInCartGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsProductsInCart);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductsInCartGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportsSearchTermsPage()
+    public function goToTheAdminSearchTermsReportGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsSearchTerms);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSearchTermsReportGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportsAbandonedCartsPage()
+    public function goToTheAdminAbandonedCartsGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsAbandonedCArts);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAbandonedCartsGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportsNewsletterProblemReportsPage()
+    public function goToTheAdminNewsletterProblemsReportGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsNewsletterProblemReports);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminNewsletterProblemsReportGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportsByCustomersPage()
+    public function goToTheAdminCustomerReviewsReportGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsByCustomers);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomerReviewsReportGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportsByProductsPage()
+    public function goToTheAdminProductReviewsReportGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsByProducts);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductReviewsReportGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportsOrdersPage()
+    public function goToTheAdminOrdersReportGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsOrders);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminOrdersReportGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportsTaxPage()
+    public function goToTheAdminTaxReportGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsTax);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminTaxReportGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportsInvoicedPage()
+    public function goToTheAdminInvoiceReportGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsInvoiced);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminInvoiceReportGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportsShippingPage()
+    public function goToTheAdminShippingReportGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsShipping);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminShippingReportGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportsRefundsPage()
+    public function goToTheAdminRefundsReportGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsRefunds);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminRefundsReportGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportsCouponsPage()
+    public function goToTheAdminCouponsReportGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsCoupons);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCouponsReportGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportsPayPalSettlementPage()
+    public function goToTheAdminPayPalSettlementReportsGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsPayPalSettlement);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminPayPalSettlementReportsGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportsBraintreeSettlementPage()
+    public function goToTheAdminBraintreeSettlementReportGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsBraintreeSettlement);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminBraintreeSettlementReportGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportsOrderTotalPage()
+    public function goToTheAdminOrderTotalReportGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsOrderTotal);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminOrderTotalReportGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportsOrderCountPage()
+    public function goToTheAdminOrderCountReportGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsOrderCount);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminOrderCountReportGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportsNewPage()
+    public function goToTheAdminNewAccountsReportGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsNew);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminNewAccountsReportGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportsViewsPage()
+    public function goToTheAdminProductViewsReportGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsViews);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductViewsReportGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportsBestsellersPage()
+    public function goToTheAdminBestsellersReportGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsBestsellers);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminBestsellersReportGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportsLowStockPage()
+    public function goToTheAdminLowStockReportGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsLowStock);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminLowStockReportGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportsOrderedPage()
+    public function goToTheAdminOrderedProductsReportGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsOrdered);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminOrderedProductsReportGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportsDownloadsPage()
+    public function goToTheAdminDownloadsReportGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsDownloads);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminDownloadsReportGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminReportRefreshStatisticsPage()
+    public function goToTheAdminRefreshStatisticsGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsRefreshStatistics);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminRefreshStatisticsGrid);
         $I->waitForPageLoad();
     }
 
     // Stores
-    public function goToTheAdminStoresAllStoresPage()
+    public function goToTheAdminAllStoresGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresAllStores);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAllStoresGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminStoresConfigurationPage()
+    public function goToTheAdminConfigurationGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresConfiguration);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminConfigurationGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminStoresTermsAndConditionsPage()
+    public function goToTheAdminTermsAndConditionsGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresTermsAndConditions);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminTermsAndConditionsGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminStoresOrderStatusPage()
+    public function goToTheAdminOrderStatusGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresOrderStatus);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminOrderStatusGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminStoresTaxRulesPage()
+    public function goToTheAdminTaxRulesGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresTaxRules);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminTaxRulesGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminStoresTaxZonesAndRatesPage()
+    public function goToTheAdminTaxZonesAndRatesGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresTaxZonesAndRates);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminTaxZonesAndRatesGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminStoresCurrencyRatesPage()
+    public function goToTheAdminCurrencyRatesPage()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresCurrencyRates);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCurrencyRatesPage);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminStoresCurrencySymbolsPage()
+    public function goToTheAdminCurrencySymbolsPage()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresCurrencySymbols);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCurrencySymbolsPage);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminStoresProductPage()
+    public function goToTheAdminProductAttributesGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresProduct);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductAttributesGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminStoresAttributeSetPage()
+    public function goToTheAdminAttributeSetGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresAttributeSet);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAttributeSetsGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminStoresRatingPage()
+    public function goToTheAdminRatingGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresRating);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminRatingsGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminStoresCustomerGroupsPage()
+    public function goToTheAdminCustomerGroupsGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresCustomerGroups);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomerGroupsGrid);
         $I->waitForPageLoad();
     }
 
     // System
-    public function goToTheAdminSystemImportPage()
+    public function goToTheAdminImportPage()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemImport);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminImportPage);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminSystemExportPage()
+    public function goToTheAdminExportPage()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemExport);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminExportPage);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminSystemImportExportTaxRatesPage()
+    public function goToTheAdminImportAndExportTaxRatesPage()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemImportExportTaxRates);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminImportAndExportTaxRatesPage);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminSystemImportHistoryPage()
+    public function goToTheAdminImportHistoryGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemImportHistory);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminImportHistoryGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminSystemIntegrationsPage()
+    public function goToTheAdminIntegrationsGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemIntegrations);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminIntegrationsGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminSystemCacheManagementPage()
+    public function goToTheAdminCacheManagementGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemCacheManagement);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCacheManagementGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminSystemBackupsPage()
+    public function goToTheAdminBackupsGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemBackups);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminBackupsGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminSystemIndexManagementPage()
+    public function goToTheAdminIndexManagementGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemIndexManagement);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminIndexManagementGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminSystemWebSetupWizardPage()
+    public function goToTheAdminWebSetupWizardPage()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemWebSetupWizard);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminWebSetupWizardPage);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminSystemAllUsersPage()
+    public function goToTheAdminAllUsersGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemAllUsers);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAllUsersGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminSystemLockedUsersPage()
+    public function goToTheAdminLockedUsersGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemLockedUsers);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminLockedUsersGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminSystemUserRolesPage()
+    public function goToTheAdminUserRolesGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemUserRoles);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminUserRolesGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminSystemNotificationsPage()
+    public function goToTheAdminNotificationsGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemNotifications);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminNotificationsGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminSystemCustomVariablesPage()
+    public function goToTheAdminCustomVariablesGrid()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemCustomVariables);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomVariablesGrid);
         $I->waitForPageLoad();
     }
 
-    public function goToTheAdminSystemManageEncryptionKeyPage()
+    public function goToTheAdminEncryptionKeyPage()
     {
         $I = $this;
-        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemManageEncryptionKey);
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminEncryptionKeyPage);
         $I->waitForPageLoad();
     }
 
@@ -679,575 +682,576 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->waitForPageLoad();
     }
 
+    // Key Admin Pages
     public function shouldBeOnTheAdminLoginPage()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminLogin);
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminLoginPage);
     }
 
     public function shouldBeOnTheAdminDashboardPage()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminDashboard);
-        $I->see('Dashboard', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminDashboardPage);
+        $I->see('Dashboard', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheForgotYourPasswordPage()
+    public function shouldBeOnTheAdminForgotYourPasswordPage()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminForgotYourPassword);
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminForgotYourPasswordPage);
     }
 
     // Sales
-    public function shouldBeOnTheAdminSalesOrdersPage()
+    public function shouldBeOnTheAdminOrdersGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSalesOrders);
-        $I->see('Orders', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminOrdersGrid);
+        $I->see('Orders', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminSalesInvoicesPage()
+    public function shouldBeOnTheAdminInvoicesGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSalesInvoices);
-        $I->see('Invoices', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminInvoicesGrid);
+        $I->see('Invoices', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminSalesShipmentsPage()
+    public function shouldBeOnTheAdminShipmentsGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSalesShipments);
-        $I->see('Shipments', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminShipmentsGrid);
+        $I->see('Shipments', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminSalesCreditMemosPage()
+    public function shouldBeOnTheAdminCreditMemosGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSalesCreditMemos);
-        $I->see('Credit Memos', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCreditMemosGrid);
+        $I->see('Credit Memos', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminSalesBillingAgreementsPage()
+    public function shouldBeOnTheAdminBillingAgreementsGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSalesBillingAgreements);
-        $I->see('Billing Agreements', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminBillingAgreementsGrid);
+        $I->see('Billing Agreements', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminSalesTransactionsPage()
+    public function shouldBeOnTheAdminTransactionsGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSalesTransactions);
-        $I->see('Transactions', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminTransactionsGrid);
+        $I->see('Transactions', self::$adminPageTitle);
     }
 
     // Products
-    public function shouldBeOnTheAdminProductsCatalogPage()
+    public function shouldBeOnTheAdminCatalogGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductsCatalog);
-        $I->see('Catalog', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCatalogGrid);
+        $I->see('Catalog', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminProductsCategoriesPage()
+    public function shouldBeOnTheAdminCategoryPage()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductsCategories);
-        $I->see('Default Category', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCategoriesPage);
+        $I->see('Default Category', self::$adminPageTitle);
     }
 
     // Customers
-    public function shouldBeOnTheAdminCustomersAllCustomersPage()
+    public function shouldBeOnTheAdminAllCustomersGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomersAllCustomers);
-        $I->see('Customers', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAllCustomersGrid);
+        $I->see('Customers', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminCustomersNowOnlinePage()
+    public function shouldBeOnTheAdminCustomersNowOnlineGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomersNowOnline);
-        $I->see('Customers Now Online', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomersNowOnlineGrid);
+        $I->see('Customers Now Online', self::$adminPageTitle);
     }
 
     // Marketing
-    public function shouldBeOnTheAdminMarketingCatalogPriceRulePage()
+    public function shouldBeOnTheAdminCatalogPriceRuleGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingCatalogPriceRule);
-        $I->see('Catalog Price Rule', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCatalogPriceRuleGrid);
+        $I->see('Catalog Price Rule', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminMarketingCartPriceRulePage()
+    public function shouldBeOnTheAdminCartPriceRulesGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingCartPriceRules);
-        $I->see('Cart Price Rules', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCartPriceRulesGrid);
+        $I->see('Cart Price Rules', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminMarketingEmailTemplatesPage()
+    public function shouldBeOnTheAdminEmailTemplatesGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingEmailTemplates);
-        $I->see('Email Templates', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminEmailTemplatesGrid);
+        $I->see('Email Templates', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminMarketingNewsletterTemplatePage()
+    public function shouldBeOnTheAdminNewsletterTemplateGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingNewsletterTemplate);
-        $I->see('Newsletter Templates', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminNewsletterTemplateGrid);
+        $I->see('Newsletter Templates', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminMarketingNewsletterQueuePage()
+    public function shouldBeOnTheAdminNewsletterQueueGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingNewsletterQueue);
-        $I->see('Newsletter Queue', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminNewsletterQueueGrid);
+        $I->see('Newsletter Queue', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminMarketingNewsletterSubscribersPage()
+    public function shouldBeOnTheAdminNewsletterSubscribersGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingNewsletterSubscribers);
-        $I->see('Newsletter Subscribers', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminNewsletterSubscribersGrid);
+        $I->see('Newsletter Subscribers', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminMarketingURLRewritesPage()
+    public function shouldBeOnTheAdminURLRewritesGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingURLRewrites);
-        $I->see('URL Rewrites', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminURLRewritesGrid);
+        $I->see('URL Rewrites', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminMarketingSearchTermsPage()
+    public function shouldBeOnTheAdminSearchTermsGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingSearchTerms);
-        $I->see('Search Terms', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSearchTermsGrid);
+        $I->see('Search Terms', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminMarketingSearchSynonymsPage()
+    public function shouldBeOnTheAdminSearchSynonymsGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingSearchSynonyms);
-        $I->see('Search Synonyms', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSearchSynonymsGrid);
+        $I->see('Search Synonyms', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminMarketingSiteMapPage()
+    public function shouldBeOnTheAdminSiteMapGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingSiteMap);
-        $I->see('Site Map', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSiteMapGrid);
+        $I->see('Site Map', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminMarketingReviewsPage()
+    public function shouldBeOnTheAdminReviewsGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminMarketingReviews);
-        $I->see('Reviews', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReviewsGrid);
+        $I->see('Reviews', self::$adminPageTitle);
     }
 
     // Content
-    public function shouldBeOnTheAdminContentPagesPage()
+    public function shouldBeOnTheAdminPagesGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminContentPages);
-        $I->see('Pages', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminPagesGrid);
+        $I->see('Pages', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminContentBlocksPage()
+    public function shouldBeOnTheAdminBlocksGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminContentBlocks);
-        $I->see('Blocks', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminBlocksGrid);
+        $I->see('Blocks', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminContentWidgetsPage()
+    public function shouldBeOnTheAdminWidgetsGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminContentWidgets);
-        $I->see('Widgets', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminWidgetsGrid);
+        $I->see('Widgets', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminContentConfigurationPage()
+    public function shouldBeOnTheAdminDesignConfigurationGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminContentConfiguration);
-        $I->see('Design Configuration', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminDesignConfigurationGrid);
+        $I->see('Design Configuration', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminContentThemesPage()
+    public function shouldBeOnTheAdminThemesGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminContentThemes);
-        $I->see('Themes', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminThemesGrid);
+        $I->see('Themes', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminContentSchedulePage()
+    public function shouldBeOnTheAdminStoreContentScheduleGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminContentSchedule);
-        $I->see('Store Design Schedule', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoreContentScheduleGrid);
+        $I->see('Store Design Schedule', self::$adminPageTitle);
     }
 
     // Reports
-    public function shouldBeOnTheAdminReportsProductsInCartPage()
+    public function shouldBeOnTheAdminProductsInCartGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsProductsInCart);
-        $I->see('Products in Carts', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductsInCartGrid);
+        $I->see('Products in Carts', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportsSearchTermsPage()
+    public function shouldBeOnTheAdminSearchTermsReportGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsSearchTerms);
-        $I->see('Search Terms Report', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSearchTermsReportGrid);
+        $I->see('Search Terms Report', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportsAbandonedCartsPage()
+    public function shouldBeOnTheAdminAbandonedCartsGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsAbandonedCArts);
-        $I->see('Abandoned Carts', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAbandonedCartsGrid);
+        $I->see('Abandoned Carts', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportsNewsletterProblemReportsPage()
+    public function shouldBeOnTheAdminNewsletterProblemsReportGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsNewsletterProblemReports);
-        $I->see('Newsletter Problems Report', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminNewsletterProblemsReportGrid);
+        $I->see('Newsletter Problems Report', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportsByCustomersPage()
+    public function shouldBeOnTheAdminCustomerReviewsReportGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsByCustomers);
-        $I->see('Customer Reviews Report', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomerReviewsReportGrid);
+        $I->see('Customer Reviews Report', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportsByProductsPage()
+    public function shouldBeOnTheAdminProductReviewsReportGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsByProducts);
-        $I->see('Product Reviews Report', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductReviewsReportGrid);
+        $I->see('Product Reviews Report', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportsOrdersPage()
+    public function shouldBeOnTheAdminOrdersReportGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsOrders);
-        $I->see('Orders Report', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminOrdersReportGrid);
+        $I->see('Orders Report', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportsTaxPage()
+    public function shouldBeOnTheAdminTaxReportGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsTax);
-        $I->see('Tax Report', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminTaxReportGrid);
+        $I->see('Tax Report', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportsInvoicedPage()
+    public function shouldBeOnTheAdminInvoiceReportGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsInvoiced);
-        $I->see('Invoice Report', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminInvoiceReportGrid);
+        $I->see('Invoice Report', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportsShippingPage()
+    public function shouldBeOnTheAdminShippingReportGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsShipping);
-        $I->see('Shipping Report', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminShippingReportGrid);
+        $I->see('Shipping Report', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportsRefundsPage()
+    public function shouldBeOnTheAdminRefundsReportGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsRefunds);
-        $I->see('Refunds Report', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminRefundsReportGrid);
+        $I->see('Refunds Report', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportsCouponsPage()
+    public function shouldBeOnTheAdminCouponsReportGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsCoupons);
-        $I->see('Coupons Report', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCouponsReportGrid);
+        $I->see('Coupons Report', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportsPayPalSettlementPage()
+    public function shouldBeOnTheAdminPayPalSettlementReportsGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsPayPalSettlement);
-        $I->see('PayPal Settlement Reports', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminPayPalSettlementReportsGrid);
+        $I->see('PayPal Settlement Reports', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportsBraintreeSettlementPage()
+    public function shouldBeOnTheAdminBraintreeSettlementReportGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsBraintreeSettlement);
-        $I->see('Braintree Settlement Report', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminBraintreeSettlementReportGrid);
+        $I->see('Braintree Settlement Report', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportsOrderTotalPage()
+    public function shouldBeOnTheAdminOrderTotalReportGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsOrderTotal);
-        $I->see('Order Total Report', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminOrderTotalReportGrid);
+        $I->see('Order Total Report', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportsOrderCountPage()
+    public function shouldBeOnTheAdminOrderCountReportGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsOrderCount);
-        $I->see('Order Count Report', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminOrderCountReportGrid);
+        $I->see('Order Count Report', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportsNewPage()
+    public function shouldBeOnTheAdminNewAccountsReportGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsNew);
-        $I->see('New Accounts Report', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminNewAccountsReportGrid);
+        $I->see('New Accounts Report', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportsViewsPage()
+    public function shouldBeOnTheAdminProductViewsReportGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsViews);
-        $I->see('Product Views Report', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductViewsReportGrid);
+        $I->see('Product Views Report', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportsBestsellersPage()
+    public function shouldBeOnTheAdminBestsellersReportGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsBestsellers);
-        $I->see('Bestsellers Report', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminBestsellersReportGrid);
+        $I->see('Bestsellers Report', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportsLowStockPage()
+    public function shouldBeOnTheAdminLowStockReportGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsLowStock);
-        $I->see('Low Stock Report', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminLowStockReportGrid);
+        $I->see('Low Stock Report', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportsOrderedPage()
+    public function shouldBeOnTheAdminOrderedProductsGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsOrdered);
-        $I->see('Ordered Products Report', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminOrderedProductsReportGrid);
+        $I->see('Ordered Products Report', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportsDownloadsPage()
+    public function shouldBeOnTheAdminDownloadsReportGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsDownloads);
-        $I->see('Downloads Report', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminDownloadsReportGrid);
+        $I->see('Downloads Report', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminReportRefreshStatisticsPage()
+    public function shouldBeOnTheAdminRefreshStatisticsGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReportsRefreshStatistics);
-        $I->see('Refresh Statistics', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminRefreshStatisticsGrid);
+        $I->see('Refresh Statistics', self::$adminPageTitle);
     }
 
     // Stores
-    public function shouldBeOnTheAdminStoresAllStoresPage()
+    public function shouldBeOnTheAdminAllStoresGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresAllStores);
-        $I->see('Stores', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAllStoresGrid);
+        $I->see('Stores', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminStoresConfigurationPage()
+    public function shouldBeOnTheAdminConfigurationGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresConfiguration);
-        $I->see('Configuration', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminConfigurationGrid);
+        $I->see('Configuration', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminStoresTermsAndConditionsPage()
+    public function shouldBeOnTheAdminTermsAndConditionsGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresTermsAndConditions);
-        $I->see('Terms and Conditions', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminTermsAndConditionsGrid);
+        $I->see('Terms and Conditions', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminStoresOrderStatusPage()
+    public function shouldBeOnTheAdminOrderStatusGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresOrderStatus);
-        $I->see('Order Status', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminOrderStatusGrid);
+        $I->see('Order Status', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminStoresTaxRulesPage()
+    public function shouldBeOnTheAdminTaxRulesGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresTaxRules);
-        $I->see('Tax Rules', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminTaxRulesGrid);
+        $I->see('Tax Rules', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminStoresTaxZonesAndRatesPage()
+    public function shouldBeOnTheAdminTaxZonesAndRatesGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresTaxZonesAndRates);
-        $I->see('Tax Zones and Rates', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminTaxZonesAndRatesGrid);
+        $I->see('Tax Zones and Rates', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminStoresCurrencyRatesPage()
+    public function shouldBeOnTheAdminCurrencyRatesPage()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresCurrencyRates);
-        $I->see('Currency Rates', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCurrencyRatesPage);
+        $I->see('Currency Rates', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminStoresCurrencySymbolsPage()
+    public function shouldBeOnTheAdminCurrencySymbolsPage()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresCurrencySymbols);
-        $I->see('Currency Symbols', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCurrencySymbolsPage);
+        $I->see('Currency Symbols', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminStoresProductPage()
+    public function shouldBeOnTheAdminProductAttributesGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresProduct);
-        $I->see('Product Attributes', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductAttributesGrid);
+        $I->see('Product Attributes', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminStoresAttributeSetPage()
+    public function shouldBeOnTheAdminAttributeSetsGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresAttributeSet);
-        $I->see('Attribute Sets', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAttributeSetsGrid);
+        $I->see('Attribute Sets', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminStoresRatingPage()
+    public function shouldBeOnTheAdminRatingsGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresRating);
-        $I->see('Ratings', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminRatingsGrid);
+        $I->see('Ratings', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminStoresCustomerGroupsPage()
+    public function shouldBeOnTheAdminCustomerGroupsGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoresCustomerGroups);
-        $I->see('Customer Groups', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomerGroupsGrid);
+        $I->see('Customer Groups', self::$adminPageTitle);
     }
 
     // System
-    public function shouldBeOnTheAdminSystemImportPage()
+    public function shouldBeOnTheAdminImportPage()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemImport);
-        $I->see('Import', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminImportPage);
+        $I->see('Import', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminSystemExportPage()
+    public function shouldBeOnTheAdminExportPage()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemExport);
-        $I->see('Export', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminExportPage);
+        $I->see('Export', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminSystemImportExportTaxRatesPage()
+    public function shouldBeOnTheAdminImportAndExportTaxRatesPage()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemImportExportTaxRates);
-        $I->see('Import and Export Tax Rates', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminImportAndExportTaxRatesPage);
+        $I->see('Import and Export Tax Rates', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminSystemImportHistoryPage()
+    public function shouldBeOnTheAdminImportHistoryGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemImportHistory);
-        $I->see('Import History', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminImportHistoryGrid);
+        $I->see('Import History', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminSystemIntegrationsPage()
+    public function shouldBeOnTheAdminIntegrationsGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemIntegrations);
-        $I->see('Integrations', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminIntegrationsGrid);
+        $I->see('Integrations', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminSystemCacheManagementPage()
+    public function shouldBeOnTheAdminCacheManagementGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemCacheManagement);
-        $I->see('Cache Management', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCacheManagementGrid);
+        $I->see('Cache Management', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminSystemBackupsPage()
+    public function shouldBeOnTheAdminBackupsGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemBackups);
-        $I->see('Backups', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminBackupsGrid);
+        $I->see('Backups', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminSystemIndexManagementPage()
+    public function shouldBeOnTheAdminIndexManagementGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemIndexManagement);
-        $I->see('Index Management', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminIndexManagementGrid);
+        $I->see('Index Management', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminSystemWebSetupWizardPage()
+    public function shouldBeOnTheAdminWebSetupWizardPage()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemWebSetupWizard);
-        $I->see('Setup Wizard', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminWebSetupWizardPage);
+        $I->see('Setup Wizard', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminSystemAllUsersPage()
+    public function shouldBeOnTheAdminAllUsersGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemAllUsers);
-        $I->see('Users', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAllUsersGrid);
+        $I->see('Users', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminSystemLockedUsersPage()
+    public function shouldBeOnTheAdminLockedUsersGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemLockedUsers);
-        $I->see('Locked Users', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminLockedUsersGrid);
+        $I->see('Locked Users', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminSystemUserRolesPage()
+    public function shouldBeOnTheAdminUserRolesGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemUserRoles);
-        $I->see('Roles', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminUserRolesGrid);
+        $I->see('Roles', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminSystemNotificationsPage()
+    public function shouldBeOnTheAdminNotificationsGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemNotifications);
-        $I->see('Notifications', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminNotificationsGrid);
+        $I->see('Notifications', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminSystemCustomVariablesPage()
+    public function shouldBeOnTheAdminCustomVariablesGrid()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemCustomVariables);
-        $I->see('Custom Variables', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomVariablesGrid);
+        $I->see('Custom Variables', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminSystemManageEncryptionKeyPage()
+    public function shouldBeOnTheAdminEncryptionKeyPage()
     {
         $I = $this;
-        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSystemManageEncryptionKey);
-        $I->see('Encryption Key', '.page-title');
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminEncryptionKeyPage);
+        $I->see('Encryption Key', self::$adminPageTitle);
     }
 
     public function shouldBeOnTheAdminFindPartnersAndExtensionsPage() {
         $I = $this;
         $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminFindPartnersAndExtensions);
-        $I->see('Magento Marketplace', '.page-title');
+        $I->see('Magento Marketplace', self::$adminPageTitle);
     }
 }

@@ -74,16 +74,16 @@ class CreateOrderViaAdminCest
 
         $customerName = $customerDetails['firstname'] . " " . $customerDetails['lastname'];
 
-        $I->goToTheAdminCustomersAllCustomersPage();
+        $I->goToTheAdminAllCustomersGrid();
         $adminCustomerPage->addBasicCustomerWithAddress($customerDetails);
 
-        $I->goToTheAdminProductsCategoriesPage();
+        $I->goToTheAdminCategoriesPage();
         $adminCategoryPage->addBasicCategory($categoryDetails);
 
-        $I->goToTheAdminProductsCatalogPage();
+        $I->goToTheAdminCatalogPage();
         $adminProductPage->addBasicProductUnderCategory($productDetails, $categoryDetails);
 
-        $I->goToTheAdminSalesOrdersPage();
+        $I->goToTheAdminOrdersGrid();
         $adminOrderGrid->clickOnCreateNewOrderButton();
 
         $adminOrderAddPage->enterCustomerEmailSearchTerm($customerDetails['email']);

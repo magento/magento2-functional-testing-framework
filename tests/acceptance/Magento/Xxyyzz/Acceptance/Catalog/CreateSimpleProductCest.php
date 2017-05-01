@@ -45,7 +45,7 @@ class CreateSimpleProductCest
     public function _before(AdminStep $I, CategoryApiStep $api)
     {
         $I->loginAsAdmin();
-        $I->goToTheAdminProductsCatalogPage();
+        $I->goToTheAdminCatalogPage();
         
         $this->category = $I->getCategoryApiData();
         $api->amAdminTokenAuthenticated();

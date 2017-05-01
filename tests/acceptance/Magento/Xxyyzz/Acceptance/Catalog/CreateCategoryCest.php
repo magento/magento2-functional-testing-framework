@@ -63,7 +63,7 @@ class CreateCategoryCest
         $I->wantTo('create sub category with required fields in admin Category page.');
         $category = $I->getCategoryApiData();
 
-        $I->goToTheAdminProductsCategoriesPage();
+        $I->goToTheAdminCategoriesPage();
         $adminCategoryPage->addSubCategory();
         $adminCategoryPage->fillFieldCategoryName($category['name']);
 

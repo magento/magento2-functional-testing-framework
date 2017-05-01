@@ -37,7 +37,7 @@ class CreateContentPageCest
     {
         $I->am('an Admin');
         $I->loginAsAdmin();
-        $I->goToTheAdminContentPagesPage();
+        $I->goToTheAdminPagesGrid();
         
         $adminCmsGrid->clickOnAddPageButton();
     }

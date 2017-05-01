@@ -35,7 +35,7 @@ class CreateCustomerCest
     {
         $I->am('an Admin');
         $I->loginAsAdmin();
-        $I->goToTheAdminCustomersAllCustomersPage();
+        $I->goToTheAdminAllCustomersGrid();
         $customerPageGrid->clickOnAddNewCustomerButton();
     }
 

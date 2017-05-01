@@ -50,7 +50,7 @@ class AccessForgotYourPasswordCest
         $I->am('an Admin');
         $I->wantTo('see if I can access the Forgot Your Password page');
         $adminLogin->clickOnForgotYourPassword();
-        $I->shouldBeOnTheForgotYourPasswordPage();
+        $I->shouldBeOnTheAdminForgotYourPasswordPage();
         $adminLogin->shouldSeeTheForgotYourPasswordFields();
         $I->see('Password Help');
     }
