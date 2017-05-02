@@ -68,7 +68,7 @@ class MagentoFakerData extends Sequence
             ],
             'custom_attributes' => [
                 ['attribute_code' => 'url_key', 'value' => isset($productData['name'])
-                    ? $productData['name'] : 'simple_product'.$sq,],
+                    ? $productData['name'] : $type . '_product'.$sq,],
                 ['attribute_code' => 'tax_class_id', 'value' => 2],
                 ['attribute_code' => 'category_ids', 'value' => $categoryId],
             ],

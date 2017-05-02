@@ -5,15 +5,20 @@ use Magento\Xxyyzz\Page\AbstractFrontendPage;
 
 class StorefrontProductPage extends AbstractFrontendPage
 {
-    /**
-     * Declare UI map for this page here. CSS or XPath allowed.
-     */
     public static $addToCartButton              = '#product-addtocart-button';
 
+    /**
+     * Product data.
+     */
     public static $productName                  = '.base';
     public static $productPrice                 = '.price';
     public static $productStockStatus           = '.stock[title=Availability]>span';
     public static $productSku                   = '.product.attribute.sku>.value';
+
+    /**
+     * Product options data.
+     */
+    public static $productOptionsDropDown       = '#product-options-wrapper .super-attribute-select';
 
     public function amOnProductPage($categoryUrlKey)
     {
@@ -51,5 +56,29 @@ class StorefrontProductPage extends AbstractFrontendPage
     {
         $I = $this->acceptanceTester;
         $I->seeElement(sprintf(self::$productSku, $sku));
+    }
+
+    public function selectProductOption($option)
+    {
+        $I = $this->acceptanceTester;
+        $I->selectOption(self::$productOptionsDropDown, $option);
+    }
+
+    /**
+     * @param array $options
+     */
+    public function seeProductOptions(array $options)
+    {
+        $I = $this->acceptanceTester;
+        foreach ($options as $option) {
+            for($c = 2; $c < count($options)+2; $c++) {
+                try {
+                    $I->see($option, self::$productOptionsDropDown . ' option:nth-child('. strval($c). ')');
+                    break;
+                } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+                    continue;
+                }
+            }
+        }
     }
 }
