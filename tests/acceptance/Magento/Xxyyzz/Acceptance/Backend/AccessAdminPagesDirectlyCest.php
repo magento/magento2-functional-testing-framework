@@ -67,7 +67,7 @@ class AccessAdminPagesDirectlyCest
         $I->shouldBeOnTheAdminCatalogGrid();
 
         $I->goToTheAdminCategoriesPage();
-        $I->shouldBeOnTheAdminCategoryPage();
+        $I->shouldBeOnTheAdminCategoriesPage();
 
         $I->goToTheAdminAllCustomersGrid();
         $I->shouldBeOnTheAdminAllCustomersGrid();
@@ -272,5 +272,117 @@ class AccessAdminPagesDirectlyCest
 
         $I->goToTheAdminEncryptionKeyPage();
         $I->shouldBeOnTheAdminEncryptionKeyPage();
+    }
+
+    /**
+     * Allure annotations
+     * @Severity(level = SeverityLevel::CRITICAL)
+     * @Parameter(name = "AdminStep", value = "$I")
+     * @TestCaseId("")
+     *
+     * Codeception annotations
+     * @param AdminStep $I
+     * @return void
+     */
+    public function shouldBeAbleToAccessEachAdminAddPageDirectly(AdminStep $I)
+    {
+        $I->goToTheAdminAddOrderPage();
+        $I->shouldBeOnTheAdminAddOrderPage();
+
+        $I->goToTheAdminAddSimpleProductPage();
+        $I->shouldBeOnTheAdminAddSimpleProductPage();
+        
+        $I->goToTheAdminAddConfigurableProductPage();
+        $I->shouldBeOnTheAdminAddConfigurableProductPage();
+
+        $I->goToTheAdminAddGroupedProductPage();
+        $I->shouldBeOnTheAdminAddGroupedProductPage();
+
+        $I->goToTheAdminAddVirtualProductPage();
+        $I->shouldBeOnTheAdminAddVirtualProductPage();
+
+        $I->goToTheAdminAddBundledProductPage();
+        $I->shouldBeOnTheAdminAddBundledProductPage();
+
+        $I->goToTheAdminAddDownloadableProductPage();
+        $I->shouldBeOnTheAdminAddDownloadableProductPage();
+
+        $I->goToTheAdminAddCustomerPage();
+        $I->shouldBeOnTheAdminAddCustomerPage();
+
+        $I->goToTheAdminAddCatalogPriceRulePage();
+        $I->shouldBeOnTheAdminAddCatalogPriceRulePage();
+
+        $I->goToTheAdminAddCartPriceRulePage();
+        $I->shouldBeOnTheAdminAddCartPriceRulePage();
+
+        $I->goToTheAdminAddEmailTemplatePage();
+        $I->shouldBeOnTheAdminAddEmailTemplatePage();
+
+        $I->goToTheAdminAddNewsletterTemplatePage();
+        $I->shouldBeOnTheAdminAddNewsletterTemplatePage();
+
+        $I->goToTheAdminAddURLRewritePage();
+        $I->shouldBeOnTheAdminAddURLRewritePage();
+
+        $I->goToTheAdminAddSearchTermPage();
+        $I->shouldBeOnTheAdminAddSearchTermPage();
+
+        $I->goToTheAdminAddSearchSynonymGroupPage();
+        $I->shouldBeOnTheAdminAddSearchSynonymGroupPage();
+
+        $I->goToTheAdminAddSiteMapPage();
+        $I->shouldBeOnTheAdminAddSiteMapPage();
+
+        $I->goToTheAdminAddReviewPage();
+        $I->shouldBeOnTheAdminAddReviewPage();
+
+        $I->goToTheAdminAddPagePage();
+        $I->shouldBeOnTheAdminAddPagePage();
+
+        $I->goToTheAdminAddBlockPage();
+        $I->shouldBeOnTheAdminAddBlockPage();
+
+        $I->goToTheAdminAddWidgetPage();
+        $I->shouldBeOnTheAdminAddWidgetPage();
+
+        $I->goToTheAdminAddStoreDesignChangePage();
+        $I->shouldBeOnTheAdminAddStoreDesignChangePage();
+
+        $I->goToTheAdminAddNewTermsAndConditionsPage();
+        $I->shouldBeOnTheAdminAddNewTermsAndConditionsPage();
+
+        $I->goToTheAdminAddOrderStatusPage();
+        $I->shouldBeOnTheAdminAddOrderStatusPage();
+
+        $I->goToTheAdminAddTaxRulePage();
+        $I->shouldBeOnTheAdminAddTaxRulePage();
+
+        $I->goToTheAdminAddTaxZoneAndRatePage();
+        $I->shouldBeOnTheAdminAddTaxZoneAndRatePage();
+
+        $I->goToTheAdminAddProductAttributePage();
+        $I->shouldBeOnTheAdminAddProductAttributePage();
+
+        $I->goToTheAdminAddAttributeSetPage();
+        $I->shouldBeOnTheAdminAddAttributeSetPage();
+
+        $I->goToTheAdminAddRatingPage();
+        $I->shouldBeOnTheAdminAddRatingPage();
+
+        $I->goToTheAdminAddCustomerGroupPage();
+        $I->shouldBeOnTheAdminAddCustomerGroupPage();
+
+        $I->goToTheAdminAddIntegrationPage();
+        $I->shouldBeOnTheAdminAddIntegrationPage();
+
+        $I->goToTheAdminAddUserPage();
+        $I->shouldBeOnTheAdminAddUserPage();
+
+        $I->goToTheAdminAddUserRolePage();
+        $I->shouldBeOnTheAdminAddUserRolePage();
+
+        $I->goToTheAdminAddCustomVariablePage();
+        $I->shouldBeOnTheAdminAddCustomVariablePage();
     }
 }

@@ -120,7 +120,7 @@ class AccessAdminPagesViaNavMenuCest
 
         $sideNavMenu->clickOnProductsInTheSideNavMenu();
         $sideNavMenu->clickOnCategoriesInTheProductNavMenu();
-        $I->shouldBeOnTheAdminCategoryPage();
+        $I->shouldBeOnTheAdminCategoriesPage();
     }
 
     /**

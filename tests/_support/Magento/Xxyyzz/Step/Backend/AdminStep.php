@@ -136,10 +136,38 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->waitForPageLoad();
     }
 
+    public function goToTheAdminOrderForIdPage($orderId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminOrderByIdPage . $orderId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddOrderPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddOrderPage);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddOrderForCustomerIdPage($customerId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddOrderForCustomerIdPage . $customerId));
+        $I->waitForPageLoad();
+    }
+
     public function goToTheAdminInvoicesGrid()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminInvoicesGrid);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddInvoiceForOrderIdPage($orderId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddInvoiceForOrderIdPage . $orderId));
         $I->waitForPageLoad();
     }
 
@@ -150,10 +178,24 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->waitForPageLoad();
     }
 
+    public function goToTheAdminShipmentForIdPage($shipmentId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminShipmentForIdPage . $shipmentId));
+        $I->waitForPageLoad();
+    }
+
     public function goToTheAdminCreditMemosGrid()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCreditMemosGrid);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminCreditMemoForIdPage($creditMemoId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminCreditMemoForIdPage . $creditMemoId));
         $I->waitForPageLoad();
     }
 
@@ -179,10 +221,80 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->waitForPageLoad();
     }
 
+    public function goToTheAdminProductForIdPage($productId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductForIdPage . $productId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddSimpleProductPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddSimpleProductPage);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddConfigurableProductPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddConfigurableProductPage);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddGroupedProductPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddGroupedProductPage);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddVirtualProductPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddVirtualProductPage);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddBundledProductPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddBundleProductPage);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddDownloadableProductPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddDownloadableProductPage);
+        $I->waitForPageLoad();
+    }
+
     public function goToTheAdminCategoriesPage()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCategoriesPage);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminCategoryForIdPage($categoryId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminCategoryForIdPage . $categoryId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddRootCategoryForStoreIdPage($storeId)
+    {
+        $I = $this;
+        $I->amOnPage(('/admin/catalog/category/add/store/' . $storeId . '/parent/1'));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddSubCategoryForStoreIdPage($storeId)
+    {
+        $I = $this;
+        $I->amOnPage(('/admin/catalog/category/add/store/' . $storeId . '/parent/2'));
         $I->waitForPageLoad();
     }
 
@@ -201,11 +313,39 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->waitForPageLoad();
     }
 
+    public function goToTheAdminCustomerForIdPage($customerId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomerForCustomerIdPage . $customerId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddCustomerPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddCustomerPage);
+        $I->waitForPageLoad();
+    }
+
     // Marketing
     public function goToTheAdminCatalogPriceRuleGrid()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCatalogPriceRuleGrid);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminCatalogPriceRuleForIdPage($catalogPriceRuleId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminCatalogPriceRuleForIdPage . $catalogPriceRuleId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddCatalogPriceRulePage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddCatalogPriceRulePage);
         $I->waitForPageLoad();
     }
 
@@ -216,6 +356,20 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->waitForPageLoad();
     }
 
+    public function goToTheAdminCartPriceRuleForIdPage($cartPriceRuleId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminCartPriceRuleForIdPage . $cartPriceRuleId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddCartPriceRulePage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddCartPriceRulePage);
+        $I->waitForPageLoad();
+    }
+
     public function goToTheAdminEmailTemplatesGrid()
     {
         $I = $this;
@@ -223,10 +377,38 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->waitForPageLoad();
     }
 
+    public function goToTheAdminEmailTemplateForIdPage($emailTemplateId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminEmailTemplateForIdPage . $emailTemplateId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddEmailTemplatePage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddEmailTemplatePage);
+        $I->waitForPageLoad();
+    }
+
     public function goToTheAdminNewsletterTemplateGrid()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminNewsletterTemplateGrid);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminNewsletterTemplateByIdPage($newsletterTemplateId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminNewsletterTemplateForIdPage . $newsletterTemplateId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddNewsletterTemplatePage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddNewsletterTemplatePage);
         $I->waitForPageLoad();
     }
 
@@ -251,10 +433,38 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->waitForPageLoad();
     }
 
+    public function goToTheAdminURLRewriteForId($urlRewriteId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminURLRewriteForIdPage . $urlRewriteId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddURLRewritePage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddURLRewritePage);
+        $I->waitForPageLoad();
+    }
+
     public function goToTheAdminSearchTermsGrid()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSearchTermsGrid);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminSearchTermForIdPage($searchTermId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminSearchTermForIdPage . $searchTermId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddSearchTermPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddSearchTermPage);
         $I->waitForPageLoad();
     }
 
@@ -265,6 +475,20 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->waitForPageLoad();
     }
 
+    public function goToTheAdminSearchSynonymGroupByIdPage($searchSynonymId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminSearchSynonymGroupForIdPage . $searchSynonymId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddSearchSynonymGroupPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddSearchSynonymGroupPage);
+        $I->waitForPageLoad();
+    }
+
     public function goToTheAdminSiteMapGrid()
     {
         $I = $this;
@@ -272,10 +496,38 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->waitForPageLoad();
     }
 
+    public function goToTheAdminSiteMapForIdPage($siteMapId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminSiteMapForIdPage . $siteMapId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddSiteMapPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddSiteMapPage);
+        $I->waitForPageLoad();
+    }
+
     public function goToTheAdminReviewsGrid()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReviewsGrid);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminReviewForIdPage($reviewId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminReviewByIdPage . $reviewId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddReviewPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddReviewPage);
         $I->waitForPageLoad();
     }
 
@@ -287,6 +539,20 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->waitForPageLoad();
     }
 
+    public function goToTheAdminPageForIdPage($pageId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminPageForIdPage . $pageId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddPagePage()
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddPagePage));
+        $I->waitForPageLoad();
+    }
+
     public function goToTheAdminBlocksGrid()
     {
         $I = $this;
@@ -294,10 +560,31 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->waitForPageLoad();
     }
 
+    public function goToTheAdminBlockForIdPage($blockId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminBlockForIdPage . $blockId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddBlockPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddBlockPage);
+        $I->waitForPageLoad();
+    }
+
     public function goToTheAdminWidgetsGrid()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminWidgetsGrid);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddWidgetPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddWidgetPage);
         $I->waitForPageLoad();
     }
 
@@ -315,10 +602,31 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->waitForPageLoad();
     }
 
+    public function goToTheAdminThemeByIdPage($themeId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminThemeByIdPage . $themeId));
+        $I->waitForPageLoad();
+    }
+
     public function goToTheAdminStoreContentScheduleGrid()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoreContentScheduleGrid);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminStoreContentScheduleForIdPage($storeContentScheduleId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoreContentScheduleForIdPage . $storeContentScheduleId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddStoreDesignChangePage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddStoreDesignChangePage);
         $I->waitForPageLoad();
     }
 
@@ -362,6 +670,20 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductReviewsReportGrid);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminProductReviewsForProductIdPage($productId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductReviewsForProductIdPage . $productId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminProductReviewIdForProductIdPage($productReviewId, $productId)
+    {
+        $I = $this;
+        $I->amOnPage(('/admin/review/product/edit/id/' . $productReviewId . '/productId/' . $productId));
         $I->waitForPageLoad();
     }
 
@@ -492,6 +814,48 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->waitForPageLoad();
     }
 
+    public function goToTheAdminCreateStoreViewPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCreateStoreViewPage);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminCreateStorePage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCreateStorePage);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminCreateWebsitePage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCreateWebsitePage);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminWebsiteForIdPage($websiteId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminWebsiteByIdPage . $websiteId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminStoreViewForIdPage($storeViewId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoreViewByIdPage . $storeViewId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminStoreForIdPage($storeId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoreByIdPage . $storeId));
+        $I->waitForPageLoad();
+    }
+
     public function goToTheAdminConfigurationGrid()
     {
         $I = $this;
@@ -506,10 +870,31 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->waitForPageLoad();
     }
 
+    public function goToTheAdminTermsAndConditionForIdPage($termsAndConditionsId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminTermsAndConditionByIdPage . $termsAndConditionsId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddNewTermsAndConditionsPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddNewTermsAndConditionPage);
+        $I->waitForPageLoad();
+    }
+
     public function goToTheAdminOrderStatusGrid()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminOrderStatusGrid);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddOrderStatusPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddOrderStatusPage);
         $I->waitForPageLoad();
     }
 
@@ -520,10 +905,38 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->waitForPageLoad();
     }
 
+    public function goToTheAdminTaxRuleForIdPage($taxRuleId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminTaxRuleByIdPage . $taxRuleId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddTaxRulePage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddTaxRulePage);
+        $I->waitForPageLoad();
+    }
+
     public function goToTheAdminTaxZonesAndRatesGrid()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminTaxZonesAndRatesGrid);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminTaxZoneAndRateForIdPage($taxZoneAndRateId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminTaxZoneAndRateByIdPage . $taxZoneAndRateId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddTaxZoneAndRatePage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddTaxZoneAndRatePage);
         $I->waitForPageLoad();
     }
 
@@ -548,10 +961,38 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->waitForPageLoad();
     }
 
+    public function goToTheAdminProductAttributeForIdPage($productAttributeId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductAttributeForIdPage . $productAttributeId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddProductAttributePage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddProductAttributePage);
+        $I->waitForPageLoad();
+    }
+
     public function goToTheAdminAttributeSetGrid()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAttributeSetsGrid);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAttributeSetByIdPage($attributeSetId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminAttributeSetByIdPage . $attributeSetId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddAttributeSetPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddAttributeSetPage);
         $I->waitForPageLoad();
     }
 
@@ -562,10 +1003,38 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->waitForPageLoad();
     }
 
+    public function goToTheAdminRatingForIdPage($ratingId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminRatingForIdPage . $ratingId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddRatingPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddRatingPage);
+        $I->waitForPageLoad();
+    }
+
     public function goToTheAdminCustomerGroupsGrid()
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomerGroupsGrid);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminCustomerGroupForIdPage($customerGroupId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomerGroupByIdPage . $customerGroupId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddCustomerGroupPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddCustomerGroupPage);
         $I->waitForPageLoad();
     }
 
@@ -605,6 +1074,20 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->waitForPageLoad();
     }
 
+    public function goToTheAdminIntegrationForIdPage($integrationId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminIntegrationByIdPage . $integrationId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddIntegrationPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddIntegrationPage);
+        $I->waitForPageLoad();
+    }
+
     public function goToTheAdminCacheManagementGrid()
     {
         $I = $this;
@@ -640,6 +1123,20 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->waitForPageLoad();
     }
 
+    public function goToTheAdminUserForIdPage($userId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminUserByIdPage . $userId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddUserPage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddNewUserPage);
+        $I->waitForPageLoad();
+    }
+
     public function goToTheAdminLockedUsersGrid()
     {
         $I = $this;
@@ -654,6 +1151,20 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->waitForPageLoad();
     }
 
+    public function goToTheAdminUserRoleForIdPage($userRoleId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminUserRoleByIdPage . $userRoleId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddUserRolePage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddUserRolePage);
+        $I->waitForPageLoad();
+    }
+
     public function goToTheAdminNotificationsGrid()
     {
         $I = $this;
@@ -665,6 +1176,20 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
     {
         $I = $this;
         $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomVariablesGrid);
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminCustomVariableForId($customVariableId)
+    {
+        $I = $this;
+        $I->amOnPage((\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomVariableByIdPage . $customVariableId));
+        $I->waitForPageLoad();
+    }
+
+    public function goToTheAdminAddCustomVariablePage()
+    {
+        $I = $this;
+        $I->amOnPage(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddCustomVariablePage);
         $I->waitForPageLoad();
     }
 
@@ -710,11 +1235,39 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->see('Orders', self::$adminPageTitle);
     }
 
+    public function shouldBeOnTheAdminOrderForIdPage($orderId)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminOrderByIdPage . $orderId));
+        $I->see($orderId, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddOrderPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddOrderPage);
+        $I->see('Create New Order', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddOrderForCustomerIdPage($customerId)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddOrderForCustomerIdPage . $customerId));
+        $I->see('Create New Order', self::$adminPageTitle);
+    }
+
     public function shouldBeOnTheAdminInvoicesGrid()
     {
         $I = $this;
         $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminInvoicesGrid);
         $I->see('Invoices', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddInvoiceForOrderIdPage($orderId)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddInvoiceForOrderIdPage . $orderId));
+        $I->see('New Invoice', self::$adminPageTitle);
     }
 
     public function shouldBeOnTheAdminShipmentsGrid()
@@ -724,11 +1277,25 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->see('Shipments', self::$adminPageTitle);
     }
 
+    public function shouldBeOnTheAdminShipmentForIdPage($shipmentId)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminShipmentForIdPage . $shipmentId));
+        $I->see('New Shipment');
+    }
+
     public function shouldBeOnTheAdminCreditMemosGrid()
     {
         $I = $this;
         $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCreditMemosGrid);
         $I->see('Credit Memos', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminCreditMemoForIdPage($creditMemoId)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminCreditMemoForIdPage . $creditMemoId));
+        $I->see('View Memo', self::$adminPageTitle);
     }
 
     public function shouldBeOnTheAdminBillingAgreementsGrid()
@@ -753,11 +1320,81 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->see('Catalog', self::$adminPageTitle);
     }
 
-    public function shouldBeOnTheAdminCategoryPage()
+    public function shouldBeOnTheAdminProductForIdPage($productId, $productName)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductForIdPage . $productId));
+        $I->see($productName, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddSimpleProductPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddSimpleProductPage);
+        $I->see('New Product', self::$adminPageTitle);
+    }
+    
+    public function shouldBeOnTheAdminAddConfigurableProductPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddConfigurableProductPage);
+        $I->see('New Product', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddGroupedProductPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddGroupedProductPage);
+        $I->see('New Product', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddVirtualProductPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddVirtualProductPage);
+        $I->see('New Product', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddBundledProductPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddBundleProductPage);
+        $I->see('New Product', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddDownloadableProductPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddDownloadableProductPage);
+        $I->see('New Product', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminCategoriesPage()
     {
         $I = $this;
         $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCategoriesPage);
         $I->see('Default Category', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminCategoryForIdPage($categoryId, $categoryName)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminCategoryForIdPage . $categoryId));
+        $I->see($categoryName, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddRootCategoryForStoreIdPage($storeId)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(('/admin/catalog/category/add/store/' . $storeId . '/parent/1'));
+        $I->see('New Category', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddSubCategoryForStoreIdPage($storeId)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(('/admin/catalog/category/add/store/' . $storeId . '/parent/2'));
+        $I->see('New Category', self::$adminPageTitle);
     }
 
     // Customers
@@ -775,12 +1412,40 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->see('Customers Now Online', self::$adminPageTitle);
     }
 
+    public function shouldBeOnTheAdminCustomerForIdPage($customerId, $customerName)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomerForCustomerIdPage . $customerId));
+        $I->see($customerName, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddCustomerPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddCustomerPage);
+        $I->see('New Customer', self::$adminPageTitle);
+    }
+
     // Marketing
     public function shouldBeOnTheAdminCatalogPriceRuleGrid()
     {
         $I = $this;
         $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCatalogPriceRuleGrid);
         $I->see('Catalog Price Rule', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminCatalogPriceRuleForIdPage($catalogPriceRuleId, $catalogPriceRuleName)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminCatalogPriceRuleForIdPage . $catalogPriceRuleId));
+        $I->see($catalogPriceRuleName, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddCatalogPriceRulePage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddCatalogPriceRulePage);
+        $I->see('New Catalog Price Rule', self::$adminPageTitle);
     }
 
     public function shouldBeOnTheAdminCartPriceRulesGrid()
@@ -790,6 +1455,20 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->see('Cart Price Rules', self::$adminPageTitle);
     }
 
+    public function shouldBeOnTheAdminCartPriceRuleForIdPage($cartPriceRuleId, $cartPriceRuleName)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminCartPriceRuleForIdPage . $cartPriceRuleId));
+        $I->see($cartPriceRuleName, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddCartPriceRulePage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddCartPriceRulePage);
+        $I->see('New Cart Price Rule', self::$adminPageTitle);
+    }
+
     public function shouldBeOnTheAdminEmailTemplatesGrid()
     {
         $I = $this;
@@ -797,11 +1476,39 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->see('Email Templates', self::$adminPageTitle);
     }
 
+    public function shouldBeOnTheAdminEmailTemplateForIdPage($emailTemplateId, $templateName)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminEmailTemplateForIdPage . $emailTemplateId));
+        $I->see($templateName, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddEmailTemplatePage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddEmailTemplatePage);
+        $I->see('New Template', self::$adminPageTitle);
+    }
+
     public function shouldBeOnTheAdminNewsletterTemplateGrid()
     {
         $I = $this;
         $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminNewsletterTemplateGrid);
         $I->see('Newsletter Templates', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminNewsletterTemplateByIdPage($newsletterTemplateId, $templateName)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminNewsletterTemplateForIdPage . $newsletterTemplateId));
+        $I->see($templateName, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddNewsletterTemplatePage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddNewsletterTemplatePage);
+        $I->see('New Template', self::$adminPageTitle);
     }
 
     public function shouldBeOnTheAdminNewsletterQueueGrid()
@@ -825,11 +1532,39 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->see('URL Rewrites', self::$adminPageTitle);
     }
 
+    public function shouldBeOnTheAdminURLRewriteForId($urlRewriteId)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminURLRewriteForIdPage . $urlRewriteId));
+        $I->see('Edit URL Rewrite for a', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddURLRewritePage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddURLRewritePage);
+        $I->see('Add New URL Rewrite', self::$adminPageTitle);
+    }
+
     public function shouldBeOnTheAdminSearchTermsGrid()
     {
         $I = $this;
         $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminSearchTermsGrid);
         $I->see('Search Terms', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminSearchTermForIdPage($searchTermId, $searchQuery)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminSearchTermForIdPage . $searchTermId));
+        $I->see($searchQuery, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddSearchTermPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddSearchTermPage);
+        $I->see('New Search', self::$adminPageTitle);
     }
 
     public function shouldBeOnTheAdminSearchSynonymsGrid()
@@ -839,6 +1574,20 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->see('Search Synonyms', self::$adminPageTitle);
     }
 
+    public function shouldBeOnTheAdminSearchSynonymGroupByIdPage($searchSynonymId, $synonyms)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminSearchSynonymGroupForIdPage . $searchSynonymId));
+        $I->see($synonyms, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddSearchSynonymGroupPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddSearchSynonymGroupPage);
+        $I->see('New Synonym Group', self::$adminPageTitle);
+    }
+
     public function shouldBeOnTheAdminSiteMapGrid()
     {
         $I = $this;
@@ -846,11 +1595,39 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->see('Site Map', self::$adminPageTitle);
     }
 
+    public function shouldBeOnTheAdminSiteMapForIdPage($siteMapId, $fileName)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminSiteMapForIdPage . $siteMapId));
+        $I->see($fileName, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddSiteMapPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddSiteMapPage);
+        $I->see('New Site Map', self::$adminPageTitle);
+    }
+
     public function shouldBeOnTheAdminReviewsGrid()
     {
         $I = $this;
         $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminReviewsGrid);
         $I->see('Reviews', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminReviewForIdPage($reviewId)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminReviewByIdPage . $reviewId));
+        $I->see('Edit Review', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddReviewPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddReviewPage);
+        $I->see('New Review', self::$adminPageTitle);
     }
 
     // Content
@@ -861,6 +1638,20 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->see('Pages', self::$adminPageTitle);
     }
 
+    public function shouldBeOnTheAdminPageForIdPage($pageId, $pageTitle)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminPageForIdPage . $pageId));
+        $I->see($pageTitle, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddPagePage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddPagePage));
+        $I->see('New Page', self::$adminPageTitle);
+    }
+
     public function shouldBeOnTheAdminBlocksGrid()
     {
         $I = $this;
@@ -868,10 +1659,31 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->see('Blocks', self::$adminPageTitle);
     }
 
+    public function shouldBeOnTheAdminBlockForIdPage($blockId, $blockTitle)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminBlockForIdPage . $blockId));
+        $I->see($blockTitle, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddBlockPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddBlockPage);
+        $I->see('New Block', self::$adminPageTitle);
+    }
+
     public function shouldBeOnTheAdminWidgetsGrid()
     {
         $I = $this;
         $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminWidgetsGrid);
+        $I->see('Widgets', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddWidgetPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddWidgetPage);
         $I->see('Widgets', self::$adminPageTitle);
     }
 
@@ -889,11 +1701,32 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->see('Themes', self::$adminPageTitle);
     }
 
+    public function shouldBeOnTheAdminThemeByIdPage($themeId, $themeTitle)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminThemeByIdPage . $themeId));
+        $I->see($themeTitle);
+    }
+
     public function shouldBeOnTheAdminStoreContentScheduleGrid()
     {
         $I = $this;
         $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoreContentScheduleGrid);
         $I->see('Store Design Schedule', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminStoreContentScheduleForIdPage($storeContentScheduleId)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoreContentScheduleForIdPage . $storeContentScheduleId));
+        $I->see('Edit Store Design Change', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddStoreDesignChangePage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddStoreDesignChangePage);
+        $I->see('New Store Design Change');
     }
 
     // Reports
@@ -937,6 +1770,20 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I = $this;
         $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductReviewsReportGrid);
         $I->see('Product Reviews Report', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminProductReviewsForProductIdPage($productId)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductReviewsForProductIdPage . $productId));
+        $I->see('Reviews', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminProductReviewIdForProductIdPage($productReviewId, $productId)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(('/admin/review/product/edit/id/' . $productReviewId . '/productId/' . $productId));
+        $I->see('Edit Review', self::$adminPageTitle);
     }
 
     public function shouldBeOnTheAdminOrdersReportGrid()
@@ -1066,6 +1913,45 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->see('Stores', self::$adminPageTitle);
     }
 
+    public function shouldBeOnTheAdminCreateStoreViewPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCreateStoreViewPage);
+        $I->see('Stores', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminCreateStorePage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCreateStorePage);
+        $I->see('Stores', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminCreateWebsitePage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCreateWebsitePage);
+        $I->see('Stores');
+    }
+
+    public function shouldBeOnTheAdminWebsiteForIdPage($websiteId)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminWebsiteByIdPage . $websiteId));
+    }
+
+    public function shouldBeOnTheAdminStoreViewForIdPage($storeViewId)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoreViewByIdPage . $storeViewId));
+    }
+
+    public function shouldBeOnTheAdminStoreForIdPage($storeId)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminStoreByIdPage . $storeId));
+    }
+
     public function shouldBeOnTheAdminConfigurationGrid()
     {
         $I = $this;
@@ -1080,11 +1966,32 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->see('Terms and Conditions', self::$adminPageTitle);
     }
 
+    public function shouldBeOnTheAdminTermsAndConditionForIdPage($termsAndConditionsId, $conditionName)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminTermsAndConditionByIdPage . $termsAndConditionsId));
+        $I->see($conditionName, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddNewTermsAndConditionsPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddNewTermsAndConditionPage);
+        $I->see('New Condition', self::$adminPageTitle);
+    }
+
     public function shouldBeOnTheAdminOrderStatusGrid()
     {
         $I = $this;
         $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminOrderStatusGrid);
         $I->see('Order Status', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddOrderStatusPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddOrderStatusPage);
+        $I->see('Create New Order Status', self::$adminPageTitle);
     }
 
     public function shouldBeOnTheAdminTaxRulesGrid()
@@ -1094,11 +2001,39 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->see('Tax Rules', self::$adminPageTitle);
     }
 
+    public function shouldBeOnTheAdminTaxRuleForIdPage($taxRuleId, $taxRuleName)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminTaxRuleByIdPage . $taxRuleId));
+        $I->see($taxRuleName, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddTaxRulePage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddTaxRulePage);
+        $I->see('New Tax Rule', self::$adminPageTitle);
+    }
+
     public function shouldBeOnTheAdminTaxZonesAndRatesGrid()
     {
         $I = $this;
         $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminTaxZonesAndRatesGrid);
         $I->see('Tax Zones and Rates', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminTaxZoneAndRateForIdPage($taxZoneAndRateId, $taxIdentifier)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminTaxZoneAndRateByIdPage . $taxZoneAndRateId));
+        $I->see($taxIdentifier, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddTaxZoneAndRatePage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddTaxZoneAndRatePage);
+        $I->see('New Tax Rate', self::$adminPageTitle);
     }
 
     public function shouldBeOnTheAdminCurrencyRatesPage()
@@ -1122,11 +2057,39 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->see('Product Attributes', self::$adminPageTitle);
     }
 
+    public function shouldBeOnTheAdminProductAttributeForIdPage($productAttributeId, $productAttributeDefaultLabel)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminProductAttributeForIdPage . $productAttributeId));
+        $I->see($productAttributeDefaultLabel, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddProductAttributePage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddProductAttributePage);
+        $I->see('New Product Attribute', self::$adminPageTitle);
+    }
+
     public function shouldBeOnTheAdminAttributeSetsGrid()
     {
         $I = $this;
         $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAttributeSetsGrid);
         $I->see('Attribute Sets', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAttributeSetByIdPage($attributeSetId, $attributeSetName)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminAttributeSetByIdPage . $attributeSetId));
+        $I->see($attributeSetName, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddAttributeSetPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddAttributeSetPage);
+        $I->see('New Attribute Set', self::$adminPageTitle);
     }
 
     public function shouldBeOnTheAdminRatingsGrid()
@@ -1136,11 +2099,39 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->see('Ratings', self::$adminPageTitle);
     }
 
+    public function shouldBeOnTheAdminRatingForIdPage($ratingId, $ratingDefaultValue)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminRatingForIdPage . $ratingId));
+        $I->see($ratingDefaultValue, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddRatingPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddRatingPage);
+        $I->see('New Rating', self::$adminPageTitle);
+    }
+
     public function shouldBeOnTheAdminCustomerGroupsGrid()
     {
         $I = $this;
         $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomerGroupsGrid);
         $I->see('Customer Groups', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminCustomerGroupForIdPage($customerGroupId, $customerGroupName)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomerGroupByIdPage . $customerGroupId));
+        $I->see($customerGroupName, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddCustomerGroupPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddCustomerGroupPage);
+        $I->see('New Customer Group', self::$adminPageTitle);
     }
 
     // System
@@ -1179,6 +2170,22 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->see('Integrations', self::$adminPageTitle);
     }
 
+    public function shouldBeOnTheAdminIntegrationForIdPage($integrationId, $integrationName)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminIntegrationByIdPage . $integrationId));
+        $I->see('Edit', self::$adminPageTitle);
+        $I->see($integrationName, self::$adminPageTitle);
+        $I->see('Integration', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddIntegrationPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddIntegrationPage);
+        $I->see('New Integration', self::$adminPageTitle);
+    }
+
     public function shouldBeOnTheAdminCacheManagementGrid()
     {
         $I = $this;
@@ -1214,6 +2221,20 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->see('Users', self::$adminPageTitle);
     }
 
+    public function shouldBeOnTheAdminUserForIdPage($userId, $userFirstAndLastName)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminUserByIdPage . $userId));
+        $I->see($userFirstAndLastName, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddUserPage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddNewUserPage);
+        $I->see('New User', self::$adminPageTitle);
+    }
+
     public function shouldBeOnTheAdminLockedUsersGrid()
     {
         $I = $this;
@@ -1228,6 +2249,20 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I->see('Roles', self::$adminPageTitle);
     }
 
+    public function shouldBeOnTheAdminUserRoleForIdPage($userRoleId, $userRoleName)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminUserRoleByIdPage . $userRoleId));
+        $I->see($userRoleName, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddUserRolePage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddUserRolePage);
+        $I->see('New Role', self::$adminPageTitle);
+    }
+
     public function shouldBeOnTheAdminNotificationsGrid()
     {
         $I = $this;
@@ -1240,6 +2275,20 @@ class AdminStep extends \Magento\Xxyyzz\AcceptanceTester
         $I = $this;
         $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomVariablesGrid);
         $I->see('Custom Variables', self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminCustomVariableForId($customVariableId, $customVariableCode)
+    {
+        $I = $this;
+        $I->seeInCurrentUrl((\Magento\Xxyyzz\Helper\AdminUrlList::$adminCustomVariableByIdPage . $customVariableId));
+        $I->see($customVariableCode, self::$adminPageTitle);
+    }
+
+    public function shouldBeOnTheAdminAddCustomVariablePage()
+    {
+        $I = $this;
+        $I->seeInCurrentUrl(\Magento\Xxyyzz\Helper\AdminUrlList::$adminAddCustomVariablePage);
+        $I->see('New Custom Variable', self::$adminPageTitle);
     }
 
     public function shouldBeOnTheAdminEncryptionKeyPage()
