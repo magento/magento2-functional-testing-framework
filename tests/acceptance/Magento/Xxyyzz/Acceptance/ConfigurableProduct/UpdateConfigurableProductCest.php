@@ -24,7 +24,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
  *
  * Codeception annotations
  * @group configurable
- * @group add
+ * @group update
  * @env chrome
  * @env firefox
  * @env phantomjs

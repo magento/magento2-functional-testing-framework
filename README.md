@@ -98,6 +98,7 @@
 ### Testing Groups
 * You can run or exclude subsets of Tests using the `--group` and `--skip-group` codeception flags in the Terminal (IF you add the `@env` tag to a Test you HAVE to include the `--env ZZZZ` flag in your `codecept` command):
     * ```codecept run acceptance --env ZZZZ --group XXXX --skip-group YYYY```
+    ##### Base on operation, currently we have groups:
         * *skip*
         * *slow*
         * *example*
@@ -107,7 +108,9 @@
         * *sampleData*
         * *nav-menu*
         * *add*
+        * *update* 
         * *fields*
+    ##### Base on Magento module, currently we have groups:
         * *catalog*
         * *configurable*
         * *customer*
