@@ -2,8 +2,6 @@
 namespace Magento\Xxyyzz\Acceptance\Catalog;
 
 use Magento\Xxyyzz\Step\Backend\AdminStep;
-use Magento\Xxyyzz\Step\Catalog\Api\CategoryApiStep;
-use Magento\Xxyyzz\Step\Catalog\Api\ProductApiStep;
 use Magento\Xxyyzz\Page\Catalog\AdminProductGridPage;
 use Magento\Xxyyzz\Page\Catalog\AdminProductPage;
 use Magento\Xxyyzz\Page\Catalog\StorefrontCategoryPage;
@@ -44,34 +42,24 @@ class UpdateSimpleProductCest
 
     /**
      * @param AdminStep $I
-     * @param CategoryApiStep $categoryApi
-     * @param ProductApiStep $productApi
      */
-    public function _before(AdminStep $I, CategoryApiStep $categoryApi, ProductApiStep $productApi)
+    public function _before(AdminStep $I)
     {
         $I->loginAsAdmin();
-        $I->goToTheAdminCatalogPage();
-        
+
         $this->category = $I->getCategoryApiData();
-        $categoryApi->amAdminTokenAuthenticated();
-        $this->category = array_merge(
-            $this->category,
-            ['id' => $categoryApi->createCategory(['category' => $this->category])]
-        );
+        $this->category['id'] = $I->requireCategory($this->category)->id;
         $this->category['url_key'] = $this->category['custom_attributes'][0]['value'];
+
         $this->product = $I->getProductApiData('simple', $this->category['id']);
-        $productApi->amAdminTokenAuthenticated();
-        $this->product = array_merge(
-            $this->product,
-            ['id' => $productApi->createProduct(['product' => $this->product])]
-        );
+        $this->product['id'] = $I->requireSimpleProduct($this->category['id'], $this->product)->id;
+        $this->product['url_key'] = $this->product['custom_attributes'][0]['value'];
         if ($this->product['extension_attributes']['stock_item']['is_in_stock'] !== 0) {
             $this->product['stock_status'] = 'In Stock';
             $this->product['qty'] = $this->product['extension_attributes']['stock_item']['qty'];
         } else {
             $this->product['stock_status'] = 'Out of Stock';
         }
-        $this->product['url_key'] = $this->product['custom_attributes'][0]['value'];
     }
 
     public function _after(AdminStep $I)
@@ -108,6 +96,7 @@ class UpdateSimpleProductCest
         StorefrontProductPage $storefrontProductPage
     ) {
         $I->wantTo('update simple product in admin.');
+        $adminProductGridPage->amOnAdminProductGridPage();
         $adminProductGridPage->searchBySku($this->product['sku']);
         $adminProductGridPage->seeInCurrentGridNthRow(1, [$this->product['sku']]);
 
@@ -140,7 +129,7 @@ class UpdateSimpleProductCest
         $I->wantTo('verify simple product data in frontend category page.');
         $storefrontCategoryPage->amOnCategoryPage($this->category['url_key']);
         $storefrontCategoryPage->seeProductNameInPage($this->product['name'] . '-updated');
-        $storefrontCategoryPage->seeProductPriceInPage($this->product['name'] . '-updated', $this->product['price'] + 10);
+        $storefrontCategoryPage->seeProductPriceInPage($this->product['name'] . '-updated', $this->product['price']+10);
 
         $I->wantTo('verify simple product data in frontend product page.');
         $storefrontProductPage->amOnProductPage(str_replace('_', '-', $this->product['url_key']));

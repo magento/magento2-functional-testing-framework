@@ -16,7 +16,7 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * Class CreateConfigurableProductCest
+ * Class UpdateConfigurableProductCest
  *
  * Allure annotations
  * @Features({"Catalog"})
@@ -29,7 +29,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
  * @env firefox
  * @env phantomjs
  */
-class CreateConfigurableProductCest
+class UpdateConfigurableProductCest
 {
     /**
      * @var array
@@ -40,6 +40,11 @@ class CreateConfigurableProductCest
      * @var array
      */
     protected $product;
+
+    /**
+     * @var array
+     */
+    protected $attribute;
 
     /**
      * @var array
@@ -70,6 +75,7 @@ class CreateConfigurableProductCest
         $this->category['url_key'] = $this->category['custom_attributes'][0]['value'];
 
         $this->product = $I->getProductApiData('configurable', $this->category['id']);
+        $this->product['id'] = ($I->requireConfigurableProduct($this->category['id'], $this->product))->id;
         $this->product['url_key'] = $this->product['custom_attributes'][0]['value'];
         if ($this->product['extension_attributes']['stock_item']['is_in_stock'] !== 0) {
             $this->product['stock_status'] = 'In Stock';
@@ -78,26 +84,21 @@ class CreateConfigurableProductCest
             $this->product['stock_status'] = 'Out of Stock';
         }
 
+        $this->attribute = $I->requireProductAttribute();
+
         $this->productVariations = [
             [
-                'attribute_code' => 'Color',
-                'attribute_value' => 'red',
-                'sku' => $this->product['sku'].'-red',
+                'attribute_code' => $this->attribute->attribute_code,
+                'attribute_value' => $this->attribute->options[1]->label . '_updated',
+                'sku' => $this->product['sku'] . '_updated-' . $this->attribute->options[1]->label . '_updated',
                 'price' => '11.11',
                 'qty' => $this->product['qty'],
             ],
             [
-                'attribute_code' => 'Color',
-                'attribute_value' => 'blue',
-                'sku' => $this->product['sku'].'-blue',
+                'attribute_code' => $this->attribute->attribute_code,
+                'attribute_value' => $this->attribute->options[2]->label . '_updated',
+                'sku' => $this->product['sku'] . '_updated-' . $this->attribute->options[2]->label . '_updated',
                 'price' => '22.22',
-                'qty' => $this->product['qty'],
-            ],
-            [
-                'attribute_code' => 'Color',
-                'attribute_value' => 'white',
-                'sku' => $this->product['sku'].'-white',
-                'price' => '33.33',
                 'qty' => $this->product['qty'],
             ]
         ];
@@ -116,8 +117,8 @@ class CreateConfigurableProductCest
 
     /**
      * Allure annotations
-     * @Title("Create a configurable product and verify on the storefront")
-     * @Description("Create a configurable product and verify on the storefront.")
+     * @Title("Update a configurable product and verify on the storefront")
+     * @Description("Update a configurable product and verify on the storefront.")
      * @TestCaseId("")
      * @Severity(level = SeverityLevel::CRITICAL)
      * @Parameter(name = "AdminStep", value = "$I")
@@ -140,22 +141,18 @@ class CreateConfigurableProductCest
         StorefrontCategoryPage $storefrontCategoryPage,
         StorefrontProductPage $storefrontProductPage
     ) {
-        $I->wantTo('create configurable product with required fields in admin product page.');
+        $I->wantTo('update configurable product in admin.');
         $adminProductGridPage->amOnAdminProductGridPage();
-        $adminProductGridPage->clickOnAddConfigurableProductOption();
-        $adminConfigurableProductPage->amOnAdminNewProductPage();
-        $adminConfigurableProductPage->fillFieldProductName($this->product['name']);
-        $adminConfigurableProductPage->fillFieldProductSku($this->product['sku']);
-        $adminConfigurableProductPage->fillFieldProductPrice($this->product['price']);
-        if (isset($this->product['qty'])) {
-            $adminConfigurableProductPage->fillFieldProductQuantity($this->product['qty']);
-        }
-        $adminConfigurableProductPage->selectProductStockStatus($this->product['stock_status']);
-        $adminConfigurableProductPage->selectProductCategories([$this->category['name']]);
-        $adminConfigurableProductPage->fillFieldProductUrlKey($this->product['url_key']);
+        $adminProductGridPage->searchBySku($this->product['sku']);
+        $adminProductGridPage->seeInCurrentGridNthRow(1, [$this->product['sku']]);
 
-        $I->wantTo('create configurations for product.');
-        $adminConfigurableProductPage->clickCreateConfigurationsButton();
+        $I->wantTo('open product created from precondition.');
+        $adminConfigurableProductPage->amOnAdminEditProductPageById($this->product['id']);
+
+        $I->wantTo('update configurable data.');
+        $adminConfigurableProductPage->fillFieldProductName($this->product['name'] . '_updated');
+        $adminConfigurableProductPage->fillFieldProductSku($this->product['sku'] . '_updated');
+        $adminConfigurableProductPage->clickEditConfigurationsButton();
 
         $I->wantTo('on Create Product Configurations Wizard - Select Attributes...');
         $adminConfigurableProductPage->filterAndSelectAttributeByCode(
@@ -191,14 +188,11 @@ class CreateConfigurableProductCest
         $adminConfigurableProductPage->saveProduct();
         $I->seeElement($adminConfigurableProductPage::$successMessage);
 
-        $I->wantTo('verify configurable product data in admin product page.');
-        $adminConfigurableProductPage->seeProductAttributeSet('Default');
-        $adminConfigurableProductPage->seeProductName($this->product['name']);
-        $adminConfigurableProductPage->seeProductSku($this->product['sku']);
-        $adminConfigurableProductPage->seeProductPriceDisabled();
-        $adminConfigurableProductPage->seeProductQuantityDisabled();
-        $adminConfigurableProductPage->seeProductStockStatus($this->product['stock_status']);
-        $adminConfigurableProductPage->seeProductCategories([$this->category['name']]);
+        $I->wantTo('see updated product data.');
+        $adminConfigurableProductPage->seeInPageTitle($this->product['name'] . '_updated');
+        $adminConfigurableProductPage->seeProductName($this->product['name'] . '_updated');
+        $adminConfigurableProductPage->seeProductSku($this->product['sku'] . '_updated');
+
         $adminConfigurableProductPage->seeProductUrlKey(str_replace('_', '-', $this->product['url_key']));
         $adminConfigurableProductPage->assertNumberOfConfigurableVariations(count($this->productVariations));
         foreach ($this->productVariations as $variation) {
@@ -207,6 +201,7 @@ class CreateConfigurableProductCest
 
         $I->wantTo('verify configurable product data in frontend category page.');
         $storefrontCategoryPage->amOnCategoryPage($this->category['url_key']);
+        //TODO: need to confirm if the product name should change.
         $storefrontCategoryPage->seeProductLinksInPage(
             $this->product['name'],
             str_replace('_', '-', $this->product['url_key'])
@@ -219,7 +214,7 @@ class CreateConfigurableProductCest
         $storefrontProductPage->seeProductNameInPage($this->product['name']);
         $storefrontProductPage->seeProductPriceInPage($this->variationPrice[0]);
         $storefrontProductPage->seeProductStockStatusInPage($this->product['stock_status']);
-        $storefrontProductPage->seeProductSkuInPage($this->productVariations[0]['sku']);
+        $storefrontProductPage->seeProductSkuInPage($this->productVariations[0]['sku'] . '_updated');
         $storefrontProductPage->seeProductOptions($this->attributeValues);
     }
 }

@@ -6,7 +6,6 @@ use Magento\Xxyyzz\Page\Catalog\AdminProductGridPage;
 use Magento\Xxyyzz\Page\Catalog\AdminProductPage;
 use Magento\Xxyyzz\Page\Catalog\StorefrontCategoryPage;
 use Magento\Xxyyzz\Page\Catalog\StorefrontProductPage;
-use Magento\Xxyyzz\Step\Catalog\Api\CategoryApiStep;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
 use Yandex\Allure\Adapter\Annotation\Title;
@@ -42,23 +41,21 @@ class CreateSimpleProductCest
      */
     protected $product;
 
-    public function _before(AdminStep $I, CategoryApiStep $api)
+    public function _before(AdminStep $I)
     {
         $I->loginAsAdmin();
         $I->goToTheAdminCatalogPage();
-        
         $this->category = $I->getCategoryApiData();
-        $api->amAdminTokenAuthenticated();
-        $this->category = array_merge($this->category, ['id' => $api->createCategory(['category' => $this->category])]);
+        $this->category['id'] = $I->requireCategory($this->category)->id;
         $this->category['url_key'] = $this->category['custom_attributes'][0]['value'];
-        $this->product = $I->getProductApiData();
+        $this->product = $I->getProductApiData('simple', $this->category['id']);
+        $this->product['url_key'] = $this->product['custom_attributes'][0]['value'];
         if ($this->product['extension_attributes']['stock_item']['is_in_stock'] !== 0) {
             $this->product['stock_status'] = 'In Stock';
             $this->product['qty'] = $this->product['extension_attributes']['stock_item']['qty'];
         } else {
             $this->product['stock_status'] = 'Out of Stock';
         }
-        $this->product['url_key'] = $this->product['custom_attributes'][0]['value'];
     }
 
     public function _after(AdminStep $I)

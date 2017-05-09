@@ -4,7 +4,6 @@ namespace Magento\Xxyyzz\Acceptance\Customer;
 use Magento\Xxyyzz\AcceptanceTester;
 use Magento\Xxyyzz\Page\Customer\StorefrontCustomerAccountLoginPage;
 use Magento\Xxyyzz\Page\Customer\StorefrontCustomerAccountDashboardPage;
-use Magento\Xxyyzz\Step\Customer\Api\CustomerApiStep;
 use Yandex\Allure\Adapter\Annotation\Stories;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Title;
@@ -37,13 +36,10 @@ class SignInCustomerFrontendCest
     /**
      * @param AcceptanceTester $I
      */
-    public function _before(AcceptanceTester $I, CustomerApiStep $api)
+    public function _before(AcceptanceTester $I)
     {
-        $this->customer = $I->getCustomerApiDataWithPassword();
-        $api->amAdminTokenAuthenticated();
-        $this->customer = array_merge($this->customer, ['id' => $api->createCustomer($this->customer)]);
-        $this->customer = array_merge($this->customer['customer'], $this->customer);
-        unset($this->customer['customer']);
+        $this->customer = $I->getCustomerApiData();
+        $this->customer['id'] = $I->requireCustomer($this->customer);
     }
 
     /**
