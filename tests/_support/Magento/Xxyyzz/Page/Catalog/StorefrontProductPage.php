@@ -20,10 +20,10 @@ class StorefrontProductPage extends AbstractFrontendPage
      */
     public static $productOptionsDropDown       = '#product-options-wrapper .super-attribute-select';
 
-    public function amOnProductPage($categoryUrlKey)
+    public function amOnProductPage($productUrlKey)
     {
         $I = $this->acceptanceTester;
-        $I->amOnPage(self::route($categoryUrlKey . '.html'));
+        $I->amOnPage(self::route($productUrlKey . '.html'));
         $I->waitForPageLoad();
     }
 

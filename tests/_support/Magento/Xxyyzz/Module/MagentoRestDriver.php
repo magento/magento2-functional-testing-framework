@@ -2,6 +2,7 @@
 namespace Magento\Xxyyzz\Module;
 
 use Codeception\Module\REST;
+use Codeception\Module\Sequence;
 
 /**
  * MagentoRestDriver module provides Magento REST WebService.
@@ -43,6 +44,22 @@ use Codeception\Module\REST;
  */
 class MagentoRestDriver extends REST
 {
+    /**
+     * HTTP methods supported by REST.
+     */
+    const HTTP_METHOD_GET = 'GET';
+    const HTTP_METHOD_DELETE = 'DELETE';
+    const HTTP_METHOD_PUT = 'PUT';
+    const HTTP_METHOD_POST = 'POST';
+
+    protected static $categoryEndpoint = 'categories';
+    protected static $productEndpoint = 'products';
+    protected static $productAttributesEndpoint = 'products/attributes';
+    protected static $productAttributesOptionsEndpoint = 'products/attributes/%s/options';
+    protected static $productAttributeSetEndpoint = 'products/attribute-sets/attributes';
+    protected static $configurableProductEndpoint = 'configurable-products/%s/options';
+    protected static $customersEndpoint = 'customers';
+
     /**
      * Module required fields.
      *
@@ -89,6 +106,7 @@ class MagentoRestDriver extends REST
         $this->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
         $this->haveHttpHeader('Authorization', 'Bearer ' . $token);
         self::$adminTokens[$this->config['username']] = $token;
+        $this->getModule('Sequence')->_initialize();
     }
 
     /**
@@ -150,5 +168,496 @@ class MagentoRestDriver extends REST
             self::$adminTokens[$username] = $token;
         }
         $this->amBearerAuthenticated(self::$adminTokens[$username]);
+    }
+
+    /**
+     * Send REST API request.
+     *
+     * @param string $endpoint
+     * @param string $httpMethod
+     * @param array $params
+     * @param string $grabByJsonPath
+     * @param bool $decode
+     * @return mixed
+     * @throws \LogicException
+     * @part json
+     * @part xml
+     */
+    public function sendRestRequest($endpoint, $httpMethod, $params = [], $grabByJsonPath = null, $decode = true)
+    {
+        $this->amAdminTokenAuthenticated();
+        switch ($httpMethod) {
+            case self::HTTP_METHOD_GET:
+                $this->sendGET($endpoint, $params);
+                break;
+            case self::HTTP_METHOD_POST:
+                $this->sendPOST($endpoint, $params);
+                break;
+            case self::HTTP_METHOD_PUT:
+                $this->sendPUT($endpoint, $params);
+                break;
+            case self::HTTP_METHOD_DELETE:
+                $this->sendDELETE($endpoint, $params);
+                break;
+            default:
+                throw new \LogicException("HTTP method '{$httpMethod}' is not supported.");
+        }
+        $this->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+
+        if (!$decode && is_null($grabByJsonPath)) {
+            return $this->grabResponse();
+        } elseif (!$decode) {
+            return $this->grabDataFromResponseByJsonPath($grabByJsonPath);
+        } else {
+            return \GuzzleHttp\json_decode($this->grabResponse());
+        }
+    }
+
+    /**
+     * Create a category in Magento.
+     *
+     * @param array $categoryData
+     * @return array|mixed
+     * @part json
+     * @part xml
+     */
+    public function requireCategory($categoryData = [])
+    {
+        if (!$categoryData) {
+            $categoryData = $this->getCategoryApiData();
+        }
+        $categoryData = $this->sendRestRequest(
+            self::$categoryEndpoint,
+            self::HTTP_METHOD_POST,
+            ['category' => $categoryData]
+        );
+        return $categoryData;
+    }
+
+    /**
+     * Create a simple product in Magento.
+     *
+     * @param int $categoryId
+     * @param array $simpleProductData
+     * @return array|mixed
+     * @part json
+     * @part xml
+     */
+    public function requireSimpleProduct($categoryId = 0, $simpleProductData = [])
+    {
+        if (!$simpleProductData) {
+            $simpleProductData = $this->getProductApiData('simple', $categoryId);
+        }
+        $simpleProductData = $this->sendRestRequest(
+            self::$productEndpoint,
+            self::HTTP_METHOD_POST,
+            ['product' => $simpleProductData]
+        );
+        return $simpleProductData;
+    }
+
+    /**
+     * Create a configurable product in Magento.
+     *
+     * @param int $categoryId
+     * @param array $configurableProductData
+     * @return array|mixed
+     * @part json
+     * @part xml
+     */
+    public function requireConfigurableProduct($categoryId = 0, $configurableProductData = [])
+    {
+        $configurableProductData = $this->getProductApiData('configurable', $categoryId, $configurableProductData);
+        $this->sendRestRequest(
+            self::$productEndpoint,
+            self::HTTP_METHOD_POST,
+            ['product' => $configurableProductData]
+        );
+
+        $attributeData = $this->getProductAttributeApiData();
+        $attribute = $this->sendRestRequest(
+            self::$productAttributesEndpoint,
+            self::HTTP_METHOD_POST,
+            $attributeData
+        );
+        $options = $this->sendRestRequest(
+            sprintf(self::$productAttributesOptionsEndpoint, $attribute->attribute_code),
+            self::HTTP_METHOD_GET
+        );
+
+        $attributeSetData = $this->getAssignAttributeToAttributeSetApiData($attribute->attribute_code);
+        $this->sendRestRequest(
+            self::$productAttributeSetEndpoint,
+            self::HTTP_METHOD_POST,
+            $attributeSetData
+        );
+
+        $simpleProduct1Data = $this->getProductApiData('simple', $categoryId);
+        array_push(
+            $simpleProduct1Data['custom_attributes'],
+            [
+                'attribute_code' => $attribute->attribute_code,
+                'value' => $options[1]->value
+            ]
+        );
+        $simpleProduct1Id = $this->sendRestRequest(
+            self::$productEndpoint,
+            self::HTTP_METHOD_POST,
+            ['product' => $simpleProduct1Data]
+        )->id;
+
+        $simpleProduct2Data = $this->getProductApiData('simple', $categoryId);
+        array_push(
+            $simpleProduct2Data['custom_attributes'],
+            [
+                'attribute_code' => $attribute->attribute_code,
+                'value' => $options[2]->value
+            ]
+        );
+        $simpleProduct2Id = $this->sendRestRequest(
+            self::$productEndpoint,
+            self::HTTP_METHOD_POST,
+            ['product' => $simpleProduct2Data]
+        )->id;
+
+        $tAttributes[] = [
+            'id' => $attribute->attribute_id,
+            'code' => $attribute->attribute_code
+        ];
+
+        $tOptions = [
+            intval($options[1]->value),
+            intval($options[2]->value)
+        ];
+
+        $configOptions = $this->getConfigurableProductOptionsApiData($tAttributes, $tOptions);
+
+        $configurableProductData = $this->getConfigurableProductApiData(
+            $configOptions,
+            [$simpleProduct1Id, $simpleProduct2Id],
+            $configurableProductData
+        );
+
+        $configurableProductData = $this->sendRestRequest(
+            self::$productEndpoint . '/' . $configurableProductData['sku'],
+            self::HTTP_METHOD_PUT,
+            ['product' => $configurableProductData]
+        );
+        return $configurableProductData;
+    }
+
+    /**
+     * Create a product attribute in Magento.
+     *
+     * @param string $code
+     * @return array|mixed
+     * @part json
+     * @part xml
+     */
+    public function requireProductAttribute($code = 'attribute')
+    {
+        $attributeData = $this->getProductAttributeApiData($code);
+        $attributeData = $this->sendRestRequest(
+            self::$productAttributesEndpoint,
+            self::HTTP_METHOD_POST,
+            $attributeData
+        );
+        return $attributeData;
+    }
+
+    /**
+     * Create a customer in Magento.
+     *
+     * @param array $customerData
+     * @param string $password
+     * @return array|mixed
+     * @part json
+     * @part xml
+     */
+    public function requireCustomer(array $customerData = [], $password = '123123qW')
+    {
+        if (!$customerData) {
+            $customerData = $this->getCustomerApiData();
+        }
+        $customerData = $this->getCustomerApiDataWithPassword($customerData, $password);
+        $customerData = $this->sendRestRequest(
+            self::$customersEndpoint,
+            self::HTTP_METHOD_POST,
+            $customerData
+        );
+        return $customerData;
+    }
+
+    /**
+     * Get category api data.
+     *
+     * @param array $categoryData
+     * @return array
+     * @part json
+     * @part xml
+     */
+    public function getCategoryApiData($categoryData = [])
+    {
+        $faker = \Faker\Factory::create();
+        $sq = sqs();
+        return array_replace_recursive(
+            [
+                'parent_id' => '2',
+                'name' => 'category' . $sq,
+                'is_active' => true,
+                'include_in_menu' => true,
+                'available_sort_by' => ['position', 'name'],
+                'custom_attributes' => [
+                    ['attribute_code' => 'url_key', 'value' => 'category' . $sq],
+                    ['attribute_code' => 'description', 'value' => $faker->text(20)],
+                    ['attribute_code' => 'meta_title', 'value' => $faker->text(20)],
+                    ['attribute_code' => 'meta_keywords', 'value' => $faker->text(20)],
+                    ['attribute_code' => 'meta_description', 'value' => $faker->text(20)],
+                    ['attribute_code' => 'display_mode', 'value' => 'PRODUCTS'],
+                    ['attribute_code' => 'landing_page', 'value' => ''],
+                    ['attribute_code' => 'is_anchor', 'value' => '0'],
+                    ['attribute_code' => 'custom_use_parent_settings', 'value' => '0'],
+                    ['attribute_code' => 'custom_apply_to_products', 'value' => '0'],
+                    ['attribute_code' => 'custom_design', 'value' => ''],
+                    ['attribute_code' => 'page_layout', 'value' => ''],
+                    ['attribute_code' => 'custom_design_to', 'value' => $faker->date($format = 'm/d/Y')],
+                    ['attribute_code' => 'custom_design_from', 'value' => $faker->date($format = 'm/d/Y', $max = 'now')]
+                ]
+            ],
+            $categoryData
+        );
+    }
+
+    /**
+     * Get simple product api data.
+     *
+     * @param string $type
+     * @param integer $categoryId
+     * @param array $productData
+     * @return array
+     * @part json
+     * @part xml
+     */
+    public function getProductApiData($type = 'simple', $categoryId = 0, $productData = [])
+    {
+        $faker = \Faker\Factory::create();
+        $sq = sqs();
+        return array_replace_recursive(
+            [
+                'sku' => $type . '_product_sku' . $sq,
+                'name' => $type . '_product' . $sq,
+                'visibility' => 4,
+                'type_id' => $type,
+                'price' => $faker->randomFloat(2, 1),
+                'status' => 1,
+                'attribute_set_id' => 4,
+                'extension_attributes' => [
+                    'stock_item' => ['is_in_stock' => 1, 'qty' => $faker->numberBetween(100, 9000)]
+                ],
+                'custom_attributes' => [
+                    ['attribute_code' => 'url_key', 'value' => $type . '_product' . $sq],
+                    ['attribute_code' => 'tax_class_id', 'value' => 2],
+                    ['attribute_code' => 'category_ids', 'value' => $categoryId],
+                ],
+            ],
+            $productData
+        );
+    }
+
+    /**
+     * Get Customer Api data.
+     *
+     * @param array $customerData
+     * @return array
+     * @part json
+     * @part xml
+     */
+    public function getCustomerApiData($customerData = [])
+    {
+        $faker = \Faker\Factory::create();
+        return array_replace_recursive(
+            [
+                'firstname' => $faker->firstName,
+                'middlename' => $faker->firstName,
+                'lastname' => $faker->lastName,
+                'email' => $faker->email,
+                'gender' => rand(0, 1),
+                'group_id' => 1,
+                'store_id' => 1,
+                'website_id' => 1,
+                'custom_attributes' => [
+                    [
+                        'attribute_code' => 'disable_auto_group_change',
+                        'value' => '0',
+                    ],
+                ],
+            ],
+            $customerData
+        );
+    }
+
+    /**
+     * Get customer data including password.
+     *
+     * @param array $customerData
+     * @param string $password
+     * @return array
+     * @part json
+     * @part xml
+     */
+    public function getCustomerApiDataWithPassword($customerData = [], $password = '123123qW')
+    {
+        return ['customer' => self::getCustomerApiData($customerData), 'password' => $password];
+    }
+
+    /**
+     * @param string $code
+     * @param array $attributeData
+     * @return array
+     * @part json
+     * @part xml
+     */
+    public function getProductAttributeApiData($code = 'attribute', $attributeData = [])
+    {
+        $sq = sqs();
+        return array_replace_recursive(
+            [
+                'attribute' => [
+                    'attribute_code' => $code . $sq,
+                    'frontend_labels' => [
+                        [
+                            'store_id' => 0,
+                            'label' => $code . $sq
+                        ],
+                    ],
+                    'is_required' => false,
+                    'is_unique' => false,
+                    'is_visible' => true,
+                    'scope' => 'global',
+                    'default_value' => '',
+                    'frontend_input' => 'select',
+                    'is_visible_on_front' => true,
+                    'is_searchable' => true,
+                    'is_visible_in_advanced_search' => true,
+                    'is_filterable' => true,
+                    'is_filterable_in_search' => true,
+                    //'is_used_in_grid' => true,
+                    //'is_visible_in_grid' => true,
+                    //'is_filterable_in_grid' => true,
+                    'used_in_product_listing' => true,
+                    'is_used_for_promo_rules' => true,
+                    'options' => [
+                        [
+                            'label' => 'option1',
+                            'value' => '',
+                            'sort_order' => 0,
+                            'is_default' => true,
+                            'store_labels' => [
+                                [
+                                    'store_id' => 0,
+                                    'label' => 'option1'
+                                ],
+                                [
+                                    'store_id' => 1,
+                                    'label' => 'option1'
+                                ]
+                            ]
+                        ],
+                        [
+                            'label' => 'option2',
+                            'value' => '',
+                            'sort_order' => 1,
+                            'is_default' => false,
+                            'store_labels' => [
+                                [
+                                    'store_id' => 0,
+                                    'label' => 'option2'
+                                ],
+                                [
+                                    'store_id' => 1,
+                                    'label' => 'option2'
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            $attributeData
+        );
+    }
+
+    /**
+     * @param array $attributes
+     * @param array $optionIds
+     * @return array
+     * @part json
+     * @part xml
+     */
+    public function getConfigurableProductOptionsApiData($attributes, $optionIds)
+    {
+        $configurableProductOptions = [];
+        foreach ($attributes as $attribute) {
+            $attributeItem = [
+                'attribute_id' => (string)$attribute['id'],
+                'label' => $attribute['code'],
+                'values' => []
+            ];
+            foreach ($optionIds as $optionId) {
+                $attributeItem['values'][] = ['value_index' => $optionId];
+            }
+            $configurableProductOptions [] = $attributeItem;
+        }
+        return $configurableProductOptions;
+    }
+
+    /**
+     * @param array $configurableProductOptions
+     * @param array $childProductIds
+     * @param array $configurableProduct
+     * @param int $categoryId
+     * @return array
+     * @part json
+     * @part xml
+     */
+    public function getConfigurableProductApiData(
+        array $configurableProductOptions,
+        array $childProductIds,
+        array $configurableProduct = [],
+        int $categoryId = 0
+    ) {
+        if (!$configurableProduct) {
+            $configurableProduct = $this->getProductApiData('configurable', $categoryId);
+        }
+        $configurableProduct = array_merge_recursive(
+            $configurableProduct,
+            [
+                'extension_attributes' => [
+                    'configurable_product_options' => $configurableProductOptions,
+                    'configurable_product_links' => $childProductIds,
+                ],
+            ]
+        );
+        return $configurableProduct;
+    }
+
+    /**
+     * @param $attributeCode
+     * @param int $attributeSetId
+     * @param int $attributeGroupId
+     * @return array
+     * @part json
+     * @part xml
+     */
+    public function getAssignAttributeToAttributeSetApiData(
+        $attributeCode,
+        int $attributeSetId = 4,
+        int $attributeGroupId = 7
+    ) {
+        return [
+            'attributeSetId' => $attributeSetId,
+            'attributeGroupId' => $attributeGroupId,
+            'attributeCode' => $attributeCode,
+            'sortOrder' => 0
+        ];
     }
 }

@@ -10,13 +10,14 @@ modules:
     enabled:
         - \Magento\Xxyyzz\Module\MagentoWebDriver
         - \Magento\Xxyyzz\Helper\Acceptance
+        - \Magento\Xxyyzz\Helper\MagentoFakerData
         - \Magento\Xxyyzz\Module\MagentoRESTDriver:
             url: "%MAGENTO_BASE_URL%/rest/default/V1/"
             username: "%MAGENTO_ADMIN_USERNAME%"
             password: "%MAGENTO_ADMIN_PASSWORD%"
             depends: PhpBrowser
             part: Json
-        - \Magento\Xxyyzz\Module\MagentoFakerData
+        - Sequence
         - Asserts
     config:
         \Magento\Xxyyzz\Module\MagentoWebDriver:

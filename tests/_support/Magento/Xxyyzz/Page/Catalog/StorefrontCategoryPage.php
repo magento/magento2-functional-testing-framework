@@ -5,6 +5,7 @@ use Magento\Xxyyzz\Page\AbstractFrontendPage;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\Exception\WebDriverException;
+use Codeception\Exception\ElementNotFound;
 
 class StorefrontCategoryPage extends AbstractFrontendPage
 {
@@ -50,14 +51,14 @@ class StorefrontCategoryPage extends AbstractFrontendPage
     {
         $this->goToPageForProduct($name);
         $I = $this->acceptanceTester;
-        $I->seeElement(sprintf(self::$productLinks, $link));
+        $I->canSeeElement(sprintf(self::$productLinks, $link));
     }
 
     public function seeProductNameInPage($name)
     {
         $this->goToPageForProduct($name);
         $I = $this->acceptanceTester;
-        $I->seeElement(sprintf(self::$productName, $name));
+        $I->canSeeElement(sprintf(self::$productName, $name));
     }
 
     public function seeProductPriceInPage($name, $price)
@@ -83,7 +84,8 @@ class StorefrontCategoryPage extends AbstractFrontendPage
                 try {
                     $I->click(self::$pageNextButton);
                     $I->waitForPageLoad();
-                } catch (WebDriverException $e) {
+                } catch (ElementNotFound $e) {
+                    break;
                 }
             }
         } while (true);

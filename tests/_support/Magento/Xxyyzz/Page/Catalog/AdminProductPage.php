@@ -15,7 +15,6 @@ class AdminProductPage extends AbstractAdminPage
      */
     public static $productAddProductButton      = '#add_new_product-button';
     public static $productSaveButton            = '#save-button';
-    public static $createConfigurationsButton   = 'button[data-index=create_configurable_products_button]';
 
     /**
      * Product data fields.
@@ -33,6 +32,7 @@ class AdminProductPage extends AbstractAdminPage
     public static $producCategoriesMultiSelect  = '.admin__field[data-index=category_ids]';
     public static $producCategoriesMultiSelectText
         = '.admin__field[data-index=category_ids] .admin__action-multiselect-crumb:nth-child(%s)>span';
+    public static $productCountryOfManufacture  = '.admin__field[data-index=country_of_manufacture] select';
 
     /**
      * Product form loading spinner.
@@ -189,12 +189,5 @@ class AdminProductPage extends AbstractAdminPage
         self::selectProductCategories(array($categoryData['categoryName']));
 
         self::saveProduct();
-    }
-
-    public function clickCreateConfigurationsButton()
-    {
-        $I = $this->acceptanceTester;
-        $I->performOn(self::$createConfigurationsButton, ['click' => self::$createConfigurationsButton]);
-        $I->waitForPageLoad();
     }
 }
