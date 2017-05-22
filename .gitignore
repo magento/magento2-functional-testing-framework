@@ -1,9 +1,3 @@
 .idea
 composer.phar
 vendor/*
-tests/_output/*
-tests/_support/Magento/Xxyyzz/AcceptanceTester.php
-tests/acceptance.suite.yml
-codeception.yml
-.env
-_generated
