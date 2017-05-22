@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e4c946a9a61310f5664b0cd48a521e0f",
-    "content-hash": "cfaff575db89011a5e0d0f60979dcf01",
+    "hash": "c898396a0e199f4ee06aa583d460dd13",
+    "content-hash": "b3996f320720df346a5957013e38c433",
     "packages": [
         {
             "name": "allure-framework/allure-codeception",
