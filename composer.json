@@ -16,7 +16,7 @@
             "Yandex": "vendor/allure-framework/allure-codeception/src/"
         },
         "psr-4": {
-            "Magento\\Xxyyzz\\": "tests/_support/Magento/Xxyyzz",
+            "Magento\\Xxyyzz\\": "src/Magento/Xxyyzz",
             "Magento\\Xxyyzz\\Acceptance\\": "tests/acceptance/Magento/Xxyyzz/Acceptance"
         }
     }

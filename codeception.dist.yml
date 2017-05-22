@@ -3,8 +3,8 @@ paths:
     tests: tests
     log: tests/_output
     data: tests/_data
-    support: tests/_support/Magento/Xxyyzz
-    envs: tests/_envs
+    support: src/Magento/Xxyyzz
+    envs: etc/_envs
 settings:
     bootstrap: _bootstrap.php
     colors: true
