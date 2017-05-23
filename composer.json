@@ -4,20 +4,11 @@
     "description": "Magento Acceptance Testing Framework",
     "keywords": ["magento", "automation", "acceptance", "testing"],
     "require": {
-	    "php": ">=5.4.0",
-        "codeception/codeception": "~2.2",
-        "symfony/filesystem": "~2.6",
-        "symfony/finder": "~2.6",
-        "consolidation/robo": "^1.0.0",
-        "allure-framework/allure-codeception": "dev-master",
+        "codeception/codeception": "~2.2|2.3",
         "flow/jsonpath": ">0.2",
-        "vlucas/phpdotenv": "~2.4",
         "fzaninotto/faker": "^1.6"
     },
     "autoload": {
-        "psr-0": {
-            "Yandex": "vendor/allure-framework/allure-codeception/src/"
-        },
         "psr-4": {
             "Magento\\Xxyyzz\\": "src/Magento/Xxyyzz"
         }

@@ -3,6 +3,7 @@ namespace Magento\Xxyyzz\Module;
 
 use Codeception\Module\REST;
 use Codeception\Module\Sequence;
+use Flow\JSONPath;
 
 /**
  * MagentoRestDriver module provides Magento REST WebService.
