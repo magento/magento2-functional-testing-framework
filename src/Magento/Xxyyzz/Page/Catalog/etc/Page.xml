@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../lib/Magento/TestFramework/PageObject/etc/pageObject.xsd">
+    <page name="CatalogProductIndex" area="Adminhtml" link="catalog/product/index" module="Magento_Backend">
+        <block name="gridPageActionBlock" class="Magento\Xxyyzz\Acceptance\Catalog\Test\Block\Adminhtml\Product\GridPageAction" locator="#add_new_product" strategy="css selector"/>
+    </page>
+</config>

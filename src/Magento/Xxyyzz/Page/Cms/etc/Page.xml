@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../lib/Magento/TestFramework/PageObject/etc/pageObject.xsd">
+    <page name="CatalogProductIndex" area="Adminhtml" link="catalog/product/index" module="Magento_Catalog">
+        <block name="productGrid" class="BlaBlaBla" locator="BlaBlaBla" strategy="xpath"/>
+    </page>
+</config>
