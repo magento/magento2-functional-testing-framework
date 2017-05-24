@@ -1,5 +1,5 @@
 {
-    "name": "magento/acceptance-test-framework",
+    "name": "magento/magento2-acceptance-test-framework",
     "type": "library",
     "description": "Magento Acceptance Testing Framework",
     "keywords": ["magento", "automation", "acceptance", "testing"],

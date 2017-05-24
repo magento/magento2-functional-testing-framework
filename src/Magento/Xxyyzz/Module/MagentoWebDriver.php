@@ -229,7 +229,7 @@ class MagentoWebDriver extends WebDriver
      * @param $floatString
      * @return float
      */
-    function parseFloat($floatString){
+    public function parseFloat($floatString){
         $floatString = str_replace(',', '', $floatString);
         return floatval($floatString);
     }
