@@ -1,13 +1,15 @@
 <?php
 /**
- * Copyright © 2017 Magento. All rights reserved.
+ * Reader responsible for retrieving provided scope of configuration from storage
+ *
+ * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 
 namespace Magento\TestFramework\Config;
 
 /**
- * Interface ReaderInterface
+ * Config reader interface.
  */
 interface ReaderInterface
 {
@@ -18,12 +20,4 @@ interface ReaderInterface
      * @return array
      */
     public function read($scope = null);
-
-    /**
-     * Set name of the config file
-     *
-     * @param string $fileName
-     * @return void
-     */
-    public function setFileName($fileName);
 }

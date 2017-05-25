@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2017 Magento. All rights reserved.
+ * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 namespace Magento\TestFramework\Data\Argument\InterpreterInterface;
@@ -47,7 +47,7 @@ class Proxy implements \Magento\TestFramework\Data\Argument\InterpreterInterface
      */
     public function __construct(
         \Magento\TestFramework\ObjectManagerInterface $objectManager,
-        $instanceName = 'Magento\\TestFramework\\Data\\Argument\\InterpreterInterface',
+        $instanceName = \Magento\TestFramework\Data\Argument\InterpreterInterface::class,
         $shared = true
     ) {
         $this->objectManager = $objectManager;

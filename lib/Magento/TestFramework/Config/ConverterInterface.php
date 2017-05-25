@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2017 Magento. All rights reserved.
+ * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 namespace Magento\TestFramework\Config;
@@ -16,5 +16,5 @@ interface ConverterInterface
      * @param \DOMDocument $source
      * @return array
      */
-    public function convert(\DOMDocument $source);
+    public function convert($source);
 }

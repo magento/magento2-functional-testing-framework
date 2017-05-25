@@ -1,19 +1,15 @@
 <?php
 /**
- * Copyright © 2017 Magento. All rights reserved.
+ *
+ * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
 namespace Magento\TestFramework\Data\Argument\Interpreter;
 
 use Magento\TestFramework\Data\Argument\InterpreterInterface;
 use Magento\TestFramework\Stdlib\BooleanUtils;
 
-/**
- * Class ObjectType
- * @package Magento\TestFramework\Data\Argument\Interpreter
- */
-class ObjectType implements InterpreterInterface
+class DataObject implements InterpreterInterface
 {
     /**
      * @var \Magento\TestFramework\Stdlib\BooleanUtils

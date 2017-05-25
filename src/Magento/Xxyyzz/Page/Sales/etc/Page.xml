@@ -4,7 +4,7 @@
     <page name="CategoryIndex" area="Storefront" link="category/index" module="Magento_Catalog">
         <block name="productGrid" class="Magento\Xxyyzz\Acceptance\Catalog\Test\Block\Adminhtml\Product\Grid" locator="//div[contains(@data-bind, 'product_listing')]" strategy="xpath"/>
     </page>
-    <page name="CatalogProductIndex">
-        <block name="SomeNewBlock" class="Magento\Xxyyzz\Dummy" locator="body" strategy="css selector"/>
+    <page name="CatalogProductIndex" link="catalog/product/index" >
+        <block name="NavigationMenu" class="asdf" locator="asdfasdf" />
     </page>
 </config>

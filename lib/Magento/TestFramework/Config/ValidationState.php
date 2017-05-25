@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2017 Magento. All rights reserved.
+ * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -33,7 +33,7 @@ class ValidationState implements ValidationStateInterface
      *
      * @return boolean
      */
-    public function isValidated()
+    public function isValidationRequired()
     {
         return $this->_appMode == 'developer'; // @todo
     }

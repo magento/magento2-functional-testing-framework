@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2017 Magento. All rights reserved.
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 namespace Magento\TestFramework\Config\Converter\Dom;
@@ -74,15 +74,13 @@ class Flat
                 if ($isArrayNode) {
                     if ($isNumericArrayNode) {
                         $value[$nodeName][] = $nodeData;
+                    } elseif (isset($nodeData[$arrayKeyAttribute])) {
+                        $arrayKeyValue = $nodeData[$arrayKeyAttribute];
+                        $value[$nodeName][$arrayKeyValue] = $nodeData;
                     } else {
-                        if (isset($nodeData[$arrayKeyAttribute])) {
-                            $arrayKeyValue = $nodeData[$arrayKeyAttribute];
-                            $value[$nodeName][$arrayKeyValue] = $nodeData;
-                        } else {
-                            throw new \UnexpectedValueException(
-                                "Array is expected to contain value for key '{$arrayKeyAttribute}'."
-                            );
-                        }
+                        throw new \UnexpectedValueException(
+                            "Array is expected to contain value for key '{$arrayKeyAttribute}'."
+                        );
                     }
                 } else {
                     $value[$nodeName] = $nodeData;
@@ -119,7 +117,7 @@ class Flat
     protected function getNodeAttributes(\DOMNode $node)
     {
         $result = [];
-        $attributes = $node->attributes ? : [];
+        $attributes = $node->attributes ?: [];
         /** @var \DOMNode $attribute */
         foreach ($attributes as $attribute) {
             if ($attribute->nodeType == XML_ATTRIBUTE_NODE) {

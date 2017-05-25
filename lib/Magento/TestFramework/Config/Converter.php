@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2017 Magento. All rights reserved.
+ * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 namespace Magento\TestFramework\Config;
@@ -62,7 +62,7 @@ class Converter implements \Magento\TestFramework\Config\ConverterInterface
      * @param \DOMDocument $source
      * @return array
      */
-    public function convert(\DOMDocument $source)
+    public function convert($source)
     {
         return $this->convertXml($source->documentElement->childNodes);
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2017 Magento. All rights reserved.
+ * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 namespace Magento\TestFramework;
@@ -74,11 +74,11 @@ class ObjectManagerFactory
         $result = new \Magento\TestFramework\Data\Argument\Interpreter\Composite(
             [
                 'boolean' => new \Magento\TestFramework\Data\Argument\Interpreter\Boolean($booleanUtils),
-                'string' => new \Magento\TestFramework\Data\Argument\Interpreter\StringType($booleanUtils),
+                'string' => new \Magento\TestFramework\Data\Argument\Interpreter\StringUtils($booleanUtils),
                 'number' => new \Magento\TestFramework\Data\Argument\Interpreter\Number(),
                 'null' => new \Magento\TestFramework\Data\Argument\Interpreter\NullType(),
                 'const' => $constInterpreter,
-                'object' => new \Magento\TestFramework\Data\Argument\Interpreter\ObjectType($booleanUtils),
+                'object' => new \Magento\TestFramework\Data\Argument\Interpreter\DataObject($booleanUtils),
                 'init_parameter' => new \Magento\TestFramework\Data\Argument\Interpreter\Argument($constInterpreter),
             ],
             \Magento\TestFramework\ObjectManager\Config\Reader\Dom::TYPE_ATTRIBUTE
@@ -113,7 +113,7 @@ class ObjectManagerFactory
     public static function configure(\Magento\TestFramework\ObjectManagerInterface $objectManager)
     {
         $objectManager->configure(
-            $objectManager->get('Magento\TestFramework\ObjectManager\ConfigLoader\Primary')->load()
+            $objectManager->get(\Magento\TestFramework\ObjectManager\ConfigLoader\Primary::class)->load()
         );
     }
 }

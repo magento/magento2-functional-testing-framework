@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2017 Magento. All rights reserved.
+ * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -37,7 +37,6 @@ class Dom extends \Magento\TestFramework\Config\Reader\Filesystem
         $idAttributes = [
             '/config/preference' => 'for',
             '/config/(type|virtualType)' => 'name',
-            '/config/(type|virtualType)/plugin' => 'name',
             '/config/(type|virtualType)/arguments/argument' => 'name',
             '/config/(type|virtualType)/arguments/argument(/item)+' => 'name'
         ],

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © 2017 Magento. All rights reserved.
+ * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 -->
@@ -36,11 +36,11 @@
     <type name="Magento\TestFramework\Data\Argument\Interpreter\Composite">
         <arguments>
             <argument name="interpreters" xsi:type="array">
-                <item name="object" xsi:type="object">Magento\TestFramework\Data\Argument\Interpreter\ObjectType</item>
+                <item name="object" xsi:type="object">Magento\TestFramework\Data\Argument\Interpreter\DataObject</item>
                 <item name="array" xsi:type="object">arrayArgumentInterpreterProxy</item>
                 <item name="boolean" xsi:type="object">Magento\TestFramework\Data\Argument\Interpreter\Boolean</item>
                 <item name="number" xsi:type="object">Magento\TestFramework\Data\Argument\Interpreter\Number</item>
-                <item name="string" xsi:type="object">Magento\TestFramework\Data\Argument\Interpreter\StringType</item>
+                <item name="string" xsi:type="object">Magento\TestFramework\Data\Argument\Interpreter\StringUtils</item>
                 <item name="null" xsi:type="object">Magento\TestFramework\Data\Argument\Interpreter\NullType</item>
                 <item name="const" xsi:type="object">Magento\TestFramework\Data\Argument\Interpreter\Constant</item>
             </argument>

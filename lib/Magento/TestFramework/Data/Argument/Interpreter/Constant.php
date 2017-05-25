@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2017 Magento. All rights reserved.
+ * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 namespace Magento\TestFramework\Data\Argument\Interpreter;
@@ -22,7 +22,6 @@ class Constant implements InterpreterInterface
         if (!isset($data['value']) || !defined($data['value'])) {
             throw new \InvalidArgumentException('Constant name is expected.');
         }
-        $constantName = $data['value'];
-        return constant($constantName);
+        return constant($data['value']);
     }
 }

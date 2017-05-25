@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2017 Magento. All rights reserved.
+ * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 namespace Magento\TestFramework\ObjectManager\Config\Mapper;
@@ -8,9 +8,6 @@ namespace Magento\TestFramework\ObjectManager\Config\Mapper;
 use Magento\TestFramework\Data\Argument\InterpreterInterface;
 use Magento\TestFramework\Stdlib\BooleanUtils;
 
-/**
- * Class Dom
- */
 class Dom implements \Magento\TestFramework\Config\ConverterInterface
 {
     /**
@@ -39,8 +36,8 @@ class Dom implements \Magento\TestFramework\Config\ConverterInterface
         ArgumentParser $argumentParser = null
     ) {
         $this->argumentInterpreter = $argumentInterpreter;
-        $this->booleanUtils = $booleanUtils ? : new BooleanUtils();
-        $this->argumentParser = $argumentParser ? : new ArgumentParser();
+        $this->booleanUtils = $booleanUtils ?: new BooleanUtils();
+        $this->argumentParser = $argumentParser ?: new ArgumentParser();
     }
 
     /**
@@ -54,7 +51,7 @@ class Dom implements \Magento\TestFramework\Config\ConverterInterface
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function convert(\DOMDocument $config)
+    public function convert($config)
     {
         $output = [];
         /** @var \DOMNode $node */
@@ -86,7 +83,6 @@ class Dom implements \Magento\TestFramework\Config\ConverterInterface
                         }
                     }
                     $typeArguments = [];
-                    $typePlugins = [];
                     /** @var \DOMNode $typeChildNode */
                     foreach ($node->childNodes as $typeChildNode) {
                         if ($typeChildNode->nodeType != XML_ELEMENT_NODE) {
@@ -106,24 +102,6 @@ class Dom implements \Magento\TestFramework\Config\ConverterInterface
                                     );
                                 }
                                 break;
-                            case 'plugin':
-                                $pluginAttributes = $typeChildNode->attributes;
-                                $pluginDisabledNode = $pluginAttributes->getNamedItem('disabled');
-                                $pluginSortOrderNode = $pluginAttributes->getNamedItem('sortOrder');
-                                $pluginTypeNode = $pluginAttributes->getNamedItem('type');
-                                $pluginData = [
-                                    'sortOrder' => $pluginSortOrderNode ? (int)$pluginSortOrderNode->nodeValue : 0
-                                ];
-                                if ($pluginDisabledNode) {
-                                    $pluginData['disabled'] = $this->booleanUtils->toBoolean(
-                                        $pluginDisabledNode->nodeValue
-                                    );
-                                }
-                                if ($pluginTypeNode) {
-                                    $pluginData['instance'] = $pluginTypeNode->nodeValue;
-                                }
-                                $typePlugins[$pluginAttributes->getNamedItem('name')->nodeValue] = $pluginData;
-                                break;
                             default:
                                 throw new \Exception(
                                     "Invalid application config. Unknown node: {$typeChildNode->nodeName}."
@@ -132,9 +110,6 @@ class Dom implements \Magento\TestFramework\Config\ConverterInterface
                     }
 
                     $typeData['arguments'] = $typeArguments;
-                    if (!empty($typePlugins)) {
-                        $typeData['plugins'] = $typePlugins;
-                    }
                     $output[$typeNodeAttributes->getNamedItem('name')->nodeValue] = $typeData;
                     break;
                 default:

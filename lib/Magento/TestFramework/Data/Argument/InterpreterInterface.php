@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2017 Magento. All rights reserved.
+ * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 namespace Magento\TestFramework\Data\Argument;
@@ -17,7 +17,6 @@ interface InterpreterInterface
      * @return mixed
      * @throws \InvalidArgumentException
      * @throws \UnexpectedValueException
-     * @throws MissingOptionalValueException
      */
     public function evaluate(array $data);
 }
