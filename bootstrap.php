@@ -8,4 +8,4 @@ defined('BP') || define('BP', str_replace('\\', '/', (__DIR__)));
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$objectManager = \Magento\TestFramework\ObjectManagerFactory::getObjectManager();
+$objectManager = \Magento\AcceptanceTestFramework\ObjectManagerFactory::getObjectManager();

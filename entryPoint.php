@@ -2,6 +2,6 @@
 
 require_once 'bootstrap.php';
 
-/** @var Magento\Xxyyzz\Dummy $dummy */
-$dummy = $objectManager->create(\Magento\Xxyyzz\Dummy::class);
+/** @var Magento\AcceptanceTestFramework\Dummy $dummy */
+$dummy = $objectManager->create(\Magento\AcceptanceTestFramework\Dummy::class);
 $dummy->readPageObjects();
