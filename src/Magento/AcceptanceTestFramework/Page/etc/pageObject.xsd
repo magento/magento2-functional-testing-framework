@@ -38,7 +38,7 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="link" use="required">
+            <xs:attribute name="mca" use="required">
                 <xs:annotation>
                     <xs:documentation>
                         MCA path for the page. For example: "catalog/product/view".
@@ -94,6 +94,13 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute type="notEmptyType" name="parent_class" use="optional">
+                <xs:annotation>
+                    <xs:documentation>
+                        Parent block class name, if not specified, Magento\AcceptanceTestFramework\Page\Block\Block is used.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
 
@@ -120,7 +127,7 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute type="notEmptyType" name="is_required" use="optional">
+            <xs:attribute type="xs:boolean" name="required" use="optional">
                 <xs:annotation>
                     <xs:documentation>
                         If the element is a required field in the ui.
@@ -138,6 +145,13 @@
                 <xs:annotation>
                     <xs:documentation>
                         If the element depends on other element to be enabled.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:boolean" name="wait_required" use="optional">
+                <xs:annotation>
+                    <xs:documentation>
+                        If waitForPageLoad() is required after default action.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>

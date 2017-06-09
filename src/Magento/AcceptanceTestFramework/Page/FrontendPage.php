@@ -1,14 +1,15 @@
 <?php
 namespace Magento\AcceptanceTestFramework\Page;
 
-use Magento\AcceptanceTestFramework\AcceptanceTester;
-
-abstract class AbstractFrontendPage
+/**
+ * Magento frontend pages.
+ */
+class FrontendPage extends Page
 {
     /**
-     * Include url of current page.
+     * Frontend page base url.
      */
-    public static $URL = '/';
+    const FRONTEND_BASE_URL = '/';
 
     /**
      * Declare UI map for this page here. CSS or XPath allowed.
@@ -21,37 +22,9 @@ abstract class AbstractFrontendPage
 
     public static $pageFooterContent                = '.footer.content';
 
-    /**
-     * @var AcceptanceTester
-     */
-    protected $acceptanceTester;
-
-    /**
-     * Page load timeout in seconds.
-     *
-     * @var string
-     */
-    protected $pageLoadTimeout;
-
-    public function __construct(AcceptanceTester $I)
+    protected function initUrl()
     {
-        $this->acceptanceTester = $I;
-        $this->pageLoadTimeout = $I->getConfiguration('pageload_timeout');
-    }
-
-    public static function of(AcceptanceTester $I)
-    {
-        return new static($I);
-    }
-
-    /**
-     * Basic route example for your current URL
-     * You can append any additional parameter to URL
-     * and use it in tests like: Page\Edit::route('/123-post');
-     */
-    public static function route($param)
-    {
-        return static::$URL.$param;
+        $this->url = static::FRONTEND_BASE_URL . static::MCA;
     }
 
     public function seeInPageTitle($name)

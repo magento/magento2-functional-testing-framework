@@ -26,8 +26,8 @@ class SchemaLocator implements \Magento\AcceptanceTestFramework\Config\SchemaLoc
      */
     public function __construct($schemaPath)
     {
-        if (constant('BP') && file_exists(BP . '/' . $schemaPath)) {
-            $this->schemaPath =  BP . '/' . $schemaPath;
+        if (constant('FW_BP') && file_exists(FW_BP . '/' . $schemaPath)) {
+            $this->schemaPath =  FW_BP . '/' . $schemaPath;
         } else {
             $path = dirname(dirname(dirname(__DIR__)));
             $path = str_replace('\\', '/', $path);

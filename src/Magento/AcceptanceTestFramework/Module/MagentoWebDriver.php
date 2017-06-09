@@ -229,8 +229,17 @@ class MagentoWebDriver extends WebDriver
      * @param $floatString
      * @return float
      */
-    function parseFloat($floatString){
+    public function parseFloat($floatString){
         $floatString = str_replace(',', '', $floatString);
         return floatval($floatString);
+    }
+
+    /**
+     * @param string $locator
+     * @return
+     */
+    public function findElement($locator)
+    {
+        return $this->_findElements($locator);
     }
 }

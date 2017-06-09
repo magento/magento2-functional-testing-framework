@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Page/etc/pageObject.xsd">
-    <page name="CatalogProductIndex" area="Adminhtml" link="catalog/product/index" module="Magento_Catalog">
-        <block name="BlaBlaBla" class="BlaBlaBla" locator="BlaBlaBla" />
-    </page>
-</config>

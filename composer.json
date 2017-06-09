@@ -1,17 +1,20 @@
 {
-    "name": "magento/acceptance-test-framework",
+    "name": "magento/magento2-acceptance-test-framework",
     "type": "library",
     "description": "Magento Acceptance Testing Framework",
     "keywords": ["magento", "automation", "acceptance", "testing"],
     "require": {
-        "php": ">=7.0",
-        "codeception/codeception": "~2.2|2.3",
+        "php": "~7.0",
+        "codeception/codeception": "2.2|2.3",
         "flow/jsonpath": ">0.2",
-        "fzaninotto/faker": "^1.6"
+        "fzaninotto/faker": "^1.6",
+        "vlucas/phpdotenv": "~2.4"
     },
     "autoload": {
         "psr-4": {
-            "Magento\\AcceptanceTestFramework\\": "src/Magento/AcceptanceTestFramework"
+            "Magento\\AcceptanceTestFramework\\": [
+                "src/Magento/AcceptanceTestFramework"
+            ]
         }
     }
 }

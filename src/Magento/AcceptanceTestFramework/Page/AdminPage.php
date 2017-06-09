@@ -1,14 +1,15 @@
 <?php
 namespace Magento\AcceptanceTestFramework\Page;
 
-use Magento\AcceptanceTestFramework\AcceptanceTester;
-
-abstract class AbstractAdminPage
+/**
+ * Magento admin pages.
+ */
+class AdminPage extends Page
 {
     /**
-     * Include url of current page.
+     * Admin page base url.
      */
-    public static $URL = '/admin/admin/';
+    const ADMIN_BASE_URL = '/admin/';
 
     /**
      * Declare UI map for this page here. CSS or XPath allowed.
@@ -40,37 +41,9 @@ abstract class AbstractAdminPage
     public static $pageMainActionsSave            = '#save';
     public static $pageMainActionsAdd             = '#add';
 
-    /**
-     * @var AcceptanceTester
-     */
-    protected $acceptanceTester;
-
-    /**
-     * Page load timeout in seconds.
-     *
-     * @var string
-     */
-    protected $pageLoadTimeout;
-
-    public function __construct(AcceptanceTester $I)
+    protected function initUrl()
     {
-        $this->acceptanceTester = $I;
-        $this->pageLoadTimeout = $I->getConfiguration('pageload_timeout');
-    }
-
-    public static function of(AcceptanceTester $I)
-    {
-        return new static($I);
-    }
-
-    /**
-     * Basic route example for your current URL
-     * You can append any additional parameter to URL
-     * and use it in tests like: Page\Edit::route('/123-post');
-     */
-    public static function route($param)
-    {
-        return static::$URL.$param;
+        $this->url = static::ADMIN_BASE_URL . static::MCA;
     }
 
     public function openTabGoToAndVerifyUrl($pageUrl)

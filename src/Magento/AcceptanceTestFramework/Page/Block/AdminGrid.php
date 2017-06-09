@@ -1,18 +1,10 @@
 <?php
-namespace Magento\AcceptanceTestFramework\Page;
+namespace Magento\AcceptanceTestFramework\Page\Block;
 
-use Magento\AcceptanceTestFramework\AcceptanceTester;
 use Codeception\Exception\ElementNotFound;
 
-class AdminGridPage
+abstract class AdminGrid extends Block
 {
-    /**
-     * Include url of
-     *
-     * current page.
-     */
-    public static $URL = '/admin/admin/';
-
     /**
      * Declare UI map for this page here. CSS or XPath allowed.
      */
@@ -80,27 +72,6 @@ class AdminGridPage
 
     public static $checkboxInGridNthRow
         = '.admin__data-grid-outer-wrap>.admin__data-grid-wrap tbody tr:nth-child(%s) .admin__control-checkbox';
-    
-    /**
-     * @var AcceptanceTester
-     */
-    protected $acceptanceTester;
-
-    public function __construct(AcceptanceTester $I)
-    {
-        $this->acceptanceTester = $I;
-        $this->pageLoadTimeout = $I->getConfiguration('pageload_timeout');
-    }
-
-    public static function of(AcceptanceTester $I)
-    {
-        return new static($I);
-    }
-
-    public static function route($param)
-    {
-        return static::$URL.$param;
-    }
 
     public function enterSearchKeyword($searchKeyboard)
     {
@@ -176,7 +147,7 @@ class AdminGridPage
                 break;
             case 'textfield':
             default:
-            $I->fillField($selector, $value);
+                $I->fillField($selector, $value);
         }
         $I->click(self::$filtersApplyButton);
         $I->waitForPageLoad();

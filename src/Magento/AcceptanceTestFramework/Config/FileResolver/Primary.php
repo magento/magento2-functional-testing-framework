@@ -57,7 +57,7 @@ class Primary implements FileResolverInterface
      */
     private function getPathPatterns($filename, $scope)
     {
-        if (substr($scope, 0, strlen(BP)) === BP) {
+        if (substr($scope, 0, strlen(FW_BP)) === FW_BP) {
             $patterns = [
                 $scope . '/' . $filename,
                 $scope . '/*/' . $filename
@@ -68,8 +68,8 @@ class Primary implements FileResolverInterface
             $patterns = [
                 $defaultPath . '/' . $scope . '/' . $filename,
                 $defaultPath . '/' . $scope . '/*/' . $filename,
-                BP . '/' . $scope . '/' . $filename,
-                BP . '/' . $scope . '/*/' . $filename
+                FW_BP . '/' . $scope . '/' . $filename,
+                FW_BP . '/' . $scope . '/*/' . $filename
             ];
         }
         return str_replace('/', DIRECTORY_SEPARATOR, $patterns);

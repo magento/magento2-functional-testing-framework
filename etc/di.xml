@@ -8,31 +8,15 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../src/Magento/AcceptanceTestFramework/ObjectManager/etc/config.xsd">
     <preference for="Magento\AcceptanceTestFramework\ObjectManagerInterface" type="Magento\AcceptanceTestFramework\ObjectManager" />
     <preference for="Magento\AcceptanceTestFramework\ObjectManager\FactoryInterface" type="Magento\AcceptanceTestFramework\ObjectManager\Factory" />
-    <preference for="Magento\AcceptanceTestFramework\Config\ReaderInterface" type="Magento\AcceptanceTestFramework\Config\Reader\Filesystem" />
     <preference for="Magento\AcceptanceTestFramework\ObjectManager\ConfigInterface" type="Magento\AcceptanceTestFramework\ObjectManager\Config\Config" />
+    <preference for="Magento\AcceptanceTestFramework\Data\Argument\InterpreterInterface" type="Magento\AcceptanceTestFramework\Data\Argument\Interpreter\Composite" />
+    <preference for="Magento\AcceptanceTestFramework\Config\ReaderInterface" type="Magento\AcceptanceTestFramework\Config\Reader\Filesystem" />
     <preference for="Magento\AcceptanceTestFramework\Config\FileResolverInterface" type="Magento\AcceptanceTestFramework\Config\FileResolver\Primary" />
     <preference for="Magento\AcceptanceTestFramework\Config\ConverterInterface" type="Magento\AcceptanceTestFramework\Config\Converter" />
     <preference for="Magento\AcceptanceTestFramework\Config\SchemaLocatorInterface" type="Magento\AcceptanceTestFramework\Config\SchemaLocator" />
     <preference for="Magento\AcceptanceTestFramework\Config\ValidationStateInterface" type="Magento\AcceptanceTestFramework\Config\ValidationState" />
-    <preference for="Magento\AcceptanceTestFramework\Data\Argument\InterpreterInterface" type="Magento\AcceptanceTestFramework\Data\Argument\Interpreter\Composite" />
-    <type name="Magento\AcceptanceTestFramework\Config\ValidationState">
-        <arguments>
-            <argument name="appMode" xsi:type="string">developer</argument>
-        </arguments>
-    </type>
+    <preference for="Magento\AcceptanceTestFramework\Util\ModuleResolver\SequenceSorterInterface" type="Magento\AcceptanceTestFramework\Util\ModuleResolver\SequenceSorter" />
 
-    <virtualType name="converterArgumentParser" type="Magento\AcceptanceTestFramework\ObjectManager\Config\Mapper\ArgumentParser">
-        <arguments>
-            <argument name="argumentNodeName" xsi:type="string">data</argument>
-        </arguments>
-    </virtualType>
-    <type name="Magento\AcceptanceTestFramework\Config\Converter">
-        <arguments>
-            <argument name="argumentParser" xsi:type="object">converterArgumentParser</argument>
-            <argument name="argumentInterpreter" xsi:type="object">Magento\AcceptanceTestFramework\Data\Argument\Interpreter\Composite</argument>
-            <argument name="argumentNodeName" xsi:type="string">data</argument>
-        </arguments>
-    </type>
     <type name="Magento\AcceptanceTestFramework\Data\Argument\Interpreter\Composite">
         <arguments>
             <argument name="interpreters" xsi:type="array">
@@ -52,20 +36,38 @@
             <argument name="itemInterpreter" xsi:type="object">Magento\AcceptanceTestFramework\Data\Argument\Interpreter\Composite</argument>
         </arguments>
     </type>
+    <type name="Magento\AcceptanceTestFramework\Config\ValidationState">
+        <arguments>
+            <argument name="appMode" xsi:type="string">developer</argument>
+        </arguments>
+    </type>
+    <type name="Magento\AcceptanceTestFramework\Config\Converter">
+        <arguments>
+            <argument name="argumentParser" xsi:type="object">converterArgumentParser</argument>
+            <argument name="argumentInterpreter" xsi:type="object">Magento\AcceptanceTestFramework\Data\Argument\Interpreter\Composite</argument>
+            <argument name="argumentNodeName" xsi:type="string">data</argument>
+        </arguments>
+    </type>
+    <type name="Magento\AcceptanceTestFramework\Util\ModuleResolver\SequenceSorter" />
+    <type name="Magento\AcceptanceTestFramework\Generate\GeneratePage">
+        <arguments>
+            <argument name="configData" xsi:type="object">Magento\AcceptanceTestFramework\Page\Config\Data</argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\AcceptanceTestFramework\Dummy">
+        <arguments>
+            <argument name="pageObjects" xsi:type="object">Magento\AcceptanceTestFramework\Page\Config\Data</argument>
+        </arguments>
+    </type>
     <!--
     Array item can be of any type just like an argument, including array type itself, which creates circular dependency.
     Proxy is used to resolve the circular dependency, so that array items undergo the same interpretation as arguments.
     -->
+    <virtualType name="converterArgumentParser" type="Magento\AcceptanceTestFramework\ObjectManager\Config\Mapper\ArgumentParser" />
     <virtualType name="arrayArgumentInterpreterProxy" type="Magento\AcceptanceTestFramework\Data\Argument\InterpreterInterface\Proxy">
         <arguments>
             <argument name="instanceName" xsi:type="string">Magento\AcceptanceTestFramework\Data\Argument\Interpreter\ArrayType</argument>
-        </arguments>
-    </virtualType>
-
-<!--//////////////////////////////////////////////////////////////////////////////////////////////////-->
-    <virtualType name="Magento\AcceptanceTestFramework\Page\Config\Data" type="Magento\AcceptanceTestFramework\Config\Data">
-        <arguments>
-            <argument name="reader" xsi:type="object">Magento\AcceptanceTestFramework\Config\Reader\Page</argument>
         </arguments>
     </virtualType>
 
@@ -76,7 +78,7 @@
     </virtualType>
     <virtualType name="Magento\AcceptanceTestFramework\Config\Reader\Page" type="Magento\AcceptanceTestFramework\Config\Reader\Filesystem">
         <arguments>
-            <argument name="fileResolver" xsi:type="object">Magento\AcceptanceTestFramework\Config\FileResolver\Module</argument>
+            <argument name="fileResolver" xsi:type="object">Magento\AcceptanceTestFramework\Config\FileResolver\Mask</argument>
             <argument name="converter" xsi:type="object">Magento\AcceptanceTestFramework\Config\Converter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\AcceptanceTestFramework\Config\SchemaLocator\Page</argument>
             <argument name="idAttributes" xsi:type="array">
@@ -84,14 +86,13 @@
                 <item name="/config/page/block" xsi:type="string">name</item>
                 <item name="/config/page/block/element" xsi:type="string">name</item>
             </argument>
-            <argument name="fileName" xsi:type="string">Page.xml</argument>
-            <argument name="defaultScope" xsi:type="string">etc</argument>
+            <argument name="fileName" xsi:type="string">#\.xml$#</argument>
+            <argument name="defaultScope" xsi:type="string">Page</argument>
         </arguments>
     </virtualType>
-
-    <type name="Magento\AcceptanceTestFramework\Dummy">
+    <virtualType name="Magento\AcceptanceTestFramework\Page\Config\Data" type="Magento\AcceptanceTestFramework\Config\Data">
         <arguments>
-            <argument name="pageObjects" xsi:type="object">Magento\AcceptanceTestFramework\Page\Config\Data</argument>
+            <argument name="reader" xsi:type="object">Magento\AcceptanceTestFramework\Config\Reader\Page</argument>
         </arguments>
-    </type>
+    </virtualType>
 </config>
