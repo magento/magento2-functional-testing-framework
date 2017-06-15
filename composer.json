@@ -10,6 +10,9 @@
         "fzaninotto/faker": "^1.6",
         "vlucas/phpdotenv": "~2.4"
     },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "1.5.3"
+    },
     "autoload": {
         "psr-4": {
             "Magento\\AcceptanceTestFramework\\": [
