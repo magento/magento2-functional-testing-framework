@@ -1,9 +1,9 @@
 # `chrome` environment config goes here
 modules:
     enabled:
-        - \Magento\Xxyyzz\Module\MagentoWebDriver
-        - \Magento\Xxyyzz\Helper\Acceptance
+        - \Magento\AcceptanceTestFramework\Module\MagentoWebDriver
+        - \Magento\AcceptanceTestFramework\Helper\Acceptance
     config:
-        \Magento\Xxyyzz\Module\MagentoWebDriver:
+        \Magento\AcceptanceTestFramework\Module\MagentoWebDriver:
             browser: chrome
             window_size: maximize
