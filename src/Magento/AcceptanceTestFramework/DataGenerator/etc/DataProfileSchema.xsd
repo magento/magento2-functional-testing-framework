@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="config">
+        <xs:annotation>
+            <xs:documentation>
+                The root element for configuration data.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element type="entityType" name="entity" minOccurs="0" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:documentation>
+                            An element that contains configuration array containing all Entity elements.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="entityType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="scenario" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        Scenario elements.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element type="fieldGroupType" name="fieldGroup" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        FieldGroup elements, contains data pairs and asserts.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="name">
+            <xs:annotation>
+                <xs:documentation>
+                    Name of the Entity.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="type">
+            <xs:annotation>
+                <xs:documentation>
+                    Node containing the exact name of Entity type. Used later to find specific Persistence Layer Model
+                    class.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="fieldGroupType">
+        <xs:sequence>
+            <xs:element name="data" type="dataType" maxOccurs="unbounded" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Element containing Data/Value pair.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="assert" type="xs:string" maxOccurs="unbounded" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Name of Assert.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="name">
+            <xs:annotation>
+                <xs:documentation>
+                    Name of the DataObject element.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="dataType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="key" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Key attribute of data/value pair.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+</xs:schema>

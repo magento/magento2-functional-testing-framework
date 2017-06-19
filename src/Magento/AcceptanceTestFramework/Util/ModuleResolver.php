@@ -159,8 +159,8 @@ class ModuleResolver
         }
 
         $enabledModules = $this->getEnabledModules();
-        $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
-        $allModulePaths = glob($modulePath . '*/*');
+        $modulePath = FW_BP . '/src/Magento/AcceptanceTestFramework';
+        $allModulePaths = glob($modulePath . '/*');
         if (empty($enabledModules)) {
             $this->enabledModulePaths = $allModulePaths;
             return $this->enabledModulePaths;

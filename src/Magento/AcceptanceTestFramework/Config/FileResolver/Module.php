@@ -41,9 +41,7 @@ class Module implements FileResolverInterface
         $paths = [];
         foreach ($modulesPath as $modulePath) {
             $path = $modulePath . DIRECTORY_SEPARATOR . $scope . DIRECTORY_SEPARATOR . $filename;
-            if (is_readable($path)) {
-                $paths[] = $path;
-            }
+            $paths = array_merge($paths, glob($path));
         }
 
         $iterator = new File($paths);

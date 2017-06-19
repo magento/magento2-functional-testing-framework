@@ -8,5 +8,8 @@ defined('TESTS_MODULE_PATH') || define('TESTS_MODULE_PATH', FW_BP .'/src/Magento
 require_once 'bootstrap.php';
 
 /** @var Magento\AcceptanceTestFramework\Dummy $dummy */
-$dummy = $objectManager->create(\Magento\AcceptanceTestFramework\Dummy::class);
-$dummy->readPageObjects();
+$dummy = new Magento\AcceptanceTestFramework\DataGenerator\DataHandler('test');
+
+$result = $dummy->persistData(['CustomerEntityTwo'], 'API');
+
+print_r($result);
