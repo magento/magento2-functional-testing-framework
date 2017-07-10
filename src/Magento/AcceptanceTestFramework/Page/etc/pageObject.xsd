@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:annotation>
+        <xs:documentation>The definition of a page object.</xs:documentation>
+    </xs:annotation>
+
     <xs:element name="config">
         <xs:annotation>
             <xs:documentation>
@@ -64,26 +68,10 @@
 
     <xs:element name="block">
         <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="element" maxOccurs="unbounded" minOccurs="0">
-                    <xs:annotation>
-                        <xs:documentation>
-                            A ui element that contains data for selenium web driver to perform default action on them.
-                        </xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-            </xs:sequence>
             <xs:attribute type="notEmptyType" name="name" use="required">
                 <xs:annotation>
                     <xs:documentation>
-                        The name of the block.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute type="notEmptyType" name="class">
-                <xs:annotation>
-                    <xs:documentation>
-                        The path to the block PHP class file.
+                        The fully qualified class name of the block.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
@@ -94,87 +82,8 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute type="notEmptyType" name="parent_class" use="optional">
-                <xs:annotation>
-                    <xs:documentation>
-                        Parent block class name, if not specified, Magento\AcceptanceTestFramework\Page\Block\Block is used.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
         </xs:complexType>
     </xs:element>
-
-    <xs:element name="element">
-        <xs:complexType>
-            <xs:attribute type="notEmptyType" name="name" use="required">
-                <xs:annotation>
-                    <xs:documentation>
-                        The name of the element.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute type="uiElementType" name="type" use="required">
-                <xs:annotation>
-                    <xs:documentation>
-                        The type of the element, e.g. select, radio, etc.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute type="notEmptyType" name="locator" use="required">
-                <xs:annotation>
-                    <xs:documentation>
-                        Locator of the element.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute type="xs:boolean" name="required" use="optional">
-                <xs:annotation>
-                    <xs:documentation>
-                        If the element is a required field in the ui.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute type="notEmptyType" name="group" use="optional">
-                <xs:annotation>
-                    <xs:documentation>
-                        The group that the element belongs in the ui.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute type="notEmptyType" name="depends_on" use="optional">
-                <xs:annotation>
-                    <xs:documentation>
-                        If the element depends on other element to be enabled.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute type="xs:boolean" name="wait_required" use="optional">
-                <xs:annotation>
-                    <xs:documentation>
-                        If waitForPageLoad() is required after default action.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-        </xs:complexType>
-    </xs:element>
-
-    <xs:simpleType name="uiElementType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="text"/>
-            <xs:enumeration value="textarea"/>
-            <xs:enumeration value="input"/>
-            <xs:enumeration value="button"/>
-            <xs:enumeration value="checkbox"/>
-            <xs:enumeration value="radio"/>
-            <xs:enumeration value="checkboxset"/>
-            <xs:enumeration value="radioset"/>
-            <xs:enumeration value="date"/>
-            <xs:enumeration value="file"/>
-            <xs:enumeration value="select"/>
-            <xs:enumeration value="multiselect"/>
-            <xs:enumeration value="wysiwyg"/>
-        </xs:restriction>
-    </xs:simpleType>
 
     <xs:simpleType name="notEmptyType">
         <xs:restriction base="xs:string">

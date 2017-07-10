@@ -54,6 +54,11 @@
             <argument name="configData" xsi:type="object">Magento\AcceptanceTestFramework\Page\Config\Data</argument>
         </arguments>
     </type>
+    <type name="Magento\AcceptanceTestFramework\Generate\GenerateBlock">
+        <arguments>
+            <argument name="configData" xsi:type="object">Magento\AcceptanceTestFramework\Block\Config\Data</argument>
+        </arguments>
+    </type>
 
     <type name="Magento\AcceptanceTestFramework\Dummy">
         <arguments>
@@ -76,6 +81,11 @@
             <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/Page/etc/pageObject.xsd</argument>
         </arguments>
     </virtualType>
+    <virtualType name="Magento\AcceptanceTestFramework\Config\SchemaLocator\Block" type="Magento\AcceptanceTestFramework\Config\SchemaLocator">
+        <arguments>
+            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/Page/etc/blockObject.xsd</argument>
+        </arguments>
+    </virtualType>
     <virtualType name="Magento\AcceptanceTestFramework\Config\Reader\Page" type="Magento\AcceptanceTestFramework\Config\Reader\Filesystem">
         <arguments>
             <argument name="fileResolver" xsi:type="object">Magento\AcceptanceTestFramework\Config\FileResolver\Mask</argument>
@@ -84,10 +94,22 @@
             <argument name="idAttributes" xsi:type="array">
                 <item name="/config/page" xsi:type="string">name</item>
                 <item name="/config/page/block" xsi:type="string">name</item>
-                <item name="/config/page/block/element" xsi:type="string">name</item>
             </argument>
             <argument name="fileName" xsi:type="string">#\.xml$#</argument>
             <argument name="defaultScope" xsi:type="string">Page</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\AcceptanceTestFramework\Config\Reader\Block" type="Magento\AcceptanceTestFramework\Config\Reader\Filesystem">
+        <arguments>
+            <argument name="fileResolver" xsi:type="object">Magento\AcceptanceTestFramework\Config\FileResolver\Mask</argument>
+            <argument name="converter" xsi:type="object">Magento\AcceptanceTestFramework\Config\Converter</argument>
+            <argument name="schemaLocator" xsi:type="object">Magento\AcceptanceTestFramework\Config\SchemaLocator\Block</argument>
+            <argument name="idAttributes" xsi:type="array">
+                <item name="/config/block" xsi:type="string">name</item>
+                <item name="/config/block/element" xsi:type="string">name</item>
+            </argument>
+            <argument name="fileName" xsi:type="string">#\.xml$#</argument>
+            <argument name="defaultScope" xsi:type="string">Block</argument>
         </arguments>
     </virtualType>
     <virtualType name="Magento\AcceptanceTestFramework\Page\Config\Data" type="Magento\AcceptanceTestFramework\Config\Data">
@@ -95,36 +117,17 @@
             <argument name="reader" xsi:type="object">Magento\AcceptanceTestFramework\Config\Reader\Page</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Magento\AcceptanceTestFramework\DataProfile\Config\Data" type="Magento\AcceptanceTestFramework\Config\Data">
+    <virtualType name="Magento\AcceptanceTestFramework\Block\Config\Data" type="Magento\AcceptanceTestFramework\Config\Data">
         <arguments>
-            <argument name="reader" xsi:type="object">Magento\AcceptanceTestFramework\Config\Reader\DataProfile</argument>
+            <argument name="reader" xsi:type="object">Magento\AcceptanceTestFramework\Config\Reader\Block</argument>
         </arguments>
     </virtualType>
-
-    <virtualType name="Magento\AcceptanceTestFramework\Config\SchemaLocator\DataProfile" type="Magento\AcceptanceTestFramework\Config\SchemaLocator">
+    <type name="Magento\AcceptanceTestFramework\Generate\Pool">
         <arguments>
-            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/DataGenerator/etc/DataProfileSchema.xsd</argument>
-        </arguments>
-    </virtualType>
-
-    <virtualType name="Magento\AcceptanceTestFramework\Config\Reader\DataProfile" type="Magento\AcceptanceTestFramework\Config\Reader\Filesystem">
-        <arguments>
-            <argument name="fileResolver" xsi:type="object">Magento\AcceptanceTestFramework\Config\FileResolver\Module</argument>
-            <argument name="converter" xsi:type="object">Magento\AcceptanceTestFramework\Config\Converter</argument>
-            <argument name="schemaLocator" xsi:type="object">Magento\AcceptanceTestFramework\Config\SchemaLocator\DataProfile</argument>
-            <argument name="idAttributes" xsi:type="array">
-                <item name="/config/entities/entity" xsi:type="string">name</item>
-                <item name="/config/entities/entity/dataObjects/dataObject" xsi:type="string">name</item>
-                <item name="/config/entities/entity/dataObjects/dataObject/dataArray/data" xsi:type="string">key</item>
+            <argument name="pool" xsi:type="array">
+                <item name="page" xsi:type="object">Magento\AcceptanceTestFramework\Generate\GeneratePage</item>
+                <item name="block" xsi:type="object">Magento\AcceptanceTestFramework\Generate\GenerateBlock</item>
             </argument>
-            <argument name="fileName" xsi:type="string">data.xml</argument>
-            <argument name="defaultScope" xsi:type="string">*/etc</argument>
-        </arguments>
-    </virtualType>
-
-    <type name="Magento\AcceptanceTestFramework\DataProfileSchemaParser">
-        <arguments>
-            <argument name="dataProfiles" xsi:type="object">Magento\AcceptanceTestFramework\DataProfile\Config\Data</argument>
         </arguments>
     </type>
 </config>
