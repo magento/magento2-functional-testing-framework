@@ -59,7 +59,19 @@
             <argument name="configData" xsi:type="object">Magento\AcceptanceTestFramework\Block\Config\Data</argument>
         </arguments>
     </type>
-
+    <type name="Magento\AcceptanceTestFramework\Generate\Pool">
+        <arguments>
+            <argument name="pool" xsi:type="array">
+                <item name="page" xsi:type="object">Magento\AcceptanceTestFramework\Generate\GeneratePage</item>
+                <item name="block" xsi:type="object">Magento\AcceptanceTestFramework\Generate\GenerateBlock</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\AcceptanceTestFramework\DataProfileSchemaParser">
+        <arguments>
+            <argument name="dataProfiles" xsi:type="object">Magento\AcceptanceTestFramework\DataProfile\Config\Data</argument>
+        </arguments>
+    </type>
     <type name="Magento\AcceptanceTestFramework\Dummy">
         <arguments>
             <argument name="pageObjects" xsi:type="object">Magento\AcceptanceTestFramework\Page\Config\Data</argument>
@@ -122,12 +134,28 @@
             <argument name="reader" xsi:type="object">Magento\AcceptanceTestFramework\Config\Reader\Block</argument>
         </arguments>
     </virtualType>
-    <type name="Magento\AcceptanceTestFramework\Generate\Pool">
+    <virtualType name="Magento\AcceptanceTestFramework\DataProfile\Config\Data" type="Magento\AcceptanceTestFramework\Config\Data">
         <arguments>
-            <argument name="pool" xsi:type="array">
-                <item name="page" xsi:type="object">Magento\AcceptanceTestFramework\Generate\GeneratePage</item>
-                <item name="block" xsi:type="object">Magento\AcceptanceTestFramework\Generate\GenerateBlock</item>
-            </argument>
+            <argument name="reader" xsi:type="object">Magento\AcceptanceTestFramework\Config\Reader\DataProfile</argument>
         </arguments>
-    </type>
+    </virtualType>
+    <virtualType name="Magento\AcceptanceTestFramework\Config\SchemaLocator\DataProfile" type="Magento\AcceptanceTestFramework\Config\SchemaLocator">
+        <arguments>
+            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/DataGenerator/etc/DataProfileSchema.xsd</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\AcceptanceTestFramework\Config\Reader\DataProfile" type="Magento\AcceptanceTestFramework\Config\Reader\Filesystem">
+        <arguments>
+            <argument name="fileResolver" xsi:type="object">Magento\AcceptanceTestFramework\Config\FileResolver\Module</argument>
+            <argument name="converter" xsi:type="object">Magento\AcceptanceTestFramework\Config\Converter</argument>
+            <argument name="schemaLocator" xsi:type="object">Magento\AcceptanceTestFramework\Config\SchemaLocator\DataProfile</argument>
+            <argument name="idAttributes" xsi:type="array">
+                <item name="/config/entities/entity" xsi:type="string">name</item>
+                <item name="/config/entities/entity/dataObjects/dataObject" xsi:type="string">name</item>
+                <item name="/config/entities/entity/dataObjects/dataObject/dataArray/data" xsi:type="string">key</item>
+            </argument>
+            <argument name="fileName" xsi:type="string">data.xml</argument>
+            <argument name="defaultScope" xsi:type="string">*/etc</argument>
+        </arguments>
+    </virtualType>
 </config>
