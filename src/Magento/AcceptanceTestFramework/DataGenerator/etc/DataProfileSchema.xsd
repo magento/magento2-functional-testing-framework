@@ -94,4 +94,14 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
+    <xs:attributeGroup name="removeAttribute">
+        <xs:attribute type="xs:boolean" name="remove" use="optional" default="false">
+            <xs:annotation>
+                <xs:documentation>
+                    Set to true to remove this element during parsing.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
 </xs:schema>

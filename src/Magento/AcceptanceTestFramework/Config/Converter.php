@@ -79,6 +79,10 @@ class Converter implements \Magento\AcceptanceTestFramework\Config\ConverterInte
 
         foreach ($elements as $element) {
             if ($element instanceof \DOMElement) {
+                if ($element->getAttribute('remove') == 'true') {
+                    // Remove element
+                    continue;
+                }
                 if ($element->hasAttribute('xsi:type')) {
                     if ($element->hasAttribute('path')) {
                         $elementData = $this->getAttributes($element);
