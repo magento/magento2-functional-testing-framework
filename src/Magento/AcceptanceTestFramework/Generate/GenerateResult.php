@@ -61,7 +61,7 @@ class GenerateResult
             $lengths = [
                 'item' => strlen('Item'),
                 'count' => strlen('Count'),
-                'time' => strlen('Time')
+                'time' => strlen('Time(s)')
             ];
             foreach ($results as $result) {
                 $lengths['item'] = max($lengths['item'], strlen($result['item']));
@@ -70,7 +70,7 @@ class GenerateResult
             }
             echo "|| " . self::prepareForShell('Item', $lengths['item']);
             echo " || " . self::prepareForShell('Count', $lengths['count']);
-            echo " || " . self::prepareForShell('Time', $lengths['time']) . " ||\n";
+            echo " || " . self::prepareForShell('Time(s)', $lengths['time']) . " ||\n";
             foreach ($results as $result) {
                 echo "|| " . self::prepareForShell($result['item'], $lengths['item']);
                 echo " || " . self::prepareForShell($result['count'], $lengths['count']);

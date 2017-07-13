@@ -17,6 +17,20 @@ abstract class AbstractGenerate implements LauncherInterface
     protected $cnt = 0;
 
     /**
+     * Execution start in Unix timestamp with microseconds.
+     *
+     * @var int
+     */
+    protected $start;
+
+    /**
+     * Execution end in Unix timestamp with microseconds.
+     *
+     * @var int
+     */
+    protected $end;
+
+    /**
      * An array of errors.
      *
      * @var string[]
