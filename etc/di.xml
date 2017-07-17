@@ -150,12 +150,12 @@
             <argument name="converter" xsi:type="object">Magento\AcceptanceTestFramework\Config\Converter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\AcceptanceTestFramework\Config\SchemaLocator\DataProfile</argument>
             <argument name="idAttributes" xsi:type="array">
-                <item name="/config/entities/entity" xsi:type="string">name</item>
-                <item name="/config/entities/entity/dataObjects/dataObject" xsi:type="string">name</item>
-                <item name="/config/entities/entity/dataObjects/dataObject/dataArray/data" xsi:type="string">key</item>
+                <item name="/config/entity" xsi:type="string">name</item>
+                <item name="/config/entity/data" xsi:type="string">key</item>
+                <item name="/config/entity/required-entity" xsi:type="string">name</item>
             </argument>
-            <argument name="fileName" xsi:type="string">data.xml</argument>
-            <argument name="defaultScope" xsi:type="string">*/etc</argument>
+            <argument name="fileName" xsi:type="string">*Data.xml</argument>
+            <argument name="defaultScope" xsi:type="string">Data</argument>
         </arguments>
     </virtualType>
 </config>
