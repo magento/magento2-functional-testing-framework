@@ -67,11 +67,6 @@
             </argument>
         </arguments>
     </type>
-    <type name="Magento\AcceptanceTestFramework\DataProfileSchemaParser">
-        <arguments>
-            <argument name="dataProfiles" xsi:type="object">Magento\AcceptanceTestFramework\DataProfile\Config\Data</argument>
-        </arguments>
-    </type>
     <type name="Magento\AcceptanceTestFramework\Dummy">
         <arguments>
             <argument name="pageObjects" xsi:type="object">Magento\AcceptanceTestFramework\Page\Config\Data</argument>
@@ -134,6 +129,14 @@
             <argument name="reader" xsi:type="object">Magento\AcceptanceTestFramework\Config\Reader\Block</argument>
         </arguments>
     </virtualType>
+
+    <!-- Configuration for Data.xml -->
+
+    <type name="Magento\AcceptanceTestFramework\DataProfileSchemaParser">
+        <arguments>
+            <argument name="dataProfiles" xsi:type="object">Magento\AcceptanceTestFramework\DataProfile\Config\Data</argument>
+        </arguments>
+    </type>
     <virtualType name="Magento\AcceptanceTestFramework\DataProfile\Config\Data" type="Magento\AcceptanceTestFramework\Config\Data">
         <arguments>
             <argument name="reader" xsi:type="object">Magento\AcceptanceTestFramework\Config\Reader\DataProfile</argument>
@@ -156,6 +159,49 @@
             </argument>
             <argument name="fileName" xsi:type="string">*Data.xml</argument>
             <argument name="defaultScope" xsi:type="string">Data</argument>
+        </arguments>
+    </virtualType>
+
+
+    <!-- Configuration for TestData -->
+
+    <virtualType name="Magento\AcceptanceTestFramework\Config\SchemaLocator\TestData" type="Magento\AcceptanceTestFramework\Config\SchemaLocator">
+        <arguments>
+            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/Test/etc/testSchema.xsd</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\AcceptanceTestFramework\Config\Reader\TestData" type="Magento\AcceptanceTestFramework\Config\Reader\Filesystem">
+        <arguments>
+            <argument name="fileResolver" xsi:type="object">Magento\AcceptanceTestFramework\Config\FileResolver\Module</argument>
+            <argument name="converter" xsi:type="object">Magento\AcceptanceTestFramework\Config\Converter</argument>
+            <argument name="schemaLocator" xsi:type="object">Magento\AcceptanceTestFramework\Config\SchemaLocator\TestData</argument>
+            <argument name="idAttributes" xsi:type="array">
+                <item name="/config/cest" xsi:type="string">name</item>
+                <item name="/config/cest/test" xsi:type="string">name</item>
+                <item name="/config/cest/annotations/features" xsi:type="string">value</item>
+                <item name="/config/cest/annotations/stories" xsi:type="string">value</item>
+                <item name="/config/cest/annotations/title" xsi:type="string">value</item>
+                <item name="/config/cest/annotations/description" xsi:type="string">value</item>
+                <item name="/config/cest/annotations/severity" xsi:type="string">value</item>
+                <item name="/config/cest/annotations/testCaseId" xsi:type="string">value</item>
+                <item name="/config/cest/annotations/group" xsi:type="string">value</item>
+                <item name="/config/cest/annotations/env" xsi:type="string">value</item>
+                <item name="/config/cest/annotations/return" xsi:type="string">value</item>
+                <item name="/config/cest/test/action" xsi:type="string">name</item>
+            </argument>
+            <argument name="fileName" xsi:type="string">*Cest.xml</argument>
+            <argument name="defaultScope" xsi:type="string">Cest</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\AcceptanceTestFramework\Test\TestDataParser">
+        <arguments>
+            <argument name="testData" xsi:type="object">Magento\AcceptanceTestFramework\Test\Config\Data</argument>
+        </arguments>
+    </type>
+    <virtualType name="Magento\AcceptanceTestFramework\Test\Config\Data" type="Magento\AcceptanceTestFramework\Config\Data">
+        <arguments>
+            <argument name="reader" xsi:type="object">Magento\AcceptanceTestFramework\Config\Reader\TestData</argument>
         </arguments>
     </virtualType>
 </config>

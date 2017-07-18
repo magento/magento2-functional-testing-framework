@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+    <xs:element name="config">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="cest" type="cestType" maxOccurs="unbounded" minOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="cestType">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="use" type="useType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="annotations" type="annotationContainerType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="before" type="metaTestType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="test" type="testType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="after" type="metaTestType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attributeGroup ref="removeAttribute"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="metaTestType">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="dependency" type="dependencyType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="action" type="actionType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="removeAttribute"/>
+    </xs:complexType>
+
+    <xs:complexType name="testType">
+        <xs:sequence  minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="annotations" type="annotationContainerType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="dependency" type="dependencyType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="action" type="actionType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="name" use="required" type="xs:string"/>
+        <xs:attributeGroup ref="removeAttribute"/>
+    </xs:complexType>
+
+    <xs:complexType name="actionType">
+        <xs:attribute name="actor" type="xs:string" use="optional"></xs:attribute>
+        <xs:attribute name="function" type="xs:string" use="required"></xs:attribute>
+        <xs:attribute name="selector" type="xs:string" use="optional"></xs:attribute>
+        <xs:attribute name="parameter" type="xs:string" use="optional"></xs:attribute>
+        <xs:attribute name="data" type="xs:string" use="optional"></xs:attribute>
+        <xs:attribute name="field" type="xs:string" use="optional"></xs:attribute>
+        <xs:attribute name="returnVariable" type="xs:string" use="optional"></xs:attribute>
+        <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+        <xs:attribute name="userInput" type="xs:string" use="optional"></xs:attribute>
+        <xs:attribute name="order" type="xs:string" use="optional"></xs:attribute>
+        <xs:attribute name="linkedAction" type="xs:string" use="optional"></xs:attribute>
+        <xs:attributeGroup ref="removeAttribute"/>
+    </xs:complexType>
+
+    <xs:complexType name="useType">
+        <xs:attribute name="path" type="xs:string" use="required"/>
+        <xs:attributeGroup ref="removeAttribute"/>
+    </xs:complexType>
+
+    <xs:complexType name="dependencyType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="name" type="xs:string" use="required"/>
+                <xs:attribute name="actor" type="xs:string" use="required"/>
+                <xs:attributeGroup ref="removeAttribute"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="annotationContainerType">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element type="annotationType" name="features" minOccurs="0" maxOccurs="unbounded"></xs:element>
+            <xs:element type="annotationType" name="stories" minOccurs="0" maxOccurs="unbounded"></xs:element>
+            <xs:element type="annotationType" name="title" minOccurs="0" maxOccurs="unbounded"></xs:element>
+            <xs:element type="annotationType" name="description" minOccurs="0" maxOccurs="unbounded"></xs:element>
+            <xs:element type="annotationType" name="severity" minOccurs="0" maxOccurs="unbounded"></xs:element>
+            <xs:element type="annotationType" name="testCaseId" minOccurs="0" maxOccurs="unbounded"></xs:element>
+            <xs:element type="annotationType" name="group" minOccurs="0" maxOccurs="unbounded"></xs:element>
+            <xs:element type="annotationType" name="env" minOccurs="0" maxOccurs="unbounded"></xs:element>
+            <xs:element type="annotationType" name="return" minOccurs="0" maxOccurs="unbounded"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="annotationType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="value" type="xs:string" use="required"/>
+                <xs:attributeGroup ref="removeAttribute"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:attributeGroup name="removeAttribute">
+        <xs:attribute type="xs:boolean" name="remove" use="optional" default="false">
+            <xs:annotation>
+                <xs:documentation>
+                    Set to true to remove this element during parsing.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+</xs:schema>

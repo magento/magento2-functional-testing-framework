@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Test XML Example -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="testSchema.xsd">
+    <cest name="sampleCest">
+        <annotations>
+            <env value="chrome"></env>
+            <env value="firefox"></env>
+        </annotations>
+
+        <test name="MinimumFieldsTest">
+            <dependency name="\FakerDataGenerator" actor="faker"/>
+            <dependency name="CustomerAddPage" actor="I"/>
+
+            <action actor="faker" function="getFakerCustomerData" returnVariable="customerData" name="getFakerCustomerData"/>
+            <action function="selectAssociateToWebsiteDropdown" parameter="'MainWebsite'" name="selectAssociateToWebsiteDropdown"/>
+            <action function="selectGroupDropdown" parameter="'Wholesale'" name="selectGroupDropdown"/>
+            <action function="enterPrefixField" parameter="$customerData['prefix']" name="enterPrefixField"/>
+            <action function="enterFirstNameField" parameter="$customerData['firstname']" name="enterFirstNameField"/>
+            <action function="enterMiddleNameField" parameter="$customerData['middlename']" name="enterMiddleNameField"/>
+            <action function="enterLastNameField" parameter="$customerData['lastname']" name="enterLastNameField"/>
+            <action function="enterSuffixField" parameter="$customerData['suffix']" name="enterSuffixField"/>
+            <action function="enterEmailField" parameter="$customerData['email']" name="enterEmailField"/>
+            <action function="enterDateOfBirthField" parameter="$customerData['dateOfBirth']" name="enterDateOfBirthField"/>
+            <action function="enterTaxVatNumberField" parameter="$customerData['taxVatNumber']" name="enterTaxVatNumberField"/>
+            <action function="selectGenderDropdown" userInput="Female" name="selectGenderDropdown"/>
+            <action function="selectSendWelcomeEmailFromDropdown" parameter="'Default Store View'" name="selectSendWelcomeEmailFromDropdown"/>
+        </test>
+    </cest>
+</config>
