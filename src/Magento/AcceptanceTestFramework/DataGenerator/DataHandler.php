@@ -2,7 +2,7 @@
 
 namespace Magento\AcceptanceTestFramework\DataGenerator;
 
-use Magento\AcceptanceTestFramework\DataGenerator\Objects\EntityXmlObject;
+use Magento\AcceptanceTestFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\AcceptanceTestFramework\DataProfileSchemaParser;
 use Magento\AcceptanceTestFramework\ObjectManagerFactory;
 
@@ -24,15 +24,16 @@ class DataHandler
         $entityParser = $this->objectManager->create(DataProfileSchemaParser::class);
         $entities = $entityParser->readDataProfiles();
 
-        foreach ($entities[DataGeneratorXMLConstants::ENTITY_DATA] as $entityName => $entity) {
-            $entityXmlObject = new EntityXmlObject(
-                $entityName,
-                $entity[DataGeneratorXMLConstants::ENTITY_DATA_TYPE],
-                $entity[DataGeneratorXMLConstants::ENTITY_DATA_CONFIG],
-                $entity[DataGeneratorXMLConstants::DATA_OBJECT]
-            );
+        foreach ($entities[DataGeneratorConstants::ENTITY_DATA] as $entityName => $entity) {
+            $entityType = $entity[DataGeneratorConstants::ENTITY_DATA_TYPE];
 
-            if ($mapEntities) {
+            if (strcasecmp($entityType, $type) == 0) {
+                $entityXmlObject = new EntityDataObject(
+                    $entityName,
+                    $entityType,
+                    $entity[DataGeneratorConstants::DATA_VALUES] ?? null,
+                    $entity[DataGeneratorConstants::REQUIRED_ENTITY] ?? null
+                );
                 $entityObjects[$entityXmlObject->getName()] = $entityXmlObject;
             } else {
                 $entityObjects[] = $entityXmlObject;
