@@ -1,7 +1,7 @@
 <?php
 
 use Magento\AcceptanceTestFramework\Test\CestDataManager;
-require_once '../../../../entryPoint.php';
+require_once '../../../../bootstrap.php';
 
 function loadAllCestObjects()
 {
