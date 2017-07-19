@@ -50,8 +50,8 @@
         <xs:attribute name="returnVariable" type="xs:string" use="optional"></xs:attribute>
         <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
         <xs:attribute name="userInput" type="xs:string" use="optional"></xs:attribute>
-        <xs:attribute name="order" type="xs:string" use="optional"></xs:attribute>
-        <xs:attribute name="linkedAction" type="xs:string" use="optional"></xs:attribute>
+        <xs:attribute name="before" type="xs:string" use="optional"></xs:attribute>
+        <xs:attribute name="after" type="xs:string" use="optional"></xs:attribute>
         <xs:attributeGroup ref="removeAttribute"/>
     </xs:complexType>
 

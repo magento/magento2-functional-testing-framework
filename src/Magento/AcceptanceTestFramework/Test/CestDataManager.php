@@ -3,9 +3,12 @@
 namespace Magento\AcceptanceTestFramework\Test;
 
 use Magento\AcceptanceTestFramework\ObjectManagerFactory;
+use Magento\AcceptanceTestFramework\Exceptions\XmlException;
 
 class CestDataManager
 {
+    const BEFORE_AFTER_ERROR_MSG = "Merge Error - Steps cannot have both before and after attributes.\tTestStep='%s'";
+
     public static function getCestData()
     {
         $cestDataParser = ObjectManagerFactory::getObjectManager()->create(TestDataParser::class);
@@ -135,9 +138,9 @@ class CestDataManager
             $actor = null;
             $parameter = null;
             $selector = null;
-            $linkedAction = null;
             $userInput = null;
             $returnVariable = null;
+            $linkedAction = null;
             $order = null;
 
             if (array_key_exists(CestDataConstants::TEST_ACTION_ACTOR, $actionData)) {
@@ -150,9 +153,17 @@ class CestDataManager
                 $selector = $actionData[CestDataConstants::TEST_ACTION_SELECTOR];
             }
 
-            if (array_key_exists(CestDataConstants::TEST_ACTION_LINK, $actionData)) {
-                $linkedAction = $actionData[CestDataConstants::TEST_ACTION_LINK];
-                $order = $actionData [CestDataConstants::TEST_ACTION_ORDER];
+            if (array_key_exists(CestDataConstants::TEST_ACTION_BEFORE, $actionData)
+                and array_key_exists(CestDataConstants::TEST_ACTION_AFTER, $actionData)) {
+                throw new XmlException(sprintf(self::BEFORE_AFTER_ERROR_MSG, $actionName));
+            }
+
+            if (array_key_exists(CestDataConstants::TEST_ACTION_BEFORE, $actionData)) {
+                $linkedAction = $actionData[CestDataConstants::TEST_ACTION_BEFORE];
+                $order = "before";
+            } elseif (array_key_exists(CestDataConstants::TEST_ACTION_AFTER, $actionData)) {
+                $linkedAction = $actionData[CestDataConstants::TEST_ACTION_AFTER];
+                $order = "after";
             }
 
             if (array_key_exists(CestDataConstants::TEST_ACTION_USER_INPUT, $actionData)) {
