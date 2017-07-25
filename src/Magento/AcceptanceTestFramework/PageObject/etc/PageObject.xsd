@@ -16,7 +16,7 @@
                 <xs:element ref="page" maxOccurs="unbounded" minOccurs="1">
                     <xs:annotation>
                         <xs:documentation>
-                            An element that contains configuration data of a page.
+                            Contains sequence of ui sections in a page.
                         </xs:documentation>
                     </xs:annotation>
                 </xs:element>
@@ -27,10 +27,10 @@
     <xs:element name="page">
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="block" maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="section" maxOccurs="unbounded" minOccurs="0">
                     <xs:annotation>
                         <xs:documentation>
-                            An element that contains configuration data of a page block.
+                            Contains sequence of ui elements.
                         </xs:documentation>
                     </xs:annotation>
                 </xs:element>
@@ -38,50 +38,45 @@
             <xs:attribute type="notEmptyType" name="name" use="required">
                 <xs:annotation>
                     <xs:documentation>
-                        The name of the page.
+                        Unique page name identifier.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="mca" use="required">
+            <xs:attribute type="notEmptyType" name="urlPath" use="required">
                 <xs:annotation>
                     <xs:documentation>
-                        MCA path for the page. For example: "catalog/product/view".
+                        Url path (excluding the base url) for the page. Use "%s" for placeholders for variables.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute type="notEmptyType" name="module">
+            <xs:attribute type="notEmptyType" name="urlPathVariables" use="optional">
+                <xs:annotation>
+                    <xs:documentation>
+                        Optional variable names separated by "," which are used to substitute %s in urlPath attribute.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="notEmptyType" name="module" use="required">
                 <xs:annotation>
                     <xs:documentation>
                         The name of the module to which the page belongs. For example: "Magento_Catalog".
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute type="notEmptyType" name="area">
-                <xs:annotation>
-                    <xs:documentation>
-                        The name of the area to which the page belongs. For example: "Adminhtml".
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
+            <xs:attributeGroup ref="removeAttribute"/>
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="block">
+    <xs:element name="section">
         <xs:complexType>
             <xs:attribute type="notEmptyType" name="name" use="required">
                 <xs:annotation>
                     <xs:documentation>
-                        The fully qualified class name of the block.
+                        Unique section name identifier.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute type="notEmptyType" name="locator">
-                <xs:annotation>
-                    <xs:documentation>
-                        Locator of the block. For example, CSS selector "#maincontent".
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
+            <xs:attributeGroup ref="removeAttribute"/>
         </xs:complexType>
     </xs:element>
 

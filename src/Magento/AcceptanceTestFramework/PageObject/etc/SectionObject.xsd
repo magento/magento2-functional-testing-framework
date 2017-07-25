@@ -9,10 +9,10 @@
         </xs:annotation>
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="block" maxOccurs="unbounded" minOccurs="1">
+                <xs:element ref="section" maxOccurs="unbounded" minOccurs="1">
                     <xs:annotation>
                         <xs:documentation>
-                            An element that contains configuration data of a page.
+                            Contains sequence of ui elements in a section of a page.
                         </xs:documentation>
                     </xs:annotation>
                 </xs:element>
@@ -20,13 +20,13 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="block">
+    <xs:element name="section">
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="element" maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="element" maxOccurs="unbounded" minOccurs="1">
                     <xs:annotation>
                         <xs:documentation>
-                            A ui element that contains data for selenium web driver to perform default action on them.
+                            Contains information of an ui element.
                         </xs:documentation>
                     </xs:annotation>
                 </xs:element>
@@ -34,17 +34,11 @@
             <xs:attribute type="notEmptyType" name="name" use="required">
                 <xs:annotation>
                     <xs:documentation>
-                        The fully qualified class name of the block.
+                        Unique section name identifier.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute type="notEmptyType" name="parent_class" use="optional">
-                <xs:annotation>
-                    <xs:documentation>
-                        Parent block class name, if not specified, Magento\AcceptanceTestFramework\Page\Block\Block is used.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
+            <xs:attributeGroup ref="removeAttribute"/>
         </xs:complexType>
     </xs:element>
 
@@ -53,7 +47,7 @@
             <xs:attribute type="notEmptyType" name="name" use="required">
                 <xs:annotation>
                     <xs:documentation>
-                        The name of the element.
+                        Element name.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
@@ -67,38 +61,25 @@
             <xs:attribute type="notEmptyType" name="locator" use="required">
                 <xs:annotation>
                     <xs:documentation>
-                        Locator of the element.
+                        Locator of the element. Use %s for placeholders for variables.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute type="xs:boolean" name="required" use="optional">
+            <xs:attribute type="notEmptyType" name="locatorVariables" use="optional">
                 <xs:annotation>
                     <xs:documentation>
-                        If the element is a required field in the ui.
+                        Optional variable names separated by "," which are used to substitute %s in locator attribute.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute type="notEmptyType" name="group" use="optional">
+            <xs:attribute type="timeOutType" name="timeOut" use="optional">
                 <xs:annotation>
                     <xs:documentation>
-                        The group that the element belongs in the ui.
+                        Optional timeout value in second to wait for the operation on the element. use "-" for default value.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute type="notEmptyType" name="depends_on" use="optional">
-                <xs:annotation>
-                    <xs:documentation>
-                        If the element depends on other element to be enabled.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute type="xs:boolean" name="wait_required" use="optional">
-                <xs:annotation>
-                    <xs:documentation>
-                        If waitForPageLoad() is required after default action.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
+            <xs:attributeGroup ref="removeAttribute"/>
         </xs:complexType>
     </xs:element>
 
@@ -123,6 +104,12 @@
     <xs:simpleType name="notEmptyType">
         <xs:restriction base="xs:string">
             <xs:minLength value="1" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="timeOutType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="([0-9])+|-"/>
         </xs:restriction>
     </xs:simpleType>
 

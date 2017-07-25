@@ -49,29 +49,6 @@
         </arguments>
     </type>
     <type name="Magento\AcceptanceTestFramework\Util\ModuleResolver\SequenceSorter" />
-    <type name="Magento\AcceptanceTestFramework\Generate\GeneratePage">
-        <arguments>
-            <argument name="configData" xsi:type="object">Magento\AcceptanceTestFramework\Page\Config\Data</argument>
-        </arguments>
-    </type>
-    <type name="Magento\AcceptanceTestFramework\Generate\GenerateBlock">
-        <arguments>
-            <argument name="configData" xsi:type="object">Magento\AcceptanceTestFramework\Block\Config\Data</argument>
-        </arguments>
-    </type>
-    <type name="Magento\AcceptanceTestFramework\Generate\Pool">
-        <arguments>
-            <argument name="pool" xsi:type="array">
-                <item name="page" xsi:type="object">Magento\AcceptanceTestFramework\Generate\GeneratePage</item>
-                <item name="block" xsi:type="object">Magento\AcceptanceTestFramework\Generate\GenerateBlock</item>
-            </argument>
-        </arguments>
-    </type>
-    <type name="Magento\AcceptanceTestFramework\Dummy">
-        <arguments>
-            <argument name="pageObjects" xsi:type="object">Magento\AcceptanceTestFramework\Page\Config\Data</argument>
-        </arguments>
-    </type>
     <!--
     Array item can be of any type just like an argument, including array type itself, which creates circular dependency.
     Proxy is used to resolve the circular dependency, so that array items undergo the same interpretation as arguments.
@@ -83,14 +60,16 @@
         </arguments>
     </virtualType>
 
+    <!-- Configuration for PageObject -->
+
     <virtualType name="Magento\AcceptanceTestFramework\Config\SchemaLocator\Page" type="Magento\AcceptanceTestFramework\Config\SchemaLocator">
         <arguments>
-            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/Page/etc/pageObject.xsd</argument>
+            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/PageObject/etc/PageObject.xsd</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Magento\AcceptanceTestFramework\Config\SchemaLocator\Block" type="Magento\AcceptanceTestFramework\Config\SchemaLocator">
+    <virtualType name="Magento\AcceptanceTestFramework\Config\SchemaLocator\Section" type="Magento\AcceptanceTestFramework\Config\SchemaLocator">
         <arguments>
-            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/Page/etc/blockObject.xsd</argument>
+            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/PageObject/etc/SectionObject.xsd</argument>
         </arguments>
     </virtualType>
     <virtualType name="Magento\AcceptanceTestFramework\Config\Reader\Page" type="Magento\AcceptanceTestFramework\Config\Reader\Filesystem">
@@ -100,33 +79,47 @@
             <argument name="schemaLocator" xsi:type="object">Magento\AcceptanceTestFramework\Config\SchemaLocator\Page</argument>
             <argument name="idAttributes" xsi:type="array">
                 <item name="/config/page" xsi:type="string">name</item>
-                <item name="/config/page/block" xsi:type="string">name</item>
+                <item name="/config/page/section" xsi:type="string">name</item>
             </argument>
             <argument name="fileName" xsi:type="string">#\.xml$#</argument>
             <argument name="defaultScope" xsi:type="string">Page</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Magento\AcceptanceTestFramework\Config\Reader\Block" type="Magento\AcceptanceTestFramework\Config\Reader\Filesystem">
+    <virtualType name="Magento\AcceptanceTestFramework\Config\Reader\Section" type="Magento\AcceptanceTestFramework\Config\Reader\Filesystem">
         <arguments>
             <argument name="fileResolver" xsi:type="object">Magento\AcceptanceTestFramework\Config\FileResolver\Mask</argument>
             <argument name="converter" xsi:type="object">Magento\AcceptanceTestFramework\Config\Converter</argument>
-            <argument name="schemaLocator" xsi:type="object">Magento\AcceptanceTestFramework\Config\SchemaLocator\Block</argument>
+            <argument name="schemaLocator" xsi:type="object">Magento\AcceptanceTestFramework\Config\SchemaLocator\Section</argument>
             <argument name="idAttributes" xsi:type="array">
-                <item name="/config/block" xsi:type="string">name</item>
-                <item name="/config/block/element" xsi:type="string">name</item>
+                <item name="/config/section" xsi:type="string">name</item>
+                <item name="/config/section/element" xsi:type="string">name</item>
             </argument>
             <argument name="fileName" xsi:type="string">#\.xml$#</argument>
-            <argument name="defaultScope" xsi:type="string">Block</argument>
+            <argument name="defaultScope" xsi:type="string">Section</argument>
         </arguments>
     </virtualType>
+
+    <type name="Magento\AcceptanceTestFramework\XmlParser\PageParser">
+        <arguments>
+            <argument name="configData" xsi:type="object">Magento\AcceptanceTestFramework\Page\Config\Data</argument>
+        </arguments>
+    </type>
+
     <virtualType name="Magento\AcceptanceTestFramework\Page\Config\Data" type="Magento\AcceptanceTestFramework\Config\Data">
         <arguments>
             <argument name="reader" xsi:type="object">Magento\AcceptanceTestFramework\Config\Reader\Page</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Magento\AcceptanceTestFramework\Block\Config\Data" type="Magento\AcceptanceTestFramework\Config\Data">
+
+    <type name="Magento\AcceptanceTestFramework\XmlParser\SectionParser">
         <arguments>
-            <argument name="reader" xsi:type="object">Magento\AcceptanceTestFramework\Config\Reader\Block</argument>
+            <argument name="configData" xsi:type="object">Magento\AcceptanceTestFramework\Section\Config\Data</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Magento\AcceptanceTestFramework\Section\Config\Data" type="Magento\AcceptanceTestFramework\Config\Data">
+        <arguments>
+            <argument name="reader" xsi:type="object">Magento\AcceptanceTestFramework\Config\Reader\Section</argument>
         </arguments>
     </virtualType>
 
@@ -161,7 +154,6 @@
             <argument name="defaultScope" xsi:type="string">Data</argument>
         </arguments>
     </virtualType>
-
 
     <!-- Configuration for TestData -->
 
