@@ -21,9 +21,9 @@ class ActionObject
         $this->function = $function;
         $this->selector = $selector;
         $this->parameter = $parameter;
-        $this->linkedAction = $linkedAction;
         $this->returnVariable = $returnVariable;
         $this->userInput = $userInput;
+        $this->linkedAction = $linkedAction;
 
         if ($order == 'after') {
             $this->orderOffset = 1;
@@ -55,11 +55,6 @@ class ActionObject
         return $this->selector;
     }
 
-    public function getLinkedAction()
-    {
-        return $this->linkedAction;
-    }
-
     public function getReturnVariable()
     {
         return $this->returnVariable;
@@ -70,7 +65,12 @@ class ActionObject
         return $this->userInput;
     }
 
-    public function getOrderOffset()
+    public function getLinkedAction()
+    {
+        return $this->linkedAction;
+    }
+
+    public function getOrderOffset(): int
     {
         return $this->orderOffset;
     }

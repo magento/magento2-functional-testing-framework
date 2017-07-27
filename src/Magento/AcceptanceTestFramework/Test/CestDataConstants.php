@@ -23,8 +23,8 @@ class CestDataConstants
     const TEST_ACTION_ACTOR = 'actor';
     const TEST_ACTION_PARAMETER = 'parameter';
     const TEST_ACTION_SELECTOR = 'selector';
-    const TEST_ACTION_ORDER = 'order';
-    const TEST_ACTION_LINK = 'linkedAction';
+    const TEST_ACTION_BEFORE = 'before';
+    const TEST_ACTION_AFTER = 'after';
     const TEST_ACTION_USER_INPUT = 'userInput';
     const TEST_ACTION_RETURN_VARIABLE = 'returnVariable';
 

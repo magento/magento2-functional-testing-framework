@@ -2,6 +2,8 @@
 
 namespace Magento\AcceptanceTestFramework\Test;
 
+use Magento\AcceptanceTestFramework\Exceptions\XmlException;
+
 class TestObject
 {
     private $name;
@@ -10,6 +12,7 @@ class TestObject
     private $parsedSteps = [];
     private $dependencies = [];
     private $annotations = [];
+    private const STEP_MISSING_ERROR_MSG = "Merge Error - Step could not be found in either TestXML or DeltaXML.\tTest = '%s'\tTestStep='%s'\tLinkedStep'%s'";
 
     public function __construct($name, $dependencies, $parsedSteps, $annotations)
     {
@@ -47,6 +50,7 @@ class TestObject
     /**
      * This method takes the steps from the parser and splits steps which need merge from steps that are ordered.
      * @return void
+     * @throws XmlException
      */
     private function sortActions()
     {
@@ -79,14 +83,17 @@ class TestObject
     /**
      * Recursively merges in each step and its dependencies
      * @param ActionObject $stepToMerge
+     * @throws XmlException
      * @return void
      */
     private function mergeAction($stepToMerge)
     {
         $linkedStep = $stepToMerge->getLinkedAction();
 
-        if (!array_key_exists($linkedStep, $this->orderedSteps)) {
-            $this->mergeAction($this->stepsToMerge[$stepToMerge->getLinkedAction()]);
+        if (!array_key_exists($linkedStep, $this->orderedSteps) and !array_key_exists($linkedStep, $this->stepsToMerge)) {
+            throw new XmlException(sprintf(self::STEP_MISSING_ERROR_MSG, $this->getName(), $stepToMerge->getName(), $linkedStep));
+        } elseif (!array_key_exists($linkedStep, $this->orderedSteps)) {
+            $this->mergeAction($this->stepsToMerge[$linkedStep]);
         }
 
         $position = array_search($linkedStep, array_keys($this->orderedSteps)) + $stepToMerge->getOrderOffset();
