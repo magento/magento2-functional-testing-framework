@@ -12,36 +12,24 @@ class EntityDataObject
     private $linkedEntities = []; //array of required entity name to corresponding type
     private $data = []; //array of Data Name to Data Value
 
-
+    /**
+     * EntityDataObject constructor.
+     * @param string $entityName
+     * @param string $entityType
+     * @param array $data
+     * @param array $linkedEntities
+     */
     public function __construct($entityName, $entityType, $data, $linkedEntities)
     {
         $this->name = $entityName;
         $this->type = $entityType;
-
-        if ($data) {
-            foreach ($data as $dataElement) {
-                $dataElementKey = $dataElement[DataGeneratorConstants::DATA_ELEMENT_KEY];
-                $dataElementValue = $dataElement[DataGeneratorConstants::DATA_ELEMENT_VALUE];
-
-                $this->data[$dataElementKey] = $dataElementValue;
-            }
-            unset($dataElement);
-        }
-
-        if ($linkedEntities) {
-            foreach ($linkedEntities as $linkedEntity) {
-                $linkedEntityName = $linkedEntity[DataGeneratorConstants::REQUIRED_ENTITY_VALUE];
-                $linkedEntityType = $linkedEntity[DataGeneratorConstants::REQUIRED_ENTITY_TYPE];
-
-                $this->linkedEntities[$linkedEntityName] = $linkedEntityType;
-            }
-            unset($linkedEntity);
-        }
+        $this->data = $data;
+        $this->linkedEntities = $linkedEntities;
     }
 
-    public function hasLinkedEntity($entityName)
+    public function getLinkedEntities()
     {
-        return array_key_exists($entityName, $this->linkedEntities);
+        return $this->linkedEntities;
     }
 
     public function getName()
@@ -55,42 +43,39 @@ class EntityDataObject
     }
 
     /**
-     * This function retrieves data from an entity defined in xml. The data can be defined explicitly by the entity or
-     * within any entity linked to or required by the entity. The function will evaluate in the following order:
-     * 1) Data declared explicitly by the entity
-     * 2) Data declared explicitly as a known linked entity
-     * 3) Data declared by entities linked to linked entities
-     * @param string $name
-     * @param string $entityName
+     * This function retrieves data from an entity defined in xml.
+     *
+     * @param string $dataName
      * @return string
      */
-    public function getDataByName($name, $entityName = null)
+    public function getDataByName($dataName)
     {
-        if ($entityName == null) {
-            return $this->data[$name];
-        } elseif ($this->hasLinkedEntity($entityName)) {
-            $entityTypeManager = EntityDataManager::getDataManager($this->linkedEntities[$entityName]);
-            return $entityTypeManager->getEntity($entityName)->getDataByName($name);
-        } else {
-            foreach ($this->linkedEntities as $linkedEntityName => $linkedEntityType) {
-                $result = EntityDataManager::getDataManager($linkedEntityType)->getEntity($linkedEntityName)
-                    ->getDataByName($name, $entityName);
+        $name = strtolower($dataName);
 
-                if ($result) {
-                    return $result;
-                }
+        if (array_key_exists($name, $this->data)) {
+            return $this->data[$name];
+        }
+
+        return null;
+    }
+
+    /**
+     * This function takes an array of entityTypes indexed by name and a string that represents the type of interest.
+     * The function returns an array of entityNames relevant to the specified type.
+     *
+     * @param string $fieldType
+     * @return array
+     */
+    public function getLinkedEntitiesOfType($fieldType)
+    {
+        $groupedArray = array();
+
+        foreach ($this->linkedEntities as $entityName => $entityType) {
+            if ($entityType == $fieldType) {
+                $groupedArray[] = $entityName;
             }
         }
-    }
 
-    public function persistEntity()
-    {
-        $this->persistDependencies();
-        // TODO fetch json representation and api persistence mechanism
-    }
-
-    private function persistDependencies()
-    {
-        // TODO call method to fetch json representation and api persistence mechanism
+        return $groupedArray;
     }
 }

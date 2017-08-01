@@ -6,7 +6,7 @@
  * Time: 1:53 PM
  */
 
-namespace Magento\AcceptanceTestFramework;
+namespace Magento\AcceptanceTestFramework\DataGenerator\Parsers;
 
 use Magento\AcceptanceTestFramework\Config\DataInterface;
 

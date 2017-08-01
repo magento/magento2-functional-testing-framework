@@ -12,6 +12,10 @@ class DataGeneratorConstants
     const DATA_ELEMENT_KEY = 'key';
     const DATA_ELEMENT_VALUE = 'value';
 
+    const ARRAY_VALUES = 'array';
+    const ARRAY_ELEMENT_KEY = 'key';
+    const ARRAY_ELEMENT_VALUE = 'item';
+
     const REQUIRED_ENTITY = 'required-entity';
     const REQUIRED_ENTITY_TYPE = 'type';
     const REQUIRED_ENTITY_VALUE = 'value';

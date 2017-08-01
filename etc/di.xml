@@ -126,7 +126,7 @@
 
     <!-- Configuration for Data.xml -->
 
-    <type name="Magento\AcceptanceTestFramework\DataProfileSchemaParser">
+    <type name="Magento\AcceptanceTestFramework\DataGenerator\Parsers\DataProfileSchemaParser">
         <arguments>
             <argument name="dataProfiles" xsi:type="object">Magento\AcceptanceTestFramework\DataProfile\Config\Data</argument>
         </arguments>
@@ -149,10 +149,43 @@
             <argument name="idAttributes" xsi:type="array">
                 <item name="/config/entity" xsi:type="string">name</item>
                 <item name="/config/entity/data" xsi:type="string">key</item>
+                <item name="/config/entity/array" xsi:type="string">key</item>
                 <item name="/config/entity/required-entity" xsi:type="string">name</item>
             </argument>
             <argument name="fileName" xsi:type="string">*Data.xml</argument>
             <argument name="defaultScope" xsi:type="string">Data</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Configuration for Metadata.xml -->
+
+    <type name="Magento\AcceptanceTestFramework\DataGenerator\Parsers\MetadataParser">
+        <arguments>
+            <argument name="metadata" xsi:type="object">Magento\AcceptanceTestFramework\DataProfile\Config\Metadata</argument>
+        </arguments>
+    </type>
+    <virtualType name="Magento\AcceptanceTestFramework\DataProfile\Config\Metadata" type="Magento\AcceptanceTestFramework\Config\Data">
+        <arguments>
+            <argument name="reader" xsi:type="object">Magento\AcceptanceTestFramework\Config\Reader\Metadata</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\AcceptanceTestFramework\Config\SchemaLocator\Metadata" type="Magento\AcceptanceTestFramework\Config\SchemaLocator">
+        <arguments>
+            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/DataGenerator/etc/EntityMetadata.xsd</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\AcceptanceTestFramework\Config\Reader\Metadata" type="Magento\AcceptanceTestFramework\Config\Reader\Filesystem">
+        <arguments>
+            <argument name="fileResolver" xsi:type="object">Magento\AcceptanceTestFramework\Config\FileResolver\Module</argument>
+            <argument name="converter" xsi:type="object">Magento\AcceptanceTestFramework\Config\Converter</argument>
+            <argument name="schemaLocator" xsi:type="object">Magento\AcceptanceTestFramework\Config\SchemaLocator\Metadata</argument>
+            <argument name="idAttributes" xsi:type="array">
+                <item name="/config/metadata" xsi:type="string">name</item>
+                <item name="/config/metadata/entry" xsi:type="string">key</item>
+                <item name="/config/metadata/array" xsi:type="string">key</item>
+            </argument>
+            <argument name="fileName" xsi:type="string">*-meta.xml</argument>
+            <argument name="defaultScope" xsi:type="string">Metadata</argument>
         </arguments>
     </virtualType>
 

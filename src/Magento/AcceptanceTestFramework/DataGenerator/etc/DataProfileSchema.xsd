@@ -22,7 +22,7 @@
     </xs:element>
 
     <xs:complexType name="entityType">
-        <xs:sequence>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="data" type="dataType" maxOccurs="unbounded" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation>
@@ -37,7 +37,14 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-        </xs:sequence>
+            <xs:element name="array" type="arrayType" maxOccurs="unbounded" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                       Element that contains a reference to non singular data/values.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:choice>
         <xs:attribute type="xs:string" name="name">
             <xs:annotation>
                 <xs:documentation>
@@ -67,6 +74,19 @@
                 </xs:attribute>
             </xs:extension>
         </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="arrayType">
+        <xs:sequence>
+            <xs:element name="item" type="xs:string" maxOccurs="unbounded" minOccurs="0">
+            <xs:annotation>
+                <xs:documentation>
+                    Individual piece of data to be passed in as part of the parrent array type.
+                </xs:documentation>
+            </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="key" use="required"/>
     </xs:complexType>
 
     <xs:complexType name="requiredEntityType">
