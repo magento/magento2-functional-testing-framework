@@ -49,6 +49,7 @@
         </arguments>
     </type>
     <type name="Magento\AcceptanceTestFramework\Util\ModuleResolver\SequenceSorter" />
+
     <!--
     Array item can be of any type just like an argument, including array type itself, which creates circular dependency.
     Proxy is used to resolve the circular dependency, so that array items undergo the same interpretation as arguments.
@@ -165,7 +166,7 @@
     <virtualType name="Magento\AcceptanceTestFramework\Config\Reader\TestData" type="Magento\AcceptanceTestFramework\Config\Reader\Filesystem">
         <arguments>
             <argument name="fileResolver" xsi:type="object">Magento\AcceptanceTestFramework\Config\FileResolver\Module</argument>
-            <argument name="converter" xsi:type="object">Magento\AcceptanceTestFramework\Config\Converter</argument>
+            <argument name="converter" xsi:type="object">Magento\AcceptanceTestFramework\Config\TestDataConverter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\AcceptanceTestFramework\Config\SchemaLocator\TestData</argument>
             <argument name="idAttributes" xsi:type="array">
                 <item name="/config/cest" xsi:type="string">name</item>
@@ -179,10 +180,29 @@
                 <item name="/config/cest/annotations/group" xsi:type="string">value</item>
                 <item name="/config/cest/annotations/env" xsi:type="string">value</item>
                 <item name="/config/cest/annotations/return" xsi:type="string">value</item>
-                <item name="/config/cest/test/action" xsi:type="string">name</item>
+                <item name="/config/cest/test/(acceptPopup|amOnPage|appendField|assertArraySubset|attachFile|cancelPopup|checkOption|click|clickWithLeftButton|clickWithRightButton|closeTab|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|executeJS|fillField|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabTextFrom|grabValueFrom|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForElement|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForText)" xsi:type="string">mergeKey</item>
             </argument>
             <argument name="fileName" xsi:type="string">*Cest.xml</argument>
             <argument name="defaultScope" xsi:type="string">Cest</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Magento\AcceptanceTestFramework\Test\Config\Dom\ArrayNodeConfig" type="Magento\AcceptanceTestFramework\Config\Dom\ArrayNodeConfig">
+        <arguments>
+            <argument name="assocArrayAttributes" xsi:type="array">
+                <item name="/config/cest/test/(acceptPopup|amOnPage|appendField|assertArraySubset|attachFile|cancelPopup|checkOption|click|clickWithLeftButton|clickWithRightButton|closeTab|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|executeJS|fillField|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabTextFrom|grabValueFrom|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForElement|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForText)" xsi:type="string">mergeKey</item>
+                <item name="/config/cest/test" xsi:type="string">name</item>
+                <item name="/config/cest" xsi:type="string">name</item>
+            </argument>
+            <argument name="numericArrays" xsi:type="array">
+                <item name="/config/cest/annotations/env" xsi:type="string">/config/cest/annotations/env</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Magento\AcceptanceTestFramework\Config\TestDataConverter" type="Magento\AcceptanceTestFramework\Test\Config\Converter\Dom\Flat">
+        <arguments>
+            <argument name="arrayNodeConfig" xsi:type="object">Magento\AcceptanceTestFramework\Test\Config\Dom\ArrayNodeConfig</argument>
         </arguments>
     </virtualType>
 
