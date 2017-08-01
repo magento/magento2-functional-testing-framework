@@ -10,16 +10,16 @@
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="cestType">
-        <xs:sequence>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
             <xs:element type="annotationsType" name="annotations" minOccurs="0"/>
             <xs:element type="testType" name="before" minOccurs="0"/>
             <xs:element type="testType" name="after" minOccurs="0"/>
             <xs:element type="testType" name="test" maxOccurs="unbounded"/>
-        </xs:sequence>
+        </xs:choice>
         <xs:attribute type="xs:string" name="name" use="required"/>
     </xs:complexType>
     <xs:complexType name="annotationsType">
-        <xs:sequence>
+        <xs:choice maxOccurs="unbounded">
             <xs:element type="annotationType" name="env" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="features" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="stories" minOccurs="0" maxOccurs="unbounded"/>
@@ -29,7 +29,7 @@
             <xs:element type="annotationType" name="testCaseId" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="group" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="return" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
+        </xs:choice>
     </xs:complexType>
     <xs:complexType name="annotationType">
         <xs:simpleContent>
@@ -39,7 +39,7 @@
         </xs:simpleContent>
     </xs:complexType>
     <xs:complexType name="testType">
-        <xs:sequence>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
             <xs:element type="annotationsType" name="annotations" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="acceptPopupType" name="acceptPopup" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="amOnPageType" name="amOnPage" minOccurs="0" maxOccurs="unbounded"/>
@@ -129,7 +129,7 @@
             <xs:element type="waitForElementVisibleType" name="waitForElementVisible" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForJSType" name="waitForJS" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForTextType" name="waitForText" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
+        </xs:choice>
         <xs:attribute type="xs:string" name="name"/>
         <xs:attribute type="xs:boolean" name="remove" default="false"/>
     </xs:complexType>
@@ -998,6 +998,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
+                <xs:attribute type="xs:string" name="button"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
                 <xs:attribute type="xs:string" name="before"/>
