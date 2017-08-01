@@ -1,6 +1,6 @@
 <?php
 
-namespace Magento\AcceptanceTestFramework\Test;
+namespace Magento\AcceptanceTestFramework\Test\Objects;
 
 use Magento\AcceptanceTestFramework\Exceptions\XmlException;
 
@@ -10,14 +10,14 @@ class TestObject
     private $orderedSteps = [];
     private $stepsToMerge = [];
     private $parsedSteps = [];
-    private $dependencies = [];
     private $annotations = [];
-    private const STEP_MISSING_ERROR_MSG = "Merge Error - Step could not be found in either TestXML or DeltaXML.\tTest = '%s'\tTestStep='%s'\tLinkedStep'%s'";
+    private const STEP_MISSING_ERROR_MSG =
+        "Merge Error - Step could not be found in either TestXML or DeltaXML.
+        \tTest = '%s'\tTestStep='%s'\tLinkedStep'%s'";
 
-    public function __construct($name, $dependencies, $parsedSteps, $annotations)
+    public function __construct($name, $parsedSteps, $annotations)
     {
         $this->name = $name;
-        $this->dependencies = $dependencies;
         $this->parsedSteps = $parsedSteps;
         $this->annotations = $annotations;
     }
@@ -25,11 +25,6 @@ class TestObject
     public function getName()
     {
         return $this->name;
-    }
-
-    public function getDependencies()
-    {
-        return $this->dependencies;
     }
 
     public function getAnnotations()
@@ -56,9 +51,9 @@ class TestObject
     {
         foreach ($this->parsedSteps as $parsedStep) {
             if ($parsedStep->getLinkedAction()) {
-                $this->stepsToMerge[$parsedStep->getName()] = $parsedStep;
+                $this->stepsToMerge[$parsedStep->getMergeKey()] = $parsedStep;
             } else {
-                $this->orderedSteps[$parsedStep->getName()] = $parsedStep;
+                $this->orderedSteps[$parsedStep->getMergeKey()] = $parsedStep;
             }
         }
     }
@@ -90,8 +85,15 @@ class TestObject
     {
         $linkedStep = $stepToMerge->getLinkedAction();
 
-        if (!array_key_exists($linkedStep, $this->orderedSteps) and !array_key_exists($linkedStep, $this->stepsToMerge)) {
-            throw new XmlException(sprintf(self::STEP_MISSING_ERROR_MSG, $this->getName(), $stepToMerge->getName(), $linkedStep));
+        if (!array_key_exists($linkedStep, $this->orderedSteps)
+            and
+            !array_key_exists($linkedStep, $this->stepsToMerge)) {
+            throw new XmlException(sprintf(
+                self::STEP_MISSING_ERROR_MSG,
+                $this->getName(),
+                $stepToMerge->getMergeKey(),
+                $linkedStep
+            ));
         } elseif (!array_key_exists($linkedStep, $this->orderedSteps)) {
             $this->mergeAction($this->stepsToMerge[$linkedStep]);
         }
@@ -99,7 +101,7 @@ class TestObject
         $position = array_search($linkedStep, array_keys($this->orderedSteps)) + $stepToMerge->getOrderOffset();
         $previous_items = array_slice($this->orderedSteps, 0, $position, true);
         $next_items = array_slice($this->orderedSteps, $position, null, true);
-        $this->orderedSteps = $previous_items + [$stepToMerge->getName() => $stepToMerge] + $next_items;
+        $this->orderedSteps = $previous_items + [$stepToMerge->getMergeKey() => $stepToMerge] + $next_items;
     }
 
 }

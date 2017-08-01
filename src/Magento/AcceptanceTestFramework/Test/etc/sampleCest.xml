@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Test XML Example -->
+
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="testSchema.xsd">
     <cest name="sampleCest">
         <annotations>
-            <env value="chrome"></env>
-            <env value="firefox"></env>
+            <env value="chrome"/>
+            <env value="firefox"/>
         </annotations>
 
         <test name="sampleTest">

@@ -1,20 +1,18 @@
 <?php
 
-namespace Magento\AcceptanceTestFramework\Test;
+namespace Magento\AcceptanceTestFramework\Test\Objects;
 
 class CestObject
 {
     private $name;
     private $hooks = [];
     private $annotations = [];
-    private $useStatements = [];
     private $tests = [];
 
-    public function __construct($name, $annotations, $useStatements, $tests, $hooks)
+    public function __construct($name, $annotations, $tests, $hooks)
     {
         $this->name = $name;
         $this->annotations = $annotations;
-        $this->useStatements = $useStatements;
         $this->tests = $tests;
         $this->hooks = $hooks;
     }
@@ -29,11 +27,6 @@ class CestObject
         return $this->annotations;
     }
 
-    public function getUseStatements()
-    {
-        return $this->useStatements;
-    }
-
     public function getTests()
     {
         return $this->tests;
@@ -44,5 +37,3 @@ class CestObject
         return $this->hooks;
     }
 }
-
-
