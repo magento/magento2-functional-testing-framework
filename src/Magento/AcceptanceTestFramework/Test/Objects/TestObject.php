@@ -39,6 +39,7 @@ class TestObject
     public function getOrderedActions()
     {
         $this->mergeActions();
+        $this->insertWaits();
         return $this->orderedSteps;
     }
 
@@ -50,6 +51,7 @@ class TestObject
     private function sortActions()
     {
         foreach ($this->parsedSteps as $parsedStep) {
+            $parsedStep->resolveReferences();
             if ($parsedStep->getLinkedAction()) {
                 $this->stepsToMerge[$parsedStep->getMergeKey()] = $parsedStep;
             } else {
@@ -98,10 +100,30 @@ class TestObject
             $this->mergeAction($this->stepsToMerge[$linkedStep]);
         }
 
-        $position = array_search($linkedStep, array_keys($this->orderedSteps)) + $stepToMerge->getOrderOffset();
+        $this->insertStep($stepToMerge);
+    }
+
+    /**
+     * Runs through the prepared orderedSteps and calls insertWait if a step requires a wait after it.
+     * @return void
+     */
+    private function insertWaits()
+    {
+        foreach ($this->orderedSteps as $step) {
+
+            if ($step->getTimeout()) {
+                $waitStepAttributes = array('timeout' => $step->getTimeout());
+                $waitStep = new ActionObject($step->getMergeKey() . 'WaitForPageLoad', 'waitForPageLoad', $waitStepAttributes, $step->getMergeKey(), 'after');
+                $this->insertStep($waitStep);
+            }
+        }
+    }
+
+    private function insertStep($stepToMerge)
+    {
+        $position = array_search($stepToMerge->getLinkedAction(), array_keys($this->orderedSteps)) + $stepToMerge->getOrderOffset();
         $previous_items = array_slice($this->orderedSteps, 0, $position, true);
         $next_items = array_slice($this->orderedSteps, $position, null, true);
         $this->orderedSteps = $previous_items + [$stepToMerge->getMergeKey() => $stepToMerge] + $next_items;
     }
-
 }
