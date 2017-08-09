@@ -4,6 +4,7 @@ namespace Magento\AcceptanceTestFramework\Test\Objects;
 
 use Magento\AcceptanceTestFramework\PageObject\Page\Page;
 use Magento\AcceptanceTestFramework\PageObject\Section\Section;
+use Magento\AcceptanceTestFramework\DataGenerator\Managers\DataManager;
 
 class ActionObject
 {
@@ -67,39 +68,151 @@ class ActionObject
     }
 
     /**
-     * Resolves all references
+     * Populate the resolved custom attributes array with lookup values for the following attributes:
+     *
+     *   selector
+     *   url
+     *   userInput
+     *
+     * @return void
      */
     public function resolveReferences()
     {
-        if(empty($this->resolvedCustomAttributes)){
-            $this->resolveSelectorReference();
+        if (empty($this->resolvedCustomAttributes)) {
+            $this->resolveSelectorReferenceAndTimeout();
             $this->resolveUrlReference();
+            $this->resolveUserInputReference();
         }
     }
 
     /**
-     * Checks if selector is an attribute, and if the selector refers to a defined section.
-     * If not, assume selector is CSS/xpath literal and leave it be.
+     * Look up the selector for SomeSectionName.ElementName and set it as the selector attribute in the
+     * resolved custom attributes. Also set the timeout value.
+     *
+     * e.g. {{SomeSectionName.ElementName}} becomes #login-button
+     *
+     * @return void
      */
-    private function resolveSelectorReference()
+    private function resolveSelectorReferenceAndTimeout()
     {
-        if(array_key_exists('selector', $this->actionAttributes)
-            and array_key_exists(strtok($this->actionAttributes['selector'], '.'), Section::getSection()) ) {
-            list($section, $element) = explode('.', $this->actionAttributes['selector']);
-            $this->resolvedCustomAttributes['selector'] = Section::getElementLocator($section, $element);
-            $this->timeout = Section::getElementTimeOut($section, $element);
+        if (!array_key_exists('selector', $this->actionAttributes)) {
+            return;
         }
+        $selector = $this->actionAttributes['selector'];
+
+        $reference = $this->findReference($selector);
+        if ($reference == null) {
+            // Nothing to replace
+            return;
+        }
+
+        list($sectionName, $elementName) = $this->stripAndSplitReference($reference);
+        $section = Section::getSection($sectionName);
+        if ($section == null) {
+            // Bad section reference
+            return;
+        }
+        $replacement = Section::getElementLocator($sectionName, $elementName);
+
+        $this->resolvedCustomAttributes['selector'] = str_replace($reference, $replacement, $selector);
+        $this->timeout = Section::getElementTimeOut($sectionName, $elementName);
     }
 
     /**
-     * Checks if url is an attribute, and if the url given is a defined page.
-     * If not, assume url is literal and leave it be.
+     * Look up the url for SomePageName and set it, with MAGENTO_BASE_URL prepended, as the url attribute in the
+     * resolved custom attributes.
+     *
+     * e.g. {{SomePageName}} becomes http://localhost:76543/some/url
+     *
+     * @return void
      */
     private function resolveUrlReference()
     {
-        if (array_key_exists('url', $this->actionAttributes)
-            and array_key_exists($this->actionAttributes['url'], Page::getPage())) {
-            $this->resolvedCustomAttributes['url'] = $_ENV['MAGENTO_BASE_URL'] . Page::getPageUrl($this->actionAttributes['url']);
+        if (!array_key_exists('url', $this->actionAttributes)) {
+            return;
+        }
+        $url = $this->actionAttributes['url'];
+
+        $reference = $this->findReference($url);
+        if ($reference == null) {
+            // Nothing to replace
+            return;
+        }
+
+        list($pageName) = $this->stripAndSplitReference($reference);
+        $page = Page::getPage($pageName);
+        if ($page == null) {
+            // Bad page reference
+            return;
+        }
+        $replacement = $_ENV['MAGENTO_BASE_URL'] . Page::getPageUrl($pageName);
+
+        $this->resolvedCustomAttributes['url'] = str_replace($reference, $replacement, $url);
+    }
+
+
+    /**
+     * Look up the value for EntityDataObjectName.Key and set it as the userInput attribute in the resolved custom
+     * attributes.
+     *
+     * e.g. {{CustomerEntityFoo.FirstName}} becomes Jerry
+     *
+     * @return void
+     */
+    private function resolveUserInputReference()
+    {
+        if (!array_key_exists('userInput', $this->actionAttributes)) {
+            return;
+        }
+        $userInput = $this->actionAttributes['userInput'];
+
+        $reference = $this->findReference($userInput);
+        if ($reference == null) {
+            // Nothing to replace
+            return;
+        }
+
+        list($entityName, $entityKey) = $this->stripAndSplitReference($userInput);
+        $entityObj = DataManager::getInstance()->getEntity($entityName);
+        if ($entityObj == null) {
+            // Bad entity reference
+            return;
+        }
+
+        $replacement = $entityObj->getDataByName($entityKey);
+        if ($replacement == null) {
+            // Bad entity.key reference
+            return;
+        }
+
+        $this->resolvedCustomAttributes['userInput'] = str_replace($reference, $replacement, $userInput);
+    }
+
+    /**
+     * Return an array containing the name (before the period) and key (after the period) in a {{reference.foo}}.
+     *
+     * @param string $reference
+     * @return string[] The name and key that is referenced.
+     */
+    private function stripAndSplitReference($reference)
+    {
+        $strippedReference = str_replace('}}', '', str_replace('{{', '', $reference));
+        return explode('.', $strippedReference);
+    }
+
+    /**
+     * Return a {{reference.foo}} if it exists in the string.
+     *
+     * @param string $str
+     * @return string|null
+     */
+    private function findReference($str)
+    {
+        preg_match('/{{[\w.]+}}/', $str, $matches);
+        if (empty($matches)) {
+            return null;
+        } else {
+            return $matches[0];
         }
     }
 }
