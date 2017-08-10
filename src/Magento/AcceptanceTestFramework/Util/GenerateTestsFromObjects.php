@@ -25,8 +25,7 @@ function createCestFile($cestPhp, $filename)
     $exportDirectory = TESTS_BP . "/tests/acceptance/Magento/AcceptanceTest/_generated";
     $exportFilePath  = sprintf("%s/%s.php", $exportDirectory, $filename);
 
-    if (!is_dir($exportDirectory))
-    {
+    if (!is_dir($exportDirectory)) {
         mkdir($exportDirectory, 0777, true);
     }
 
@@ -61,7 +60,7 @@ function createAllCestFiles()
  */
 function assembleCestPhp($cestObject)
 {
-    $usePhp              = generateUseStatementsPhp();
+    $usePhp              = generateUseStatementsPhp($cestObject);
     $classAnnotationsPhp = generateClassAnnotationsPhp($cestObject->getAnnotations());
     $className           = $cestObject->getName();
     $className           = str_replace(' ', '', $className);
@@ -104,11 +103,37 @@ function assembleAllCestPhp()
 /**
  * Creates a PHP string for the necessary Allure and AcceptanceTester use statements.
  * Since we don't support other dependencies at this time, this function takes no parameter.
+ * @param $cestObject
  * @return string
  */
-function generateUseStatementsPhp()
+function generateUseStatementsPhp($cestObject)
 {
+    $hooks = $cestObject->getHooks();
+    $data  = false;
+
+    /**
+     * Loop over each Hook object, loop over each Step in the Hook object looking for a createData or deleteData.
+     * If they are present set a variable to True so the PHP generator uses $this->_____->createData() instead of $______->createData().
+     */
+    foreach ($hooks as $hook) {
+        if (!$data) {
+            $steps = $hook->getActions();
+
+            foreach ($steps as $step) {
+                if ($step->getType() === "createData" || $step->getType() === "deleteData") {
+                    $data = true;
+                    break;
+                }
+            }
+        }
+    }
+
     $useStatementsPhp = "use Magento\AcceptanceTestFramework\AcceptanceTester;\n";
+
+    if ($data) {
+        $useStatementsPhp .= "use Magento\AcceptanceTestFramework\DataGenerator\Managers\DataManager;\n";
+        $useStatementsPhp .= "use Magento\AcceptanceTestFramework\DataGenerator\Api\EntityApiHandler;\n";
+    }
 
     $allureStatements = ["Yandex\Allure\Adapter\Annotation\Features;",
         "Yandex\Allure\Adapter\Annotation\Stories;",
@@ -138,16 +163,14 @@ function generateClassAnnotationsPhp($classAnnotationsObject)
 
     foreach ($classAnnotationsObject as $annotationType => $annotationName)
     {
-        if ($annotationType == "features")
-        {
+        if ($annotationType == "features") {
             $features = "";
 
             foreach ($annotationName as $name)
             {
                 $features .= sprintf("\"%s\"", $name);
 
-                if (next($annotationName))
-                {
+                if (next($annotationName)) {
                     $features .= ", ";
                 }
             }
@@ -155,16 +178,14 @@ function generateClassAnnotationsPhp($classAnnotationsObject)
             $classAnnotationsPhp .= sprintf(" * @Features({%s})\n", $features);
         }
 
-        if ($annotationType == "stories")
-        {
+        if ($annotationType == "stories") {
             $stories = "";
 
             foreach ($annotationName as $name)
             {
                 $stories .= sprintf("\"%s\"", $name);
 
-                if (next($annotationName))
-                {
+                if (next($annotationName)) {
                     $stories .= ", ";
                 }
             }
@@ -172,36 +193,30 @@ function generateClassAnnotationsPhp($classAnnotationsObject)
             $classAnnotationsPhp .= sprintf(" * @Stories({%s})\n", $stories);
         }
 
-        if ($annotationType == "title")
-        {
-            $classAnnotationsPhp .= sprintf(" * @Title(\"%s\")\n", $annotationName[0]);
+        if ($annotationType == "title") {
+            $classAnnotationsPhp .= sprintf(" * @Title(\"%s\")\n", ucwords($annotationType), $annotationName[0]);
         }
 
-        if ($annotationType == "description")
-        {
+        if ($annotationType == "description") {
             $classAnnotationsPhp .= sprintf(" * @Description(\"%s\")\n", $annotationName[0]);
         }
 
-        if ($annotationType == "severity")
-        {
+        if ($annotationType == "severity") {
             $classAnnotationsPhp .= sprintf(" * @Severity(level = SeverityLevel::%s)\n", $annotationName[0]);
         }
 
-        if ($annotationType == "testCaseId")
-        {
+        if ($annotationType == "testCaseId") {
             $classAnnotationsPhp .= sprintf(" * TestCaseId(\"%s\")", $annotationName[0]);
         }
 
-        if ($annotationType == "group")
-        {
+        if ($annotationType == "group") {
             foreach ($annotationName as $group)
             {
                 $classAnnotationsPhp .= sprintf(" * @group %s\n", $group);
             }
         }
 
-        if ($annotationType == "env")
-        {
+        if ($annotationType == "env") {
             foreach ($annotationName as $env)
             {
                 $classAnnotationsPhp .= sprintf(" * @env %s\n", $env);
@@ -219,9 +234,10 @@ function generateClassAnnotationsPhp($classAnnotationsObject)
  * Since nearly half of all Codeception methods don't share the same signature I had to setup a massive Case statement to handle each unique action.
  * At the bottom of the case statement there is a generic function that can construct the PHP string for nearly half of all Codeception actions.
  * @param $stepsObject
+ * @param $hookObject
  * @return string
  */
-function generateStepsPhp($stepsObject)
+function generateStepsPhp($stepsObject, $hookObject = false)
 {
     $testSteps = "";
 
@@ -318,6 +334,29 @@ function generateStepsPhp($stepsObject)
                     $testSteps .= sprintf("\t\t$%s->%s(%s, %s, %s);\n", $actor, $actionName, $selector, $x, $y);
                 } else {
                     $testSteps .= sprintf("\t\t$%s->%s(null, %s, %s);\n", $actor, $actionName, $x, $y);
+                }
+                break;
+            case "createData":
+                $entity = $customActionAttributes['entity'];
+                $key    = $steps->getMergeKey();
+
+                if ($hookObject) {
+                    $testSteps .= sprintf("\t\t$%s = DataManager::getInstance()->getEntity(\"%s\");\n", $entity, $entity);
+                    $testSteps .= sprintf("\t\t\$this->%s = new EntityApiHandler($%s);\n", $key, $entity);
+                    $testSteps .= sprintf("\t\t\$this->%s->createEntity();\n", $key);
+                } else {
+                    $testSteps .= sprintf("\t\t$%s = DataManager::getInstance()->getEntity(\"%s\");\n", $entity, $entity);
+                    $testSteps .= sprintf("\t\t$%s = new EntityApiHandler($%s);\n", $key, $entity);
+                    $testSteps .= sprintf("\t\t$%s->createEntity();\n", $key);
+                }
+                break;
+            case "deleteData":
+                $key = $customActionAttributes['createDataKey'];
+
+                if ($hookObject) {
+                    $testSteps .= sprintf("\t\t\$this->%s->deleteEntity();\n", $key);
+                } else {
+                    $testSteps .= sprintf("\t\t$%s->deleteEntity();\n", $key);
                 }
                 break;
             case "dontSee":
@@ -649,23 +688,34 @@ function generateStepsPhp($stepsObject)
  */
 function generateHooksPhp($hookObjects)
 {
-    $hooks = "";
+    $hooks      = "";
+    $createData = false;
     foreach ($hookObjects as $hookObject)
     {
         $type         = $hookObject->getType();
         $dependencies = 'AcceptanceTester $I';
-        $steps        = generateStepsPhp($hookObject->getActions());
 
-        if ($type == "after")
+        foreach ($hookObject->getActions() as $step)
         {
+            if ($step->getType() == "createData") {
+                $hooks .= "\t/**\n";
+                $hooks .= sprintf("\t  * @var EntityApiHandler $%s;\n", $step->getMergeKey());
+                $hooks .= "\t */\n";
+                $hooks .= sprintf("\tprotected $%s;\n\n", $step->getMergeKey());
+                $createData = true;
+            }
+        }
+
+        $steps = generateStepsPhp($hookObject->getActions(), $createData);
+
+        if ($type == "after") {
             $hooks .= sprintf("\tpublic function _after(%s)\n", $dependencies);
             $hooks .= "\t{\n";
             $hooks .= $steps;
             $hooks .= "\t}\n\n";
         }
 
-        if ($type == "before")
-        {
+        if ($type == "before") {
             $hooks .= sprintf("\tpublic function _before(%s)\n", $dependencies);
             $hooks .= "\t{\n";
             $hooks .= $steps;
@@ -689,16 +739,14 @@ function generateTestAnnotationsPhp($testAnnotationsObject)
 
     foreach ($testAnnotationsObject as $annotationType => $annotationName)
     {
-        if ($annotationType == "features")
-        {
+        if ($annotationType == "features") {
             $features = "";
 
             foreach ($annotationName as $name)
             {
                 $features .= sprintf("\"%s\"", $name);
 
-                if (next($annotationName))
-                {
+                if (next($annotationName)) {
                     $features .= ", ";
                 }
             }
@@ -706,16 +754,14 @@ function generateTestAnnotationsPhp($testAnnotationsObject)
             $testAnnotationsPhp .= sprintf("\t * @Features({%s})\n", $features);
         }
 
-        if ($annotationType == "stories")
-        {
+        if ($annotationType == "stories") {
             $stories = "";
 
             foreach ($annotationName as $name)
             {
                 $stories .= sprintf("\"%s\"", $name);
 
-                if (next($annotationName))
-                {
+                if (next($annotationName)) {
                     $stories .= ", ";
                 }
             }
@@ -723,23 +769,19 @@ function generateTestAnnotationsPhp($testAnnotationsObject)
             $testAnnotationsPhp .= sprintf("\t * @Stories({%s})\n", $stories);
         }
 
-        if ($annotationType == "title")
-        {
+        if ($annotationType == "title") {
             $testAnnotationsPhp .= sprintf("\t * @Title(\"%s\")\n", $annotationName[0]);
         }
 
-        if ($annotationType == "description")
-        {
+        if ($annotationType == "description") {
             $testAnnotationsPhp .= sprintf("\t * @Description(\"%s\")\n", $annotationName[0]);
         }
 
-        if ($annotationType == "severity")
-        {
+        if ($annotationType == "severity") {
             $testAnnotationsPhp .= sprintf("\t * @Severity(level = SeverityLevel::%s)\n", $annotationName[0]);
         }
 
-        if ($annotationType == "testCaseId")
-        {
+        if ($annotationType == "testCaseId") {
             $testAnnotationsPhp .= sprintf("\t * @TestCaseId(\"%s\")\n", $annotationName[0]);
         }
     }
@@ -747,16 +789,14 @@ function generateTestAnnotationsPhp($testAnnotationsObject)
     $testAnnotationsPhp .= sprintf("\t * @Parameter(name = \"%s\", value=\"$%s\")\n", "AcceptanceTester", "I");
 
     foreach ($testAnnotationsObject as $annotationType => $annotationName) {
-        if ($annotationType == "group")
-        {
+        if ($annotationType == "group") {
             foreach ($annotationName as $name)
             {
                 $testAnnotationsPhp .= sprintf("\t * @group %s\n", $name);
             }
         }
 
-        if ($annotationType == "env")
-        {
+        if ($annotationType == "env") {
             foreach ($annotationName as $env)
             {
                 $testAnnotationsPhp .= sprintf("\t * @env %s\n", $env);
@@ -795,8 +835,7 @@ function generateTestsPhp($testsObject)
         $testPhp        .= $steps;
         $testPhp        .= "\t}\n";
 
-        if (sizeof($testsObject) > 1)
-        {
+        if (sizeof($testsObject) > 1) {
             $testPhp .= "\n";
         }
     }
