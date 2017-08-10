@@ -2,6 +2,8 @@
 namespace Magento\AcceptanceTestFramework\Module;
 
 use Codeception\Module\WebDriver;
+use Codeception\Test\Descriptor;
+use Codeception\TestInterface;
 use Facebook\WebDriver\WebDriverSelect;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\Exception\NoSuchElementException;
@@ -10,6 +12,7 @@ use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Util\Uri;
 use Codeception\Util\ActionSequence;
+use Yandex\Allure\Adapter\Support\AttachmentSupport;
 
 /**
  * MagentoWebDriver module provides common Magento web actions through Selenium WebDriver.
@@ -31,6 +34,7 @@ use Codeception\Util\ActionSequence;
  */
 class MagentoWebDriver extends WebDriver
 {
+    use AttachmentSupport;
     public static $loadingMask = '.loading-mask';
 
     /**
@@ -275,5 +279,24 @@ class MagentoWebDriver extends WebDriver
     public function scrollToTopOfPage()
     {
         $this->executeJS('window.scrollTo(0,0);');
+    }
+
+    /**
+     * Override for _failed method in Codeception method. Adds png and html attachments to allure report
+     * following parent execution of test failure processing.
+     * @param TestInterface $test
+     * @param \Exception $fail
+     */
+    public function _failed(TestInterface $test, $fail)
+    {
+        parent::_failed($test, $fail);
+
+        // Reconstruct file naming from codeception method
+        $filename = preg_replace('~\W~', '.', Descriptor::getTestSignature($test));
+        $outputDir = codecept_output_dir();
+        $pngReport = $outputDir . mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png';
+        $htmlReport = $outputDir . mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html';
+        $this->addAttachment($pngReport, $test->getMetadata()->getName() . '.png', 'image/png');
+        $this->addAttachment($htmlReport, $test->getMetadata()->getName() . '.html', 'text/html');
     }
 }
