@@ -3,12 +3,23 @@
 use Magento\AcceptanceTestFramework\Test\Managers\CestArrayProcessor;
 require_once '../../../../bootstrap.php';
 
+/**
+ * Load all Cest files as Objects using the Cest Array Processor.
+ * @return array
+ */
 function loadAllCestObjects()
 {
     $cestOutput = CestArrayProcessor::getInstance()->getCestData();
     return $cestOutput;
 }
 
+/**
+ * Create a single PHP file containing the $cestPhp using the $filename.
+ * If the _generated directory doesn't exist it will be created.
+ * @param $cestPhp
+ * @param $filename
+ * @throws Exception
+ */
 function createCestFile($cestPhp, $filename)
 {
     $exportDirectory = TESTS_BP . "/tests/acceptance/Magento/AcceptanceTest/_generated";
@@ -19,11 +30,19 @@ function createCestFile($cestPhp, $filename)
         mkdir($exportDirectory, 0777, true);
     }
 
-    $file = fopen($exportFilePath, 'w') or die('Unable to open file!');
+    $file = fopen($exportFilePath, 'w');
+
+    if (! $file) {
+        throw new Exception("Could not open the file!");
+    }
+
     fwrite($file, $cestPhp);
     fclose($file);
 }
 
+/**
+ * Assemble ALL PHP strings using the assembleAllCestPhp function. Loop over and pass each array item to the createCestFile function.
+ */
 function createAllCestFiles()
 {
     $cestPhpArray = assembleAllCestPhp();
@@ -34,11 +53,18 @@ function createAllCestFiles()
     }
 }
 
+/**
+ * Assemble the entire PHP string for a single Test based on a Cest Object.
+ * Create all of the PHP strings for a Test. Concatenate the strings together.
+ * @param $cestObject
+ * @return string
+ */
 function assembleCestPhp($cestObject)
 {
     $usePhp              = generateUseStatementsPhp();
     $classAnnotationsPhp = generateClassAnnotationsPhp($cestObject->getAnnotations());
     $className           = $cestObject->getName();
+    $className           = str_replace(' ', '', $className);
     $hookPhp             = generateHooksPhp($cestObject->getHooks());
     $testsPhp            = generateTestsPhp($cestObject->getTests());
 
@@ -55,6 +81,10 @@ function assembleCestPhp($cestObject)
     return $cestPhp;
 }
 
+/**
+ * Load ALL Cest objects. Loop over and pass each to the assembleCestPhp function.
+ * @return array
+ */
 function assembleAllCestPhp()
 {
     $cestObjects  = loadAllCestObjects();
@@ -63,6 +93,7 @@ function assembleAllCestPhp()
     foreach ($cestObjects as $cest)
     {
         $name = $cest->getName();
+        $name = $string = str_replace(' ', '', $name);
         $php  = assembleCestPhp($cest);
         $cestPhpArray[] = [$name, $php];
     }
@@ -70,6 +101,11 @@ function assembleAllCestPhp()
     return $cestPhpArray;
 }
 
+/**
+ * Creates a PHP string for the necessary Allure and AcceptanceTester use statements.
+ * Since we don't support other dependencies at this time, this function takes no parameter.
+ * @return string
+ */
 function generateUseStatementsPhp()
 {
     $useStatementsPhp = "use Magento\AcceptanceTestFramework\AcceptanceTester;\n";
@@ -91,6 +127,11 @@ function generateUseStatementsPhp()
     return $useStatementsPhp;
 }
 
+/**
+ * Creates a PHP string for the Class Annotations block if the Cest file contains an <annotations> block, outside of the <test> blocks.
+ * @param $classAnnotationsObject
+ * @return string
+ */
 function generateClassAnnotationsPhp($classAnnotationsObject)
 {
     $classAnnotationsPhp = "/**\n";
@@ -133,7 +174,7 @@ function generateClassAnnotationsPhp($classAnnotationsObject)
 
         if ($annotationType == "title")
         {
-            $classAnnotationsPhp .= sprintf(" * @Title(\"%s\")\n", ucwords($annotationType), $annotationName[0]);
+            $classAnnotationsPhp .= sprintf(" * @Title(\"%s\")\n", $annotationName[0]);
         }
 
         if ($annotationType == "description")
@@ -173,67 +214,77 @@ function generateClassAnnotationsPhp($classAnnotationsObject)
     return $classAnnotationsPhp;
 }
 
+/**
+ * Creates a PHP string for the actions contained withing a <test> block.
+ * Since nearly half of all Codeception methods don't share the same signature I had to setup a massive Case statement to handle each unique action.
+ * At the bottom of the case statement there is a generic function that can construct the PHP string for nearly half of all Codeception actions.
+ * @param $stepsObject
+ * @return string
+ */
 function generateStepsPhp($stepsObject)
 {
     $testSteps = "";
 
     foreach ($stepsObject as $steps)
     {
-        $actor          = "I";
-        $actionName     = $steps->getType();
-        $selector       = null;
-        $input          = null;
-        $parameterArray = null;
-        $returnVariable = null;
-        $x              = null;
-        $y              = null;
-        $html           = null;
-        $url            = null;
-        $function       = null;
-        $time           = null;
+        $actor                  = "I";
+        $actionName             = $steps->getType();
+        $customActionAttributes = $steps->getCustomActionAttributes();
+        $selector               = null;
+        $input                  = null;
+        $parameterArray         = null;
+        $returnVariable         = null;
+        $x                      = null;
+        $y                      = null;
+        $html                   = null;
+        $url                    = null;
+        $function               = null;
+        $time                   = null;
 
-        if (isset($steps->getCustomActionAttributes()['returnVariable'])) {
-            $returnVariable = $steps->getCustomActionAttributes()['returnVariable'];
+        if (isset($customActionAttributes['returnVariable'])) {
+            $returnVariable = $customActionAttributes['returnVariable'];
         }
 
-        if (isset($steps->getCustomActionAttributes()['url']) && isset($steps->getCustomActionAttributes()['userInput'])) {
-            $input = sprintf("\"%s\"", $steps->getCustomActionAttributes()['userInput']);
-        } else if (isset($steps->getCustomActionAttributes()['userInput'])) {
-            $input = sprintf("\"%s\"", $steps->getCustomActionAttributes()['userInput']);
-        } else if (isset($steps->getCustomActionAttributes()['url'])) {
-            $input = sprintf("\"%s\"", $steps->getCustomActionAttributes()['url']);
-        } else if (isset($steps->getCustomActionAttributes()['time'])) {
-            $input = sprintf("\"%s\"", $steps->getCustomActionAttributes()['time']);
+        if (isset($customActionAttributes['url']) && isset($customActionAttributes['userInput'])) {
+            $input = sprintf("\"%s\"", $customActionAttributes['userInput']);
+        } else if (isset($customActionAttributes['userInput'])) {
+            $input = sprintf("\"%s\"", $customActionAttributes['userInput']);
+        } else if (isset($customActionAttributes['url'])) {
+            $input = sprintf("\"%s\"", $customActionAttributes['url']);
+        } else if (isset($customActionAttributes['time'])) {
+            $input = sprintf("\"%s\"", $customActionAttributes['time']);
         }
 
-        if (isset($steps->getCustomActionAttributes()['parameterArray'])) {
-            $parameterArray = $steps->getCustomActionAttributes()['parameterArray'];
+        if (isset($customActionAttributes['parameterArray'])) {
+            $parameterArray = $customActionAttributes['parameterArray'];
         }
 
-        if (isset($steps->getCustomActionAttributes()['selectorArray'])) {
-            $selector = sprintf("%s", $steps->getCustomActionAttributes()['selectorArray']);
-        } else if (isset($steps->getCustomActionAttributes()['selector'])) {
-            $selector = sprintf("\"%s\"", $steps->getCustomActionAttributes()['selector']);
+        if (isset($customActionAttributes['selectorArray'])) {
+            $selector = sprintf("%s", $customActionAttributes['selectorArray']);
+        } else if (isset($customActionAttributes['selector'])) {
+            $selector = sprintf("\"%s\"", $customActionAttributes['selector']);
         }
 
-        if (isset($steps->getCustomActionAttributes()['x'])) {
-            $x = $steps->getCustomActionAttributes()['x'];
+        if (isset($customActionAttributes['x'])) {
+            $x = $customActionAttributes['x'];
         }
 
-        if (isset($steps->getCustomActionAttributes()['y'])) {
-            $y = $steps->getCustomActionAttributes()['y'];
+        if (isset($customActionAttributes['y'])) {
+            $y = $customActionAttributes['y'];
         }
 
-        if (isset($steps->getCustomActionAttributes()['function'])) {
-            $function = $steps->getCustomActionAttributes()['function'];
+        if (isset($customActionAttributes['function'])) {
+            $function = $customActionAttributes['function'];
         }
 
-        if (isset($steps->getCustomActionAttributes()['html'])) {
-            $html = $steps->getCustomActionAttributes()['html'];
+        if (isset($customActionAttributes['html'])) {
+            $html = $customActionAttributes['html'];
         }
 
-        if (isset($steps->getCustomActionAttributes()['time'])) {
-            $time = $steps->getCustomActionAttributes()['time'];
+        if (isset($customActionAttributes['time'])) {
+            $time = $customActionAttributes['time'];
+        } else if (isset($customActionAttributes['timeout'])) {
+            $time = $customActionAttributes['timeout'];
         }
 
         switch ($actionName) {
@@ -317,14 +368,14 @@ function generateStepsPhp($stepsObject)
                 $testSteps .= sprintf("\t\t$%s->%s(\"%s\");\n", $actor, $actionName, $html);
                 break;
             case "dontSeeLink":
-                if (isset($steps->getCustomActionAttributes()['url'])) {
-                    $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\");\n", $actor, $actionName, $input, $steps->getCustomActionAttributes()['url']);
+                if (isset($customActionAttributes['url'])) {
+                    $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\");\n", $actor, $actionName, $input, $customActionAttributes['url']);
                 } else {
                     $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
                 }
                 break;
             case "dragAndDrop":
-                $testSteps .= sprintf("\t\t$%s->%s(\"%s\", \"%s\");\n", $actor, $actionName, $steps->getCustomActionAttributes()['selector1'], $steps->getCustomActionAttributes()['selector2']);
+                $testSteps .= sprintf("\t\t$%s->%s(\"%s\", \"%s\");\n", $actor, $actionName, $customActionAttributes['selector1'], $customActionAttributes['selector2']);
                 break;
             case "executeInSelenium":
                 $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $function);
@@ -334,6 +385,13 @@ function generateStepsPhp($stepsObject)
                 break;
             case "fillField":
                 $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $input);
+                break;
+            case "formatMoney":
+                if (isset($customActionAttributes['locale'])) {
+                    $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\");\n", $actor, $actionName, $input, $customActionAttributes['locale']);
+                } else {
+                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
+                }
                 break;
             case "grabCookie":
                 if (isset($returnVariable)) {
@@ -372,6 +430,13 @@ function generateStepsPhp($stepsObject)
                     $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $selector);
                 }
                 break;
+            case "loginAsAdmin":
+                if (isset($customActionAttributes['username']) && isset($customActionAttributes['password'])) {
+                    $testSteps .= sprintf("\t\t$%s->%s(\"%s\", \"%s\");\n", $actor, $actionName, $customActionAttributes['username'], $customActionAttributes['password']);
+                } else {
+                    $testSteps .= sprintf("\t\t$%s->%s();\n", $actor, $actionName);
+                }
+                break;
             case "moveMouseOver":
                 if ($selector) {
                     if (isset($step['x']) || isset($step['y'])) {
@@ -381,6 +446,13 @@ function generateStepsPhp($stepsObject)
                     }
                 } else {
                     $testSteps .= sprintf("\t\t$%s->%s(null, %s, %s);\n", $actor, $actionName, $x, $y);
+                }
+                break;
+            case "mSetLocale":
+                if (isset($customActionAttributes['locale'])) {
+                    $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\");\n", $actor, $actionName, $input, $customActionAttributes['locale']);
+                } else {
+                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
                 }
                 break;
             case "performOn":
@@ -401,13 +473,20 @@ function generateStepsPhp($stepsObject)
                 }
                 break;
             case "resizeWindow":
-                $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $steps->getCustomActionAttributes()['width'], $steps->getCustomActionAttributes()['height']);
+                $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $customActionAttributes['width'], $customActionAttributes['height']);
                 break;
             case "scrollTo":
                 $testSteps .= sprintf("\t\t$%s->%s(%s, %s, %s);\n", $actor, $actionName, $selector, $x, $y);
                 break;
+            case "searchAndMultiSelectOption":
+                if (isset($customActionAttributes['requiredAction'])) {
+                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s, %s);\n", $actor, $actionName, $selector, $customActionAttributes['parameterArray'], $customActionAttributes['requiredAction']);
+                } else {
+                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $customActionAttributes['parameterArray']);
+                }
+                break;
             case "see":
-                if (isset($steps->getCustomActionAttributes()['selector'])) {
+                if (isset($customActionAttributes['selector'])) {
                     $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $input, $selector);
                 } else {
                     $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
@@ -457,13 +536,13 @@ function generateStepsPhp($stepsObject)
                 break;
             case "seeLink":
                 if (isset($step['url'])) {
-                    $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\");\n", $actor, $actionName, $input, $steps->getCustomActionAttributes()['url']);
+                    $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\");\n", $actor, $actionName, $input, $customActionAttributes['url']);
                 } else {
                     $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
                 }
                 break;
             case "seeNumberOfElements":
-                $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $steps->getCustomActionAttributes()['userInput']);
+                $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $customActionAttributes['userInput']);
                 break;
             case "selectOption":
                 if ($parameterArray) {
@@ -474,20 +553,27 @@ function generateStepsPhp($stepsObject)
                 break;
             case "setCookie":
                 if ($parameterArray) {
-                    $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\", %s);\n", $actor, $actionName, $input, $steps->getCustomActionAttributes()['value'], $parameterArray);
+                    $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\", %s);\n", $actor, $actionName, $input, $customActionAttributes['value'], $parameterArray);
                 } else {
-                    $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\");\n", $actor, $actionName, $input, $steps->getCustomActionAttributes()['value']);
+                    $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\");\n", $actor, $actionName, $input, $customActionAttributes['value']);
                 }
                 break;
             case "submitForm":
                 if (isset($step['button'])) {
-                    $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\", \"%s\");\n", $actor, $actionName, $selector, $parameterArray, $steps->getCustomActionAttributes()['button']);
+                    $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\", \"%s\");\n", $actor, $actionName, $selector, $parameterArray, $customActionAttributes['button']);
                 } else {
                     $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\");\n", $actor, $actionName, $selector, $parameterArray);
                 }
                 break;
             case "wait":
                 $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $time);
+                break;
+            case "waitForAjaxLoad":
+                if ($input) {
+                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $time);
+                } else {
+                    $testSteps .= sprintf("\t\t$%s->%s();\n", $actor, $actionName);
+                }
                 break;
             case "waitForElement":
                 $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $time);
@@ -497,6 +583,13 @@ function generateStepsPhp($stepsObject)
                 break;
             case "waitForJS":
                 $testSteps .= sprintf("\t\t$%s->%s(\"%s\", %s);\n", $actor, $actionName, $function, $time);
+                break;
+            case "waitForPageLoad":
+                if ($time) {
+                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $time);
+                } else {
+                    $testSteps .= sprintf("\t\t$%s->%s();\n", $actor, $actionName);
+                }
                 break;
             case "waitForText":
                 if ($selector) {
@@ -508,36 +601,36 @@ function generateStepsPhp($stepsObject)
             default:
                 if ($returnVariable) {
                     if ($selector) {
-                        if (isset($steps->getCustomActionAttributes()['userInput'])) {
-                            $testSteps .= sprintf("\t\t$%s = $%s->%s(%s, \"%s\");\n", $returnVariable, $actor, $actionName, $selector, $steps->getCustomActionAttributes()['userInput']);
-                        } else if (isset($steps->getCustomActionAttributes()['parameter'])) {
-                            $testSteps .= sprintf("\t\t$%s = $%s->%s(%s, %s);\n", $returnVariable, $actor, $actionName, $selector, $steps->getCustomActionAttributes()['parameter']);
+                        if (isset($customActionAttributes['userInput'])) {
+                            $testSteps .= sprintf("\t\t$%s = $%s->%s(%s, \"%s\");\n", $returnVariable, $actor, $actionName, $selector, $customActionAttributes['userInput']);
+                        } else if (isset($customActionAttributes['parameter'])) {
+                            $testSteps .= sprintf("\t\t$%s = $%s->%s(%s, %s);\n", $returnVariable, $actor, $actionName, $selector, $customActionAttributes['parameter']);
                         } else {
                             $testSteps .= sprintf("\t\t$%s = $%s->%s(%s);\n", $returnVariable, $actor, $actionName, $selector);
                         }
                     } else {
-                        if (isset($steps->getCustomActionAttributes()['userInput'])) {
-                            $testSteps .= sprintf("\t\t$%s = $%s->%s(\"%s\");\n", $returnVariable, $actor, $actionName, $steps->getCustomActionAttributes()['userInput']);
-                        } else if (isset($steps->getCustomActionAttributes()['parameter'])) {
-                            $testSteps .= sprintf("\t\t$%s = $%s->%s(%s);\n", $returnVariable, $actor, $actionName, $steps->getCustomActionAttributes()['parameter']);
+                        if (isset($customActionAttributes['userInput'])) {
+                            $testSteps .= sprintf("\t\t$%s = $%s->%s(\"%s\");\n", $returnVariable, $actor, $actionName, $customActionAttributes['userInput']);
+                        } else if (isset($customActionAttributes['parameter'])) {
+                            $testSteps .= sprintf("\t\t$%s = $%s->%s(%s);\n", $returnVariable, $actor, $actionName, $customActionAttributes['parameter']);
                         } else {
                             $testSteps .= sprintf("\t\t$%s = $%s->%s();\n", $returnVariable, $actor, $actionName);
                         }
                     }
                 } else {
                     if ($selector) {
-                        if (isset($steps->getCustomActionAttributes()['userInput'])) {
-                            $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\");\n", $actor, $actionName, $selector, $steps->getCustomActionAttributes()['userInput']);
-                        } else if (isset($steps->getCustomActionAttributes()['parameter'])) {
-                            $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $steps->getCustomActionAttributes()['parameter']);
+                        if (isset($customActionAttributes['userInput'])) {
+                            $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\");\n", $actor, $actionName, $selector, $customActionAttributes['userInput']);
+                        } else if (isset($customActionAttributes['parameter'])) {
+                            $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $customActionAttributes['parameter']);
                         } else {
                             $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $selector);
                         }
                     } else {
-                        if (isset($steps->getCustomActionAttributes()['userInput'])) {
-                            $testSteps .= sprintf("\t\t$%s->%s(\"%s\");\n", $actor, $actionName, $steps->getCustomActionAttributes()['userInput']);
-                        } else if (isset($steps->getCustomActionAttributes()['parameter'])) {
-                            $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $steps->getCustomActionAttributes()['parameter']);
+                        if (isset($customActionAttributes['userInput'])) {
+                            $testSteps .= sprintf("\t\t$%s->%s(\"%s\");\n", $actor, $actionName, $customActionAttributes['userInput']);
+                        } else if (isset($customActionAttributes['parameter'])) {
+                            $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $customActionAttributes['parameter']);
                         } else {
                             $testSteps .= sprintf("\t\t$%s->%s();\n", $actor, $actionName);
                         }
@@ -549,6 +642,11 @@ function generateStepsPhp($stepsObject)
     return $testSteps;
 }
 
+/**
+ * Creates a PHP string for the _before/_after methods if the Test contains an <before> or <after> block.
+ * @param $hookObjects
+ * @return string
+ */
 function generateHooksPhp($hookObjects)
 {
     $hooks = "";
@@ -580,6 +678,11 @@ function generateHooksPhp($hookObjects)
     return $hooks;
 }
 
+/**
+ * Creates a PHP string for the Test Annotations block if the Test contains an <annotations> block.
+ * @param $testAnnotationsObject
+ * @return string
+ */
 function generateTestAnnotationsPhp($testAnnotationsObject)
 {
     $testAnnotationsPhp = "\t/**\n";
@@ -622,7 +725,7 @@ function generateTestAnnotationsPhp($testAnnotationsObject)
 
         if ($annotationType == "title")
         {
-            $testAnnotationsPhp .= sprintf("\t * @Title(\"%s\")\n", ucwords($annotationType), $annotationName[0]);
+            $testAnnotationsPhp .= sprintf("\t * @Title(\"%s\")\n", $annotationName[0]);
         }
 
         if ($annotationType == "description")
@@ -668,6 +771,12 @@ function generateTestAnnotationsPhp($testAnnotationsObject)
     return $testAnnotationsPhp;
 }
 
+/**
+ * Creates a PHP string based on a <test> block.
+ * Concatenates the Test Annotations PHP and Test PHP for a single Test.
+ * @param $testsObject
+ * @return string
+ */
 function generateTestsPhp($testsObject)
 {
     $testPhp = "";
@@ -675,6 +784,7 @@ function generateTestsPhp($testsObject)
     foreach ($testsObject as $test)
     {
         $testName        = $test->getName();
+        $testName        = str_replace(' ', '', $testName);
         $testAnnotations = generateTestAnnotationsPhp($test->getAnnotations());
         $dependencies    = 'AcceptanceTester $I';
         $steps           = generateStepsPhp($test->getOrderedActions());
@@ -694,4 +804,7 @@ function generateTestsPhp($testsObject)
     return $testPhp;
 }
 
+/**
+ * Create ALL Cest files.
+ */
 createAllCestFiles();

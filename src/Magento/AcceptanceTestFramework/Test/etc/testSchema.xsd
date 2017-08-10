@@ -52,6 +52,7 @@
             <xs:element type="clickType" name="click" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="clickWithLeftButtonType" name="clickWithLeftButton" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="clickWithRightButtonType" name="clickWithRightButton" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="closeAdminNotificationType" name="closeAdminNotification" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="closeTabType" name="closeTab" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="createDataType" name="createData" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="deleteDataType" name="deleteData" minOccurs="0" maxOccurs="unbounded"/>
@@ -68,6 +69,7 @@
             <xs:element type="dontSeeInPageSourceType" name="dontSeeInPageSource" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dontSeeInSourceType" name="dontSeeInSource" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dontSeeInTitleType" name="dontSeeInTitle" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeJsErrorType" name="dontSeeJsError" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dontSeeLinkType" name="dontSeeLink" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dontSeeOptionIsSelectedType" name="dontSeeOptionIsSelected" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="doubleClickType" name="doubleClick" minOccurs="0" maxOccurs="unbounded"/>
@@ -75,6 +77,7 @@
             <xs:element type="executeInSeleniumType" name="executeInSelenium" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="executeJSType" name="executeJS" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="fillFieldType" name="fillField" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="formatMoneyType" name="formatMoney" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="grabAttributeFromType" name="grabAttributeFrom" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="grabCookieType" name="grabCookie" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="grabFromCurrentUrlType" name="grabFromCurrentUrl" minOccurs="0" maxOccurs="unbounded"/>
@@ -83,12 +86,17 @@
             <xs:element type="grabTextFromType" name="grabTextFrom" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="grabValueFromType" name="grabValueFrom" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="loadSessionSnapshotType" name="loadSessionSnapshot" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="loginAsAdminType" name="loginAsAdmin" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="makeScreenshotType" name="makeScreenshot" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="maximizeWindowType" name="maximizeWindow" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="moveBackType" name="moveBack" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="moveForwardType" name="moveForward" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="moveMouseOverType" name="moveMouseOver" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="mSetLocaleType" name="mSetLocale" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="mResetLocaleType" name="mResetLocale" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="moveMouseOverType" name="moveMouseOver" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="openNewTabType" name="openNewTab" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="parseFloatType" name="parseFloat" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="pauseExecutionType" name="pauseExecution" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="performOnType" name="performOn" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="pressKeyType" name="pressKey" minOccurs="0" maxOccurs="unbounded"/>
@@ -97,6 +105,8 @@
             <xs:element type="resizeWindowType" name="resizeWindow" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="saveSessionSnapshotType" name="saveSessionSnapshot" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="scrollToType" name="scrollTo" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="scrollToTopOfPageType" name="scrollToTopOfPage" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="searchAndMultiSelectOptionType" name="searchAndMultiSelectOption" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="seeType" name="see" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="seeCheckboxIsCheckedType" name="seeCheckboxIsChecked" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="seeCookieType" name="seeCookie" minOccurs="0" maxOccurs="unbounded"/>
@@ -125,11 +135,14 @@
             <xs:element type="uncheckOptionType" name="uncheckOption" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="unselectOptionType" name="unselectOption" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitType" name="wait" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForAjaxLoadType" name="waitForAjaxLoad" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForElementChangeType" name="waitForElementChange" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForElementType" name="waitForElement" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForElementNotVisibleType" name="waitForElementNotVisible" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForElementVisibleType" name="waitForElementVisible" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForJSType" name="waitForJS" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForLoadingMaskToDisappearType" name="waitForLoadingMaskToDisappear" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForPageLoadType" name="waitForPageLoad" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForTextType" name="waitForText" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
         <xs:attribute type="xs:string" name="name"/>
@@ -261,6 +274,16 @@
                 <xs:attribute type="xs:string" name="selectorArray"/>
                 <xs:attribute type="xs:string" name="x"/>
                 <xs:attribute type="xs:string" name="y"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="closeAdminNotificationType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
                 <xs:attribute type="xs:string" name="before"/>
@@ -452,6 +475,16 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+    <xs:complexType name="dontSeeJsErrorType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
     <xs:complexType name="dontSeeLinkType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -527,6 +560,18 @@
                 <xs:attribute type="xs:string" name="selector"/>
                 <xs:attribute type="xs:string" name="selectorArray"/>
                 <xs:attribute type="xs:string" name="userInput" use="required"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="formatMoneyType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="userInput" use="required"/>
+                <xs:attribute type="xs:string" name="locale"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
                 <xs:attribute type="xs:string" name="before"/>
@@ -632,6 +677,18 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+    <xs:complexType name="loginAsAdminType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="username"/>
+                <xs:attribute type="xs:string" name="password"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
     <xs:complexType name="makeScreenshotType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -644,6 +701,28 @@
         </xs:simpleContent>
     </xs:complexType>
     <xs:complexType name="maximizeWindowType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="mSetLocaleType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="userInput" use="required"/>
+                <xs:attribute type="xs:string" name="locale" use="required"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="mResetLocaleType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
@@ -690,6 +769,17 @@
     <xs:complexType name="openNewTabType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="parseFloatType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="userInput" use="required"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
                 <xs:attribute type="xs:string" name="before"/>
@@ -784,6 +874,29 @@
                 <xs:attribute type="xs:string" name="selectorArray"/>
                 <xs:attribute type="xs:string" name="x"/>
                 <xs:attribute type="xs:string" name="y"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="scrollToTopOfPageType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="searchAndMultiSelectOptionType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="parameterArray" use="required"/>
+                <xs:attribute type="xs:string" name="requiredAction"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
                 <xs:attribute type="xs:string" name="before"/>
@@ -1120,6 +1233,17 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+    <xs:complexType name="waitForAjaxLoadType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="time"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
     <xs:complexType name="waitForElementChangeType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -1174,6 +1298,27 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="function" use="required"/>
                 <xs:attribute type="xs:string" name="time" use="required"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="waitForLoadingMaskToDisappearType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="waitForPageLoadType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="time"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
                 <xs:attribute type="xs:string" name="before"/>

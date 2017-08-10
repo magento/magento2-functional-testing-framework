@@ -31,7 +31,7 @@ use Codeception\Util\ActionSequence;
  */
 class MagentoWebDriver extends WebDriver
 {
-    public static $loadingMask     = '.loading-mask';
+    public static $loadingMask = '.loading-mask';
 
     /**
      * The module required fields, to be set in the suite .yml configuration file.
@@ -47,6 +47,8 @@ class MagentoWebDriver extends WebDriver
     ];
 
     /**
+     * Set all Locale variables to NULL.
+     *
      * @var array $localeAll
      */
     protected static $localeAll = [
@@ -60,6 +62,7 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Returns URL of a host.
+     *
      * @api
      * @return mixed
      * @throws ModuleConfigException
@@ -77,6 +80,7 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Uri of currently opened page.
+     *
      * @return string
      * @api
      * @throws ModuleException
@@ -88,6 +92,17 @@ class MagentoWebDriver extends WebDriver
             throw new ModuleException($this, 'Current url is blank, no page was opened');
         }
         return Uri::retrieveUri($url);
+    }
+
+    /**
+     * Returns an array of Elements.
+     *
+     * @param string $locator
+     * @return array
+     */
+    public function findElement($locator)
+    {
+        return $this->_findElements($locator);
     }
 
     /**
@@ -123,6 +138,9 @@ class MagentoWebDriver extends WebDriver
 
 
     /**
+     * Search for and Select multiple options from a Magento Multi-Select drop down menu.
+     * e.g. The drop down menu you use to assign Products to Categories.
+     *
      * @param $select
      * @param array $options
      * @param bool $requireAction
@@ -152,18 +170,41 @@ class MagentoWebDriver extends WebDriver
         }
     }
 
-    public function waitAjaxLoad($timeout = 15)
+    /**
+     * Wait for all Ajax calls to finish.
+     *
+     * @param int $timeout
+     */
+    public function waitForAjaxLoad($timeout = 15)
     {
         $this->waitForJS('return !!window.jQuery && window.jQuery.active == 0;', $timeout);
         $this->wait(1);
     }
 
+    /**
+     * Wait for all JavaScript to finish executing.
+     *
+     * @param int $timeout
+     */
     public function waitForPageLoad($timeout = 15)
     {
         $this->waitForJS('return document.readyState == "complete"', $timeout);
-        $this->waitAjaxLoad($timeout);
+        $this->waitForAjaxLoad($timeout);
     }
 
+    /**
+     * Wait for the Loading mask to disappear.
+     */
+    public function waitForLoadingMaskToDisappear()
+    {
+        $this->waitForElementNotVisible(self::$loadingMask, 30);
+    }
+
+    /**
+     * Verify that there are no JavaScript errors in the console.
+     *
+     * @throws ModuleException
+     */
     public function dontSeeJsError()
     {
         $logs = $this->webDriver->manage()->getLog('browser');
@@ -190,6 +231,17 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
+     * Parse float number with thousands_sep.
+     *
+     * @param $floatString
+     * @return float
+     */
+    public function parseFloat($floatString){
+        $floatString = str_replace(',', '', $floatString);
+        return floatval($floatString);
+    }
+
+    /**
      * @param int $category
      * @param string $locale
     */
@@ -204,6 +256,9 @@ class MagentoWebDriver extends WebDriver
         setlocale($category, $locale);
     }
 
+    /**
+     * Reset Locale setting.
+     */
     public function mResetLocale()
     {
         foreach (self::$localeAll as $c => $l) {
@@ -214,32 +269,11 @@ class MagentoWebDriver extends WebDriver
         }
     }
 
-    public function waitForLoadingMaskToDisappear()
-    {
-        $this->waitForElementNotVisible(self::$loadingMask, 30);
-    }
-
+    /**
+     * Scroll to the Top of the Page.
+     */
     public function scrollToTopOfPage()
     {
         $this->executeJS('window.scrollTo(0,0);');
-    }
-
-    /**
-     * Parse float number with thousands_sep.
-     * @param $floatString
-     * @return float
-     */
-    public function parseFloat($floatString){
-        $floatString = str_replace(',', '', $floatString);
-        return floatval($floatString);
-    }
-
-    /**
-     * @param string $locator
-     * @return
-     */
-    public function findElement($locator)
-    {
-        return $this->_findElements($locator);
     }
 }
