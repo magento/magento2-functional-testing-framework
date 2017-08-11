@@ -25,7 +25,15 @@ class Page implements PageInterface
     public static function getPage($pageName = null)
     {
         self::initPageObjects();
-        return !$pageName ? self::$pageObjects : self::$pageObjects[$pageName];
+        if (!$pageName) {
+            return self::$pageObjects;
+        }
+
+        if (array_key_exists($pageName, self::$pageObjects)) {
+            return self::$pageObjects[$pageName];
+        }
+
+        return null;
     }
 
     /**

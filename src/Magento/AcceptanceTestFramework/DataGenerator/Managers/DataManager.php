@@ -13,7 +13,13 @@ class DataManager
     private $data = []; // an array of entity names to the entity data objects themselves
     private $arrayData;
     private static $dataManager;
+    const ENV_DATA_OBJECT_NAME = '_ENV';
 
+    /**
+     * Singleton method to access instance of DataManager.
+     * @return DataManager
+     * @throws Exception
+     */
     public static function getInstance()
     {
         if (!self::$dataManager) {
@@ -21,7 +27,7 @@ class DataManager
             $entityParsedData = $entityParser->readDataProfiles();
 
             if (!$entityParsedData) {
-                throw new Exception(sprintf("No entities could be parsed from xml definitions"));
+                throw new Exception("No entities could be parsed from xml definitions");
             }
 
             self::$dataManager = new DataManager($entityParsedData);
@@ -30,14 +36,47 @@ class DataManager
         return self::$dataManager;
     }
 
+    /**
+     * DataManager constructor.
+     * @param array $arrayData
+     */
     private function __construct($arrayData)
     {
         $this->arrayData = $arrayData;
     }
 
+    /**
+     * Adds all .env variables defined in the PROJECT_ROOT as EntityDataObjects. This is to allow resolution
+     * of these variables when referenced in a cest.
+     */
+    private function parseEnvVariables()
+    {
+        $envFilename = PROJECT_ROOT . '/.env';
+
+        if (file_exists($envFilename)) {
+            $envData = [];
+
+            $envFile = file($envFilename);
+
+            foreach ($envFile as $entry) {
+                $params = explode("=", $entry);
+                if (count($params) != 2) {
+                    continue;
+                }
+                $envData[strtolower(trim($params[0]))] = trim($params[1]);
+            }
+
+
+            $envDataObject = new EntityDataObject(self::ENV_DATA_OBJECT_NAME, 'environment', $envData, null);
+            $this->data[$envDataObject->getName()] = $envDataObject;
+        }
+    }
+
+    /**
+     * Parses data xml and extracts all information into EntityDataObject.
+     */
     private function parseDataEntities()
     {
-        $entityObjects = array();
         $entities = $this->arrayData;
 
         foreach ($entities[DataGeneratorConstants::ENTITY_DATA] as $entityName => $entity) {
@@ -85,24 +124,32 @@ class DataManager
                 $linkedEntities
             );
 
-            $entityObjects[$entityXmlObject->getName()] = $entityXmlObject;
+            $this->data[$entityXmlObject->getName()] = $entityXmlObject;
 
         }
         unset($entityName);
         unset($entity);
-
-        $this->data = $entityObjects;
     }
 
+    /**
+     * Method returns a single data entity by name based on what is defined in data.xml.
+     * @param $entityName
+     * @return EntityDataObject
+     */
     public function getEntity($entityName)
     {
         return $this->getAllEntities()[$entityName];
     }
 
+    /**
+     * Method returns all data entities read from data.xml into objects.
+     * @return array
+     */
     public function getAllEntities()
     {
         if (!$this->data) {
             $this->parseDataEntities();
+            $this->parseEnvVariables();
         }
 
         return $this->data;

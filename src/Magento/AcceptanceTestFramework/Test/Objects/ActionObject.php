@@ -8,6 +8,15 @@ use Magento\AcceptanceTestFramework\DataGenerator\Managers\DataManager;
 
 class ActionObject
 {
+    /**
+     * @var string $mergeKey
+     * @var string $type
+     * @var array $actionAttributes
+     * @var string $linkedAction
+     * @var int $orderOffset
+     * @var array $resolvedCustomAttributes
+     * @var int timeout
+     */
     private $mergeKey;
     private $type;
     private $actionAttributes = [];
@@ -16,6 +25,16 @@ class ActionObject
     private $resolvedCustomAttributes = [];
     private $timeout;
 
+    const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray"];
+
+    /**
+     * ActionObject constructor.
+     * @param string $mergeKey
+     * @param string $type
+     * @param array $actionAttributes
+     * @param string|null $linkedAction
+     * @param int $order
+     */
     public function __construct($mergeKey, $type, $actionAttributes, $linkedAction = null, $order = 0)
     {
         $this->mergeKey = $mergeKey;
@@ -28,11 +47,19 @@ class ActionObject
         }
     }
 
+    /**
+     * This function returns the string property mergeKey.
+     * @return string
+     */
     public function getMergeKey()
     {
         return $this->mergeKey;
     }
 
+    /**
+     * This function returns the string property type.
+     * @return string
+     */
     public function getType()
     {
         return $this->type;
@@ -52,16 +79,29 @@ class ActionObject
         return array_merge($this->actionAttributes, $this->resolvedCustomAttributes);
     }
 
+    /**
+     * This function returns the string property linkedAction, describing a step to reference for a merge.
+     * @return string
+     */
     public function getLinkedAction()
     {
         return $this->linkedAction;
     }
 
+    /**
+     * This function returns the int property orderOffset, describing before or after for a merge.
+     * @return int
+     */
     public function getOrderOffset()
     {
         return $this->orderOffset;
     }
 
+    /**
+     * This function returns the int property timeout, this can be set as a result of the use of a section element
+     * requiring a wait.
+     * @return int
+     */
     public function getTimeout()
     {
         return $this->timeout;
@@ -81,7 +121,7 @@ class ActionObject
         if (empty($this->resolvedCustomAttributes)) {
             $this->resolveSelectorReferenceAndTimeout();
             $this->resolveUrlReference();
-            $this->resolveUserInputReference();
+            $this->resolveDataInputReferences();
         }
     }
 
@@ -100,9 +140,11 @@ class ActionObject
         }
         $selector = $this->actionAttributes['selector'];
 
-        $reference = $this->findReference($selector);
-        if ($reference == null) {
-            // Nothing to replace
+        $reference = $this->findAllReferences($selector);
+        if (count($reference) == 1) {
+            $reference = $reference[0];
+        } else {
+            // Selectors can only handle a single var reference
             return;
         }
 
@@ -112,8 +154,13 @@ class ActionObject
             // Bad section reference
             return;
         }
+
         $replacement = Section::getElementLocator($sectionName, $elementName);
 
+        if ($replacement == null) {
+            // Bad section reference
+            return;
+        }
         $this->resolvedCustomAttributes['selector'] = str_replace($reference, $replacement, $selector);
         $this->timeout = Section::getElementTimeOut($sectionName, $elementName);
     }
@@ -133,59 +180,70 @@ class ActionObject
         }
         $url = $this->actionAttributes['url'];
 
-        $reference = $this->findReference($url);
-        if ($reference == null) {
-            // Nothing to replace
-            return;
+        foreach ($this->findAllReferences($url) as $reference) {
+            $replacement = null;
+
+            // assume this is a page
+            list($pageName) = $this->stripAndSplitReference($reference);
+            $page = Page::getPage($pageName);
+
+            if ($page != null) {
+                $replacement = Page::getPageUrl($pageName);
+            } else {
+                // try to resolve as data
+                list($entityName, $entityField) = $this->stripAndSplitReference($reference);
+                $replacement = DataManager::getInstance()->getEntity($entityName)->getDataByName($entityField);
+            }
+
+            if ($replacement == null) {
+                continue;
+                // Bad var ref
+            }
+            $url = str_replace($reference, $replacement, $url);
         }
 
-        list($pageName) = $this->stripAndSplitReference($reference);
-        $page = Page::getPage($pageName);
-        if ($page == null) {
-            // Bad page reference
-            return;
-        }
-        $replacement = $_ENV['MAGENTO_BASE_URL'] . Page::getPageUrl($pageName);
-
-        $this->resolvedCustomAttributes['url'] = str_replace($reference, $replacement, $url);
+        $this->resolvedCustomAttributes['url'] = $url;
     }
 
-
     /**
-     * Look up the value for EntityDataObjectName.Key and set it as the userInput attribute in the resolved custom
+     * Look up the value for EntityDataObjectName.Key and set it as the corresponding attribute in the resolved custom
      * attributes.
      *
      * e.g. {{CustomerEntityFoo.FirstName}} becomes Jerry
      *
      * @return void
      */
-    private function resolveUserInputReference()
+    private function resolveDataInputReferences()
     {
-        if (!array_key_exists('userInput', $this->actionAttributes)) {
-            return;
-        }
-        $userInput = $this->actionAttributes['userInput'];
+        $actionAttributeKeys = array_keys($this->actionAttributes);
+        $relevantDataAttributes = array_intersect($actionAttributeKeys, ActionObject::DATA_ENABLED_ATTRIBUTES);
 
-        $reference = $this->findReference($userInput);
-        if ($reference == null) {
-            // Nothing to replace
+        if (empty($relevantDataAttributes)) {
             return;
         }
 
-        list($entityName, $entityKey) = $this->stripAndSplitReference($userInput);
-        $entityObj = DataManager::getInstance()->getEntity($entityName);
-        if ($entityObj == null) {
-            // Bad entity reference
-            return;
-        }
+        foreach ($relevantDataAttributes as $dataAttribute) {
+            $varInput = $this->actionAttributes[$dataAttribute];
 
-        $replacement = $entityObj->getDataByName($entityKey);
-        if ($replacement == null) {
-            // Bad entity.key reference
-            return;
-        }
+            foreach ($this->findAllReferences($varInput) as $reference) {
+                list($entityName, $entityKey) = $this->stripAndSplitReference($reference);
+                $entityObj = DataManager::getInstance()->getEntity($entityName);
+                if ($entityObj == null) {
+                    // Bad entity reference
+                    continue;
+                }
 
-        $this->resolvedCustomAttributes['userInput'] = str_replace($reference, $replacement, $userInput);
+                $replacement = $entityObj->getDataByName($entityKey) ?? null;
+                if ($replacement == null) {
+                    // Bad entity.key reference
+                    return;
+                }
+
+                $varInput  = str_replace($reference, $replacement, $varInput);
+            }
+
+            $this->resolvedCustomAttributes[$dataAttribute] = $varInput;
+        }
     }
 
     /**
@@ -201,16 +259,16 @@ class ActionObject
     }
 
     /**
-     * Return a {{reference.foo}} if it exists in the string.
+     * Return an array of {{reference.foo}} if any exist in the string, otherwise returns an empty array.
      *
      * @param string $str
-     * @return string|null
+     * @return array
      */
-    private function findReference($str)
+    private function findAllReferences($str)
     {
-        preg_match('/{{[\w.]+}}/', $str, $matches);
+        preg_match_all('/{{[\w.]+}}/', $str, $matches);
         if (empty($matches)) {
-            return null;
+            return [];
         } else {
             return $matches[0];
         }
