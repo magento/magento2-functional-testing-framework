@@ -3,7 +3,7 @@
     <xs:element name="config">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="metadata" maxOccurs="unbounded" minOccurs="0">
+                <xs:element name="operation" maxOccurs="unbounded" minOccurs="0">
                     <xs:complexType>
                         <xs:choice maxOccurs="unbounded">
                             <xs:element name="entry" maxOccurs="unbounded" minOccurs="0">
@@ -48,7 +48,7 @@
                         </xs:choice>
                         <xs:attribute type="xs:string" name="name"/>
                         <xs:attribute type="xs:string" name="dataType" use="required"/>
-                        <xs:attribute type="operationEnum" name="operation" use="required"/>
+                        <xs:attribute type="operationEnum" name="type" use="required"/>
                         <xs:attribute type="xs:string" name="url"/>
                         <xs:attribute type="xs:string" name="auth"/>
                         <xs:attribute type="xs:string" name="method"/>

@@ -155,7 +155,7 @@
     </virtualType>
     <virtualType name="Magento\AcceptanceTestFramework\Config\SchemaLocator\DataProfile" type="Magento\AcceptanceTestFramework\Config\SchemaLocator">
         <arguments>
-            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/DataGenerator/etc/DataProfileSchema.xsd</argument>
+            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/DataGenerator/etc/dataProfileSchema.xsd</argument>
         </arguments>
     </virtualType>
     <virtualType name="Magento\AcceptanceTestFramework\Config\Reader\DataProfile" type="Magento\AcceptanceTestFramework\Config\Reader\Filesystem">
@@ -174,7 +174,7 @@
         </arguments>
     </virtualType>
 
-    <!-- Configuration for Metadata.xml -->
+    <!-- Configuration for Data Operation Metadata.xml -->
 
     <type name="Magento\AcceptanceTestFramework\DataGenerator\Parsers\MetadataParser">
         <arguments>
@@ -188,7 +188,7 @@
     </virtualType>
     <virtualType name="Magento\AcceptanceTestFramework\Config\SchemaLocator\Metadata" type="Magento\AcceptanceTestFramework\Config\SchemaLocator">
         <arguments>
-            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/DataGenerator/etc/EntityMetadata.xsd</argument>
+            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/DataGenerator/etc/dataOperation.xsd</argument>
         </arguments>
     </virtualType>
     <virtualType name="Magento\AcceptanceTestFramework\Config\Reader\Metadata" type="Magento\AcceptanceTestFramework\Config\Reader\Filesystem">
