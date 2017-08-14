@@ -7,8 +7,7 @@
         "php": "~7.0",
         "codeception/codeception": "2.2|2.3",
         "flow/jsonpath": ">0.2",
-        "fzaninotto/faker": "^1.6",
-        "vlucas/phpdotenv": "~2.4"
+        "fzaninotto/faker": "^1.6"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "1.5.3"
