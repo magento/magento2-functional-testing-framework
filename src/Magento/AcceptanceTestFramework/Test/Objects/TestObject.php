@@ -11,7 +11,7 @@ class TestObject
     private $stepsToMerge = [];
     private $parsedSteps = [];
     private $annotations = [];
-    private const STEP_MISSING_ERROR_MSG =
+    const STEP_MISSING_ERROR_MSG =
         "Merge Error - Step could not be found in either TestXML or DeltaXML.
         \tTest = '%s'\tTestStep='%s'\tLinkedStep'%s'";
 
