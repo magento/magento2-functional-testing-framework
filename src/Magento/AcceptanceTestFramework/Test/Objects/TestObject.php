@@ -6,15 +6,47 @@ use Magento\AcceptanceTestFramework\Exceptions\XmlException;
 
 class TestObject
 {
+    /**
+     * Name of the test
+     * @var string $name
+     */
     private $name;
+
+    /**
+     * Array which contains the final set of test steps in order after merge
+     * @var array $orderedSteps
+     */
     private $orderedSteps = [];
+
+    /**
+     * Array which contains steps to be merged into test flow
+     * @var array $stepsToMerge
+     */
     private $stepsToMerge = [];
+
+    /**
+     * Array which contains steps parsed in and are the default set
+     * @var array $parsedSteps
+     */
     private $parsedSteps = [];
+
+    /**
+     * Array which contains annotations indexed by name
+     * @var array $annotations
+     */
     private $annotations = [];
+
     const STEP_MISSING_ERROR_MSG =
         "Merge Error - Step could not be found in either TestXML or DeltaXML.
         \tTest = '%s'\tTestStep='%s'\tLinkedStep'%s'";
 
+    /**
+     * TestObject constructor.
+     * @constructor
+     * @param string $name
+     * @param array $parsedSteps
+     * @param array $annotations
+     */
     public function __construct($name, $parsedSteps, $annotations)
     {
         $this->name = $name;
@@ -22,11 +54,19 @@ class TestObject
         $this->annotations = $annotations;
     }
 
+    /**
+     * Getter for the Test Name
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * Getter for the Test Annotations
+     * @return array
+     */
     public function getAnnotations()
     {
         return $this->annotations;
@@ -110,18 +150,31 @@ class TestObject
     private function insertWaits()
     {
         foreach ($this->orderedSteps as $step) {
-
             if ($step->getTimeout()) {
                 $waitStepAttributes = array('timeout' => $step->getTimeout());
-                $waitStep = new ActionObject($step->getMergeKey() . 'WaitForPageLoad', 'waitForPageLoad', $waitStepAttributes, $step->getMergeKey(), 'after');
+                $waitStep = new ActionObject(
+                    $step->getMergeKey() . 'WaitForPageLoad',
+                    'waitForPageLoad',
+                    $waitStepAttributes,
+                    $step->getMergeKey(),
+                    'after'
+                );
                 $this->insertStep($waitStep);
             }
         }
     }
 
+    /**
+     * Inserts a step into the ordered steps array based on position and step referenced.
+     * @param $stepToMerge
+     * @return void
+     */
     private function insertStep($stepToMerge)
     {
-        $position = array_search($stepToMerge->getLinkedAction(), array_keys($this->orderedSteps)) + $stepToMerge->getOrderOffset();
+        $position = array_search(
+            $stepToMerge->getLinkedAction(),
+            array_keys($this->orderedSteps)
+        ) + $stepToMerge->getOrderOffset();
         $previous_items = array_slice($this->orderedSteps, 0, $position, true);
         $next_items = array_slice($this->orderedSteps, $position, null, true);
         $this->orderedSteps = $previous_items + [$stepToMerge->getMergeKey() => $stepToMerge] + $next_items;

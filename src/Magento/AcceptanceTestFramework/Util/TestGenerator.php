@@ -2,7 +2,7 @@
 
 namespace Magento\AcceptanceTestFramework\Util;
 
-use Magento\AcceptanceTestFramework\Test\Managers\CestArrayProcessor;
+use Magento\AcceptanceTestFramework\Test\Handlers\CestObjectHandler;
 
 class TestGenerator
 {
@@ -32,7 +32,7 @@ class TestGenerator
      */
     private function loadAllCestObjects()
     {
-        $cestOutput = CestArrayProcessor::getInstance()->getCestData();
+        $cestOutput = CestObjectHandler::getInstance()->getAllObjects();
         return $cestOutput;
     }
 

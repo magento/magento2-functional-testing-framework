@@ -1,48 +1,95 @@
 <?php
 
-namespace Magento\AcceptanceTestFramework\Test\Managers;
+namespace Magento\AcceptanceTestFramework\Test\Handlers;
 
 use Magento\AcceptanceTestFramework\Exceptions\XmlException;
+use Magento\AcceptanceTestFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\AcceptanceTestFramework\ObjectManagerFactory;
-use Magento\AcceptanceTestFramework\Test\CestDataConstants;
 use Magento\AcceptanceTestFramework\Test\Objects\ActionObject;
 use Magento\AcceptanceTestFramework\Test\Objects\CestObject;
 use Magento\AcceptanceTestFramework\Test\Objects\TestObject;
 use Magento\AcceptanceTestFramework\Test\Objects\CestHookObject;
 use Magento\AcceptanceTestFramework\Test\TestDataParser;
 
-class CestArrayProcessor
+class CestObjectHandler implements ObjectHandlerInterface
 {
-    private $parsedArray;
     const BEFORE_AFTER_ERROR_MSG = "Merge Error - Steps cannot have both before and after attributes.\tTestStep='%s'";
-    private static $cestDataManager;
+    const CEST_ROOT = 'config';
+    const CEST_ANNOTATIONS = 'annotations';
+    const CEST_BEFORE_HOOK = 'before';
+    const CEST_AFTER_HOOK = 'after';
+    const CEST_TEST_TAG = 'test';
+    const TEST_ANNOTATIONS = 'annotations';
+    const TEST_ACTION_BEFORE = 'before';
+    const TEST_ACTION_AFTER = 'after';
+    const TEST_STEP_MERGE_KEY = 'mergeKey';
+    const NODE_NAME = 'nodeName';
+    const NAME = 'name';
+    const ANNOTATION_VALUE = 'value';
 
+    /**
+     * @var CestObjectHandler $cestObjectHandler
+     */
+    private static $cestObjectHandler;
+
+    /**
+     * Array contains all cest objects indexed by name
+     * @var array $cests
+     */
+    private $cests = [];
+
+    /**
+     * Singleton method to return CestObjectHandler.
+     * @return CestObjectHandler
+     */
     public static function getInstance()
     {
-        if (!self::$cestDataManager) {
+        if (!self::$cestObjectHandler) {
             $testDataParser = ObjectManagerFactory::getObjectManager()->create(TestDataParser::class);
             $parsedCestArray = $testDataParser->readTestData();
-            self::$cestDataManager = new CestArrayProcessor($parsedCestArray);
+            self::$cestObjectHandler = new CestObjectHandler();
+            self::$cestObjectHandler->initCestData($parsedCestArray);
         }
 
-        return self::$cestDataManager;
-    }
-
-    private function __construct($parsedCestArray)
-    {
-        $this->parsedArray = $parsedCestArray;
+        return self::$cestObjectHandler;
     }
 
     /**
-     * This method takes no arguments and returns CestObjects parsed from defined *Cest.xml files.
-     *
+     * CestObjectHandler constructor.
+     * @constructor
+     */
+    private function __construct()
+    {
+        // private constructor
+    }
+
+    /**
+     * Takes a cest name and returns the corresponding cest.
+     * @param string $cestName
+     * @return CestObject
+     */
+    public function getObject($cestName)
+    {
+        return $this->cests[$cestName];
+    }
+
+    /**
+     * Returns all cests parsed from xml indexed by cestName.
      * @return array
      */
-    public function getCestData()
+    public function getAllObjects()
     {
-        $cests = [];
+        return $this->cests;
+    }
 
-        foreach ($this->parsedArray[CestDataConstants::CEST_ROOT] as $cestName => $cestData) {
+    /**
+     * This method takes the parsed cest array and returns CestObjects parsed from defined *Cest.xml files
+     * @param array $parsedArray
+     * @return array
+     */
+    private function initCestData($parsedArray)
+    {
+        foreach ($parsedArray[CestObjectHandler::CEST_ROOT] as $cestName => $cestData) {
             $hooks = [];
             $annotations = [];
 
@@ -52,44 +99,41 @@ class CestArrayProcessor
 
             $tests = $this->stripDescriptorTags(
                 $cestData,
-                CestDataConstants::NODE_NAME,
-                CestDataConstants::NAME
+                CestObjectHandler::NODE_NAME,
+                CestObjectHandler::NAME
             );
 
-            if (array_key_exists(CestDataConstants::CEST_BEFORE_HOOK, $cestData)) {
-                $hooks[CestDataConstants::CEST_BEFORE_HOOK] = $this->extractHook(
-                    CestDataConstants::CEST_BEFORE_HOOK,
-                    $cestData[CestDataConstants::CEST_BEFORE_HOOK]
+            if (array_key_exists(CestObjectHandler::CEST_BEFORE_HOOK, $cestData)) {
+                $hooks[CestObjectHandler::CEST_BEFORE_HOOK] = $this->extractHook(
+                    CestObjectHandler::CEST_BEFORE_HOOK,
+                    $cestData[CestObjectHandler::CEST_BEFORE_HOOK]
                 );
 
-                $tests = $this->stripDescriptorTags($tests, CestDataConstants::CEST_BEFORE_HOOK);
+                $tests = $this->stripDescriptorTags($tests, CestObjectHandler::CEST_BEFORE_HOOK);
             }
 
-            if (array_key_exists(CestDataConstants::CEST_AFTER_HOOK, $cestData)) {
-                $hooks[CestDataConstants::CEST_AFTER_HOOK] = $this->extractHook(
-                    CestDataConstants::CEST_AFTER_HOOK,
-                    $cestData[CestDataConstants::CEST_AFTER_HOOK]
+            if (array_key_exists(CestObjectHandler::CEST_AFTER_HOOK, $cestData)) {
+                $hooks[CestObjectHandler::CEST_AFTER_HOOK] = $this->extractHook(
+                    CestObjectHandler::CEST_AFTER_HOOK,
+                    $cestData[CestObjectHandler::CEST_AFTER_HOOK]
                 );
 
-                $tests = $this->stripDescriptorTags($tests, CestDataConstants::CEST_AFTER_HOOK);
+                $tests = $this->stripDescriptorTags($tests, CestObjectHandler::CEST_AFTER_HOOK);
             }
 
-            if (array_key_exists(CestDataConstants::CEST_ANNOTATIONS, $cestData)) {
-                $annotations = $this->extractAnnotations($cestData[CestDataConstants::CEST_ANNOTATIONS]);
+            if (array_key_exists(CestObjectHandler::CEST_ANNOTATIONS, $cestData)) {
+                $annotations = $this->extractAnnotations($cestData[CestObjectHandler::CEST_ANNOTATIONS]);
 
-                $tests = $this->stripDescriptorTags($tests, CestDataConstants::CEST_ANNOTATIONS);
+                $tests = $this->stripDescriptorTags($tests, CestObjectHandler::CEST_ANNOTATIONS);
             }
 
-
-            $cests[] = new CestObject(
+            $this->cests[$cestName] = new CestObject(
                 $cestName,
                 $annotations,
                 $this->extractTestData($tests),
                 $hooks
             );
         }
-
-        return $cests;
     }
 
     /**
@@ -98,13 +142,13 @@ class CestArrayProcessor
      *
      * @param string $hookType
      * @param array $cestHook
-     * @return array
+     * @return CestHookObject
      */
     private function extractHook($hookType, $cestHook)
     {
         $hookActions = $this->stripDescriptorTags(
             $cestHook,
-            CestDataConstants::NODE_NAME
+            CestObjectHandler::NODE_NAME
         );
 
         $hook = new CestHookObject(
@@ -126,13 +170,13 @@ class CestArrayProcessor
     private function extractAnnotations($cestAnnotations)
     {
         $annotationObjects = [];
-        $annotations = $this->stripDescriptorTags($cestAnnotations, CestDataConstants::NODE_NAME);
+        $annotations = $this->stripDescriptorTags($cestAnnotations, CestObjectHandler::NODE_NAME);
 
         // parse the Cest annotations
         foreach ($annotations as $annotationKey => $annotationData) {
             $annotationValues = [];
             foreach ($annotationData as $annotationValue) {
-                $annotationValues[] = $annotationValue[CestDataConstants::ANNOTATION_VALUE];
+                $annotationValues[] = $annotationValue[CestObjectHandler::ANNOTATION_VALUE];
             }
 
             $annotationObjects[$annotationKey] = $annotationValues;
@@ -161,13 +205,13 @@ class CestArrayProcessor
             $testAnnotations = [];
             $testActions = $this->stripDescriptorTags(
                 $testData,
-                CestDataConstants::NODE_NAME,
-                CestDataConstants::NAME,
-                CestDataConstants::TEST_ANNOTATIONS
+                CestObjectHandler::NODE_NAME,
+                CestObjectHandler::NAME,
+                CestObjectHandler::TEST_ANNOTATIONS
             );
 
-            if (array_key_exists(CestDataConstants::TEST_ANNOTATIONS, $testData)) {
-                $testAnnotations = $this->extractAnnotations($testData[CestDataConstants::TEST_ANNOTATIONS]);
+            if (array_key_exists(CestObjectHandler::TEST_ANNOTATIONS, $testData)) {
+                $testAnnotations = $this->extractAnnotations($testData[CestObjectHandler::TEST_ANNOTATIONS]);
             }
 
             $testObjects[] = new TestObject(
@@ -193,36 +237,35 @@ class CestArrayProcessor
         $actions = [];
 
         foreach ($testActions as $actionName => $actionData) {
-            $mergeKey = $actionData[CestDataConstants::TEST_STEP_MERGE_KEY];
+            $mergeKey = $actionData[CestObjectHandler::TEST_STEP_MERGE_KEY];
             $actionAttributes = $this->stripDescriptorTags(
                 $actionData,
-                CestDataConstants::TEST_STEP_MERGE_KEY,
-                CestDataConstants::NODE_NAME
+                CestObjectHandler::TEST_STEP_MERGE_KEY,
+                CestObjectHandler::NODE_NAME
             );
             $linkedAction = null;
             $order = null;
 
-            if (array_key_exists(CestDataConstants::TEST_ACTION_BEFORE, $actionData)
-                and array_key_exists(CestDataConstants::TEST_ACTION_AFTER, $actionData)) {
+            if (array_key_exists(CestObjectHandler::TEST_ACTION_BEFORE, $actionData)
+                and array_key_exists(CestObjectHandler::TEST_ACTION_AFTER, $actionData)) {
                 throw new XmlException(sprintf(self::BEFORE_AFTER_ERROR_MSG, $actionName));
             }
 
-            if (array_key_exists(CestDataConstants::TEST_ACTION_BEFORE, $actionData)) {
-                $linkedAction = $actionData[CestDataConstants::TEST_ACTION_BEFORE];
+            if (array_key_exists(CestObjectHandler::TEST_ACTION_BEFORE, $actionData)) {
+                $linkedAction = $actionData[CestObjectHandler::TEST_ACTION_BEFORE];
                 $order = "before";
-            } elseif (array_key_exists(CestDataConstants::TEST_ACTION_AFTER, $actionData)) {
-                $linkedAction = $actionData[CestDataConstants::TEST_ACTION_AFTER];
+            } elseif (array_key_exists(CestObjectHandler::TEST_ACTION_AFTER, $actionData)) {
+                $linkedAction = $actionData[CestObjectHandler::TEST_ACTION_AFTER];
                 $order = "after";
             }
-
             // TODO this is to be implemented later. Currently the schema does not use or need return var.
-            /*if (array_key_exists(CestDataConstants::TEST_ACTION_RETURN_VARIABLE, $actionData)) {
-                $returnVariable = $actionData[CestDataConstants::TEST_ACTION_RETURN_VARIABLE];
+            /*if (array_key_exists(CestObjectHandler::TEST_ACTION_RETURN_VARIABLE, $actionData)) {
+                $returnVariable = $actionData[CestObjectHandler::TEST_ACTION_RETURN_VARIABLE];
             }*/
 
             $actions[] = new ActionObject(
                 $mergeKey,
-                $actionData[CestDataConstants::NODE_NAME],
+                $actionData[CestObjectHandler::NODE_NAME],
                 $actionAttributes,
                 $linkedAction,
                 $order
@@ -238,8 +281,8 @@ class CestArrayProcessor
      * the data passed in of the irrelevant tags and returns the result.
      *
      * @param array $data
-     * @param array ...$tags
-     * @return mixed
+     * @param array $tags
+     * @return array
      */
     private function stripDescriptorTags($data, ...$tags)
     {
