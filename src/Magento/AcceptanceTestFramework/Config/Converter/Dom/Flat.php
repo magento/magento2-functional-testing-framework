@@ -30,6 +30,25 @@ class Flat
     }
 
     /**
+     * Retrieve key-value pairs of node attributes
+     *
+     * @param \DOMNode $node
+     * @return array
+     */
+    protected function getNodeAttributes(\DOMNode $node)
+    {
+        $result = [];
+        $attributes = $node->attributes ?: [];
+        /** @var \DOMNode $attribute */
+        foreach ($attributes as $attribute) {
+            if ($attribute->nodeType == XML_ATTRIBUTE_NODE) {
+                $result[$attribute->nodeName] = $attribute->nodeValue;
+            }
+        }
+        return $result;
+    }
+
+    /**
      * Convert dom node tree to array in general case or to string in a case of a text node
      *
      * Example:
@@ -105,25 +124,6 @@ class Flat
                 $result['value'] = $value;
             } else {
                 $result = $value;
-            }
-        }
-        return $result;
-    }
-
-    /**
-     * Retrieve key-value pairs of node attributes
-     *
-     * @param \DOMNode $node
-     * @return array
-     */
-    protected function getNodeAttributes(\DOMNode $node)
-    {
-        $result = [];
-        $attributes = $node->attributes ?: [];
-        /** @var \DOMNode $attribute */
-        foreach ($attributes as $attribute) {
-            if ($attribute->nodeType == XML_ATTRIBUTE_NODE) {
-                $result[$attribute->nodeName] = $attribute->nodeValue;
             }
         }
         return $result;

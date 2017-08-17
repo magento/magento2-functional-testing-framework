@@ -172,6 +172,7 @@ class Developer implements \Magento\AcceptanceTestFramework\ObjectManager\Factor
      * @throws \Exception
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPCPD)
      */
     public function create($requestedType, array $arguments = [])
     {

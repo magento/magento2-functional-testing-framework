@@ -224,10 +224,10 @@ class Factory extends \Magento\AcceptanceTestFramework\ObjectManager\Factory\Dyn
      */
     public function create($requestedType, array $arguments = [])
     {
-        $type = $this->config->getInstanceType($requestedType);
-        $parameters = $this->definitions->getParameters($type);
+        $instanceType = $this->config->getInstanceType($requestedType);
+        $parameters = $this->definitions->getParameters($instanceType);
         if ($parameters == null) {
-            return new $type();
+            return new $instanceType();
         }
         if (isset($this->creationStack[$requestedType])) {
             $lastFound = end($this->creationStack);
@@ -243,7 +243,7 @@ class Factory extends \Magento\AcceptanceTestFramework\ObjectManager\Factory\Dyn
             throw $e;
         }
 
-        $reflection = new \ReflectionClass($type);
+        $reflection = new \ReflectionClass($instanceType);
 
         return $reflection->newInstanceArgs($args);
     }
