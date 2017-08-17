@@ -85,11 +85,17 @@ class DataManager
             $dataValues = [];
             $linkedEntities = [];
             $arrayValues = [];
+            $uniquenessValues = [];
 
             if (array_key_exists(DataGeneratorConstants::DATA_VALUES, $entity)) {
                 foreach ($entity[DataGeneratorConstants::DATA_VALUES] as $dataElement) {
                     $dataElementKey = strtolower($dataElement[DataGeneratorConstants::DATA_ELEMENT_KEY]);
                     $dataElementValue = $dataElement[DataGeneratorConstants::DATA_ELEMENT_VALUE];
+                    if (array_key_exists(DataGeneratorConstants::DATA_ELEMENT_UNIQUENESS_ATTR, $dataElement)) {
+                        $uniquenessValues[$dataElementKey] = $dataElement[
+                            DataGeneratorConstants::DATA_ELEMENT_UNIQUENESS_ATTR
+                        ];
+                    }
 
                     $dataValues[$dataElementKey] = $dataElementValue;
                 }
@@ -121,7 +127,8 @@ class DataManager
                 $entityName,
                 $entityType,
                 $dataValues,
-                $linkedEntities
+                $linkedEntities,
+                $uniquenessValues
             );
 
             $this->data[$entityXmlObject->getName()] = $entityXmlObject;

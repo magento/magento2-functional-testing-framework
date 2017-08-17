@@ -3,14 +3,44 @@
 namespace Magento\AcceptanceTestFramework\DataGenerator\Objects;
 
 use Magento\AcceptanceTestFramework\DataGenerator\DataGeneratorConstants;
-use Magento\AcceptanceTestFramework\DataGenerator\Managers\EntityDataManager;
+use Magento\AcceptanceTestFramework\DataGenerator\Managers\DataManager;
 
 class EntityDataObject
 {
+    /**
+     * Entity name.
+     *
+     * @var string
+     */
     private $name;
+
+    /**
+     * Entity type.
+     *
+     * @var string
+     */
     private $type;
-    private $linkedEntities = []; //array of required entity name to corresponding type
-    private $data = []; //array of Data Name to Data Value
+
+    /**
+     * Array of required entity name to corresponding type.
+     *
+     * @var array
+     */
+    private $linkedEntities = [];
+
+    /**
+     * Array of data name to data value.
+     *
+     * @var array
+     */
+    private $data = [];
+
+    /**
+     * Array of data name and its uniqueness attribute value.
+     *
+     * @var array
+     */
+    private $uniquenessData = [];
 
     /**
      * EntityDataObject constructor.
@@ -18,13 +48,17 @@ class EntityDataObject
      * @param string $entityType
      * @param array $data
      * @param array $linkedEntities
+     * @param array $uniquenessData
      */
-    public function __construct($entityName, $entityType, $data, $linkedEntities)
+    public function __construct($entityName, $entityType, $data, $linkedEntities, $uniquenessData = null)
     {
         $this->name = $entityName;
         $this->type = $entityType;
         $this->data = $data;
         $this->linkedEntities = $linkedEntities;
+        if ($uniquenessData) {
+            $this->uniquenessData = $uniquenessData;
+        }
     }
 
     public function getLinkedEntities()
@@ -68,7 +102,7 @@ class EntityDataObject
      */
     public function getLinkedEntitiesOfType($fieldType)
     {
-        $groupedArray = array();
+        $groupedArray = [];
 
         foreach ($this->linkedEntities as $entityName => $entityType) {
             if ($entityType == $fieldType) {
@@ -77,5 +111,22 @@ class EntityDataObject
         }
 
         return $groupedArray;
+    }
+
+    /**
+     * This function retrieves uniqueness data by its name.
+     *
+     * @param string $dataName
+     * @return string|null
+     */
+    public function getUniquenessDataByName($dataName)
+    {
+        $name = strtolower($dataName);
+
+        if (array_key_exists($name, $this->uniquenessData)) {
+            return $this->uniquenessData[$name];
+        }
+
+        return null;
     }
 }

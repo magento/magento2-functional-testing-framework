@@ -11,6 +11,9 @@ class DataGeneratorConstants
     const DATA_VALUES = 'data';
     const DATA_ELEMENT_KEY = 'key';
     const DATA_ELEMENT_VALUE = 'value';
+    const DATA_ELEMENT_UNIQUENESS_ATTR = 'unique';
+    const DATA_ELEMENT_UNIQUENESS_ATTR_VALUE_PREFIX = 'prefix';
+    const DATA_ELEMENT_UNIQUENESS_ATTR_VALUE_SUFFIX = 'suffix';
 
     const ARRAY_VALUES = 'array';
     const ARRAY_ELEMENT_KEY = 'key';

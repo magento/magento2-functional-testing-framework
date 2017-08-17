@@ -5,6 +5,7 @@ namespace Magento\AcceptanceTestFramework\Test\Objects;
 use Magento\AcceptanceTestFramework\PageObject\Page\Page;
 use Magento\AcceptanceTestFramework\PageObject\Section\Section;
 use Magento\AcceptanceTestFramework\DataGenerator\Managers\DataManager;
+use Magento\AcceptanceTestFramework\DataGenerator\DataGeneratorConstants;
 
 class ActionObject
 {
@@ -26,6 +27,7 @@ class ActionObject
     private $timeout;
 
     const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray"];
+    const UNIQUENESS_FUNCTION = 'msq';
 
     /**
      * ActionObject constructor.
@@ -237,6 +239,14 @@ class ActionObject
                 if ($replacement == null) {
                     // Bad entity.key reference
                     return;
+                }
+
+                $uniquenessData = $entityObj->getUniquenessDataByName($entityKey);
+
+                if ($uniquenessData == DataGeneratorConstants::DATA_ELEMENT_UNIQUENESS_ATTR_VALUE_PREFIX) {
+                    $replacement = self::UNIQUENESS_FUNCTION . '("' . $entityName . '.' . $entityKey . '")' . $replacement;
+                } elseif ($uniquenessData == DataGeneratorConstants::DATA_ELEMENT_UNIQUENESS_ATTR_VALUE_SUFFIX) {
+                    $replacement .= self::UNIQUENESS_FUNCTION . '("' . $entityName . '.' . $entityKey . '")';
                 }
 
                 $varInput  = str_replace($reference, $replacement, $varInput);

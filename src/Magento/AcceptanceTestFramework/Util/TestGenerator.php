@@ -3,6 +3,7 @@
 namespace Magento\AcceptanceTestFramework\Util;
 
 use Magento\AcceptanceTestFramework\Test\Managers\CestArrayProcessor;
+use Magento\AcceptanceTestFramework\Test\Objects\ActionObject;
 
 class TestGenerator
 {
@@ -281,7 +282,33 @@ class TestGenerator
             if (isset($customActionAttributes['url']) && isset($customActionAttributes['userInput'])) {
                 $input = sprintf("\"%s\"", $customActionAttributes['userInput']);
             } elseif (isset($customActionAttributes['userInput'])) {
-                $input = sprintf("\"%s\"", $customActionAttributes['userInput']);
+                preg_match(
+                    '/' . ActionObject::UNIQUENESS_FUNCTION .'\("[\w]+.[\w]+"\)/',
+                    $customActionAttributes['userInput'],
+                    $matches
+                );
+                if (!empty($matches)) {
+                    $parts = preg_split(
+                        '/' . ActionObject::UNIQUENESS_FUNCTION . '\("[\w]+.[\w]+"\)/',
+                        $customActionAttributes['userInput'],
+                        -1
+                    );
+                    foreach ($parts as $part) {
+                        if (!$part) {
+                            if (!empty($input)) {
+                                $input .= '.';
+                            }
+                            $input .= $matches[0];
+                        } else {
+                            if (!empty($input)) {
+                                $input .= '.';
+                            }
+                            $input .= sprintf("\"%s\"", $part);
+                        }
+                    }
+                } else {
+                    $input = sprintf("\"%s\"", $customActionAttributes['userInput']);
+                }
             } elseif (isset($customActionAttributes['url'])) {
                 $input = sprintf("\"%s\"", $customActionAttributes['url']);
             } elseif (isset($customActionAttributes['time'])) {
