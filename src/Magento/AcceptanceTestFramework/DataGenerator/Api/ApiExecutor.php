@@ -1,47 +1,38 @@
 <?php
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
+
 namespace Magento\AcceptanceTestFramework\DataGenerator\Api;
 
-use Magento\AcceptanceTestFramework\DataGenerator\Managers\DataManager;
-use Magento\AcceptanceTestFramework\DataGenerator\Managers\JsonDefinitionManager;
+use Magento\AcceptanceTestFramework\DataGenerator\Handlers\DataObjectHandler;
+use Magento\AcceptanceTestFramework\DataGenerator\Handlers\JsonDefinitionObjectHandler;
 use Magento\AcceptanceTestFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\AcceptanceTestFramework\DataGenerator\Objects\JsonDefinition;
 use Magento\AcceptanceTestFramework\Util\ApiClientUtil;
 
 class ApiExecutor
 {
     /**
-     * Entity operation root tag.
-     *
-     * @var string
-     */
+     * Describes the operation for the executor ('create','update','delete')
+     * @var string $operation
+     **/
     private $operation;
 
     /**
-     * Entity data object
-     *
-     * @var EntityDataObject
+     * The entity object data being created, updated, or deleted.
+     * @var EntityDataObject $entityObject
      */
     private $entityObject;
 
     /**
-     * Json definition of an object.
-     *
-     * @var \Magento\AcceptanceTestFramework\DataGenerator\Objects\JsonDefinition
+     * The json definitions used to map the operation.
+     * @var JsonDefinition $jsonDefinition
      */
     private $jsonDefinition;
 
-    /**
-     * Primitive types for casting values.
-     *
-     * @var array
-     */
-    private $primitives = ['string', 'boolean', 'integer', 'double', 'array'];
+    const PRIMITIVE_TYPES = ['string', 'boolean', 'integer', 'double', 'array'];
 
     /**
      * ApiSubObject constructor.
+     * @constructor
      * @param string $operation
      * @param EntityDataObject $entityObject
      */
@@ -50,16 +41,15 @@ class ApiExecutor
         $this->operation = $operation;
         $this->entityObject = $entityObject;
 
-        $this->jsonDefinition = JsonDefinitionManager::getInstance()->getJsonDefinition(
+        $this->jsonDefinition = JsonDefinitionObjectHandler::getInstance()->getJsonDefinition(
             $this->operation,
             $this->entityObject->getType()
         );
     }
 
     /**
-     * Method responsible for execution requests.
-     *
-     * @return string|bool
+     * Executes an api request based on parameters given by constructor.
+     * @return string | null
      */
     public function executeRequest()
     {
@@ -127,7 +117,7 @@ class ApiExecutor
      */
     private function getJsonDataArray($entityObject, $jsonDefMetadata = null)
     {
-        $jsonArrayMetadata = !$jsonDefMetadata ? JsonDefinitionManager::getInstance()->getJsonDefinition(
+        $jsonArrayMetadata = !$jsonDefMetadata ? JsonDefinitionObjectHandler::getInstance()->getJsonDefinition(
             $this->operation,
             $entityObject->getType()
         )->getJsonMetadata() : $jsonDefMetadata;
@@ -137,7 +127,7 @@ class ApiExecutor
         foreach ($jsonArrayMetadata as $jsonElement) {
             $jsonElementType = $jsonElement->getValue();
 
-            if (in_array($jsonElementType, $this->primitives)) {
+            if (in_array($jsonElementType, ApiExecutor::PRIMITIVE_TYPES)) {
                 $jsonArray[$jsonElement->getKey()] = $this->castValue(
                     $jsonElementType,
                     $entityObject->getDataByName($jsonElement->getKey())
@@ -146,7 +136,7 @@ class ApiExecutor
                 $entityNamesOfType = $entityObject->getLinkedEntitiesOfType($jsonElementType);
 
                 foreach ($entityNamesOfType as $entityName) {
-                    $linkedEntityObj = DataManager::getInstance()->getEntity($entityName);
+                    $linkedEntityObj = DataObjectHandler::getInstance()->getObject($entityName);
                     $jsonDataSubArray = self::getJsonDataArray($linkedEntityObj);
 
                     if ($jsonElement->getType() == 'array') {
@@ -162,24 +152,22 @@ class ApiExecutor
     }
 
     /**
-     * Encodes data to json string.
-     *
+     * This function retrieves an array representative of json body for a request and returns it encoded as a string.
      * @return string
      */
-    private function getEncodedJsonString()
+    public function getEncodedJsonString()
     {
         $jsonArray = $this->getJsonDataArray($this->entityObject, $this->jsonDefinition->getJsonMetadata());
 
         return json_encode([$this->entityObject->getType() => $jsonArray], JSON_PRETTY_PRINT);
     }
 
-    // @codingStandardsIgnoreStart
     /**
-     * Casting value based on type.
-     *
+     * This function takes a string value and its corresponding type and returns the string cast
+     * into its the type passed.
      * @param string $type
      * @param string $value
-     * @return mixed
+     * @return bool|float|int|string
      */
     private function castValue($type, $value)
     {
@@ -201,5 +189,4 @@ class ApiExecutor
 
         return $newVal;
     }
-    // @codingStandardsIgnoreEnd
 }

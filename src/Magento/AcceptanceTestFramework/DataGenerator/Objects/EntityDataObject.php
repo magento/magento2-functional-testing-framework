@@ -1,41 +1,30 @@
 <?php
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
 
 namespace Magento\AcceptanceTestFramework\DataGenerator\Objects;
-
-use Magento\AcceptanceTestFramework\DataGenerator\DataGeneratorConstants;
-use Magento\AcceptanceTestFramework\DataGenerator\Managers\EntityDataManager;
 
 class EntityDataObject
 {
     /**
-     * Entity name.
-     *
-     * @var string
+     * Name of the entity
+     * @var string $name
      */
     private $name;
 
     /**
-     * Entity type.
-     *
-     * @var string
+     * Type of the entity
+     * @var string $type
      */
     private $type;
 
     /**
-     * Array of required entity name to corresponding type.
-     *
-     * @var array
+     * An array of required entity name to corresponding type
+     * @var array $linkedEntities
      */
     private $linkedEntities = [];
 
     /**
-     * Array of Data Name to Data Value.
-     *
-     * @var array
+     * An array of Data Name to Data Value
+     * @var array $data
      */
     private $data = [];
 
@@ -46,7 +35,7 @@ class EntityDataObject
      * @param array $data
      * @param array $linkedEntities
      */
-    public function __construct($entityName, $entityType, array $data, array $linkedEntities)
+    public function __construct($entityName, $entityType, $data, $linkedEntities)
     {
         $this->name = $entityName;
         $this->type = $entityType;
@@ -55,31 +44,28 @@ class EntityDataObject
     }
 
     /**
-     * Returns array of linked entities.
-     *
+     * Getter for linked entity names
      * @return array
      */
-    public function getLinkedEntities(): array
+    public function getLinkedEntities()
     {
         return $this->linkedEntities;
     }
 
     /**
-     * Returns entity name.
-     *
+     * Getter for entity name
      * @return string
      */
-    public function getName(): string
+    public function getName()
     {
         return $this->name;
     }
 
     /**
-     * Returns entity type.
-     *
+     * Getter for entity type
      * @return string
      */
-    public function getType(): string
+    public function getType()
     {
         return $this->type;
     }
@@ -88,9 +74,9 @@ class EntityDataObject
      * This function retrieves data from an entity defined in xml.
      *
      * @param string $dataName
-     * @return string|null
+     * @return string
      */
-    public function getDataByName(string $dataName)
+    public function getDataByName($dataName)
     {
         $name = strtolower($dataName);
 
@@ -108,7 +94,7 @@ class EntityDataObject
      * @param string $fieldType
      * @return array
      */
-    public function getLinkedEntitiesOfType(string $fieldType): array
+    public function getLinkedEntitiesOfType($fieldType)
     {
         $groupedArray = [];
 

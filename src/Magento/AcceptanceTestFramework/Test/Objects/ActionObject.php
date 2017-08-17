@@ -1,72 +1,69 @@
 <?php
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
+
 namespace Magento\AcceptanceTestFramework\Test\Objects;
 
-use Magento\AcceptanceTestFramework\PageObject\Page\Page;
-use Magento\AcceptanceTestFramework\PageObject\Section\Section;
-use Magento\AcceptanceTestFramework\DataGenerator\Managers\DataManager;
+use Magento\AcceptanceTestFramework\DataGenerator\Handlers\DataObjectHandler;
+use Magento\AcceptanceTestFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\AcceptanceTestFramework\ObjectManager\ObjectHandlerInterface;
+use Magento\AcceptanceTestFramework\Page\Objects\PageObject;
+use Magento\AcceptanceTestFramework\Page\Objects\SectionObject;
+use Magento\AcceptanceTestFramework\Page\Handlers\PageObjectHandler;
+use Magento\AcceptanceTestFramework\Page\Handlers\SectionObjectHandler;
 
-/**
- * Class ActionObject
- */
 class ActionObject
 {
     /**
-     * Merge key
-     *
+     * The unique identifier for the action
      * @var string $mergeKey
      */
     private $mergeKey;
 
     /**
-     * Class property.
-     *
-     * @var string
+     * The type of action (e.g. fillField, createData, etc)
+     * @var string $type
      */
     private $type;
 
     /**
-     * Class property.
-     *
-     * @var array
+     * THe attributes which describe the action (e.g. selector,
+     * @var array $actionAttributes
      */
     private $actionAttributes = [];
 
     /**
-     * Class property.
-     *
-     * @var null|string
+     * The name of the action to reference when merging this action into existing test steps
+     * @var null|string $linkedAction
      */
     private $linkedAction;
 
     /**
-     * Class property.
-     *
-     * @var int
+     * A value used to describe position during merge
+     * @var int $orderOffset
      */
     private $orderOffset = 0;
 
     /**
-     * Class property.
-     *
-     * @var array
+     * An array which contains variable resolution of all specified parameters in an action
+     * @var array $resolvedCustomAttributes
      */
     private $resolvedCustomAttributes = [];
 
     /**
-     * Class property.
-     *
-     * @var int
+     * A string which represents a needed timeout whenever the action is referenced
+     * @var string timeout
      */
     private $timeout;
 
     const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray"];
+    const MERGE_ACTION_ORDER_AFTER = 'after';
+    const ACTION_ATTRIBUTE_URL = 'url';
+    const ACTION_ATTRIBUTE_SELECTOR = 'selector';
+    const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/{{[\w.]+}}/';
+
 
     /**
      * ActionObject constructor.
+     * @constructor
      * @param string $mergeKey
      * @param string $type
      * @param array $actionAttributes
@@ -80,7 +77,7 @@ class ActionObject
         $this->actionAttributes = $actionAttributes;
         $this->linkedAction = $linkedAction;
 
-        if ($order == 'after') {
+        if ($order == ActionObject::MERGE_ACTION_ORDER_AFTER) {
             $this->orderOffset = 1;
         }
     }
@@ -147,10 +144,9 @@ class ActionObject
 
     /**
      * Populate the resolved custom attributes array with lookup values for the following attributes:
-     *  - selector
-     *  - url
-     *  - userInput
-     *
+     *   selector
+     *   url
+     *   userInput
      * @return void
      */
     public function resolveReferences()
@@ -166,85 +162,46 @@ class ActionObject
      * Look up the selector for SomeSectionName.ElementName and set it as the selector attribute in the
      * resolved custom attributes. Also set the timeout value.
      * e.g. {{SomeSectionName.ElementName}} becomes #login-button
-     *
      * @return void
      */
     private function resolveSelectorReferenceAndTimeout()
     {
-        if (!array_key_exists('selector', $this->actionAttributes)) {
-            return;
-        }
-        $selector = $this->actionAttributes['selector'];
-
-        $reference = $this->findAllReferences($selector);
-        if (count($reference) == 1) {
-            $reference = $reference[0];
-        } else {
-            // Selectors can only handle a single var reference
+        if (!array_key_exists(ActionObject::ACTION_ATTRIBUTE_SELECTOR, $this->actionAttributes)) {
             return;
         }
 
-        list($sectionName, $elementName) = $this->stripAndSplitReference($reference);
-        $section = Section::getSection($sectionName);
-        if ($section == null) {
-            // Bad section reference
-            return;
-        }
+        $selector = $this->actionAttributes[ActionObject::ACTION_ATTRIBUTE_SELECTOR];
 
-        $replacement = Section::getElementLocator($sectionName, $elementName);
-
-        if ($replacement == null) {
-            // Bad section reference
-            return;
+        $replacement = $this->findAndReplaceReferences(SectionObjectHandler::getInstance(), $selector);
+        if ($replacement) {
+            $this->resolvedCustomAttributes[ActionObject::ACTION_ATTRIBUTE_SELECTOR] = $replacement;
         }
-        $this->resolvedCustomAttributes['selector'] = str_replace($reference, $replacement, $selector);
-        $this->timeout = Section::getElementTimeOut($sectionName, $elementName);
     }
 
     /**
      * Look up the url for SomePageName and set it, with MAGENTO_BASE_URL prepended, as the url attribute in the
      * resolved custom attributes.
      * e.g. {{SomePageName}} becomes http://localhost:76543/some/url
-     *
      * @return void
      */
     private function resolveUrlReference()
     {
-        if (!array_key_exists('url', $this->actionAttributes)) {
+        if (!array_key_exists(ActionObject::ACTION_ATTRIBUTE_URL, $this->actionAttributes)) {
             return;
         }
-        $url = $this->actionAttributes['url'];
 
-        foreach ($this->findAllReferences($url) as $reference) {
-            $replacement = null;
+        $url = $this->actionAttributes[ActionObject::ACTION_ATTRIBUTE_URL];
 
-            // assume this is a page
-            list($pageName) = $this->stripAndSplitReference($reference);
-            $page = Page::getPage($pageName);
-
-            if ($page != null) {
-                $replacement = Page::getPageUrl($pageName);
-            } else {
-                // try to resolve as data
-                list($entityName, $entityField) = $this->stripAndSplitReference($reference);
-                $replacement = DataManager::getInstance()->getEntity($entityName)->getDataByName($entityField);
-            }
-
-            if ($replacement == null) {
-                continue;
-                // Bad var ref
-            }
-            $url = str_replace($reference, $replacement, $url);
+        $replacement = $this->findAndReplaceReferences(PageObjectHandler::getInstance(), $url);
+        if ($replacement) {
+            $this->resolvedCustomAttributes[ActionObject::ACTION_ATTRIBUTE_URL] = $replacement;
         }
-
-        $this->resolvedCustomAttributes['url'] = $url;
     }
 
     /**
      * Look up the value for EntityDataObjectName.Key and set it as the corresponding attribute in the resolved custom
      * attributes.
      * e.g. {{CustomerEntityFoo.FirstName}} becomes Jerry
-     *
      * @return void
      */
     private function resolveDataInputReferences()
@@ -258,31 +215,15 @@ class ActionObject
 
         foreach ($relevantDataAttributes as $dataAttribute) {
             $varInput = $this->actionAttributes[$dataAttribute];
-
-            foreach ($this->findAllReferences($varInput) as $reference) {
-                list($entityName, $entityKey) = $this->stripAndSplitReference($reference);
-                $entityObj = DataManager::getInstance()->getEntity($entityName);
-                if ($entityObj == null) {
-                    // Bad entity reference
-                    continue;
-                }
-
-                $replacement = $entityObj->getDataByName($entityKey) ?? null;
-                if ($replacement == null) {
-                    // Bad entity.key reference
-                    return;
-                }
-
-                $varInput  = str_replace($reference, $replacement, $varInput);
+            $replacement = $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $varInput);
+            if ($replacement) {
+                $this->resolvedCustomAttributes[$dataAttribute] = $replacement;
             }
-
-            $this->resolvedCustomAttributes[$dataAttribute] = $varInput;
         }
     }
 
     /**
      * Return an array containing the name (before the period) and key (after the period) in a {{reference.foo}}.
-     *
      * @param string $reference
      * @return string[] The name and key that is referenced.
      */
@@ -293,18 +234,52 @@ class ActionObject
     }
 
     /**
-     * Return an array of {{reference.foo}} if any exist in the string, otherwise returns an empty array.
-     *
-     * @param string $str
-     * @return array
+     * Return a string based on a reference to a page, section, or data field (e.g. {{foo.ref}} resolves to 'data')
+     * @param ObjectHandlerInterface $objectHandler
+     * @param string $inputString
+     * @return string | null
      */
-    private function findAllReferences($str)
+    private function findAndReplaceReferences($objectHandler, $inputString)
     {
-        preg_match_all('/{{[\w.]+}}/', $str, $matches);
-        if (empty($matches)) {
-            return [];
-        } else {
-            return $matches[0];
+        preg_match_all(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN, $inputString, $matches);
+
+        if (empty($matches[0])) {
+            return null;
         }
+
+        $outputString = $inputString;
+
+        foreach ($matches[0] as $match) {
+            $replacement = null;
+            list($objName) = $this->stripAndSplitReference($match);
+
+            $obj = $objectHandler->getObject($objName);
+
+            // sepcify behavior depending on field
+            switch (get_class($obj)) {
+                case PageObject::class:
+                    $replacement = $obj->getUrl();
+                    break;
+                case SectionObject::class:
+                    list(,$objField) = $this->stripAndSplitReference($match);
+                    $replacement = $obj->getElement($objField)->getLocator();
+                    $this->timeout = $obj->getElement($objField)->getTimeout();
+                    break;
+                case (get_class($obj) == EntityDataObject::class):
+                    list(,$objField) = $this->stripAndSplitReference($match);
+                    $replacement = $obj->getDataByName($objField);
+                    break;
+            }
+
+            //Check to see if field is defined as data if cannot be found in a different interface
+            if ($replacement == null && get_class($obj) != EntityDataObject::class) {
+                $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $inputString);
+            }
+
+            $outputString = str_replace($match, $replacement, $outputString);
+
+        }
+
+        return $outputString;
     }
 }

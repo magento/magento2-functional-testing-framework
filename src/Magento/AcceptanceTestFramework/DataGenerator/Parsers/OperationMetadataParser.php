@@ -1,17 +1,10 @@
 <?php
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
 
 namespace Magento\AcceptanceTestFramework\DataGenerator\Parsers;
 
 use Magento\AcceptanceTestFramework\Config\DataInterface;
 
-/**
- * Class MetadataParser
- */
-class MetadataParser
+class OperationMetadataParser
 {
     /**
      * MetadataParser constructor.
@@ -23,11 +16,10 @@ class MetadataParser
     }
 
     /**
-     * Returns metadata.
-     *
-     * @return array|null
+     * Returns an array containing all data read from operations.xml files.
+     * @return array
      */
-    public function readMetadata()
+    public function readOperationMetadata()
     {
         return $this->metadata->get();
     }

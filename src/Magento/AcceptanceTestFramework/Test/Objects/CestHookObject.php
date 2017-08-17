@@ -1,32 +1,24 @@
 <?php
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
 
 namespace Magento\AcceptanceTestFramework\Test\Objects;
 
-/**
- * Class CestHookObject
- */
 class CestHookObject
 {
     /**
-     * Type.
-     *
-     * @var string
+     * Type of Hook (i.e. before or after).
+     * @var string $type
      */
     private $type;
 
     /**
-     * Actions.
-     *
-     * @var array
+     * Array which contains the action objects to be executed in a hook.
+     * @var array $actions
      */
     private $actions = [];
 
     /**
      * CestHookObject constructor.
+     * @constructor
      * @param string $type
      * @param array $actions
      */
@@ -37,8 +29,7 @@ class CestHookObject
     }
 
     /**
-     * Returns type.
-     *
+     * Getter for hook type
      * @return string
      */
     public function getType()
@@ -47,8 +38,7 @@ class CestHookObject
     }
 
     /**
-     * Returns actions.
-     *
+     * Returns an array of action objects to be executed within the hook.
      * @return array
      */
     public function getActions()

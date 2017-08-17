@@ -1,8 +1,4 @@
 <?php
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
 
 namespace Magento\AcceptanceTestFramework\DataGenerator\Api;
 
@@ -11,21 +7,20 @@ use Magento\AcceptanceTestFramework\DataGenerator\Objects\EntityDataObject;
 class EntityApiHandler
 {
     /**
-     * Original data object.
-     *
-     * @var EntityDataObject
+     * Entity object data to use for create, delete, or update.
+     * @var EntityDataObject $entityObject
      */
     private $entityObject;
 
     /**
-     * New data object.
-     *
-     * @var EntityDataObject
+     * Resulting created object from create or update.
+     * @var EntityDataObject $createdObject
      */
     private $createdObject;
 
     /**
      * ApiPersistenceHandler constructor.
+     * @constructor
      * @param EntityDataObject $entityObject
      */
     public function __construct($entityObject)
@@ -34,9 +29,8 @@ class EntityApiHandler
     }
 
     /**
-     * Method responsible for creating entity.
-     *
-     * @return void
+     * Function which executes a create request based on specific operation metadata
+     * @return string | false
      */
     public function createEntity()
     {
@@ -49,12 +43,13 @@ class EntityApiHandler
             json_decode($result, true),
             null
         );
+
+        return $result;
     }
 
     /**
-     * Method responsible for deleting entity.
-     *
-     * @return bool|string
+     * Function which executes a delete request based on specific operation metadata
+     * @return string | false
      */
     public function deleteEntity()
     {

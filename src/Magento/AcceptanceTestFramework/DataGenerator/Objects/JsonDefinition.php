@@ -1,83 +1,66 @@
 <?php
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
 
 namespace Magento\AcceptanceTestFramework\DataGenerator\Objects;
 
-/**
- * Class JsonDefinition
- */
 class JsonDefinition
 {
     /**
-     * Name of entity definition.
-     *
-     * @var string
+     * Json Definitions Name
+     * @var string $name
      */
     private $name;
 
     /**
-     * Operation.
-     *
-     * @var string
+     * Operation which the json defintion describes
+     * @var string $operation
      */
     private $operation;
 
     /**
-     * Data type.
-     *
-     * @var string
+     * Data type for which the json defintiion is used
+     * @var string $dataType
      */
     private $dataType;
 
     /**
-     * HTTP Request method.
-     *
-     * @var string
+     * Api method such as ('POST', 'PUT', 'GET', DELETE', etc.)
+     * @var string $apiMethod
      */
     private $apiMethod;
 
     /**
-     * Application base url.
-     *
-     * @var string
+     * Base URL for the request
+     * @var string $baseUrl
      */
     private $baseUrl;
 
     /**
-     * API url.
-     *
-     * @var string
+     * Resource specific URI for the request
+     * @var string $apiUrl
      */
     private $apiUrl;
 
     /**
-     * Authentication.
-     *
-     * @var string
+     * Authorization path for retrieving a token
+     * @var string $auth
      */
     private $auth;
 
     /**
-     * HTTP request headers.
-     *
-     * @var array
+     * Relevant headers for the request
+     * @var array $headers
      */
     private $headers = [];
 
     /**
-     * Request parameters.
-     *
-     * @var array
+     * Relevant params for the request (e.g. query, path)
+     * @var array $params
      */
     private $params = [];
 
     /**
-     * Entity metadata.
-     *
-     * @var array
+     * The metadata describing the json fields and values themselves
+     * @var array $jsonMetadata
      */
     private $jsonMetadata = [];
 
@@ -116,8 +99,7 @@ class JsonDefinition
     }
 
     /**
-     * Returns data type.
-     *
+     * Getter for json data type
      * @return string
      */
     public function getDataType()
@@ -126,8 +108,7 @@ class JsonDefinition
     }
 
     /**
-     * Returns operation.
-     *
+     * Getter for json operation
      * @return string
      */
     public function getOperation()
@@ -136,8 +117,7 @@ class JsonDefinition
     }
 
     /**
-     * Returns HTTP request method.
-     *
+     * Getter for api method
      * @return string
      */
     public function getApiMethod()
@@ -146,8 +126,7 @@ class JsonDefinition
     }
 
     /**
-     * Returns API url.
-     *
+     * Getter for api url
      * @return string
      */
     public function getApiUrl()
@@ -166,8 +145,7 @@ class JsonDefinition
     }
 
     /**
-     * Returns auth key.
-     *
+     * Getter for auth path
      * @return string
      */
     public function getAuth()
@@ -176,8 +154,7 @@ class JsonDefinition
     }
 
     /**
-     * Returns request headers.
-     *
+     * Getter for request headers
      * @return array
      */
     public function getHeaders()
@@ -186,8 +163,7 @@ class JsonDefinition
     }
 
     /**
-     * Returns entity metadata.
-     *
+     * Getter for json metadata
      * @return array
      */
     public function getJsonMetadata()
@@ -196,8 +172,7 @@ class JsonDefinition
     }
 
     /**
-     * Cleans api url.
-     *
+     * Function to validate api format and add "/" char where necessary
      * @return void
      */
     private function cleanApiUrl()
@@ -210,8 +185,7 @@ class JsonDefinition
     }
 
     /**
-     * Adding path params.
-     *
+     * Function to append path params where necessary
      * @return void
      */
     private function addPathParam()
@@ -222,8 +196,7 @@ class JsonDefinition
     }
 
     /**
-     * Adding query params.
-     *
+     * Function to append query params where necessary
      * @return void
      */
     private function addQueryParams()
@@ -239,4 +212,5 @@ class JsonDefinition
             $this->apiUrl = $paramName . "=" . $paramValue;
         }
     }
+
 }
