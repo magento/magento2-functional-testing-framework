@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 namespace Magento\AcceptanceTestFramework\XmlParser;
 
 use Magento\AcceptanceTestFramework\Config\DataInterface;
@@ -11,19 +15,20 @@ class PageParser implements ParserInterface
 {
     /**
      * Object manager.
+     *
      * @var \Magento\AcceptanceTestFramework\ObjectManager
      */
     protected $objectManager;
 
     /**
      * Configuration data.
+     *
      * @var DataInterface
      */
     protected $configData;
 
     /**
      * PageParser Constructor
-     * @constructor
      * @param ObjectManagerInterface $objectManager
      * @param DataInterface $configData
      */
@@ -36,7 +41,7 @@ class PageParser implements ParserInterface
     /**
      * Get parsed xml data.
      * @param string $type
-     * @return mixed
+     * @return array
      */
     public function getData($type)
     {

@@ -1,14 +1,28 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 namespace Magento\AcceptanceTestFramework\Page\Objects;
 
+/**
+ * Class SectionObject
+ */
 class SectionObject
 {
     /**
-     * @var string $name
-     * @var array $elements
+     * Section name.
+     *
+     * @var string
      */
     private $name;
+
+    /**
+     * Section elements.
+     *
+     * @var array
+     */
     private $elements = [];
 
     /**
@@ -24,6 +38,7 @@ class SectionObject
 
     /**
      * Getter for the name of the section
+     *
      * @return string
      */
     public function getName()
@@ -33,6 +48,7 @@ class SectionObject
 
     /**
      * Getter for an array containing all of a section's elements.
+     *
      * @return array
      */
     public function getElements()
@@ -42,7 +58,8 @@ class SectionObject
 
     /**
      * Given the name of an element, returns the element object
-     * @param $elementName
+     *
+     * @param string $elementName
      * @return ElementObject
      */
     public function getElement($elementName)

@@ -10,12 +10,6 @@ use Magento\AcceptanceTestFramework\ObjectManagerFactory;
 
 class JsonDefinitionObjectHandler implements ObjectHandlerInterface
 {
-    /**
-     * Singleton Instance of class
-     * @var JsonDefinitionObjectHandler $JSON_DEFINITION_ARRAY_PROCESSOR
-     */
-    private static $JSON_DEFINITION_OBJECT_HANDLER;
-
     const ENTITY_OPERATION_ROOT_TAG = 'operation';
     const ENTITY_OPERATION_TYPE = 'type';
     const ENTITY_OPERATION_DATA_TYPE = 'dataType';
@@ -37,13 +31,22 @@ class JsonDefinitionObjectHandler implements ObjectHandlerInterface
     const ENTITY_OPERATION_ARRAY_VALUE = 'value';
 
     /**
+     * Singleton Instance of class
+     *
+     * @var JsonDefinitionObjectHandler
+     */
+    private static $JSON_DEFINITION_OBJECT_HANDLER;
+
+    /**
      * Array containing all Json Definition Objects
-     * @var array $jsonDefinitions
+     *
+     * @var array
      */
     private $jsonDefinitions = [];
 
     /**
      * Singleton method to return JsonDefinitionProcessor.
+     *
      * @return JsonDefinitionObjectHandler
      */
     public static function getInstance()
@@ -58,7 +61,8 @@ class JsonDefinitionObjectHandler implements ObjectHandlerInterface
 
     /**
      * Returns a JsonDefinition object based on name
-     * @param string $jsonDefitionName
+     *
+     * @param string $jsonDefinitionName
      * @return JsonDefinition
      */
     public function getObject($jsonDefinitionName)
@@ -68,6 +72,7 @@ class JsonDefinitionObjectHandler implements ObjectHandlerInterface
 
     /**
      * Returns all Json Definition objects
+     *
      * @return array
      */
     public function getAllObjects()
@@ -77,7 +82,6 @@ class JsonDefinitionObjectHandler implements ObjectHandlerInterface
 
     /**
      * JsonDefintionArrayProcessor constructor.
-     * @constructor
      */
     private function __construct()
     {
@@ -87,6 +91,7 @@ class JsonDefinitionObjectHandler implements ObjectHandlerInterface
     /**
      * This method takes an operation such as create and a data type such as 'customer' and returns the corresponding
      * json definition defined in metadata.xml
+     *
      * @param string $operation
      * @param string $dataType
      * @return JsonDefinition
@@ -98,6 +103,7 @@ class JsonDefinitionObjectHandler implements ObjectHandlerInterface
 
     /**
      * This method reads all jsonDefinitions from metadata xml into memory.
+     * @return void
      */
     private function initJsonDefinitions()
     {

@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 namespace Magento\AcceptanceTestFramework\DataGenerator\Objects;
 
@@ -6,18 +10,21 @@ class JsonElement
 {
     /**
      * Json parameter name
+     *
      * @var string $key
      */
     private $key;
 
     /**
      * Json parameter metadata value (e.g. string, bool)
+     *
      * @var string $value
      */
     private $value;
 
     /**
      * Json type such as array or entry
+     *
      * @var string $type
      */
     private $type;
@@ -37,6 +44,7 @@ class JsonElement
 
     /**
      * Getter for json parameter name
+     *
      * @return string
      */
     public function getKey()
@@ -46,6 +54,7 @@ class JsonElement
 
     /**
      * Getter for parameter metadata value
+     *
      * @return string
      */
     public function getValue()
@@ -55,6 +64,7 @@ class JsonElement
 
     /**
      * Getter for parameter value type
+     *
      * @return string
      */
     public function getType()

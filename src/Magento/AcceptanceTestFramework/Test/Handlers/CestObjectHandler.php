@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 namespace Magento\AcceptanceTestFramework\Test\Handlers;
 
 use Magento\AcceptanceTestFramework\Exceptions\XmlException;
@@ -11,6 +14,9 @@ use Magento\AcceptanceTestFramework\Test\Objects\TestObject;
 use Magento\AcceptanceTestFramework\Test\Objects\CestHookObject;
 use Magento\AcceptanceTestFramework\Test\TestDataParser;
 
+/**
+ * Class CestObjectHandler
+ */
 class CestObjectHandler implements ObjectHandlerInterface
 {
     const BEFORE_AFTER_ERROR_MSG = "Merge Error - Steps cannot have both before and after attributes.\tTestStep='%s'";
@@ -28,18 +34,22 @@ class CestObjectHandler implements ObjectHandlerInterface
     const ANNOTATION_VALUE = 'value';
 
     /**
-     * @var CestObjectHandler $cestObjectHandler
+     * Cest Object Handler
+     *
+     * @var CestObjectHandler
      */
     private static $cestObjectHandler;
 
     /**
      * Array contains all cest objects indexed by name
+     *
      * @var array $cests
      */
     private $cests = [];
 
     /**
      * Singleton method to return CestObjectHandler.
+     *
      * @return CestObjectHandler
      */
     public static function getInstance()
@@ -56,7 +66,6 @@ class CestObjectHandler implements ObjectHandlerInterface
 
     /**
      * CestObjectHandler constructor.
-     * @constructor
      */
     private function __construct()
     {
@@ -65,6 +74,7 @@ class CestObjectHandler implements ObjectHandlerInterface
 
     /**
      * Takes a cest name and returns the corresponding cest.
+     *
      * @param string $cestName
      * @return CestObject
      */
@@ -75,6 +85,7 @@ class CestObjectHandler implements ObjectHandlerInterface
 
     /**
      * Returns all cests parsed from xml indexed by cestName.
+     *
      * @return array
      */
     public function getAllObjects()
@@ -84,8 +95,9 @@ class CestObjectHandler implements ObjectHandlerInterface
 
     /**
      * This method takes the parsed cest array and returns CestObjects parsed from defined *Cest.xml files
+     *
      * @param array $parsedArray
-     * @return array
+     * @return void
      */
     private function initCestData($parsedArray)
     {
@@ -155,7 +167,6 @@ class CestObjectHandler implements ObjectHandlerInterface
             $hookType,
             $this->extractTestActions($hookActions)
         );
-
 
         return $hook;
     }
@@ -275,7 +286,7 @@ class CestObjectHandler implements ObjectHandlerInterface
         return $actions;
     }
 
-
+    // @codingStandardsIgnoreStart
     /**
      * This method takes an array of data and an array representing irrelevant tags. The method strips
      * the data passed in of the irrelevant tags and returns the result.
@@ -293,4 +304,5 @@ class CestObjectHandler implements ObjectHandlerInterface
 
         return $results;
     }
+    // @codingStandardsIgnoreEnd
 }

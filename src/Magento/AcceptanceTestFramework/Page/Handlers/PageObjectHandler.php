@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 namespace Magento\AcceptanceTestFramework\Page\Handlers;
 
@@ -9,25 +13,28 @@ use Magento\AcceptanceTestFramework\XmlParser\PageParser;
 
 class PageObjectHandler implements ObjectHandlerInterface
 {
-    /**
-     * Singleton class variable instance
-     * @var PageObjectHandler $PAGE_DATA_PROCESSOR
-     */
-    private static $PAGE_DATA_PROCESSOR;
-
-    /**
-     * Array containing all page objects
-     * @var array $pages
-     */
-    private $pages = [];
-
     const TYPE = 'page';
     const SUB_TYPE = 'section';
     const URL_PATH_ATTR = 'urlPath';
     const MODULE_ATTR = 'module';
 
     /**
+     * Singleton class variable instance
+     *
+     * @var PageObjectHandler
+     */
+    private static $PAGE_DATA_PROCESSOR;
+
+    /**
+     * Array containing all page objects
+     *
+     * @var array
+     */
+    private $pages = [];
+
+    /**
      * Singleton method to return PageDataProcessor.
+     *
      * @return PageObjectHandler
      */
     public static function getInstance()
@@ -42,7 +49,6 @@ class PageObjectHandler implements ObjectHandlerInterface
 
     /**
      * PageObjectHandler constructor.
-     * @constructor
      */
     private function __construct()
     {
@@ -51,6 +57,7 @@ class PageObjectHandler implements ObjectHandlerInterface
 
     /**
      * Takes a page name and returns an array parsed from xml.
+     *
      * @param string $pageName
      * @return PageObject | null
      */
@@ -65,6 +72,7 @@ class PageObjectHandler implements ObjectHandlerInterface
 
     /**
      * Return an array containing all pages parsed from xml.
+     *
      * @return array
      */
     public function getAllObjects()
@@ -74,6 +82,7 @@ class PageObjectHandler implements ObjectHandlerInterface
 
     /**
      * Executes parser code to read in page xml data.
+     *
      * @return void
      */
     private function initPageObjects()

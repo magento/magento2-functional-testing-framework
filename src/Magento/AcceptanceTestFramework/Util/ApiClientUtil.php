@@ -1,43 +1,50 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 namespace Magento\AcceptanceTestFramework\Util;
 
 class ApiClientUtil
 {
     /**
-     * curl resource for request execution
+     * Curl resource for request execution
+     *
      * @var resource $curl
      */
     private $curl;
 
     /**
      * Api Path for the request
+     *
      * @var string $apiPath
      */
     private $apiPath;
 
     /**
      * Headers to be included in the request
+     *
      * @var array $headers
      */
     private $headers;
 
     /**
      * An HTTP Request Type (e.g. CREATE, GET, POST, DELETE)
+     *
      * @var string $apiOperation
      */
     private $apiOperation;
 
     /**
      * The json body to be submitted in the request
+     *
      * @var string $jsonBody
      */
     private $jsonBody;
 
-
     /**
      * ApiClientUtil constructor.
-     * @constructor
      * @param string $apiPath
      * @param array $headers
      * @param string $apiOperation
@@ -55,8 +62,9 @@ class ApiClientUtil
 
     /**
      * Submits the request based on object properties
+     *
      * @param bool $verbose
-     * @return string | false
+     * @return string|bool
      */
     public function submit($verbose = false)
     {
@@ -66,12 +74,12 @@ class ApiClientUtil
 
         curl_setopt($this->curl, CURLOPT_VERBOSE, $verbose);
 
-        curl_setopt_array($this->curl, array(
+        curl_setopt_array($this->curl, [
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_HTTPHEADER => $this->headers,
             CURLOPT_CUSTOMREQUEST => $this->apiOperation,
             CURLOPT_URL => HOSTNAME . ':' .  PORT . $this->apiPath
-        ));
+        ]);
 
         $response = curl_exec($this->curl);
         curl_close($this->curl);

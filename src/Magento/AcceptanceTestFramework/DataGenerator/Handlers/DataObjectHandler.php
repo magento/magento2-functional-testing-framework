@@ -7,6 +7,7 @@ use Magento\AcceptanceTestFramework\DataGenerator\Parsers\DataProfileSchemaParse
 use Magento\AcceptanceTestFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\AcceptanceTestFramework\ObjectManagerFactory;
 
+// @codingStandardsIgnoreFile
 class DataObjectHandler implements ObjectHandlerInterface
 {
     /**

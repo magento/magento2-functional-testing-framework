@@ -1,48 +1,59 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 namespace Magento\AcceptanceTestFramework\Test\Objects;
 
 use Magento\AcceptanceTestFramework\Exceptions\XmlException;
 
+/**
+ * Class TestObject
+ */
 class TestObject
 {
-    /**
-     * Name of the test
-     * @var string $name
-     */
-    private $name;
-
-    /**
-     * Array which contains the final set of test steps in order after merge
-     * @var array $orderedSteps
-     */
-    private $orderedSteps = [];
-
-    /**
-     * Array which contains steps to be merged into test flow
-     * @var array $stepsToMerge
-     */
-    private $stepsToMerge = [];
-
-    /**
-     * Array which contains steps parsed in and are the default set
-     * @var array $parsedSteps
-     */
-    private $parsedSteps = [];
-
-    /**
-     * Array which contains annotations indexed by name
-     * @var array $annotations
-     */
-    private $annotations = [];
-
     const STEP_MISSING_ERROR_MSG =
         "Merge Error - Step could not be found in either TestXML or DeltaXML.
         \tTest = '%s'\tTestStep='%s'\tLinkedStep'%s'";
 
     /**
+     * Name of the test
+     *
+     * @var string
+     */
+    private $name;
+
+    /**
+     * Array which contains the final set of test steps in order after merge
+     *
+     * @var array
+     */
+    private $orderedSteps = [];
+
+    /**
+     * Array which contains steps to be merged into test flow
+     *
+     * @var array
+     */
+    private $stepsToMerge = [];
+
+    /**
+     * Array which contains steps parsed in and are the default set
+     *
+     * @var array
+     */
+    private $parsedSteps = [];
+
+    /**
+     * Array which contains annotations indexed by name
+     *
+     * @var array
+     */
+    private $annotations = [];
+
+    /**
      * TestObject constructor.
-     * @constructor
      * @param string $name
      * @param array $parsedSteps
      * @param array $annotations
@@ -56,6 +67,7 @@ class TestObject
 
     /**
      * Getter for the Test Name
+     *
      * @return string
      */
     public function getName()
@@ -65,6 +77,7 @@ class TestObject
 
     /**
      * Getter for the Test Annotations
+     *
      * @return array
      */
     public function getAnnotations()
@@ -74,6 +87,7 @@ class TestObject
 
     /**
      *This method calls a function to merge custom steps and returns the resulting ordered set of steps.
+     *
      * @return array
      */
     public function getOrderedActions()
@@ -85,6 +99,7 @@ class TestObject
 
     /**
      * This method takes the steps from the parser and splits steps which need merge from steps that are ordered.
+     *
      * @return void
      * @throws XmlException
      */
@@ -102,6 +117,7 @@ class TestObject
 
     /**
      * This method runs a step sort, loops steps which need to be merged, and runs the mergeStep function on each one.
+     *
      * @return void
      */
     private function mergeActions()
@@ -119,6 +135,7 @@ class TestObject
 
     /**
      * Recursively merges in each step and its dependencies
+     *
      * @param ActionObject $stepToMerge
      * @throws XmlException
      * @return void
@@ -145,13 +162,14 @@ class TestObject
 
     /**
      * Runs through the prepared orderedSteps and calls insertWait if a step requires a wait after it.
+     *
      * @return void
      */
     private function insertWaits()
     {
         foreach ($this->orderedSteps as $step) {
             if ($step->getTimeout()) {
-                $waitStepAttributes = array('timeout' => $step->getTimeout());
+                $waitStepAttributes = ['timeout' => $step->getTimeout()];
                 $waitStep = new ActionObject(
                     $step->getMergeKey() . 'WaitForPageLoad',
                     'waitForPageLoad',
@@ -166,7 +184,8 @@ class TestObject
 
     /**
      * Inserts a step into the ordered steps array based on position and step referenced.
-     * @param $stepToMerge
+     *
+     * @param ActionObject $stepToMerge
      * @return void
      */
     private function insertStep($stepToMerge)

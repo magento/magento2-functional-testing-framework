@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 namespace Magento\AcceptanceTestFramework\Test\Objects;
 
 use Magento\AcceptanceTestFramework\DataGenerator\Handlers\DataObjectHandler;
@@ -10,60 +13,68 @@ use Magento\AcceptanceTestFramework\Page\Objects\SectionObject;
 use Magento\AcceptanceTestFramework\Page\Handlers\PageObjectHandler;
 use Magento\AcceptanceTestFramework\Page\Handlers\SectionObjectHandler;
 
+/**
+ * Class ActionObject
+ */
 class ActionObject
 {
-    /**
-     * The unique identifier for the action
-     * @var string $mergeKey
-     */
-    private $mergeKey;
-
-    /**
-     * The type of action (e.g. fillField, createData, etc)
-     * @var string $type
-     */
-    private $type;
-
-    /**
-     * THe attributes which describe the action (e.g. selector,
-     * @var array $actionAttributes
-     */
-    private $actionAttributes = [];
-
-    /**
-     * The name of the action to reference when merging this action into existing test steps
-     * @var null|string $linkedAction
-     */
-    private $linkedAction;
-
-    /**
-     * A value used to describe position during merge
-     * @var int $orderOffset
-     */
-    private $orderOffset = 0;
-
-    /**
-     * An array which contains variable resolution of all specified parameters in an action
-     * @var array $resolvedCustomAttributes
-     */
-    private $resolvedCustomAttributes = [];
-
-    /**
-     * A string which represents a needed timeout whenever the action is referenced
-     * @var string timeout
-     */
-    private $timeout;
-
     const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray"];
     const MERGE_ACTION_ORDER_AFTER = 'after';
     const ACTION_ATTRIBUTE_URL = 'url';
     const ACTION_ATTRIBUTE_SELECTOR = 'selector';
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/{{[\w.]+}}/';
 
+    /**
+     * The unique identifier for the action
+     *
+     * @var string $mergeKey
+     */
+    private $mergeKey;
+
+    /**
+     * The type of action (e.g. fillField, createData, etc)
+     *
+     * @var string $type
+     */
+    private $type;
+
+    /**
+     * THe attributes which describe the action (e.g. selector,
+     *
+     * @var array $actionAttributes
+     */
+    private $actionAttributes = [];
+
+    /**
+     * The name of the action to reference when merging this action into existing test steps
+     *
+     * @var null|string $linkedAction
+     */
+    private $linkedAction;
+
+    /**
+     * A value used to describe position during merge
+     *
+     * @var int $orderOffset
+     */
+    private $orderOffset = 0;
+
+    /**
+     * An array which contains variable resolution of all specified parameters in an action
+     *
+     * @var array $resolvedCustomAttributes
+     */
+    private $resolvedCustomAttributes = [];
+
+    /**
+     * A string which represents a needed timeout whenever the action is referenced
+     *
+     * @var string timeout
+     */
+    private $timeout;
 
     /**
      * ActionObject constructor.
-     * @constructor
      * @param string $mergeKey
      * @param string $type
      * @param array $actionAttributes
@@ -107,6 +118,7 @@ class ActionObject
      * return the array would return [selector => value1, expected => value2]
      * The returned array is also the merged result of the resolved and normal actions, giving
      * priority to the resolved actions (resolved selector instead of section.element, etc).
+     *
      * @return array
      */
     public function getCustomActionAttributes()
@@ -116,6 +128,7 @@ class ActionObject
 
     /**
      * This function returns the string property linkedAction, describing a step to reference for a merge.
+     *
      * @return string
      */
     public function getLinkedAction()
@@ -125,6 +138,7 @@ class ActionObject
 
     /**
      * This function returns the int property orderOffset, describing before or after for a merge.
+     *
      * @return int
      */
     public function getOrderOffset()
@@ -135,6 +149,7 @@ class ActionObject
     /**
      * This function returns the int property timeout, this can be set as a result of the use of a section element
      * requiring a wait.
+     *
      * @return int
      */
     public function getTimeout()
@@ -147,6 +162,7 @@ class ActionObject
      *   selector
      *   url
      *   userInput
+     *
      * @return void
      */
     public function resolveReferences()
@@ -162,6 +178,7 @@ class ActionObject
      * Look up the selector for SomeSectionName.ElementName and set it as the selector attribute in the
      * resolved custom attributes. Also set the timeout value.
      * e.g. {{SomeSectionName.ElementName}} becomes #login-button
+     *
      * @return void
      */
     private function resolveSelectorReferenceAndTimeout()
@@ -182,6 +199,7 @@ class ActionObject
      * Look up the url for SomePageName and set it, with MAGENTO_BASE_URL prepended, as the url attribute in the
      * resolved custom attributes.
      * e.g. {{SomePageName}} becomes http://localhost:76543/some/url
+     *
      * @return void
      */
     private function resolveUrlReference()
@@ -202,6 +220,7 @@ class ActionObject
      * Look up the value for EntityDataObjectName.Key and set it as the corresponding attribute in the resolved custom
      * attributes.
      * e.g. {{CustomerEntityFoo.FirstName}} becomes Jerry
+     *
      * @return void
      */
     private function resolveDataInputReferences()
@@ -225,6 +244,7 @@ class ActionObject
     /**
      * Return an array containing the name (before the period) and key (after the period) in a {{reference.foo}}.
      * @param string $reference
+     *
      * @return string[] The name and key that is referenced.
      */
     private function stripAndSplitReference($reference)

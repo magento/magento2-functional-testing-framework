@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 namespace Magento\AcceptanceTestFramework\DataGenerator\Api;
 
 use Magento\AcceptanceTestFramework\DataGenerator\Handlers\DataObjectHandler;
@@ -12,8 +15,9 @@ class ApiExecutor
 {
     /**
      * Describes the operation for the executor ('create','update','delete')
-     * @var string $operation
-     **/
+     *
+     * @var string
+     */
     private $operation;
 
     /**
@@ -32,7 +36,6 @@ class ApiExecutor
 
     /**
      * ApiSubObject constructor.
-     * @constructor
      * @param string $operation
      * @param EntityDataObject $entityObject
      */
@@ -49,6 +52,7 @@ class ApiExecutor
 
     /**
      * Executes an api request based on parameters given by constructor.
+     *
      * @return string | null
      */
     public function executeRequest()
@@ -153,6 +157,7 @@ class ApiExecutor
 
     /**
      * This function retrieves an array representative of json body for a request and returns it encoded as a string.
+     *
      * @return string
      */
     public function getEncodedJsonString()
@@ -162,12 +167,14 @@ class ApiExecutor
         return json_encode([$this->entityObject->getType() => $jsonArray], JSON_PRETTY_PRINT);
     }
 
+    // @codingStandardsIgnoreStart
     /**
      * This function takes a string value and its corresponding type and returns the string cast
      * into its the type passed.
+     *
      * @param string $type
      * @param string $value
-     * @return bool|float|int|string
+     * @return mixed
      */
     private function castValue($type, $value)
     {
@@ -189,4 +196,5 @@ class ApiExecutor
 
         return $newVal;
     }
+    // @codingStandardsIgnoreEnd
 }

@@ -1,34 +1,44 @@
 <?php
-
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 namespace Magento\AcceptanceTestFramework\Page\Objects;
 
+/**
+ * Class ElementObject
+ */
 class ElementObject
 {
+    const DEFAULT_TIMEOUT_SYMBOL = '-';
+
     /**
      * Section element name
-     * @var string $name
+     *
+     * @var string
      */
     private $name;
 
     /**
      * Section element type
-     * @var string $type
+     *
+     * @var string
      */
     private $type;
 
     /**
      * Section element locator
-     * @var string $locator
+     *
+     * @var string
      */
     private $locator;
 
     /**
      * Section element timeout
+     *
      * @var string $timeout
      */
     private $timeout;
-
-    const DEFAULT_TIMEOUT_SYMBOL = '-';
 
     /**
      * ElementObject constructor.
@@ -47,6 +57,7 @@ class ElementObject
 
     /**
      * Getter for the name of the element
+     *
      * @return string
      */
     public function getName()
@@ -56,6 +67,7 @@ class ElementObject
 
     /**
      * Getter for the name of the element type
+     *
      * @return string
      */
     public function getType()
@@ -65,6 +77,7 @@ class ElementObject
 
     /**
      * Getter for the locator of an element
+     *
      * @return string
      */
     public function getLocator()
@@ -74,6 +87,7 @@ class ElementObject
 
     /**
      * Returns an integer representing an element's timeout
+     *
      * @return int|null
      */
     public function getTimeout()
@@ -84,5 +98,4 @@ class ElementObject
 
         return (int)$this->timeout;
     }
-
 }

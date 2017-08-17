@@ -1,30 +1,41 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 namespace Magento\AcceptanceTestFramework\DataGenerator\Objects;
 
+/**
+ * Class EntityDataObject
+ */
 class EntityDataObject
 {
     /**
      * Name of the entity
-     * @var string $name
+     *
+     * @var string
      */
     private $name;
 
     /**
      * Type of the entity
-     * @var string $type
+     *
+     * @var string
      */
     private $type;
 
     /**
      * An array of required entity name to corresponding type
-     * @var array $linkedEntities
+     *
+     * @var array
      */
     private $linkedEntities = [];
 
     /**
      * An array of Data Name to Data Value
-     * @var array $data
+     *
+     * @var array
      */
     private $data = [];
 
@@ -45,6 +56,7 @@ class EntityDataObject
 
     /**
      * Getter for linked entity names
+     *
      * @return array
      */
     public function getLinkedEntities()
@@ -54,6 +66,7 @@ class EntityDataObject
 
     /**
      * Getter for entity name
+     *
      * @return string
      */
     public function getName()
@@ -63,6 +76,7 @@ class EntityDataObject
 
     /**
      * Getter for entity type
+     *
      * @return string
      */
     public function getType()
@@ -74,7 +88,7 @@ class EntityDataObject
      * This function retrieves data from an entity defined in xml.
      *
      * @param string $dataName
-     * @return string
+     * @return string|null
      */
     public function getDataByName($dataName)
     {

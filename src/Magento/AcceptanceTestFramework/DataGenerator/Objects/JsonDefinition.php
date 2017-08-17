@@ -1,66 +1,83 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 namespace Magento\AcceptanceTestFramework\DataGenerator\Objects;
 
+/**
+ * Class JsonDefinition
+ */
 class JsonDefinition
 {
     /**
      * Json Definitions Name
-     * @var string $name
+     *
+     * @var string
      */
     private $name;
 
     /**
      * Operation which the json defintion describes
-     * @var string $operation
+     *
+     * @var string
      */
     private $operation;
 
     /**
      * Data type for which the json defintiion is used
-     * @var string $dataType
+     *
+     * @var string
      */
     private $dataType;
 
     /**
      * Api method such as ('POST', 'PUT', 'GET', DELETE', etc.)
-     * @var string $apiMethod
+     *
+     * @var string
      */
     private $apiMethod;
 
     /**
      * Base URL for the request
-     * @var string $baseUrl
+     *
+     * @var string
      */
     private $baseUrl;
 
     /**
      * Resource specific URI for the request
-     * @var string $apiUrl
+     *
+     * @var string
      */
     private $apiUrl;
 
     /**
      * Authorization path for retrieving a token
-     * @var string $auth
+     *
+     * @var string
      */
     private $auth;
 
     /**
      * Relevant headers for the request
-     * @var array $headers
+     *
+     * @var array
      */
     private $headers = [];
 
     /**
      * Relevant params for the request (e.g. query, path)
-     * @var array $params
+     *
+     * @var array
      */
     private $params = [];
 
     /**
      * The metadata describing the json fields and values themselves
-     * @var array $jsonMetadata
+     *
+     * @var array
      */
     private $jsonMetadata = [];
 
@@ -100,6 +117,7 @@ class JsonDefinition
 
     /**
      * Getter for json data type
+     *
      * @return string
      */
     public function getDataType()
@@ -109,6 +127,7 @@ class JsonDefinition
 
     /**
      * Getter for json operation
+     *
      * @return string
      */
     public function getOperation()
@@ -118,6 +137,7 @@ class JsonDefinition
 
     /**
      * Getter for api method
+     *
      * @return string
      */
     public function getApiMethod()
@@ -127,6 +147,7 @@ class JsonDefinition
 
     /**
      * Getter for api url
+     *
      * @return string
      */
     public function getApiUrl()
@@ -146,6 +167,7 @@ class JsonDefinition
 
     /**
      * Getter for auth path
+     *
      * @return string
      */
     public function getAuth()
@@ -155,6 +177,7 @@ class JsonDefinition
 
     /**
      * Getter for request headers
+     *
      * @return array
      */
     public function getHeaders()
@@ -164,6 +187,7 @@ class JsonDefinition
 
     /**
      * Getter for json metadata
+     *
      * @return array
      */
     public function getJsonMetadata()
@@ -173,6 +197,7 @@ class JsonDefinition
 
     /**
      * Function to validate api format and add "/" char where necessary
+     *
      * @return void
      */
     private function cleanApiUrl()
@@ -186,6 +211,7 @@ class JsonDefinition
 
     /**
      * Function to append path params where necessary
+     *
      * @return void
      */
     private function addPathParam()
@@ -197,6 +223,7 @@ class JsonDefinition
 
     /**
      * Function to append query params where necessary
+     *
      * @return void
      */
     private function addQueryParams()
@@ -212,5 +239,4 @@ class JsonDefinition
             $this->apiUrl = $paramName . "=" . $paramValue;
         }
     }
-
 }

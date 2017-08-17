@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 namespace Magento\AcceptanceTestFramework\Page\Handlers;
 
@@ -8,20 +12,11 @@ use Magento\AcceptanceTestFramework\Page\Objects\ElementObject;
 use Magento\AcceptanceTestFramework\Page\Objects\SectionObject;
 use Magento\AcceptanceTestFramework\XmlParser\SectionParser;
 
+/**
+ * Class SectionObjectHandler
+ */
 class SectionObjectHandler implements ObjectHandlerInterface
 {
-    /**
-     * Singleton variable instance of class
-     * @var SectionObjectHandler $SECTION_DATA_PROCESSOR
-     */
-    private static $SECTION_DATA_PROCESSOR;
-
-    /**
-     * Array containing all Section Objects
-     * @var array $sectionData
-     */
-    private $sectionData = [];
-
     const TYPE = 'section';
     const SUB_TYPE = 'element';
     const ELEMENT_TYPE_ATTR = 'type';
@@ -29,7 +24,22 @@ class SectionObjectHandler implements ObjectHandlerInterface
     const ELEMENT_TIMEOUT_ATTR = 'timeout';
 
     /**
+     * Singleton variable instance of class
+     *
+     * @var SectionObjectHandler
+     */
+    private static $SECTION_DATA_PROCESSOR;
+
+    /**
+     * Array containing all Section Objects
+     *
+     * @var array
+     */
+    private $sectionData = [];
+
+    /**
      * Singleton method to return SectionArrayProcesor.
+     *
      * @return SectionObjectHandler
      */
     public static function getInstance()
@@ -53,6 +63,7 @@ class SectionObjectHandler implements ObjectHandlerInterface
 
     /**
      * Returns the corresponding section array parsed from xml.
+     *
      * @param string $sectionName
      * @return SectionObject | null
      */
@@ -67,6 +78,7 @@ class SectionObjectHandler implements ObjectHandlerInterface
 
     /**
      * Returns all section arrays parsed from section xml.
+     *
      * @return array
      */
     public function getAllObjects()
@@ -76,6 +88,7 @@ class SectionObjectHandler implements ObjectHandlerInterface
 
     /**
      * Parse section objects if it's not previously done.
+     *
      * @return void
      */
     private function initSectionObjects()

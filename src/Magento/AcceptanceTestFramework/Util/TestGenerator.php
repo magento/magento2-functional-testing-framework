@@ -27,6 +27,7 @@ class TestGenerator
 
     /**
      * Singleton method to retrieve Test Generator
+     *
      * @return TestGenerator
      */
     public static function getInstance()
@@ -40,12 +41,12 @@ class TestGenerator
 
     /**
      * Load all Cest files as Objects using the Cest Array Processor.
+     *
      * @return array
      */
     private function loadAllCestObjects()
     {
-        $cestOutput = CestObjectHandler::getInstance()->getAllObjects();
-        return $cestOutput;
+        return CestObjectHandler::getInstance()->getAllObjects();
     }
 
     /**

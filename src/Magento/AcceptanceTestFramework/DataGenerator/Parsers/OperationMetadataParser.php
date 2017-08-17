@@ -1,9 +1,16 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 namespace Magento\AcceptanceTestFramework\DataGenerator\Parsers;
 
 use Magento\AcceptanceTestFramework\Config\DataInterface;
 
+/**
+ * Class OperationMetadataParser
+ */
 class OperationMetadataParser
 {
     /**
@@ -17,6 +24,7 @@ class OperationMetadataParser
 
     /**
      * Returns an array containing all data read from operations.xml files.
+     *
      * @return array
      */
     public function readOperationMetadata()

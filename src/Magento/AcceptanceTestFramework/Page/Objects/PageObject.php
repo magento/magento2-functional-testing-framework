@@ -1,39 +1,49 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 namespace Magento\AcceptanceTestFramework\Page\Objects;
 
 
-use Magento\AcceptanceTestFramework\Page\Managers\SectionObjectHandler;
+use Magento\AcceptanceTestFramework\Page\Handlers\SectionObjectHandler;
 
+/**
+ * Class PageObject
+ */
 class PageObject
 {
     /**
      * Page name
-     * @var string $name
+     *
+     * @var string
      */
     private $name;
 
     /**
      * Page url
-     * @var string $url
+     *
+     * @var string
      */
     private $url;
 
     /**
      * Page module
-     * @var string $module
+     *
+     * @var string
      */
     private $module;
 
     /**
      * Array of page section names
-     * @var array $sectionNames
+     *
+     * @var array
      */
     private $sectionNames = [];
 
     /**
      * PageObject constructor.
-     * @constructor
      * @param string $name
      * @param string $urlPath
      * @param string $module
@@ -49,6 +59,7 @@ class PageObject
 
     /**
      * Getter for Page Name
+     *
      * @return string
      */
     public function getName()
@@ -58,6 +69,7 @@ class PageObject
 
     /**
      * Getter for Page URL
+     *
      * @return string
      */
     public function getUrl()
@@ -67,6 +79,7 @@ class PageObject
 
     /**
      * Getter for Page Module
+     *
      * @return string
      */
     public function getModule()
@@ -76,6 +89,7 @@ class PageObject
 
     /**
      * Getter for Section Names
+     *
      * @return array
      */
     public function getSectionNames()
@@ -85,6 +99,7 @@ class PageObject
 
     /**
      * Checks the section names in the page for existence of the section name passed into the method.
+     *
      * @param string $sectionName
      * @return boolean
      */
@@ -95,7 +110,8 @@ class PageObject
 
     /**
      * Given a section name referenced by the page, returns the section object
-     * @param $sectionName
+     *
+     * @param string $sectionName
      * @return SectionObject | null
      */
     public function getSection($sectionName)
