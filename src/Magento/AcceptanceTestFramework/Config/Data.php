@@ -47,11 +47,13 @@ class Data implements \Magento\AcceptanceTestFramework\Config\DataInterface
         $this->data = array_replace_recursive($this->data, $config);
     }
 
+    // @codingStandardsIgnoreStart
     /**
      * Get config value by key
      *
      * @param string $path
-     * @param mixed $default
+     *
+     * @param null|mixed $default
      * @return array|mixed|null
      */
     public function get($path = null, $default = null)
@@ -70,6 +72,7 @@ class Data implements \Magento\AcceptanceTestFramework\Config\DataInterface
         }
         return $data;
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * Set name of the config file
@@ -79,7 +82,7 @@ class Data implements \Magento\AcceptanceTestFramework\Config\DataInterface
      */
     public function setFileName($fileName)
     {
-        if (!is_null($fileName)) {
+        if ($fileName !== null) {
             $this->reader->setFileName($fileName);
         }
         return $this;
@@ -89,6 +92,7 @@ class Data implements \Magento\AcceptanceTestFramework\Config\DataInterface
      * Load config data
      *
      * @param string|null $scope
+     * @return void
      */
     public function load($scope = null)
     {

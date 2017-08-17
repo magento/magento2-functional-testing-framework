@@ -16,7 +16,7 @@ interface ObjectManagerInterface
      *
      * @param string $type
      * @param array $arguments
-     * @return mixed
+     * @return object
      */
     public function create($type, array $arguments = []);
 
@@ -24,7 +24,7 @@ interface ObjectManagerInterface
      * Retrieve cached object instance
      *
      * @param string $type
-     * @return mixed
+     * @return object
      */
     public function get($type);
 

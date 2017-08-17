@@ -39,9 +39,17 @@ class Developer implements \Magento\AcceptanceTestFramework\ObjectManager\Factor
     protected $creationStack = [];
 
     /**
+     * Global arguments.
+     *
+     * @var array
+     */
+    protected $globalArguments;
+
+    /**
+     * Developer constructor.
      * @param \Magento\AcceptanceTestFramework\ObjectManager\ConfigInterface $config
-     * @param \Magento\AcceptanceTestFramework\ObjectManagerInterface $objectManager
-     * @param \Magento\AcceptanceTestFramework\ObjectManager\DefinitionInterface $definitions
+     * @param \Magento\AcceptanceTestFramework\ObjectManagerInterface|null $objectManager
+     * @param \Magento\AcceptanceTestFramework\ObjectManager\DefinitionInterface|null $definitions
      * @param array $globalArguments
      */
     public function __construct(
@@ -80,7 +88,7 @@ class Developer implements \Magento\AcceptanceTestFramework\ObjectManager\Factor
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    protected function _resolveArguments($requestedType, array $parameters, array $arguments = [])
+    protected function resolveArguments($requestedType, array $parameters, array $arguments = [])
     {
         $resolvedArguments = [];
         $arguments = count($arguments)
@@ -91,7 +99,7 @@ class Developer implements \Magento\AcceptanceTestFramework\ObjectManager\Factor
             $argument = null;
             if (!empty($arguments) && (isset($arguments[$paramName]) || array_key_exists($paramName, $arguments))) {
                 $argument = $arguments[$paramName];
-            } else if ($paramRequired) {
+            } elseif ($paramRequired) {
                 if ($paramType) {
                     $argument = ['instance' => $paramType];
                 } else {
@@ -114,12 +122,12 @@ class Developer implements \Magento\AcceptanceTestFramework\ObjectManager\Factor
                 $argument = $isShared
                     ? $this->objectManager->get($argumentType)
                     : $this->objectManager->create($argumentType);
-            } else if (is_array($argument)) {
+            } elseif (is_array($argument)) {
                 if (isset($argument['argument'])) {
                     $argument = isset($this->globalArguments[$argument['argument']])
                         ? $this->globalArguments[$argument['argument']]
                         : $paramDefault;
-                } else if (!empty($argument)) {
+                } elseif (!empty($argument)) {
                     $this->parseArray($argument);
                 }
             }
@@ -131,7 +139,7 @@ class Developer implements \Magento\AcceptanceTestFramework\ObjectManager\Factor
     /**
      * Parse array argument
      *
-     * @param array $array
+     * @param array &$array
      * @return void
      */
     protected function parseArray(&$array)
@@ -179,7 +187,7 @@ class Developer implements \Magento\AcceptanceTestFramework\ObjectManager\Factor
         }
         $this->creationStack[$requestedType] = $requestedType;
         try {
-            $args = $this->_resolveArguments($requestedType, $parameters, $arguments);
+            $args = $this->resolveArguments($requestedType, $parameters, $arguments);
             unset($this->creationStack[$requestedType]);
         } catch (\Exception $e) {
             unset($this->creationStack[$requestedType]);

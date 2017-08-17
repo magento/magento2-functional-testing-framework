@@ -12,33 +12,38 @@ namespace Magento\AcceptanceTestFramework\ObjectManager;
 class ObjectManager implements \Magento\AcceptanceTestFramework\ObjectManagerInterface
 {
     /**
+     * Create instance with call time arguments.
+     * 
      * @var \Magento\AcceptanceTestFramework\ObjectManager\FactoryInterface
      */
-    protected $_factory;
+    protected $factory;
 
     /**
      * List of shared instances
      *
      * @var array
      */
-    protected $_sharedInstances = [];
+    protected $sharedInstances = [];
 
     /**
+     * Class config.
+     *
      * @var Config\Config
      */
-    protected $_config;
+    protected $config;
 
     /**
+     * ObjectManager constructor.
      * @param FactoryInterface $factory
      * @param ConfigInterface $config
      * @param array $sharedInstances
      */
     public function __construct(FactoryInterface $factory, ConfigInterface $config, array $sharedInstances = [])
     {
-        $this->_config = $config;
-        $this->_factory = $factory;
-        $this->_sharedInstances = $sharedInstances;
-        $this->_sharedInstances['Magento\AcceptanceTestFramework\ObjectManagerInterface'] = $this;
+        $this->config = $config;
+        $this->factory = $factory;
+        $this->sharedInstances = $sharedInstances;
+        $this->sharedInstances[\Magento\AcceptanceTestFramework\ObjectManagerInterface::class] = $this;
     }
 
     /**
@@ -46,26 +51,26 @@ class ObjectManager implements \Magento\AcceptanceTestFramework\ObjectManagerInt
      *
      * @param string $type
      * @param array $arguments
-     * @return mixed
+     * @return object
      */
     public function create($type, array $arguments = [])
     {
-        return $this->_factory->create($this->_config->getPreference($type), $arguments);
+        return $this->factory->create($this->config->getPreference($type), $arguments);
     }
 
     /**
      * Retrieve cached object instance
      *
      * @param string $type
-     * @return mixed
+     * @return object
      */
     public function get($type)
     {
-        $type = $this->_config->getPreference($type);
-        if (!isset($this->_sharedInstances[$type])) {
-            $this->_sharedInstances[$type] = $this->_factory->create($type);
+        $type = $this->config->getPreference($type);
+        if (!isset($this->sharedInstances[$type])) {
+            $this->sharedInstances[$type] = $this->factory->create($type);
         }
-        return $this->_sharedInstances[$type];
+        return $this->sharedInstances[$type];
     }
 
     /**
@@ -76,7 +81,7 @@ class ObjectManager implements \Magento\AcceptanceTestFramework\ObjectManagerInt
      */
     public function configure(array $configuration)
     {
-        $this->_config->extend($configuration);
+        $this->config->extend($configuration);
     }
 
     /**

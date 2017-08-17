@@ -18,14 +18,16 @@ interface DataInterface
      */
     public function merge(array $config);
 
+    // @codingStandardsIgnoreStart
     /**
      * Get config value by key
      *
      * @param string $key
-     * @param mixed $default
-     * @return mixed
+     * @param mixed|null $default
+     * @return mixed|null
      */
     public function get($key = null, $default = null);
+    // @codingStandardsIgnoreEnd
 
     /**
      * Load config data

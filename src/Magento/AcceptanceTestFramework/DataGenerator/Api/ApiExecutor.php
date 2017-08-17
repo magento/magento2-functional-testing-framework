@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 namespace Magento\AcceptanceTestFramework\DataGenerator\Api;
 
 use Magento\AcceptanceTestFramework\DataGenerator\Managers\DataManager;
@@ -9,10 +12,32 @@ use Magento\AcceptanceTestFramework\Util\ApiClientUtil;
 
 class ApiExecutor
 {
+    /**
+     * Entity operation root tag.
+     *
+     * @var string
+     */
     private $operation;
+
+    /**
+     * Entity data object
+     *
+     * @var EntityDataObject
+     */
     private $entityObject;
+
+    /**
+     * Json definition of an object.
+     *
+     * @var \Magento\AcceptanceTestFramework\DataGenerator\Objects\JsonDefinition
+     */
     private $jsonDefinition;
 
+    /**
+     * Primitive types for casting values.
+     *
+     * @var array
+     */
     private $primitives = ['string', 'boolean', 'integer', 'double', 'array'];
 
     /**
@@ -31,6 +56,11 @@ class ApiExecutor
         );
     }
 
+    /**
+     * Method responsible for execution requests.
+     *
+     * @return string|bool
+     */
     public function executeRequest()
     {
         $apiClientUrl = $this->jsonDefinition->getApiUrl();
@@ -91,7 +121,7 @@ class ApiExecutor
      * recursively forming an array which represents the json structure for the api of the desired type.
      *
      * @param EntityDataObject $entityObject
-     * @param Array $jsonDefMetadata
+     * @param array $jsonDefMetadata
      *
      * @return array
      */
@@ -102,7 +132,7 @@ class ApiExecutor
             $entityObject->getType()
         )->getJsonMetadata() : $jsonDefMetadata;
 
-        $jsonArray = array();
+        $jsonArray = [];
 
         foreach ($jsonArrayMetadata as $jsonElement) {
             $jsonElementType = $jsonElement->getValue();
@@ -131,6 +161,11 @@ class ApiExecutor
         return $jsonArray;
     }
 
+    /**
+     * Encodes data to json string.
+     *
+     * @return string
+     */
     private function getEncodedJsonString()
     {
         $jsonArray = $this->getJsonDataArray($this->entityObject, $this->jsonDefinition->getJsonMetadata());
@@ -138,6 +173,14 @@ class ApiExecutor
         return json_encode([$this->entityObject->getType() => $jsonArray], JSON_PRETTY_PRINT);
     }
 
+    // @codingStandardsIgnoreStart
+    /**
+     * Casting value based on type.
+     *
+     * @param string $type
+     * @param string $value
+     * @return mixed
+     */
     private function castValue($type, $value)
     {
         $newVal = $value;
@@ -158,4 +201,5 @@ class ApiExecutor
 
         return $newVal;
     }
+    // @codingStandardsIgnoreEnd
 }

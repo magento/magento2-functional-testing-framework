@@ -16,22 +16,22 @@ class Reader extends \Magento\AcceptanceTestFramework\Config\Reader\Filesystem
      *
      * @var array
      */
-    protected $_idAttributes = [
+    protected $idAttributes = [
         '/scenarios/scenario' => 'name',
         '/scenarios/scenario/methods/method' => 'name',
         '/scenarios/scenario/methods/method/steps/step' => 'name',
     ];
 
     /**
-     * @constructor
+     * Reader constructor.
      * @param FileResolverInterface $fileResolver
      * @param ConverterInterface $converter
      * @param SchemaLocatorInterface $schemaLocator
      * @param ValidationStateInterface $validationState
-     * @param string $fileName [optional]
-     * @param array $idAttributes [optional]
-     * @param string $domDocumentClass [optional]
-     * @param string $defaultScope [optional]
+     * @param string $fileName
+     * @param array $idAttributes
+     * @param string $domDocumentClass
+     * @param string $defaultScope
      */
     public function __construct(
         FileResolverInterface $fileResolver,
@@ -43,15 +43,15 @@ class Reader extends \Magento\AcceptanceTestFramework\Config\Reader\Filesystem
         $domDocumentClass = 'Magento\AcceptanceTestFramework\Config\Dom',
         $defaultScope = 'etc'
     ) {
-        $this->_fileResolver = $fileResolver;
-        $this->_converter = $converter;
-        $this->_fileName = $fileName;
-        $this->_idAttributes = array_replace($this->_idAttributes, $idAttributes);
-        $this->_schemaFile = $schemaLocator->getSchema();
-        $this->_isValidated = $validationState->isValidated();
-        $this->_perFileSchema = $schemaLocator->getPerFileSchema() &&
-        $this->_isValidated ? $schemaLocator->getPerFileSchema() : null;
-        $this->_domDocumentClass = $domDocumentClass;
-        $this->_defaultScope = $defaultScope;
+        $this->fileResolver = $fileResolver;
+        $this->converter = $converter;
+        $this->fileName = $fileName;
+        $this->idAttributes = array_replace($this->idAttributes, $idAttributes);
+        $this->schemaFile = $schemaLocator->getSchema();
+        $this->isValidated = $validationState->isValidated();
+        $this->perFileSchema = $schemaLocator->getPerFileSchema() &&
+        $this->isValidated ? $schemaLocator->getPerFileSchema() : null;
+        $this->domDocumentClass = $domDocumentClass;
+        $this->defaultScope = $defaultScope;
     }
 }

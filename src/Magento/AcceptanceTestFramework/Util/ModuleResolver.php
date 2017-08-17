@@ -88,12 +88,14 @@ class ModuleResolver
     }
 
     /**
-     * @constructor
+     * ModuleResolver constructor.
      */
     private function __construct()
     {
         $objectManager = \Magento\AcceptanceTestFramework\ObjectManagerFactory::getObjectManager();
-        $this->sequenceSorter = $objectManager->get('Magento\AcceptanceTestFramework\Util\ModuleResolver\SequenceSorterInterface');
+        $this->sequenceSorter = $objectManager->get(
+            \Magento\AcceptanceTestFramework\Util\ModuleResolver\SequenceSorterInterface::class
+        );
     }
 
     /**

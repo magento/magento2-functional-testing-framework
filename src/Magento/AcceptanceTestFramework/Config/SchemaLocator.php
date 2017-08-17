@@ -21,7 +21,6 @@ class SchemaLocator implements \Magento\AcceptanceTestFramework\Config\SchemaLoc
     /**
      * Class constructor
      *
-     * @constructor
      * @param string $schemaPath
      */
     public function __construct($schemaPath)

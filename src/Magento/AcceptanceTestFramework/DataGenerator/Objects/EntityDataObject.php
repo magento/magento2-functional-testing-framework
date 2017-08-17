@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 namespace Magento\AcceptanceTestFramework\DataGenerator\Objects;
 
@@ -7,10 +11,33 @@ use Magento\AcceptanceTestFramework\DataGenerator\Managers\EntityDataManager;
 
 class EntityDataObject
 {
+    /**
+     * Entity name.
+     *
+     * @var string
+     */
     private $name;
+
+    /**
+     * Entity type.
+     *
+     * @var string
+     */
     private $type;
-    private $linkedEntities = []; //array of required entity name to corresponding type
-    private $data = []; //array of Data Name to Data Value
+
+    /**
+     * Array of required entity name to corresponding type.
+     *
+     * @var array
+     */
+    private $linkedEntities = [];
+
+    /**
+     * Array of Data Name to Data Value.
+     *
+     * @var array
+     */
+    private $data = [];
 
     /**
      * EntityDataObject constructor.
@@ -19,7 +46,7 @@ class EntityDataObject
      * @param array $data
      * @param array $linkedEntities
      */
-    public function __construct($entityName, $entityType, $data, $linkedEntities)
+    public function __construct($entityName, $entityType, array $data, array $linkedEntities)
     {
         $this->name = $entityName;
         $this->type = $entityType;
@@ -27,17 +54,32 @@ class EntityDataObject
         $this->linkedEntities = $linkedEntities;
     }
 
-    public function getLinkedEntities()
+    /**
+     * Returns array of linked entities.
+     *
+     * @return array
+     */
+    public function getLinkedEntities(): array
     {
         return $this->linkedEntities;
     }
 
-    public function getName()
+    /**
+     * Returns entity name.
+     *
+     * @return string
+     */
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getType()
+    /**
+     * Returns entity type.
+     *
+     * @return string
+     */
+    public function getType(): string
     {
         return $this->type;
     }
@@ -46,9 +88,9 @@ class EntityDataObject
      * This function retrieves data from an entity defined in xml.
      *
      * @param string $dataName
-     * @return string
+     * @return string|null
      */
-    public function getDataByName($dataName)
+    public function getDataByName(string $dataName)
     {
         $name = strtolower($dataName);
 
@@ -66,9 +108,9 @@ class EntityDataObject
      * @param string $fieldType
      * @return array
      */
-    public function getLinkedEntitiesOfType($fieldType)
+    public function getLinkedEntitiesOfType(string $fieldType): array
     {
-        $groupedArray = array();
+        $groupedArray = [];
 
         foreach ($this->linkedEntities as $entityName => $entityType) {
             if ($entityType == $fieldType) {

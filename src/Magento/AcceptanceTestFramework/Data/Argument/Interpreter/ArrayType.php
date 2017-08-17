@@ -20,6 +20,7 @@ class ArrayType implements InterpreterInterface
     private $itemInterpreter;
 
     /**
+     * ArrayType constructor.
      * @param InterpreterInterface $itemInterpreter
      */
     public function __construct(InterpreterInterface $itemInterpreter)
@@ -78,8 +79,8 @@ class ArrayType implements InterpreterInterface
     /**
      * Compare sortOrder of item
      *
-     * @param mixed $firstItemKey
-     * @param mixed $secondItemKey
+     * @param string|int $firstItemKey
+     * @param string|int $secondItemKey
      * @param array $indexedItems
      * @return int
      */

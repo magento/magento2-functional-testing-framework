@@ -16,28 +16,30 @@ use Magento\AcceptanceTestFramework\System\Code\ClassReader;
 class Factory extends \Magento\AcceptanceTestFramework\ObjectManager\Factory\Dynamic\Developer
 {
     /**
+     * Class reader.
+     *
      * @var \Magento\AcceptanceTestFramework\System\Code\ClassReader
      */
     protected $classReader;
 
     /**
-     * @constructor
-     *
-     * @param \Magento\AcceptanceTestFramework\ObjectManager\ConfigInterface $config
-     * @param \Magento\AcceptanceTestFramework\ObjectManagerInterface $objectManager
-     * @param \Magento\AcceptanceTestFramework\ObjectManager\DefinitionInterface $definitions
+     * Factory constructor.
+     * @param ConfigInterface $config
+     * @param \Magento\AcceptanceTestFramework\ObjectManagerInterface|null $objectManager
+     * @param DefinitionInterface|null $definitions
      * @param array $globalArguments
      */
     public function __construct(
-        \Magento\AcceptanceTestFramework\ObjectManager\ConfigInterface $config,
+        ConfigInterface $config,
         \Magento\AcceptanceTestFramework\ObjectManagerInterface $objectManager = null,
-        \Magento\AcceptanceTestFramework\ObjectManager\DefinitionInterface $definitions = null,
+        DefinitionInterface $definitions = null,
         $globalArguments = []
     ) {
         parent::__construct($config, $objectManager, $definitions, $globalArguments);
         $this->classReader = new ClassReader();
     }
 
+    // @codingStandardsIgnoreStart
     /**
      * Invoke class method and prepared arguments
      *
@@ -56,6 +58,7 @@ class Factory extends \Magento\AcceptanceTestFramework\ObjectManager\Factory\Dyn
 
         return $method->invokeArgs($object, $args);
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * Get list of parameters for class method
@@ -85,7 +88,7 @@ class Factory extends \Magento\AcceptanceTestFramework\ObjectManager\Factory\Dyn
             return [];
         }
 
-        return $this->_resolveArguments($type, $parameters, $arguments);
+        return $this->resolveArguments($type, $parameters, $arguments);
     }
 
     /**
@@ -101,7 +104,7 @@ class Factory extends \Magento\AcceptanceTestFramework\ObjectManager\Factory\Dyn
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    protected function _resolveArguments($requestedType, array $parameters, array $arguments = [])
+    protected function resolveArguments($requestedType, array $parameters, array $arguments = [])
     {
         $resolvedArguments = [];
         $arguments = count($arguments)
@@ -174,7 +177,7 @@ class Factory extends \Magento\AcceptanceTestFramework\ObjectManager\Factory\Dyn
     /**
      * Parse array argument
      *
-     * @param array $array
+     * @param array &$array
      * @return void
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
@@ -233,7 +236,7 @@ class Factory extends \Magento\AcceptanceTestFramework\ObjectManager\Factory\Dyn
         }
         $this->creationStack[$requestedType] = $requestedType;
         try {
-            $args = $this->_resolveArguments($requestedType, $parameters, $arguments);
+            $args = $this->resolveArguments($requestedType, $parameters, $arguments);
             unset($this->creationStack[$requestedType]);
         } catch (\Exception $e) {
             unset($this->creationStack[$requestedType]);

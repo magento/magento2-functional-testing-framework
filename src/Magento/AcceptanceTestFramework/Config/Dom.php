@@ -26,40 +26,42 @@ class Dom
      *
      * @var \DOMDocument
      */
-    protected $_dom;
+    protected $dom;
 
     /**
+     * Configuration of identifier attributes to be taken into account during merging.
+     *
      * @var Dom\NodeMergingConfig
      */
-    protected $_nodeMergingConfig;
+    protected $nodeMergingConfig;
 
     /**
      * Name of attribute that specifies type of argument node
      *
      * @var string|null
      */
-    protected $_typeAttributeName;
+    protected $typeAttributeName;
 
     /**
      * Schema validation file
      *
      * @var string
      */
-    protected $_schemaFile;
+    protected $schemaFile;
 
     /**
      * Format of error messages
      *
      * @var string
      */
-    protected $_errorFormat;
+    protected $errorFormat;
 
     /**
      * Default namespace for xml elements
      *
      * @var string
      */
-    protected $_rootNamespace;
+    protected $rootNamespace;
 
     /**
      * Build DOM with initial XML contents and specifying identifier attributes for merging
@@ -80,12 +82,12 @@ class Dom
         $schemaFile = null,
         $errorFormat = self::ERROR_FORMAT_DEFAULT
     ) {
-        $this->_schemaFile = $schemaFile;
-        $this->_nodeMergingConfig = new Dom\NodeMergingConfig(new Dom\NodePathMatcher(), $idAttributes);
-        $this->_typeAttributeName = $typeAttributeName;
-        $this->_errorFormat = $errorFormat;
-        $this->_dom = $this->_initDom($xml);
-        $this->_rootNamespace = $this->_dom->lookupNamespaceUri($this->_dom->namespaceURI);
+        $this->schemaFile = $schemaFile;
+        $this->nodeMergingConfig = new Dom\NodeMergingConfig(new Dom\NodePathMatcher(), $idAttributes);
+        $this->typeAttributeName = $typeAttributeName;
+        $this->errorFormat = $errorFormat;
+        $this->dom = $this->initDom($xml);
+        $this->rootNamespace = $this->dom->lookupNamespaceUri($this->dom->namespaceURI);
     }
 
     /**
@@ -96,8 +98,8 @@ class Dom
      */
     public function merge($xml)
     {
-        $dom = $this->_initDom($xml);
-        $this->_mergeNode($dom->documentElement, '');
+        $dom = $this->initDom($xml);
+        $this->mergeNode($dom->documentElement, '');
     }
 
     /**
@@ -113,27 +115,27 @@ class Dom
      * @return void
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function _mergeNode(\DOMElement $node, $parentPath)
+    protected function mergeNode(\DOMElement $node, $parentPath)
     {
-        $path = $this->_getNodePathByParent($node, $parentPath);
+        $path = $this->getNodePathByParent($node, $parentPath);
 
-        $matchedNode = $this->_getMatchedNode($path);
+        $matchedNode = $this->getMatchedNode($path);
 
         /* Update matched node attributes and value */
         if ($matchedNode) {
 
             //different node type
-            if ($this->_typeAttributeName
-                && $node->hasAttribute($this->_typeAttributeName)
-                && $matchedNode->hasAttribute($this->_typeAttributeName)
-                && $node->getAttribute($this->_typeAttributeName)
-                !== $matchedNode->getAttribute($this->_typeAttributeName)
+            if ($this->typeAttributeName
+                && $node->hasAttribute($this->typeAttributeName)
+                && $matchedNode->hasAttribute($this->typeAttributeName)
+                && $node->getAttribute($this->typeAttributeName)
+                !== $matchedNode->getAttribute($this->typeAttributeName)
             ) {
                 $this->replaceNodeValue($parentPath, $node, $matchedNode);
                 return;
             }
 
-            $this->_mergeAttributes($matchedNode, $node);
+            $this->mergeAttributes($matchedNode, $node);
             if ($node->nodeValue === '' && $matchedNode->nodeValue !== '' && $matchedNode->childNodes->length === 1) {
                 $this->replaceNodeValue($parentPath, $node, $matchedNode);
             }
@@ -141,23 +143,23 @@ class Dom
                 return;
             }
             /* override node value */
-            if ($this->_isTextNode($node)) {
+            if ($this->isTextNode($node)) {
                 /* skip the case when the matched node has children, otherwise they get overridden */
-                if (!$matchedNode->hasChildNodes() || $this->_isTextNode($matchedNode)) {
+                if (!$matchedNode->hasChildNodes() || $this->isTextNode($matchedNode)) {
                     $matchedNode->nodeValue = $node->childNodes->item(0)->nodeValue;
                 }
             } else {
                 /* recursive merge for all child nodes */
                 foreach ($node->childNodes as $childNode) {
                     if ($childNode instanceof \DOMElement) {
-                        $this->_mergeNode($childNode, $path);
+                        $this->mergeNode($childNode, $path);
                     }
                 }
             }
         } else {
             /* Add node as is to the document under the same parent element */
-            $parentMatchedNode = $this->_getMatchedNode($parentPath);
-            $newNode = $this->_dom->importNode($node, true);
+            $parentMatchedNode = $this->getMatchedNode($parentPath);
+            $newNode = $this->dom->importNode($node, true);
             $parentMatchedNode->appendChild($newNode);
         }
     }
@@ -173,8 +175,8 @@ class Dom
      */
     private function replaceNodeValue($parentPath, \DOMElement $node, \DOMElement $matchedNode)
     {
-        $parentMatchedNode = $this->_getMatchedNode($parentPath);
-        $newNode = $this->_dom->importNode($node, true);
+        $parentMatchedNode = $this->getMatchedNode($parentPath);
+        $newNode = $this->dom->importNode($node, true);
         $parentMatchedNode->replaceChild($newNode, $matchedNode);
     }
 
@@ -184,7 +186,7 @@ class Dom
      * @param \DOMElement $node
      * @return bool
      */
-    protected function _isTextNode($node)
+    protected function isTextNode($node)
     {
         return $node->childNodes->length == 1 && $node->childNodes->item(0) instanceof \DOMText;
     }
@@ -196,10 +198,10 @@ class Dom
      * @param \DOMNode $mergeNode
      * @return void
      */
-    protected function _mergeAttributes($baseNode, $mergeNode)
+    protected function mergeAttributes($baseNode, $mergeNode)
     {
         foreach ($mergeNode->attributes as $attribute) {
-            $baseNode->setAttribute($this->_getAttributeName($attribute), $attribute->value);
+            $baseNode->setAttribute($this->getAttributeName($attribute), $attribute->value);
         }
     }
 
@@ -210,11 +212,11 @@ class Dom
      * @param string $parentPath
      * @return string
      */
-    protected function _getNodePathByParent(\DOMElement $node, $parentPath)
+    protected function getNodePathByParent(\DOMElement $node, $parentPath)
     {
-        $prefix = is_null($this->_rootNamespace) ? '' : self::ROOT_NAMESPACE_PREFIX . ':';
+        $prefix = $this->rootNamespace === null ? '' : self::ROOT_NAMESPACE_PREFIX . ':';
         $path = $parentPath . '/' . $prefix . $node->tagName;
-        $idAttribute = $this->_nodeMergingConfig->getIdAttribute($path);
+        $idAttribute = $this->nodeMergingConfig->getIdAttribute($path);
         if ($idAttribute) {
             foreach (explode('|', $idAttribute) as $idAttributeValue) {
                 if ($value = $node->getAttribute($idAttributeValue)) {
@@ -234,11 +236,11 @@ class Dom
      * @throws \Exception
      * @return \DOMElement|null
      */
-    protected function _getMatchedNode($nodePath)
+    protected function getMatchedNode($nodePath)
     {
-        $xPath = new \DOMXPath($this->_dom);
-        if ($this->_rootNamespace) {
-            $xPath->registerNamespace(self::ROOT_NAMESPACE_PREFIX, $this->_rootNamespace);
+        $xPath = new \DOMXPath($this->dom);
+        if ($this->rootNamespace) {
+            $xPath->registerNamespace(self::ROOT_NAMESPACE_PREFIX, $this->rootNamespace);
         }
         $matchedNodes = $xPath->query($nodePath);
         $node = null;
@@ -272,7 +274,7 @@ class Dom
                 $validationErrors = libxml_get_errors();
                 if (count($validationErrors)) {
                     foreach ($validationErrors as $error) {
-                        $errors[] = self::_renderErrorMessage($error, $errorFormat);
+                        $errors[] = self::renderErrorMessage($error, $errorFormat);
                     }
                 } else {
                     $errors[] = 'Unknown validation error';
@@ -300,7 +302,7 @@ class Dom
      * @return string
      * @throws \InvalidArgumentException
      */
-    private static function _renderErrorMessage(\LibXMLError $errorInfo, $format)
+    private static function renderErrorMessage(\LibXMLError $errorInfo, $format)
     {
         $result = $format;
         foreach ($errorInfo as $field => $value) {
@@ -321,7 +323,7 @@ class Dom
      */
     public function getDom()
     {
-        return $this->_dom;
+        return $this->dom;
     }
 
     /**
@@ -331,12 +333,12 @@ class Dom
      * @return \DOMDocument
      * @throws \Magento\AcceptanceTestFramework\Config\Dom\ValidationException
      */
-    protected function _initDom($xml)
+    protected function initDom($xml)
     {
         $dom = new \DOMDocument();
         $dom->loadXML($xml);
-        if ($this->_schemaFile) {
-            $errors = self::validateDomDocument($dom, $this->_schemaFile, $this->_errorFormat);
+        if ($this->schemaFile) {
+            $errors = self::validateDomDocument($dom, $this->schemaFile, $this->errorFormat);
             if (count($errors)) {
                 throw new \Magento\AcceptanceTestFramework\Config\Dom\ValidationException(implode("\n", $errors));
             }
@@ -353,7 +355,7 @@ class Dom
      */
     public function validate($schemaFileName, &$errors = [])
     {
-        $errors = self::validateDomDocument($this->_dom, $schemaFileName, $this->_errorFormat);
+        $errors = self::validateDomDocument($this->dom, $schemaFileName, $this->errorFormat);
         return !count($errors);
     }
 
@@ -365,7 +367,7 @@ class Dom
      */
     public function setSchemaFile($schemaFile)
     {
-        $this->_schemaFile = $schemaFile;
+        $this->schemaFile = $schemaFile;
         return $this;
     }
 
@@ -375,9 +377,9 @@ class Dom
      * @param \DOMAttr $attribute
      * @return string
      */
-    private function _getAttributeName($attribute)
+    private function getAttributeName($attribute)
     {
-        if (!is_null($attribute->prefix) && !empty($attribute->prefix)) {
+        if ($attribute->prefix !== null && !empty($attribute->prefix)) {
             $attributeName = $attribute->prefix . ':' . $attribute->name;
         } else {
             $attributeName = $attribute->name;

@@ -12,16 +12,26 @@ namespace Magento\AcceptanceTestFramework\ObjectManager\Definition;
 class Runtime implements \Magento\AcceptanceTestFramework\ObjectManager\DefinitionInterface
 {
     /**
+     * Definitions.
+     *
      * @var array
      */
-    protected $_definitions = [];
+    protected $definitions = [];
 
     /**
-     * @param \Magento\AcceptanceTestFramework\Code\Reader\ClassReader $reader
+     * Reader.
+     *
+     * @var \Magento\AcceptanceTestFramework\Code\Reader\ClassReader
+     */
+    private $reader;
+
+    /**
+     * Runtime constructor.
+     * @param \Magento\AcceptanceTestFramework\Code\Reader\ClassReader|null $reader
      */
     public function __construct(\Magento\AcceptanceTestFramework\Code\Reader\ClassReader $reader = null)
     {
-        $this->_reader = $reader ? : new \Magento\AcceptanceTestFramework\Code\Reader\ClassReader();
+        $this->reader = $reader ? : new \Magento\AcceptanceTestFramework\Code\Reader\ClassReader();
     }
 
     /**
@@ -42,10 +52,10 @@ class Runtime implements \Magento\AcceptanceTestFramework\ObjectManager\Definiti
      */
     public function getParameters($className)
     {
-        if (!array_key_exists($className, $this->_definitions)) {
-            $this->_definitions[$className] = $this->_reader->getConstructor($className);
+        if (!array_key_exists($className, $this->definitions)) {
+            $this->definitions[$className] = $this->reader->getConstructor($className);
         }
-        return $this->_definitions[$className];
+        return $this->definitions[$className];
     }
 
     /**

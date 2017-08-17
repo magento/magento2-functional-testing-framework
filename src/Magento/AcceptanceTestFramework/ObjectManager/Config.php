@@ -17,9 +17,11 @@ use Magento\AcceptanceTestFramework\ObjectManager\Config\Config as ObjectManager
 class Config extends ObjectManagerConfig
 {
     /**
+     * Class reflections.
+     *
      * @var \ReflectionClass[]
      */
-    protected $_nonSharedRefClasses = [];
+    protected $nonSharedRefClasses = [];
 
     /**
      * Check whether type is shared
@@ -30,19 +32,19 @@ class Config extends ObjectManagerConfig
      */
     public function isShared($type)
     {
-        if (isset($this->_nonShared[$type])) {
+        if (isset($this->nonShared[$type])) {
             return false;
         }
 
-        if (isset($this->_virtualTypes[$type])) {
+        if (isset($this->virtualTypes[$type])) {
             return true;
         }
 
-        if (!isset($this->_nonSharedRefClasses[$type])) {
-            $this->_nonSharedRefClasses[$type] = new \ReflectionClass($type);
+        if (!isset($this->nonSharedRefClasses[$type])) {
+            $this->nonSharedRefClasses[$type] = new \ReflectionClass($type);
         }
-        foreach ($this->_nonShared as $noneShared => $flag) {
-            if ($this->_nonSharedRefClasses[$type]->isSubclassOf($noneShared)) {
+        foreach ($this->nonShared as $noneShared => $flag) {
+            if ($this->nonSharedRefClasses[$type]->isSubclassOf($noneShared)) {
                 return false;
             }
         }

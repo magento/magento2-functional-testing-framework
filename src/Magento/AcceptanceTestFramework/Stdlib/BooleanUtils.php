@@ -8,6 +8,7 @@ namespace Magento\AcceptanceTestFramework\Stdlib;
 /**
  * Utility methods for the boolean data type
  */
+// @codingStandardsIgnoreFile
 class BooleanUtils
 {
     /**
@@ -25,6 +26,7 @@ class BooleanUtils
     private $falseValues;
 
     /**
+     * BooleanUtils constructor.
      * @param array $trueValues
      * @param array $falseValues
      */

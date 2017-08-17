@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 namespace Magento\AcceptanceTestFramework\DataGenerator\Managers;
 
@@ -9,9 +13,23 @@ use Magento\AcceptanceTestFramework\ObjectManagerFactory;
 
 class JsonDefinitionManager
 {
+    /**
+     * Json definition manager.
+     *
+     * @var JsonDefinitionManager
+     */
     private static $jsonDefinitionManager;
+
+    /**
+     * Array with json definitions.
+     *
+     * @var array
+     */
     private $jsonDefinitions;
 
+    /**
+     * Entity operation params.
+     */
     const ENTITY_OPERATION_ROOT_TAG = 'operation';
     const ENTITY_OPERATION_TYPE = 'type';
     const ENTITY_OPERATION_DATA_TYPE = 'dataType';
@@ -32,7 +50,11 @@ class JsonDefinitionManager
     const ENTITY_OPERATION_ARRAY_KEY = 'key';
     const ENTITY_OPERATION_ARRAY_VALUE = 'value';
 
-
+    /**
+     * Returns instance of JsonDefinitionManager.
+     *
+     * @return JsonDefinitionManager
+     */
     public static function getInstance()
     {
         if (!self::$jsonDefinitionManager) {
@@ -42,57 +64,65 @@ class JsonDefinitionManager
         return self::$jsonDefinitionManager;
     }
 
+    /**
+     * JsonDefinitionManager constructor.
+     */
     private function __construct()
     {
         // do nothing
     }
 
-    private function getObjects()
+    /**
+     * Retrieves Json Definitions for all entities.
+     *
+     * @return void
+     */
+    private function retrieveJsonDefinitions()
     {
         $objectManager = ObjectManagerFactory::getObjectManager();
         $metadataParser = $objectManager->create(MetadataParser::class);
-        foreach ($metadataParser->readMetadata()[JsonDefinitionManager::ENTITY_OPERATION_ROOT_TAG] as
+        foreach ($metadataParser->readMetadata()[self::ENTITY_OPERATION_ROOT_TAG] as
                  $jsonDefName => $jsonDefArray) {
-            $operation = $jsonDefArray[JsonDefinitionManager::ENTITY_OPERATION_TYPE];
-            $dataType = $jsonDefArray[JsonDefinitionManager::ENTITY_OPERATION_DATA_TYPE];
-            $url = $jsonDefArray[JsonDefinitionManager::ENTITY_OPERATION_URL] ?? null;
-            $method = $jsonDefArray[JsonDefinitionManager::ENTITY_OPERATION_METHOD] ?? null;
-            $auth = $jsonDefArray[JsonDefinitionManager::ENTITY_OPERATION_AUTH] ?? null;
+            $operation = $jsonDefArray[self::ENTITY_OPERATION_TYPE];
+            $dataType = $jsonDefArray[self::ENTITY_OPERATION_DATA_TYPE];
+            $url = $jsonDefArray[self::ENTITY_OPERATION_URL] ?? null;
+            $method = $jsonDefArray[self::ENTITY_OPERATION_METHOD] ?? null;
+            $auth = $jsonDefArray[self::ENTITY_OPERATION_AUTH] ?? null;
             $headers = [];
             $params = [];
             $jsonMetadata = [];
 
-            if (array_key_exists(JsonDefinitionManager::ENTITY_OPERATION_HEADER, $jsonDefArray)) {
-                foreach ($jsonDefArray[JsonDefinitionManager::ENTITY_OPERATION_HEADER] as $headerEntry) {
-                    $headers[] = $headerEntry[JsonDefinitionManager::ENTITY_OPERATION_HEADER_PARAM] . ': ' .
-                        $headerEntry[JsonDefinitionManager::ENTITY_OPERATION_HEADER_VALUE];
+            if (array_key_exists(self::ENTITY_OPERATION_HEADER, $jsonDefArray)) {
+                foreach ($jsonDefArray[self::ENTITY_OPERATION_HEADER] as $headerEntry) {
+                    $headers[] = $headerEntry[self::ENTITY_OPERATION_HEADER_PARAM] . ': ' .
+                        $headerEntry[self::ENTITY_OPERATION_HEADER_VALUE];
                 }
             }
 
-            if (array_key_exists(JsonDefinitionManager::ENTITY_OPERATION_URL_PARAM, $jsonDefArray)) {
-                foreach ($jsonDefArray[JsonDefinitionManager::ENTITY_OPERATION_URL_PARAM] as $paramEntry) {
-                    $params[$paramEntry[JsonDefinitionManager::ENTITY_OPERATION_URL_PARAM_TYPE]]
-                    [$paramEntry[JsonDefinitionManager::ENTITY_OPERATION_URL_PARAM_KEY]] =
-                        $paramEntry[JsonDefinitionManager::ENTITY_OPERATION_URL_PARAM_VALUE];
+            if (array_key_exists(self::ENTITY_OPERATION_URL_PARAM, $jsonDefArray)) {
+                foreach ($jsonDefArray[self::ENTITY_OPERATION_URL_PARAM] as $paramEntry) {
+                    $params[$paramEntry[self::ENTITY_OPERATION_URL_PARAM_TYPE]]
+                    [$paramEntry[self::ENTITY_OPERATION_URL_PARAM_KEY]] =
+                        $paramEntry[self::ENTITY_OPERATION_URL_PARAM_VALUE];
                 }
             }
 
-            if (array_key_exists(JsonDefinitionManager::ENTITY_OPERATION_ENTRY, $jsonDefArray)) {
-                foreach ($jsonDefArray[JsonDefinitionManager::ENTITY_OPERATION_ENTRY] as $jsonEntryType) {
+            if (array_key_exists(self::ENTITY_OPERATION_ENTRY, $jsonDefArray)) {
+                foreach ($jsonDefArray[self::ENTITY_OPERATION_ENTRY] as $jsonEntryType) {
                     $jsonMetadata[] = new JsonElement(
-                        $jsonEntryType[JsonDefinitionManager::ENTITY_OPERATION_ENTRY_KEY],
-                        $jsonEntryType[JsonDefinitionManager::ENTITY_OPERATION_ENTRY_VALUE],
-                        JsonDefinitionManager::ENTITY_OPERATION_ENTRY
+                        $jsonEntryType[self::ENTITY_OPERATION_ENTRY_KEY],
+                        $jsonEntryType[self::ENTITY_OPERATION_ENTRY_VALUE],
+                        self::ENTITY_OPERATION_ENTRY
                     );
                 }
             }
 
-            if (array_key_exists(JsonDefinitionManager::ENTITY_OPERATION_ARRAY, $jsonDefArray)) {
-                foreach ($jsonDefArray[JsonDefinitionManager::ENTITY_OPERATION_ARRAY] as $jsonEntryType) {
+            if (array_key_exists(self::ENTITY_OPERATION_ARRAY, $jsonDefArray)) {
+                foreach ($jsonDefArray[self::ENTITY_OPERATION_ARRAY] as $jsonEntryType) {
                     $jsonMetadata[] = new JsonElement(
-                        $jsonEntryType[JsonDefinitionManager::ENTITY_OPERATION_ARRAY_KEY],
-                        $jsonEntryType[JsonDefinitionManager::ENTITY_OPERATION_ARRAY_VALUE],
-                        JsonDefinitionManager::ENTITY_OPERATION_ARRAY
+                        $jsonEntryType[self::ENTITY_OPERATION_ARRAY_KEY],
+                        $jsonEntryType[self::ENTITY_OPERATION_ARRAY_VALUE],
+                        self::ENTITY_OPERATION_ARRAY
                     );
                 }
             }
@@ -112,13 +142,16 @@ class JsonDefinitionManager
     }
 
     /**
-     * @param $type
+     * Returns json definition object.
+     *
+     * @param string $operation
+     * @param string $type
      * @return JsonDefinition
      */
     public function getJsonDefinition($operation, $type)
     {
         if (!$this->jsonDefinitions) {
-            $this->getObjects();
+            $this->retrieveJsonDefinitions();
         }
 
         return $this->jsonDefinitions[$operation][$type];

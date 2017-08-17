@@ -17,14 +17,14 @@ class DomFactory
      *
      * @var \Magento\AcceptanceTestFramework\ObjectManagerInterface
      */
-    protected $_objectManager = null;
+    protected $objectManager = null;
 
     /**
      * Instance name to create
      *
      * @var string
      */
-    protected $_instanceName = null;
+    protected $instanceName = null;
 
     /**
      * Factory constructor
@@ -36,8 +36,8 @@ class DomFactory
         \Magento\AcceptanceTestFramework\ObjectManagerInterface $objectManager,
         $instanceName = \Magento\AcceptanceTestFramework\ObjectManager\Config\Reader\Dom::class
     ) {
-        $this->_objectManager = $objectManager;
-        $this->_instanceName = $instanceName;
+        $this->objectManager = $objectManager;
+        $this->instanceName = $instanceName;
     }
 
     /**
@@ -48,6 +48,6 @@ class DomFactory
      */
     public function create(array $data = [])
     {
-        return $this->_objectManager->create($this->_instanceName, $data);
+        return $this->objectManager->create($this->instanceName, $data);
     }
 }

@@ -11,6 +11,8 @@ namespace Magento\AcceptanceTestFramework\Config\Dom;
 class NodeMergingConfig
 {
     /**
+     * Matching of XPath expressions to path patterns.
+     *
      * @var NodePathMatcher
      */
     private $nodePathMatcher;
@@ -23,6 +25,7 @@ class NodeMergingConfig
     private $idAttributes = [];
 
     /**
+     * NodeMergingConfig constructor.
      * @param NodePathMatcher $nodePathMatcher
      * @param array $idAttributes
      */

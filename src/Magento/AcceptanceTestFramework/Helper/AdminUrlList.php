@@ -1,9 +1,15 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
 namespace Magento\AcceptanceTestFramework\Helper;
 
 /**
  * Class AdminUrlList
  */
+// @codingStandardsIgnoreFile
 class AdminUrlList
 {
     public static $adminLoginPage                         = '/admin/admin/';

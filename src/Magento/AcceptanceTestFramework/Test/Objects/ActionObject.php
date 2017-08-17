@@ -1,28 +1,66 @@
 <?php
-
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 namespace Magento\AcceptanceTestFramework\Test\Objects;
 
 use Magento\AcceptanceTestFramework\PageObject\Page\Page;
 use Magento\AcceptanceTestFramework\PageObject\Section\Section;
 use Magento\AcceptanceTestFramework\DataGenerator\Managers\DataManager;
 
+/**
+ * Class ActionObject
+ */
 class ActionObject
 {
     /**
+     * Merge key
+     *
      * @var string $mergeKey
-     * @var string $type
-     * @var array $actionAttributes
-     * @var string $linkedAction
-     * @var int $orderOffset
-     * @var array $resolvedCustomAttributes
-     * @var int timeout
      */
     private $mergeKey;
+
+    /**
+     * Class property.
+     *
+     * @var string
+     */
     private $type;
+
+    /**
+     * Class property.
+     *
+     * @var array
+     */
     private $actionAttributes = [];
+
+    /**
+     * Class property.
+     *
+     * @var null|string
+     */
     private $linkedAction;
+
+    /**
+     * Class property.
+     *
+     * @var int
+     */
     private $orderOffset = 0;
+
+    /**
+     * Class property.
+     *
+     * @var array
+     */
     private $resolvedCustomAttributes = [];
+
+    /**
+     * Class property.
+     *
+     * @var int
+     */
     private $timeout;
 
     const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray"];
@@ -109,10 +147,9 @@ class ActionObject
 
     /**
      * Populate the resolved custom attributes array with lookup values for the following attributes:
-     *
-     *   selector
-     *   url
-     *   userInput
+     *  - selector
+     *  - url
+     *  - userInput
      *
      * @return void
      */
@@ -128,7 +165,6 @@ class ActionObject
     /**
      * Look up the selector for SomeSectionName.ElementName and set it as the selector attribute in the
      * resolved custom attributes. Also set the timeout value.
-     *
      * e.g. {{SomeSectionName.ElementName}} becomes #login-button
      *
      * @return void
@@ -168,7 +204,6 @@ class ActionObject
     /**
      * Look up the url for SomePageName and set it, with MAGENTO_BASE_URL prepended, as the url attribute in the
      * resolved custom attributes.
-     *
      * e.g. {{SomePageName}} becomes http://localhost:76543/some/url
      *
      * @return void
@@ -208,7 +243,6 @@ class ActionObject
     /**
      * Look up the value for EntityDataObjectName.Key and set it as the corresponding attribute in the resolved custom
      * attributes.
-     *
      * e.g. {{CustomerEntityFoo.FirstName}} becomes Jerry
      *
      * @return void

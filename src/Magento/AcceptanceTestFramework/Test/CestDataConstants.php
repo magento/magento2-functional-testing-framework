@@ -1,7 +1,14 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 namespace Magento\AcceptanceTestFramework\Test;
 
+/**
+ * Class CestDataConstants
+ */
 class CestDataConstants
 {
     const CEST_ROOT = 'config';
@@ -21,5 +28,4 @@ class CestDataConstants
     const NAME = 'name';
 
     const ANNOTATION_VALUE = 'value';
-
 }

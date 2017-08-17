@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 namespace Magento\AcceptanceTestFramework\PageObject\Section;
 
 use Magento\AcceptanceTestFramework\ObjectManagerFactory;
@@ -14,6 +18,8 @@ class Section implements SectionInterface
     const DEFAULT_TIMEOUT_SAMBOL = '-';
 
     /**
+     * Array of section objects.
+     *
      * @var array
      */
     private static $sectionObjects = [];
@@ -22,7 +28,7 @@ class Section implements SectionInterface
      * Get section object data. All sections data is returned if $name is not specified.
      *
      * @param string $sectionName [optional]
-     * @return mixed
+     * @return array
      */
     public static function getSection($sectionName = null)
     {
@@ -35,7 +41,7 @@ class Section implements SectionInterface
      *
      * @param string $sectionName
      * @param string $elementName
-     * @return mixed
+     * @return array
      */
     public static function getElement($sectionName, $elementName)
     {
@@ -47,7 +53,7 @@ class Section implements SectionInterface
      *
      * @param string $sectionName
      * @param string $elementName
-     * @return mixed
+     * @return array
      */
     public static function getElementNamesInSection($sectionName, $elementName)
     {
@@ -104,7 +110,7 @@ class Section implements SectionInterface
      */
     public static function getElementTimeOut($sectionName, $elementName)
     {
-        if(self::isElementRequireWait($sectionName, $elementName)) {
+        if (self::isElementRequireWait($sectionName, $elementName)) {
             $timeOut = self::getSection($sectionName)[self::SUB_TYPE][$elementName][self::TIMEOUT_ATTR];
             if ($timeOut === self::DEFAULT_TIMEOUT_SAMBOL) {
                 return null;

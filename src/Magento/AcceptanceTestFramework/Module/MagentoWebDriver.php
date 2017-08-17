@@ -32,6 +32,7 @@ use Yandex\Allure\Adapter\Support\AttachmentSupport;
  *             browser: chrome
  * ```
  */
+// @codingStandardsIgnoreFile
 class MagentoWebDriver extends WebDriver
 {
     use AttachmentSupport;

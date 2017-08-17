@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 namespace Magento\AcceptanceTestFramework\PageObject\Page;
 
 /**
@@ -12,7 +16,7 @@ interface PageInterface
      * Get page object data. All pages data is returned if $name is not specified.
      *
      * @param string $pageName [optional]
-     * @return mixed
+     * @return array|null
      */
     public static function getPage($pageName = null);
 

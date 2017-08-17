@@ -14,11 +14,14 @@ use Magento\AcceptanceTestFramework\Data\Argument\MissingOptionalValueException;
 class Argument implements InterpreterInterface
 {
     /**
+     * Interpreter that returns value of a constant by its name.
+     *
      * @var Constant
      */
     private $constInterpreter;
 
     /**
+     * Argument constructor.
      * @param Constant $constInterpreter
      */
     public function __construct(Constant $constInterpreter)
@@ -27,9 +30,10 @@ class Argument implements InterpreterInterface
     }
 
     /**
-     * {@inheritdoc}
-     * @return mixed
-     * @throws MissingOptionalValueException
+     * Compute and return effective value of an argument.
+     *
+     * @param array $data
+     * @return array
      */
     public function evaluate(array $data)
     {

@@ -1,15 +1,12 @@
 <?php
 /**
- * Filesystem configuration loader. Loads configuration from XML files, split by scopes
- *
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
- *
  */
 namespace Magento\AcceptanceTestFramework\Config\Reader;
 
 /**
- * @SuppressWarnings(PHPMD.NumberOfChildren)
+ * Filesystem configuration loader. Loads configuration from XML files, split by scopes.
  */
 class Filesystem implements \Magento\AcceptanceTestFramework\Config\ReaderInterface
 {
@@ -18,64 +15,70 @@ class Filesystem implements \Magento\AcceptanceTestFramework\Config\ReaderInterf
      *
      * @var \Magento\AcceptanceTestFramework\Config\FileResolverInterface
      */
-    protected $_fileResolver;
+    protected $fileResolver;
 
     /**
      * Config converter
      *
      * @var \Magento\AcceptanceTestFramework\Config\ConverterInterface
      */
-    protected $_converter;
+    protected $converter;
 
     /**
      * The name of file that stores configuration
      *
      * @var string
      */
-    protected $_fileName;
+    protected $fileName;
 
     /**
      * Path to corresponding XSD file with validation rules for merged config
      *
      * @var string
      */
-    protected $_schema;
+    protected $schema;
 
     /**
      * Path to corresponding XSD file with validation rules for separate config files
      *
      * @var string
      */
-    protected $_perFileSchema;
+    protected $perFileSchema;
 
     /**
      * List of id attributes for merge
      *
      * @var array
      */
-    protected $_idAttributes = [];
+    protected $idAttributes = [];
 
     /**
      * Class of dom configuration document used for merge
      *
      * @var string
      */
-    protected $_domDocumentClass;
+    protected $domDocumentClass;
 
     /**
+     * Config validation state object.
+     *
      * @var \Magento\AcceptanceTestFramework\Config\ValidationStateInterface
      */
     protected $validationState;
 
     /**
+     * Default scope.
+     *
      * @var string
      */
-    protected $_defaultScope;
+    protected $defaultScope;
 
     /**
+     * File path to schema file.
+     *
      * @var string
      */
-    protected $_schemaFile;
+    protected $schemaFile;
 
     /**
      * Constructor
@@ -99,16 +102,16 @@ class Filesystem implements \Magento\AcceptanceTestFramework\Config\ReaderInterf
         $domDocumentClass = \Magento\AcceptanceTestFramework\Config\Dom::class,
         $defaultScope = 'global'
     ) {
-        $this->_fileResolver = $fileResolver;
-        $this->_converter = $converter;
-        $this->_fileName = $fileName;
-        $this->_idAttributes = array_replace($this->_idAttributes, $idAttributes);
+        $this->fileResolver = $fileResolver;
+        $this->converter = $converter;
+        $this->fileName = $fileName;
+        $this->idAttributes = array_replace($this->idAttributes, $idAttributes);
         $this->validationState = $validationState;
-        $this->_schemaFile = $schemaLocator->getSchema();
-        $this->_perFileSchema = $schemaLocator->getPerFileSchema() && $validationState->isValidationRequired()
+        $this->schemaFile = $schemaLocator->getSchema();
+        $this->perFileSchema = $schemaLocator->getPerFileSchema() && $validationState->isValidationRequired()
             ? $schemaLocator->getPerFileSchema() : null;
-        $this->_domDocumentClass = $domDocumentClass;
-        $this->_defaultScope = $defaultScope;
+        $this->domDocumentClass = $domDocumentClass;
+        $this->defaultScope = $defaultScope;
     }
 
     /**
@@ -119,12 +122,12 @@ class Filesystem implements \Magento\AcceptanceTestFramework\Config\ReaderInterf
      */
     public function read($scope = null)
     {
-        $scope = $scope ?: $this->_defaultScope;
-        $fileList = $this->_fileResolver->get($this->_fileName, $scope);
+        $scope = $scope ?: $this->defaultScope;
+        $fileList = $this->fileResolver->get($this->fileName, $scope);
         if (!count($fileList)) {
             return [];
         }
-        $output = $this->_readFiles($fileList);
+        $output = $this->readFiles($fileList);
 
         return $output;
     }
@@ -136,14 +139,14 @@ class Filesystem implements \Magento\AcceptanceTestFramework\Config\ReaderInterf
      * @return array
      * @throws \Exception
      */
-    protected function _readFiles($fileList)
+    protected function readFiles($fileList)
     {
         /** @var \Magento\AcceptanceTestFramework\Config\Dom $configMerger */
         $configMerger = null;
         foreach ($fileList as $key => $content) {
             try {
                 if (!$configMerger) {
-                    $configMerger = $this->_createConfigMerger($this->_domDocumentClass, $content);
+                    $configMerger = $this->createConfigMerger($this->domDocumentClass, $content);
                 } else {
                     $configMerger->merge($content);
                 }
@@ -153,7 +156,7 @@ class Filesystem implements \Magento\AcceptanceTestFramework\Config\ReaderInterf
         }
         if ($this->validationState->isValidationRequired()) {
             $errors = [];
-            if ($configMerger && !$configMerger->validate($this->_schemaFile, $errors)) {
+            if ($configMerger && !$configMerger->validate($this->schemaFile, $errors)) {
                 $message = "Invalid Document \n";
                 throw new \Exception($message . implode("\n", $errors));
             }
@@ -161,7 +164,7 @@ class Filesystem implements \Magento\AcceptanceTestFramework\Config\ReaderInterf
 
         $output = [];
         if ($configMerger) {
-            $output = $this->_converter->convert($configMerger->getDom());
+            $output = $this->converter->convert($configMerger->getDom());
         }
         return $output;
     }
@@ -174,13 +177,13 @@ class Filesystem implements \Magento\AcceptanceTestFramework\Config\ReaderInterf
      * @return \Magento\AcceptanceTestFramework\Config\Dom
      * @throws \UnexpectedValueException
      */
-    protected function _createConfigMerger($mergerClass, $initialContents)
+    protected function createConfigMerger($mergerClass, $initialContents)
     {
         $result = new $mergerClass(
             $initialContents,
-            $this->_idAttributes,
+            $this->idAttributes,
             null,
-            $this->_perFileSchema
+            $this->perFileSchema
         );
         if (!$result instanceof \Magento\AcceptanceTestFramework\Config\Dom) {
             throw new \UnexpectedValueException(

@@ -12,7 +12,7 @@ interface SectionInterface
      * Get section object data. All sections data is returned if $name is not specified.
      *
      * @param string $sectionName [optional]
-     * @return mixed
+     * @return array
      */
     public static function getSection($sectionName = null);
 
@@ -21,7 +21,7 @@ interface SectionInterface
      *
      * @param string $sectionName
      * @param string $elementName
-     * @return mixed
+     * @return array
      */
     public static function getElement($sectionName, $elementName);
 
@@ -30,7 +30,7 @@ interface SectionInterface
      *
      * @param string $sectionName
      * @param string $elementName
-     * @return mixed
+     * @return array
      */
     public static function getElementNamesInSection($sectionName, $elementName);
 

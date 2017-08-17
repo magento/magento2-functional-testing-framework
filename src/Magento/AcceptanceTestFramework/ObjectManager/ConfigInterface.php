@@ -30,7 +30,7 @@ interface ConfigInterface
      * Retrieve instance type
      *
      * @param string $instanceName
-     * @return mixed
+     * @return string
      */
     public function getInstanceType($instanceName);
 

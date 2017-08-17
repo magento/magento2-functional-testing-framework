@@ -10,7 +10,7 @@ interface ParserInterface
      * Get parsed xml data.
      *
      * @param string $type
-     * @return mixed
+     * @return array
      */
     public function getData($type);
 }

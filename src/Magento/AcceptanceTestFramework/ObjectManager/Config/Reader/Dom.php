@@ -10,6 +10,7 @@ namespace Magento\AcceptanceTestFramework\ObjectManager\Config\Reader;
  *
  * @internal
  */
+// @codingStandardsIgnoreFile
 class Dom extends \Magento\AcceptanceTestFramework\Config\Reader\Filesystem
 {
     /**
@@ -18,6 +19,7 @@ class Dom extends \Magento\AcceptanceTestFramework\Config\Reader\Filesystem
     const TYPE_ATTRIBUTE = 'xsi:type';
 
     /**
+     * Dom constructor.
      * @param \Magento\AcceptanceTestFramework\Config\FileResolverInterface $fileResolver
      * @param \Magento\AcceptanceTestFramework\ObjectManager\Config\Mapper\Dom $converter
      * @param \Magento\AcceptanceTestFramework\ObjectManager\Config\SchemaLocator $schemaLocator

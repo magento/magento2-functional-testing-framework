@@ -1,9 +1,16 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 namespace Magento\AcceptanceTestFramework\PageObject\Page;
 
 use Magento\AcceptanceTestFramework\ObjectManagerFactory;
 use Magento\AcceptanceTestFramework\XmlParser\PageParser;
 
+/**
+ * Class Page
+ */
 class Page implements PageInterface
 {
     const SUB_TYPE = 'section';
@@ -12,6 +19,8 @@ class Page implements PageInterface
     const MODULE_ATTR = 'module';
 
     /**
+     * Array with page objects.
+     *
      * @var array
      */
     private static $pageObjects = [];
@@ -20,7 +29,7 @@ class Page implements PageInterface
      * Get page object data. All pages data is returned if $name is not specified.
      *
      * @param string $pageName [optional]
-     * @return mixed
+     * @return array"null
      */
     public static function getPage($pageName = null)
     {

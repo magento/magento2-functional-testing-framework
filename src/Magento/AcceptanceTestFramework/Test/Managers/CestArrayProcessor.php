@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 namespace Magento\AcceptanceTestFramework\Test\Managers;
 
 use Magento\AcceptanceTestFramework\Exceptions\XmlException;
@@ -13,10 +16,27 @@ use Magento\AcceptanceTestFramework\Test\TestDataParser;
 
 class CestArrayProcessor
 {
-    private $parsedArray;
     const BEFORE_AFTER_ERROR_MSG = "Merge Error - Steps cannot have both before and after attributes.\tTestStep='%s'";
+
+    /**
+     * Parced array.
+     *
+     * @var array
+     */
+    private $parsedArray;
+
+    /**
+     * Cest Array Processor.
+     *
+     * @var CestArrayProcessor
+     */
     private static $cestDataManager;
 
+    /**
+     * Returns instance of CestArrayProcessor.
+     *
+     * @return CestArrayProcessor
+     */
     public static function getInstance()
     {
         if (!self::$cestDataManager) {
@@ -28,6 +48,10 @@ class CestArrayProcessor
         return self::$cestDataManager;
     }
 
+    /**
+     * CestArrayProcessor constructor.
+     * @param array $parsedCestArray
+     */
     private function __construct($parsedCestArray)
     {
         $this->parsedArray = $parsedCestArray;
@@ -80,7 +104,6 @@ class CestArrayProcessor
                 $tests = $this->stripDescriptorTags($tests, CestDataConstants::CEST_ANNOTATIONS);
             }
 
-
             $cests[] = new CestObject(
                 $cestName,
                 $annotations,
@@ -98,7 +121,7 @@ class CestArrayProcessor
      *
      * @param string $hookType
      * @param array $cestHook
-     * @return array
+     * @return CestHookObject
      */
     private function extractHook($hookType, $cestHook)
     {
@@ -111,7 +134,6 @@ class CestArrayProcessor
             $hookType,
             $this->extractTestActions($hookActions)
         );
-
 
         return $hook;
     }
@@ -232,7 +254,7 @@ class CestArrayProcessor
         return $actions;
     }
 
-
+    // @codingStandardsIgnoreStart
     /**
      * This method takes an array of data and an array representing irrelevant tags. The method strips
      * the data passed in of the irrelevant tags and returns the result.
@@ -250,4 +272,5 @@ class CestArrayProcessor
 
         return $results;
     }
+    // @codingStandardsIgnoreEnd
 }

@@ -10,7 +10,7 @@ interface SequenceSorterInterface
      * Sort files according to specified sequence.
      *
      * @param array $paths
-     * @return mixed
+     * @return array
      */
     public function sort(array $paths);
 }

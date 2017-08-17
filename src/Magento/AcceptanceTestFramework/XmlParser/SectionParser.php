@@ -24,7 +24,7 @@ class SectionParser implements ParserInterface
     protected $configData;
 
     /**
-     * @constructor
+     * SectionParser constructor.
      * @param ObjectManagerInterface $objectManager
      * @param DataInterface $configData
      */
@@ -38,7 +38,7 @@ class SectionParser implements ParserInterface
      * Get parsed xml data.
      *
      * @param string $type
-     * @return mixed
+     * @return array
      */
     public function getData($type)
     {

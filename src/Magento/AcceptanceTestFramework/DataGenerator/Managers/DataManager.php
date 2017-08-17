@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 namespace Magento\AcceptanceTestFramework\DataGenerator\Managers;
 
 use Exception;
@@ -10,13 +13,45 @@ use Magento\AcceptanceTestFramework\ObjectManagerFactory;
 
 class DataManager
 {
-    private $data = []; // an array of entity names to the entity data objects themselves
-    private $arrayData;
-    private static $dataManager;
+    /**
+     * Environment data object name.
+     */
     const ENV_DATA_OBJECT_NAME = '_ENV';
 
     /**
+     * An array of entity names to the entity data objects themselves.
+     *
+     * @var array
+     */
+    private $data = [];
+
+    /**
+     * Data.
+     *
+     * @var array
+     */
+    private $arrayData;
+
+    /**
+     * Data profile schema parser.
+     *
+     * @var \Magento\AcceptanceTestFramework\DataGenerator\Parsers\DataProfileSchemaParser
+     */
+    private static $dataManager;
+
+    /**
+     * DataManager constructor.
+     *
+     * @param array $arrayData
+     */
+    private function __construct($arrayData)
+    {
+        $this->arrayData = $arrayData;
+    }
+
+    /**
      * Singleton method to access instance of DataManager.
+     *
      * @return DataManager
      * @throws Exception
      */
@@ -37,17 +72,10 @@ class DataManager
     }
 
     /**
-     * DataManager constructor.
-     * @param array $arrayData
-     */
-    private function __construct($arrayData)
-    {
-        $this->arrayData = $arrayData;
-    }
-
-    /**
      * Adds all .env variables defined in the PROJECT_ROOT as EntityDataObjects. This is to allow resolution
      * of these variables when referenced in a cest.
+     *
+     * @return void
      */
     private function parseEnvVariables()
     {
@@ -66,7 +94,6 @@ class DataManager
                 $envData[strtolower(trim($params[0]))] = trim($params[1]);
             }
 
-
             $envDataObject = new EntityDataObject(self::ENV_DATA_OBJECT_NAME, 'environment', $envData, null);
             $this->data[$envDataObject->getName()] = $envDataObject;
         }
@@ -74,6 +101,8 @@ class DataManager
 
     /**
      * Parses data xml and extracts all information into EntityDataObject.
+     *
+     * @return void
      */
     private function parseDataEntities()
     {
@@ -133,7 +162,8 @@ class DataManager
 
     /**
      * Method returns a single data entity by name based on what is defined in data.xml.
-     * @param $entityName
+     *
+     * @param string $entityName
      * @return EntityDataObject
      */
     public function getEntity($entityName)
@@ -143,6 +173,7 @@ class DataManager
 
     /**
      * Method returns all data entities read from data.xml into objects.
+     *
      * @return array
      */
     public function getAllEntities()

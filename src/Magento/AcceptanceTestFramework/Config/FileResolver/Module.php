@@ -16,12 +16,15 @@ use Magento\AcceptanceTestFramework\Util\ModuleResolver;
 class Module implements FileResolverInterface
 {
     /**
+     * Resolves module paths based on enabled modules of target Magento instance.
+     *
      * @var ModuleResolver
      */
     private $moduleResolver;
 
     /**
-     * @param ModuleResolver $moduleResolver
+     * Module constructor.
+     * @param ModuleResolver|null $moduleResolver
      */
     public function __construct(ModuleResolver $moduleResolver = null)
     {
@@ -29,7 +32,7 @@ class Module implements FileResolverInterface
     }
 
     /**
-     * Retrieve the list of configuration files with given name that relate to specified scope
+     * Retrieve the list of configuration files with given name that relate to specified scope.
      *
      * @param string $filename
      * @param string $scope
