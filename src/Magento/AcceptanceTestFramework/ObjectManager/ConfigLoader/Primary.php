@@ -13,6 +13,7 @@ namespace Magento\AcceptanceTestFramework\ObjectManager\ConfigLoader;
  * @internal
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
+// @codingStandardsIgnoreFile
 class Primary
 {
     /**
@@ -20,7 +21,7 @@ class Primary
      *
      * @var string
      */
-    protected $_appMode = 'developer';
+    protected $appMode = 'developer';
 
     /**
      * Load primary DI configuration
@@ -35,7 +36,7 @@ class Primary
                 $this->createArgumentInterpreter()
             ),
             new \Magento\AcceptanceTestFramework\ObjectManager\Config\SchemaLocator(),
-            new \Magento\AcceptanceTestFramework\Config\ValidationState($this->_appMode)
+            new \Magento\AcceptanceTestFramework\Config\ValidationState($this->appMode)
         );
 
         return $reader->read();

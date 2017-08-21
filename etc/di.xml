@@ -82,12 +82,12 @@
 
     <virtualType name="Magento\AcceptanceTestFramework\Config\SchemaLocator\Page" type="Magento\AcceptanceTestFramework\Config\SchemaLocator">
         <arguments>
-            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/PageObject/etc/PageObject.xsd</argument>
+            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/Page/etc/PageObject.xsd</argument>
         </arguments>
     </virtualType>
     <virtualType name="Magento\AcceptanceTestFramework\Config\SchemaLocator\Section" type="Magento\AcceptanceTestFramework\Config\SchemaLocator">
         <arguments>
-            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/PageObject/etc/SectionObject.xsd</argument>
+            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/Page/etc/SectionObject.xsd</argument>
         </arguments>
     </virtualType>
     <virtualType name="Magento\AcceptanceTestFramework\Config\Reader\Page" type="Magento\AcceptanceTestFramework\Config\Reader\Filesystem">
@@ -176,7 +176,7 @@
 
     <!-- Configuration for Data Operation Metadata.xml -->
 
-    <type name="Magento\AcceptanceTestFramework\DataGenerator\Parsers\MetadataParser">
+    <type name="Magento\AcceptanceTestFramework\DataGenerator\Parsers\OperationMetadataParser">
         <arguments>
             <argument name="metadata" xsi:type="object">Magento\AcceptanceTestFramework\DataProfile\Config\Metadata</argument>
         </arguments>
@@ -197,9 +197,9 @@
             <argument name="converter" xsi:type="object">Magento\AcceptanceTestFramework\Config\Converter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\AcceptanceTestFramework\Config\SchemaLocator\Metadata</argument>
             <argument name="idAttributes" xsi:type="array">
-                <item name="/config/metadata" xsi:type="string">name</item>
-                <item name="/config/metadata/entry" xsi:type="string">key</item>
-                <item name="/config/metadata/array" xsi:type="string">key</item>
+                <item name="/config/operation" xsi:type="string">name</item>
+                <item name="/config/operation/entry" xsi:type="string">key</item>
+                <item name="/config/operation/array" xsi:type="string">key</item>
             </argument>
             <argument name="fileName" xsi:type="string">*-meta.xml</argument>
             <argument name="defaultScope" xsi:type="string">Metadata</argument>

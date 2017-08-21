@@ -19,30 +19,40 @@ class Converter implements \Magento\AcceptanceTestFramework\Config\ConverterInte
     const NAME_ATTRIBUTE = 'name';
 
     /**
+     * Argument parser.
+     *
      * @var ArgumentParser
      */
     protected $argumentParser;
 
     /**
+     * Argument interpreter.
+     *
      * @var InterpreterInterface
      */
     protected $argumentInterpreter;
 
     /**
+     * Argument node name.
+     *
      * @var string
      */
     protected $argumentNodeName;
 
     /**
+     * Id attributes.
+     *
      * @var string[]
      */
     protected $idAttributes;
 
     /**
+     * Constructor for Converter object.
+     *
      * @param ArgumentParser $argumentParser
      * @param InterpreterInterface $argumentInterpreter
      * @param string $argumentNodeName
-     * @param string[] $idAttributes
+     * @param array $idAttributes
      */
     public function __construct(
         ArgumentParser $argumentParser,
@@ -135,6 +145,8 @@ class Converter implements \Magento\AcceptanceTestFramework\Config\ConverterInte
     }
 
     /**
+     * Verify attribute is main key for element.
+     *
      * @param \DOMElement $element
      * @param \DOMAttr $attribute
      * @return bool

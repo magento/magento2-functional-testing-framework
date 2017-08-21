@@ -21,6 +21,7 @@ class File extends AbstractIterator
     protected $cached = [];
 
     /**
+     * File constructor.
      * @param array $paths
      */
     public function __construct(array $paths)

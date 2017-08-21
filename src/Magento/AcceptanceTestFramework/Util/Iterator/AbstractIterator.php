@@ -20,6 +20,7 @@ abstract class AbstractIterator implements \Iterator, \Countable
      */
     protected $data = [];
 
+    // @codingStandardsIgnoreStart
     /**
      * Current data element
      *
@@ -28,18 +29,19 @@ abstract class AbstractIterator implements \Iterator, \Countable
     protected $current;
 
     /**
-     * Key associated with the current row data
-     *
-     * @var int|string
-     */
-    protected $key;
-
-    /**
      * Get current element
      *
      * @return mixed
      */
     abstract public function current();
+    // @codingStandardsIgnoreEnd
+
+    /**
+     * Key associated with the current row data
+     *
+     * @var int|string
+     */
+    protected $key;
 
     /**
      * Check if current element is valid

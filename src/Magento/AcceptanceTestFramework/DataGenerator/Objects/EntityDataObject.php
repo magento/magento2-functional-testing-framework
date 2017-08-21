@@ -1,16 +1,43 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 namespace Magento\AcceptanceTestFramework\DataGenerator\Objects;
 
-use Magento\AcceptanceTestFramework\DataGenerator\DataGeneratorConstants;
-use Magento\AcceptanceTestFramework\DataGenerator\Managers\EntityDataManager;
-
+/**
+ * Class EntityDataObject
+ */
 class EntityDataObject
 {
+    /**
+     * Name of the entity
+     *
+     * @var string
+     */
     private $name;
+
+    /**
+     * Type of the entity
+     *
+     * @var string
+     */
     private $type;
-    private $linkedEntities = []; //array of required entity name to corresponding type
-    private $data = []; //array of Data Name to Data Value
+
+    /**
+     * An array of required entity name to corresponding type
+     *
+     * @var array
+     */
+    private $linkedEntities = [];
+
+    /**
+     * An array of Data Name to Data Value
+     *
+     * @var array
+     */
+    private $data = [];
 
     /**
      * EntityDataObject constructor.
@@ -27,16 +54,31 @@ class EntityDataObject
         $this->linkedEntities = $linkedEntities;
     }
 
+    /**
+     * Getter for linked entity names
+     *
+     * @return array
+     */
     public function getLinkedEntities()
     {
         return $this->linkedEntities;
     }
 
+    /**
+     * Getter for entity name
+     *
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * Getter for entity type
+     *
+     * @return string
+     */
     public function getType()
     {
         return $this->type;
@@ -46,7 +88,7 @@ class EntityDataObject
      * This function retrieves data from an entity defined in xml.
      *
      * @param string $dataName
-     * @return string
+     * @return string|null
      */
     public function getDataByName($dataName)
     {
@@ -68,7 +110,7 @@ class EntityDataObject
      */
     public function getLinkedEntitiesOfType($fieldType)
     {
-        $groupedArray = array();
+        $groupedArray = [];
 
         foreach ($this->linkedEntities as $entityName => $entityType) {
             if ($entityType == $fieldType) {

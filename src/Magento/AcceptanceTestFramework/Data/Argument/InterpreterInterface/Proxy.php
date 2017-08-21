@@ -56,6 +56,8 @@ class Proxy implements \Magento\AcceptanceTestFramework\Data\Argument\Interprete
     }
 
     /**
+     * Definition of field which should be serialized.
+     *
      * @return array
      */
     public function __sleep()
@@ -65,6 +67,7 @@ class Proxy implements \Magento\AcceptanceTestFramework\Data\Argument\Interprete
 
     /**
      * Retrieve ObjectManager from global scope
+     * @return void
      */
     public function __wakeup()
     {
@@ -73,10 +76,11 @@ class Proxy implements \Magento\AcceptanceTestFramework\Data\Argument\Interprete
 
     /**
      * Clone proxied instance
+     * @return void
      */
     public function __clone()
     {
-        $this->subject = clone $this->_getSubject();
+        $this->subject = clone $this->getSubject();
     }
 
     /**
@@ -84,7 +88,7 @@ class Proxy implements \Magento\AcceptanceTestFramework\Data\Argument\Interprete
      *
      * @return \Magento\AcceptanceTestFramework\Data\Argument\InterpreterInterface
      */
-    protected function _getSubject()
+    protected function getSubject()
     {
         if (!$this->subject) {
             $this->subject = true === $this->isShared
@@ -99,6 +103,6 @@ class Proxy implements \Magento\AcceptanceTestFramework\Data\Argument\Interprete
      */
     public function evaluate(array $data)
     {
-        return $this->_getSubject()->evaluate($data);
+        return $this->getSubject()->evaluate($data);
     }
 }

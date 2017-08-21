@@ -19,19 +19,23 @@ namespace Magento\AcceptanceTestFramework;
 class ObjectManager extends \Magento\AcceptanceTestFramework\ObjectManager\ObjectManager
 {
     /**
+     * Object manager factory.
+     *
      * @var \Magento\AcceptanceTestFramework\ObjectManager\Factory
      */
-    protected $_factory;
+    protected $factory;
 
     /**
+     * Object manager instance.
+     *
      * @var ObjectManager
      */
-    protected static $_instance;
+    protected static $instance;
 
     /**
-     * @constructor
-     * @param \Magento\AcceptanceTestFramework\ObjectManager\Factory $factory
-     * @param \Magento\AcceptanceTestFramework\ObjectManager\ConfigInterface $config
+     * ObjectManager constructor.
+     * @param ObjectManager\Factory|null $factory
+     * @param ObjectManager\ConfigInterface|null $config
      * @param array $sharedInstances
      */
     public function __construct(
@@ -40,7 +44,7 @@ class ObjectManager extends \Magento\AcceptanceTestFramework\ObjectManager\Objec
         array $sharedInstances = []
     ) {
         parent::__construct($factory, $config, $sharedInstances);
-        $this->_sharedInstances['Magento\AcceptanceTestFramework\ObjectManager'] = $this;
+        $this->sharedInstances[\Magento\AcceptanceTestFramework\ObjectManager::class] = $this;
     }
 
     /**
@@ -52,7 +56,7 @@ class ObjectManager extends \Magento\AcceptanceTestFramework\ObjectManager\Objec
      */
     public function getParameters($type, $method)
     {
-        return $this->_factory->getParameters($type, $method);
+        return $this->factory->getParameters($type, $method);
     }
 
     /**
@@ -65,9 +69,10 @@ class ObjectManager extends \Magento\AcceptanceTestFramework\ObjectManager\Objec
      */
     public function prepareArguments($object, $method, array $arguments = [])
     {
-        return $this->_factory->prepareArguments($object, $method, $arguments);
+        return $this->factory->prepareArguments($object, $method, $arguments);
     }
 
+    // @codingStandardsIgnoreStart
     /**
      * Invoke class method with prepared arguments
      *
@@ -78,8 +83,9 @@ class ObjectManager extends \Magento\AcceptanceTestFramework\ObjectManager\Objec
      */
     public function invoke($object, $method, array $arguments = [])
     {
-        return $this->_factory->invoke($object, $method, $arguments);
+        return $this->factory->invoke($object, $method, $arguments);
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * Set object manager instance
@@ -89,21 +95,21 @@ class ObjectManager extends \Magento\AcceptanceTestFramework\ObjectManager\Objec
      */
     public static function setInstance(ObjectManager $objectManager)
     {
-        self::$_instance = $objectManager;
+        self::$instance = $objectManager;
     }
 
     /**
      * Retrieve object manager
      *
-     * @return ObjectManager
+     * @return ObjectManager|bool
      * @throws \RuntimeException
      */
     public static function getInstance()
     {
-        if (!self::$_instance instanceof ObjectManager) {
+        if (!self::$instance instanceof ObjectManager) {
             return false;
         }
-        return self::$_instance;
+        return self::$instance;
     }
 
     /**

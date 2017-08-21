@@ -15,6 +15,8 @@ use Magento\AcceptanceTestFramework\Config\Dom\NodePathMatcher;
 class ArgumentParser
 {
     /**
+     * Converter.
+     *
      * @var FlatConverter
      */
     private $converter;

@@ -1,6 +1,14 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
 namespace Magento\AcceptanceTestFramework\Helper;
 
+/**
+ * Class MagentoFakerData
+ */
 class MagentoFakerData extends \Codeception\Module
 {
     /**
@@ -105,10 +113,11 @@ class MagentoFakerData extends \Codeception\Module
             'metaTitle' => $faker->word,
             'metaKeywords' => $faker->sentence($nbWords = 5, $variableNbWords = true),
             'metaDescription' => $faker->sentence($nbWords = 10, $variableNbWords = true),
-            'layoutUpdateXml' => "<note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Don't forget me this weekend!</body></note>",
             'from' => $faker->date($format = 'm/d/Y', $max = 'now'),
             'to' => $faker->date($format = 'm/d/Y')
         ];
+        $pageContent['layoutUpdateXml'] = "<note><to>Tove</to><from>Jani</from><heading>Reminder</heading>";
+        $pageContent['layoutUpdateXml'] .= "<body>Don't forget me this weekend!</body></note>";
 
         return $pageContent;
     }

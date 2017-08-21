@@ -15,17 +15,19 @@ namespace Magento\AcceptanceTestFramework\Config;
 class ValidationState implements ValidationStateInterface
 {
     /**
+     * Application mode value.
+     *
      * @var string
      */
-    protected $_appMode;
+    protected $appMode;
 
     /**
-     * @constructor
+     * ValidationState constructor.
      * @param string $appMode
      */
     public function __construct($appMode)
     {
-        $this->_appMode = $appMode;
+        $this->appMode = $appMode;
     }
 
     /**
@@ -35,6 +37,6 @@ class ValidationState implements ValidationStateInterface
      */
     public function isValidationRequired()
     {
-        return $this->_appMode == 'developer'; // @todo
+        return $this->appMode == 'developer'; // @todo
     }
 }

@@ -43,6 +43,7 @@ use Flow\JSONPath;
  * Conflicts with SOAP module
  *
  */
+// @codingStandardsIgnoreFile
 class MagentoRestDriver extends REST
 {
     /**

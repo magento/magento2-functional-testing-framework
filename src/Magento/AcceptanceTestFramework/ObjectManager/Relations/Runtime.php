@@ -11,23 +11,26 @@ namespace Magento\AcceptanceTestFramework\ObjectManager\Relations;
 class Runtime implements \Magento\AcceptanceTestFramework\ObjectManager\RelationsInterface
 {
     /**
+     * Class reader.
+     *
      * @var \Magento\AcceptanceTestFramework\Code\Reader\ClassReader
      */
-    protected $_classReader;
+    protected $classReader;
 
     /**
      * Default behavior
      *
      * @var array
      */
-    protected $_default = [];
+    protected $default = [];
 
     /**
-     * @param \Magento\AcceptanceTestFramework\Code\Reader\ClassReader $classReader
+     * Runtime constructor.
+     * @param \Magento\AcceptanceTestFramework\Code\Reader\ClassReader|null $classReader
      */
     public function __construct(\Magento\AcceptanceTestFramework\Code\Reader\ClassReader $classReader = null)
     {
-        $this->_classReader = $classReader ? : new \Magento\AcceptanceTestFramework\Code\Reader\ClassReader();
+        $this->classReader = $classReader ? : new \Magento\AcceptanceTestFramework\Code\Reader\ClassReader();
     }
 
     /**
@@ -50,8 +53,8 @@ class Runtime implements \Magento\AcceptanceTestFramework\ObjectManager\Relation
     public function getParents($type)
     {
         if (!class_exists($type)) {
-            return $this->_default;
+            return $this->default;
         }
-        return $this->_classReader->getParents($type) ? : $this->_default;
+        return $this->classReader->getParents($type) ? : $this->default;
     }
 }

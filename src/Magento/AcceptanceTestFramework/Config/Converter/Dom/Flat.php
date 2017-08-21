@@ -13,6 +13,8 @@ use Magento\AcceptanceTestFramework\Config\Dom\ArrayNodeConfig;
 class Flat
 {
     /**
+     * Array node configuration.
+     *
      * @var ArrayNodeConfig
      */
     protected $arrayNodeConfig;
@@ -25,6 +27,25 @@ class Flat
     public function __construct(ArrayNodeConfig $arrayNodeConfig)
     {
         $this->arrayNodeConfig = $arrayNodeConfig;
+    }
+
+    /**
+     * Retrieve key-value pairs of node attributes
+     *
+     * @param \DOMNode $node
+     * @return array
+     */
+    protected function getNodeAttributes(\DOMNode $node)
+    {
+        $result = [];
+        $attributes = $node->attributes ?: [];
+        /** @var \DOMNode $attribute */
+        foreach ($attributes as $attribute) {
+            if ($attribute->nodeType == XML_ATTRIBUTE_NODE) {
+                $result[$attribute->nodeName] = $attribute->nodeValue;
+            }
+        }
+        return $result;
     }
 
     /**
@@ -103,25 +124,6 @@ class Flat
                 $result['value'] = $value;
             } else {
                 $result = $value;
-            }
-        }
-        return $result;
-    }
-
-    /**
-     * Retrieve key-value pairs of node attributes
-     *
-     * @param \DOMNode $node
-     * @return array
-     */
-    protected function getNodeAttributes(\DOMNode $node)
-    {
-        $result = [];
-        $attributes = $node->attributes ?: [];
-        /** @var \DOMNode $attribute */
-        foreach ($attributes as $attribute) {
-            if ($attribute->nodeType == XML_ATTRIBUTE_NODE) {
-                $result[$attribute->nodeName] = $attribute->nodeValue;
             }
         }
         return $result;

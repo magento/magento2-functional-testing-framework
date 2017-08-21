@@ -15,6 +15,7 @@ use Magento\AcceptanceTestFramework\ObjectManager as MagentoObjectManager;
  * @api
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
+// @codingStandardsIgnoreFile
 class ObjectManagerFactory
 {
     /**

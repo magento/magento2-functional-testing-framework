@@ -1,13 +1,25 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 namespace Magento\AcceptanceTestFramework\Util;
 
-use Magento\AcceptanceTestFramework\Test\Managers\CestArrayProcessor;
+use Magento\AcceptanceTestFramework\Test\Handlers\CestObjectHandler;
 
 class TestGenerator
 {
+    /**
+     * Test generator.
+     *
+     * @var TestGenerator
+     */
     private static $testGenerator;
 
+    /**
+     * TestGenerator constructor.
+     */
     private function __construct()
     {
         // private constructor for singleton
@@ -15,6 +27,7 @@ class TestGenerator
 
     /**
      * Singleton method to retrieve Test Generator
+     *
      * @return TestGenerator
      */
     public static function getInstance()
@@ -28,20 +41,22 @@ class TestGenerator
 
     /**
      * Load all Cest files as Objects using the Cest Array Processor.
+     *
      * @return array
      */
     private function loadAllCestObjects()
     {
-        $cestOutput = CestArrayProcessor::getInstance()->getCestData();
-        return $cestOutput;
+        return CestObjectHandler::getInstance()->getAllObjects();
     }
 
     /**
      * Create a single PHP file containing the $cestPhp using the $filename.
      * If the _generated directory doesn't exist it will be created.
-     * @param $cestPhp
-     * @param $filename
-     * @throws Exception
+     *
+     * @param string $cestPhp
+     * @param string $filename
+     * @return void
+     * @throws \Exception
      */
     private function createCestFile($cestPhp, $filename)
     {
@@ -55,7 +70,7 @@ class TestGenerator
         $file = fopen($exportFilePath, 'w');
 
         if (!$file) {
-            throw new Exception("Could not open the file!");
+            throw new \Exception("Could not open the file!");
         }
 
         fwrite($file, $cestPhp);
@@ -63,7 +78,10 @@ class TestGenerator
     }
 
     /**
-     * Assemble ALL PHP strings using the assembleAllCestPhp function. Loop over and pass each array item to the createCestFile function.
+     * Assemble ALL PHP strings using the assembleAllCestPhp function. Loop over and pass each array item
+     * to the createCestFile function.
+     *
+     * @return void
      */
     public function createAllCestFiles()
     {
@@ -77,7 +95,8 @@ class TestGenerator
     /**
      * Assemble the entire PHP string for a single Test based on a Cest Object.
      * Create all of the PHP strings for a Test. Concatenate the strings together.
-     * @param $cestObject
+     *
+     * @param \Magento\AcceptanceTestFramework\Test\Objects\CestObject $cestObject
      * @return string
      */
     private function assembleCestPhp($cestObject)
@@ -104,6 +123,7 @@ class TestGenerator
 
     /**
      * Load ALL Cest objects. Loop over and pass each to the assembleCestPhp function.
+     *
      * @return array
      */
     private function assembleAllCestPhp()
@@ -124,7 +144,8 @@ class TestGenerator
     /**
      * Creates a PHP string for the necessary Allure and AcceptanceTester use statements.
      * Since we don't support other dependencies at this time, this function takes no parameter.
-     * @param $cestObject
+     *
+     * @param \Magento\AcceptanceTestFramework\Test\Objects\CestObject  $cestObject
      * @return string
      */
     private function generateUseStatementsPhp($cestObject)
@@ -157,14 +178,16 @@ class TestGenerator
             $useStatementsPhp .= "use Magento\AcceptanceTestFramework\DataGenerator\Api\EntityApiHandler;\n";
         }
 
-        $allureStatements = ["Yandex\Allure\Adapter\Annotation\Features;",
+        $allureStatements = [
+            "Yandex\Allure\Adapter\Annotation\Features;",
             "Yandex\Allure\Adapter\Annotation\Stories;",
             "Yandex\Allure\Adapter\Annotation\Title;",
             "Yandex\Allure\Adapter\Annotation\Description;",
             "Yandex\Allure\Adapter\Annotation\Parameter;",
             "Yandex\Allure\Adapter\Annotation\Severity;",
             "Yandex\Allure\Adapter\Model\SeverityLevel;",
-            "Yandex\Allure\Adapter\Annotation\TestCaseId;\n"];
+            "Yandex\Allure\Adapter\Annotation\TestCaseId;\n"
+        ];
 
         foreach ($allureStatements as $allureUseStatement) {
             $useStatementsPhp .= sprintf("use %s\n", $allureUseStatement);
@@ -176,7 +199,8 @@ class TestGenerator
     /**
      * Creates a PHP string for the Class Annotations block if the Cest file contains an <annotations> block, outside
      * of the <test> blocks.
-     * @param $classAnnotationsObject
+     *
+     * @param array $classAnnotationsObject
      * @return string
      */
     private function generateClassAnnotationsPhp($classAnnotationsObject)
@@ -251,8 +275,8 @@ class TestGenerator
      * Since nearly half of all Codeception methods don't share the same signature I had to setup a massive Case
      * statement to handle each unique action. At the bottom of the case statement there is a generic function that can
      * construct the PHP string for nearly half of all Codeception actions.
-     * @param $stepsObject
-     * @param $hookObject
+     * @param array $stepsObject
+     * @param array|bool $hookObject
      * @return string
      */
     private function generateStepsPhp($stepsObject, $hookObject = false)
@@ -358,11 +382,19 @@ class TestGenerator
                     $key = $steps->getMergeKey();
 
                     if ($hookObject) {
-                        $testSteps .= sprintf("\t\t$%s = DataManager::getInstance()->getEntity(\"%s\");\n", $entity, $entity);
+                        $testSteps .= sprintf(
+                            "\t\t$%s = DataManager::getInstance()->getEntity(\"%s\");\n",
+                            $entity,
+                            $entity
+                        );
                         $testSteps .= sprintf("\t\t\$this->%s = new EntityApiHandler($%s);\n", $key, $entity);
                         $testSteps .= sprintf("\t\t\$this->%s->createEntity();\n", $key);
                     } else {
-                        $testSteps .= sprintf("\t\t$%s = DataManager::getInstance()->getEntity(\"%s\");\n", $entity, $entity);
+                        $testSteps .= sprintf(
+                            "\t\t$%s = DataManager::getInstance()->getEntity(\"%s\");\n",
+                            $entity,
+                            $entity
+                        );
                         $testSteps .= sprintf("\t\t$%s = new EntityApiHandler($%s);\n", $key, $entity);
                         $testSteps .= sprintf("\t\t$%s->createEntity();\n", $key);
                     }
@@ -398,14 +430,26 @@ class TestGenerator
                     break;
                 case "dontSeeElement":
                     if ($parameterArray) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $parameterArray);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, %s);\n",
+                            $actor,
+                            $actionName,
+                            $selector,
+                            $parameterArray
+                        );
                     } else {
                         $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $selector);
                     }
                     break;
                 case "dontSeeElementInDOM":
                     if ($parameterArray) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $parameterArray);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, %s);\n",
+                            $actor,
+                            $actionName,
+                            $selector,
+                            $parameterArray
+                        );
                     } else {
                         $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $selector);
                     }
@@ -425,13 +469,25 @@ class TestGenerator
                     break;
                 case "dontSeeLink":
                     if (isset($customActionAttributes['url'])) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\");\n", $actor, $actionName, $input, $customActionAttributes['url']);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, \"%s\");\n",
+                            $actor,
+                            $actionName,
+                            $input,
+                            $customActionAttributes['url']
+                        );
                     } else {
                         $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
                     }
                     break;
                 case "dragAndDrop":
-                    $testSteps .= sprintf("\t\t$%s->%s(\"%s\", \"%s\");\n", $actor, $actionName, $customActionAttributes['selector1'], $customActionAttributes['selector2']);
+                    $testSteps .= sprintf(
+                        "\t\t$%s->%s(\"%s\", \"%s\");\n",
+                        $actor,
+                        $actionName,
+                        $customActionAttributes['selector1'],
+                        $customActionAttributes['selector2']
+                    );
                     break;
                 case "executeInSelenium":
                     $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $function);
@@ -444,7 +500,13 @@ class TestGenerator
                     break;
                 case "formatMoney":
                     if (isset($customActionAttributes['locale'])) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\");\n", $actor, $actionName, $input, $customActionAttributes['locale']);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, \"%s\");\n",
+                            $actor,
+                            actionName,
+                            $input,
+                            $customActionAttributes['locale']
+                        );
                     } else {
                         $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
                     }
@@ -452,13 +514,32 @@ class TestGenerator
                 case "grabCookie":
                     if (isset($returnVariable)) {
                         if (isset($parameterArray)) {
-                            $testSteps .= sprintf("\t\t$%s = $%s->%s(%s, %s);\n", $returnVariable, $actor, $actionName, $input, $parameterArray);
+                            $testSteps .= sprintf(
+                                "\t\t$%s = $%s->%s(%s, %s);\n",
+                                $returnVariable,
+                                $actor,
+                                $actionName,
+                                $input,
+                                $parameterArray
+                            );
                         } else {
-                            $testSteps .= sprintf("\t\t$%s = $%s->%s(%s);\n", $returnVariable, $actor, $actionName, $input);
+                            $testSteps .= sprintf(
+                                "\t\t$%s = $%s->%s(%s);\n",
+                                $returnVariable,
+                                $actor,
+                                $actionName,
+                                $input
+                            );
                         }
                     } else {
                         if (isset($parameterArray)) {
-                            $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $input, $parameterArray);
+                            $testSteps .= sprintf(
+                                "\t\t$%s->%s(%s, %s);\n",
+                                $actor,
+                                $actionName,
+                                $input,
+                                $parameterArray
+                            );
                         } else {
                             $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
                         }
@@ -467,7 +548,13 @@ class TestGenerator
                 case "grabFromCurrentUrl":
                     if (isset($returnVariable)) {
                         if ($input) {
-                            $testSteps .= sprintf("\t\t$%s = $%s->%s(%s);\n", $returnVariable, $actor, $actionName, $input);
+                            $testSteps .= sprintf(
+                                "\t\t$%s = $%s->%s(%s);\n",
+                                $returnVariable,
+                                $actor,
+                                $actionName,
+                                $input
+                            );
                         } else {
                             $testSteps .= sprintf("\t\t$%s = $%s->%s();\n", $returnVariable, $actor, $actionName);
                         }
@@ -481,14 +568,26 @@ class TestGenerator
                     break;
                 case "grabValueFrom":
                     if (isset($returnVariable)) {
-                        $testSteps .= sprintf("\t\t$%s = $%s->%s(%s);\n", $returnVariable, $actor, $actionName, $selector);
+                        $testSteps .= sprintf(
+                            "\t\t$%s = $%s->%s(%s);\n",
+                            $returnVariable,
+                            $actor,
+                            $actionName,
+                            $selector
+                        );
                     } else {
                         $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $selector);
                     }
                     break;
                 case "loginAsAdmin":
                     if (isset($customActionAttributes['username']) && isset($customActionAttributes['password'])) {
-                        $testSteps .= sprintf("\t\t$%s->%s(\"%s\", \"%s\");\n", $actor, $actionName, $customActionAttributes['username'], $customActionAttributes['password']);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(\"%s\", \"%s\");\n",
+                            $actor,
+                            $actionName,
+                            $customActionAttributes['username'],
+                            $customActionAttributes['password']
+                        );
                     } else {
                         $testSteps .= sprintf("\t\t$%s->%s();\n", $actor, $actionName);
                     }
@@ -506,7 +605,13 @@ class TestGenerator
                     break;
                 case "mSetLocale":
                     if (isset($customActionAttributes['locale'])) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\");\n", $actor, $actionName, $input, $customActionAttributes['locale']);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, \"%s\");\n",
+                            $actor,
+                            $actionName,
+                            $input,
+                            $customActionAttributes['locale']
+                        );
                     } else {
                         $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
                     }
@@ -516,7 +621,13 @@ class TestGenerator
                     break;
                 case "pressKey":
                     if (isset($parameterArray)) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $parameterArray);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, %s);\n",
+                            $actor,
+                            $actionName,
+                            $selector,
+                            $parameterArray
+                        );
                     } else {
                         $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $input);
                     }
@@ -529,16 +640,35 @@ class TestGenerator
                     }
                     break;
                 case "resizeWindow":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $customActionAttributes['width'], $customActionAttributes['height']);
+                    $testSteps .= sprintf(
+                        "\t\t$%s->%s(%s, %s);\n",
+                        $actor,
+                        $actionName,
+                        $customActionAttributes['width'],
+                        $customActionAttributes['height']
+                    );
                     break;
                 case "scrollTo":
                     $testSteps .= sprintf("\t\t$%s->%s(%s, %s, %s);\n", $actor, $actionName, $selector, $x, $y);
                     break;
                 case "searchAndMultiSelectOption":
                     if (isset($customActionAttributes['requiredAction'])) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s, %s);\n", $actor, $actionName, $selector, $customActionAttributes['parameterArray'], $customActionAttributes['requiredAction']);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, %s, %s);\n",
+                            $actor,
+                            $actionName,
+                            $selector,
+                            $customActionAttributes['parameterArray'],
+                            $customActionAttributes['requiredAction']
+                        );
                     } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $customActionAttributes['parameterArray']);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, %s);\n",
+                            $actor,
+                            $actionName,
+                            $selector,
+                            $customActionAttributes['parameterArray']
+                        );
                     }
                     break;
                 case "see":
@@ -563,14 +693,26 @@ class TestGenerator
                     break;
                 case "seeElement":
                     if (isset($parameterArray)) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $parameterArray);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, %s);\n",
+                            $actor,
+                            $actionName,
+                            $selector,
+                            $parameterArray
+                        );
                     } else {
                         $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $selector);
                     }
                     break;
                 case "seeElementInDOM":
                     if (isset($parameterArray)) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $parameterArray);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, %s);\n",
+                            $actor,
+                            $actionName,
+                            $selector,
+                            $parameterArray
+                        );
                     } else {
                         $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $selector);
                     }
@@ -592,33 +734,77 @@ class TestGenerator
                     break;
                 case "seeLink":
                     if (isset($step['url'])) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\");\n", $actor, $actionName, $input, $customActionAttributes['url']);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, \"%s\");\n",
+                            $actor,
+                            $actionName,
+                            $input,
+                            $customActionAttributes['url']
+                        );
                     } else {
                         $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
                     }
                     break;
                 case "seeNumberOfElements":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $customActionAttributes['userInput']);
+                    $testSteps .= sprintf(
+                        "\t\t$%s->%s(%s, %s);\n",
+                        $actor,
+                        $actionName,
+                        $selector,
+                        $customActionAttributes['userInput']
+                    );
                     break;
                 case "selectOption":
                     if ($parameterArray) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $parameterArray);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, %s);\n",
+                            $actor,
+                            $actionName,
+                            $selector,
+                            $parameterArray
+                        );
                     } else {
                         $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $input);
                     }
                     break;
                 case "setCookie":
                     if ($parameterArray) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\", %s);\n", $actor, $actionName, $input, $customActionAttributes['value'], $parameterArray);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, \"%s\", %s);\n",
+                            $actor,
+                            $actionName,
+                            $input,
+                            $customActionAttributes['value'],
+                            $parameterArray
+                        );
                     } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\");\n", $actor, $actionName, $input, $customActionAttributes['value']);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, \"%s\");\n",
+                            $actor,
+                            $actionName,
+                            $input,
+                            $customActionAttributes['value']
+                        );
                     }
                     break;
                 case "submitForm":
                     if (isset($step['button'])) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\", \"%s\");\n", $actor, $actionName, $selector, $parameterArray, $customActionAttributes['button']);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, \"%s\", \"%s\");\n",
+                            $actor,
+                            $actionName,
+                            $selector,
+                            $parameterArray,
+                            $customActionAttributes['button']
+                        );
                     } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\");\n", $actor, $actionName, $selector, $parameterArray);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, \"%s\");\n",
+                            $actor,
+                            $actionName,
+                            $selector,
+                            $parameterArray
+                        );
                     }
                     break;
                 case "wait":
@@ -635,7 +821,14 @@ class TestGenerator
                     $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $time);
                     break;
                 case "waitForElementChange":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s, %s);\n", $actor, $actionName, $selector, $function, $time);
+                    $testSteps .= sprintf(
+                        "\t\t$%s->%s(%s, %s, %s);\n",
+                        $actor,
+                        $actionName,
+                        $selector,
+                        $function,
+                        $time
+                    );
                     break;
                 case "waitForJS":
                     $testSteps .= sprintf("\t\t$%s->%s(\"%s\", %s);\n", $actor, $actionName, $function, $time);
@@ -649,7 +842,14 @@ class TestGenerator
                     break;
                 case "waitForText":
                     if ($selector) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s, %s);\n", $actor, $actionName, $input, $time, $selector);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, %s, %s);\n",
+                            $actor,
+                            $actionName,
+                            $input,
+                            $time,
+                            $selector
+                        );
                     } else {
                         $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $input, $time);
                     }
@@ -658,17 +858,49 @@ class TestGenerator
                     if ($returnVariable) {
                         if ($selector) {
                             if (isset($customActionAttributes['userInput'])) {
-                                $testSteps .= sprintf("\t\t$%s = $%s->%s(%s, \"%s\");\n", $returnVariable, $actor, $actionName, $selector, $customActionAttributes['userInput']);
+                                $testSteps .= sprintf(
+                                    "\t\t$%s = $%s->%s(%s, \"%s\");\n",
+                                    $returnVariable,
+                                    $actor,
+                                    $actionName,
+                                    $selector,
+                                    $customActionAttributes['userInput']
+                                );
                             } elseif (isset($customActionAttributes['parameter'])) {
-                                $testSteps .= sprintf("\t\t$%s = $%s->%s(%s, %s);\n", $returnVariable, $actor, $actionName, $selector, $customActionAttributes['parameter']);
+                                $testSteps .= sprintf(
+                                    "\t\t$%s = $%s->%s(%s, %s);\n",
+                                    $returnVariable,
+                                    $actor,
+                                    $actionName,
+                                    $selector,
+                                    $customActionAttributes['parameter']
+                                );
                             } else {
-                                $testSteps .= sprintf("\t\t$%s = $%s->%s(%s);\n", $returnVariable, $actor, $actionName, $selector);
+                                $testSteps .= sprintf(
+                                    "\t\t$%s = $%s->%s(%s);\n",
+                                    $returnVariable,
+                                    $actor,
+                                    $actionName,
+                                    $selector
+                                );
                             }
                         } else {
                             if (isset($customActionAttributes['userInput'])) {
-                                $testSteps .= sprintf("\t\t$%s = $%s->%s(\"%s\");\n", $returnVariable, $actor, $actionName, $customActionAttributes['userInput']);
+                                $testSteps .= sprintf(
+                                    "\t\t$%s = $%s->%s(\"%s\");\n",
+                                    $returnVariable,
+                                    $actor,
+                                    $actionName,
+                                    $customActionAttributes['userInput']
+                                );
                             } elseif (isset($customActionAttributes['parameter'])) {
-                                $testSteps .= sprintf("\t\t$%s = $%s->%s(%s);\n", $returnVariable, $actor, $actionName, $customActionAttributes['parameter']);
+                                $testSteps .= sprintf(
+                                    "\t\t$%s = $%s->%s(%s);\n",
+                                    $returnVariable,
+                                    $actor,
+                                    $actionName,
+                                    $customActionAttributes['parameter']
+                                );
                             } else {
                                 $testSteps .= sprintf("\t\t$%s = $%s->%s();\n", $returnVariable, $actor, $actionName);
                             }
@@ -676,17 +908,39 @@ class TestGenerator
                     } else {
                         if ($selector) {
                             if (isset($customActionAttributes['userInput'])) {
-                                $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\");\n", $actor, $actionName, $selector, $customActionAttributes['userInput']);
+                                $testSteps .= sprintf(
+                                    "\t\t$%s->%s(%s, \"%s\");\n",
+                                    $actor,
+                                    $actionName,
+                                    $selector,
+                                    $customActionAttributes['userInput']
+                                );
                             } elseif (isset($customActionAttributes['parameter'])) {
-                                $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $customActionAttributes['parameter']);
+                                $testSteps .= sprintf(
+                                    "\t\t$%s->%s(%s, %s);\n",
+                                    $actor,
+                                    $actionName,
+                                    $selector,
+                                    $customActionAttributes['parameter']
+                                );
                             } else {
                                 $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $selector);
                             }
                         } else {
                             if (isset($customActionAttributes['userInput'])) {
-                                $testSteps .= sprintf("\t\t$%s->%s(\"%s\");\n", $actor, $actionName, $customActionAttributes['userInput']);
+                                $testSteps .= sprintf(
+                                    "\t\t$%s->%s(\"%s\");\n",
+                                    $actor,
+                                    $actionName,
+                                    $customActionAttributes['userInput']
+                                );
                             } elseif (isset($customActionAttributes['parameter'])) {
-                                $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $customActionAttributes['parameter']);
+                                $testSteps .= sprintf(
+                                    "\t\t$%s->%s(%s);\n",
+                                    $actor,
+                                    $actionName,
+                                    $customActionAttributes['parameter']
+                                );
                             } else {
                                 $testSteps .= sprintf("\t\t$%s->%s();\n", $actor, $actionName);
                             }
@@ -700,7 +954,7 @@ class TestGenerator
 
     /**
      * Creates a PHP string for the _before/_after methods if the Test contains an <before> or <after> block.
-     * @param $hookObjects
+     * @param array $hookObjects
      * @return string
      */
     private function generateHooksPhp($hookObjects)
@@ -745,7 +999,8 @@ class TestGenerator
 
     /**
      * Creates a PHP string for the Test Annotations block if the Test contains an <annotations> block.
-     * @param $testAnnotationsObject
+     *
+     * @param array $testAnnotationsObject
      * @return string
      */
     private function generateTestAnnotationsPhp($testAnnotationsObject)
@@ -824,7 +1079,7 @@ class TestGenerator
     /**
      * Creates a PHP string based on a <test> block.
      * Concatenates the Test Annotations PHP and Test PHP for a single Test.
-     * @param $testsObject
+     * @param array $testsObject
      * @return string
      */
     private function generateTestsPhp($testsObject)

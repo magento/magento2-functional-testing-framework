@@ -14,6 +14,8 @@ use Magento\AcceptanceTestFramework\Config\Dom\ArrayNodeConfig;
 class Flat implements ConverterInterface
 {
     /**
+     * Array node configuration.
+     *
      * @var ArrayNodeConfig
      */
     protected $arrayNodeConfig;

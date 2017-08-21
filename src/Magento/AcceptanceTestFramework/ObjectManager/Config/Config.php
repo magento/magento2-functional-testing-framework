@@ -18,65 +18,66 @@ class Config implements \Magento\AcceptanceTestFramework\ObjectManager\ConfigInt
      *
      * @var \Magento\AcceptanceTestFramework\ObjectManager\DefinitionInterface
      */
-    protected $_definitions;
+    protected $definitions;
 
     /**
      * Current cache key
      *
      * @var string
      */
-    protected $_currentCacheKey;
+    protected $currentCacheKey;
 
     /**
      * Interface preferences
      *
      * @var array
      */
-    protected $_preferences = [];
+    protected $preferences = [];
 
     /**
      * Virtual types
      *
      * @var array
      */
-    protected $_virtualTypes = [];
+    protected $virtualTypes = [];
 
     /**
      * Instance arguments
      *
      * @var array
      */
-    protected $_arguments = [];
+    protected $arguments = [];
 
     /**
      * Type shareability
      *
      * @var array
      */
-    protected $_nonShared = [];
+    protected $nonShared = [];
 
     /**
      * List of relations
      *
      * @var RelationsInterface
      */
-    protected $_relations;
+    protected $relations;
 
     /**
      * List of merged arguments
      *
      * @var array
      */
-    protected $_mergedArguments;
+    protected $mergedArguments;
 
     /**
-     * @param RelationsInterface $relations
-     * @param DefinitionInterface $definitions
+     * Config constructor.
+     * @param RelationsInterface|null $relations
+     * @param DefinitionInterface|null $definitions
      */
     public function __construct(RelationsInterface $relations = null, DefinitionInterface $definitions = null)
     {
-        $this->_relations = $relations ? : new \Magento\AcceptanceTestFramework\ObjectManager\Relations\Runtime();
-        $this->_definitions = $definitions ? : new \Magento\AcceptanceTestFramework\ObjectManager\Definition\Runtime();
+        $this->relations = $relations ? : new \Magento\AcceptanceTestFramework\ObjectManager\Relations\Runtime();
+        $this->definitions = $definitions ? : new \Magento\AcceptanceTestFramework\ObjectManager\Definition\Runtime();
     }
 
     /**
@@ -87,9 +88,9 @@ class Config implements \Magento\AcceptanceTestFramework\ObjectManager\ConfigInt
      */
     public function getArguments($type)
     {
-        return isset($this->_mergedArguments[$type])
-            ? $this->_mergedArguments[$type]
-            : $this->_collectConfiguration($type);
+        return isset($this->mergedArguments[$type])
+            ? $this->mergedArguments[$type]
+            : $this->collectConfiguration($type);
     }
 
     /**
@@ -100,19 +101,19 @@ class Config implements \Magento\AcceptanceTestFramework\ObjectManager\ConfigInt
      */
     public function isShared($type)
     {
-        return !isset($this->_nonShared[$type]);
+        return !isset($this->nonShared[$type]);
     }
 
     /**
      * Retrieve instance type
      *
      * @param string $instanceName
-     * @return mixed
+     * @return string
      */
     public function getInstanceType($instanceName)
     {
-        while (isset($this->_virtualTypes[$instanceName])) {
-            $instanceName = $this->_virtualTypes[$instanceName];
+        while (isset($this->virtualTypes[$instanceName])) {
+            $instanceName = $this->virtualTypes[$instanceName];
         }
         return $instanceName;
     }
@@ -128,17 +129,17 @@ class Config implements \Magento\AcceptanceTestFramework\ObjectManager\ConfigInt
     {
         $type = ltrim($type, '\\');
         $preferencePath = [];
-        while (isset($this->_preferences[$type])) {
-            if (isset($preferencePath[$this->_preferences[$type]])) {
+        while (isset($this->preferences[$type])) {
+            if (isset($preferencePath[$this->preferences[$type]])) {
                 throw new \LogicException(
                     'Circular type preference: ' .
                     $type .
                     ' relates to ' .
-                    $this->_preferences[$type] .
+                    $this->preferences[$type] .
                     ' and viceversa.'
                 );
             }
-            $type = $this->_preferences[$type];
+            $type = $this->preferences[$type];
             $preferencePath[$type] = 1;
         }
         return $type;
@@ -151,18 +152,18 @@ class Config implements \Magento\AcceptanceTestFramework\ObjectManager\ConfigInt
      * @return array
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function _collectConfiguration($type)
+    protected function collectConfiguration($type)
     {
-        if (!isset($this->_mergedArguments[$type])) {
-            if (isset($this->_virtualTypes[$type])) {
-                $arguments = $this->_collectConfiguration($this->_virtualTypes[$type]);
+        if (!isset($this->mergedArguments[$type])) {
+            if (isset($this->virtualTypes[$type])) {
+                $arguments = $this->collectConfiguration($this->virtualTypes[$type]);
             } else {
-                if ($this->_relations->has($type)) {
-                    $relations = $this->_relations->getParents($type);
+                if ($this->relations->has($type)) {
+                    $relations = $this->relations->getParents($type);
                     $arguments = [];
                     foreach ($relations as $relation) {
                         if ($relation) {
-                            $relationArguments = $this->_collectConfiguration($relation);
+                            $relationArguments = $this->collectConfiguration($relation);
                             if ($relationArguments) {
                                 $arguments = array_replace($arguments, $relationArguments);
                             }
@@ -173,17 +174,17 @@ class Config implements \Magento\AcceptanceTestFramework\ObjectManager\ConfigInt
                 }
             }
 
-            if (isset($this->_arguments[$type])) {
+            if (isset($this->arguments[$type])) {
                 if ($arguments && count($arguments)) {
-                    $arguments = array_replace_recursive($arguments, $this->_arguments[$type]);
+                    $arguments = array_replace_recursive($arguments, $this->arguments[$type]);
                 } else {
-                    $arguments = $this->_arguments[$type];
+                    $arguments = $this->arguments[$type];
                 }
             }
-            $this->_mergedArguments[$type] = $arguments;
+            $this->mergedArguments[$type] = $arguments;
             return $arguments;
         }
-        return $this->_mergedArguments[$type];
+        return $this->mergedArguments[$type];
     }
 
     /**
@@ -193,36 +194,36 @@ class Config implements \Magento\AcceptanceTestFramework\ObjectManager\ConfigInt
      * @return void
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function _mergeConfiguration(array $configuration)
+    protected function mergeConfiguration(array $configuration)
     {
         foreach ($configuration as $key => $curConfig) {
             switch ($key) {
                 case 'preferences':
                     foreach ($curConfig as $for => $to) {
-                        $this->_preferences[ltrim($for, '\\')] = ltrim($to, '\\');
+                        $this->preferences[ltrim($for, '\\')] = ltrim($to, '\\');
                     }
                     break;
 
                 default:
                     $key = ltrim($key, '\\');
                     if (isset($curConfig['type'])) {
-                        $this->_virtualTypes[$key] = ltrim($curConfig['type'], '\\');
+                        $this->virtualTypes[$key] = ltrim($curConfig['type'], '\\');
                     }
                     if (isset($curConfig['arguments'])) {
-                        if (!empty($this->_mergedArguments)) {
-                            $this->_mergedArguments = [];
+                        if (!empty($this->mergedArguments)) {
+                            $this->mergedArguments = [];
                         }
-                        if (isset($this->_arguments[$key])) {
-                            $this->_arguments[$key] = array_replace($this->_arguments[$key], $curConfig['arguments']);
+                        if (isset($this->arguments[$key])) {
+                            $this->arguments[$key] = array_replace($this->arguments[$key], $curConfig['arguments']);
                         } else {
-                            $this->_arguments[$key] = $curConfig['arguments'];
+                            $this->arguments[$key] = $curConfig['arguments'];
                         }
                     }
                     if (isset($curConfig['shared'])) {
                         if (!$curConfig['shared']) {
-                            $this->_nonShared[$key] = 1;
+                            $this->nonShared[$key] = 1;
                         } else {
-                            unset($this->_nonShared[$key]);
+                            unset($this->nonShared[$key]);
                         }
                     }
                     break;
@@ -238,6 +239,6 @@ class Config implements \Magento\AcceptanceTestFramework\ObjectManager\ConfigInt
      */
     public function extend(array $configuration)
     {
-        $this->_mergeConfiguration($configuration);
+        $this->mergeConfiguration($configuration);
     }
 }

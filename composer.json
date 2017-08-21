@@ -10,7 +10,8 @@
         "fzaninotto/faker": "^1.6"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "1.5.3"
+        "squizlabs/php_codesniffer": "1.5.3",
+        "sebastian/phpcpd": "~3.0"
     },
     "autoload": {
         "psr-4": {

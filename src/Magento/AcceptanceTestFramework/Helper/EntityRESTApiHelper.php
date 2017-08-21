@@ -1,15 +1,41 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 namespace Magento\AcceptanceTestFramework\Helper;
 
 use GuzzleHttp\Client;
 
+/**
+ * Class EntityRESTApiHelper
+ * @package Magento\AcceptanceTestFramework\Helper
+ */
 class EntityRESTApiHelper
 {
-    private $guzzle_client;
+    /**
+     * Integration admin token uri.
+     */
     const INTEGRATION_ADMIN_TOKEN_URI = '/rest/V1/integration/admin/token';
+
+    /**
+     * Application json header.
+     */
     const APPLICATION_JSON_HEADER = ['Content-Type' => 'application/json'];
 
+    /**
+     * Rest API client.
+     *
+     * @var Client
+     */
+    private $guzzle_client;
+
+    /**
+     * EntityRESTApiHelper constructor.
+     * @param string $host
+     * @param string $port
+     */
     public function __construct($host, $port)
     {
         $this->guzzle_client = new Client([
@@ -18,6 +44,15 @@ class EntityRESTApiHelper
         ]);
     }
 
+    /**
+     * Submit Auth API Request.
+     *
+     * @param string $apiMethod
+     * @param string $requestURI
+     * @param string $jsonBody
+     * @param array $headers
+     * @return \Psr\Http\Message\ResponseInterface
+     */
     public function submitAuthAPIRequest($apiMethod, $requestURI, $jsonBody, $headers)
     {
         $allHeaders = $headers;
@@ -30,9 +65,9 @@ class EntityRESTApiHelper
 
     /**
      * Function that sends a REST call to the integration endpoint for an authorization token.
+     *
      * @return string
      */
-
     private function getAuthToken()
     {
         $jsonArray = json_encode(['username' => 'admin', 'password' => 'admin123']);
@@ -54,6 +89,7 @@ class EntityRESTApiHelper
 
     /**
      * Function that submits an api request from the guzzle client using the following parameters:
+     *
      * @param string $apiMethod
      * @param string $requestURI
      * @param string $jsonBody

@@ -3,6 +3,7 @@ namespace Magento\AcceptanceTestFramework\Step\Backend;
 
 require_once __DIR__ . '/../../Helper/AdminUrlList.php';
 
+// @codingStandardsIgnoreFile
 class AdminStep extends \Magento\AcceptanceTestFramework\AcceptanceTester
 {
     public static $adminPageTitle = '.page-title';

@@ -27,7 +27,8 @@ class Composite implements InterpreterInterface
     private $discriminator;
 
     /**
-     * @param InterpreterInterface[] $interpreters
+     * Composite constructor.
+     * @param array $interpreters
      * @param string $discriminator
      * @throws \InvalidArgumentException
      */

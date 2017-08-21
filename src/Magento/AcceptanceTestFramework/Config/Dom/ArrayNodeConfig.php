@@ -11,6 +11,8 @@ namespace Magento\AcceptanceTestFramework\Config\Dom;
 class ArrayNodeConfig
 {
     /**
+     * Matching of XPath expressions to path patterns.
+     *
      * @var NodePathMatcher
      */
     private $nodePathMatcher;
@@ -30,6 +32,7 @@ class ArrayNodeConfig
     private $numericArrays = [];
 
     /**
+     * ArrayNodeConfig constructor.
      * @param NodePathMatcher $nodePathMatcher
      * @param array $assocArrayAttributes
      * @param array $numericArrays

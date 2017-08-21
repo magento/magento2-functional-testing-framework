@@ -8,6 +8,7 @@ namespace Magento\AcceptanceTestFramework\ObjectManager\Config\Mapper;
 use Magento\AcceptanceTestFramework\Data\Argument\InterpreterInterface;
 use Magento\AcceptanceTestFramework\Stdlib\BooleanUtils;
 
+// @codingStandardsIgnoreFile
 class Dom implements \Magento\AcceptanceTestFramework\Config\ConverterInterface
 {
     /**

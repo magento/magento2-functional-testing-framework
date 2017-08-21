@@ -17,6 +17,8 @@ use Magento\AcceptanceTestFramework\Util\Iterator\File;
 class Mask implements FileResolverInterface
 {
     /**
+     * Resolves module paths based on enabled modules of target Magento instance.
+     *
      * @var ModuleResolver
      */
     protected $moduleResolver;

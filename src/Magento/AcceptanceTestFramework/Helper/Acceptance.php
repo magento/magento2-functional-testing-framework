@@ -1,4 +1,9 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
 namespace Magento\AcceptanceTestFramework\Helper;
 
 /**
@@ -18,7 +23,8 @@ class Acceptance extends \Codeception\Module
      */
     public function changeConfiguration($config, $value)
     {
-        $this->getModule('\Magento\AcceptanceTestFramework\Module\MagentoWebDriver')->_reconfigure(array($config => $value));
+        $this->getModule(\Magento\AcceptanceTestFramework\Module\MagentoWebDriver::class)
+            ->_reconfigure([$config => $value]);
     }
 
     /**
@@ -29,6 +35,6 @@ class Acceptance extends \Codeception\Module
      */
     public function getConfiguration($config)
     {
-        return $this->getModule('\Magento\AcceptanceTestFramework\Module\MagentoWebDriver')->_getConfig($config);
+        return $this->getModule(\Magento\AcceptanceTestFramework\Module\MagentoWebDriver::class)->_getConfig($config);
     }
 }

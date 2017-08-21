@@ -12,11 +12,14 @@ use Magento\AcceptanceTestFramework\Stdlib\BooleanUtils;
 class DataObject implements InterpreterInterface
 {
     /**
+     * Utility methods for the boolean data type.
+     *
      * @var \Magento\AcceptanceTestFramework\Stdlib\BooleanUtils
      */
     protected $booleanUtils;
 
     /**
+     * DataObject constructor.
      * @param BooleanUtils $booleanUtils
      */
     public function __construct(BooleanUtils $booleanUtils)
@@ -28,7 +31,7 @@ class DataObject implements InterpreterInterface
      * Compute and return effective value of an argument
      *
      * @param array $data
-     * @return mixed
+     * @return array
      * @throws \InvalidArgumentException
      * @throws \UnexpectedValueException
      */
