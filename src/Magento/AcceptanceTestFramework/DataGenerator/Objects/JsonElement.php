@@ -11,21 +11,21 @@ class JsonElement
     /**
      * Json parameter name
      *
-     * @var string $key
+     * @var string
      */
     private $key;
 
     /**
      * Json parameter metadata value (e.g. string, bool)
      *
-     * @var string $value
+     * @var string
      */
     private $value;
 
     /**
      * Json type such as array or entry
      *
-     * @var string $type
+     * @var string
      */
     private $type;
 
