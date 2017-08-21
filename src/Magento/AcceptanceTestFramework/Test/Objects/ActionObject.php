@@ -293,7 +293,7 @@ class ActionObject
 
             //Check to see if field is defined as data if cannot be found in a different interface
             if ($replacement == null && get_class($obj) != EntityDataObject::class) {
-                $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $inputString);
+                return $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $inputString);
             }
 
             $outputString = str_replace($match, $replacement, $outputString);
