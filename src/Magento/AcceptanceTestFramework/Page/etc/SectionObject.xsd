@@ -72,7 +72,7 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute type="timeOutType" name="timeOut" use="optional">
+            <xs:attribute type="timeoutType" name="timeout" use="optional">
                 <xs:annotation>
                     <xs:documentation>
                         Optional timeout value in second to wait for the operation on the element. use "-" for default value.
@@ -107,7 +107,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="timeOutType">
+    <xs:simpleType name="timeoutType">
         <xs:restriction base="xs:string">
             <xs:pattern value="([0-9])+|-"/>
         </xs:restriction>
