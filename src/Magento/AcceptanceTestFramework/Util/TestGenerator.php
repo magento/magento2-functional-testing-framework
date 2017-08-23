@@ -249,7 +249,7 @@ class TestGenerator
             }
 
             if ($annotationType == "testCaseId") {
-                $classAnnotationsPhp .= sprintf(" * TestCaseId(\"%s\")", $annotationName[0]);
+                $classAnnotationsPhp .= sprintf(" * TestCaseId(\"%s\")\n", $annotationName[0]);
             }
 
             if ($annotationType == "group") {
@@ -503,7 +503,7 @@ class TestGenerator
                         $testSteps .= sprintf(
                             "\t\t$%s->%s(%s, \"%s\");\n",
                             $actor,
-                            actionName,
+                            $actionName,
                             $input,
                             $customActionAttributes['locale']
                         );
@@ -653,22 +653,11 @@ class TestGenerator
                     break;
                 case "searchAndMultiSelectOption":
                     if (isset($customActionAttributes['requiredAction'])) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, %s, %s);\n",
-                            $actor,
-                            $actionName,
-                            $selector,
-                            $customActionAttributes['parameterArray'],
-                            $customActionAttributes['requiredAction']
-                        );
+                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s, %s);\n", $actor, $actionName, $selector, $customActionAttributes['parameterArray'], $customActionAttributes['requiredAction']);
+                    } else if (isset($customActionAttributes['parameterArray'])) {
+                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $customActionAttributes['parameterArray']);
                     } else {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, %s);\n",
-                            $actor,
-                            $actionName,
-                            $selector,
-                            $customActionAttributes['parameterArray']
-                        );
+                        $testSteps .= sprintf("\t\t$%s->%s(%s, [%s]);\n", $actor, $actionName, $selector, $input);
                     }
                     break;
                 case "see":
