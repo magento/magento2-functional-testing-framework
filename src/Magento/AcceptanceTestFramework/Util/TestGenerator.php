@@ -302,7 +302,9 @@ class TestGenerator
                 $returnVariable = $customActionAttributes['returnVariable'];
             }
 
-            if (isset($customActionAttributes['url']) && isset($customActionAttributes['userInput'])) {
+            if (isset($customActionAttributes['variable'])) {
+                $input = sprintf("$%s", $customActionAttributes['variable']);
+            } elseif (isset($customActionAttributes['url']) && isset($customActionAttributes['userInput'])) {
                 $input = sprintf("\"%s\"", $customActionAttributes['userInput']);
             } elseif (isset($customActionAttributes['userInput'])) {
                 $input = sprintf("\"%s\"", $customActionAttributes['userInput']);
@@ -353,6 +355,12 @@ class TestGenerator
                     break;
                 case "amOnUrl":
                     $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
+                    break;
+                case "appendField":
+                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $input);
+                    break;
+                case "attachFile":
+                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $input);
                     break;
                 case "click":
                     if ($input && $selector) {
@@ -463,6 +471,12 @@ class TestGenerator
                 case "dontSeeInFormFields":
                     $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $parameterArray);
                     break;
+                case "dontSeeInTitle":
+                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
+                    break;
+                case "dontSeeInPageSource":
+                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
+                    break;
                 case "dontSeeInSource":
                     // TODO: Solve the HTML parsing issue.
                     $testSteps .= sprintf("\t\t$%s->%s(\"%s\");\n", $actor, $actionName, $html);
@@ -479,6 +493,9 @@ class TestGenerator
                     } else {
                         $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
                     }
+                    break;
+                case "dontSeeOptionIsSelected":
+                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $input);
                     break;
                 case "dragAndDrop":
                     $testSteps .= sprintf(
@@ -503,7 +520,7 @@ class TestGenerator
                         $testSteps .= sprintf(
                             "\t\t$%s->%s(%s, \"%s\");\n",
                             $actor,
-                            actionName,
+                            $actionName,
                             $input,
                             $customActionAttributes['locale']
                         );
@@ -512,58 +529,46 @@ class TestGenerator
                     }
                     break;
                 case "grabCookie":
-                    if (isset($returnVariable)) {
-                        if (isset($parameterArray)) {
-                            $testSteps .= sprintf(
-                                "\t\t$%s = $%s->%s(%s, %s);\n",
-                                $returnVariable,
-                                $actor,
-                                $actionName,
-                                $input,
-                                $parameterArray
-                            );
-                        } else {
-                            $testSteps .= sprintf(
-                                "\t\t$%s = $%s->%s(%s);\n",
-                                $returnVariable,
-                                $actor,
-                                $actionName,
-                                $input
-                            );
-                        }
+                    if (isset($parameterArray)) {
+                        $testSteps .= sprintf(
+                            "\t\t$%s = $%s->%s(%s, %s);\n",
+                            $returnVariable,
+                            $actor,
+                            $actionName,
+                            $input,
+                            $parameterArray
+                        );
                     } else {
-                        if (isset($parameterArray)) {
-                            $testSteps .= sprintf(
-                                "\t\t$%s->%s(%s, %s);\n",
-                                $actor,
-                                $actionName,
-                                $input,
-                                $parameterArray
-                            );
-                        } else {
-                            $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                        }
+                        $testSteps .= sprintf(
+                            "\t\t$%s = $%s->%s(%s);\n",
+                            $returnVariable,
+                            $actor,
+                            $actionName,
+                            $input
+                        );
                     }
                     break;
+                case "grabAttributeFrom":
+                    $testSteps .= sprintf("\t\t$%s = $%s->%s(%s, %s);\n", $returnVariable, $actor, $actionName, $selector, $input);
+                    break;
                 case "grabFromCurrentUrl":
-                    if (isset($returnVariable)) {
-                        if ($input) {
-                            $testSteps .= sprintf(
-                                "\t\t$%s = $%s->%s(%s);\n",
-                                $returnVariable,
-                                $actor,
-                                $actionName,
-                                $input
-                            );
-                        } else {
-                            $testSteps .= sprintf("\t\t$%s = $%s->%s();\n", $returnVariable, $actor, $actionName);
-                        }
+                    if ($input) {
+                        $testSteps .= sprintf(
+                            "\t\t$%s = $%s->%s(%s);\n",
+                            $returnVariable,
+                            $actor,
+                            $actionName,
+                            $input
+                        );
                     } else {
-                        if ($input) {
-                            $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                        } else {
-                            $testSteps .= sprintf("\t\t$%s->%s();\n", $actor, $actionName);
-                        }
+                        $testSteps .= sprintf("\t\t$%s = $%s->%s();\n", $returnVariable, $actor, $actionName);
+                    }
+                    break;
+                case "grabMultiple":
+                    if ($input) {
+                        $testSteps .= sprintf("\t\t$%s = $%s->%s(%s, %s);\n", $returnVariable, $actor, $actionName, $selector, $input);
+                    } else {
+                        $testSteps .= sprintf("\t\t$%s = $%s->%s(%s);\n", $returnVariable, $actor, $actionName, $selector);
                     }
                     break;
                 case "grabValueFrom":
@@ -578,6 +583,9 @@ class TestGenerator
                     } else {
                         $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $selector);
                     }
+                    break;
+                case "loadSessionSnapshot":
+                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
                     break;
                 case "loginAsAdmin":
                     if (isset($customActionAttributes['username']) && isset($customActionAttributes['password'])) {
@@ -647,6 +655,9 @@ class TestGenerator
                         $customActionAttributes['width'],
                         $customActionAttributes['height']
                     );
+                    break;
+                case "saveSessionSnapshot":
+                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
                     break;
                 case "scrollTo":
                     $testSteps .= sprintf("\t\t$%s->%s(%s, %s, %s);\n", $actor, $actionName, $selector, $x, $y);
@@ -729,8 +740,14 @@ class TestGenerator
                 case "seeInPageSource":
                     // TODO: Solve the HTML parsing issue.
                     break;
+                case "seeInPopup":
+                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
+                    break;
                 case "seeInSource":
                     // TODO: Solve the HTML parsing issue.
+                    break;
+                case "seeInTitle":
+                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
                     break;
                 case "seeLink":
                     if (isset($step['url'])) {
@@ -751,8 +768,11 @@ class TestGenerator
                         $actor,
                         $actionName,
                         $selector,
-                        $customActionAttributes['userInput']
+                        $input
                     );
+                    break;
+                case "seeOptionIsSelected":
+                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $input);
                     break;
                 case "selectOption":
                     if ($parameterArray) {
@@ -806,6 +826,40 @@ class TestGenerator
                             $parameterArray
                         );
                     }
+                    break;
+                case "switchToIFrame":
+                    if ($input) {
+                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
+                    } else {
+                        $testSteps .= sprintf("\t\t$%s->%s();\n", $actor, $actionName);
+                    }
+                    break;
+                case "switchToPreviousTab":
+                    if ($input) {
+                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
+                    } else {
+                        $testSteps .= sprintf("\t\t$%s->%s();\n", $actor, $actionName);
+                    }
+                    break;
+                case "switchToNextTab":
+                    if ($input) {
+                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
+                    } else {
+                        $testSteps .= sprintf("\t\t$%s->%s();\n", $actor, $actionName);
+                    }
+                    break;
+                case "switchToWindow":
+                    if ($input) {
+                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
+                    } else {
+                        $testSteps .= sprintf("\t\t$%s->%s();\n", $actor, $actionName);
+                    }
+                    break;
+                case "typeInPopup":
+                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
+                    break;
+                case "unselectOption":
+                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $input);
                     break;
                 case "wait":
                     $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $time);
