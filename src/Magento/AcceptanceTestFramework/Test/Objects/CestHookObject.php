@@ -26,14 +26,22 @@ class CestHookObject
     private $actions = [];
 
     /**
+     * Array of Hook-defined data.
+     * @var array|null
+     */
+    private $customData = [];
+
+    /**
      * CestHookObject constructor.
      * @param string $type
      * @param array $actions
+     * @param array $customData
      */
-    public function __construct($type, $actions)
+    public function __construct($type, $actions, $customData = null)
     {
         $this->type = $type;
         $this->actions = $actions;
+        $this->customData = $customData;
     }
 
     /**
@@ -54,5 +62,14 @@ class CestHookObject
     public function getActions()
     {
         return $this->actions;
+    }
+
+    /**
+     * Returns an array of customData to be interperpreted by the generator.
+     * @return array|null
+     */
+    public function getCustomData()
+    {
+        return $this->customData;
     }
 }

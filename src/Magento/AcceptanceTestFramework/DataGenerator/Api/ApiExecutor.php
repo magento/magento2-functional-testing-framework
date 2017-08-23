@@ -32,17 +32,30 @@ class ApiExecutor
      */
     private $jsonDefinition;
 
+    /**
+     * The array of dependentEntities this class can be given. When finding linked entities, APIExecutor
+     * uses this repository before looking for static data.
+     * @var null
+     */
+    private $dependentEntities;
+
     const PRIMITIVE_TYPES = ['string', 'boolean', 'integer', 'double', 'array'];
 
     /**
      * ApiSubObject constructor.
      * @param string $operation
      * @param EntityDataObject $entityObject
+     * @param array $dependentEntities
      */
-    public function __construct($operation, $entityObject)
+    public function __construct($operation, $entityObject, $dependentEntities = null)
     {
         $this->operation = $operation;
         $this->entityObject = $entityObject;
+        if ($dependentEntities != null) {
+            foreach ($dependentEntities as $entity) {
+                $this->dependentEntities[$entity->getName()] = $entity;
+            }
+        }
 
         $this->jsonDefinition = JsonDefinitionObjectHandler::getInstance()->getJsonDefinition(
             $this->operation,
@@ -140,7 +153,14 @@ class ApiExecutor
                 $entityNamesOfType = $entityObject->getLinkedEntitiesOfType($jsonElementType);
 
                 foreach ($entityNamesOfType as $entityName) {
-                    $linkedEntityObj = DataObjectHandler::getInstance()->getObject($entityName);
+                    // If this entity's name exists in the dependentEntities (Test-defined data), use that.
+                    // Else go to the DataManager and try and get the entity from the overall repository of data.
+                    if (array_key_exists($entityName, $this->dependentEntities)) {
+                        $linkedEntityObj = $this->dependentEntities[$entityName];
+                    } else {
+                        $linkedEntityObj = DataObjectHandler::getInstance()->getObject($entityName);
+                    }
+
                     $jsonDataSubArray = self::getJsonDataArray($linkedEntityObj);
 
                     if ($jsonElement->getType() == 'array') {

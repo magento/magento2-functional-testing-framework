@@ -32,6 +32,10 @@ class CestObjectHandler implements ObjectHandlerInterface
     const NODE_NAME = 'nodeName';
     const NAME = 'name';
     const ANNOTATION_VALUE = 'value';
+    const TEST_STEP_ENTITY_CREATION = 'entity';
+    const TEST_ENTITY_CREATION_KEY = 'key';
+    const TEST_ENTITY_CREATION_VALUE = 'value';
+    const TEST_STEP_DATA_CREATION = 'createData';
 
     /**
      * Cest Object Handler
@@ -139,6 +143,7 @@ class CestObjectHandler implements ObjectHandlerInterface
                 $tests = $this->stripDescriptorTags($tests, CestObjectHandler::CEST_ANNOTATIONS);
             }
 
+            //add customData before here.
             $this->cests[$cestName] = new CestObject(
                 $cestName,
                 $annotations,
@@ -165,7 +170,8 @@ class CestObjectHandler implements ObjectHandlerInterface
 
         $hook = new CestHookObject(
             $hookType,
-            $this->extractTestActions($hookActions)
+            $this->extractTestActions($hookActions),
+            $this->extractTestEntities($hookActions)
         );
 
         return $hook;
@@ -228,7 +234,8 @@ class CestObjectHandler implements ObjectHandlerInterface
             $testObjects[] = new TestObject(
                 $testName,
                 $this->extractTestActions($testActions),
-                $testAnnotations
+                $testAnnotations,
+                $this->extractTestEntities($testActions)
             );
         }
 
@@ -238,6 +245,8 @@ class CestObjectHandler implements ObjectHandlerInterface
     /**
      * This method takes an array of test actions read in from a CestHook or Test. The actions are stripped of
      * irrelevant tags and returned as an array of ActionObjects.
+     * This method also strips data-declaration from test-action attributes and passes in the appropriate customData
+     * array to the CestObject.
      *
      * @param array $testActions
      * @return array
@@ -249,6 +258,14 @@ class CestObjectHandler implements ObjectHandlerInterface
 
         foreach ($testActions as $actionName => $actionData) {
             $mergeKey = $actionData[CestObjectHandler::TEST_STEP_MERGE_KEY];
+            if ($actionData[CestObjectHandler::NODE_NAME] === CestObjectHandler::TEST_STEP_ENTITY_CREATION) {
+                foreach ($actionData as $key => $attribute) {
+                    if (is_array($attribute)) {
+                        unset($actionData[$key]);
+                    }
+                }
+            }
+            $mergeKey = $actionData[CestObjectHandler::TEST_STEP_MERGE_KEY];
             $actionAttributes = $this->stripDescriptorTags(
                 $actionData,
                 CestObjectHandler::TEST_STEP_MERGE_KEY,
@@ -258,7 +275,8 @@ class CestObjectHandler implements ObjectHandlerInterface
             $order = null;
 
             if (array_key_exists(CestObjectHandler::TEST_ACTION_BEFORE, $actionData)
-                and array_key_exists(CestObjectHandler::TEST_ACTION_AFTER, $actionData)) {
+                and array_key_exists(CestObjectHandler::TEST_ACTION_AFTER, $actionData)
+            ) {
                 throw new XmlException(sprintf(self::BEFORE_AFTER_ERROR_MSG, $actionName));
             }
 
@@ -286,6 +304,32 @@ class CestObjectHandler implements ObjectHandlerInterface
         return $actions;
     }
 
+    /**
+     * Extracts custom entity or data definitions from test actions.
+     * Returns array of entity data objects indexed by mergeKey, and an array of key-value pairs.
+     * @param array $testActions
+     * @return array $entityData
+     */
+    private function extractTestEntities($testActions)
+    {
+        $testEntities = [];
+
+        foreach ($testActions as $actionName => $actionData) {
+            $entityData = [];
+            if ($actionData[CestObjectHandler::NODE_NAME] === CestObjectHandler::TEST_STEP_ENTITY_CREATION) {
+                foreach ($actionData as $key => $attribute) {
+                    if (is_array($attribute)) {
+                        $entityData[$attribute[CestObjectHandler::TEST_ENTITY_CREATION_KEY]]
+                            = $attribute[CestObjectHandler::TEST_ENTITY_CREATION_VALUE];
+                        unset($actionData[$key]);
+                    }
+                }
+                $testEntities[$actionData[CestObjectHandler::NAME]] = $entityData;
+            }
+        }
+
+        return $testEntities;
+    }
     // @codingStandardsIgnoreStart
     /**
      * This method takes an array of data and an array representing irrelevant tags. The method strips

@@ -150,33 +150,11 @@ class TestGenerator
      */
     private function generateUseStatementsPhp($cestObject)
     {
-        $hooks = $cestObject->getHooks();
-        $data = false;
-
-        /**
-         * Loop over each Hook object, loop over each Step in the Hook object looking for a createData or deleteData.
-         * If they are present set a variable to True so the PHP generator uses $this->_____->createData() instead of
-         * $______->createData().
-         */
-        foreach ($hooks as $hook) {
-            if (!$data) {
-                $steps = $hook->getActions();
-
-                foreach ($steps as $step) {
-                    if ($step->getType() === "createData" || $step->getType() === "deleteData") {
-                        $data = true;
-                        break;
-                    }
-                }
-            }
-        }
-
         $useStatementsPhp = "use Magento\AcceptanceTestFramework\AcceptanceTester;\n";
 
-        if ($data) {
-            $useStatementsPhp .= "use Magento\AcceptanceTestFramework\DataGenerator\Managers\DataManager;\n";
-            $useStatementsPhp .= "use Magento\AcceptanceTestFramework\DataGenerator\Api\EntityApiHandler;\n";
-        }
+        $useStatementsPhp .= "use Magento\AcceptanceTestFramework\DataGenerator\Handlers\DataObjectHandler;\n";
+        $useStatementsPhp .= "use Magento\AcceptanceTestFramework\DataGenerator\Api\EntityApiHandler;\n";
+        $useStatementsPhp .= "use Magento\AcceptanceTestFramework\DataGenerator\Objects\EntityDataObject;\n";
 
         $allureStatements = [
             "Yandex\Allure\Adapter\Annotation\Features;",
@@ -276,10 +254,11 @@ class TestGenerator
      * statement to handle each unique action. At the bottom of the case statement there is a generic function that can
      * construct the PHP string for nearly half of all Codeception actions.
      * @param array $stepsObject
+     * @param array $stepsData
      * @param array|bool $hookObject
      * @return string
      */
-    private function generateStepsPhp($stepsObject, $hookObject = false)
+    private function generateStepsPhp($stepsObject, $stepsData, $hookObject = false)
     {
         $testSteps = "";
 
@@ -287,6 +266,7 @@ class TestGenerator
             $actor = "I";
             $actionName = $steps->getType();
             $customActionAttributes = $steps->getCustomActionAttributes();
+            $key = $steps->getMergeKey();
             $selector = null;
             $input = null;
             $parameterArray = null;
@@ -380,24 +360,72 @@ class TestGenerator
                 case "createData":
                     $entity = $customActionAttributes['entity'];
                     $key = $steps->getMergeKey();
+                    //Get Entity from Static data.
+                    $testSteps .= sprintf(
+                        "\t\t$%s = DataObjectHandler::getInstance()->getObject(\"%s\");\n",
+                        $entity,
+                        $entity
+                    );
 
-                    if ($hookObject) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s = DataManager::getInstance()->getEntity(\"%s\");\n",
-                            $entity,
-                            $entity
-                        );
-                        $testSteps .= sprintf("\t\t\$this->%s = new EntityApiHandler($%s);\n", $key, $entity);
-                        $testSteps .= sprintf("\t\t\$this->%s->createEntity();\n", $key);
-                    } else {
-                        $testSteps .= sprintf(
-                            "\t\t$%s = DataManager::getInstance()->getEntity(\"%s\");\n",
-                            $entity,
-                            $entity
-                        );
-                        $testSteps .= sprintf("\t\t$%s = new EntityApiHandler($%s);\n", $key, $entity);
-                        $testSteps .= sprintf("\t\t$%s->createEntity();\n", $key);
+                    //HookObject End-Product needs to be created in the Class/Cest scope,
+                    //otherwise create them in the Test scope.
+                    //Determine if there are required-entities and create array of required-entities for merging.
+                    $requiredEntities = [];
+                    $requiredEntityObjects = [];
+                    foreach ($customActionAttributes as $customAttribute) {
+                        if (is_array($customAttribute) && $customAttribute['nodeName'] = 'required-entity') {
+                            if ($hookObject) {
+                                $requiredEntities [] = "\$this->" . $customAttribute['name'] . "->getName() => " .
+                                    "\$this->" . $customAttribute['name'] . "->getType()";
+                                $requiredEntityObjects [] = '$this->' . $customAttribute['name'];
+                            } else {
+                                $requiredEntities [] = "\$" . $customAttribute['name'] . "->getName() => "
+                                    . "\$" . $customAttribute['name'] . "->getType()";
+                                $requiredEntityObjects [] = '$' . $customAttribute['name'];
+                            }
+                        }
                     }
+                    //If required-entities are defined, reassign dataObject to not overwrite the static definition.
+                    //Also, EntityApiHandler needs to be defined with customData array.
+                    if (!empty($requiredEntities)) {
+                        $testSteps .= sprintf(
+                            "\t\t$%s = new EntityDataObject($%s->getName(), $%s->getType(), $%s->getData()
+                            , array_merge($%s->getLinkedEntities(), [%s]));\n",
+                            $entity,
+                            $entity,
+                            $entity,
+                            $entity,
+                            $entity,
+                            implode(", ", $requiredEntities)
+                        );
+
+                        if ($hookObject) {
+                            $testSteps .= sprintf(
+                                "\t\t\$this->%s = new EntityApiHandler($%s, [%s]);\n",
+                                $key,
+                                $entity,
+                                implode(', ', $requiredEntityObjects)
+                            );
+                            $testSteps .= sprintf("\t\t\$this->%s->createEntity();\n", $key);
+                        } else {
+                            $testSteps .= sprintf(
+                                "\t\t$%s = new EntityApiHandler($%s, [%s]);\n",
+                                $key,
+                                $entity,
+                                implode(', ', $requiredEntityObjects)
+                            );
+                            $testSteps .= sprintf("\t\t$%s->createEntity();\n", $key);
+                        }
+                    } else {
+                        if ($hookObject) {
+                            $testSteps .= sprintf("\t\t\$this->%s = new EntityApiHandler($%s);\n", $key, $entity);
+                            $testSteps .= sprintf("\t\t\$this->%s->createEntity();\n", $key);
+                        } else {
+                            $testSteps .= sprintf("\t\t$%s = new EntityApiHandler($%s);\n", $key, $entity);
+                            $testSteps .= sprintf("\t\t$%s->createEntity();\n", $key);
+                        }
+                    }
+
                     break;
                 case "deleteData":
                     $key = $customActionAttributes['createDataKey'];
@@ -491,6 +519,40 @@ class TestGenerator
                     break;
                 case "executeInSelenium":
                     $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $function);
+                    break;
+                case "entity":
+                    $entityData = "[";
+                    foreach ($stepsData[$customActionAttributes['name']] as $dataKey => $dataValue) {
+                        $variableReplace = '';
+                        if ($hookObject) {
+                            $variableReplace = $this->resolveTestVariable($dataValue, true);
+                        } else {
+                            $variableReplace = $this->resolveTestVariable($dataValue);
+                        }
+                        if (!empty($variableReplace)) {
+                            $entityData .= sprintf("'%s' => %s, ", $dataKey, $variableReplace);
+                        } else {
+                            $entityData .= sprintf("'%s' => '%s', ", $dataKey, $dataValue);
+                        }
+                    }
+                    $entityData .= ']';
+                    if ($hookObject) {
+                        $testSteps .= sprintf(
+                            "\t\t\$this->%s = new EntityDataObject('%s','%s',%s,null);\n",
+                            $customActionAttributes['name'],
+                            $customActionAttributes['name'],
+                            $customActionAttributes['type'],
+                            $entityData
+                        );
+                    } else {
+                        $testSteps .= sprintf(
+                            "\t\t$%s = new EntityDataObject('%s','%s',%s,null);\n",
+                            $customActionAttributes['name'],
+                            $customActionAttributes['name'],
+                            $customActionAttributes['type'],
+                            $entityData
+                        );
+                    }
                     break;
                 case "executeJS":
                     $testSteps .= sprintf("\t\t$%s->%s(\"%s\");\n", $actor, $actionName, $function);
@@ -653,9 +715,22 @@ class TestGenerator
                     break;
                 case "searchAndMultiSelectOption":
                     if (isset($customActionAttributes['requiredAction'])) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s, %s);\n", $actor, $actionName, $selector, $customActionAttributes['parameterArray'], $customActionAttributes['requiredAction']);
-                    } else if (isset($customActionAttributes['parameterArray'])) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $customActionAttributes['parameterArray']);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, %s, %s);\n",
+                            $actor,
+                            $actionName,
+                            $selector,
+                            $customActionAttributes['parameterArray'],
+                            $customActionAttributes['requiredAction']
+                        );
+                    } elseif (isset($customActionAttributes['parameterArray'])) {
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, %s);\n",
+                            $actor,
+                            $actionName,
+                            $selector,
+                            $customActionAttributes['parameterArray']
+                        );
                     } else {
                         $testSteps .= sprintf("\t\t$%s->%s(%s, [%s]);\n", $actor, $actionName, $selector, $input);
                     }
@@ -942,6 +1017,33 @@ class TestGenerator
     }
 
     /**
+     * Resolves regex for given variable. Can be given a cestScope, otherwise assumes it's a test variable.
+     * @param string $variable
+     * @param bool $cestScope
+     * @return string
+     */
+    private function resolveTestVariable($variable, $cestScope = false)
+    {
+        $replacement = '';
+        if (!$cestScope) {
+            preg_match("/\\$[\w.]+\\$/", $variable, $match);
+            if (!empty($match)) {
+                $match[0] = str_replace('$', '', $match[0]);
+                list($entity, $value) = explode('.', $match[0]);
+                $replacement = sprintf("$%s->getCreatedDataByName('%s')", $entity, $value);
+            }
+        } else {
+            preg_match("/\\$\\$[\w.]+\\$\\$/", $variable, $match);
+            if (!empty($match)) {
+                $match[0] = str_replace('$$', '', $match[0]);
+                list($entity, $value) = explode('.', $match[0]);
+                $replacement = sprintf("\$this->%s->getCreatedDataByName('%s')", $entity, $value);
+            }
+        }
+        return $replacement;
+    }
+
+    /**
      * Creates a PHP string for the _before/_after methods if the Test contains an <before> or <after> block.
      * @param array $hookObjects
      * @return string
@@ -961,10 +1063,15 @@ class TestGenerator
                     $hooks .= "\t */\n";
                     $hooks .= sprintf("\tprotected $%s;\n\n", $step->getMergeKey());
                     $createData = true;
+                } elseif ($step->getType() == "entity") {
+                    $hooks .= "\t/**\n";
+                    $hooks .= sprintf("\t  * @var EntityDataObject $%s;\n", $step->getMergeKey());
+                    $hooks .= "\t */\n";
+                    $hooks .= sprintf("\tprotected $%s;\n\n", $step->getCustomActionAttributes()['name']);
                 }
             }
 
-            $steps = $this->generateStepsPhp($hookObject->getActions(), $createData);
+            $steps = $this->generateStepsPhp($hookObject->getActions(), $hookObject->getCustomData(), $createData);
 
             if ($type == "after") {
                 $hooks .= sprintf("\tpublic function _after(%s)\n", $dependencies);
@@ -1080,7 +1187,7 @@ class TestGenerator
             $testName = str_replace(' ', '', $testName);
             $testAnnotations = $this->generateTestAnnotationsPhp($test->getAnnotations());
             $dependencies = 'AcceptanceTester $I';
-            $steps = $this->generateStepsPhp($test->getOrderedActions());
+            $steps = $this->generateStepsPhp($test->getOrderedActions(), $test->getCustomData());
 
             $testPhp .= $testAnnotations;
             $testPhp .= sprintf("\tpublic function %s(%s)\n", $testName, $dependencies);

@@ -85,6 +85,15 @@ class EntityDataObject
     }
 
     /**
+     * Getter for Entity's data.
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
      * This function retrieves data from an entity defined in xml.
      *
      * @param string $dataName

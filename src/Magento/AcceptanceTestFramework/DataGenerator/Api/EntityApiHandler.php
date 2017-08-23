@@ -6,7 +6,13 @@
 
 namespace Magento\AcceptanceTestFramework\DataGenerator\Api;
 
+use Codeception\Test\Cest;
+use Magento\AcceptanceTestFramework\Config\Data;
+use Magento\AcceptanceTestFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\AcceptanceTestFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\AcceptanceTestFramework\Test\Handlers\CestObjectHandler;
+use Magento\AcceptanceTestFramework\Test\Managers\CestArrayProcessor;
+use Magento\AcceptanceTestFramework\Util\TestGenerator;
 
 class EntityApiHandler
 {
@@ -25,22 +31,29 @@ class EntityApiHandler
     private $createdObject;
 
     /**
+     * Array of dependent entities, handed to ApiExecutor when entity is created.
+     * @var array|null
+     */
+    private $dependentObjects = [];
+
+    /**
      * ApiPersistenceHandler constructor.
      * @param EntityDataObject $entityObject
+     * @param array $dependentObjects
      */
-    public function __construct($entityObject)
+    public function __construct($entityObject, $dependentObjects = null)
     {
-        $this->entityObject = $entityObject;
+        $this->entityObject = clone $entityObject;
+        $this->dependentObjects = $dependentObjects;
     }
 
     /**
      * Function which executes a create request based on specific operation metadata
-     *
-     * @return string | false
+     * @return void
      */
     public function createEntity()
     {
-        $apiExecutor = new ApiExecutor('create', $this->entityObject);
+        $apiExecutor = new ApiExecutor('create', $this->entityObject, $this->dependentObjects);
         $result = $apiExecutor->executeRequest();
 
         $this->createdObject = new EntityDataObject(
@@ -49,8 +62,6 @@ class EntityApiHandler
             json_decode($result, true),
             null
         );
-
-        return $result;
     }
 
     /**
@@ -64,6 +75,25 @@ class EntityApiHandler
         $result = $apiExecutor->executeRequest();
 
         return $result;
+    }
+
+    /**
+     * Returns the createdDataObject, instantiated when the entity is created via API.
+     * @return EntityDataObject
+     */
+    public function getCreatedObject()
+    {
+        return $this->createdObject;
+    }
+
+    /**
+     * Returns a specific data value based on the CreatedObject's definition.
+     * @param string $dataName
+     * @return string
+     */
+    public function getCreatedDataByName($dataName)
+    {
+        return $this->createdObject->getDataByName($dataName);
     }
 
     // TODO add update function

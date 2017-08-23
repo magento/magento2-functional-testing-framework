@@ -74,6 +74,7 @@
             <xs:element type="dontSeeOptionIsSelectedType" name="dontSeeOptionIsSelected" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="doubleClickType" name="doubleClick" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dragAndDropType" name="dragAndDrop" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="entityDeclarationType" name="entity" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="executeInSeleniumType" name="executeInSelenium" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="executeJSType" name="executeJS" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="fillFieldType" name="fillField" minOccurs="0" maxOccurs="unbounded"/>
@@ -302,10 +303,19 @@
         </xs:simpleContent>
     </xs:complexType>
     <xs:complexType name="createDataType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element type="requiredEntityType" name="required-entity" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+        <xs:attribute type="xs:string" name="entity" use="required"/>
+        <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+        <xs:attribute type="xs:boolean" name="remove" default="false"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="requiredEntityType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="entity" use="required"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:string" name="name" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -526,6 +536,38 @@
                 <xs:attribute type="xs:string" name="selector1" use="required"/>
                 <xs:attribute type="xs:string" name="selector2" use="required"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="entityDeclarationType">
+        <xs:choice>
+            <xs:element name="data" type="entityDataType" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element name="required-entity" type="entityRequiredEntityType" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:choice>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="type" type="xs:string" use="required"/>
+        <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+        <xs:attribute type="xs:boolean" name="remove" default="false"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="entityDataType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="key" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="entityRequiredEntityType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="key" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>

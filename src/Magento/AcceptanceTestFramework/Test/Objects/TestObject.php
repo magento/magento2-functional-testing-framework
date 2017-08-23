@@ -53,16 +53,24 @@ class TestObject
     private $annotations = [];
 
     /**
+     * Array that contains test-defined data.
+     * @var array
+     */
+    private $customData = [];
+
+    /**
      * TestObject constructor.
      * @param string $name
      * @param array $parsedSteps
      * @param array $annotations
+     * @param array $customData
      */
-    public function __construct($name, $parsedSteps, $annotations)
+    public function __construct($name, $parsedSteps, $annotations, $customData = null)
     {
         $this->name = $name;
         $this->parsedSteps = $parsedSteps;
         $this->annotations = $annotations;
+        $this->customData = $customData;
     }
 
     /**
@@ -83,6 +91,15 @@ class TestObject
     public function getAnnotations()
     {
         return $this->annotations;
+    }
+
+    /**
+     * Getter for the custom data
+     * @return array|null
+     */
+    public function getCustomData()
+    {
+        return $this->customData;
     }
 
     /**
