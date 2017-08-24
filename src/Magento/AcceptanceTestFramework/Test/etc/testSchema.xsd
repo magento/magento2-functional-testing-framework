@@ -155,7 +155,7 @@
     <xs:complexType name="acceptPopupType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:string" name="mergeKey"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -602,7 +602,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector"/>
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="returnVariable" use="required"/>
+                <xs:attribute type="xs:string" name="returnVariable"/>
                 <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -616,7 +616,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="returnVariable" use="required"/>
+                <xs:attribute type="xs:string" name="returnVariable"/>
                 <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -629,7 +629,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
-                <xs:attribute type="xs:string" name="returnVariable" use="required"/>
+                <xs:attribute type="xs:string" name="returnVariable"/>
                 <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -643,7 +643,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector"/>
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="returnVariable" use="required"/>
+                <xs:attribute type="xs:string" name="returnVariable"/>
                 <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -655,7 +655,7 @@
     <xs:complexType name="grabPageSourceType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="returnVariable" use="required"/>
+                <xs:attribute type="xs:string" name="returnVariable"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
                 <xs:attribute type="xs:string" name="before"/>
@@ -667,7 +667,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector"/>
-                <xs:attribute type="xs:string" name="returnVariable" use="required"/>
+                <xs:attribute type="xs:string" name="returnVariable"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
                 <xs:attribute type="xs:string" name="before"/>
@@ -680,7 +680,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector"/>
                 <xs:attribute type="xs:string" name="selectorArray"/>
-                <xs:attribute type="xs:string" name="returnVariable" use="required"/>
+                <xs:attribute type="xs:string" name="returnVariable"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
                 <xs:attribute type="xs:string" name="before"/>
