@@ -684,7 +684,9 @@ class TestGenerator
                 default:
                     if ($returnVariable) {
                         if ($selector) {
-                            if (isset($customActionAttributes['userInput'])) {
+                            if ($input) {
+                                $testSteps .= sprintf("\t\t$%s = $%s->%s(%s, %s);\n", $returnVariable, $actor, $actionName, $selector, $input);
+                            } elseif (isset($customActionAttributes['userInput'])) {
                                 $testSteps .= sprintf("\t\t$%s = $%s->%s(%s, \"%s\");\n", $returnVariable, $actor, $actionName, $selector, $customActionAttributes['userInput']);
                             } elseif (isset($customActionAttributes['parameter'])) {
                                 $testSteps .= sprintf("\t\t$%s = $%s->%s(%s, %s);\n", $returnVariable, $actor, $actionName, $selector, $customActionAttributes['parameter']);
@@ -692,7 +694,9 @@ class TestGenerator
                                 $testSteps .= sprintf("\t\t$%s = $%s->%s(%s);\n", $returnVariable, $actor, $actionName, $selector);
                             }
                         } else {
-                            if (isset($customActionAttributes['userInput'])) {
+                            if ($input) {
+                                $testSteps .= sprintf("\t\t$%s = $%s->%s(%s);\n", $returnVariable, $actor, $actionName, $input);
+                            } elseif (isset($customActionAttributes['userInput'])) {
                                 $testSteps .= sprintf("\t\t$%s = $%s->%s(\"%s\");\n", $returnVariable, $actor, $actionName, $customActionAttributes['userInput']);
                             } elseif (isset($customActionAttributes['parameter'])) {
                                 $testSteps .= sprintf("\t\t$%s = $%s->%s(%s);\n", $returnVariable, $actor, $actionName, $customActionAttributes['parameter']);
@@ -702,7 +706,9 @@ class TestGenerator
                         }
                     } else {
                         if ($selector) {
-                            if (isset($customActionAttributes['userInput'])) {
+                            if ($input) {
+                                $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $input);
+                            } elseif (isset($customActionAttributes['userInput'])) {
                                 $testSteps .= sprintf("\t\t$%s->%s(%s, \"%s\");\n", $actor, $actionName, $selector, $customActionAttributes['userInput']);
                             } elseif (isset($customActionAttributes['parameter'])) {
                                 $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $customActionAttributes['parameter']);
@@ -710,7 +716,9 @@ class TestGenerator
                                 $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $selector);
                             }
                         } else {
-                            if (isset($customActionAttributes['userInput'])) {
+                            if ($input) {
+                                $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
+                            } elseif (isset($customActionAttributes['userInput'])) {
                                 $testSteps .= sprintf("\t\t$%s->%s(\"%s\");\n", $actor, $actionName, $customActionAttributes['userInput']);
                             } elseif (isset($customActionAttributes['parameter'])) {
                                 $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $customActionAttributes['parameter']);
