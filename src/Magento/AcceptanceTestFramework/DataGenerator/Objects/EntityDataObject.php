@@ -40,18 +40,29 @@ class EntityDataObject
     private $data = [];
 
     /**
+     * Array of data name and its uniqueness attribute value.
+     *
+     * @var array
+     */
+    private $uniquenessData = [];
+
+    /**
      * EntityDataObject constructor.
      * @param string $entityName
      * @param string $entityType
      * @param array $data
      * @param array $linkedEntities
+     * @param array $uniquenessData
      */
-    public function __construct($entityName, $entityType, $data, $linkedEntities)
+    public function __construct($entityName, $entityType, $data, $linkedEntities, $uniquenessData = null)
     {
         $this->name = $entityName;
         $this->type = $entityType;
         $this->data = $data;
         $this->linkedEntities = $linkedEntities;
+        if ($uniquenessData) {
+            $this->uniquenessData = $uniquenessData;
+        }
     }
 
     /**
@@ -128,5 +139,22 @@ class EntityDataObject
         }
 
         return $groupedArray;
+    }
+
+    /**
+     * This function retrieves uniqueness data by its name.
+     *
+     * @param string $dataName
+     * @return string|null
+     */
+    public function getUniquenessDataByName($dataName)
+    {
+        $name = strtolower($dataName);
+
+        if (array_key_exists($name, $this->uniquenessData)) {
+            return $this->uniquenessData[$name];
+        }
+
+        return null;
     }
 }

@@ -23,6 +23,7 @@ class ActionObject
     const ACTION_ATTRIBUTE_URL = 'url';
     const ACTION_ATTRIBUTE_SELECTOR = 'selector';
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/{{[\w.]+}}/';
+    const UNIQUENESS_FUNCTION = 'msq';
 
     /**
      * The unique identifier for the action
@@ -288,6 +289,7 @@ class ActionObject
                 case (get_class($obj) == EntityDataObject::class):
                     list(,$objField) = $this->stripAndSplitReference($match);
                     $replacement = $obj->getDataByName($objField);
+                    $replacement = $this->resolveEntityDataUniquenessReference($replacement, $obj, $objField);
                     break;
             }
 
@@ -301,5 +303,24 @@ class ActionObject
         }
 
         return $outputString;
+    }
+
+    /**
+     * @param string $reference
+     * @param EntityDataObject $entityDataObject
+     * @param string $entityKey
+     * @return string
+     */
+    private function resolveEntityDataUniquenessReference($reference, $entityDataObject, $entityKey)
+    {
+        $uniquenessData = $entityDataObject->getUniquenessDataByName($entityKey);
+        $entityName = $entityDataObject->getName();
+
+        if ($uniquenessData == DataObjectHandler::DATA_ELEMENT_UNIQUENESS_ATTR_VALUE_PREFIX) {
+            $reference = self::UNIQUENESS_FUNCTION . '("' . $entityName . '.' . $entityKey . '")' . $reference;
+        } elseif ($uniquenessData == DataObjectHandler::DATA_ELEMENT_UNIQUENESS_ATTR_VALUE_SUFFIX) {
+            $reference .= self::UNIQUENESS_FUNCTION . '("' . $entityName . '.' . $entityKey . '")';
+        }
+        return $reference;
     }
 }

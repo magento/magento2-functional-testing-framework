@@ -33,6 +33,9 @@ class DataObjectHandler implements ObjectHandlerInterface
     const DATA_VALUES = 'data';
     const DATA_ELEMENT_KEY = 'key';
     const DATA_ELEMENT_VALUE = 'value';
+    const DATA_ELEMENT_UNIQUENESS_ATTR = 'unique';
+    const DATA_ELEMENT_UNIQUENESS_ATTR_VALUE_PREFIX = 'prefix';
+    const DATA_ELEMENT_UNIQUENESS_ATTR_VALUE_SUFFIX = 'suffix';
 
     const ARRAY_VALUES = 'array';
     const ARRAY_ELEMENT_KEY = 'key';
@@ -120,7 +123,12 @@ class DataObjectHandler implements ObjectHandlerInterface
                 }
                 $envData[strtolower(trim($params[0]))] = trim($params[1]);
             }
-            $envDataObject = new EntityDataObject(self::ENV_DATA_OBJECT_NAME, 'environment', $envData, null);
+            $envDataObject = new EntityDataObject(
+                self::ENV_DATA_OBJECT_NAME,
+                'environment',
+                $envData,
+                null
+            );
             $this->data[$envDataObject->getName()] = $envDataObject;
         }
     }
@@ -133,38 +141,42 @@ class DataObjectHandler implements ObjectHandlerInterface
     {
         $entities = $this->arrayData;
 
-        foreach ($entities[DataObjectHandler::ENTITY_DATA] as $entityName => $entity) {
-            $entityType = $entity[DataObjectHandler::ENTITY_DATA_TYPE];
+        foreach ($entities[self::ENTITY_DATA] as $entityName => $entity) {
+            $entityType = $entity[self::ENTITY_DATA_TYPE];
 
             $dataValues = [];
             $linkedEntities = [];
             $arrayValues = [];
+            $uniquenessValues = [];
 
-            if (array_key_exists(DataObjectHandler::DATA_VALUES, $entity)) {
-                foreach ($entity[DataObjectHandler::DATA_VALUES] as $dataElement) {
-                    $dataElementKey = strtolower($dataElement[DataObjectHandler::DATA_ELEMENT_KEY]);
-                    $dataElementValue = $dataElement[DataObjectHandler::DATA_ELEMENT_VALUE];
+            if (array_key_exists(self::DATA_VALUES, $entity)) {
+                foreach ($entity[self::DATA_VALUES] as $dataElement) {
+                    $dataElementKey = strtolower($dataElement[self::DATA_ELEMENT_KEY]);
+                    $dataElementValue = $dataElement[self::DATA_ELEMENT_VALUE];
+                    if (array_key_exists(self::DATA_ELEMENT_UNIQUENESS_ATTR, $dataElement)) {
+                        $uniquenessValues[$dataElementKey] = $dataElement[self::DATA_ELEMENT_UNIQUENESS_ATTR];
+                    }
 
                     $dataValues[$dataElementKey] = $dataElementValue;
                 }
                 unset($dataElement);
             }
 
-            if (array_key_exists(DataObjectHandler::REQUIRED_ENTITY, $entity)) {
-                foreach ($entity[DataObjectHandler::REQUIRED_ENTITY] as $linkedEntity) {
-                    $linkedEntityName = $linkedEntity[DataObjectHandler::REQUIRED_ENTITY_VALUE];
-                    $linkedEntityType = $linkedEntity[DataObjectHandler::REQUIRED_ENTITY_TYPE];
+            if (array_key_exists(self::REQUIRED_ENTITY, $entity)) {
+                foreach ($entity[self::REQUIRED_ENTITY] as $linkedEntity) {
+                    $linkedEntityName = $linkedEntity[self::REQUIRED_ENTITY_VALUE];
+                    $linkedEntityType = $linkedEntity[self::REQUIRED_ENTITY_TYPE];
 
                     $linkedEntities[$linkedEntityName] = $linkedEntityType;
                 }
                 unset($linkedEntity);
             }
 
-            if (array_key_exists(DataObjectHandler::ARRAY_VALUES, $entity)) {
-                foreach ($entity[DataObjectHandler::ARRAY_VALUES] as $arrayElement) {
-                    $arrayKey = $arrayElement[DataObjectHandler::ARRAY_ELEMENT_KEY];
-                    foreach ($arrayElement[DataObjectHandler::ARRAY_ELEMENT_ITEM] as $arrayValue) {
-                        $arrayValues[] = $arrayValue[DataObjectHandler::ARRAY_ELEMENT_ITEM_VALUE];
+            if (array_key_exists(self::ARRAY_VALUES, $entity)) {
+                foreach ($entity[self::ARRAY_VALUES] as $arrayElement) {
+                    $arrayKey = $arrayElement[self::ARRAY_ELEMENT_KEY];
+                    foreach ($arrayElement[self::ARRAY_ELEMENT_ITEM] as $arrayValue) {
+                        $arrayValues[] = $arrayValue[self::ARRAY_ELEMENT_ITEM_VALUE];
                     }
 
                     $dataValues[$arrayKey] = $arrayValues;
@@ -175,7 +187,8 @@ class DataObjectHandler implements ObjectHandlerInterface
                 $entityName,
                 $entityType,
                 $dataValues,
-                $linkedEntities
+                $linkedEntities,
+                $uniquenessValues
             );
 
             $this->data[$entityDataObject->getName()] = $entityDataObject;
