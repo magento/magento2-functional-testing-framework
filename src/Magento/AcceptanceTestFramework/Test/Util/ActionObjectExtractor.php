@@ -86,7 +86,7 @@ class ActionObjectExtractor extends BaseCestObjectExtractor
      * Function which checks an entity definition for type array and strips this key out (as data is not stores in this
      * type of object).
      *
-     * @param $entityDataArray
+     * @param array $entityDataArray
      * @return array
      */
     private function stripDataFields($entityDataArray)
