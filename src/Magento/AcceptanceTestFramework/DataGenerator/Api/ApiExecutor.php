@@ -149,9 +149,17 @@ class ApiExecutor
                 $elementUniquenessData = $entityObject->getUniquenessDataByName($jsonElement->getKey());
                 if ($elementUniquenessData) {
                     if ($elementUniquenessData == 'prefix') {
-                        $elementData = DataObjectHandler::UNIQUENESS_FUNCTION($entityObject->getName() . '.' . $jsonElement->getKey()) . $elementData;
+                        if (DataObjectHandler::UNIQUENESS_FUNCTION == 'msq') {
+                            $elementData = msq($entityObject->getName().'.' . $jsonElement->getKey()).$elementData;
+                        } elseif (DataObjectHandler::UNIQUENESS_FUNCTION == 'msqs') {
+                            $elementData = msqs($entityObject->getName().'.' . $jsonElement->getKey()).$elementData;
+                        }
                     } elseif ($elementUniquenessData == 'suffix') {
-                        $elementData .= DataObjectHandler::UNIQUENESS_FUNCTION($entityObject->getName() . '.'. $jsonElement->getKey());
+                        if (DataObjectHandler::UNIQUENESS_FUNCTION == 'msq') {
+                            $elementData .= msq($entityObject->getName() . '.'. $jsonElement->getKey());
+                        } elseif (DataObjectHandler::UNIQUENESS_FUNCTION == 'msqs') {
+                            $elementData .= msqs($entityObject->getName() . '.'. $jsonElement->getKey());
+                        }
                     }
                 }
                 $jsonArray[$jsonElement->getKey()] = $this->castValue($jsonElementType, $elementData);
