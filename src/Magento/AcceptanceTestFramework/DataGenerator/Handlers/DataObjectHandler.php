@@ -36,6 +36,7 @@ class DataObjectHandler implements ObjectHandlerInterface
     const DATA_ELEMENT_UNIQUENESS_ATTR = 'unique';
     const DATA_ELEMENT_UNIQUENESS_ATTR_VALUE_PREFIX = 'prefix';
     const DATA_ELEMENT_UNIQUENESS_ATTR_VALUE_SUFFIX = 'suffix';
+    const UNIQUENESS_FUNCTION = 'msq';
 
     const ARRAY_VALUES = 'array';
     const ARRAY_ELEMENT_KEY = 'key';

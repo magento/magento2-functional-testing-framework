@@ -8,6 +8,7 @@ namespace Magento\AcceptanceTestFramework\Util;
 
 use Magento\AcceptanceTestFramework\Test\Handlers\CestObjectHandler;
 use Magento\AcceptanceTestFramework\Test\Objects\ActionObject;
+use Magento\AcceptanceTestFramework\DataGenerator\Handlers\DataObjectHandler;
 
 class TestGenerator
 {
@@ -289,13 +290,13 @@ class TestGenerator
                 $input = sprintf("\"%s\"", $customActionAttributes['userInput']);
             } elseif (isset($customActionAttributes['userInput'])) {
                 preg_match(
-                    '/' . ActionObject::UNIQUENESS_FUNCTION .'\("[\w]+.[\w]+"\)/',
+                    '/' . DataObjectHandler::UNIQUENESS_FUNCTION .'\("[\w]+.[\w]+"\)/',
                     $customActionAttributes['userInput'],
                     $matches
                 );
                 if (!empty($matches)) {
                     $parts = preg_split(
-                        '/' . ActionObject::UNIQUENESS_FUNCTION . '\("[\w]+.[\w]+"\)/',
+                        '/' . DataObjectHandler::UNIQUENESS_FUNCTION . '\("[\w]+.[\w]+"\)/',
                         $customActionAttributes['userInput'],
                         -1
                     );
@@ -1002,7 +1003,16 @@ class TestGenerator
                 default:
                     if ($returnVariable) {
                         if ($selector) {
-                            if (isset($customActionAttributes['userInput'])) {
+                            if ($input) {
+                                $testSteps .= sprintf(
+                                    "\t\t$%s = $%s->%s(%s, %s);\n",
+                                    $returnVariable,
+                                    $actor,
+                                    $actionName,
+                                    $selector,
+                                    $input
+                                );
+                            } elseif (isset($customActionAttributes['userInput'])) {
                                 $testSteps .= sprintf(
                                     "\t\t$%s = $%s->%s(%s, \"%s\");\n",
                                     $returnVariable,
@@ -1030,7 +1040,15 @@ class TestGenerator
                                 );
                             }
                         } else {
-                            if (isset($customActionAttributes['userInput'])) {
+                            if ($input) {
+                                $testSteps .= sprintf(
+                                    "\t\t$%s = $%s->%s(%s);\n",
+                                    $returnVariable,
+                                    $actor,
+                                    $actionName,
+                                    $input
+                                );
+                            } elseif (isset($customActionAttributes['userInput'])) {
                                 $testSteps .= sprintf(
                                     "\t\t$%s = $%s->%s(\"%s\");\n",
                                     $returnVariable,
@@ -1052,7 +1070,15 @@ class TestGenerator
                         }
                     } else {
                         if ($selector) {
-                            if (isset($customActionAttributes['userInput'])) {
+                            if ($input) {
+                                $testSteps .= sprintf(
+                                    "\t\t$%s->%s(%s, %s);\n",
+                                    $actor,
+                                    $actionName,
+                                    $selector,
+                                    $input
+                                );
+                            } elseif (isset($customActionAttributes['userInput'])) {
                                 $testSteps .= sprintf(
                                     "\t\t$%s->%s(%s, \"%s\");\n",
                                     $actor,
@@ -1072,7 +1098,14 @@ class TestGenerator
                                 $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $selector);
                             }
                         } else {
-                            if (isset($customActionAttributes['userInput'])) {
+                            if ($input) {
+                                $testSteps .= sprintf(
+                                    "\t\t$%s->%s(%s);\n",
+                                    $actor,
+                                    $actionName,
+                                    $input
+                                );
+                            } elseif (isset($customActionAttributes['userInput'])) {
                                 $testSteps .= sprintf(
                                     "\t\t$%s->%s(\"%s\");\n",
                                     $actor,

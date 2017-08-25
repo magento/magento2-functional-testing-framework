@@ -145,10 +145,16 @@ class ApiExecutor
             $jsonElementType = $jsonElement->getValue();
 
             if (in_array($jsonElementType, ApiExecutor::PRIMITIVE_TYPES)) {
-                $jsonArray[$jsonElement->getKey()] = $this->castValue(
-                    $jsonElementType,
-                    $entityObject->getDataByName($jsonElement->getKey())
-                );
+                $elementData = $entityObject->getDataByName($jsonElement->getKey());
+                $elementUniquenessData = $entityObject->getUniquenessDataByName($jsonElement->getKey());
+                if ($elementUniquenessData) {
+                    if ($elementUniquenessData == 'prefix') {
+                        $elementData = DataObjectHandler::UNIQUENESS_FUNCTION($entityObject->getName() . '.' . $jsonElement->getKey()) . $elementData;
+                    } elseif ($elementUniquenessData == 'suffix') {
+                        $elementData .= DataObjectHandler::UNIQUENESS_FUNCTION($entityObject->getName() . '.'. $jsonElement->getKey());
+                    }
+                }
+                $jsonArray[$jsonElement->getKey()] = $this->castValue($jsonElementType, $elementData);
             } else {
                 $entityNamesOfType = $entityObject->getLinkedEntitiesOfType($jsonElementType);
 

@@ -23,7 +23,6 @@ class ActionObject
     const ACTION_ATTRIBUTE_URL = 'url';
     const ACTION_ATTRIBUTE_SELECTOR = 'selector';
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/{{[\w.]+}}/';
-    const UNIQUENESS_FUNCTION = 'msq';
 
     /**
      * The unique identifier for the action
@@ -294,7 +293,7 @@ class ActionObject
             }
 
             //Check to see if field is defined as data if cannot be found in a different interface
-            if ($replacement == null && get_class($obj) != EntityDataObject::class) {
+            if ($replacement == null && get_class($objectHandler) != DataObjectHandler::class) {
                 return $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $inputString);
             }
 
@@ -317,9 +316,9 @@ class ActionObject
         $entityName = $entityDataObject->getName();
 
         if ($uniquenessData == DataObjectHandler::DATA_ELEMENT_UNIQUENESS_ATTR_VALUE_PREFIX) {
-            $reference = self::UNIQUENESS_FUNCTION . '("' . $entityName . '.' . $entityKey . '")' . $reference;
+            $reference = DataObjectHandler::UNIQUENESS_FUNCTION . '("' . $entityName . '.' . $entityKey . '")' . $reference;
         } elseif ($uniquenessData == DataObjectHandler::DATA_ELEMENT_UNIQUENESS_ATTR_VALUE_SUFFIX) {
-            $reference .= self::UNIQUENESS_FUNCTION . '("' . $entityName . '.' . $entityKey . '")';
+            $reference .= DataObjectHandler::UNIQUENESS_FUNCTION . '("' . $entityName . '.' . $entityKey . '")';
         }
         return $reference;
     }
