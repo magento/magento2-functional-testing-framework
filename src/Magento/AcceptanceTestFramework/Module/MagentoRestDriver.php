@@ -2,7 +2,7 @@
 namespace Magento\AcceptanceTestFramework\Module;
 
 use Codeception\Module\REST;
-use Codeception\Module\Sequence;
+use Magento\AcceptanceTestFramework\Module\MagentoSequence;
 use Flow\JSONPath;
 
 /**
@@ -108,7 +108,7 @@ class MagentoRestDriver extends REST
         $this->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
         $this->haveHttpHeader('Authorization', 'Bearer ' . $token);
         self::$adminTokens[$this->config['username']] = $token;
-        $this->getModule('Sequence')->_initialize();
+        $this->getModule('\Magento\AcceptanceTestFramework\Module\MagentoSequence')->_initialize();
     }
 
     /**

@@ -72,6 +72,13 @@
                         </xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
+                <xs:attribute type="uniquenessEnumType" name="unique" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Add suite or test wide unique sequence as "prefix" or "suffix" to the data value if specified.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -102,5 +109,12 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
+    <xs:simpleType name="uniquenessEnumType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="prefix" />
+            <xs:enumeration value="suffix" />
+        </xs:restriction>
+    </xs:simpleType>
 
 </xs:schema>
