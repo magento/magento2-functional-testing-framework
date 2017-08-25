@@ -4,7 +4,7 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magento\AcceptanceTestFramework\Test;
+namespace Magento\AcceptanceTestFramework\Test\Parsers;
 
 use Magento\AcceptanceTestFramework\Config\DataInterface;
 

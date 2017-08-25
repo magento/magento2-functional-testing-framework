@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="testSchema.xsd">
+    <actions name="sampleReusableActions" defaultEntity="testEntity">
+        <acceptPopup mergeKey=""/>
+        <amOnPage mergeKey="" url=""/>
+        <appendField selector="" userInput="" mergeKey=""/>
+        <attachFile userInput="" selector="" mergeKey=""/>
+        <cancelPopup mergeKey=""/>
+        <checkOption selector="" mergeKey=""/>
+        <click selector="" mergeKey=""/>
+        <clickWithLeftButton selector="" mergeKey=""/>
+        <clickWithRightButton selector="" mergeKey=""/>
+        <closeTab mergeKey=""/>
+        <dontSee userInput="" selector="" mergeKey=""/>
+        <dontSeeCheckboxIsChecked selector="" mergeKey=""/>
+        <dontSeeCookie userInput="" mergeKey=""/>
+        <dontSeeCurrentUrlEquals url="" mergeKey=""/>
+        <dontSeeCurrentUrlMatches url="" mergeKey=""/>
+        <dontSeeElement selector="" mergeKey=""/>
+        <dontSeeElementInDOM selector="" mergeKey=""/>
+        <dontSeeInCurrentUrl url="" mergeKey=""/>
+        <dontSeeInField selector="" userInput="" mergeKey=""/>
+        <dontSeeInPageSource userInput="" mergeKey=""/>
+        <dontSeeInSource html="" mergeKey=""/>
+        <dontSeeInTitle userInput="" mergeKey=""/>
+        <dontSeeLink userInput="" url="" mergeKey=""/>
+        <dontSeeOptionIsSelected selector="" userInput="" mergeKey=""/>
+        <doubleClick selector="" mergeKey=""/>
+        <dragAndDrop selector1="" selector2="" mergeKey=""/>
+        <executeJS function="" mergeKey=""/>
+        <fillField selector="" userInput="" mergeKey=""/>
+        <grabAttributeFrom selector="" userInput="" mergeKey=""/>
+        <grabCookie returnVariable="" userInput="" mergeKey=""/>
+        <grabFromCurrentUrl returnVariable=""  url="" mergeKey=""/>
+        <grabMultiple selector="" returnVariable="" mergeKey=""/>
+        <grabTextFrom returnVariable="" selector="" mergeKey=""/>
+        <grabValueFrom selector="" returnVariable="" mergeKey=""/>
+        <makeScreenshot userInput="" mergeKey=""/>
+        <maximizeWindow mergeKey=""/>
+        <moveBack mergeKey=""/>
+        <moveForward mergeKey=""/>
+        <moveMouseOver selector="" mergeKey=""/>
+        <openNewTab mergeKey=""/>
+        <pauseExecution mergeKey=""/>
+        <pressKey selector="" mergeKey=""/>
+        <reloadPage mergeKey=""/>
+        <resetCookie userInput="" mergeKey=""/>
+        <resizeWindow width="" height="" mergeKey=""/>
+        <scrollTo selector="" mergeKey=""/>
+        <see userInput="" selector="" mergeKey=""/>
+        <seeCheckboxIsChecked selector="" mergeKey=""/>
+        <seeCookie userInput="" mergeKey=""/>
+        <seeCurrentUrlEquals url="" mergeKey=""/>
+        <seeCurrentUrlMatches url="" mergeKey=""/>
+        <seeElement selector="" mergeKey=""/>
+        <seeElementInDOM selector="" mergeKey=""/>
+        <seeInCurrentUrl url="" mergeKey=""/>
+        <seeInField selector="" userInput="" mergeKey=""/>
+        <seeInPageSource html="" mergeKey=""/>
+        <seeInPopup userInput="" mergeKey=""/>
+        <seeInSource html="" mergeKey=""/>
+        <seeInTitle userInput="" mergeKey=""/>
+        <seeLink userInput="" url="" mergeKey=""/>
+        <seeNumberOfElements selector="" mergeKey=""/>
+        <seeOptionIsSelected selector="" userInput="" mergeKey=""/>
+        <selectOption selector="" mergeKey=""/>
+        <setCookie value="" userInput="" mergeKey=""/>
+        <switchToIFrame userInput="" mergeKey=""/>
+        <switchToNextTab mergeKey=""/>
+        <switchToPreviousTab mergeKey=""/>
+        <switchToWindow mergeKey=""/>
+        <typeInPopup userInput="" mergeKey=""/>
+        <uncheckOption selector="" mergeKey=""/>
+        <unselectOption selector="" userInput="" mergeKey=""/>
+        <wait time="" mergeKey=""/>
+        <waitForElement time="" selector="" mergeKey=""/>
+        <waitForElementNotVisible selector="" time="" mergeKey=""/>
+        <waitForElementVisible selector="" time="" mergeKey=""/>
+        <waitForJS function="" time="" mergeKey=""/>
+        <waitForText userInput="" time="" selector="" mergeKey=""/>
+    </actions>
+</config>

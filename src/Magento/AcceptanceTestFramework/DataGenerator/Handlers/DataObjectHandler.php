@@ -19,6 +19,7 @@ class DataObjectHandler implements ObjectHandlerInterface
      * @var array $arrayData
      */
     private $arrayData = [];
+
     /**
      * @var array $data
      */
@@ -49,6 +50,7 @@ class DataObjectHandler implements ObjectHandlerInterface
 
     /**
      * Singleton method to retrieve instance of DataArrayProcessor
+     *
      * @return DataObjectHandler
      * @throws \Exception
      */

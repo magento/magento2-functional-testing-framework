@@ -39,7 +39,7 @@ class ActionObject
     private $type;
 
     /**
-     * THe attributes which describe the action (e.g. selector,
+     * THe attributes which describe the action (e.g. selector, userInput)
      *
      * @var array $actionAttributes
      */
@@ -75,6 +75,7 @@ class ActionObject
 
     /**
      * ActionObject constructor.
+     *
      * @param string $mergeKey
      * @param string $type
      * @param array $actionAttributes
@@ -95,6 +96,7 @@ class ActionObject
 
     /**
      * This function returns the string property mergeKey.
+     *
      * @return string
      */
     public function getMergeKey()
@@ -104,6 +106,7 @@ class ActionObject
 
     /**
      * This function returns the string property type.
+     *
      * @return string
      */
     public function getType()
@@ -243,8 +246,8 @@ class ActionObject
 
     /**
      * Return an array containing the name (before the period) and key (after the period) in a {{reference.foo}}.
-     * @param string $reference
      *
+     * @param string $reference
      * @return string[] The name and key that is referenced.
      */
     private function stripAndSplitReference($reference)
@@ -255,9 +258,11 @@ class ActionObject
 
     /**
      * Return a string based on a reference to a page, section, or data field (e.g. {{foo.ref}} resolves to 'data')
+     *
      * @param ObjectHandlerInterface $objectHandler
      * @param string $inputString
      * @return string | null
+     * @throws \Exception
      */
     private function findAndReplaceReferences($objectHandler, $inputString)
     {
@@ -275,7 +280,7 @@ class ActionObject
 
             $obj = $objectHandler->getObject($objName);
 
-            // sepcify behavior depending on field
+            // specify behavior depending on field
             switch (get_class($obj)) {
                 case PageObject::class:
                     $replacement = $obj->getUrl();
@@ -292,9 +297,10 @@ class ActionObject
                     break;
             }
 
-            //Check to see if field is defined as data if cannot be found in a different interface
             if ($replacement == null && get_class($objectHandler) != DataObjectHandler::class) {
-                return $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $inputString);
+                return $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $outputString);
+            } elseif ($replacement == null) {
+                throw new \Exception("Could not resolve entity reference " . $inputString);
             }
 
             $outputString = str_replace($match, $replacement, $outputString);
@@ -316,7 +322,8 @@ class ActionObject
         $entityName = $entityDataObject->getName();
 
         if ($uniquenessData == DataObjectHandler::DATA_ELEMENT_UNIQUENESS_ATTR_VALUE_PREFIX) {
-            $reference = DataObjectHandler::UNIQUENESS_FUNCTION . '("' . $entityName . '.' . $entityKey . '")' . $reference;
+            $reference =
+                DataObjectHandler::UNIQUENESS_FUNCTION . '("' . $entityName . '.' . $entityKey . '")' . $reference;
         } elseif ($uniquenessData == DataObjectHandler::DATA_ELEMENT_UNIQUENESS_ATTR_VALUE_SUFFIX) {
             $reference .= DataObjectHandler::UNIQUENESS_FUNCTION . '("' . $entityName . '.' . $entityKey . '")';
         }

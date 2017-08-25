@@ -9,84 +9,84 @@
 
         <test name="sampleTest">
             <annotations />
+            <actions ref="sampleActions" mergeKey="" entity="optionalEntity"/>
             <acceptPopup mergeKey=""/>
-            <amOnPage page="" mergeKey=""/>
-            <appendField field="" value="" mergeKey=""/>
-            <assertArraySubset subset="" array="" strict="" message="" mergeKey=""/>
-            <attachFile field="" filename="" mergeKey=""/>
+            <amOnPage mergeKey="" url=""/>
+            <appendField selector="" userInput="" mergeKey=""/>
+            <attachFile userInput="" selector="" mergeKey=""/>
             <cancelPopup mergeKey=""/>
-            <checkOption option="" mergeKey=""/>
-            <click link="" context="" mergeKey=""/>
-            <clickWithLeftButton cssOrXPath="" offsetX="" offsetY="" mergeKey=""/>
-            <clickWithRightButton cssOrXPath="" offsetX="" offsetY="" mergeKey=""/>
+            <checkOption selector="" mergeKey=""/>
+            <click selector="" mergeKey=""/>
+            <clickWithLeftButton selector="" mergeKey=""/>
+            <clickWithRightButton selector="" mergeKey=""/>
             <closeTab mergeKey=""/>
-            <dontSee text="" selector="" mergeKey=""/>
-            <dontSeeCheckboxIsChecked checkbox="" mergeKey=""/>
-            <dontSeeCookie cookie="" params="" mergeKey=""/>
-            <dontSeeCurrentUrlEquals uri="" mergeKey=""/>
-            <dontSeeCurrentUrlMatches uri="" mergeKey=""/>
-            <dontSeeElement selector="" attributes="" mergeKey=""/>
-            <dontSeeElementInDOM selector="" attributes="" mergeKey=""/>
-            <dontSeeInCurrentUrl uri="" mergeKey=""/>
-            <dontSeeInField field="" value="" mergeKey=""/>
-            <dontSeeInPageSource text="" mergeKey=""/>
-            <dontSeeInSource raw="" mergeKey=""/>
-            <dontSeeInTitle title="" mergeKey=""/>
-            <dontSeeLink text="" url="" mergeKey=""/>
-            <dontSeeOptionIsSelected selector="" optionText="" mergeKey=""/>
-            <doubleClick cssOrXPath="" mergeKey=""/>
-            <dragAndDrop source="" target="" mergeKey=""/>
-            <executeJS script="" mergeKey=""/>
-            <fillField field="" value="" mergeKey=""/>
-            <grabAttributeFrom cssOrXPath="" attribute="" mergeKey=""/>
-            <grabCookie cookie="" params="" mergeKey=""/>
-            <grabFromCurrentUrl uri="" mergeKey=""/>
-            <grabMultiple cssOrXPath="" attribute="" mergeKey=""/>
-            <grabTextFrom cssOrXPathOrRegex="" mergeKey=""/>
-            <grabValueFrom field="" mergeKey=""/>
-            <makeScreenshot name="" mergeKey=""/>
+            <dontSee userInput="" selector="" mergeKey=""/>
+            <dontSeeCheckboxIsChecked selector="" mergeKey=""/>
+            <dontSeeCookie userInput="" mergeKey=""/>
+            <dontSeeCurrentUrlEquals url="" mergeKey=""/>
+            <dontSeeCurrentUrlMatches url="" mergeKey=""/>
+            <dontSeeElement selector="" mergeKey=""/>
+            <dontSeeElementInDOM selector="" mergeKey=""/>
+            <dontSeeInCurrentUrl url="" mergeKey=""/>
+            <dontSeeInField selector="" userInput="" mergeKey=""/>
+            <dontSeeInPageSource userInput="" mergeKey=""/>
+            <dontSeeInSource html="" mergeKey=""/>
+            <dontSeeInTitle userInput="" mergeKey=""/>
+            <dontSeeLink userInput="" url="" mergeKey=""/>
+            <dontSeeOptionIsSelected selector="" userInput="" mergeKey=""/>
+            <doubleClick selector="" mergeKey=""/>
+            <dragAndDrop selector1="" selector2="" mergeKey=""/>
+            <executeJS function="" mergeKey=""/>
+            <fillField selector="" userInput="" mergeKey=""/>
+            <grabAttributeFrom selector="" userInput="" mergeKey=""/>
+            <grabCookie returnVariable="" userInput="" mergeKey=""/>
+            <grabFromCurrentUrl returnVariable=""  url="" mergeKey=""/>
+            <grabMultiple selector="" returnVariable="" mergeKey=""/>
+            <grabTextFrom returnVariable="" selector="" mergeKey=""/>
+            <grabValueFrom selector="" returnVariable="" mergeKey=""/>
+            <makeScreenshot userInput="" mergeKey=""/>
             <maximizeWindow mergeKey=""/>
             <moveBack mergeKey=""/>
             <moveForward mergeKey=""/>
-            <moveMouseOver cssOrXPath="" offsetX="" offsetY="" mergeKey=""/>
+            <moveMouseOver selector="" mergeKey=""/>
             <openNewTab mergeKey=""/>
             <pauseExecution mergeKey=""/>
-            <pressKey element="" char="" mergeKey=""/>
+            <pressKey selector="" mergeKey=""/>
             <reloadPage mergeKey=""/>
-            <resetCookie cookie="" params="" mergeKey=""/>
+            <resetCookie userInput="" mergeKey=""/>
             <resizeWindow width="" height="" mergeKey=""/>
-            <scrollTo selector="" offsetX="" offsetY="" mergeKey=""/>
-            <see text="" selector="" mergeKey=""/>
-            <seeCheckboxIsChecked checkbox="" mergeKey=""/>
-            <seeCookie cookie="" params="" mergeKey=""/>
-            <seeCurrentUrlEquals uri="" mergeKey=""/>
-            <seeCurrentUrlMatches uri="" mergeKey=""/>
-            <seeElement selector="" attributes="" mergeKey=""/>
-            <seeElementInDOM selector="" attributes="" mergeKey=""/>
-            <seeInCurrentUrl uri="" mergeKey=""/>
-            <seeInField field="" value="" mergeKey=""/>
-            <seeInPageSource text="" mergeKey=""/>
-            <seeInPopup text="" mergeKey=""/>
-            <seeInSource raw="" mergeKey=""/>
-            <seeInTitle title="" mergeKey=""/>
-            <seeLink text="" url="" mergeKey=""/>
-            <seeNumberOfElements selector="" expected="" mergeKey=""/>
-            <seeOptionIsSelected selector="" optionText="" mergeKey=""/>
-            <selectOption select="" option="" mergeKey=""/>
-            <setCookie name="" val="" params="" mergeKey=""/>
-            <switchToIFrame name="" mergeKey=""/>
-            <switchToNextTab offset="" mergeKey=""/>
-            <switchToPreviousTab offset="" mergeKey=""/>
-            <switchToWindow name="" mergeKey=""/>
-            <typeInPopup keys="" mergeKey=""/>
-            <uncheckOption option="" mergeKey=""/>
-            <unselectOption select="" option="" mergeKey=""/>
-            <wait timeout="" mergeKey=""/>
-            <waitForElement element="" timeout="" mergeKey=""/>
-            <waitForElementNotVisible element="" timeout="" mergeKey=""/>
-            <waitForElementVisible element="" timeout="" mergeKey=""/>
-            <waitForJS script="" timeout="" mergeKey=""/>
-            <waitForText text="" timeout="" selector="" mergeKey=""/>
+            <scrollTo selector="" mergeKey=""/>
+            <see userInput="" selector="" mergeKey=""/>
+            <seeCheckboxIsChecked selector="" mergeKey=""/>
+            <seeCookie userInput="" mergeKey=""/>
+            <seeCurrentUrlEquals url="" mergeKey=""/>
+            <seeCurrentUrlMatches url="" mergeKey=""/>
+            <seeElement selector="" mergeKey=""/>
+            <seeElementInDOM selector="" mergeKey=""/>
+            <seeInCurrentUrl url="" mergeKey=""/>
+            <seeInField selector="" userInput="" mergeKey=""/>
+            <seeInPageSource html="" mergeKey=""/>
+            <seeInPopup userInput="" mergeKey=""/>
+            <seeInSource html="" mergeKey=""/>
+            <seeInTitle userInput="" mergeKey=""/>
+            <seeLink userInput="" url="" mergeKey=""/>
+            <seeNumberOfElements selector="" mergeKey=""/>
+            <seeOptionIsSelected selector="" userInput="" mergeKey=""/>
+            <selectOption selector="" mergeKey=""/>
+            <setCookie value="" userInput="" mergeKey=""/>
+            <switchToIFrame userInput="" mergeKey=""/>
+            <switchToNextTab mergeKey=""/>
+            <switchToPreviousTab mergeKey=""/>
+            <switchToWindow mergeKey=""/>
+            <typeInPopup userInput="" mergeKey=""/>
+            <uncheckOption selector="" mergeKey=""/>
+            <unselectOption selector="" userInput="" mergeKey=""/>
+            <wait time="" mergeKey=""/>
+            <waitForElement time="" selector="" mergeKey=""/>
+            <waitForElementNotVisible selector="" time="" mergeKey=""/>
+            <waitForElementVisible selector="" time="" mergeKey=""/>
+            <waitForJS function="" time="" mergeKey=""/>
+            <waitForText userInput="" time="" selector="" mergeKey=""/>
         </test>
     </cest>
 </config>

@@ -11,6 +11,9 @@ use Magento\AcceptanceTestFramework\ObjectManagerFactory;
 use Magento\AcceptanceTestFramework\Page\Objects\PageObject;
 use Magento\AcceptanceTestFramework\XmlParser\PageParser;
 
+/**
+ * Class PageObjectHandler
+ */
 class PageObjectHandler implements ObjectHandlerInterface
 {
     const TYPE = 'page';

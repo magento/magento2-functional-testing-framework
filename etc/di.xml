@@ -278,7 +278,7 @@
         </arguments>
     </virtualType>
 
-    <type name="Magento\AcceptanceTestFramework\Test\TestDataParser">
+    <type name="Magento\AcceptanceTestFramework\Test\Parsers\TestDataParser">
         <arguments>
             <argument name="testData" xsi:type="object">Magento\AcceptanceTestFramework\Test\Config\Data</argument>
         </arguments>
@@ -286,6 +286,48 @@
     <virtualType name="Magento\AcceptanceTestFramework\Test\Config\Data" type="Magento\AcceptanceTestFramework\Config\Data">
         <arguments>
             <argument name="reader" xsi:type="object">Magento\AcceptanceTestFramework\Config\Reader\TestData</argument>
+        </arguments>
+    </virtualType>
+
+    <!--Config for Action Group -->
+
+    <virtualType name="Magento\AcceptanceTestFramework\Config\Reader\ActionGroupData" type="Magento\AcceptanceTestFramework\Config\Reader\Filesystem">
+        <arguments>
+            <argument name="fileResolver" xsi:type="object">Magento\AcceptanceTestFramework\Config\FileResolver\Module</argument>
+            <argument name="converter" xsi:type="object">Magento\AcceptanceTestFramework\Config\ActionGroupDataConverter</argument>
+            <argument name="schemaLocator" xsi:type="object">Magento\AcceptanceTestFramework\Config\SchemaLocator\TestData</argument>
+            <argument name="idAttributes" xsi:type="array">
+                <item name="/config/actions" xsi:type="string">name</item>
+                <item name="/config/actions/(acceptPopup|amOnPage|appendField|assertArraySubset|attachFile|cancelPopup|checkOption|click|clickWithLeftButton|clickWithRightButton|closeTab|createData|deleteData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForPageLoad|waitForText)" xsi:type="string">mergeKey</item>
+            </argument>
+            <argument name="fileName" xsi:type="string">*-action_group.xml</argument>
+            <argument name="defaultScope" xsi:type="string">Cest</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Magento\AcceptanceTestFramework\Test\Config\Dom\ActionGroupArrayNodeConfig" type="Magento\AcceptanceTestFramework\Config\Dom\ArrayNodeConfig">
+        <arguments>
+            <argument name="assocArrayAttributes" xsi:type="array">
+                <item name="/config/actions/(acceptPopup|amOnPage|appendField|assertArraySubset|attachFile|cancelPopup|checkOption|click|clickWithLeftButton|clickWithRightButton|closeTab|createData|deleteData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForPageLoad|waitForText)" xsi:type="string">mergeKey</item>
+                <item name="/config/actions" xsi:type="string">name</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Magento\AcceptanceTestFramework\Config\ActionGroupDataConverter" type="Magento\AcceptanceTestFramework\Test\Config\Converter\Dom\Flat">
+        <arguments>
+            <argument name="arrayNodeConfig" xsi:type="object">Magento\AcceptanceTestFramework\Test\Config\Dom\ActionGroupArrayNodeConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\AcceptanceTestFramework\Test\Parsers\ActionGroupDataParser">
+        <arguments>
+            <argument name="actionGroupData" xsi:type="object">Magento\AcceptanceTestFramework\Test\Config\ActionGroupData</argument>
+        </arguments>
+    </type>
+    <virtualType name="Magento\AcceptanceTestFramework\Test\Config\ActionGroupData" type="Magento\AcceptanceTestFramework\Config\Data">
+        <arguments>
+            <argument name="reader" xsi:type="object">Magento\AcceptanceTestFramework\Config\Reader\ActionGroupData</argument>
         </arguments>
     </virtualType>
 </config>

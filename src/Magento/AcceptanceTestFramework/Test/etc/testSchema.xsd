@@ -6,7 +6,10 @@
     <xs:element name="config" type="configType"/>
     <xs:complexType name="configType">
         <xs:sequence>
-            <xs:element type="cestType" name="cest" maxOccurs="unbounded"/>
+            <xs:choice>
+                <xs:element type="cestType" name="cest" maxOccurs="unbounded"/>
+                <xs:element type="actionsRefType" name="actions" maxOccurs="unbounded"/>
+            </xs:choice>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="cestType">
@@ -18,8 +21,15 @@
         </xs:choice>
         <xs:attribute type="xs:string" name="name" use="required"/>
     </xs:complexType>
+    <xs:complexType name="actionsRefType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="actionTypeTags"/>
+        </xs:choice>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="defaultEntity" use="required"/>
+    </xs:complexType>
     <xs:complexType name="annotationsType">
-        <xs:choice maxOccurs="unbounded">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
             <xs:element type="annotationType" name="env" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="features" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="stories" minOccurs="0" maxOccurs="unbounded"/>
@@ -40,7 +50,15 @@
     </xs:complexType>
     <xs:complexType name="testType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element type="annotationsType" name="annotations" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:group ref="actionTypeTags" />
+            <xs:element type="annotationsType" name="annotations" minOccurs="0"/>
+            <xs:element type="actions" name="actions" minOccurs="0"/>
+        </xs:choice>
+        <xs:attribute type="xs:string" name="name"/>
+        <xs:attribute type="xs:boolean" name="remove" default="false"/>
+    </xs:complexType>
+    <xs:group name="actionTypeTags">
+        <xs:choice>
             <xs:element type="acceptPopupType" name="acceptPopup" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="amOnPageType" name="amOnPage" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="amOnSubdomainType" name="amOnSubdomain" minOccurs="0" maxOccurs="unbounded"/>
@@ -95,7 +113,6 @@
             <xs:element type="moveMouseOverType" name="moveMouseOver" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="mSetLocaleType" name="mSetLocale" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="mResetLocaleType" name="mResetLocale" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="moveMouseOverType" name="moveMouseOver" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="openNewTabType" name="openNewTab" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="parseFloatType" name="parseFloat" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="pauseExecutionType" name="pauseExecution" minOccurs="0" maxOccurs="unbounded"/>
@@ -146,10 +163,22 @@
             <xs:element type="waitForPageLoadType" name="waitForPageLoad" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForTextType" name="waitForText" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
-        <xs:attribute type="xs:string" name="name"/>
-        <xs:attribute type="xs:boolean" name="remove" default="false"/>
-    </xs:complexType>
+    </xs:group>
 
+    <!-- Action Group ref -->
+
+    <xs:complexType name="actions">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="ref" use="required"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:string" name="entity"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
 
     <!-- Test action types -->
 
