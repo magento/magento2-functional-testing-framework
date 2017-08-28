@@ -217,7 +217,11 @@ class TestGenerator
             }
 
             if ($annotationType == "title") {
-                $classAnnotationsPhp .= sprintf(" * @Title(\"%s\")\n", ucwords($annotationType), $annotationName[0]);
+                $classAnnotationsPhp .= sprintf(
+                    " * @Title(\"%s\")\n",
+                    ucwords($annotationType),
+                    $annotationName[0]
+                );
             }
 
             if ($annotationType == "description") {
@@ -381,14 +385,28 @@ class TestGenerator
                     break;
                 case "clickWithLeftButton":
                     if ($selector) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s, %s);\n", $actor, $actionName, $selector, $x, $y);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, %s, %s);\n",
+                            $actor,
+                            $actionName,
+                            $selector,
+                            $x,
+                            $y
+                        );
                     } else {
                         $testSteps .= sprintf("\t\t$%s->%s(null, %s, %s);\n", $actor, $actionName, $x, $y);
                     }
                     break;
                 case "clickWithRightButton":
                     if ($selector) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s, %s);\n", $actor, $actionName, $selector, $x, $y);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, %s, %s);\n",
+                            $actor,
+                            $actionName,
+                            $selector,
+                            $x,
+                            $y
+                        );
                     } else {
                         $testSteps .= sprintf("\t\t$%s->%s(null, %s, %s);\n", $actor, $actionName, $x, $y);
                     }
@@ -454,7 +472,11 @@ class TestGenerator
                         }
                     } else {
                         if ($hookObject) {
-                            $testSteps .= sprintf("\t\t\$this->%s = new EntityApiHandler($%s);\n", $key, $entity);
+                            $testSteps .= sprintf(
+                                "\t\t\$this->%s = new EntityApiHandler($%s);\n",
+                                $key,
+                                $entity
+                            );
                             $testSteps .= sprintf("\t\t\$this->%s->createEntity();\n", $key);
                         } else {
                             $testSteps .= sprintf("\t\t$%s = new EntityApiHandler($%s);\n", $key, $entity);
@@ -481,7 +503,13 @@ class TestGenerator
                     break;
                 case "dontSeeCookie":
                     if (isset($parameterArray)) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $input, $parameterArray);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, %s);\n",
+                            $actor,
+                            $actionName,
+                            $input,
+                            $parameterArray
+                        );
                     } else {
                         $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
                     }
@@ -525,7 +553,13 @@ class TestGenerator
                     $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $input);
                     break;
                 case "dontSeeInFormFields":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $parameterArray);
+                    $testSteps .= sprintf(
+                        "\t\t$%s->%s(%s, %s);\n",
+                        $actor,
+                        $actionName,
+                        $selector,
+                        $parameterArray
+                    );
                     break;
                 case "dontSeeInTitle":
                     $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
@@ -704,7 +738,14 @@ class TestGenerator
                 case "moveMouseOver":
                     if ($selector) {
                         if (isset($step['x']) || isset($step['y'])) {
-                            $testSteps .= sprintf("\t\t$%s->%s(%s, %s, %s);\n", $actor, $actionName, $selector, $x, $y);
+                            $testSteps .= sprintf(
+                                "\t\t$%s->%s(%s, %s, %s);\n",
+                                $actor,
+                                $actionName,
+                                $selector,
+                                $x,
+                                $y
+                            );
                         } else {
                             $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $selector);
                         }
@@ -743,7 +784,13 @@ class TestGenerator
                     break;
                 case "resetCookie":
                     if (isset($parameterArray)) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $input, $parameterArray);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, %s);\n",
+                            $actor,
+                            $actionName,
+                            $input,
+                            $parameterArray
+                        );
                     } else {
                         $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
                     }
@@ -782,7 +829,13 @@ class TestGenerator
                             $customActionAttributes['parameterArray']
                         );
                     } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, [%s]);\n", $actor, $actionName, $selector, $input);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, [%s]);\n",
+                            $actor,
+                            $actionName,
+                            $selector,
+                            $input
+                        );
                     }
                     break;
                 case "see":
@@ -794,7 +847,13 @@ class TestGenerator
                     break;
                 case "seeCookie":
                     if (isset($parameterArray)) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $input, $parameterArray);
+                        $testSteps .= sprintf(
+                            "\t\t$%s->%s(%s, %s);\n",
+                            $actor,
+                            $actionName,
+                            $input,
+                            $parameterArray
+                        );
                     } else {
                         $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
                     }
@@ -838,7 +897,13 @@ class TestGenerator
                     $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $input);
                     break;
                 case "seeInFormFields":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $parameterArray);
+                    $testSteps .= sprintf(
+                        "\t\t$%s->%s(%s, %s);\n",
+                        $actor,
+                        $actionName,
+                        $selector,
+                        $parameterArray
+                    );
                     break;
                 case "seeInPageSource":
                     // TODO: Solve the HTML parsing issue.
@@ -1076,7 +1141,12 @@ class TestGenerator
                                     $customActionAttributes['parameter']
                                 );
                             } else {
-                                $testSteps .= sprintf("\t\t$%s = $%s->%s();\n", $returnVariable, $actor, $actionName);
+                                $testSteps .= sprintf(
+                                    "\t\t$%s = $%s->%s();\n",
+                                    $returnVariable,
+                                    $actor,
+                                    $actionName
+                                );
                             }
                         }
                     } else {
@@ -1293,7 +1363,10 @@ class TestGenerator
             }
 
             if ($annotationType == "severity") {
-                $testAnnotationsPhp .= sprintf("\t * @Severity(level = SeverityLevel::%s)\n", $annotationName[0]);
+                $testAnnotationsPhp .= sprintf(
+                    "\t * @Severity(level = SeverityLevel::%s)\n",
+                    $annotationName[0]
+                );
             }
 
             if ($annotationType == "testCaseId") {
@@ -1301,7 +1374,10 @@ class TestGenerator
             }
         }
 
-        $testAnnotationsPhp .= sprintf("\t * @Parameter(name = \"%s\", value=\"$%s\")\n", "AcceptanceTester", "I");
+        $testAnnotationsPhp .= sprintf(
+            "\t * @Parameter(name = \"%s\", value=\"$%s\")\n",
+            "AcceptanceTester", "I"
+        );
 
         foreach ($testAnnotationsObject as $annotationType => $annotationName) {
             if ($annotationType == "group") {

@@ -6,6 +6,8 @@ use Codeception\Exception\ModuleException;
 
 /**
  * MagentoSequence module.
+ *
+ * @codingStandardsIgnoreFile
  */
 class MagentoSequence extends Sequence
 {

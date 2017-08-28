@@ -2,6 +2,12 @@
 use Magento\AcceptanceTestFramework\Module\MagentoSequence;
 
 if (!function_exists('msq')) {
+    /**
+     * Return unique sequence within test.
+     *
+     * @param null $id
+     * @return string
+     */
     function msq($id = null)
     {
         if ($id and isset(MagentoSequence::$hash[$id])) {
@@ -17,6 +23,12 @@ if (!function_exists('msq')) {
 }
 
 if (!function_exists('msqs')) {
+    /**
+     * Return unique sequence within suite.
+     *
+     * @param null $id
+     * @return string
+     */
     function msqs($id = null)
     {
         if ($id and isset(MagentoSequence::$suiteHash[$id])) {
