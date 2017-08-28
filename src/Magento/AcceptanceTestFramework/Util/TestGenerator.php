@@ -568,17 +568,8 @@ class TestGenerator
                 case "entity":
                     $entityData = "[";
                     foreach ($stepsData[$customActionAttributes['name']] as $dataKey => $dataValue) {
-                        $variableReplace = '';
-                        if ($hookObject) {
-                            $variableReplace = $this->resolveTestVariable($dataValue, true);
-                        } else {
-                            $variableReplace = $this->resolveTestVariable($dataValue);
-                        }
-                        if (!empty($variableReplace)) {
-                            $entityData .= sprintf("'%s' => %s, ", $dataKey, $variableReplace);
-                        } else {
-                            $entityData .= sprintf("'%s' => '%s', ", $dataKey, $dataValue);
-                        }
+                        $variableReplace = $this->resolveTestVariable($dataValue);
+                        $entityData .= sprintf("'%s' => %s, ", $dataKey, $variableReplace);
                     }
                     $entityData .= ']';
                     if ($hookObject) {
@@ -639,7 +630,14 @@ class TestGenerator
                     }
                     break;
                 case "grabAttributeFrom":
-                    $testSteps .= sprintf("\t\t$%s = $%s->%s(%s, %s);\n", $returnVariable, $actor, $actionName, $selector, $input);
+                    $testSteps .= sprintf(
+                        "\t\t$%s = $%s->%s(%s, %s);\n",
+                        $returnVariable,
+                        $actor,
+                        $actionName,
+                        $selector,
+                        $input
+                    );
                     break;
                 case "grabFromCurrentUrl":
                     if ($input) {
@@ -656,9 +654,22 @@ class TestGenerator
                     break;
                 case "grabMultiple":
                     if ($input) {
-                        $testSteps .= sprintf("\t\t$%s = $%s->%s(%s, %s);\n", $returnVariable, $actor, $actionName, $selector, $input);
+                        $testSteps .= sprintf(
+                            "\t\t$%s = $%s->%s(%s, %s);\n",
+                            $returnVariable,
+                            $actor,
+                            $actionName,
+                            $selector,
+                            $input
+                        );
                     } else {
-                        $testSteps .= sprintf("\t\t$%s = $%s->%s(%s);\n", $returnVariable, $actor, $actionName, $selector);
+                        $testSteps .= sprintf(
+                            "\t\t$%s = $%s->%s(%s);\n",
+                            $returnVariable,
+                            $actor,
+                            $actionName,
+                            $selector
+                        );
                     }
                     break;
                 case "grabValueFrom":
@@ -1131,30 +1142,57 @@ class TestGenerator
     }
 
     /**
-     * Resolves regex for given variable. Can be given a cestScope, otherwise assumes it's a test variable.
-     * @param string $variable
-     * @param bool $cestScope
+     * Resolves regex for given inputString.
+     * @param string $inputString
      * @return string
      */
-    private function resolveTestVariable($variable, $cestScope = false)
+    private function resolveTestVariable($inputString)
     {
-        $replacement = '';
-        if (!$cestScope) {
-            preg_match("/\\$[\w.]+\\$/", $variable, $match);
-            if (!empty($match)) {
-                $match[0] = str_replace('$', '', $match[0]);
-                list($entity, $value) = explode('.', $match[0]);
-                $replacement = sprintf("$%s->getCreatedDataByName('%s')", $entity, $value);
-            }
-        } else {
-            preg_match("/\\$\\$[\w.]+\\$\\$/", $variable, $match);
-            if (!empty($match)) {
-                $match[0] = str_replace('$$', '', $match[0]);
-                list($entity, $value) = explode('.', $match[0]);
-                $replacement = sprintf("\$this->%s->getCreatedDataByName('%s')", $entity, $value);
+        $outputString = $inputString;
+        $replaced = false;
+
+        // Chesk for Cest-scope variables first, stricter regex match.
+        preg_match_all("/\\$\\$[\w.]+\\$\\$/", $outputString, $matches);
+        if (!empty($matches)) {
+            foreach ($matches[0] as $match) {
+                $replacement = null;
+                $variable = $this->stripAndSplitReference($match, '$$');
+                $replacement = sprintf("\$this->%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
+                $outputString = str_replace($match, $replacement, $outputString);
+                $replaced = true;
             }
         }
-        return $replacement;
+
+        // Check Test-scope variables
+        preg_match_all("/\\$[\w.]+\\$/", $outputString, $matches);
+        if (!empty($matches)) {
+            foreach ($matches[0] as $match) {
+                $replacement = null;
+                $variable = $this->stripAndSplitReference($match, '$');
+                $replacement = sprintf("$%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
+                $outputString = str_replace($match, $replacement, $outputString);
+                $replaced = true;
+            }
+        }
+
+        // If no replacement was made, assume it is a string literal and append single quotes.
+        if (!$replaced) {
+            return "'" . $outputString ."'";
+        }
+
+        return $outputString;
+    }
+
+    /**
+     * Performs str_replace on variable reference, dependent on delimiter and returns exploded array.
+     * @param string $reference
+     * @param string $delimiter
+     * @return array
+     */
+    private function stripAndSplitReference($reference, $delimiter)
+    {
+        $strippedReference = str_replace($delimiter, '', $reference);
+        return explode('.', $strippedReference);
     }
 
     /**
