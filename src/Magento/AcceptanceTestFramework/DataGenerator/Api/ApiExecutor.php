@@ -9,10 +9,17 @@ use Magento\AcceptanceTestFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\AcceptanceTestFramework\DataGenerator\Handlers\JsonDefinitionObjectHandler;
 use Magento\AcceptanceTestFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\AcceptanceTestFramework\DataGenerator\Objects\JsonDefinition;
+use Magento\AcceptanceTestFramework\DataGenerator\Objects\JsonElement;
+use Magento\AcceptanceTestFramework\DataGenerator\Util\JsonObjectExtractor;
 use Magento\AcceptanceTestFramework\Util\ApiClientUtil;
 
+/**
+ * Class ApiExecutor
+ */
 class ApiExecutor
 {
+    const PRIMITIVE_TYPES = ['string', 'boolean', 'integer', 'double', 'array'];
+
     /**
      * Describes the operation for the executor ('create','update','delete')
      *
@@ -35,11 +42,9 @@ class ApiExecutor
     /**
      * The array of dependentEntities this class can be given. When finding linked entities, APIExecutor
      * uses this repository before looking for static data.
-     * @var null
+     * @var array
      */
-    private $dependentEntities;
-
-    const PRIMITIVE_TYPES = ['string', 'boolean', 'integer', 'double', 'array'];
+    private $dependentEntities = [];
 
     /**
      * ApiSubObject constructor.
@@ -128,20 +133,19 @@ class ApiExecutor
      * recursively forming an array which represents the json structure for the api of the desired type.
      *
      * @param EntityDataObject $entityObject
-     * @param array $jsonDefMetadata
-     *
+     * @param array $jsonArrayMetadata
      * @return array
      */
-    private function getJsonDataArray($entityObject, $jsonDefMetadata = null)
+    private function convertJsonArray($entityObject, $jsonArrayMetadata)
     {
-        $jsonArrayMetadata = !$jsonDefMetadata ? JsonDefinitionObjectHandler::getInstance()->getJsonDefinition(
-            $this->operation,
-            $entityObject->getType()
-        )->getJsonMetadata() : $jsonDefMetadata;
-
         $jsonArray = [];
 
         foreach ($jsonArrayMetadata as $jsonElement) {
+            if ($jsonElement->getType() == JsonObjectExtractor::JSON_OBJECT_OBJ_NAME) {
+                $jsonArray[$jsonElement->getValue()] =
+                    $this->convertJsonArray($entityObject, $jsonElement->getNestedMetadata());
+            }
+
             $jsonElementType = $jsonElement->getValue();
 
             if (in_array($jsonElementType, ApiExecutor::PRIMITIVE_TYPES)) {
@@ -167,15 +171,7 @@ class ApiExecutor
                 $entityNamesOfType = $entityObject->getLinkedEntitiesOfType($jsonElementType);
 
                 foreach ($entityNamesOfType as $entityName) {
-                    // If this entity's name exists in the dependentEntities (Test-defined data), use that.
-                    // Else go to the DataManager and try and get the entity from the overall repository of data.
-                    if (array_key_exists($entityName, $this->dependentEntities)) {
-                        $linkedEntityObj = $this->dependentEntities[$entityName];
-                    } else {
-                        $linkedEntityObj = DataObjectHandler::getInstance()->getObject($entityName);
-                    }
-
-                    $jsonDataSubArray = self::getJsonDataArray($linkedEntityObj);
+                    $jsonDataSubArray = $this->resolveNonPrimitiveElement($entityName, $jsonElement);
 
                     if ($jsonElement->getType() == 'array') {
                         $jsonArray[$jsonElement->getKey()][] = $jsonDataSubArray;
@@ -190,15 +186,61 @@ class ApiExecutor
     }
 
     /**
+     * Resolves JsonObjects and pre-defined metadata (in other operation.xml file) referenced by the json metadata
+     *
+     * @param string $entityName
+     * @param JsonElement $jsonElement
+     * @return array
+     */
+    private function resolveNonPrimitiveElement($entityName, $jsonElement)
+    {
+        $linkedEntityObj = $this->resolveLinkedEntityObject($entityName);
+
+        if (!empty($jsonElement->getNestedJsonElement($jsonElement->getValue()))
+            && $jsonElement->getType() == 'array') {
+            $jsonSubArray = $this->convertJsonArray(
+                $linkedEntityObj,
+                [$jsonElement->getNestedJsonElement($jsonElement->getValue())]
+            );
+
+            return $jsonSubArray[$jsonElement->getValue()];
+        }
+
+        $jsonMetadata = JsonDefinitionObjectHandler::getInstance()->getJsonDefinition(
+            $this->operation,
+            $linkedEntityObj->getType()
+        )->getJsonMetadata();
+
+        return $this->convertJsonArray($linkedEntityObj, $jsonMetadata);
+    }
+
+
+    /**
+     * Method to wrap entity resolution, checks locally defined dependent entities first
+     *
+     * @param string $entityName
+     * @return EntityDataObject
+     */
+    private function resolveLinkedEntityObject($entityName)
+    {
+        // check our dependent entity list to see if we have this defined
+        if (array_key_exists($entityName, $this->dependentEntities)) {
+            return $this->dependentEntities[$entityName];
+        }
+
+        return DataObjectHandler::getInstance()->getObject($entityName);
+    }
+
+    /**
      * This function retrieves an array representative of json body for a request and returns it encoded as a string.
      *
      * @return string
      */
     public function getEncodedJsonString()
     {
-        $jsonArray = $this->getJsonDataArray($this->entityObject, $this->jsonDefinition->getJsonMetadata());
+        $jsonMetadataArray = $this->convertJsonArray($this->entityObject, $this->jsonDefinition->getJsonMetadata());
 
-        return json_encode([$this->entityObject->getType() => $jsonArray], JSON_PRETTY_PRINT);
+        return json_encode($jsonMetadataArray, JSON_PRETTY_PRINT);
     }
 
     // @codingStandardsIgnoreStart

@@ -114,7 +114,7 @@ class EntityDataObject
     {
         $name = strtolower($dataName);
 
-        if (!is_null($this->data) && array_key_exists($name, $this->data)) {
+        if ($this->data != null && array_key_exists($name, $this->data)) {
             return $this->data[$name];
         }
 

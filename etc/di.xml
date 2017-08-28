@@ -200,6 +200,7 @@
                 <item name="/config/operation" xsi:type="string">name</item>
                 <item name="/config/operation/entry" xsi:type="string">key</item>
                 <item name="/config/operation/array" xsi:type="string">key</item>
+                <item name="/config/operation/object" xsi:type="string">key</item>
             </argument>
             <argument name="fileName" xsi:type="string">*-meta.xml</argument>
             <argument name="defaultScope" xsi:type="string">Metadata</argument>

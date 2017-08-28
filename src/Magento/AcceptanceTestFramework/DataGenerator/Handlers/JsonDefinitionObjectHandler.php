@@ -1,10 +1,14 @@
 <?php
-
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 namespace Magento\AcceptanceTestFramework\DataGenerator\Handlers;
 
 use Magento\AcceptanceTestFramework\DataGenerator\Objects\JsonDefinition;
 use Magento\AcceptanceTestFramework\DataGenerator\Objects\JsonElement;
 use Magento\AcceptanceTestFramework\DataGenerator\Parsers\OperationMetadataParser;
+use Magento\AcceptanceTestFramework\DataGenerator\Util\JsonObjectExtractor;
 use Magento\AcceptanceTestFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\AcceptanceTestFramework\ObjectManagerFactory;
 
@@ -29,6 +33,10 @@ class JsonDefinitionObjectHandler implements ObjectHandlerInterface
     const ENTITY_OPERATION_ARRAY = 'array';
     const ENTITY_OPERATION_ARRAY_KEY = 'key';
     const ENTITY_OPERATION_ARRAY_VALUE = 'value';
+    const ENTITY_OPERATION_OBJECT = 'object';
+    const ENTITY_OPERATION_OBJECT_KEY = 'key';
+    const ENTITY_OPERATION_OBJECT_VALUE = 'value';
+    const ENTITY_OPERATION_JSON_OBJECT = 'jsonObject';
 
     /**
      * Singleton Instance of class
@@ -43,6 +51,13 @@ class JsonDefinitionObjectHandler implements ObjectHandlerInterface
      * @var array
      */
     private $jsonDefinitions = [];
+
+    /**
+     * Object used to extract jsonObjects from array into JsonElements
+     *
+     * @var JsonObjectExtractor
+     */
+    private $jsonDefExtractor;
 
     /**
      * Singleton method to return JsonDefinitionProcessor.
@@ -85,7 +100,7 @@ class JsonDefinitionObjectHandler implements ObjectHandlerInterface
      */
     private function __construct()
     {
-        // private constructor
+        $this->jsonDefExtractor = new JsonObjectExtractor();
     }
 
     /**
@@ -135,6 +150,15 @@ class JsonDefinitionObjectHandler implements ObjectHandlerInterface
                 }
             }
 
+            // extract relevant jsonObjects as JsonElements
+            if (array_key_exists(JsonDefinitionObjectHandler::ENTITY_OPERATION_JSON_OBJECT, $jsonDefArray)) {
+                foreach ($jsonDefArray[JsonDefinitionObjectHandler::ENTITY_OPERATION_JSON_OBJECT] as $jsonObjectArray) {
+                    $jsonMetadata[] = $this->jsonDefExtractor->extractJsonObject($jsonObjectArray);
+                }
+            }
+
+            //handle loose entries
+
             if (array_key_exists(JsonDefinitionObjectHandler::ENTITY_OPERATION_ENTRY, $jsonDefArray)) {
                 foreach ($jsonDefArray[JsonDefinitionObjectHandler::ENTITY_OPERATION_ENTRY] as $jsonEntryType) {
                     $jsonMetadata[] = new JsonElement(
@@ -147,10 +171,28 @@ class JsonDefinitionObjectHandler implements ObjectHandlerInterface
 
             if (array_key_exists(JsonDefinitionObjectHandler::ENTITY_OPERATION_ARRAY, $jsonDefArray)) {
                 foreach ($jsonDefArray[JsonDefinitionObjectHandler::ENTITY_OPERATION_ARRAY] as $jsonEntryType) {
+                    $jsonSubMetadata = [];
+                    $value = null;
+                    $type = null;
+
+                    if (array_key_exists('jsonObject', $jsonEntryType)) {
+                        $jsonNestedElement = $this->jsonDefExtractor->extractJsonObject(
+                            $jsonEntryType['jsonObject'][0]
+                        );
+                        $jsonSubMetadata[$jsonNestedElement->getKey()] = $jsonNestedElement;
+                        $value = $jsonNestedElement->getValue();
+                        $type = $jsonNestedElement->getKey();
+                    } else {
+                        $value = $jsonEntryType[JsonDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_VALUE][0]
+                        [JsonDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_VALUE];
+                        $type = [JsonDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_VALUE];
+                    }
+
                     $jsonMetadata[] = new JsonElement(
                         $jsonEntryType[JsonDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_KEY],
-                        $jsonEntryType[JsonDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_VALUE],
-                        JsonDefinitionObjectHandler::ENTITY_OPERATION_ARRAY
+                        $value,
+                        $type,
+                        $jsonSubMetadata
                     );
                 }
             }
