@@ -1375,8 +1375,10 @@ class TestGenerator
         }
 
         $testAnnotationsPhp .= sprintf(
-            "\t * @Parameter(name = \"%s\", value=\"$%s\")\n",
-            "AcceptanceTester", "I"
+            "\t * @Parameter(name = \"%s\", 
+            value=\"$%s\")\n",
+            "AcceptanceTester",
+            "I"
         );
 
         foreach ($testAnnotationsObject as $annotationType => $annotationName) {

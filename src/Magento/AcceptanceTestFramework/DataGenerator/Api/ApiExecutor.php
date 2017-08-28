@@ -214,7 +214,6 @@ class ApiExecutor
         return $this->convertJsonArray($linkedEntityObj, $jsonMetadata);
     }
 
-
     /**
      * Method to wrap entity resolution, checks locally defined dependent entities first
      *

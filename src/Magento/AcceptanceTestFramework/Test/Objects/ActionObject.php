@@ -311,6 +311,8 @@ class ActionObject
     }
 
     /**
+     * Method which resolves data references requiring uniqueness for test idempotentcy
+     *
      * @param string $reference
      * @param EntityDataObject $entityDataObject
      * @param string $entityKey
