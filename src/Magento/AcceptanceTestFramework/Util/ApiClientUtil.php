@@ -81,7 +81,22 @@ class ApiClientUtil
             CURLOPT_URL => HOSTNAME . ':' .  PORT . $this->apiPath
         ]);
 
-        $response = curl_exec($this->curl);
+        try {
+            $response = curl_exec($this->curl);
+            if ($response === false) {
+                throw new \Exception(curl_error($this->curl), curl_errno($this->curl));
+            }
+        } catch (\Exception $e) {
+            trigger_error(
+                sprintf(
+                    'Curl failed with error #%d: %s',
+                    $e->getCode(),
+                    $e->getMessage()
+                ),
+                E_USER_ERROR
+            );
+        }
+
         curl_close($this->curl);
 
         return $response;

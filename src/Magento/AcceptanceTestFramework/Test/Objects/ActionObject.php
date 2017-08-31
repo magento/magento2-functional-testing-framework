@@ -22,7 +22,7 @@ class ActionObject
     const MERGE_ACTION_ORDER_AFTER = 'after';
     const ACTION_ATTRIBUTE_URL = 'url';
     const ACTION_ATTRIBUTE_SELECTOR = 'selector';
-    const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/{{[\w.]+}}/';
+    const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/{{[\w.\[\]]+}}/';
 
     /**
      * The unique identifier for the action
@@ -292,8 +292,20 @@ class ActionObject
                     break;
                 case (get_class($obj) == EntityDataObject::class):
                     list(,$objField) = $this->stripAndSplitReference($match);
-                    $replacement = $obj->getDataByName($objField);
+
+                    if (strpos($objField, '[') == true) {
+                        // Access <array>...</array>
+                        $parts = explode('[', $objField);
+                        $name = $parts[0];
+                        $index = str_replace(']', '', $parts[1]);
+                        $replacement = $obj->getDataByName($name)[$index];
+                    } else {
+                        // Access <data></data>
+                        $replacement = $obj->getDataByName($objField);
+                    }
+
                     $replacement = $this->resolveEntityDataUniquenessReference($replacement, $obj, $objField);
+
                     break;
             }
 
