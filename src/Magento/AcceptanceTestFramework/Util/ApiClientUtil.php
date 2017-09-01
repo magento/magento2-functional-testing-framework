@@ -68,17 +68,31 @@ class ApiClientUtil
      */
     public function submit($verbose = false)
     {
+        $url = null;
+
         if ($this->jsonBody) {
             curl_setopt($this->curl, CURLOPT_POSTFIELDS, $this->jsonBody);
         }
 
         curl_setopt($this->curl, CURLOPT_VERBOSE, $verbose);
 
+        if ((getenv('MAGENTO_RESTAPI_SERVER_HOST') !== false)
+            && (getenv('MAGENTO_RESTAPI_SERVER_HOST') !== '') ) {
+            $url = getenv('MAGENTO_RESTAPI_SERVER_HOST');
+        } else {
+            $url = getenv('MAGENTO_BASE_URL');
+        }
+
+        if ((getenv('MAGENTO_RESTAPI_SERVER_PORT') !== false)
+            && (getenv('MAGENTO_RESTAPI_SERVER_PORT') !== '')) {
+            $url .= ':' . getenv('MAGENTO_RESTAPI_SERVER_PORT');
+        }
+
         curl_setopt_array($this->curl, [
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_HTTPHEADER => $this->headers,
             CURLOPT_CUSTOMREQUEST => $this->apiOperation,
-            CURLOPT_URL => HOSTNAME . ':' .  PORT . $this->apiPath
+            CURLOPT_URL => $url . $this->apiPath
         ]);
 
         try {
