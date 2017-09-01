@@ -147,10 +147,9 @@ class TestGenerator
      * Creates a PHP string for the necessary Allure and AcceptanceTester use statements.
      * Since we don't support other dependencies at this time, this function takes no parameter.
      *
-     * @param \Magento\AcceptanceTestFramework\Test\Objects\CestObject  $cestObject
      * @return string
      */
-    private function generateUseStatementsPhp($cestObject)
+    private function generateUseStatementsPhp()
     {
         $useStatementsPhp = "use Magento\AcceptanceTestFramework\AcceptanceTester;\n";
 
@@ -272,8 +271,9 @@ class TestGenerator
             $actor = "I";
             $actionName = $steps->getType();
             $customActionAttributes = $steps->getCustomActionAttributes();
-            $key = $steps->getMergeKey();
             $selector = null;
+            $selector1 = null;
+            $selector2 = null;
             $input = null;
             $parameterArray = null;
             $returnVariable = null;
@@ -283,57 +283,58 @@ class TestGenerator
             $url = null;
             $function = null;
             $time = null;
+            $locale = null;
+            $username = null;
+            $password = null;
+            $width = null;
+            $height = null;
+            $requiredAction = null;
+            $value = null;
+            $button = null;
+            $parameter = null;
 
             if (isset($customActionAttributes['returnVariable'])) {
                 $returnVariable = $customActionAttributes['returnVariable'];
             }
 
             if (isset($customActionAttributes['variable'])) {
-                $input = sprintf("$%s", $customActionAttributes['variable']);
-            } elseif (isset($customActionAttributes['url']) && isset($customActionAttributes['userInput'])) {
-                $input = sprintf("\"%s\"", $customActionAttributes['userInput']);
+                $input = $this->addDollarSign($customActionAttributes['variable']);
+            } elseif (isset($customActionAttributes['userInput']) && isset($customActionAttributes['url'])) {
+                $input = $this->addUniquenessFunctionCall($customActionAttributes['userInput']);
+                $url = $this->addUniquenessFunctionCall($customActionAttributes['url']);
             } elseif (isset($customActionAttributes['userInput'])) {
-                preg_match(
-                    '/' . DataObjectHandler::UNIQUENESS_FUNCTION .'\("[\w]+.[\w]+"\)/',
-                    $customActionAttributes['userInput'],
-                    $matches
-                );
-                if (!empty($matches)) {
-                    $parts = preg_split(
-                        '/' . DataObjectHandler::UNIQUENESS_FUNCTION . '\("[\w]+.[\w]+"\)/',
-                        $customActionAttributes['userInput'],
-                        -1
-                    );
-                    foreach ($parts as $part) {
-                        if (!$part) {
-                            if (!empty($input)) {
-                                $input .= '.';
-                            }
-                            $input .= $matches[0];
-                        } else {
-                            if (!empty($input)) {
-                                $input .= '.';
-                            }
-                            $input .= sprintf("\"%s\"", $part);
-                        }
-                    }
-                } else {
-                    $input = sprintf("\"%s\"", $customActionAttributes['userInput']);
-                }
+                $input = $this->addUniquenessFunctionCall($customActionAttributes['userInput']);
             } elseif (isset($customActionAttributes['url'])) {
-                $input = sprintf("\"%s\"", $customActionAttributes['url']);
-            } elseif (isset($customActionAttributes['time'])) {
-                $input = sprintf("\"%s\"", $customActionAttributes['time']);
+                $input = $this->addUniquenessFunctionCall($customActionAttributes['url']);
+            }
+
+            if (isset($customActionAttributes['time'])) {
+                $time = $customActionAttributes['time'];
+            }
+
+            if (isset($customActionAttributes['timeout'])) {
+                $time = $customActionAttributes['timeout'];
             }
 
             if (isset($customActionAttributes['parameterArray'])) {
                 $parameterArray = $customActionAttributes['parameterArray'];
             }
+            if (isset($customActionAttributes['requiredAction'])) {
+                $requiredAction = $customActionAttributes['requiredAction'];
+            }
 
             if (isset($customActionAttributes['selectorArray'])) {
-                $selector = sprintf("%s", $customActionAttributes['selectorArray']);
+                $selector = $customActionAttributes['selectorArray'];
             } elseif (isset($customActionAttributes['selector'])) {
-                $selector = sprintf("\"%s\"", $customActionAttributes['selector']);
+                $selector = $this->wrapWithSingleQuotes($customActionAttributes['selector']);
+            }
+
+            if (isset($customActionAttributes['selector1'])) {
+                $selector1 = $this->wrapWithSingleQuotes($customActionAttributes['selector1']);
+            }
+
+            if (isset($customActionAttributes['selector2'])) {
+                $selector2 = $this->wrapWithSingleQuotes($customActionAttributes['selector2']);
             }
 
             if (isset($customActionAttributes['x'])) {
@@ -352,65 +353,39 @@ class TestGenerator
                 $html = $customActionAttributes['html'];
             }
 
-            if (isset($customActionAttributes['time'])) {
-                $time = $customActionAttributes['time'];
-            } elseif (isset($customActionAttributes['timeout'])) {
-                $time = $customActionAttributes['timeout'];
+            if (isset($customActionAttributes['locale'])) {
+                $locale = $this->wrapWithSingleQuotes($customActionAttributes['locale']);
+            }
+
+            if (isset($customActionAttributes['username'])) {
+                $username = $this->wrapWithSingleQuotes($customActionAttributes['username']);
+            }
+
+            if (isset($customActionAttributes['password'])) {
+                $password = $this->wrapWithSingleQuotes($customActionAttributes['password']);
+            }
+
+            if (isset($customActionAttributes['width'])) {
+                $width = $customActionAttributes['width'];
+            }
+
+            if (isset($customActionAttributes['height'])) {
+                $height = $customActionAttributes['height'];
+            }
+
+            if (isset($customActionAttributes['value'])) {
+                $value = $this->wrapWithSingleQuotes($customActionAttributes['value']);
+            }
+
+            if (isset($customActionAttributes['button'])) {
+                $button = $this->wrapWithSingleQuotes($customActionAttributes['button']);
+            }
+
+            if (isset($customActionAttributes['parameter'])) {
+                $parameter = $this->wrapWithSingleQuotes($customActionAttributes['parameter']);
             }
 
             switch ($actionName) {
-                case "amOnPage":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    break;
-                case "amOnSubdomain":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    break;
-                case "amOnUrl":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    break;
-                case "appendField":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $input);
-                    break;
-                case "attachFile":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $input);
-                    break;
-                case "click":
-                    if ($input && $selector) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $input, $selector);
-                    } elseif ($input && !$selector) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    } elseif (!$input && $selector) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $selector);
-                    }
-                    break;
-                case "clickWithLeftButton":
-                    if ($selector) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, %s, %s);\n",
-                            $actor,
-                            $actionName,
-                            $selector,
-                            $x,
-                            $y
-                        );
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(null, %s, %s);\n", $actor, $actionName, $x, $y);
-                    }
-                    break;
-                case "clickWithRightButton":
-                    if ($selector) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, %s, %s);\n",
-                            $actor,
-                            $actionName,
-                            $selector,
-                            $x,
-                            $y
-                        );
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(null, %s, %s);\n", $actor, $actionName, $x, $y);
-                    }
-                    break;
                 case "createData":
                     $entity = $customActionAttributes['entity'];
                     $key = $steps->getMergeKey();
@@ -494,111 +469,6 @@ class TestGenerator
                         $testSteps .= sprintf("\t\t$%s->deleteEntity();\n", $key);
                     }
                     break;
-                case "dontSee":
-                    if ($selector) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $input, $selector);
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    }
-                    break;
-                case "dontSeeCookie":
-                    if (isset($parameterArray)) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, %s);\n",
-                            $actor,
-                            $actionName,
-                            $input,
-                            $parameterArray
-                        );
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    }
-                    break;
-                case "dontSeeCurrentUrlEquals":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    break;
-                case "dontSeeCurrentUrlMatches":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    break;
-                case "dontSeeElement":
-                    if ($parameterArray) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, %s);\n",
-                            $actor,
-                            $actionName,
-                            $selector,
-                            $parameterArray
-                        );
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $selector);
-                    }
-                    break;
-                case "dontSeeElementInDOM":
-                    if ($parameterArray) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, %s);\n",
-                            $actor,
-                            $actionName,
-                            $selector,
-                            $parameterArray
-                        );
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $selector);
-                    }
-                    break;
-                case "dontSeeInCurrentUrl":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    break;
-                case "dontSeeInField":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $input);
-                    break;
-                case "dontSeeInFormFields":
-                    $testSteps .= sprintf(
-                        "\t\t$%s->%s(%s, %s);\n",
-                        $actor,
-                        $actionName,
-                        $selector,
-                        $parameterArray
-                    );
-                    break;
-                case "dontSeeInTitle":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    break;
-                case "dontSeeInPageSource":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    break;
-                case "dontSeeInSource":
-                    // TODO: Solve the HTML parsing issue.
-                    $testSteps .= sprintf("\t\t$%s->%s(\"%s\");\n", $actor, $actionName, $html);
-                    break;
-                case "dontSeeLink":
-                    if (isset($customActionAttributes['url'])) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, \"%s\");\n",
-                            $actor,
-                            $actionName,
-                            $input,
-                            $customActionAttributes['url']
-                        );
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    }
-                    break;
-                case "dontSeeOptionIsSelected":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $input);
-                    break;
-                case "dragAndDrop":
-                    $testSteps .= sprintf(
-                        "\t\t$%s->%s(\"%s\", \"%s\");\n",
-                        $actor,
-                        $actionName,
-                        $customActionAttributes['selector1'],
-                        $customActionAttributes['selector2']
-                    );
-                    break;
-                case "executeInSelenium":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $function);
-                    break;
                 case "entity":
                     $entityData = "[";
                     foreach ($stepsData[$customActionAttributes['name']] as $dataKey => $dataValue) {
@@ -624,48 +494,103 @@ class TestGenerator
                         );
                     }
                     break;
-                case "executeJS":
-                    $testSteps .= sprintf("\t\t$%s->%s(\"%s\");\n", $actor, $actionName, $function);
+                case "dontSeeCurrentUrlEquals":
+                case "dontSeeCurrentUrlMatches":
+                case "seeInPopup":
+                case "saveSessionSnapshot":
+                case "seeCurrentUrlEquals":
+                case "seeCurrentUrlMatches":
+                case "seeInTitle":
+                case "seeInCurrentUrl":
+                case "switchToIFrame":
+                case "switchToWindow":
+                case "typeInPopup":
+                case "dontSee":
+                case "see":
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $input, $selector);
                     break;
-                case "fillField":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $input);
+                case "switchToNextTab":
+                case "switchToPreviousTab":
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $this->stripWrappedQuotes($input));
                     break;
-                case "formatMoney":
-                    if (isset($customActionAttributes['locale'])) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, \"%s\");\n",
-                            $actor,
-                            $actionName,
-                            $input,
-                            $customActionAttributes['locale']
-                        );
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
+                case "clickWithLeftButton":
+                case "clickWithRightButton":
+                case "moveMouseOver":
+                case "scrollTo":
+                    if (!$selector) {
+                        $selector = 'null';
                     }
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $x, $y);
+                    break;
+                case "dontSeeCookie":
+                case "resetCookie":
+                case "seeCookie":
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $input, $parameterArray);
                     break;
                 case "grabCookie":
-                    if (isset($parameterArray)) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s = $%s->%s(%s, %s);\n",
-                            $returnVariable,
-                            $actor,
-                            $actionName,
-                            $input,
-                            $parameterArray
-                        );
-                    } else {
-                        $testSteps .= sprintf(
-                            "\t\t$%s = $%s->%s(%s);\n",
-                            $returnVariable,
-                            $actor,
-                            $actionName,
-                            $input
-                        );
-                    }
+                    $testSteps .= $this->wrapFunctionCallWithReturnValue(
+                        $returnVariable,
+                        $actor,
+                        $actionName,
+                        $input,
+                        $parameterArray
+                    );
+                    break;
+                case "dontSeeElement":
+                case "dontSeeElementInDOM":
+                case "dontSeeInFormFields":
+                case "seeElement":
+                case "seeElementInDOM":
+                case "seeInFormFields":
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $parameterArray);
+                    break;
+                case "pressKey":
+                case "selectOption":
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input, $parameterArray);
+                    break;
+                case "submitForm":
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $parameterArray, $button);
+                    break;
+                case "dragAndDrop":
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector1, $selector2);
+                    break;
+                case "executeInSelenium":
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $function);
+                    break;
+                case "executeJS":
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $this->wrapWithSingleQuotes($function));
+                    break;
+                case "performOn":
+                case "waitForElementChange":
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $function, $time);
+                    break;
+                case "waitForJS":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionName,
+                        $this->wrapWithSingleQuotes($function),
+                        $time
+                    );
+                    break;
+                case "wait":
+                case "waitForAjaxLoad":
+                case "waitForElement":
+                case "waitForElementVisible":
+                case "waitForElementNotVisible":
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $time);
+                    break;
+                case "waitForPageLoad":
+                case "waitForText":
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $input, $time, $selector);
+                    break;
+                case "formatMoney":
+                case "mSetLocale":
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $input, $locale);
                     break;
                 case "grabAttributeFrom":
-                    $testSteps .= sprintf(
-                        "\t\t$%s = $%s->%s(%s, %s);\n",
+                case "grabMultiple":
+                case "grabFromCurrentUrl":
+                    $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $returnVariable,
                         $actor,
                         $actionName,
@@ -673,537 +598,93 @@ class TestGenerator
                         $input
                     );
                     break;
-                case "grabFromCurrentUrl":
-                    if ($input) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s = $%s->%s(%s);\n",
-                            $returnVariable,
-                            $actor,
-                            $actionName,
-                            $input
-                        );
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s = $%s->%s();\n", $returnVariable, $actor, $actionName);
-                    }
-                    break;
-                case "grabMultiple":
-                    if ($input) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s = $%s->%s(%s, %s);\n",
-                            $returnVariable,
-                            $actor,
-                            $actionName,
-                            $selector,
-                            $input
-                        );
-                    } else {
-                        $testSteps .= sprintf(
-                            "\t\t$%s = $%s->%s(%s);\n",
-                            $returnVariable,
-                            $actor,
-                            $actionName,
-                            $selector
-                        );
-                    }
-                    break;
                 case "grabValueFrom":
                     if (isset($returnVariable)) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s = $%s->%s(%s);\n",
+                        $testSteps .= $this->wrapFunctionCallWithReturnValue(
                             $returnVariable,
                             $actor,
                             $actionName,
                             $selector
                         );
                     } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $selector);
+                        $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector);
                     }
-                    break;
-                case "loadSessionSnapshot":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
                     break;
                 case "loginAsAdmin":
-                    if (isset($customActionAttributes['username']) && isset($customActionAttributes['password'])) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(\"%s\", \"%s\");\n",
-                            $actor,
-                            $actionName,
-                            $customActionAttributes['username'],
-                            $customActionAttributes['password']
-                        );
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s();\n", $actor, $actionName);
-                    }
-                    break;
-                case "moveMouseOver":
-                    if ($selector) {
-                        if (isset($step['x']) || isset($step['y'])) {
-                            $testSteps .= sprintf(
-                                "\t\t$%s->%s(%s, %s, %s);\n",
-                                $actor,
-                                $actionName,
-                                $selector,
-                                $x,
-                                $y
-                            );
-                        } else {
-                            $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $selector);
-                        }
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(null, %s, %s);\n", $actor, $actionName, $x, $y);
-                    }
-                    break;
-                case "mSetLocale":
-                    if (isset($customActionAttributes['locale'])) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, \"%s\");\n",
-                            $actor,
-                            $actionName,
-                            $input,
-                            $customActionAttributes['locale']
-                        );
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    }
-                    break;
-                case "performOn":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $function);
-                    break;
-                case "pressKey":
-                    if (isset($parameterArray)) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, %s);\n",
-                            $actor,
-                            $actionName,
-                            $selector,
-                            $parameterArray
-                        );
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $input);
-                    }
-                    break;
-                case "resetCookie":
-                    if (isset($parameterArray)) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, %s);\n",
-                            $actor,
-                            $actionName,
-                            $input,
-                            $parameterArray
-                        );
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    }
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $username, $password);
                     break;
                 case "resizeWindow":
-                    $testSteps .= sprintf(
-                        "\t\t$%s->%s(%s, %s);\n",
-                        $actor,
-                        $actionName,
-                        $customActionAttributes['width'],
-                        $customActionAttributes['height']
-                    );
-                    break;
-                case "saveSessionSnapshot":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    break;
-                case "scrollTo":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s, %s);\n", $actor, $actionName, $selector, $x, $y);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $width, $height);
                     break;
                 case "searchAndMultiSelectOption":
-                    if (isset($customActionAttributes['requiredAction'])) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, %s, %s);\n",
-                            $actor,
-                            $actionName,
-                            $selector,
-                            $customActionAttributes['parameterArray'],
-                            $customActionAttributes['requiredAction']
-                        );
-                    } elseif (isset($customActionAttributes['parameterArray'])) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, %s);\n",
-                            $actor,
-                            $actionName,
-                            $selector,
-                            $customActionAttributes['parameterArray']
-                        );
-                    } else {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, [%s]);\n",
-                            $actor,
-                            $actionName,
-                            $selector,
-                            $input
-                        );
-                    }
-                    break;
-                case "see":
-                    if (isset($customActionAttributes['selector'])) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $input, $selector);
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    }
-                    break;
-                case "seeCookie":
-                    if (isset($parameterArray)) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, %s);\n",
-                            $actor,
-                            $actionName,
-                            $input,
-                            $parameterArray
-                        );
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    }
-                    break;
-                case "seeCurrentUrlEquals":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    break;
-                case "seeCurrentUrlMatches":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    break;
-                case "seeElement":
-                    if (isset($parameterArray)) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, %s);\n",
-                            $actor,
-                            $actionName,
-                            $selector,
-                            $parameterArray
-                        );
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $selector);
-                    }
-                    break;
-                case "seeElementInDOM":
-                    if (isset($parameterArray)) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, %s);\n",
-                            $actor,
-                            $actionName,
-                            $selector,
-                            $parameterArray
-                        );
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $selector);
-                    }
-                    break;
-                case "seeInCurrentUrl":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    break;
-                case "seeInField":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $input);
-                    break;
-                case "seeInFormFields":
-                    $testSteps .= sprintf(
-                        "\t\t$%s->%s(%s, %s);\n",
+                    $testSteps .= $this->wrapFunctionCall(
                         $actor,
                         $actionName,
                         $selector,
+                        $input,
+                        $parameterArray,
+                        $requiredAction
+                    );
+                    break;
+                case "seeLink":
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $input, $url);
+                    break;
+                case "setCookie":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionName,
+                        $selector,
+                        $input,
+                        $value,
+                        $parameterArray
+                    );
+                    break;
+                case "amOnPage":
+                case "amOnSubdomain":
+                case "amOnUrl":
+                case "appendField":
+                case "attachFile":
+                case "click":
+                case "dontSeeInField":
+                case "dontSeeInCurrentUrl":
+                case "dontSeeInTitle":
+                case "dontSeeInPageSource":
+                case "dontSeeOptionIsSelected":
+                case "fillField":
+                case "loadSessionSnapshot":
+                case "seeInField":
+                case "seeOptionIsSelected":
+                case "dontSeeLink":
+                case "unselectOption":
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input);
+                    break;
+                case "seeNumberOfElements":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionName,
+                        $selector,
+                        $this->stripWrappedQuotes($input),
                         $parameterArray
                     );
                     break;
                 case "seeInPageSource":
-                    // TODO: Solve the HTML parsing issue.
-                    break;
-                case "seeInPopup":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    break;
                 case "seeInSource":
-                    // TODO: Solve the HTML parsing issue.
-                    break;
-                case "seeInTitle":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    break;
-                case "seeLink":
-                    if (isset($step['url'])) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, \"%s\");\n",
-                            $actor,
-                            $actionName,
-                            $input,
-                            $customActionAttributes['url']
-                        );
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    }
-                    break;
-                case "seeNumberOfElements":
-                    $testSteps .= sprintf(
-                        "\t\t$%s->%s(%s, %s);\n",
-                        $actor,
-                        $actionName,
-                        $selector,
-                        $input
-                    );
-                    break;
-                case "seeOptionIsSelected":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $input);
-                    break;
-                case "selectOption":
-                    if ($parameterArray) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, %s);\n",
-                            $actor,
-                            $actionName,
-                            $selector,
-                            $parameterArray
-                        );
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $input);
-                    }
-                    break;
-                case "setCookie":
-                    if ($parameterArray) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, \"%s\", %s);\n",
-                            $actor,
-                            $actionName,
-                            $input,
-                            $customActionAttributes['value'],
-                            $parameterArray
-                        );
-                    } else {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, \"%s\");\n",
-                            $actor,
-                            $actionName,
-                            $input,
-                            $customActionAttributes['value']
-                        );
-                    }
-                    break;
-                case "submitForm":
-                    if (isset($step['button'])) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, \"%s\", \"%s\");\n",
-                            $actor,
-                            $actionName,
-                            $selector,
-                            $parameterArray,
-                            $customActionAttributes['button']
-                        );
-                    } else {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, \"%s\");\n",
-                            $actor,
-                            $actionName,
-                            $selector,
-                            $parameterArray
-                        );
-                    }
-                    break;
-                case "switchToIFrame":
-                    if ($input) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s();\n", $actor, $actionName);
-                    }
-                    break;
-                case "switchToPreviousTab":
-                    if ($input) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s();\n", $actor, $actionName);
-                    }
-                    break;
-                case "switchToNextTab":
-                    if ($input) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s();\n", $actor, $actionName);
-                    }
-                    break;
-                case "switchToWindow":
-                    if ($input) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s();\n", $actor, $actionName);
-                    }
-                    break;
-                case "typeInPopup":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $input);
-                    break;
-                case "unselectOption":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $input);
-                    break;
-                case "wait":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $time);
-                    break;
-                case "waitForAjaxLoad":
-                    if ($input) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $time);
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s();\n", $actor, $actionName);
-                    }
-                    break;
-                case "waitForElement":
-                    $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $selector, $time);
-                    break;
-                case "waitForElementChange":
-                    $testSteps .= sprintf(
-                        "\t\t$%s->%s(%s, %s, %s);\n",
-                        $actor,
-                        $actionName,
-                        $selector,
-                        $function,
-                        $time
-                    );
-                    break;
-                case "waitForJS":
-                    $testSteps .= sprintf("\t\t$%s->%s(\"%s\", %s);\n", $actor, $actionName, $function, $time);
-                    break;
-                case "waitForPageLoad":
-                    if ($time) {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $time);
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s();\n", $actor, $actionName);
-                    }
-                    break;
-                case "waitForText":
-                    if ($selector) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s->%s(%s, %s, %s);\n",
-                            $actor,
-                            $actionName,
-                            $input,
-                            $time,
-                            $selector
-                        );
-                    } else {
-                        $testSteps .= sprintf("\t\t$%s->%s(%s, %s);\n", $actor, $actionName, $input, $time);
-                    }
+                case "dontSeeInSource":
+                    // TODO: Need to fix xml parser to allow parsing html.
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $html);
                     break;
                 default:
                     if ($returnVariable) {
-                        if ($selector) {
-                            if ($input) {
-                                $testSteps .= sprintf(
-                                    "\t\t$%s = $%s->%s(%s, %s);\n",
-                                    $returnVariable,
-                                    $actor,
-                                    $actionName,
-                                    $selector,
-                                    $input
-                                );
-                            } elseif (isset($customActionAttributes['userInput'])) {
-                                $testSteps .= sprintf(
-                                    "\t\t$%s = $%s->%s(%s, \"%s\");\n",
-                                    $returnVariable,
-                                    $actor,
-                                    $actionName,
-                                    $selector,
-                                    $customActionAttributes['userInput']
-                                );
-                            } elseif (isset($customActionAttributes['parameter'])) {
-                                $testSteps .= sprintf(
-                                    "\t\t$%s = $%s->%s(%s, %s);\n",
-                                    $returnVariable,
-                                    $actor,
-                                    $actionName,
-                                    $selector,
-                                    $customActionAttributes['parameter']
-                                );
-                            } else {
-                                $testSteps .= sprintf(
-                                    "\t\t$%s = $%s->%s(%s);\n",
-                                    $returnVariable,
-                                    $actor,
-                                    $actionName,
-                                    $selector
-                                );
-                            }
-                        } else {
-                            if ($input) {
-                                $testSteps .= sprintf(
-                                    "\t\t$%s = $%s->%s(%s);\n",
-                                    $returnVariable,
-                                    $actor,
-                                    $actionName,
-                                    $input
-                                );
-                            } elseif (isset($customActionAttributes['userInput'])) {
-                                $testSteps .= sprintf(
-                                    "\t\t$%s = $%s->%s(\"%s\");\n",
-                                    $returnVariable,
-                                    $actor,
-                                    $actionName,
-                                    $customActionAttributes['userInput']
-                                );
-                            } elseif (isset($customActionAttributes['parameter'])) {
-                                $testSteps .= sprintf(
-                                    "\t\t$%s = $%s->%s(%s);\n",
-                                    $returnVariable,
-                                    $actor,
-                                    $actionName,
-                                    $customActionAttributes['parameter']
-                                );
-                            } else {
-                                $testSteps .= sprintf(
-                                    "\t\t$%s = $%s->%s();\n",
-                                    $returnVariable,
-                                    $actor,
-                                    $actionName
-                                );
-                            }
-                        }
+                        $testSteps .= $this->wrapFunctionCallWithReturnValue(
+                            $returnVariable,
+                            $actor,
+                            $actionName,
+                            $selector,
+                            $input,
+                            $parameter
+                        );
                     } else {
-                        if ($selector) {
-                            if ($input) {
-                                $testSteps .= sprintf(
-                                    "\t\t$%s->%s(%s, %s);\n",
-                                    $actor,
-                                    $actionName,
-                                    $selector,
-                                    $input
-                                );
-                            } elseif (isset($customActionAttributes['userInput'])) {
-                                $testSteps .= sprintf(
-                                    "\t\t$%s->%s(%s, \"%s\");\n",
-                                    $actor,
-                                    $actionName,
-                                    $selector,
-                                    $customActionAttributes['userInput']
-                                );
-                            } elseif (isset($customActionAttributes['parameter'])) {
-                                $testSteps .= sprintf(
-                                    "\t\t$%s->%s(%s, %s);\n",
-                                    $actor,
-                                    $actionName,
-                                    $selector,
-                                    $customActionAttributes['parameter']
-                                );
-                            } else {
-                                $testSteps .= sprintf("\t\t$%s->%s(%s);\n", $actor, $actionName, $selector);
-                            }
-                        } else {
-                            if ($input) {
-                                $testSteps .= sprintf(
-                                    "\t\t$%s->%s(%s);\n",
-                                    $actor,
-                                    $actionName,
-                                    $input
-                                );
-                            } elseif (isset($customActionAttributes['userInput'])) {
-                                $testSteps .= sprintf(
-                                    "\t\t$%s->%s(\"%s\");\n",
-                                    $actor,
-                                    $actionName,
-                                    $customActionAttributes['userInput']
-                                );
-                            } elseif (isset($customActionAttributes['parameter'])) {
-                                $testSteps .= sprintf(
-                                    "\t\t$%s->%s(%s);\n",
-                                    $actor,
-                                    $actionName,
-                                    $customActionAttributes['parameter']
-                                );
-                            } else {
-                                $testSteps .= sprintf("\t\t$%s->%s();\n", $actor, $actionName);
-                            }
-                        }
+                        $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input, $parameter);
                     }
             }
         }
@@ -1221,7 +702,7 @@ class TestGenerator
         $outputString = $inputString;
         $replaced = false;
 
-        // Chesk for Cest-scope variables first, stricter regex match.
+        // Check for Cest-scope variables first, stricter regex match.
         preg_match_all("/\\$\\$[\w.]+\\$\\$/", $outputString, $matches);
         if (!empty($matches)) {
             foreach ($matches[0] as $match) {
@@ -1375,8 +856,7 @@ class TestGenerator
         }
 
         $testAnnotationsPhp .= sprintf(
-            "\t * @Parameter(name = \"%s\", 
-            value=\"$%s\")\n",
+            "\t * @Parameter(name = \"%s\", value=\"$%s\")\n",
             "AcceptanceTester",
             "I"
         );
@@ -1432,4 +912,132 @@ class TestGenerator
 
         return $testPhp;
     }
+
+    /**
+     * Add uniqueness function call to input string based on regex pattern.
+     *
+     * @param string $input
+     * @return string
+     */
+    private function addUniquenessFunctionCall($input)
+    {
+        $output = '';
+
+        preg_match('/' . DataObjectHandler::UNIQUENESS_FUNCTION .'\("[\w]+.[\w]+"\)/', $input, $matches);
+        if (!empty($matches)) {
+            $parts = preg_split('/' . DataObjectHandler::UNIQUENESS_FUNCTION . '\("[\w]+.[\w]+"\)/', $input, -1);
+            foreach ($parts as $part) {
+                if (!$part) {
+                    if (!empty($output)) {
+                        $output .= '.';
+                    }
+                    $output .= $matches[0];
+                } else {
+                    if (!empty($output)) {
+                        $output .= '.';
+                    }
+                    $output .= sprintf("\"%s\"", $part);
+                }
+            }
+        } else {
+            $output = $this->wrapWithSingleQuotes($input);
+        }
+
+        return $output;
+    }
+
+    /**
+     * Wrap input string with single quotes.
+     *
+     * @param string $input
+     * @return string
+     */
+    private function wrapWithSingleQuotes($input)
+    {
+        $input = str_replace("'", '"', $input);
+        return sprintf("'%s'", $input);
+    }
+
+    /**
+     * Strip beginning and ending quotes of input string.
+     *
+     * @param string $input
+     * @return string
+     */
+    private function stripWrappedQuotes($input)
+    {
+        if (substr($input, 0, 1) === '"' || substr($input, 0, 1) === "'") {
+            $input = substr($input, 1);
+        }
+        if (substr($input, -1, 1) === '"' || substr($input, -1, 1) === "'") {
+            $input = substr($input, 0, -1);
+        }
+        return $input;
+    }
+
+    /**
+     * Add dollar sign at the beginning of input string.
+     *
+     * @param string $input
+     * @return string
+     */
+    private function addDollarSign($input)
+    {
+        return sprintf("$%s", $input);
+    }
+
+    // @codingStandardsIgnoreStart
+    /**
+     * Wrap parameters into a function call.
+     *
+     * @param string $actor
+     * @param string $action
+     * @param array ...$args
+     * @return string
+     */
+    private function wrapFunctionCall($actor, $action, ...$args)
+    {
+        $isFirst = true;
+        $output = sprintf("\t\t$%s->%s(", $actor, $action);
+        for ($i = 0; $i < count($args); $i++) {
+            if (null === $args[$i]) {
+                continue;
+            }
+            if (!$isFirst) {
+                $output .= ', ';
+            }
+            $output .= $args[$i];
+            $isFirst = false;
+        }
+        $output .= ");\n";
+        return $output;
+    }
+
+    /**
+     * Wrap parameters into a function call with a return value.
+     *
+     * @param string $returnVariable
+     * @param string $actor
+     * @param string $action
+     * @param array ...$args
+     * @return string
+     */
+    private function wrapFunctionCallWithReturnValue($returnVariable, $actor, $action, ...$args)
+    {
+        $isFirst = true;
+        $output = sprintf("\t\t$%s = $%s->%s(", $returnVariable, $actor, $action);
+        for ($i = 0; $i < count($args); $i++) {
+            if (null === $args[$i]) {
+                continue;
+            }
+            if (!$isFirst) {
+                $output .= ', ';
+            }
+            $output .= $args[$i];
+            $isFirst = false;
+        }
+        $output .= ");\n";
+        return $output;
+    }
+    // @codingStandardsIgnoreEnd
 }
