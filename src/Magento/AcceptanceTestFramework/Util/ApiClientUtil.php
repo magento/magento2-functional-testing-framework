@@ -44,6 +44,13 @@ class ApiClientUtil
     private $jsonBody;
 
     /**
+     * A list of successful HTTP responses that will not trigger an exception
+     *
+     * @var int[] SUCCESSFUL_HTTP_CODES
+     */
+    const SUCCESSFUL_HTTP_CODES = [200, 201, 202, 203, 204, 205];
+
+    /**
      * ApiClientUtil constructor.
      * @param string $apiPath
      * @param array $headers
@@ -65,6 +72,7 @@ class ApiClientUtil
      *
      * @param bool $verbose
      * @return string|bool
+     * @throws \Exception
      */
     public function submit($verbose = false)
     {
@@ -95,20 +103,11 @@ class ApiClientUtil
             CURLOPT_URL => $url . $this->apiPath
         ]);
 
-        try {
-            $response = curl_exec($this->curl);
-            if ($response === false) {
-                throw new \Exception(curl_error($this->curl), curl_errno($this->curl));
-            }
-        } catch (\Exception $e) {
-            trigger_error(
-                sprintf(
-                    'Curl failed with error #%d: %s',
-                    $e->getCode(),
-                    $e->getMessage()
-                ),
-                E_USER_ERROR
-            );
+        $response = curl_exec($this->curl);
+        $http_code = curl_getinfo($this->curl, CURLINFO_HTTP_CODE);
+
+        if ($response === false || !in_array($http_code, ApiClientUtil::SUCCESSFUL_HTTP_CODES)) {
+            throw new \Exception('API returned response code: ' . $http_code . '    Response:' . $response);
         }
 
         curl_close($this->curl);

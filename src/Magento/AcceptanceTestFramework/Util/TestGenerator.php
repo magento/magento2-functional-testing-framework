@@ -389,6 +389,12 @@ class TestGenerator
                 case "createData":
                     $entity = $customActionAttributes['entity'];
                     $key = $steps->getMergeKey();
+                    //Add an informative statement to help the user debug test runs
+                    $testSteps .= sprintf(
+                        "\t\t$%s->amGoingTo(\"create entity that has the mergeKey: %s\");\n",
+                        $actor,
+                        $key
+                    );
                     //Get Entity from Static data.
                     $testSteps .= sprintf(
                         "\t\t$%s = DataObjectHandler::getInstance()->getObject(\"%s\");\n",
@@ -462,6 +468,12 @@ class TestGenerator
                     break;
                 case "deleteData":
                     $key = $customActionAttributes['createDataKey'];
+                    //Add an informative statement to help the user debug test runs
+                    $testSteps .= sprintf(
+                        "\t\t$%s->amGoingTo(\"delete entity that has the createDataKey: %s\");\n",
+                        $actor,
+                        $key
+                    );
 
                     if ($hookObject) {
                         $testSteps .= sprintf("\t\t\$this->%s->deleteEntity();\n", $key);
