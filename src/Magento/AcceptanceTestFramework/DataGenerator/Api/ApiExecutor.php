@@ -29,12 +29,14 @@ class ApiExecutor
 
     /**
      * The entity object data being created, updated, or deleted.
+     *
      * @var EntityDataObject $entityObject
      */
     private $entityObject;
 
     /**
      * The json definitions used to map the operation.
+     *
      * @var JsonDefinition $jsonDefinition
      */
     private $jsonDefinition;
@@ -42,9 +44,18 @@ class ApiExecutor
     /**
      * The array of dependentEntities this class can be given. When finding linked entities, APIExecutor
      * uses this repository before looking for static data.
+     *
      * @var array
      */
     private $dependentEntities = [];
+
+    /**
+     * The array of entity name and number of objects being created,
+     * we don't need to track objects in update and delete operations.
+     *
+     * @var array
+     */
+    private static $entitySequences = [];
 
     /**
      * ApiSubObject constructor.
@@ -82,7 +93,10 @@ class ApiExecutor
 
         if (!empty($matchedParams)) {
             foreach ($matchedParams[0] as $paramKey => $paramValue) {
-                $param = $this->entityObject->getDataByName($matchedParams[1][$paramKey]);
+                $param = $this->entityObject->getDataByName(
+                    $matchedParams[1][$paramKey],
+                    EntityDataObject::CEST_UNIQUE_VALUE
+                );
                 $apiClientUrl = str_replace($paramValue, $param, $apiClientUrl);
             }
         }
@@ -139,6 +153,7 @@ class ApiExecutor
     private function convertJsonArray($entityObject, $jsonArrayMetadata)
     {
         $jsonArray = [];
+        self::incrementSequence($entityObject->getName());
 
         foreach ($jsonArrayMetadata as $jsonElement) {
             if ($jsonElement->getType() == JsonObjectExtractor::JSON_OBJECT_OBJ_NAME) {
@@ -149,23 +164,21 @@ class ApiExecutor
             $jsonElementType = $jsonElement->getValue();
 
             if (in_array($jsonElementType, ApiExecutor::PRIMITIVE_TYPES)) {
-                $elementData = $entityObject->getDataByName($jsonElement->getKey());
-                $elementUniquenessData = $entityObject->getUniquenessDataByName($jsonElement->getKey());
-                if ($elementUniquenessData) {
-                    if ($elementUniquenessData == 'prefix') {
-                        if (DataObjectHandler::UNIQUENESS_FUNCTION == 'msq') {
-                            $elementData = msq($entityObject->getName().'.' . $jsonElement->getKey()).$elementData;
-                        } elseif (DataObjectHandler::UNIQUENESS_FUNCTION == 'msqs') {
-                            $elementData = msqs($entityObject->getName().'.' . $jsonElement->getKey()).$elementData;
-                        }
-                    } elseif ($elementUniquenessData == 'suffix') {
-                        if (DataObjectHandler::UNIQUENESS_FUNCTION == 'msq') {
-                            $elementData .= msq($entityObject->getName() . '.'. $jsonElement->getKey());
-                        } elseif (DataObjectHandler::UNIQUENESS_FUNCTION == 'msqs') {
-                            $elementData .= msqs($entityObject->getName() . '.'. $jsonElement->getKey());
-                        }
+                $elementData = $entityObject->getDataByName(
+                    $jsonElement->getKey(),
+                    EntityDataObject::CEST_UNIQUE_VALUE
+                );
+
+                if (array_key_exists($jsonElement->getKey(), $entityObject->getUniquenessData())) {
+                    $uniqueData = $entityObject->getUniquenessDataByName($jsonElement->getKey());
+                    if ($uniqueData === 'suffix') {
+                        $elementData .= (string)self::getSequence($entityObject->getName());
+                    } else {
+                        $elementData = (string)self::getSequence($entityObject->getName())
+                            . $elementData;
                     }
                 }
+
                 $jsonArray[$jsonElement->getKey()] = $this->castValue($jsonElementType, $elementData);
             } else {
                 $entityNamesOfType = $entityObject->getLinkedEntitiesOfType($jsonElementType);
@@ -240,6 +253,35 @@ class ApiExecutor
         $jsonMetadataArray = $this->convertJsonArray($this->entityObject, $this->jsonDefinition->getJsonMetadata());
 
         return json_encode($jsonMetadataArray, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Increment an entity's sequence number by 1.
+     *
+     * @param string $entityName
+     * @return void
+     */
+    private static function incrementSequence($entityName)
+    {
+        if (array_key_exists($entityName, self::$entitySequences)) {
+            self::$entitySequences[$entityName]++;
+        } else {
+            self::$entitySequences[$entityName] = 1;
+        }
+    }
+
+    /**
+     * Get the current sequence number for an entity.
+     *
+     * @param string $entityName
+     * @return int
+     */
+    private static function getSequence($entityName)
+    {
+        if (array_key_exists($entityName, self::$entitySequences)) {
+            return self::$entitySequences[$entityName];
+        }
+        return 0;
     }
 
     // @codingStandardsIgnoreStart

@@ -6,6 +6,7 @@
 
 namespace Magento\AcceptanceTestFramework\Util;
 
+use Magento\AcceptanceTestFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\AcceptanceTestFramework\Test\Handlers\CestObjectHandler;
 use Magento\AcceptanceTestFramework\Test\Objects\ActionObject;
 use Magento\AcceptanceTestFramework\DataGenerator\Handlers\DataObjectHandler;
@@ -317,8 +318,17 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['parameterArray'])) {
-                $parameterArray = $customActionAttributes['parameterArray'];
+                $paramsWithUniqueness = [];
+                $params = explode(
+                    ',',
+                    $this->stripWrappedQuotes(rtrim(ltrim($customActionAttributes['parameterArray'], '['), ']'))
+                );
+                foreach ($params as $param) {
+                    $paramsWithUniqueness[] = $this->addUniquenessFunctionCall($param);
+                }
+                $parameterArray = '[' . implode(',', $paramsWithUniqueness) .']';
             }
+
             if (isset($customActionAttributes['requiredAction'])) {
                 $requiredAction = $customActionAttributes['requiredAction'];
             }
@@ -425,13 +435,14 @@ class TestGenerator
                     if (!empty($requiredEntities)) {
                         $testSteps .= sprintf(
                             "\t\t$%s = new EntityDataObject($%s->getName(), $%s->getType(), $%s->getData()
-                            , array_merge($%s->getLinkedEntities(), [%s]));\n",
+                            , array_merge($%s->getLinkedEntities(), [%s]), $%s->getUniquenessData());\n",
                             $entity,
                             $entity,
                             $entity,
                             $entity,
                             $entity,
-                            implode(", ", $requiredEntities)
+                            implode(", ", $requiredEntities),
+                            $entity
                         );
 
                         if ($hookObject) {
@@ -489,16 +500,18 @@ class TestGenerator
                     }
                     $entityData .= ']';
                     if ($hookObject) {
+                        // no uniqueness attributes for data allowed within entity defined in cest.
                         $testSteps .= sprintf(
-                            "\t\t\$this->%s = new EntityDataObject(\"%s\",\"%s\",%s,null);\n",
+                            "\t\t\$this->%s = new EntityDataObject(\"%s\",\"%s\",%s,null,null);\n",
                             $customActionAttributes['name'],
                             $customActionAttributes['name'],
                             $customActionAttributes['type'],
                             $entityData
                         );
                     } else {
+                        // no uniqueness attributes for data allowed within entity defined in cest.
                         $testSteps .= sprintf(
-                            "\t\t$%s = new EntityDataObject(\"%s\",\"%s\",%s,null);\n",
+                            "\t\t$%s = new EntityDataObject(\"%s\",\"%s\",%s,null,null);\n",
                             $customActionAttributes['name'],
                             $customActionAttributes['name'],
                             $customActionAttributes['type'],
@@ -602,13 +615,17 @@ class TestGenerator
                 case "grabAttributeFrom":
                 case "grabMultiple":
                 case "grabFromCurrentUrl":
-                    $testSteps .= $this->wrapFunctionCallWithReturnValue(
-                        $returnVariable,
-                        $actor,
-                        $actionName,
-                        $selector,
-                        $input
-                    );
+                    if (isset($returnVariable)) {
+                        $testSteps .= $this->wrapFunctionCallWithReturnValue(
+                            $returnVariable,
+                            $actor,
+                            $actionName,
+                            $selector,
+                            $input
+                        );
+                    } else {
+                        $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input);
+                    }
                     break;
                 case "grabValueFrom":
                     if (isset($returnVariable)) {
@@ -639,6 +656,7 @@ class TestGenerator
                     );
                     break;
                 case "seeLink":
+                case "dontSeeLink":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $input, $url);
                     break;
                 case "setCookie":
@@ -666,7 +684,6 @@ class TestGenerator
                 case "loadSessionSnapshot":
                 case "seeInField":
                 case "seeOptionIsSelected":
-                case "dontSeeLink":
                 case "unselectOption":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input);
                     break;
@@ -947,21 +964,18 @@ class TestGenerator
     {
         $output = '';
 
-        preg_match('/' . DataObjectHandler::UNIQUENESS_FUNCTION .'\("[\w]+.[\w]+"\)/', $input, $matches);
+        preg_match('/' . EntityDataObject::CEST_UNIQUE_FUNCTION .'\("[\w]+"\)/', $input, $matches);
         if (!empty($matches)) {
-            $parts = preg_split('/' . DataObjectHandler::UNIQUENESS_FUNCTION . '\("[\w]+.[\w]+"\)/', $input, -1);
-            foreach ($parts as $part) {
-                if (!$part) {
-                    if (!empty($output)) {
-                        $output .= '.';
-                    }
-                    $output .= $matches[0];
-                } else {
-                    if (!empty($output)) {
-                        $output .= '.';
-                    }
-                    $output .= sprintf("\"%s\"", $part);
-                }
+            $parts = preg_split('/' . EntityDataObject::CEST_UNIQUE_FUNCTION . '\("[\w]+"\)/', $input, -1);
+            for ($i = 0; $i < count($parts); $i++) {
+                $parts[$i] = $this->stripWrappedQuotes($parts[$i]);
+            }
+            if (!empty($parts[0])) {
+                $output = $this->wrapWithSingleQuotes($parts[0]);
+            }
+            $output .= $output === '' ? $matches[0] : '.' . $matches[0];
+            if (!empty($parts[1])) {
+                $output .= '.' . $this->wrapWithSingleQuotes($parts[1]);
             }
         } else {
             $output = $this->wrapWithSingleQuotes($input);
@@ -978,6 +992,9 @@ class TestGenerator
      */
     private function wrapWithSingleQuotes($input)
     {
+        if (empty($input)) {
+            return '';
+        }
         $input = addslashes($input);
         return sprintf('"%s"', $input);
     }
@@ -990,6 +1007,9 @@ class TestGenerator
      */
     private function stripWrappedQuotes($input)
     {
+        if (empty($input)) {
+            return '';
+        }
         if (substr($input, 0, 1) === '"' || substr($input, 0, 1) === "'") {
             $input = substr($input, 1);
         }

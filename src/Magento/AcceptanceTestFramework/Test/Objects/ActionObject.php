@@ -12,7 +12,6 @@ use Magento\AcceptanceTestFramework\Page\Objects\PageObject;
 use Magento\AcceptanceTestFramework\Page\Objects\SectionObject;
 use Magento\AcceptanceTestFramework\Page\Handlers\PageObjectHandler;
 use Magento\AcceptanceTestFramework\Page\Handlers\SectionObjectHandler;
-use Magento\AcceptanceTestFramework\Test\Managers\CestArrayProcessor;
 
 /**
  * Class ActionObject
@@ -333,14 +332,14 @@ class ActionObject
                         $parts = explode('[', $objField);
                         $name = $parts[0];
                         $index = str_replace(']', '', $parts[1]);
-                        $replacement = $obj->getDataByName($name)[$index];
+                        $replacement = $obj->getDataByName(
+                            $name,
+                            EntityDataObject::CEST_UNIQUE_NOTATION
+                        )[$index];
                     } else {
                         // Access <data></data>
-                        $replacement = $obj->getDataByName($objField);
+                        $replacement = $obj->getDataByName($objField, EntityDataObject::CEST_UNIQUE_NOTATION);
                     }
-
-                    $replacement = $this->resolveEntityDataUniquenessReference($replacement, $obj, $objField);
-
                     break;
             }
 
@@ -358,28 +357,6 @@ class ActionObject
             $outputString = str_replace($match, $replacement, $outputString);
         }
         return $outputString;
-    }
-
-    /**
-     * Method which resolves data references requiring uniqueness for test idempotentcy
-     *
-     * @param string $reference
-     * @param EntityDataObject $entityDataObject
-     * @param string $entityKey
-     * @return string
-     */
-    private function resolveEntityDataUniquenessReference($reference, $entityDataObject, $entityKey)
-    {
-        $uniquenessData = $entityDataObject->getUniquenessDataByName($entityKey);
-        $entityName = $entityDataObject->getName();
-
-        if ($uniquenessData == DataObjectHandler::DATA_ELEMENT_UNIQUENESS_ATTR_VALUE_PREFIX) {
-            $reference =
-                DataObjectHandler::UNIQUENESS_FUNCTION . '("' . $entityName . '.' . $entityKey . '")' . $reference;
-        } elseif ($uniquenessData == DataObjectHandler::DATA_ELEMENT_UNIQUENESS_ATTR_VALUE_SUFFIX) {
-            $reference .= DataObjectHandler::UNIQUENESS_FUNCTION . '("' . $entityName . '.' . $entityKey . '")';
-        }
-        return $reference;
     }
 
     /**

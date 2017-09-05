@@ -37,7 +37,6 @@ class DataObjectHandler implements ObjectHandlerInterface
     const DATA_ELEMENT_UNIQUENESS_ATTR = 'unique';
     const DATA_ELEMENT_UNIQUENESS_ATTR_VALUE_PREFIX = 'prefix';
     const DATA_ELEMENT_UNIQUENESS_ATTR_VALUE_SUFFIX = 'suffix';
-    const UNIQUENESS_FUNCTION = 'msq';
 
     const ARRAY_VALUES = 'array';
     const ARRAY_ELEMENT_KEY = 'key';
@@ -130,6 +129,7 @@ class DataObjectHandler implements ObjectHandlerInterface
                 self::ENV_DATA_OBJECT_NAME,
                 'environment',
                 $envData,
+                null,
                 null
             );
             $this->data[$envDataObject->getName()] = $envDataObject;
