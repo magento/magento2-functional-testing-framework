@@ -79,6 +79,7 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute type="xs:boolean" name="parameterized" use="optional"/>
             <xs:attributeGroup ref="removeAttribute"/>
         </xs:complexType>
     </xs:element>

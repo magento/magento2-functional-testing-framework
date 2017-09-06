@@ -22,6 +22,7 @@ class SectionObjectHandler implements ObjectHandlerInterface
     const ELEMENT_TYPE_ATTR = 'type';
     const ELEMENT_LOCATOR_ATTR = 'locator';
     const ELEMENT_TIMEOUT_ATTR = 'timeout';
+    const ELEMENT_PARAMETERIZED = 'parameterized';
 
     /**
      * Singleton variable instance of class
@@ -103,12 +104,14 @@ class SectionObjectHandler implements ObjectHandlerInterface
                 $elementType = $elementData[SectionObjectHandler::ELEMENT_TYPE_ATTR];
                 $elementLocator = $elementData[SectionObjectHandler::ELEMENT_LOCATOR_ATTR];
                 $elementTimeout = $elementData[SectionObjectHandler::ELEMENT_TIMEOUT_ATTR] ?? null;
+                $elementParameterized = $elementData[SectionObjectHandler::ELEMENT_PARAMETERIZED] ?? false;
 
                 $elements[$elementName] = new ElementObject(
                     $elementName,
                     $elementType,
                     $elementLocator,
-                    $elementTimeout
+                    $elementTimeout,
+                    $elementParameterized
                 );
             }
 

@@ -293,6 +293,30 @@ class TestGenerator
             $button = null;
             $parameter = null;
 
+            //Resolve $input$ and $$input$$ replacement in url, selector, and userInput.
+            if (isset($customActionAttributes['url'])) {
+                $customActionAttributes['url'] = $this->resolveTestVariable(
+                    $customActionAttributes['url'],
+                    true
+                );
+            }
+
+            if (isset($customActionAttributes['userInput'])) {
+                $customActionAttributes['userInput'] = $this->resolveTestVariable(
+                    $customActionAttributes['userInput'],
+                    true
+                );
+            }
+
+            if (isset($customActionAttributes['selector'])) {
+                $customActionAttributes['selector'] = $this->resolveTestVariable(
+                    $customActionAttributes['selector'],
+                    true
+                );
+            }
+
+            //Resume step building
+
             if (isset($customActionAttributes['returnVariable'])) {
                 $returnVariable = $customActionAttributes['returnVariable'];
             }
@@ -482,10 +506,10 @@ class TestGenerator
                     }
                     break;
                 case "entity":
-                    $entityData = "[";
+                    $entityData = '[';
                     foreach ($stepsData[$customActionAttributes['name']] as $dataKey => $dataValue) {
-                        $variableReplace = $this->resolveTestVariable($dataValue);
-                        $entityData .= sprintf("'%s' => %s, ", $dataKey, $variableReplace);
+                        $variableReplace = $this->resolveTestVariable($dataValue, true);
+                        $entityData .= sprintf("'%s' => '%s', ", $dataKey, $variableReplace);
                     }
                     $entityData .= ']';
                     if ($hookObject) {
@@ -705,42 +729,54 @@ class TestGenerator
     }
 
     /**
-     * Resolves regex for given inputString.
+     * Resolves replacement of $input$ and $$input$$ in given string.
+     * Can be given a boolean to surround replacement with quote breaking.
      * @param string $inputString
+     * @param bool $quoteBreak
      * @return string
+     * @throws \Exception
      */
-    private function resolveTestVariable($inputString)
+    private function resolveTestVariable($inputString, $quoteBreak = false)
     {
         $outputString = $inputString;
         $replaced = false;
 
         // Check for Cest-scope variables first, stricter regex match.
         preg_match_all("/\\$\\$[\w.]+\\$\\$/", $outputString, $matches);
-        if (!empty($matches)) {
-            foreach ($matches[0] as $match) {
-                $replacement = null;
-                $variable = $this->stripAndSplitReference($match, '$$');
-                $replacement = sprintf("\$this->%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
-                $outputString = str_replace($match, $replacement, $outputString);
-                $replaced = true;
+        foreach ($matches[0] as $match) {
+            $replacement = null;
+            $variable = $this->stripAndSplitReference($match, '$$');
+            if (count($variable) != 2) {
+                throw new \Exception(
+                    "Invalid Persisted Entity Reference: " . $match .
+                    ". Hook persisted entity references must follow \$\$entityMergeKey.field\$\$ format."
+                );
             }
+            $replacement = sprintf("\$this->%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
+            if ($quoteBreak) {
+                $replacement = "' . " . $replacement . " . '";
+            }
+            $outputString = str_replace($match, $replacement, $outputString);
+            $replaced = true;
         }
 
         // Check Test-scope variables
         preg_match_all("/\\$[\w.]+\\$/", $outputString, $matches);
-        if (!empty($matches)) {
-            foreach ($matches[0] as $match) {
-                $replacement = null;
-                $variable = $this->stripAndSplitReference($match, '$');
-                $replacement = sprintf("$%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
-                $outputString = str_replace($match, $replacement, $outputString);
-                $replaced = true;
+        foreach ($matches[0] as $match) {
+            $replacement = null;
+            $variable = $this->stripAndSplitReference($match, '$');
+            if (count($variable) != 2) {
+                throw new \Exception(
+                    "Invalid Persisted Entity Reference: " . $match .
+                    ". Test persisted entity references must follow \$entityMergeKey.field\$ format."
+                );
             }
-        }
-
-        // If no replacement was made, assume it is a string literal and append single quotes.
-        if (!$replaced) {
-            return "'" . $outputString ."'";
+            $replacement = sprintf("$%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
+            if ($quoteBreak) {
+                $replacement = "' . " . $replacement . " . '";
+            }
+            $outputString = str_replace($match, $replacement, $outputString);
+            $replaced = true;
         }
 
         return $outputString;
@@ -966,7 +1002,6 @@ class TestGenerator
      */
     private function wrapWithSingleQuotes($input)
     {
-        $input = str_replace("'", '"', $input);
         return sprintf("'%s'", $input);
     }
 

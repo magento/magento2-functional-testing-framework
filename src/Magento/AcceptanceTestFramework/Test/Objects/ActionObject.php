@@ -12,6 +12,7 @@ use Magento\AcceptanceTestFramework\Page\Objects\PageObject;
 use Magento\AcceptanceTestFramework\Page\Objects\SectionObject;
 use Magento\AcceptanceTestFramework\Page\Handlers\PageObjectHandler;
 use Magento\AcceptanceTestFramework\Page\Handlers\SectionObjectHandler;
+use Magento\AcceptanceTestFramework\Test\Managers\CestArrayProcessor;
 
 /**
  * Class ActionObject
@@ -22,7 +23,9 @@ class ActionObject
     const MERGE_ACTION_ORDER_AFTER = 'after';
     const ACTION_ATTRIBUTE_URL = 'url';
     const ACTION_ATTRIBUTE_SELECTOR = 'selector';
+    const ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER = '/\(.+\)/';
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/{{[\w.\[\]]+}}/';
+    const ACTION_ATTRIBUTE_VARIABLE_REGEX_NESTED = '/{{[\w.\[\]()\',${} ]+}}/';
 
     /**
      * The unique identifier for the action
@@ -246,6 +249,7 @@ class ActionObject
 
     /**
      * Return an array containing the name (before the period) and key (after the period) in a {{reference.foo}}.
+     * Also truncates variables inside parenthesis.
      *
      * @param string $reference
      * @return string[] The name and key that is referenced.
@@ -253,7 +257,29 @@ class ActionObject
     private function stripAndSplitReference($reference)
     {
         $strippedReference = str_replace('}}', '', str_replace('{{', '', $reference));
+        $strippedReference = preg_replace(
+            ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER,
+            '',
+            $strippedReference
+        );
         return explode('.', $strippedReference);
+    }
+
+    /**
+     * Returns an array containing all parameters found inside () block of test input.
+     * Returns null if no parameters were found.
+     *
+     * @param string $reference
+     * @return array|null
+     */
+    private function stripAndReturnParameters($reference)
+    {
+        preg_match(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER, $reference, $matches);
+        if (!empty($matches)) {
+            $strippedReference = str_replace(')', '', str_replace('(', '', $matches[0]));
+            return explode(',', $strippedReference);
+        }
+        return null;
     }
 
     /**
@@ -266,16 +292,24 @@ class ActionObject
      */
     private function findAndReplaceReferences($objectHandler, $inputString)
     {
-        preg_match_all(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN, $inputString, $matches);
+        //Determine if there are Parethesis and parameters. If not, use strict regex. If so, use nested regex.
+        preg_match_all(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN, $inputString, $variableMatches);
+        if (!empty($variableMatches[0])) {
+            $regex = ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN;
+        } else {
+            $regex = ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_NESTED;
+        }
+        preg_match_all($regex, $inputString, $matches);
 
         if (empty($matches[0])) {
-            return null;
+            return $inputString;
         }
 
         $outputString = $inputString;
 
         foreach ($matches[0] as $match) {
             $replacement = null;
+            $parameterized = false;
             list($objName) = $this->stripAndSplitReference($match);
 
             $obj = $objectHandler->getObject($objName);
@@ -284,11 +318,12 @@ class ActionObject
             switch (get_class($obj)) {
                 case PageObject::class:
                     $replacement = $obj->getUrl();
+                    $parameterized = $obj->isParameterized();
                     break;
                 case SectionObject::class:
                     list(,$objField) = $this->stripAndSplitReference($match);
+                    $parameterized = $obj->getElement($objField)->isParameterized();
                     $replacement = $obj->getElement($objField)->getLocator();
-                    $this->timeout = $obj->getElement($objField)->getTimeout();
                     break;
                 case (get_class($obj) == EntityDataObject::class):
                     list(,$objField) = $this->stripAndSplitReference($match);
@@ -315,10 +350,13 @@ class ActionObject
                 throw new \Exception("Could not resolve entity reference " . $inputString);
             }
 
+            //If Page or Section's Element is has parameterized = true attribute, attempt to do parameter replacement.
+            if ($parameterized) {
+                $parameterList = $this->stripAndReturnParameters($match);
+                $replacement = $this->matchParameterReferences($replacement, $parameterList);
+            }
             $outputString = str_replace($match, $replacement, $outputString);
-
         }
-
         return $outputString;
     }
 
@@ -340,6 +378,46 @@ class ActionObject
                 DataObjectHandler::UNIQUENESS_FUNCTION . '("' . $entityName . '.' . $entityKey . '")' . $reference;
         } elseif ($uniquenessData == DataObjectHandler::DATA_ELEMENT_UNIQUENESS_ATTR_VALUE_SUFFIX) {
             $reference .= DataObjectHandler::UNIQUENESS_FUNCTION . '("' . $entityName . '.' . $entityKey . '")';
+        }
+        return $reference;
+    }
+
+    /**
+     * Finds all {{var}} occurrences in reference, and replaces them in sequence with parameters list given.
+     * Parameter list given is also resolved, attempting to match {{data.field}} references.
+     *
+     * @param string $reference
+     * @param array $parameters
+     * @return string
+     * @throws \Exception
+     */
+    private function matchParameterReferences($reference, $parameters)
+    {
+        preg_match_all('/{{[\w.]+}}/', $reference, $varMatches);
+        if (count($varMatches[0]) > count($parameters)) {
+            throw new \Exception(
+                "Parameter Resolution Failed: Not enough parameters given for reference " .
+                $reference . ". Parameters Given: " . implode(",", $parameters)
+            );
+        } elseif (count($varMatches[0]) < count($parameters)) {
+            throw new \Exception(
+                "Parameter Resolution Failed: Too many parameters given for reference " .
+                $reference . ". Parameters Given: " . implode(",", $parameters)
+            );
+        }
+
+        //Attempt to Resolve {{data}} references to actual output.
+        $resolvedParameters = [];
+        foreach ($parameters as $parameter) {
+            $resolvedParameters[] = $this->findAndReplaceReferences(
+                DataObjectHandler::getInstance(),
+                $parameter
+            );
+        }
+
+        $resolveIndex = 0;
+        foreach ($varMatches[0] as $var) {
+            $reference = str_replace($var, $resolvedParameters[$resolveIndex++], $reference);
         }
         return $reference;
     }

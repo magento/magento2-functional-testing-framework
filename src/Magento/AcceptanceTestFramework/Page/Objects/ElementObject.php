@@ -41,18 +41,27 @@ class ElementObject
     private $timeout;
 
     /**
+     * Section element locator is parameterized
+     *
+     * @var bool $parameterized
+     */
+    private $parameterized;
+
+    /**
      * ElementObject constructor.
      * @param string $name
      * @param string $type
      * @param string $locator
      * @param string $timeout
+     * @param bool $parameterized
      */
-    public function __construct($name, $type, $locator, $timeout)
+    public function __construct($name, $type, $locator, $timeout, $parameterized)
     {
         $this->name = $name;
         $this->type = $type;
         $this->locator = $locator;
         $this->timeout = $timeout;
+        $this->parameterized = $parameterized;
     }
 
     /**
@@ -97,5 +106,16 @@ class ElementObject
         }
 
         return (int)$this->timeout;
+    }
+
+    /**
+     * Determines if the element's selector is parameterized. Based on $parameterized property.
+     *
+     * @return bool
+     */
+
+    public function isParameterized()
+    {
+        return $this->parameterized;
     }
 }

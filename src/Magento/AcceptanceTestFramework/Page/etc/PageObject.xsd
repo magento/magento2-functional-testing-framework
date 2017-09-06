@@ -49,13 +49,6 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute type="notEmptyType" name="urlPathVariables" use="optional">
-                <xs:annotation>
-                    <xs:documentation>
-                        Optional variable names separated by "," which are used to substitute %s in urlPath attribute.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
             <xs:attribute type="notEmptyType" name="module" use="required">
                 <xs:annotation>
                     <xs:documentation>
@@ -63,6 +56,7 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute type="xs:boolean" name="parameterized" use="optional"/>
             <xs:attributeGroup ref="removeAttribute"/>
         </xs:complexType>
     </xs:element>
