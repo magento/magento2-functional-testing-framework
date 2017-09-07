@@ -1,8 +1,8 @@
 {
-    "name": "magento/magento2-acceptance-test-framework",
+    "name": "magento/magento2-functional-testing-framework",
     "type": "library",
-    "description": "Magento Acceptance Testing Framework",
-    "keywords": ["magento", "automation", "acceptance", "testing"],
+    "description": "Magento2 Functional Testing Framework",
+    "keywords": ["magento", "automation", "functional", "testing"],
     "require": {
         "php": "~7.0",
         "codeception/codeception": "2.2|2.3",
@@ -15,8 +15,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Magento\\AcceptanceTestFramework\\": [
-                "src/Magento/AcceptanceTestFramework"
+            "Magento\\FunctionalTestingFramework\\": [
+                "src/Magento/FunctionalTestingFramework"
             ]
         }
     }

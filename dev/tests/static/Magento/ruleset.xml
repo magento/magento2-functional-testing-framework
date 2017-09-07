@@ -5,8 +5,8 @@
  * See COPYING.txt for license details.
  */
 -->
-<ruleset name="MagentoAcceptanceTestFramework">
-    <description>Custom Magento Acceptance Test Framework coding standard.</description>
+<ruleset name="Magento2FunctionalTestingFramework">
+    <description>Custom Magento2 Functional Testing Framework coding standard.</description>
 
     <rule ref="PSR2"/>
 
