@@ -6,13 +6,16 @@
 
 namespace Magento\FunctionalTestingFramework\Helper;
 
+use Magento\FunctionalTestingFramework\Module\MagentoWebDriver;
+use Codeception\Module;
+
 /**
  * Class Acceptance
  *
  * Define global actions
  * All public methods declared in helper class will be available in $I
  */
-class Acceptance extends \Codeception\Module
+class Acceptance extends Module
 {
     /**
      * Reconfig WebDriver.
@@ -23,8 +26,7 @@ class Acceptance extends \Codeception\Module
      */
     public function changeConfiguration($config, $value)
     {
-        $this->getModule(\Magento\FunctionalTestingFramework\Module\MagentoWebDriver::class)
-            ->_reconfigure([$config => $value]);
+        $this->getModule(MagentoWebDriver::class)->_reconfigure([$config => $value]);
     }
 
     /**
@@ -35,6 +37,6 @@ class Acceptance extends \Codeception\Module
      */
     public function getConfiguration($config)
     {
-        return $this->getModule(\Magento\FunctionalTestingFramework\Module\MagentoWebDriver::class)->_getConfig($config);
+        return $this->getModule(MagentoWebDriver::class)->_getConfig($config);
     }
 }

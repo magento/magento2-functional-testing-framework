@@ -7,6 +7,8 @@ namespace Magento\FunctionalTestingFramework\ObjectManager\Config;
 
 use Magento\FunctionalTestingFramework\ObjectManager\DefinitionInterface;
 use Magento\FunctionalTestingFramework\ObjectManager\RelationsInterface;
+use Magento\FunctionalTestingFramework\ObjectManager\Definition\Runtime as DefinitionRuntime;
+use Magento\FunctionalTestingFramework\ObjectManager\Relations\Runtime as RelationsRuntime;
 
 /**
  * Class Config
@@ -76,8 +78,8 @@ class Config implements \Magento\FunctionalTestingFramework\ObjectManager\Config
      */
     public function __construct(RelationsInterface $relations = null, DefinitionInterface $definitions = null)
     {
-        $this->relations = $relations ? : new \Magento\FunctionalTestingFramework\ObjectManager\Relations\Runtime();
-        $this->definitions = $definitions ? : new \Magento\FunctionalTestingFramework\ObjectManager\Definition\Runtime();
+        $this->relations = $relations ? : new RelationsRuntime();
+        $this->definitions = $definitions ? : new DefinitionRuntime();
     }
 
     /**
