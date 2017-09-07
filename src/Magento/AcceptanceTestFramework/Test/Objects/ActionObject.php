@@ -293,8 +293,8 @@ class ActionObject
     private function findAndReplaceReferences($objectHandler, $inputString)
     {
         //Determine if there are Parethesis and parameters. If not, use strict regex. If so, use nested regex.
-        preg_match_all(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN, $inputString, $variableMatches);
-        if (!empty($variableMatches[0])) {
+        preg_match_all(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER, $inputString, $variableMatches);
+        if (empty($variableMatches[0])) {
             $regex = ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN;
         } else {
             $regex = ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_NESTED;
