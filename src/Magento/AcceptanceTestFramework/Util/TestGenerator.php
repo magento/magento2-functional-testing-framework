@@ -293,30 +293,6 @@ class TestGenerator
             $button = null;
             $parameter = null;
 
-            //Resolve $input$ and $$input$$ replacement in url, selector, and userInput.
-            if (isset($customActionAttributes['url'])) {
-                $customActionAttributes['url'] = $this->resolveTestVariable(
-                    $customActionAttributes['url'],
-                    true
-                );
-            }
-
-            if (isset($customActionAttributes['userInput'])) {
-                $customActionAttributes['userInput'] = $this->resolveTestVariable(
-                    $customActionAttributes['userInput'],
-                    true
-                );
-            }
-
-            if (isset($customActionAttributes['selector'])) {
-                $customActionAttributes['selector'] = $this->resolveTestVariable(
-                    $customActionAttributes['selector'],
-                    true
-                );
-            }
-
-            //Resume step building
-
             if (isset($customActionAttributes['returnVariable'])) {
                 $returnVariable = $customActionAttributes['returnVariable'];
             }
@@ -754,7 +730,7 @@ class TestGenerator
             }
             $replacement = sprintf("\$this->%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
             if ($quoteBreak) {
-                $replacement = "' . " . $replacement . " . '";
+                $replacement = '" . ' . $replacement . ' . "';
             }
             $outputString = str_replace($match, $replacement, $outputString);
             $replaced = true;
@@ -773,7 +749,7 @@ class TestGenerator
             }
             $replacement = sprintf("$%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
             if ($quoteBreak) {
-                $replacement = "' . " . $replacement . " . '";
+                $replacement = '" . ' . $replacement . ' . "';
             }
             $outputString = str_replace($match, $replacement, $outputString);
             $replaced = true;
@@ -1002,7 +978,8 @@ class TestGenerator
      */
     private function wrapWithSingleQuotes($input)
     {
-        return sprintf("'%s'", $input);
+        $input = addslashes($input);
+        return sprintf('"%s"', $input);
     }
 
     /**
@@ -1057,7 +1034,10 @@ class TestGenerator
             $isFirst = false;
         }
         $output .= ");\n";
-        return $output;
+
+        // TODO put in condiional to prevent unncessary quote break (i.e. there are no strings to be appended to
+        // variable call.
+        return $this->resolveTestVariable($output, true);
     }
 
     /**
@@ -1084,7 +1064,10 @@ class TestGenerator
             $isFirst = false;
         }
         $output .= ");\n";
-        return $output;
+
+        // TODO put in condiional to prevent unncessary quote break (i.e. there are no strings to be appended to
+        // variable call.
+        return $output = $this->resolveTestVariable($output, true);
     }
     // @codingStandardsIgnoreEnd
 }
