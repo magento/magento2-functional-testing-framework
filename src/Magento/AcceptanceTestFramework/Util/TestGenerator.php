@@ -485,12 +485,12 @@ class TestGenerator
                     $entityData = '[';
                     foreach ($stepsData[$customActionAttributes['name']] as $dataKey => $dataValue) {
                         $variableReplace = $this->resolveTestVariable($dataValue, true);
-                        $entityData .= sprintf("'%s' => '%s', ", $dataKey, $variableReplace);
+                        $entityData .= sprintf("\"%s\" => \"%s\", ", $dataKey, $variableReplace);
                     }
                     $entityData .= ']';
                     if ($hookObject) {
                         $testSteps .= sprintf(
-                            "\t\t\$this->%s = new EntityDataObject('%s','%s',%s,null);\n",
+                            "\t\t\$this->%s = new EntityDataObject(\"%s\",\"%s\",%s,null);\n",
                             $customActionAttributes['name'],
                             $customActionAttributes['name'],
                             $customActionAttributes['type'],
@@ -498,7 +498,7 @@ class TestGenerator
                         );
                     } else {
                         $testSteps .= sprintf(
-                            "\t\t$%s = new EntityDataObject('%s','%s',%s,null);\n",
+                            "\t\t$%s = new EntityDataObject(\"%s\",\"%s\",%s,null);\n",
                             $customActionAttributes['name'],
                             $customActionAttributes['name'],
                             $customActionAttributes['type'],
