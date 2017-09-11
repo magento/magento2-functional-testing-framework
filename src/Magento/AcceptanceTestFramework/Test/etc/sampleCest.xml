@@ -9,7 +9,9 @@
 
         <test name="sampleTest">
             <annotations />
-            <actions ref="sampleActions" mergeKey="" entity="optionalEntity"/>
+            <actionGroup ref="sampleActions" mergeKey="">
+                <argument name="category" value="myCategory" />
+            </actionGroup>
             <acceptPopup mergeKey=""/>
             <amOnPage mergeKey="" url=""/>
             <appendField selector="" userInput="" mergeKey=""/>
