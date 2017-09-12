@@ -82,12 +82,12 @@
 
     <virtualType name="Magento\FunctionalTestingFramework\Config\SchemaLocator\Page" type="Magento\FunctionalTestingFramework\Config\SchemaLocator">
         <arguments>
-            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/Page/etc/PageObject.xsd</argument>
+            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Page/etc/PageObject.xsd</argument>
         </arguments>
     </virtualType>
     <virtualType name="Magento\FunctionalTestingFramework\Config\SchemaLocator\Section" type="Magento\FunctionalTestingFramework\Config\SchemaLocator">
         <arguments>
-            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/Page/etc/SectionObject.xsd</argument>
+            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd</argument>
         </arguments>
     </virtualType>
     <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\Page" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
@@ -155,7 +155,7 @@
     </virtualType>
     <virtualType name="Magento\FunctionalTestingFramework\Config\SchemaLocator\DataProfile" type="Magento\FunctionalTestingFramework\Config\SchemaLocator">
         <arguments>
-            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/DataGenerator/etc/dataProfileSchema.xsd</argument>
+            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd</argument>
         </arguments>
     </virtualType>
     <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\DataProfile" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
@@ -188,7 +188,7 @@
     </virtualType>
     <virtualType name="Magento\FunctionalTestingFramework\Config\SchemaLocator\Metadata" type="Magento\FunctionalTestingFramework\Config\SchemaLocator">
         <arguments>
-            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/DataGenerator/etc/dataOperation.xsd</argument>
+            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/DataGenerator/etc/dataOperation.xsd</argument>
         </arguments>
     </virtualType>
     <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\Metadata" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
@@ -211,7 +211,7 @@
 
     <virtualType name="Magento\FunctionalTestingFramework\Config\SchemaLocator\TestData" type="Magento\FunctionalTestingFramework\Config\SchemaLocator">
         <arguments>
-            <argument name="schemaPath" xsi:type="string">Magento/AcceptanceTestFramework/Test/etc/testSchema.xsd</argument>
+            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd</argument>
         </arguments>
     </virtualType>
     <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\TestData" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">

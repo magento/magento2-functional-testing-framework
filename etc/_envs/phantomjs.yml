@@ -1,8 +1,8 @@
 # `phantomjs` environment config goes here
 modules:
     enabled:
-        - \Magento\AcceptanceTestFramework\Module\MagentoWebDriver
-        - \Magento\AcceptanceTestFramework\Helper\Acceptance
+        - \Magento\FunctionalTestingFramework\Module\MagentoWebDriver
+        - \Magento\FunctionalTestingFramework\Helper\Acceptance
     config:
-        \Magento\AcceptanceTestFramework\Module\MagentoWebDriver:
+        \Magento\FunctionalTestingFramework\Module\MagentoWebDriver:
             browser: phantomjs

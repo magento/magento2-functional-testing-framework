@@ -7,11 +7,11 @@ Add the package into your acceptance test project composer.json:
 ```
     {
         "require": {
-            "magento/acceptance-test-framework": "dev-master"
+            "magento/acceptance-test-framework": "dev-develop"
         }
     }
 ```
 Then run:
 ```
-    php composer.phar update
+    composer update
 ```
