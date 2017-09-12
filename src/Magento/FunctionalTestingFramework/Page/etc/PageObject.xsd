@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:annotation>
+        <xs:documentation>The definition of a page object.</xs:documentation>
+    </xs:annotation>
+
+    <xs:element name="config">
+        <xs:annotation>
+            <xs:documentation>
+                The root element for configuration data.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="page" maxOccurs="unbounded" minOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Contains sequence of ui sections in a page.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="page">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="section" maxOccurs="unbounded" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Contains sequence of ui elements.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute type="notEmptyType" name="name" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        Unique page name identifier.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="notEmptyType" name="urlPath" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        Url path (excluding the base url) for the page. Use "%s" for placeholders for variables.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="notEmptyType" name="module" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        The name of the module to which the page belongs. For example: "Magento_Catalog".
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:boolean" name="parameterized" use="optional"/>
+            <xs:attributeGroup ref="removeAttribute"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="section">
+        <xs:complexType>
+            <xs:attribute type="notEmptyType" name="name" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        Unique section name identifier.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attributeGroup ref="removeAttribute"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="notEmptyType">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:attributeGroup name="removeAttribute">
+        <xs:attribute type="xs:boolean" name="remove" use="optional" default="false">
+            <xs:annotation>
+                <xs:documentation>
+                    Set to true to remove this element during parsing.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+</xs:schema>

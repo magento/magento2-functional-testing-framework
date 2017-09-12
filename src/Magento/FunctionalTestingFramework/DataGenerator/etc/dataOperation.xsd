@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="config">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="operation" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="jsonObject" type="jsonObject" maxOccurs="unbounded" minOccurs="0"/>
+                            <xs:element name="entry" type="entry" maxOccurs="unbounded" minOccurs="0"/>
+                            <xs:element name="array" type="array" maxOccurs="unbounded" minOccurs="0"/>
+                            <xs:element name="header" type="header" maxOccurs="unbounded" minOccurs="0"/>
+                            <xs:element name="param" type="param" maxOccurs="unbounded" minOccurs="0"/>
+                        </xs:choice>
+                        <xs:attribute type="xs:string" name="name"/>
+                        <xs:attribute type="xs:string" name="dataType" use="required"/>
+                        <xs:attribute type="operationEnum" name="type" use="required"/>
+                        <xs:attribute type="xs:string" name="url"/>
+                        <xs:attribute type="xs:string" name="auth"/>
+                        <xs:attribute type="xs:string" name="method"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="jsonObject">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="entry" type="entry" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element name="array" type="array" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element name="jsonObject" type="jsonObject" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:choice>
+        <xs:attribute type="xs:string" name="key"/>
+        <xs:attribute type="xs:string" name="dataType" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="entry">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="key" use="required"/>
+                <xs:attribute type="xs:string" name="type" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="array">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="jsonObject" type="jsonObject" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element name="value" type="xs:string" maxOccurs="1" minOccurs="0"/>
+        </xs:choice>
+        <xs:attribute type="xs:string" name="key" use="required"/>
+        <xs:attribute type="xs:string" name="type" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="header">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="param" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="param">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="key" use="required"/>
+                <xs:attribute type="xs:string" name="type" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:simpleType name="operationEnum" final="restriction" >
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="create" />
+            <xs:enumeration value="delete" />
+            <xs:enumeration value="update" />
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

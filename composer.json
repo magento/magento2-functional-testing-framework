@@ -1,0 +1,21 @@
+{
+    "name": "magento/magento2-functional-testing-framework",
+    "type": "library",
+    "description": "Magento2 Functional Testing Framework",
+    "keywords": ["magento", "automation", "functional", "testing"],
+    "require": {
+        "php": "~7.0",
+        "codeception/codeception": "2.2|2.3",
+        "flow/jsonpath": ">0.2",
+        "fzaninotto/faker": "^1.6"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "1.5.3",
+        "sebastian/phpcpd": "~3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Magento\\FunctionalTestingFramework\\": ["src/Magento/FunctionalTestingFramework"]
+        }
+    }
+}

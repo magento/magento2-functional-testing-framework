@@ -1,0 +1,6 @@
+.idea
+composer.phar
+vendor/*
+.env
+_generated
+AcceptanceTester.php

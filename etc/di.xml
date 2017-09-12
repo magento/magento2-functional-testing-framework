@@ -1,0 +1,338 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../src/Magento/FunctionalTestingFramework/ObjectManager/etc/config.xsd">
+    <preference for="Magento\FunctionalTestingFramework\ObjectManagerInterface" type="Magento\FunctionalTestingFramework\ObjectManager" />
+    <preference for="Magento\FunctionalTestingFramework\ObjectManager\FactoryInterface" type="Magento\FunctionalTestingFramework\ObjectManager\Factory" />
+    <preference for="Magento\FunctionalTestingFramework\ObjectManager\ConfigInterface" type="Magento\FunctionalTestingFramework\ObjectManager\Config\Config" />
+    <preference for="Magento\FunctionalTestingFramework\Data\Argument\InterpreterInterface" type="Magento\FunctionalTestingFramework\Data\Argument\Interpreter\Composite" />
+    <preference for="Magento\FunctionalTestingFramework\Config\ReaderInterface" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem" />
+    <preference for="Magento\FunctionalTestingFramework\Config\FileResolverInterface" type="Magento\FunctionalTestingFramework\Config\FileResolver\Primary" />
+    <preference for="Magento\FunctionalTestingFramework\Config\ConverterInterface" type="Magento\FunctionalTestingFramework\Config\Converter" />
+    <preference for="Magento\FunctionalTestingFramework\Config\SchemaLocatorInterface" type="Magento\FunctionalTestingFramework\Config\SchemaLocator" />
+    <preference for="Magento\FunctionalTestingFramework\Config\ValidationStateInterface" type="Magento\FunctionalTestingFramework\Config\ValidationState" />
+    <preference for="Magento\FunctionalTestingFramework\Util\ModuleResolver\SequenceSorterInterface" type="Magento\FunctionalTestingFramework\Util\ModuleResolver\SequenceSorter" />
+
+    <type name="Magento\FunctionalTestingFramework\Data\Argument\Interpreter\Composite">
+        <arguments>
+            <argument name="interpreters" xsi:type="array">
+                <item name="object" xsi:type="object">Magento\FunctionalTestingFramework\Data\Argument\Interpreter\DataObject</item>
+                <item name="array" xsi:type="object">arrayArgumentInterpreterProxy</item>
+                <item name="boolean" xsi:type="object">Magento\FunctionalTestingFramework\Data\Argument\Interpreter\Boolean</item>
+                <item name="number" xsi:type="object">Magento\FunctionalTestingFramework\Data\Argument\Interpreter\Number</item>
+                <item name="string" xsi:type="object">Magento\FunctionalTestingFramework\Data\Argument\Interpreter\StringUtils</item>
+                <item name="null" xsi:type="object">Magento\FunctionalTestingFramework\Data\Argument\Interpreter\NullType</item>
+                <item name="const" xsi:type="object">Magento\FunctionalTestingFramework\Data\Argument\Interpreter\Constant</item>
+            </argument>
+            <argument name="discriminator" xsi:type="string">xsi:type</argument>
+        </arguments>
+    </type>
+    <type name="Magento\FunctionalTestingFramework\Data\Argument\Interpreter\ArrayType">
+        <arguments>
+            <argument name="itemInterpreter" xsi:type="object">Magento\FunctionalTestingFramework\Data\Argument\Interpreter\Composite</argument>
+        </arguments>
+    </type>
+    <type name="Magento\FunctionalTestingFramework\Config\ValidationState">
+        <arguments>
+            <argument name="appMode" xsi:type="string">developer</argument>
+        </arguments>
+    </type>
+    <type name="Magento\FunctionalTestingFramework\Config\Converter">
+        <arguments>
+            <argument name="argumentParser" xsi:type="object">converterArgumentParser</argument>
+            <argument name="argumentInterpreter" xsi:type="object">Magento\FunctionalTestingFramework\Data\Argument\Interpreter\Composite</argument>
+            <argument name="argumentNodeName" xsi:type="string">data</argument>
+        </arguments>
+    </type>
+    <type name="Magento\FunctionalTestingFramework\Util\ModuleResolver\SequenceSorter" />
+    <type name="Magento\FunctionalTestingFramework\Generate\GeneratePage">
+        <arguments>
+            <argument name="configData" xsi:type="object">Magento\FunctionalTestingFramework\Page\Config\Data</argument>
+        </arguments>
+    </type>
+    <type name="Magento\FunctionalTestingFramework\Generate\GenerateBlock">
+        <arguments>
+            <argument name="configData" xsi:type="object">Magento\FunctionalTestingFramework\Block\Config\Data</argument>
+        </arguments>
+    </type>
+    <type name="Magento\FunctionalTestingFramework\Generate\Pool">
+        <arguments>
+            <argument name="pool" xsi:type="array">
+                <item name="page" xsi:type="object">Magento\FunctionalTestingFramework\Generate\GeneratePage</item>
+                <item name="block" xsi:type="object">Magento\FunctionalTestingFramework\Generate\GenerateBlock</item>
+            </argument>
+        </arguments>
+    </type>
+    <!--
+    Array item can be of any type just like an argument, including array type itself, which creates circular dependency.
+    Proxy is used to resolve the circular dependency, so that array items undergo the same interpretation as arguments.
+    -->
+    <virtualType name="converterArgumentParser" type="Magento\FunctionalTestingFramework\ObjectManager\Config\Mapper\ArgumentParser" />
+    <virtualType name="arrayArgumentInterpreterProxy" type="Magento\FunctionalTestingFramework\Data\Argument\InterpreterInterface\Proxy">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Magento\FunctionalTestingFramework\Data\Argument\Interpreter\ArrayType</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Configuration for PageObject -->
+
+    <virtualType name="Magento\FunctionalTestingFramework\Config\SchemaLocator\Page" type="Magento\FunctionalTestingFramework\Config\SchemaLocator">
+        <arguments>
+            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Page/etc/PageObject.xsd</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\FunctionalTestingFramework\Config\SchemaLocator\Section" type="Magento\FunctionalTestingFramework\Config\SchemaLocator">
+        <arguments>
+            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\Page" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
+        <arguments>
+            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Mask</argument>
+            <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
+            <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\Page</argument>
+            <argument name="idAttributes" xsi:type="array">
+                <item name="/config/page" xsi:type="string">name</item>
+                <item name="/config/page/section" xsi:type="string">name</item>
+            </argument>
+            <argument name="fileName" xsi:type="string">#\.xml$#</argument>
+            <argument name="defaultScope" xsi:type="string">Page</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\Section" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
+        <arguments>
+            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Mask</argument>
+            <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
+            <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\Section</argument>
+            <argument name="idAttributes" xsi:type="array">
+                <item name="/config/section" xsi:type="string">name</item>
+                <item name="/config/section/element" xsi:type="string">name</item>
+            </argument>
+            <argument name="fileName" xsi:type="string">#\.xml$#</argument>
+            <argument name="defaultScope" xsi:type="string">Section</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\FunctionalTestingFramework\XmlParser\PageParser">
+        <arguments>
+            <argument name="configData" xsi:type="object">Magento\FunctionalTestingFramework\Page\Config\Data</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Magento\FunctionalTestingFramework\Page\Config\Data" type="Magento\FunctionalTestingFramework\Config\Data">
+        <arguments>
+            <argument name="reader" xsi:type="object">Magento\FunctionalTestingFramework\Config\Reader\Page</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\FunctionalTestingFramework\XmlParser\SectionParser">
+        <arguments>
+            <argument name="configData" xsi:type="object">Magento\FunctionalTestingFramework\Section\Config\Data</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Magento\FunctionalTestingFramework\Section\Config\Data" type="Magento\FunctionalTestingFramework\Config\Data">
+        <arguments>
+            <argument name="reader" xsi:type="object">Magento\FunctionalTestingFramework\Config\Reader\Section</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Configuration for Data.xml -->
+
+    <type name="Magento\FunctionalTestingFramework\DataGenerator\Parsers\DataProfileSchemaParser">
+        <arguments>
+            <argument name="dataProfiles" xsi:type="object">Magento\FunctionalTestingFramework\DataProfile\Config\Data</argument>
+        </arguments>
+    </type>
+    <virtualType name="Magento\FunctionalTestingFramework\DataProfile\Config\Data" type="Magento\FunctionalTestingFramework\Config\Data">
+        <arguments>
+            <argument name="reader" xsi:type="object">Magento\FunctionalTestingFramework\Config\Reader\DataProfile</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\FunctionalTestingFramework\Config\SchemaLocator\DataProfile" type="Magento\FunctionalTestingFramework\Config\SchemaLocator">
+        <arguments>
+            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\DataProfile" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
+        <arguments>
+            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
+            <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
+            <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\DataProfile</argument>
+            <argument name="idAttributes" xsi:type="array">
+                <item name="/config/entity" xsi:type="string">name</item>
+                <item name="/config/entity/data" xsi:type="string">key</item>
+                <item name="/config/entity/array" xsi:type="string">key</item>
+                <item name="/config/entity/required-entity" xsi:type="string">name</item>
+            </argument>
+            <argument name="fileName" xsi:type="string">*Data.xml</argument>
+            <argument name="defaultScope" xsi:type="string">Data</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Configuration for Data Operation Metadata.xml -->
+
+    <type name="Magento\FunctionalTestingFramework\DataGenerator\Parsers\OperationMetadataParser">
+        <arguments>
+            <argument name="metadata" xsi:type="object">Magento\FunctionalTestingFramework\DataProfile\Config\Metadata</argument>
+        </arguments>
+    </type>
+    <virtualType name="Magento\FunctionalTestingFramework\DataProfile\Config\Metadata" type="Magento\FunctionalTestingFramework\Config\Data">
+        <arguments>
+            <argument name="reader" xsi:type="object">Magento\FunctionalTestingFramework\Config\Reader\Metadata</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\FunctionalTestingFramework\Config\SchemaLocator\Metadata" type="Magento\FunctionalTestingFramework\Config\SchemaLocator">
+        <arguments>
+            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/DataGenerator/etc/dataOperation.xsd</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\Metadata" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
+        <arguments>
+            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
+            <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
+            <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\Metadata</argument>
+            <argument name="idAttributes" xsi:type="array">
+                <item name="/config/operation" xsi:type="string">name</item>
+                <item name="/config/operation/entry" xsi:type="string">key</item>
+                <item name="/config/operation/array" xsi:type="string">key</item>
+                <item name="/config/operation/object" xsi:type="string">key</item>
+            </argument>
+            <argument name="fileName" xsi:type="string">*-meta.xml</argument>
+            <argument name="defaultScope" xsi:type="string">Metadata</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Configuration for TestData -->
+
+    <virtualType name="Magento\FunctionalTestingFramework\Config\SchemaLocator\TestData" type="Magento\FunctionalTestingFramework\Config\SchemaLocator">
+        <arguments>
+            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\TestData" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
+        <arguments>
+            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
+            <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\TestDataConverter</argument>
+            <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\TestData</argument>
+            <argument name="idAttributes" xsi:type="array">
+                <item name="/config/cest" xsi:type="string">name</item>
+                <item name="/config/cest/test" xsi:type="string">name</item>
+                <item name="/config/cest/test/entity/data" xsi:type="string">key</item>
+                <item name="/config/cest/test/entity/required-entity" xsi:type="string">key</item>
+                <item name="/config/cest/test/actionGroup/argument" xsi:type="string">name</item>
+                <item name="/config/cest/test/createData/required-entity" xsi:type="string">name</item>
+                <item name="/config/cest/test/(acceptPopup|amOnPage|amOnUrl|appendField|assertArraySubset|attachFile|cancelPopup|checkOption|click|clickWithLeftButton|clickWithRightButton|closeTab|createData|deleteData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForPageLoad|waitForText)" xsi:type="string">mergeKey</item>
+            </argument>
+            <argument name="fileName" xsi:type="string">*Cest.xml</argument>
+            <argument name="defaultScope" xsi:type="string">Cest</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Magento\FunctionalTestingFramework\Test\Config\Dom\ArrayNodeConfig" type="Magento\FunctionalTestingFramework\Config\Dom\ArrayNodeConfig">
+        <arguments>
+            <argument name="assocArrayAttributes" xsi:type="array">
+                <item name="/config/cest/test/(acceptPopup|amOnPage|amOnUrl|appendField|assertArraySubset|attachFile|cancelPopup|checkOption|click|clickWithLeftButton|clickWithRightButton|closeTab|createData|deleteData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForPageLoad|waitForText)" xsi:type="string">mergeKey</item>
+                <item name="/config/cest/before/(acceptPopup|amOnPage|amOnUrl|appendField|assertArraySubset|attachFile|cancelPopup|checkOption|click|clickWithLeftButton|clickWithRightButton|closeTab|createData|deleteData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForPageLoad|waitForText)" xsi:type="string">mergeKey</item>
+                <item name="/config/cest/after/(acceptPopup|amOnPage|amOnUrl|appendField|assertArraySubset|attachFile|cancelPopup|checkOption|click|clickWithLeftButton|clickWithRightButton|closeTab|createData|deleteData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForPageLoad|waitForText)" xsi:type="string">mergeKey</item>
+                <item name="/config/cest/test" xsi:type="string">name</item>
+                <item name="/config/cest" xsi:type="string">name</item>
+                <item name="/config/cest/test/entity/data" xsi:type="string">key</item>
+                <item name="/config/cest/test/entity/required-entity" xsi:type="string">key</item>
+                <item name="/config/cest/test/createData/required-entity" xsi:type="string">name</item>
+                <item name="/config/cest/before/entity/data" xsi:type="string">key</item>
+                <item name="/config/cest/before/entity/required-entity" xsi:type="string">key</item>
+                <item name="/config/cest/before/createData/required-entity" xsi:type="string">name</item>
+                <item name="/config/cest/after/entity/data" xsi:type="string">key</item>
+                <item name="/config/cest/after/entity/required-entity" xsi:type="string">key</item>
+                <item name="/config/cest/after/createData/required-entity" xsi:type="string">name</item>
+                <item name="/config/cest/test/actionGroup/argument" xsi:type="string">name</item>
+            </argument>
+            <argument name="numericArrays" xsi:type="array">
+                <item name="/config/cest/annotations/env" xsi:type="string">/config/cest/annotations/env</item>
+                <item name="/config/cest/annotations/features" xsi:type="string">/config/cest/annotations/features</item>
+                <item name="/config/cest/annotations/stories" xsi:type="string">/config/cest/annotations/stories</item>
+                <item name="/config/cest/annotations/title" xsi:type="string">/config/cest/annotations/title</item>
+                <item name="/config/cest/annotations/description" xsi:type="string">/config/cest/annotations/description</item>
+                <item name="/config/cest/annotations/severity" xsi:type="string">/config/cest/annotations/severity</item>
+                <item name="/config/cest/annotations/testCaseId" xsi:type="string">/config/cest/annotations/testCaseId</item>
+                <item name="/config/cest/annotations/group" xsi:type="string">/config/cest/annotations/group</item>
+                <item name="/config/cest/annotations/return" xsi:type="string">/config/cest/annotations/return</item>
+                <item name="/config/cest/test/annotations/features" xsi:type="string">/config/cest/test/annotations/features</item>
+                <item name="/config/cest/test/annotations/stories" xsi:type="string">/config/cest/test/annotations/stories</item>
+                <item name="/config/cest/test/annotations/title" xsi:type="string">/config/cest/test/annotations/title</item>
+                <item name="/config/cest/test/annotations/description" xsi:type="string">/config/cest/test/annotations/description</item>
+                <item name="/config/cest/test/annotations/severity" xsi:type="string">/config/cest/test/annotations/severity</item>
+                <item name="/config/cest/test/annotations/testCaseId" xsi:type="string">/config/cest/test/annotations/testCaseId</item>
+                <item name="/config/cest/test/annotations/group" xsi:type="string">/config/cest/test/annotations/group</item>
+                <item name="/config/cest/test/annotations/env" xsi:type="string">/config/cest/test/annotations/env</item>
+                <item name="/config/cest/test/annotations/return" xsi:type="string">/config/cest/test/annotations/return</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Magento\FunctionalTestingFramework\Config\TestDataConverter" type="Magento\FunctionalTestingFramework\Test\Config\Converter\Dom\Flat">
+        <arguments>
+            <argument name="arrayNodeConfig" xsi:type="object">Magento\FunctionalTestingFramework\Test\Config\Dom\ArrayNodeConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser">
+        <arguments>
+            <argument name="testData" xsi:type="object">Magento\FunctionalTestingFramework\Test\Config\Data</argument>
+        </arguments>
+    </type>
+    <virtualType name="Magento\FunctionalTestingFramework\Test\Config\Data" type="Magento\FunctionalTestingFramework\Config\Data">
+        <arguments>
+            <argument name="reader" xsi:type="object">Magento\FunctionalTestingFramework\Config\Reader\TestData</argument>
+        </arguments>
+    </virtualType>
+
+    <!--Config for Action Group -->
+
+    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\ActionGroupData" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
+        <arguments>
+            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
+            <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\ActionGroupDataConverter</argument>
+            <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\TestData</argument>
+            <argument name="idAttributes" xsi:type="array">
+                <item name="/config/actionGroup" xsi:type="string">name</item>
+                <item name="/config/actionGroup/arguments/argument" xsi:type="string">name</item>
+                <item name="/config/actionGroup/(acceptPopup|amOnPage|appendField|assertArraySubset|attachFile|cancelPopup|checkOption|click|clickWithLeftButton|clickWithRightButton|closeTab|createData|deleteData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForPageLoad|waitForText)" xsi:type="string">mergeKey</item>
+            </argument>
+            <argument name="fileName" xsi:type="string">*ActionGroup.xml</argument>
+            <argument name="defaultScope" xsi:type="string">ActionGroup</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Magento\FunctionalTestingFramework\Test\Config\Dom\ActionGroupArrayNodeConfig" type="Magento\FunctionalTestingFramework\Config\Dom\ArrayNodeConfig">
+        <arguments>
+            <argument name="assocArrayAttributes" xsi:type="array">
+                <item name="/config/actionGroup/(acceptPopup|amOnPage|appendField|assertArraySubset|attachFile|cancelPopup|checkOption|click|clickWithLeftButton|clickWithRightButton|closeTab|createData|deleteData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForPageLoad|waitForText)" xsi:type="string">mergeKey</item>
+                <item name="/config/actionGroup" xsi:type="string">name</item>
+                <item name="/config/actionGroup/arguments/argument" xsi:type="string">name</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Magento\FunctionalTestingFramework\Config\ActionGroupDataConverter" type="Magento\FunctionalTestingFramework\Test\Config\Converter\Dom\Flat">
+        <arguments>
+            <argument name="arrayNodeConfig" xsi:type="object">Magento\FunctionalTestingFramework\Test\Config\Dom\ActionGroupArrayNodeConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\FunctionalTestingFramework\Test\Parsers\ActionGroupDataParser">
+        <arguments>
+            <argument name="actionGroupData" xsi:type="object">Magento\FunctionalTestingFramework\Test\Config\ActionGroupData</argument>
+        </arguments>
+    </type>
+    <virtualType name="Magento\FunctionalTestingFramework\Test\Config\ActionGroupData" type="Magento\FunctionalTestingFramework\Config\Data">
+        <arguments>
+            <argument name="reader" xsi:type="object">Magento\FunctionalTestingFramework\Config\Reader\ActionGroupData</argument>
+        </arguments>
+    </virtualType>
+</config>
