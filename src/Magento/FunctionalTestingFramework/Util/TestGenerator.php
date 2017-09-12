@@ -996,7 +996,8 @@ class TestGenerator
         if (empty($input)) {
             return '';
         }
-        $input = addslashes($input);
+        //Only replace &quot; with \" so that it doesn't break outer string.
+        $input = str_replace('"', '\"', $input);
         return sprintf('"%s"', $input);
     }
 
