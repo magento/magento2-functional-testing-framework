@@ -17,6 +17,10 @@ class ActionObjectExtractor extends BaseCestObjectExtractor
     const TEST_ACTION_BEFORE = 'before';
     const TEST_ACTION_AFTER = 'after';
     const TEST_STEP_MERGE_KEY = 'mergeKey';
+    const ACTION_GROUP_TAG = 'actionGroup';
+    const ACTION_GROUP_REF = 'ref';
+    const ACTION_GROUP_ARGUMENTS = 'arguments';
+    const ACTION_GROUP_ARG_VALUE = 'value';
     const BEFORE_AFTER_ERROR_MSG = "Merge Error - Steps cannot have both before and after attributes.\tTestStep='%s'";
 
     /**
@@ -53,6 +57,10 @@ class ActionObjectExtractor extends BaseCestObjectExtractor
             $linkedAction = null;
             $order = null;
 
+            if ($actionData[self::NODE_NAME] === self::ACTION_GROUP_TAG) {
+                $actionAttributes = $this->processActionGroupArgs($actionAttributes);
+            }
+
             if (array_key_exists(self::TEST_ACTION_BEFORE, $actionData)
                 and array_key_exists(self::TEST_ACTION_AFTER, $actionData)) {
                 throw new XmlException(sprintf(self::BEFORE_AFTER_ERROR_MSG, $actionName));
@@ -60,10 +68,10 @@ class ActionObjectExtractor extends BaseCestObjectExtractor
 
             if (array_key_exists(self::TEST_ACTION_BEFORE, $actionData)) {
                 $linkedAction = $actionData[self::TEST_ACTION_BEFORE];
-                $order = "before";
+                $order = self::TEST_ACTION_BEFORE;
             } elseif (array_key_exists(self::TEST_ACTION_AFTER, $actionData)) {
                 $linkedAction = $actionData[self::TEST_ACTION_AFTER];
-                $order = "after";
+                $order = self::TEST_ACTION_AFTER;
             }
             // TODO this is to be implemented later. Currently the schema does not use or need return var.
             /*if (array_key_exists(ActionGroupObjectHandler::TEST_ACTION_RETURN_VARIABLE, $actionData)) {
@@ -80,6 +88,29 @@ class ActionObjectExtractor extends BaseCestObjectExtractor
         }
 
         return $actions;
+    }
+
+    /**
+     * Takes the action group reference and parses out arguments as an array that can be passed to override defaults
+     * defined in the action group xml.
+     *
+     * @param array $actionAttributeData
+     * @return array
+     */
+    private function processActionGroupArgs($actionAttributeData)
+    {
+        $actionAttributeArgData = [];
+        foreach ($actionAttributeData as $attributeDataKey => $attributeDataValues) {
+            if ($attributeDataKey == self::ACTION_GROUP_REF) {
+                $actionAttributeArgData[self::ACTION_GROUP_REF] = $attributeDataValues;
+                continue;
+            }
+
+            $actionAttributeArgData[self::ACTION_GROUP_ARGUMENTS][$attributeDataKey] =
+                $attributeDataValues[self::ACTION_GROUP_ARG_VALUE];
+        }
+
+        return $actionAttributeArgData;
     }
 
     /**

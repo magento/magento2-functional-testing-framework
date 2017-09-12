@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Util;
 
+use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\CestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
@@ -317,8 +318,17 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['parameterArray'])) {
-                $parameterArray = $customActionAttributes['parameterArray'];
+                $paramsWithUniqueness = [];
+                $params = explode(
+                    ',',
+                    $this->stripWrappedQuotes(rtrim(ltrim($customActionAttributes['parameterArray'], '['), ']'))
+                );
+                foreach ($params as $param) {
+                    $paramsWithUniqueness[] = $this->addUniquenessFunctionCall($param);
+                }
+                $parameterArray = '[' . implode(',', $paramsWithUniqueness) .']';
             }
+
             if (isset($customActionAttributes['requiredAction'])) {
                 $requiredAction = $customActionAttributes['requiredAction'];
             }
@@ -425,13 +435,14 @@ class TestGenerator
                     if (!empty($requiredEntities)) {
                         $testSteps .= sprintf(
                             "\t\t$%s = new EntityDataObject($%s->getName(), $%s->getType(), $%s->getData()
-                            , array_merge($%s->getLinkedEntities(), [%s]));\n",
+                            , array_merge($%s->getLinkedEntities(), [%s]), $%s->getUniquenessData());\n",
                             $entity,
                             $entity,
                             $entity,
                             $entity,
                             $entity,
-                            implode(", ", $requiredEntities)
+                            implode(", ", $requiredEntities),
+                            $entity
                         );
 
                         if ($hookObject) {
@@ -482,23 +493,25 @@ class TestGenerator
                     }
                     break;
                 case "entity":
-                    $entityData = "[";
+                    $entityData = '[';
                     foreach ($stepsData[$customActionAttributes['name']] as $dataKey => $dataValue) {
-                        $variableReplace = $this->resolveTestVariable($dataValue);
-                        $entityData .= sprintf("'%s' => %s, ", $dataKey, $variableReplace);
+                        $variableReplace = $this->resolveTestVariable($dataValue, true);
+                        $entityData .= sprintf("\"%s\" => \"%s\", ", $dataKey, $variableReplace);
                     }
                     $entityData .= ']';
                     if ($hookObject) {
+                        // no uniqueness attributes for data allowed within entity defined in cest.
                         $testSteps .= sprintf(
-                            "\t\t\$this->%s = new EntityDataObject('%s','%s',%s,null);\n",
+                            "\t\t\$this->%s = new EntityDataObject(\"%s\",\"%s\",%s,null,null);\n",
                             $customActionAttributes['name'],
                             $customActionAttributes['name'],
                             $customActionAttributes['type'],
                             $entityData
                         );
                     } else {
+                        // no uniqueness attributes for data allowed within entity defined in cest.
                         $testSteps .= sprintf(
-                            "\t\t$%s = new EntityDataObject('%s','%s',%s,null);\n",
+                            "\t\t$%s = new EntityDataObject(\"%s\",\"%s\",%s,null,null);\n",
                             $customActionAttributes['name'],
                             $customActionAttributes['name'],
                             $customActionAttributes['type'],
@@ -602,13 +615,17 @@ class TestGenerator
                 case "grabAttributeFrom":
                 case "grabMultiple":
                 case "grabFromCurrentUrl":
-                    $testSteps .= $this->wrapFunctionCallWithReturnValue(
-                        $returnVariable,
-                        $actor,
-                        $actionName,
-                        $selector,
-                        $input
-                    );
+                    if (isset($returnVariable)) {
+                        $testSteps .= $this->wrapFunctionCallWithReturnValue(
+                            $returnVariable,
+                            $actor,
+                            $actionName,
+                            $selector,
+                            $input
+                        );
+                    } else {
+                        $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input);
+                    }
                     break;
                 case "grabValueFrom":
                     if (isset($returnVariable)) {
@@ -639,6 +656,7 @@ class TestGenerator
                     );
                     break;
                 case "seeLink":
+                case "dontSeeLink":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $input, $url);
                     break;
                 case "setCookie":
@@ -666,7 +684,6 @@ class TestGenerator
                 case "loadSessionSnapshot":
                 case "seeInField":
                 case "seeOptionIsSelected":
-                case "dontSeeLink":
                 case "unselectOption":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input);
                     break;
@@ -705,42 +722,54 @@ class TestGenerator
     }
 
     /**
-     * Resolves regex for given inputString.
+     * Resolves replacement of $input$ and $$input$$ in given string.
+     * Can be given a boolean to surround replacement with quote breaking.
      * @param string $inputString
+     * @param bool $quoteBreak
      * @return string
+     * @throws \Exception
      */
-    private function resolveTestVariable($inputString)
+    private function resolveTestVariable($inputString, $quoteBreak = false)
     {
         $outputString = $inputString;
         $replaced = false;
 
         // Check for Cest-scope variables first, stricter regex match.
         preg_match_all("/\\$\\$[\w.]+\\$\\$/", $outputString, $matches);
-        if (!empty($matches)) {
-            foreach ($matches[0] as $match) {
-                $replacement = null;
-                $variable = $this->stripAndSplitReference($match, '$$');
-                $replacement = sprintf("\$this->%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
-                $outputString = str_replace($match, $replacement, $outputString);
-                $replaced = true;
+        foreach ($matches[0] as $match) {
+            $replacement = null;
+            $variable = $this->stripAndSplitReference($match, '$$');
+            if (count($variable) != 2) {
+                throw new \Exception(
+                    "Invalid Persisted Entity Reference: " . $match .
+                    ". Hook persisted entity references must follow \$\$entityMergeKey.field\$\$ format."
+                );
             }
+            $replacement = sprintf("\$this->%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
+            if ($quoteBreak) {
+                $replacement = '" . ' . $replacement . ' . "';
+            }
+            $outputString = str_replace($match, $replacement, $outputString);
+            $replaced = true;
         }
 
         // Check Test-scope variables
         preg_match_all("/\\$[\w.]+\\$/", $outputString, $matches);
-        if (!empty($matches)) {
-            foreach ($matches[0] as $match) {
-                $replacement = null;
-                $variable = $this->stripAndSplitReference($match, '$');
-                $replacement = sprintf("$%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
-                $outputString = str_replace($match, $replacement, $outputString);
-                $replaced = true;
+        foreach ($matches[0] as $match) {
+            $replacement = null;
+            $variable = $this->stripAndSplitReference($match, '$');
+            if (count($variable) != 2) {
+                throw new \Exception(
+                    "Invalid Persisted Entity Reference: " . $match .
+                    ". Test persisted entity references must follow \$entityMergeKey.field\$ format."
+                );
             }
-        }
-
-        // If no replacement was made, assume it is a string literal and append single quotes.
-        if (!$replaced) {
-            return "'" . $outputString ."'";
+            $replacement = sprintf("$%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
+            if ($quoteBreak) {
+                $replacement = '" . ' . $replacement . ' . "';
+            }
+            $outputString = str_replace($match, $replacement, $outputString);
+            $replaced = true;
         }
 
         return $outputString;
@@ -935,21 +964,18 @@ class TestGenerator
     {
         $output = '';
 
-        preg_match('/' . DataObjectHandler::UNIQUENESS_FUNCTION .'\("[\w]+.[\w]+"\)/', $input, $matches);
+        preg_match('/' . EntityDataObject::CEST_UNIQUE_FUNCTION .'\("[\w]+"\)/', $input, $matches);
         if (!empty($matches)) {
-            $parts = preg_split('/' . DataObjectHandler::UNIQUENESS_FUNCTION . '\("[\w]+.[\w]+"\)/', $input, -1);
-            foreach ($parts as $part) {
-                if (!$part) {
-                    if (!empty($output)) {
-                        $output .= '.';
-                    }
-                    $output .= $matches[0];
-                } else {
-                    if (!empty($output)) {
-                        $output .= '.';
-                    }
-                    $output .= sprintf("\"%s\"", $part);
-                }
+            $parts = preg_split('/' . EntityDataObject::CEST_UNIQUE_FUNCTION . '\("[\w]+"\)/', $input, -1);
+            for ($i = 0; $i < count($parts); $i++) {
+                $parts[$i] = $this->stripWrappedQuotes($parts[$i]);
+            }
+            if (!empty($parts[0])) {
+                $output = $this->wrapWithSingleQuotes($parts[0]);
+            }
+            $output .= $output === '' ? $matches[0] : '.' . $matches[0];
+            if (!empty($parts[1])) {
+                $output .= '.' . $this->wrapWithSingleQuotes($parts[1]);
             }
         } else {
             $output = $this->wrapWithSingleQuotes($input);
@@ -966,8 +992,11 @@ class TestGenerator
      */
     private function wrapWithSingleQuotes($input)
     {
-        $input = str_replace("'", '"', $input);
-        return sprintf("'%s'", $input);
+        if (empty($input)) {
+            return '';
+        }
+        $input = addslashes($input);
+        return sprintf('"%s"', $input);
     }
 
     /**
@@ -978,6 +1007,9 @@ class TestGenerator
      */
     private function stripWrappedQuotes($input)
     {
+        if (empty($input)) {
+            return '';
+        }
         if (substr($input, 0, 1) === '"' || substr($input, 0, 1) === "'") {
             $input = substr($input, 1);
         }
@@ -1022,7 +1054,10 @@ class TestGenerator
             $isFirst = false;
         }
         $output .= ");\n";
-        return $output;
+
+        // TODO put in condiional to prevent unncessary quote break (i.e. there are no strings to be appended to
+        // variable call.
+        return $this->resolveTestVariable($output, true);
     }
 
     /**
@@ -1049,7 +1084,10 @@ class TestGenerator
             $isFirst = false;
         }
         $output .= ");\n";
-        return $output;
+
+        // TODO put in condiional to prevent unncessary quote break (i.e. there are no strings to be appended to
+        // variable call.
+        return $output = $this->resolveTestVariable($output, true);
     }
     // @codingStandardsIgnoreEnd
 }

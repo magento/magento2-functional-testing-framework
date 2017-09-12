@@ -36,6 +36,13 @@ class PageObject
     private $module;
 
     /**
+     * Page url is parameterized
+     *
+     * @var bool $parameterized
+     */
+    private $parameterized;
+
+    /**
      * Array of page section names
      *
      * @var array
@@ -48,13 +55,15 @@ class PageObject
      * @param string $urlPath
      * @param string $module
      * @param array $sections
+     * @param bool $parameterized
      */
-    public function __construct($name, $urlPath, $module, $sections)
+    public function __construct($name, $urlPath, $module, $sections, $parameterized)
     {
         $this->name = $name;
         $this->url = $urlPath;
         $this->module = $module;
         $this->sectionNames = $sections;
+        $this->parameterized = $parameterized;
     }
 
     /**
@@ -121,5 +130,16 @@ class PageObject
         }
 
         return null;
+    }
+
+    /**
+     * Determines if the page's url is parameterized. Based on $parameterized property.
+     *
+     * @return bool
+     */
+
+    public function isParameterized()
+    {
+        return $this->parameterized;
     }
 }

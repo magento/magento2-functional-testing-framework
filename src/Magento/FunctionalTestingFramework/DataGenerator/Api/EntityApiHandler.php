@@ -6,12 +6,10 @@
 
 namespace Magento\FunctionalTestingFramework\DataGenerator\Api;
 
-use Codeception\Test\Cest;
 use Magento\FunctionalTestingFramework\Config\Data;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\CestObjectHandler;
-use Magento\FunctionalTestingFramework\Test\Managers\CestArrayProcessor;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 
 class EntityApiHandler
@@ -57,10 +55,11 @@ class EntityApiHandler
         $result = $apiExecutor->executeRequest();
 
         $this->createdObject = new EntityDataObject(
-            '__created' . $this->entityObject->getName(),
+            $this->entityObject->getName(),
             $this->entityObject->getType(),
             json_decode($result, true),
-            null
+            null,
+            null // No uniqueness data is needed to be further processed.
         );
     }
 
@@ -93,7 +92,11 @@ class EntityApiHandler
      */
     public function getCreatedDataByName($dataName)
     {
-        return $this->createdObject->getDataByName($dataName);
+        $data = $this->createdObject->getDataByName($dataName, EntityDataObject::NO_UNIQUE_PROCESS);
+        if (empty($data)) {
+            $data = $this->entityObject->getDataByName($dataName, EntityDataObject::CEST_UNIQUE_VALUE);
+        }
+        return $data;
     }
 
     // TODO add update function

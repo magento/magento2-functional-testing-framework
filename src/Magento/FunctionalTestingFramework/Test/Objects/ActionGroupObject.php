@@ -13,6 +13,8 @@ use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
  */
 class ActionGroupObject
 {
+    const VAR_ATTRIBUTES = ['userInput', 'selector', 'page'];
+
     /**
      * The name of the action group
      *
@@ -28,70 +30,79 @@ class ActionGroupObject
     private $parsedActions = [];
 
     /**
-     * A string used as the default entity if the user does not specify one
+     * An array used to store the default entities if the user does not specify any
      *
-     * @var string
+     * @var array
      */
-    private $defaultEntity;
+    private $arguments;
 
     /**
      * ActionGroupObject constructor.
      *
      * @param string $name
-     * @param string $defaultEntity
+     * @param string $arguments
      * @param array $actions
      */
-    public function __construct($name, $defaultEntity, $actions)
+    public function __construct($name, $arguments, $actions)
     {
         $this->name = $name;
-        $this->defaultEntity = $defaultEntity;
+        $this->arguments = $arguments;
         $this->parsedActions = $actions;
     }
 
     /**
      * Gets the ordered steps including merged waits
      *
-     * @param string $entity
+     * @param array $arguments
      * @return array
      */
-    public function getSteps($entity)
+    public function getSteps($arguments)
     {
         $mergeUtil = new ActionMergeUtil();
-        if (!$entity) {
-            $entity = $this->defaultEntity;
+        $args = $this->arguments;
+
+        if ($arguments) {
+            $args = array_merge($args, $arguments);
         }
-        return $mergeUtil->mergeStepsAndInsertWaits($this->getResolvedActions($entity));
+
+        return $mergeUtil->mergeStepsAndInsertWaits($this->getResolvedActionsWithArgs($args));
     }
 
     /**
-     * Function which takes the name of the entity object to be appended to an action objects fields returns resulting
-     * action objects with proper entity.field references.
+     * Function which takes a set of arguments to be appended to an action objects fields returns resulting
+     * action objects with proper argument.field references.
      *
-     * @param string $entity
+     * @param array $arguments
      * @return array
      */
-    private function getResolvedActions($entity)
+    private function getResolvedActionsWithArgs($arguments)
     {
         $resolvedActions = [];
+        $regexPattern = '/{{([\w]+)/';
 
         foreach ($this->parsedActions as $action) {
-            /**@var \Magento\FunctionalTestingFramework\Test\Objects\ActionObject $action **/
-            if (array_key_exists('userInput', $action->getCustomActionAttributes())) {
-                $regexPattern = '/{{.[\w]+}}/';
-                preg_match_all($regexPattern, $action->getCustomActionAttributes()['userInput'], $matches);
+            $varAttributes = array_intersect(self::VAR_ATTRIBUTES, array_keys($action->getCustomActionAttributes()));
+            if (!empty($varAttributes)) {
+                $newActionAttributes = [];
+                // 1 check to see if we have pertinent var
+                foreach ($varAttributes as $varAttribute) {
+                    $attributeValue = $action->getCustomActionAttributes()[$varAttribute];
+                    preg_match_all($regexPattern, $attributeValue, $matches);
+                    if (empty($matches[0]) & empty($matches[1])) {
+                        continue;
+                    }
 
-                $userInputString = $action->getCustomActionAttributes()['userInput'];
-                foreach ($matches[0] as $match) {
-                    $search = str_replace('}}', '', str_replace('{{', '', $match));
-                    $userInputString = str_replace($search, $entity . $search, $userInputString);
+                    $newActionAttributes[$varAttribute] = $this->resolveNewAttribute(
+                        $arguments,
+                        $attributeValue,
+                        $matches
+                    );
                 }
-
-                $attribute['userInput'] = $userInputString;
 
                 $resolvedActions[$action->getMergeKey()] = new ActionObject(
                     $action->getMergeKey(),
                     $action->getType(),
-                    array_merge($action->getCustomActionAttributes(), $attribute),
+                    array_merge($action->getCustomActionAttributes(), $newActionAttributes),
                     $action->getLinkedAction(),
                     $action->getOrderOffset()
                 );
@@ -102,5 +113,26 @@ class ActionGroupObject
         }
 
         return $resolvedActions;
+    }
+
+    /**
+     * Function which takes an array of arguments to use for replacement of var name, the string which contains
+     * the variable for replacement, an array of matching vars.
+     *
+     * @param array $arguments
+     * @param string $attributeValue
+     * @param array $matches
+     * @return string
+     */
+    private function resolveNewAttribute($arguments, $attributeValue, $matches)
+    {
+        $newAttributeVal = $attributeValue;
+        foreach ($matches[1] as $var) {
+            if (array_key_exists($var, $arguments)) {
+                $newAttributeVal = str_replace($var, $arguments[$var], $newAttributeVal);
+            }
+        }
+
+        return $newAttributeVal;
     }
 }

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="testSchema.xsd">
-    <actions name="sampleReusableActions" defaultEntity="testEntity">
+    <actionGroup name="sampleReusableActions" defaultEntity="testEntity">
+        <arguments>
+            <argument name="product" defaultValue="_defaultProduct" />
+            <argument name="category" defaultValue="_defaultCategory" />
+        </arguments>
         <acceptPopup mergeKey=""/>
         <amOnPage mergeKey="" url=""/>
-        <appendField selector="" userInput="" mergeKey=""/>
-        <attachFile userInput="" selector="" mergeKey=""/>
+        <appendField selector="" userInput="{{product.id}}" mergeKey=""/>
+        <attachFile userInput="{{category.name}}" selector="" mergeKey=""/>
         <cancelPopup mergeKey=""/>
         <checkOption selector="" mergeKey=""/>
         <click selector="" mergeKey=""/>
@@ -79,5 +83,5 @@
         <waitForElementVisible selector="" time="" mergeKey=""/>
         <waitForJS function="" time="" mergeKey=""/>
         <waitForText userInput="" time="" selector="" mergeKey=""/>
-    </actions>
+    </actionGroup>
 </config>

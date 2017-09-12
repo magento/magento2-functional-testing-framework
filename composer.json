@@ -15,9 +15,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Magento\\FunctionalTestingFramework\\": [
-                "src/Magento/FunctionalTestingFramework"
-            ]
+            "Magento\\FunctionalTestingFramework\\": ["src/Magento/FunctionalTestingFramework"]
         }
     }
 }

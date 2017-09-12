@@ -8,6 +8,7 @@ namespace Magento\FunctionalTestingFramework\Test\Objects;
 
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
+use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
 
 /**
  * Class TestObject
@@ -114,12 +115,12 @@ class TestObject
 
         foreach ($mergedSteps as $key => $mergedStep) {
             /**@var ActionObject $mergedStep**/
-            if ($mergedStep->getType() == 'actions') {
+            if ($mergedStep->getType() == ActionObjectExtractor::ACTION_GROUP_TAG) {
                 $actionGroup = ActionGroupObjectHandler::getInstance()->getObject(
-                    $mergedStep->getCustomActionAttributes()['ref']
+                    $mergedStep->getCustomActionAttributes()[ActionObjectExtractor::ACTION_GROUP_REF]
                 );
-                $entity = $mergedStep->getCustomActionAttributes()['entity'] ?? null;
-                $actionsToMerge = $actionGroup->getSteps($entity);
+                $args = $mergedStep->getCustomActionAttributes()[ActionObjectExtractor::ACTION_GROUP_ARGUMENTS] ?? null;
+                $actionsToMerge = $actionGroup->getSteps($args);
                 $newOrderedList = $newOrderedList + $actionsToMerge;
             } else {
                 $newOrderedList[$key]  = $mergedStep;
