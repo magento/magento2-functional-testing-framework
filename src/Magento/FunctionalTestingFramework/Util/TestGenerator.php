@@ -336,15 +336,15 @@ class TestGenerator
             if (isset($customActionAttributes['selectorArray'])) {
                 $selector = $customActionAttributes['selectorArray'];
             } elseif (isset($customActionAttributes['selector'])) {
-                $selector = $this->wrapWithSingleQuotes($customActionAttributes['selector']);
+                $selector = $this->wrapWithDoubleQuotes($customActionAttributes['selector']);
             }
 
             if (isset($customActionAttributes['selector1'])) {
-                $selector1 = $this->wrapWithSingleQuotes($customActionAttributes['selector1']);
+                $selector1 = $this->wrapWithDoubleQuotes($customActionAttributes['selector1']);
             }
 
             if (isset($customActionAttributes['selector2'])) {
-                $selector2 = $this->wrapWithSingleQuotes($customActionAttributes['selector2']);
+                $selector2 = $this->wrapWithDoubleQuotes($customActionAttributes['selector2']);
             }
 
             if (isset($customActionAttributes['x'])) {
@@ -364,15 +364,15 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['locale'])) {
-                $locale = $this->wrapWithSingleQuotes($customActionAttributes['locale']);
+                $locale = $this->wrapWithDoubleQuotes($customActionAttributes['locale']);
             }
 
             if (isset($customActionAttributes['username'])) {
-                $username = $this->wrapWithSingleQuotes($customActionAttributes['username']);
+                $username = $this->wrapWithDoubleQuotes($customActionAttributes['username']);
             }
 
             if (isset($customActionAttributes['password'])) {
-                $password = $this->wrapWithSingleQuotes($customActionAttributes['password']);
+                $password = $this->wrapWithDoubleQuotes($customActionAttributes['password']);
             }
 
             if (isset($customActionAttributes['width'])) {
@@ -384,15 +384,15 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['value'])) {
-                $value = $this->wrapWithSingleQuotes($customActionAttributes['value']);
+                $value = $this->wrapWithDoubleQuotes($customActionAttributes['value']);
             }
 
             if (isset($customActionAttributes['button'])) {
-                $button = $this->wrapWithSingleQuotes($customActionAttributes['button']);
+                $button = $this->wrapWithDoubleQuotes($customActionAttributes['button']);
             }
 
             if (isset($customActionAttributes['parameter'])) {
-                $parameter = $this->wrapWithSingleQuotes($customActionAttributes['parameter']);
+                $parameter = $this->wrapWithDoubleQuotes($customActionAttributes['parameter']);
             }
 
             switch ($actionName) {
@@ -584,7 +584,7 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $function);
                     break;
                 case "executeJS":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $this->wrapWithSingleQuotes($function));
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $this->wrapWithDoubleQuotes($function));
                     break;
                 case "performOn":
                 case "waitForElementChange":
@@ -594,7 +594,7 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
                         $actionName,
-                        $this->wrapWithSingleQuotes($function),
+                        $this->wrapWithDoubleQuotes($function),
                         $time
                     );
                     break;
@@ -972,26 +972,26 @@ class TestGenerator
                 $parts[$i] = $this->stripWrappedQuotes($parts[$i]);
             }
             if (!empty($parts[0])) {
-                $output = $this->wrapWithSingleQuotes($parts[0]);
+                $output = $this->wrapWithDoubleQuotes($parts[0]);
             }
             $output .= $output === '' ? $matches[0] : '.' . $matches[0];
             if (!empty($parts[1])) {
-                $output .= '.' . $this->wrapWithSingleQuotes($parts[1]);
+                $output .= '.' . $this->wrapWithDoubleQuotes($parts[1]);
             }
         } else {
-            $output = $this->wrapWithSingleQuotes($input);
+            $output = $this->wrapWithDoubleQuotes($input);
         }
 
         return $output;
     }
 
     /**
-     * Wrap input string with single quotes.
+     * Wrap input string with double quotes, and replaces " with \" to prevent broken PHP when generated.
      *
      * @param string $input
      * @return string
      */
-    private function wrapWithSingleQuotes($input)
+    private function wrapWithDoubleQuotes($input)
     {
         if (empty($input)) {
             return '';
