@@ -323,6 +323,7 @@ class ActionObject
                     list(,$objField) = $this->stripAndSplitReference($match);
                     $parameterized = $obj->getElement($objField)->isParameterized();
                     $replacement = $obj->getElement($objField)->getLocator();
+                    $this->timeout = $obj->getElement($objField)->getTimeout();
                     break;
                 case (get_class($obj) == EntityDataObject::class):
                     list(,$objField) = $this->stripAndSplitReference($match);
