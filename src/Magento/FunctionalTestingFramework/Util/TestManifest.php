@@ -18,12 +18,20 @@ class TestManifest
     private $filePath;
 
     /**
+     * Relative dir path from functional yml file. For devOps execution flexibility.
+     *
+     * @var string
+     */
+    private $relativeDirPath;
+
+    /**
      * TestManifest constructor.
      *
      * @param string $path
      */
     public function __construct($path)
     {
+        $this->relativeDirPath = substr($path, strlen(dirname(dirname(TESTS_BP))) + 1);
         $filePath = $path .  DIRECTORY_SEPARATOR . 'testManifest.txt';
         $this->filePath = $filePath;
         $fileResource = fopen($filePath, 'w');
@@ -43,7 +51,7 @@ class TestManifest
 
         foreach ($tests as $test)
         {
-            $line = $cestName . ':' . $test->getName();
+            $line = $this->relativeDirPath . DIRECTORY_SEPARATOR . $cestName . '.php:' . $test->getName();
             fwrite($fileResource, $line ."\n");
         }
 
