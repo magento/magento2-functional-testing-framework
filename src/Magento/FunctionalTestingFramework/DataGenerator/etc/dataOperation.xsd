@@ -18,6 +18,7 @@
                         <xs:attribute type="xs:string" name="url"/>
                         <xs:attribute type="xs:string" name="auth"/>
                         <xs:attribute type="xs:string" name="method"/>
+                        <xs:attribute type="xs:string" name="storeCode" default="default"/>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>

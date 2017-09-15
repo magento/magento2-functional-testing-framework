@@ -430,6 +430,29 @@ class TestGenerator
                             }
                         }
                     }
+
+                    if ($hookObject) {
+                        $createEntityFunctionCall = sprintf("\t\t\$this->%s->createEntity(", $key);
+                        $entityApiHandlerFunctionCall = sprintf(
+                            "\t\t\$this->%s = new EntityApiHandler($%s",
+                            $key,
+                            $entity
+                        );
+                    } else {
+                        $createEntityFunctionCall = sprintf("\t\t\$%s->createEntity(", $key);
+                        $entityApiHandlerFunctionCall = sprintf(
+                            "\t\t$%s = new EntityApiHandler($%s",
+                            $key,
+                            $entity
+                        );
+                    }
+
+                    if (isset($customActionAttributes['storeCode'])) {
+                        $createEntityFunctionCall .= sprintf("\"%s\");\n", $customActionAttributes['storeCode']);
+                    } else {
+                        $createEntityFunctionCall .= ");\n";
+                    }
+
                     //If required-entities are defined, reassign dataObject to not overwrite the static definition.
                     //Also, EntityApiHandler needs to be defined with customData array.
                     if (!empty($requiredEntities)) {
@@ -445,37 +468,15 @@ class TestGenerator
                             $entity
                         );
 
-                        if ($hookObject) {
-                            $testSteps .= sprintf(
-                                "\t\t\$this->%s = new EntityApiHandler($%s, [%s]);\n",
-                                $key,
-                                $entity,
-                                implode(', ', $requiredEntityObjects)
-                            );
-                            $testSteps .= sprintf("\t\t\$this->%s->createEntity();\n", $key);
-                        } else {
-                            $testSteps .= sprintf(
-                                "\t\t$%s = new EntityApiHandler($%s, [%s]);\n",
-                                $key,
-                                $entity,
-                                implode(', ', $requiredEntityObjects)
-                            );
-                            $testSteps .= sprintf("\t\t$%s->createEntity();\n", $key);
-                        }
+                        $entityApiHandlerFunctionCall .= sprintf(
+                            ", [%s]);\n",
+                            implode(', ', $requiredEntityObjects)
+                        );
                     } else {
-                        if ($hookObject) {
-                            $testSteps .= sprintf(
-                                "\t\t\$this->%s = new EntityApiHandler($%s);\n",
-                                $key,
-                                $entity
-                            );
-                            $testSteps .= sprintf("\t\t\$this->%s->createEntity();\n", $key);
-                        } else {
-                            $testSteps .= sprintf("\t\t$%s = new EntityApiHandler($%s);\n", $key, $entity);
-                            $testSteps .= sprintf("\t\t$%s->createEntity();\n", $key);
-                        }
+                        $entityApiHandlerFunctionCall .= ");\n";
                     }
-
+                    $testSteps .= $entityApiHandlerFunctionCall;
+                    $testSteps .= $createEntityFunctionCall;
                     break;
                 case "deleteData":
                     $key = $customActionAttributes['createDataKey'];

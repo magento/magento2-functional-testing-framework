@@ -58,15 +58,24 @@ class ApiExecutor
     private static $entitySequences = [];
 
     /**
+     * Store code in web api rest url.
+     *
+     * @var string
+     */
+    private $storeCode;
+
+    /**
      * ApiSubObject constructor.
      * @param string $operation
      * @param EntityDataObject $entityObject
      * @param array $dependentEntities
+     * @param string $storeCode
      */
-    public function __construct($operation, $entityObject, $dependentEntities = null)
+    public function __construct($operation, $entityObject, $dependentEntities = null, $storeCode = 'default')
     {
         $this->operation = $operation;
         $this->entityObject = $entityObject;
+        $this->storeCode = $storeCode;
         if ($dependentEntities != null) {
             foreach ($dependentEntities as $entity) {
                 $this->dependentEntities[$entity->getName()] = $entity;
@@ -86,6 +95,7 @@ class ApiExecutor
      */
     public function executeRequest()
     {
+        $this->jsonDefinition->setStoreCode($this->storeCode);
         $apiClientUrl = $this->jsonDefinition->getApiUrl();
 
         $matchedParams = [];

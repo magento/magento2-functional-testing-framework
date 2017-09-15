@@ -35,6 +35,13 @@ class EntityApiHandler
     private $dependentObjects = [];
 
     /**
+     * Store code in web api rest url.
+     *
+     * @var string
+     */
+    private $storeCode;
+
+    /**
      * ApiPersistenceHandler constructor.
      * @param EntityDataObject $entityObject
      * @param array $dependentObjects
@@ -43,15 +50,21 @@ class EntityApiHandler
     {
         $this->entityObject = clone $entityObject;
         $this->dependentObjects = $dependentObjects;
+        $this->storeCode = 'default';
     }
 
     /**
      * Function which executes a create request based on specific operation metadata
+     *
+     * @param string $storeCode
      * @return void
      */
-    public function createEntity()
+    public function createEntity($storeCode = null)
     {
-        $apiExecutor = new ApiExecutor('create', $this->entityObject, $this->dependentObjects);
+        if (!$storeCode) {
+            $storeCode = $this->storeCode;
+        }
+        $apiExecutor = new ApiExecutor('create', $this->entityObject, $this->dependentObjects, $storeCode);
         $result = $apiExecutor->executeRequest();
 
         $this->createdObject = new EntityDataObject(
@@ -66,11 +79,15 @@ class EntityApiHandler
     /**
      * Function which executes a delete request based on specific operation metadata
      *
+     * @param string $storeCode
      * @return string | false
      */
-    public function deleteEntity()
+    public function deleteEntity($storeCode = null)
     {
-        $apiExecutor = new ApiExecutor('delete', $this->createdObject);
+        if (!$storeCode) {
+            $storeCode = $this->storeCode;
+        }
+        $apiExecutor = new ApiExecutor('delete', $this->createdObject, null, $storeCode);
         $result = $apiExecutor->executeRequest();
 
         return $result;

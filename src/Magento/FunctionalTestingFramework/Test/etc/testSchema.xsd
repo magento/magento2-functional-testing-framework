@@ -361,6 +361,7 @@
         <xs:attribute type="xs:boolean" name="remove" default="false"/>
         <xs:attribute type="xs:string" name="before"/>
         <xs:attribute type="xs:string" name="after"/>
+        <xs:attribute type="xs:string" name="storeCode"/>
     </xs:complexType>
     <xs:complexType name="requiredEntityType">
         <xs:simpleContent>
@@ -380,6 +381,7 @@
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute type="xs:string" name="storeCode"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>

@@ -40,18 +40,18 @@ class JsonDefinition
     private $apiMethod;
 
     /**
-     * Base URL for the request
+     * Api request url.
      *
      * @var string
      */
-    private $baseUrl;
+    private $apiUrl;
 
     /**
      * Resource specific URI for the request
      *
      * @var string
      */
-    private $apiUrl;
+    private $apiUri;
 
     /**
      * Authorization path for retrieving a token
@@ -82,37 +82,48 @@ class JsonDefinition
     private $jsonMetadata = [];
 
     /**
+     * Store code in api url.
+     *
+     * @var string
+     */
+    private $apiStoreCode;
+
+    /**
      * JsonDefinition constructor.
      * @param string $name
      * @param string $operation
      * @param string $dataType
      * @param string $apiMethod
-     * @param string $apiUrl
+     * @param string $apiUri
      * @param string $auth
      * @param array $headers
      * @param array $params
      * @param array $jsonMetadata
+     * @param string $apiStoreCode
      */
     public function __construct(
         $name,
         $operation,
         $dataType,
         $apiMethod,
-        $apiUrl,
+        $apiUri,
         $auth,
         $headers,
         $params,
-        $jsonMetadata
+        $jsonMetadata,
+        $apiStoreCode = 'default'
     ) {
         $this->name = $name;
         $this->operation = $operation;
         $this->dataType = $dataType;
         $this->apiMethod = $apiMethod;
-        $this->baseUrl = $apiUrl;
+        $this->apiUri = $apiUri;
         $this->auth = $auth;
         $this->headers = $headers;
         $this->params = $params;
         $this->jsonMetadata = $jsonMetadata;
+        $this->apiStoreCode = $apiStoreCode;
+        $this->apiUrl = null;
     }
 
     /**
@@ -152,7 +163,7 @@ class JsonDefinition
      */
     public function getApiUrl()
     {
-        $this->cleanApiUrl();
+        $this->apiUrl = '/rest/' . $this->apiStoreCode . '/' . trim($this->apiUri, '/');
 
         if (array_key_exists('path', $this->params)) {
             $this->addPathParam();
@@ -172,7 +183,7 @@ class JsonDefinition
      */
     public function getAuth()
     {
-        return $this->auth;
+        return '/rest/' . $this->apiStoreCode . '/' . trim($this->auth, '/');
     }
 
     /**
@@ -196,17 +207,14 @@ class JsonDefinition
     }
 
     /**
-     * Function to validate api format and add "/" char where necessary
+     * Set store code.
      *
+     * @param $newStoreCode
      * @return void
      */
-    private function cleanApiUrl()
+    public function setStoreCode($newStoreCode)
     {
-        if (substr($this->baseUrl, -1) == "/") {
-            $this->apiUrl = rtrim($this->baseUrl, "/");
-        } else {
-            $this->apiUrl = $this->baseUrl;
-        }
+        $this->apiStoreCode = $newStoreCode;
     }
 
     /**
@@ -228,15 +236,14 @@ class JsonDefinition
      */
     private function addQueryParams()
     {
-
         foreach ($this->params['query'] as $paramName => $paramValue) {
-            if (!stringContains("?", $this->apiUrl)) {
+            if (strpos($this->apiUrl, '?') == false) {
                 $this->apiUrl = $this->apiUrl . "?";
             } else {
                 $this->apiUrl = $this->apiUrl . "&";
             }
 
-            $this->apiUrl = $paramName . "=" . $paramValue;
+            $this->apiUrl = $this->apiUrl . $paramName . "=" . $paramValue;
         }
     }
 }
