@@ -195,6 +195,9 @@ class MagentoWebDriver extends WebDriver
     {
         $this->waitForJS('return document.readyState == "complete"', $timeout);
         $this->waitForAjaxLoad($timeout);
+        $this->waitForElementNotVisible('.loading-mask', 30);
+        $this->waitForElementNotVisible('.admin_data-grid-loading-mask', 30);
+        $this->waitForElementNotVisible('.admin__form-loading-mask', 30);
     }
 
     /**
