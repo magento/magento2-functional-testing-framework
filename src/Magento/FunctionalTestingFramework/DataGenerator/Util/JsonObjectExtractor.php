@@ -58,7 +58,7 @@ class JsonObjectExtractor
         if (array_key_exists(JsonObjectExtractor::JSON_OBJECT_OBJ_NAME, $jsonObjectArray)) {
             foreach ($jsonObjectArray[JsonObjectExtractor::JSON_OBJECT_OBJ_NAME] as $jsonObject) {
                 $nestedJsonElement = $this->extractJsonObject($jsonObject);
-                $nestedJsonElements[$nestedJsonElement->getKey()] = $nestedJsonElement;
+                $jsonMetadata[] = $nestedJsonElement;
             }
         }
 

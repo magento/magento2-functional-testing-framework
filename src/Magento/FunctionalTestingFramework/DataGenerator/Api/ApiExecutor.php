@@ -161,8 +161,10 @@ class ApiExecutor
 
         foreach ($jsonArrayMetadata as $jsonElement) {
             if ($jsonElement->getType() == JsonObjectExtractor::JSON_OBJECT_OBJ_NAME) {
+                $entityObj = $this->resolveJsonObjectAndEntityData($entityObject, $jsonElement->getValue());
                 $jsonArray[$jsonElement->getValue()] =
-                    $this->convertJsonArray($entityObject, $jsonElement->getNestedMetadata());
+                    $this->convertJsonArray($entityObj, $jsonElement->getNestedMetadata());
+                continue;
             }
 
             $jsonElementType = $jsonElement->getValue();
@@ -223,6 +225,25 @@ class ApiExecutor
     }
 
     /**
+     * This function does a comparison of the entity object being matched to the json element. If there is a mismatch in
+     * type we attempt to use a nested entity, if the entities are properly matched, we simply return the object.
+     *
+     * @param EntityDataObject $entityObject
+     * @param string $jsonElementValue
+     * @return EntityDataObject|null
+     */
+    private function resolveJsonObjectAndEntityData($entityObject, $jsonElementValue)
+    {
+        if ($jsonElementValue != $entityObject->getType()) {
+            // if we have a mismatch attempt to retrieve linked data and return just the first linkage
+            $linkName = $entityObject->getLinkedEntitiesOfType($jsonElementValue)[0];
+            return DataObjectHandler::getInstance()->getObject($linkName);
+        }
+
+        return $entityObject;
+    }
+
+    /**
      * Resolves JsonObjects and pre-defined metadata (in other operation.xml file) referenced by the json metadata
      *
      * @param string $entityName
@@ -233,6 +254,7 @@ class ApiExecutor
     {
         $linkedEntityObj = $this->resolveLinkedEntityObject($entityName);
 
+        // in array case
         if (!empty($jsonElement->getNestedJsonElement($jsonElement->getValue()))
             && $jsonElement->getType() == 'array'
         ) {
