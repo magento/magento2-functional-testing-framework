@@ -44,19 +44,31 @@ class JsonElement
     private $nestedMetadata = [];
 
     /**
+     * Json required attribute, used to determine if values need to be cast before insertion.
+     * @var bool
+     */
+    private $required;
+
+    /**
      * JsonElement constructor.
      * @param string $key
      * @param string $value
      * @param string $type
      * @param array $nestedElements
+     * @param bool $required
      * @param array $nestedMetadata
      */
-    public function __construct($key, $value, $type, $nestedElements = [], $nestedMetadata = null)
+    public function __construct($key, $value, $type, $required, $nestedElements = [], $nestedMetadata = null)
     {
         $this->key = $key;
         $this->value = $value;
         $this->type = $type;
         $this->nestedElements = $nestedElements;
+        if ($required) {
+            $this->required = true;
+        } else {
+            $this->required = false;
+        }
         $this->nestedMetadata = $nestedMetadata;
     }
 
@@ -88,6 +100,16 @@ class JsonElement
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Getter for required attribute
+     *
+     * @return bool
+     */
+    public function getRequired()
+    {
+        return $this->required;
     }
 
     /**
