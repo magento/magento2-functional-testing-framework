@@ -19,5 +19,4 @@ class TestReferenceException extends \Exception
     {
         parent::__construct($message);
     }
-
 }

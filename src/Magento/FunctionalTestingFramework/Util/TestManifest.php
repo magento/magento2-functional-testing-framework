@@ -49,8 +49,7 @@ class TestManifest
     {
         $fileResource = fopen($this->filePath, 'a');
 
-        foreach ($tests as $test)
-        {
+        foreach ($tests as $test) {
             $line = $this->relativeDirPath . DIRECTORY_SEPARATOR . $cestName . '.php:' . $test->getName();
             fwrite($fileResource, $line ."\n");
         }

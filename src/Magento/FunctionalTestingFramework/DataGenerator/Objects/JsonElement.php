@@ -54,9 +54,9 @@ class JsonElement
      * @param string $key
      * @param string $value
      * @param string $type
-     * @param array $nestedElements
      * @param bool $required
-     * @param array $nestedMetadata
+     * @param array $nestedElements
+     * @param null|array $nestedMetadata
      */
     public function __construct($key, $value, $type, $required, $nestedElements = [], $nestedMetadata = null)
     {

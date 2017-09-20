@@ -58,7 +58,7 @@ class SectionObject
 
     /**
      * Checks to see if this section contains any element by the name of elementName
-     * @param $elementName
+     * @param string $elementName
      * @return bool
      */
     public function hasElement($elementName)

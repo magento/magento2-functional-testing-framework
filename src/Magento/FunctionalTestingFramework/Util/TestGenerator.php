@@ -34,6 +34,7 @@ class TestGenerator
 
     /**
      * TestGenerator constructor.
+     * @param string $exportDir
      */
     private function __construct($exportDir)
     {
@@ -59,6 +60,7 @@ class TestGenerator
      * Takes a directory path and recursively deletes all files and folders.
      *
      * @param string $directory
+     * @return void
      */
     private function rmdirRecursive($directory)
     {
@@ -451,7 +453,6 @@ class TestGenerator
             if (isset($customActionAttributes['parameter'])) {
                 $parameter = $this->wrapWithDoubleQuotes($customActionAttributes['parameter']);
             }
-
 
             if (isset($customActionAttributes['dependentSelector'])) {
                 $dependentSelector = $this->wrapWithDoubleQuotes($customActionAttributes['dependentSelector']);
