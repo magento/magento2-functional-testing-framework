@@ -100,17 +100,6 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * Returns an array of Elements.
-     *
-     * @param string $locator
-     * @return array
-     */
-    public function findElement($locator)
-    {
-        return $this->_findElements($locator);
-    }
-
-    /**
      * Login Magento Admin with given username and password.
      *
      * @param string $username
@@ -283,6 +272,32 @@ class MagentoWebDriver extends WebDriver
     public function scrollToTopOfPage()
     {
         $this->executeJS('window.scrollTo(0,0);');
+    }
+
+    /**
+     * Conditional click for an area that should be visible
+     *
+     * @param string $selector
+     * @param string dependentSelector
+     * @param bool $visible
+     */
+    public function conditionalClick($selector, $dependentSelector, $visible)
+    {
+        $el = $this->_findElements($dependentSelector);
+        if (sizeof($el) > 1) {
+            throw new \Exception("more than one element matches selector " . $selector);
+        }
+
+        $clickCondition = null;
+        if ($visible) {
+            $clickCondition = !empty($el) && $el[0]->isDisplayed();
+        } else {
+            $clickCondition = empty($el) || !$el[0]->isDisplayed();
+        }
+
+        if ($clickCondition) {
+            $this->click($selector);
+        }
     }
 
     /**

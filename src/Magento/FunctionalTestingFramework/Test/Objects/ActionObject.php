@@ -20,6 +20,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 class ActionObject
 {
     const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray"];
+    const SELECTOR_ENABLED_ATTRIBUTES = ['selector', 'dependentSelector'];
     const MERGE_ACTION_ORDER_AFTER = 'after';
     const ACTION_ATTRIBUTE_URL = 'url';
     const ACTION_ATTRIBUTE_SELECTOR = 'selector';
@@ -189,15 +190,20 @@ class ActionObject
      */
     private function resolveSelectorReferenceAndTimeout()
     {
-        if (!array_key_exists(ActionObject::ACTION_ATTRIBUTE_SELECTOR, $this->actionAttributes)) {
+        $actionAttributeKeys = array_keys($this->actionAttributes);
+        $relevantSelectorAttributes = array_intersect($actionAttributeKeys, ActionObject::SELECTOR_ENABLED_ATTRIBUTES);
+
+        if (empty($relevantSelectorAttributes)) {
             return;
         }
 
-        $selector = $this->actionAttributes[ActionObject::ACTION_ATTRIBUTE_SELECTOR];
+        foreach ($relevantSelectorAttributes as $selectorAttribute) {
+            $selector = $this->actionAttributes[$selectorAttribute];
 
-        $replacement = $this->findAndReplaceReferences(SectionObjectHandler::getInstance(), $selector);
-        if ($replacement) {
-            $this->resolvedCustomAttributes[ActionObject::ACTION_ATTRIBUTE_SELECTOR] = $replacement;
+            $replacement = $this->findAndReplaceReferences(SectionObjectHandler::getInstance(), $selector);
+            if ($replacement) {
+                $this->resolvedCustomAttributes[$selectorAttribute] = $replacement;
+            }
         }
     }
 

@@ -348,6 +348,8 @@ class TestGenerator
             $value = null;
             $button = null;
             $parameter = null;
+            $dependentSelector = null;
+            $visible = null;
 
             if (isset($customActionAttributes['returnVariable'])) {
                 $returnVariable = $customActionAttributes['returnVariable'];
@@ -448,6 +450,15 @@ class TestGenerator
 
             if (isset($customActionAttributes['parameter'])) {
                 $parameter = $this->wrapWithDoubleQuotes($customActionAttributes['parameter']);
+            }
+
+
+            if (isset($customActionAttributes['dependentSelector'])) {
+                $dependentSelector = $this->wrapWithDoubleQuotes($customActionAttributes['dependentSelector']);
+            }
+
+            if (isset($customActionAttributes['visible'])) {
+                $visible = $customActionAttributes['visible'];
             }
 
             switch ($actionName) {
@@ -756,6 +767,9 @@ class TestGenerator
                 case "dontSeeInSource":
                     // TODO: Need to fix xml parser to allow parsing html.
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $html);
+                    break;
+                case "conditionalClick":
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $dependentSelector, $visible);
                     break;
                 default:
                     if ($returnVariable) {
