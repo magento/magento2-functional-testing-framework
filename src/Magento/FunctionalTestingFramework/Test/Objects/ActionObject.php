@@ -12,6 +12,7 @@ use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
 use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
 use Magento\FunctionalTestingFramework\Page\Handlers\PageObjectHandler;
 use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 
 /**
  * Class ActionObject
@@ -321,6 +322,9 @@ class ActionObject
                     break;
                 case SectionObject::class:
                     list(,$objField) = $this->stripAndSplitReference($match);
+                    if ($obj->getElement($objField) == null) {
+                        throw new TestReferenceException("Could not resolve entity reference " . $inputString);
+                    }
                     $parameterized = $obj->getElement($objField)->isParameterized();
                     $replacement = $obj->getElement($objField)->getLocator();
                     $this->timeout = $obj->getElement($objField)->getTimeout();
@@ -347,7 +351,7 @@ class ActionObject
             if ($replacement == null && get_class($objectHandler) != DataObjectHandler::class) {
                 return $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $outputString);
             } elseif ($replacement == null) {
-                throw new \Exception("Could not resolve entity reference " . $inputString);
+                throw new TestReferenceException("Could not resolve entity reference " . $inputString);
             }
 
             //If Page or Section's Element is has parameterized = true attribute, attempt to do parameter replacement.
@@ -373,12 +377,12 @@ class ActionObject
     {
         preg_match_all('/{{[\w.]+}}/', $reference, $varMatches);
         if (count($varMatches[0]) > count($parameters)) {
-            throw new \Exception(
+            throw new TestReferenceException(
                 "Parameter Resolution Failed: Not enough parameters given for reference " .
                 $reference . ". Parameters Given: " . implode(",", $parameters)
             );
         } elseif (count($varMatches[0]) < count($parameters)) {
-            throw new \Exception(
+            throw new TestReferenceException(
                 "Parameter Resolution Failed: Too many parameters given for reference " .
                 $reference . ". Parameters Given: " . implode(",", $parameters)
             );

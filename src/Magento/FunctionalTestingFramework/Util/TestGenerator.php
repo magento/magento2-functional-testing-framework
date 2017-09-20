@@ -8,6 +8,7 @@ namespace Magento\FunctionalTestingFramework\Util;
 
 use FilesystemIterator;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Test\Handlers\CestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
@@ -63,7 +64,7 @@ class TestGenerator
     {
         $it = new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS);
 
-        while($it->valid()) {
+        while ($it->valid()) {
             $path = $directory . DIRECTORY_SEPARATOR . $it->getFilename();
             if ($it->isDir()) {
                 $this->rmDirRecursive($path);
@@ -85,7 +86,7 @@ class TestGenerator
     public static function getInstance()
     {
         if (!self::$testGenerator) {
-            self::$testGenerator = new TestGenerator(TESTS_MODULE_PATH .  DIRECTORY_SEPARATOR . "_generated");
+            self::$testGenerator = new TestGenerator(TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . "_generated");
         }
 
         return self::$testGenerator;
@@ -152,8 +153,12 @@ class TestGenerator
         $classAnnotationsPhp = $this->generateClassAnnotationsPhp($cestObject->getAnnotations());
         $className = $cestObject->getName();
         $className = str_replace(' ', '', $className);
-        $hookPhp = $this->generateHooksPhp($cestObject->getHooks());
-        $testsPhp = $this->generateTestsPhp($cestObject->getTests());
+        try {
+            $hookPhp = $this->generateHooksPhp($cestObject->getHooks());
+            $testsPhp = $this->generateTestsPhp($cestObject->getTests());
+        } catch (TestReferenceException $e) {
+            throw new TestReferenceException($e->getMessage(). " in Cest \"" . $cestObject->getName() . "\"");
+        }
 
         $cestPhp = "<?php\n";
         $cestPhp .= "namespace Magento\AcceptanceTest\Backend;\n\n";
@@ -376,7 +381,7 @@ class TestGenerator
                 foreach ($params as $param) {
                     $paramsWithUniqueness[] = $this->addUniquenessFunctionCall($param);
                 }
-                $parameterArray = '[' . implode(',', $paramsWithUniqueness) .']';
+                $parameterArray = '[' . implode(',', $paramsWithUniqueness) . ']';
             }
 
             if (isset($customActionAttributes['requiredAction'])) {
@@ -865,7 +870,15 @@ class TestGenerator
                 }
             }
 
-            $steps = $this->generateStepsPhp($hookObject->getActions(), $hookObject->getCustomData(), $createData);
+            try {
+                $steps = $this->generateStepsPhp(
+                    $hookObject->getActions(),
+                    $hookObject->getCustomData(),
+                    $createData
+                );
+            } catch (TestReferenceException $e) {
+                throw new TestReferenceException($e->getMessage() . " in Element \"" . $type . "\"");
+            }
 
             if ($type == "after") {
                 $hooks .= sprintf("\tpublic function _after(%s)\n", $dependencies);
@@ -988,7 +1001,11 @@ class TestGenerator
             $testName = str_replace(' ', '', $testName);
             $testAnnotations = $this->generateTestAnnotationsPhp($test->getAnnotations());
             $dependencies = 'AcceptanceTester $I';
-            $steps = $this->generateStepsPhp($test->getOrderedActions(), $test->getCustomData());
+            try {
+                $steps = $this->generateStepsPhp($test->getOrderedActions(), $test->getCustomData());
+            } catch (TestReferenceException $e) {
+                throw new TestReferenceException($e->getMessage() . " in Test \"" . $test->getName() . "\"");
+            }
 
             $testPhp .= $testAnnotations;
             $testPhp .= sprintf("\tpublic function %s(%s)\n", $testName, $dependencies);
@@ -1014,7 +1031,7 @@ class TestGenerator
     {
         $output = '';
 
-        preg_match('/' . EntityDataObject::CEST_UNIQUE_FUNCTION .'\("[\w]+"\)/', $input, $matches);
+        preg_match('/' . EntityDataObject::CEST_UNIQUE_FUNCTION . '\("[\w]+"\)/', $input, $matches);
         if (!empty($matches)) {
             $parts = preg_split('/' . EntityDataObject::CEST_UNIQUE_FUNCTION . '\("[\w]+"\)/', $input, -1);
             for ($i = 0; $i < count($parts); $i++) {
@@ -1082,6 +1099,7 @@ class TestGenerator
     }
 
     // @codingStandardsIgnoreStart
+
     /**
      * Wrap parameters into a function call.
      *
