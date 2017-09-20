@@ -31,12 +31,14 @@
         </xs:choice>
         <xs:attribute type="xs:string" name="key"/>
         <xs:attribute type="xs:string" name="dataType" use="required"/>
+        <xs:attribute type="xs:boolean" name="required" use="optional"/>
     </xs:complexType>
     <xs:complexType name="entry">
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="key" use="required"/>
                 <xs:attribute type="xs:string" name="type" use="optional"/>
+                <xs:attribute type="xs:boolean" name="required" use="optional"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -47,6 +49,7 @@
         </xs:choice>
         <xs:attribute type="xs:string" name="key" use="required"/>
         <xs:attribute type="xs:string" name="type" use="optional"/>
+        <xs:attribute type="xs:boolean" name="required" use="optional"/>
     </xs:complexType>
     <xs:complexType name="header">
         <xs:simpleContent>

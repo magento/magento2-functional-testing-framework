@@ -99,34 +99,6 @@ class TestObject
     public function getOrderedActions()
     {
         $mergeUtil = new ActionMergeUtil();
-        $mergedSteps = $mergeUtil->mergeStepsAndInsertWaits($this->parsedSteps);
-        return $this->extractActionGroups($mergedSteps);
-    }
-
-    /**
-     * Method to insert action group references into step flow
-     *
-     * @param array $mergedSteps
-     * @return array
-     */
-    private function extractActionGroups($mergedSteps)
-    {
-        $newOrderedList = [];
-
-        foreach ($mergedSteps as $key => $mergedStep) {
-            /**@var ActionObject $mergedStep**/
-            if ($mergedStep->getType() == ActionObjectExtractor::ACTION_GROUP_TAG) {
-                $actionGroup = ActionGroupObjectHandler::getInstance()->getObject(
-                    $mergedStep->getCustomActionAttributes()[ActionObjectExtractor::ACTION_GROUP_REF]
-                );
-                $args = $mergedStep->getCustomActionAttributes()[ActionObjectExtractor::ACTION_GROUP_ARGUMENTS] ?? null;
-                $actionsToMerge = $actionGroup->getSteps($args);
-                $newOrderedList = $newOrderedList + $actionsToMerge;
-            } else {
-                $newOrderedList[$key]  = $mergedStep;
-            }
-        }
-
-        return $newOrderedList;
+        return $mergeUtil->resolveActionSteps($this->parsedSteps);
     }
 }

@@ -58,7 +58,7 @@ class JsonObjectExtractor
         if (array_key_exists(JsonObjectExtractor::JSON_OBJECT_OBJ_NAME, $jsonObjectArray)) {
             foreach ($jsonObjectArray[JsonObjectExtractor::JSON_OBJECT_OBJ_NAME] as $jsonObject) {
                 $nestedJsonElement = $this->extractJsonObject($jsonObject);
-                $nestedJsonElements[$nestedJsonElement->getKey()] = $nestedJsonElement;
+                $jsonMetadata[] = $nestedJsonElement;
             }
         }
 
@@ -71,6 +71,7 @@ class JsonObjectExtractor
             $jsonDefKey,
             $dataType,
             JsonObjectExtractor::JSON_OBJECT_OBJ_NAME,
+            $jsonObjectArray[JsonDefinitionObjectHandler::ENTITY_OPERATION_REQUIRED] ?? null,
             $nestedJsonElements,
             $jsonMetadata
         );
@@ -89,7 +90,8 @@ class JsonObjectExtractor
             $jsonMetadata[] = new JsonElement(
                 $jsonEntryType[JsonDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY],
                 $jsonEntryType[JsonDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE],
-                JsonDefinitionObjectHandler::ENTITY_OPERATION_ENTRY
+                JsonDefinitionObjectHandler::ENTITY_OPERATION_ENTRY,
+                $jsonEntryType[JsonDefinitionObjectHandler::ENTITY_OPERATION_REQUIRED] ?? null
             );
         }
     }
@@ -122,6 +124,7 @@ class JsonObjectExtractor
                 $jsonEntryType[JsonDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_KEY],
                 $jsonElementValue,
                 JsonDefinitionObjectHandler::ENTITY_OPERATION_ARRAY,
+                $jsonEntryType[JsonDefinitionObjectHandler::ENTITY_OPERATION_REQUIRED] ?? null,
                 $nestedJsonElements
             );
         }

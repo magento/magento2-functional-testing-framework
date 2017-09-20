@@ -84,6 +84,7 @@
             <xs:element type="clickWithRightButtonType" name="clickWithRightButton" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="closeAdminNotificationType" name="closeAdminNotification" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="closeTabType" name="closeTab" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="conditionalClickType" name="conditionalClick" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="createDataType" name="createData" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="deleteDataType" name="deleteData" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dontSeeType" name="dontSee" minOccurs="0" maxOccurs="unbounded"/>
@@ -345,6 +346,19 @@
     <xs:complexType name="closeTabType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="conditionalClickType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="dependentSelector" />
+                <xs:attribute type="xs:boolean" name="visible"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
                 <xs:attribute type="xs:string" name="before"/>

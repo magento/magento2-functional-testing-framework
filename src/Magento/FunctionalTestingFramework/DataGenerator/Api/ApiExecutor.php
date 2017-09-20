@@ -3,6 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magento\FunctionalTestingFramework\DataGenerator\Api;
 
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
@@ -12,6 +13,7 @@ use Magento\FunctionalTestingFramework\DataGenerator\Objects\JsonDefinition;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\JsonElement;
 use Magento\FunctionalTestingFramework\DataGenerator\Util\JsonObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\ApiClientUtil;
+use Magento\Setup\Exception;
 
 /**
  * Class ApiExecutor
@@ -19,6 +21,7 @@ use Magento\FunctionalTestingFramework\Util\ApiClientUtil;
 class ApiExecutor
 {
     const PRIMITIVE_TYPES = ['string', 'boolean', 'integer', 'double', 'array'];
+    const EXCEPTION_REQUIRED_DATA = "%s of key \" %s\" in \"%s\" is required by metadata, but was not provided.";
 
     /**
      * Describes the operation for the executor ('create','update','delete')
@@ -149,6 +152,7 @@ class ApiExecutor
      * @param EntityDataObject $entityObject
      * @param array $jsonArrayMetadata
      * @return array
+     * @throws \Exception
      */
     private function convertJsonArray($entityObject, $jsonArrayMetadata)
     {
@@ -157,8 +161,10 @@ class ApiExecutor
 
         foreach ($jsonArrayMetadata as $jsonElement) {
             if ($jsonElement->getType() == JsonObjectExtractor::JSON_OBJECT_OBJ_NAME) {
+                $entityObj = $this->resolveJsonObjectAndEntityData($entityObject, $jsonElement->getValue());
                 $jsonArray[$jsonElement->getValue()] =
-                    $this->convertJsonArray($entityObject, $jsonElement->getNestedMetadata());
+                    $this->convertJsonArray($entityObj, $jsonElement->getNestedMetadata());
+                continue;
             }
 
             $jsonElementType = $jsonElement->getValue();
@@ -169,20 +175,40 @@ class ApiExecutor
                     EntityDataObject::CEST_UNIQUE_VALUE
                 );
 
-                if (array_key_exists($jsonElement->getKey(), $entityObject->getUniquenessData())) {
-                    $uniqueData = $entityObject->getUniquenessDataByName($jsonElement->getKey());
-                    if ($uniqueData === 'suffix') {
-                        $elementData .= (string)self::getSequence($entityObject->getName());
-                    } else {
-                        $elementData = (string)self::getSequence($entityObject->getName())
-                            . $elementData;
+                // If data was defined at all, attempt to put it into JSON body
+                // If data was not defined, and element is required, throw exception
+                // If no data is defined, don't input defaults per primitive into JSON for the data
+                if ($elementData != null) {
+                    if (array_key_exists($jsonElement->getKey(), $entityObject->getUniquenessData())) {
+                        $uniqueData = $entityObject->getUniquenessDataByName($jsonElement->getKey());
+                        if ($uniqueData === 'suffix') {
+                            $elementData .= (string)self::getSequence($entityObject->getName());
+                        } else {
+                            $elementData = (string)self::getSequence($entityObject->getName()) . $elementData;
+                        }
                     }
-                }
+                    $jsonArray[$jsonElement->getKey()] = $this->castValue($jsonElementType, $elementData);
 
-                $jsonArray[$jsonElement->getKey()] = $this->castValue($jsonElementType, $elementData);
+                } elseif ($jsonElement->getRequired()) {
+                    throw new \Exception(sprintf(
+                        ApiExecutor::EXCEPTION_REQUIRED_DATA,
+                        $jsonElement->getType(),
+                        $jsonElement->getKey(),
+                        $this->entityObject->getName()
+                    ));
+                }
             } else {
                 $entityNamesOfType = $entityObject->getLinkedEntitiesOfType($jsonElementType);
 
+                // If an element is required by metadata, but was not provided in the entity, throw an exception
+                if ($jsonElement->getRequired() && $entityNamesOfType == null) {
+                    throw new \Exception(sprintf(
+                        ApiExecutor::EXCEPTION_REQUIRED_DATA,
+                        $jsonElement->getType(),
+                        $jsonElement->getKey(),
+                        $this->entityObject->getName()
+                    ));
+                }
                 foreach ($entityNamesOfType as $entityName) {
                     $jsonDataSubArray = $this->resolveNonPrimitiveElement($entityName, $jsonElement);
 
@@ -199,6 +225,25 @@ class ApiExecutor
     }
 
     /**
+     * This function does a comparison of the entity object being matched to the json element. If there is a mismatch in
+     * type we attempt to use a nested entity, if the entities are properly matched, we simply return the object.
+     *
+     * @param EntityDataObject $entityObject
+     * @param string $jsonElementValue
+     * @return EntityDataObject|null
+     */
+    private function resolveJsonObjectAndEntityData($entityObject, $jsonElementValue)
+    {
+        if ($jsonElementValue != $entityObject->getType()) {
+            // if we have a mismatch attempt to retrieve linked data and return just the first linkage
+            $linkName = $entityObject->getLinkedEntitiesOfType($jsonElementValue)[0];
+            return DataObjectHandler::getInstance()->getObject($linkName);
+        }
+
+        return $entityObject;
+    }
+
+    /**
      * Resolves JsonObjects and pre-defined metadata (in other operation.xml file) referenced by the json metadata
      *
      * @param string $entityName
@@ -209,8 +254,10 @@ class ApiExecutor
     {
         $linkedEntityObj = $this->resolveLinkedEntityObject($entityName);
 
+        // in array case
         if (!empty($jsonElement->getNestedJsonElement($jsonElement->getValue()))
-            && $jsonElement->getType() == 'array') {
+            && $jsonElement->getType() == 'array'
+        ) {
             $jsonSubArray = $this->convertJsonArray(
                 $linkedEntityObj,
                 [$jsonElement->getNestedJsonElement($jsonElement->getValue())]
@@ -285,6 +332,7 @@ class ApiExecutor
     }
 
     // @codingStandardsIgnoreStart
+
     /**
      * This function takes a string value and its corresponding type and returns the string cast
      * into its the type passed.
@@ -304,6 +352,9 @@ class ApiExecutor
                 $newVal = (integer)$value;
                 break;
             case 'boolean':
+                if (strtolower($newVal) === 'false') {
+                    return false;
+                }
                 $newVal = (boolean)$value;
                 break;
             case 'double':

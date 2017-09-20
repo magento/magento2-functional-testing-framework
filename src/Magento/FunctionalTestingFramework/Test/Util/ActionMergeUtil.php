@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
+use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 
 /**
@@ -44,14 +45,46 @@ class ActionMergeUtil
      * Method to execute merge of steps and insert wait steps.
      *
      * @param array $parsedSteps
+     * @param bool $skipActionGroupResolution
      * @return array
      */
-    public function mergeStepsAndInsertWaits($parsedSteps)
+    public function resolveActionSteps($parsedSteps, $skipActionGroupResolution = false)
     {
         $this->mergeActions($parsedSteps);
         $this->insertWaits();
 
-        return $this->orderedSteps;
+        if ($skipActionGroupResolution) {
+            return $this->orderedSteps;
+        }
+
+        return $this->resolveActionGroups($this->orderedSteps);
+    }
+
+    /**
+     * Method to resolve action group references and insert relevant actions into step flow
+     *
+     * @param array $mergedSteps
+     * @return array
+     */
+    private function resolveActionGroups($mergedSteps)
+    {
+        $newOrderedList = [];
+
+        foreach ($mergedSteps as $key => $mergedStep) {
+            /**@var ActionObject $mergedStep**/
+            if ($mergedStep->getType() == ActionObjectExtractor::ACTION_GROUP_TAG) {
+                $actionGroup = ActionGroupObjectHandler::getInstance()->getObject(
+                    $mergedStep->getCustomActionAttributes()[ActionObjectExtractor::ACTION_GROUP_REF]
+                );
+                $args = $mergedStep->getCustomActionAttributes()[ActionObjectExtractor::ACTION_GROUP_ARGUMENTS] ?? null;
+                $actionsToMerge = $actionGroup->getSteps($args);
+                $newOrderedList = $newOrderedList + $actionsToMerge;
+            } else {
+                $newOrderedList[$key]  = $mergedStep;
+            }
+        }
+
+        return $newOrderedList;
     }
 
     /**

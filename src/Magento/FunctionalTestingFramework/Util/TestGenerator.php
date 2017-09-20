@@ -6,13 +6,25 @@
 
 namespace Magento\FunctionalTestingFramework\Util;
 
+use FilesystemIterator;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Test\Handlers\CestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
+use Magento\FunctionalTestingFramework\Test\Objects\CestObject;
+use RecursiveDirectoryIterator;
 
 class TestGenerator
 {
+
+    /**
+     * Path to the export dir.
+     *
+     * @var string
+     */
+    private $exportDirectory;
+
     /**
      * Test generator.
      *
@@ -22,10 +34,50 @@ class TestGenerator
 
     /**
      * TestGenerator constructor.
+     * @param string $exportDir
      */
-    private function __construct()
+    private function __construct($exportDir)
     {
         // private constructor for singleton
+        $this->exportDirectory = $exportDir;
+    }
+
+    /**
+     * Method used to clean export dir if needed and create new empty export dir.
+     *
+     * @return void
+     */
+    private function setupExportDir()
+    {
+        if (file_exists($this->exportDirectory)) {
+            $this->rmDirRecursive($this->exportDirectory);
+        }
+
+        mkdir($this->exportDirectory, 0777, true);
+    }
+
+    /**
+     * Takes a directory path and recursively deletes all files and folders.
+     *
+     * @param string $directory
+     * @return void
+     */
+    private function rmdirRecursive($directory)
+    {
+        $it = new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS);
+
+        while ($it->valid()) {
+            $path = $directory . DIRECTORY_SEPARATOR . $it->getFilename();
+            if ($it->isDir()) {
+                $this->rmDirRecursive($path);
+            } else {
+                unlink($path);
+            }
+
+            $it->next();
+        }
+
+        rmdir($directory);
     }
 
     /**
@@ -36,7 +88,7 @@ class TestGenerator
     public static function getInstance()
     {
         if (!self::$testGenerator) {
-            self::$testGenerator = new TestGenerator();
+            self::$testGenerator = new TestGenerator(TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . "_generated");
         }
 
         return self::$testGenerator;
@@ -63,13 +115,7 @@ class TestGenerator
      */
     private function createCestFile($cestPhp, $filename)
     {
-        $exportDirectory = TESTS_MODULE_PATH . "/_generated";
-        $exportFilePath = sprintf("%s/%s.php", $exportDirectory, $filename);
-
-        if (!is_dir($exportDirectory)) {
-            mkdir($exportDirectory, 0777, true);
-        }
-
+        $exportFilePath = $this->exportDirectory . DIRECTORY_SEPARATOR . $filename . ".php";
         $file = fopen($exportFilePath, 'w');
 
         if (!$file) {
@@ -88,6 +134,7 @@ class TestGenerator
      */
     public function createAllCestFiles()
     {
+        $this->setupExportDir();
         $cestPhpArray = $this->assembleAllCestPhp();
 
         foreach ($cestPhpArray as $cestPhpFile) {
@@ -108,8 +155,12 @@ class TestGenerator
         $classAnnotationsPhp = $this->generateClassAnnotationsPhp($cestObject->getAnnotations());
         $className = $cestObject->getName();
         $className = str_replace(' ', '', $className);
-        $hookPhp = $this->generateHooksPhp($cestObject->getHooks());
-        $testsPhp = $this->generateTestsPhp($cestObject->getTests());
+        try {
+            $hookPhp = $this->generateHooksPhp($cestObject->getHooks());
+            $testsPhp = $this->generateTestsPhp($cestObject->getTests());
+        } catch (TestReferenceException $e) {
+            throw new TestReferenceException($e->getMessage(). " in Cest \"" . $cestObject->getName() . "\"");
+        }
 
         $cestPhp = "<?php\n";
         $cestPhp .= "namespace Magento\AcceptanceTest\Backend;\n\n";
@@ -134,11 +185,17 @@ class TestGenerator
         $cestObjects = $this->loadAllCestObjects();
         $cestPhpArray = [];
 
+        // create our manifest file here
+        $testManifest = new TestManifest($this->exportDirectory);
+
         foreach ($cestObjects as $cest) {
             $name = $cest->getName();
             $name = $string = str_replace(' ', '', $name);
             $php = $this->assembleCestPhp($cest);
             $cestPhpArray[] = [$name, $php];
+
+            //write to manifest here
+            $testManifest->recordCest($cest->getName(), $cest->getTests());
         }
 
         return $cestPhpArray;
@@ -293,6 +350,8 @@ class TestGenerator
             $value = null;
             $button = null;
             $parameter = null;
+            $dependentSelector = null;
+            $visible = null;
 
             if (isset($customActionAttributes['returnVariable'])) {
                 $returnVariable = $customActionAttributes['returnVariable'];
@@ -326,7 +385,7 @@ class TestGenerator
                 foreach ($params as $param) {
                     $paramsWithUniqueness[] = $this->addUniquenessFunctionCall($param);
                 }
-                $parameterArray = '[' . implode(',', $paramsWithUniqueness) .']';
+                $parameterArray = '[' . implode(',', $paramsWithUniqueness) . ']';
             }
 
             if (isset($customActionAttributes['requiredAction'])) {
@@ -336,15 +395,15 @@ class TestGenerator
             if (isset($customActionAttributes['selectorArray'])) {
                 $selector = $customActionAttributes['selectorArray'];
             } elseif (isset($customActionAttributes['selector'])) {
-                $selector = $this->wrapWithSingleQuotes($customActionAttributes['selector']);
+                $selector = $this->wrapWithDoubleQuotes($customActionAttributes['selector']);
             }
 
             if (isset($customActionAttributes['selector1'])) {
-                $selector1 = $this->wrapWithSingleQuotes($customActionAttributes['selector1']);
+                $selector1 = $this->wrapWithDoubleQuotes($customActionAttributes['selector1']);
             }
 
             if (isset($customActionAttributes['selector2'])) {
-                $selector2 = $this->wrapWithSingleQuotes($customActionAttributes['selector2']);
+                $selector2 = $this->wrapWithDoubleQuotes($customActionAttributes['selector2']);
             }
 
             if (isset($customActionAttributes['x'])) {
@@ -364,15 +423,15 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['locale'])) {
-                $locale = $this->wrapWithSingleQuotes($customActionAttributes['locale']);
+                $locale = $this->wrapWithDoubleQuotes($customActionAttributes['locale']);
             }
 
             if (isset($customActionAttributes['username'])) {
-                $username = $this->wrapWithSingleQuotes($customActionAttributes['username']);
+                $username = $this->wrapWithDoubleQuotes($customActionAttributes['username']);
             }
 
             if (isset($customActionAttributes['password'])) {
-                $password = $this->wrapWithSingleQuotes($customActionAttributes['password']);
+                $password = $this->wrapWithDoubleQuotes($customActionAttributes['password']);
             }
 
             if (isset($customActionAttributes['width'])) {
@@ -384,15 +443,23 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['value'])) {
-                $value = $this->wrapWithSingleQuotes($customActionAttributes['value']);
+                $value = $this->wrapWithDoubleQuotes($customActionAttributes['value']);
             }
 
             if (isset($customActionAttributes['button'])) {
-                $button = $this->wrapWithSingleQuotes($customActionAttributes['button']);
+                $button = $this->wrapWithDoubleQuotes($customActionAttributes['button']);
             }
 
             if (isset($customActionAttributes['parameter'])) {
-                $parameter = $this->wrapWithSingleQuotes($customActionAttributes['parameter']);
+                $parameter = $this->wrapWithDoubleQuotes($customActionAttributes['parameter']);
+            }
+
+            if (isset($customActionAttributes['dependentSelector'])) {
+                $dependentSelector = $this->wrapWithDoubleQuotes($customActionAttributes['dependentSelector']);
+            }
+
+            if (isset($customActionAttributes['visible'])) {
+                $visible = $customActionAttributes['visible'];
             }
 
             switch ($actionName) {
@@ -583,7 +650,7 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $function);
                     break;
                 case "executeJS":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $this->wrapWithSingleQuotes($function));
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $this->wrapWithDoubleQuotes($function));
                     break;
                 case "performOn":
                 case "waitForElementChange":
@@ -593,7 +660,7 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
                         $actionName,
-                        $this->wrapWithSingleQuotes($function),
+                        $this->wrapWithDoubleQuotes($function),
                         $time
                     );
                     break;
@@ -701,6 +768,9 @@ class TestGenerator
                 case "dontSeeInSource":
                     // TODO: Need to fix xml parser to allow parsing html.
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $html);
+                    break;
+                case "conditionalClick":
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $dependentSelector, $visible);
                     break;
                 default:
                     if ($returnVariable) {
@@ -815,7 +885,15 @@ class TestGenerator
                 }
             }
 
-            $steps = $this->generateStepsPhp($hookObject->getActions(), $hookObject->getCustomData(), $createData);
+            try {
+                $steps = $this->generateStepsPhp(
+                    $hookObject->getActions(),
+                    $hookObject->getCustomData(),
+                    $createData
+                );
+            } catch (TestReferenceException $e) {
+                throw new TestReferenceException($e->getMessage() . " in Element \"" . $type . "\"");
+            }
 
             if ($type == "after") {
                 $hooks .= sprintf("\tpublic function _after(%s)\n", $dependencies);
@@ -938,7 +1016,11 @@ class TestGenerator
             $testName = str_replace(' ', '', $testName);
             $testAnnotations = $this->generateTestAnnotationsPhp($test->getAnnotations());
             $dependencies = 'AcceptanceTester $I';
-            $steps = $this->generateStepsPhp($test->getOrderedActions(), $test->getCustomData());
+            try {
+                $steps = $this->generateStepsPhp($test->getOrderedActions(), $test->getCustomData());
+            } catch (TestReferenceException $e) {
+                throw new TestReferenceException($e->getMessage() . " in Test \"" . $test->getName() . "\"");
+            }
 
             $testPhp .= $testAnnotations;
             $testPhp .= sprintf("\tpublic function %s(%s)\n", $testName, $dependencies);
@@ -964,38 +1046,39 @@ class TestGenerator
     {
         $output = '';
 
-        preg_match('/' . EntityDataObject::CEST_UNIQUE_FUNCTION .'\("[\w]+"\)/', $input, $matches);
+        preg_match('/' . EntityDataObject::CEST_UNIQUE_FUNCTION . '\("[\w]+"\)/', $input, $matches);
         if (!empty($matches)) {
             $parts = preg_split('/' . EntityDataObject::CEST_UNIQUE_FUNCTION . '\("[\w]+"\)/', $input, -1);
             for ($i = 0; $i < count($parts); $i++) {
                 $parts[$i] = $this->stripWrappedQuotes($parts[$i]);
             }
             if (!empty($parts[0])) {
-                $output = $this->wrapWithSingleQuotes($parts[0]);
+                $output = $this->wrapWithDoubleQuotes($parts[0]);
             }
             $output .= $output === '' ? $matches[0] : '.' . $matches[0];
             if (!empty($parts[1])) {
-                $output .= '.' . $this->wrapWithSingleQuotes($parts[1]);
+                $output .= '.' . $this->wrapWithDoubleQuotes($parts[1]);
             }
         } else {
-            $output = $this->wrapWithSingleQuotes($input);
+            $output = $this->wrapWithDoubleQuotes($input);
         }
 
         return $output;
     }
 
     /**
-     * Wrap input string with single quotes.
+     * Wrap input string with double quotes, and replaces " with \" to prevent broken PHP when generated.
      *
      * @param string $input
      * @return string
      */
-    private function wrapWithSingleQuotes($input)
+    private function wrapWithDoubleQuotes($input)
     {
         if (empty($input)) {
             return '';
         }
-        $input = addslashes($input);
+        //Only replace &quot; with \" so that it doesn't break outer string.
+        $input = str_replace('"', '\"', $input);
         return sprintf('"%s"', $input);
     }
 
@@ -1031,6 +1114,7 @@ class TestGenerator
     }
 
     // @codingStandardsIgnoreStart
+
     /**
      * Wrap parameters into a function call.
      *

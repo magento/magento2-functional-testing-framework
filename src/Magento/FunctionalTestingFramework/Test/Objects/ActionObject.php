@@ -12,6 +12,7 @@ use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
 use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
 use Magento\FunctionalTestingFramework\Page\Handlers\PageObjectHandler;
 use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 
 /**
  * Class ActionObject
@@ -19,6 +20,7 @@ use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
 class ActionObject
 {
     const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray"];
+    const SELECTOR_ENABLED_ATTRIBUTES = ['selector', 'dependentSelector'];
     const MERGE_ACTION_ORDER_AFTER = 'after';
     const ACTION_ATTRIBUTE_URL = 'url';
     const ACTION_ATTRIBUTE_SELECTOR = 'selector';
@@ -188,15 +190,20 @@ class ActionObject
      */
     private function resolveSelectorReferenceAndTimeout()
     {
-        if (!array_key_exists(ActionObject::ACTION_ATTRIBUTE_SELECTOR, $this->actionAttributes)) {
+        $actionAttributeKeys = array_keys($this->actionAttributes);
+        $relevantSelectorAttributes = array_intersect($actionAttributeKeys, ActionObject::SELECTOR_ENABLED_ATTRIBUTES);
+
+        if (empty($relevantSelectorAttributes)) {
             return;
         }
 
-        $selector = $this->actionAttributes[ActionObject::ACTION_ATTRIBUTE_SELECTOR];
+        foreach ($relevantSelectorAttributes as $selectorAttribute) {
+            $selector = $this->actionAttributes[$selectorAttribute];
 
-        $replacement = $this->findAndReplaceReferences(SectionObjectHandler::getInstance(), $selector);
-        if ($replacement) {
-            $this->resolvedCustomAttributes[ActionObject::ACTION_ATTRIBUTE_SELECTOR] = $replacement;
+            $replacement = $this->findAndReplaceReferences(SectionObjectHandler::getInstance(), $selector);
+            if ($replacement) {
+                $this->resolvedCustomAttributes[$selectorAttribute] = $replacement;
+            }
         }
     }
 
@@ -321,8 +328,12 @@ class ActionObject
                     break;
                 case SectionObject::class:
                     list(,$objField) = $this->stripAndSplitReference($match);
+                    if ($obj->getElement($objField) == null) {
+                        throw new TestReferenceException("Could not resolve entity reference " . $inputString);
+                    }
                     $parameterized = $obj->getElement($objField)->isParameterized();
                     $replacement = $obj->getElement($objField)->getLocator();
+                    $this->timeout = $obj->getElement($objField)->getTimeout();
                     break;
                 case (get_class($obj) == EntityDataObject::class):
                     list(,$objField) = $this->stripAndSplitReference($match);
@@ -346,7 +357,7 @@ class ActionObject
             if ($replacement == null && get_class($objectHandler) != DataObjectHandler::class) {
                 return $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $outputString);
             } elseif ($replacement == null) {
-                throw new \Exception("Could not resolve entity reference " . $inputString);
+                throw new TestReferenceException("Could not resolve entity reference " . $inputString);
             }
 
             //If Page or Section's Element is has parameterized = true attribute, attempt to do parameter replacement.
@@ -372,12 +383,12 @@ class ActionObject
     {
         preg_match_all('/{{[\w.]+}}/', $reference, $varMatches);
         if (count($varMatches[0]) > count($parameters)) {
-            throw new \Exception(
+            throw new TestReferenceException(
                 "Parameter Resolution Failed: Not enough parameters given for reference " .
                 $reference . ". Parameters Given: " . implode(",", $parameters)
             );
         } elseif (count($varMatches[0]) < count($parameters)) {
-            throw new \Exception(
+            throw new TestReferenceException(
                 "Parameter Resolution Failed: Too many parameters given for reference " .
                 $reference . ". Parameters Given: " . implode(",", $parameters)
             );

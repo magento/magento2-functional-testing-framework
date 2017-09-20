@@ -37,6 +37,7 @@ class JsonDefinitionObjectHandler implements ObjectHandlerInterface
     const ENTITY_OPERATION_OBJECT_KEY = 'key';
     const ENTITY_OPERATION_OBJECT_VALUE = 'value';
     const ENTITY_OPERATION_JSON_OBJECT = 'jsonObject';
+    const ENTITY_OPERATION_REQUIRED = 'required';
 
     /**
      * Singleton Instance of class
@@ -164,7 +165,8 @@ class JsonDefinitionObjectHandler implements ObjectHandlerInterface
                     $jsonMetadata[] = new JsonElement(
                         $jsonEntryType[JsonDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY],
                         $jsonEntryType[JsonDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE],
-                        JsonDefinitionObjectHandler::ENTITY_OPERATION_ENTRY
+                        JsonDefinitionObjectHandler::ENTITY_OPERATION_ENTRY,
+                        $jsonEntryType[JsonDefinitionObjectHandler::ENTITY_OPERATION_REQUIRED] ?? null
                     );
                 }
             }
@@ -192,6 +194,7 @@ class JsonDefinitionObjectHandler implements ObjectHandlerInterface
                         $jsonEntryType[JsonDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_KEY],
                         $value,
                         $type,
+                        $jsonEntryType[JsonDefinitionObjectHandler::ENTITY_OPERATION_REQUIRED] ?? null,
                         $jsonSubMetadata
                     );
                 }
