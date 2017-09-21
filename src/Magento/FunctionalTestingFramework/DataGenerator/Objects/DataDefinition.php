@@ -7,26 +7,26 @@
 namespace Magento\FunctionalTestingFramework\DataGenerator\Objects;
 
 /**
- * Class JsonDefinition
+ * Class DataDefinition
  */
-class JsonDefinition
+class DataDefinition
 {
     /**
-     * Json Definitions Name
+     * Data Definitions Name
      *
      * @var string
      */
     private $name;
 
     /**
-     * Operation which the json defintion describes
+     * Operation which the data defintion describes
      *
      * @var string
      */
     private $operation;
 
     /**
-     * Data type for which the json defintiion is used
+     * Data type for which the data defintiion is used
      *
      * @var string
      */
@@ -75,21 +75,35 @@ class JsonDefinition
     private $params = [];
 
     /**
-     * The metadata describing the json fields and values themselves
+     * The metadata describing the data fields and values themselves
      *
      * @var array
      */
-    private $jsonMetadata = [];
+    private $metaData = [];
 
     /**
      * Store code in api url.
      *
      * @var string
      */
-    private $apiStoreCode;
+    private $storeCode;
 
     /**
-     * JsonDefinition constructor.
+     * Regex to check for request success.
+     *
+     * @var string
+     */
+    private $successRegex;
+
+    /**
+     * Regex to grab return value from response.
+     *
+     * @var string
+     */
+    private $returnRegex;
+
+    /**
+     * DataDefinition constructor.
      * @param string $name
      * @param string $operation
      * @param string $dataType
@@ -98,8 +112,10 @@ class JsonDefinition
      * @param string $auth
      * @param array $headers
      * @param array $params
-     * @param array $jsonMetadata
-     * @param string $apiStoreCode
+     * @param array $metaData
+     * @param string $successRegex
+     * @param string $returnRegex
+     * @param string $storeCode
      */
     public function __construct(
         $name,
@@ -110,8 +126,10 @@ class JsonDefinition
         $auth,
         $headers,
         $params,
-        $jsonMetadata,
-        $apiStoreCode = 'default'
+        $metaData,
+        $successRegex = null,
+        $returnRegex = null,
+        $storeCode = 'default'
     ) {
         $this->name = $name;
         $this->operation = $operation;
@@ -121,13 +139,15 @@ class JsonDefinition
         $this->auth = $auth;
         $this->headers = $headers;
         $this->params = $params;
-        $this->jsonMetadata = $jsonMetadata;
-        $this->apiStoreCode = $apiStoreCode;
+        $this->metaData = $metaData;
+        $this->storeCode = $storeCode;
+        $this->successRegex = $successRegex;
+        $this->returnRegex = $returnRegex;
         $this->apiUrl = null;
     }
 
     /**
-     * Getter for json data type
+     * Getter for data's data type
      *
      * @return string
      */
@@ -137,7 +157,7 @@ class JsonDefinition
     }
 
     /**
-     * Getter for json operation
+     * Getter for data operation
      *
      * @return string
      */
@@ -157,13 +177,22 @@ class JsonDefinition
     }
 
     /**
-     * Getter for api url
+     * Getter for api url for a store.
      *
+     * @param string $storeCode
      * @return string
      */
-    public function getApiUrl()
+    public function getApiUrl($storeCode)
     {
-        $this->apiUrl = '/rest/' . $this->apiStoreCode . '/' . trim($this->apiUri, '/');
+        if (isset($storeCode)) {
+            $this->storeCode = $storeCode;
+        }
+
+        if (strpos($this->auth, 'Formkey') === false) {
+            $this->apiUrl = '/rest/' . $this->storeCode . '/' . trim($this->apiUri, '/');
+        } else {
+            $this->apiUrl = trim($this->apiUri, '/') . '/';
+        }
 
         if (array_key_exists('path', $this->params)) {
             $this->addPathParam();
@@ -183,7 +212,7 @@ class JsonDefinition
      */
     public function getAuth()
     {
-        return '/rest/' . $this->apiStoreCode . '/' . trim($this->auth, '/');
+        return $this->auth;
     }
 
     /**
@@ -197,24 +226,43 @@ class JsonDefinition
     }
 
     /**
-     * Getter for json metadata
+     * Getter for data metadata
      *
      * @return array
      */
-    public function getJsonMetadata()
+    public function getMetaData()
     {
-        return $this->jsonMetadata;
+        return $this->metaData;
     }
 
     /**
-     * Set store code.
+     * Getter for store code.
      *
-     * @param $newStoreCode
-     * @return void
+     * @return string
      */
-    public function setStoreCode($newStoreCode)
+    public function getStoreCode()
     {
-        $this->apiStoreCode = $newStoreCode;
+        return $this->storeCode;
+    }
+
+    /**
+     * Getter for success regex.
+     *
+     * @return string
+     */
+    public function getSuccessRegex()
+    {
+        return $this->successRegex;
+    }
+
+    /**
+     * Getter for return regex.
+     *
+     * @return string
+     */
+    public function getReturnRegex()
+    {
+        return $this->returnRegex;
     }
 
     /**

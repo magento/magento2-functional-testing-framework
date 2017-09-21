@@ -4,15 +4,14 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magento\FunctionalTestingFramework\DataGenerator\Api;
+namespace Magento\FunctionalTestingFramework\DataGenerator\Persist;
 
-use Magento\FunctionalTestingFramework\Config\Data;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
-use Magento\FunctionalTestingFramework\Test\Handlers\CestObjectHandler;
-use Magento\FunctionalTestingFramework\Util\TestGenerator;
 
-class EntityApiHandler
+/**
+ * Class DataPersistHandler
+ */
+class DataPersistHandler
 {
     /**
      * Entity object data to use for create, delete, or update.
@@ -29,7 +28,7 @@ class EntityApiHandler
     private $createdObject;
 
     /**
-     * Array of dependent entities, handed to ApiExecutor when entity is created.
+     * Array of dependent entities, handed to CurlHandler when entity is created.
      * @var array|null
      */
     private $dependentObjects = [];
@@ -61,19 +60,29 @@ class EntityApiHandler
      */
     public function createEntity($storeCode = null)
     {
-        if (!$storeCode) {
-            $storeCode = $this->storeCode;
+        if (isset($storeCode)) {
+            $this->storeCode = $storeCode;
         }
-        $apiExecutor = new ApiExecutor('create', $this->entityObject, $this->dependentObjects, $storeCode);
-        $result = $apiExecutor->executeRequest();
+        $curlHandler = new CurlHandler('create', $this->entityObject, $this->dependentObjects, $this->storeCode);
+        $result = $curlHandler->executeRequest();
 
-        $this->createdObject = new EntityDataObject(
-            $this->entityObject->getName(),
-            $this->entityObject->getType(),
-            json_decode($result, true),
-            null,
-            null // No uniqueness data is needed to be further processed.
-        );
+        if ($curlHandler->isRestRequest()) {
+            $this->createdObject = new EntityDataObject(
+                $this->entityObject->getName(),
+                $this->entityObject->getType(),
+                json_decode($result, true),
+                null,
+                null // No uniqueness data is needed to be further processed.
+            );
+        } else {
+            $this->createdObject = new EntityDataObject(
+                $this->entityObject->getName(),
+                $this->entityObject->getType(),
+                null,
+                null,
+                null
+            );
+        }
     }
 
     /**
@@ -87,8 +96,8 @@ class EntityApiHandler
         if (!$storeCode) {
             $storeCode = $this->storeCode;
         }
-        $apiExecutor = new ApiExecutor('delete', $this->createdObject, null, $storeCode);
-        $result = $apiExecutor->executeRequest();
+        $curlHandler = new CurlHandler('delete', $this->createdObject, null, $storeCode);
+        $result = $curlHandler->executeRequest();
 
         return $result;
     }

@@ -6,7 +6,7 @@
                 <xs:element name="operation" maxOccurs="unbounded" minOccurs="0">
                     <xs:complexType>
                         <xs:choice minOccurs="0" maxOccurs="unbounded">
-                            <xs:element name="jsonObject" type="jsonObject" maxOccurs="unbounded" minOccurs="0"/>
+                            <xs:element name="metaDataObject" type="metaDataObject" maxOccurs="unbounded" minOccurs="0"/>
                             <xs:element name="entry" type="entry" maxOccurs="unbounded" minOccurs="0"/>
                             <xs:element name="array" type="array" maxOccurs="unbounded" minOccurs="0"/>
                             <xs:element name="header" type="header" maxOccurs="unbounded" minOccurs="0"/>
@@ -16,19 +16,21 @@
                         <xs:attribute type="xs:string" name="dataType" use="required"/>
                         <xs:attribute type="operationEnum" name="type" use="required"/>
                         <xs:attribute type="xs:string" name="url"/>
-                        <xs:attribute type="xs:string" name="auth"/>
+                        <xs:attribute type="authEnum" name="auth"/>
                         <xs:attribute type="xs:string" name="method"/>
                         <xs:attribute type="xs:string" name="storeCode" default="default"/>
+                        <xs:attribute type="xs:string" name="successRegex"/>
+                        <xs:attribute type="xs:string" name="returnRegex"/>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <xs:complexType name="jsonObject">
+    <xs:complexType name="metaDataObject">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
             <xs:element name="entry" type="entry" maxOccurs="unbounded" minOccurs="0"/>
             <xs:element name="array" type="array" maxOccurs="unbounded" minOccurs="0"/>
-            <xs:element name="jsonObject" type="jsonObject" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element name="metaDataObject" type="metaDataObject" maxOccurs="unbounded" minOccurs="0"/>
         </xs:choice>
         <xs:attribute type="xs:string" name="key"/>
         <xs:attribute type="xs:string" name="dataType" use="required"/>
@@ -43,7 +45,7 @@
     </xs:complexType>
     <xs:complexType name="array">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element name="jsonObject" type="jsonObject" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element name="metaDataObject" type="metaDataObject" maxOccurs="unbounded" minOccurs="0"/>
             <xs:element name="value" type="xs:string" maxOccurs="1" minOccurs="0"/>
         </xs:choice>
         <xs:attribute type="xs:string" name="key" use="required"/>
@@ -69,6 +71,14 @@
             <xs:enumeration value="create" />
             <xs:enumeration value="delete" />
             <xs:enumeration value="update" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="authEnum" final="restriction" >
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="adminOauth" />
+            <xs:enumeration value="customerOauth" />
+            <xs:enumeration value="adminFormkey" />
+            <xs:enumeration value="customerFormkey" />
         </xs:restriction>
     </xs:simpleType>
 </xs:schema>
