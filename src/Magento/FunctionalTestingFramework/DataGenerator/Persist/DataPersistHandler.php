@@ -41,7 +41,8 @@ class DataPersistHandler
     private $storeCode;
 
     /**
-     * ApiPersistenceHandler constructor.
+     * DataPersistHandler constructor.
+     *
      * @param EntityDataObject $entityObject
      * @param array $dependentObjects
      */
@@ -66,23 +67,20 @@ class DataPersistHandler
         $curlHandler = new CurlHandler('create', $this->entityObject, $this->dependentObjects, $this->storeCode);
         $result = $curlHandler->executeRequest();
 
-        if ($curlHandler->isRestRequest()) {
-            $this->createdObject = new EntityDataObject(
-                $this->entityObject->getName(),
-                $this->entityObject->getType(),
-                json_decode($result, true),
-                null,
-                null // No uniqueness data is needed to be further processed.
-            );
+        $persistedDataArray = $curlHandler->getPersistedDataArray();
+        if ($curlHandler->isWebApiRequest()) {
+            $persistedDataArray = array_merge($persistedDataArray, json_decode($result, true));
         } else {
-            $this->createdObject = new EntityDataObject(
-                $this->entityObject->getName(),
-                $this->entityObject->getType(),
-                null,
-                null,
-                null
-            );
+            $persistedDataArray = array_merge($persistedDataArray, ['return' => $result]);
         }
+
+        $this->createdObject = new EntityDataObject(
+            $this->entityObject->getName(),
+            $this->entityObject->getType(),
+            $persistedDataArray,
+            null,
+            null
+        );
     }
 
     /**
@@ -93,10 +91,10 @@ class DataPersistHandler
      */
     public function deleteEntity($storeCode = null)
     {
-        if (!$storeCode) {
-            $storeCode = $this->storeCode;
+        if (isset($storeCode)) {
+            $this->storeCode = $storeCode;
         }
-        $curlHandler = new CurlHandler('delete', $this->createdObject, null, $storeCode);
+        $curlHandler = new CurlHandler('delete', $this->createdObject, null, $this->storeCode);
         $result = $curlHandler->executeRequest();
 
         return $result;
@@ -118,11 +116,7 @@ class DataPersistHandler
      */
     public function getCreatedDataByName($dataName)
     {
-        $data = $this->createdObject->getDataByName($dataName, EntityDataObject::NO_UNIQUE_PROCESS);
-        if (empty($data)) {
-            $data = $this->entityObject->getDataByName($dataName, EntityDataObject::CEST_UNIQUE_VALUE);
-        }
-        return $data;
+        return $this->createdObject->getDataByName($dataName, EntityDataObject::NO_UNIQUE_PROCESS);
     }
 
     // TODO add update function

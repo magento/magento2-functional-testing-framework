@@ -52,6 +52,13 @@ class CurlHandler
     private $dependentEntities = [];
 
     /**
+     * Persisted data array.
+     *
+     * @var array
+     */
+    private $persistedDataArray;
+
+    /**
      * The array of entity name and number of objects being created,
      * we don't need to track objects in update and delete operations.
      *
@@ -79,25 +86,11 @@ class CurlHandler
         ];
 
     /**
-     * Persisted entity.
-     *
-     * @var EntityDataObject
-     */
-    private $persistedEntity;
-
-    /**
-     * Persisted dependent entities.
-     *
-     * @var array
-     */
-    private $persistedDependentEntities = [];
-
-    /**
-     * If it's a REST request.
+     * If it's a web api request.
      *
      * @var bool
      */
-    private $isRestRequest;
+    private $isWebApiRequest;
 
     /**
      * ApiSubObject constructor.
@@ -111,7 +104,7 @@ class CurlHandler
         $this->operation = $operation;
         $this->entityObject = $entityObject;
         $this->storeCode = $storeCode;
-        $this->isRestRequest = true;
+        $this->isWebApiRequest = true;
         if ($dependentEntities != null) {
             foreach ($dependentEntities as $entity) {
                 $this->dependentEntities[$entity->getName()] = $entity;
@@ -150,23 +143,33 @@ class CurlHandler
         $successRegex = null;
         $returnRegex = null;
         $headers = $this->dataDefinition->getHeaders();
-        $params = $this->convertDataArray($this->entityObject, $this->dataDefinition->getMetaData());
+        $this->persistedDataArray = $this->convertDataArray($this->entityObject, $this->dataDefinition->getMetaData());
 
         $authorization = $this->dataDefinition->getAuth();
         switch ($authorization) {
             case 'adminOauth':
                 $executor = new WebapiExecutor($this->storeCode);
-                $executor->write($apiUrl, $params, self::$curlMethodMapping[$this->operation], $headers);
+                $executor->write(
+                    $apiUrl,
+                    $this->persistedDataArray,
+                    self::$curlMethodMapping[$this->operation],
+                    $headers
+                );
                 break;
             case 'adminFormkey':
-                $this->isRestRequest = false;
+                $this->isWebApiRequest = false;
                 $executor = new AdminExecutor();
-                $executor->write($apiUrl, $params, self::$curlMethodMapping[$this->operation], $headers);
+                $executor->write(
+                    $apiUrl,
+                    $this->persistedDataArray,
+                    self::$curlMethodMapping[$this->operation],
+                    $headers
+                );
                 $successRegex = $this->dataDefinition->getSuccessRegex();
                 $returnRegex = $this->dataDefinition->getReturnRegex();
                 break;
             case 'customFromkey':
-                $this->isRestRequest = false;
+                $this->isWebApiRequest = false;
                 // TODO: add frontend request executor.
                 break;
         }
@@ -176,13 +179,23 @@ class CurlHandler
     }
 
     /**
-     * If the request is a Rest.
+     * If it's a web api request.
      *
      * @return bool
      */
-    public function isRestRequest()
+    public function isWebApiRequest()
     {
-        return $this->isRestRequest;
+        return $this->isWebApiRequest;
+    }
+
+    /**
+     * Get persisted data array.
+     *
+     * @return array
+     */
+    public function getPersistedDataArray()
+    {
+        return $this->persistedDataArray;
     }
 
     /**
