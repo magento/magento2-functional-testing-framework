@@ -57,13 +57,27 @@ class SectionObject
     }
 
     /**
+     * Checks to see if this section contains any element by the name of elementName
+     * @param string $elementName
+     * @return bool
+     */
+    public function hasElement($elementName)
+    {
+        return array_key_exists($elementName, $this->elements);
+    }
+
+    /**
      * Given the name of an element, returns the element object
      *
      * @param string $elementName
-     * @return ElementObject
+     * @return ElementObject | null
      */
     public function getElement($elementName)
     {
-        return $this->elements[$elementName];
+        if ($this->hasElement($elementName)) {
+            return $this->elements[$elementName];
+        }
+
+        return null;
     }
 }

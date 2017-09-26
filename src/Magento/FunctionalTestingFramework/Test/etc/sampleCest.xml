@@ -21,6 +21,7 @@
             <click selector="" mergeKey=""/>
             <clickWithLeftButton selector="" mergeKey=""/>
             <clickWithRightButton selector="" mergeKey=""/>
+            <conditionalClick mergeKey="" selector="" dependentSelector="" visible="true" />
             <closeTab mergeKey=""/>
             <dontSee userInput="" selector="" mergeKey=""/>
             <dontSeeCheckboxIsChecked selector="" mergeKey=""/>

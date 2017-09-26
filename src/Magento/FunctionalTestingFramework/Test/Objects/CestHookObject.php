@@ -6,6 +6,8 @@
 
 namespace Magento\FunctionalTestingFramework\Test\Objects;
 
+use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
+
 /**
  * Class CestHookObject
  */
@@ -61,7 +63,8 @@ class CestHookObject
      */
     public function getActions()
     {
-        return $this->actions;
+        $mergeUtil = new ActionMergeUtil();
+        return $mergeUtil->resolveActionSteps($this->actions);
     }
 
     /**

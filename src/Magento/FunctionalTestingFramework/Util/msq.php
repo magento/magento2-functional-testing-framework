@@ -14,7 +14,7 @@ if (!function_exists('msq')) {
             return MagentoSequence::$hash[$id];
         }
         $prefix = MagentoSequence::$prefix;
-        $sequence = $prefix . uniqid($id);
+        $sequence = $prefix . uniqid();
         if ($id) {
             MagentoSequence::$hash[$id] = $sequence;
         }
@@ -35,7 +35,7 @@ if (!function_exists('msqs')) {
             return MagentoSequence::$suiteHash[$id];
         }
         $prefix = MagentoSequence::$prefix;
-        $sequence = $prefix . uniqid($id);
+        $sequence = $prefix . uniqid();
         if ($id) {
             MagentoSequence::$suiteHash[$id] = $sequence;
         }

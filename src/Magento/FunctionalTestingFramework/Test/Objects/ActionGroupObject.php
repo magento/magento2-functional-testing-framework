@@ -65,7 +65,7 @@ class ActionGroupObject
             $args = array_merge($args, $arguments);
         }
 
-        return $mergeUtil->mergeStepsAndInsertWaits($this->getResolvedActionsWithArgs($args));
+        return $mergeUtil->resolveActionSteps($this->getResolvedActionsWithArgs($args), true);
     }
 
     /**
