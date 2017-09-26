@@ -9,9 +9,9 @@ namespace Magento\FunctionalTestingFramework\DataGenerator\Persist;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 
 /**
- * Class DataPersistHandler
+ * Class DataPersistenceHandler
  */
-class DataPersistHandler
+class DataPersistenceHandler
 {
     /**
      * Entity object data to use for create, delete, or update.
@@ -41,7 +41,7 @@ class DataPersistHandler
     private $storeCode;
 
     /**
-     * DataPersistHandler constructor.
+     * DataPersistenceHandler constructor.
      *
      * @param EntityDataObject $entityObject
      * @param array $dependentObjects
@@ -61,25 +61,15 @@ class DataPersistHandler
      */
     public function createEntity($storeCode = null)
     {
-        if (isset($storeCode)) {
+        if (!empty($storeCode)) {
             $this->storeCode = $storeCode;
         }
-        $curlHandler = new CurlHandler('create', $this->entityObject, $this->dependentObjects, $this->storeCode);
-        $result = $curlHandler->executeRequest();
-
-        $persistedDataArray = $curlHandler->getPersistedDataArray();
-        if ($curlHandler->isWebApiRequest()) {
-            $persistedDataArray = array_merge($persistedDataArray, json_decode($result, true));
-        } else {
-            $persistedDataArray = array_merge($persistedDataArray, ['return' => $result]);
-        }
-
-        $this->createdObject = new EntityDataObject(
-            $this->entityObject->getName(),
-            $this->entityObject->getType(),
-            $persistedDataArray,
-            null,
-            null
+        $curlHandler = new CurlHandler('create', $this->entityObject, $this->storeCode);
+        $result = $curlHandler->executeRequest($this->dependentObjects);
+        $this->setCreatedEntity(
+            $result,
+            $curlHandler->getRequestDataArray(),
+            $curlHandler->isContentTypeJson()
         );
     }
 
@@ -87,17 +77,15 @@ class DataPersistHandler
      * Function which executes a delete request based on specific operation metadata
      *
      * @param string $storeCode
-     * @return string | false
+     * @return void
      */
     public function deleteEntity($storeCode = null)
     {
-        if (isset($storeCode)) {
+        if (!empty($storeCode)) {
             $this->storeCode = $storeCode;
         }
-        $curlHandler = new CurlHandler('delete', $this->createdObject, null, $this->storeCode);
-        $result = $curlHandler->executeRequest();
-
-        return $result;
+        $curlHandler = new CurlHandler('delete', $this->createdObject, $this->storeCode);
+        $result = $curlHandler->executeRequest($this->dependentObjects);
     }
 
     /**
@@ -124,4 +112,59 @@ class DataPersistHandler
     {
 
     }*/
+
+    /**
+     * Save created entity.
+     *
+     * @param mixed $response
+     * @param array $requestDataArray
+     * @param bool $isJson
+     * @return void
+     */
+    private function setCreatedEntity($response, $requestDataArray, $isJson)
+    {
+        if ($isJson) {
+            $persistedData = array_merge($requestDataArray, json_decode($response, true));
+        } else {
+            $persistedData = array_merge(
+                $this->convertToFlatArray($requestDataArray),
+                ['return' => $response]
+            );
+        }
+
+        $this->createdObject = new EntityDataObject(
+            $this->entityObject->getName(),
+            $this->entityObject->getType(),
+            $persistedData,
+            null,
+            null
+        );
+    }
+
+    /**
+     * Convert an multi-dimensional array to flat array.
+     *
+     * @param array $arrayIn
+     * @param string $rootKey
+     * @return array
+     */
+    private function convertToFlatArray($arrayIn, $rootKey = '')
+    {
+        $arrayOut = [];
+        foreach ($arrayIn as $key => $value) {
+            if (is_array($value)) {
+                if (!empty($rootKey)) {
+                    $newRootKey = $rootKey . '[' . $key . ']';
+                } else {
+                    $newRootKey = $key;
+                }
+                $arrayOut = array_merge($arrayOut, $this->convertToFlatArray($value, $newRootKey));
+            } elseif (!empty($rootKey)) {
+                $arrayOut[$rootKey . '[' . $key . ']'] = $value;
+            } else {
+                $arrayOut[$key] = $value;
+            }
+        }
+        return $arrayOut;
+    }
 }

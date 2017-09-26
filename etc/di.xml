@@ -158,7 +158,7 @@
 
     <!-- Configuration for Data Operation Metadata.xml -->
 
-    <type name="Magento\FunctionalTestingFramework\DataGenerator\Parsers\OperationMetadataParser">
+    <type name="Magento\FunctionalTestingFramework\DataGenerator\Parsers\OperationDefinitionParser">
         <arguments>
             <argument name="metadata" xsi:type="object">Magento\FunctionalTestingFramework\DataProfile\Config\Metadata</argument>
         </arguments>
@@ -180,7 +180,7 @@
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\Metadata</argument>
             <argument name="idAttributes" xsi:type="array">
                 <item name="/config/operation" xsi:type="string">name</item>
-                <item name="/config/operation/entry" xsi:type="string">key</item>
+                <item name="/config/operation/field" xsi:type="string">key</item>
                 <item name="/config/operation/array" xsi:type="string">key</item>
                 <item name="/config/operation/object" xsi:type="string">key</item>
             </argument>

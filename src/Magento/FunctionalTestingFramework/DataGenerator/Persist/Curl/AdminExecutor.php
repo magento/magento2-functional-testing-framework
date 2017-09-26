@@ -101,24 +101,24 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
      * Send request to the remote server.
      *
      * @param string $url
-     * @param array $params
+     * @param array $data
      * @param string $method
      * @param mixed $headers
      * @return void
      * @throws TestFrameworkException
      */
-    public function write($url, $params = [], $method = CurlInterface::POST, $headers = [])
+    public function write($url, $data = [], $method = CurlInterface::POST, $headers = [])
     {
         $apiUrl = self::$adminUrl . $url;
         if ($this->formKey) {
-            $params['form_key'] = $this->formKey;
+            $data['form_key'] = $this->formKey;
         } else {
             throw new TestFrameworkException(
                 sprintf('Form key is absent! Url: "%s" Response: "%s"', $url, $this->response)
             );
         }
 
-        $this->transport->write($apiUrl, str_replace('null', '', http_build_query($params)), $method, $headers);
+        $this->transport->write($apiUrl, str_replace('null', '', http_build_query($data)), $method, $headers);
     }
 
     /**
@@ -134,7 +134,7 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
         $this->response = $this->transport->read();
         $this->setFormKey();
 
-        if (isset($successRegex)) {
+        if (!empty($successRegex)) {
             preg_match(
                 '/' . preg_quote($successRegex, '/') . '/',
                 $this->response,
@@ -145,7 +145,7 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
             }
         }
 
-        if (isset($returnRegex)) {
+        if (!empty($returnRegex)) {
             preg_match(
                 '/' . preg_quote($returnRegex, '/') . '/',
                 $this->response,

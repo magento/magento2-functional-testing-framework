@@ -6,7 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\DataGenerator\Objects;
 
-class DataElement
+class OperationElement
 {
     /**
      * Data parameter name
@@ -50,7 +50,7 @@ class DataElement
     private $required;
 
     /**
-     * DataElement constructor.
+     * OperationElement constructor.
      * @param string $key
      * @param string $value
      * @param string $type
@@ -118,7 +118,7 @@ class DataElement
      * @param string $type
      * @return array
      */
-    public function getNestedDataElement($type)
+    public function getNestedOperationElement($type)
     {
         if (array_key_exists($type, $this->nestedElements)) {
             return $this->nestedElements[$type];

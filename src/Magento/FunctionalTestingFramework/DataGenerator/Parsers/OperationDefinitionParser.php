@@ -9,10 +9,17 @@ namespace Magento\FunctionalTestingFramework\DataGenerator\Parsers;
 use Magento\FunctionalTestingFramework\Config\DataInterface;
 
 /**
- * Class OperationMetadataParser
+ * Class OperationDefinitionParser
  */
-class OperationMetadataParser
+class OperationDefinitionParser
 {
+    /**
+     * Meta Data.
+     *
+     * @var DataInterface
+     */
+    private $metadata;
+
     /**
      * MetadataParser constructor.
      * @param DataInterface $metadata

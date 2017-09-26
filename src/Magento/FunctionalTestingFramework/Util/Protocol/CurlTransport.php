@@ -118,13 +118,13 @@ class CurlTransport implements CurlInterface
      * Send request to the remote server.
      *
      * @param string $url
-     * @param mixed $params
+     * @param mixed $body
      * @param string $method
      * @param mixed $headers
      * @return void
      * @throws TestFrameworkException
      */
-    public function write($url, $params = [], $method = CurlInterface::POST, $headers = [])
+    public function write($url, $body = [], $method = CurlInterface::POST, $headers = [])
     {
         $this->applyConfig();
         $options = [
@@ -138,11 +138,11 @@ class CurlTransport implements CurlInterface
         switch ($method) {
             case CurlInterface::POST:
                 $options[CURLOPT_POST] = true;
-                $options[CURLOPT_POSTFIELDS] = $params;
+                $options[CURLOPT_POSTFIELDS] = $body;
                 break;
             case CurlInterface::PUT:
                 $options[CURLOPT_CUSTOMREQUEST] = self::PUT;
-                $options[CURLOPT_POSTFIELDS] = $params;
+                $options[CURLOPT_POSTFIELDS] = $body;
                 break;
             case CurlInterface::DELETE:
                 $options[CURLOPT_CUSTOMREQUEST] = self::DELETE;

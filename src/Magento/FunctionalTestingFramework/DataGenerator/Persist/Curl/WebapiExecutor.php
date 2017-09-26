@@ -51,7 +51,8 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
     private $storeCode;
 
     /**
-     * @construct
+     * WebapiExecutor Constructor.
+     *
      * @param string $storeCode
      */
     public function __construct($storeCode = 'default')
@@ -88,16 +89,16 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
      * Send request to the remote server.
      *
      * @param string $url
-     * @param array $params
+     * @param array $data
      * @param string $method
      * @param array $headers
      * @return void
      */
-    public function write($url, $params = [], $method = CurlInterface::POST, $headers = [])
+    public function write($url, $data = [], $method = CurlInterface::POST, $headers = [])
     {
         $this->transport->write(
-            parent::$baseUrl . ltrim($url, '/'),
-            json_encode($params, JSON_PRETTY_PRINT),
+            parent::$baseUrl . 'rest/' . $this->storeCode . '/' . trim($url, '/'),
+            json_encode($data, JSON_PRETTY_PRINT),
             $method,
             array_unique(array_merge($headers, $this->headers))
         );
@@ -108,7 +109,7 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
      *
      * @param string $successRegex
      * @param string $returnRegex
-     * @return string
+     * @return mixed
      */
     public function read($successRegex = null, $returnRegex = null)
     {

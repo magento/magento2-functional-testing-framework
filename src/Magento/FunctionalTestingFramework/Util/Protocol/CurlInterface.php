@@ -32,19 +32,19 @@ interface CurlInterface
      * Send request to the remote server.
      *
      * @param string $url
-     * @param mixed $params
+     * @param mixed $body
      * @param string $method
      * @param mixed $headers
      * @return void
      */
-    public function write($url, $params = [], $method = CurlInterface::POST, $headers = []);
+    public function write($url, $body = [], $method = CurlInterface::POST, $headers = []);
 
     /**
      * Read response from server.
      *
      * @param string $successRegex
      * @param string $returnRegex
-     * @return string|array
+     * @return mixed
      */
     public function read($successRegex = null, $returnRegex = null);
 

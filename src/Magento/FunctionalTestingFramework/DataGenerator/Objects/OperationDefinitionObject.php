@@ -7,10 +7,12 @@
 namespace Magento\FunctionalTestingFramework\DataGenerator\Objects;
 
 /**
- * Class DataDefinition
+ * Class OperationDefinitionObject
  */
-class DataDefinition
+class OperationDefinitionObject
 {
+    const HTTP_CONTENT_TYPE_HEADER = 'Content-Type';
+
     /**
      * Data Definitions Name
      *
@@ -61,6 +63,13 @@ class DataDefinition
     private $auth;
 
     /**
+     * Content type of body
+     *
+     * @var string
+     */
+    private $contentType;
+
+    /**
      * Relevant headers for the request
      *
      * @var array
@@ -79,14 +88,7 @@ class DataDefinition
      *
      * @var array
      */
-    private $metaData = [];
-
-    /**
-     * Store code in api url.
-     *
-     * @var string
-     */
-    private $storeCode;
+    private $operationMetadata = [];
 
     /**
      * Regex to check for request success.
@@ -103,7 +105,7 @@ class DataDefinition
     private $returnRegex;
 
     /**
-     * DataDefinition constructor.
+     * OperationDefinitionObject constructor.
      * @param string $name
      * @param string $operation
      * @param string $dataType
@@ -113,9 +115,9 @@ class DataDefinition
      * @param array $headers
      * @param array $params
      * @param array $metaData
+     * @param string $contentType
      * @param string $successRegex
      * @param string $returnRegex
-     * @param string $storeCode
      */
     public function __construct(
         $name,
@@ -127,23 +129,30 @@ class DataDefinition
         $headers,
         $params,
         $metaData,
+        $contentType,
         $successRegex = null,
-        $returnRegex = null,
-        $storeCode = 'default'
+        $returnRegex = null
     ) {
         $this->name = $name;
         $this->operation = $operation;
         $this->dataType = $dataType;
         $this->apiMethod = $apiMethod;
-        $this->apiUri = $apiUri;
+        $this->apiUri = trim($apiUri, '/');
         $this->auth = $auth;
         $this->headers = $headers;
         $this->params = $params;
-        $this->metaData = $metaData;
-        $this->storeCode = $storeCode;
+        $this->operationMetadata = $metaData;
         $this->successRegex = $successRegex;
         $this->returnRegex = $returnRegex;
         $this->apiUrl = null;
+
+        if (!empty($contentType)) {
+            $this->contentType = $contentType;
+        } else {
+            $this->contentType = 'application/x-www-form-urlencoded';
+        }
+        // add content type as a header
+        $this->headers[] = self::HTTP_CONTENT_TYPE_HEADER . ': ' . $this->contentType;
     }
 
     /**
@@ -179,27 +188,20 @@ class DataDefinition
     /**
      * Getter for api url for a store.
      *
-     * @param string $storeCode
      * @return string
      */
-    public function getApiUrl($storeCode)
+    public function getApiUrl()
     {
-        if (isset($storeCode)) {
-            $this->storeCode = $storeCode;
-        }
+        if (!$this->apiUrl) {
+            $this->apiUrl = $this->apiUri;
 
-        if (strpos($this->auth, 'Formkey') === false) {
-            $this->apiUrl = '/rest/' . $this->storeCode . '/' . trim($this->apiUri, '/');
-        } else {
-            $this->apiUrl = trim($this->apiUri, '/') . '/';
-        }
+            if (array_key_exists('path', $this->params)) {
+                $this->addPathParam();
+            }
 
-        if (array_key_exists('path', $this->params)) {
-            $this->addPathParam();
-        }
-
-        if (array_key_exists('query', $this->params)) {
-            $this->addQueryParams();
+            if (array_key_exists('query', $this->params)) {
+                $this->addQueryParams();
+            }
         }
 
         return $this->apiUrl;
@@ -226,23 +228,23 @@ class DataDefinition
     }
 
     /**
+     * Getter for Content-type
+     *
+     * @return string
+     */
+    public function getContentType()
+    {
+        return $this->contentType;
+    }
+
+    /**
      * Getter for data metadata
      *
      * @return array
      */
-    public function getMetaData()
+    public function getOperationMetadata()
     {
-        return $this->metaData;
-    }
-
-    /**
-     * Getter for store code.
-     *
-     * @return string
-     */
-    public function getStoreCode()
-    {
-        return $this->storeCode;
+        return $this->operationMetadata;
     }
 
     /**
@@ -278,19 +280,18 @@ class DataDefinition
     }
 
     /**
-     * Function to append query params where necessary
+     * Function to append or add query parameters
      *
      * @return void
      */
-    private function addQueryParams()
+    public function addQueryParams()
     {
         foreach ($this->params['query'] as $paramName => $paramValue) {
-            if (strpos($this->apiUrl, '?') == false) {
+            if (strpos($this->apiUrl, '?') === false) {
                 $this->apiUrl = $this->apiUrl . "?";
             } else {
                 $this->apiUrl = $this->apiUrl . "&";
             }
-
             $this->apiUrl = $this->apiUrl . $paramName . "=" . $paramValue;
         }
     }
