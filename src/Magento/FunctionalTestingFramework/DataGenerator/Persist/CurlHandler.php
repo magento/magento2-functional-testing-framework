@@ -21,6 +21,7 @@ use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
 class CurlHandler
 {
     const PRIMITIVE_TYPES = ['string', 'boolean', 'integer', 'double', 'array'];
+    const EXCEPTION_REQUIRED_DATA = "%s of key \" %s\" in \"%s\" is required by metadata, but was not provided.";
 
     /**
      * Describes the operation for the executor ('create','update','delete')
@@ -207,6 +208,7 @@ class CurlHandler
      * @param EntityDataObject $entityObject
      * @param array $dataArrayMetadata
      * @return array
+     * @throws \Exception
      */
     public function convertDataArray($entityObject, $dataArrayMetadata)
     {
@@ -215,8 +217,10 @@ class CurlHandler
 
         foreach ($dataArrayMetadata as $dataElement) {
             if ($dataElement->getType() == DataObjectExtractor::MATA_DATA_OBJECT_NAME) {
+                $entityObj = $this->resolveDataObjectAndEntityData($entityObject, $dataElement->getValue());
                 $dataArray[$dataElement->getValue()] =
                     $this->convertDataArray($entityObject, $dataElement->getNestedMetadata());
+                continue;
             }
 
             $dataElementType = $dataElement->getValue();
@@ -227,19 +231,40 @@ class CurlHandler
                     EntityDataObject::CEST_UNIQUE_VALUE
                 );
 
-                if (array_key_exists($dataElement->getKey(), $entityObject->getUniquenessData())) {
-                    $uniqueData = $entityObject->getUniquenessDataByName($dataElement->getKey());
-                    if ($uniqueData === 'suffix') {
-                        $elementData .= (string)self::getSequence($entityObject->getName());
-                    } else {
-                        $elementData = (string)self::getSequence($entityObject->getName()) . $elementData;
+                // If data was defined at all, attempt to put it into JSON body
+                // If data was not defined, and element is required, throw exception
+                // If no data is defined, don't input defaults per primitive into JSON for the data
+                if ($elementData != null) {
+                    if (array_key_exists($dataElement->getKey(), $entityObject->getUniquenessData())) {
+                        $uniqueData = $entityObject->getUniquenessDataByName($dataElement->getKey());
+                        if ($uniqueData === 'suffix') {
+                            $elementData .= (string)self::getSequence($entityObject->getName());
+                        } else {
+                            $elementData = (string)self::getSequence($entityObject->getName()) . $elementData;
+                        }
                     }
-                }
 
-                $dataArray[$dataElement->getKey()] = $this->castValue($dataElementType, $elementData);
+                    $dataArray[$dataElement->getKey()] = $this->castValue($dataElementType, $elementData);
+                } elseif ($dataElement->getRequired()) {
+                    throw new \Exception(sprintf(
+                        CurlHandler::EXCEPTION_REQUIRED_DATA,
+                        $dataElement->getType(),
+                        $dataElement->getKey(),
+                        $this->entityObject->getName()
+                    ));
+                }
             } else {
                 $entityNamesOfType = $entityObject->getLinkedEntitiesOfType($dataElementType);
 
+                // If an element is required by metadata, but was not provided in the entity, throw an exception
+                if ($dataElement->getRequired() && $entityNamesOfType == null) {
+                    throw new \Exception(sprintf(
+                        CurlHandler::EXCEPTION_REQUIRED_DATA,
+                        $dataElement->getType(),
+                        $dataElement->getKey(),
+                        $this->entityObject->getName()
+                    ));
+                }
                 foreach ($entityNamesOfType as $entityName) {
                     $dataSubArray = $this->resolveNonPrimitiveElement($entityName, $dataElement);
 
@@ -256,6 +281,25 @@ class CurlHandler
     }
 
     /**
+     * This function does a comparison of the entity object being matched to the data element. If there is a mismatch in
+     * type we attempt to use a nested entity, if the entities are properly matched, we simply return the object.
+     *
+     * @param EntityDataObject $entityObject
+     * @param string $dataElementValue
+     * @return EntityDataObject|null
+     */
+    private function resolveDataObjectAndEntityData($entityObject, $dataElementValue)
+    {
+        if ($dataElementValue != $entityObject->getType()) {
+            // if we have a mismatch attempt to retrieve linked data and return just the first linkage
+            $linkName = $entityObject->getLinkedEntitiesOfType($dataElementValue)[0];
+            return DataObjectHandler::getInstance()->getObject($linkName);
+        }
+
+        return $entityObject;
+    }
+
+    /**
      * Resolves dataObjects and pre-defined metadata (in other operation.xml file) referenced by the metadata.
      *
      * @param string $entityName
@@ -266,8 +310,10 @@ class CurlHandler
     {
         $linkedEntityObj = $this->resolveLinkedEntityObject($entityName);
 
+        // in array case
         if (!empty($dataElement->getNestedDataElement($dataElement->getValue()))
-            && $dataElement->getType() == 'array') {
+            && $dataElement->getType() == 'array'
+        ) {
             $dataSubArray = $this->convertDataArray(
                 $linkedEntityObj,
                 [$dataElement->getNestedDataElement($dataElement->getValue())]
@@ -349,6 +395,9 @@ class CurlHandler
                 $newVal = (integer)$value;
                 break;
             case 'boolean':
+                if (strtolower($newVal) === 'false') {
+                    return false;
+                }
                 $newVal = (boolean)$value;
                 break;
             case 'double':

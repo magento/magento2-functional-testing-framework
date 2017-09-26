@@ -58,7 +58,7 @@ class DataObjectExtractor
         if (array_key_exists(DataObjectExtractor::MATA_DATA_OBJECT_NAME, $dataObjectArray)) {
             foreach ($dataObjectArray[DataObjectExtractor::MATA_DATA_OBJECT_NAME] as $dataObject) {
                 $nestedDataElement = $this->extractDataObject($dataObject);
-                $nestedDataElements[$nestedDataElement->getKey()] = $nestedDataElement;
+                $metaData[] = $nestedDataElement;
             }
         }
 
@@ -71,6 +71,7 @@ class DataObjectExtractor
             $dataDefKey,
             $dataType,
             DataObjectExtractor::MATA_DATA_OBJECT_NAME,
+            $dataObjectArray[DataDefinitionObjectHandler::ENTITY_OPERATION_REQUIRED] ?? null,
             $nestedDataElements,
             $metaData
         );
@@ -89,7 +90,8 @@ class DataObjectExtractor
             $metaData[] = new DataElement(
                 $dataEntryType[DataDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY],
                 $dataEntryType[DataDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE],
-                DataDefinitionObjectHandler::ENTITY_OPERATION_ENTRY
+                DataDefinitionObjectHandler::ENTITY_OPERATION_ENTRY,
+                $dataEntryType[DataDefinitionObjectHandler::ENTITY_OPERATION_REQUIRED] ?? null
             );
         }
     }
@@ -122,6 +124,7 @@ class DataObjectExtractor
                 $dataEntryType[DataDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_KEY],
                 $dataElementValue,
                 DataDefinitionObjectHandler::ENTITY_OPERATION_ARRAY,
+                $dataEntryType[DataDefinitionObjectHandler::ENTITY_OPERATION_REQUIRED] ?? null,
                 $nestedDataElements
             );
         }

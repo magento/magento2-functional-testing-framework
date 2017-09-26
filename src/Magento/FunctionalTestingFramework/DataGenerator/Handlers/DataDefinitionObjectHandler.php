@@ -40,6 +40,7 @@ class DataDefinitionObjectHandler implements ObjectHandlerInterface
     const ENTITY_OPERATION_OBJECT_KEY = 'key';
     const ENTITY_OPERATION_OBJECT_VALUE = 'value';
     const ENTITY_OPERATION_DATA_OBJECT = 'metaDataObject';
+    const ENTITY_OPERATION_REQUIRED = 'required';
 
     /**
      * Singleton Instance of class
@@ -173,7 +174,8 @@ class DataDefinitionObjectHandler implements ObjectHandlerInterface
                     $metaData[] = new DataElement(
                         $dataEntryType[DataDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY],
                         $dataEntryType[DataDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE],
-                        DataDefinitionObjectHandler::ENTITY_OPERATION_ENTRY
+                        DataDefinitionObjectHandler::ENTITY_OPERATION_ENTRY,
+                        $dataEntryType[DataDefinitionObjectHandler::ENTITY_OPERATION_REQUIRED] ?? null
                     );
                 }
             }
@@ -201,6 +203,7 @@ class DataDefinitionObjectHandler implements ObjectHandlerInterface
                         $dataEntryType[DataDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_KEY],
                         $value,
                         $type,
+                        $dataEntryType[DataDefinitionObjectHandler::ENTITY_OPERATION_REQUIRED] ?? null,
                         $subMetaData
                     );
                 }
