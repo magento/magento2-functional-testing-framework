@@ -323,7 +323,7 @@ class ActionObject
                         throw new TestReferenceException("Could not resolve entity reference " . $inputString);
                     }
                     $parameterized = $obj->getElement($objField)->isParameterized();
-                    $replacement = $obj->getElement($objField)->getLocator();
+                    $replacement = $obj->getElement($objField)->getSelector();
                     $this->timeout = $obj->getElement($objField)->getTimeout();
                     break;
                 case (get_class($obj) == EntityDataObject::class):
