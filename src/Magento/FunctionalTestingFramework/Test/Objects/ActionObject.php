@@ -20,13 +20,12 @@ use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 class ActionObject
 {
     const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray"];
-    const SELECTOR_ENABLED_ATTRIBUTES = ['selector', 'dependentSelector'];
+    const SELECTOR_ENABLED_ATTRIBUTES = ['selector', 'dependentSelector', "selector1", "selector2"];
     const MERGE_ACTION_ORDER_AFTER = 'after';
     const ACTION_ATTRIBUTE_URL = 'url';
     const ACTION_ATTRIBUTE_SELECTOR = 'selector';
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER = '/\(.+\)/';
-    const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/{{[\w.\[\]]+}}/';
-    const ACTION_ATTRIBUTE_VARIABLE_REGEX_NESTED = '/{{[\w.\[\]()\',${} ]+}}/';
+    const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/{{[\w.\[\]()\',$ ]+}}/';
 
     /**
      * The unique identifier for the action
@@ -298,15 +297,7 @@ class ActionObject
      */
     private function findAndReplaceReferences($objectHandler, $inputString)
     {
-        //Determine if there are Parethesis and parameters. If not, use strict regex. If so, use nested regex.
-        preg_match_all(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER, $inputString, $variableMatches);
-        if (empty($variableMatches[0])) {
-            $regex = ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN;
-        } else {
-            $regex = ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_NESTED;
-        }
-        preg_match_all($regex, $inputString, $matches);
-
+        preg_match_all(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN, $inputString, $matches);
         if (empty($matches[0])) {
             return $inputString;
         }
@@ -332,7 +323,7 @@ class ActionObject
                         throw new TestReferenceException("Could not resolve entity reference " . $inputString);
                     }
                     $parameterized = $obj->getElement($objField)->isParameterized();
-                    $replacement = $obj->getElement($objField)->getLocator();
+                    $replacement = $obj->getElement($objField)->getSelector();
                     $this->timeout = $obj->getElement($objField)->getTimeout();
                     break;
                 case (get_class($obj) == EntityDataObject::class):
@@ -383,24 +374,38 @@ class ActionObject
     {
         preg_match_all('/{{[\w.]+}}/', $reference, $varMatches);
         if (count($varMatches[0]) > count($parameters)) {
+            if (is_array($parameters)) {
+                $parametersGiven = implode(",", $parameters);
+            } elseif ($parameters == null) {
+                $parametersGiven = "NONE";
+            } else {
+                $parametersGiven = $parameters;
+            }
             throw new TestReferenceException(
                 "Parameter Resolution Failed: Not enough parameters given for reference " .
-                $reference . ". Parameters Given: " . implode(",", $parameters)
+                $reference . ". Parameters Given: " . $parametersGiven
             );
         } elseif (count($varMatches[0]) < count($parameters)) {
             throw new TestReferenceException(
                 "Parameter Resolution Failed: Too many parameters given for reference " .
-                $reference . ". Parameters Given: " . implode(",", $parameters)
+                $reference . ". Parameters Given: " . implode(", ", $parameters)
             );
         }
 
         //Attempt to Resolve {{data}} references to actual output.
+        //If regex matched it means that it's either a 'StringLiteral' or $key.data$/$$key.data$$ reference.
+        //Else assume it's a normal {{data.key}} reference and recurse through findAndReplace
         $resolvedParameters = [];
         foreach ($parameters as $parameter) {
-            $resolvedParameters[] = $this->findAndReplaceReferences(
-                DataObjectHandler::getInstance(),
-                $parameter
-            );
+            preg_match_all("/[$'][\w.$]+[$']/", $parameter, $match);
+            if (!empty($match[0])) {
+                $resolvedParameters[] = ltrim(rtrim($parameter, "'"), "'");
+            } else {
+                $resolvedParameters[] = $this->findAndReplaceReferences(
+                    DataObjectHandler::getInstance(),
+                    '{{' . $parameter . '}}'
+                );
+            }
         }
 
         $resolveIndex = 0;
