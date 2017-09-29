@@ -7,26 +7,28 @@
 namespace Magento\FunctionalTestingFramework\DataGenerator\Objects;
 
 /**
- * Class JsonDefinition
+ * Class OperationDefinitionObject
  */
-class JsonDefinition
+class OperationDefinitionObject
 {
+    const HTTP_CONTENT_TYPE_HEADER = 'Content-Type';
+
     /**
-     * Json Definitions Name
+     * Data Definitions Name
      *
      * @var string
      */
     private $name;
 
     /**
-     * Operation which the json defintion describes
+     * Operation which the data defintion describes
      *
      * @var string
      */
     private $operation;
 
     /**
-     * Data type for which the json defintiion is used
+     * Data type for which the data defintiion is used
      *
      * @var string
      */
@@ -40,18 +42,18 @@ class JsonDefinition
     private $apiMethod;
 
     /**
-     * Base URL for the request
+     * Api request url.
      *
      * @var string
      */
-    private $baseUrl;
+    private $apiUrl;
 
     /**
      * Resource specific URI for the request
      *
      * @var string
      */
-    private $apiUrl;
+    private $apiUri;
 
     /**
      * Authorization path for retrieving a token
@@ -59,6 +61,13 @@ class JsonDefinition
      * @var string
      */
     private $auth;
+
+    /**
+     * Content type of body
+     *
+     * @var string
+     */
+    private $contentType;
 
     /**
      * Relevant headers for the request
@@ -75,48 +84,79 @@ class JsonDefinition
     private $params = [];
 
     /**
-     * The metadata describing the json fields and values themselves
+     * The metadata describing the data fields and values themselves
      *
      * @var array
      */
-    private $jsonMetadata = [];
+    private $operationMetadata = [];
 
     /**
-     * JsonDefinition constructor.
+     * Regex to check for request success.
+     *
+     * @var string
+     */
+    private $successRegex;
+
+    /**
+     * Regex to grab return value from response.
+     *
+     * @var string
+     */
+    private $returnRegex;
+
+    /**
+     * OperationDefinitionObject constructor.
      * @param string $name
      * @param string $operation
      * @param string $dataType
      * @param string $apiMethod
-     * @param string $apiUrl
+     * @param string $apiUri
      * @param string $auth
      * @param array $headers
      * @param array $params
-     * @param array $jsonMetadata
+     * @param array $metaData
+     * @param string $contentType
+     * @param string $successRegex
+     * @param string $returnRegex
      */
     public function __construct(
         $name,
         $operation,
         $dataType,
         $apiMethod,
-        $apiUrl,
+        $apiUri,
         $auth,
         $headers,
         $params,
-        $jsonMetadata
+        $metaData,
+        $contentType,
+        $successRegex = null,
+        $returnRegex = null
     ) {
         $this->name = $name;
         $this->operation = $operation;
         $this->dataType = $dataType;
         $this->apiMethod = $apiMethod;
-        $this->baseUrl = $apiUrl;
+        $this->apiUri = trim($apiUri, '/');
         $this->auth = $auth;
         $this->headers = $headers;
         $this->params = $params;
-        $this->jsonMetadata = $jsonMetadata;
+        $this->operationMetadata = $metaData;
+        $this->successRegex = $successRegex;
+        $this->returnRegex = $returnRegex;
+        $this->apiUrl = null;
+
+        if (!empty($contentType)) {
+            $this->contentType = $contentType;
+        } else {
+            $this->contentType = 'application/x-www-form-urlencoded';
+        }
+        // add content type as a header
+        $this->headers[] = self::HTTP_CONTENT_TYPE_HEADER . ': ' . $this->contentType;
     }
 
     /**
-     * Getter for json data type
+     * Getter for data's data type
      *
      * @return string
      */
@@ -126,7 +166,7 @@ class JsonDefinition
     }
 
     /**
-     * Getter for json operation
+     * Getter for data operation
      *
      * @return string
      */
@@ -146,20 +186,22 @@ class JsonDefinition
     }
 
     /**
-     * Getter for api url
+     * Getter for api url for a store.
      *
      * @return string
      */
     public function getApiUrl()
     {
-        $this->cleanApiUrl();
+        if (!$this->apiUrl) {
+            $this->apiUrl = $this->apiUri;
 
-        if (array_key_exists('path', $this->params)) {
-            $this->addPathParam();
-        }
+            if (array_key_exists('path', $this->params)) {
+                $this->addPathParam();
+            }
 
-        if (array_key_exists('query', $this->params)) {
-            $this->addQueryParams();
+            if (array_key_exists('query', $this->params)) {
+                $this->addQueryParams();
+            }
         }
 
         return $this->apiUrl;
@@ -186,27 +228,43 @@ class JsonDefinition
     }
 
     /**
-     * Getter for json metadata
+     * Getter for Content-type
      *
-     * @return array
+     * @return string
      */
-    public function getJsonMetadata()
+    public function getContentType()
     {
-        return $this->jsonMetadata;
+        return $this->contentType;
     }
 
     /**
-     * Function to validate api format and add "/" char where necessary
+     * Getter for data metadata
      *
-     * @return void
+     * @return array
      */
-    private function cleanApiUrl()
+    public function getOperationMetadata()
     {
-        if (substr($this->baseUrl, -1) == "/") {
-            $this->apiUrl = rtrim($this->baseUrl, "/");
-        } else {
-            $this->apiUrl = $this->baseUrl;
-        }
+        return $this->operationMetadata;
+    }
+
+    /**
+     * Getter for success regex.
+     *
+     * @return string
+     */
+    public function getSuccessRegex()
+    {
+        return $this->successRegex;
+    }
+
+    /**
+     * Getter for return regex.
+     *
+     * @return string
+     */
+    public function getReturnRegex()
+    {
+        return $this->returnRegex;
     }
 
     /**
@@ -222,21 +280,19 @@ class JsonDefinition
     }
 
     /**
-     * Function to append query params where necessary
+     * Function to append or add query parameters
      *
      * @return void
      */
-    private function addQueryParams()
+    public function addQueryParams()
     {
-
         foreach ($this->params['query'] as $paramName => $paramValue) {
-            if (!stringContains("?", $this->apiUrl)) {
+            if (strpos($this->apiUrl, '?') === false) {
                 $this->apiUrl = $this->apiUrl . "?";
             } else {
                 $this->apiUrl = $this->apiUrl . "&";
             }
-
-            $this->apiUrl = $paramName . "=" . $paramValue;
+            $this->apiUrl = $this->apiUrl . $paramName . "=" . $paramValue;
         }
     }
 }

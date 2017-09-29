@@ -212,7 +212,7 @@ class TestGenerator
         $useStatementsPhp = "use Magento\FunctionalTestingFramework\AcceptanceTester;\n";
 
         $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;\n";
-        $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Api\EntityApiHandler;\n";
+        $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;\n";
         $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;\n";
 
         $allureStatements = [
@@ -497,8 +497,31 @@ class TestGenerator
                             }
                         }
                     }
+
+                    if ($hookObject) {
+                        $createEntityFunctionCall = sprintf("\t\t\$this->%s->createEntity(", $key);
+                        $dataPersistenceHandlerFunctionCall = sprintf(
+                            "\t\t\$this->%s = new DataPersistenceHandler($%s",
+                            $key,
+                            $entity
+                        );
+                    } else {
+                        $createEntityFunctionCall = sprintf("\t\t\$%s->createEntity(", $key);
+                        $dataPersistenceHandlerFunctionCall = sprintf(
+                            "\t\t$%s = new DataPersistenceHandler($%s",
+                            $key,
+                            $entity
+                        );
+                    }
+
+                    if (isset($customActionAttributes['storeCode'])) {
+                        $createEntityFunctionCall .= sprintf("\"%s\");\n", $customActionAttributes['storeCode']);
+                    } else {
+                        $createEntityFunctionCall .= ");\n";
+                    }
+
                     //If required-entities are defined, reassign dataObject to not overwrite the static definition.
-                    //Also, EntityApiHandler needs to be defined with customData array.
+                    //Also, DataPersistenceHandler needs to be defined with customData array.
                     if (!empty($requiredEntities)) {
                         $testSteps .= sprintf(
                             "\t\t$%s = new EntityDataObject($%s->getName(), $%s->getType(), $%s->getData()
@@ -512,37 +535,15 @@ class TestGenerator
                             $entity
                         );
 
-                        if ($hookObject) {
-                            $testSteps .= sprintf(
-                                "\t\t\$this->%s = new EntityApiHandler($%s, [%s]);\n",
-                                $key,
-                                $entity,
-                                implode(', ', $requiredEntityObjects)
-                            );
-                            $testSteps .= sprintf("\t\t\$this->%s->createEntity();\n", $key);
-                        } else {
-                            $testSteps .= sprintf(
-                                "\t\t$%s = new EntityApiHandler($%s, [%s]);\n",
-                                $key,
-                                $entity,
-                                implode(', ', $requiredEntityObjects)
-                            );
-                            $testSteps .= sprintf("\t\t$%s->createEntity();\n", $key);
-                        }
+                        $dataPersistenceHandlerFunctionCall .= sprintf(
+                            ", [%s]);\n",
+                            implode(', ', $requiredEntityObjects)
+                        );
                     } else {
-                        if ($hookObject) {
-                            $testSteps .= sprintf(
-                                "\t\t\$this->%s = new EntityApiHandler($%s);\n",
-                                $key,
-                                $entity
-                            );
-                            $testSteps .= sprintf("\t\t\$this->%s->createEntity();\n", $key);
-                        } else {
-                            $testSteps .= sprintf("\t\t$%s = new EntityApiHandler($%s);\n", $key, $entity);
-                            $testSteps .= sprintf("\t\t$%s->createEntity();\n", $key);
-                        }
+                        $dataPersistenceHandlerFunctionCall .= ");\n";
                     }
-
+                    $testSteps .= $dataPersistenceHandlerFunctionCall;
+                    $testSteps .= $createEntityFunctionCall;
                     break;
                 case "deleteData":
                     $key = $customActionAttributes['createDataKey'];
@@ -873,7 +874,7 @@ class TestGenerator
             foreach ($hookObject->getActions() as $step) {
                 if ($step->getType() == "createData") {
                     $hooks .= "\t/**\n";
-                    $hooks .= sprintf("\t  * @var EntityApiHandler $%s;\n", $step->getMergeKey());
+                    $hooks .= sprintf("\t  * @var DataPersistenceHandler $%s;\n", $step->getMergeKey());
                     $hooks .= "\t */\n";
                     $hooks .= sprintf("\tprotected $%s;\n\n", $step->getMergeKey());
                     $createData = true;
