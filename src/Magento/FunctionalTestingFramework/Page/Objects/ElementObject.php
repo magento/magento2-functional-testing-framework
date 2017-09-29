@@ -31,7 +31,7 @@ class ElementObject
      *
      * @var string
      */
-    private $locator;
+    private $selector;
 
     /**
      * Section element timeout
@@ -51,15 +51,15 @@ class ElementObject
      * ElementObject constructor.
      * @param string $name
      * @param string $type
-     * @param string $locator
+     * @param string $selector
      * @param string $timeout
      * @param bool $parameterized
      */
-    public function __construct($name, $type, $locator, $timeout, $parameterized)
+    public function __construct($name, $type, $selector, $timeout, $parameterized)
     {
         $this->name = $name;
         $this->type = $type;
-        $this->locator = $locator;
+        $this->selector = $selector;
         $this->timeout = $timeout;
         $this->parameterized = $parameterized;
     }
@@ -85,13 +85,13 @@ class ElementObject
     }
 
     /**
-     * Getter for the locator of an element
+     * Getter for the selector of an element
      *
      * @return string
      */
-    public function getLocator()
+    public function getSelector()
     {
-        return $this->locator;
+        return $this->selector;
     }
 
     /**

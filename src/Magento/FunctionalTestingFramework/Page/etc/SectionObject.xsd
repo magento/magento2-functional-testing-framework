@@ -58,17 +58,10 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute type="notEmptyType" name="locator" use="required">
+            <xs:attribute type="notEmptyType" name="selector" use="required">
                 <xs:annotation>
                     <xs:documentation>
-                        Locator of the element. Use %s for placeholders for variables.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute type="notEmptyType" name="locatorVariables" use="optional">
-                <xs:annotation>
-                    <xs:documentation>
-                        Optional variable names separated by "," which are used to substitute %s in locator attribute.
+                        Selector of the element.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
