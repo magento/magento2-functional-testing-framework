@@ -806,7 +806,7 @@ class TestGenerator
         $replaced = false;
 
         // Check for Cest-scope variables first, stricter regex match.
-        preg_match_all("/\\$\\$[\w.]+\\$\\$/", $outputString, $matches);
+        preg_match_all("/\\$\\$[\w.\[\]]+\\$\\$/", $outputString, $matches);
         foreach ($matches[0] as $match) {
             $replacement = null;
             $variable = $this->stripAndSplitReference($match, '$$');
@@ -816,7 +816,19 @@ class TestGenerator
                     ". Hook persisted entity references must follow \$\$entityMergeKey.field\$\$ format."
                 );
             }
-            $replacement = sprintf("\$this->%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
+            preg_match_all("/\[[\w.]+\]/", $variable[1], $arrayMatch);
+            if (!empty($arrayMatch[0])) {
+                $variable[1] = str_replace($arrayMatch[0][0], "", $variable[1]);
+                $arrayMatch[0][0] = trim($arrayMatch[0][0], "[]");
+                $replacement = sprintf(
+                    "\$this->%s->getCreatedDataByName('%s')['%s']",
+                    $variable[0],
+                    $variable[1],
+                    $arrayMatch[0][0]
+                );
+            } else {
+                $replacement = sprintf("\$this->%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
+            }
             if ($quoteBreak) {
                 $replacement = '" . ' . $replacement . ' . "';
             }
@@ -825,7 +837,7 @@ class TestGenerator
         }
 
         // Check Test-scope variables
-        preg_match_all("/\\$[\w.]+\\$/", $outputString, $matches);
+        preg_match_all("/\\$[\w.\[\]]+\\$/", $outputString, $matches);
         foreach ($matches[0] as $match) {
             $replacement = null;
             $variable = $this->stripAndSplitReference($match, '$');
@@ -835,7 +847,19 @@ class TestGenerator
                     ". Test persisted entity references must follow \$entityMergeKey.field\$ format."
                 );
             }
-            $replacement = sprintf("$%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
+            preg_match_all("/\[[\w.]+\]/", $variable[1], $arrayMatch);
+            if (!empty($arrayMatch[0])) {
+                $variable[1] = str_replace($arrayMatch[0][0], "", $variable[1]);
+                $arrayMatch[0][0] = trim($arrayMatch[0][0], "[]");
+                $replacement = sprintf(
+                    "$%s->getCreatedDataByName('%s')['%s']",
+                    $variable[0],
+                    $variable[1],
+                    $arrayMatch[0][0]
+                );
+            } else {
+                $replacement = sprintf("$%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
+            }
             if ($quoteBreak) {
                 $replacement = '" . ' . $replacement . ' . "';
             }
