@@ -18,6 +18,8 @@ use RecursiveDirectoryIterator;
 class TestGenerator
 {
 
+    const REQUIRED_ENTITY_REFERENCE = 'persistedKey';
+
     /**
      * Path to the export dir.
      *
@@ -487,13 +489,16 @@ class TestGenerator
                     foreach ($customActionAttributes as $customAttribute) {
                         if (is_array($customAttribute) && $customAttribute['nodeName'] = 'required-entity') {
                             if ($hookObject) {
-                                $requiredEntities [] = "\$this->" . $customAttribute['name'] . "->getName() => " .
-                                    "\$this->" . $customAttribute['name'] . "->getType()";
-                                $requiredEntityObjects [] = '$this->' . $customAttribute['name'];
+                                $requiredEntities [] = "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
+                                    "->getName() => " . "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
+                                    "->getType()";
+                                $requiredEntityObjects [] = '$this->' . $customAttribute
+                                    [self::REQUIRED_ENTITY_REFERENCE];
                             } else {
-                                $requiredEntities [] = "\$" . $customAttribute['name'] . "->getName() => "
-                                    . "\$" . $customAttribute['name'] . "->getType()";
-                                $requiredEntityObjects [] = '$' . $customAttribute['name'];
+                                $requiredEntities [] = "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE]
+                                    . "->getName() => " . "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
+                                    "->getType()";
+                                $requiredEntityObjects [] = '$' . $customAttribute[self::REQUIRED_ENTITY_REFERENCE];
                             }
                         }
                     }
@@ -523,18 +528,6 @@ class TestGenerator
                     //If required-entities are defined, reassign dataObject to not overwrite the static definition.
                     //Also, DataPersistenceHandler needs to be defined with customData array.
                     if (!empty($requiredEntities)) {
-                        $testSteps .= sprintf(
-                            "\t\t$%s = new EntityDataObject($%s->getName(), $%s->getType(), $%s->getData()
-                            , array_merge($%s->getLinkedEntities(), [%s]), $%s->getUniquenessData());\n",
-                            $entity,
-                            $entity,
-                            $entity,
-                            $entity,
-                            $entity,
-                            implode(", ", $requiredEntities),
-                            $entity
-                        );
-
                         $dataPersistenceHandlerFunctionCall .= sprintf(
                             ", [%s]);\n",
                             implode(', ', $requiredEntityObjects)
@@ -558,33 +551,6 @@ class TestGenerator
                         $testSteps .= sprintf("\t\t\$this->%s->deleteEntity();\n", $key);
                     } else {
                         $testSteps .= sprintf("\t\t$%s->deleteEntity();\n", $key);
-                    }
-                    break;
-                case "entity":
-                    $entityData = '[';
-                    foreach ($stepsData[$customActionAttributes['name']] as $dataKey => $dataValue) {
-                        $variableReplace = $this->resolveTestVariable($dataValue, true);
-                        $entityData .= sprintf("\"%s\" => \"%s\", ", $dataKey, $variableReplace);
-                    }
-                    $entityData .= ']';
-                    if ($hookObject) {
-                        // no uniqueness attributes for data allowed within entity defined in cest.
-                        $testSteps .= sprintf(
-                            "\t\t\$this->%s = new EntityDataObject(\"%s\",\"%s\",%s,null,null);\n",
-                            $customActionAttributes['name'],
-                            $customActionAttributes['name'],
-                            $customActionAttributes['type'],
-                            $entityData
-                        );
-                    } else {
-                        // no uniqueness attributes for data allowed within entity defined in cest.
-                        $testSteps .= sprintf(
-                            "\t\t$%s = new EntityDataObject(\"%s\",\"%s\",%s,null,null);\n",
-                            $customActionAttributes['name'],
-                            $customActionAttributes['name'],
-                            $customActionAttributes['type'],
-                            $entityData
-                        );
                     }
                     break;
                 case "dontSeeCurrentUrlEquals":

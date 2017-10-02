@@ -201,14 +201,14 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
                     } else {
                         $value = $operationField[OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_VALUE][0]
                         [OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_VALUE];
-                        $type = [OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_VALUE];
+                        $type = OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY;
                     }
 
                     $operationElements[] = new OperationElement(
                         $operationField[OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_KEY],
                         $value,
                         $type,
-                        $dataEntryType[OperationDefinitionObjectHandler::ENTITY_OPERATION_REQUIRED] ?? null,
+                        $operationField[OperationDefinitionObjectHandler::ENTITY_OPERATION_REQUIRED] ?? null,
                         $subOperationElements
                     );
                 }

@@ -18,8 +18,7 @@ class OperationDataArrayResolver
         'string',
         'boolean',
         'integer',
-        'double',
-        OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY
+        'double'
     ];
     const EXCEPTION_REQUIRED_DATA = "%s of key \" %s\" in \"%s\" is required by metadata, but was not provided.";
 
@@ -82,9 +81,10 @@ class OperationDataArrayResolver
             $operationElementType = $operationElement->getValue();
 
             if (in_array($operationElementType, self::PRIMITIVE_TYPES)) {
-                $elementData = $entityObject->getDataByName(
+                $elementData = $this->resolvePrimitiveReference(
+                    $entityObject,
                     $operationElement->getKey(),
-                    EntityDataObject::CEST_UNIQUE_VALUE
+                    $operationElement->getType()
                 );
 
                 // If data was defined at all, attempt to put it into operation data array
@@ -141,6 +141,67 @@ class OperationDataArrayResolver
         }
 
         return $operationDataArray;
+    }
+
+    /**
+     * Resolves a reference for a primitive piece of data, if the data cannot be found as a defined field, the method
+     * looks to see if any vars have been declared with the same operationKey and resolves based on defined dependent
+     * entities.
+     *
+     * @param EntityDataObject $entityObject
+     * @param string $operationKey
+     * @param string $operationElementType
+     * @return array|string
+     */
+    private function resolvePrimitiveReference($entityObject, $operationKey, $operationElementType)
+    {
+        $elementData = $entityObject->getDataByName(
+            $operationKey,
+            EntityDataObject::CEST_UNIQUE_VALUE
+        );
+
+        if ($elementData == null && $entityObject->getVarReference($operationKey) != null) {
+            list($type, $field) = explode(
+                DataObjectHandler::VAR_ENTITY_FIELD_SEPARATOR,
+                $entityObject->getVarReference($operationKey)
+            );
+
+            if ($operationElementType == OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY) {
+                $elementDatas = [];
+                $entities = $this->getDependentEntitiesOfType($type);
+                foreach ($entities as $entity) {
+                    $elementDatas[] = $entity->getDataByName($field, EntityDataObject::CEST_UNIQUE_VALUE);
+                }
+
+                return $elementDatas;
+
+            }
+
+            $entity = $this->getDependentEntitiesOfType($type)[0];
+            $elementData = $entity->getDataByName($field, EntityDataObject::CEST_UNIQUE_VALUE);
+        }
+
+        return $elementData;
+    }
+
+    /**
+     * Returns all dependent entities of the type passed in as an arg (the dependent entities are given at runtime,
+     * and are not statically defined).
+     *
+     * @param string $type
+     * @return array
+     */
+    private function getDependentEntitiesOfType($type)
+    {
+        $entitiesOfType = [];
+
+        foreach ($this->dependentEntities as $dependentEntity) {
+            if ($dependentEntity->getType() == $type) {
+                $entitiesOfType[] = $dependentEntity;
+            }
+        }
+
+        return $entitiesOfType;
     }
 
     /**
@@ -253,6 +314,15 @@ class OperationDataArrayResolver
     private function castValue($type, $value)
     {
         $newVal = $value;
+
+        if (is_array($value)) {
+            $newVals = [];
+            foreach($value as $val) {
+                $newVals[] = $this->castValue($type, $val);
+            }
+
+            return $newVals;
+        }
 
         switch ($type) {
             case 'string':

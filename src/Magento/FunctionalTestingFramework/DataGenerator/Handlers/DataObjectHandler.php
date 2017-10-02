@@ -43,6 +43,12 @@ class DataObjectHandler implements ObjectHandlerInterface
     const ARRAY_ELEMENT_ITEM = 'item';
     const ARRAY_ELEMENT_ITEM_VALUE = 'value';
 
+    const VAR_VALUES = 'var';
+    const VAR_KEY = 'key';
+    const VAR_ENTITY = 'entityType';
+    const VAR_FIELD = 'entityKey';
+    const VAR_ENTITY_FIELD_SEPARATOR = '->';
+
     const REQUIRED_ENTITY = 'required-entity';
     const REQUIRED_ENTITY_TYPE = 'type';
     const REQUIRED_ENTITY_VALUE = 'value';
@@ -150,6 +156,7 @@ class DataObjectHandler implements ObjectHandlerInterface
             $dataValues = [];
             $linkedEntities = [];
             $arrayValues = [];
+            $vars = [];
             $uniquenessValues = [];
 
             if (array_key_exists(self::DATA_VALUES, $entity)) {
@@ -186,12 +193,21 @@ class DataObjectHandler implements ObjectHandlerInterface
                 }
             }
 
+            if (array_key_exists(self::VAR_VALUES, $entity)) {
+                foreach ($entity[self::VAR_VALUES] as $varElement) {
+                    $varKey = $varElement[self::VAR_KEY];
+                    $varValue = $varElement[self::VAR_ENTITY] . self::VAR_ENTITY_FIELD_SEPARATOR . $varElement[self::VAR_FIELD];
+                    $vars[$varKey] = $varValue;
+                }
+            }
+
             $entityDataObject = new EntityDataObject(
                 $entityName,
                 $entityType,
                 $dataValues,
                 $linkedEntities,
-                $uniquenessValues
+                $uniquenessValues,
+                $vars
             );
 
             $this->data[$entityDataObject->getName()] = $entityDataObject;

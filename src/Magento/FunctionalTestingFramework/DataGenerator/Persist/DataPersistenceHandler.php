@@ -31,7 +31,7 @@ class DataPersistenceHandler
      * Array of dependent entities, handed to CurlHandler when entity is created.
      * @var array|null
      */
-    private $dependentObjects = [];
+    private $dependentObjects;
 
     /**
      * Store code in web api rest url.
@@ -46,11 +46,14 @@ class DataPersistenceHandler
      * @param EntityDataObject $entityObject
      * @param array $dependentObjects
      */
-    public function __construct($entityObject, $dependentObjects = null)
+    public function __construct($entityObject, $dependentObjects = [])
     {
         $this->entityObject = clone $entityObject;
-        $this->dependentObjects = $dependentObjects;
         $this->storeCode = 'default';
+
+        foreach ($dependentObjects as $dependentObject) {
+            $this->dependentObjects[] = $dependentObject->getCreatedObject();
+        }
     }
 
     /**
