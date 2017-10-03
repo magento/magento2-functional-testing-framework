@@ -11,9 +11,9 @@ use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
 /**
- * Curl executor for requests to Admin.
+ * Curl executor for requests to Frontend.
  */
-class AdminExecutor extends AbstractExecutor implements CurlInterface
+class FrontendExecutor extends AbstractExecutor implements CurlInterface
 {
     /**
      * Curl transport protocol.
@@ -37,50 +37,65 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
     private $response;
 
     /**
-     * Backend url.
+     * Cookies data.
      *
      * @var string
      */
-    private static $adminUrl;
+    private $cookies = '';
 
     /**
-     * Constructor.
+     * Customer email used for authentication.
      *
-     * @constructor
+     * @var string
      */
-    public function __construct()
+    private $customerEmail;
+
+    /**
+     * Customer password used for authentication.
+     *
+     * @var string
+     */
+    private $customerPassword;
+
+    /**
+     * FrontendExecutor constructor.
+     *
+     * @param string $customerEmail
+     * @param string $customerPassWord
+     */
+    public function __construct($customerEmail, $customerPassWord)
     {
         if (!isset(parent::$baseUrl)) {
             parent::resolveBaseUrl();
         }
-        self::$adminUrl = parent::$baseUrl . getenv('MAGENTO_BACKEND_NAME') . '/';
         $this->transport = new CurlTransport();
+        $this->customerEmail = $customerEmail;
+        $this->customerPassword = $customerPassWord;
         $this->authorize();
     }
 
     /**
-     * Authorize admin on backend.
+     * Authorize customer on frontend.
      *
      * @return void
      * @throws TestFrameworkException
      */
     private function authorize()
     {
-        // Perform GET to backend url so form_key is set
-        $this->transport->write(self::$adminUrl, [], CurlInterface::GET);
+        $url = parent::$baseUrl . 'customer/account/login/';
+        $this->transport->write($url);
         $this->read();
 
-        // Authenticate admin user
-        $authUrl = self::$adminUrl . 'admin/auth/login/';
+        $url = parent::$baseUrl  . 'customer/account/loginPost/';
         $data = [
-            'login[username]' => getenv('MAGENTO_ADMIN_USERNAME'),
-            'login[password]' => getenv('MAGENTO_ADMIN_PASSWORD'),
+            'login[username]' => $this->customerEmail,
+            'login[password]' => $this->customerPassword,
             'form_key' => $this->formKey,
         ];
-        $this->transport->write($authUrl, $data, CurlInterface::POST);
+        $this->transport->write($url, $data, CurlInterface::POST, ['Set-Cookie:' . $this->cookies]);
         $response = $this->read();
-        if (strpos($response, 'login-form')) {
-            throw new TestFrameworkException('Admin user authentication failed!');
+        if (strpos($response, 'customer/account/login')) {
+            throw new TestFrameworkException($this->customerEmail . ', cannot be logged in by curl handler!');
         }
     }
 
@@ -91,9 +106,23 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
      */
     private function setFormKey()
     {
-        preg_match('!var FORM_KEY = \'(\w+)\';!', $this->response, $matches);
+        $str = substr($this->response, strpos($this->response, 'form_key'));
+        preg_match('/value="(.*)" \/>/', $str, $matches);
         if (!empty($matches[1])) {
             $this->formKey = $matches[1];
+        }
+    }
+
+    /**
+     * Set Cookies from response.
+     *
+     * @return void
+     */
+    protected function setCookies()
+    {
+        preg_match_all('|Set-Cookie: (.*);|U', $this->response, $matches);
+        if (!empty($matches[1])) {
+            $this->cookies = implode('; ', $matches[1]);
         }
     }
 
@@ -109,7 +138,13 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
      */
     public function write($url, $data = [], $method = CurlInterface::POST, $headers = [])
     {
-        $apiUrl = self::$adminUrl . $url;
+        if(isset($data['customer_email'])) {
+            unset($data['customer_email']);
+        }
+        if(isset($data['customer_password'])) {
+            unset($data['customer_password']);
+        }
+        $apiUrl = parent::$baseUrl . $url;
         if ($this->formKey) {
             $data['form_key'] = $this->formKey;
         } else {
@@ -117,7 +152,7 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
                 sprintf('Form key is absent! Url: "%s" Response: "%s"', $apiUrl, $this->response)
             );
         }
-
+        $headers = ['Set-Cookie:' . $this->cookies];
         $this->transport->write($apiUrl, str_replace('null', '', http_build_query($data)), $method, $headers);
     }
 
@@ -132,6 +167,7 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
     public function read($successRegex = null, $returnRegex = null)
     {
         $this->response = $this->transport->read();
+        $this->setCookies();
         $this->setFormKey();
 
         if (!empty($successRegex)) {
