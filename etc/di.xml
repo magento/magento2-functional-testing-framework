@@ -74,27 +74,27 @@
     </virtualType>
     <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\Page" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
         <arguments>
-            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Mask</argument>
+            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\Page</argument>
             <argument name="idAttributes" xsi:type="array">
                 <item name="/config/page" xsi:type="string">name</item>
                 <item name="/config/page/section" xsi:type="string">name</item>
             </argument>
-            <argument name="fileName" xsi:type="string">#\.xml$#</argument>
+            <argument name="fileName" xsi:type="string">*Page.xml</argument>
             <argument name="defaultScope" xsi:type="string">Page</argument>
         </arguments>
     </virtualType>
     <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\Section" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
         <arguments>
-            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Mask</argument>
+            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\Section</argument>
             <argument name="idAttributes" xsi:type="array">
                 <item name="/config/section" xsi:type="string">name</item>
                 <item name="/config/section/element" xsi:type="string">name</item>
             </argument>
-            <argument name="fileName" xsi:type="string">#\.xml$#</argument>
+            <argument name="fileName" xsi:type="string">*Section.xml</argument>
             <argument name="defaultScope" xsi:type="string">Section</argument>
         </arguments>
     </virtualType>
