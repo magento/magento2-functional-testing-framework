@@ -772,7 +772,7 @@ class TestGenerator
         $replaced = false;
 
         // Check for Cest-scope variables first, stricter regex match.
-        preg_match_all("/\\$\\$[\w.]+\\$\\$/", $outputString, $matches);
+        preg_match_all("/\\$\\$[\w.\[\]]+\\$\\$/", $outputString, $matches);
         foreach ($matches[0] as $match) {
             $replacement = null;
             $variable = $this->stripAndSplitReference($match, '$$');
@@ -791,7 +791,7 @@ class TestGenerator
         }
 
         // Check Test-scope variables
-        preg_match_all("/\\$[\w.]+\\$/", $outputString, $matches);
+        preg_match_all("/\\$[\w.\[\]]+\\$/", $outputString, $matches);
         foreach ($matches[0] as $match) {
             $replacement = null;
             $variable = $this->stripAndSplitReference($match, '$');
