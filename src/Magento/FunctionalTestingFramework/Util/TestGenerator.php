@@ -397,7 +397,7 @@ class TestGenerator
             if (isset($customActionAttributes['selectorArray'])) {
                 $selector = $customActionAttributes['selectorArray'];
             } elseif (isset($customActionAttributes['selector'])) {
-                $selector = $this->wrapWithDoubleQuotes($customActionAttributes['selector']);
+                $selector = $this->addUniquenessFunctionCall($customActionAttributes['selector']);
             }
 
             if (isset($customActionAttributes['selector1'])) {
@@ -1050,7 +1050,7 @@ class TestGenerator
     }
 
     /**
-     * Strip beginning and ending quotes of input string.
+     * Strip beginning and ending double quotes of input string.
      *
      * @param string $input
      * @return string
@@ -1060,10 +1060,10 @@ class TestGenerator
         if (empty($input)) {
             return '';
         }
-        if (substr($input, 0, 1) === '"' || substr($input, 0, 1) === "'") {
+        if (substr($input, 0, 1) === '"') {
             $input = substr($input, 1);
         }
-        if (substr($input, -1, 1) === '"' || substr($input, -1, 1) === "'") {
+        if (substr($input, -1, 1) === '"') {
             $input = substr($input, 0, -1);
         }
         return $input;
