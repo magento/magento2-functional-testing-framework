@@ -54,9 +54,10 @@ class ActionGroupObject
      * Gets the ordered steps including merged waits
      *
      * @param array $arguments
+     * @param string $actionReferenceKey
      * @return array
      */
-    public function getSteps($arguments)
+    public function getSteps($arguments, $actionReferenceKey)
     {
         $mergeUtil = new ActionMergeUtil();
         $args = $this->arguments;
@@ -65,7 +66,7 @@ class ActionGroupObject
             $args = array_merge($args, $arguments);
         }
 
-        return $mergeUtil->resolveActionSteps($this->getResolvedActionsWithArgs($args), true);
+        return $mergeUtil->resolveActionSteps($this->getResolvedActionsWithArgs($args, $actionReferenceKey), true);
     }
 
     /**
@@ -73,17 +74,18 @@ class ActionGroupObject
      * action objects with proper argument.field references.
      *
      * @param array $arguments
+     * @param string $actionReferenceKey
      * @return array
      */
-    private function getResolvedActionsWithArgs($arguments)
+    private function getResolvedActionsWithArgs($arguments, $actionReferenceKey)
     {
         $resolvedActions = [];
         $regexPattern = '/{{([\w]+)/';
 
         foreach ($this->parsedActions as $action) {
             $varAttributes = array_intersect(self::VAR_ATTRIBUTES, array_keys($action->getCustomActionAttributes()));
+            $newActionAttributes = [];
             if (!empty($varAttributes)) {
-                $newActionAttributes = [];
                 // 1 check to see if we have pertinent var
                 foreach ($varAttributes as $varAttribute) {
                     $attributeValue = $action->getCustomActionAttributes()[$varAttribute];
@@ -98,18 +100,14 @@ class ActionGroupObject
                         $matches
                     );
                 }
-
-                $resolvedActions[$action->getMergeKey()] = new ActionObject(
-                    $action->getMergeKey(),
-                    $action->getType(),
-                    array_merge($action->getCustomActionAttributes(), $newActionAttributes),
-                    $action->getLinkedAction(),
-                    $action->getOrderOffset()
-                );
-            } else {
-                // add action here if we do not see any userInput in this particular action
-                $resolvedActions[$action->getMergeKey()] = $action;
             }
+            $resolvedActions[$action->getMergeKey() . $actionReferenceKey] = new ActionObject(
+                $action->getMergeKey() . $actionReferenceKey,
+                $action->getType(),
+                array_merge($action->getCustomActionAttributes(), $newActionAttributes),
+                $action->getLinkedAction(),
+                $action->getOrderOffset()
+            );
         }
 
         return $resolvedActions;
