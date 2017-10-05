@@ -119,7 +119,7 @@ class DataPersistenceHandler
     /**
      * Save created entity.
      *
-     * @param mixed $response
+     * @param string|array $response
      * @param array $requestDataArray
      * @param bool $isJson
      * @return void

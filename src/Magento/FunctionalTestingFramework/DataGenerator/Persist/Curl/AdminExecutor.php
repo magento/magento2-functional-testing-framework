@@ -103,7 +103,7 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
      * @param string $url
      * @param array $data
      * @param string $method
-     * @param mixed $headers
+     * @param array $headers
      * @return void
      * @throws TestFrameworkException
      */
@@ -162,7 +162,7 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
      * Add additional option to cURL.
      *
      * @param int $option the CURLOPT_* constants
-     * @param mixed $value
+     * @param int|string|bool|array $value
      * @return void
      */
     public function addOption($option, $value)

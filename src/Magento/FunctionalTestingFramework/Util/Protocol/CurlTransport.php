@@ -93,7 +93,7 @@ class CurlTransport implements CurlInterface
      * Add additional option to cURL.
      *
      * @param int $option
-     * @param mixed $value
+     * @param int|string|bool|array $value
      * @return $this
      */
     public function addOption($option, $value)
@@ -118,9 +118,9 @@ class CurlTransport implements CurlInterface
      * Send request to the remote server.
      *
      * @param string $url
-     * @param mixed $body
+     * @param array $body
      * @param string $method
-     * @param mixed $headers
+     * @param array $headers
      * @return void
      * @throws TestFrameworkException
      */
@@ -228,7 +228,7 @@ class CurlTransport implements CurlInterface
      * Get information regarding a specific transfer.
      *
      * @param int $opt CURLINFO option
-     * @return mixed
+     * @return string|array
      */
     public function getInfo($opt = 0)
     {

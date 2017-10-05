@@ -109,7 +109,7 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
      *
      * @param string $successRegex
      * @param string $returnRegex
-     * @return mixed
+     * @return string
      */
     public function read($successRegex = null, $returnRegex = null)
     {
@@ -121,7 +121,7 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
      * Add additional option to cURL.
      *
      * @param  int $option the CURLOPT_* constants
-     * @param  mixed $value
+     * @param  int|string|bool|array $value
      * @return void
      */
     public function addOption($option, $value)
