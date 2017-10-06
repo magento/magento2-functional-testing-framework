@@ -77,7 +77,7 @@ class ActionMergeUtil
                     $mergedStep->getCustomActionAttributes()[ActionObjectExtractor::ACTION_GROUP_REF]
                 );
                 $args = $mergedStep->getCustomActionAttributes()[ActionObjectExtractor::ACTION_GROUP_ARGUMENTS] ?? null;
-                $actionsToMerge = $actionGroup->getSteps($args);
+                $actionsToMerge = $actionGroup->getSteps($args, $key);
                 $newOrderedList = $newOrderedList + $actionsToMerge;
             } else {
                 $newOrderedList[$key]  = $mergedStep;

@@ -30,6 +30,16 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
+            <xs:element name="var" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="dataType">
+                            <xs:attribute name="entityType" type="xs:string"/>
+                            <xs:attribute name="entityKey" type="xs:string"/>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="required-entity" type="requiredEntityType" maxOccurs="unbounded" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation>

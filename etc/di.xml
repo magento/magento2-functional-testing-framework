@@ -49,24 +49,6 @@
         </arguments>
     </type>
     <type name="Magento\FunctionalTestingFramework\Util\ModuleResolver\SequenceSorter" />
-    <type name="Magento\FunctionalTestingFramework\Generate\GeneratePage">
-        <arguments>
-            <argument name="configData" xsi:type="object">Magento\FunctionalTestingFramework\Page\Config\Data</argument>
-        </arguments>
-    </type>
-    <type name="Magento\FunctionalTestingFramework\Generate\GenerateBlock">
-        <arguments>
-            <argument name="configData" xsi:type="object">Magento\FunctionalTestingFramework\Block\Config\Data</argument>
-        </arguments>
-    </type>
-    <type name="Magento\FunctionalTestingFramework\Generate\Pool">
-        <arguments>
-            <argument name="pool" xsi:type="array">
-                <item name="page" xsi:type="object">Magento\FunctionalTestingFramework\Generate\GeneratePage</item>
-                <item name="block" xsi:type="object">Magento\FunctionalTestingFramework\Generate\GenerateBlock</item>
-            </argument>
-        </arguments>
-    </type>
     <!--
     Array item can be of any type just like an argument, including array type itself, which creates circular dependency.
     Proxy is used to resolve the circular dependency, so that array items undergo the same interpretation as arguments.
@@ -92,27 +74,27 @@
     </virtualType>
     <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\Page" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
         <arguments>
-            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Mask</argument>
+            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\Page</argument>
             <argument name="idAttributes" xsi:type="array">
                 <item name="/config/page" xsi:type="string">name</item>
                 <item name="/config/page/section" xsi:type="string">name</item>
             </argument>
-            <argument name="fileName" xsi:type="string">#\.xml$#</argument>
+            <argument name="fileName" xsi:type="string">*Page.xml</argument>
             <argument name="defaultScope" xsi:type="string">Page</argument>
         </arguments>
     </virtualType>
     <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\Section" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
         <arguments>
-            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Mask</argument>
+            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\Section</argument>
             <argument name="idAttributes" xsi:type="array">
                 <item name="/config/section" xsi:type="string">name</item>
                 <item name="/config/section/element" xsi:type="string">name</item>
             </argument>
-            <argument name="fileName" xsi:type="string">#\.xml$#</argument>
+            <argument name="fileName" xsi:type="string">*Section.xml</argument>
             <argument name="defaultScope" xsi:type="string">Section</argument>
         </arguments>
     </virtualType>
@@ -176,7 +158,7 @@
 
     <!-- Configuration for Data Operation Metadata.xml -->
 
-    <type name="Magento\FunctionalTestingFramework\DataGenerator\Parsers\OperationMetadataParser">
+    <type name="Magento\FunctionalTestingFramework\DataGenerator\Parsers\OperationDefinitionParser">
         <arguments>
             <argument name="metadata" xsi:type="object">Magento\FunctionalTestingFramework\DataProfile\Config\Metadata</argument>
         </arguments>
@@ -198,7 +180,7 @@
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\Metadata</argument>
             <argument name="idAttributes" xsi:type="array">
                 <item name="/config/operation" xsi:type="string">name</item>
-                <item name="/config/operation/entry" xsi:type="string">key</item>
+                <item name="/config/operation/field" xsi:type="string">key</item>
                 <item name="/config/operation/array" xsi:type="string">key</item>
                 <item name="/config/operation/object" xsi:type="string">key</item>
             </argument>
@@ -222,11 +204,9 @@
             <argument name="idAttributes" xsi:type="array">
                 <item name="/config/cest" xsi:type="string">name</item>
                 <item name="/config/cest/test" xsi:type="string">name</item>
-                <item name="/config/cest/test/entity/data" xsi:type="string">key</item>
-                <item name="/config/cest/test/entity/required-entity" xsi:type="string">key</item>
                 <item name="/config/cest/test/actionGroup/argument" xsi:type="string">name</item>
-                <item name="/config/cest/test/createData/required-entity" xsi:type="string">name</item>
-                <item name="/config/cest/test/(acceptPopup|amOnPage|amOnUrl|appendField|assertArraySubset|attachFile|cancelPopup|checkOption|click|clickWithLeftButton|clickWithRightButton|closeTab|createData|deleteData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForPageLoad|waitForText)" xsi:type="string">mergeKey</item>
+                <item name="/config/cest/test/createData/required-entity" xsi:type="string">persistedKey</item>
+                <item name="/config/cest/test/(acceptPopup|actionGroup|amOnPage|amOnUrl|appendField|assertArraySubset|attachFile|cancelPopup|checkOption|click|clickWithLeftButton|clickWithRightButton|closeTab|createData|deleteData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForLoadingMaskToDisappear|waitForPageLoad|waitForText)" xsi:type="string">mergeKey</item>
             </argument>
             <argument name="fileName" xsi:type="string">*Cest.xml</argument>
             <argument name="defaultScope" xsi:type="string">Cest</argument>
@@ -236,20 +216,14 @@
     <virtualType name="Magento\FunctionalTestingFramework\Test\Config\Dom\ArrayNodeConfig" type="Magento\FunctionalTestingFramework\Config\Dom\ArrayNodeConfig">
         <arguments>
             <argument name="assocArrayAttributes" xsi:type="array">
-                <item name="/config/cest/test/(acceptPopup|amOnPage|amOnUrl|appendField|assertArraySubset|attachFile|cancelPopup|checkOption|click|clickWithLeftButton|clickWithRightButton|closeTab|createData|deleteData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForPageLoad|waitForText)" xsi:type="string">mergeKey</item>
-                <item name="/config/cest/before/(acceptPopup|amOnPage|amOnUrl|appendField|assertArraySubset|attachFile|cancelPopup|checkOption|click|clickWithLeftButton|clickWithRightButton|closeTab|createData|deleteData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForPageLoad|waitForText)" xsi:type="string">mergeKey</item>
-                <item name="/config/cest/after/(acceptPopup|amOnPage|amOnUrl|appendField|assertArraySubset|attachFile|cancelPopup|checkOption|click|clickWithLeftButton|clickWithRightButton|closeTab|createData|deleteData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForPageLoad|waitForText)" xsi:type="string">mergeKey</item>
+                <item name="/config/cest/test/(acceptPopup|actionGroup|amOnPage|amOnUrl|appendField|assertArraySubset|attachFile|cancelPopup|checkOption|click|clickWithLeftButton|clickWithRightButton|closeTab|createData|deleteData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForLoadingMaskToDisappear|waitForPageLoad|waitForText)" xsi:type="string">mergeKey</item>
+                <item name="/config/cest/before/(acceptPopup|actionGroup|amOnPage|amOnUrl|appendField|assertArraySubset|attachFile|cancelPopup|checkOption|click|clickWithLeftButton|clickWithRightButton|closeTab|createData|deleteData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForLoadingMaskToDisappear|waitForPageLoad|waitForText)" xsi:type="string">mergeKey</item>
+                <item name="/config/cest/after/(acceptPopup|actionGroup|amOnPage|amOnUrl|appendField|assertArraySubset|attachFile|cancelPopup|checkOption|click|clickWithLeftButton|clickWithRightButton|closeTab|createData|deleteData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForLoadingMaskToDisappear|waitForPageLoad|waitForText)" xsi:type="string">mergeKey</item>
                 <item name="/config/cest/test" xsi:type="string">name</item>
                 <item name="/config/cest" xsi:type="string">name</item>
-                <item name="/config/cest/test/entity/data" xsi:type="string">key</item>
-                <item name="/config/cest/test/entity/required-entity" xsi:type="string">key</item>
-                <item name="/config/cest/test/createData/required-entity" xsi:type="string">name</item>
-                <item name="/config/cest/before/entity/data" xsi:type="string">key</item>
-                <item name="/config/cest/before/entity/required-entity" xsi:type="string">key</item>
-                <item name="/config/cest/before/createData/required-entity" xsi:type="string">name</item>
-                <item name="/config/cest/after/entity/data" xsi:type="string">key</item>
-                <item name="/config/cest/after/entity/required-entity" xsi:type="string">key</item>
-                <item name="/config/cest/after/createData/required-entity" xsi:type="string">name</item>
+                <item name="/config/cest/test/createData/required-entity" xsi:type="string">persistedKey</item>
+                <item name="/config/cest/before/createData/required-entity" xsi:type="string">persistedKey</item>
+                <item name="/config/cest/after/createData/required-entity" xsi:type="string">persistedKey</item>
                 <item name="/config/cest/test/actionGroup/argument" xsi:type="string">name</item>
             </argument>
             <argument name="numericArrays" xsi:type="array">

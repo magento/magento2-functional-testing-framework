@@ -392,11 +392,12 @@ class ActionObject
             );
         }
 
-        //Attempt to Resolve {{data}} references to actual output.
+        //Attempt to Resolve {{data}} references to actual output. Trim parameter for whitespace before processing it.
         //If regex matched it means that it's either a 'StringLiteral' or $key.data$/$$key.data$$ reference.
         //Else assume it's a normal {{data.key}} reference and recurse through findAndReplace
         $resolvedParameters = [];
         foreach ($parameters as $parameter) {
+            $parameter = trim($parameter);
             preg_match_all("/[$'][\w.$]+[$']/", $parameter, $match);
             if (!empty($match[0])) {
                 $resolvedParameters[] = ltrim(rtrim($parameter, "'"), "'");

@@ -14,6 +14,13 @@ use Magento\FunctionalTestingFramework\Config\DataInterface;
 class DataProfileSchemaParser
 {
     /**
+     * Data Profiles.
+     *
+     * @var DataInterface
+     */
+    private $dataProfiles;
+
+    /**
      * DataProfileSchemaParser constructor.
      * @param DataInterface $dataProfiles
      */

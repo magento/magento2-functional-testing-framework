@@ -35,6 +35,13 @@ class EntityDataObject
     private $linkedEntities = [];
 
     /**
+     * An array of variable mappings for static data
+     *
+     * @var array
+     */
+    private $vars;
+
+    /**
      * An array of Data Name to Data Value
      *
      * @var array
@@ -63,8 +70,9 @@ class EntityDataObject
      * @param array $data
      * @param array $linkedEntities
      * @param array $uniquenessData
+     * @param array $vars
      */
-    public function __construct($entityName, $entityType, $data, $linkedEntities, $uniquenessData)
+    public function __construct($entityName, $entityType, $data, $linkedEntities, $uniquenessData, $vars = [])
     {
         $this->name = $entityName;
         $this->type = $entityType;
@@ -73,6 +81,8 @@ class EntityDataObject
         if ($uniquenessData) {
             $this->uniquenessData = $uniquenessData;
         }
+
+        $this->vars = $vars;
     }
 
     /**
@@ -184,6 +194,22 @@ class EntityDataObject
                 default:
                     break;
             }
+        }
+
+        return null;
+    }
+
+    /**
+     * Function which returns a reference to another entity (e.g. a var with entity="category" field="id" returns as
+     * category->id)
+     *
+     * @param string $dataKey
+     * @return array|null
+     */
+    public function getVarReference($dataKey)
+    {
+        if (array_key_exists($dataKey, $this->vars)) {
+            return $this->vars[$dataKey];
         }
 
         return null;
