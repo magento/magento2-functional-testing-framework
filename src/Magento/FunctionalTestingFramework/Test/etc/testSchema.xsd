@@ -38,7 +38,6 @@
             </xs:element>
         </xs:choice>
         <xs:attribute type="xs:string" name="name" use="required"/>
-        <xs:attribute type="xs:string" name="defaultEntity"/>
     </xs:complexType>
     <xs:complexType name="annotationsType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
