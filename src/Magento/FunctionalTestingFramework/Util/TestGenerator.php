@@ -18,7 +18,7 @@ use RecursiveDirectoryIterator;
 class TestGenerator
 {
 
-    const REQUIRED_ENTITY_REFERENCE = 'persistedKey';
+    const REQUIRED_ENTITY_REFERENCE = 'createDataKey';
 
     /**
      * Path to the export dir.
