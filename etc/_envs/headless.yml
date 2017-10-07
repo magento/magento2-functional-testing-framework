@@ -1,4 +1,4 @@
-# `chrome` environment config goes here
+# `headless` environment config goes here
 modules:
     enabled:
         - \Magento\FunctionalTestingFramework\Module\MagentoWebDriver
@@ -6,6 +6,8 @@ modules:
     config:
         \Magento\FunctionalTestingFramework\Module\MagentoWebDriver:
             browser: 'chrome'
+            window_size: false
             capabilities:
                 chromeOptions:
-                    args: ["--start-maximized", "--disable-extensions", "--enable-automation"]
+                    args: ["--headless", "--disable-gpu", "--disable-extensions"]
+                    binary: "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"

@@ -5,4 +5,4 @@ modules:
         - \Magento\FunctionalTestingFramework\Helper\Acceptance
     config:
         \Magento\FunctionalTestingFramework\Module\MagentoWebDriver:
-            browser: phantomjs
+            browser: 'phantomjs'
