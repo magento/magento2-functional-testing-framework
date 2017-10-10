@@ -6,6 +6,7 @@
 namespace Magento\FunctionalTestingFramework\DataGenerator\Persist;
 
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\AdminExecutor;
+use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\FrontendExecutor;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\WebapiExecutor;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\OperationDefinitionObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
@@ -123,8 +124,11 @@ class CurlHandler
             $executor = new WebapiExecutor($this->storeCode);
         } elseif ($authorization === 'adminFormKey') {
             $executor = new AdminExecutor();
-            //TODO: add frontend request executor
-        //} elseif ($authorization === 'customFromKey') {
+        } elseif ($authorization === 'customerFormKey') {
+            $executor = new FrontendExecutor(
+                $this->requestData['customer_email'],
+                $this->requestData['customer_password']
+            );
         }
 
         if (!$executor) {
