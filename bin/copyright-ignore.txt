@@ -1,0 +1,1 @@
+dev/tests/static/Magento/Sniffs/Annotations/

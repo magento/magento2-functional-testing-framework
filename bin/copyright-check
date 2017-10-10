@@ -1,0 +1,27 @@
+#!/bin/bash
+
+IGNORE_PATH='bin/copyright-ignore.txt'
+FILE_EXTENSIONS_TO_CHECK='.php\|.xml\|.xsd'
+
+RESULT=''
+
+# Iterate through all php, xml, and xsd files that are part of the Git repo
+# (excluding any matching lines from the ignore file)
+for i in `git ls-tree --full-tree -r --name-only HEAD | grep $FILE_EXTENSIONS_TO_CHECK | grep -v -f $IGNORE_PATH`
+do
+  if echo `cat $i` | grep -q -v "Copyright © Magento, Inc. All rights reserved."; then
+    # Copyright is missing
+    RESULT+="$i\n"
+  fi
+done
+
+if [[ ! -z $RESULT ]]; then
+  printf "\nTHE FOLLOWING FILES ARE MISSING THE MAGENTO COPYRIGHT:\n\n"
+  printf "    Copyright © Magento, Inc. All rights reserved.\n"
+  printf "    See COPYING.txt for license details.\n\n"
+  printf "$RESULT\n"
+  exit 1
+fi
+
+# Success!
+exit 0
