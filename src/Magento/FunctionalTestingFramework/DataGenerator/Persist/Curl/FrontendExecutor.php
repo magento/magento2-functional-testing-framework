@@ -138,10 +138,10 @@ class FrontendExecutor extends AbstractExecutor implements CurlInterface
      */
     public function write($url, $data = [], $method = CurlInterface::POST, $headers = [])
     {
-        if(isset($data['customer_email'])) {
+        if (isset($data['customer_email'])) {
             unset($data['customer_email']);
         }
-        if(isset($data['customer_password'])) {
+        if (isset($data['customer_password'])) {
             unset($data['customer_password']);
         }
         $apiUrl = parent::$baseUrl . $url;
