@@ -20,7 +20,6 @@ class TestGenerator
     const REQUIRED_ENTITY_REFERENCE = 'createDataKey';
     const GENERATED_DIR = '_generated';
 
-
     /**
      * Path to the export dir.
      *
@@ -44,20 +43,26 @@ class TestGenerator
 
     /**
      * TestGenerator constructor.
+     *
      * @param string $exportDir
+     * @param array $cests
      */
     private function __construct($exportDir, $cests)
     {
         // private constructor for factory
         $this->exportDirName = $exportDir ?? self::GENERATED_DIR;
-        $this->exportDirectory = rtrim(TESTS_MODULE_PATH . DIRECTORY_SEPARATOR .
-            self::GENERATED_DIR . DIRECTORY_SEPARATOR . $exportDir, DIRECTORY_SEPARATOR);
+        $this->exportDirectory = rtrim(
+            TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . self::GENERATED_DIR . DIRECTORY_SEPARATOR . $exportDir,
+            DIRECTORY_SEPARATOR
+        );
         $this->cests = $cests;
     }
 
     /**
      * Singleton method to retrieve Test Generator
      *
+     * @param string $dir
+     * @param array $cests
      * @return TestGenerator
      */
     public static function getInstance($dir = null, $cests = null)

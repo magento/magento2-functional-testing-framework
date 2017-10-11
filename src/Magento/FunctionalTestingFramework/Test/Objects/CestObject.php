@@ -74,6 +74,12 @@ class CestObject
         return $this->annotations;
     }
 
+    /**
+     * Returns the value(s) of an annotation by a specific name such as group
+     *
+     * @param string $name
+     * @return array
+     */
     public function getAnnotationByName($name)
     {
         if (array_key_exists($name, $this->annotations)) {

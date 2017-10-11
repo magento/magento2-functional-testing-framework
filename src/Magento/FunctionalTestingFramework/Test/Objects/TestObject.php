@@ -78,6 +78,12 @@ class TestObject
         return $this->annotations;
     }
 
+    /**
+     * Method to return the value(s) of a corresponding annotation such as group.
+     *
+     * @param string $name
+     * @return array
+     */
     public function getAnnotationByName($name)
     {
         if (array_key_exists($name, $this->annotations)) {

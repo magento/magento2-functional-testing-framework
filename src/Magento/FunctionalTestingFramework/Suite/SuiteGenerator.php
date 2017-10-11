@@ -55,6 +55,7 @@ class SuiteGenerator
      * yml configuration for group run.
      *
      * @param string $suiteName
+     * @return void
      */
     public function generateSuite($suiteName)
     {
@@ -71,6 +72,8 @@ class SuiteGenerator
 
     /**
      * Method which will be needed for adding preconditions and creating a corresponding group file for codeception.
+     *
+     * @return void
      */
     private function generateGroupFile()
     {
@@ -83,6 +86,7 @@ class SuiteGenerator
      *
      * @param string $suiteName
      * @param string $suitePath
+     * @return void
      */
     private function appendGroupEntryToConfig($suiteName, $suitePath)
     {
@@ -116,6 +120,7 @@ class SuiteGenerator
      *
      * @param string $path
      * @param array $cests
+     * @return void
      */
     private function generateRelevantGroupTests($path, $cests)
     {

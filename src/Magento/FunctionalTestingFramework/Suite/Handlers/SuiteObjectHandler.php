@@ -43,6 +43,9 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      */
     private $suiteObjects;
 
+    /**
+     * SuiteObjectHandler constructor.
+     */
     private function __construct()
     {
         // empty constructor
@@ -87,12 +90,23 @@ class SuiteObjectHandler implements ObjectHandlerInterface
         return $this->suiteObjects;
     }
 
+    /**
+     * Method to parse all suite data xml into objects.
+     *
+     * @return void
+     */
     private function initSuiteData()
     {
         $suiteDataParser = ObjectManagerFactory::getObjectManager()->create(SuiteDataParser::class);
         $this->suiteObjects = $this->parseSuiteDataIntoObjects($suiteDataParser->readSuiteData());
     }
 
+    /**
+     * Takes an array of parsed xml and converts into an array of suite objects.
+     *
+     * @param array $parsedSuiteData
+     * @return array
+     */
     private function parseSuiteDataIntoObjects($parsedSuiteData)
     {
         $suiteObjects = [];
@@ -113,7 +127,6 @@ class SuiteObjectHandler implements ObjectHandlerInterface
 
             $includeCests = $includeCests + $this->extractGroups($groupCestsToInclude);
             $excludeCests = $excludeCests + $this->extractGroups($groupCestsToExclude);
-
 
             // get tests by path (dir or file)
             if (array_key_exists(self::MODULE_TAG_NAME, $groupCestsToInclude)) {
@@ -141,6 +154,12 @@ class SuiteObjectHandler implements ObjectHandlerInterface
         return $suiteObjects;
     }
 
+    /**
+     * Takes an array of Cests/Tests and resolves names into corresponding Cest/Test objects.
+     *
+     * @param array $suiteTestData
+     * @return array
+     */
     private function extractRelevantTests($suiteTestData)
     {
         $relevantCests = [];
@@ -174,6 +193,12 @@ class SuiteObjectHandler implements ObjectHandlerInterface
         return $relevantCests;
     }
 
+    /**
+     * Takes an array of group names and resolves to Cest/Test objects.
+     *
+     * @param array $suiteData
+     * @return array
+     */
     private function extractGroups($suiteData)
     {
         $cestsByGroup = [];
@@ -188,6 +213,12 @@ class SuiteObjectHandler implements ObjectHandlerInterface
         return $cestsByGroup;
     }
 
+    /**
+     * Takes an array of modules/files and resolves to an array of cest objects.
+     *
+     * @param array $suitePathData
+     * @return array
+     */
     private function extractModuleAndFiles($suitePathData)
     {
         $cestsByModule = [];
@@ -203,6 +234,14 @@ class SuiteObjectHandler implements ObjectHandlerInterface
         return $cestsByModule;
     }
 
+    /**
+     * Takes a filepath (and optionally a module name) and resolves to a cest object.
+     *
+     * @param string $filename
+     * @param null $moduleName
+     * @return CestObject
+     * @throws Exception
+     */
     private function resolveFilePathCestName($filename, $moduleName = null)
     {
         $filepath = $filename;
@@ -225,6 +264,12 @@ class SuiteObjectHandler implements ObjectHandlerInterface
         return CestObjectHandler::getInstance()->getObject($cestName);
     }
 
+    /**
+     * Takes a single module name and resolves to an array of cests contained within specified module.
+     *
+     * @param string $moduleName
+     * @return array
+     */
     private function resolveModulePathCestNames($moduleName)
     {
         $cestObjects = [];

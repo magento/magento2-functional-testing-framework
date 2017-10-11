@@ -10,6 +10,7 @@ class DirSetupUtil
     /**
      * Method used to clean export dir if needed and create new empty export dir.
      *
+     * @param string $fullPath
      * @return void
      */
     public static function createGroupDir($fullPath)

@@ -19,7 +19,6 @@ class SuiteObject
      */
     private $name;
 
-
     /**
      * Array of Cests to include for the suite.
      *
@@ -27,14 +26,12 @@ class SuiteObject
      */
     private $includeCests = [];
 
-
     /**
      * Array of Cests to exclude for the suite.
      *
      * @var array
      */
     private $excludeCests = [];
-
 
     /**
      * SuiteObject constructor.
@@ -134,6 +131,8 @@ class SuiteObject
 
     /**
      * Getter for before hooks.
+     *
+     * @return void
      */
     public function getBeforeHook()
     {
@@ -142,6 +141,8 @@ class SuiteObject
 
     /**
      * Getter for after hooks.
+     *
+     * @return void
      */
     public function getAfterHook()
     {
