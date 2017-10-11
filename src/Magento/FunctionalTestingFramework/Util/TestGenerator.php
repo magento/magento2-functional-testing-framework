@@ -6,19 +6,20 @@
 
 namespace Magento\FunctionalTestingFramework\Util;
 
-use FilesystemIterator;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Test\Handlers\CestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\CestObject;
-use RecursiveDirectoryIterator;
+use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 
 class TestGenerator
 {
 
     const REQUIRED_ENTITY_REFERENCE = 'createDataKey';
+    const GENERATED_DIR = '_generated';
+
 
     /**
      * Path to the export dir.
@@ -28,58 +29,30 @@ class TestGenerator
     private $exportDirectory;
 
     /**
-     * Test generator.
+     * Export dir name.
      *
-     * @var TestGenerator
+     * @var string
      */
-    private static $testGenerator;
+    private $exportDirName;
+
+    /**
+     * Array of CestObjects to be generated
+     *
+     * @var array
+     */
+    private $cests;
 
     /**
      * TestGenerator constructor.
      * @param string $exportDir
      */
-    private function __construct($exportDir)
+    private function __construct($exportDir, $cests)
     {
-        // private constructor for singleton
-        $this->exportDirectory = $exportDir;
-    }
-
-    /**
-     * Method used to clean export dir if needed and create new empty export dir.
-     *
-     * @return void
-     */
-    private function setupExportDir()
-    {
-        if (file_exists($this->exportDirectory)) {
-            $this->rmDirRecursive($this->exportDirectory);
-        }
-
-        mkdir($this->exportDirectory, 0777, true);
-    }
-
-    /**
-     * Takes a directory path and recursively deletes all files and folders.
-     *
-     * @param string $directory
-     * @return void
-     */
-    private function rmdirRecursive($directory)
-    {
-        $it = new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS);
-
-        while ($it->valid()) {
-            $path = $directory . DIRECTORY_SEPARATOR . $it->getFilename();
-            if ($it->isDir()) {
-                $this->rmDirRecursive($path);
-            } else {
-                unlink($path);
-            }
-
-            $it->next();
-        }
-
-        rmdir($directory);
+        // private constructor for factory
+        $this->exportDirName = $exportDir ?? self::GENERATED_DIR;
+        $this->exportDirectory = rtrim(TESTS_MODULE_PATH . DIRECTORY_SEPARATOR .
+            self::GENERATED_DIR . DIRECTORY_SEPARATOR . $exportDir, DIRECTORY_SEPARATOR);
+        $this->cests = $cests;
     }
 
     /**
@@ -87,13 +60,19 @@ class TestGenerator
      *
      * @return TestGenerator
      */
-    public static function getInstance()
+    public static function getInstance($dir = null, $cests = null)
     {
-        if (!self::$testGenerator) {
-            self::$testGenerator = new TestGenerator(TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . "_generated");
-        }
+        return new TestGenerator($dir, $cests);
+    }
 
-        return self::$testGenerator;
+    /**
+     * Returns the absolute path to the test export director for the generator instance.
+     *
+     * @return string
+     */
+    public function getExportDir()
+    {
+        return $this->exportDirectory;
     }
 
     /**
@@ -103,7 +82,11 @@ class TestGenerator
      */
     private function loadAllCestObjects()
     {
-        return CestObjectHandler::getInstance()->getAllObjects();
+        if ($this->cests === null) {
+            return CestObjectHandler::getInstance()->getAllObjects();
+        }
+
+        return $this->cests;
     }
 
     /**
@@ -136,7 +119,7 @@ class TestGenerator
      */
     public function createAllCestFiles()
     {
-        $this->setupExportDir();
+        DirSetupUtil::createGroupDir($this->exportDirectory);
         $cestPhpArray = $this->assembleAllCestPhp();
 
         foreach ($cestPhpArray as $cestPhpFile) {
@@ -165,7 +148,7 @@ class TestGenerator
         }
 
         $cestPhp = "<?php\n";
-        $cestPhp .= "namespace Magento\AcceptanceTest\Backend;\n\n";
+        $cestPhp .= "namespace Magento\AcceptanceTest\\" .  $this->exportDirName ."\Backend;\n\n";
         $cestPhp .= $usePhp;
         $cestPhp .= $classAnnotationsPhp;
         $cestPhp .= sprintf("class %s\n", $className);

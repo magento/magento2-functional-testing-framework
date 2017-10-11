@@ -74,6 +74,15 @@ class CestObject
         return $this->annotations;
     }
 
+    public function getAnnotationByName($name)
+    {
+        if (array_key_exists($name, $this->annotations)) {
+            return $this->annotations[$name];
+        }
+
+        return [];
+    }
+
     /**
      * Returns tests.
      *

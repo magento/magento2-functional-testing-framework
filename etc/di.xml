@@ -309,4 +309,36 @@
             <argument name="reader" xsi:type="object">Magento\FunctionalTestingFramework\Config\Reader\ActionGroupData</argument>
         </arguments>
     </virtualType>
+
+    <!--Config for Suite Data -->
+
+    <type name="Magento\FunctionalTestingFramework\Suite\Parsers\SuiteDataParser">
+        <arguments>
+            <argument name="suiteData" xsi:type="object">Magento\FunctionalTestingFramework\Suite\Config\SuiteData</argument>
+        </arguments>
+    </type>
+    <virtualType name="Magento\FunctionalTestingFramework\Suite\Config\SuiteData" type="Magento\FunctionalTestingFramework\Config\Data">
+        <arguments>
+            <argument name="reader" xsi:type="object">Magento\FunctionalTestingFramework\Config\Reader\SuiteData</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\FunctionalTestingFramework\Config\SchemaLocator\SuiteData" type="Magento\FunctionalTestingFramework\Config\SchemaLocator">
+        <arguments>
+            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Suite/etc/suiteSchema.xsd</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\SuiteData" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
+        <arguments>
+            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Root</argument>
+            <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
+            <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\SuiteData</argument>
+            <argument name="idAttributes" xsi:type="array">
+                <item name="/config/suite" xsi:type="string">name</item>
+                <item name="/config/suite/include/group" xsi:type="string">name</item>
+                <item name="/config/suite/exclude/group" xsi:type="string">name</item>
+            </argument>
+            <argument name="fileName" xsi:type="string">*.xml</argument>
+            <argument name="defaultScope" xsi:type="string">_suite</argument>
+        </arguments>
+    </virtualType>
 </config>

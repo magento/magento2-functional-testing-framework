@@ -75,7 +75,7 @@ class TestObjectExtractor extends BaseCestObjectExtractor
                 $testAnnotations = $this->annotationExtractor->extractAnnotations($testData[self::TEST_ANNOTATIONS]);
             }
 
-            $testObjects[] = new TestObject(
+            $testObjects[$testName] = new TestObject(
                 $testName,
                 $this->actionObjectExtractor->extractActions($testActions),
                 $testAnnotations,

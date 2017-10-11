@@ -204,7 +204,7 @@ class EntityDataObject
      * category->id)
      *
      * @param string $dataKey
-     * @return array|null
+     * @return string|null
      */
     public function getVarReference($dataKey)
     {

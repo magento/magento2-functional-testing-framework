@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="suiteSchema.xsd">
+    <suite name="mySuite">
+        <include>
+            <group name="someGroup"/>
+            <cest name="cest"  test=""/>
+            <module name="moduleName" file="myFile"/>
+        </include>
+        <exclude>
+            <group name="someGroup"/>
+            <cest name="excludeTest" test=""/>
+            <group name="excludeGroup"/>
+            <module name="moduleName" file="excludeFile"/>
+        </exclude>
+    </suite>
+</config>
