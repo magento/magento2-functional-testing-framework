@@ -127,7 +127,18 @@ class ActionGroupObject
         $newAttributeVal = $attributeValue;
         foreach ($matches[1] as $var) {
             if (array_key_exists($var, $arguments)) {
-                $newAttributeVal = str_replace($var, $arguments[$var], $newAttributeVal);
+                if (preg_match('/\$\$[\w.\[\]\',]+\$\$/', $arguments[$var])) {
+                    //if persisted $$data$$ was passed, return $$param.id$$ instead of {{$$param$$.id}}
+                    $newAttributeVal = str_replace($var, trim($arguments[$var], '$'), $newAttributeVal);
+                    $newAttributeVal = str_replace('{{', '$$', str_replace('}}', '$$', $newAttributeVal));
+                } elseif (preg_match('/\$[\w.\[\]\',]+\$/', $arguments[$var])) {
+                    //elseif persisted $data$ was passed, return $param.id$ instead of {{$param$.id}}
+                    $newAttributeVal = str_replace($var, trim($arguments[$var], '$'), $newAttributeVal);
+                    $newAttributeVal = str_replace('{{', '$', str_replace('}}', '$', $newAttributeVal));
+                } else {
+                    //else normal param replacement
+                    $newAttributeVal = str_replace($var, $arguments[$var], $newAttributeVal);
+                }
             }
         }
 
