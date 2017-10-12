@@ -367,15 +367,7 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['parameterArray'])) {
-                $paramsWithUniqueness = [];
-                $params = explode(
-                    ',',
-                    $this->stripWrappedQuotes(rtrim(ltrim($customActionAttributes['parameterArray'], '['), ']'))
-                );
-                foreach ($params as $param) {
-                    $paramsWithUniqueness[] = $this->addUniquenessFunctionCall($param);
-                }
-                $parameterArray = '[' . implode(',', $paramsWithUniqueness) . ']';
+                $parameterArray =  $customActionAttributes['parameterArray'];
             }
 
             if (isset($customActionAttributes['requiredAction'])) {
