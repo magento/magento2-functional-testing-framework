@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 
@@ -14,6 +15,10 @@ use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
  */
 class ActionMergeUtil
 {
+    const STEP_MISSING_ERROR_MSG =
+        "Merge Error - Step could not be found in either TestXML or DeltaXML.
+        \tTest = '%s'\tTestStep='%s'\tLinkedStep'%s'";
+
     const WAIT_ATTR = 'timeout';
     const WAIT_ACTION_NAME = 'waitForPageLoad';
     const WAIT_ACTION_SUFFIX = 'WaitForPageLoad';

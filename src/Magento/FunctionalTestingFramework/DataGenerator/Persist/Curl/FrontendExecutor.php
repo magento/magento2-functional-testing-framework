@@ -132,16 +132,16 @@ class FrontendExecutor extends AbstractExecutor implements CurlInterface
      * @param string $url
      * @param array $data
      * @param string $method
-     * @param mixed $headers
+     * @param array $headers
      * @return void
      * @throws TestFrameworkException
      */
     public function write($url, $data = [], $method = CurlInterface::POST, $headers = [])
     {
-        if(isset($data['customer_email'])) {
+        if (isset($data['customer_email'])) {
             unset($data['customer_email']);
         }
-        if(isset($data['customer_password'])) {
+        if (isset($data['customer_password'])) {
             unset($data['customer_password']);
         }
         $apiUrl = parent::$baseUrl . $url;
@@ -190,7 +190,7 @@ class FrontendExecutor extends AbstractExecutor implements CurlInterface
      * Add additional option to cURL.
      *
      * @param int $option the CURLOPT_* constants
-     * @param mixed $value
+     * @param int|string|bool|array $value
      * @return void
      */
     public function addOption($option, $value)
