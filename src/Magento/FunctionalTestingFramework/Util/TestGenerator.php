@@ -120,15 +120,24 @@ class TestGenerator
      * Assemble ALL PHP strings using the assembleAllCestPhp function. Loop over and pass each array item
      * to the createCestFile function.
      *
+     * @param string $runConfig
+     * @param string $env
      * @return void
      */
-    public function createAllCestFiles()
+    public function createAllCestFiles($runConfig = null, $env = null)
     {
         DirSetupUtil::createGroupDir($this->exportDirectory);
-        $cestPhpArray = $this->assembleAllCestPhp();
+
+        // create our manifest file here
+        $testManifest = new TestManifest($this->exportDirectory, $runConfig, $env);
+        $cestPhpArray = $this->assembleAllCestPhp($testManifest);
 
         foreach ($cestPhpArray as $cestPhpFile) {
             $this->createCestFile($cestPhpFile[1], $cestPhpFile[0]);
+        }
+
+        if ($testManifest->getManifestConfig() === TestManifest::SINGLE_RUN_CONFIG) {
+            $testManifest->recordPathToExportDir();
         }
     }
 
@@ -137,6 +146,7 @@ class TestGenerator
      * Create all of the PHP strings for a Test. Concatenate the strings together.
      *
      * @param \Magento\FunctionalTestingFramework\Test\Objects\CestObject $cestObject
+     * @throws TestReferenceException
      * @return string
      */
     private function assembleCestPhp($cestObject)
@@ -168,15 +178,13 @@ class TestGenerator
     /**
      * Load ALL Cest objects. Loop over and pass each to the assembleCestPhp function.
      *
+     * @param TestManifest $testManifest
      * @return array
      */
-    private function assembleAllCestPhp()
+    private function assembleAllCestPhp($testManifest)
     {
         $cestObjects = $this->loadAllCestObjects();
         $cestPhpArray = [];
-
-        // create our manifest file here
-        $testManifest = new TestManifest($this->exportDirectory);
 
         foreach ($cestObjects as $cest) {
             $name = $cest->getName();
@@ -184,8 +192,10 @@ class TestGenerator
             $php = $this->assembleCestPhp($cest);
             $cestPhpArray[] = [$name, $php];
 
-            //write to manifest here
-            $testManifest->recordCest($cest->getName(), $cest->getTests());
+            //write to manifest here if config is not single run
+            if ($testManifest->getManifestConfig() != TestManifest::SINGLE_RUN_CONFIG) {
+                $testManifest->recordCest($cest->getName(), $cest->getTests());
+            }
         }
 
         return $cestPhpArray;
