@@ -131,6 +131,11 @@ class CestObjectHandler implements ObjectHandlerInterface
 
         $cestObjectExtractor = new CestObjectExtractor();
 
+        if (!$parsedCestArray) {
+            trigger_error("Could not parse any data.xml.", E_USER_NOTICE);
+            return;
+        }
+
         foreach ($parsedCestArray[CestObjectHandler::XML_ROOT] as $cestName => $cestData) {
             if (!is_array($cestData)) {
                 continue;

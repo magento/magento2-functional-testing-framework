@@ -1,0 +1,23 @@
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.3/phpunit.xsd"
+    convertNoticesToExceptions="false"
+    bootstrap="_bootstrap.php">
+    <testsuites>
+        <testsuite name="verification">
+            <directory>verification</directory>
+        </testsuite>
+        <testsuite name="unit">
+            <directory>unit</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="false">
+            <directory suffix=".php">../../src/Magento/FunctionalTestingFramework/DataGenerator</directory>
+            <directory suffix=".php">../../src/Magento/FunctionalTestingFramework/Page</directory>
+            <directory suffix=".php">../../src/Magento/FunctionalTestingFramework/Suite</directory>
+            <directory suffix=".php">../../src/Magento/FunctionalTestingFramework/Test</directory>
+            <directory suffix=".php">../../src/Magento/FunctionalTestingFramework/Util</directory>
+        </whitelist>
+    </filter>
+</phpunit>
