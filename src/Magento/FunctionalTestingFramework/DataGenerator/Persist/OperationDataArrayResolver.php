@@ -73,7 +73,7 @@ class OperationDataArrayResolver
         foreach ($operationMetadata as $operationElement) {
             if ($operationElement->getType() == OperationElementExtractor::OPERATION_OBJECT_OBJ_NAME) {
                 $entityObj = $this->resolveOperationObjectAndEntityData($entityObject, $operationElement->getValue());
-                $operationDataArray[$operationElement->getValue()] =
+                $operationDataArray[$operationElement->getKey()] =
                     $this->resolveOperationDataArray($entityObj, $operationElement->getNestedMetadata(), $operation);
                 continue;
             }
