@@ -1,0 +1,9 @@
+# Specify directories or files for the copyright-check to ignore.
+#
+# e.g.
+# path/to/directory
+# path/to/file.php
+#
+# THIS FILE CANNOT CONTAIN BLANK LINES
+#
+dev/tests/static/Magento/Sniffs/Annotations
