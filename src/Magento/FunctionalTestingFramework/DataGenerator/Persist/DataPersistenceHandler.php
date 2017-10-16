@@ -69,7 +69,28 @@ class DataPersistenceHandler
         }
         $curlHandler = new CurlHandler('create', $this->entityObject, $this->storeCode);
         $result = $curlHandler->executeRequest($this->dependentObjects);
-        $this->setCreatedEntity(
+        $this->setCreatedObject(
+            $result,
+            $curlHandler->getRequestDataArray(),
+            $curlHandler->isContentTypeJson()
+        );
+    }
+
+    /**
+     * Function which executes a put request based on specific operation metadata.
+     *
+     * @param string $storeCode
+     * @return void
+     */
+
+    public function updateEntity($storeCode = null)
+    {
+        if (!empty($storeCode)) {
+            $this->storeCode = $storeCode;
+        }
+        $curlHandler = new CurlHandler('update', $this->entityObject, $this->storeCode);
+        $result = $curlHandler->executeRequest($this->dependentObjects);
+        $this->setCreatedObject(
             $result,
             $curlHandler->getRequestDataArray(),
             $curlHandler->isContentTypeJson()
@@ -92,7 +113,8 @@ class DataPersistenceHandler
     }
 
     /**
-     * Returns the createdDataObject, instantiated when the entity is created via API.
+     * Returns the created data object, instantiated when the entity is created via API.
+     *
      * @return EntityDataObject
      */
     public function getCreatedObject()
@@ -110,21 +132,15 @@ class DataPersistenceHandler
         return $this->createdObject->getDataByName($dataName, EntityDataObject::NO_UNIQUE_PROCESS);
     }
 
-    // TODO add update function
-    /* public function updateEntity()
-    {
-
-    }*/
-
     /**
-     * Save created entity.
+     * Save the created data object.
      *
      * @param string|array $response
      * @param array $requestDataArray
      * @param bool $isJson
      * @return void
      */
-    private function setCreatedEntity($response, $requestDataArray, $isJson)
+    private function setCreatedObject($response, $requestDataArray, $isJson)
     {
         if ($isJson) {
             $persistedData = array_merge($requestDataArray, json_decode($response, true));

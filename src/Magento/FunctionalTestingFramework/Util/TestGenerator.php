@@ -151,7 +151,7 @@ class TestGenerator
      */
     private function assembleCestPhp($cestObject)
     {
-        $usePhp = $this->generateUseStatementsPhp($cestObject);
+        $usePhp = $this->generateUseStatementsPhp();
         $classAnnotationsPhp = $this->generateClassAnnotationsPhp($cestObject->getAnnotations());
         $className = $cestObject->getName();
         $className = str_replace(' ', '', $className);
@@ -543,6 +543,53 @@ class TestGenerator
                         $testSteps .= sprintf("\t\t$%s->deleteEntity();\n", $key);
                     }
                     break;
+                case "updateData":
+                    $entity = $customActionAttributes['entity'];
+                    $originalEntity = null;
+                    if (isset($customActionAttributes['createDataKey'])) {
+                        $originalEntity = $customActionAttributes['createDataKey'];
+                    }
+                    $key = $steps->getMergeKey();
+                    //Add an informative statement to help the user debug test runs
+                    $testSteps .= sprintf(
+                        "\t\t$%s->amGoingTo(\"update entity that has the mergeKey: %s\");\n",
+                        $actor,
+                        $key
+                    );
+                    //Get Entity from Static data.
+                    $testSteps .= sprintf(
+                        "\t\t$%s = DataObjectHandler::getInstance()->getObject(\"%s\");\n",
+                        $entity,
+                        $entity
+                    );
+
+                    if ($hookObject) {
+                        $updateEntityFunctionCall = sprintf("\t\t\$this->%s->updateEntity(", $key);
+                        $dataPersistenceHandlerFunctionCall = sprintf(
+                            "\t\t\$this->%s = new DataPersistenceHandler($%s, [\$this->%s]);\n",
+                            $key,
+                            $entity,
+                            $originalEntity
+                        );
+                    } else {
+                        $updateEntityFunctionCall = sprintf("\t\t\$%s->updateEntity(", $key);
+                        $dataPersistenceHandlerFunctionCall = sprintf(
+                            "\t\t$%s = new DataPersistenceHandler($%s, [$%s]);\n",
+                            $key,
+                            $entity,
+                            $originalEntity
+                        );
+                    }
+
+                    if (isset($customActionAttributes['storeCode'])) {
+                        $updateEntityFunctionCall .= sprintf("\"%s\");\n", $customActionAttributes['storeCode']);
+                    } else {
+                        $updateEntityFunctionCall .= ");\n";
+                    }
+
+                    $testSteps .= $dataPersistenceHandlerFunctionCall;
+                    $testSteps .= $updateEntityFunctionCall;
+                    break;
                 case "dontSeeCurrentUrlEquals":
                 case "dontSeeCurrentUrlMatches":
                 case "seeInPopup":
@@ -828,7 +875,7 @@ class TestGenerator
             $dependencies = 'AcceptanceTester $I';
 
             foreach ($hookObject->getActions() as $step) {
-                if ($step->getType() == "createData") {
+                if (($step->getType() == "createData") || ($step->getType() == "updateData")) {
                     $hooks .= "\t/**\n";
                     $hooks .= sprintf("\t  * @var DataPersistenceHandler $%s;\n", $step->getMergeKey());
                     $hooks .= "\t */\n";
