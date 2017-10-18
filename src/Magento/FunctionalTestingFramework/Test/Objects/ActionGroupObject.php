@@ -13,7 +13,7 @@ use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
  */
 class ActionGroupObject
 {
-    const VAR_ATTRIBUTES = ['userInput', 'selector', 'page'];
+    const VAR_ATTRIBUTES = ['userInput', 'selector', 'page', 'url'];
 
     /**
      * The name of the action group
@@ -80,7 +80,11 @@ class ActionGroupObject
     private function getResolvedActionsWithArgs($arguments, $actionReferenceKey)
     {
         $resolvedActions = [];
-        $regexPattern = '/{{([\w]+)/';
+
+        // $regexPattern match on:   $matches[0] {{section.element(arg.field)}}
+        // $matches[1] = section.element
+        // $matches[2] = arg.field
+        $regexPattern = '/{{([\w.]+)\(*([\w.$\']+)*\)*}}/';
 
         foreach ($this->parsedActions as $action) {
             $varAttributes = array_intersect(self::VAR_ATTRIBUTES, array_keys($action->getCustomActionAttributes()));
@@ -90,11 +94,15 @@ class ActionGroupObject
                 foreach ($varAttributes as $varAttribute) {
                     $attributeValue = $action->getCustomActionAttributes()[$varAttribute];
                     preg_match_all($regexPattern, $attributeValue, $matches);
-                    if (empty($matches[0]) & empty($matches[1])) {
+
+                    if (empty($matches[0])) {
                         continue;
                     }
 
-                    $newActionAttributes[$varAttribute] = $this->resolveNewAttribute(
+                    //get rid of full match {{arg.field(arg.field)}}
+                    unset($matches[0]);
+
+                    $newActionAttributes[$varAttribute] = $this->replaceAttributeArguments(
                         $arguments,
                         $attributeValue,
                         $matches
@@ -114,34 +122,78 @@ class ActionGroupObject
     }
 
     /**
-     * Function which takes an array of arguments to use for replacement of var name, the string which contains
-     * the variable for replacement, an array of matching vars.
+     * Function that takes an array of replacement arguments, and matches them with args in an actionGroup's attribute.
+     * Determines if the replacement arguments are persisted data, and replaces them accordingly.
      *
      * @param array $arguments
      * @param string $attributeValue
      * @param array $matches
      * @return string
      */
-    private function resolveNewAttribute($arguments, $attributeValue, $matches)
+    private function replaceAttributeArguments($arguments, $attributeValue, $matches)
     {
+        $matchParametersKey = 2;
         $newAttributeVal = $attributeValue;
-        foreach ($matches[1] as $var) {
-            if (array_key_exists($var, $arguments)) {
-                if (preg_match('/\$\$[\w.\[\]\',]+\$\$/', $arguments[$var])) {
-                    //if persisted $$data$$ was passed, return $$param.id$$ instead of {{$$param$$.id}}
-                    $newAttributeVal = str_replace($var, trim($arguments[$var], '$'), $newAttributeVal);
-                    $newAttributeVal = str_replace('{{', '$$', str_replace('}}', '$$', $newAttributeVal));
-                } elseif (preg_match('/\$[\w.\[\]\',]+\$/', $arguments[$var])) {
-                    //elseif persisted $data$ was passed, return $param.id$ instead of {{$param$.id}}
-                    $newAttributeVal = str_replace($var, trim($arguments[$var], '$'), $newAttributeVal);
-                    $newAttributeVal = str_replace('{{', '$', str_replace('}}', '$', $newAttributeVal));
+
+        foreach ($matches as $key => $match) {
+            foreach ($match as $variable) {
+                if (empty($variable)) {
+                    continue;
+                }
+                // Truncate arg.field into arg
+                $variableName = strstr($variable, '.', true);
+                // Check if arguments has a mapping for the given variableName
+                if (!array_key_exists($variableName, $arguments)) {
+                    continue;
+                }
+                $isPersisted = strstr($arguments[$variableName], '$');
+                if ($isPersisted) {
+                    $newAttributeVal = $this->replacePersistedArgument(
+                        $arguments[$variableName],
+                        $attributeValue,
+                        $variable,
+                        $variableName,
+                        $key == $matchParametersKey ? true : false
+                    );
                 } else {
-                    //else normal param replacement
-                    $newAttributeVal = str_replace($var, $arguments[$var], $newAttributeVal);
+                    $newAttributeVal = str_replace($variableName, $arguments[$variableName], $attributeValue);
                 }
             }
         }
 
         return $newAttributeVal;
+    }
+
+    /**
+     * Replaces args with replacements given, behavior is specific to persisted arguments.
+     * @param string $replacement
+     * @param string $attributeValue
+     * @param string $fullVariable
+     * @param string $variable
+     * @param boolean $isParameter
+     * @return string
+     */
+    private function replacePersistedArgument($replacement, $attributeValue, $fullVariable, $variable, $isParameter)
+    {
+        //hookPersisted will be true if replacement passed in is $$arg.field$$, otherwise assume it's $arg.field$
+        $hookPersistedArgumentRegex = '/\$\$[\w.\[\]\',]+\$\$/';
+        $hookPersisted = (preg_match($hookPersistedArgumentRegex, $replacement));
+
+        $newAttributeValue = $attributeValue;
+
+        $scope = '$';
+        if ($hookPersisted) {
+            $scope = '$$';
+        }
+
+        // parameter replacements require changing of (arg.field) to ($arg.field$)
+        if ($isParameter) {
+            $newAttributeValue = str_replace($fullVariable, $scope . $fullVariable . $scope, $newAttributeValue);
+        } else {
+            $newAttributeValue = str_replace('{{', $scope, str_replace('}}', $scope, $newAttributeValue));
+        }
+        $newAttributeValue = str_replace($variable, trim($replacement, '$'), $newAttributeValue);
+
+        return $newAttributeValue;
     }
 }
