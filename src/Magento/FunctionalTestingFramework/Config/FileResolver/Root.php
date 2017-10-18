@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright © 2017 Magento. All rights reserved.
+ * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magento\FunctionalTestingFramework\Config\FileResolver;
 
 use Magento\FunctionalTestingFramework\Config\FileResolverInterface;

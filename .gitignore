@@ -4,3 +4,4 @@ vendor/*
 .env
 _generated
 AcceptanceTester.php
+cghooks.lock
