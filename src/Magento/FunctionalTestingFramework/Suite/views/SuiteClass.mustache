@@ -1,0 +1,54 @@
+<?php
+
+namespace Group;
+
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
+use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
+
+/**
+ * Group class is Codeception Extension which is allowed to handle to all internal events.
+ * This class itself can be used to listen events for test execution of one particular group.
+ * It may be especially useful to create fixtures data, prepare server, etc.
+ *
+ * INSTALLATION:
+ *
+ * To use this group extension, include it to "extensions" option of global Codeception config.
+ */
+class {{suiteName}} extends \Codeception\GroupObject
+{
+    public static $group = '{{suiteName}}';
+    private static $TEST_COUNT = {{testCount}};
+    private static $CURRENT_TEST_RUN = 0;
+
+    {{#var}}
+    private ${{mergeKey}};
+    {{/var}}
+
+    {{#before}}
+    public function _before(\Codeception\Event\TestEvent $e)
+    {
+        // increment test count per execution
+        self::$CURRENT_TEST_RUN++;
+
+        if (self::$CURRENT_TEST_RUN == 1) {
+            {{> dataPersistence}}
+        }
+    }
+    {{/before}}
+
+    {{#after}}
+    public function _after(\Codeception\Event\TestEvent $e)
+    {
+        if (self::$CURRENT_TEST_RUN == self::$TEST_COUNT) {
+            {{> dataPersistence}}
+        }
+    }
+
+    public function _failed(\Codeception\Event\TestEvent $e)
+    {
+        if (self::$CURRENT_TEST_RUN == self::$TEST_COUNT) {
+            {{> dataPersistence}}
+        }
+    }
+    {{/after}}
+}

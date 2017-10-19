@@ -12,6 +12,7 @@ class TestManifest
 {
     const SINGLE_RUN_CONFIG = 'singleRun';
     const DEFAULT_BROWSER = 'chrome';
+    const TEST_MANIFEST_FILENAME = 'testManifest.txt';
 
     /**
      * Test Manifest file path.
@@ -51,7 +52,7 @@ class TestManifest
     public function __construct($path, $runConfig, $env)
     {
         $this->relativeDirPath = substr($path, strlen(dirname(dirname(TESTS_BP))) + 1);
-        $filePath = $path .  DIRECTORY_SEPARATOR . 'testManifest.txt';
+        $filePath = $path .  DIRECTORY_SEPARATOR . self::TEST_MANIFEST_FILENAME;
         $this->filePath = $filePath;
         $fileResource = fopen($filePath, 'w');
         fclose($fileResource);

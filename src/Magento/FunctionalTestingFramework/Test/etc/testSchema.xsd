@@ -77,6 +77,7 @@
     </xs:complexType>
     <xs:group name="actionTypeTags">
         <xs:choice>
+            <xs:group ref="dataOperationTags"/>
             <xs:element type="acceptPopupType" name="acceptPopup" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="amOnPageType" name="amOnPage" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="amOnSubdomainType" name="amOnSubdomain" minOccurs="0" maxOccurs="unbounded"/>
@@ -91,9 +92,7 @@
             <xs:element type="closeAdminNotificationType" name="closeAdminNotification" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="closeTabType" name="closeTab" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="conditionalClickType" name="conditionalClick" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="createDataType" name="createData" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="updateDataType" name="updateData" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="deleteDataType" name="deleteData" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="getDataType" name="getData" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dontSeeType" name="dontSee" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dontSeeCheckboxIsCheckedType" name="dontSeeCheckboxIsChecked" minOccurs="0" maxOccurs="unbounded"/>
@@ -182,6 +181,13 @@
             <xs:element type="waitForLoadingMaskToDisappearType" name="waitForLoadingMaskToDisappear" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForPageLoadType" name="waitForPageLoad" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForTextType" name="waitForText" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+    </xs:group>
+
+    <xs:group name="dataOperationTags">
+        <xs:choice>
+            <xs:element type="createDataType" name="createData" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="deleteDataType" name="deleteData" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
     </xs:group>
 

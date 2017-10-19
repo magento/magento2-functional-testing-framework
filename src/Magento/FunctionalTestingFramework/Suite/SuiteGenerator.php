@@ -8,6 +8,7 @@ namespace Magento\FunctionalTestingFramework\Suite;
 
 use Magento\Framework\Phrase;
 use Magento\Framework\Validator\Exception;
+use Magento\FunctionalTestingFramework\Suite\Generators\GroupClassGenerator;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
@@ -18,6 +19,9 @@ class SuiteGenerator
 {
     const YAML_CODECEPTION_DIST_FILENAME = 'codeception.dist.yml';
     const YAML_CODECEPTION_CONFIG_FILENAME = 'codeception.yml';
+    const YAML_GROUPS_TAG = 'groups';
+    const YAML_EXTENSIONS_TAG = 'extensions';
+    const YAML_ENABLED_TAG = 'enabled';
     const YAML_COPYRIGHT_TEXT =
         "# Copyright © Magento, Inc. All rights reserved.\n# See COPYING.txt for license details.\n";
 
@@ -29,11 +33,18 @@ class SuiteGenerator
     private static $SUITE_GENERATOR_INSTANCE;
 
     /**
+     * Group Class Generator initialized in constructor.
+     *
+     * @var GroupClassGenerator
+     */
+    private $groupClassGenerator;
+
+    /**
      * SuiteGenerator constructor.
      */
     private function __construct()
     {
-        //private constructor for singelton
+        $this->groupClassGenerator = new GroupClassGenerator();
     }
 
     /**
@@ -59,36 +70,35 @@ class SuiteGenerator
      */
     public function generateSuite($suiteName)
     {
+        /**@var SuiteObject $suite **/
         $suite = SuiteObjectHandler::getInstance()->getObject($suiteName);
-        $relativePath = '_generated' . DIRECTORY_SEPARATOR . $suiteName;
+        $relativePath = TestGenerator::GENERATED_DIR . DIRECTORY_SEPARATOR . $suiteName;
         $fullPath = TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . $relativePath;
+        $groupNamespace = null;
 
         DirSetupUtil::createGroupDir($fullPath);
-        $this->generateGroupFile($fullPath);
         $this->generateRelevantGroupTests($suiteName, $suite->getCests());
-        $this->appendGroupEntryToConfig($suiteName, $fullPath);
+
+        if ($suite->requiresGroupFile()) {
+            // if the suite requires a group file, generate it and set the namespace
+            $groupNamespace = $this->groupClassGenerator->generateGroupClass($suite);
+        }
+
+        $this->appendEntriesToConfig($suiteName, $fullPath, $groupNamespace);
         print "Suite ${suiteName} generated to ${relativePath}.\n";
     }
 
     /**
-     * Method which will be needed for adding preconditions and creating a corresponding group file for codeception.
-     *
-     * @return void
-     */
-    private function generateGroupFile()
-    {
-        // generate group file here
-    }
-
-    /**
      * Function which accepts a suite name and suite path and appends a new group entry to the codeception.yml.dist
-     * file in order to register the set of tests as a new group.
+     * file in order to register the set of tests as a new group. Also appends group object location if required
+     * by suite.
      *
      * @param string $suiteName
      * @param string $suitePath
+     * @param string $groupNamespace
      * @return void
      */
-    private function appendGroupEntryToConfig($suiteName, $suitePath)
+    private function appendEntriesToConfig($suiteName, $suitePath, $groupNamespace)
     {
         $configYmlPath = dirname(dirname(TESTS_BP)) . DIRECTORY_SEPARATOR;
         $configYmlFile = $configYmlPath . self::YAML_CODECEPTION_CONFIG_FILENAME;
@@ -103,12 +113,16 @@ class SuiteGenerator
         }
 
         $ymlArray = Yaml::parse($ymlContents) ?? [];
-
-        if (!array_key_exists('group', $ymlArray)) {
-            $ymlArray['group']= [];
+        if (!array_key_exists(self::YAML_GROUPS_TAG, $ymlArray)) {
+            $ymlArray[self::YAML_GROUPS_TAG]= [];
         }
 
-        $ymlArray['group'][$suiteName] = $relativeSuitePath;
+        $ymlArray[self::YAML_GROUPS_TAG][$suiteName] = [$relativeSuitePath];
+
+        if ($groupNamespace) {
+            $ymlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG][] = $groupNamespace;
+        }
+
         $ymlText = self::YAML_COPYRIGHT_TEXT . Yaml::dump($ymlArray, 10);
         file_put_contents($configYmlFile, $ymlText);
     }

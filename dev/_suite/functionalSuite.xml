@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../src/Magento/FunctionalTestingFramework/Suite/etc/suiteSchema.xsd">
+    <suite name="functionalSuite1">
+        <include>
+            <group name="include"/>
+            <cest name="sampleSuiteCest" test="includeTest"/>
+            <cest name="sampleSuite4Cest"/>
+        </include>
+        <exclude>
+            <group name="exclude"/>
+            <cest name="sampleSuite5Cest" test="excludeTest"/>
+        </exclude>
+    </suite>
+</suites>

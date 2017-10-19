@@ -338,15 +338,43 @@
     <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\SuiteData" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
         <arguments>
             <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Root</argument>
-            <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
+            <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\SuiteDataConverter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\SuiteData</argument>
             <argument name="idAttributes" xsi:type="array">
-                <item name="/config/suite" xsi:type="string">name</item>
-                <item name="/config/suite/include/group" xsi:type="string">name</item>
-                <item name="/config/suite/exclude/group" xsi:type="string">name</item>
+                <item name="/suites/suite" xsi:type="string">name</item>
+                <item name="/suites/suite/include/group" xsi:type="string">name</item>
+                <item name="/suites/suite/include/cest" xsi:type="string">name</item>
+                <item name="/suites/suite/include/module" xsi:type="string">name</item>
+                <item name="/suites/suite/exclude/group" xsi:type="string">name</item>
+                <item name="/suites/suite/exclude/cest" xsi:type="string">name</item>
+                <item name="/suites/suite/exclude/module" xsi:type="string">name</item>
             </argument>
             <argument name="fileName" xsi:type="string">*.xml</argument>
             <argument name="defaultScope" xsi:type="string">_suite</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Magento\FunctionalTestingFramework\Suite\Config\Dom\SuiteArrayNodeConfig" type="Magento\FunctionalTestingFramework\Config\Dom\ArrayNodeConfig">
+        <arguments>
+            <argument name="assocArrayAttributes" xsi:type="array">
+                <item name="/suites/suite" xsi:type="string">name</item>
+                <item name="/suites/suite/before/(createData|deleteData)" xsi:type="string">mergeKey</item>
+                <item name="/suites/suite/after/(createData|deleteData)" xsi:type="string">mergeKey</item>
+                <item name="/suites/suite/before/createData/required-entity" xsi:type="string">createDataKey</item>
+                <item name="/suites/suite/after/createData/required-entity" xsi:type="string">createDataKey</item>
+                <item name="/suites/suite/include/group" xsi:type="string">name</item>
+                <item name="/suites/suite/include/cest" xsi:type="string">name</item>
+                <item name="/suites/suite/include/module" xsi:type="string">name</item>
+                <item name="/suites/suite/exclude/group" xsi:type="string">name</item>
+                <item name="/suites/suite/exclude/cest" xsi:type="string">name</item>
+                <item name="/suites/suite/exclude/module" xsi:type="string">name</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Magento\FunctionalTestingFramework\Config\SuiteDataConverter" type="Magento\FunctionalTestingFramework\Test\Config\Converter\Dom\Flat">
+        <arguments>
+            <argument name="arrayNodeConfig" xsi:type="object">Magento\FunctionalTestingFramework\Suite\Config\Dom\SuiteArrayNodeConfig</argument>
         </arguments>
     </virtualType>
 </config>

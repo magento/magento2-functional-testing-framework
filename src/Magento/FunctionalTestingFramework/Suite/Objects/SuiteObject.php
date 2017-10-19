@@ -5,6 +5,7 @@
  */
 namespace Magento\FunctionalTestingFramework\Suite\Objects;
 
+use Magento\FunctionalTestingFramework\Test\Objects\CestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\CestObject;
 
 /**
@@ -34,16 +35,25 @@ class SuiteObject
     private $excludeCests = [];
 
     /**
+     * Array of before/after hooks to be executed for a suite.
+     *
+     * @var array
+     */
+    private $hooks;
+
+    /**
      * SuiteObject constructor.
      * @param string $name
      * @param array $includeCests
      * @param array $excludeCests
+     * @param array $hooks
      */
-    public function __construct($name, $includeCests, $excludeCests)
+    public function __construct($name, $includeCests, $excludeCests, $hooks)
     {
         $this->name = $name;
         $this->includeCests = $includeCests;
         $this->excludeCests = $excludeCests;
+        $this->hooks = $hooks;
     }
 
     /**
@@ -130,22 +140,33 @@ class SuiteObject
     }
 
     /**
+     * Convenience method for determining if a Suite will require group file generation.
+     * A group file will only be generated when the user specifies a before/after statement.
+     *
+     * @return bool
+     */
+    public function requiresGroupFile()
+    {
+        return !empty($this->hooks);
+    }
+
+    /**
      * Getter for before hooks.
      *
-     * @return void
+     * @return CestHookObject
      */
     public function getBeforeHook()
     {
-        //TODO implement getter for before hooks
+        return $this->hooks['before'];
     }
 
     /**
      * Getter for after hooks.
      *
-     * @return void
+     * @return CestHookObject
      */
     public function getAfterHook()
     {
-        //TODO implement getter for after hooks
+        return $this->hooks['after'];
     }
 }
