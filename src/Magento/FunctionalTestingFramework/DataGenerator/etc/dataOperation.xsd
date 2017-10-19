@@ -74,6 +74,7 @@
             <xs:enumeration value="create" />
             <xs:enumeration value="delete" />
             <xs:enumeration value="update" />
+            <xs:enumeration value="get" />
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="authEnum" final="restriction" >
