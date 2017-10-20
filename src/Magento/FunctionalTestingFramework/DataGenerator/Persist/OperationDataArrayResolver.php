@@ -45,7 +45,6 @@ class OperationDataArrayResolver
      */
     public function __construct($dependentEntities = null)
     {
-        //empty constructor
         if ($dependentEntities !== null) {
             foreach ($dependentEntities as $entity) {
                 $this->dependentEntities[$entity->getName()] = $entity;

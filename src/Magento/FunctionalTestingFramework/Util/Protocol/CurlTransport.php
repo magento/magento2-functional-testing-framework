@@ -118,7 +118,7 @@ class CurlTransport implements CurlInterface
      * Send request to the remote server.
      *
      * @param string $url
-     * @param array $body
+     * @param array|string $body
      * @param string $method
      * @param array $headers
      * @return void
