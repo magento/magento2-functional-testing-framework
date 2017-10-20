@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: imeron
- * Date: 10/16/17
- * Time: 2:44 PM
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
  */
 
 namespace tests\verification\Tests;

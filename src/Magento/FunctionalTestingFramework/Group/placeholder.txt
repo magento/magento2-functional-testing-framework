@@ -1,0 +1,2 @@
+This directory is used for group object files. The framework will generate files to this directory for support of
+before and after logic run once (before and after) a suite of tests.
