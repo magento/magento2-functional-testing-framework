@@ -590,6 +590,86 @@ class TestGenerator
                     $testSteps .= $dataPersistenceHandlerFunctionCall;
                     $testSteps .= $updateEntityFunctionCall;
                     break;
+                case "getData":
+                    $entity = $customActionAttributes['entity'];
+                    $key = $steps->getMergeKey();
+                    //Add an informative statement to help the user debug test runs
+                    $testSteps .= sprintf(
+                        "\t\t$%s->amGoingTo(\"get entity that has the mergeKey: %s\");\n",
+                        $actor,
+                        $key
+                    );
+                    //Get Entity from Static data.
+                    $testSteps .= sprintf(
+                        "\t\t$%s = DataObjectHandler::getInstance()->getObject(\"%s\");\n",
+                        $entity,
+                        $entity
+                    );
+
+                    //HookObject End-Product needs to be created in the Class/Cest scope,
+                    //otherwise create them in the Test scope.
+                    //Determine if there are required-entities and create array of required-entities for merging.
+                    $requiredEntities = [];
+                    $requiredEntityObjects = [];
+                    foreach ($customActionAttributes as $customAttribute) {
+                        if (is_array($customAttribute) && $customAttribute['nodeName'] = 'required-entity') {
+                            if ($hookObject) {
+                                $requiredEntities [] = "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
+                                    "->getName() => " . "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
+                                    "->getType()";
+                                $requiredEntityObjects [] = '$this->' . $customAttribute
+                                    [self::REQUIRED_ENTITY_REFERENCE];
+                            } else {
+                                $requiredEntities [] = "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE]
+                                    . "->getName() => " . "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
+                                    "->getType()";
+                                $requiredEntityObjects [] = '$' . $customAttribute[self::REQUIRED_ENTITY_REFERENCE];
+                            }
+                        }
+                    }
+
+                    if ($hookObject) {
+                        $getEntityFunctionCall = sprintf("\t\t\$this->%s->getEntity(", $key);
+                        $dataPersistenceHandlerFunctionCall = sprintf(
+                            "\t\t\$this->%s = new DataPersistenceHandler($%s",
+                            $key,
+                            $entity
+                        );
+                    } else {
+                        $getEntityFunctionCall = sprintf("\t\t\$%s->getEntity(", $key);
+                        $dataPersistenceHandlerFunctionCall = sprintf(
+                            "\t\t$%s = new DataPersistenceHandler($%s",
+                            $key,
+                            $entity
+                        );
+                    }
+
+                    if (isset($customActionAttributes['index'])) {
+                        $getEntityFunctionCall .= sprintf("%s", (int)$customActionAttributes['index']);
+                    } else {
+                        $getEntityFunctionCall .= 'null';
+                    }
+
+                    if (isset($customActionAttributes['storeCode'])) {
+                        $getEntityFunctionCall .= sprintf(", \"%s\");\n", $customActionAttributes['storeCode']);
+                    } else {
+                        $getEntityFunctionCall .= ");\n";
+                    }
+
+                    //If required-entities are defined, reassign dataObject to not overwrite the static definition.
+                    //Also, DataPersistenceHandler needs to be defined with customData array.
+                    if (!empty($requiredEntities)) {
+                        $dataPersistenceHandlerFunctionCall .= sprintf(
+                            ", [%s]);\n",
+                            implode(', ', $requiredEntityObjects)
+                        );
+                    } else {
+                        $dataPersistenceHandlerFunctionCall .= ");\n";
+                    }
+
+                    $testSteps .= $dataPersistenceHandlerFunctionCall;
+                    $testSteps .= $getEntityFunctionCall;
+                    break;
                 case "dontSeeCurrentUrlEquals":
                 case "dontSeeCurrentUrlMatches":
                 case "seeInPopup":
@@ -875,7 +955,10 @@ class TestGenerator
             $dependencies = 'AcceptanceTester $I';
 
             foreach ($hookObject->getActions() as $step) {
-                if (($step->getType() == "createData") || ($step->getType() == "updateData")) {
+                if (($step->getType() == "createData")
+                    || ($step->getType() == "updateData")
+                    || ($step->getType() == "getData")
+                ) {
                     $hooks .= "\t/**\n";
                     $hooks .= sprintf("\t  * @var DataPersistenceHandler $%s;\n", $step->getMergeKey());
                     $hooks .= "\t */\n";

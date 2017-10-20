@@ -94,6 +94,7 @@
             <xs:element type="createDataType" name="createData" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="updateDataType" name="updateData" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="deleteDataType" name="deleteData" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="getDataType" name="getData" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dontSeeType" name="dontSee" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dontSeeCheckboxIsCheckedType" name="dontSeeCheckboxIsChecked" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dontSeeCookieType" name="dontSeeCookie" minOccurs="0" maxOccurs="unbounded"/>
@@ -416,6 +417,18 @@
                 <xs:attribute type="xs:string" name="storeCode"/>
             </xs:extension>
         </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="getDataType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element type="requiredEntityType" name="required-entity" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+        <xs:attribute type="xs:string" name="entity" use="required"/>
+        <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+        <xs:attribute type="xs:integer" name="index"/>
+        <xs:attribute type="xs:boolean" name="remove" default="false"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+        <xs:attribute type="xs:string" name="storeCode"/>
     </xs:complexType>
     <xs:complexType name="dontSeeType">
         <xs:simpleContent>
