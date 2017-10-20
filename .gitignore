@@ -5,3 +5,4 @@ vendor/*
 _generated
 AcceptanceTester.php
 cghooks.lock
+src/Magento/FunctionalTestingFramework/Group/*.php
