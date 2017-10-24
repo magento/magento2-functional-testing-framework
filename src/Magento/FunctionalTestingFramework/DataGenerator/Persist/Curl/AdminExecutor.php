@@ -59,12 +59,12 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
     }
 
     /**
-     * Authorize customer on backend.
+     * Authorize admin on backend.
      *
      * @return void
      * @throws TestFrameworkException
      */
-    public function authorize()
+    private function authorize()
     {
         // Perform GET to backend url so form_key is set
         $this->transport->write(self::$adminUrl, [], CurlInterface::GET);
@@ -85,7 +85,7 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
     }
 
     /**
-     * Init Form Key from response.
+     * Set Form Key from response.
      *
      * @return void
      */
@@ -114,7 +114,7 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
             $data['form_key'] = $this->formKey;
         } else {
             throw new TestFrameworkException(
-                sprintf('Form key is absent! Url: "%s" Response: "%s"', $url, $this->response)
+                sprintf('Form key is absent! Url: "%s" Response: "%s"', $apiUrl, $this->response)
             );
         }
 
@@ -135,22 +135,14 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
         $this->setFormKey();
 
         if (!empty($successRegex)) {
-            preg_match(
-                '/' . preg_quote($successRegex, '/') . '/',
-                $this->response,
-                $successMatches
-            );
+            preg_match($successRegex, $this->response, $successMatches);
             if (empty($successMatches)) {
                 throw new TestFrameworkException("Entity creation was not successful! Response: $this->response");
             }
         }
 
         if (!empty($returnRegex)) {
-            preg_match(
-                '/' . preg_quote($returnRegex, '/') . '/',
-                $this->response,
-                $returnMatches
-            );
+            preg_match($returnRegex, $this->response, $returnMatches);
             if (!empty($returnMatches)) {
                 return $returnMatches;
             }

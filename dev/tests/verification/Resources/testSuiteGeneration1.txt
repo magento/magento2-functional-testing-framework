@@ -1,0 +1,4 @@
+dev/tests/verification/_generated/functionalSuite1/sampleSuite3Cest.php:includeTest --env chrome
+dev/tests/verification/_generated/functionalSuite1/sampleSuite5Cest.php:additionalTest --env chrome
+dev/tests/verification/_generated/functionalSuite1/sampleSuiteCest.php:includeTest --env chrome
+dev/tests/verification/_generated/functionalSuite1/sampleSuite4Cest.php:includeTest --env chrome

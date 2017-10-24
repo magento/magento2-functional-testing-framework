@@ -195,10 +195,6 @@ class OperationDefinitionObject
         if (!$this->apiUrl) {
             $this->apiUrl = $this->apiUri;
 
-            if (array_key_exists('path', $this->params)) {
-                $this->addPathParam();
-            }
-
             if (array_key_exists('query', $this->params)) {
                 $this->addQueryParams();
             }
@@ -265,18 +261,6 @@ class OperationDefinitionObject
     public function getReturnRegex()
     {
         return $this->returnRegex;
-    }
-
-    /**
-     * Function to append path params where necessary
-     *
-     * @return void
-     */
-    private function addPathParam()
-    {
-        foreach ($this->params['path'] as $paramName => $paramValue) {
-            $this->apiUrl = $this->apiUrl . "/" . $paramValue;
-        }
     }
 
     /**

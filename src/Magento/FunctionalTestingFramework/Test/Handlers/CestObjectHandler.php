@@ -63,6 +63,11 @@ class CestObjectHandler implements ObjectHandlerInterface
      */
     public function getObject($cestName)
     {
+        if (!array_key_exists($cestName, $this->cests)) {
+            trigger_error("Cest ${cestName} not defined in xml.", E_USER_ERROR);
+            return null;
+        }
+
         return $this->cests[$cestName];
     }
 
@@ -77,6 +82,44 @@ class CestObjectHandler implements ObjectHandlerInterface
     }
 
     /**
+     * Returns tests and cests tagged with the group name passed to the method.
+     *
+     * @param string $groupName
+     * @return array
+     */
+    public function getCestsByGroup($groupName)
+    {
+        $relevantCests = [];
+        foreach ($this->cests as $cest) {
+            /** @var CestObject $cest */
+            if (in_array($groupName, $cest->getAnnotationByName('group'))) {
+                $relevantCests[$cest->getName()] = $cest;
+                continue;
+            }
+
+            $relevantTests = [];
+            // extract relevant tests here
+            foreach ($cest->getTests() as $test) {
+                if (in_array($groupName, $test->getAnnotationByName('group'))) {
+                    $relevantTests[$test->getName()] = $test;
+                    continue;
+                }
+            }
+
+            if (!empty($relevantTests)) {
+                $relevantCests[$cest->getName()] = new CestObject(
+                    $cest->getName(),
+                    $cest->getAnnotations(),
+                    $relevantTests,
+                    $cest->getHooks()
+                );
+            }
+        }
+
+        return $relevantCests;
+    }
+
+    /**
      * This method reads all Cest.xml files into objects and stores them in an array for future access.
      *
      * @return void
@@ -87,6 +130,11 @@ class CestObjectHandler implements ObjectHandlerInterface
         $parsedCestArray = $testDataParser->readTestData();
 
         $cestObjectExtractor = new CestObjectExtractor();
+
+        if (!$parsedCestArray) {
+            trigger_error("Could not parse any data.xml.", E_USER_NOTICE);
+            return;
+        }
 
         foreach ($parsedCestArray[CestObjectHandler::XML_ROOT] as $cestName => $cestData) {
             if (!is_array($cestData)) {

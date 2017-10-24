@@ -6,6 +6,7 @@
 namespace Magento\FunctionalTestingFramework\DataGenerator\Persist;
 
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\AdminExecutor;
+use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\FrontendExecutor;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\WebapiExecutor;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\OperationDefinitionObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
@@ -74,6 +75,7 @@ class CurlHandler
 
     /**
      * ApiSubObject constructor.
+     *
      * @param string $operation
      * @param EntityDataObject $entityObject
      * @param string $storeCode
@@ -104,7 +106,14 @@ class CurlHandler
         $successRegex = null;
         $returnRegex = null;
 
-        $apiUrl = $this->resolveUrlReference($this->operationDefinition->getApiUrl());
+        if ($this->operation == 'update') {
+            $entities = array_merge($dependentEntities, [$this->entityObject]);
+        } elseif ((null !== $dependentEntities) && is_array($dependentEntities)) {
+            $entities = array_merge([$this->entityObject], $dependentEntities);
+        } else {
+            $entities = [$this->entityObject];
+        }
+        $apiUrl = $this->resolveUrlReference($this->operationDefinition->getApiUrl(), $entities);
         $headers = $this->operationDefinition->getHeaders();
         $authorization = $this->operationDefinition->getAuth();
         $contentType = $this->operationDefinition->getContentType();
@@ -123,8 +132,11 @@ class CurlHandler
             $executor = new WebapiExecutor($this->storeCode);
         } elseif ($authorization === 'adminFormKey') {
             $executor = new AdminExecutor();
-            //TODO: add frontend request executor
-        //} elseif ($authorization === 'customFromKey') {
+        } elseif ($authorization === 'customerFormKey') {
+            $executor = new FrontendExecutor(
+                $this->requestData['customer_email'],
+                $this->requestData['customer_password']
+            );
         }
 
         if (!$executor) {
@@ -171,12 +183,13 @@ class CurlHandler
     }
 
     /**
-     * Resolve rul reference from entity data.
+     * Resolve rul reference from entity objects.
      *
      * @param string $urlIn
+     * @param array $entityObjects
      * @return string
      */
-    private function resolveUrlReference($urlIn)
+    private function resolveUrlReference($urlIn, $entityObjects)
     {
         $urlOut = $urlIn;
         $matchedParams = [];
@@ -184,11 +197,16 @@ class CurlHandler
 
         if (!empty($matchedParams)) {
             foreach ($matchedParams[0] as $paramKey => $paramValue) {
-                $param = $this->entityObject->getDataByName(
-                    $matchedParams[1][$paramKey],
-                    EntityDataObject::CEST_UNIQUE_VALUE
-                );
-                $urlOut = str_replace($paramValue, $param, $urlIn);
+                foreach ($entityObjects as $entityObject) {
+                    $param = $entityObject->getDataByName(
+                        $matchedParams[1][$paramKey],
+                        EntityDataObject::CEST_UNIQUE_VALUE
+                    );
+                    if (null !== $param) {
+                        $urlOut = str_replace($paramValue, $param, $urlIn);
+                        continue;
+                    }
+                }
             }
         }
         return $urlOut;

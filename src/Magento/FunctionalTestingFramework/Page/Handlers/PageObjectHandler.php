@@ -94,7 +94,14 @@ class PageObjectHandler implements ObjectHandlerInterface
         $objectManager = ObjectManagerFactory::getObjectManager();
         /** @var $parser \Magento\FunctionalTestingFramework\XmlParser\PageParser */
         $parser = $objectManager->get(PageParser::class);
-        foreach ($parser->getData(self::TYPE) as $pageName => $pageData) {
+        $parsedObjs = $parser->getData(self::TYPE);
+
+        if (!$parsedObjs) {
+            trigger_error("No " . self::TYPE . " objects defined", E_USER_NOTICE);
+            return;
+        }
+
+        foreach ($parsedObjs as $pageName => $pageData) {
             $urlPath = $pageData[PageObjectHandler::URL_PATH_ATTR];
             $module = $pageData[PageObjectHandler::MODULE_ATTR];
             $sections = array_keys($pageData[PageObjectHandler::SUB_TYPE]);

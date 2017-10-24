@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 namespace Magento\FunctionalTestingFramework\DataGenerator\Handlers;
 
@@ -62,14 +66,8 @@ class DataObjectHandler implements ObjectHandlerInterface
     public static function getInstance()
     {
         if (!self::$DATA_OBJECT_HANDLER) {
-            $entityParser = ObjectManagerFactory::getObjectManager()->create(DataProfileSchemaParser::class);
-            $entityParsedData = $entityParser->readDataProfiles();
-
-            if (!$entityParsedData) {
-                throw new \Exception("No entities could be parsed from xml definitions");
-            }
-
-            self::$DATA_OBJECT_HANDLER = new DataObjectHandler($entityParsedData);
+            self::$DATA_OBJECT_HANDLER = new DataObjectHandler();
+            self::$DATA_OBJECT_HANDLER->initDataObjects();
         }
 
         return self::$DATA_OBJECT_HANDLER;
@@ -78,11 +76,10 @@ class DataObjectHandler implements ObjectHandlerInterface
     /**
      * DataArrayProcessor constructor.
      * @constructor
-     * @param array $arrayData
      */
-    private function __construct($arrayData)
+    private function __construct()
     {
-        $this->arrayData = $arrayData;
+        // private constructor
     }
 
     /**
@@ -105,12 +102,27 @@ class DataObjectHandler implements ObjectHandlerInterface
      */
     public function getAllObjects()
     {
-        if (!$this->data) {
-            $this->parseEnvVariables();
-            $this->parseDataEntities();
+        return $this->data;
+    }
+
+    /**
+     * Method to initialize parsing of data.xml and read into objects.
+     *
+     * @return void
+     */
+    private function initDataObjects()
+    {
+        $entityParser = ObjectManagerFactory::getObjectManager()->create(DataProfileSchemaParser::class);
+        $entityParsedData = $entityParser->readDataProfiles();
+
+        if (!$entityParsedData) {
+            trigger_error("No entities could be parsed from xml definitions", E_USER_NOTICE);
+            return;
         }
 
-        return $this->data;
+        $this->arrayData = $entityParsedData;
+        $this->parseEnvVariables();
+        $this->parseDataEntities();
     }
 
     /**

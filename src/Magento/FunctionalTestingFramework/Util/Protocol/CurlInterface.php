@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2017 Magento. All rights reserved.
+ * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -32,7 +32,7 @@ interface CurlInterface
      * Send request to the remote server.
      *
      * @param string $url
-     * @param array $body
+     * @param array|string $body
      * @param string $method
      * @param array $headers
      * @return void

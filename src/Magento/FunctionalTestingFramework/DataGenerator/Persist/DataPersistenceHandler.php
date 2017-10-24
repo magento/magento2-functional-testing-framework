@@ -69,8 +69,54 @@ class DataPersistenceHandler
         }
         $curlHandler = new CurlHandler('create', $this->entityObject, $this->storeCode);
         $result = $curlHandler->executeRequest($this->dependentObjects);
-        $this->setCreatedEntity(
+        $this->setCreatedObject(
             $result,
+            null,
+            $curlHandler->getRequestDataArray(),
+            $curlHandler->isContentTypeJson()
+        );
+    }
+
+    /**
+     * Function which executes a put request based on specific operation metadata.
+     *
+     * @param string $storeCode
+     * @return void
+     */
+
+    public function updateEntity($storeCode = null)
+    {
+        if (!empty($storeCode)) {
+            $this->storeCode = $storeCode;
+        }
+        $curlHandler = new CurlHandler('update', $this->entityObject, $this->storeCode);
+        $result = $curlHandler->executeRequest($this->dependentObjects);
+        $this->setCreatedObject(
+            $result,
+            null,
+            $curlHandler->getRequestDataArray(),
+            $curlHandler->isContentTypeJson()
+        );
+    }
+
+    /**
+     * Function which executes a get request on specific operation metadata.
+     *
+     * @param integer|null $index
+     * @param string $storeCode
+     * @return void
+     */
+
+    public function getEntity($index = null, $storeCode = null)
+    {
+        if (!empty($storeCode)) {
+            $this->storeCode = $storeCode;
+        }
+        $curlHandler = new CurlHandler('get', $this->entityObject, $this->storeCode);
+        $result = $curlHandler->executeRequest($this->dependentObjects);
+        $this->setCreatedObject(
+            $result,
+            $index,
             $curlHandler->getRequestDataArray(),
             $curlHandler->isContentTypeJson()
         );
@@ -92,7 +138,8 @@ class DataPersistenceHandler
     }
 
     /**
-     * Returns the createdDataObject, instantiated when the entity is created via API.
+     * Returns the created data object, instantiated when the entity is created via API.
+     *
      * @return EntityDataObject
      */
     public function getCreatedObject()
@@ -110,24 +157,27 @@ class DataPersistenceHandler
         return $this->createdObject->getDataByName($dataName, EntityDataObject::NO_UNIQUE_PROCESS);
     }
 
-    // TODO add update function
-    /* public function updateEntity()
-    {
-
-    }*/
-
     /**
-     * Save created entity.
+     * Save the created data object.
      *
      * @param string|array $response
+     * @param integer|null $index
      * @param array $requestDataArray
      * @param bool $isJson
      * @return void
      */
-    private function setCreatedEntity($response, $requestDataArray, $isJson)
+    private function setCreatedObject($response, $index, $requestDataArray, $isJson)
     {
         if ($isJson) {
-            $persistedData = array_merge($requestDataArray, json_decode($response, true));
+            $responseData = json_decode($response, true);
+            if (is_array($responseData) && (null !== $index)) {
+                $responseData = $responseData[$index];
+            }
+            if (is_array($responseData)) {
+                $persistedData = array_merge($requestDataArray, $responseData);
+            } else {
+                $persistedData = $requestDataArray;
+            }
         } else {
             $persistedData = array_merge(
                 $this->convertToFlatArray($requestDataArray),

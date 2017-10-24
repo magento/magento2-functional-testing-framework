@@ -97,7 +97,14 @@ class SectionObjectHandler implements ObjectHandlerInterface
         $objectManager = ObjectManagerFactory::getObjectManager();
         /** @var $parser \Magento\FunctionalTestingFramework\XmlParser\SectionParser */
         $parser = $objectManager->get(SectionParser::class);
-        foreach ($parser->getData(self::TYPE) as $sectionName => $sectionData) {
+        $parsedObjs = $parser->getData(self::TYPE);
+
+        if (!$parsedObjs) {
+            trigger_error("No " . self::TYPE . " objects defined", E_USER_NOTICE);
+            return;
+        }
+
+        foreach ($parsedObjs as $sectionName => $sectionData) {
             // create elements
             $elements = [];
             foreach ($sectionData[SectionObjectHandler::SUB_TYPE] as $elementName => $elementData) {

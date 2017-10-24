@@ -6,19 +6,19 @@
 
 namespace Magento\FunctionalTestingFramework\Util;
 
-use FilesystemIterator;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Test\Handlers\CestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\CestObject;
-use RecursiveDirectoryIterator;
+use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 
 class TestGenerator
 {
 
     const REQUIRED_ENTITY_REFERENCE = 'createDataKey';
+    const GENERATED_DIR = '_generated';
 
     /**
      * Path to the export dir.
@@ -28,72 +28,56 @@ class TestGenerator
     private $exportDirectory;
 
     /**
-     * Test generator.
+     * Export dir name.
      *
-     * @var TestGenerator
+     * @var string
      */
-    private static $testGenerator;
+    private $exportDirName;
+
+    /**
+     * Array of CestObjects to be generated
+     *
+     * @var array
+     */
+    private $cests;
 
     /**
      * TestGenerator constructor.
+     *
      * @param string $exportDir
+     * @param array $cests
      */
-    private function __construct($exportDir)
+    private function __construct($exportDir, $cests)
     {
-        // private constructor for singleton
-        $this->exportDirectory = $exportDir;
-    }
-
-    /**
-     * Method used to clean export dir if needed and create new empty export dir.
-     *
-     * @return void
-     */
-    private function setupExportDir()
-    {
-        if (file_exists($this->exportDirectory)) {
-            $this->rmDirRecursive($this->exportDirectory);
-        }
-
-        mkdir($this->exportDirectory, 0777, true);
-    }
-
-    /**
-     * Takes a directory path and recursively deletes all files and folders.
-     *
-     * @param string $directory
-     * @return void
-     */
-    private function rmdirRecursive($directory)
-    {
-        $it = new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS);
-
-        while ($it->valid()) {
-            $path = $directory . DIRECTORY_SEPARATOR . $it->getFilename();
-            if ($it->isDir()) {
-                $this->rmDirRecursive($path);
-            } else {
-                unlink($path);
-            }
-
-            $it->next();
-        }
-
-        rmdir($directory);
+        // private constructor for factory
+        $this->exportDirName = $exportDir ?? self::GENERATED_DIR;
+        $this->exportDirectory = rtrim(
+            TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . self::GENERATED_DIR . DIRECTORY_SEPARATOR . $exportDir,
+            DIRECTORY_SEPARATOR
+        );
+        $this->cests = $cests;
     }
 
     /**
      * Singleton method to retrieve Test Generator
      *
+     * @param string $dir
+     * @param array $cests
      * @return TestGenerator
      */
-    public static function getInstance()
+    public static function getInstance($dir = null, $cests = null)
     {
-        if (!self::$testGenerator) {
-            self::$testGenerator = new TestGenerator(TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . "_generated");
-        }
+        return new TestGenerator($dir, $cests);
+    }
 
-        return self::$testGenerator;
+    /**
+     * Returns the absolute path to the test export director for the generator instance.
+     *
+     * @return string
+     */
+    public function getExportDir()
+    {
+        return $this->exportDirectory;
     }
 
     /**
@@ -103,7 +87,11 @@ class TestGenerator
      */
     private function loadAllCestObjects()
     {
-        return CestObjectHandler::getInstance()->getAllObjects();
+        if ($this->cests === null) {
+            return CestObjectHandler::getInstance()->getAllObjects();
+        }
+
+        return $this->cests;
     }
 
     /**
@@ -132,15 +120,24 @@ class TestGenerator
      * Assemble ALL PHP strings using the assembleAllCestPhp function. Loop over and pass each array item
      * to the createCestFile function.
      *
+     * @param string $runConfig
+     * @param string $env
      * @return void
      */
-    public function createAllCestFiles()
+    public function createAllCestFiles($runConfig = null, $env = null)
     {
-        $this->setupExportDir();
-        $cestPhpArray = $this->assembleAllCestPhp();
+        DirSetupUtil::createGroupDir($this->exportDirectory);
+
+        // create our manifest file here
+        $testManifest = new TestManifest($this->exportDirectory, $runConfig, $env);
+        $cestPhpArray = $this->assembleAllCestPhp($testManifest);
 
         foreach ($cestPhpArray as $cestPhpFile) {
             $this->createCestFile($cestPhpFile[1], $cestPhpFile[0]);
+        }
+
+        if ($testManifest->getManifestConfig() === TestManifest::SINGLE_RUN_CONFIG) {
+            $testManifest->recordPathToExportDir();
         }
     }
 
@@ -149,11 +146,12 @@ class TestGenerator
      * Create all of the PHP strings for a Test. Concatenate the strings together.
      *
      * @param \Magento\FunctionalTestingFramework\Test\Objects\CestObject $cestObject
+     * @throws TestReferenceException
      * @return string
      */
     private function assembleCestPhp($cestObject)
     {
-        $usePhp = $this->generateUseStatementsPhp($cestObject);
+        $usePhp = $this->generateUseStatementsPhp();
         $classAnnotationsPhp = $this->generateClassAnnotationsPhp($cestObject->getAnnotations());
         $className = $cestObject->getName();
         $className = str_replace(' ', '', $className);
@@ -165,7 +163,7 @@ class TestGenerator
         }
 
         $cestPhp = "<?php\n";
-        $cestPhp .= "namespace Magento\AcceptanceTest\Backend;\n\n";
+        $cestPhp .= "namespace Magento\AcceptanceTest\\" .  $this->exportDirName ."\Backend;\n\n";
         $cestPhp .= $usePhp;
         $cestPhp .= $classAnnotationsPhp;
         $cestPhp .= sprintf("class %s\n", $className);
@@ -180,15 +178,13 @@ class TestGenerator
     /**
      * Load ALL Cest objects. Loop over and pass each to the assembleCestPhp function.
      *
+     * @param TestManifest $testManifest
      * @return array
      */
-    private function assembleAllCestPhp()
+    private function assembleAllCestPhp($testManifest)
     {
         $cestObjects = $this->loadAllCestObjects();
         $cestPhpArray = [];
-
-        // create our manifest file here
-        $testManifest = new TestManifest($this->exportDirectory);
 
         foreach ($cestObjects as $cest) {
             $name = $cest->getName();
@@ -196,8 +192,10 @@ class TestGenerator
             $php = $this->assembleCestPhp($cest);
             $cestPhpArray[] = [$name, $php];
 
-            //write to manifest here
-            $testManifest->recordCest($cest->getName(), $cest->getTests());
+            //write to manifest here if config is not single run
+            if ($testManifest->getManifestConfig() != TestManifest::SINGLE_RUN_CONFIG) {
+                $testManifest->recordCest($cest->getName(), $cest->getTests());
+            }
         }
 
         return $cestPhpArray;
@@ -379,15 +377,7 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['parameterArray'])) {
-                $paramsWithUniqueness = [];
-                $params = explode(
-                    ',',
-                    $this->stripWrappedQuotes(rtrim(ltrim($customActionAttributes['parameterArray'], '['), ']'))
-                );
-                foreach ($params as $param) {
-                    $paramsWithUniqueness[] = $this->addUniquenessFunctionCall($param);
-                }
-                $parameterArray = '[' . implode(',', $paramsWithUniqueness) . ']';
+                $parameterArray =  $customActionAttributes['parameterArray'];
             }
 
             if (isset($customActionAttributes['requiredAction'])) {
@@ -552,6 +542,133 @@ class TestGenerator
                     } else {
                         $testSteps .= sprintf("\t\t$%s->deleteEntity();\n", $key);
                     }
+                    break;
+                case "updateData":
+                    $entity = $customActionAttributes['entity'];
+                    $originalEntity = null;
+                    if (isset($customActionAttributes['createDataKey'])) {
+                        $originalEntity = $customActionAttributes['createDataKey'];
+                    }
+                    $key = $steps->getMergeKey();
+                    //Add an informative statement to help the user debug test runs
+                    $testSteps .= sprintf(
+                        "\t\t$%s->amGoingTo(\"update entity that has the mergeKey: %s\");\n",
+                        $actor,
+                        $key
+                    );
+                    //Get Entity from Static data.
+                    $testSteps .= sprintf(
+                        "\t\t$%s = DataObjectHandler::getInstance()->getObject(\"%s\");\n",
+                        $entity,
+                        $entity
+                    );
+
+                    if ($hookObject) {
+                        $updateEntityFunctionCall = sprintf("\t\t\$this->%s->updateEntity(", $key);
+                        $dataPersistenceHandlerFunctionCall = sprintf(
+                            "\t\t\$this->%s = new DataPersistenceHandler($%s, [\$this->%s]);\n",
+                            $key,
+                            $entity,
+                            $originalEntity
+                        );
+                    } else {
+                        $updateEntityFunctionCall = sprintf("\t\t\$%s->updateEntity(", $key);
+                        $dataPersistenceHandlerFunctionCall = sprintf(
+                            "\t\t$%s = new DataPersistenceHandler($%s, [$%s]);\n",
+                            $key,
+                            $entity,
+                            $originalEntity
+                        );
+                    }
+
+                    if (isset($customActionAttributes['storeCode'])) {
+                        $updateEntityFunctionCall .= sprintf("\"%s\");\n", $customActionAttributes['storeCode']);
+                    } else {
+                        $updateEntityFunctionCall .= ");\n";
+                    }
+
+                    $testSteps .= $dataPersistenceHandlerFunctionCall;
+                    $testSteps .= $updateEntityFunctionCall;
+                    break;
+                case "getData":
+                    $entity = $customActionAttributes['entity'];
+                    $key = $steps->getMergeKey();
+                    //Add an informative statement to help the user debug test runs
+                    $testSteps .= sprintf(
+                        "\t\t$%s->amGoingTo(\"get entity that has the mergeKey: %s\");\n",
+                        $actor,
+                        $key
+                    );
+                    //Get Entity from Static data.
+                    $testSteps .= sprintf(
+                        "\t\t$%s = DataObjectHandler::getInstance()->getObject(\"%s\");\n",
+                        $entity,
+                        $entity
+                    );
+
+                    //HookObject End-Product needs to be created in the Class/Cest scope,
+                    //otherwise create them in the Test scope.
+                    //Determine if there are required-entities and create array of required-entities for merging.
+                    $requiredEntities = [];
+                    $requiredEntityObjects = [];
+                    foreach ($customActionAttributes as $customAttribute) {
+                        if (is_array($customAttribute) && $customAttribute['nodeName'] = 'required-entity') {
+                            if ($hookObject) {
+                                $requiredEntities [] = "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
+                                    "->getName() => " . "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
+                                    "->getType()";
+                                $requiredEntityObjects [] = '$this->' . $customAttribute
+                                    [self::REQUIRED_ENTITY_REFERENCE];
+                            } else {
+                                $requiredEntities [] = "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE]
+                                    . "->getName() => " . "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
+                                    "->getType()";
+                                $requiredEntityObjects [] = '$' . $customAttribute[self::REQUIRED_ENTITY_REFERENCE];
+                            }
+                        }
+                    }
+
+                    if ($hookObject) {
+                        $getEntityFunctionCall = sprintf("\t\t\$this->%s->getEntity(", $key);
+                        $dataPersistenceHandlerFunctionCall = sprintf(
+                            "\t\t\$this->%s = new DataPersistenceHandler($%s",
+                            $key,
+                            $entity
+                        );
+                    } else {
+                        $getEntityFunctionCall = sprintf("\t\t\$%s->getEntity(", $key);
+                        $dataPersistenceHandlerFunctionCall = sprintf(
+                            "\t\t$%s = new DataPersistenceHandler($%s",
+                            $key,
+                            $entity
+                        );
+                    }
+
+                    if (isset($customActionAttributes['index'])) {
+                        $getEntityFunctionCall .= sprintf("%s", (int)$customActionAttributes['index']);
+                    } else {
+                        $getEntityFunctionCall .= 'null';
+                    }
+
+                    if (isset($customActionAttributes['storeCode'])) {
+                        $getEntityFunctionCall .= sprintf(", \"%s\");\n", $customActionAttributes['storeCode']);
+                    } else {
+                        $getEntityFunctionCall .= ");\n";
+                    }
+
+                    //If required-entities are defined, reassign dataObject to not overwrite the static definition.
+                    //Also, DataPersistenceHandler needs to be defined with customData array.
+                    if (!empty($requiredEntities)) {
+                        $dataPersistenceHandlerFunctionCall .= sprintf(
+                            ", [%s]);\n",
+                            implode(', ', $requiredEntityObjects)
+                        );
+                    } else {
+                        $dataPersistenceHandlerFunctionCall .= ");\n";
+                    }
+
+                    $testSteps .= $dataPersistenceHandlerFunctionCall;
+                    $testSteps .= $getEntityFunctionCall;
                     break;
                 case "dontSeeCurrentUrlEquals":
                 case "dontSeeCurrentUrlMatches":
@@ -838,7 +955,10 @@ class TestGenerator
             $dependencies = 'AcceptanceTester $I';
 
             foreach ($hookObject->getActions() as $step) {
-                if ($step->getType() == "createData") {
+                if (($step->getType() == "createData")
+                    || ($step->getType() == "updateData")
+                    || ($step->getType() == "getData")
+                ) {
                     $hooks .= "\t/**\n";
                     $hooks .= sprintf("\t  * @var DataPersistenceHandler $%s;\n", $step->getMergeKey());
                     $hooks .= "\t */\n";

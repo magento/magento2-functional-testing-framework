@@ -15,10 +15,6 @@ use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
  */
 class TestObject
 {
-    const STEP_MISSING_ERROR_MSG =
-        "Merge Error - Step could not be found in either TestXML or DeltaXML.
-        \tTest = '%s'\tTestStep='%s'\tLinkedStep'%s'";
-
     /**
      * Name of the test
      *
@@ -80,6 +76,21 @@ class TestObject
     public function getAnnotations()
     {
         return $this->annotations;
+    }
+
+    /**
+     * Method to return the value(s) of a corresponding annotation such as group.
+     *
+     * @param string $name
+     * @return array
+     */
+    public function getAnnotationByName($name)
+    {
+        if (array_key_exists($name, $this->annotations)) {
+            return $this->annotations[$name];
+        }
+
+        return [];
     }
 
     /**

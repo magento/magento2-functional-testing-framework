@@ -21,10 +21,10 @@ interface ObjectHandlerInterface
     /**
      * Function to return a single object by name
      *
-     * @param string $jsonDefitionName
+     * @param string $objectName
      * @return object
      */
-    public function getObject($jsonDefitionName);
+    public function getObject($objectName);
 
     /**
      * Function to return all objects the handler is responsible for
