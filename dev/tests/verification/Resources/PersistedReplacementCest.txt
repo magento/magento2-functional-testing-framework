@@ -1,0 +1,69 @@
+<?php
+namespace Magento\AcceptanceTest\_generated\Backend;
+
+use Magento\FunctionalTestingFramework\AcceptanceTester;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
+use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
+use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
+use Yandex\Allure\Adapter\Annotation\Title;
+use Yandex\Allure\Adapter\Annotation\Description;
+use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
+use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
+
+/**
+ */
+class PersistedReplacementCest
+{
+	/**
+	  * @var DataPersistenceHandler $createData1;
+	 */
+	protected $createData1;
+
+	public function _before(AcceptanceTester $I)
+	{
+		$I->amGoingTo("create entity that has the mergeKey: createData1");
+		$replacementPerson = DataObjectHandler::getInstance()->getObject("replacementPerson");
+		$this->createData1 = new DataPersistenceHandler($replacementPerson);
+		$this->createData1->createEntity();
+	}
+
+	/**
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 */
+	public function PersistedReplacementTest(AcceptanceTester $I)
+	{
+		$I->amGoingTo("create entity that has the mergeKey: testScopeData");
+		$replacementPerson = DataObjectHandler::getInstance()->getObject("replacementPerson");
+		$testScopeData = new DataPersistenceHandler($replacementPerson);
+		$testScopeData->createEntity();
+		$I->amGoingTo("create entity that has the mergeKey: uniqueData");
+		$uniquePerson = DataObjectHandler::getInstance()->getObject("uniquePerson");
+		$uniqueData = new DataPersistenceHandler($uniquePerson);
+		$uniqueData->createEntity();
+		$I->amOnPage("/success/success2.html");
+		$I->amOnPage($testScopeData->getCreatedDataByName('firstname') . ".html");
+		$I->amOnPage($this->createData1->getCreatedDataByName('firstname') . ".html");
+		$I->amOnPage("/" . $testScopeData->getCreatedDataByName('firstname') . "/" . $testScopeData->getCreatedDataByName('lastname') . ".html");
+		$I->amOnPage("/" . $this->createData1->getCreatedDataByName('firstname') . "/" . $this->createData1->getCreatedDataByName('lastname') . ".html");
+		$I->click("#element ." . $testScopeData->getCreatedDataByName('firstname'));
+		$I->click("#" . $testScopeData->getCreatedDataByName('firstname') . " .success");
+		$I->click("#John-Doe ." . $testScopeData->getCreatedDataByName('lastname'));
+		$I->click("#" . $testScopeData->getCreatedDataByName('firstname') . " ." . $testScopeData->getCreatedDataByName('lastname'));
+		$I->click("#" . $this->createData1->getCreatedDataByName('firstname') . " ." . $this->createData1->getCreatedDataByName('lastname'));
+		$I->fillField("#sample", "Hello " . $testScopeData->getCreatedDataByName('firstname') . " " . $testScopeData->getCreatedDataByName('lastname'));
+		$I->fillField("#sample", "Hello " . $this->createData1->getCreatedDataByName('firstname') . " " . $this->createData1->getCreatedDataByName('lastname'));
+		$I->searchAndMultiSelectOption("#selector", [$testScopeData->getCreatedDataByName('lastname')]);
+		$I->searchAndMultiSelectOption("#selector", [$this->createData1->getCreatedDataByName('lastname')]);
+		$I->amOnPage($uniqueData->getCreatedDataByName('firstname') . ".html");
+		$I->amOnPage("/" . $uniqueData->getCreatedDataByName('firstname') . "/" . $uniqueData->getCreatedDataByName('lastname') . ".html");
+		$I->click("#element ." . $uniqueData->getCreatedDataByName('firstname'));
+		$I->click("#" . $uniqueData->getCreatedDataByName('firstname') . " .success");
+		$I->click("#" . $uniqueData->getCreatedDataByName('firstname'));
+	}
+}
