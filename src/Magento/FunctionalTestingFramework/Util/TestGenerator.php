@@ -1206,7 +1206,7 @@ class TestGenerator
      */
     private function wrapWithDoubleQuotes($input)
     {
-        if (empty($input)) {
+        if ($input == null) {
             return '';
         }
         //Only replace &quot; with \" so that it doesn't break outer string.

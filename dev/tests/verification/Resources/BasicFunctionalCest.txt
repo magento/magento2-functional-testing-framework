@@ -75,6 +75,7 @@ class BasicFunctionalCest
 		$I->dragAndDrop(".functionalTestSelector", ".functionalTestSelector2");
 		$I->executeJS("someJSFunction");
 		$I->fillField(".functionalTestSelector", "someInput");
+		$I->fillField(".functionalTestSelector", "0");
 		$grabAttributeVar = $I->grabAttributeFrom(".functionalTestSelector", "someInput");
 		$grabCookieVar = $I->grabCookie("grabCookieInput", ['domain' => 'www.google.com']);
 		$grabUrlVar = $I->grabFromCurrentUrl("/grabCurrentUrl");
