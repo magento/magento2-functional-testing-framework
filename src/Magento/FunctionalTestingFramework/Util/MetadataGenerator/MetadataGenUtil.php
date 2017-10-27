@@ -51,6 +51,13 @@ class MetadataGenUtil
     private $inputString;
 
     /**
+     * The relative filepath for the *meta.xml file to be generated.
+     *
+     * @var string
+     */
+    private $filepath;
+
+    /**
      * MetadataGenUtil constructor.
      *
      * @param string $operationName
@@ -64,6 +71,8 @@ class MetadataGenUtil
         $this->operationDataType = $operationDataType;
         $this->operationUrl = $operationUrl;
         $this->inputString = $inputString;
+
+        $this->filepath = self::OUTPUT_DIR . DIRECTORY_SEPARATOR . $this->operationDataType . "-meta.xml";
     }
 
     /**
@@ -83,7 +92,7 @@ class MetadataGenUtil
         $output = $this->mustache_engine->render('operation', $data);
         $this->cleanAndCreateOutputDir();
         file_put_contents(
-            self::OUTPUT_DIR . DIRECTORY_SEPARATOR . $this->operationDataType . "-meta.xml",
+            $this->filepath,
             $output
         );
     }
@@ -153,16 +162,18 @@ class MetadataGenUtil
     }
 
     /**
-     * Function which cleans and creates the _output dir.
+     * Function which cleans any previously created fileand creates the _output dir.
      *
      * @return void
      */
     private function cleanAndCreateOutputDir()
     {
-        if (file_exists(self::OUTPUT_DIR)) {
-            \Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil::rmdirRecursive(self::OUTPUT_DIR);
+        if (!file_exists(self::OUTPUT_DIR)) {
+            mkdir(self::OUTPUT_DIR);
         }
 
-        mkdir(self::OUTPUT_DIR);
+        if (file_exists($this->filepath)) {
+            unlink($this->filepath);
+        }
     }
 }

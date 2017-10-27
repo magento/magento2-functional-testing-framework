@@ -1,4 +1,9 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
 require_once '../../../../../vendor/autoload.php';
 
 const INPUT_TXT_FILE = 'input.yml';
