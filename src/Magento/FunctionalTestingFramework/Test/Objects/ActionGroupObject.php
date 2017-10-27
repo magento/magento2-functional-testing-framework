@@ -84,7 +84,7 @@ class ActionGroupObject
         // $regexPattern match on:   $matches[0] {{section.element(arg.field)}}
         // $matches[1] = section.element
         // $matches[2] = arg.field
-        $regexPattern = '/{{([\w.]+)\(*([\w.$\']+)*\)*}}/';
+        $regexPattern = '/{{([\w.\[\]]+)\(*([\w.$\']+)*\)*}}/';
 
         foreach ($this->parsedActions as $action) {
             $varAttributes = array_intersect(self::VAR_ATTRIBUTES, array_keys($action->getCustomActionAttributes()));
@@ -140,10 +140,10 @@ class ActionGroupObject
                 if (empty($variable)) {
                     continue;
                 }
-                // Truncate arg.field into arg
+                // Truncate arg.field into arg. If 'Literal' was passed, variableName will be null.
                 $variableName = strstr($variable, '.', true);
                 // Check if arguments has a mapping for the given variableName
-                if (!array_key_exists($variableName, $arguments)) {
+                if ($variableName == null || !array_key_exists($variableName, $arguments)) {
                     continue;
                 }
                 $isPersisted = strstr($arguments[$variableName], '$');

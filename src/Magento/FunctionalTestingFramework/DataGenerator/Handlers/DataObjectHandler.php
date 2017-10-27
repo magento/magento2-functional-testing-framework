@@ -201,7 +201,7 @@ class DataObjectHandler implements ObjectHandlerInterface
                         $arrayValues[] = $arrayValue[self::ARRAY_ELEMENT_ITEM_VALUE];
                     }
 
-                    $dataValues[$arrayKey] = $arrayValues;
+                    $dataValues[strtolower($arrayKey)] = $arrayValues;
                 }
             }
 
