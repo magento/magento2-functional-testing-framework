@@ -57,6 +57,11 @@
             <click selector="{{SampleSection.oneParamElement($uniqueData.firstname$)}}" mergeKey="h3"/>
             <click selector="{{SampleSection.twoParamElement($uniqueData.firstname$,'success')}}" mergeKey="h4"/>
             <click selector="#$uniqueData.firstname$" mergeKey="h5"/>
+
+            <!-- selector1/2 replacement -->
+            <dragAndDrop selector1="$uniqueData.firstname$" selector2="$uniqueData.firstname$" mergeKey="j1"/>
+            <dragAndDrop selector1="{{SampleSection.oneParamElement($uniqueData.firstname$)}}" selector2="{{SampleSection.twoParamElement($uniqueData.firstname$,'success')}}" mergeKey="j2"/>
+
         </test>
     </cest>
 </config>

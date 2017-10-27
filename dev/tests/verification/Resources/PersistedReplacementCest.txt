@@ -65,5 +65,7 @@ class PersistedReplacementCest
 		$I->click("#element ." . $uniqueData->getCreatedDataByName('firstname'));
 		$I->click("#" . $uniqueData->getCreatedDataByName('firstname') . " .success");
 		$I->click("#" . $uniqueData->getCreatedDataByName('firstname'));
+		$I->dragAndDrop($uniqueData->getCreatedDataByName('firstname'), $uniqueData->getCreatedDataByName('firstname'));
+		$I->dragAndDrop("#element ." . $uniqueData->getCreatedDataByName('firstname'), "#" . $uniqueData->getCreatedDataByName('firstname') . " .success");
 	}
 }
