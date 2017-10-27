@@ -86,6 +86,7 @@
             <xs:element type="attachFileType" name="attachFile" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="cancelPopupType" name="cancelPopup" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="checkOptionType" name="checkOption" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="clearFieldType" name="clearField" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="clickType" name="click" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="clickWithLeftButtonType" name="clickWithLeftButton" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="clickWithRightButtonType" name="clickWithRightButton" minOccurs="0" maxOccurs="unbounded"/>
@@ -295,6 +296,17 @@
         </xs:simpleContent>
     </xs:complexType>
     <xs:complexType name="checkOptionType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="clearFieldType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector"/>
