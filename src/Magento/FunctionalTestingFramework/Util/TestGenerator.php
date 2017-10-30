@@ -391,11 +391,11 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['selector1'])) {
-                $selector1 = $this->wrapWithDoubleQuotes($customActionAttributes['selector1']);
+                $selector1 = $this->addUniquenessFunctionCall($customActionAttributes['selector1']);
             }
 
             if (isset($customActionAttributes['selector2'])) {
-                $selector2 = $this->wrapWithDoubleQuotes($customActionAttributes['selector2']);
+                $selector2 = $this->addUniquenessFunctionCall($customActionAttributes['selector2']);
             }
 
             if (isset($customActionAttributes['x'])) {
@@ -876,57 +876,102 @@ class TestGenerator
     }
 
     /**
-     * Resolves replacement of $input$ and $$input$$ in given string.
-     * Can be given a boolean to surround replacement with quote breaking.
+     * Resolves replacement of $input$ and $$input$$ in given function, recursing and replacing individual arguments
+     * Also determines if each argument requires any quote replacement.
      * @param string $inputString
-     * @param bool $quoteBreak
+     * @param array $args
      * @return string
-     * @throws \Exception
      */
-    private function resolveTestVariable($inputString, $quoteBreak = false)
+    private function resolveTestVariable($inputString, $args)
     {
         $outputString = $inputString;
-        $replaced = false;
 
-        // Check for Cest-scope variables first, stricter regex match.
-        preg_match_all("/\\$\\$[\w.\[\]]+\\$\\$/", $outputString, $matches);
-        foreach ($matches[0] as $match) {
-            $replacement = null;
-            $variable = $this->stripAndSplitReference($match, '$$');
-            if (count($variable) != 2) {
-                throw new \Exception(
-                    "Invalid Persisted Entity Reference: " . $match .
-                    ". Hook persisted entity references must follow \$\$entityMergeKey.field\$\$ format."
-                );
-            }
-            $replacement = sprintf("\$this->%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
-            if ($quoteBreak) {
-                $replacement = '" . ' . $replacement . ' . "';
-            }
-            $outputString = str_replace($match, $replacement, $outputString);
-            $replaced = true;
-        }
+        //Loop through each argument, replace and then replace
+        foreach ($args as $arg) {
+            $outputArg = $arg;
+            // Match on any $$data.key$$ found inside arg, matches[0] will be array of $$data.key$$
+            preg_match_all("/\\$\\$[\w.\[\]]+\\$\\$/", $outputArg, $matches);
+            $this->replaceMatchesIntoArg($matches[0], $outputArg, "$$");
 
-        // Check Test-scope variables
-        preg_match_all("/\\$[\w.\[\]]+\\$/", $outputString, $matches);
-        foreach ($matches[0] as $match) {
-            $replacement = null;
-            $variable = $this->stripAndSplitReference($match, '$');
-            if (count($variable) != 2) {
-                throw new \Exception(
-                    "Invalid Persisted Entity Reference: " . $match .
-                    ". Test persisted entity references must follow \$entityMergeKey.field\$ format."
-                );
-            }
-            $replacement = sprintf("$%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
-            if ($quoteBreak) {
-                $replacement = '" . ' . $replacement . ' . "';
-            }
-            $outputString = str_replace($match, $replacement, $outputString);
-            $replaced = true;
+            // Match on any $data.key$ found inside arg, matches[0] will be array of $data.key$
+            preg_match_all("/\\$[\w.\[\]]+\\$/", $outputArg, $matches);
+            $this->replaceMatchesIntoArg($matches[0], $outputArg, "$");
+
+            $outputString = str_replace($arg, $outputArg, $outputString);
         }
 
         return $outputString;
+    }
+
+    /**
+     * Replaces all matches into given outputArg with. Variable scope determined by delimiter given
+     * @param array $matches
+     * @param string &$outputArg
+     * @param string $delimiter
+     * @return void
+     * @throws \Exception
+     */
+    private function replaceMatchesIntoArg($matches, &$outputArg, $delimiter)
+    {
+        foreach ($matches as $match) {
+            $replacement = null;
+            $variable = $this->stripAndSplitReference($match, $delimiter);
+            if (count($variable) != 2) {
+                throw new \Exception(
+                    "Invalid Persisted Entity Reference: {$match}. 
+                Test persisted entity references must follow {$delimiter}entityMergeKey.field{$delimiter} format."
+                );
+            }
+            if ($delimiter == "$") {
+                $replacement = sprintf("$%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
+            } elseif ($delimiter == "$$") {
+                $replacement = sprintf("\$this->%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
+            }
+
+            //Determine if quoteBreak check is necessary. Assume replacement is surrounded in quotes, then override
+            if (strpos($outputArg, "\"") !== false) {
+                $outputArg = $this->processQuoteBreaks($match, $outputArg, $replacement);
+            } else {
+                $outputArg = str_replace($match, $replacement, $outputArg);
+            }
+        }
+    }
+
+    /**
+     * Processes an argument for $data.key$ and determines if it needs quote breaks on either ends.
+     * Returns an output with quote breaks and replacement already done.
+     * @param string $match
+     * @param string $argument
+     * @param string $replacement
+     * @return string
+     */
+    private function processQuoteBreaks($match, $argument, $replacement)
+    {
+        $outputArg = $argument;
+        $beforeIndex = strpos($outputArg, $match) - 1;
+        $afterIndex = $beforeIndex + strlen($match) + 1;
+        $quoteBefore = true;
+        $quoteAfter = true;
+
+        // Prepare replacement with quote breaks if needed
+        if ($argument[$beforeIndex] != "\"") {
+            $replacement = '" . ' . $replacement;
+            $quoteBefore = false;
+        }
+        if ($argument[$afterIndex] != "\"") {
+            $replacement = $replacement . ' . "';
+            $quoteAfter = false;
+        }
+        //Remove quotes at either end of argument if they aren't necessary.
+        if ($quoteBefore) {
+            $outputArg = substr($outputArg, 0, $beforeIndex) . substr($outputArg, $beforeIndex+1);
+            $afterIndex--;
+        }
+        if ($quoteAfter) {
+            $outputArg = substr($outputArg, 0, $afterIndex) . substr($outputArg, $afterIndex+1);
+        }
+        $outputArg = str_replace($match, $replacement, $outputArg);
+        return $outputArg;
     }
 
     /**
@@ -1161,7 +1206,7 @@ class TestGenerator
      */
     private function wrapWithDoubleQuotes($input)
     {
-        if (empty($input)) {
+        if ($input == null) {
             return '';
         }
         //Only replace &quot; with \" so that it doesn't break outer string.
@@ -1226,9 +1271,7 @@ class TestGenerator
         }
         $output .= ");\n";
 
-        // TODO put in condiional to prevent unncessary quote break (i.e. there are no strings to be appended to
-        // variable call.
-        return $this->resolveTestVariable($output, true);
+        return $this->resolveTestVariable($output, $args);
     }
 
     /**
@@ -1256,9 +1299,7 @@ class TestGenerator
         }
         $output .= ");\n";
 
-        // TODO put in condiional to prevent unncessary quote break (i.e. there are no strings to be appended to
-        // variable call.
-        return $output = $this->resolveTestVariable($output, true);
+        return $this->resolveTestVariable($output, $args);
     }
     // @codingStandardsIgnoreEnd
 }

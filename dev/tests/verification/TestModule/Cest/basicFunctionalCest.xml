@@ -60,6 +60,7 @@
             <dragAndDrop selector1=".functionalTestSelector" selector2=".functionalTestSelector2" mergeKey="dragAndDropKey1" />
             <executeJS function="someJSFunction" mergeKey="executeJSKey1"/>
             <fillField selector=".functionalTestSelector" userInput="someInput" mergeKey="fillFieldKey1" />
+            <fillField selector=".functionalTestSelector" userInput="0" mergeKey="fillFieldKey2" />
             <grabAttributeFrom returnVariable="grabAttributeVar" selector=".functionalTestSelector" userInput="someInput" mergeKey="grabAttributeFromKey1" />
             <grabCookie returnVariable="grabCookieVar" userInput="grabCookieInput" parameterArray="['domain' => 'www.google.com']" mergeKey="grabCookieKey1" />
             <grabFromCurrentUrl returnVariable="grabUrlVar" url="/grabCurrentUrl" mergeKey="grabFromCurrentUrlKey1" />
