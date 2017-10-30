@@ -172,7 +172,6 @@ class ActionGroupObject
         $variableName = strstr($variable, '.', true);
         // Check if arguments has a mapping for the given variableName
 
-
         if ($variableName === false) {
             $variableName = $variable;
         }
