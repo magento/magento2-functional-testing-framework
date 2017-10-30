@@ -391,11 +391,11 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['selector1'])) {
-                $selector1 = $this->wrapWithDoubleQuotes($customActionAttributes['selector1']);
+                $selector1 = $this->addUniquenessFunctionCall($customActionAttributes['selector1']);
             }
 
             if (isset($customActionAttributes['selector2'])) {
-                $selector2 = $this->wrapWithDoubleQuotes($customActionAttributes['selector2']);
+                $selector2 = $this->addUniquenessFunctionCall($customActionAttributes['selector2']);
             }
 
             if (isset($customActionAttributes['x'])) {
@@ -1206,7 +1206,7 @@ class TestGenerator
      */
     private function wrapWithDoubleQuotes($input)
     {
-        if (empty($input)) {
+        if ($input == null) {
             return '';
         }
         //Only replace &quot; with \" so that it doesn't break outer string.
