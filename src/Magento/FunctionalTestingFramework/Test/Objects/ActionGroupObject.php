@@ -172,6 +172,7 @@ class ActionGroupObject
         $variableName = strstr($variable, '.', true);
         // Check if arguments has a mapping for the given variableName
 
+
         if ($variableName === false) {
             $variableName = $variable;
         }
@@ -218,11 +219,12 @@ class ActionGroupObject
 
         // parameter replacements require changing of (arg.field) to ($arg.field$)
         if ($isParameter) {
-            $newAttributeValue = str_replace($fullVariable, $scope . $fullVariable . $scope, $newAttributeValue);
+            $fullReplacement = str_replace($variable, trim($replacement, '$'), $fullVariable);
+            $newAttributeValue = str_replace($fullVariable, $scope . $fullReplacement . $scope, $newAttributeValue);
         } else {
             $newAttributeValue = str_replace('{{', $scope, str_replace('}}', $scope, $newAttributeValue));
+            $newAttributeValue = str_replace($variable, trim($replacement, '$'), $newAttributeValue);
         }
-        $newAttributeValue = str_replace($variable, trim($replacement, '$'), $newAttributeValue);
 
         return $newAttributeValue;
     }

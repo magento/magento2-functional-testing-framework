@@ -913,6 +913,7 @@ class TestGenerator
      */
     private function replaceMatchesIntoArg($matches, &$outputArg, $delimiter)
     {
+        $matches = array_unique($matches);
         foreach ($matches as $match) {
             $replacement = null;
             $variable = $this->stripAndSplitReference($match, $delimiter);
@@ -953,22 +954,24 @@ class TestGenerator
         $quoteBefore = true;
         $quoteAfter = true;
 
-        // Prepare replacement with quote breaks if needed
-        if ($argument[$beforeIndex] != "\"") {
-            $replacement = '" . ' . $replacement;
+        // Determine if there is a Single quote before/after the $match, and if there is only 1 quote before/after.
+        if ($argument[$beforeIndex] != '"' || substr_count($argument, '"', 0, $beforeIndex+1)>1) {
             $quoteBefore = false;
         }
-        if ($argument[$afterIndex] != "\"") {
-            $replacement = $replacement . ' . "';
+        if ($argument[$afterIndex] != '"' || substr_count($argument, '"', $afterIndex)>1) {
             $quoteAfter = false;
         }
-        //Remove quotes at either end of argument if they aren't necessary.
+        //Remove quotes at either end of argument if they aren't necessary. Add quote breaking if needed
         if ($quoteBefore) {
             $outputArg = substr($outputArg, 0, $beforeIndex) . substr($outputArg, $beforeIndex+1);
             $afterIndex--;
+        } else {
+            $replacement = '" . ' . $replacement;
         }
         if ($quoteAfter) {
             $outputArg = substr($outputArg, 0, $afterIndex) . substr($outputArg, $afterIndex+1);
+        } else {
+            $replacement = $replacement . ' . "';
         }
         $outputArg = str_replace($match, $replacement, $outputArg);
         return $outputArg;
