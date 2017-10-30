@@ -52,15 +52,15 @@ class PageObject
     /**
      * PageObject constructor.
      * @param string $name
-     * @param string $urlPath
+     * @param string $url
      * @param string $module
      * @param array $sections
      * @param bool $parameterized
      */
-    public function __construct($name, $urlPath, $module, $sections, $parameterized)
+    public function __construct($name, $url, $module, $sections, $parameterized)
     {
         $this->name = $name;
-        $this->url = $urlPath;
+        $this->url = $url;
         $this->module = $module;
         $this->sectionNames = $sections;
         $this->parameterized = $parameterized;

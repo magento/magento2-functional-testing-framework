@@ -18,8 +18,8 @@ class PageObjectHandler implements ObjectHandlerInterface
 {
     const TYPE = 'page';
     const SUB_TYPE = 'section';
-    const URL_PATH_ATTR = 'urlPath';
-    const MODULE_ATTR = 'module';
+    const URL = 'url';
+    const MODULE = 'module';
     const PARAMETERIZED = 'parameterized';
 
     /**
@@ -102,12 +102,12 @@ class PageObjectHandler implements ObjectHandlerInterface
         }
 
         foreach ($parsedObjs as $pageName => $pageData) {
-            $urlPath = $pageData[PageObjectHandler::URL_PATH_ATTR];
-            $module = $pageData[PageObjectHandler::MODULE_ATTR];
-            $sections = array_keys($pageData[PageObjectHandler::SUB_TYPE]);
-            $parameterized = $pageData[PageObjectHandler::PARAMETERIZED] ?? false;
+            $url = $pageData[self::URL];
+            $module = $pageData[self::MODULE];
+            $sections = array_keys($pageData[self::SUB_TYPE]);
+            $parameterized = $pageData[self::PARAMETERIZED] ?? false;
 
-            $this->pages[$pageName] = new PageObject($pageName, $urlPath, $module, $sections, $parameterized);
+            $this->pages[$pageName] = new PageObject($pageName, $url, $module, $sections, $parameterized);
         }
     }
 }
