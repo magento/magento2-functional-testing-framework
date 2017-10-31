@@ -74,7 +74,10 @@
             <moveMouseOver selector=".functionalTestSelector" mergeKey="moveMouseOverKey1"/>
             <openNewTab mergeKey="openNewTabKey1"/>
             <pauseExecution mergeKey="pauseExecutionKey1"/>
-            <pressKey selector=".functionalTestSelector" mergeKey="pressKeyKey1"/>
+            <pressKey selector="#page" userInput="a" mergeKey="pressKey1"/>
+            <pressKey selector="#page" parameterArray="[['ctrl','a'],'new']" mergeKey="pressKey2"/>
+            <pressKey selector="#page" parameterArray="[['shift','111'],'1','x']" mergeKey="pressKey3"/>
+            <pressKey selector="#page" parameterArray="[['ctrl', 'a'], \Facebook\WebDriver\WebDriverKeys::DELETE]" mergeKey="pressKey4"/>
             <reloadPage mergeKey="reloadPageKey1"/>
             <resetCookie userInput="cookieInput" mergeKey="resetCookieKey1"/>
             <resizeWindow width="0" height="0" mergeKey="resizeWindowKey1" />

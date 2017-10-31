@@ -89,7 +89,10 @@ class BasicFunctionalCest
 		$I->moveMouseOver(".functionalTestSelector");
 		$I->openNewTab();
 		$I->pauseExecution();
-		$I->pressKey(".functionalTestSelector");
+		$I->pressKey("#page", "a");
+		$I->pressKey("#page", ['ctrl','a'],'new');
+		$I->pressKey("#page", ['shift','111'],'1','x');
+		$I->pressKey("#page", ['ctrl', 'a'],\Facebook\WebDriver\WebDriverKeys::DELETE);
 		$I->reloadPage();
 		$I->resetCookie("cookieInput");
 		$I->resizeWindow(0, 0);

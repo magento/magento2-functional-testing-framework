@@ -375,8 +375,13 @@ class TestGenerator
                 $time = $customActionAttributes['timeout'];
             }
 
-            if (isset($customActionAttributes['parameterArray'])) {
-                $parameterArray =  $customActionAttributes['parameterArray'];
+            if (isset($customActionAttributes['parameterArray']) && $actionName != 'pressKey') {
+                // validate the param array is in the correct format
+                $this->validateParameterArray($customActionAttributes['parameterArray']);
+
+                $parameterArray = "[" . $this->addUniquenessToParamArray(
+                    $customActionAttributes['parameterArray']
+                )  . "]";
             }
 
             if (isset($customActionAttributes['requiredAction'])) {
@@ -720,6 +725,29 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $parameterArray);
                     break;
                 case "pressKey":
+                    $parameterArray = $customActionAttributes['parameterArray'] ?? null;
+                    if ($parameterArray) {
+                        // validate the param array is in the correct format
+                        $this->validateParameterArray($parameterArray);
+
+                        // trim off the outer braces and add commas for the regex match
+                        $params = "," . substr($parameterArray, 1, strlen($parameterArray) - 2) . ",";
+
+                        // we are matching any nested arrays for a simultaneous press, any string literals, and any
+                        // explicit function calls from a class.
+                        preg_match_all('/(\[.*?\])|(\'.*?\')|(\\\\.*?\,)/', $params, $paramInput);
+
+                        //clean up the input by trimming any extra commas
+                        $tmpParameterArray = [];
+                        foreach ($paramInput[0] as $params) {
+                            $tmpParameterArray[] = trim($params, ",");
+                        }
+
+                        // put the array together as a string to be passed as args
+                        $parameterArray = implode(",", $tmpParameterArray);
+                    }
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input, $parameterArray);
+                    break;
                 case "selectOption":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input, $parameterArray);
                     break;
@@ -1167,6 +1195,40 @@ class TestGenerator
     }
 
     /**
+     * Detects uniqueness function calls on given attribute, and calls addUniquenessFunctionCall on matches.
+     * @param string $input
+     * @return string
+     */
+    private function addUniquenessToParamArray($input)
+    {
+        $tempInput = trim($input, "[]");
+        $paramArray = explode(",", $tempInput);
+        $result = [];
+
+        foreach ($paramArray as $param) {
+            // Determine if param has key/value array notation
+            if (preg_match_all('/(.+)=>(.+)/', trim($param), $paramMatches)) {
+                $param1 = $this->addUniquenessToParamArray($paramMatches[1][0]);
+                $param2 = $this->addUniquenessToParamArray($paramMatches[2][0]);
+                $result[] = trim($param1) . " => " . trim($param2);
+                continue;
+            }
+
+            // Matches strings wrapped in ', we assume these are string literals
+            if (preg_match('/^(["\']).*\1$/m', trim($param))) {
+                $result[] = $param;
+                continue;
+            }
+
+            $replacement = $this->addUniquenessFunctionCall(trim($param));
+
+            $result[] = $replacement;
+        }
+
+        return implode(", ", $result);
+    }
+
+    /**
      * Add uniqueness function call to input string based on regex pattern.
      *
      * @param string $input
@@ -1300,4 +1362,18 @@ class TestGenerator
         return $this->resolveTestVariable($output, $args);
     }
     // @codingStandardsIgnoreEnd
+
+    /**
+     * Validates parameter array format, making sure user has enclosed string with square brackets.
+     *
+     * @param string $paramArray
+     * @return void
+     * @throws TestReferenceException
+     */
+    private function validateParameterArray($paramArray)
+    {
+        if (substr($paramArray, 0, 1) != "[" || substr($paramArray, strlen($paramArray)-1, 1)!= "]") {
+            throw new TestReferenceException("parameterArray must begin with `[` and end with `]");
+        }
+    }
 }
