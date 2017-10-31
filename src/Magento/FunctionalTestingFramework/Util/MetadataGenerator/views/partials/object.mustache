@@ -1,0 +1,10 @@
+{{#objects}}
+<object key="{{objectName}}" dataType="{{dataType}}">
+{{#fields}}
+    {{> field}}
+{{/fields}}
+{{#hasChildObj}}
+    {{> object}}
+{{/hasChildObj}}
+</object>
+{{/objects}}
