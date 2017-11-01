@@ -84,23 +84,23 @@ class ActionGroupObject
         // $regexPattern match on:   $matches[0] {{section.element(arg.field)}}
         // $matches[1] = section.element
         // $matches[2] = arg.field
-        $regexPattern = '/{{([\w.\[\]]+)\(*([\w.$\']+)*\)*}}/';
+        $regexPattern = '/{{([\w.\[\]]+)\(*([\w.$\',\s]+)*\)*}}/';
 
         foreach ($this->parsedActions as $action) {
             $varAttributes = array_intersect(self::VAR_ATTRIBUTES, array_keys($action->getCustomActionAttributes()));
             $newActionAttributes = [];
+
             if (!empty($varAttributes)) {
                 // 1 check to see if we have pertinent var
                 foreach ($varAttributes as $varAttribute) {
                     $attributeValue = $action->getCustomActionAttributes()[$varAttribute];
                     preg_match_all($regexPattern, $attributeValue, $matches);
-
                     if (empty($matches[0])) {
                         continue;
                     }
 
                     //get rid of full match {{arg.field(arg.field)}}
-                    unset($matches[0]);
+                    array_shift($matches);
 
                     $newActionAttributes[$varAttribute] = $this->replaceAttributeArguments(
                         $arguments,
@@ -132,36 +132,68 @@ class ActionGroupObject
      */
     private function replaceAttributeArguments($arguments, $attributeValue, $matches)
     {
-        $matchParametersKey = 2;
-        $newAttributeVal = $attributeValue;
+        list($mainValueList, $possibleArgumentsList) = $matches;
 
-        foreach ($matches as $key => $match) {
-            foreach ($match as $variable) {
-                if (empty($variable)) {
-                    continue;
-                }
-                // Truncate arg.field into arg. If 'Literal' was passed, variableName will be null.
-                $variableName = strstr($variable, '.', true);
-                // Check if arguments has a mapping for the given variableName
-                if ($variableName == null || !array_key_exists($variableName, $arguments)) {
-                    continue;
-                }
-                $isPersisted = strstr($arguments[$variableName], '$');
-                if ($isPersisted) {
-                    $newAttributeVal = $this->replacePersistedArgument(
-                        $arguments[$variableName],
-                        $attributeValue,
-                        $variable,
-                        $variableName,
-                        $key == $matchParametersKey ? true : false
-                    );
-                } else {
-                    $newAttributeVal = str_replace($variableName, $arguments[$variableName], $attributeValue);
-                }
+        foreach ($mainValueList as $index => $mainValue) {
+            $possibleArguments = $possibleArgumentsList[$index];
+
+            $attributeValue = $this->replaceAttributeArgumentInVariable($mainValue, $arguments, $attributeValue);
+
+            // Split on commas, trim all values, and finally filter out all FALSE values
+            $argumentList = array_filter(array_map('trim', explode(',', $possibleArguments)));
+
+            foreach ($argumentList as $argumentValue) {
+                $attributeValue = $this->replaceAttributeArgumentInVariable(
+                    $argumentValue,
+                    $arguments,
+                    $attributeValue,
+                    true
+                );
             }
         }
 
-        return $newAttributeVal;
+        return $attributeValue;
+    }
+
+    /**
+     * Replace attribute arguments in variable.
+     *
+     * @param string $variable
+     * @param array $arguments
+     * @param string $attributeValue
+     * @param bool $isInnerArgument
+     * @return string
+     */
+    private function replaceAttributeArgumentInVariable(
+        $variable,
+        $arguments,
+        $attributeValue,
+        $isInnerArgument = false
+    ) {
+        // Truncate arg.field into arg
+        $variableName = strstr($variable, '.', true);
+        // Check if arguments has a mapping for the given variableName
+
+        if ($variableName === false) {
+            $variableName = $variable;
+        }
+
+        if (!array_key_exists($variableName, $arguments)) {
+            return $attributeValue;
+        }
+
+        $isPersisted = strstr($arguments[$variableName], '$');
+        if ($isPersisted) {
+            return $this->replacePersistedArgument(
+                $arguments[$variableName],
+                $attributeValue,
+                $variable,
+                $variableName,
+                $isInnerArgument
+            );
+        }
+
+        return  str_replace($variableName, $arguments[$variableName], $attributeValue);
     }
 
     /**
@@ -188,11 +220,12 @@ class ActionGroupObject
 
         // parameter replacements require changing of (arg.field) to ($arg.field$)
         if ($isParameter) {
-            $newAttributeValue = str_replace($fullVariable, $scope . $fullVariable . $scope, $newAttributeValue);
+            $fullReplacement = str_replace($variable, trim($replacement, '$'), $fullVariable);
+            $newAttributeValue = str_replace($fullVariable, $scope . $fullReplacement . $scope, $newAttributeValue);
         } else {
             $newAttributeValue = str_replace('{{', $scope, str_replace('}}', $scope, $newAttributeValue));
+            $newAttributeValue = str_replace($variable, trim($replacement, '$'), $newAttributeValue);
         }
-        $newAttributeValue = str_replace($variable, trim($replacement, '$'), $newAttributeValue);
 
         return $newAttributeValue;
     }
