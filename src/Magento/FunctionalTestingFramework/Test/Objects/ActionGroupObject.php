@@ -84,7 +84,7 @@ class ActionGroupObject
         // $regexPattern match on:   $matches[0] {{section.element(arg.field)}}
         // $matches[1] = section.element
         // $matches[2] = arg.field
-        $regexPattern = '/{{([\w.\[\]]+)\(*([\w.$\']+)*\)*}}/';
+        $regexPattern = '/{{([\w.\[\]]+)\(*([\w.$\',\s]+)*\)*}}/';
 
         foreach ($this->parsedActions as $action) {
             $varAttributes = array_intersect(self::VAR_ATTRIBUTES, array_keys($action->getCustomActionAttributes()));
