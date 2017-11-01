@@ -48,10 +48,10 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute type="notEmptyType" name="urlPath" use="required">
+            <xs:attribute type="notEmptyType" name="url" use="required">
                 <xs:annotation>
                     <xs:documentation>
-                        Url path (excluding the base url) for the page. Use "%s" for placeholders for variables.
+                        URL for the page. Do not include the hostname. For example: "/admin/customer/index/"
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
