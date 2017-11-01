@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <cest name="ActionGroupCest">
+        <annotations>
+            <severity value="CRITICAL"/>
+            <title value="Action Group Cest"/>
+            <group value="functional"/>
+            <features value="Action Group"/>
+            <stories value="MQE-496"/>
+        </annotations>
+
+        <test name="actionGroupWithNoArguments">
+            <annotations>
+                <severity value="SEVERE"/>
+                <title value="Action Group With No Argument"/>
+            </annotations>
+
+            <actionGroup ref="actionGroupWithoutArguments" mergeKey="actionGroup"/>
+        </test>
+
+        <test name="actionGroupWithDefaultArgumentAndStringSelectorParam">
+            <annotations>
+                <severity value="SEVERE"/>
+                <title value="Action Group With Default Argument Value and Hardcoded Value in Param"/>
+            </annotations>
+
+            <actionGroup ref="actionGroupWithDefaultArgumentAndStringSelectorParam" mergeKey="actionGroup"/>
+        </test>
+
+        <test name="actionGroupWithPassedArgumentAndStringSelectorParam">
+            <annotations>
+                <severity value="SEVERE"/>
+                <title value="Action Group With Passed Argument Value and Hardcoded Value in Param"/>
+            </annotations>
+
+            <actionGroup ref="actionGroupWithDefaultArgumentAndStringSelectorParam" mergeKey="actionGroup">
+                <argument name="someArgument" value="uniquePerson"/>
+            </actionGroup>
+        </test>
+
+        <test name="actionGroupWithSingleParameterSelectorFromDefaultArgument">
+            <annotations>
+                <severity value="SEVERE"/>
+                <title value="Action Group With Default Argument Value and Argument Value in Param"/>
+            </annotations>
+
+            <actionGroup ref="actionGroupWithSingleParameterSelectorFromArgument" mergeKey="actionGroup"/>
+        </test>
+
+        <test name="actionGroupWithSingleParameterSelectorFromPassedArgument">
+            <annotations>
+                <severity value="SEVERE"/>
+                <title value="Action Group With Passed Argument Value and Argument Value in Param"/>
+            </annotations>
+
+            <actionGroup ref="actionGroupWithSingleParameterSelectorFromArgument" mergeKey="actionGroup">
+                <argument name="someArgument" value="uniquePerson"/>
+            </actionGroup>
+        </test>
+
+        <test name="actionGroupWithMultipleParameterSelectorsFromDefaultArgument">
+            <annotations>
+                <severity value="SEVERE"/>
+                <title value="Action Group With Passed Argument Value and Multiple Argument Values in Param"/>
+            </annotations>
+
+            <actionGroup ref="actionGroupWithMultipleParameterSelectorsFromArgument" mergeKey="actionGroup"/>
+        </test>
+    </cest>
+</config>
