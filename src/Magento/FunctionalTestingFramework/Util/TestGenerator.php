@@ -954,8 +954,8 @@ class TestGenerator
         $afterIndex = $beforeIndex + strlen($match) + 1;
 
         // Determine if there is a " before/after the $match, and if there is only one " before/after match.
-        $quoteBefore = $argument[$beforeIndex] == '"' && substr_count($argument, '"', 0, $beforeIndex+1)<1;
-        $quoteAfter = $argument[$afterIndex] == '"' && substr_count($argument, '"', $afterIndex)<1;
+        $quoteBefore = $argument[$beforeIndex] == '"' && substr_count($argument, '"', 0, $beforeIndex)<1;
+        $quoteAfter = $argument[$afterIndex] == '"' && substr_count($argument, '"', $afterIndex+1)<1;
 
         //Remove quotes at either end of argument if they aren't necessary. Add double-quote concatenation if needed.
         if ($quoteBefore) {
