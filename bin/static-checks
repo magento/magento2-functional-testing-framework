@@ -1,0 +1,11 @@
+# Copyright © Magento, Inc. All rights reserved.
+# See COPYING.txt for license details.
+
+echo "===============================PHP CODE SNIFFER REPORT==============================="
+vendor/bin/phpcs ./src --standard=./dev/tests/static/Magento
+
+echo "===============================COPY PASTE DETECTOR REPORT==============================="
+vendor/bin/phpcpd ./src
+
+echo "===============================MAGENTO COPYRIGHT REPORT==============================="
+bin/copyright-check
