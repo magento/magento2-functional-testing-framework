@@ -913,6 +913,7 @@ class TestGenerator
      */
     private function replaceMatchesIntoArg($matches, &$outputArg, $delimiter)
     {
+        // Remove Duplicate $matches from array. Duplicate matches are replaced all in one go.
         $matches = array_unique($matches);
         foreach ($matches as $match) {
             $replacement = null;
@@ -951,17 +952,12 @@ class TestGenerator
         $outputArg = $argument;
         $beforeIndex = strpos($outputArg, $match) - 1;
         $afterIndex = $beforeIndex + strlen($match) + 1;
-        $quoteBefore = true;
-        $quoteAfter = true;
 
-        // Determine if there is a Single quote before/after the $match, and if there is only 1 quote before/after.
-        if ($argument[$beforeIndex] != '"' || substr_count($argument, '"', 0, $beforeIndex+1)>1) {
-            $quoteBefore = false;
-        }
-        if ($argument[$afterIndex] != '"' || substr_count($argument, '"', $afterIndex)>1) {
-            $quoteAfter = false;
-        }
-        //Remove quotes at either end of argument if they aren't necessary. Add quote breaking if needed
+        // Determine if there is a " before/after the $match, and if there is only one " before/after match.
+        $quoteBefore = $argument[$beforeIndex] == '"' && substr_count($argument, '"', 0, $beforeIndex+1)<1;
+        $quoteAfter = $argument[$afterIndex] == '"' && substr_count($argument, '"', $afterIndex)<1;
+
+        //Remove quotes at either end of argument if they aren't necessary. Add double-quote concatenation if needed.
         if ($quoteBefore) {
             $outputArg = substr($outputArg, 0, $beforeIndex) . substr($outputArg, $beforeIndex+1);
             $afterIndex--;

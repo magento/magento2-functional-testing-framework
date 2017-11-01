@@ -139,6 +139,7 @@ class ActionGroupObject
 
             $attributeValue = $this->replaceAttributeArgumentInVariable($mainValue, $arguments, $attributeValue);
 
+            // Split on commas, trim all values, and finally filter out all FALSE values
             $argumentList = array_filter(array_map('trim', explode(',', $possibleArguments)));
 
             foreach ($argumentList as $argumentValue) {
