@@ -4,4 +4,5 @@ php:
   - 7.1
 install: composer install --no-interaction --prefer-source
 script:
-  - vendor/bin/phpcs ./src --standard=./dev/tests/static/Magento
+  - composer code-style
+  - composer tests
