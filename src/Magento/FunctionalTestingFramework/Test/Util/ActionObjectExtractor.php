@@ -107,7 +107,7 @@ class ActionObjectExtractor extends BaseCestObjectExtractor
             }
 
             $actionAttributeArgData[self::ACTION_GROUP_ARGUMENTS][$attributeDataKey] =
-                $attributeDataValues[self::ACTION_GROUP_ARG_VALUE];
+                $attributeDataValues[self::ACTION_GROUP_ARG_VALUE] ?? null;
         }
 
         return $actionAttributeArgData;
