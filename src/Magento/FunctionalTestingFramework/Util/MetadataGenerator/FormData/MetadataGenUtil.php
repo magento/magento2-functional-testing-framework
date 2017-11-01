@@ -4,7 +4,7 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magento\FunctionalTestingFramework\Util\MetadataGenerator;
+namespace Magento\FunctionalTestingFramework\Util\MetadataGenerator\FormData;
 
 use Mustache_Engine;
 use Mustache_Loader_FilesystemLoader;
