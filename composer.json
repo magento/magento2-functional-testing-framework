@@ -31,12 +31,16 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "tests\\unit\\Magento\\FunctionalTestingFramework\\": "dev/tests/unit/Magento/FunctionalTestingFramework"
+            "tests\\unit\\": "dev/tests/unit"
         }
+    },
+    "scripts": {
+        "tests": "bin/phpunit-checks",
+        "static": "bin/static-checks"
     },
     "extra": {
         "hooks": {
-            "pre-push": "bin/copyright-check"
+            "pre-push": "bin/all-checks"
         }
     }
 }
