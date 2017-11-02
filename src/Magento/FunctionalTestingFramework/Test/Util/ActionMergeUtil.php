@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
@@ -69,6 +70,7 @@ class ActionMergeUtil
      * Method to resolve action group references and insert relevant actions into step flow
      *
      * @param array $mergedSteps
+     * @throws TestReferenceException
      * @return array
      */
     private function resolveActionGroups($mergedSteps)
@@ -78,9 +80,11 @@ class ActionMergeUtil
         foreach ($mergedSteps as $key => $mergedStep) {
             /**@var ActionObject $mergedStep**/
             if ($mergedStep->getType() == ActionObjectExtractor::ACTION_GROUP_TAG) {
-                $actionGroup = ActionGroupObjectHandler::getInstance()->getObject(
-                    $mergedStep->getCustomActionAttributes()[ActionObjectExtractor::ACTION_GROUP_REF]
-                );
+                $actionGroupRef = $mergedStep->getCustomActionAttributes()[ActionObjectExtractor::ACTION_GROUP_REF];
+                $actionGroup = ActionGroupObjectHandler::getInstance()->getObject($actionGroupRef);
+                if ($actionGroup == null) {
+                    throw new TestReferenceException("Could not find ActionGroup by ref \"{$actionGroupRef}\"");
+                }
                 $args = $mergedStep->getCustomActionAttributes()[ActionObjectExtractor::ACTION_GROUP_ARGUMENTS] ?? null;
                 $actionsToMerge = $actionGroup->getSteps($args, $key);
                 $newOrderedList = $newOrderedList + $actionsToMerge;
