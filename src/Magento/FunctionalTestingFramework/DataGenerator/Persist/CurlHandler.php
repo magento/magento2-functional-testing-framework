@@ -106,9 +106,7 @@ class CurlHandler
         $successRegex = null;
         $returnRegex = null;
 
-        if ($this->operation == 'update') {
-            $entities = array_merge($dependentEntities, [$this->entityObject]);
-        } elseif ((null !== $dependentEntities) && is_array($dependentEntities)) {
+        if ((null !== $dependentEntities) && is_array($dependentEntities)) {
             $entities = array_merge([$this->entityObject], $dependentEntities);
         } else {
             $entities = [$this->entityObject];

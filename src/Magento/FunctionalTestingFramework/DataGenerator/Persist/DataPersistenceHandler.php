@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\DataGenerator\Persist;
 
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 
 /**
  * Class DataPersistenceHandler
@@ -80,17 +81,24 @@ class DataPersistenceHandler
     /**
      * Function which executes a put request based on specific operation metadata.
      *
+     * @param string $updateDataName
+     * @param array $updateDependentObjects
      * @param string $storeCode
      * @return void
      */
 
-    public function updateEntity($storeCode = null)
+    public function updateEntity($updateDataName, $updateDependentObjects = [], $storeCode = null)
     {
         if (!empty($storeCode)) {
             $this->storeCode = $storeCode;
         }
-        $curlHandler = new CurlHandler('update', $this->entityObject, $this->storeCode);
-        $result = $curlHandler->executeRequest($this->dependentObjects);
+
+        foreach ($updateDependentObjects as $dependentObject) {
+            $this->dependentObjects[] = $dependentObject->getCreatedObject();
+        }
+        $updateEntityObject = DataObjectHandler::getInstance()->getObject($updateDataName);
+        $curlHandler = new CurlHandler('update', $updateEntityObject, $this->storeCode);
+        $result = $curlHandler->executeRequest(array_merge($this->dependentObjects, [$this->createdObject]));
         $this->setCreatedObject(
             $result,
             null,
