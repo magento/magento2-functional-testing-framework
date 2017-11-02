@@ -61,10 +61,11 @@ class OperationDataArrayResolver
      * @param EntityDataObject $entityObject
      * @param array $operationMetadata
      * @param string $operation
+     * @param integer $depth
      * @return array
      * @throws \Exception
      */
-    public function resolveOperationDataArray($entityObject, $operationMetadata, $operation)
+    public function resolveOperationDataArray($entityObject, $operationMetadata, $operation, $depth = 0)
     {
         $operationDataArray = [];
         self::incrementSequence($entityObject->getName());
@@ -72,8 +73,27 @@ class OperationDataArrayResolver
         foreach ($operationMetadata as $operationElement) {
             if ($operationElement->getType() == OperationElementExtractor::OPERATION_OBJECT_OBJ_NAME) {
                 $entityObj = $this->resolveOperationObjectAndEntityData($entityObject, $operationElement->getValue());
-                $operationDataArray[$operationElement->getKey()] =
-                    $this->resolveOperationDataArray($entityObj, $operationElement->getNestedMetadata(), $operation);
+                if (null === $entityObj && $operationElement->getRequired()) {
+                    throw new \Exception(sprintf(
+                        self::EXCEPTION_REQUIRED_DATA,
+                        $operationElement->getType(),
+                        $operationElement->getKey(),
+                        $entityObject->getName()
+                    ));
+                } elseif (null === $entityObj) {
+                        continue;
+                }
+                $operationData = $this->resolveOperationDataArray(
+                    $entityObj,
+                    $operationElement->getNestedMetadata(),
+                    $operation,
+                    $depth+1
+                );
+                if ($depth == 0) {
+                    $operationDataArray[$operationElement->getKey()] = $operationData;
+                } else {
+                    $operationDataArray = $operationData;
+                }
                 continue;
             }
 
@@ -127,7 +147,8 @@ class OperationDataArrayResolver
                     $operationDataSubArray = $this->resolveNonPrimitiveElement(
                         $entityName,
                         $operationElement,
-                        $operation
+                        $operation,
+                        $depth
                     );
 
                     if ($operationElement->getType() == OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY) {
@@ -216,8 +237,12 @@ class OperationDataArrayResolver
     {
         if ($operationElementValue != $entityObject->getType()) {
             // if we have a mismatch attempt to retrieve linked data and return just the first linkage
-            $linkName = $entityObject->getLinkedEntitiesOfType($operationElementValue)[0];
-            return DataObjectHandler::getInstance()->getObject($linkName);
+            $linkName = $entityObject->getLinkedEntitiesOfType($operationElementValue);
+            if (!empty($linkName)) {
+                $linkName = $linkName[0];
+                return DataObjectHandler::getInstance()->getObject($linkName);
+            }
+            return null;
         }
 
         return $entityObject;
@@ -229,9 +254,10 @@ class OperationDataArrayResolver
      * @param string $entityName
      * @param OperationElement $operationElement
      * @param string $operation
+     * @param integer $depth
      * @return array
      */
-    private function resolveNonPrimitiveElement($entityName, $operationElement, $operation)
+    private function resolveNonPrimitiveElement($entityName, $operationElement, $operation, $depth)
     {
         $linkedEntityObj = $this->resolveLinkedEntityObject($entityName);
 
@@ -242,10 +268,11 @@ class OperationDataArrayResolver
             $operationSubArray = $this->resolveOperationDataArray(
                 $linkedEntityObj,
                 [$operationElement->getNestedOperationElement($operationElement->getValue())],
-                $operation
+                $operation,
+                $depth+1
             );
 
-            return $operationSubArray[$operationElement->getValue()];
+            return $operationSubArray;
         }
 
         $operationMetadata = OperationDefinitionObjectHandler::getInstance()->getOperationDefinition(

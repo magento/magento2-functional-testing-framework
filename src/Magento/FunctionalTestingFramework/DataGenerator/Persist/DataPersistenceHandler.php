@@ -174,7 +174,7 @@ class DataPersistenceHandler
                 $responseData = $responseData[$index];
             }
             if (is_array($responseData)) {
-                $persistedData = array_merge($requestDataArray, $responseData);
+                $persistedData = $this->convertToFlatArray(array_merge($requestDataArray, $responseData));
             } else {
                 $persistedData = $requestDataArray;
             }
