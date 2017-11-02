@@ -13,7 +13,11 @@ use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
  */
 class ActionGroupObject
 {
-    const VAR_ATTRIBUTES = ['userInput', 'selector', 'page', 'url'];
+    /**
+     * Array of variable-enabled attributes.
+     * @var array
+     */
+    private $varAttributes;
 
     /**
      * The name of the action group
@@ -45,6 +49,11 @@ class ActionGroupObject
      */
     public function __construct($name, $arguments, $actions)
     {
+        $this->varAttributes = array_merge(
+            ActionObject::SELECTOR_ENABLED_ATTRIBUTES,
+            ActionObject::DATA_ENABLED_ATTRIBUTES
+        );
+        $this->varAttributes[] = ActionObject::ACTION_ATTRIBUTE_URL;
         $this->name = $name;
         $this->arguments = $arguments;
         $this->parsedActions = $actions;
@@ -87,7 +96,7 @@ class ActionGroupObject
         $regexPattern = '/{{([\w.\[\]]+)\(*([\w.$\']+)*\)*}}/';
 
         foreach ($this->parsedActions as $action) {
-            $varAttributes = array_intersect(self::VAR_ATTRIBUTES, array_keys($action->getCustomActionAttributes()));
+            $varAttributes = array_intersect($this->varAttributes, array_keys($action->getCustomActionAttributes()));
             $newActionAttributes = [];
             if (!empty($varAttributes)) {
                 // 1 check to see if we have pertinent var
