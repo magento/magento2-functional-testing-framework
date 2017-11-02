@@ -121,15 +121,14 @@ class TestGenerator
      * to the createCestFile function.
      *
      * @param string $runConfig
-     * @param string $env
      * @return void
      */
-    public function createAllCestFiles($runConfig = null, $env = null)
+    public function createAllCestFiles($runConfig = null)
     {
         DirSetupUtil::createGroupDir($this->exportDirectory);
 
         // create our manifest file here
-        $testManifest = new TestManifest($this->exportDirectory, $runConfig, $env);
+        $testManifest = new TestManifest($this->exportDirectory, $runConfig);
         $cestPhpArray = $this->assembleAllCestPhp($testManifest);
 
         foreach ($cestPhpArray as $cestPhpFile) {

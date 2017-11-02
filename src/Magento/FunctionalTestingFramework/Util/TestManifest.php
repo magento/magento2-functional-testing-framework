@@ -11,7 +11,6 @@ use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 class TestManifest
 {
     const SINGLE_RUN_CONFIG = 'singleRun';
-    const DEFAULT_BROWSER = 'chrome';
     const TEST_MANIFEST_FILENAME = 'testManifest.txt';
 
     /**
@@ -20,13 +19,6 @@ class TestManifest
      * @var string
      */
     private $filePath;
-
-    /**
-     * Test Manifest environment flag. This is added to each dir or file in order for tests to execute properly.
-     *
-     * @var string $environment
-     */
-    private $environment = self::DEFAULT_BROWSER;
 
     /**
      * Type of manifest to generate. (Currently describes whether to path to a dir or for each test).
@@ -47,9 +39,8 @@ class TestManifest
      *
      * @param string $path
      * @param string $runConfig
-     * @param string $env
      */
-    public function __construct($path, $runConfig, $env)
+    public function __construct($path, $runConfig)
     {
         $this->relativeDirPath = substr($path, strlen(dirname(dirname(TESTS_BP))) + 1);
         $filePath = $path .  DIRECTORY_SEPARATOR . self::TEST_MANIFEST_FILENAME;
@@ -58,10 +49,6 @@ class TestManifest
         fclose($fileResource);
 
         $this->runTypeConfig = $runConfig;
-
-        if ($env) {
-            $this->environment = $env;
-        }
     }
 
     /**
@@ -87,7 +74,7 @@ class TestManifest
 
         foreach ($tests as $test) {
             $line = $this->relativeDirPath . DIRECTORY_SEPARATOR . $cestName . '.php:' . $test->getName();
-            fwrite($fileResource, $this->appendDefaultBrowser($line) ."\n");
+            fwrite($fileResource, $line . PHP_EOL);
         }
 
         fclose($fileResource);
@@ -102,21 +89,8 @@ class TestManifest
     public function recordPathToExportDir()
     {
         $fileResource = fopen($this->filePath, 'a');
-
         $line = $this->relativeDirPath . DIRECTORY_SEPARATOR;
-        fwrite($fileResource, $this->appendDefaultBrowser($line) ."\n");
-
+        fwrite($fileResource, $line . PHP_EOL);
         fclose($fileResource);
-    }
-
-    /**
-     * Function which appends the --env flag to the test. This is needed to properly execute all tests in codeception.
-     *
-     * @param string $line
-     * @return string
-     */
-    private function appendDefaultBrowser($line)
-    {
-        return "${line} --env " . $this->environment;
     }
 }
