@@ -61,11 +61,11 @@ class OperationDataArrayResolver
      * @param EntityDataObject $entityObject
      * @param array $operationMetadata
      * @param string $operation
-     * @param integer $depth
+     * @param bool $fromArray
      * @return array
      * @throws \Exception
      */
-    public function resolveOperationDataArray($entityObject, $operationMetadata, $operation, $depth = 0)
+    public function resolveOperationDataArray($entityObject, $operationMetadata, $operation, $fromArray = false)
     {
         $operationDataArray = [];
         self::incrementSequence($entityObject->getName());
@@ -87,9 +87,9 @@ class OperationDataArrayResolver
                     $entityObj,
                     $operationElement->getNestedMetadata(),
                     $operation,
-                    $depth+1
+                    $fromArray
                 );
-                if ($depth == 0) {
+                if (!$fromArray) {
                     $operationDataArray[$operationElement->getKey()] = $operationData;
                 } else {
                     $operationDataArray = $operationData;
@@ -148,7 +148,7 @@ class OperationDataArrayResolver
                         $entityName,
                         $operationElement,
                         $operation,
-                        $depth
+                        $fromArray
                     );
 
                     if ($operationElement->getType() == OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY) {
@@ -254,10 +254,10 @@ class OperationDataArrayResolver
      * @param string $entityName
      * @param OperationElement $operationElement
      * @param string $operation
-     * @param integer $depth
+     * @param bool $fromArray
      * @return array
      */
-    private function resolveNonPrimitiveElement($entityName, $operationElement, $operation, $depth)
+    private function resolveNonPrimitiveElement($entityName, $operationElement, $operation, $fromArray = false)
     {
         $linkedEntityObj = $this->resolveLinkedEntityObject($entityName);
 
@@ -269,7 +269,7 @@ class OperationDataArrayResolver
                 $linkedEntityObj,
                 [$operationElement->getNestedOperationElement($operationElement->getValue())],
                 $operation,
-                $depth+1
+                true
             );
 
             return $operationSubArray;
@@ -280,7 +280,7 @@ class OperationDataArrayResolver
             $linkedEntityObj->getType()
         )->getOperationMetadata();
 
-        return $this->resolveOperationDataArray($linkedEntityObj, $operationMetadata, $operation);
+        return $this->resolveOperationDataArray($linkedEntityObj, $operationMetadata, $operation, $fromArray);
     }
 
     /**
