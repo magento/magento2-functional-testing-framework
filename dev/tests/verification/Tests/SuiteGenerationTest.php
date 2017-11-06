@@ -10,7 +10,6 @@ use Magento\FunctionalTestingFramework\Suite\SuiteGenerator;
 use Magento\FunctionalTestingFramework\Util\TestManifest;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
-use tests\verification\Util\FileDiffUtil;
 
 class SuiteGenerationTest extends TestCase
 {
@@ -58,8 +57,7 @@ class SuiteGenerationTest extends TestCase
             DIRECTORY_SEPARATOR .
             TestManifest::TEST_MANIFEST_FILENAME;
         $expectedManifest = self::RESOURCES_DIR .  DIRECTORY_SEPARATOR . __FUNCTION__ . ".txt";
-        $fileDiffUtil = new FileDiffUtil($expectedManifest, $actualManifest);
-        $this->assertNull($fileDiffUtil->diffContents());
+        $this->assertFileEquals($expectedManifest, $actualManifest);
     }
 
     public static function tearDownAfterClass()

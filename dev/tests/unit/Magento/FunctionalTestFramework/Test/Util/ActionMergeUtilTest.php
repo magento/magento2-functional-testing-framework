@@ -30,7 +30,7 @@ class ActionMergeUtilTest extends TestCase
      */
     public static function setUpBeforeClass()
     {
-        self::$MERGE_UTIL = new ActionMergeUtil();
+        self::$MERGE_UTIL = new ActionMergeUtil("actionMergeUtilTest", "TestCase");
     }
 
     /**
@@ -149,7 +149,7 @@ class ActionMergeUtilTest extends TestCase
 
         $this->assertEquals($userinputValue, $actions[$actionName]->getCustomActionAttributes()[$userInputKey]);
 
-        $mergeUtil = new ActionMergeUtil();
+        $mergeUtil = new ActionMergeUtil("test", "TestCase");
         $resolvedActions = $mergeUtil->resolveActionSteps($actions);
 
         $this->assertEquals($dataFieldValue, $resolvedActions[$actionName]->getCustomActionAttributes()[$userInputKey]);

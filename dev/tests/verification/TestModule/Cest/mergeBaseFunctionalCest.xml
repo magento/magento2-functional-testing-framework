@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <cest name="MergeFunctionalCest">
+        <annotations>
+            <severity value="CRITICAL"/>
+            <title value="A Functional Cest"/>
+            <group value="functional"/>
+            <features value="Merge Functional Cest"/>
+            <stories value="MQE-433"/>
+        </annotations>
+        <before>
+            <amOnPage url="/beforeUrl" mergeKey="before1"/>
+        </before>
+        <after>
+            <amOnPage url="/afterUrl" mergeKey="after1"/>
+        </after>
+        <test name="BasicMergeTest">
+            <amOnPage mergeKey="step1" url="/step1"/>
+            <fillField mergeKey="step3" selector="#username" userInput="step3"/>
+            <fillField mergeKey="step5" selector="#password" userInput="step5"/>
+            <click mergeKey="step6" selector=".step6"/>
+        </test>
+        <test name="MergedReferencesTest">
+            <fillField mergeKey="fillField1" selector="{{SampleSection.mergeElement}}" userInput="{{defaultPerson.mergedField}}"/>
+            <fillField mergeKey="fillField2" selector="{{SampleSection.newElement}}" userInput="{{defaultPerson.newField}}" />
+        </test>
+    </cest>
+</config>

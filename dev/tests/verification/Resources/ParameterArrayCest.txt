@@ -33,7 +33,7 @@ class ParameterArrayCest
 		$I->searchAndMultiSelectOption("#selector", [msq("simpleParamData")."prename"]);
 		$I->searchAndMultiSelectOption("#selector", ["postname".msq("simpleParamData")]);
 		$I->searchAndMultiSelectOption("#selector", [$simpleDataKey->getCreatedDataByName('name')]);
-		$I->searchAndMultiSelectOption("#selector", ["name", $simpleDataKey->getCreatedDataByName('name')]);
+		$I->searchAndMultiSelectOption("#selector", ["name", "" . $simpleDataKey->getCreatedDataByName('name')]);
 		$I->searchAndMultiSelectOption("#selector", ['someKey' => $simpleDataKey->getCreatedDataByName('name')]);
 		$I->searchAndMultiSelectOption("#selector", ['someKey' => "name"]);
 		$I->searchAndMultiSelectOption("#selector", ['someKey' => msq("simpleParamData")."prename"]);

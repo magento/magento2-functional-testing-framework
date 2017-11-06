@@ -1,0 +1,69 @@
+<?php
+namespace Magento\AcceptanceTest\_generated\Backend;
+
+use Magento\FunctionalTestingFramework\AcceptanceTester;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
+use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
+use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
+use Yandex\Allure\Adapter\Annotation\Title;
+use Yandex\Allure\Adapter\Annotation\Description;
+use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
+use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
+
+/**
+ * @Severity(level = SeverityLevel::CRITICAL)
+ * @Title("Title")
+ * @group mergeTest
+ * @Features({"Merge Functional Cest"})
+ * @Stories({"MQE-433"})
+ */
+class MergeFunctionalCest
+{
+	public function _before(AcceptanceTester $I)
+	{
+		$I->amOnPage("/beforeUrl");
+		$I->see("#before2");
+	}
+
+	public function _after(AcceptanceTester $I)
+	{
+		$I->amOnPage("/afterUrl1");
+	}
+
+	/**
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 */
+	public function BasicMergeTest(AcceptanceTester $I)
+	{
+		$I->amOnPage("/step1");
+		$I->click("#step2");
+		$I->fillField("#username", "step3");
+		$I->click("#step4");
+		$I->fillField("#password", "step5");
+		$I->click("#step6Merged");
+		$I->click("#element .Jane .step7Merge");
+		$I->amOnPage("/Jane/Dane.html");
+		$I->fillField("#foo", "Jane");
+		$I->fillField("#bar", "Dane");
+		$I->searchAndMultiSelectOption("#foo", ["Jane", "Dane"]);
+		$I->see("#element .Jane");
+	}
+
+	/**
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 */
+	public function MergedReferencesTest(AcceptanceTester $I)
+	{
+		$I->fillField("#merge", "merged");
+		$I->fillField("#newElement", "newField");
+	}
+
+}

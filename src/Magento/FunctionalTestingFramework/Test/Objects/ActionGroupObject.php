@@ -68,7 +68,7 @@ class ActionGroupObject
      */
     public function getSteps($arguments, $actionReferenceKey)
     {
-        $mergeUtil = new ActionMergeUtil();
+        $mergeUtil = new ActionMergeUtil($this->name, "ActionGroup");
         $args = $this->arguments;
 
         if ($arguments) {
@@ -118,11 +118,14 @@ class ActionGroupObject
                     );
                 }
             }
+
+            // we append the action reference key to any linked action and the action's merge key as the user might
+            // use this action group multiple times in the same test.
             $resolvedActions[$action->getMergeKey() . $actionReferenceKey] = new ActionObject(
                 $action->getMergeKey() . $actionReferenceKey,
                 $action->getType(),
                 array_merge($action->getCustomActionAttributes(), $newActionAttributes),
-                $action->getLinkedAction(),
+                $action->getLinkedAction() == null ? null : $action->getLinkedAction() . $actionReferenceKey,
                 $action->getOrderOffset()
             );
         }

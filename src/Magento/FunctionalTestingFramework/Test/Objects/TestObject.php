@@ -109,7 +109,7 @@ class TestObject
      */
     public function getOrderedActions()
     {
-        $mergeUtil = new ActionMergeUtil();
+        $mergeUtil = new ActionMergeUtil($this->getName(), "Test");
         return $mergeUtil->resolveActionSteps($this->parsedSteps);
     }
 }

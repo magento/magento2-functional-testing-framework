@@ -40,11 +40,12 @@ class CestHookObjectExtractor extends BaseCestObjectExtractor
      * This method trims all irrelevant tags to extract hook information including before and after tags
      * and their relevant actions. The result is an array of CestHookObjects.
      *
+     * @param string $parentName
      * @param string $hookType
      * @param array $cestHook
      * @return CestHookObject
      */
-    public function extractHook($hookType, $cestHook)
+    public function extractHook($parentName, $hookType, $cestHook)
     {
         $hookActions = $this->stripDescriptorTags(
             $cestHook,
@@ -53,6 +54,7 @@ class CestHookObjectExtractor extends BaseCestObjectExtractor
 
         $hook = new CestHookObject(
             $hookType,
+            $parentName,
             $this->actionObjectExtractor->extractActions($hookActions),
             $this->testEntityExtractor->extractTestEntities($hookActions)
         );

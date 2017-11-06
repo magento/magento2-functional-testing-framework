@@ -8,7 +8,6 @@ namespace tests\verification\Tests;
 use Magento\FunctionalTestingFramework\Test\Handlers\CestObjectHandler;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use PHPUnit\Framework\TestCase;
-use tests\verification\Util\FileDiffUtil;
 
 class PersistedReplacementGenerationTest extends TestCase
 {
@@ -31,12 +30,9 @@ class PersistedReplacementGenerationTest extends TestCase
 
         $this->assertTrue(file_exists($cestFile));
 
-        $fileDiffUtil = new FileDiffUtil(
+        $this->assertFileEquals(
             self::RESOURCES_PATH . DIRECTORY_SEPARATOR . self::PERSISTED_REPLACEMENT_CEST . ".txt",
             $cestFile
         );
-
-        $diffResult = $fileDiffUtil->diffContents();
-        $this->assertNull($diffResult, $diffResult);
     }
 }

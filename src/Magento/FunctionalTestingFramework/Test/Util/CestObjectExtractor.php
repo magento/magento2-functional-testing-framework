@@ -50,6 +50,7 @@ class CestObjectExtractor extends BaseCestObjectExtractor
 
         if (array_key_exists(self::CEST_BEFORE_HOOK, $cestData)) {
             $hooks[self::CEST_BEFORE_HOOK] = $cestHookObjectExtractor->extractHook(
+                $cestData[self::NAME],
                 self::CEST_BEFORE_HOOK,
                 $cestData[self::CEST_BEFORE_HOOK]
             );
@@ -59,6 +60,7 @@ class CestObjectExtractor extends BaseCestObjectExtractor
 
         if (array_key_exists(self::CEST_AFTER_HOOK, $cestData)) {
             $hooks[self::CEST_AFTER_HOOK] = $cestHookObjectExtractor->extractHook(
+                $cestData[self::NAME],
                 self::CEST_AFTER_HOOK,
                 $cestData[self::CEST_AFTER_HOOK]
             );

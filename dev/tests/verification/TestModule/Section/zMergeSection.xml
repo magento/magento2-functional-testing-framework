@@ -13,6 +13,7 @@
         <element name="twoParamElement" type="button" selector="#{{var1}} .{{var2}}" parameterized="true"/>
         <element name="threeParamElement" type="button" selector="#{{var1}}-{{var2}} .{{var3}}" parameterized="true"/>
         <element name="timeoutElement" type="button" selector="#foo" timeout="30"/>
-        <element name="mergeElement" type="button" selector="#unMerge"/>
+        <element name="mergeElement" type="select" selector="#merge"/>
+        <element name="newElement" type="select" selector="#newElement"/>
     </section>
 </config>
