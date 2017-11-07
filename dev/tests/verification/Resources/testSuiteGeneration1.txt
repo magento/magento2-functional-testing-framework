@@ -1,4 +1,4 @@
-dev/tests/verification/_generated/functionalSuite1/sampleSuite3Cest.php:includeTest
-dev/tests/verification/_generated/functionalSuite1/sampleSuite5Cest.php:additionalTest
-dev/tests/verification/_generated/functionalSuite1/sampleSuiteCest.php:includeTest
-dev/tests/verification/_generated/functionalSuite1/sampleSuite4Cest.php:includeTest
+dev/tests/verification/_generated/functionalSuite1/SampleSuite3Cest.php:IncludeTest
+dev/tests/verification/_generated/functionalSuite1/SampleSuite5Cest.php:additionalTest
+dev/tests/verification/_generated/functionalSuite1/SampleSuiteCest.php:IncludeTest
+dev/tests/verification/_generated/functionalSuite1/SampleSuite4Cest.php:IncludeTest

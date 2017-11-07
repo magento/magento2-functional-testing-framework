@@ -29,8 +29,8 @@
             <click mergeKey="step6" selector=".step6"/>
         </test>
         <test name="MergedReferencesTest">
-            <fillField mergeKey="fillField1" selector="{{SampleSection.mergeElement}}" userInput="{{defaultPerson.mergedField}}"/>
-            <fillField mergeKey="fillField2" selector="{{SampleSection.newElement}}" userInput="{{defaultPerson.newField}}" />
+            <fillField mergeKey="fillField1" selector="{{SampleSection.mergeElement}}" userInput="{{DefaultPerson.mergedField}}"/>
+            <fillField mergeKey="fillField2" selector="{{SampleSection.newElement}}" userInput="{{DefaultPerson.newField}}" />
         </test>
     </cest>
 </config>

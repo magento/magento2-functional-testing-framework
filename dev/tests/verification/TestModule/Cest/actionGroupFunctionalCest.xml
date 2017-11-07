@@ -17,54 +17,54 @@
             <stories value="MQE-433"/>
         </annotations>
         <before>
-            <createData entity="replacementPerson" mergeKey="createPersonParam"/>
+            <createData entity="ReplacementPerson" mergeKey="createPersonParam"/>
         </before>
         <test name="BasicActionGroupTest">
             <amOnPage mergeKey="step1" url="/someUrl"/>
-            <actionGroup ref="functionalActionGroup" mergeKey="actionGroup1"/>
+            <actionGroup ref="FunctionalActionGroup" mergeKey="actionGroup1"/>
             <click mergeKey="step6" selector="loginButton"/>
         </test>
         <test name="ActionGroupWithDataTest">
             <amOnPage mergeKey="step1" url="/someUrl"/>
-            <actionGroup ref="functionalActionGroupWithData" mergeKey="actionGroupWithData1"/>
+            <actionGroup ref="FunctionalActionGroupWithData" mergeKey="actionGroupWithData1"/>
             <click mergeKey="step6" selector="loginButton"/>
         </test>
         <test name="ActionGroupWithDataOverrideTest">
             <amOnPage mergeKey="step1" url="/someUrl"/>
-            <actionGroup ref="functionalActionGroupWithData" mergeKey="actionGroupWithDataOverride1">
-                <argument name="person" value="replacementPerson"/>
+            <actionGroup ref="FunctionalActionGroupWithData" mergeKey="actionGroupWithDataOverride1">
+                <argument name="person" value="ReplacementPerson"/>
             </actionGroup>
             <click mergeKey="step6" selector="loginButton"/>
         </test>
         <test name="ActionGroupWithNoDefaultTest">
             <amOnPage mergeKey="step1" url="/someUrl"/>
-            <actionGroup ref="functionalActionGroupNoDefault" mergeKey="actionGroupWithDataOverride1">
-                <argument name="person" value="defaultPerson"/>
+            <actionGroup ref="FunctionalActionGroupNoDefault" mergeKey="actionGroupWithDataOverride1">
+                <argument name="person" value="DefaultPerson"/>
             </actionGroup>
             <click mergeKey="step6" selector="loginButton"/>
         </test>
         <test name="ActionGroupWithPersistedData">
-            <createData entity="defaultPerson" mergeKey="createPerson"/>
-            <actionGroup ref="functionalActionGroupWithData" mergeKey="actionGroupWithPersistedData1">
+            <createData entity="DefaultPerson" mergeKey="createPerson"/>
+            <actionGroup ref="FunctionalActionGroupWithData" mergeKey="actionGroupWithPersistedData1">
                 <argument name="person" value="$createPerson$"/>
             </actionGroup>
         </test>
         <test name="ActionGroupWithTopLevelPersistedData">
-            <actionGroup ref="functionalActionGroupWithData" mergeKey="actionGroupWithPersistedData1">
+            <actionGroup ref="FunctionalActionGroupWithData" mergeKey="actionGroupWithPersistedData1">
                 <argument name="person" value="$$createPersonParam$$"/>
             </actionGroup>
         </test>
         <test name="MultipleActionGroupsTest">
             <amOnPage mergeKey="step1" url="/someUrl"/>
-            <actionGroup ref="functionalActionGroupWithData" mergeKey="actionGroup1"/>
+            <actionGroup ref="FunctionalActionGroupWithData" mergeKey="actionGroup1"/>
             <click mergeKey="step6" selector="loginButton"/>
-            <actionGroup ref="functionalActionGroupWithData" mergeKey="actionGroupWithDataOverride2">
-                <argument name="person" value="replacementPerson"/>
+            <actionGroup ref="FunctionalActionGroupWithData" mergeKey="actionGroupWithDataOverride2">
+                <argument name="person" value="ReplacementPerson"/>
             </actionGroup>
         </test>
         <test name="MergedActionGroupTest">
-            <actionGroup ref="functionalActionGroupForMerge" mergeKey="actionGroupForMerge">
-                <argument name="myArg" value="defaultPerson"/>
+            <actionGroup ref="FunctionalActionGroupForMerge" mergeKey="actionGroupForMerge">
+                <argument name="myArg" value="DefaultPerson"/>
             </actionGroup>
         </test>
     </cest>

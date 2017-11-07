@@ -81,7 +81,7 @@ class OperationDataArrayResolver
                         $entityObject->getName()
                     ));
                 } elseif (null === $entityObj) {
-                        continue;
+                    continue;
                 }
                 $operationData = $this->resolveOperationDataArray(
                     $entityObj,

@@ -8,13 +8,13 @@
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
-    <actionGroup name="functionalActionGroup">
+    <actionGroup name="FunctionalActionGroup">
         <fillField selector="#foo" userInput="myData1" mergeKey="fillField1"/>
         <fillField selector="#bar" userInput="myData2" mergeKey="fillField2"/>
     </actionGroup>
-    <actionGroup name="functionalActionGroupWithData">
+    <actionGroup name="FunctionalActionGroupWithData">
         <arguments>
-            <argument name="person" defaultValue="defaultPerson"/>
+            <argument name="person" defaultValue="DefaultPerson"/>
         </arguments>
         <amOnPage url="{{SamplePage.url(person.firstname,person.lastname)}}" mergeKey="amOnPage1"/>
         <fillField selector="#foo" userInput="{{person.firstname}}" mergeKey="fillField1"/>
@@ -22,7 +22,7 @@
         <searchAndMultiSelectOption selector="#foo" parameterArray="[{{person.firstname}}, {{person.lastname}}]" mergeKey="multi1"/>
         <see selector="{{SampleSection.oneParamElement(person.firstname)}}" mergeKey="see1"/>
     </actionGroup>
-    <actionGroup name="functionalActionGroupNoDefault">
+    <actionGroup name="FunctionalActionGroupNoDefault">
         <arguments>
             <argument name="person"/>
         </arguments>
@@ -30,7 +30,7 @@
         <fillField selector="#bar" userInput="{{person.lastname}}" mergeKey="fillField2"/>
         <see selector="{{SampleSection.twoParamElement(person.firstname,person.lastname)}}" mergeKey="see2"/>
     </actionGroup>
-    <actionGroup name="functionalActionGroupForMerge">
+    <actionGroup name="FunctionalActionGroupForMerge">
         <arguments>
             <argument name="myArg"/>
         </arguments>

@@ -24,12 +24,20 @@ class ActionGroupMergeGenerationTest extends TestCase
         $this->runComparisonTest(self::MERGE_FUNCTIONAL_CEST);
     }
 
+    /**
+     * Test generation of a cest file with action group references.
+     */
     public function testActionGroupFunctionalCest()
     {
         $this->runComparisonTest(self::ACTION_GROUP_FUNCTIONAL_CEST);
     }
 
 
+    /**
+     * Generate a Cest by name and assert that it equals the corresponding .txt source of truth
+     *
+     * @param string $cestName
+     */
     private function runComparisonTest($cestName)
     {
         $cest = CestObjectHandler::getInstance()->getObject($cestName);

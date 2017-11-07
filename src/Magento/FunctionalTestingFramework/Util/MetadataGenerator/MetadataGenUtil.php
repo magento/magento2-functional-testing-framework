@@ -19,7 +19,7 @@ class MetadataGenUtil
      *
      * @var Mustache_Engine
      */
-    private $mustache_engine;
+    private $mustacheEngine;
 
     /**
      * Name of the operation (e.g. createCategory)
@@ -83,32 +83,23 @@ class MetadataGenUtil
      */
     public function generateMetadataFile()
     {
-        $this->initMustacheTemplates();
+        // Load Mustache templates
+        $this->mustacheEngine = new Mustache_Engine(
+            ['loader' => new Mustache_Loader_FilesystemLoader("views"),
+                'partials_loader' => new Mustache_Loader_FilesystemLoader(
+                    "views" . DIRECTORY_SEPARATOR . "partials"
+                )]
+        );
 
         // parse the string params into an array
         parse_str($this->inputString, $results);
         $data = $this->convertResultToEntry($results, $this->operationDataType);
         $data = $this->appendParentParams($data);
-        $output = $this->mustache_engine->render('operation', $data);
+        $output = $this->mustacheEngine->render('operation', $data);
         $this->cleanAndCreateOutputDir();
         file_put_contents(
             $this->filepath,
             $output
-        );
-    }
-
-    /**
-     * Function which initializes mustache templates for file generation.
-     *
-     * @return void
-     */
-    private function initMustacheTemplates()
-    {
-        $this->mustache_engine = new Mustache_Engine(
-            ['loader' => new Mustache_Loader_FilesystemLoader("views"),
-            'partials_loader' => new Mustache_Loader_FilesystemLoader(
-                "views" . DIRECTORY_SEPARATOR . "partials"
-            )]
         );
     }
 

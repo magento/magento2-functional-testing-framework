@@ -31,8 +31,8 @@ class ActionGroupFunctionalCest
 	public function _before(AcceptanceTester $I)
 	{
 		$I->amGoingTo("create entity that has the mergeKey: createPersonParam");
-		$replacementPerson = DataObjectHandler::getInstance()->getObject("replacementPerson");
-		$this->createPersonParam = new DataPersistenceHandler($replacementPerson);
+		$ReplacementPerson = DataObjectHandler::getInstance()->getObject("ReplacementPerson");
+		$this->createPersonParam = new DataPersistenceHandler($ReplacementPerson);
 		$this->createPersonParam->createEntity();
 	}
 
@@ -103,8 +103,8 @@ class ActionGroupFunctionalCest
 	public function ActionGroupWithPersistedData(AcceptanceTester $I)
 	{
 		$I->amGoingTo("create entity that has the mergeKey: createPerson");
-		$defaultPerson = DataObjectHandler::getInstance()->getObject("defaultPerson");
-		$createPerson = new DataPersistenceHandler($defaultPerson);
+		$DefaultPerson = DataObjectHandler::getInstance()->getObject("DefaultPerson");
+		$createPerson = new DataPersistenceHandler($DefaultPerson);
 		$createPerson->createEntity();
 		$I->amOnPage("/" . $createPerson->getCreatedDataByName('firstname') . "/" . $createPerson->getCreatedDataByName('lastname') . ".html");
 		$I->fillField("#foo", $createPerson->getCreatedDataByName('firstname'));
