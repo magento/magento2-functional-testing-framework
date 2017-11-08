@@ -10,7 +10,17 @@ use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 
 class TestNameValidationUtil
 {
-    const BLACKLISTED_CHAR = [" ", ",", "'", "\"" , "{", "}", "$", "(", ")" ];
+    const BLACKLISTED_CHAR = [
+        " " => "spaces",
+        "," => "commas",
+        "'" => "single quotes",
+        "\"" => "double quotes",
+        "{" => "curly braces",
+        "}" => "curly braces",
+        "$" => "dollar signs",
+        "(" => "parenthesis",
+        ")" => "parenthesis"
+    ];
 
     /**
      * Function which runs a validation against the blacklisted char defined in this class. Validation occurs to insure
@@ -24,9 +34,21 @@ class TestNameValidationUtil
     {
         $testChars = str_split($testName);
 
-        $diff = array_diff($testChars, self::BLACKLISTED_CHAR);
-        if (count($diff) != count($testChars)) {
-            throw new XmlException("Test name ${testName} contains illegal characters, please fix and re-run");
+        $diff = array_intersect($testChars, array_keys(self::BLACKLISTED_CHAR));
+        if (count($diff) > 0) {
+            $errorMessage = "Test name \"${testName}\" contains illegal characters, please fix and re-run.";
+            $uniqueDiff = array_unique(array_map(['self', 'nameMapper'], $diff));
+
+            foreach ($uniqueDiff as $diffChar) {
+                $errorMessage .= "\nTest names cannot contain " . $diffChar;
+            }
+
+            throw new XmlException($errorMessage);
         }
+    }
+
+    private static function nameMapper($val)
+    {
+        return self::BLACKLISTED_CHAR[$val];
     }
 }

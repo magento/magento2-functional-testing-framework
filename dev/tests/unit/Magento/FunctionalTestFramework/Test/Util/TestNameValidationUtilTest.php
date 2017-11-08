@@ -64,6 +64,7 @@ class TestNameValidationUtilTest extends TestCase
      * Method which takes the name of the test expecting an invalid char. Runs the validation method against name.
      *
      * @param string $testName
+     * @return void
      */
     private function validateBlacklistedTestName($testName)
     {
