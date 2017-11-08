@@ -47,6 +47,12 @@ class TestNameValidationUtil
         }
     }
 
+    /**
+     * Function which maps the blacklisted char to its name, function is used by the array map above.
+     *
+     * @param string $val
+     * @return string
+     */
     private static function nameMapper($val)
     {
         return self::BLACKLISTED_CHAR[$val];
