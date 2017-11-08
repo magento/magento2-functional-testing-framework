@@ -10,11 +10,11 @@
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
     <cest name="PersistedReplacementCest">
         <before>
-            <createData entity="replacementPerson" mergeKey="createData1"/>
+            <createData entity="ReplacementPerson" mergeKey="createData1"/>
         </before>
         <test name="PersistedReplacementTest">
-            <createData entity="replacementPerson" mergeKey="testScopeData"/>
-            <createData entity="uniquePerson" mergeKey="uniqueData"/>
+            <createData entity="ReplacementPerson" mergeKey="testScopeData"/>
+            <createData entity="UniquePerson" mergeKey="uniqueData"/>
 
             <!-- parameterized url that uses literal params -->
             <amOnPage url="{{SamplePage.url('success','success2')}}" mergeKey="a0"/>
@@ -34,7 +34,7 @@
             <click selector="{{SampleSection.twoParamElement($testScopeData.firstname$,'success')}}" mergeKey="c2"/>
 
             <!-- parameterized selector with literal, static data, and created data  -->
-            <click selector="{{SampleSection.threeParamElement('John', replacementPerson.lastname, $testScopeData.lastname$)}}"
+            <click selector="{{SampleSection.threeParamElement('John', ReplacementPerson.lastname, $testScopeData.lastname$)}}"
                    mergeKey="c3"/>
 
             <!-- selector that uses created data -->

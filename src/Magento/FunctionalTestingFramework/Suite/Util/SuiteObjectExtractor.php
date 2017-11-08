@@ -68,12 +68,14 @@ class SuiteObjectExtractor extends BaseCestObjectExtractor
             // parse any object hooks
             if (array_key_exists(CestObjectExtractor::CEST_BEFORE_HOOK, $parsedSuite)) {
                 $suiteHooks[CestObjectExtractor::CEST_BEFORE_HOOK] = $cestObjectHookExtractor->extractHook(
+                    $parsedSuite[self::NAME],
                     CestObjectExtractor::CEST_BEFORE_HOOK,
                     $parsedSuite[CestObjectExtractor::CEST_BEFORE_HOOK]
                 );
             }
             if (array_key_exists(CestObjectExtractor::CEST_AFTER_HOOK, $parsedSuite)) {
                 $suiteHooks[CestObjectExtractor::CEST_AFTER_HOOK] = $cestObjectHookExtractor->extractHook(
+                    $parsedSuite[self::NAME],
                     CestObjectExtractor::CEST_AFTER_HOOK,
                     $parsedSuite[CestObjectExtractor::CEST_AFTER_HOOK]
                 );

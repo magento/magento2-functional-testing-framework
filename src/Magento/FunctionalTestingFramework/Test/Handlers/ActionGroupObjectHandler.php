@@ -66,7 +66,11 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
      */
     public function getObject($actionGroupName)
     {
-        return $this->getAllObjects()[$actionGroupName];
+        if (array_key_exists($actionGroupName, $this->getAllObjects())) {
+            return $this->getAllObjects()[$actionGroupName];
+        }
+
+        return null;
     }
 
     /**

@@ -9,29 +9,29 @@ use Magento\FunctionalTestingFramework\Test\Handlers\CestObjectHandler;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use PHPUnit\Framework\TestCase;
 
-class BasicCestGenerationTest extends TestCase
+class ParameterArrayTest extends TestCase
 {
-    const BASIC_FUNCTIONAL_CEST = 'BasicFunctionalCest';
+    const PARAMETER_ARRAY_CEST = 'ParameterArrayCest';
     const RESOURCES_PATH = __DIR__ . '/../Resources';
 
     /**
      * Tests flat generation of a hardcoded cest file with no external references.
      */
-    public function testBasicGeneration()
+    public function testParameterArrayGeneration()
     {
-        $cest = CestObjectHandler::getInstance()->getObject(self::BASIC_FUNCTIONAL_CEST);
+        $cest = CestObjectHandler::getInstance()->getObject(self::PARAMETER_ARRAY_CEST);
         $test = TestGenerator::getInstance(null, [$cest]);
         $test->createAllCestFiles();
 
         $cestFile = $test->getExportDir() .
             DIRECTORY_SEPARATOR .
-            self::BASIC_FUNCTIONAL_CEST .
+            self::PARAMETER_ARRAY_CEST .
             ".php";
 
         $this->assertTrue(file_exists($cestFile));
 
         $this->assertFileEquals(
-            self::RESOURCES_PATH . DIRECTORY_SEPARATOR . self::BASIC_FUNCTIONAL_CEST . ".txt",
+            self::RESOURCES_PATH . DIRECTORY_SEPARATOR . self::PARAMETER_ARRAY_CEST . ".txt",
             $cestFile
         );
     }

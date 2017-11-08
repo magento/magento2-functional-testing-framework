@@ -9,12 +9,8 @@
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd">
-    <entity name="replacementPerson" type="samplePerson">
-        <data key="firstname">John</data>
-        <data key="lastName">Doe</data>
-    </entity>
-    <entity name="uniquePerson" type="samplePerson">
-        <data key="firstname" unique="suffix">John</data>
-        <data key="lastName">Doe</data>
+    <entity name="DefaultPerson" type="samplePerson">
+        <data key="mergedField">merged</data>
+        <data key="newField">newField</data>
     </entity>
 </config>

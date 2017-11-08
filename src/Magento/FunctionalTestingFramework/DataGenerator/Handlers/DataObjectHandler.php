@@ -174,7 +174,7 @@ class DataObjectHandler implements ObjectHandlerInterface
             if (array_key_exists(self::DATA_VALUES, $entity)) {
                 foreach ($entity[self::DATA_VALUES] as $dataElement) {
                     $dataElementKey = strtolower($dataElement[self::DATA_ELEMENT_KEY]);
-                    $dataElementValue = $dataElement[self::DATA_ELEMENT_VALUE];
+                    $dataElementValue = $dataElement[self::DATA_ELEMENT_VALUE] ?? "";
                     if (array_key_exists(self::DATA_ELEMENT_UNIQUENESS_ATTR, $dataElement)) {
                         $uniquenessValues[$dataElementKey] = $dataElement[self::DATA_ELEMENT_UNIQUENESS_ATTR];
                     }

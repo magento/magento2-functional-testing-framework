@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <cest name="MergeFunctionalCest">
+        <annotations>
+            <group value="mergeTest"/>
+        </annotations>
+        <before>
+            <see mergeKey="before2" selector="#before2" after="before1"/>
+        </before>
+        <after>
+            <amOnPage url="/afterUrl1" mergeKey="after1"/>
+        </after>
+        <test name="BasicMergeTest">
+            <click mergeKey="step7Merge" selector="{{SampleSection.oneParamElement(DefaultPerson.firstname)}} .step7Merge" after="step6Merge"/>
+            <click mergeKey="step2" selector="#step2" after="step1"/>
+            <click mergeKey="step4" selector="#step4" before="step5"/>
+            <click mergeKey="step6" remove="true"/>
+            <click mergeKey="step6Merge" selector="#step6Merged" after="step5"/>
+            <actionGroup ref="FunctionalActionGroupWithData" mergeKey="step8Merge" after="step7Merge"/>
+        </test>
+    </cest>
+</config>

@@ -32,7 +32,7 @@ class DirSetupUtil
      * @param string $directory
      * @return void
      */
-    private static function rmdirRecursive($directory)
+    public static function rmdirRecursive($directory)
     {
         $it = new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS);
 

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../../../../../../magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <cest name="ParameterArrayCest">
+        <test name="ParameterArrayTest">
+            <createData entity="simpleParamData" mergeKey="simpleDataKey"/>
+            <searchAndMultiSelectOption selector="#selector" parameterArray="[{{simpleParamData.name}}]" mergeKey="xmlSimpleReplace"/>
+            <searchAndMultiSelectOption selector="#selector" parameterArray="[{{simpleParamData.uniqueNamePre}}]" mergeKey="xmlPrefix"/>
+            <searchAndMultiSelectOption selector="#selector" parameterArray="[{{simpleParamData.uniqueNamePost}}]" mergeKey="xmlSuffix"/>
+            <searchAndMultiSelectOption selector="#selector" parameterArray="[$simpleDataKey.name$]" mergeKey="persistSimple"/>
+            <searchAndMultiSelectOption selector="#selector" parameterArray="[{{simpleParamData.name}}, $simpleDataKey.name$]" mergeKey="persistXmlSimple"/>
+            <searchAndMultiSelectOption selector="#selector" parameterArray="['someKey' => $simpleDataKey.name$]" mergeKey="literalKeyToPersist"/>
+            <searchAndMultiSelectOption selector="#selector" parameterArray="['someKey' => {{simpleParamData.name}}]" mergeKey="literalKeyToStatic"/>
+            <searchAndMultiSelectOption selector="#selector" parameterArray="['someKey' => {{simpleParamData.uniqueNamePre}}]" mergeKey="literalKeyToPrefixUnique"/>
+            <searchAndMultiSelectOption selector="#selector" parameterArray="['someKey' => {{simpleParamData.uniqueNamePost}}]" mergeKey="literalKeyToSuffixUnique"/>
+        </test>
+    </cest>
+</config>

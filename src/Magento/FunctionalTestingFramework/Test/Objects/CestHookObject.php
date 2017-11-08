@@ -21,6 +21,13 @@ class CestHookObject
     private $type;
 
     /**
+     * Name of parent object
+     *
+     * @var string
+     */
+    private $parentName;
+
+    /**
      * Array which contains the action objects to be executed in a hook.
      *
      * @var array
@@ -36,12 +43,14 @@ class CestHookObject
     /**
      * CestHookObject constructor.
      * @param string $type
+     * @param string $parentName
      * @param array $actions
      * @param array $customData
      */
-    public function __construct($type, $actions, $customData = null)
+    public function __construct($type, $parentName, $actions, $customData = null)
     {
         $this->type = $type;
+        $this->cestNameparent = $parentName;
         $this->actions = $actions;
         $this->customData = $customData;
     }
@@ -63,7 +72,7 @@ class CestHookObject
      */
     public function getActions()
     {
-        $mergeUtil = new ActionMergeUtil();
+        $mergeUtil = new ActionMergeUtil($this->parentName, $this->getType());
         return $mergeUtil->resolveActionSteps($this->actions);
     }
 

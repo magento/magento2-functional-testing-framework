@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <cest name="ActionGroupFunctionalCest">
+        <annotations>
+            <severity value="CRITICAL"/>
+            <title value="A Functional Cest"/>
+            <group value="functional"/>
+            <features value="Action Group Functional Cest"/>
+            <stories value="MQE-433"/>
+        </annotations>
+        <before>
+            <createData entity="ReplacementPerson" mergeKey="createPersonParam"/>
+        </before>
+        <test name="BasicActionGroupTest">
+            <amOnPage mergeKey="step1" url="/someUrl"/>
+            <actionGroup ref="FunctionalActionGroup" mergeKey="actionGroup1"/>
+            <click mergeKey="step6" selector="loginButton"/>
+        </test>
+        <test name="ActionGroupWithDataTest">
+            <amOnPage mergeKey="step1" url="/someUrl"/>
+            <actionGroup ref="FunctionalActionGroupWithData" mergeKey="actionGroupWithData1"/>
+            <click mergeKey="step6" selector="loginButton"/>
+        </test>
+        <test name="ActionGroupWithDataOverrideTest">
+            <amOnPage mergeKey="step1" url="/someUrl"/>
+            <actionGroup ref="FunctionalActionGroupWithData" mergeKey="actionGroupWithDataOverride1">
+                <argument name="person" value="ReplacementPerson"/>
+            </actionGroup>
+            <click mergeKey="step6" selector="loginButton"/>
+        </test>
+        <test name="ActionGroupWithNoDefaultTest">
+            <amOnPage mergeKey="step1" url="/someUrl"/>
+            <actionGroup ref="FunctionalActionGroupNoDefault" mergeKey="actionGroupWithDataOverride1">
+                <argument name="person" value="DefaultPerson"/>
+            </actionGroup>
+            <click mergeKey="step6" selector="loginButton"/>
+        </test>
+        <test name="ActionGroupWithPersistedData">
+            <createData entity="DefaultPerson" mergeKey="createPerson"/>
+            <actionGroup ref="FunctionalActionGroupWithData" mergeKey="actionGroupWithPersistedData1">
+                <argument name="person" value="$createPerson$"/>
+            </actionGroup>
+        </test>
+        <test name="ActionGroupWithTopLevelPersistedData">
+            <actionGroup ref="FunctionalActionGroupWithData" mergeKey="actionGroupWithPersistedData1">
+                <argument name="person" value="$$createPersonParam$$"/>
+            </actionGroup>
+        </test>
+        <test name="MultipleActionGroupsTest">
+            <amOnPage mergeKey="step1" url="/someUrl"/>
+            <actionGroup ref="FunctionalActionGroupWithData" mergeKey="actionGroup1"/>
+            <click mergeKey="step6" selector="loginButton"/>
+            <actionGroup ref="FunctionalActionGroupWithData" mergeKey="actionGroupWithDataOverride2">
+                <argument name="person" value="ReplacementPerson"/>
+            </actionGroup>
+        </test>
+        <test name="MergedActionGroupTest">
+            <actionGroup ref="FunctionalActionGroupForMerge" mergeKey="actionGroupForMerge">
+                <argument name="myArg" value="DefaultPerson"/>
+            </actionGroup>
+        </test>
+    </cest>
+</config>

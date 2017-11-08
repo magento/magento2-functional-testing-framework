@@ -15,7 +15,7 @@
         </include>
         <exclude>
             <group name="someGroup"/>
-            <cest name="excludeTest" test=""/>
+            <cest name="ExcludeTest" test=""/>
             <group name="excludeGroup"/>
             <module name="moduleName" file="excludeFile"/>
         </exclude>

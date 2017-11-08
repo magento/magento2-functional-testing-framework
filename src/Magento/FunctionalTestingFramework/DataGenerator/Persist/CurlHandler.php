@@ -124,7 +124,8 @@ class CurlHandler
         $this->requestData = $operationDataResolver->resolveOperationDataArray(
             $this->entityObject,
             $this->operationDefinition->getOperationMetadata(),
-            $this->operationDefinition->getOperation()
+            $this->operationDefinition->getOperation(),
+            false
         );
 
         if (($contentType === 'application/json') && ($authorization === 'adminOauth')) {

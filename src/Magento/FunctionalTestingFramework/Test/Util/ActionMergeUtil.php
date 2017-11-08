@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
@@ -17,7 +18,7 @@ class ActionMergeUtil
 {
     const STEP_MISSING_ERROR_MSG =
         "Merge Error - Step could not be found in either TestXML or DeltaXML.
-        \tTest = '%s'\tTestStep='%s'\tLinkedStep'%s'";
+        \t%s = '%s'\tTestStep='%s'\tLinkedStep'%s'";
 
     const WAIT_ATTR = 'timeout';
     const WAIT_ACTION_NAME = 'waitForPageLoad';
@@ -39,11 +40,29 @@ class ActionMergeUtil
     private $stepsToMerge = [];
 
     /**
-     * ActionMergeUtil constructor.
+     * Name of calling context.
+     *
+     * @var string
      */
-    public function __construct()
+    private $name;
+
+    /**
+     * Type of calling context.
+     *
+     * @var string
+     */
+    private $type;
+
+    /**
+     * ActionMergeUtil constructor.
+     *
+     * @param string $contextName
+     * @param string $contextType
+     */
+    public function __construct($contextName, $contextType)
     {
-        // empty constructor
+        $this->name = $contextName;
+        $this->type = $contextType;
     }
 
     /**
@@ -69,6 +88,7 @@ class ActionMergeUtil
      * Method to resolve action group references and insert relevant actions into step flow
      *
      * @param array $mergedSteps
+     * @throws TestReferenceException
      * @return array
      */
     private function resolveActionGroups($mergedSteps)
@@ -78,9 +98,11 @@ class ActionMergeUtil
         foreach ($mergedSteps as $key => $mergedStep) {
             /**@var ActionObject $mergedStep**/
             if ($mergedStep->getType() == ActionObjectExtractor::ACTION_GROUP_TAG) {
-                $actionGroup = ActionGroupObjectHandler::getInstance()->getObject(
-                    $mergedStep->getCustomActionAttributes()[ActionObjectExtractor::ACTION_GROUP_REF]
-                );
+                $actionGroupRef = $mergedStep->getCustomActionAttributes()[ActionObjectExtractor::ACTION_GROUP_REF];
+                $actionGroup = ActionGroupObjectHandler::getInstance()->getObject($actionGroupRef);
+                if ($actionGroup == null) {
+                    throw new TestReferenceException("Could not find ActionGroup by ref \"{$actionGroupRef}\"");
+                }
                 $args = $mergedStep->getCustomActionAttributes()[ActionObjectExtractor::ACTION_GROUP_ARGUMENTS] ?? null;
                 $actionsToMerge = $actionGroup->getSteps($args, $key);
                 $newOrderedList = $newOrderedList + $actionsToMerge;
@@ -168,7 +190,8 @@ class ActionMergeUtil
             !array_key_exists($linkedStep, $this->stepsToMerge)) {
             throw new XmlException(sprintf(
                 self::STEP_MISSING_ERROR_MSG,
-                $this->getName(),
+                $this->type,
+                $this->name,
                 $stepToMerge->getMergeKey(),
                 $linkedStep
             ));

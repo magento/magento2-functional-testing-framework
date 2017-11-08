@@ -70,7 +70,7 @@ class Flat implements ConverterInterface
         $value = [];
         /** @var \DOMNode $node */
         foreach ($source->childNodes as $node) {
-            if ($node->nodeType == XML_ELEMENT_NODE) {
+            if ($node->nodeType == XML_ELEMENT_NODE && $node->getAttribute('remove') != 'true') {
                 $nodeName = $node->nodeName;
                 $nodePath = $basePath . '/' . $nodeName;
 

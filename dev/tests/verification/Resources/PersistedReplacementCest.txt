@@ -26,8 +26,8 @@ class PersistedReplacementCest
 	public function _before(AcceptanceTester $I)
 	{
 		$I->amGoingTo("create entity that has the mergeKey: createData1");
-		$replacementPerson = DataObjectHandler::getInstance()->getObject("replacementPerson");
-		$this->createData1 = new DataPersistenceHandler($replacementPerson);
+		$ReplacementPerson = DataObjectHandler::getInstance()->getObject("ReplacementPerson");
+		$this->createData1 = new DataPersistenceHandler($ReplacementPerson);
 		$this->createData1->createEntity();
 	}
 
@@ -39,12 +39,12 @@ class PersistedReplacementCest
 	public function PersistedReplacementTest(AcceptanceTester $I)
 	{
 		$I->amGoingTo("create entity that has the mergeKey: testScopeData");
-		$replacementPerson = DataObjectHandler::getInstance()->getObject("replacementPerson");
-		$testScopeData = new DataPersistenceHandler($replacementPerson);
+		$ReplacementPerson = DataObjectHandler::getInstance()->getObject("ReplacementPerson");
+		$testScopeData = new DataPersistenceHandler($ReplacementPerson);
 		$testScopeData->createEntity();
 		$I->amGoingTo("create entity that has the mergeKey: uniqueData");
-		$uniquePerson = DataObjectHandler::getInstance()->getObject("uniquePerson");
-		$uniqueData = new DataPersistenceHandler($uniquePerson);
+		$UniquePerson = DataObjectHandler::getInstance()->getObject("UniquePerson");
+		$uniqueData = new DataPersistenceHandler($UniquePerson);
 		$uniqueData->createEntity();
 		$I->amOnPage("/success/success2.html");
 		$I->amOnPage($testScopeData->getCreatedDataByName('firstname') . ".html");

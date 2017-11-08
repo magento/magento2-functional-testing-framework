@@ -235,7 +235,7 @@ class MagentoWebDriver extends WebDriver
     /**
      * Parse float number with thousands_sep.
      *
-     * @param $floatString
+     * @param string $floatString
      * @return float
      */
     public function parseFloat($floatString){
@@ -283,8 +283,9 @@ class MagentoWebDriver extends WebDriver
      * Conditional click for an area that should be visible
      *
      * @param string $selector
-     * @param string dependentSelector
+     * @param string $dependentSelector
      * @param bool $visible
+     * @throws \Exception
      */
     public function conditionalClick($selector, $dependentSelector, $visible)
     {
@@ -303,6 +304,16 @@ class MagentoWebDriver extends WebDriver
         if ($clickCondition) {
             $this->click($selector);
         }
+    }
+
+    /**
+     * Clear the given Text Field or Textarea
+     *
+     * @param string $selector
+     */
+    public function clearField($selector)
+    {
+        $this->fillField($selector, "");
     }
 
     /**
