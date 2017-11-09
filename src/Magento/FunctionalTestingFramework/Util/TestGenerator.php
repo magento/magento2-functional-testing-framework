@@ -451,7 +451,7 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['dependentSelector'])) {
-                $dependentSelector = $this->wrapWithDoubleQuotes($customActionAttributes['dependentSelector']);
+                $dependentSelector = $this->addUniquenessFunctionCall($customActionAttributes['dependentSelector']);
             }
 
             if (isset($customActionAttributes['visible'])) {

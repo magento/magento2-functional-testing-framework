@@ -38,34 +38,17 @@ class PersistedReplacementCest
 	 */
 	public function PersistedReplacementTest(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the mergeKey: testScopeData");
-		$ReplacementPerson = DataObjectHandler::getInstance()->getObject("ReplacementPerson");
-		$testScopeData = new DataPersistenceHandler($ReplacementPerson);
-		$testScopeData->createEntity();
-		$I->amGoingTo("create entity that has the mergeKey: uniqueData");
-		$UniquePerson = DataObjectHandler::getInstance()->getObject("UniquePerson");
-		$uniqueData = new DataPersistenceHandler($UniquePerson);
-		$uniqueData->createEntity();
-		$I->amOnPage("/success/success2.html");
-		$I->amOnPage($testScopeData->getCreatedDataByName('firstname') . ".html");
-		$I->amOnPage($this->createData1->getCreatedDataByName('firstname') . ".html");
-		$I->amOnPage("/" . $testScopeData->getCreatedDataByName('firstname') . "/" . $testScopeData->getCreatedDataByName('lastname') . ".html");
-		$I->amOnPage("/" . $this->createData1->getCreatedDataByName('firstname') . "/" . $this->createData1->getCreatedDataByName('lastname') . ".html");
-		$I->click("#element ." . $testScopeData->getCreatedDataByName('firstname'));
-		$I->click("#" . $testScopeData->getCreatedDataByName('firstname') . " .success");
-		$I->click("#John-Doe ." . $testScopeData->getCreatedDataByName('lastname'));
-		$I->click("#" . $testScopeData->getCreatedDataByName('firstname') . " ." . $testScopeData->getCreatedDataByName('lastname'));
-		$I->click("#" . $this->createData1->getCreatedDataByName('firstname') . " ." . $this->createData1->getCreatedDataByName('lastname'));
-		$I->fillField("#sample", "Hello " . $testScopeData->getCreatedDataByName('firstname') . " " . $testScopeData->getCreatedDataByName('lastname'));
-		$I->fillField("#sample", "Hello " . $this->createData1->getCreatedDataByName('firstname') . " " . $this->createData1->getCreatedDataByName('lastname'));
-		$I->searchAndMultiSelectOption("#selector", [$testScopeData->getCreatedDataByName('lastname')]);
-		$I->searchAndMultiSelectOption("#selector", [$this->createData1->getCreatedDataByName('lastname')]);
-		$I->amOnPage($uniqueData->getCreatedDataByName('firstname') . ".html");
-		$I->amOnPage("/" . $uniqueData->getCreatedDataByName('firstname') . "/" . $uniqueData->getCreatedDataByName('lastname') . ".html");
-		$I->click("#element ." . $uniqueData->getCreatedDataByName('firstname'));
-		$I->click("#" . $uniqueData->getCreatedDataByName('firstname') . " .success");
-		$I->click("#" . $uniqueData->getCreatedDataByName('firstname'));
-		$I->dragAndDrop($uniqueData->getCreatedDataByName('firstname'), $uniqueData->getCreatedDataByName('firstname'));
-		$I->dragAndDrop("#element ." . $uniqueData->getCreatedDataByName('firstname'), "#" . $uniqueData->getCreatedDataByName('firstname') . " .success");
+		$I->amGoingTo("create entity that has the mergeKey: createdData");
+		$simpleData = DataObjectHandler::getInstance()->getObject("simpleData");
+		$createdData = new DataPersistenceHandler($simpleData);
+		$createdData->createEntity();
+		$I->fillField("#selector", "StringBefore " . $createdData->getCreatedDataByName('firstname') . " StringAfter");
+		$I->fillField("#" . $createdData->getCreatedDataByName('firstname'), "input");
+		$I->dragAndDrop("#" . $createdData->getCreatedDataByName('firstname'), $createdData->getCreatedDataByName('lastname'));
+		$I->conditionalClick($createdData->getCreatedDataByName('lastname'), "#" . $createdData->getCreatedDataByName('firstname'), true);
+		$I->amOnUrl($createdData->getCreatedDataByName('firstname') . ".html");
+		$I->searchAndMultiSelectOption("#selector", [$createdData->getCreatedDataByName('firstname') . "", "" . $createdData->getCreatedDataByName('lastname')]);
+		$I->fillField("#selector", "John " . $createdData->getCreatedDataByName('firstname') . " stringLiteral");
+		$I->searchAndMultiSelectOption("#selector", [$createdData->getCreatedDataByName('firstname') . "", "John", "stringLiteral"]);
 	}
 }
