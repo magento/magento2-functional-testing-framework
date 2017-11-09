@@ -1,9 +1,19 @@
-Copyright © 2013-2017 Magento, Inc.
+Copyright © 2013-present Magento, Inc.
 
-Each Magento source file included in this distribution is licensed under OSL 3.0 or the Magento Enterprise Edition (MEE) license
+GNU Affero General Public License Usage
+Unless otherwise indicated within the source file, each source file included in this source tree may be used under the
+terms of version 3 of the GNU Affero General Public License (AGPL-3.0) as published by the Free Software Foundation.
+The full text of the AGPL-3.0 is provided in the LICENSE_AGPL3 file included in the root directory of this source tree
+and also available at: https://www.gnu.org/licenses/agpl-3.0.html
 
-http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-Please see LICENSE.txt for the full text of the OSL 3.0 license or contact license@magentocommerce.com for a copy.
+Commercial License Usage
+Alternatively, unless otherwise indicated within the source file and subject to licensee's payment of all applicable
+fees and compliance with the terms of the Magento Enterprise Edition Agreement (MEEA), licensees holding a valid MEEA
+may use each source file included in this source tree under the terms of the MEEA. The full text of the MEEA is
+provided in the LICENSE_MEAA file included in the root directory of this source tree and also available at:
+http://magento.com/legal/terms/enterprise
 
-Subject to Licensee's payment of fees and compliance with the terms and conditions of the MEE License, the MEE License supersedes the OSL 3.0 license for each source file.
-Please see LICENSE_EE.txt for the full text of the MEE License or visit http://magento.com/legal/terms/enterprise.
+Academic Free License Usage
+As explicitly indicated therein, certain source files included in this source tree may be used under the terms of
+version 3 of the Academic Free License (AFL-3.0).  The full text of the AFL-3.0 is provided in the LICENSE_AFL3 file
+included in the root directory of this source tree and also available at: https://opensource.org/licenses/afl-3.0
