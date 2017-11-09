@@ -67,5 +67,15 @@ class PersistedReplacementCest
 		$I->click("#" . $uniqueData->getCreatedDataByName('firstname'));
 		$I->dragAndDrop($uniqueData->getCreatedDataByName('firstname'), $uniqueData->getCreatedDataByName('firstname'));
 		$I->dragAndDrop("#element ." . $uniqueData->getCreatedDataByName('firstname'), "#" . $uniqueData->getCreatedDataByName('firstname') . " .success");
+		$I->assertStringStartsNotWith("D", $this->createData1->getCreatedDataByName('lastname') . ", " . $this->createData1->getCreatedDataByName('firstname'), "fail");
+		$I->assertStringStartsWith("W", $uniqueData->getCreatedDataByName('firstname') . " " . $uniqueData->getCreatedDataByName('lastname'), "pass");
+		$I->assertEquals($this->createData1->getCreatedDataByName('lastname'), $this->createData1->getCreatedDataByName('lastname'), "pass");
+		$I->assertFileExists("../Data/SampleData.xml", "pass");
+		$I->assertArraySubset([$this->createData1->getCreatedDataByName('lastname') . "", "" . $this->createData1->getCreatedDataByName('firstname')], [$this->createData1->getCreatedDataByName('lastname') . "", "" . $this->createData1->getCreatedDataByName('firstname') . "", "1"], "pass");
+		$I->assertArraySubset([$uniqueData->getCreatedDataByName('firstname') . "", "" . $uniqueData->getCreatedDataByName('lastname')], [$uniqueData->getCreatedDataByName('firstname') . "", "" . $uniqueData->getCreatedDataByName('lastname') . "", "1"], "pass");
+		$I->assertArrayHasKey("lastname", ['lastname' => $this->createData1->getCreatedDataByName('lastname') . "", 'firstname' => "" . $this->createData1->getCreatedDataByName('firstname')], "pass");
+		$I->assertArrayHasKey("lastname", ['lastname' => $uniqueData->getCreatedDataByName('lastname') . "", 'firstname' => "" . $uniqueData->getCreatedDataByName('firstname')], "pass");
+		$I->fail($uniqueData->getCreatedDataByName('firstname') . " " . $uniqueData->getCreatedDataByName('lastname'));
+		$I->fail($this->createData1->getCreatedDataByName('firstname') . " " . $this->createData1->getCreatedDataByName('lastname'));
 	}
 }

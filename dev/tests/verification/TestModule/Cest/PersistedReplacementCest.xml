@@ -61,7 +61,22 @@
             <!-- selector1/2 replacement -->
             <dragAndDrop selector1="$uniqueData.firstname$" selector2="$uniqueData.firstname$" mergeKey="j1"/>
             <dragAndDrop selector1="{{SampleSection.oneParamElement($uniqueData.firstname$)}}" selector2="{{SampleSection.twoParamElement($uniqueData.firstname$,'success')}}" mergeKey="j2"/>
+            
+            <!-- expected, actual replacements -->
+            <assertStringStartsNotWith mergeKey="assert1" expected="D" actual="$$createData1.lastname$$, $$createData1.firstname$$" message="fail"/>
+            <assertStringStartsWith mergeKey="assert2" expected="W" actual="$uniqueData.firstname$ $uniqueData.lastname$" message="pass"/>
+            <assertEquals mergeKey="assert5" expected="$$createData1.lastname$$" actual="$$createData1.lastname$$" message="pass"/>
+            <assertFileExists mergeKey="assert6" actual="../Data/SampleData.xml" message="pass"/>
 
+            <!-- expectedArray, actualArray replacements -->
+            <assertArraySubset mergeKey="assert9" expectedArray="[$$createData1.lastname$$, $$createData1.firstname$$]" actualArray="[$$createData1.lastname$$, $$createData1.firstname$$, 1]" message="pass"/>
+            <assertArraySubset mergeKey="assert10" expectedArray="[$uniqueData.firstname$, $uniqueData.lastname$]" actualArray="[$uniqueData.firstname$, $uniqueData.lastname$, 1]" message="pass"/>
+            <assertArrayHasKey mergeKey="assert3" expected="lastname" actualArray="[['lastname' => $$createData1.lastname$$], ['firstname' => $$createData1.firstname$$]" message="pass"/>
+            <assertArrayHasKey mergeKey="assert4" expected="lastname" actualArray="[['lastname' => $uniqueData.lastname$], ['firstname' => $uniqueData.firstname$]" message="pass"/>
+
+            <!-- message replacements -->
+            <fail mergeKey="assert7" message="$uniqueData.firstname$ $uniqueData.lastname$"/>
+            <fail mergeKey="assert8" message="$$createData1.firstname$$ $$createData1.lastname$$"/>
         </test>
     </cest>
 </config>
