@@ -64,10 +64,17 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute type="notEmptyType" name="selector" use="required">
+            <xs:attribute type="notEmptyType" name="selector" use="optional">
                 <xs:annotation>
                     <xs:documentation>
-                        Selector of the element.
+                        Selector of the element. Optional due to being able to use either this or locatorFunction.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="notEmptyType" name="locatorFunction" use="optional">
+                <xs:annotation>
+                    <xs:documentation>
+                        LocatorFunction of an element, substitute for a selector.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
