@@ -22,8 +22,8 @@
     <xs:complexType name="cestType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
             <xs:element type="annotationsType" name="annotations" minOccurs="0"/>
-            <xs:element type="testType" name="before" minOccurs="0"/>
-            <xs:element type="testType" name="after" minOccurs="0"/>
+            <xs:element type="hookType" name="before" minOccurs="0"/>
+            <xs:element type="hookType" name="after" minOccurs="0"/>
             <xs:element type="testType" name="test" maxOccurs="unbounded"/>
         </xs:choice>
         <xs:attribute type="xs:string" name="name" use="required"/>
@@ -65,6 +65,11 @@
                 <xs:attribute type="xs:string" name="value" use="required"/>
             </xs:extension>
         </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="hookType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="actionTypeTags"/>
+        </xs:choice>
     </xs:complexType>
     <xs:complexType name="testType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">

@@ -1,0 +1,59 @@
+<?php
+namespace Magento\AcceptanceTest\_generated\Backend;
+
+use Magento\FunctionalTestingFramework\AcceptanceTester;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
+use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
+use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
+use Yandex\Allure\Adapter\Annotation\Title;
+use Yandex\Allure\Adapter\Annotation\Description;
+use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
+use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
+
+/**
+ */
+class SectionReplacementCest
+{
+	/**
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 */
+	public function SectionReplacementTest(AcceptanceTester $I)
+	{
+		$I->click("#element");
+		$I->click("#foo");
+		$I->waitForPageLoad(30);
+		$I->click("#element .stringLiteral");
+		$I->click("#stringLiteral1 .stringLiteral2");
+		$I->click("#stringLiteral1-stringLiteral2 .stringLiteral3");
+		$I->click("#stringLiteral1-stringLiteral2 .stringLiteral1 [stringLiteral3]");
+		$I->click("#element .John");
+		$I->click("#John .Doe");
+		$I->click("#John-Doe .Tiberius");
+		$I->click("#John-Doe .John [Tiberius]");
+		$I->click("#element .".msq("uniqueData")."John");
+		$I->click("#".msq("uniqueData")."John .stringLiteral2");
+		$I->click("#".msq("uniqueData")."John-stringLiteral2 .stringLiteral3");
+		$I->click("#".msq("uniqueData")."John-stringLiteral2 .");
+		$I->click("#element .Doe".msq("uniqueData"));
+		$I->click("#Doe".msq("uniqueData")." .stringLiteral2");
+		$I->click("#Doe".msq("uniqueData")."-stringLiteral2 .stringLiteral3");
+		$I->click("#Doe".msq("uniqueData")."-stringLiteral2 .Doe");
+		$I->amGoingTo("create entity that has the mergeKey: createdData");
+		$simpleData = DataObjectHandler::getInstance()->getObject("simpleData");
+		$createdData = new DataPersistenceHandler($simpleData);
+		$createdData->createEntity();
+		$I->click("#element ." . $createdData->getCreatedDataByName('firstname'));
+		$I->click("#" . $createdData->getCreatedDataByName('firstname') . " .stringLiteral2");
+		$I->click("#" . $createdData->getCreatedDataByName('firstname') . "-stringLiteral2 .stringLiteral3");
+		$I->click("#" . $createdData->getCreatedDataByName('firstname') . "-stringLiteral2 ." . $createdData->getCreatedDataByName('firstname') . " [stringLiteral3]");
+		$I->click("#stringLiteral1-" . $createdData->getCreatedDataByName('firstname') . " .John");
+		$I->click("#stringLiteral1-" . $createdData->getCreatedDataByName('firstname') . " .".msq("uniqueData")."John");
+		$I->click("#stringLiteral1-" . $createdData->getCreatedDataByName('firstname') . " .Doe".msq("uniqueData"));
+	}
+}

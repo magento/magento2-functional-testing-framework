@@ -63,6 +63,9 @@ class TestObjectExtractor extends BaseCestObjectExtractor
                 continue;
             }
 
+            // validate the test name for blacklisted char (will cause allure report issues) MQE-483
+            TestNameValidationUtil::validateName($testName);
+
             $testAnnotations = [];
             $testActions = $this->stripDescriptorTags(
                 $testData,

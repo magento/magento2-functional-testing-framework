@@ -11,4 +11,13 @@
     <page name="SamplePage" url="/{{var1}}/{{var2}}.html" module="SampleTests" parameterized="true">
         <section name="SampleSection"/>
     </page>
+    <page name="NoParamPage" url="/page.html" module="SampleTests">
+        <section name="SampleSection"/>
+    </page>
+    <page name="OneParamPage" url="/{{var1}}/page.html" module="SampleTests" parameterized="true">
+        <section name="SampleSection"/>
+    </page>
+    <page name="TwoParamPage" url="/{{var1}}/{{var2}}.html" module="SampleTests" parameterized="true">
+        <section name="SampleSection"/>
+    </page>
 </config>

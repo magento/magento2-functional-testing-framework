@@ -373,6 +373,7 @@ class ActionObject
     private function matchParameterReferences($reference, $parameters)
     {
         preg_match_all('/{{[\w.]+}}/', $reference, $varMatches);
+        $varMatches[0] = array_unique($varMatches[0]);
         if (count($varMatches[0]) > count($parameters)) {
             if (is_array($parameters)) {
                 $parametersGiven = implode(",", $parameters);
