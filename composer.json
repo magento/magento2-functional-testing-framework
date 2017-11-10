@@ -13,11 +13,17 @@
     "require-dev": {
         "squizlabs/php_codesniffer": "1.5.3",
         "sebastian/phpcpd": "~3.0",
-        "brainmaestro/composer-git-hooks": "^2.3"
+        "brainmaestro/composer-git-hooks": "^2.3",
+        "codeception/aspect-mock": "^2.0"
     },
     "autoload": {
         "psr-4": {
             "Magento\\FunctionalTestingFramework\\": ["src/Magento/FunctionalTestingFramework"]
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "tests\\unit\\Magento\\FunctionalTestingFramework\\": ["dev/tests/unit/Magento/FunctionalTestingFramework"]
         }
     },
     "extra": {

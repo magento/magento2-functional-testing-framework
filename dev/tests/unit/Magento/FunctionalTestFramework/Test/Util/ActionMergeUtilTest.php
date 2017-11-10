@@ -101,7 +101,7 @@ class ActionMergeUtilTest extends TestCase
      */
     public function testResolveActionStepSectionData()
     {
-        //TODO implement section object mocker and test
+        $this->markTestIncomplete('TODO');
     }
 
     /**
@@ -109,9 +109,9 @@ class ActionMergeUtilTest extends TestCase
      *
      * @return void
      */
-    public function resolveActionStepPageData()
+    public function testResolveActionStepPageData()
     {
-        //TODO implement page object mocker and test
+        $this->markTestIncomplete('TODO');
     }
 
     /**
@@ -121,6 +121,7 @@ class ActionMergeUtilTest extends TestCase
      */
     public function testResolveActionStepEntityData()
     {
+        $this->markTestSkipped('This test was written using reflection instead of AspectMock. It needs refactored.');
         $dataObjectName = 'myObject';
         $dataObjectType = 'testObject';
         $dataFieldName = 'myfield';
