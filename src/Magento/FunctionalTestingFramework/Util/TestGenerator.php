@@ -552,40 +552,48 @@ class TestGenerator
                     }
                     break;
                 case "updateData":
-                    $entity = $customActionAttributes['entity'];
-                    $originalEntity = null;
-                    if (isset($customActionAttributes['createDataKey'])) {
-                        $originalEntity = $customActionAttributes['createDataKey'];
-                    }
-                    $key = $steps->getMergeKey();
+                    $key = $customActionAttributes['createDataKey'];
+                    $updateEntity = $customActionAttributes['entity'];
+
                     //Add an informative statement to help the user debug test runs
                     $testSteps .= sprintf(
-                        "\t\t$%s->amGoingTo(\"update entity that has the mergeKey: %s\");\n",
+                        "\t\t$%s->amGoingTo(\"update entity that has the createdDataKey: %s\");\n",
                         $actor,
                         $key
                     );
-                    //Get Entity from Static data.
-                    $testSteps .= sprintf(
-                        "\t\t$%s = DataObjectHandler::getInstance()->getObject(\"%s\");\n",
-                        $entity,
-                        $entity
-                    );
+
+                    //HookObject End-Product needs to be created in the Class/Cest scope,
+                    //otherwise create them in the Test scope.
+                    //Determine if there are required-entities and create array of required-entities for merging.
+                    $requiredEntities = [];
+                    $requiredEntityObjects = [];
+                    foreach ($customActionAttributes as $customAttribute) {
+                        if (is_array($customAttribute) && $customAttribute['nodeName'] = 'required-entity') {
+                            if ($hookObject) {
+                                $requiredEntities [] = "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
+                                    "->getName() => " . "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
+                                    "->getType()";
+                                $requiredEntityObjects [] = '$this->' . $customAttribute
+                                    [self::REQUIRED_ENTITY_REFERENCE];
+                            } else {
+                                $requiredEntities [] = "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE]
+                                    . "->getName() => " . "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
+                                    "->getType()";
+                                $requiredEntityObjects [] = '$' . $customAttribute[self::REQUIRED_ENTITY_REFERENCE];
+                            }
+                        }
+                    }
 
                     if ($hookObject) {
-                        $updateEntityFunctionCall = sprintf("\t\t\$this->%s->updateEntity(", $key);
-                        $dataPersistenceHandlerFunctionCall = sprintf(
-                            "\t\t\$this->%s = new DataPersistenceHandler($%s, [\$this->%s]);\n",
-                            $key,
-                            $entity,
-                            $originalEntity
-                        );
+                        $updateEntityFunctionCall = sprintf("\t\t\$this->%s->updateEntity(\"%s\"", $key, $updateEntity);
                     } else {
-                        $updateEntityFunctionCall = sprintf("\t\t\$%s->updateEntity(", $key);
-                        $dataPersistenceHandlerFunctionCall = sprintf(
-                            "\t\t$%s = new DataPersistenceHandler($%s, [$%s]);\n",
-                            $key,
-                            $entity,
-                            $originalEntity
+                        $updateEntityFunctionCall = sprintf("\t\t\$%s->updateEntity(\"%s\"", $key, $updateEntity);
+                    }
+
+                    if (!empty($requiredEntities)) {
+                        $updateEntityFunctionCall .= sprintf(
+                            ", [%s]",
+                            implode(', ', $requiredEntityObjects)
                         );
                     }
 
@@ -595,7 +603,6 @@ class TestGenerator
                         $updateEntityFunctionCall .= ");\n";
                     }
 
-                    $testSteps .= $dataPersistenceHandlerFunctionCall;
                     $testSteps .= $updateEntityFunctionCall;
                     break;
                 case "getData":
