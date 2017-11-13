@@ -19,8 +19,8 @@ class SectionObjectTest extends TestCase
      * Assert that the section object has an element
      */
     public function testHasElement() {
-        $element1 = new ElementObject('element1', 'type', '#selector', '41', false);
-        $element2 = new ElementObject('element2', 'type', '#selector', '42', true);
+        $element1 = new ElementObject('element1', 'type', '#selector', null, '41', false);
+        $element2 = new ElementObject('element2', 'type', '#selector', null, '42', true);
         $elements = [
             'element1' => $element1,
             'element2' => $element2
@@ -33,7 +33,7 @@ class SectionObjectTest extends TestCase
      * Assert that the section object doesn't have an element
      */
     public function testDoesntHaveElement() {
-        $element2 = new ElementObject('element2', 'type', '#selector', '42', true);
+        $element2 = new ElementObject('element2', 'type', '#selector', null, '42', true);
         $elements = [
             'element2' => $element2
         ];
@@ -45,8 +45,8 @@ class SectionObjectTest extends TestCase
      * Assert that an element object is returned
      */
     public function testGetElement() {
-        $element1 = new ElementObject('element1', 'type', '#selector', '41', false);
-        $element2 = new ElementObject('element2', 'type', '#selector', '42', true);
+        $element1 = new ElementObject('element1', 'type', '#selector', null, '41', false);
+        $element2 = new ElementObject('element2', 'type', '#selector', null, '42', true);
         $elements = [
             'element1' => $element1,
             'element2' => $element2
@@ -61,7 +61,7 @@ class SectionObjectTest extends TestCase
      * Assert that null is returned if no such element
      */
     public function testNullGetElement() {
-        $element1 = new ElementObject('element1', 'type', '#selector', '41', false);
+        $element1 = new ElementObject('element1', 'type', '#selector', null, '41', false);
         $elements = [
             'element1' => $element1
         ];

@@ -50,7 +50,7 @@ class ActionObjectTest extends TestCase
             'selector' => '{{SectionObject.elementObject}}',
             'userInput' => 'Hello world'
         ]);
-        $elementObject = new ElementObject('elementObject', 'button', '#replacementSelector', '42', false);
+        $elementObject = new ElementObject('elementObject', 'button', '#replacementSelector', null, '42', false);
         $sectionObject = new SectionObject('SectionObject', ['elementObject' => $elementObject]);
         $instance = AspectMock::double(SectionObjectHandler::class, ['getObject' => $sectionObject])
             ->make(); // bypass the private constructor
@@ -92,7 +92,7 @@ class ActionObjectTest extends TestCase
         $actionObject = new ActionObject('merge123', 'click', [
             'selector' => '{{SectionObject.elementObject}}'
         ]);
-        $elementObject = new ElementObject('elementObject', 'button', '#replacementSelector', '42', false);
+        $elementObject = new ElementObject('elementObject', 'button', '#replacementSelector', null, '42', false);
         $sectionObject = new SectionObject('SectionObject', ['elementObject' => $elementObject]);
         $instance = AspectMock::double(SectionObjectHandler::class, ['getObject' => $sectionObject])
             ->make(); // bypass the private constructor

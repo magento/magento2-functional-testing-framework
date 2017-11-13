@@ -6,6 +6,7 @@
 
 namespace tests\unit\Magento\FunctionalTestFramework\Page\Objects;
 
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Page\Objects\ElementObject;
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +20,7 @@ class ElementObjectTest extends TestCase
      */
     public function testTimeoutDefault()
     {
-        $element = new ElementObject('name', 'type', 'selector', '-', false);
+        $element = new ElementObject('name', 'type', 'selector', null, '-', false);
         $this->assertNull($element->getTimeout());
     }
 
@@ -28,7 +29,7 @@ class ElementObjectTest extends TestCase
      */
     public function testTimeoutNotNull()
     {
-        $element = new ElementObject('name', 'type', 'selector', '15', false);
+        $element = new ElementObject('name', 'type', 'selector', null, '15', false);
         $timeout = $element->getTimeout();
         $this->assertEquals(15, $timeout);
         $this->assertInternalType('int', $timeout);
@@ -39,9 +40,19 @@ class ElementObjectTest extends TestCase
      */
     public function testTimeoutCastFromString()
     {
-        $element = new ElementObject('name', 'type', 'selector', 'helloString', true);
+        $element = new ElementObject('name', 'type', 'selector', null, 'helloString', true);
         $timeout = $element->getTimeout();
         $this->assertEquals(0, $timeout);
         $this->assertInternalType('int', $timeout);
+    }
+
+
+    /**
+     * An exception should be thrown if both a selector and locatorFunction are passed
+     */
+    public function testBothSelectorAndLocatorFunction()
+    {
+        $this->expectException(XmlException::class);
+        new ElementObject('name', 'type', 'selector', 'cantDoThis', 'helloString', true);
     }
 }
