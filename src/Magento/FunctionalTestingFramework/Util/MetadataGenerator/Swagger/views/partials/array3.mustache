@@ -1,0 +1,12 @@
+{{!
+/**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+}}
+{{! No array is nested more than 2 level in Magento2 swagger spec. }}
+{{# arrays3 }}
+<array key="{{ arrayKey }}">
+    {{> value }}
+</array>
+{{/ arrays3 }}
