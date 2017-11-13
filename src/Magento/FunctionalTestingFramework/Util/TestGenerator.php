@@ -1001,31 +1001,12 @@ class TestGenerator
      */
     private function processQuoteBreaks($match, $argument, $replacement)
     {
-        $outputArg = $argument;
-        $beforeIndex = strpos($outputArg, $match) - 1;
-        $afterIndex = $beforeIndex + strlen($match) + 1;
+        $outputArg = str_replace($match, '" . ' . $replacement . ' . "', $argument);
 
-        $quoteBefore = false;
-        // Determine if there is a " before/after the $match, and if there is only one " before/after match.
-        if ($beforeIndex == 0
-            || ($argument[$beforeIndex] == '"' && substr_count($argument, '"', 0, $beforeIndex) < 1)) {
-            $quoteBefore = true;
-        }
-        $quoteAfter = $argument[$afterIndex] == '"' && substr_count($argument, '"', $afterIndex+1) < 1;
-
-        //Remove quotes at either end of argument if they aren't necessary. Add double-quote concatenation if needed.
-        if ($quoteBefore) {
-            $outputArg = substr($outputArg, 0, $beforeIndex) . substr($outputArg, $beforeIndex+1);
-            $afterIndex--;
-        } else {
-            $replacement = '" . ' . $replacement;
-        }
-        if ($quoteAfter) {
-            $outputArg = substr($outputArg, 0, $afterIndex) . substr($outputArg, $afterIndex+1);
-        } else {
-            $replacement = $replacement . ' . "';
-        }
-        $outputArg = str_replace($match, $replacement, $outputArg);
+        //Sanitize string of any unnecessary '"" .' and '. ""'.
+        //Regex means: Search for '"" . ' but not '\"" . '  and ' . ""'.
+        //Matches on '"" . ' and ' . ""', but not on '\"" . ' and ' . "\"'.
+        $outputArg = preg_replace('/(?(?<![\\\\])"" \. )| \. ""/', "", $outputArg);
         return $outputArg;
     }
 

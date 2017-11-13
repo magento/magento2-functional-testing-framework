@@ -110,7 +110,7 @@ class ActionGroupFunctionalCest
 		$I->amOnPage("/" . $createPerson->getCreatedDataByName('firstname') . "/" . $createPerson->getCreatedDataByName('lastname') . ".html");
 		$I->fillField("#foo", $createPerson->getCreatedDataByName('firstname'));
 		$I->fillField("#bar", $createPerson->getCreatedDataByName('lastname'));
-		$I->searchAndMultiSelectOption("#foo", [$createPerson->getCreatedDataByName('firstname') . "", "" . $createPerson->getCreatedDataByName('lastname')]);
+		$I->searchAndMultiSelectOption("#foo", [$createPerson->getCreatedDataByName('firstname'), $createPerson->getCreatedDataByName('lastname')]);
 		$I->see("#element ." . $createPerson->getCreatedDataByName('firstname'));
 	}
 
@@ -124,7 +124,7 @@ class ActionGroupFunctionalCest
 		$I->amOnPage("/" . $this->createPersonParam->getCreatedDataByName('firstname') . "/" . $this->createPersonParam->getCreatedDataByName('lastname') . ".html");
 		$I->fillField("#foo", $this->createPersonParam->getCreatedDataByName('firstname'));
 		$I->fillField("#bar", $this->createPersonParam->getCreatedDataByName('lastname'));
-		$I->searchAndMultiSelectOption("#foo", [$this->createPersonParam->getCreatedDataByName('firstname') . "", "" . $this->createPersonParam->getCreatedDataByName('lastname')]);
+		$I->searchAndMultiSelectOption("#foo", [$this->createPersonParam->getCreatedDataByName('firstname'), $this->createPersonParam->getCreatedDataByName('lastname')]);
 		$I->see("#element ." . $this->createPersonParam->getCreatedDataByName('firstname'));
 	}
 
