@@ -5,6 +5,8 @@
  */
 namespace Magento\FunctionalTestingFramework\Page\Objects;
 
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
+
 /**
  * Class ElementObject
  */
@@ -34,6 +36,13 @@ class ElementObject
     private $selector;
 
     /**
+     * Section element locatorFunction
+     *
+     * @var string
+     */
+    private $locatorFunction;
+
+    /**
      * Section element timeout
      *
      * @var string $timeout
@@ -52,14 +61,25 @@ class ElementObject
      * @param string $name
      * @param string $type
      * @param string $selector
+     * @param string $locatorFunction
      * @param string $timeout
      * @param bool $parameterized
+     * @throws XmlException
      */
-    public function __construct($name, $type, $selector, $timeout, $parameterized)
+    public function __construct($name, $type, $selector, $locatorFunction, $timeout, $parameterized)
     {
+        //Elements cannot have both a selector and a locatorFunction defined
+        if ($selector != null && $locatorFunction != null) {
+            throw new XmlException("Element '{$name}' cannot have both a selector and a locatorFunction.");
+        }
+
         $this->name = $name;
         $this->type = $type;
         $this->selector = $selector;
+        $this->locatorFunction = $locatorFunction;
+        if (strpos($locatorFunction, "Locator::") === false) {
+            $this->locatorFunction = "Locator::" . $locatorFunction;
+        }
         $this->timeout = $timeout;
         $this->parameterized = $parameterized;
     }
@@ -92,6 +112,16 @@ class ElementObject
     public function getSelector()
     {
         return $this->selector;
+    }
+
+    /**
+     * Getter for the locatorFunction of an element
+     *
+     * @return string
+     */
+    public function getLocatorFunction()
+    {
+        return $this->locatorFunction;
     }
 
     /**

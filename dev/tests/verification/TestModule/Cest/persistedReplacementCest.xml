@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <cest name="PersistedReplacementCest">
+        <before>
+            <createData entity="ReplacementPerson" mergeKey="createData1"/>
+        </before>
+        <test name="PersistedReplacementTest">
+            <createData entity="simpleData" mergeKey="createdData"/>
+
+            <fillField mergeKey="inputReplace" selector="#selector" userInput="StringBefore $createdData.firstname$ StringAfter"/>
+            <fillField mergeKey="selectorReplace" selector="#$createdData.firstname$" userInput="input"/>
+            <dragAndDrop mergeKey="selector12Replace" selector1="#$createdData.firstname$" selector2="$createdData.lastname$"/>
+            <conditionalClick mergeKey="dependentSelectorReplace" dependentSelector="#$createdData.firstname$" selector="$createdData.lastname$" visible="true"/>
+            <amOnUrl mergeKey="urlReplace" url="$createdData.firstname$.html"/>
+            <searchAndMultiSelectOption mergeKey="parameterArrayReplacement" selector="#selector" parameterArray="[$createdData.firstname$, $createdData.lastname$]"/>
+            <fillField mergeKey="allTypesMixed" selector="#selector" userInput="{{simpleData.firstname}} $createdData.firstname$ stringLiteral"/>
+            <searchAndMultiSelectOption mergeKey="parameterArrayMixed" selector="#selector" parameterArray="[$createdData.firstname$, {{simpleData.firstname}}, stringLiteral]"/>
+        </test>
+    </cest>
+</config>

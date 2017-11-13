@@ -213,6 +213,7 @@ class TestGenerator
         $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;\n";
         $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;\n";
         $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;\n";
+        $useStatementsPhp .= "use \Codeception\Util\Locator;\n";
 
         $allureStatements = [
             "Yandex\Allure\Adapter\Annotation\Features;",
@@ -392,14 +393,17 @@ class TestGenerator
                 $selector = $customActionAttributes['selectorArray'];
             } elseif (isset($customActionAttributes['selector'])) {
                 $selector = $this->addUniquenessFunctionCall($customActionAttributes['selector']);
+                $selector = $this->resolveLocatorFunctionInAttribute($selector);
             }
 
             if (isset($customActionAttributes['selector1'])) {
                 $selector1 = $this->addUniquenessFunctionCall($customActionAttributes['selector1']);
+                $selector1 = $this->resolveLocatorFunctionInAttribute($selector1);
             }
 
             if (isset($customActionAttributes['selector2'])) {
                 $selector2 = $this->addUniquenessFunctionCall($customActionAttributes['selector2']);
+                $selector2 = $this->resolveLocatorFunctionInAttribute($selector2);
             }
 
             if (isset($customActionAttributes['x'])) {
@@ -451,7 +455,7 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['dependentSelector'])) {
-                $dependentSelector = $this->wrapWithDoubleQuotes($customActionAttributes['dependentSelector']);
+                $dependentSelector = $this->addUniquenessFunctionCall($customActionAttributes['dependentSelector']);
             }
 
             if (isset($customActionAttributes['visible'])) {
@@ -903,6 +907,20 @@ class TestGenerator
     }
 
     /**
+     * Resolves Locator:: in given $attribute if it is found.
+     * @param string $attribute
+     * @return string
+     */
+    private function resolveLocatorFunctionInAttribute($attribute)
+    {
+        if (strpos($attribute, "Locator::") !== false) {
+            $attribute = $this->stripWrappedQuotes($attribute);
+            $attribute = $this->wrapFunctionArgsWithQuotes("/Locator::[\w]+\(([\s\S]+)\)/", $attribute);
+        }
+        return $attribute;
+    }
+
+    /**
      * Resolves replacement of $input$ and $$input$$ in given function, recursing and replacing individual arguments
      * Also determines if each argument requires any quote replacement.
      * @param string $inputString
@@ -1002,6 +1020,42 @@ class TestGenerator
         }
         $outputArg = str_replace($match, $replacement, $outputArg);
         return $outputArg;
+    }
+
+    /**
+     * Wraps all args inside function give with double quotes. Uses regex to locate arguments of function
+     * @param string $functionRegex
+     * @param string $input
+     * @return string
+     */
+    private function wrapFunctionArgsWithQuotes($functionRegex, $input)
+    {
+        $output = $input;
+        preg_match_all($functionRegex, $input, $matches);
+
+        //If no Arguments were passed in
+        if (!isset($matches[1][0])) {
+            return $input;
+        }
+
+        $allArguments = explode(',', $matches[1][0]);
+        foreach ($allArguments as $argument) {
+            $argument = trim($argument);
+
+            if ($argument[0] == "[") {
+                $replacement = "[" . $this->addUniquenessToParamArray($argument) . "]";
+            } elseif (is_numeric($argument)) {
+                $replacement = $argument;
+            } else {
+                $replacement = $this->addUniquenessFunctionCall($argument);
+            }
+
+            //Replace only first occurrence of argument with "argument"
+            $pos = strpos($output, $argument);
+            $output = substr_replace($output, $replacement, $pos, strlen($argument));
+        }
+
+        return $output;
     }
 
     /**

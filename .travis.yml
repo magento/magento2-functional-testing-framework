@@ -3,5 +3,10 @@ php:
   - 7.0
   - 7.1
 install: composer install --no-interaction --prefer-source
+env:
+  matrix:
+    - VERIFICATION_TOOL=copyright-check
+    - VERIFICATION_TOOL=phpunit-checks
+    - VERIFICATION_TOOL=static-checks
 script:
-  - vendor/bin/phpcs ./src --standard=./dev/tests/static/Magento
+  - bin/$VERIFICATION_TOOL

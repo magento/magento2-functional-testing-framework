@@ -4,7 +4,7 @@
  * See COPYING.txt for license details.
  */
 
-require_once '../../../../../vendor/autoload.php';
+require_once '../../../../../../vendor/autoload.php';
 
 const INPUT_TXT_FILE = 'input.yml';
 
@@ -12,7 +12,7 @@ const INPUT_TXT_FILE = 'input.yml';
 $inputCfg = \Symfony\Component\Yaml\Yaml::parse(file_get_contents(INPUT_TXT_FILE));
 
 // create new MetadataGenUtil Object
-$metadataGenUtil = new Magento\FunctionalTestingFramework\Util\MetadataGenerator\MetadataGenUtil(
+$metadataGenUtil = new Magento\FunctionalTestingFramework\Util\MetadataGenerator\FormData\MetadataGenUtil(
     $inputCfg['operationName'],
     $inputCfg['operationDataType'],
     $inputCfg['operationUrl'],

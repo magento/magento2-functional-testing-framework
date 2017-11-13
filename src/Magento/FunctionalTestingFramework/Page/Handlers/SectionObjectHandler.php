@@ -21,6 +21,7 @@ class SectionObjectHandler implements ObjectHandlerInterface
     const SUB_TYPE = 'element';
     const ELEMENT_TYPE_ATTR = 'type';
     const ELEMENT_SELECTOR_ATTR = 'selector';
+    const ELEMENT_LOCATOR_FUNC_ATTR = 'locatorFunction';
     const ELEMENT_TIMEOUT_ATTR = 'timeout';
     const ELEMENT_PARAMETERIZED = 'parameterized';
 
@@ -109,7 +110,8 @@ class SectionObjectHandler implements ObjectHandlerInterface
             $elements = [];
             foreach ($sectionData[SectionObjectHandler::SUB_TYPE] as $elementName => $elementData) {
                 $elementType = $elementData[SectionObjectHandler::ELEMENT_TYPE_ATTR];
-                $elementSelector = $elementData[SectionObjectHandler::ELEMENT_SELECTOR_ATTR];
+                $elementSelector = $elementData[SectionObjectHandler::ELEMENT_SELECTOR_ATTR] ?? null;
+                $elementLocatorFunc = $elementData[SectionObjectHandler::ELEMENT_LOCATOR_FUNC_ATTR] ?? null;
                 $elementTimeout = $elementData[SectionObjectHandler::ELEMENT_TIMEOUT_ATTR] ?? null;
                 $elementParameterized = $elementData[SectionObjectHandler::ELEMENT_PARAMETERIZED] ?? false;
 
@@ -117,6 +119,7 @@ class SectionObjectHandler implements ObjectHandlerInterface
                     $elementName,
                     $elementType,
                     $elementSelector,
+                    $elementLocatorFunc,
                     $elementTimeout,
                     $elementParameterized
                 );

@@ -323,7 +323,9 @@ class ActionObject
                         throw new TestReferenceException("Could not resolve entity reference " . $inputString);
                     }
                     $parameterized = $obj->getElement($objField)->isParameterized();
-                    $replacement = $obj->getElement($objField)->getSelector();
+                    // If no Selector is defined, assume element has LocatorFunction
+                    $replacement = $obj->getElement($objField)->getSelector() ?:
+                        $obj->getElement($objField)->getLocatorFunction();
                     $this->timeout = $obj->getElement($objField)->getTimeout();
                     break;
                 case (get_class($obj) == EntityDataObject::class):
@@ -373,6 +375,7 @@ class ActionObject
     private function matchParameterReferences($reference, $parameters)
     {
         preg_match_all('/{{[\w.]+}}/', $reference, $varMatches);
+        $varMatches[0] = array_unique($varMatches[0]);
         if (count($varMatches[0]) > count($parameters)) {
             if (is_array($parameters)) {
                 $parametersGiven = implode(",", $parameters);
