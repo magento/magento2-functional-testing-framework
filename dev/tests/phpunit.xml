@@ -9,7 +9,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.3/phpunit.xsd"
     convertNoticesToExceptions="false"
-    bootstrap="_bootstrap.php">
+    bootstrap="_bootstrap.php"
+    backupGlobals="false">
     <testsuites>
         <testsuite name="verification">
             <directory>verification</directory>

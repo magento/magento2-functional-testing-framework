@@ -8,6 +8,13 @@ error_reporting(~E_USER_NOTICE);
 define('PROJECT_ROOT', dirname(dirname(__DIR__)));
 require_once PROJECT_ROOT . '/vendor/autoload.php';
 
+// Set up AspectMock
+$kernel = \AspectMock\Kernel::getInstance();
+$kernel->init([
+    'debug' => true,
+    'includePaths' => [PROJECT_ROOT . '/src']
+]);
+
 // Load needed framework env params
 $TEST_ENVS = [
     'MAGENTO_BASE_URL' => 'http://baseurl:8080',
@@ -22,7 +29,6 @@ foreach ($TEST_ENVS as $key => $value) {
 
 // Add our test module to the whitelist
 putenv('MODULE_WHITELIST=Magento_TestModule');
-
 
 // Define our own set of paths for the tests
 defined('FW_BP') || define('FW_BP', PROJECT_ROOT);
