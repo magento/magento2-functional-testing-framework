@@ -68,9 +68,10 @@ class ElementObject
      */
     public function __construct($name, $type, $selector, $locatorFunction, $timeout, $parameterized)
     {
-        //Elements cannot have both a selector and a locatorFunction defined
         if ($selector != null && $locatorFunction != null) {
             throw new XmlException("Element '{$name}' cannot have both a selector and a locatorFunction.");
+        } elseif ($selector == null && $locatorFunction == null) {
+            throw new XmlException("Element '{$name}' must have either a selector or a locatorFunction.'");
         }
 
         $this->name = $name;

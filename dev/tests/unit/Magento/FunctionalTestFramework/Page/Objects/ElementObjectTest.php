@@ -46,13 +46,21 @@ class ElementObjectTest extends TestCase
         $this->assertInternalType('int', $timeout);
     }
 
-
     /**
      * An exception should be thrown if both a selector and locatorFunction are passed
      */
     public function testBothSelectorAndLocatorFunction()
     {
         $this->expectException(XmlException::class);
-        new ElementObject('name', 'type', 'selector', 'cantDoThis', 'helloString', true);
+        new ElementObject('name', 'type', 'selector', 'cantHaveThisAndSelector', '-', false);
+    }
+
+    /**
+     * An exception should be thrown if neither a selector nor locatorFunction are passed
+     */
+    public function testNeitherSelectorNorLocatorFunction()
+    {
+        $this->expectException(XmlException::class);
+        new ElementObject('name', 'type', null, null, '-', false);
     }
 }
