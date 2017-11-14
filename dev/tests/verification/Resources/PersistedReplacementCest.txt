@@ -48,8 +48,8 @@ class PersistedReplacementCest
 		$I->dragAndDrop("#" . $createdData->getCreatedDataByName('firstname'), $createdData->getCreatedDataByName('lastname'));
 		$I->conditionalClick($createdData->getCreatedDataByName('lastname'), "#" . $createdData->getCreatedDataByName('firstname'), true);
 		$I->amOnUrl($createdData->getCreatedDataByName('firstname') . ".html");
-		$I->searchAndMultiSelectOption("#selector", [$createdData->getCreatedDataByName('firstname') . "", "" . $createdData->getCreatedDataByName('lastname')]);
+		$I->searchAndMultiSelectOption("#selector", [$createdData->getCreatedDataByName('firstname'), $createdData->getCreatedDataByName('lastname')]);
 		$I->fillField("#selector", "John " . $createdData->getCreatedDataByName('firstname') . " stringLiteral");
-		$I->searchAndMultiSelectOption("#selector", [$createdData->getCreatedDataByName('firstname') . "", "John", "stringLiteral"]);
+		$I->searchAndMultiSelectOption("#selector", [$createdData->getCreatedDataByName('firstname'), "John", "stringLiteral"]);
 	}
 }

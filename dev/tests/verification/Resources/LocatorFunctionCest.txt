@@ -35,12 +35,12 @@ class LocatorFunctionCest
 		$I->click(Locator::find("'img'", ['title' => 'diagram']));
 		$I->click(Locator::contains("string", "'Name'"));
 		$I->click(Locator::contains("John", "'Name'"));
-		$I->click(Locator::contains($data->getCreatedDataByName('key') . "", "'Name'"));
+		$I->click(Locator::contains($data->getCreatedDataByName('key'), "'Name'"));
 		$I->click(Locator::contains("string1", "string2"));
 		$I->click(Locator::contains("John", "Doe"));
-		$I->click(Locator::contains($data->getCreatedDataByName('key1') . "", "" . $data->getCreatedDataByName('key2')));
+		$I->click(Locator::contains($data->getCreatedDataByName('key1'), $data->getCreatedDataByName('key2')));
 		$I->click(Locator::contains("string1", "John"));
-		$I->click(Locator::contains("string1", "" . $data->getCreatedDataByName('key1')));
-		$I->click(Locator::contains("John", "" . $data->getCreatedDataByName('key1')));
+		$I->click(Locator::contains("string1", $data->getCreatedDataByName('key1')));
+		$I->click(Locator::contains("John", $data->getCreatedDataByName('key1')));
 	}
 }
