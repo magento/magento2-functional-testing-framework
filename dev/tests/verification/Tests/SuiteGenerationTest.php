@@ -56,8 +56,8 @@ class SuiteGenerationTest extends TestCase
             $groupName .
             DIRECTORY_SEPARATOR .
             TestManifest::TEST_MANIFEST_FILENAME;
-        $expectedManifest = self::RESOURCES_DIR .  DIRECTORY_SEPARATOR . __FUNCTION__ . ".txt";
-        $this->assertFileEquals($expectedManifest, $actualManifest);
+        $expectedManifest = self::RESOURCES_DIR .  DIRECTORY_SEPARATOR . "TestSuiteGeneration1.txt";
+        $this->assertFileEquals($expectedManifest, $actualManifest, '', true, true);
     }
 
     public static function tearDownAfterClass()
