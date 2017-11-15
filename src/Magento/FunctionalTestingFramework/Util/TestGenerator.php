@@ -369,6 +369,16 @@ class TestGenerator
             $dependentSelector = null;
             $visible = null;
 
+            $assertExpected = null;
+            $assertExpectedArray = null;
+            $assertActual = null;
+            $assertActualArray = null;
+            $assertMessage = null;
+            $assertFunction = null;
+            $assertIsStrict = null;
+            $assertDelta = null;
+            $class = null;
+
             if (isset($customActionAttributes['returnVariable'])) {
                 $returnVariable = $customActionAttributes['returnVariable'];
             }
@@ -384,10 +394,25 @@ class TestGenerator
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['url']);
             }
 
+            if (isset($customActionAttributes['expected'])) {
+                $assertExpected = $this->addUniquenessFunctionCall($customActionAttributes['expected']);
+            }
+            if (isset($customActionAttributes['actual'])) {
+                $assertActual = $this->addUniquenessFunctionCall($customActionAttributes['actual']);
+            }
+            if (isset($customActionAttributes['message'])) {
+                $assertMessage = $this->addUniquenessFunctionCall($customActionAttributes['message']);
+            }
+            if (isset($customActionAttributes['expectedVariable'])) {
+                $assertExpected = $this->addDollarSign($customActionAttributes['expectedVariable']);
+            }
+            if (isset($customActionAttributes['actualVariable'])) {
+                $assertActual = $this->addDollarSign($customActionAttributes['actualVariable']);
+            }
+
             if (isset($customActionAttributes['time'])) {
                 $time = $customActionAttributes['time'];
             }
-
             if (isset($customActionAttributes['timeout'])) {
                 $time = $customActionAttributes['timeout'];
             }
@@ -399,6 +424,22 @@ class TestGenerator
                 $parameterArray = "[" . $this->addUniquenessToParamArray(
                     $customActionAttributes['parameterArray']
                 )  . "]";
+            }
+            if (isset($customActionAttributes['expectedArray'])) {
+                // validate the param array is in the correct format
+                $this->validateParameterArray($customActionAttributes['expectedArray']);
+
+                $assertExpectedArray = "["
+                    . $this->addUniquenessToParamArray($customActionAttributes['expectedArray'])
+                    . "]";
+            }
+            if (isset($customActionAttributes['actualArray'])) {
+                // validate the param array is in the correct format
+                $this->validateParameterArray($customActionAttributes['actualArray']);
+
+                $assertActualArray = "["
+                    . $this->addUniquenessToParamArray($customActionAttributes['actualArray'])
+                    . "]";
             }
 
             if (isset($customActionAttributes['requiredAction'])) {
@@ -432,6 +473,10 @@ class TestGenerator
 
             if (isset($customActionAttributes['function'])) {
                 $function = $customActionAttributes['function'];
+            }
+
+            if (isset($customActionAttributes['class'])) {
+                $class = $customActionAttributes['class'];
             }
 
             if (isset($customActionAttributes['html'])) {
@@ -910,6 +955,95 @@ class TestGenerator
                 case "conditionalClick":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $dependentSelector, $visible);
                     break;
+                case "assertEquals":
+                case "assertGreaterOrEquals":
+                case "assertGreaterThan":
+                case "assertGreaterThanOrEqual":
+                case "assertInternalType":
+                case "assertLessOrEquals":
+                case "assertLessThan":
+                case "assertLessThanOrEqual":
+                case "assertNotEquals":
+
+                case "assertNotRegExp":
+                case "assertNotSame":
+                case "assertRegExp":
+                case "assertSame":
+                case "assertStringStartsNotWith":
+                case "assertStringStartsWith":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionName,
+                        $assertExpected,
+                        $assertActual,
+                        $assertMessage,
+                        $assertDelta
+                    );
+                    break;
+                case "assertInstanceOf":
+                case "assertNotInstanceOf":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionName,
+                        $class,
+                        $assertActual,
+                        $assertMessage
+                    );
+                    break;
+                case "assertArrayHasKey":
+                case "assertArrayNotHasKey":
+                case "assertCount":
+                case "assertContains":
+                case "assertNotContains":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionName,
+                        $assertExpected,
+                        $assertActualArray,
+                        $assertMessage
+                    );
+                    break;
+                case "assertEmpty":
+                case "assertFalse":
+                case "assertFileExists":
+                case "assertFileNotExists":
+                case "assertIsEmpty":
+                case "assertNotEmpty":
+                case "assertNotNull":
+                case "assertNull":
+                case "assertTrue":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionName,
+                        $assertActual,
+                        $assertMessage
+                    );
+                    break;
+                case "assertArraySubset":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionName,
+                        $assertExpectedArray,
+                        $assertActualArray,
+                        $assertIsStrict,
+                        $assertMessage
+                    );
+                    break;
+                case "expectException":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionName,
+                        $class,
+                        $function
+                    );
+                    break;
+                case "fail":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionName,
+                        $assertMessage
+                    );
+                    break;
                 default:
                     if ($returnVariable) {
                         $testSteps .= $this->wrapFunctionCallWithReturnValue(
@@ -1078,6 +1212,7 @@ class TestGenerator
      * Creates a PHP string for the _before/_after methods if the Test contains an <before> or <after> block.
      * @param array $hookObjects
      * @return string
+     * @throws TestReferenceException
      */
     private function generateHooksPhp($hookObjects)
     {

@@ -5,7 +5,7 @@
     "keywords": ["magento", "automation", "functional", "testing"],
     "require": {
         "php": "~7.0",
-        "codeception/codeception": "2.2|2.3",
+        "codeception/codeception": "~2.3.4",
         "flow/jsonpath": ">0.2",
         "fzaninotto/faker": "^1.6",
         "mustache/mustache": "~2.5",
