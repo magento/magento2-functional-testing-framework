@@ -55,6 +55,7 @@
             <xs:element type="annotationType" name="description" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="severity" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="testCaseId" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="annotationType" name="useCaseId" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="group" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="return" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>

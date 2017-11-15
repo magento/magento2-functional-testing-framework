@@ -17,7 +17,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  * @Severity(level = SeverityLevel::CRITICAL)
- * @Title("Title")
+ * @Title("A Functional Cest")
  * @group functional
  * @Features({"Basic Functional Cest"})
  * @Stories({"MQE-305"})
@@ -37,10 +37,10 @@ class BasicFunctionalCest
 	/**
 	 * @Severity(level = SeverityLevel::SEVERE)
 	 * @Title("Basic Functional Test")
+	 * @group functionalTest
 	 * @Features({"Hardcoded Functional Test"})
 	 * @Stories({"MQE-425"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
-	 * @group functionalTest
 	 * @param AcceptanceTester $I
 	 * @return void
 	 */

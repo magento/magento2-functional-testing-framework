@@ -242,6 +242,7 @@
                 <item name="/config/cest/annotations/description" xsi:type="string">/config/cest/annotations/description</item>
                 <item name="/config/cest/annotations/severity" xsi:type="string">/config/cest/annotations/severity</item>
                 <item name="/config/cest/annotations/testCaseId" xsi:type="string">/config/cest/annotations/testCaseId</item>
+                <item name="/config/cest/annotations/useCaseId" xsi:type="string">/config/cest/annotations/useCaseId</item>
                 <item name="/config/cest/annotations/group" xsi:type="string">/config/cest/annotations/group</item>
                 <item name="/config/cest/annotations/return" xsi:type="string">/config/cest/annotations/return</item>
                 <item name="/config/cest/test/annotations/features" xsi:type="string">/config/cest/test/annotations/features</item>
@@ -250,6 +251,7 @@
                 <item name="/config/cest/test/annotations/description" xsi:type="string">/config/cest/test/annotations/description</item>
                 <item name="/config/cest/test/annotations/severity" xsi:type="string">/config/cest/test/annotations/severity</item>
                 <item name="/config/cest/test/annotations/testCaseId" xsi:type="string">/config/cest/test/annotations/testCaseId</item>
+                <item name="/config/cest/test/annotations/useCaseId" xsi:type="string">/config/cest/test/annotations/useCaseId</item>
                 <item name="/config/cest/test/annotations/group" xsi:type="string">/config/cest/test/annotations/group</item>
                 <item name="/config/cest/test/annotations/env" xsi:type="string">/config/cest/test/annotations/env</item>
                 <item name="/config/cest/test/annotations/return" xsi:type="string">/config/cest/test/annotations/return</item>

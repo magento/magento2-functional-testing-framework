@@ -17,7 +17,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  * @Severity(level = SeverityLevel::CRITICAL)
- * @Title("Title")
+ * @Title("A Functional Cest")
  * @group functional
  * @Features({"Action Group Functional Cest"})
  * @Stories({"MQE-433"})

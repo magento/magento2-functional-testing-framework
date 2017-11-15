@@ -18,6 +18,7 @@ class TestGenerator
 {
 
     const REQUIRED_ENTITY_REFERENCE = 'createDataKey';
+    const TEST_SCOPE = 'Test';
     const GENERATED_DIR = '_generated';
 
     /**
@@ -151,7 +152,7 @@ class TestGenerator
     private function assembleCestPhp($cestObject)
     {
         $usePhp = $this->generateUseStatementsPhp();
-        $classAnnotationsPhp = $this->generateClassAnnotationsPhp($cestObject->getAnnotations());
+        $classAnnotationsPhp = $this->generateAnnotationsPhp($cestObject->getAnnotations(), "Cest");
         $className = $cestObject->getName();
         $className = str_replace(' ', '', $className);
         try {
@@ -234,17 +235,22 @@ class TestGenerator
     }
 
     /**
-     * Creates a PHP string for the Class Annotations block if the Cest file contains an <annotations> block, outside
-     * of the <test> blocks.
-     *
-     * @param array $classAnnotationsObject
+     * Generates Annotations PHP for given object, using given scope to determine indentation and additional output.
+     * @param array $annotationsObject
+     * @param string $scope
      * @return string
      */
-    private function generateClassAnnotationsPhp($classAnnotationsObject)
+    private function generateAnnotationsPhp($annotationsObject, $scope)
     {
-        $classAnnotationsPhp = "/**\n";
+        if ($scope == self::TEST_SCOPE) {
+            $indent = "\t";
+        } else {
+            $indent = "";
+        }
 
-        foreach ($classAnnotationsObject as $annotationType => $annotationName) {
+        $annotationsPhp = "{$indent}/**\n";
+
+        foreach ($annotationsObject as $annotationType => $annotationName) {
             if ($annotationType == "features") {
                 $features = "";
 
@@ -256,7 +262,7 @@ class TestGenerator
                     }
                 }
 
-                $classAnnotationsPhp .= sprintf(" * @Features({%s})\n", $features);
+                $annotationsPhp .= sprintf("{$indent} * @Features({%s})\n", $features);
             }
 
             if ($annotationType == "stories") {
@@ -270,45 +276,55 @@ class TestGenerator
                     }
                 }
 
-                $classAnnotationsPhp .= sprintf(" * @Stories({%s})\n", $stories);
+                $annotationsPhp .= sprintf("{$indent} * @Stories({%s})\n", $stories);
             }
 
             if ($annotationType == "title") {
-                $classAnnotationsPhp .= sprintf(
-                    " * @Title(\"%s\")\n",
-                    ucwords($annotationType),
-                    $annotationName[0]
-                );
+                $annotationsPhp .= sprintf("{$indent} * @Title(\"%s\")\n", $annotationName[0]);
             }
 
             if ($annotationType == "description") {
-                $classAnnotationsPhp .= sprintf(" * @Description(\"%s\")\n", $annotationName[0]);
+                $annotationsPhp .= sprintf("{$indent} * @Description(\"%s\")\n", $annotationName[0]);
             }
 
             if ($annotationType == "severity") {
-                $classAnnotationsPhp .= sprintf(" * @Severity(level = SeverityLevel::%s)\n", $annotationName[0]);
+                $annotationsPhp .= sprintf("{$indent} * @Severity(level = SeverityLevel::%s)\n", $annotationName[0]);
             }
 
             if ($annotationType == "testCaseId") {
-                $classAnnotationsPhp .= sprintf(" * TestCaseId(\"%s\")\n", $annotationName[0]);
+                $annotationsPhp .= sprintf("{$indent} * @TestCaseId(\"%s\")\n", $annotationName[0]);
+            }
+
+            if ($annotationType == "useCaseId") {
+                $annotationsPhp .= sprintf("{$indent} * @UseCaseId(\"%s\")\n", $annotationName[0]);
             }
 
             if ($annotationType == "group") {
                 foreach ($annotationName as $group) {
-                    $classAnnotationsPhp .= sprintf(" * @group %s\n", $group);
+                    $annotationsPhp .= sprintf("{$indent} * @group %s\n", $group);
                 }
             }
 
             if ($annotationType == "env") {
                 foreach ($annotationName as $env) {
-                    $classAnnotationsPhp .= sprintf(" * @env %s\n", $env);
+                    $annotationsPhp .= sprintf("{$indent} * @env %s\n", $env);
                 }
             }
         }
 
-        $classAnnotationsPhp .= " */\n";
+        if ($scope == self::TEST_SCOPE) {
+            $annotationsPhp .= sprintf(
+                "{$indent} * @Parameter(name = \"%s\", value=\"$%s\")\n",
+                "AcceptanceTester",
+                "I"
+            );
+            $annotationsPhp .= sprintf("{$indent} * @param %s $%s\n", "AcceptanceTester", "I");
+            $annotationsPhp .= "{$indent} * @return void\n";
+        }
 
-        return $classAnnotationsPhp;
+        $annotationsPhp .= "{$indent} */\n";
+
+        return $annotationsPhp;
     }
 
     /**
@@ -1120,96 +1136,11 @@ class TestGenerator
     }
 
     /**
-     * Creates a PHP string for the Test Annotations block if the Test contains an <annotations> block.
-     *
-     * @param array $testAnnotationsObject
-     * @return string
-     */
-    private function generateTestAnnotationsPhp($testAnnotationsObject)
-    {
-        $testAnnotationsPhp = "\t/**\n";
-
-        foreach ($testAnnotationsObject as $annotationType => $annotationName) {
-            if ($annotationType == "features") {
-                $features = "";
-
-                foreach ($annotationName as $name) {
-                    $features .= sprintf("\"%s\"", $name);
-
-                    if (next($annotationName)) {
-                        $features .= ", ";
-                    }
-                }
-
-                $testAnnotationsPhp .= sprintf("\t * @Features({%s})\n", $features);
-            }
-
-            if ($annotationType == "stories") {
-                $stories = "";
-
-                foreach ($annotationName as $name) {
-                    $stories .= sprintf("\"%s\"", $name);
-
-                    if (next($annotationName)) {
-                        $stories .= ", ";
-                    }
-                }
-
-                $testAnnotationsPhp .= sprintf("\t * @Stories({%s})\n", $stories);
-            }
-
-            if ($annotationType == "title") {
-                $testAnnotationsPhp .= sprintf("\t * @Title(\"%s\")\n", $annotationName[0]);
-            }
-
-            if ($annotationType == "description") {
-                $testAnnotationsPhp .= sprintf("\t * @Description(\"%s\")\n", $annotationName[0]);
-            }
-
-            if ($annotationType == "severity") {
-                $testAnnotationsPhp .= sprintf(
-                    "\t * @Severity(level = SeverityLevel::%s)\n",
-                    $annotationName[0]
-                );
-            }
-
-            if ($annotationType == "testCaseId") {
-                $testAnnotationsPhp .= sprintf("\t * @TestCaseId(\"%s\")\n", $annotationName[0]);
-            }
-        }
-
-        $testAnnotationsPhp .= sprintf(
-            "\t * @Parameter(name = \"%s\", value=\"$%s\")\n",
-            "AcceptanceTester",
-            "I"
-        );
-
-        foreach ($testAnnotationsObject as $annotationType => $annotationName) {
-            if ($annotationType == "group") {
-                foreach ($annotationName as $name) {
-                    $testAnnotationsPhp .= sprintf("\t * @group %s\n", $name);
-                }
-            }
-
-            if ($annotationType == "env") {
-                foreach ($annotationName as $env) {
-                    $testAnnotationsPhp .= sprintf("\t * @env %s\n", $env);
-                }
-            }
-        }
-
-        $testAnnotationsPhp .= sprintf("\t * @param %s $%s\n", "AcceptanceTester", "I");
-        $testAnnotationsPhp .= "\t * @return void\n";
-        $testAnnotationsPhp .= "\t */\n";
-
-        return $testAnnotationsPhp;
-    }
-
-    /**
      * Creates a PHP string based on a <test> block.
      * Concatenates the Test Annotations PHP and Test PHP for a single Test.
      * @param array $testsObject
      * @return string
+     * @throws TestReferenceException
      */
     private function generateTestsPhp($testsObject)
     {
@@ -1218,7 +1149,7 @@ class TestGenerator
         foreach ($testsObject as $test) {
             $testName = $test->getName();
             $testName = str_replace(' ', '', $testName);
-            $testAnnotations = $this->generateTestAnnotationsPhp($test->getAnnotations());
+            $testAnnotations = $this->generateAnnotationsPhp($test->getAnnotations(), "Test");
             $dependencies = 'AcceptanceTester $I';
             try {
                 $steps = $this->generateStepsPhp($test->getOrderedActions(), $test->getCustomData());
