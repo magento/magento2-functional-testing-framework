@@ -44,9 +44,9 @@ class PersistedReplacementCest
 		$createdData = new DataPersistenceHandler($simpleData);
 		$createdData->createEntity();
 		$I->amGoingTo("create entity that has the mergeKey: uniqueData");
-        $UniquePerson = DataObjectHandler::getInstance()->getObject("UniquePerson");
-        $uniqueData = new DataPersistenceHandler($UniquePerson);
-        $uniqueData->createEntity();
+		$UniquePerson = DataObjectHandler::getInstance()->getObject("UniquePerson");
+		$uniqueData = new DataPersistenceHandler($UniquePerson);
+		$uniqueData->createEntity();
 		$I->fillField("#selector", "StringBefore " . $createdData->getCreatedDataByName('firstname') . " StringAfter");
 		$I->fillField("#" . $createdData->getCreatedDataByName('firstname'), "input");
 		$I->dragAndDrop("#" . $createdData->getCreatedDataByName('firstname'), $createdData->getCreatedDataByName('lastname'));
@@ -55,15 +55,15 @@ class PersistedReplacementCest
 		$I->searchAndMultiSelectOption("#selector", [$createdData->getCreatedDataByName('firstname'), $createdData->getCreatedDataByName('lastname')]);
 		$I->fillField("#selector", "John " . $createdData->getCreatedDataByName('firstname') . " stringLiteral");
 		$I->searchAndMultiSelectOption("#selector", [$createdData->getCreatedDataByName('firstname'), "John", "stringLiteral"]);
-    	$I->assertStringStartsWith("W", $uniqueData->getCreatedDataByName('firstname') . " " . $uniqueData->getCreatedDataByName('lastname'), "pass");
-    	$I->assertEquals($this->createData1->getCreatedDataByName('lastname'), $this->createData1->getCreatedDataByName('lastname'), "pass");
-    	$I->assertFileExists("../Data/SampleData.xml", "pass");
-    	$I->assertArraySubset([$this->createData1->getCreatedDataByName('lastname') . "", "" . $this->createData1->getCreatedDataByName('firstname')], [$this->createData1->getCreatedDataByName('lastname') . "", "" . $this->createData1->getCreatedDataByName('firstname') . "", "1"], "pass");
-    	$I->assertArraySubset([$uniqueData->getCreatedDataByName('firstname') . "", "" . $uniqueData->getCreatedDataByName('lastname')], [$uniqueData->getCreatedDataByName('firstname') . "", "" . $uniqueData->getCreatedDataByName('lastname') . "", "1"], "pass");
-    	$I->assertArrayHasKey("lastname", ['lastname' => $this->createData1->getCreatedDataByName('lastname') . "", 'firstname' => "" . $this->createData1->getCreatedDataByName('firstname')], "pass");
-    	$I->assertArrayHasKey("lastname", ['lastname' => $uniqueData->getCreatedDataByName('lastname') . "", 'firstname' => "" . $uniqueData->getCreatedDataByName('firstname')], "pass");
-    	$I->fail($uniqueData->getCreatedDataByName('firstname') . " " . $uniqueData->getCreatedDataByName('lastname'));
-    	$I->fail($this->createData1->getCreatedDataByName('firstname') . " " . $this->createData1->getCreatedDataByName('lastname'));
-	    $I->assertStringStartsNotWith("D", $this->createData1->getCreatedDataByName('lastname') . ", " . $this->createData1->getCreatedDataByName('firstname'), "fail");
+		$I->assertStringStartsNotWith("D", $this->createData1->getCreatedDataByName('lastname') . ", " . $this->createData1->getCreatedDataByName('firstname'), "fail");
+		$I->assertStringStartsWith("W", $uniqueData->getCreatedDataByName('firstname') . " " . $uniqueData->getCreatedDataByName('lastname'), "pass");
+		$I->assertEquals($this->createData1->getCreatedDataByName('lastname'), $this->createData1->getCreatedDataByName('lastname'), "pass");
+		$I->assertFileExists("../Data/SampleData.xml", "pass");
+		$I->assertArraySubset([$this->createData1->getCreatedDataByName('lastname'), $this->createData1->getCreatedDataByName('firstname')], [$this->createData1->getCreatedDataByName('lastname'), $this->createData1->getCreatedDataByName('firstname'), "1"], "pass");
+		$I->assertArraySubset([$uniqueData->getCreatedDataByName('firstname'), $uniqueData->getCreatedDataByName('lastname')], [$uniqueData->getCreatedDataByName('firstname'), $uniqueData->getCreatedDataByName('lastname'), "1"], "pass");
+		$I->assertArrayHasKey("lastname", ['lastname' => $this->createData1->getCreatedDataByName('lastname'), 'firstname' => $this->createData1->getCreatedDataByName('firstname')], "pass");
+		$I->assertArrayHasKey("lastname", ['lastname' => $uniqueData->getCreatedDataByName('lastname'), 'firstname' => $uniqueData->getCreatedDataByName('firstname')], "pass");
+		$I->fail($uniqueData->getCreatedDataByName('firstname') . " " . $uniqueData->getCreatedDataByName('lastname'));
+		$I->fail($this->createData1->getCreatedDataByName('firstname') . " " . $this->createData1->getCreatedDataByName('lastname'));
 	}
 }
