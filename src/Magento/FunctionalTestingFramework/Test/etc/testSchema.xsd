@@ -1565,9 +1565,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="xs:string" name="actualArray"/>
-                <xs:attribute type="xs:string" name="expectedVariable"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1580,9 +1580,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="xs:string" name="actualArray"/>
-                <xs:attribute type="xs:string" name="expectedVariable"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1594,10 +1594,10 @@
     <xs:complexType name="assertArraySubsetType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expectedArray"/>
-                <xs:attribute type="xs:string" name="actualArray"/>
-                <xs:attribute type="xs:string" name="expectedVariable"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:boolean" name="strict"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
@@ -1611,9 +1611,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="xs:string" name="actualArray"/>
-                <xs:attribute type="xs:string" name="expectedVariable"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1626,9 +1626,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="xs:string" name="actualArray"/>
-                <xs:attribute type="xs:string" name="expectedVariable"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1641,7 +1641,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1654,9 +1654,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="expectedVariable"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="delta"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
@@ -1670,7 +1670,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1683,7 +1683,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1696,7 +1696,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1709,7 +1709,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
                 <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1722,9 +1724,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="expectedVariable"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1737,9 +1739,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="expectedVariable"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1751,8 +1753,10 @@
     <xs:complexType name="assertInstanceOfType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="class"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1764,10 +1768,10 @@
     <xs:complexType name="assertInternalTypeType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="type"/>
                 <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1780,7 +1784,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1793,9 +1797,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="expectedVariable"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1808,9 +1812,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="expectedVariable"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1823,9 +1827,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="expectedVariable"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1838,9 +1842,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="xs:string" name="actualArray"/>
-                <xs:attribute type="xs:string" name="expectedVariable"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1853,7 +1857,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1866,9 +1870,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="expectedVariable"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="delta"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
@@ -1882,9 +1886,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="expectedVariable"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1897,7 +1901,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1910,9 +1914,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="expectedVariable"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1925,9 +1929,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="expectedVariable"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1940,7 +1944,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1953,9 +1957,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="expectedVariable"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1968,9 +1972,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="expectedVariable"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1983,9 +1987,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="expectedVariable"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -1998,9 +2002,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="expectedVariable"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -2013,7 +2017,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="xs:string" name="actualVariable"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="message"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -2025,8 +2029,10 @@
     <xs:complexType name="expectExceptionType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="class"/>
-                <xs:attribute type="xs:string" name="function"/>
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>
                 <xs:attribute type="xs:string" name="before"/>
@@ -2045,4 +2051,15 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+    <xs:simpleType name="assertEnum" final="restriction" >
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="int" />
+            <xs:enumeration value="float" />
+            <xs:enumeration value="bool" />
+            <xs:enumeration value="string" />
+            <xs:enumeration value="variable" />
+            <xs:enumeration value="array" />
+            <xs:enumeration value="const" />
+        </xs:restriction>
+    </xs:simpleType>
 </xs:schema>

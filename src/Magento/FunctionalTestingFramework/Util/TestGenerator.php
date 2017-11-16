@@ -370,14 +370,10 @@ class TestGenerator
             $visible = null;
 
             $assertExpected = null;
-            $assertExpectedArray = null;
             $assertActual = null;
-            $assertActualArray = null;
             $assertMessage = null;
-            $assertFunction = null;
             $assertIsStrict = null;
             $assertDelta = null;
-            $class = null;
 
             if (isset($customActionAttributes['returnVariable'])) {
                 $returnVariable = $customActionAttributes['returnVariable'];
@@ -393,21 +389,26 @@ class TestGenerator
             } elseif (isset($customActionAttributes['url'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['url']);
             }
-
             if (isset($customActionAttributes['expected'])) {
-                $assertExpected = $this->addUniquenessFunctionCall($customActionAttributes['expected']);
+                $assertExpected = $this->resolveValueByType(
+                    $customActionAttributes['expected'],
+                    isset($customActionAttributes['expectedType']) ? $customActionAttributes['expectedType'] : null
+                );
             }
             if (isset($customActionAttributes['actual'])) {
-                $assertActual = $this->addUniquenessFunctionCall($customActionAttributes['actual']);
+                $assertActual = $this->resolveValueByType(
+                    $customActionAttributes['actual'],
+                    isset($customActionAttributes['actualType']) ? $customActionAttributes['actualType'] : null
+                );
             }
             if (isset($customActionAttributes['message'])) {
                 $assertMessage = $this->addUniquenessFunctionCall($customActionAttributes['message']);
             }
-            if (isset($customActionAttributes['expectedVariable'])) {
-                $assertExpected = $this->addDollarSign($customActionAttributes['expectedVariable']);
+            if (isset($customActionAttributes['delta'])) {
+                $assertDelta = $this->resolveValueByType($customActionAttributes['delta'], "float");
             }
-            if (isset($customActionAttributes['actualVariable'])) {
-                $assertActual = $this->addDollarSign($customActionAttributes['actualVariable']);
+            if (isset($customActionAttributes['strict'])) {
+                $assertIsStrict = $this->resolveValueByType($customActionAttributes['strict'], "bool");
             }
 
             if (isset($customActionAttributes['time'])) {
@@ -424,22 +425,6 @@ class TestGenerator
                 $parameterArray = "[" . $this->addUniquenessToParamArray(
                     $customActionAttributes['parameterArray']
                 )  . "]";
-            }
-            if (isset($customActionAttributes['expectedArray'])) {
-                // validate the param array is in the correct format
-                $this->validateParameterArray($customActionAttributes['expectedArray']);
-
-                $assertExpectedArray = "["
-                    . $this->addUniquenessToParamArray($customActionAttributes['expectedArray'])
-                    . "]";
-            }
-            if (isset($customActionAttributes['actualArray'])) {
-                // validate the param array is in the correct format
-                $this->validateParameterArray($customActionAttributes['actualArray']);
-
-                $assertActualArray = "["
-                    . $this->addUniquenessToParamArray($customActionAttributes['actualArray'])
-                    . "]";
             }
 
             if (isset($customActionAttributes['requiredAction'])) {
@@ -473,10 +458,6 @@ class TestGenerator
 
             if (isset($customActionAttributes['function'])) {
                 $function = $customActionAttributes['function'];
-            }
-
-            if (isset($customActionAttributes['class'])) {
-                $class = $customActionAttributes['class'];
             }
 
             if (isset($customActionAttributes['html'])) {
@@ -964,13 +945,20 @@ class TestGenerator
                 case "assertLessThan":
                 case "assertLessThanOrEqual":
                 case "assertNotEquals":
-
+                case "assertInstanceOf":
+                case "assertNotInstanceOf":
                 case "assertNotRegExp":
                 case "assertNotSame":
                 case "assertRegExp":
                 case "assertSame":
                 case "assertStringStartsNotWith":
                 case "assertStringStartsWith":
+                case "assertArrayHasKey":
+                case "assertArrayNotHasKey":
+                case "assertCount":
+                case "assertContains":
+                case "assertNotContains":
+                case "expectException":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
                         $actionName,
@@ -978,29 +966,6 @@ class TestGenerator
                         $assertActual,
                         $assertMessage,
                         $assertDelta
-                    );
-                    break;
-                case "assertInstanceOf":
-                case "assertNotInstanceOf":
-                    $testSteps .= $this->wrapFunctionCall(
-                        $actor,
-                        $actionName,
-                        $class,
-                        $assertActual,
-                        $assertMessage
-                    );
-                    break;
-                case "assertArrayHasKey":
-                case "assertArrayNotHasKey":
-                case "assertCount":
-                case "assertContains":
-                case "assertNotContains":
-                    $testSteps .= $this->wrapFunctionCall(
-                        $actor,
-                        $actionName,
-                        $assertExpected,
-                        $assertActualArray,
-                        $assertMessage
                     );
                     break;
                 case "assertEmpty":
@@ -1023,18 +988,10 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
                         $actionName,
-                        $assertExpectedArray,
-                        $assertActualArray,
+                        $assertExpected,
+                        $assertActual,
                         $assertIsStrict,
                         $assertMessage
-                    );
-                    break;
-                case "expectException":
-                    $testSteps .= $this->wrapFunctionCall(
-                        $actor,
-                        $actionName,
-                        $class,
-                        $function
                     );
                     break;
                 case "fail":
@@ -1487,5 +1444,72 @@ class TestGenerator
         if (substr($paramArray, 0, 1) != "[" || substr($paramArray, strlen($paramArray)-1, 1)!= "]") {
             throw new TestReferenceException("parameterArray must begin with `[` and end with `]");
         }
+    }
+
+    /**
+     * @param string $value
+     * @param string $type
+     * @return string
+     */
+    private function resolveValueByType($value, $type)
+    {
+        if (null === $value) {
+            return null;
+        }
+        if (null === $type) {
+            $type = 'const';
+        }
+        if ($type == "string") {
+            return $this->addUniquenessFunctionCall($value);
+        } elseif ($type == "bool") {
+            return $this->toBoolean($value) ? "true" : "false";
+        } elseif ($type == "int" || $type == "float") {
+            return $this->toNumber($value);
+        } elseif ($type == "array") {
+            $this->validateParameterArray($value);
+            return "[" . $this->addUniquenessToParamArray($value) . "]";
+        } elseif ($type == "variable") {
+            return $this->addDollarSign($value);
+        } else {
+            return $value;
+        }
+    }
+
+    /**
+     * Convert input string to boolean equivalent.
+     *
+     * @param string $inStr
+     * @return bool|null
+     */
+    private function toBoolean($inStr)
+    {
+        return boolval($this->stripQuotes($inStr));
+    }
+
+    /**
+     * Convert input string to number equivalent.
+     *
+     * @param string $inStr
+     * @return int|float|null
+     */
+    private function toNumber($inStr)
+    {
+        $outStr = $this->stripQuotes($inStr);
+        if (strpos($outStr, localeconv()['decimal_point']) === false) {
+            return intval($outStr);
+        } else {
+            return floatval($outStr);
+        }
+    }
+
+    /**
+     * Strip single or double quotes from begin and end of input string.
+     *
+     * @param string $inStr
+     * @return string
+     */
+    private function stripQuotes($inStr) {
+        $unquoted = preg_replace('/^(\'(.*)\'|"(.*)")$/', '$2$3', $inStr);
+        return $unquoted;
     }
 }
