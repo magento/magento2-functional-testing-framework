@@ -1371,7 +1371,7 @@ class TestGenerator
      */
     private function addDollarSign($input)
     {
-        return sprintf("$%s", $input);
+        return sprintf("$%s", ltrim($this->stripQuotes($input), '$'));
     }
 
     // @codingStandardsIgnoreStart
@@ -1447,6 +1447,8 @@ class TestGenerator
     }
 
     /**
+     * Resolve value based on type.
+     *
      * @param string $value
      * @param string $type
      * @return string
@@ -1508,7 +1510,8 @@ class TestGenerator
      * @param string $inStr
      * @return string
      */
-    private function stripQuotes($inStr) {
+    private function stripQuotes($inStr)
+    {
         $unquoted = preg_replace('/^(\'(.*)\'|"(.*)")$/', '$2$3', $inStr);
         return $unquoted;
     }

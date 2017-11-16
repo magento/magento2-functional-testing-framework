@@ -27,13 +27,13 @@
             <assertEquals mergeKey="assertEquals2" expected="Copyright © 2013-2017 Magento, Inc. All rights reserved." expectedType="string" actual="text" actualType="variable" message="pass"/>
             <assertFalse mergeKey="assertFalse1" actual="0" actualType="bool" message="pass"/>
             <assertFileNotExists mergeKey="assertFileNotExists1" actual="/out.txt" actualType="string" message="pass"/>
-            <assertFileNotExists mergeKey="assertFileNotExists2" actual="text" actualType="variable" message="pass"/>
+            <assertFileNotExists mergeKey="assertFileNotExists2" actual="$text" actualType="variable" message="pass"/>
             <assertGreaterOrEquals mergeKey="assertGreaterOrEquals" expected="2" expectedType="int" actual="5" actualType="int" message="pass"/>
             <assertGreaterThan mergeKey="assertGreaterThan" expected="2" expectedType="int" actual="5" actualType="int" message="pass"/>
             <assertGreaterThanOrEqual mergeKey="assertGreaterThanOrEqual" expected="2" expectedType="int" actual="5" actualType="int" message="pass"/>
             <assertInternalType mergeKey="assertInternalType1" expected="string" expectedType="string" actual="xyz" actualType="string" message="pass"/>
             <assertInternalType mergeKey="assertInternalType2" expected="int" expectedType="string" actual="21" actualType="int" message="pass"/>
-            <assertInternalType mergeKey="assertInternalType3" expected="string" expectedType="string" actual="text" actualType="variable" message="pass"/>
+            <assertInternalType mergeKey="assertInternalType3" expected="string" expectedType="string" actual="$text" actualType="variable" message="pass"/>
             <assertLessOrEquals mergeKey="assertLessOrEquals" expected="5" expectedType="int" actual="2" actualType="int" message="pass"/>
             <assertLessThan mergeKey="assertLessThan" expected="5" expectedType="int" actual="2" actualType="int" message="pass"/>
             <assertLessThanOrEqual mergeKey="assertLessThanOrEqual" expected="5" expectedType="int" actual="2" actualType="int" message="pass"/>
