@@ -2,6 +2,13 @@ language: php
 php:
   - 7.0
   - 7.1
-install: composer install --no-interaction --prefer-source
+install: 
+  - composer install --no-interaction --prefer-source
+before_script:
+  - composer require codacy/coverage --dev
 script:
-  - vendor/bin/phpcs ./src --standard=./dev/tests/static/Magento
+  - vendor/bin/all-checks
+after_script:
+  - php vendor/bin/codacycoverage phpunit
+
+  
