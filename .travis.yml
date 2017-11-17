@@ -7,7 +7,7 @@ install:
 before_script:
   - composer require codacy/coverage --dev
 script:
-  - vendor/bin/all-checks
+  - bin/all-checks
 after_script:
   - php vendor/bin/codacycoverage phpunit
 
