@@ -6,3 +6,5 @@ _generated
 AcceptanceTester.php
 cghooks.lock
 src/Magento/FunctionalTestingFramework/Group/*.php
+.DS_Store
+build/*
