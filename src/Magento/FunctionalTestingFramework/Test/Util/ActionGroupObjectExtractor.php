@@ -77,7 +77,7 @@ class ActionGroupObjectExtractor extends BaseCestObjectExtractor
         );
 
         foreach ($argData as $argName => $argValue) {
-            $parsedArguments[$argName] = $argValue[self::DEFAULT_VALUE];
+            $parsedArguments[$argName] = $argValue[self::DEFAULT_VALUE] ?? null;
         }
 
         return $parsedArguments;
