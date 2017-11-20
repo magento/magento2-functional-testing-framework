@@ -61,7 +61,6 @@ class OperationElementBuilder
      */
     private $nestedElements;
 
-
     /**
      * Build function which takes params defined by the user and returns a new Operation Element.
      *

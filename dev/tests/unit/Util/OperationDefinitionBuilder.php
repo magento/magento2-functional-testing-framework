@@ -112,9 +112,10 @@ class OperationDefinitionBuilder
             }
         }
 
-        $this->metadata = array_merge($this->metadata, OperationElementBuilder::buildOperationElementFields($primitives));
+        $this->metadata = array_merge(
+            $this->metadata,
+            OperationElementBuilder::buildOperationElementFields($primitives)
+        );
         return $this;
     }
-
-
 }

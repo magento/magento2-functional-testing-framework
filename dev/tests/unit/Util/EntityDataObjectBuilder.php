@@ -113,5 +113,4 @@ class EntityDataObjectBuilder
         $this->linkedEntities = $linkedEntities;
         return $this;
     }
-
 }

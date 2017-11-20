@@ -130,7 +130,6 @@ class ActionMergeUtilTest extends TestCase
         $actionName = "myAction";
         $actionType = "myCustomType";
 
-
         // Set up mock data object
         $mockData = [$dataFieldName => $dataFieldValue];
         $mockDataObject = new EntityDataObject($dataObjectName, $dataObjectType, $mockData, null, null, null);

@@ -19,7 +19,6 @@ class SuiteGenerationTest extends TestCase
     private static $YML_EXISTS_FLAG = false;
     private static $TEST_GROUPS = [];
 
-
     public static function setUpBeforeClass()
     {
         if (file_exists(self::CONFIG_YML_FILE)) {

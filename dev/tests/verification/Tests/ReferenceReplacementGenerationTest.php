@@ -67,7 +67,6 @@ class ReferenceReplacementGenerationTest extends TestCase
 
         $this->assertTrue(file_exists($cestFile));
 
-
         $this->assertFileEquals(
             self::RESOURCES_PATH . DIRECTORY_SEPARATOR . $cestName . ".txt",
             $cestFile
