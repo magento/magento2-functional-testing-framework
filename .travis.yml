@@ -2,13 +2,13 @@ language: php
 php:
   - 7.0
   - 7.1
-install: 
-  - composer install --no-interaction --prefer-source
-before_script:
-  - composer require codacy/coverage --dev
+install: composer install --no-interaction --prefer-source
+env:
+  matrix:
+    - VERIFICATION_TOOL=copyright-check
+    - VERIFICATION_TOOL=phpunit-checks
+    - VERIFICATION_TOOL=static-checks
 script:
-  - bin/all-checks
+  - bin/$VERIFICATION_TOOL
 after_script:
-  - php vendor/bin/codacycoverage phpunit
-
-  
+  - if [ $VERIFICATION_TOOL == "phpunit-checks" ]; then php vendor/bin/codacycoverage phpunit; fi

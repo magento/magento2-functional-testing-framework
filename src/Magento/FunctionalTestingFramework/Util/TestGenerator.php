@@ -18,6 +18,7 @@ class TestGenerator
 {
 
     const REQUIRED_ENTITY_REFERENCE = 'createDataKey';
+    const TEST_SCOPE = 'Test';
     const GENERATED_DIR = '_generated';
 
     /**
@@ -151,7 +152,7 @@ class TestGenerator
     private function assembleCestPhp($cestObject)
     {
         $usePhp = $this->generateUseStatementsPhp();
-        $classAnnotationsPhp = $this->generateClassAnnotationsPhp($cestObject->getAnnotations());
+        $classAnnotationsPhp = $this->generateAnnotationsPhp($cestObject->getAnnotations(), "Cest");
         $className = $cestObject->getName();
         $className = str_replace(' ', '', $className);
         try {
@@ -213,6 +214,7 @@ class TestGenerator
         $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;\n";
         $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;\n";
         $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;\n";
+        $useStatementsPhp .= "use \Codeception\Util\Locator;\n";
 
         $allureStatements = [
             "Yandex\Allure\Adapter\Annotation\Features;",
@@ -233,17 +235,22 @@ class TestGenerator
     }
 
     /**
-     * Creates a PHP string for the Class Annotations block if the Cest file contains an <annotations> block, outside
-     * of the <test> blocks.
-     *
-     * @param array $classAnnotationsObject
+     * Generates Annotations PHP for given object, using given scope to determine indentation and additional output.
+     * @param array $annotationsObject
+     * @param string $scope
      * @return string
      */
-    private function generateClassAnnotationsPhp($classAnnotationsObject)
+    private function generateAnnotationsPhp($annotationsObject, $scope)
     {
-        $classAnnotationsPhp = "/**\n";
+        if ($scope == self::TEST_SCOPE) {
+            $indent = "\t";
+        } else {
+            $indent = "";
+        }
 
-        foreach ($classAnnotationsObject as $annotationType => $annotationName) {
+        $annotationsPhp = "{$indent}/**\n";
+
+        foreach ($annotationsObject as $annotationType => $annotationName) {
             if ($annotationType == "features") {
                 $features = "";
 
@@ -255,7 +262,7 @@ class TestGenerator
                     }
                 }
 
-                $classAnnotationsPhp .= sprintf(" * @Features({%s})\n", $features);
+                $annotationsPhp .= sprintf("{$indent} * @Features({%s})\n", $features);
             }
 
             if ($annotationType == "stories") {
@@ -269,45 +276,55 @@ class TestGenerator
                     }
                 }
 
-                $classAnnotationsPhp .= sprintf(" * @Stories({%s})\n", $stories);
+                $annotationsPhp .= sprintf("{$indent} * @Stories({%s})\n", $stories);
             }
 
             if ($annotationType == "title") {
-                $classAnnotationsPhp .= sprintf(
-                    " * @Title(\"%s\")\n",
-                    ucwords($annotationType),
-                    $annotationName[0]
-                );
+                $annotationsPhp .= sprintf("{$indent} * @Title(\"%s\")\n", $annotationName[0]);
             }
 
             if ($annotationType == "description") {
-                $classAnnotationsPhp .= sprintf(" * @Description(\"%s\")\n", $annotationName[0]);
+                $annotationsPhp .= sprintf("{$indent} * @Description(\"%s\")\n", $annotationName[0]);
             }
 
             if ($annotationType == "severity") {
-                $classAnnotationsPhp .= sprintf(" * @Severity(level = SeverityLevel::%s)\n", $annotationName[0]);
+                $annotationsPhp .= sprintf("{$indent} * @Severity(level = SeverityLevel::%s)\n", $annotationName[0]);
             }
 
             if ($annotationType == "testCaseId") {
-                $classAnnotationsPhp .= sprintf(" * TestCaseId(\"%s\")\n", $annotationName[0]);
+                $annotationsPhp .= sprintf("{$indent} * @TestCaseId(\"%s\")\n", $annotationName[0]);
+            }
+
+            if ($annotationType == "useCaseId") {
+                $annotationsPhp .= sprintf("{$indent} * @UseCaseId(\"%s\")\n", $annotationName[0]);
             }
 
             if ($annotationType == "group") {
                 foreach ($annotationName as $group) {
-                    $classAnnotationsPhp .= sprintf(" * @group %s\n", $group);
+                    $annotationsPhp .= sprintf("{$indent} * @group %s\n", $group);
                 }
             }
 
             if ($annotationType == "env") {
                 foreach ($annotationName as $env) {
-                    $classAnnotationsPhp .= sprintf(" * @env %s\n", $env);
+                    $annotationsPhp .= sprintf("{$indent} * @env %s\n", $env);
                 }
             }
         }
 
-        $classAnnotationsPhp .= " */\n";
+        if ($scope == self::TEST_SCOPE) {
+            $annotationsPhp .= sprintf(
+                "{$indent} * @Parameter(name = \"%s\", value=\"$%s\")\n",
+                "AcceptanceTester",
+                "I"
+            );
+            $annotationsPhp .= sprintf("{$indent} * @param %s $%s\n", "AcceptanceTester", "I");
+            $annotationsPhp .= "{$indent} * @return void\n";
+        }
 
-        return $classAnnotationsPhp;
+        $annotationsPhp .= "{$indent} */\n";
+
+        return $annotationsPhp;
     }
 
     /**
@@ -352,6 +369,12 @@ class TestGenerator
             $dependentSelector = null;
             $visible = null;
 
+            $assertExpected = null;
+            $assertActual = null;
+            $assertMessage = null;
+            $assertIsStrict = null;
+            $assertDelta = null;
+
             if (isset($customActionAttributes['returnVariable'])) {
                 $returnVariable = $customActionAttributes['returnVariable'];
             }
@@ -366,11 +389,31 @@ class TestGenerator
             } elseif (isset($customActionAttributes['url'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['url']);
             }
+            if (isset($customActionAttributes['expected'])) {
+                $assertExpected = $this->resolveValueByType(
+                    $customActionAttributes['expected'],
+                    isset($customActionAttributes['expectedType']) ? $customActionAttributes['expectedType'] : null
+                );
+            }
+            if (isset($customActionAttributes['actual'])) {
+                $assertActual = $this->resolveValueByType(
+                    $customActionAttributes['actual'],
+                    isset($customActionAttributes['actualType']) ? $customActionAttributes['actualType'] : null
+                );
+            }
+            if (isset($customActionAttributes['message'])) {
+                $assertMessage = $this->addUniquenessFunctionCall($customActionAttributes['message']);
+            }
+            if (isset($customActionAttributes['delta'])) {
+                $assertDelta = $this->resolveValueByType($customActionAttributes['delta'], "float");
+            }
+            if (isset($customActionAttributes['strict'])) {
+                $assertIsStrict = $this->resolveValueByType($customActionAttributes['strict'], "bool");
+            }
 
             if (isset($customActionAttributes['time'])) {
                 $time = $customActionAttributes['time'];
             }
-
             if (isset($customActionAttributes['timeout'])) {
                 $time = $customActionAttributes['timeout'];
             }
@@ -392,14 +435,17 @@ class TestGenerator
                 $selector = $customActionAttributes['selectorArray'];
             } elseif (isset($customActionAttributes['selector'])) {
                 $selector = $this->addUniquenessFunctionCall($customActionAttributes['selector']);
+                $selector = $this->resolveLocatorFunctionInAttribute($selector);
             }
 
             if (isset($customActionAttributes['selector1'])) {
                 $selector1 = $this->addUniquenessFunctionCall($customActionAttributes['selector1']);
+                $selector1 = $this->resolveLocatorFunctionInAttribute($selector1);
             }
 
             if (isset($customActionAttributes['selector2'])) {
                 $selector2 = $this->addUniquenessFunctionCall($customActionAttributes['selector2']);
+                $selector2 = $this->resolveLocatorFunctionInAttribute($selector2);
             }
 
             if (isset($customActionAttributes['x'])) {
@@ -451,7 +497,7 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['dependentSelector'])) {
-                $dependentSelector = $this->wrapWithDoubleQuotes($customActionAttributes['dependentSelector']);
+                $dependentSelector = $this->addUniquenessFunctionCall($customActionAttributes['dependentSelector']);
             }
 
             if (isset($customActionAttributes['visible'])) {
@@ -548,40 +594,48 @@ class TestGenerator
                     }
                     break;
                 case "updateData":
-                    $entity = $customActionAttributes['entity'];
-                    $originalEntity = null;
-                    if (isset($customActionAttributes['createDataKey'])) {
-                        $originalEntity = $customActionAttributes['createDataKey'];
-                    }
-                    $key = $steps->getMergeKey();
+                    $key = $customActionAttributes['createDataKey'];
+                    $updateEntity = $customActionAttributes['entity'];
+
                     //Add an informative statement to help the user debug test runs
                     $testSteps .= sprintf(
-                        "\t\t$%s->amGoingTo(\"update entity that has the mergeKey: %s\");\n",
+                        "\t\t$%s->amGoingTo(\"update entity that has the createdDataKey: %s\");\n",
                         $actor,
                         $key
                     );
-                    //Get Entity from Static data.
-                    $testSteps .= sprintf(
-                        "\t\t$%s = DataObjectHandler::getInstance()->getObject(\"%s\");\n",
-                        $entity,
-                        $entity
-                    );
+
+                    //HookObject End-Product needs to be created in the Class/Cest scope,
+                    //otherwise create them in the Test scope.
+                    //Determine if there are required-entities and create array of required-entities for merging.
+                    $requiredEntities = [];
+                    $requiredEntityObjects = [];
+                    foreach ($customActionAttributes as $customAttribute) {
+                        if (is_array($customAttribute) && $customAttribute['nodeName'] = 'required-entity') {
+                            if ($hookObject) {
+                                $requiredEntities [] = "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
+                                    "->getName() => " . "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
+                                    "->getType()";
+                                $requiredEntityObjects [] = '$this->' . $customAttribute
+                                    [self::REQUIRED_ENTITY_REFERENCE];
+                            } else {
+                                $requiredEntities [] = "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE]
+                                    . "->getName() => " . "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
+                                    "->getType()";
+                                $requiredEntityObjects [] = '$' . $customAttribute[self::REQUIRED_ENTITY_REFERENCE];
+                            }
+                        }
+                    }
 
                     if ($hookObject) {
-                        $updateEntityFunctionCall = sprintf("\t\t\$this->%s->updateEntity(", $key);
-                        $dataPersistenceHandlerFunctionCall = sprintf(
-                            "\t\t\$this->%s = new DataPersistenceHandler($%s, [\$this->%s]);\n",
-                            $key,
-                            $entity,
-                            $originalEntity
-                        );
+                        $updateEntityFunctionCall = sprintf("\t\t\$this->%s->updateEntity(\"%s\"", $key, $updateEntity);
                     } else {
-                        $updateEntityFunctionCall = sprintf("\t\t\$%s->updateEntity(", $key);
-                        $dataPersistenceHandlerFunctionCall = sprintf(
-                            "\t\t$%s = new DataPersistenceHandler($%s, [$%s]);\n",
-                            $key,
-                            $entity,
-                            $originalEntity
+                        $updateEntityFunctionCall = sprintf("\t\t\$%s->updateEntity(\"%s\"", $key, $updateEntity);
+                    }
+
+                    if (!empty($requiredEntities)) {
+                        $updateEntityFunctionCall .= sprintf(
+                            ", [%s]",
+                            implode(', ', $requiredEntityObjects)
                         );
                     }
 
@@ -591,7 +645,6 @@ class TestGenerator
                         $updateEntityFunctionCall .= ");\n";
                     }
 
-                    $testSteps .= $dataPersistenceHandlerFunctionCall;
                     $testSteps .= $updateEntityFunctionCall;
                     break;
                 case "getData":
@@ -883,6 +936,71 @@ class TestGenerator
                 case "conditionalClick":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $dependentSelector, $visible);
                     break;
+                case "assertEquals":
+                case "assertGreaterOrEquals":
+                case "assertGreaterThan":
+                case "assertGreaterThanOrEqual":
+                case "assertInternalType":
+                case "assertLessOrEquals":
+                case "assertLessThan":
+                case "assertLessThanOrEqual":
+                case "assertNotEquals":
+                case "assertInstanceOf":
+                case "assertNotInstanceOf":
+                case "assertNotRegExp":
+                case "assertNotSame":
+                case "assertRegExp":
+                case "assertSame":
+                case "assertStringStartsNotWith":
+                case "assertStringStartsWith":
+                case "assertArrayHasKey":
+                case "assertArrayNotHasKey":
+                case "assertCount":
+                case "assertContains":
+                case "assertNotContains":
+                case "expectException":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionName,
+                        $assertExpected,
+                        $assertActual,
+                        $assertMessage,
+                        $assertDelta
+                    );
+                    break;
+                case "assertEmpty":
+                case "assertFalse":
+                case "assertFileExists":
+                case "assertFileNotExists":
+                case "assertIsEmpty":
+                case "assertNotEmpty":
+                case "assertNotNull":
+                case "assertNull":
+                case "assertTrue":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionName,
+                        $assertActual,
+                        $assertMessage
+                    );
+                    break;
+                case "assertArraySubset":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionName,
+                        $assertExpected,
+                        $assertActual,
+                        $assertIsStrict,
+                        $assertMessage
+                    );
+                    break;
+                case "fail":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionName,
+                        $assertMessage
+                    );
+                    break;
                 default:
                     if ($returnVariable) {
                         $testSteps .= $this->wrapFunctionCallWithReturnValue(
@@ -900,6 +1018,20 @@ class TestGenerator
         }
 
         return $testSteps;
+    }
+
+    /**
+     * Resolves Locator:: in given $attribute if it is found.
+     * @param string $attribute
+     * @return string
+     */
+    private function resolveLocatorFunctionInAttribute($attribute)
+    {
+        if (strpos($attribute, "Locator::") !== false) {
+            $attribute = $this->stripWrappedQuotes($attribute);
+            $attribute = $this->wrapFunctionArgsWithQuotes("/Locator::[\w]+\(([\s\S]+)\)/", $attribute);
+        }
+        return $attribute;
     }
 
     /**
@@ -976,32 +1108,49 @@ class TestGenerator
      */
     private function processQuoteBreaks($match, $argument, $replacement)
     {
-        $outputArg = $argument;
-        $beforeIndex = strpos($outputArg, $match) - 1;
-        $afterIndex = $beforeIndex + strlen($match) + 1;
+        $outputArg = str_replace($match, '" . ' . $replacement . ' . "', $argument);
 
-        $quoteBefore = false;
-        // Determine if there is a " before/after the $match, and if there is only one " before/after match.
-        if ($beforeIndex == 0
-            || ($argument[$beforeIndex] == '"' && substr_count($argument, '"', 0, $beforeIndex) < 1)) {
-            $quoteBefore = true;
-        }
-        $quoteAfter = $argument[$afterIndex] == '"' && substr_count($argument, '"', $afterIndex+1) < 1;
-
-        //Remove quotes at either end of argument if they aren't necessary. Add double-quote concatenation if needed.
-        if ($quoteBefore) {
-            $outputArg = substr($outputArg, 0, $beforeIndex) . substr($outputArg, $beforeIndex+1);
-            $afterIndex--;
-        } else {
-            $replacement = '" . ' . $replacement;
-        }
-        if ($quoteAfter) {
-            $outputArg = substr($outputArg, 0, $afterIndex) . substr($outputArg, $afterIndex+1);
-        } else {
-            $replacement = $replacement . ' . "';
-        }
-        $outputArg = str_replace($match, $replacement, $outputArg);
+        //Sanitize string of any unnecessary '"" .' and '. ""'.
+        //Regex means: Search for '"" . ' but not '\"" . '  and ' . ""'.
+        //Matches on '"" . ' and ' . ""', but not on '\"" . ' and ' . "\"'.
+        $outputArg = preg_replace('/(?(?<![\\\\])"" \. )| \. ""/', "", $outputArg);
         return $outputArg;
+    }
+
+    /**
+     * Wraps all args inside function give with double quotes. Uses regex to locate arguments of function
+     * @param string $functionRegex
+     * @param string $input
+     * @return string
+     */
+    private function wrapFunctionArgsWithQuotes($functionRegex, $input)
+    {
+        $output = $input;
+        preg_match_all($functionRegex, $input, $matches);
+
+        //If no Arguments were passed in
+        if (!isset($matches[1][0])) {
+            return $input;
+        }
+
+        $allArguments = explode(',', $matches[1][0]);
+        foreach ($allArguments as $argument) {
+            $argument = trim($argument);
+
+            if ($argument[0] == "[") {
+                $replacement = "[" . $this->addUniquenessToParamArray($argument) . "]";
+            } elseif (is_numeric($argument)) {
+                $replacement = $argument;
+            } else {
+                $replacement = $this->addUniquenessFunctionCall($argument);
+            }
+
+            //Replace only first occurrence of argument with "argument"
+            $pos = strpos($output, $argument);
+            $output = substr_replace($output, $replacement, $pos, strlen($argument));
+        }
+
+        return $output;
     }
 
     /**
@@ -1020,6 +1169,7 @@ class TestGenerator
      * Creates a PHP string for the _before/_after methods if the Test contains an <before> or <after> block.
      * @param array $hookObjects
      * @return string
+     * @throws TestReferenceException
      */
     private function generateHooksPhp($hookObjects)
     {
@@ -1078,96 +1228,11 @@ class TestGenerator
     }
 
     /**
-     * Creates a PHP string for the Test Annotations block if the Test contains an <annotations> block.
-     *
-     * @param array $testAnnotationsObject
-     * @return string
-     */
-    private function generateTestAnnotationsPhp($testAnnotationsObject)
-    {
-        $testAnnotationsPhp = "\t/**\n";
-
-        foreach ($testAnnotationsObject as $annotationType => $annotationName) {
-            if ($annotationType == "features") {
-                $features = "";
-
-                foreach ($annotationName as $name) {
-                    $features .= sprintf("\"%s\"", $name);
-
-                    if (next($annotationName)) {
-                        $features .= ", ";
-                    }
-                }
-
-                $testAnnotationsPhp .= sprintf("\t * @Features({%s})\n", $features);
-            }
-
-            if ($annotationType == "stories") {
-                $stories = "";
-
-                foreach ($annotationName as $name) {
-                    $stories .= sprintf("\"%s\"", $name);
-
-                    if (next($annotationName)) {
-                        $stories .= ", ";
-                    }
-                }
-
-                $testAnnotationsPhp .= sprintf("\t * @Stories({%s})\n", $stories);
-            }
-
-            if ($annotationType == "title") {
-                $testAnnotationsPhp .= sprintf("\t * @Title(\"%s\")\n", $annotationName[0]);
-            }
-
-            if ($annotationType == "description") {
-                $testAnnotationsPhp .= sprintf("\t * @Description(\"%s\")\n", $annotationName[0]);
-            }
-
-            if ($annotationType == "severity") {
-                $testAnnotationsPhp .= sprintf(
-                    "\t * @Severity(level = SeverityLevel::%s)\n",
-                    $annotationName[0]
-                );
-            }
-
-            if ($annotationType == "testCaseId") {
-                $testAnnotationsPhp .= sprintf("\t * @TestCaseId(\"%s\")\n", $annotationName[0]);
-            }
-        }
-
-        $testAnnotationsPhp .= sprintf(
-            "\t * @Parameter(name = \"%s\", value=\"$%s\")\n",
-            "AcceptanceTester",
-            "I"
-        );
-
-        foreach ($testAnnotationsObject as $annotationType => $annotationName) {
-            if ($annotationType == "group") {
-                foreach ($annotationName as $name) {
-                    $testAnnotationsPhp .= sprintf("\t * @group %s\n", $name);
-                }
-            }
-
-            if ($annotationType == "env") {
-                foreach ($annotationName as $env) {
-                    $testAnnotationsPhp .= sprintf("\t * @env %s\n", $env);
-                }
-            }
-        }
-
-        $testAnnotationsPhp .= sprintf("\t * @param %s $%s\n", "AcceptanceTester", "I");
-        $testAnnotationsPhp .= "\t * @return void\n";
-        $testAnnotationsPhp .= "\t */\n";
-
-        return $testAnnotationsPhp;
-    }
-
-    /**
      * Creates a PHP string based on a <test> block.
      * Concatenates the Test Annotations PHP and Test PHP for a single Test.
      * @param array $testsObject
      * @return string
+     * @throws TestReferenceException
      */
     private function generateTestsPhp($testsObject)
     {
@@ -1176,7 +1241,7 @@ class TestGenerator
         foreach ($testsObject as $test) {
             $testName = $test->getName();
             $testName = str_replace(' ', '', $testName);
-            $testAnnotations = $this->generateTestAnnotationsPhp($test->getAnnotations());
+            $testAnnotations = $this->generateAnnotationsPhp($test->getAnnotations(), "Test");
             $dependencies = 'AcceptanceTester $I';
             try {
                 $steps = $this->generateStepsPhp($test->getOrderedActions(), $test->getCustomData());
@@ -1306,7 +1371,7 @@ class TestGenerator
      */
     private function addDollarSign($input)
     {
-        return sprintf("$%s", $input);
+        return sprintf("$%s", ltrim($this->stripQuotes($input), '$'));
     }
 
     // @codingStandardsIgnoreStart
@@ -1379,5 +1444,75 @@ class TestGenerator
         if (substr($paramArray, 0, 1) != "[" || substr($paramArray, strlen($paramArray)-1, 1)!= "]") {
             throw new TestReferenceException("parameterArray must begin with `[` and end with `]");
         }
+    }
+
+    /**
+     * Resolve value based on type.
+     *
+     * @param string $value
+     * @param string $type
+     * @return string
+     */
+    private function resolveValueByType($value, $type)
+    {
+        if (null === $value) {
+            return null;
+        }
+        if (null === $type) {
+            $type = 'const';
+        }
+        if ($type == "string") {
+            return $this->addUniquenessFunctionCall($value);
+        } elseif ($type == "bool") {
+            return $this->toBoolean($value) ? "true" : "false";
+        } elseif ($type == "int" || $type == "float") {
+            return $this->toNumber($value);
+        } elseif ($type == "array") {
+            $this->validateParameterArray($value);
+            return "[" . $this->addUniquenessToParamArray($value) . "]";
+        } elseif ($type == "variable") {
+            return $this->addDollarSign($value);
+        } else {
+            return $value;
+        }
+    }
+
+    /**
+     * Convert input string to boolean equivalent.
+     *
+     * @param string $inStr
+     * @return bool|null
+     */
+    private function toBoolean($inStr)
+    {
+        return boolval($this->stripQuotes($inStr));
+    }
+
+    /**
+     * Convert input string to number equivalent.
+     *
+     * @param string $inStr
+     * @return int|float|null
+     */
+    private function toNumber($inStr)
+    {
+        $outStr = $this->stripQuotes($inStr);
+        if (strpos($outStr, localeconv()['decimal_point']) === false) {
+            return intval($outStr);
+        } else {
+            return floatval($outStr);
+        }
+    }
+
+    /**
+     * Strip single or double quotes from begin and end of input string.
+     *
+     * @param string $inStr
+     * @return string
+     */
+    private function stripQuotes($inStr)
+    {
+        $unquoted = preg_replace('/^(\'(.*)\'|"(.*)")$/', '$2$3', $inStr);
+        return $unquoted;
     }
 }

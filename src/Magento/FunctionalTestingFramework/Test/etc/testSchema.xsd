@@ -22,8 +22,8 @@
     <xs:complexType name="cestType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
             <xs:element type="annotationsType" name="annotations" minOccurs="0"/>
-            <xs:element type="testType" name="before" minOccurs="0"/>
-            <xs:element type="testType" name="after" minOccurs="0"/>
+            <xs:element type="hookType" name="before" minOccurs="0"/>
+            <xs:element type="hookType" name="after" minOccurs="0"/>
             <xs:element type="testType" name="test" maxOccurs="unbounded"/>
         </xs:choice>
         <xs:attribute type="xs:string" name="name" use="required"/>
@@ -55,6 +55,7 @@
             <xs:element type="annotationType" name="description" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="severity" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="testCaseId" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="annotationType" name="useCaseId" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="group" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="return" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
@@ -65,6 +66,11 @@
                 <xs:attribute type="xs:string" name="value" use="required"/>
             </xs:extension>
         </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="hookType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="actionTypeTags"/>
+        </xs:choice>
     </xs:complexType>
     <xs:complexType name="testType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -183,6 +189,40 @@
             <xs:element type="waitForLoadingMaskToDisappearType" name="waitForLoadingMaskToDisappear" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForPageLoadType" name="waitForPageLoad" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForTextType" name="waitForText" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertArrayHasKeyType" name="assertArrayHasKey" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertArrayNotHasKeyType" name="assertArrayNotHasKey" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertArraySubsetType" name="assertArraySubset" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertContainsType" name="assertContains" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertCountType" name="assertCount" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertEmptyType" name="assertEmpty" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertEqualsType" name="assertEquals" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertFalseType" name="assertFalse" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertFileExistsType" name="assertFileExists" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertFileNotExistsType" name="assertFileNotExists" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertGreaterOrEqualsType" name="assertGreaterOrEquals" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertGreaterThanType" name="assertGreaterThan" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertGreaterThanOrEqualType" name="assertGreaterThanOrEqual" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertInstanceOfType" name="assertInstanceOf" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertInternalTypeType" name="assertInternalType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertIsEmptyType" name="assertIsEmpty" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertLessOrEqualsType" name="assertLessOrEquals" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertLessThanType" name="assertLessThan" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertLessThanOrEqualType" name="assertLessThanOrEqual" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertNotContainsType" name="assertNotContains" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertNotEmptyType" name="assertNotEmpty" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertNotEqualsType" name="assertNotEquals" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertNotInstanceOfType" name="assertNotInstanceOf" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertNotNullType" name="assertNotNull" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertNotRegExpType" name="assertNotRegExp" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertNotSameType" name="assertNotSame" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertNullType" name="assertNull" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertRegExpType" name="assertRegExp" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertSameType" name="assertSame" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertStringStartsNotWithType" name="assertStringStartsNotWith" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertStringStartsWithType" name="assertStringStartsWith" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertTrueType" name="assertTrue" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="expectExceptionType" name="expectException" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="failType" name="fail" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
     </xs:group>
 
@@ -1521,4 +1561,505 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+    <xs:complexType name="assertArrayHasKeyType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertArrayNotHasKeyType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertArraySubsetType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:boolean" name="strict"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertContainsType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertCountType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertEmptyType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertEqualsType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="delta"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertFalseType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertFileExistsType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertFileNotExistsType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertGreaterOrEqualsType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertGreaterThanType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertGreaterThanOrEqualType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertInstanceOfType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertInternalTypeType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertIsEmptyType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertLessOrEqualsType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertLessThanType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertLessThanOrEqualType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertNotContainsType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertNotEmptyType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertNotEqualsType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="delta"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertNotInstanceOfType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertNotNullType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertNotRegExpType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertNotSameType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertNullType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertRegExpType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertSameType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertStringStartsNotWithType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertStringStartsWithType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertTrueType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="expectExceptionType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="expected"/>
+                <xs:attribute type="assertEnum" name="expectedType"/>
+                <xs:attribute type="xs:string" name="actual"/>
+                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="failType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="message"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:simpleType name="assertEnum" final="restriction" >
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="int" />
+            <xs:enumeration value="float" />
+            <xs:enumeration value="bool" />
+            <xs:enumeration value="string" />
+            <xs:enumeration value="variable" />
+            <xs:enumeration value="array" />
+            <xs:enumeration value="const" />
+        </xs:restriction>
+    </xs:simpleType>
 </xs:schema>

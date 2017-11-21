@@ -32,7 +32,6 @@ class ActionGroupMergeGenerationTest extends TestCase
         $this->runComparisonTest(self::ACTION_GROUP_FUNCTIONAL_CEST);
     }
 
-
     /**
      * Generate a Cest by name and assert that it equals the corresponding .txt source of truth
      *
@@ -50,7 +49,6 @@ class ActionGroupMergeGenerationTest extends TestCase
             ".php";
 
         $this->assertTrue(file_exists($cestFile));
-
 
         $this->assertFileEquals(
             self::RESOURCES_PATH . DIRECTORY_SEPARATOR . $cestName . ".txt",

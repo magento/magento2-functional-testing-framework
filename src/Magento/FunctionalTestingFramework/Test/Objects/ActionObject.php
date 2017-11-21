@@ -22,6 +22,7 @@ class ActionObject
     const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray"];
     const SELECTOR_ENABLED_ATTRIBUTES = ['selector', 'dependentSelector', "selector1", "selector2"];
     const MERGE_ACTION_ORDER_AFTER = 'after';
+    const MERGE_ACTION_ORDER_BEFORE = 'before';
     const ACTION_ATTRIBUTE_URL = 'url';
     const ACTION_ATTRIBUTE_SELECTOR = 'selector';
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER = '/\(.+\)/';
@@ -83,10 +84,15 @@ class ActionObject
      * @param string $type
      * @param array $actionAttributes
      * @param string|null $linkedAction
-     * @param int $order
+     * @param string $order
      */
-    public function __construct($mergeKey, $type, $actionAttributes, $linkedAction = null, $order = 0)
-    {
+    public function __construct(
+        $mergeKey,
+        $type,
+        $actionAttributes,
+        $linkedAction = null,
+        $order = ActionObject::MERGE_ACTION_ORDER_BEFORE
+    ) {
         $this->mergeKey = $mergeKey;
         $this->type = $type;
         $this->actionAttributes = $actionAttributes;
@@ -323,7 +329,9 @@ class ActionObject
                         throw new TestReferenceException("Could not resolve entity reference " . $inputString);
                     }
                     $parameterized = $obj->getElement($objField)->isParameterized();
-                    $replacement = $obj->getElement($objField)->getSelector();
+                    // If no Selector is defined, assume element has LocatorFunction
+                    $replacement = $obj->getElement($objField)->getSelector() ?:
+                        $obj->getElement($objField)->getLocatorFunction();
                     $this->timeout = $obj->getElement($objField)->getTimeout();
                     break;
                 case (get_class($obj) == EntityDataObject::class):
@@ -351,7 +359,7 @@ class ActionObject
                 throw new TestReferenceException("Could not resolve entity reference " . $inputString);
             }
 
-            //If Page or Section's Element is has parameterized = true attribute, attempt to do parameter replacement.
+            // If Page or Section's Element has the parameterized = true attribute, attempt to do parameter replacement
             if ($parameterized) {
                 $parameterList = $this->stripAndReturnParameters($match);
                 $replacement = $this->matchParameterReferences($replacement, $parameterList);
@@ -373,6 +381,7 @@ class ActionObject
     private function matchParameterReferences($reference, $parameters)
     {
         preg_match_all('/{{[\w.]+}}/', $reference, $varMatches);
+        $varMatches[0] = array_unique($varMatches[0]);
         if (count($varMatches[0]) > count($parameters)) {
             if (is_array($parameters)) {
                 $parametersGiven = implode(",", $parameters);

@@ -41,7 +41,13 @@ use Yandex\Allure\Adapter\Support\AttachmentSupport;
 class MagentoWebDriver extends WebDriver
 {
     use AttachmentSupport;
-    public static $loadingMask = '.loading-mask';
+    public static $loadingMasksLocators = [
+        '//div[contains(@class, "loading-mask")]',
+        '//div[contains(@class, "admin_data-grid-loading-mask")]',
+        '//div[contains(@class, "admin__data-grid-loading-mask")]',
+        '//div[contains(@class, "admin__form-loading-mask")]',
+        '//div[@data-role="spinner"]'
+    ];
 
     /**
      * The module required fields, to be set in the suite .yml configuration file.
@@ -189,17 +195,20 @@ class MagentoWebDriver extends WebDriver
     {
         $this->waitForJS('return document.readyState == "complete"', $timeout);
         $this->waitForAjaxLoad($timeout);
-        $this->waitForElementNotVisible('.loading-mask', 30);
-        $this->waitForElementNotVisible('.admin_data-grid-loading-mask', 30);
-        $this->waitForElementNotVisible('.admin__form-loading-mask', 30);
+        $this->waitForLoadingMaskToDisappear();
     }
 
     /**
-     * Wait for the Loading mask to disappear.
+     * Wait for all visible loading masks to disappear. Gets all elements by mask selector, then loops over them.
      */
     public function waitForLoadingMaskToDisappear()
     {
-        $this->waitForElementNotVisible(self::$loadingMask, 30);
+        foreach( self::$loadingMasksLocators as $maskLocator) {
+            $loadingMaskElements = $this->_findElements($maskLocator);
+            for ($i = 1; $i <= count($loadingMaskElements); $i++) {
+                $this->waitForElementNotVisible("{$maskLocator}[{$i}]", 30);
+            }
+        }
     }
 
     /**

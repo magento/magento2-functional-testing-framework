@@ -28,7 +28,6 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
     const ENTITY_OPERATION_HEADER_PARAM = 'param';
     const ENTITY_OPERATION_HEADER_VALUE = 'value';
     const ENTITY_OPERATION_URL_PARAM = 'param';
-    const ENTITY_OPERATION_URL_PARAM_TYPE = 'type';
     const ENTITY_OPERATION_URL_PARAM_KEY = 'key';
     const ENTITY_OPERATION_URL_PARAM_VALUE = 'value';
     const ENTITY_OPERATION_ENTRY = 'field';
@@ -156,8 +155,7 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
 
             if (array_key_exists(OperationDefinitionObjectHandler::ENTITY_OPERATION_URL_PARAM, $opDefArray)) {
                 foreach ($opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_URL_PARAM] as $paramEntry) {
-                    $params[$paramEntry[OperationDefinitionObjectHandler::ENTITY_OPERATION_URL_PARAM_TYPE]]
-                    [$paramEntry[OperationDefinitionObjectHandler::ENTITY_OPERATION_URL_PARAM_KEY]] =
+                    $params[$paramEntry[OperationDefinitionObjectHandler::ENTITY_OPERATION_URL_PARAM_KEY]] =
                         $paramEntry[OperationDefinitionObjectHandler::ENTITY_OPERATION_URL_PARAM_VALUE];
                 }
             }

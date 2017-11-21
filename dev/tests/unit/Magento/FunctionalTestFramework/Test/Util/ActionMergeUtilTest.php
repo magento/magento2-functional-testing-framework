@@ -5,10 +5,10 @@
  */
 namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
 
+use AspectMock\Test as AspectMock;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
-use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
 use PHPUnit\Framework\TestCase;
@@ -101,7 +101,7 @@ class ActionMergeUtilTest extends TestCase
      */
     public function testResolveActionStepSectionData()
     {
-        //TODO implement section object mocker and test
+        $this->markTestIncomplete('TODO');
     }
 
     /**
@@ -109,9 +109,9 @@ class ActionMergeUtilTest extends TestCase
      *
      * @return void
      */
-    public function resolveActionStepPageData()
+    public function testResolveActionStepPageData()
     {
-        //TODO implement page object mocker and test
+        $this->markTestIncomplete('TODO');
     }
 
     /**
@@ -130,18 +130,13 @@ class ActionMergeUtilTest extends TestCase
         $actionName = "myAction";
         $actionType = "myCustomType";
 
-
         // Set up mock data object
         $mockData = [$dataFieldName => $dataFieldValue];
         $mockDataObject = new EntityDataObject($dataObjectName, $dataObjectType, $mockData, null, null, null);
 
         // Set up mock DataObject Handler
-        $mockDataHandler = $this->createMock(DataObjectHandler::class);
-        $mockDataHandler->expects($this->any())
-            ->method('getObject')
-            ->with($this->matches($dataObjectName))
-            ->willReturn($mockDataObject);
-        DataObjectHandlerReflectionUtil::setupMock($mockDataHandler);
+        $mockDOHInstance = AspectMock::double(DataObjectHandler::class, ['getObject' => $mockDataObject])->make();
+        AspectMock::double(DataObjectHandler::class, ['getInstance' => $mockDOHInstance]);
 
         // Create test object and action object
         $actionAttributes = [$userInputKey => $userinputValue];
@@ -153,7 +148,5 @@ class ActionMergeUtilTest extends TestCase
         $resolvedActions = $mergeUtil->resolveActionSteps($actions);
 
         $this->assertEquals($dataFieldValue, $resolvedActions[$actionName]->getCustomActionAttributes()[$userInputKey]);
-
-        DataObjectHandlerReflectionUtil::tearDown();
     }
 }

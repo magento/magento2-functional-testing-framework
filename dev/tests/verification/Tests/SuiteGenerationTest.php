@@ -19,7 +19,6 @@ class SuiteGenerationTest extends TestCase
     private static $YML_EXISTS_FLAG = false;
     private static $TEST_GROUPS = [];
 
-
     public static function setUpBeforeClass()
     {
         if (file_exists(self::CONFIG_YML_FILE)) {
@@ -56,8 +55,8 @@ class SuiteGenerationTest extends TestCase
             $groupName .
             DIRECTORY_SEPARATOR .
             TestManifest::TEST_MANIFEST_FILENAME;
-        $expectedManifest = self::RESOURCES_DIR .  DIRECTORY_SEPARATOR . __FUNCTION__ . ".txt";
-        $this->assertFileEquals($expectedManifest, $actualManifest);
+        $expectedManifest = self::RESOURCES_DIR .  DIRECTORY_SEPARATOR . "TestSuiteGeneration1.txt";
+        $this->assertFileEquals($expectedManifest, $actualManifest, '', true, true);
     }
 
     public static function tearDownAfterClass()

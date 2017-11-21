@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <cest name="DataReplacementCest">
+        <test name="DataReplacementTest">
+            <fillField mergeKey="inputReplace" selector="#selector" userInput="StringBefore {{simpleData.firstname}} StringAfter"/>
+            <fillField mergeKey="selectorReplace" selector="#{{simpleData.firstname}}" userInput="input"/>
+            <dragAndDrop mergeKey="selector12Replace" selector1="#{{simpleData.firstname}}" selector2="{{simpleData.lastname}}"/>
+            <conditionalClick mergeKey="dependentSelectorReplace" dependentSelector="#{{simpleData.firstname}}" selector="{{simpleData.lastname}}" visible="true"/>
+            <amOnUrl mergeKey="urlReplace" url="{{simpleData.firstname}}.html"/>
+            <searchAndMultiSelectOption mergeKey="parameterArrayReplacement" selector="#selector" parameterArray="[{{simpleData.firstname}}, {{simpleData.lastname}}]"/>
+
+            <fillField mergeKey="inputPrefixReplaceMSQPrefix" selector="#selector" userInput="StringBefore {{uniqueData.firstname}} StringAfter"/>
+            <fillField mergeKey="selectorReplaceMSQPrefix" selector="#{{uniqueData.firstname}}" userInput="input"/>
+            <dragAndDrop mergeKey="selector12ReplaceMSQPrefix" selector1="#{{uniqueData.firstname}}" selector2="{{uniqueData.firstname}}"/>
+            <conditionalClick mergeKey="dependentSelectorReplaceMSQPrefix" dependentSelector="#{{uniqueData.firstname}}" selector="{{uniqueData.firstname}}" visible="true"/>
+            <amOnUrl mergeKey="urlReplaceMSQPrefix" url="{{uniqueData.firstname}}.html"/>
+            <searchAndMultiSelectOption mergeKey="parameterArrayReplacementMSQPrefix" selector="#selector" parameterArray="[{{uniqueData.firstname}}, {{simpleData.lastname}}]"/>
+
+            <fillField mergeKey="inputReplaceMSQSuffix" selector="#selector" userInput="StringBefore {{uniqueData.lastname}} StringAfter"/>
+            <fillField mergeKey="selectorReplaceMSQSuffix" selector="#{{uniqueData.lastname}}" userInput="input"/>
+            <dragAndDrop mergeKey="selector12ReplaceMSQSuffix" selector1="#{{uniqueData.lastname}}" selector2="{{uniqueData.lastname}}"/>
+            <conditionalClick mergeKey="dependentSelectorReplaceMSQSuffix" dependentSelector="#{{uniqueData.lastname}}" selector="{{uniqueData.lastname}}" visible="true"/>
+            <amOnUrl mergeKey="urlReplaceMSQSuffix" url="{{uniqueData.lastname}}.html"/>
+            <searchAndMultiSelectOption mergeKey="parameterArrayReplacementMSQSuffix" selector="#selector" parameterArray="[{{simpleData.firstname}}, {{uniqueData.lastname}}]"/>
+            <searchAndMultiSelectOption mergeKey="parameterArrayReplacementMSQBoth" selector="#selector" parameterArray="[{{uniqueData.firstname}}, {{uniqueData.lastname}}]"/>
+        </test>
+    </cest>
+</config>

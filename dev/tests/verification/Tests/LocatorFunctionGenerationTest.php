@@ -9,29 +9,29 @@ use Magento\FunctionalTestingFramework\Test\Handlers\CestObjectHandler;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use PHPUnit\Framework\TestCase;
 
-class PersistedReplacementGenerationTest extends TestCase
+class LocatorFunctionGenerationTest extends TestCase
 {
-    const PERSISTED_REPLACEMENT_CEST = 'PersistedReplacementCest';
+    const LOCATOR_FUNCTION_CEST = 'LocatorFunctionCest';
     const RESOURCES_PATH = __DIR__ . '/../Resources';
 
     /**
-     * Tests flat generation of a hardcoded cest file with no external references.
+     * Tests generation of actions using elements that have a LocatorFunction.
      */
-    public function testPersistedReplacementGeneration()
+    public function testLocatorFunctionGeneration()
     {
-        $cest = CestObjectHandler::getInstance()->getObject(self::PERSISTED_REPLACEMENT_CEST);
+        $cest = CestObjectHandler::getInstance()->getObject(self::LOCATOR_FUNCTION_CEST);
         $test = TestGenerator::getInstance(null, [$cest]);
         $test->createAllCestFiles();
 
         $cestFile = $test->getExportDir() .
             DIRECTORY_SEPARATOR .
-            self::PERSISTED_REPLACEMENT_CEST .
+            self::LOCATOR_FUNCTION_CEST .
             ".php";
 
         $this->assertTrue(file_exists($cestFile));
 
         $this->assertFileEquals(
-            self::RESOURCES_PATH . DIRECTORY_SEPARATOR . self::PERSISTED_REPLACEMENT_CEST . ".txt",
+            self::RESOURCES_PATH . DIRECTORY_SEPARATOR . self::LOCATOR_FUNCTION_CEST . ".txt",
             $cestFile
         );
     }
