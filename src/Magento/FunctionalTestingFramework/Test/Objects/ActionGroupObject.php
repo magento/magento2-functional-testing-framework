@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Test\Objects;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 
 /**
@@ -65,12 +66,23 @@ class ActionGroupObject
      * @param array $arguments
      * @param string $actionReferenceKey
      * @return array
+     * @throws TestReferenceException
      */
     public function getSteps($arguments, $actionReferenceKey)
     {
         $mergeUtil = new ActionMergeUtil($this->name, "ActionGroup");
         $args = $this->arguments;
-
+        $emptyArguments = array_keys($args, null, true);
+        if (!empty($emptyArguments) && $arguments !== null) {
+            $diff = array_diff($emptyArguments, array_keys($arguments));
+            if (!empty($diff)) {
+                $error = 'Argument(s) missed (' . implode(", ", $diff) . ') for actionGroup "' . $this->name . '"';
+                throw new TestReferenceException($error);
+            }
+        } elseif (!empty($emptyArguments)) {
+            $error = 'Not enough arguments given for actionGroup "' . $this->name . '"';
+            throw new TestReferenceException($error);
+        }
         if ($arguments) {
             $args = array_merge($args, $arguments);
         }
