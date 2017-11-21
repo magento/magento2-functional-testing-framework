@@ -2,7 +2,7 @@
 # See COPYING.txt for license details.
 
 echo "===============================UNIT TESTS==============================="
-vendor/bin/phpunit --configuration dev/tests/phpunit.xml --testsuite unit
+vendor/bin/phpunit --configuration dev/tests/phpunit.xml --testsuite unit --coverage-xml build/coverage-xml
 
 echo "===============================VERIFICATION TESTS==============================="
-vendor/bin/phpunit --configuration dev/tests/phpunit.xml --testsuite verification
+vendor/bin/phpunit --configuration dev/tests/phpunit.xml --testsuite verification --coverage-xml build/coverage-xml

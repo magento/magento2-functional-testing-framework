@@ -10,3 +10,5 @@ env:
     - VERIFICATION_TOOL=static-checks
 script:
   - bin/$VERIFICATION_TOOL
+after_script:
+  - if [ $VERIFICATION_TOOL == "phpunit-checks" ]; then php vendor/bin/codacycoverage phpunit; fi
