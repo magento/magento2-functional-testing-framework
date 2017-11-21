@@ -101,7 +101,7 @@ class SectionObjectHandler implements ObjectHandlerInterface
         $parsedObjs = $parser->getData(self::TYPE);
 
         if (!$parsedObjs) {
-            trigger_error("No " . self::TYPE . " objects defined", E_USER_NOTICE);
+            // No *Section.xml files found so give up
             return;
         }
 

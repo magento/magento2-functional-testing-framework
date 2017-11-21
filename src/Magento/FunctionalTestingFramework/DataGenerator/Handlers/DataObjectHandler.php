@@ -116,7 +116,7 @@ class DataObjectHandler implements ObjectHandlerInterface
         $entityParsedData = $entityParser->readDataProfiles();
 
         if (!$entityParsedData) {
-            trigger_error("No entities could be parsed from xml definitions", E_USER_NOTICE);
+            // No *Data.xml files found so give up
             return;
         }
 
