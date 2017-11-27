@@ -67,5 +67,8 @@
                 <argument name="myArg" value="DefaultPerson"/>
             </actionGroup>
         </test>
+        <test name="ArgumentWithSameNameAsElement">
+            <actionGroup ref="FunctionalActionGroupWithTrickyArgument" mergeKey="actionGroup1"/>
+        </test>
     </cest>
 </config>

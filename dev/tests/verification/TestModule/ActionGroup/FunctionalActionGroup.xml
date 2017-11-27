@@ -38,4 +38,11 @@
         <see selector="{{SampleSection.oneParamElement(myArg.firstname)}}" mergeKey="see1"/>
         <amOnPage url="{{SamplePage.url(myArg.firstname,myArg.lastname)}}" mergeKey="amOnPage1"/>
     </actionGroup>
+    <actionGroup name="FunctionalActionGroupWithTrickyArgument">
+        <arguments>
+            <argument name="simple" defaultValue="simpleData"/>
+        </arguments>
+        <seeElement mergeKey="see1" selector="{{SampleSection.simpleElement}}"/>
+        <seeElement mergeKey="see2" selector="{{SampleSection.simpleElementOneParam(simple.firstname)}}"/>
+    </actionGroup>
 </config>

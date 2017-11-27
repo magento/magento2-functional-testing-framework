@@ -162,4 +162,15 @@ class ActionGroupFunctionalCest
 		$I->amOnPage("/Jane/Dane.html");
 	}
 
+	/**
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 */
+	public function ArgumentWithSameNameAsElement(AcceptanceTester $I)
+	{
+		$I->seeElement("#element");
+		$I->seeElement("#element .John");
+	}
+
 }
