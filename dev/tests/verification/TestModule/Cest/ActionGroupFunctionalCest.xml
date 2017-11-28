@@ -18,6 +18,7 @@
         </annotations>
         <before>
             <createData entity="ReplacementPerson" mergeKey="createPersonParam"/>
+            <actionGroup ref="FunctionalActionGroup" mergeKey="beforeGroup"/>
         </before>
         <test name="BasicActionGroupTest">
             <amOnPage mergeKey="step1" url="/someUrl"/>
@@ -67,5 +68,11 @@
                 <argument name="myArg" value="DefaultPerson"/>
             </actionGroup>
         </test>
+        <test name="ArgumentWithSameNameAsElement">
+            <actionGroup ref="FunctionalActionGroupWithTrickyArgument" mergeKey="actionGroup1"/>
+        </test>
+        <after>
+            <actionGroup ref="FunctionalActionGroup" mergeKey="afterGroup"/>
+        </after>
     </cest>
 </config>

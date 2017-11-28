@@ -217,7 +217,8 @@ class ActionGroupObject
             );
         }
 
-        return  str_replace($variableName, $arguments[$variableName], $attributeValue);
+        //replace argument ONLY when there is no letters attached before after (ex. category.name vs categoryTreeButton)
+        return preg_replace("/(?<![\w]){$variableName}(?![(\w])/", $arguments[$variableName], $attributeValue);
     }
 
     /**
