@@ -344,6 +344,7 @@ class TestGenerator
         foreach ($stepsObject as $steps) {
             $actor = "I";
             $actionName = $steps->getType();
+            $attribute = null;
             $customActionAttributes = $steps->getCustomActionAttributes();
             $selector = null;
             $selector1 = null;
@@ -379,6 +380,10 @@ class TestGenerator
                 $returnVariable = $customActionAttributes['returnVariable'];
             }
 
+            if (isset($customActionAttributes['attribute'])) {
+                $attribute = $customActionAttributes['attribute'];
+            }
+
             if (isset($customActionAttributes['variable'])) {
                 $input = $this->addDollarSign($customActionAttributes['variable']);
             } elseif (isset($customActionAttributes['userInput']) && isset($customActionAttributes['url'])) {
@@ -388,6 +393,8 @@ class TestGenerator
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['userInput']);
             } elseif (isset($customActionAttributes['url'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['url']);
+            } elseif (isset($customActionAttributes['expectedValue'])) {
+                $input = $this->addUniquenessFunctionCall($customActionAttributes['expectedValue']);
             }
             if (isset($customActionAttributes['expected'])) {
                 $assertExpected = $this->resolveValueByType(
@@ -966,6 +973,20 @@ class TestGenerator
                         $assertActual,
                         $assertMessage,
                         $assertDelta
+                    );
+                    break;
+                case "assertElementContainsAttribute":
+                    // If a blank string or null is passed in we need to pass a blank string to the function.
+                    if (empty($input)) {
+                        $input = '""';
+                    }
+
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionName,
+                        $selector,
+                        $this->wrapWithDoubleQuotes($attribute),
+                        $input
                     );
                     break;
                 case "assertEmpty":

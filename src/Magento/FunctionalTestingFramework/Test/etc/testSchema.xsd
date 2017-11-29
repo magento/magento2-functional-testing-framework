@@ -95,6 +95,7 @@
             <xs:element type="amOnSubdomainType" name="amOnSubdomain" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="amOnUrlType" name="amOnUrl" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="appendFieldType" name="appendField" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertElementContainsAttributeType" name="assertElementContainsAttribute" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="attachFileType" name="attachFile" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="cancelPopupType" name="cancelPopup" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="checkOptionType" name="checkOption" minOccurs="0" maxOccurs="unbounded"/>
@@ -310,6 +311,20 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector"/>
                 <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute type="xs:string" name="variable"/>
+                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="assertElementContainsAttributeType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="expectedValue"/>
+                <xs:attribute type="xs:string" name="attribute"/>
                 <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="mergeKey" use="required"/>
                 <xs:attribute type="xs:boolean" name="remove" default="false"/>

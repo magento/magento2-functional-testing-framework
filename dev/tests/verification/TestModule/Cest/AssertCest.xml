@@ -76,6 +76,16 @@
             <fail mergeKey="fail" message="fail"/>
             <fail mergeKey="assert7" message="$createData2.firstname$ $createData2.lastname$"/>
             <fail mergeKey="assert8" message="$$createData1.firstname$$ $$createData1.lastname$$"/>
+
+            <!-- assertElementContainsAttribute examples -->
+            <assertElementContainsAttribute selector="#username" attribute="class" expectedValue="admin__control-text" mergeKey="assertElementContainsAttribute1"/>
+            <assertElementContainsAttribute selector="#username" attribute="name" expectedValue="login[username]" mergeKey="assertElementContainsAttribute2"/>
+            <assertElementContainsAttribute selector="#username" attribute="autofocus" expectedValue="" mergeKey="assertElementContainsAttribute3"/>
+            <assertElementContainsAttribute selector="#username" attribute="data-validate" expectedValue="{required:true}" mergeKey="assertElementContainsAttribute4"/>
+            <assertElementContainsAttribute selector=".admin__menu-overlay" attribute="style" expectedValue="display: none;" mergeKey="assertElementContainsAttribute5"/>
+            <assertElementContainsAttribute selector=".admin__menu-overlay" attribute="border" expectedValue="0" mergeKey="assertElementContainsAttribute6"/>
+            <assertElementContainsAttribute selector="#username" attribute="value" expectedValue="$createData2.firstname$" mergeKey="assertElementContainsAttribute7"/>
+            <assertElementContainsAttribute selector="#username" attribute="value" expectedValue="$$createData1.firstname$$" mergeKey="assertElementContainsAttribute8"/>
         </test>
     </cest>
 </config>

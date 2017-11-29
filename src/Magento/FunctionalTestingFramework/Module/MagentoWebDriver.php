@@ -326,6 +326,26 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
+     * Assert that an element contains a given value for the specific attribute.
+     *
+     * @param string $selector
+     * @param string $attribute
+     * @param $value
+     */
+    public function assertElementContainsAttribute($selector, $attribute, $value)
+    {
+        $attributes = $this->grabAttributeFrom($selector, $attribute);
+
+        if (isset($value) && empty($value)) {
+            // If an "attribute" is blank, "", or null we need to be able to assert that it's present.
+            // When an "attribute" is blank or null it returns "true" so we assert that "true" is present.
+            $this->assertEquals($attributes, 'true');
+        } else {
+            $this->assertContains($value, $attributes);
+        }
+    }
+
+    /**
      * Override for _failed method in Codeception method. Adds png and html attachments to allure report
      * following parent execution of test failure processing.
      * @param TestInterface $test
