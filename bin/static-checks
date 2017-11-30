@@ -4,7 +4,7 @@
 echo "===============================PHP CODE SNIFFER REPORT==============================="
 vendor/bin/phpcs ./src --standard=./dev/tests/static/Magento
 vendor/bin/phpcs ./dev/tests/unit --standard=./dev/tests/static/Magento
-vendor/bin/phpcs ./dev/tests/verification --standard=./dev/tests/static/Magento
+vendor/bin/phpcs ./dev/tests/verification --standard=./dev/tests/static/Magento --ignore=dev/tests/verification/_generated
 
 echo "===============================COPY PASTE DETECTOR REPORT==============================="
 vendor/bin/phpcpd ./src
