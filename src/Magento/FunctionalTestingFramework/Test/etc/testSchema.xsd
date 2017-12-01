@@ -69,18 +69,24 @@
     </xs:complexType>
     <xs:complexType name="hookType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="actionTypeTags"/>
+            <xs:group ref="testTypeTags"/>
         </xs:choice>
     </xs:complexType>
     <xs:complexType name="testType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="actionTypeTags" />
+            <xs:group ref="testTypeTags" />
             <xs:element type="annotationsType" name="annotations" minOccurs="0"/>
-            <xs:element type="actions" name="actionGroup" minOccurs="0"/>
         </xs:choice>
         <xs:attribute type="xs:string" name="name"/>
         <xs:attribute type="xs:boolean" name="remove" default="false"/>
     </xs:complexType>
+    <xs:group name="testTypeTags">
+        <xs:choice>
+            <xs:group ref="actionTypeTags"/>
+            <xs:element type="actions" name="actionGroup" minOccurs="0"/>
+        </xs:choice>
+    </xs:group>
+
     <xs:group name="actionTypeTags">
         <xs:choice>
             <xs:group ref="dataOperationTags"/>

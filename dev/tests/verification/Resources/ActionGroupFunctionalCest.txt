@@ -35,6 +35,14 @@ class ActionGroupFunctionalCest
 		$ReplacementPerson = DataObjectHandler::getInstance()->getObject("ReplacementPerson");
 		$this->createPersonParam = new DataPersistenceHandler($ReplacementPerson);
 		$this->createPersonParam->createEntity();
+		$I->fillField("#foo", "myData1");
+		$I->fillField("#bar", "myData2");
+	}
+
+	public function _after(AcceptanceTester $I)
+	{
+		$I->fillField("#foo", "myData1");
+		$I->fillField("#bar", "myData2");
 	}
 
 	/**
