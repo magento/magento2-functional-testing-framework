@@ -20,14 +20,14 @@ class OperationDataArrayResolverTest extends TestCase
         "name" => "Hopper",
         "address" => ["city" => "Hawkins", "state" => "Indiana", "zip" => 78758],
         "isPrimary" => true,
-        "gpa" => 3.5,
+        "gpa" => 3.5678,
         "phone" => 5555555
     ]];
 
     const NESTED_METADATA_ARRAY_RESULT = ["parentType" => [
         "name" => "Hopper",
         "isPrimary" => true,
-        "gpa" => 3.5,
+        "gpa" => 3.5678,
         "phone" => 5555555,
         "address" => [
             ["city" => "Hawkins", "state" => "Indiana", "zip" => 78758],
@@ -65,7 +65,7 @@ class OperationDataArrayResolverTest extends TestCase
         // assert on result
         $expectedResult = ["testType" => [
             "name" => "Hopper",
-            "gpa" => 3.5,
+            "gpa" => 3.5678,
             "phone" => 5555555,
             "isPrimary" => true
         ]];

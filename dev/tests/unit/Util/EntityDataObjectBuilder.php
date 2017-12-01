@@ -16,7 +16,7 @@ class EntityDataObjectBuilder
      */
     private $data = [
         "name" => "Hopper",
-        "gpa" => "3.5",
+        "gpa" => "3.5678",
         "phone" => "5555555",
         "isprimary" => "true"
     ];
