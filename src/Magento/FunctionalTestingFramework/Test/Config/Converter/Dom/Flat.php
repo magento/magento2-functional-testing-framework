@@ -14,6 +14,9 @@ use Magento\FunctionalTestingFramework\Config\Dom\ArrayNodeConfig;
  */
 class Flat implements ConverterInterface
 {
+    const UNIQUE_KEY = 'stepKey';
+    const DEPRECATED_UNIQUE_KEY = 'mergeKey';
+
     /**
      * Array node configuration.
      *
@@ -85,6 +88,10 @@ class Flat implements ConverterInterface
                 }
 
                 $nodeData = $this->convertXml($node, $nodePath);
+                if (!isset($nodeData[self::UNIQUE_KEY]) && isset($nodeData[self::DEPRECATED_UNIQUE_KEY])) {
+                    $nodeData[self::UNIQUE_KEY] = $nodeData[self::DEPRECATED_UNIQUE_KEY];
+                    unset($nodeData[self::DEPRECATED_UNIQUE_KEY]);
+                }
                 if ($isArrayNode) {
                     if ($isNumericArrayNode) {
                         $value[$nodeName][] = $nodeData;
