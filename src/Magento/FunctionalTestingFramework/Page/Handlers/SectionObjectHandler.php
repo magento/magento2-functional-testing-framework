@@ -92,6 +92,7 @@ class SectionObjectHandler implements ObjectHandlerInterface
      * Parse section objects if it's not previously done.
      *
      * @return void
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function initSectionObjects()
     {

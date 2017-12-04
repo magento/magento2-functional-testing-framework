@@ -433,7 +433,7 @@ class MagentoRestDriver extends REST
                     ['attribute_code' => 'custom_design', 'value' => ''],
                     ['attribute_code' => 'page_layout', 'value' => ''],
                     ['attribute_code' => 'custom_design_to', 'value' => $faker->date($format = 'm/d/Y')],
-                    ['attribute_code' => 'custom_design_from', 'value' => $faker->date($format = 'm/d/Y', $max = 'now')]
+                    ['attribute_code' => 'custom_design_from', 'value' => $faker->date($format = 'm/d/Y', 'now')]
                 ]
             ],
             $categoryData

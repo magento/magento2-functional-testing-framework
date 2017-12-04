@@ -82,6 +82,7 @@ class Converter implements \Magento\FunctionalTestingFramework\Config\ConverterI
      *
      * @param \DOMNodeList|array $elements
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function convertXml($elements)
     {

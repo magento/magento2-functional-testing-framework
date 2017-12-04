@@ -109,6 +109,7 @@ class DataObjectHandler implements ObjectHandlerInterface
      * Method to initialize parsing of data.xml and read into objects.
      *
      * @return void
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function initDataObjects()
     {

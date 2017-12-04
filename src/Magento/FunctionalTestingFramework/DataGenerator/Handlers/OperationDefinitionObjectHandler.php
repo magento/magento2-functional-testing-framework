@@ -122,9 +122,13 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
     /**
      * This method reads all dataDefinitions from metadata xml into memory.
      * @return void
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function initDataDefinitions()
     {
+        //TODO: Reduce CyclomaticComplexity/NPathComplexity of method, remove warning suppression.
         $objectManager = ObjectManagerFactory::getObjectManager();
         $metadataParser = $objectManager->create(OperationDefinitionParser::class);
         foreach ($metadataParser->readOperationMetadata()

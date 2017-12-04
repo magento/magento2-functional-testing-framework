@@ -14,6 +14,10 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\CestObject;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 
+/**
+ * Class TestGenerator
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ */
 class TestGenerator
 {
 
@@ -187,8 +191,7 @@ class TestGenerator
         $cestPhpArray = [];
 
         foreach ($cestObjects as $cest) {
-            $name = $cest->getName();
-            $name = $string = str_replace(' ', '', $name);
+            $name = str_replace(' ', '', $cest->getName());
             $php = $this->assembleCestPhp($cest);
             $cestPhpArray[] = [$name, $php];
 
@@ -239,9 +242,12 @@ class TestGenerator
      * @param array $annotationsObject
      * @param string $scope
      * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     private function generateAnnotationsPhp($annotationsObject, $scope)
     {
+        //TODO: Refactor to deal with PHPMD.CyclomaticComplexity
         if ($scope == self::TEST_SCOPE) {
             $indent = "\t";
         } else {
@@ -333,12 +339,13 @@ class TestGenerator
      * statement to handle each unique action. At the bottom of the case statement there is a generic function that can
      * construct the PHP string for nearly half of all Codeception actions.
      * @param array $stepsObject
-     * @param array $stepsData
      * @param array|bool $hookObject
      * @return string
+     * @SuppressWarnings(PHPMD)
      */
-    private function generateStepsPhp($stepsObject, $stepsData, $hookObject = false)
+    private function generateStepsPhp($stepsObject, $hookObject = false)
     {
+        //TODO: Refactor Method according to PHPMD warnings, remove @SuppressWarnings accordingly.
         $testSteps = "";
 
         foreach ($stepsObject as $steps) {
@@ -1221,22 +1228,14 @@ class TestGenerator
             try {
                 $steps = $this->generateStepsPhp(
                     $hookObject->getActions(),
-                    $hookObject->getCustomData(),
                     $createData
                 );
             } catch (TestReferenceException $e) {
                 throw new TestReferenceException($e->getMessage() . " in Element \"" . $type . "\"");
             }
 
-            if ($type == "after") {
-                $hooks .= sprintf("\tpublic function _after(%s)\n", $dependencies);
-                $hooks .= "\t{\n";
-                $hooks .= $steps;
-                $hooks .= "\t}\n\n";
-            }
-
-            if ($type == "before") {
-                $hooks .= sprintf("\tpublic function _before(%s)\n", $dependencies);
+            if ($type == "after" or $type == "before") {
+                $hooks .= sprintf("\tpublic function _{$type}(%s)\n", $dependencies);
                 $hooks .= "\t{\n";
                 $hooks .= $steps;
                 $hooks .= "\t}\n\n";
@@ -1265,7 +1264,7 @@ class TestGenerator
             $testAnnotations = $this->generateAnnotationsPhp($test->getAnnotations(), "Test");
             $dependencies = 'AcceptanceTester $I';
             try {
-                $steps = $this->generateStepsPhp($test->getOrderedActions(), $test->getCustomData());
+                $steps = $this->generateStepsPhp($test->getOrderedActions());
             } catch (TestReferenceException $e) {
                 throw new TestReferenceException($e->getMessage() . " in Test \"" . $test->getName() . "\"");
             }
@@ -1473,9 +1472,11 @@ class TestGenerator
      * @param string $value
      * @param string $type
      * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function resolveValueByType($value, $type)
     {
+        //TODO: Refactor to deal with PHPMD.CyclomaticComplexity, and remove @SuppressWarnings
         if (null === $value) {
             return null;
         }

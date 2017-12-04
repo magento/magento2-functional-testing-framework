@@ -87,6 +87,7 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
      * Method which populates field array with objects from parsed action_group.xml
      *
      * @return void
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function initActionGroups()
     {

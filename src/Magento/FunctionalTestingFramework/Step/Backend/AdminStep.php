@@ -8,6 +8,10 @@ namespace Magento\FunctionalTestingFramework\Step\Backend;
 
 require_once __DIR__ . '/../../Helper/AdminUrlList.php';
 
+/**
+ * Class AdminStep
+ * @SuppressWarnings(PHPMD)
+ */
 // @codingStandardsIgnoreFile
 class AdminStep extends \Magento\FunctionalTestingFramework\AcceptanceTester
 {
