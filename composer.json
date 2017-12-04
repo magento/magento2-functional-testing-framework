@@ -16,7 +16,8 @@
         "sebastian/phpcpd": "~3.0",
         "brainmaestro/composer-git-hooks": "^2.3",
         "codeception/aspect-mock": "^2.0",
-        "codacy/coverage": "^1.4"
+        "codacy/coverage": "^1.4",
+        "phpmd/phpmd": "^2.6.0"
     },
     "autoload": {
         "psr-4": {
