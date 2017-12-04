@@ -193,8 +193,8 @@ class ModuleResolver
      */
     protected function getAdminToken()
     {
-        $login = $_ENV['MAGENTO_ADMIN_USERNAME'];
-        $password = $_ENV['MAGENTO_ADMIN_PASSWORD'];
+        $login = $_ENV['MAGENTO_ADMIN_USERNAME'] ?? null;
+        $password = $_ENV['MAGENTO_ADMIN_PASSWORD'] ?? null;
         if (!$login || !$password || !isset($_ENV['MAGENTO_BASE_URL'])) {
             return false;
         }

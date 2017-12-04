@@ -104,6 +104,11 @@ class MagentoRestDriver extends REST
     public function _beforeSuite($settings = [])
     {
         parent::_beforeSuite($settings);
+
+        if (empty($this->config['url']) || empty($this->config['username']) || empty($this->config['password'])) {
+            return;
+        }
+
         $this->haveHttpHeader('Content-Type', 'application/json');
         $this->sendPOST(
             'integration/admin/token',
