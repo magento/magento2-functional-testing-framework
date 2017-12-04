@@ -75,6 +75,15 @@ class ModuleResolver
     protected $sequenceSorter;
 
     /**
+     * List of module names that will be ignored.
+     *
+     * @var array
+     */
+    protected $moduleBlacklist = [
+        'SampleTests',
+    ];
+
+    /**
      * Get ModuleResolver instance.
      *
      * @return ModuleResolver
@@ -157,7 +166,7 @@ class ModuleResolver
     public function getModulesPath()
     {
         if (isset($this->enabledModulePaths)) {
-            return $this->enabledModulePaths;
+            return $this->removeBlacklistModules($this->enabledModulePaths);
         }
 
         $enabledModules = $this->getEnabledModules();
@@ -165,7 +174,7 @@ class ModuleResolver
         $allModulePaths = glob($modulePath . '*/*');
         if (empty($enabledModules)) {
             $this->enabledModulePaths = $allModulePaths;
-            return $this->enabledModulePaths;
+            return $this->removeBlacklistModules($this->enabledModulePaths);
         }
 
         $enabledModules = array_merge($enabledModules, $this->getModuleWhitelist());
@@ -183,7 +192,7 @@ class ModuleResolver
         }
 
         $this->enabledModulePaths = $allModulePaths;
-        return $this->enabledModulePaths;
+        return $this->removeBlacklistModules($this->enabledModulePaths);
     }
 
     /**
@@ -230,5 +239,31 @@ class ModuleResolver
     public function sortFilesByModuleSequence(array $files)
     {
         return $this->sequenceSorter->sort($files);
+    }
+
+    /**
+     * Remove blacklist modules from input module paths.
+     *
+     * @param array &$modulePaths
+     * @return array
+     */
+    protected function removeBlacklistModules(&$modulePaths)
+    {
+        foreach ($modulePaths as $index => $modulePath) {
+            if (in_array(basename($modulePath), $this->getModuleBlacklist())) {
+                unset($modulePaths[$index]);
+            }
+        }
+        return $modulePaths;
+    }
+
+    /**
+     * Getter for moduleBlacklist.
+     *
+     * @return array
+     */
+    protected function getModuleBlacklist()
+    {
+        return $this->moduleBlacklist;
     }
 }
