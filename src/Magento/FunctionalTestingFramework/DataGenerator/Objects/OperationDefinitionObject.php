@@ -118,6 +118,7 @@ class OperationDefinitionObject
      * @param string $contentType
      * @param string $successRegex
      * @param string $returnRegex
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         $name,

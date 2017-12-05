@@ -125,10 +125,11 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function initDataDefinitions()
     {
-        //TODO: Reduce CyclomaticComplexity/NPathComplexity of method, remove warning suppression.
+        //TODO: Reduce CyclomaticComplexity/NPathComplexity/Length of method, remove warning suppression.
         $objectManager = ObjectManagerFactory::getObjectManager();
         $metadataParser = $objectManager->create(OperationDefinitionParser::class);
         foreach ($metadataParser->readOperationMetadata()

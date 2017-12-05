@@ -1234,14 +1234,10 @@ class TestGenerator
                 throw new TestReferenceException($e->getMessage() . " in Element \"" . $type . "\"");
             }
 
-            if ($type == "after" or $type == "before") {
-                $hooks .= sprintf("\tpublic function _{$type}(%s)\n", $dependencies);
-                $hooks .= "\t{\n";
-                $hooks .= $steps;
-                $hooks .= "\t}\n\n";
-            }
-
-            $hooks .= "";
+            $hooks .= sprintf("\tpublic function _{$type}(%s)\n", $dependencies);
+            $hooks .= "\t{\n";
+            $hooks .= $steps;
+            $hooks .= "\t}\n\n";
         }
 
         return $hooks;

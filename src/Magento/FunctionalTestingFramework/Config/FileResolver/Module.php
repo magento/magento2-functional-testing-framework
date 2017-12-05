@@ -25,6 +25,7 @@ class Module implements FileResolverInterface
     /**
      * Module constructor.
      * @param ModuleResolver|null $moduleResolver
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(ModuleResolver $moduleResolver = null)
     {
