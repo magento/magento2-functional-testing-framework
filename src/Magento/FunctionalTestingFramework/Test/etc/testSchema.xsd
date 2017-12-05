@@ -90,6 +90,7 @@
     <xs:group name="actionTypeTags">
         <xs:choice>
             <xs:group ref="dataOperationTags"/>
+            <xs:element type="removeActionType" name="remove" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="acceptPopupType" name="acceptPopup" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="amOnPageType" name="amOnPage" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="amOnSubdomainType" name="amOnSubdomain" minOccurs="0" maxOccurs="unbounded"/>
@@ -259,6 +260,15 @@
     </xs:complexType>
 
     <!-- Test action types -->
+
+    <xs:complexType name="removeActionType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="keyForRemoval" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
 
     <xs:complexType name="acceptPopupType">
         <xs:simpleContent>

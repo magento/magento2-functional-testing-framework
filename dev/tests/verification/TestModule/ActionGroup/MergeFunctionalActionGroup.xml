@@ -11,6 +11,6 @@
     <actionGroup name="FunctionalActionGroupForMerge">
         <see mergeKey="myMergedSeeElement" selector=".merge .{{myArg.firstname}}" before="see1"/>
         <click mergeKey="myMergedClick" selector=".merge .{{myArg.lastname}}" after="amOnPage1"/>
-        <fillField mergeKey="deleteMe" remove="true"/>
+        <remove keyForRemoval="deleteMe"/>
     </actionGroup>
 </config>

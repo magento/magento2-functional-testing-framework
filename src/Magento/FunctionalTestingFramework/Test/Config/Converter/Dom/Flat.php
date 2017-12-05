@@ -14,6 +14,9 @@ use Magento\FunctionalTestingFramework\Config\Dom\ArrayNodeConfig;
  */
 class Flat implements ConverterInterface
 {
+    const REMOVE_ACTION = 'remove';
+    const REMOVE_KEY_ATTRIBUTE = 'keyForRemoval';
+
     /**
      * Array node configuration.
      *
@@ -70,10 +73,17 @@ class Flat implements ConverterInterface
         $value = [];
         /** @var \DOMNode $node */
         foreach ($source->childNodes as $node) {
+            // TODO Remove this block once the 'remove' attribute has been full deprecated
+            if ($node->nodeType == XML_ELEMENT_NODE && $node->getAttribute('remove') != null) {
+                trigger_error(
+                    "use of the 'remove' attribute will be deprecated in the next release.",
+                    E_USER_DEPRECATED
+                );
+            }
+
             if ($node->nodeType == XML_ELEMENT_NODE && $node->getAttribute('remove') != 'true') {
                 $nodeName = $node->nodeName;
                 $nodePath = $basePath . '/' . $nodeName;
-
                 $arrayKeyAttribute = $this->arrayNodeConfig->getAssocArrayKeyAttribute($nodePath);
                 $isNumericArrayNode = $this->arrayNodeConfig->isNumericArray($nodePath);
                 $isArrayNode = $isNumericArrayNode || $arrayKeyAttribute;
@@ -82,6 +92,11 @@ class Flat implements ConverterInterface
                     throw new \UnexpectedValueException(
                         "Node path '{$nodePath}' is not unique, but it has not been marked as array."
                     );
+                }
+
+                if ($nodeName == self::REMOVE_ACTION) {
+                    unset($value[$node->getAttribute(self::REMOVE_KEY_ATTRIBUTE)]);
+                    continue;
                 }
 
                 $nodeData = $this->convertXml($node, $nodePath);
