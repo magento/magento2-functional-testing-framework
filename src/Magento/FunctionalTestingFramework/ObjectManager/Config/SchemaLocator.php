@@ -22,7 +22,8 @@ class SchemaLocator implements SchemaLocatorInterface
      */
     public function getSchema()
     {
-        return realpath(__DIR__ . '/../etc/') . DIRECTORY_SEPARATOR . 'config.xsd';
+        return realpath(__DIR__ .  DIRECTORY_SEPARATOR . '..'  . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR)
+            . DIRECTORY_SEPARATOR . 'config.xsd';
     }
 
     /**
