@@ -1,18 +1,31 @@
 # Copyright © Magento, Inc. All rights reserved.
 # See COPYING.txt for license details.
 
-echo "===============================PHP CODE SNIFFER REPORT==============================="
+set -e
+
+echo "==============================="
+echo "         CODE SNIFFER"
+echo "==============================="
 vendor/bin/phpcs ./src --standard=./dev/tests/static/Magento
 vendor/bin/phpcs ./dev/tests/unit --standard=./dev/tests/static/Magento
 vendor/bin/phpcs ./dev/tests/verification --standard=./dev/tests/static/Magento --ignore=dev/tests/verification/_generated
+echo ""
 
-echo "===============================COPY PASTE DETECTOR REPORT==============================="
+echo "==============================="
+echo "      COPY PASTE DETECTOR"
+echo "==============================="
 vendor/bin/phpcpd ./src
+echo ""
 
 # Uncomment lines as part of MQE-590
-# echo "===============================PHP MESS DETECTOR REPORT==============================="
+# echo "==============================="
+# echo "    MAGENTO COPYRIGHT CHECK"
+# echo "==============================="
 # vendor/bin/phpmd ./src text /dev/tests/static/Magento/CodeMessDetector/ruleset.xml --exclude _generated
+# echo ""
 
-echo "===============================MAGENTO COPYRIGHT REPORT==============================="
+echo "==============================="
+echo "    MAGENTO COPYRIGHT CHECK"
+echo "==============================="
 bin/copyright-check
-
+echo ""
