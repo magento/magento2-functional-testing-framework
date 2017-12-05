@@ -64,9 +64,11 @@ class OperationDataArrayResolver
      * @param bool $fromArray
      * @return array
      * @throws \Exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function resolveOperationDataArray($entityObject, $operationMetadata, $operation, $fromArray = false)
     {
+        //TODO: Refactor to reduce Cyclomatic Complexity, remove SupressWarning accordingly.
         $operationDataArray = [];
         self::incrementSequence($entityObject->getName());
 

@@ -126,6 +126,16 @@ class ElementObject
     }
 
     /**
+     * Returns selector if not null, otherwise returns locatorFunction
+     *
+     * @return string
+     */
+    public function getPrioritizedSelector()
+    {
+        return $this->selector ?: $this->locatorFunction;
+    }
+
+    /**
      * Returns an integer representing an element's timeout
      *
      * @return int|null
