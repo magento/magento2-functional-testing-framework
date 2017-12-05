@@ -204,9 +204,13 @@ class MagentoWebDriver extends WebDriver
     public function waitForLoadingMaskToDisappear()
     {
         foreach( self::$loadingMasksLocators as $maskLocator) {
+            // Get count of elements found for looping.
+            // Elements are NOT useful for interaction, as they cannot be fed to codeception actions.
             $loadingMaskElements = $this->_findElements($maskLocator);
             for ($i = 1; $i <= count($loadingMaskElements); $i++) {
-                $this->waitForElementNotVisible("{$maskLocator}[{$i}]", 30);
+                // Formatting and looping on i as we can't interact elements returned above
+                // eg.  (//div[@data-role="spinner"])[1]
+                $this->waitForElementNotVisible("({$maskLocator})[{$i}]", 30);
             }
         }
     }
