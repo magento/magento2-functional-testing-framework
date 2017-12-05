@@ -6,6 +6,8 @@
 
 namespace Magento\FunctionalTestingFramework\Config;
 
+use Magento\FunctionalTestingFramework\Util\GlobalConstants;
+
 /**
  * Magento configuration XML DOM utility
  */
@@ -222,6 +224,12 @@ class Dom
                 if ($value = $node->getAttribute($idAttributeValue)) {
                     $path .= "[@{$idAttributeValue}='{$value}']";
                     break;
+                } elseif (empty($value) && $idAttributeValue === GlobalConstants::TEST_ID_ATTRIBUTE) {
+                    $idAttributeValue = GlobalConstants::DEPRECATED_TEST_ID_ATTRIBUTE;
+                    if ($value = $node->getAttribute($idAttributeValue)) {
+                        $path .= "[@{$idAttributeValue}='{$value}']";
+                        break;
+                    }
                 }
             }
         }
