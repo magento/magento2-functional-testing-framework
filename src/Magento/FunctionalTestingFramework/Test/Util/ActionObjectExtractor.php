@@ -16,7 +16,7 @@ class ActionObjectExtractor extends BaseCestObjectExtractor
 {
     const TEST_ACTION_BEFORE = 'before';
     const TEST_ACTION_AFTER = 'after';
-    const TEST_STEP_MERGE_KEY = 'mergeKey';
+    const TEST_STEP_MERGE_KEY = 'stepKey';
     const ACTION_GROUP_TAG = 'actionGroup';
     const ACTION_GROUP_REF = 'ref';
     const ACTION_GROUP_ARGUMENTS = 'arguments';

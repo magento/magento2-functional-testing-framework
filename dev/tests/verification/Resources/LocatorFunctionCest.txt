@@ -26,7 +26,7 @@ class LocatorFunctionCest
 	 */
 	public function LocatorFuctionTest(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the mergeKey: data");
+		$I->amGoingTo("create entity that has the stepKey: data");
 		$ReplacementPerson = DataObjectHandler::getInstance()->getObject("ReplacementPerson");
 		$data = new DataPersistenceHandler($ReplacementPerson);
 		$data->createEntity();

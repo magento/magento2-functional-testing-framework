@@ -514,10 +514,10 @@ class TestGenerator
             switch ($actionName) {
                 case "createData":
                     $entity = $customActionAttributes['entity'];
-                    $key = $steps->getMergeKey();
+                    $key = $steps->getStepKey();
                     //Add an informative statement to help the user debug test runs
                     $testSteps .= sprintf(
-                        "\t\t$%s->amGoingTo(\"create entity that has the mergeKey: %s\");\n",
+                        "\t\t$%s->amGoingTo(\"create entity that has the stepKey: %s\");\n",
                         $actor,
                         $key
                     );
@@ -656,10 +656,10 @@ class TestGenerator
                     break;
                 case "getData":
                     $entity = $customActionAttributes['entity'];
-                    $key = $steps->getMergeKey();
+                    $key = $steps->getStepKey();
                     //Add an informative statement to help the user debug test runs
                     $testSteps .= sprintf(
-                        "\t\t$%s->amGoingTo(\"get entity that has the mergeKey: %s\");\n",
+                        "\t\t$%s->amGoingTo(\"get entity that has the stepKey: %s\");\n",
                         $actor,
                         $key
                     );
@@ -1101,7 +1101,7 @@ class TestGenerator
             if (count($variable) != 2) {
                 throw new \Exception(
                     "Invalid Persisted Entity Reference: {$match}. 
-                Test persisted entity references must follow {$delimiter}entityMergeKey.field{$delimiter} format."
+                Test persisted entity references must follow {$delimiter}entityStepKey.field{$delimiter} format."
                 );
             }
             if ($delimiter == "$") {
@@ -1206,13 +1206,13 @@ class TestGenerator
                     || ($step->getType() == "getData")
                 ) {
                     $hooks .= "\t/**\n";
-                    $hooks .= sprintf("\t  * @var DataPersistenceHandler $%s;\n", $step->getMergeKey());
+                    $hooks .= sprintf("\t  * @var DataPersistenceHandler $%s;\n", $step->getStepKey());
                     $hooks .= "\t */\n";
-                    $hooks .= sprintf("\tprotected $%s;\n\n", $step->getMergeKey());
+                    $hooks .= sprintf("\tprotected $%s;\n\n", $step->getStepKey());
                     $createData = true;
                 } elseif ($step->getType() == "entity") {
                     $hooks .= "\t/**\n";
-                    $hooks .= sprintf("\t  * @var EntityDataObject $%s;\n", $step->getMergeKey());
+                    $hooks .= sprintf("\t  * @var EntityDataObject $%s;\n", $step->getStepKey());
                     $hooks .= "\t */\n";
                     $hooks .= sprintf("\tprotected $%s;\n\n", $step->getCustomActionAttributes()['name']);
                 }

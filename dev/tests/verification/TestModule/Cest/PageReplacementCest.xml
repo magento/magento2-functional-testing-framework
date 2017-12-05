@@ -10,15 +10,15 @@
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
     <cest name="PageReplacementCest">
         <test name="PageReplacementTest">
-            <createData entity="simpleData" mergeKey="datakey"/>
-            <amOnPage mergeKey="noParamPage" url="{{NoParamPage.url}}"/>
-            <amOnPage mergeKey="oneParamPageString" url="{{OneParamPage.url('StringLiteral')}}"/>
-            <amOnPage mergeKey="oneParamPageData" url="{{OneParamPage.url(simpleData.firstname)}}"/>
-            <amOnPage mergeKey="oneParamPagePersist" url="{{OneParamPage.url($datakey.firstname$)}}"/>
-            <amOnPage mergeKey="twoParamPageString" url="{{TwoParamPage.url('StringLiteral1', 'StringLiteral2')}}"/>
-            <amOnPage mergeKey="twoParamPageStringData" url="{{TwoParamPage.url(simpleData.firstname, 'StringLiteral2')}}"/>
-            <amOnPage mergeKey="twoParamPageDataPersist" url="{{TwoParamPage.url(simpleData.firstname, $datakey.firstname$)}}"/>
-            <amOnPage mergeKey="twoParamPagePersistString" url="{{TwoParamPage.url($datakey.firstname$, 'StringLiteral2')}}"/>
+            <createData entity="simpleData" stepKey="datakey"/>
+            <amOnPage stepKey="noParamPage" url="{{NoParamPage.url}}"/>
+            <amOnPage stepKey="oneParamPageString" url="{{OneParamPage.url('StringLiteral')}}"/>
+            <amOnPage stepKey="oneParamPageData" url="{{OneParamPage.url(simpleData.firstname)}}"/>
+            <amOnPage stepKey="oneParamPagePersist" url="{{OneParamPage.url($datakey.firstname$)}}"/>
+            <amOnPage stepKey="twoParamPageString" url="{{TwoParamPage.url('StringLiteral1', 'StringLiteral2')}}"/>
+            <amOnPage stepKey="twoParamPageStringData" url="{{TwoParamPage.url(simpleData.firstname, 'StringLiteral2')}}"/>
+            <amOnPage stepKey="twoParamPageDataPersist" url="{{TwoParamPage.url(simpleData.firstname, $datakey.firstname$)}}"/>
+            <amOnPage stepKey="twoParamPagePersistString" url="{{TwoParamPage.url($datakey.firstname$, 'StringLiteral2')}}"/>
         </test>
     </cest>
 </config>

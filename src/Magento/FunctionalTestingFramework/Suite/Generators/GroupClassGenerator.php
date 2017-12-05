@@ -22,7 +22,7 @@ class GroupClassGenerator
     const BEFORE_MUSTACHE_KEY = 'before';
     const AFTER_MUSTACHE_KEY = 'after';
     const ENTITY_NAME_TAG = 'entityName';
-    const ENTITY_MERGE_KEY = 'mergeKey';
+    const ENTITY_MERGE_KEY = 'stepKey';
     const REQUIRED_ENTITY_KEY = 'requiredEntities';
     const LAST_REQUIRED_ENTITY_TAG = 'last';
     const MUSTACHE_VAR_TAG = 'var';
@@ -103,7 +103,7 @@ class GroupClassGenerator
         foreach ($hookObj->getActions() as $action) {
             /** @var ActionObject $action */
             $entityArray = [];
-            $entityArray[self::ENTITY_MERGE_KEY] = $action->getMergeKey();
+            $entityArray[self::ENTITY_MERGE_KEY] = $action->getStepKey();
             $entityArray[self::ENTITY_NAME_TAG] =
                 $action->getCustomActionAttributes()['entity'] ??
                 $action->getCustomActionAttributes()[TestGenerator::REQUIRED_ENTITY_REFERENCE];
@@ -123,7 +123,7 @@ class GroupClassGenerator
     /**
      * Function which takes any required entities under a 'createData' tag and transforms data into array to be consumed
      * by mustache template.
-     * (<createData entity="" mergeKey="">
+     * (<createData entity="" stepKey="">
      *      <requiredEntity'...)
      *
      * @param array $customAttributes

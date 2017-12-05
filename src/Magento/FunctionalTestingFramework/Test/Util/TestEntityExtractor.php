@@ -28,7 +28,7 @@ class TestEntityExtractor extends BaseCestObjectExtractor
 
     /**
      * Extracts custom entity or data definitions from test actions.
-     * Returns array of entity data objects indexed by mergeKey, and an array of key-value pairs.
+     * Returns array of entity data objects indexed by stepKey, and an array of key-value pairs.
      * @param array $testActions
      * @return array $entityData
      */

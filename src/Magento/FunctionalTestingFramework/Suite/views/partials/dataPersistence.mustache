@@ -1,7 +1,7 @@
 {{#createData}}
 ${{entityName}} = DataObjectHandler::getInstance()->getObject("{{entityName}}");
-$this->{{mergeKey}} = new DataPersistenceHandler(${{entityName}}, [{{#requiredEntities}}$this->{{entityName}}{{^last}}, {{/last}}{{/requiredEntities}}]);
-$this->{{mergeKey}}->createEntity();
+$this->{{stepKey}} = new DataPersistenceHandler(${{entityName}}, [{{#requiredEntities}}$this->{{entityName}}{{^last}}, {{/last}}{{/requiredEntities}}]);
+$this->{{stepKey}}->createEntity();
 {{/createData}}
 {{#deleteData}}
 $this->{{entityName}}->deleteEntity();

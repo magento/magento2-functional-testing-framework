@@ -26,7 +26,7 @@ class AssertCest
 
 	public function _before(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the mergeKey: createData1");
+		$I->amGoingTo("create entity that has the stepKey: createData1");
 		$ReplacementPerson = DataObjectHandler::getInstance()->getObject("ReplacementPerson");
 		$this->createData1 = new DataPersistenceHandler($ReplacementPerson);
 		$this->createData1->createEntity();
@@ -39,7 +39,7 @@ class AssertCest
 	 */
 	public function AssertTest(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the mergeKey: createData2");
+		$I->amGoingTo("create entity that has the stepKey: createData2");
 		$UniquePerson = DataObjectHandler::getInstance()->getObject("UniquePerson");
 		$createData2 = new DataPersistenceHandler($UniquePerson);
 		$createData2->createEntity();
