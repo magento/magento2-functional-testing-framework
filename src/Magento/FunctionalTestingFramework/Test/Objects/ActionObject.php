@@ -348,8 +348,8 @@ class ActionObject
 
     /**
      * Gets the object's dataByName with given $match, differentiating behavior between <array> and <data> nodes.
-     * @param $obj
-     * @param $match
+     * @param string $obj
+     * @param string $match
      * @return string
      */
     private function resolveEntityDataObjectReference($obj, $match)
@@ -368,6 +368,13 @@ class ActionObject
         }
     }
 
+    /**
+     * Resolves $replacement parameterization with given conditional.
+     * @param boolean $isParameterized
+     * @param string $replacement
+     * @param string $match
+     * @return string
+     */
     private function resolveParameterization($isParameterized, $replacement, $match)
     {
         if ($isParameterized) {
