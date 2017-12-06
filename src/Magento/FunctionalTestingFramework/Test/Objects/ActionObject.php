@@ -170,6 +170,17 @@ class ActionObject
     }
 
     /**
+     * Set the timeout value.
+     *
+     * @param int $timeout
+     * @return void
+     */
+    public function setTimeout($timeout)
+    {
+        $this->timeout = $timeout;
+    }
+
+    /**
      * Populate the resolved custom attributes array with lookup values for the following attributes:
      *   selector
      *   url
@@ -332,7 +343,7 @@ class ActionObject
                     // If no Selector is defined, assume element has LocatorFunction
                     $replacement = $obj->getElement($objField)->getSelector() ?:
                         $obj->getElement($objField)->getLocatorFunction();
-                    $this->timeout = $obj->getElement($objField)->getTimeout();
+                    $this->setTimeout($obj->getElement($objField)->getTimeout());
                     break;
                 case (get_class($obj) == EntityDataObject::class):
                     list(,$objField) = $this->stripAndSplitReference($match);

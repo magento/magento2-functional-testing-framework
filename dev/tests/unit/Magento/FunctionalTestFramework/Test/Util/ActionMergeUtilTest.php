@@ -17,23 +17,6 @@ use tests\unit\Util\DataObjectHandlerReflectionUtil;
 class ActionMergeUtilTest extends TestCase
 {
     /**
-     * Static ActionMergeUtil for all tests.
-     *
-     * @var ActionMergeUtil
-     */
-    private static $MERGE_UTIL;
-
-    /**
-     * Set up method for ActionMergeUtil tests.
-     *
-     * @return void
-     */
-    public static function setUpBeforeClass()
-    {
-        self::$MERGE_UTIL = new ActionMergeUtil("actionMergeUtilTest", "TestCase");
-    }
-
-    /**
      * Test to validate actions are properly ordered during a merge.
      *
      * @return void
@@ -85,33 +68,14 @@ class ActionMergeUtilTest extends TestCase
             ActionObject::MERGE_ACTION_ORDER_AFTER
         );
 
-        $orderedActions = self::$MERGE_UTIL->resolveActionSteps($actions);
+        $mergeUtil = new ActionMergeUtil("actionMergeUtilTest", "TestCase");
+        $orderedActions = $mergeUtil->resolveActionSteps($actions);
         $orderedActionKeys = array_keys($orderedActions);
 
         $this->assertEquals($testObjNamePosBeforeFirst, $orderedActionKeys[0]);
         $this->assertEquals($testObjNamePosFirst, $orderedActionKeys[1]);
         $this->assertEquals($testObjNamePosEnd, $orderedActionKeys[$actionsLength + 1]);
         $this->assertEquals($testObjNamePosAfterEnd, $orderedActionKeys[$actionsLength + 2]);
-    }
-
-    /**
-     * Test to validate action steps properly resolve section element references.
-     *
-     * @return void
-     */
-    public function testResolveActionStepSectionData()
-    {
-        $this->markTestIncomplete('TODO');
-    }
-
-    /**
-     * Test to validate action steps properly resolve page references.
-     *
-     * @return void
-     */
-    public function testResolveActionStepPageData()
-    {
-        $this->markTestIncomplete('TODO');
     }
 
     /**
@@ -148,5 +112,55 @@ class ActionMergeUtilTest extends TestCase
         $resolvedActions = $mergeUtil->resolveActionSteps($actions);
 
         $this->assertEquals($dataFieldValue, $resolvedActions[$actionName]->getCustomActionAttributes()[$userInputKey]);
+    }
+
+    /**
+     * Verify that an XmlException is thrown when an action references a non-existant action.
+     *
+     * @return void
+     */
+    public function testNoActionException()
+    {
+        $actionObjects = [];
+
+        $actionObjects[] = new ActionObject('actionKey1', 'bogusType', []);
+        $actionObjects[] = new ActionObject(
+            'actionKey2',
+            'bogusType',
+            [],
+            'badActionReference',
+            ActionObject::MERGE_ACTION_ORDER_BEFORE
+        );
+
+        $this->expectException("\Magento\FunctionalTestingFramework\Exceptions\XmlException");
+
+        $actionMergeUtil = new ActionMergeUtil("actionMergeUtilTest", "TestCase");
+        $actionMergeUtil->resolveActionSteps($actionObjects);
+    }
+
+    /**
+     * Verify that a <waitForPageLoad> action is added after actions that have a wait (timeout property).
+     *
+     * @return void
+     */
+    public function testInsertWait()
+    {
+        $actionObjectOne = new ActionObject('actionKey1', 'bogusType', []);
+        $actionObjectOne->setTimeout(42);
+        $actionObjects = [$actionObjectOne];
+
+        $actionMergeUtil = new ActionMergeUtil("actionMergeUtilTest", "TestCase");
+        $result = $actionMergeUtil->resolveActionSteps($actionObjects);
+
+        $actual = $result['actionKey1WaitForPageLoad'];
+        $expected = new ActionObject(
+            'actionKey1WaitForPageLoad',
+            'waitForPageLoad',
+            ['timeout' => 42],
+            'actionKey1',
+            0
+        );
+        $this->assertEquals($expected, $actual);
+
     }
 }
