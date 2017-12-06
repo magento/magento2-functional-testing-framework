@@ -376,6 +376,9 @@ class TestGenerator
             $assertIsStrict = null;
             $assertDelta = null;
 
+            // Validate action attributes and print notice messages on violation.
+            $this->validateXmlAttributesMutuallyExclusive($actionName, $customActionAttributes);
+
             if (isset($customActionAttributes['returnVariable'])) {
                 $returnVariable = $customActionAttributes['returnVariable'];
             }
@@ -1535,5 +1538,84 @@ class TestGenerator
     {
         $unquoted = preg_replace('/^(\'(.*)\'|"(.*)")$/', '$2$3', $inStr);
         return $unquoted;
+    }
+
+    /**
+     * Validate action attributes are either not set at all or only one is set for a given rule.
+     *
+     * @param string $tagName
+     * @param array $attributes
+     * @return void
+     */
+    private function validateXmlAttributesMutuallyExclusive($tagName, $attributes)
+    {
+        $rules = [
+            [   'attributes' => [
+                    'selector',
+                    'selectorArray',
+                ]
+            ],
+            [
+                'attributes' => [
+                    'url',
+                    'userInput',
+                    'variable',
+                ]
+            ],
+            [
+                'attributes' => [
+                    'userInput',
+                    'parameterArray',
+                    'variable'
+                ],
+                'excludes' => [
+                    'dontSeeCookie',
+                    'grabCookie',
+                    'resetCookie',
+                    'seeCookie',
+                    'setCookie',
+                ],
+            ],
+        ];
+        foreach ($rules as $rule) {
+            if (isset($rule['excludes']) && in_array($tagName, $rule['excludes'])) {
+                continue;
+            }
+            $count = 0;
+            foreach ($rule['attributes'] as $attribute) {
+                if (isset($attributes[$attribute])) {
+                    $count++;
+                }
+            }
+            if ($count > 1) {
+                $this->printRuleErrorToConsole($tagName, $rule['attributes']);
+            }
+        }
+    }
+
+    /**
+     * Print rule violation message to console.
+     *
+     * @param $tagName
+     * @param $attributes
+     * @return void
+     */
+    private function printRuleErrorToConsole($tagName, $attributes)
+    {
+        if (empty($tagName) || empty($attributes)) {
+            return;
+        }
+        $message = "Only one of the attributes: ";
+        $first = true;
+        foreach ($attributes as $attribute) {
+            if ($first) {
+                $message .= '"' . $attribute . '"';
+                $first = false;
+            } else {
+                $message .= ', "' . $attribute . '"';
+            }
+        }
+        $message .= ' can be use for action: "' . $tagName . "\"\n";
+        print $message;
     }
 }
