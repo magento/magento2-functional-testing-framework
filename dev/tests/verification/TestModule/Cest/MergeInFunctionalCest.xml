@@ -25,8 +25,6 @@
             <click stepKey="step6" remove="true"/>
             <click stepKey="step6Merge" selector="#step6Merged" after="step5"/>
             <click stepKey="step10" selector="#step10MergedInResult"/>
-            <click mergeKey="step11" selector="#step11MergedInResult"/>
-            <click mergeKey="step12" selector="#step12MergedInResult"/>
             <actionGroup ref="FunctionalActionGroupWithData" stepKey="step8Merge" after="step7Merge"/>
         </test>
     </cest>

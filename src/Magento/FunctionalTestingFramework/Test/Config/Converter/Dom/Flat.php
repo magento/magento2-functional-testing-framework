@@ -8,7 +8,6 @@ namespace Magento\FunctionalTestingFramework\Test\Config\Converter\Dom;
 
 use Magento\FunctionalTestingFramework\Config\ConverterInterface;
 use Magento\FunctionalTestingFramework\Config\Dom\ArrayNodeConfig;
-use Magento\FunctionalTestingFramework\Util\GlobalConstants;
 
 /**
  * Universal converter of any XML data to an array representation with no data loss
@@ -86,14 +85,6 @@ class Flat implements ConverterInterface
                 }
 
                 $nodeData = $this->convertXml($node, $nodePath);
-
-                // TODO Remove the following if block once the 'mergeKey' attribute has been fully deprecated.
-                if (!isset($nodeData[GlobalConstants::TEST_ID_ATTRIBUTE])
-                        && isset($nodeData[GlobalConstants::DEPRECATED_TEST_ID_ATTRIBUTE])) {
-                    $nodeData[GlobalConstants::TEST_ID_ATTRIBUTE] =
-                        $nodeData[GlobalConstants::DEPRECATED_TEST_ID_ATTRIBUTE];
-                    unset($nodeData[GlobalConstants::DEPRECATED_TEST_ID_ATTRIBUTE]);
-                }
                 if ($isArrayNode) {
                     if ($isNumericArrayNode) {
                         $value[$nodeName][] = $nodeData;

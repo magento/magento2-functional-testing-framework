@@ -6,8 +6,6 @@
 
 namespace Magento\FunctionalTestingFramework\Config;
 
-use Magento\FunctionalTestingFramework\Util\GlobalConstants;
-
 /**
  * Magento configuration XML DOM utility
  */
@@ -224,14 +222,6 @@ class Dom
                 if ($value = $node->getAttribute($idAttributeValue)) {
                     $path .= "[@{$idAttributeValue}='{$value}']";
                     break;
-                    // TODO Remove the following elseif block once the 'mergeKey' attribute has been fully deprecated.
-                } elseif (empty($value) && $idAttributeValue === GlobalConstants::TEST_ID_ATTRIBUTE) {
-                    print "use of the 'mergeKey' attribute will be deprecated in the next release.\n";
-                    $idAttributeValue = GlobalConstants::DEPRECATED_TEST_ID_ATTRIBUTE;
-                    if ($value = $node->getAttribute($idAttributeValue)) {
-                        $path .= "[@{$idAttributeValue}='{$value}']";
-                        break;
-                    }
                 }
             }
         }
