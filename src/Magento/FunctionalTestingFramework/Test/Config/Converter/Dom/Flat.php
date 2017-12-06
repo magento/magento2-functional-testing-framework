@@ -73,15 +73,7 @@ class Flat implements ConverterInterface
         $value = [];
         /** @var \DOMNode $node */
         foreach ($source->childNodes as $node) {
-            // TODO Remove this block once the 'remove' attribute has been full deprecated
-            if ($node->nodeType == XML_ELEMENT_NODE && $node->getAttribute('remove') != null) {
-                trigger_error(
-                    "use of the 'remove' attribute will be deprecated in the next release.",
-                    E_USER_DEPRECATED
-                );
-            }
-
-            if ($node->nodeType == XML_ELEMENT_NODE && $node->getAttribute('remove') != 'true') {
+           if ($node->nodeType == XML_ELEMENT_NODE) {
                 $nodeName = $node->nodeName;
                 $nodePath = $basePath . '/' . $nodeName;
                 $arrayKeyAttribute = $this->arrayNodeConfig->getAssocArrayKeyAttribute($nodePath);
