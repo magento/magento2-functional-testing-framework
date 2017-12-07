@@ -17,6 +17,7 @@ use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Util\Uri;
 use Codeception\Util\ActionSequence;
+use Magento\Setup\Exception;
 use Yandex\Allure\Adapter\Support\AttachmentSupport;
 
 /**
@@ -270,9 +271,16 @@ class MagentoWebDriver extends WebDriver
      *
      * @param int $timeout
      */
-    public function waitForAjaxLoad($timeout = 15)
+    public function waitForAjaxLoad($timeout = null)
     {
-        $this->waitForJS('return !!window.jQuery && window.jQuery.active == 0;', $timeout);
+        $timeout = $timeout ?? $this->_getConfig()['pageload_timeout'];
+
+        try {
+            $this->waitForJS('return !!window.jQuery && window.jQuery.active == 0;', $timeout);
+        } catch (\Exception $exceptione) {
+            $this->debug("js never executed, performing {$timeout} second wait.");
+            $this->wait($timeout);
+        }
         $this->wait(1);
     }
 
@@ -281,8 +289,10 @@ class MagentoWebDriver extends WebDriver
      *
      * @param int $timeout
      */
-    public function waitForPageLoad($timeout = 15)
+    public function waitForPageLoad($timeout = null)
     {
+        $timeout = $timeout ?? $this->_getConfig()['pageload_timeout'];
+
         $this->waitForJS('return document.readyState == "complete"', $timeout);
         $this->waitForAjaxLoad($timeout);
         $this->waitForLoadingMaskToDisappear();
@@ -350,7 +360,7 @@ class MagentoWebDriver extends WebDriver
     /**
      * @param int $category
      * @param string $locale
-    */
+     */
     public function mSetLocale(int $category, $locale)
     {
         if (self::$localeAll[$category] == $locale) {
