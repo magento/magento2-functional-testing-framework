@@ -65,6 +65,6 @@ Stay up-to-date on the latest security news and patches for Magento by signing u
 
 ## License
 
-Each Magento source file included in this distribution is licensed under APL 3.0
+Each Magento source file included in this distribution is licensed under AGPL 3.0
 
-Please see LICENSE_APL3.txt for the full text of the APL 3.0 license or contact license@magentocommerce.com for a copy.
+Please see LICENSE_AGPL3.txt for the full text of the AGPL 3.0 license or contact license@magentocommerce.com for a copy.
