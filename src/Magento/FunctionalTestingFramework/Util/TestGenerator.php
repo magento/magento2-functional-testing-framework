@@ -344,8 +344,9 @@ class TestGenerator
         foreach ($stepsObject as $steps) {
             $actor = "I";
             $actionName = $steps->getType();
-            $attribute = null;
+            $stepKey = $steps->getStepKey();
             $customActionAttributes = $steps->getCustomActionAttributes();
+            $attribute = null;
             $selector = null;
             $selector1 = null;
             $selector2 = null;
@@ -375,6 +376,9 @@ class TestGenerator
             $assertMessage = null;
             $assertIsStrict = null;
             $assertDelta = null;
+
+            // Validate action attributes and print notice messages on violation.
+            $this->validateXmlAttributesMutuallyExclusive($stepKey, $actionName, $customActionAttributes);
 
             if (isset($customActionAttributes['returnVariable'])) {
                 $returnVariable = $customActionAttributes['returnVariable'];
@@ -514,12 +518,11 @@ class TestGenerator
             switch ($actionName) {
                 case "createData":
                     $entity = $customActionAttributes['entity'];
-                    $key = $steps->getStepKey();
                     //Add an informative statement to help the user debug test runs
                     $testSteps .= sprintf(
                         "\t\t$%s->amGoingTo(\"create entity that has the stepKey: %s\");\n",
                         $actor,
-                        $key
+                        $stepKey
                     );
                     //Get Entity from Static data.
                     $testSteps .= sprintf(
@@ -551,17 +554,17 @@ class TestGenerator
                     }
 
                     if ($hookObject) {
-                        $createEntityFunctionCall = sprintf("\t\t\$this->%s->createEntity(", $key);
+                        $createEntityFunctionCall = sprintf("\t\t\$this->%s->createEntity(", $stepKey);
                         $dataPersistenceHandlerFunctionCall = sprintf(
                             "\t\t\$this->%s = new DataPersistenceHandler($%s",
-                            $key,
+                            $stepKey,
                             $entity
                         );
                     } else {
-                        $createEntityFunctionCall = sprintf("\t\t\$%s->createEntity(", $key);
+                        $createEntityFunctionCall = sprintf("\t\t\$%s->createEntity(", $stepKey);
                         $dataPersistenceHandlerFunctionCall = sprintf(
                             "\t\t$%s = new DataPersistenceHandler($%s",
-                            $key,
+                            $stepKey,
                             $entity
                         );
                     }
@@ -656,12 +659,11 @@ class TestGenerator
                     break;
                 case "getData":
                     $entity = $customActionAttributes['entity'];
-                    $key = $steps->getStepKey();
                     //Add an informative statement to help the user debug test runs
                     $testSteps .= sprintf(
                         "\t\t$%s->amGoingTo(\"get entity that has the stepKey: %s\");\n",
                         $actor,
-                        $key
+                        $stepKey
                     );
                     //Get Entity from Static data.
                     $testSteps .= sprintf(
@@ -693,17 +695,17 @@ class TestGenerator
                     }
 
                     if ($hookObject) {
-                        $getEntityFunctionCall = sprintf("\t\t\$this->%s->getEntity(", $key);
+                        $getEntityFunctionCall = sprintf("\t\t\$this->%s->getEntity(", $stepKey);
                         $dataPersistenceHandlerFunctionCall = sprintf(
                             "\t\t\$this->%s = new DataPersistenceHandler($%s",
-                            $key,
+                            $stepKey,
                             $entity
                         );
                     } else {
-                        $getEntityFunctionCall = sprintf("\t\t\$%s->getEntity(", $key);
+                        $getEntityFunctionCall = sprintf("\t\t\$%s->getEntity(", $stepKey);
                         $dataPersistenceHandlerFunctionCall = sprintf(
                             "\t\t$%s = new DataPersistenceHandler($%s",
-                            $key,
+                            $stepKey,
                             $entity
                         );
                     }
@@ -1535,5 +1537,82 @@ class TestGenerator
     {
         $unquoted = preg_replace('/^(\'(.*)\'|"(.*)")$/', '$2$3', $inStr);
         return $unquoted;
+    }
+
+    /**
+     * Validate action attributes are either not set at all or only one is set for a given rule.
+     *
+     * @param string $key
+     * @param string $tagName
+     * @param array $attributes
+     * @return void
+     */
+    private function validateXmlAttributesMutuallyExclusive($key, $tagName, $attributes)
+    {
+        $rules = [
+            [   'attributes' => [
+                    'selector',
+                    'selectorArray',
+                ]
+            ],
+            [
+                'attributes' => [
+                    'url',
+                    'userInput',
+                    'variable',
+                ],
+                'excludes' => [
+                    'dontSeeLink',
+                    'seeLink',
+                ],
+            ],
+            [
+                'attributes' => [
+                    'userInput',
+                    'parameterArray',
+                    'variable'
+                ],
+                'excludes' => [
+                    'dontSeeCookie',
+                    'grabCookie',
+                    'resetCookie',
+                    'seeCookie',
+                    'setCookie',
+                ],
+            ],
+        ];
+        foreach ($rules as $rule) {
+            if (isset($rule['excludes']) && in_array($tagName, $rule['excludes'])) {
+                continue;
+            }
+            $count = 0;
+            foreach ($rule['attributes'] as $attribute) {
+                if (isset($attributes[$attribute])) {
+                    $count++;
+                }
+            }
+            if ($count > 1) {
+                $this->printRuleErrorToConsole($key, $tagName, $rule['attributes']);
+            }
+        }
+    }
+
+    /**
+     * Print rule violation message to console.
+     *
+     * @param string $key
+     * @param string $tagName
+     * @param array $attributes
+     * @return void
+     */
+    private function printRuleErrorToConsole($key, $tagName, $attributes)
+    {
+        if (empty($tagName) || empty($attributes)) {
+            return;
+        }
+        $message = 'On step with stepKey "' . $key . '", only one of the attributes: "';
+        $message .= implode('", "', $attributes);
+        $message .= '" can be use for action "' . $tagName . "\".\n";
+        print $message;
     }
 }
