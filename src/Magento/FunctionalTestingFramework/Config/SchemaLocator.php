@@ -25,12 +25,12 @@ class SchemaLocator implements \Magento\FunctionalTestingFramework\Config\Schema
      */
     public function __construct($schemaPath)
     {
-        if (constant('FW_BP') && file_exists(FW_BP . '/' . $schemaPath)) {
-            $this->schemaPath =  FW_BP . '/' . $schemaPath;
+        if (constant('FW_BP') && file_exists(FW_BP . DIRECTORY_SEPARATOR . $schemaPath)) {
+            $this->schemaPath =  FW_BP . DIRECTORY_SEPARATOR . $schemaPath;
         } else {
             $path = dirname(dirname(dirname(__DIR__)));
-            $path = str_replace('\\', '/', $path);
-            $this->schemaPath =  $path . '/' . $schemaPath;
+            $path = str_replace('\\', DIRECTORY_SEPARATOR, $path);
+            $this->schemaPath =  $path . DIRECTORY_SEPARATOR . $schemaPath;
         }
     }
 

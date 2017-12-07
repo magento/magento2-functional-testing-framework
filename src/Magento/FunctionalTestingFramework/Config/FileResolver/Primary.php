@@ -28,7 +28,7 @@ class Primary implements FileResolverInterface
         if (!$filename) {
             return [];
         }
-        $scope = str_replace('\\', '/', $scope);
+        $scope = str_replace('\\', DIRECTORY_SEPARATOR, $scope);
         return new File($this->getFilePaths($filename, $scope));
     }
 
@@ -59,19 +59,20 @@ class Primary implements FileResolverInterface
     {
         if (substr($scope, 0, strlen(FW_BP)) === FW_BP) {
             $patterns = [
-                $scope . '/' . $filename,
-                $scope . '/*/' . $filename
+                $scope . DIRECTORY_SEPARATOR . $filename,
+                $scope . DIRECTORY_SEPARATOR . '*' . DIRECTORY_SEPARATOR . $filename
             ];
         } else {
             $defaultPath = dirname(dirname(dirname(dirname(__DIR__))));
-            $defaultPath = str_replace('\\', '/', $defaultPath);
+            $defaultPath = str_replace('\\', DIRECTORY_SEPARATOR, $defaultPath);
             $patterns = [
-                $defaultPath . '/' . $scope . '/' . $filename,
-                $defaultPath . '/' . $scope . '/*/' . $filename,
-                FW_BP . '/' . $scope . '/' . $filename,
-                FW_BP . '/' . $scope . '/*/' . $filename
+                $defaultPath . DIRECTORY_SEPARATOR . $scope . DIRECTORY_SEPARATOR . $filename,
+                $defaultPath . DIRECTORY_SEPARATOR . $scope . DIRECTORY_SEPARATOR . '*' . DIRECTORY_SEPARATOR
+                . $filename,
+                FW_BP . DIRECTORY_SEPARATOR . $scope . DIRECTORY_SEPARATOR . $filename,
+                FW_BP . DIRECTORY_SEPARATOR . $scope . DIRECTORY_SEPARATOR . '*' . DIRECTORY_SEPARATOR . $filename
             ];
         }
-        return str_replace('/', DIRECTORY_SEPARATOR, $patterns);
+        return str_replace(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $patterns);
     }
 }
