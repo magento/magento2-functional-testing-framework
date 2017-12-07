@@ -1560,7 +1560,11 @@ class TestGenerator
                     'url',
                     'userInput',
                     'variable',
-                ]
+                ],
+                'excludes' => [
+                    'dontSeeLink',
+                    'seeLink',
+                ],
             ],
             [
                 'attributes' => [

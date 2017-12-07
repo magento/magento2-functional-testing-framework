@@ -33,7 +33,7 @@
             <grabValueFrom returnVariable="someVar" stepKey="someVarDefinition"/>
             <acceptPopup stepKey="acceptPopupKey1"/>
             <amOnPage stepKey="amOnPageKey1" url="/test/url"/>
-            <appendField variable="someVar" selector=".functionalTestSelector" userInput="someInput" stepKey="appendFieldKey1" />
+            <appendField variable="someVar" selector=".functionalTestSelector" stepKey="appendFieldKey1" />
             <attachFile userInput="testFileAttachment" selector=".functionalTestSelector" stepKey="attachFileKey1" />
             <cancelPopup stepKey="cancelPopupKey1"/>
             <checkOption selector=".functionalTestSelector" stepKey="checkOptionKey1"/>
@@ -50,7 +50,7 @@
             <dontSeeElement selector=".functionalTestSelector" stepKey="dontSeeElementKey1"/>
             <dontSeeElementInDOM selector=".functionalTestSelector" stepKey="dontSeeElementInDOMKey1"/>
             <dontSeeInCurrentUrl url="/functionalUrl" stepKey="dontSeeInCurrentUrlKey1"/>
-            <dontSeeInField variable="someVar" selector=".functionalTestSelector" userInput="someInput" stepKey="dontSeeInFieldKey1" />
+            <dontSeeInField variable="someVar" selector=".functionalTestSelector" stepKey="dontSeeInFieldKey1" />
             <dontSeeInPageSource userInput="someInput" stepKey="dontSeeInPageSourceKey1"/>
             <dontSeeInSource html="&quot;&lt;myHtmlHere&gt;&quot;" stepKey="dontSeeInSourceKey1"/>
             <dontSeeInTitle userInput="someInput" stepKey="dontSeeInTitleKey1"/>
