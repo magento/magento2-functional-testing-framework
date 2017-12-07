@@ -17,62 +17,62 @@
             <stories value="MQE-433"/>
         </annotations>
         <before>
-            <createData entity="ReplacementPerson" mergeKey="createPersonParam"/>
-            <actionGroup ref="FunctionalActionGroup" mergeKey="beforeGroup"/>
+            <createData entity="ReplacementPerson" stepKey="createPersonParam"/>
+            <actionGroup ref="FunctionalActionGroup" stepKey="beforeGroup"/>
         </before>
         <test name="BasicActionGroupTest">
-            <amOnPage mergeKey="step1" url="/someUrl"/>
-            <actionGroup ref="FunctionalActionGroup" mergeKey="actionGroup1"/>
-            <click mergeKey="step6" selector="loginButton"/>
+            <amOnPage stepKey="step1" url="/someUrl"/>
+            <actionGroup ref="FunctionalActionGroup" stepKey="actionGroup1"/>
+            <click stepKey="step6" selector="loginButton"/>
         </test>
         <test name="ActionGroupWithDataTest">
-            <amOnPage mergeKey="step1" url="/someUrl"/>
-            <actionGroup ref="FunctionalActionGroupWithData" mergeKey="actionGroupWithData1"/>
-            <click mergeKey="step6" selector="loginButton"/>
+            <amOnPage stepKey="step1" url="/someUrl"/>
+            <actionGroup ref="FunctionalActionGroupWithData" stepKey="actionGroupWithData1"/>
+            <click stepKey="step6" selector="loginButton"/>
         </test>
         <test name="ActionGroupWithDataOverrideTest">
-            <amOnPage mergeKey="step1" url="/someUrl"/>
-            <actionGroup ref="FunctionalActionGroupWithData" mergeKey="actionGroupWithDataOverride1">
+            <amOnPage stepKey="step1" url="/someUrl"/>
+            <actionGroup ref="FunctionalActionGroupWithData" stepKey="actionGroupWithDataOverride1">
                 <argument name="person" value="ReplacementPerson"/>
             </actionGroup>
-            <click mergeKey="step6" selector="loginButton"/>
+            <click stepKey="step6" selector="loginButton"/>
         </test>
         <test name="ActionGroupWithNoDefaultTest">
-            <amOnPage mergeKey="step1" url="/someUrl"/>
-            <actionGroup ref="FunctionalActionGroupNoDefault" mergeKey="actionGroupWithDataOverride1">
+            <amOnPage stepKey="step1" url="/someUrl"/>
+            <actionGroup ref="FunctionalActionGroupNoDefault" stepKey="actionGroupWithDataOverride1">
                 <argument name="person" value="DefaultPerson"/>
             </actionGroup>
-            <click mergeKey="step6" selector="loginButton"/>
+            <click stepKey="step6" selector="loginButton"/>
         </test>
         <test name="ActionGroupWithPersistedData">
-            <createData entity="DefaultPerson" mergeKey="createPerson"/>
-            <actionGroup ref="FunctionalActionGroupWithData" mergeKey="actionGroupWithPersistedData1">
+            <createData entity="DefaultPerson" stepKey="createPerson"/>
+            <actionGroup ref="FunctionalActionGroupWithData" stepKey="actionGroupWithPersistedData1">
                 <argument name="person" value="$createPerson$"/>
             </actionGroup>
         </test>
         <test name="ActionGroupWithTopLevelPersistedData">
-            <actionGroup ref="FunctionalActionGroupWithData" mergeKey="actionGroupWithPersistedData1">
+            <actionGroup ref="FunctionalActionGroupWithData" stepKey="actionGroupWithPersistedData1">
                 <argument name="person" value="$$createPersonParam$$"/>
             </actionGroup>
         </test>
         <test name="MultipleActionGroupsTest">
-            <amOnPage mergeKey="step1" url="/someUrl"/>
-            <actionGroup ref="FunctionalActionGroupWithData" mergeKey="actionGroup1"/>
-            <click mergeKey="step6" selector="loginButton"/>
-            <actionGroup ref="FunctionalActionGroupWithData" mergeKey="actionGroupWithDataOverride2">
+            <amOnPage stepKey="step1" url="/someUrl"/>
+            <actionGroup ref="FunctionalActionGroupWithData" stepKey="actionGroup1"/>
+            <click stepKey="step6" selector="loginButton"/>
+            <actionGroup ref="FunctionalActionGroupWithData" stepKey="actionGroupWithDataOverride2">
                 <argument name="person" value="ReplacementPerson"/>
             </actionGroup>
         </test>
         <test name="MergedActionGroupTest">
-            <actionGroup ref="FunctionalActionGroupForMerge" mergeKey="actionGroupForMerge">
+            <actionGroup ref="FunctionalActionGroupForMerge" stepKey="actionGroupForMerge">
                 <argument name="myArg" value="DefaultPerson"/>
             </actionGroup>
         </test>
         <test name="ArgumentWithSameNameAsElement">
-            <actionGroup ref="FunctionalActionGroupWithTrickyArgument" mergeKey="actionGroup1"/>
+            <actionGroup ref="FunctionalActionGroupWithTrickyArgument" stepKey="actionGroup1"/>
         </test>
         <after>
-            <actionGroup ref="FunctionalActionGroup" mergeKey="afterGroup"/>
+            <actionGroup ref="FunctionalActionGroup" stepKey="afterGroup"/>
         </after>
     </cest>
 </config>

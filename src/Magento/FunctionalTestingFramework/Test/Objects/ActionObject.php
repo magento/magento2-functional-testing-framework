@@ -31,9 +31,9 @@ class ActionObject
     /**
      * The unique identifier for the action
      *
-     * @var string $mergeKey
+     * @var string $stepKey
      */
-    private $mergeKey;
+    private $stepKey;
 
     /**
      * The type of action (e.g. fillField, createData, etc)
@@ -80,20 +80,20 @@ class ActionObject
     /**
      * ActionObject constructor.
      *
-     * @param string $mergeKey
+     * @param string $stepKey
      * @param string $type
      * @param array $actionAttributes
      * @param string|null $linkedAction
      * @param string $order
      */
     public function __construct(
-        $mergeKey,
+        $stepKey,
         $type,
         $actionAttributes,
         $linkedAction = null,
         $order = ActionObject::MERGE_ACTION_ORDER_BEFORE
     ) {
-        $this->mergeKey = $mergeKey;
+        $this->stepKey = $stepKey;
         $this->type = $type;
         $this->actionAttributes = $actionAttributes;
         $this->linkedAction = $linkedAction;
@@ -104,13 +104,13 @@ class ActionObject
     }
 
     /**
-     * This function returns the string property mergeKey.
+     * This function returns the string property stepKey.
      *
      * @return string
      */
-    public function getMergeKey()
+    public function getStepKey()
     {
-        return $this->mergeKey;
+        return $this->stepKey;
     }
 
     /**
@@ -125,7 +125,7 @@ class ActionObject
 
     /**
      * This function returns an array of action attributes mapped by key. For example
-     * the tag <seeNumberOfElements selector="value1" expected="value2" mergeKey=""/> has 3 attributes,
+     * the tag <seeNumberOfElements selector="value1" expected="value2" stepKey=""/> has 3 attributes,
      * only 2 of which are specific to the 'seeNumberOfElements' tag. As a result this function would
      * return the array would return [selector => value1, expected => value2]
      * The returned array is also the merged result of the resolved and normal actions, giving

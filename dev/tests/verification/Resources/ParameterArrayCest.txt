@@ -26,7 +26,7 @@ class ParameterArrayCest
 	 */
 	public function ParameterArrayTest(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the mergeKey: simpleDataKey");
+		$I->amGoingTo("create entity that has the stepKey: simpleDataKey");
 		$simpleParamData = DataObjectHandler::getInstance()->getObject("simpleParamData");
 		$simpleDataKey = new DataPersistenceHandler($simpleParamData);
 		$simpleDataKey->createEntity();

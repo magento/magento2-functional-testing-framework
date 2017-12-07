@@ -32,39 +32,39 @@ class ActionMergeUtilTest extends TestCase
         $testObjNamePosAfterEnd = 'testAfterAfterMerge10';
 
         for ($i = 1; $i < $actionsLength; $i++) {
-            $mergeKey = 'mergeKey'. $i;
+            $stepKey = 'stepKey'. $i;
             $type = 'testType';
             $actionAttributes = [];
 
-            $actions[] = new ActionObject($mergeKey, $type, $actionAttributes);
+            $actions[] = new ActionObject($stepKey, $type, $actionAttributes);
         }
 
         $actions[] = new ActionObject(
             $testObjNamePosAfterEnd,
-            'mergeType',
+            'stepType',
             [],
             $testObjNamePosEnd,
             ActionObject::MERGE_ACTION_ORDER_AFTER
         );
         $actions[] = new ActionObject(
             $testObjNamePosBeforeFirst,
-            'mergeType',
+            'stepType',
             [],
             $testObjNamePosFirst,
             ActionObjectExtractor::TEST_ACTION_BEFORE
         );
         $actions[] = new ActionObject(
             $testObjNamePosFirst,
-            'mergeType',
+            'stepType',
             [],
-            'mergeKey1',
+            'stepKey1',
             ActionObjectExtractor::TEST_ACTION_BEFORE
         );
         $actions[] = new ActionObject(
             $testObjNamePosEnd,
-            'mergeType',
+            'stepType',
             [],
-            'mergeKey' . (string)($actionsLength - 1),
+            'stepKey' . (string)($actionsLength - 1),
             ActionObject::MERGE_ACTION_ORDER_AFTER
         );
 
