@@ -9,8 +9,8 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
     <actionGroup name="FunctionalActionGroupForMerge">
-        <see mergeKey="myMergedSeeElement" selector=".merge .{{myArg.firstname}}" before="see1"/>
-        <click mergeKey="myMergedClick" selector=".merge .{{myArg.lastname}}" after="amOnPage1"/>
-        <fillField mergeKey="deleteMe" remove="true"/>
+        <see stepKey="myMergedSeeElement" selector=".merge .{{myArg.firstname}}" before="see1"/>
+        <click stepKey="myMergedClick" selector=".merge .{{myArg.lastname}}" after="amOnPage1"/>
+        <remove keyForRemoval="deleteMe"/>
     </actionGroup>
 </config>

@@ -31,7 +31,7 @@ class ActionGroupFunctionalCest
 
 	public function _before(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the mergeKey: createPersonParam");
+		$I->amGoingTo("create entity that has the stepKey: createPersonParam");
 		$ReplacementPerson = DataObjectHandler::getInstance()->getObject("ReplacementPerson");
 		$this->createPersonParam = new DataPersistenceHandler($ReplacementPerson);
 		$this->createPersonParam->createEntity();
@@ -111,7 +111,7 @@ class ActionGroupFunctionalCest
 	 */
 	public function ActionGroupWithPersistedData(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the mergeKey: createPerson");
+		$I->amGoingTo("create entity that has the stepKey: createPerson");
 		$DefaultPerson = DataObjectHandler::getInstance()->getObject("DefaultPerson");
 		$createPerson = new DataPersistenceHandler($DefaultPerson);
 		$createPerson->createEntity();
@@ -168,6 +168,17 @@ class ActionGroupFunctionalCest
 		$I->see(".merge .Jane");
 		$I->click(".merge .Dane");
 		$I->amOnPage("/Jane/Dane.html");
+	}
+
+	/**
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 */
+	public function ArgumentWithSameNameAsElement(AcceptanceTester $I)
+	{
+		$I->seeElement("#element");
+		$I->seeElement("#element .John");
 	}
 
 }

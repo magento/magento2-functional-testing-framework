@@ -10,16 +10,16 @@
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
     <cest name="SampleSuiteCest">
         <test name="IncludeTest">
-            <amOnPage mergeKey="testOnPage" url="/someUrl"/>
-            <see mergeKey="seeThePage" selector=".someSelector"/>
-            <click mergeKey="clickOnSomething" selector=".clickable"/>
-            <fillField mergeKey="fillAField" selector=".fillable"/>
+            <amOnPage stepKey="testOnPage" url="/someUrl"/>
+            <see stepKey="seeThePage" selector=".someSelector"/>
+            <click stepKey="clickOnSomething" selector=".clickable"/>
+            <fillField stepKey="fillAField" selector=".fillable"/>
         </test>
         <test name="ExcludeTest">
-            <amOnPage mergeKey="testOnPage" url="/someUrl"/>
-            <see mergeKey="seeThePage" selector=".someSelector"/>
-            <click mergeKey="clickOnSomething" selector=".clickable"/>
-            <fillField mergeKey="fillAField" selector=".fillable"/>
+            <amOnPage stepKey="testOnPage" url="/someUrl"/>
+            <see stepKey="seeThePage" selector=".someSelector"/>
+            <click stepKey="clickOnSomething" selector=".clickable"/>
+            <fillField stepKey="fillAField" selector=".fillable"/>
         </test>
     </cest>
     <cest name="SampleSuite2Cest">
@@ -27,10 +27,10 @@
             <group value="exclude"/>
         </annotations>
         <test name="additionalTest">
-            <amOnPage mergeKey="testOnPage" url="/someUrl"/>
-            <see mergeKey="seeThePage" selector=".someSelector"/>
-            <click mergeKey="clickOnSomething" selector=".clickable"/>
-            <fillField mergeKey="fillAField" selector=".fillable"/>
+            <amOnPage stepKey="testOnPage" url="/someUrl"/>
+            <see stepKey="seeThePage" selector=".someSelector"/>
+            <click stepKey="clickOnSomething" selector=".clickable"/>
+            <fillField stepKey="fillAField" selector=".fillable"/>
         </test>
     </cest>
     <cest name="SampleSuite3Cest">
@@ -38,16 +38,16 @@
             <annotations>
                 <group value="include"/>
             </annotations>
-            <amOnPage mergeKey="testOnPage" url="/someUrl"/>
-            <see mergeKey="seeThePage" selector=".someSelector"/>
-            <click mergeKey="clickOnSomething" selector=".clickable"/>
-            <fillField mergeKey="fillAField" selector=".fillable"/>
+            <amOnPage stepKey="testOnPage" url="/someUrl"/>
+            <see stepKey="seeThePage" selector=".someSelector"/>
+            <click stepKey="clickOnSomething" selector=".clickable"/>
+            <fillField stepKey="fillAField" selector=".fillable"/>
         </test>
         <test name="additionalTest">
-            <amOnPage mergeKey="testOnPage" url="/someUrl"/>
-            <see mergeKey="seeThePage" selector=".someSelector"/>
-            <click mergeKey="clickOnSomething" selector=".clickable"/>
-            <fillField mergeKey="fillAField" selector=".fillable"/>
+            <amOnPage stepKey="testOnPage" url="/someUrl"/>
+            <see stepKey="seeThePage" selector=".someSelector"/>
+            <click stepKey="clickOnSomething" selector=".clickable"/>
+            <fillField stepKey="fillAField" selector=".fillable"/>
         </test>
     </cest>
     <cest name="SampleSuite4Cest">
@@ -55,16 +55,16 @@
             <annotations>
                 <group value="exclude"/>
             </annotations>
-            <amOnPage mergeKey="testOnPage" url="/someUrl"/>
-            <see mergeKey="seeThePage" selector=".someSelector"/>
-            <click mergeKey="clickOnSomething" selector=".clickable"/>
-            <fillField mergeKey="fillAField" selector=".fillable"/>
+            <amOnPage stepKey="testOnPage" url="/someUrl"/>
+            <see stepKey="seeThePage" selector=".someSelector"/>
+            <click stepKey="clickOnSomething" selector=".clickable"/>
+            <fillField stepKey="fillAField" selector=".fillable"/>
         </test>
         <test name="IncludeTest">
-            <amOnPage mergeKey="testOnPage" url="/someUrl"/>
-            <see mergeKey="seeThePage" selector=".someSelector"/>
-            <click mergeKey="clickOnSomething" selector=".clickable"/>
-            <fillField mergeKey="fillAField" selector=".fillable"/>
+            <amOnPage stepKey="testOnPage" url="/someUrl"/>
+            <see stepKey="seeThePage" selector=".someSelector"/>
+            <click stepKey="clickOnSomething" selector=".clickable"/>
+            <fillField stepKey="fillAField" selector=".fillable"/>
         </test>
     </cest>
     <cest name="SampleSuite5Cest">
@@ -72,16 +72,16 @@
             <group value="include"/>
         </annotations>
         <test name="additionalTest">
-            <amOnPage mergeKey="testOnPage" url="/someUrl"/>
-            <see mergeKey="seeThePage" selector=".someSelector"/>
-            <click mergeKey="clickOnSomething" selector=".clickable"/>
-            <fillField mergeKey="fillAField" selector=".fillable"/>
+            <amOnPage stepKey="testOnPage" url="/someUrl"/>
+            <see stepKey="seeThePage" selector=".someSelector"/>
+            <click stepKey="clickOnSomething" selector=".clickable"/>
+            <fillField stepKey="fillAField" selector=".fillable"/>
         </test>
         <test name="ExcludeTest">
-            <amOnPage mergeKey="testOnPage" url="/someUrl"/>
-            <see mergeKey="seeThePage" selector=".someSelector"/>
-            <click mergeKey="clickOnSomething" selector=".clickable"/>
-            <fillField mergeKey="fillAField" selector=".fillable"/>
+            <amOnPage stepKey="testOnPage" url="/someUrl"/>
+            <see stepKey="seeThePage" selector=".someSelector"/>
+            <click stepKey="clickOnSomething" selector=".clickable"/>
+            <fillField stepKey="fillAField" selector=".fillable"/>
         </test>
     </cest>
 </config>

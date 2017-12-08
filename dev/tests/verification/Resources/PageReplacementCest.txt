@@ -26,7 +26,7 @@ class PageReplacementCest
 	 */
 	public function PageReplacementTest(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the mergeKey: datakey");
+		$I->amGoingTo("create entity that has the stepKey: datakey");
 		$simpleData = DataObjectHandler::getInstance()->getObject("simpleData");
 		$datakey = new DataPersistenceHandler($simpleData);
 		$datakey->createEntity();

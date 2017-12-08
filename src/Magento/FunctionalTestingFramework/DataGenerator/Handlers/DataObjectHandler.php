@@ -116,7 +116,7 @@ class DataObjectHandler implements ObjectHandlerInterface
         $entityParsedData = $entityParser->readDataProfiles();
 
         if (!$entityParsedData) {
-            trigger_error("No entities could be parsed from xml definitions", E_USER_NOTICE);
+            // No *Data.xml files found so give up
             return;
         }
 
@@ -132,7 +132,7 @@ class DataObjectHandler implements ObjectHandlerInterface
      */
     private function parseEnvVariables()
     {
-        $envFilename = PROJECT_ROOT . '/.env';
+        $envFilename = PROJECT_ROOT . DIRECTORY_SEPARATOR . '.env';
         if (file_exists($envFilename)) {
             $envData = [];
             $envFile = file($envFilename);

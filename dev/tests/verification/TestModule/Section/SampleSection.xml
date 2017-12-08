@@ -10,6 +10,7 @@
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
     <section name="SampleSection">
         <element name="simpleElement" type="button" selector="#element"/>
+        <element name="simpleElementOneParam" type="button" selector="#element .{{var1}}" parameterized="true"/>
         <element name="oneParamElement" type="button" selector="#element .{{var1}}" parameterized="true"/>
         <element name="twoParamElement" type="button" selector="#{{var1}} .{{var2}}" parameterized="true"/>
         <element name="threeParamElement" type="button" selector="#{{var1}}-{{var2}} .{{var3}}" parameterized="true"/>

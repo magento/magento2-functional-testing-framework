@@ -344,7 +344,9 @@ class TestGenerator
         foreach ($stepsObject as $steps) {
             $actor = "I";
             $actionName = $steps->getType();
+            $stepKey = $steps->getStepKey();
             $customActionAttributes = $steps->getCustomActionAttributes();
+            $attribute = null;
             $selector = null;
             $selector1 = null;
             $selector2 = null;
@@ -375,8 +377,15 @@ class TestGenerator
             $assertIsStrict = null;
             $assertDelta = null;
 
+            // Validate action attributes and print notice messages on violation.
+            $this->validateXmlAttributesMutuallyExclusive($stepKey, $actionName, $customActionAttributes);
+
             if (isset($customActionAttributes['returnVariable'])) {
                 $returnVariable = $customActionAttributes['returnVariable'];
+            }
+
+            if (isset($customActionAttributes['attribute'])) {
+                $attribute = $customActionAttributes['attribute'];
             }
 
             if (isset($customActionAttributes['variable'])) {
@@ -388,6 +397,8 @@ class TestGenerator
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['userInput']);
             } elseif (isset($customActionAttributes['url'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['url']);
+            } elseif (isset($customActionAttributes['expectedValue'])) {
+                $input = $this->addUniquenessFunctionCall($customActionAttributes['expectedValue']);
             }
             if (isset($customActionAttributes['expected'])) {
                 $assertExpected = $this->resolveValueByType(
@@ -507,12 +518,11 @@ class TestGenerator
             switch ($actionName) {
                 case "createData":
                     $entity = $customActionAttributes['entity'];
-                    $key = $steps->getMergeKey();
                     //Add an informative statement to help the user debug test runs
                     $testSteps .= sprintf(
-                        "\t\t$%s->amGoingTo(\"create entity that has the mergeKey: %s\");\n",
+                        "\t\t$%s->amGoingTo(\"create entity that has the stepKey: %s\");\n",
                         $actor,
-                        $key
+                        $stepKey
                     );
                     //Get Entity from Static data.
                     $testSteps .= sprintf(
@@ -544,17 +554,17 @@ class TestGenerator
                     }
 
                     if ($hookObject) {
-                        $createEntityFunctionCall = sprintf("\t\t\$this->%s->createEntity(", $key);
+                        $createEntityFunctionCall = sprintf("\t\t\$this->%s->createEntity(", $stepKey);
                         $dataPersistenceHandlerFunctionCall = sprintf(
                             "\t\t\$this->%s = new DataPersistenceHandler($%s",
-                            $key,
+                            $stepKey,
                             $entity
                         );
                     } else {
-                        $createEntityFunctionCall = sprintf("\t\t\$%s->createEntity(", $key);
+                        $createEntityFunctionCall = sprintf("\t\t\$%s->createEntity(", $stepKey);
                         $dataPersistenceHandlerFunctionCall = sprintf(
                             "\t\t$%s = new DataPersistenceHandler($%s",
-                            $key,
+                            $stepKey,
                             $entity
                         );
                     }
@@ -649,12 +659,11 @@ class TestGenerator
                     break;
                 case "getData":
                     $entity = $customActionAttributes['entity'];
-                    $key = $steps->getMergeKey();
                     //Add an informative statement to help the user debug test runs
                     $testSteps .= sprintf(
-                        "\t\t$%s->amGoingTo(\"get entity that has the mergeKey: %s\");\n",
+                        "\t\t$%s->amGoingTo(\"get entity that has the stepKey: %s\");\n",
                         $actor,
-                        $key
+                        $stepKey
                     );
                     //Get Entity from Static data.
                     $testSteps .= sprintf(
@@ -686,17 +695,17 @@ class TestGenerator
                     }
 
                     if ($hookObject) {
-                        $getEntityFunctionCall = sprintf("\t\t\$this->%s->getEntity(", $key);
+                        $getEntityFunctionCall = sprintf("\t\t\$this->%s->getEntity(", $stepKey);
                         $dataPersistenceHandlerFunctionCall = sprintf(
                             "\t\t\$this->%s = new DataPersistenceHandler($%s",
-                            $key,
+                            $stepKey,
                             $entity
                         );
                     } else {
-                        $getEntityFunctionCall = sprintf("\t\t\$%s->getEntity(", $key);
+                        $getEntityFunctionCall = sprintf("\t\t\$%s->getEntity(", $stepKey);
                         $dataPersistenceHandlerFunctionCall = sprintf(
                             "\t\t$%s = new DataPersistenceHandler($%s",
-                            $key,
+                            $stepKey,
                             $entity
                         );
                     }
@@ -968,6 +977,20 @@ class TestGenerator
                         $assertDelta
                     );
                     break;
+                case "assertElementContainsAttribute":
+                    // If a blank string or null is passed in we need to pass a blank string to the function.
+                    if (empty($input)) {
+                        $input = '""';
+                    }
+
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionName,
+                        $selector,
+                        $this->wrapWithDoubleQuotes($attribute),
+                        $input
+                    );
+                    break;
                 case "assertEmpty":
                 case "assertFalse":
                 case "assertFileExists":
@@ -1080,7 +1103,7 @@ class TestGenerator
             if (count($variable) != 2) {
                 throw new \Exception(
                     "Invalid Persisted Entity Reference: {$match}. 
-                Test persisted entity references must follow {$delimiter}entityMergeKey.field{$delimiter} format."
+                Test persisted entity references must follow {$delimiter}entityStepKey.field{$delimiter} format."
                 );
             }
             if ($delimiter == "$") {
@@ -1185,13 +1208,13 @@ class TestGenerator
                     || ($step->getType() == "getData")
                 ) {
                     $hooks .= "\t/**\n";
-                    $hooks .= sprintf("\t  * @var DataPersistenceHandler $%s;\n", $step->getMergeKey());
+                    $hooks .= sprintf("\t  * @var DataPersistenceHandler $%s;\n", $step->getStepKey());
                     $hooks .= "\t */\n";
-                    $hooks .= sprintf("\tprotected $%s;\n\n", $step->getMergeKey());
+                    $hooks .= sprintf("\tprotected $%s;\n\n", $step->getStepKey());
                     $createData = true;
                 } elseif ($step->getType() == "entity") {
                     $hooks .= "\t/**\n";
-                    $hooks .= sprintf("\t  * @var EntityDataObject $%s;\n", $step->getMergeKey());
+                    $hooks .= sprintf("\t  * @var EntityDataObject $%s;\n", $step->getStepKey());
                     $hooks .= "\t */\n";
                     $hooks .= sprintf("\tprotected $%s;\n\n", $step->getCustomActionAttributes()['name']);
                 }
@@ -1514,5 +1537,82 @@ class TestGenerator
     {
         $unquoted = preg_replace('/^(\'(.*)\'|"(.*)")$/', '$2$3', $inStr);
         return $unquoted;
+    }
+
+    /**
+     * Validate action attributes are either not set at all or only one is set for a given rule.
+     *
+     * @param string $key
+     * @param string $tagName
+     * @param array $attributes
+     * @return void
+     */
+    private function validateXmlAttributesMutuallyExclusive($key, $tagName, $attributes)
+    {
+        $rules = [
+            [   'attributes' => [
+                    'selector',
+                    'selectorArray',
+                ]
+            ],
+            [
+                'attributes' => [
+                    'url',
+                    'userInput',
+                    'variable',
+                ],
+                'excludes' => [
+                    'dontSeeLink',
+                    'seeLink',
+                ],
+            ],
+            [
+                'attributes' => [
+                    'userInput',
+                    'parameterArray',
+                    'variable'
+                ],
+                'excludes' => [
+                    'dontSeeCookie',
+                    'grabCookie',
+                    'resetCookie',
+                    'seeCookie',
+                    'setCookie',
+                ],
+            ],
+        ];
+        foreach ($rules as $rule) {
+            if (isset($rule['excludes']) && in_array($tagName, $rule['excludes'])) {
+                continue;
+            }
+            $count = 0;
+            foreach ($rule['attributes'] as $attribute) {
+                if (isset($attributes[$attribute])) {
+                    $count++;
+                }
+            }
+            if ($count > 1) {
+                $this->printRuleErrorToConsole($key, $tagName, $rule['attributes']);
+            }
+        }
+    }
+
+    /**
+     * Print rule violation message to console.
+     *
+     * @param string $key
+     * @param string $tagName
+     * @param array $attributes
+     * @return void
+     */
+    private function printRuleErrorToConsole($key, $tagName, $attributes)
+    {
+        if (empty($tagName) || empty($attributes)) {
+            return;
+        }
+        $message = 'On step with stepKey "' . $key . '", only one of the attributes: "';
+        $message .= implode('", "', $attributes);
+        $message .= '" can be use for action "' . $tagName . "\".\n";
+        print $message;
     }
 }

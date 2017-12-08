@@ -18,7 +18,7 @@ class OperationElementBuilder
      */
     private $fields = [
         'name' => 'string',
-        'gpa' => 'double',
+        'gpa' => 'number',
         'phone' => 'integer',
         'isPrimary' => 'boolean'
     ];

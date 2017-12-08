@@ -45,7 +45,7 @@ class SectionReplacementCest
 		$I->click("#Doe".msq("uniqueData")." .stringLiteral2");
 		$I->click("#Doe".msq("uniqueData")."-stringLiteral2 .stringLiteral3");
 		$I->click("#Doe".msq("uniqueData")."-stringLiteral2 .Doe");
-		$I->amGoingTo("create entity that has the mergeKey: createdData");
+		$I->amGoingTo("create entity that has the stepKey: createdData");
 		$simpleData = DataObjectHandler::getInstance()->getObject("simpleData");
 		$createdData = new DataPersistenceHandler($simpleData);
 		$createdData->createEntity();

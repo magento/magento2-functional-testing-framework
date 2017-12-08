@@ -18,7 +18,7 @@ class OperationDataArrayResolver
         'string',
         'boolean',
         'integer',
-        'double'
+        'number'
     ];
     const EXCEPTION_REQUIRED_DATA = "%s of key \" %s\" in \"%s\" is required by metadata, but was not provided.";
 
@@ -362,8 +362,8 @@ class OperationDataArrayResolver
                 }
                 $newVal = (boolean)$value;
                 break;
-            case 'double':
-                $newVal = (double)$value;
+            case 'number':
+                $newVal = (float)$value;
                 break;
         }
 

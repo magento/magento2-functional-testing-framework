@@ -16,6 +16,13 @@ class SuiteGenerationTest extends TestCase
     const RESOURCES_DIR = TESTS_BP . DIRECTORY_SEPARATOR . 'verification' . DIRECTORY_SEPARATOR . 'Resources';
     const CONFIG_YML_FILE = FW_BP . DIRECTORY_SEPARATOR . SuiteGenerator::YAML_CODECEPTION_CONFIG_FILENAME;
 
+    const MANIFEST_RESULTS = [
+        'SampleSuite3Cest.php:IncludeTest',
+        'SampleSuite5Cest.php:additionalTest',
+        'SampleSuiteCest.php:IncludeTest',
+        'SampleSuite4Cest.php:IncludeTest'
+    ];
+
     private static $YML_EXISTS_FLAG = false;
     private static $TEST_GROUPS = [];
 
@@ -45,18 +52,34 @@ class SuiteGenerationTest extends TestCase
         $yml = Yaml::parse(file_get_contents(self::CONFIG_YML_FILE));
         $this->assertArrayHasKey($groupName, $yml['groups']);
 
-        // Validate test manifest contents
-        $actualManifest = TESTS_BP .
+        $suiteResultBaseDir = TESTS_BP .
             DIRECTORY_SEPARATOR .
             "verification" .
             DIRECTORY_SEPARATOR .
             "_generated" .
             DIRECTORY_SEPARATOR .
             $groupName .
-            DIRECTORY_SEPARATOR .
-            TestManifest::TEST_MANIFEST_FILENAME;
-        $expectedManifest = self::RESOURCES_DIR .  DIRECTORY_SEPARATOR . "TestSuiteGeneration1.txt";
-        $this->assertFileEquals($expectedManifest, $actualManifest, '', true, true);
+            DIRECTORY_SEPARATOR;
+
+        // Validate test manifest contents
+        $actualManifest = $suiteResultBaseDir . TestManifest::TEST_MANIFEST_FILENAME;
+        $actualTestReferences = explode(PHP_EOL, file_get_contents($actualManifest));
+
+        for ($i = 0; $i < count($actualTestReferences); $i++) {
+            if (empty($actualTestReferences[$i])) {
+                continue;
+            }
+
+            $this->assertStringEndsWith(self::MANIFEST_RESULTS[$i], $actualTestReferences[$i]);
+            $this->assertNotFalse(strpos($actualTestReferences[$i], $groupName));
+        }
+
+        // Validate expected php files exist
+        foreach (self::MANIFEST_RESULTS as $expectedTestReference) {
+            $cestName = explode(":", $expectedTestReference, 2);
+            $this->assertFileExists($suiteResultBaseDir . $cestName[0]);
+        }
+
     }
 
     public static function tearDownAfterClass()

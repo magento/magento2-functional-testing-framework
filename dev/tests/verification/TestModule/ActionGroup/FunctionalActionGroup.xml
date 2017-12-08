@@ -9,33 +9,40 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
     <actionGroup name="FunctionalActionGroup">
-        <fillField selector="#foo" userInput="myData1" mergeKey="fillField1"/>
-        <fillField selector="#bar" userInput="myData2" mergeKey="fillField2"/>
+        <fillField selector="#foo" userInput="myData1" stepKey="fillField1"/>
+        <fillField selector="#bar" userInput="myData2" stepKey="fillField2"/>
     </actionGroup>
     <actionGroup name="FunctionalActionGroupWithData">
         <arguments>
             <argument name="person" defaultValue="DefaultPerson"/>
         </arguments>
-        <amOnPage url="{{SamplePage.url(person.firstname,person.lastname)}}" mergeKey="amOnPage1"/>
-        <fillField selector="#foo" userInput="{{person.firstname}}" mergeKey="fillField1"/>
-        <fillField selector="#bar" userInput="{{person.lastname}}" mergeKey="fillField2"/>
-        <searchAndMultiSelectOption selector="#foo" parameterArray="[{{person.firstname}}, {{person.lastname}}]" mergeKey="multi1"/>
-        <see selector="{{SampleSection.oneParamElement(person.firstname)}}" mergeKey="see1"/>
+        <amOnPage url="{{SamplePage.url(person.firstname,person.lastname)}}" stepKey="amOnPage1"/>
+        <fillField selector="#foo" userInput="{{person.firstname}}" stepKey="fillField1"/>
+        <fillField selector="#bar" userInput="{{person.lastname}}" stepKey="fillField2"/>
+        <searchAndMultiSelectOption selector="#foo" parameterArray="[{{person.firstname}}, {{person.lastname}}]" stepKey="multi1"/>
+        <see selector="{{SampleSection.oneParamElement(person.firstname)}}" stepKey="see1"/>
     </actionGroup>
     <actionGroup name="FunctionalActionGroupNoDefault">
         <arguments>
             <argument name="person"/>
         </arguments>
-        <fillField selector="#foo" userInput="{{person.firstname}}" mergeKey="fillField1"/>
-        <fillField selector="#bar" userInput="{{person.lastname}}" mergeKey="fillField2"/>
-        <see selector="{{SampleSection.twoParamElement(person.firstname,person.lastname)}}" mergeKey="see2"/>
+        <fillField selector="#foo" userInput="{{person.firstname}}" stepKey="fillField1"/>
+        <fillField selector="#bar" userInput="{{person.lastname}}" stepKey="fillField2"/>
+        <see selector="{{SampleSection.twoParamElement(person.firstname,person.lastname)}}" stepKey="see2"/>
     </actionGroup>
     <actionGroup name="FunctionalActionGroupForMerge">
         <arguments>
             <argument name="myArg"/>
         </arguments>
-        <fillField mergeKey="deleteMe" userInput="Please delete me" selector="#delete" />
-        <see selector="{{SampleSection.oneParamElement(myArg.firstname)}}" mergeKey="see1"/>
-        <amOnPage url="{{SamplePage.url(myArg.firstname,myArg.lastname)}}" mergeKey="amOnPage1"/>
+        <fillField stepKey="deleteMe" userInput="Please delete me" selector="#delete" />
+        <see selector="{{SampleSection.oneParamElement(myArg.firstname)}}" stepKey="see1"/>
+        <amOnPage url="{{SamplePage.url(myArg.firstname,myArg.lastname)}}" stepKey="amOnPage1"/>
+    </actionGroup>
+    <actionGroup name="FunctionalActionGroupWithTrickyArgument">
+        <arguments>
+            <argument name="simple" defaultValue="simpleData"/>
+        </arguments>
+        <seeElement stepKey="see1" selector="{{SampleSection.simpleElement}}"/>
+        <seeElement stepKey="see2" selector="{{SampleSection.simpleElementOneParam(simple.firstname)}}"/>
     </actionGroup>
 </config>

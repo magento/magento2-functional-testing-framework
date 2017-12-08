@@ -133,8 +133,8 @@ class ActionGroupObject
 
             // we append the action reference key to any linked action and the action's merge key as the user might
             // use this action group multiple times in the same test.
-            $resolvedActions[$action->getMergeKey() . $actionReferenceKey] = new ActionObject(
-                $action->getMergeKey() . $actionReferenceKey,
+            $resolvedActions[$action->getStepKey() . $actionReferenceKey] = new ActionObject(
+                $action->getStepKey() . $actionReferenceKey,
                 $action->getType(),
                 array_merge($action->getCustomActionAttributes(), $newActionAttributes),
                 $action->getLinkedAction() == null ? null : $action->getLinkedAction() . $actionReferenceKey,
@@ -217,7 +217,8 @@ class ActionGroupObject
             );
         }
 
-        return  str_replace($variableName, $arguments[$variableName], $attributeValue);
+        //replace argument ONLY when there is no letters attached before after (ex. category.name vs categoryTreeButton)
+        return preg_replace("/(?<![\w]){$variableName}(?![(\w])/", $arguments[$variableName], $attributeValue);
     }
 
     /**

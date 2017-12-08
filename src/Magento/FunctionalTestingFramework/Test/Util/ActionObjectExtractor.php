@@ -16,7 +16,7 @@ class ActionObjectExtractor extends BaseCestObjectExtractor
 {
     const TEST_ACTION_BEFORE = 'before';
     const TEST_ACTION_AFTER = 'after';
-    const TEST_STEP_MERGE_KEY = 'mergeKey';
+    const TEST_STEP_MERGE_KEY = 'stepKey';
     const ACTION_GROUP_TAG = 'actionGroup';
     const ACTION_GROUP_REF = 'ref';
     const ACTION_GROUP_ARGUMENTS = 'arguments';
@@ -44,7 +44,7 @@ class ActionObjectExtractor extends BaseCestObjectExtractor
         $actions = [];
 
         foreach ($testActions as $actionName => $actionData) {
-            $mergeKey = $actionData[self::TEST_STEP_MERGE_KEY];
+            $stepKey = $actionData[self::TEST_STEP_MERGE_KEY];
             if ($actionData[self::NODE_NAME] === TestEntityExtractor::TEST_STEP_ENTITY_CREATION) {
                 $actionData = $this->stripDataFields($actionData);
             }
@@ -79,7 +79,7 @@ class ActionObjectExtractor extends BaseCestObjectExtractor
             }*/
 
             $actions[] = new ActionObject(
-                $mergeKey,
+                $stepKey,
                 $actionData[self::NODE_NAME],
                 $actionAttributes,
                 $linkedAction,

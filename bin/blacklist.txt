@@ -7,3 +7,4 @@ bin/blacklist.txt
 dev/tests/static/Magento/Sniffs/Annotations/Helper.php
 dev/tests/static/Magento/Sniffs/Annotations/RequireAnnotatedAttributesSniff.php
 dev/tests/static/Magento/Sniffs/Annotations/RequireAnnotatedMethodsSniff.php
+dev/tests/verification/_generated

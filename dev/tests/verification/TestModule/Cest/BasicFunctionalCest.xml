@@ -17,10 +17,10 @@
             <stories value="MQE-305"/>
         </annotations>
         <before>
-            <amOnPage url="/beforeUrl" mergeKey="beforeAmOnPageKey"/>
+            <amOnPage url="/beforeUrl" stepKey="beforeAmOnPageKey"/>
         </before>
         <after>
-            <amOnPage url="/afterUrl" mergeKey="afterAmOnPageKey"/>
+            <amOnPage url="/afterUrl" stepKey="afterAmOnPageKey"/>
         </after>
         <test name="BasicFunctionalTest">
             <annotations>
@@ -30,89 +30,89 @@
                 <features value="Hardcoded Functional Test"/>
                 <stories value="MQE-425"/>
             </annotations>
-            <grabValueFrom returnVariable="someVar" mergeKey="someVarDefinition"/>
-            <acceptPopup mergeKey="acceptPopupKey1"/>
-            <amOnPage mergeKey="amOnPageKey1" url="/test/url"/>
-            <appendField variable="someVar" selector=".functionalTestSelector" userInput="someInput" mergeKey="appendFieldKey1" />
-            <attachFile userInput="testFileAttachment" selector=".functionalTestSelector" mergeKey="attachFileKey1" />
-            <cancelPopup mergeKey="cancelPopupKey1"/>
-            <checkOption selector=".functionalTestSelector" mergeKey="checkOptionKey1"/>
-            <click selector=".functionalTestSelector" mergeKey="clickKey1"/>
-            <clickWithLeftButton selector=".functionalTestSelector" mergeKey="clickWithLeftButtonKey1"/>
-            <clickWithRightButton selector=".functionalTestSelector" mergeKey="clickWithRightButtonKey1"/>
-            <closeTab mergeKey="closeTabKey1"/>
-            <conditionalClick selector=".functionalTestSelector" dependentSelector=".functionalDependentTestSelector" mergeKey="conditionalClickKey1"/>
-            <dontSee userInput="someInput" selector=".functionalTestSelector" mergeKey="dontSeeKey1" />
-            <dontSeeCheckboxIsChecked selector=".functionalTestSelector" mergeKey="dontSeeCheckboxIsCheckedKey1"/>
-            <dontSeeCookie userInput="someInput" mergeKey="dontSeeCookieKey1"/>
-            <dontSeeCurrentUrlEquals url="/functionalUrl" mergeKey="dontSeeCurrentUrlEqualsKey1"/>
-            <dontSeeCurrentUrlMatches url="/functionalUrl" mergeKey="dontSeeCurrentUrlMatchesKey1"/>
-            <dontSeeElement selector=".functionalTestSelector" mergeKey="dontSeeElementKey1"/>
-            <dontSeeElementInDOM selector=".functionalTestSelector" mergeKey="dontSeeElementInDOMKey1"/>
-            <dontSeeInCurrentUrl url="/functionalUrl" mergeKey="dontSeeInCurrentUrlKey1"/>
-            <dontSeeInField variable="someVar" selector=".functionalTestSelector" userInput="someInput" mergeKey="dontSeeInFieldKey1" />
-            <dontSeeInPageSource userInput="someInput" mergeKey="dontSeeInPageSourceKey1"/>
-            <dontSeeInSource html="&quot;&lt;myHtmlHere&gt;&quot;" mergeKey="dontSeeInSourceKey1"/>
-            <dontSeeInTitle userInput="someInput" mergeKey="dontSeeInTitleKey1"/>
-            <dontSeeLink userInput="someInput" url="/functionalUrl" mergeKey="dontSeeLinkKey1" />
-            <dontSeeOptionIsSelected selector=".functionalTestSelector" userInput="someInput" mergeKey="dontSeeOptionIsSelectedKey1" />
-            <doubleClick selector=".functionalTestSelector" mergeKey="doubleClickKey1"/>
-            <dragAndDrop selector1=".functionalTestSelector" selector2=".functionalTestSelector2" mergeKey="dragAndDropKey1" />
-            <executeJS function="someJSFunction" mergeKey="executeJSKey1"/>
-            <fillField selector=".functionalTestSelector" userInput="someInput" mergeKey="fillFieldKey1" />
-            <fillField selector=".functionalTestSelector" userInput="0" mergeKey="fillFieldKey2" />
-            <grabAttributeFrom returnVariable="grabAttributeVar" selector=".functionalTestSelector" userInput="someInput" mergeKey="grabAttributeFromKey1" />
-            <grabCookie returnVariable="grabCookieVar" userInput="grabCookieInput" parameterArray="['domain' => 'www.google.com']" mergeKey="grabCookieKey1" />
-            <grabFromCurrentUrl returnVariable="grabUrlVar" url="/grabCurrentUrl" mergeKey="grabFromCurrentUrlKey1" />
-            <grabMultiple selector=".functionalTestSelector" returnVariable="grabMultipleVar" mergeKey="grabMultipleKey1" />
-            <grabTextFrom returnVariable="" selector=".functionalTestSelector" mergeKey="grabTextFromKey1" />
-            <grabValueFrom selector=".functionalTestSelector" returnVariable="grabValueVar" mergeKey="grabValueFromKey1" />
-            <makeScreenshot userInput="screenShotInput" mergeKey="makeScreenshotKey1"/>
-            <maximizeWindow mergeKey="maximizeWindowKey1"/>
-            <moveBack mergeKey="moveBackKey1"/>
-            <moveForward mergeKey="moveForwardKey1"/>
-            <moveMouseOver selector=".functionalTestSelector" mergeKey="moveMouseOverKey1"/>
-            <openNewTab mergeKey="openNewTabKey1"/>
-            <pauseExecution mergeKey="pauseExecutionKey1"/>
-            <pressKey selector="#page" userInput="a" mergeKey="pressKey1"/>
-            <pressKey selector="#page" parameterArray="[['ctrl','a'],'new']" mergeKey="pressKey2"/>
-            <pressKey selector="#page" parameterArray="[['shift','111'],'1','x']" mergeKey="pressKey3"/>
-            <pressKey selector="#page" parameterArray="[['ctrl', 'a'], \Facebook\WebDriver\WebDriverKeys::DELETE]" mergeKey="pressKey4"/>
-            <reloadPage mergeKey="reloadPageKey1"/>
-            <resetCookie userInput="cookieInput" mergeKey="resetCookieKey1"/>
-            <resizeWindow width="0" height="0" mergeKey="resizeWindowKey1" />
-            <scrollTo selector=".functionalTestSelector" mergeKey="scrollToKey1"/>
-            <see userInput="someInput" selector=".functionalTestSelector" mergeKey="seeKey1" />
-            <seeCheckboxIsChecked selector=".functionalTestSelector" mergeKey="seeCheckboxIsCheckedKey1"/>
-            <seeCookie userInput="someInput" mergeKey="seeCookieKey1"/>
-            <seeCurrentUrlEquals url="/functionalUrl" mergeKey="seeCurrentUrlEqualsKey1"/>
-            <seeCurrentUrlMatches url="/functionalUrl" mergeKey="seeCurrentUrlMatchesKey1"/>
-            <seeElement selector=".functionalTestSelector" mergeKey="seeElementKey1"/>
-            <seeElementInDOM selector=".functionalTestSelector" mergeKey="seeElementInDOMKey1"/>
-            <seeInCurrentUrl url="/functionalUrl" mergeKey="seeInCurrentUrlKey1"/>
-            <seeInField selector=".functionalTestSelector" userInput="someInput" mergeKey="seeInFieldKey1" />
-            <seeInPageSource html="&quot;&lt;myHtmlHere&gt;&quot;" mergeKey="seeInPageSourceKey1"/>
-            <seeInPopup userInput="someInput" mergeKey="seeInPopupKey1"/>
-            <seeInSource html="&quot;&lt;myHtmlHere&gt;&quot;" mergeKey="seeInSourceKey1"/>
-            <seeInTitle userInput="someInput" mergeKey="seeInTitleKey1"/>
-            <seeLink userInput="someInput" url="/functionalUrl" mergeKey="seeLinkKey1" />
-            <seeNumberOfElements variable="someVar" selector=".functionalTestSelector" mergeKey="seeNumberOfElementsKey1"/>
-            <seeOptionIsSelected selector=".functionalTestSelector" userInput="someInput" mergeKey="seeOptionIsSelectedKey1" />
-            <selectOption selector=".functionalTestSelector" mergeKey="selectOptionKey1"/>
-            <setCookie value="someCookieValue" userInput="someInput" mergeKey="setCookieKey1" />
-            <switchToIFrame userInput="someInput" mergeKey="switchToIFrameKey1"/>
-            <switchToNextTab mergeKey="switchToNextTabKey1"/>
-            <switchToPreviousTab mergeKey="switchToPreviousTabKey1"/>
-            <switchToWindow mergeKey="switchToWindowKey1"/>
-            <typeInPopup userInput="someInput" mergeKey="typeInPopupKey1"/>
-            <uncheckOption selector=".functionalTestSelector" mergeKey="uncheckOptionKey1"/>
-            <unselectOption selector=".functionalTestSelector" userInput="someInput" mergeKey="unselectOptionKey1" />
-            <wait time="30" mergeKey="waitKey1"/>
-            <waitForElement time="30" selector=".functionalTestSelector" mergeKey="waitForElementKey1" />
-            <waitForElementNotVisible selector=".functionalTestSelector" time="30" mergeKey="waitForElementNotVisibleKey1" />
-            <waitForElementVisible selector=".functionalTestSelector" time="30" mergeKey="waitForElementVisibleKey1" />
-            <waitForJS function="someJsFunction" time="30" mergeKey="waitForJSKey1" />
-            <waitForText selector=".functionalTestSelector" userInput="someInput" time="30" mergeKey=""/>
+            <grabValueFrom returnVariable="someVar" stepKey="someVarDefinition"/>
+            <acceptPopup stepKey="acceptPopupKey1"/>
+            <amOnPage stepKey="amOnPageKey1" url="/test/url"/>
+            <appendField variable="someVar" selector=".functionalTestSelector" stepKey="appendFieldKey1" />
+            <attachFile userInput="testFileAttachment" selector=".functionalTestSelector" stepKey="attachFileKey1" />
+            <cancelPopup stepKey="cancelPopupKey1"/>
+            <checkOption selector=".functionalTestSelector" stepKey="checkOptionKey1"/>
+            <click selector=".functionalTestSelector" stepKey="clickKey1"/>
+            <clickWithLeftButton selector=".functionalTestSelector" stepKey="clickWithLeftButtonKey1"/>
+            <clickWithRightButton selector=".functionalTestSelector" stepKey="clickWithRightButtonKey1"/>
+            <closeTab stepKey="closeTabKey1"/>
+            <conditionalClick selector=".functionalTestSelector" dependentSelector=".functionalDependentTestSelector" visible="true" stepKey="conditionalClickKey1"/>
+            <dontSee userInput="someInput" selector=".functionalTestSelector" stepKey="dontSeeKey1" />
+            <dontSeeCheckboxIsChecked selector=".functionalTestSelector" stepKey="dontSeeCheckboxIsCheckedKey1"/>
+            <dontSeeCookie userInput="someInput" stepKey="dontSeeCookieKey1"/>
+            <dontSeeCurrentUrlEquals url="/functionalUrl" stepKey="dontSeeCurrentUrlEqualsKey1"/>
+            <dontSeeCurrentUrlMatches url="/functionalUrl" stepKey="dontSeeCurrentUrlMatchesKey1"/>
+            <dontSeeElement selector=".functionalTestSelector" stepKey="dontSeeElementKey1"/>
+            <dontSeeElementInDOM selector=".functionalTestSelector" stepKey="dontSeeElementInDOMKey1"/>
+            <dontSeeInCurrentUrl url="/functionalUrl" stepKey="dontSeeInCurrentUrlKey1"/>
+            <dontSeeInField variable="someVar" selector=".functionalTestSelector" stepKey="dontSeeInFieldKey1" />
+            <dontSeeInPageSource userInput="someInput" stepKey="dontSeeInPageSourceKey1"/>
+            <dontSeeInSource html="&quot;&lt;myHtmlHere&gt;&quot;" stepKey="dontSeeInSourceKey1"/>
+            <dontSeeInTitle userInput="someInput" stepKey="dontSeeInTitleKey1"/>
+            <dontSeeLink userInput="someInput" url="/functionalUrl" stepKey="dontSeeLinkKey1" />
+            <dontSeeOptionIsSelected selector=".functionalTestSelector" userInput="someInput" stepKey="dontSeeOptionIsSelectedKey1" />
+            <doubleClick selector=".functionalTestSelector" stepKey="doubleClickKey1"/>
+            <dragAndDrop selector1=".functionalTestSelector" selector2=".functionalTestSelector2" stepKey="dragAndDropKey1" />
+            <executeJS function="someJSFunction" stepKey="executeJSKey1"/>
+            <fillField selector=".functionalTestSelector" userInput="someInput" stepKey="fillFieldKey1" />
+            <fillField selector=".functionalTestSelector" userInput="0" stepKey="fillFieldKey2" />
+            <grabAttributeFrom returnVariable="grabAttributeVar" selector=".functionalTestSelector" userInput="someInput" stepKey="grabAttributeFromKey1" />
+            <grabCookie returnVariable="grabCookieVar" userInput="grabCookieInput" parameterArray="['domain' => 'www.google.com']" stepKey="grabCookieKey1" />
+            <grabFromCurrentUrl returnVariable="grabUrlVar" url="/grabCurrentUrl" stepKey="grabFromCurrentUrlKey1" />
+            <grabMultiple selector=".functionalTestSelector" returnVariable="grabMultipleVar" stepKey="grabMultipleKey1" />
+            <grabTextFrom returnVariable="" selector=".functionalTestSelector" stepKey="grabTextFromKey1" />
+            <grabValueFrom selector=".functionalTestSelector" returnVariable="grabValueVar" stepKey="grabValueFromKey1" />
+            <makeScreenshot userInput="screenShotInput" stepKey="makeScreenshotKey1"/>
+            <maximizeWindow stepKey="maximizeWindowKey1"/>
+            <moveBack stepKey="moveBackKey1"/>
+            <moveForward stepKey="moveForwardKey1"/>
+            <moveMouseOver selector=".functionalTestSelector" stepKey="moveMouseOverKey1"/>
+            <openNewTab stepKey="openNewTabKey1"/>
+            <pauseExecution stepKey="pauseExecutionKey1"/>
+            <pressKey selector="#page" userInput="a" stepKey="pressKey1"/>
+            <pressKey selector="#page" parameterArray="[['ctrl','a'],'new']" stepKey="pressKey2"/>
+            <pressKey selector="#page" parameterArray="[['shift','111'],'1','x']" stepKey="pressKey3"/>
+            <pressKey selector="#page" parameterArray="[['ctrl', 'a'], \Facebook\WebDriver\WebDriverKeys::DELETE]" stepKey="pressKey4"/>
+            <reloadPage stepKey="reloadPageKey1"/>
+            <resetCookie userInput="cookieInput" stepKey="resetCookieKey1"/>
+            <resizeWindow width="0" height="0" stepKey="resizeWindowKey1" />
+            <scrollTo selector=".functionalTestSelector" stepKey="scrollToKey1"/>
+            <see userInput="someInput" selector=".functionalTestSelector" stepKey="seeKey1" />
+            <seeCheckboxIsChecked selector=".functionalTestSelector" stepKey="seeCheckboxIsCheckedKey1"/>
+            <seeCookie userInput="someInput" stepKey="seeCookieKey1"/>
+            <seeCurrentUrlEquals url="/functionalUrl" stepKey="seeCurrentUrlEqualsKey1"/>
+            <seeCurrentUrlMatches url="/functionalUrl" stepKey="seeCurrentUrlMatchesKey1"/>
+            <seeElement selector=".functionalTestSelector" stepKey="seeElementKey1"/>
+            <seeElementInDOM selector=".functionalTestSelector" stepKey="seeElementInDOMKey1"/>
+            <seeInCurrentUrl url="/functionalUrl" stepKey="seeInCurrentUrlKey1"/>
+            <seeInField selector=".functionalTestSelector" userInput="someInput" stepKey="seeInFieldKey1" />
+            <seeInPageSource html="&quot;&lt;myHtmlHere&gt;&quot;" stepKey="seeInPageSourceKey1"/>
+            <seeInPopup userInput="someInput" stepKey="seeInPopupKey1"/>
+            <seeInSource html="&quot;&lt;myHtmlHere&gt;&quot;" stepKey="seeInSourceKey1"/>
+            <seeInTitle userInput="someInput" stepKey="seeInTitleKey1"/>
+            <seeLink userInput="someInput" url="/functionalUrl" stepKey="seeLinkKey1" />
+            <seeNumberOfElements variable="someVar" selector=".functionalTestSelector" stepKey="seeNumberOfElementsKey1"/>
+            <seeOptionIsSelected selector=".functionalTestSelector" userInput="someInput" stepKey="seeOptionIsSelectedKey1" />
+            <selectOption selector=".functionalTestSelector" stepKey="selectOptionKey1"/>
+            <setCookie value="someCookieValue" userInput="someInput" stepKey="setCookieKey1" />
+            <switchToIFrame userInput="someInput" stepKey="switchToIFrameKey1"/>
+            <switchToNextTab stepKey="switchToNextTabKey1"/>
+            <switchToPreviousTab stepKey="switchToPreviousTabKey1"/>
+            <switchToWindow stepKey="switchToWindowKey1"/>
+            <typeInPopup userInput="someInput" stepKey="typeInPopupKey1"/>
+            <uncheckOption selector=".functionalTestSelector" stepKey="uncheckOptionKey1"/>
+            <unselectOption selector=".functionalTestSelector" userInput="someInput" stepKey="unselectOptionKey1" />
+            <wait time="30" stepKey="waitKey1"/>
+            <waitForElement time="30" selector=".functionalTestSelector" stepKey="waitForElementKey1" />
+            <waitForElementNotVisible selector=".functionalTestSelector" time="30" stepKey="waitForElementNotVisibleKey1" />
+            <waitForElementVisible selector=".functionalTestSelector" time="30" stepKey="waitForElementVisibleKey1" />
+            <waitForJS function="someJsFunction" time="30" stepKey="waitForJSKey1" />
+            <waitForText selector=".functionalTestSelector" userInput="someInput" time="30" stepKey=""/>
         </test>
     </cest>
 </config>

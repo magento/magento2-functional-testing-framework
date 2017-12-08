@@ -27,7 +27,7 @@ class ActionObjectTest extends TestCase
      */
     public function testConstructOrderBefore()
     {
-        $actionObject = new ActionObject('mergeKey', 'type', [], null, 'before');
+        $actionObject = new ActionObject('stepKey', 'type', [], null, 'before');
         $this->assertEquals(0, $actionObject->getOrderOffset());
     }
 
@@ -36,7 +36,7 @@ class ActionObjectTest extends TestCase
      */
     public function testConstructOrderAfter()
     {
-        $actionObject = new ActionObject('mergeKey', 'type', [], null, 'after');
+        $actionObject = new ActionObject('stepKey', 'type', [], null, 'after');
         $this->assertEquals(1, $actionObject->getOrderOffset());
     }
 
