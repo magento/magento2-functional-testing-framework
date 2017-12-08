@@ -3,10 +3,10 @@
 ----
 
 ## System Requirements
-[Magento Functional Testing Framework system requirements](http://devdocs.magento.com/guides/v2.3/magento-functional-testing-framework/getting-started.html#prepare-environment)
+[Magento Functional Testing Framework system requirements](http://devdocs.magento.com/guides/v2.2/magento-functional-testing-framework/getting-started.html#prepare-environment)
 
 ## Installation
-To install the Magento Functional Testing Framework, see [Getting Started](http://devdocs.magento.com/guides/v2.3/magento-functional-testing-framework/getting-started.html)
+To install the Magento Functional Testing Framework, see [Getting Started](http://devdocs.magento.com/guides/v2.2/magento-functional-testing-framework/getting-started.html)
 
 ## Contributing
 Contributions can take the form of new components or features, changes to existing features, tests, documentation (such as developer guides, user guides, examples, or specifications), bug fixes, optimizations, or just good suggestions.
@@ -17,7 +17,7 @@ To open an issue, click [here][2].
 
 To suggest documentation improvements, click [here][3].
 
-[1]: <http://devdocs.magento.com/guides/v2.3/magento-functional-testing-framework/contribution-guidelines.html>
+[1]: <http://devdocs.magento.com/guides/v2.2/magento-functional-testing-framework/contribution-guidelines.html>
 [2]: <https://github.com/magento/magento2-functional-testing-framework/issues>
 [3]: <http://devdocs.magento.com>
 
