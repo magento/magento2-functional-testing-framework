@@ -11,8 +11,8 @@ require_once __DIR__ . '/../../Helper/AdminUrlList.php';
 /**
  * Class AdminStep
  * @SuppressWarnings(PHPMD)
+ * @codingStandardsIgnoreFile
  */
-// @codingStandardsIgnoreFile
 class AdminStep extends \Magento\FunctionalTestingFramework\AcceptanceTester
 {
     public static $adminPageTitle = '.page-title';

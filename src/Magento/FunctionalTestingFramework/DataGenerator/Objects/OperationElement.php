@@ -103,7 +103,7 @@ class OperationElement
     }
 
     /**
-     * Getter for required attribute
+     * Accessor for required attribute
      *
      * @return bool
      */
