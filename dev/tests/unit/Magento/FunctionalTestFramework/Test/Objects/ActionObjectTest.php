@@ -166,7 +166,7 @@ class ActionObjectTest extends TestCase
         ]);
 
         // Mock SectionHandler
-        $elementObject = new ElementObject('elementObject', 'button', '#{{var1}}[{{var2}}, {{var3}}]', null, '42', true);
+        $elementObject = new ElementObject('elementObject', 'button', '#{{var1}}[{{var2}},{{var3}}]', null, '42', true);
         $sectionObject = new SectionObject('SectionObject', ['elementObject' => $elementObject]);
         $sectionInstance = AspectMock::double(SectionObjectHandler::class, ['getObject' => $sectionObject])
             ->make(); // bypass the private constructor
@@ -183,7 +183,7 @@ class ActionObjectTest extends TestCase
 
         // Verify
         $expected = [
-            'selector' => '#stringLiteral[myValue, $data.key$]',
+            'selector' => '#stringLiteral[myValue,$data.key$]',
             'userInput' => 'Input'
         ];
         $this->assertEquals($expected, $actionObject->getCustomActionAttributes());
@@ -278,7 +278,6 @@ class ActionObjectTest extends TestCase
         ];
         $this->assertEquals($expected, $actionObject->getCustomActionAttributes());
     }
-
 
     /**
      * Action object should throw an exception if a reference to a parameterized selector has too few given args.
