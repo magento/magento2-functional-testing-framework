@@ -5,6 +5,7 @@ use Magento\FunctionalTestingFramework\AcceptanceTester;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
 use Yandex\Allure\Adapter\Annotation\Title;
@@ -16,7 +17,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  * @Severity(level = SeverityLevel::CRITICAL)
- * @Title("Title")
+ * @Title("Action Group Cest")
  * @group functional
  * @Features({"Action Group"})
  * @Stories({"MQE-496"})
@@ -56,7 +57,7 @@ class ActionGroupCest
 	 */
 	public function actionGroupWithPassedArgumentAndStringSelectorParam(AcceptanceTester $I)
 	{
-		$I->see("John".msq("uniquePerson"), "#element .test1");
+		$I->see("John".msq("UniquePerson"), "#element .test1");
 	}
 
 	/**
@@ -80,7 +81,7 @@ class ActionGroupCest
 	 */
 	public function actionGroupWithSingleParameterSelectorFromPassedArgument(AcceptanceTester $I)
 	{
-		$I->see("Doe", "#element .John".msq("uniquePerson"));
+		$I->see("Doe", "#element .John".msq("UniquePerson"));
 	}
 
 	/**

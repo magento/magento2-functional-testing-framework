@@ -25,10 +25,7 @@ class ActionGroupGenerationTest extends TestCase
 
         $this->assertFileEquals(
             self::RESOURCES_PATH . DIRECTORY_SEPARATOR . self::ACTION_GROUP_CEST . ".txt",
-            $test->getExportDir() .
-            DIRECTORY_SEPARATOR .
-            self::ACTION_GROUP_CEST .
-            ".php"
+            $test->getExportDir() . DIRECTORY_SEPARATOR . self::ACTION_GROUP_CEST . ".php"
         );
     }
 }
