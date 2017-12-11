@@ -51,10 +51,7 @@ class ActionObjectTest extends TestCase
             'userInput' => 'Hello world'
         ]);
         $elementObject = new ElementObject('elementObject', 'button', '#replacementSelector', null, '42', false);
-        $sectionObject = new SectionObject('SectionObject', ['elementObject' => $elementObject]);
-        $instance = AspectMock::double(SectionObjectHandler::class, ['getObject' => $sectionObject])
-            ->make(); // bypass the private constructor
-        AspectMock::double(SectionObjectHandler::class, ['getInstance' => $instance]);
+        $this->mockSectionHandlerWithElement($elementObject);
 
         // Call the method under test
         $actionObject->resolveReferences();
@@ -77,10 +74,7 @@ class ActionObjectTest extends TestCase
             'userInput' => 'Input'
         ]);
         $elementObject = new ElementObject('elementObject', 'button', '#{{var1}}', null, '42', true);
-        $sectionObject = new SectionObject('SectionObject', ['elementObject' => $elementObject]);
-        $instance = AspectMock::double(SectionObjectHandler::class, ['getObject' => $sectionObject])
-            ->make(); // bypass the private constructor
-        AspectMock::double(SectionObjectHandler::class, ['getInstance' => $instance]);
+        $this->mockSectionHandlerWithElement($elementObject);
 
         // Call the method under test
         $actionObject->resolveReferences();
@@ -105,16 +99,11 @@ class ActionObjectTest extends TestCase
 
         // Mock SectionHandler
         $elementObject = new ElementObject('elementObject', 'button', '#{{var1}}', null, '42', true);
-        $sectionObject = new SectionObject('SectionObject', ['elementObject' => $elementObject]);
-        $sectionInstance = AspectMock::double(SectionObjectHandler::class, ['getObject' => $sectionObject])
-            ->make(); // bypass the private constructor
-        AspectMock::double(SectionObjectHandler::class, ['getInstance' => $sectionInstance]);
+        $this->mockSectionHandlerWithElement($elementObject);
 
         // Mock DataHandler
         $dataObject = new EntityDataObject('dataObject', 'dataType', ["key" => 'myValue'], null, null, null);
-        $dataInstance = AspectMock::double(DataObjectHandler::class, ['getObject' => $dataObject])
-            ->make();
-        AspectMock::double(DataObjectHandler::class, ['getInstance' => $dataInstance]);
+        $this->mockDataHandlerWithElement($dataObject);
 
         // Call the method under test
         $actionObject->resolveReferences();
@@ -139,10 +128,7 @@ class ActionObjectTest extends TestCase
 
         // Mock SectionHandler
         $elementObject = new ElementObject('elementObject', 'button', '#{{var1}}', null, '42', true);
-        $sectionObject = new SectionObject('SectionObject', ['elementObject' => $elementObject]);
-        $sectionInstance = AspectMock::double(SectionObjectHandler::class, ['getObject' => $sectionObject])
-            ->make(); // bypass the private constructor
-        AspectMock::double(SectionObjectHandler::class, ['getInstance' => $sectionInstance]);
+        $this->mockSectionHandlerWithElement($elementObject);
 
         // Call the method under test
         $actionObject->resolveReferences();
@@ -167,16 +153,11 @@ class ActionObjectTest extends TestCase
 
         // Mock SectionHandler
         $elementObject = new ElementObject('elementObject', 'button', '#{{var1}}[{{var2}},{{var3}}]', null, '42', true);
-        $sectionObject = new SectionObject('SectionObject', ['elementObject' => $elementObject]);
-        $sectionInstance = AspectMock::double(SectionObjectHandler::class, ['getObject' => $sectionObject])
-            ->make(); // bypass the private constructor
-        AspectMock::double(SectionObjectHandler::class, ['getInstance' => $sectionInstance]);
+        $this->mockSectionHandlerWithElement($elementObject);
 
         // Mock DataHandler
         $dataObject = new EntityDataObject('dataObject', 'dataType', ["key" => 'myValue'], null, null, null);
-        $dataInstance = AspectMock::double(DataObjectHandler::class, ['getObject' => $dataObject])
-            ->make();
-        AspectMock::double(DataObjectHandler::class, ['getInstance' => $dataInstance]);
+        $this->mockDataHandlerWithElement($dataObject);
 
         // Call the method under test
         $actionObject->resolveReferences();
@@ -199,10 +180,7 @@ class ActionObjectTest extends TestCase
             'selector' => '{{SectionObject.elementObject}}'
         ]);
         $elementObject = new ElementObject('elementObject', 'button', '#replacementSelector', null, '42', false);
-        $sectionObject = new SectionObject('SectionObject', ['elementObject' => $elementObject]);
-        $instance = AspectMock::double(SectionObjectHandler::class, ['getObject' => $sectionObject])
-            ->make(); // bypass the private constructor
-        AspectMock::double(SectionObjectHandler::class, ['getInstance' => $instance]);
+        $this->mockSectionHandlerWithElement($elementObject);
 
         // Call the method under test
         $actionObject->resolveReferences();
@@ -264,9 +242,7 @@ class ActionObjectTest extends TestCase
         $entityDataObject = new EntityDataObject('EntityDataObject', 'test', [
             'key' => 'replacementData'
         ], [], '', '');
-        $instance = AspectMock::double(DataObjectHandler::class, ['getObject' => $entityDataObject])
-            ->make(); // bypass the private constructor
-        AspectMock::double(DataObjectHandler::class, ['getInstance' => $instance]);
+        $this->mockDataHandlerWithElement($entityDataObject);
 
         // Call the method under test
         $actionObject->resolveReferences();
@@ -291,10 +267,7 @@ class ActionObjectTest extends TestCase
             'userInput' => 'Input'
         ]);
         $elementObject = new ElementObject('elementObject', 'button', '#{{var1}} {{var2}}', null, '42', true);
-        $sectionObject = new SectionObject('SectionObject', ['elementObject' => $elementObject]);
-        $instance = AspectMock::double(SectionObjectHandler::class, ['getObject' => $sectionObject])
-            ->make(); // bypass the private constructor
-        AspectMock::double(SectionObjectHandler::class, ['getInstance' => $instance]);
+        $this->mockSectionHandlerWithElement($elementObject);
 
         // Call the method under test
         $actionObject->resolveReferences();
@@ -312,12 +285,24 @@ class ActionObjectTest extends TestCase
             'userInput' => 'Input'
         ]);
         $elementObject = new ElementObject('elementObject', 'button', '#{{var1}}', null, '42', true);
+        $this->mockSectionHandlerWithElement($elementObject);
+
+        // Call the method under test
+        $actionObject->resolveReferences();
+    }
+
+    private function mockSectionHandlerWithElement($elementObject)
+    {
         $sectionObject = new SectionObject('SectionObject', ['elementObject' => $elementObject]);
         $instance = AspectMock::double(SectionObjectHandler::class, ['getObject' => $sectionObject])
             ->make(); // bypass the private constructor
         AspectMock::double(SectionObjectHandler::class, ['getInstance' => $instance]);
+    }
 
-        // Call the method under test
-        $actionObject->resolveReferences();
+    private function mockDataHandlerWithElement($dataObject)
+    {
+        $dataInstance = AspectMock::double(DataObjectHandler::class, ['getObject' => $dataObject])
+            ->make();
+        AspectMock::double(DataObjectHandler::class, ['getInstance' => $dataInstance]);
     }
 }
