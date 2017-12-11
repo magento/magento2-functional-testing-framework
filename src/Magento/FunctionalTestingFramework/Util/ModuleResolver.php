@@ -19,6 +19,11 @@ class ModuleResolver
     const MODULE_WHITELIST = 'MODULE_WHITELIST';
 
     /**
+     * Environment field name for custom module paths.
+     */
+    const CUSTOM_MODULE_PATHS = 'CUSTOM_MODULE_PATHS';
+
+    /**
      * Enabled modules.
      *
      * @var array|null
@@ -166,15 +171,15 @@ class ModuleResolver
     public function getModulesPath()
     {
         if (isset($this->enabledModulePaths)) {
-            return $this->removeBlacklistModules($this->enabledModulePaths);
+            return $this->enabledModulePaths;
         }
 
         $enabledModules = $this->getEnabledModules();
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
         $allModulePaths = glob($modulePath . '*/*');
         if (empty($enabledModules)) {
-            $this->enabledModulePaths = $allModulePaths;
-            return $this->removeBlacklistModules($this->enabledModulePaths);
+            $this->enabledModulePaths = $this->applyCustomModuleMethods($allModulePaths);
+            return $this->enabledModulePaths;
         }
 
         $enabledModules = array_merge($enabledModules, $this->getModuleWhitelist());
@@ -191,8 +196,8 @@ class ModuleResolver
             }
         }
 
-        $this->enabledModulePaths = $allModulePaths;
-        return $this->removeBlacklistModules($this->enabledModulePaths);
+        $this->enabledModulePaths = $this->applyCustomModuleMethods($allModulePaths);
+        return $this->enabledModulePaths;
     }
 
     /**
@@ -242,10 +247,22 @@ class ModuleResolver
     }
 
     /**
+     * A wrapping method for any custom logic which needs to be applied to the module list
+     *
+     * @param $modulesPath
+     * @return array
+     */
+    protected function applyCustomModuleMethods(&$modulesPath)
+    {
+        $this->removeBlacklistModules($modulesPath);
+        return array_merge($modulesPath, $this->getCustomModulePaths());
+    }
+
+    /**
      * Remove blacklist modules from input module paths.
      *
      * @param array &$modulePaths
-     * @return array
+     * @return void
      */
     protected function removeBlacklistModules(&$modulePaths)
     {
@@ -254,7 +271,22 @@ class ModuleResolver
                 unset($modulePaths[$index]);
             }
         }
-        return $modulePaths;
+    }
+
+    /**
+     * Returns an array of custom module paths defined by the user
+     *
+     * @return array
+     */
+    protected function getCustomModulePaths()
+    {
+        $custom_module_paths = getenv(self::CUSTOM_MODULE_PATHS);
+
+        if (!$custom_module_paths) {
+            return [];
+        }
+
+        return array_map('trim', explode(',', $custom_module_paths));
     }
 
     /**
