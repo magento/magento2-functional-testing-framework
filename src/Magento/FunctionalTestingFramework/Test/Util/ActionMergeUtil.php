@@ -144,10 +144,10 @@ class ActionMergeUtil
             if ($step->getTimeout()) {
                 $waitStepAttributes = [self::WAIT_ATTR => $step->getTimeout()];
                 $waitStep = new ActionObject(
-                    $step->getMergeKey() . self::WAIT_ACTION_SUFFIX,
+                    $step->getStepKey() . self::WAIT_ACTION_SUFFIX,
                     self::WAIT_ACTION_NAME,
                     $waitStepAttributes,
-                    $step->getMergeKey(),
+                    $step->getStepKey(),
                     self::DEFAULT_WAIT_ORDER
                 );
                 $this->insertStep($waitStep);
@@ -167,9 +167,9 @@ class ActionMergeUtil
         foreach ($parsedSteps as $parsedStep) {
             $parsedStep->resolveReferences();
             if ($parsedStep->getLinkedAction()) {
-                $this->stepsToMerge[$parsedStep->getMergeKey()] = $parsedStep;
+                $this->stepsToMerge[$parsedStep->getStepKey()] = $parsedStep;
             } else {
-                $this->orderedSteps[$parsedStep->getMergeKey()] = $parsedStep;
+                $this->orderedSteps[$parsedStep->getStepKey()] = $parsedStep;
             }
         }
     }
@@ -192,7 +192,7 @@ class ActionMergeUtil
                 self::STEP_MISSING_ERROR_MSG,
                 $this->type,
                 $this->name,
-                $stepToMerge->getMergeKey(),
+                $stepToMerge->getStepKey(),
                 $linkedStep
             ));
         } elseif (!array_key_exists($linkedStep, $this->orderedSteps)) {
@@ -216,6 +216,6 @@ class ActionMergeUtil
         ) + $stepToMerge->getOrderOffset();
         $previous_items = array_slice($this->orderedSteps, 0, $position, true);
         $next_items = array_slice($this->orderedSteps, $position, null, true);
-        $this->orderedSteps = $previous_items + [$stepToMerge->getMergeKey() => $stepToMerge] + $next_items;
+        $this->orderedSteps = $previous_items + [$stepToMerge->getStepKey() => $stepToMerge] + $next_items;
     }
 }

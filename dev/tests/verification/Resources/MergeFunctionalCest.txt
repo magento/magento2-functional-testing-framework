@@ -54,6 +54,7 @@ class MergeFunctionalCest
 		$I->fillField("#bar", "Dane");
 		$I->searchAndMultiSelectOption("#foo", ["Jane", "Dane"]);
 		$I->see("#element .Jane");
+		$I->click("#step10MergedInResult");
 	}
 
 	/**

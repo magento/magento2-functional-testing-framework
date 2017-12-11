@@ -17,6 +17,7 @@ use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Util\Uri;
 use Codeception\Util\ActionSequence;
+use Magento\Setup\Exception;
 use Yandex\Allure\Adapter\Support\AttachmentSupport;
 
 /**
@@ -75,6 +76,98 @@ class MagentoWebDriver extends WebDriver
         LC_TIME => null,
         LC_MESSAGES => null,
     ];
+
+    public function _initialize()
+    {
+        $this->sanitizeConfig();
+        parent::_initialize();
+    }
+
+    public function _resetConfig()
+    {
+        parent::_resetConfig();
+        $this->sanitizeConfig();
+    }
+
+    /**
+     * Sanitizes URL and Selenium Variables, then assigns them to the config array.
+     * @return void
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    private function sanitizeConfig()
+    {
+        if ($this->config['url'] === "") {
+            trigger_error("MAGENTO_BASE_URL must be defined in .env", E_USER_ERROR);
+        }
+
+        //Determine if url sanitize is required
+        if (!preg_match("/(http|https):\/\/[\w.:]+\//", $this->config['url'])) {
+            $urlParts = parse_url($this->config['url']);
+
+            if (!isset($urlParts['scheme'])) {
+                $urlParts['scheme'] = "http";
+            }
+            if (!isset($urlParts['host'])) {
+                $urlParts['host'] = rtrim($urlParts['path'], "/");
+                unset($urlParts['path']);
+            }
+
+            if (!isset($urlParts['path'])) {
+                $urlParts['path'] = "/";
+            } else {
+                $urlParts['path'] = rtrim($urlParts['path'], "/") . "/";
+            }
+
+            $_ENV['MAGENTO_BASE_URL'] = str_replace("///", "//", $this->build_url($urlParts));
+            $this->config['url'] = str_replace("///", "//", $this->build_url($urlParts));
+        }
+
+        //Assign default Values to Selenium configs if they are defined
+        if ($this->config['protocol'] == '%SELENIUM_PROTOCOL%') {
+            $this->config['protocol'] = "http";
+        }
+        if ($this->config['host'] == '%SELENIUM_HOST%') {
+            $this->config['host'] = "127.0.0.1";
+        }
+        if ($this->config['port'] == '%SELENIUM_PORT%') {
+            $this->config['port'] = "4444";
+        }
+        if ($this->config['path'] == '%SELENIUM_PATH%') {
+            $this->config['path'] = "/wd/hub";
+        }
+    }
+
+    /**
+     * Returns url from $parts given, used with parse_url output for convenience.
+     * This only exists because of deprecation of http_build_url, which does the exact same thing as the code below.
+     * @param array $parts
+     * @return string
+     */
+    private function build_url(array $parts) {
+        $get = function ($key) use ($parts) {
+            return isset($parts[$key]) ? $parts[$key] : null;
+        };
+
+        $pass      = $get('pass');
+        $user      = $get('user');
+        $userinfo  = $pass !== null ? "$user:$pass" : $user;
+        $port      = $get('port');
+        $scheme    = $get('scheme');
+        $query     = $get('query');
+        $fragment  = $get('fragment');
+        $authority =
+            ($userinfo !== null ? "$userinfo@" : '') .
+            $get('host') .
+            ($port ? ":$port" : '');
+
+        return
+            (strlen($scheme) ? "$scheme:" : '') .
+            (strlen($authority) ? "//$authority" : '') .
+            $get('path') .
+            (strlen($query) ? "?$query" : '') .
+            (strlen($fragment) ? "#$fragment" : '');
+    }
 
     /**
      * Returns URL of a host.
@@ -180,9 +273,16 @@ class MagentoWebDriver extends WebDriver
      *
      * @param int $timeout
      */
-    public function waitForAjaxLoad($timeout = 15)
+    public function waitForAjaxLoad($timeout = null)
     {
-        $this->waitForJS('return !!window.jQuery && window.jQuery.active == 0;', $timeout);
+        $timeout = $timeout ?? $this->_getConfig()['pageload_timeout'];
+
+        try {
+            $this->waitForJS('return !!window.jQuery && window.jQuery.active == 0;', $timeout);
+        } catch (\Exception $exceptione) {
+            $this->debug("js never executed, performing {$timeout} second wait.");
+            $this->wait($timeout);
+        }
         $this->wait(1);
     }
 
@@ -191,11 +291,14 @@ class MagentoWebDriver extends WebDriver
      *
      * @param int $timeout
      */
-    public function waitForPageLoad($timeout = 15)
+    public function waitForPageLoad($timeout = null)
     {
+        $timeout = $timeout ?? $this->_getConfig()['pageload_timeout'];
+
         $this->waitForJS('return document.readyState == "complete"', $timeout);
         $this->waitForAjaxLoad($timeout);
         $this->waitForLoadingMaskToDisappear();
+        $this->closeAdminNotification();
     }
 
     /**
@@ -204,9 +307,13 @@ class MagentoWebDriver extends WebDriver
     public function waitForLoadingMaskToDisappear()
     {
         foreach( self::$loadingMasksLocators as $maskLocator) {
+            // Get count of elements found for looping.
+            // Elements are NOT useful for interaction, as they cannot be fed to codeception actions.
             $loadingMaskElements = $this->_findElements($maskLocator);
             for ($i = 1; $i <= count($loadingMaskElements); $i++) {
-                $this->waitForElementNotVisible("{$maskLocator}[{$i}]", 30);
+                // Formatting and looping on i as we can't interact elements returned above
+                // eg.  (//div[@data-role="spinner"])[1]
+                $this->waitForElementNotVisible("({$maskLocator})[{$i}]", 30);
             }
         }
     }
@@ -255,7 +362,7 @@ class MagentoWebDriver extends WebDriver
     /**
      * @param int $category
      * @param string $locale
-    */
+     */
     public function mSetLocale(int $category, $locale)
     {
         if (self::$localeAll[$category] == $locale) {

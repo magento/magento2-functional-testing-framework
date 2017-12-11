@@ -10,39 +10,39 @@
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
     <cest name="SectionReplacementCest">
         <test name="SectionReplacementTest">
-            <click mergeKey="selectorReplace" selector="{{SampleSection.simpleElement}}"/>
-            <click mergeKey="selectorReplaceTimeout" selector="{{SampleSection.timeoutElement}}"/>
+            <click stepKey="selectorReplace" selector="{{SampleSection.simpleElement}}"/>
+            <click stepKey="selectorReplaceTimeout" selector="{{SampleSection.timeoutElement}}"/>
 
-            <click mergeKey="selectorReplaceOneParam" selector="{{SampleSection.oneParamElement('stringLiteral')}}"/>
-            <click mergeKey="selectorReplaceTwoParam" selector="{{SampleSection.twoParamElement('stringLiteral1', 'stringLiteral2')}}"/>
-            <click mergeKey="selectorReplaceThreeParam" selector="{{SampleSection.threeParamElement('stringLiteral1', 'stringLiteral2', 'stringLiteral3')}}"/>
-            <click mergeKey="selectorReplaceThreeParamOneDupe" selector="{{SampleSection.threeOneDuplicateParamElement('stringLiteral1', 'stringLiteral2', 'stringLiteral3')}}"/>
+            <click stepKey="selectorReplaceOneParam" selector="{{SampleSection.oneParamElement('stringLiteral')}}"/>
+            <click stepKey="selectorReplaceTwoParam" selector="{{SampleSection.twoParamElement('stringLiteral1', 'stringLiteral2')}}"/>
+            <click stepKey="selectorReplaceThreeParam" selector="{{SampleSection.threeParamElement('stringLiteral1', 'stringLiteral2', 'stringLiteral3')}}"/>
+            <click stepKey="selectorReplaceThreeParamOneDupe" selector="{{SampleSection.threeOneDuplicateParamElement('stringLiteral1', 'stringLiteral2', 'stringLiteral3')}}"/>
 
 
-            <click mergeKey="selectorReplaceOneParamDataRef" selector="{{SampleSection.oneParamElement(simpleData.firstname)}}"/>
-            <click mergeKey="selectorReplaceTwoParamDataRef" selector="{{SampleSection.twoParamElement(simpleData.firstname, simpleData.lastname)}}"/>
-            <click mergeKey="selectorReplaceThreeParamDataRef" selector="{{SampleSection.threeParamElement(simpleData.firstname, simpleData.lastname, simpleData.middlename)}}"/>
-            <click mergeKey="selectorReplaceThreeParamOneDupeDataRef" selector="{{SampleSection.threeOneDuplicateParamElement(simpleData.firstname, simpleData.lastname, simpleData.middlename)}}"/>
+            <click stepKey="selectorReplaceOneParamDataRef" selector="{{SampleSection.oneParamElement(simpleData.firstname)}}"/>
+            <click stepKey="selectorReplaceTwoParamDataRef" selector="{{SampleSection.twoParamElement(simpleData.firstname, simpleData.lastname)}}"/>
+            <click stepKey="selectorReplaceThreeParamDataRef" selector="{{SampleSection.threeParamElement(simpleData.firstname, simpleData.lastname, simpleData.middlename)}}"/>
+            <click stepKey="selectorReplaceThreeParamOneDupeDataRef" selector="{{SampleSection.threeOneDuplicateParamElement(simpleData.firstname, simpleData.lastname, simpleData.middlename)}}"/>
 
-            <click mergeKey="selectorReplaceOneParamDataRefMSQPrefix" selector="{{SampleSection.oneParamElement(uniqueData.firstname)}}"/>
-            <click mergeKey="selectorReplaceTwoParamDataRefMSQPrefix" selector="{{SampleSection.twoParamElement(uniqueData.firstname, 'stringLiteral2')}}"/>
-            <click mergeKey="selectorReplaceThreeParamDataRefMSQPrefix" selector="{{SampleSection.threeParamElement(uniqueData.firstname, 'stringLiteral2', 'stringLiteral3')}}"/>
-            <click mergeKey="selectorReplaceThreeParamOneDupeDataRefMSQPrefix" selector="{{SampleSection.threeOneDuplicateParamElement(uniqueData.firstname, 'stringLiteral2', 'stringLiteral3')}}"/>
+            <click stepKey="selectorReplaceOneParamDataRefMSQPrefix" selector="{{SampleSection.oneParamElement(uniqueData.firstname)}}"/>
+            <click stepKey="selectorReplaceTwoParamDataRefMSQPrefix" selector="{{SampleSection.twoParamElement(uniqueData.firstname, 'stringLiteral2')}}"/>
+            <click stepKey="selectorReplaceThreeParamDataRefMSQPrefix" selector="{{SampleSection.threeParamElement(uniqueData.firstname, 'stringLiteral2', 'stringLiteral3')}}"/>
+            <click stepKey="selectorReplaceThreeParamOneDupeDataRefMSQPrefix" selector="{{SampleSection.threeOneDuplicateParamElement(uniqueData.firstname, 'stringLiteral2', 'stringLiteral3')}}"/>
 
-            <click mergeKey="selectorReplaceOneParamDataRefMSQSuffix" selector="{{SampleSection.oneParamElement(uniqueData.lastname)}}"/>
-            <click mergeKey="selectorReplaceTwoParamDataRefMSQSuffix" selector="{{SampleSection.twoParamElement(uniqueData.lastname, 'stringLiteral2')}}"/>
-            <click mergeKey="selectorReplaceThreeParamDataRefMSQSuffix" selector="{{SampleSection.threeParamElement(uniqueData.lastname, 'stringLiteral2', 'stringLiteral3')}}"/>
-            <click mergeKey="selectorReplaceThreeParamOneDupeDataRefMSQSuffix" selector="{{SampleSection.threeOneDuplicateParamElement(uniqueData.lastname, 'stringLiteral2', 'stringLiteral3')}}"/>
+            <click stepKey="selectorReplaceOneParamDataRefMSQSuffix" selector="{{SampleSection.oneParamElement(uniqueData.lastname)}}"/>
+            <click stepKey="selectorReplaceTwoParamDataRefMSQSuffix" selector="{{SampleSection.twoParamElement(uniqueData.lastname, 'stringLiteral2')}}"/>
+            <click stepKey="selectorReplaceThreeParamDataRefMSQSuffix" selector="{{SampleSection.threeParamElement(uniqueData.lastname, 'stringLiteral2', 'stringLiteral3')}}"/>
+            <click stepKey="selectorReplaceThreeParamOneDupeDataRefMSQSuffix" selector="{{SampleSection.threeOneDuplicateParamElement(uniqueData.lastname, 'stringLiteral2', 'stringLiteral3')}}"/>
 
-            <createData entity="simpleData" mergeKey="createdData"/>
-            <click mergeKey="selectorReplaceOneParamPersisted" selector="{{SampleSection.oneParamElement($createdData.firstname$)}}"/>
-            <click mergeKey="selectorReplaceTwoParamPersisted" selector="{{SampleSection.twoParamElement($createdData.firstname$, 'stringLiteral2')}}"/>
-            <click mergeKey="selectorReplaceThreeParamPersisted" selector="{{SampleSection.threeParamElement($createdData.firstname$, 'stringLiteral2', 'stringLiteral3')}}"/>
-            <click mergeKey="selectorReplaceThreeParamOneDupePersisted" selector="{{SampleSection.threeOneDuplicateParamElement($createdData.firstname$, 'stringLiteral2', 'stringLiteral3')}}"/>
+            <createData entity="simpleData" stepKey="createdData"/>
+            <click stepKey="selectorReplaceOneParamPersisted" selector="{{SampleSection.oneParamElement($createdData.firstname$)}}"/>
+            <click stepKey="selectorReplaceTwoParamPersisted" selector="{{SampleSection.twoParamElement($createdData.firstname$, 'stringLiteral2')}}"/>
+            <click stepKey="selectorReplaceThreeParamPersisted" selector="{{SampleSection.threeParamElement($createdData.firstname$, 'stringLiteral2', 'stringLiteral3')}}"/>
+            <click stepKey="selectorReplaceThreeParamOneDupePersisted" selector="{{SampleSection.threeOneDuplicateParamElement($createdData.firstname$, 'stringLiteral2', 'stringLiteral3')}}"/>
 
-            <click mergeKey="selectorReplaceThreeParamMixed" selector="{{SampleSection.threeParamElement('stringLiteral1', $createdData.firstname$, simpleData.firstname)}}"/>
-            <click mergeKey="selectorReplaceThreeParamMixedMSQPrefix" selector="{{SampleSection.threeParamElement('stringLiteral1', $createdData.firstname$, uniqueData.firstname)}}"/>
-            <click mergeKey="selectorReplaceThreeParamMixedMSQSuffix" selector="{{SampleSection.threeParamElement('stringLiteral1', $createdData.firstname$, uniqueData.lastname)}}"/>
+            <click stepKey="selectorReplaceThreeParamMixed" selector="{{SampleSection.threeParamElement('stringLiteral1', $createdData.firstname$, simpleData.firstname)}}"/>
+            <click stepKey="selectorReplaceThreeParamMixedMSQPrefix" selector="{{SampleSection.threeParamElement('stringLiteral1', $createdData.firstname$, uniqueData.firstname)}}"/>
+            <click stepKey="selectorReplaceThreeParamMixedMSQSuffix" selector="{{SampleSection.threeParamElement('stringLiteral1', $createdData.firstname$, uniqueData.lastname)}}"/>
         </test>
     </cest>
 </config>

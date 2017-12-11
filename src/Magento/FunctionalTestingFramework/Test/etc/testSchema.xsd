@@ -90,6 +90,7 @@
     <xs:group name="actionTypeTags">
         <xs:choice>
             <xs:group ref="dataOperationTags"/>
+            <xs:element type="removeActionType" name="remove" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="acceptPopupType" name="acceptPopup" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="amOnPageType" name="amOnPage" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="amOnSubdomainType" name="amOnSubdomain" minOccurs="0" maxOccurs="unbounded"/>
@@ -252,19 +253,26 @@
             </xs:element>
         </xs:sequence>
         <xs:attribute type="xs:string" name="ref" use="required"/>
-        <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-        <xs:attribute type="xs:boolean" name="remove" default="false"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
         <xs:attribute type="xs:string" name="before"/>
         <xs:attribute type="xs:string" name="after"/>
     </xs:complexType>
 
     <!-- Test action types -->
 
+    <xs:complexType name="removeActionType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="keyForRemoval" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+
     <xs:complexType name="acceptPopupType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="mergeKey"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -275,8 +283,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -287,8 +294,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -299,8 +305,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -309,11 +314,10 @@
     <xs:complexType name="appendFieldType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -322,12 +326,11 @@
     <xs:complexType name="assertElementContainsAttributeType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="expectedValue"/>
-                <xs:attribute type="xs:string" name="attribute"/>
+                <xs:attribute type="xs:string" name="attribute" use="required"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -336,11 +339,10 @@
     <xs:complexType name="attachFileType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -349,8 +351,7 @@
     <xs:complexType name="cancelPopupType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -359,9 +360,8 @@
     <xs:complexType name="checkOptionType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -370,9 +370,8 @@
     <xs:complexType name="clearFieldType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -385,8 +384,7 @@
                 <xs:attribute type="xs:string" name="selectorArray"/>
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -399,8 +397,7 @@
                 <xs:attribute type="xs:string" name="selectorArray"/>
                 <xs:attribute type="xs:string" name="x"/>
                 <xs:attribute type="xs:string" name="y"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -413,8 +410,7 @@
                 <xs:attribute type="xs:string" name="selectorArray"/>
                 <xs:attribute type="xs:string" name="x"/>
                 <xs:attribute type="xs:string" name="y"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -423,8 +419,7 @@
     <xs:complexType name="closeAdminNotificationType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -433,8 +428,7 @@
     <xs:complexType name="closeTabType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -443,9 +437,8 @@
     <xs:complexType name="commentType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="userInput" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -454,11 +447,10 @@
     <xs:complexType name="conditionalClickType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
-                <xs:attribute type="xs:string" name="dependentSelector" />
-                <xs:attribute type="xs:boolean" name="visible"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="dependentSelector" use="required"/>
+                <xs:attribute type="xs:boolean" name="visible" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -469,8 +461,7 @@
             <xs:element type="requiredEntityType" name="required-entity" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
         <xs:attribute type="xs:string" name="entity" use="required"/>
-        <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-        <xs:attribute type="xs:boolean" name="remove" default="false"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
         <xs:attribute type="xs:string" name="before"/>
         <xs:attribute type="xs:string" name="after"/>
         <xs:attribute type="xs:string" name="storeCode"/>
@@ -479,7 +470,6 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="createDataKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -490,9 +480,8 @@
             <xs:element type="requiredEntityType" name="required-entity" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
         <xs:attribute type="xs:string" name="entity" use="required"/>
-        <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
         <xs:attribute type="xs:string" name="createDataKey" use="required"/>
-        <xs:attribute type="xs:boolean" name="remove" default="false"/>
         <xs:attribute type="xs:string" name="before"/>
         <xs:attribute type="xs:string" name="after"/>
         <xs:attribute type="xs:string" name="storeCode"/>
@@ -500,9 +489,8 @@
     <xs:complexType name="deleteDataType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="createDataKey"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="createDataKey" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
                 <xs:attribute type="xs:string" name="storeCode"/>
@@ -514,9 +502,8 @@
             <xs:element type="requiredEntityType" name="required-entity" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
         <xs:attribute type="xs:string" name="entity" use="required"/>
-        <xs:attribute type="xs:string" name="mergeKey" use="required"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
         <xs:attribute type="xs:integer" name="index"/>
-        <xs:attribute type="xs:boolean" name="remove" default="false"/>
         <xs:attribute type="xs:string" name="before"/>
         <xs:attribute type="xs:string" name="after"/>
         <xs:attribute type="xs:string" name="storeCode"/>
@@ -528,8 +515,7 @@
                 <xs:attribute type="xs:string" name="selector"/>
                 <xs:attribute type="xs:string" name="selectorArray"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -538,9 +524,8 @@
     <xs:complexType name="dontSeeCheckboxIsCheckedType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -552,8 +537,7 @@
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -564,8 +548,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -576,8 +559,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -586,10 +568,9 @@
     <xs:complexType name="dontSeeElementType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -598,11 +579,9 @@
     <xs:complexType name="dontSeeElementInDOMType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="attributeArray"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -613,8 +592,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -627,8 +605,7 @@
                 <xs:attribute type="xs:string" name="selectorArray"/>
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -637,10 +614,9 @@
     <xs:complexType name="dontSeeInFormFieldsType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -651,8 +627,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -661,9 +636,8 @@
     <xs:complexType name="dontSeeInSourceType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="html"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="html" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -674,8 +648,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -684,8 +657,7 @@
     <xs:complexType name="dontSeeJsErrorType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -697,8 +669,7 @@
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="url"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -707,11 +678,10 @@
     <xs:complexType name="dontSeeOptionIsSelectedType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -720,9 +690,8 @@
     <xs:complexType name="doubleClickType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -731,10 +700,9 @@
     <xs:complexType name="dragAndDropType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector1"/>
-                <xs:attribute type="xs:string" name="selector2"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="selector1" use="required"/>
+                <xs:attribute type="xs:string" name="selector2" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -743,9 +711,8 @@
     <xs:complexType name="executeInSeleniumType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="function"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="function" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -754,9 +721,8 @@
     <xs:complexType name="executeJSType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="function"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="function" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -769,8 +735,7 @@
                 <xs:attribute type="xs:string" name="selectorArray"/>
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -782,8 +747,7 @@
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="locale"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -792,12 +756,11 @@
     <xs:complexType name="grabAttributeFromType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="returnVariable"/>
+                <xs:attribute type="xs:string" name="returnVariable" use="required"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -808,10 +771,9 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="returnVariable"/>
+                <xs:attribute type="xs:string" name="returnVariable" use="required"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -821,10 +783,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
-                <xs:attribute type="xs:string" name="returnVariable"/>
+                <xs:attribute type="xs:string" name="returnVariable" use="required"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -833,12 +794,11 @@
     <xs:complexType name="grabMultipleType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="returnVariable"/>
+                <xs:attribute type="xs:string" name="returnVariable" use="required"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -847,9 +807,8 @@
     <xs:complexType name="grabPageSourceType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="returnVariable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="returnVariable" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -858,10 +817,9 @@
     <xs:complexType name="grabTextFromType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
-                <xs:attribute type="xs:string" name="returnVariable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="returnVariable" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -872,9 +830,8 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector"/>
                 <xs:attribute type="xs:string" name="selectorArray"/>
-                <xs:attribute type="xs:string" name="returnVariable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="returnVariable" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -886,8 +843,7 @@
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="returnVariable"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -898,8 +854,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="username"/>
                 <xs:attribute type="xs:string" name="password"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -910,8 +865,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -920,8 +874,7 @@
     <xs:complexType name="maximizeWindowType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -931,10 +884,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="locale"/>
+                <xs:attribute type="xs:string" name="locale" use="required"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -943,8 +895,7 @@
     <xs:complexType name="mResetLocaleType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -953,8 +904,7 @@
     <xs:complexType name="moveBackType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -963,8 +913,7 @@
     <xs:complexType name="moveForwardType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -977,8 +926,7 @@
                 <xs:attribute type="xs:string" name="selectorArray"/>
                 <xs:attribute type="xs:string" name="x"/>
                 <xs:attribute type="xs:string" name="y"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -987,8 +935,7 @@
     <xs:complexType name="openNewTabType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -999,8 +946,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1009,8 +955,7 @@
     <xs:complexType name="pauseExecutionType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1019,10 +964,9 @@
     <xs:complexType name="performOnType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
-                <xs:attribute type="xs:string" name="function"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="function" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1031,12 +975,11 @@
     <xs:complexType name="pressKeyType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1045,8 +988,7 @@
     <xs:complexType name="reloadPageType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1058,8 +1000,7 @@
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1068,10 +1009,9 @@
     <xs:complexType name="resizeWindowType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="width"/>
-                <xs:attribute type="xs:string" name="height"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="width" use="required"/>
+                <xs:attribute type="xs:string" name="height" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1082,8 +1022,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1096,8 +1035,7 @@
                 <xs:attribute type="xs:string" name="selectorArray"/>
                 <xs:attribute type="xs:string" name="x"/>
                 <xs:attribute type="xs:string" name="y"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1106,8 +1044,7 @@
     <xs:complexType name="scrollToTopOfPageType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1116,12 +1053,10 @@
     <xs:complexType name="searchAndMultiSelectOptionType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
-                <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="parameterArray"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="parameterArray" use="required"/>
                 <xs:attribute type="xs:string" name="requiredAction"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1134,8 +1069,7 @@
                 <xs:attribute type="xs:string" name="selector"/>
                 <xs:attribute type="xs:string" name="selectorArray"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1144,9 +1078,8 @@
     <xs:complexType name="seeCheckboxIsCheckedType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1158,8 +1091,7 @@
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1170,8 +1102,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1182,8 +1113,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1195,8 +1125,7 @@
                 <xs:attribute type="xs:string" name="selector"/>
                 <xs:attribute type="xs:string" name="selectorArray"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1205,10 +1134,9 @@
     <xs:complexType name="seeElementInDOMType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1219,8 +1147,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1233,8 +1160,7 @@
                 <xs:attribute type="xs:string" name="selectorArray"/>
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1243,10 +1169,9 @@
     <xs:complexType name="seeInFormFieldsType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
-                <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="parameterArray" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1255,9 +1180,8 @@
     <xs:complexType name="seeInPageSourceType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="html"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="html" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1268,8 +1192,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1278,9 +1201,8 @@
     <xs:complexType name="seeInSourceType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="html"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="html" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1291,8 +1213,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1304,8 +1225,7 @@
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="url"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1314,12 +1234,11 @@
     <xs:complexType name="seeNumberOfElementsType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1328,11 +1247,10 @@
     <xs:complexType name="seeOptionIsSelectedType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1341,12 +1259,11 @@
     <xs:complexType name="selectOptionType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1355,11 +1272,10 @@
     <xs:complexType name="setCookieType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute type="xs:string" name="userInput" use="required"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="value"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="value" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1368,11 +1284,10 @@
     <xs:complexType name="submitFormType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
-                <xs:attribute type="xs:string" name="parameterArray"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="parameterArray" use="required"/>
                 <xs:attribute type="xs:string" name="button"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1384,8 +1299,7 @@
                 <xs:attribute type="xs:string" name="selector"/>
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1396,8 +1310,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1408,8 +1321,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1420,8 +1332,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1432,8 +1343,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1442,9 +1352,8 @@
     <xs:complexType name="uncheckOptionType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1453,12 +1362,11 @@
     <xs:complexType name="unselectOptionType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1468,8 +1376,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="time"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1479,8 +1386,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="time"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1489,11 +1395,10 @@
     <xs:complexType name="waitForElementChangeType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
-                <xs:attribute type="xs:string" name="function"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="function" use="required"/>
                 <xs:attribute type="xs:string" name="time"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1502,10 +1407,9 @@
     <xs:complexType name="waitForElementType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="time"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1514,10 +1418,9 @@
     <xs:complexType name="waitForElementNotVisibleType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="time"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1526,10 +1429,9 @@
     <xs:complexType name="waitForElementVisibleType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="time"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1538,10 +1440,9 @@
     <xs:complexType name="waitForJSType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="function"/>
+                <xs:attribute type="xs:string" name="function" use="required"/>
                 <xs:attribute type="xs:string" name="time"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1550,8 +1451,7 @@
     <xs:complexType name="waitForLoadingMaskToDisappearType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1561,8 +1461,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="time"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1575,8 +1474,7 @@
                 <xs:attribute type="xs:string" name="time"/>
                 <xs:attribute type="xs:string" name="selector"/>
                 <xs:attribute type="xs:string" name="variable"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1585,13 +1483,12 @@
     <xs:complexType name="assertArrayHasKeyType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1600,13 +1497,12 @@
     <xs:complexType name="assertArrayNotHasKeyType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1615,14 +1511,13 @@
     <xs:complexType name="assertArraySubsetType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:boolean" name="strict"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1631,13 +1526,12 @@
     <xs:complexType name="assertContainsType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1646,13 +1540,12 @@
     <xs:complexType name="assertCountType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1661,11 +1554,10 @@
     <xs:complexType name="assertEmptyType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1674,14 +1566,13 @@
     <xs:complexType name="assertEqualsType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="delta"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1690,11 +1581,10 @@
     <xs:complexType name="assertFalseType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1703,11 +1593,10 @@
     <xs:complexType name="assertFileExistsType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1716,11 +1605,10 @@
     <xs:complexType name="assertFileNotExistsType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1729,13 +1617,12 @@
     <xs:complexType name="assertGreaterOrEqualsType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1744,13 +1631,12 @@
     <xs:complexType name="assertGreaterThanType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1759,13 +1645,12 @@
     <xs:complexType name="assertGreaterThanOrEqualType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1774,13 +1659,12 @@
     <xs:complexType name="assertInstanceOfType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1789,13 +1673,12 @@
     <xs:complexType name="assertInternalTypeType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1804,11 +1687,10 @@
     <xs:complexType name="assertIsEmptyType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1817,13 +1699,12 @@
     <xs:complexType name="assertLessOrEqualsType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1832,13 +1713,12 @@
     <xs:complexType name="assertLessThanType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1847,13 +1727,12 @@
     <xs:complexType name="assertLessThanOrEqualType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1862,13 +1741,12 @@
     <xs:complexType name="assertNotContainsType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1877,11 +1755,10 @@
     <xs:complexType name="assertNotEmptyType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1890,14 +1767,13 @@
     <xs:complexType name="assertNotEqualsType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="delta"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1906,13 +1782,12 @@
     <xs:complexType name="assertNotInstanceOfType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1921,11 +1796,10 @@
     <xs:complexType name="assertNotNullType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1934,13 +1808,12 @@
     <xs:complexType name="assertNotRegExpType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1949,13 +1822,12 @@
     <xs:complexType name="assertNotSameType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1964,11 +1836,10 @@
     <xs:complexType name="assertNullType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1977,13 +1848,12 @@
     <xs:complexType name="assertRegExpType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -1992,13 +1862,12 @@
     <xs:complexType name="assertSameType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -2007,13 +1876,12 @@
     <xs:complexType name="assertStringStartsNotWithType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -2022,13 +1890,12 @@
     <xs:complexType name="assertStringStartsWithType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -2037,11 +1904,10 @@
     <xs:complexType name="assertTrueType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
                 <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -2050,12 +1916,11 @@
     <xs:complexType name="expectExceptionType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected"/>
-                <xs:attribute type="assertEnum" name="expectedType"/>
-                <xs:attribute type="xs:string" name="actual"/>
-                <xs:attribute type="assertEnum" name="actualType"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="expected" use="required"/>
+                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+                <xs:attribute type="xs:string" name="actual" use="required"/>
+                <xs:attribute type="assertEnum" name="actualType" default="const"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>
@@ -2064,9 +1929,8 @@
     <xs:complexType name="failType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="mergeKey" use="required"/>
-                <xs:attribute type="xs:boolean" name="remove" default="false"/>
+                <xs:attribute type="xs:string" name="message" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
             </xs:extension>

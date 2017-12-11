@@ -7,19 +7,19 @@
 -->
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="../../../../../../../../../../magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
     <cest name="ParameterArrayCest">
         <test name="ParameterArrayTest">
-            <createData entity="simpleParamData" mergeKey="simpleDataKey"/>
-            <searchAndMultiSelectOption selector="#selector" parameterArray="[{{simpleParamData.name}}]" mergeKey="xmlSimpleReplace"/>
-            <searchAndMultiSelectOption selector="#selector" parameterArray="[{{simpleParamData.uniqueNamePre}}]" mergeKey="xmlPrefix"/>
-            <searchAndMultiSelectOption selector="#selector" parameterArray="[{{simpleParamData.uniqueNamePost}}]" mergeKey="xmlSuffix"/>
-            <searchAndMultiSelectOption selector="#selector" parameterArray="[$simpleDataKey.name$]" mergeKey="persistSimple"/>
-            <searchAndMultiSelectOption selector="#selector" parameterArray="[{{simpleParamData.name}}, $simpleDataKey.name$]" mergeKey="persistXmlSimple"/>
-            <searchAndMultiSelectOption selector="#selector" parameterArray="['someKey' => $simpleDataKey.name$]" mergeKey="literalKeyToPersist"/>
-            <searchAndMultiSelectOption selector="#selector" parameterArray="['someKey' => {{simpleParamData.name}}]" mergeKey="literalKeyToStatic"/>
-            <searchAndMultiSelectOption selector="#selector" parameterArray="['someKey' => {{simpleParamData.uniqueNamePre}}]" mergeKey="literalKeyToPrefixUnique"/>
-            <searchAndMultiSelectOption selector="#selector" parameterArray="['someKey' => {{simpleParamData.uniqueNamePost}}]" mergeKey="literalKeyToSuffixUnique"/>
+            <createData entity="simpleParamData" stepKey="simpleDataKey"/>
+            <searchAndMultiSelectOption selector="#selector" parameterArray="[{{simpleParamData.name}}]" stepKey="xmlSimpleReplace"/>
+            <searchAndMultiSelectOption selector="#selector" parameterArray="[{{simpleParamData.uniqueNamePre}}]" stepKey="xmlPrefix"/>
+            <searchAndMultiSelectOption selector="#selector" parameterArray="[{{simpleParamData.uniqueNamePost}}]" stepKey="xmlSuffix"/>
+            <searchAndMultiSelectOption selector="#selector" parameterArray="[$simpleDataKey.name$]" stepKey="persistSimple"/>
+            <searchAndMultiSelectOption selector="#selector" parameterArray="[{{simpleParamData.name}}, $simpleDataKey.name$]" stepKey="persistXmlSimple"/>
+            <searchAndMultiSelectOption selector="#selector" parameterArray="['someKey' => $simpleDataKey.name$]" stepKey="literalKeyToPersist"/>
+            <searchAndMultiSelectOption selector="#selector" parameterArray="['someKey' => {{simpleParamData.name}}]" stepKey="literalKeyToStatic"/>
+            <searchAndMultiSelectOption selector="#selector" parameterArray="['someKey' => {{simpleParamData.uniqueNamePre}}]" stepKey="literalKeyToPrefixUnique"/>
+            <searchAndMultiSelectOption selector="#selector" parameterArray="['someKey' => {{simpleParamData.uniqueNamePost}}]" stepKey="literalKeyToSuffixUnique"/>
         </test>
     </cest>
 </config>

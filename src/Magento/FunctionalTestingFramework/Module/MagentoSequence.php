@@ -20,7 +20,7 @@ class MagentoSequence extends Sequence
 }
 
 if (!function_exists('msq') && !function_exists('msqs')) {
-    require_once __DIR__ . '/../Util/msq.php';
+    require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Util' . DIRECTORY_SEPARATOR . 'msq.php';
 } else {
     throw new ModuleException('Magento\FunctionalTestingFramework\Module\MagentoSequence', "function 'msq' and 'msqs' already defined");
 }
