@@ -64,16 +64,18 @@ class OperationDataArrayResolver
      * @param bool $fromArray
      * @return array
      * @throws \Exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function resolveOperationDataArray($entityObject, $operationMetadata, $operation, $fromArray = false)
     {
+        //TODO: Refactor to reduce Cyclomatic Complexity, remove SupressWarning accordingly.
         $operationDataArray = [];
         self::incrementSequence($entityObject->getName());
 
         foreach ($operationMetadata as $operationElement) {
             if ($operationElement->getType() == OperationElementExtractor::OPERATION_OBJECT_OBJ_NAME) {
                 $entityObj = $this->resolveOperationObjectAndEntityData($entityObject, $operationElement->getValue());
-                if (null === $entityObj && $operationElement->getRequired()) {
+                if (null === $entityObj && $operationElement->isRequired()) {
                     throw new \Exception(sprintf(
                         self::EXCEPTION_REQUIRED_DATA,
                         $operationElement->getType(),
@@ -123,7 +125,7 @@ class OperationDataArrayResolver
                         $elementData
                     );
 
-                } elseif ($operationElement->getRequired()) {
+                } elseif ($operationElement->isRequired()) {
                     throw new \Exception(sprintf(
                         self::EXCEPTION_REQUIRED_DATA,
                         $operationElement->getType(),
@@ -135,7 +137,7 @@ class OperationDataArrayResolver
                 $entityNamesOfType = $entityObject->getLinkedEntitiesOfType($operationElementType);
 
                 // If an element is required by metadata, but was not provided in the entity, throw an exception
-                if ($operationElement->getRequired() && $entityNamesOfType == null) {
+                if ($operationElement->isRequired() && $entityNamesOfType == null) {
                     throw new \Exception(sprintf(
                         self::EXCEPTION_REQUIRED_DATA,
                         $operationElement->getType(),

@@ -147,56 +147,74 @@ class EntityDataObject
             if (null === $uniData || $uniDataFormat == self::NO_UNIQUE_PROCESS) {
                 return $this->data[$name];
             }
-
-            switch ($uniDataFormat) {
-                case self::SUITE_UNIQUE_VALUE:
-                    if (!function_exists(self::SUITE_UNIQUE_FUNCTION)) {
-                        throw new TestFrameworkException(
-                            sprintf(
-                                'Unique data format value: %s can only be used when running cests.\n',
-                                $uniDataFormat
-                            )
-                        );
-                    } elseif ($uniData == 'prefix') {
-                        return msqs($this->getName()) . $this->data[$name];
-                    } else { // $uniData == 'suffix'
-                        return $this->data[$name] . msqs($this->getName());
-                    }
-                    break;
-                case self::CEST_UNIQUE_VALUE:
-                    if (!function_exists(self::CEST_UNIQUE_FUNCTION)) {
-                        throw new TestFrameworkException(
-                            sprintf(
-                                'Unique data format value: %s can only be used when running cests.\n',
-                                $uniDataFormat
-                            )
-                        );
-                    } elseif ($uniData == 'prefix') {
-                        return msq($this->getName()) . $this->data[$name];
-                    } else { // $uniData == 'suffix'
-                        return $this->data[$name] . msq($this->getName());
-                    }
-                    break;
-                case self::SUITE_UNIQUE_NOTATION:
-                    if ($uniData == 'prefix') {
-                        return self::SUITE_UNIQUE_FUNCTION . '("' . $this->getName() . '")' . $this->data[$name];
-                    } else { // $uniData == 'suffix'
-                        return $this->data[$name] . self::SUITE_UNIQUE_FUNCTION . '("' . $this->getName() . '")';
-                    }
-                    break;
-                case self::CEST_UNIQUE_NOTATION:
-                    if ($uniData == 'prefix') {
-                        return self::CEST_UNIQUE_FUNCTION . '("' . $this->getName() . '")' . $this->data[$name];
-                    } else { // $uniData == 'suffix'
-                        return $this->data[$name] . self::CEST_UNIQUE_FUNCTION . '("' . $this->getName() . '")';
-                    }
-                    break;
-                default:
-                    break;
-            }
+            return $this->formatUniqueData($name, $uniData, $uniDataFormat);
         }
-
         return null;
+    }
+
+    /**
+     * Formats and returns data based on given uniqueDataFormat and prefix/suffix.
+     * @param string $name
+     * @param string $uniqueData
+     * @param string $uniqueDataFormat
+     * @return null|string
+     */
+    private function formatUniqueData($name, $uniqueData, $uniqueDataFormat)
+    {
+        switch ($uniqueDataFormat) {
+            case self::SUITE_UNIQUE_VALUE:
+                $this->checkUniquenessFunctionExists(self::SUITE_UNIQUE_FUNCTION, $uniqueDataFormat);
+                if ($uniqueData == 'prefix') {
+                    return msqs($this->getName()) . $this->data[$name];
+                } else { // $uniData == 'suffix'
+                    return $this->data[$name] . msqs($this->getName());
+                }
+                break;
+            case self::CEST_UNIQUE_VALUE:
+                $this->checkUniquenessFunctionExists(self::CEST_UNIQUE_FUNCTION, $uniqueDataFormat);
+                if ($uniqueData == 'prefix') {
+                    return msq($this->getName()) . $this->data[$name];
+                } else { // $uniqueData == 'suffix'
+                    return $this->data[$name] . msq($this->getName());
+                }
+                break;
+            case self::SUITE_UNIQUE_NOTATION:
+                if ($uniqueData == 'prefix') {
+                    return self::SUITE_UNIQUE_FUNCTION . '("' . $this->getName() . '")' . $this->data[$name];
+                } else { // $uniqueData == 'suffix'
+                    return $this->data[$name] . self::SUITE_UNIQUE_FUNCTION . '("' . $this->getName() . '")';
+                }
+                break;
+            case self::CEST_UNIQUE_NOTATION:
+                if ($uniqueData == 'prefix') {
+                    return self::CEST_UNIQUE_FUNCTION . '("' . $this->getName() . '")' . $this->data[$name];
+                } else { // $uniqueData == 'suffix'
+                    return $this->data[$name] . self::CEST_UNIQUE_FUNCTION . '("' . $this->getName() . '")';
+                }
+                break;
+            default:
+                break;
+        }
+        return null;
+    }
+
+    /**
+     * Performs a check that the given uniqueness function exists, throws an exception if it doesn't.
+     * @param string $function
+     * @param string $uniqueDataFormat
+     * @return void
+     * @throws TestFrameworkException
+     */
+    private function checkUniquenessFunctionExists($function, $uniqueDataFormat)
+    {
+        if (!function_exists($function)) {
+            throw new TestFrameworkException(
+                sprintf(
+                    'Unique data format value: %s can only be used when running cests.\n',
+                    $uniqueDataFormat
+                )
+            );
+        }
     }
 
     /**

@@ -8,6 +8,7 @@ namespace Magento\FunctionalTestingFramework\Helper;
 
 /**
  * Class AdminUrlList
+ * @SuppressWarnings(PHPMD)
  */
 // @codingStandardsIgnoreFile
 class AdminUrlList

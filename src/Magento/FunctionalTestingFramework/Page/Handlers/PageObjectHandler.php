@@ -88,6 +88,7 @@ class PageObjectHandler implements ObjectHandlerInterface
      * Executes parser code to read in page xml data.
      *
      * @return void
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function initPageObjects()
     {

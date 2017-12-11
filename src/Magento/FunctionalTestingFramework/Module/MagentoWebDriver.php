@@ -92,6 +92,8 @@ class MagentoWebDriver extends WebDriver
     /**
      * Sanitizes URL and Selenium Variables, then assigns them to the config array.
      * @return void
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     private function sanitizeConfig()
     {

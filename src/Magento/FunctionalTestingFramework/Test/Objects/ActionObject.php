@@ -315,9 +315,6 @@ class ActionObject
     private function findAndReplaceReferences($objectHandler, $inputString)
     {
         preg_match_all(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN, $inputString, $matches);
-        if (empty($matches[0])) {
-            return $inputString;
-        }
 
         $outputString = $inputString;
 
@@ -340,27 +337,11 @@ class ActionObject
                         throw new TestReferenceException("Could not resolve entity reference " . $inputString);
                     }
                     $parameterized = $obj->getElement($objField)->isParameterized();
-                    // If no Selector is defined, assume element has LocatorFunction
-                    $replacement = $obj->getElement($objField)->getSelector() ?:
-                        $obj->getElement($objField)->getLocatorFunction();
+                    $replacement = $obj->getElement($objField)->getPrioritizedSelector();
                     $this->setTimeout($obj->getElement($objField)->getTimeout());
                     break;
-                case (get_class($obj) == EntityDataObject::class):
-                    list(,$objField) = $this->stripAndSplitReference($match);
-
-                    if (strpos($objField, '[') == true) {
-                        // Access <array>...</array>
-                        $parts = explode('[', $objField);
-                        $name = $parts[0];
-                        $index = str_replace(']', '', $parts[1]);
-                        $replacement = $obj->getDataByName(
-                            $name,
-                            EntityDataObject::CEST_UNIQUE_NOTATION
-                        )[$index];
-                    } else {
-                        // Access <data></data>
-                        $replacement = $obj->getDataByName($objField, EntityDataObject::CEST_UNIQUE_NOTATION);
-                    }
+                case EntityDataObject::class:
+                    $replacement = $this->resolveEntityDataObjectReference($obj, $match);
                     break;
             }
 
@@ -370,14 +351,49 @@ class ActionObject
                 throw new TestReferenceException("Could not resolve entity reference " . $inputString);
             }
 
-            // If Page or Section's Element has the parameterized = true attribute, attempt to do parameter replacement
-            if ($parameterized) {
-                $parameterList = $this->stripAndReturnParameters($match);
-                $replacement = $this->matchParameterReferences($replacement, $parameterList);
-            }
+            $replacement = $this->resolveParameterization($parameterized, $replacement, $match);
             $outputString = str_replace($match, $replacement, $outputString);
         }
         return $outputString;
+    }
+
+    /**
+     * Gets the object's dataByName with given $match, differentiating behavior between <array> and <data> nodes.
+     * @param string $obj
+     * @param string $match
+     * @return string
+     */
+    private function resolveEntityDataObjectReference($obj, $match)
+    {
+        list(,$objField) = $this->stripAndSplitReference($match);
+
+        if (strpos($objField, '[') == true) {
+            // Access <array>...</array>
+            $parts = explode('[', $objField);
+            $name = $parts[0];
+            $index = str_replace(']', '', $parts[1]);
+            return $obj->getDataByName($name, EntityDataObject::CEST_UNIQUE_NOTATION)[$index];
+        } else {
+            // Access <data></data>
+            return $obj->getDataByName($objField, EntityDataObject::CEST_UNIQUE_NOTATION);
+        }
+    }
+
+    /**
+     * Resolves $replacement parameterization with given conditional.
+     * @param boolean $isParameterized
+     * @param string $replacement
+     * @param string $match
+     * @return string
+     */
+    private function resolveParameterization($isParameterized, $replacement, $match)
+    {
+        if ($isParameterized) {
+            $parameterList = $this->stripAndReturnParameters($match);
+            return $this->matchParameterReferences($replacement, $parameterList);
+        } else {
+            return $replacement;
+        }
     }
 
     /**

@@ -27,7 +27,7 @@ class MagentoFakerData extends \Codeception\Module
             'lastname' => $faker->lastName,
             'suffix' => \Faker\Provider\en_US\Person::suffix(),
             'email' => $faker->email,
-            'dateOfBirth' => $faker->date($format = 'm/d/Y', $max = 'now'),
+            'dateOfBirth' => $faker->date('m/d/Y', 'now'),
             'gender' => rand(0, 1),
             'group_id' => 1,
             'store_id' => 1,
@@ -61,38 +61,36 @@ class MagentoFakerData extends \Codeception\Module
             'includeInMenu' => $faker->boolean(),
             'categoryName' => $faker->md5,
             'categoryImage' => '',
-            'description' => $faker->sentence($nbWords = 10, $variableNbWords = true),
+            'description' => $faker->sentence(10, true),
             'addCMSBlock' => '',
 
             'urlKey' => $faker->uuid,
             'metaTitle' => $faker->word,
-            'metaKeywords' => $faker->sentence($nbWords = 5, $variableNbWords = true),
-            'metaDescription' => $faker->sentence($nbWords = 10, $variableNbWords = true),
+            'metaKeywords' => $faker->sentence(5, true),
+            'metaDescription' => $faker->sentence(10, true),
         ];
     }
 
     /**
      * Get simple product data.
      *
-     * @param integer $categoryId
-     * @param array $productData
      * @return array
      */
-    public function getProductData($categoryId = 0, $productData = [])
+    public function getProductData()
     {
         $faker = \Faker\Factory::create();
         return [
             'enableProduct' => $faker->boolean(),
             'attributeSet' => '',
-            'productName' => $faker->text($maxNbChars = 20),
-            'sku' => \Faker\Provider\DateTime::unixTime($max = 'now'),
-            'price' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 999),
-            'quantity' => $faker->numberBetween($min = 1, $max = 999),
+            'productName' => $faker->text(20),
+            'sku' => \Faker\Provider\DateTime::unixTime('now'),
+            'price' => $faker->randomFloat(2, 0, 999),
+            'quantity' => $faker->numberBetween(1, 999),
 
             'urlKey' => $faker->uuid,
             'metaTitle' => $faker->word,
-            'metaKeywords' => $faker->sentence($nbWords = 5, $variableNbWords = true),
-            'metaDescription' => $faker->sentence($nbWords = 10, $variableNbWords = true)
+            'metaKeywords' => $faker->sentence(5, true),
+            'metaDescription' => $faker->sentence(10, true)
         ];
     }
 
@@ -106,14 +104,14 @@ class MagentoFakerData extends \Codeception\Module
         $faker = \Faker\Factory::create();
 
         $pageContent = [
-            'pageTitle' => $faker->sentence($nbWords = 3, $variableNbWords = true),
-            'contentHeading' => $faker->sentence($nbWords = 3, $variableNbWords = true),
-            'contentBody' => $faker->sentence($nbWords = 10, $variableNbWords = true),
+            'pageTitle' => $faker->sentence(3, true),
+            'contentHeading' => $faker->sentence(3, true),
+            'contentBody' => $faker->sentence(10, true),
             'urlKey' => $faker->uuid,
             'metaTitle' => $faker->word,
-            'metaKeywords' => $faker->sentence($nbWords = 5, $variableNbWords = true),
-            'metaDescription' => $faker->sentence($nbWords = 10, $variableNbWords = true),
-            'from' => $faker->date($format = 'm/d/Y', $max = 'now'),
+            'metaKeywords' => $faker->sentence(5, true),
+            'metaDescription' => $faker->sentence(10, true),
+            'from' => $faker->date($format = 'm/d/Y', 'now'),
             'to' => $faker->date($format = 'm/d/Y')
         ];
         $pageContent['layoutUpdateXml'] = "<note><to>Tove</to><from>Jani</from><heading>Reminder</heading>";

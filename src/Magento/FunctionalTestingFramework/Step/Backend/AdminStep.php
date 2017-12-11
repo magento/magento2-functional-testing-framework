@@ -8,7 +8,11 @@ namespace Magento\FunctionalTestingFramework\Step\Backend;
 
 require_once __DIR__ . '/../../Helper/AdminUrlList.php';
 
-// @codingStandardsIgnoreFile
+/**
+ * Class AdminStep
+ * @SuppressWarnings(PHPMD)
+ * @codingStandardsIgnoreFile
+ */
 class AdminStep extends \Magento\FunctionalTestingFramework\AcceptanceTester
 {
     public static $adminPageTitle = '.page-title';

@@ -52,6 +52,7 @@ class TestNameValidationUtil
      *
      * @param string $val
      * @return string
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private static function nameMapper($val)
     {
