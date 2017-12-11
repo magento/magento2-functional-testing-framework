@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <actionGroup name="actionGroupWithoutArguments">
+        <wait time="1" stepKey="waitForNothing" />
+    </actionGroup>
+
+    <actionGroup name="actionGroupWithDefaultArgumentAndStringSelectorParam">
+        <arguments>
+            <argument name="someArgument" defaultValue="ReplacementPerson" />
+        </arguments>
+
+        <see selector="{{SampleSection.oneParamElement('test1')}}" userInput="{{someArgument.firstname}}" stepKey="seeFirstName" />
+    </actionGroup>
+
+    <actionGroup name="actionGroupWithSingleParameterSelectorFromArgument">
+        <arguments>
+            <argument name="someArgument" defaultValue="ReplacementPerson" />
+        </arguments>
+
+        <see selector="{{SampleSection.oneParamElement(someArgument.firstname)}}" userInput="{{someArgument.lastname}}" stepKey="seeLastName" />
+    </actionGroup>
+
+    <actionGroup name="actionGroupWithMultipleParameterSelectorsFromArgument">
+        <arguments>
+            <argument name="someArgument" defaultValue="ReplacementPerson" />
+        </arguments>
+
+        <see selector="{{SampleSection.threeParamElement(someArgument.firstname, someArgument.lastname, 'test')}}" userInput="{{someArgument.lastname}}" stepKey="seeLastName" />
+    </actionGroup>
+</config>
