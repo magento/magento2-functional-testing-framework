@@ -249,52 +249,55 @@ class ModuleResolver
     /**
      * A wrapping method for any custom logic which needs to be applied to the module list
      *
-     * @param $modulesPath
-     * @return array
+     * @param array $modulesPath
+     * @return string[]
      */
-    protected function applyCustomModuleMethods(&$modulesPath)
+    protected function applyCustomModuleMethods($modulesPath)
     {
-        $this->removeBlacklistModules($modulesPath);
-        return array_merge($modulesPath, $this->getCustomModulePaths());
+        $modulePathsResult = $this->removeBlacklistModules($modulesPath);
+        return array_merge($modulePathsResult, $this->getCustomModulePaths());
     }
 
     /**
      * Remove blacklist modules from input module paths.
      *
-     * @param array &$modulePaths
-     * @return void
+     * @param array $modulePaths
+     * @return string[]
      */
-    protected function removeBlacklistModules(&$modulePaths)
+    private function removeBlacklistModules($modulePaths)
     {
-        foreach ($modulePaths as $index => $modulePath) {
+        $modulePathsResult = $modulePaths;
+        foreach ($modulePathsResult as $index => $modulePath) {
             if (in_array(basename($modulePath), $this->getModuleBlacklist())) {
-                unset($modulePaths[$index]);
+                unset($modulePathsResult[$index]);
             }
         }
+
+        return $modulePathsResult;
     }
 
     /**
      * Returns an array of custom module paths defined by the user
      *
-     * @return array
+     * @return string[]
      */
-    protected function getCustomModulePaths()
+    private function getCustomModulePaths()
     {
-        $custom_module_paths = getenv(self::CUSTOM_MODULE_PATHS);
+        $customModulePaths = getenv(self::CUSTOM_MODULE_PATHS);
 
-        if (!$custom_module_paths) {
+        if (!$customModulePaths) {
             return [];
         }
 
-        return array_map('trim', explode(',', $custom_module_paths));
+        return array_map('trim', explode(',', $customModulePaths));
     }
 
     /**
      * Getter for moduleBlacklist.
      *
-     * @return array
+     * @return string[]
      */
-    protected function getModuleBlacklist()
+    private function getModuleBlacklist()
     {
         return $this->moduleBlacklist;
     }
