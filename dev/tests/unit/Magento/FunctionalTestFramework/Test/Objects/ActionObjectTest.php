@@ -103,7 +103,7 @@ class ActionObjectTest extends TestCase
 
         // Mock DataHandler
         $dataObject = new EntityDataObject('dataObject', 'dataType', ["key" => 'myValue'], null, null, null);
-        $this->mockDataHandlerWithElement($dataObject);
+        $this->mockDataHandlerWithData($dataObject);
 
         // Call the method under test
         $actionObject->resolveReferences();
@@ -157,7 +157,7 @@ class ActionObjectTest extends TestCase
 
         // Mock DataHandler
         $dataObject = new EntityDataObject('dataObject', 'dataType', ["key" => 'myValue'], null, null, null);
-        $this->mockDataHandlerWithElement($dataObject);
+        $this->mockDataHandlerWithData($dataObject);
 
         // Call the method under test
         $actionObject->resolveReferences();
@@ -242,7 +242,7 @@ class ActionObjectTest extends TestCase
         $entityDataObject = new EntityDataObject('EntityDataObject', 'test', [
             'key' => 'replacementData'
         ], [], '', '');
-        $this->mockDataHandlerWithElement($entityDataObject);
+        $this->mockDataHandlerWithData($entityDataObject);
 
         // Call the method under test
         $actionObject->resolveReferences();
@@ -299,7 +299,7 @@ class ActionObjectTest extends TestCase
         AspectMock::double(SectionObjectHandler::class, ['getInstance' => $instance]);
     }
 
-    private function mockDataHandlerWithElement($dataObject)
+    private function mockDataHandlerWithData($dataObject)
     {
         $dataInstance = AspectMock::double(DataObjectHandler::class, ['getObject' => $dataObject])
             ->make();
