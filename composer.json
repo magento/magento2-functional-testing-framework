@@ -22,7 +22,8 @@
         "brainmaestro/composer-git-hooks": "^2.3",
         "codeception/aspect-mock": "^2.0",
         "codacy/coverage": "^1.4",
-        "phpmd/phpmd": "^2.6.0"
+        "phpmd/phpmd": "^2.6.0",
+        "rregeer/phpunit-coverage-check": "^0.1.4"
     },
     "autoload": {
         "psr-4": {
