@@ -17,12 +17,11 @@ echo "==============================="
 vendor/bin/phpcpd ./src
 echo ""
 
-# Uncomment lines as part of MQE-590
-# echo "==============================="
-# echo "       MESS DETECTOR"
-# echo "==============================="
-# vendor/bin/phpmd ./src text /dev/tests/static/Magento/CodeMessDetector/ruleset.xml --exclude _generated
-# echo ""
+echo "==============================="
+echo "       MESS DETECTOR"
+echo "==============================="
+vendor/bin/phpmd ./src text /dev/tests/static/Magento/CodeMessDetector/ruleset.xml --exclude _generated
+echo ""
 
 echo "==============================="
 echo "    MAGENTO COPYRIGHT CHECK"

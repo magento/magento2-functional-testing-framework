@@ -10,9 +10,8 @@ call vendor\bin\phpcs .\dev\tests\verification --standard=.\dev\tests\static\Mag
 @echo ===============================COPY PASTE DETECTOR REPORT===============================
 call vendor\bin\phpcpd .\src
 
-:: Uncomment lines as part of MQE-590
-:: @echo "===============================PHP MESS DETECTOR REPORT===============================
-:: vendor\bin\phpmd .\src text \dev\tests\static\Magento\CodeMessDetector\ruleset.xml --exclude _generated
+@echo "===============================PHP MESS DETECTOR REPORT===============================
+vendor\bin\phpmd .\src text \dev\tests\static\Magento\CodeMessDetector\ruleset.xml --exclude _generated
 
 @echo ===============================MAGENTO COPYRIGHT REPORT===============================
 echo msgbox "INFO:Copyright check currently not run as part of .bat implementation" > "%temp%\popup.vbs"

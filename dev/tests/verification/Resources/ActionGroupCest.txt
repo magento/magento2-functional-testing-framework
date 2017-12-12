@@ -1,0 +1,99 @@
+<?php
+namespace Magento\AcceptanceTest\_generated\Backend;
+
+use Magento\FunctionalTestingFramework\AcceptanceTester;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
+use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
+use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use \Codeception\Util\Locator;
+use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
+use Yandex\Allure\Adapter\Annotation\Title;
+use Yandex\Allure\Adapter\Annotation\Description;
+use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
+use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
+
+/**
+ * @Severity(level = SeverityLevel::CRITICAL)
+ * @Title("Action Group Cest")
+ * @group functional
+ * @Features({"Action Group"})
+ * @Stories({"MQE-496"})
+ */
+class ActionGroupCest
+{
+	/**
+	 * @Severity(level = SeverityLevel::SEVERE)
+	 * @Title("Action Group With No Argument")
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 */
+	public function actionGroupWithNoArguments(AcceptanceTester $I)
+	{
+		$I->wait(1);
+	}
+
+	/**
+	 * @Severity(level = SeverityLevel::SEVERE)
+	 * @Title("Action Group With Default Argument Value and Hardcoded Value in Param")
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 */
+	public function actionGroupWithDefaultArgumentAndStringSelectorParam(AcceptanceTester $I)
+	{
+		$I->see("John", "#element .test1");
+	}
+
+	/**
+	 * @Severity(level = SeverityLevel::SEVERE)
+	 * @Title("Action Group With Passed Argument Value and Hardcoded Value in Param")
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 */
+	public function actionGroupWithPassedArgumentAndStringSelectorParam(AcceptanceTester $I)
+	{
+		$I->see("John".msq("UniquePerson"), "#element .test1");
+	}
+
+	/**
+	 * @Severity(level = SeverityLevel::SEVERE)
+	 * @Title("Action Group With Default Argument Value and Argument Value in Param")
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 */
+	public function actionGroupWithSingleParameterSelectorFromDefaultArgument(AcceptanceTester $I)
+	{
+		$I->see("Doe", "#element .John");
+	}
+
+	/**
+	 * @Severity(level = SeverityLevel::SEVERE)
+	 * @Title("Action Group With Passed Argument Value and Argument Value in Param")
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 */
+	public function actionGroupWithSingleParameterSelectorFromPassedArgument(AcceptanceTester $I)
+	{
+		$I->see("Doe", "#element .John".msq("UniquePerson"));
+	}
+
+	/**
+	 * @Severity(level = SeverityLevel::SEVERE)
+	 * @Title("Action Group With Passed Argument Value and Multiple Argument Values in Param")
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 */
+	public function actionGroupWithMultipleParameterSelectorsFromDefaultArgument(AcceptanceTester $I)
+	{
+		$I->see("Doe", "#John-Doe .test");
+	}
+
+}

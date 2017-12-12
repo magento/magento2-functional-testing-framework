@@ -103,11 +103,11 @@ class OperationElement
     }
 
     /**
-     * Getter for required attribute
+     * Accessor for required attribute
      *
      * @return bool
      */
-    public function getRequired()
+    public function isRequired()
     {
         return $this->required;
     }

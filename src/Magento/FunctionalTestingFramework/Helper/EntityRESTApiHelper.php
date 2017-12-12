@@ -39,7 +39,7 @@ class EntityRESTApiHelper
     public function __construct($host, $port)
     {
         $this->guzzle_client = new Client([
-            'base_uri' => "http://${host}:${port}",
+            'base_uri' => "http://{$host}:{$port}",
             'timeout' => 5.0,
         ]);
     }

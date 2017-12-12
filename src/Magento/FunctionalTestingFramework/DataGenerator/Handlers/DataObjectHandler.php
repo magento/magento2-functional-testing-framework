@@ -109,6 +109,7 @@ class DataObjectHandler implements ObjectHandlerInterface
      * Method to initialize parsing of data.xml and read into objects.
      *
      * @return void
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function initDataObjects()
     {
@@ -172,26 +173,12 @@ class DataObjectHandler implements ObjectHandlerInterface
             $uniquenessValues = [];
 
             if (array_key_exists(self::DATA_VALUES, $entity)) {
-                foreach ($entity[self::DATA_VALUES] as $dataElement) {
-                    $dataElementKey = strtolower($dataElement[self::DATA_ELEMENT_KEY]);
-                    $dataElementValue = $dataElement[self::DATA_ELEMENT_VALUE] ?? "";
-                    if (array_key_exists(self::DATA_ELEMENT_UNIQUENESS_ATTR, $dataElement)) {
-                        $uniquenessValues[$dataElementKey] = $dataElement[self::DATA_ELEMENT_UNIQUENESS_ATTR];
-                    }
-
-                    $dataValues[$dataElementKey] = $dataElementValue;
-                }
-                unset($dataElement);
+                $dataValues = $this->parseDataElements($entity);
+                $uniquenessValues = $this->parseUniquenessValues($entity);
             }
 
             if (array_key_exists(self::REQUIRED_ENTITY, $entity)) {
-                foreach ($entity[self::REQUIRED_ENTITY] as $linkedEntity) {
-                    $linkedEntityName = $linkedEntity[self::REQUIRED_ENTITY_VALUE];
-                    $linkedEntityType = $linkedEntity[self::REQUIRED_ENTITY_TYPE];
-
-                    $linkedEntities[$linkedEntityName] = $linkedEntityType;
-                }
-                unset($linkedEntity);
+                $linkedEntities = $this->parseRequiredEntityElements($entity);
             }
 
             if (array_key_exists(self::ARRAY_VALUES, $entity)) {
@@ -206,11 +193,7 @@ class DataObjectHandler implements ObjectHandlerInterface
             }
 
             if (array_key_exists(self::VAR_VALUES, $entity)) {
-                foreach ($entity[self::VAR_VALUES] as $varElement) {
-                    $varKey = $varElement[self::VAR_KEY];
-                    $varValue = $varElement[self::VAR_ENTITY] . self::VAR_ENTITY_FIELD_SEPARATOR . $varElement[self::VAR_FIELD];
-                    $vars[$varKey] = $varValue;
-                }
+                $vars = $this->parseVarElements($entity);
             }
 
             $entityDataObject = new EntityDataObject(
@@ -223,9 +206,74 @@ class DataObjectHandler implements ObjectHandlerInterface
             );
 
             $this->data[$entityDataObject->getName()] = $entityDataObject;
-
         }
         unset($entityName);
         unset($entity);
+    }
+
+    /**
+     * Parses <data> elements in an entity, and returns them as an array of "lowerKey"=>value.
+     * @param array $entityData
+     * @return array
+     */
+    private function parseDataElements($entityData)
+    {
+        $dataValues = [];
+        foreach ($entityData[self::DATA_VALUES] as $dataElement) {
+            $dataElementKey = strtolower($dataElement[self::DATA_ELEMENT_KEY]);
+            $dataElementValue = $dataElement[self::DATA_ELEMENT_VALUE] ?? "";
+            $dataValues[$dataElementKey] = $dataElementValue;
+        }
+        return $dataValues;
+    }
+
+    /**
+     * Parses through <data> elements in an entity to return an array of "DataKey" => "UniquenessAttribute"
+     * @param array $entityData
+     * @return array
+     */
+    private function parseUniquenessValues($entityData)
+    {
+        $uniquenessValues = [];
+        foreach ($entityData[self::DATA_VALUES] as $dataElement) {
+            if (array_key_exists(self::DATA_ELEMENT_UNIQUENESS_ATTR, $dataElement)) {
+                $dataElementKey = strtolower($dataElement[self::DATA_ELEMENT_KEY]);
+                $uniquenessValues[$dataElementKey] = $dataElement[self::DATA_ELEMENT_UNIQUENESS_ATTR];
+            }
+        }
+        return $uniquenessValues;
+    }
+
+    /**
+     * Parses <required-entity> elements given entity, and returns them as an array of "EntityValue"=>"EntityType"
+     * @param array $entityData
+     * @return array
+     */
+    private function parseRequiredEntityElements($entityData)
+    {
+        $linkedEntities = [];
+        foreach ($entityData[self::REQUIRED_ENTITY] as $linkedEntity) {
+            $linkedEntityName = $linkedEntity[self::REQUIRED_ENTITY_VALUE];
+            $linkedEntityType = $linkedEntity[self::REQUIRED_ENTITY_TYPE];
+
+            $linkedEntities[$linkedEntityName] = $linkedEntityType;
+        }
+        return $linkedEntities;
+    }
+
+    /**
+     * Parses <var> elements in given entity, and returns them as an array of "Key"=> entityType -> entityKey
+     * @param array $entityData
+     * @return array
+     */
+    private function parseVarElements($entityData)
+    {
+        $vars = [];
+        foreach ($entityData[self::VAR_VALUES] as $varElement) {
+            $varKey = $varElement[self::VAR_KEY];
+            $varValue = $varElement[self::VAR_ENTITY] . self::VAR_ENTITY_FIELD_SEPARATOR . $varElement[self::VAR_FIELD];
+            $vars[$varKey] = $varValue;
+        }
+        return $vars;
     }
 }

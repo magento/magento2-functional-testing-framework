@@ -123,6 +123,7 @@ class CestObjectHandler implements ObjectHandlerInterface
      * This method reads all Cest.xml files into objects and stores them in an array for future access.
      *
      * @return void
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function initCestData()
     {

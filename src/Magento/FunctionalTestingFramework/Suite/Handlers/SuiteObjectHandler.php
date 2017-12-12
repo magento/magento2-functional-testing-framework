@@ -87,6 +87,7 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      * Method to parse all suite data xml into objects.
      *
      * @return void
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function initSuiteData()
     {

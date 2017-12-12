@@ -142,7 +142,7 @@ class DataPersistenceHandler
             $this->storeCode = $storeCode;
         }
         $curlHandler = new CurlHandler('delete', $this->createdObject, $this->storeCode);
-        $result = $curlHandler->executeRequest($this->dependentObjects);
+        $curlHandler->executeRequest($this->dependentObjects);
     }
 
     /**
