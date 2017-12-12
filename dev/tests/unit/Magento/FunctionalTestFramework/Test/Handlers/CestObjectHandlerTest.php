@@ -188,7 +188,6 @@ class CestObjectHandlerTest extends TestCase
         $coh = CestObjectHandler::getInstance();
         $cests = $coh->getCestsByGroup('test');
 
-
         // perform asserts
         $this->assertCount(2, $cests);
         $this->assertArrayHasKey($this->testCestName . '2', $cests);
