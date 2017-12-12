@@ -51,10 +51,7 @@ class ActionObjectTest extends TestCase
             'userInput' => 'Hello world'
         ]);
         $elementObject = new ElementObject('elementObject', 'button', '#replacementSelector', null, '42', false);
-        $sectionObject = new SectionObject('SectionObject', ['elementObject' => $elementObject]);
-        $instance = AspectMock::double(SectionObjectHandler::class, ['getObject' => $sectionObject])
-            ->make(); // bypass the private constructor
-        AspectMock::double(SectionObjectHandler::class, ['getInstance' => $instance]);
+        $this->mockSectionHandlerWithElement($elementObject);
 
         // Call the method under test
         $actionObject->resolveReferences();
@@ -68,19 +65,109 @@ class ActionObjectTest extends TestCase
     }
 
     /**
-     * {{Section.element(param)}} should be replaced
+     * {{Section.element(param)}} should replace correctly with 'stringLiterals'
      */
-    public function testResolveSelectorWithOneParam()
+    public function testResolveSelectorWithOneStringLiteral()
     {
-        $this->markTestIncomplete('TODO');
+        $actionObject = new ActionObject('key123', 'fillField', [
+            'selector' => "{{SectionObject.elementObject('stringliteral')}}",
+            'userInput' => 'Input'
+        ]);
+        $elementObject = new ElementObject('elementObject', 'button', '#{{var1}}', null, '42', true);
+        $this->mockSectionHandlerWithElement($elementObject);
+
+        // Call the method under test
+        $actionObject->resolveReferences();
+
+        // Verify
+        $expected = [
+            'selector' => '#stringliteral',
+            'userInput' => 'Input'
+        ];
+        $this->assertEquals($expected, $actionObject->getCustomActionAttributes());
     }
 
     /**
-     * {{Section.element(param1,param2)}} should be replaced
+     * {{Section.element(param)}} should replace correctly with {{data.key}} references
+     */
+    public function testResolveSelectorWithOneDataReference()
+    {
+        $actionObject = new ActionObject('key123', 'fillField', [
+            'selector' => "{{SectionObject.elementObject(dataObject.key)}}",
+            'userInput' => 'Input'
+        ]);
+
+        // Mock SectionHandler
+        $elementObject = new ElementObject('elementObject', 'button', '#{{var1}}', null, '42', true);
+        $this->mockSectionHandlerWithElement($elementObject);
+
+        // Mock DataHandler
+        $dataObject = new EntityDataObject('dataObject', 'dataType', ["key" => 'myValue'], null, null, null);
+        $this->mockDataHandlerWithData($dataObject);
+
+        // Call the method under test
+        $actionObject->resolveReferences();
+
+        // Verify
+        $expected = [
+            'selector' => '#myValue',
+            'userInput' => 'Input'
+        ];
+        $this->assertEquals($expected, $actionObject->getCustomActionAttributes());
+    }
+
+    /**
+     * {{Section.element(param)}} should replace correctly with $data.key$ references
+     */
+    public function testResolveSelectorWithOnePersistedReference()
+    {
+        $actionObject = new ActionObject('key123', 'fillField', [
+            'selector' => '{{SectionObject.elementObject($data.key$)}}',
+            'userInput' => 'Input'
+        ]);
+
+        // Mock SectionHandler
+        $elementObject = new ElementObject('elementObject', 'button', '#{{var1}}', null, '42', true);
+        $this->mockSectionHandlerWithElement($elementObject);
+
+        // Call the method under test
+        $actionObject->resolveReferences();
+
+        // Verify
+        $expected = [
+            'selector' => '#$data.key$',
+            'userInput' => 'Input'
+        ];
+        $this->assertEquals($expected, $actionObject->getCustomActionAttributes());
+    }
+
+    /**
+     * {{Section.element(param1,param2,param3)}} should replace correctly with all 3 data types.
      */
     public function testResolveSelectorWithManyParams()
     {
-        $this->markTestIncomplete('TODO');
+        $actionObject = new ActionObject('key123', 'fillField', [
+            'selector' => "{{SectionObject.elementObject('stringLiteral', data.key, \$data.key\$)}}",
+            'userInput' => 'Input'
+        ]);
+
+        // Mock SectionHandler
+        $elementObject = new ElementObject('elementObject', 'button', '#{{var1}}[{{var2}},{{var3}}]', null, '42', true);
+        $this->mockSectionHandlerWithElement($elementObject);
+
+        // Mock DataHandler
+        $dataObject = new EntityDataObject('dataObject', 'dataType', ["key" => 'myValue'], null, null, null);
+        $this->mockDataHandlerWithData($dataObject);
+
+        // Call the method under test
+        $actionObject->resolveReferences();
+
+        // Verify
+        $expected = [
+            'selector' => '#stringLiteral[myValue,$data.key$]',
+            'userInput' => 'Input'
+        ];
+        $this->assertEquals($expected, $actionObject->getCustomActionAttributes());
     }
 
     /**
@@ -93,10 +180,7 @@ class ActionObjectTest extends TestCase
             'selector' => '{{SectionObject.elementObject}}'
         ]);
         $elementObject = new ElementObject('elementObject', 'button', '#replacementSelector', null, '42', false);
-        $sectionObject = new SectionObject('SectionObject', ['elementObject' => $elementObject]);
-        $instance = AspectMock::double(SectionObjectHandler::class, ['getObject' => $sectionObject])
-            ->make(); // bypass the private constructor
-        AspectMock::double(SectionObjectHandler::class, ['getInstance' => $instance]);
+        $this->mockSectionHandlerWithElement($elementObject);
 
         // Call the method under test
         $actionObject->resolveReferences();
@@ -158,9 +242,7 @@ class ActionObjectTest extends TestCase
         $entityDataObject = new EntityDataObject('EntityDataObject', 'test', [
             'key' => 'replacementData'
         ], [], '', '');
-        $instance = AspectMock::double(DataObjectHandler::class, ['getObject' => $entityDataObject])
-            ->make(); // bypass the private constructor
-        AspectMock::double(DataObjectHandler::class, ['getInstance' => $instance]);
+        $this->mockDataHandlerWithData($entityDataObject);
 
         // Call the method under test
         $actionObject->resolveReferences();
@@ -174,18 +256,53 @@ class ActionObjectTest extends TestCase
     }
 
     /**
-     * $testScopeData$ (single dollar sign) should be replaced
+     * Action object should throw an exception if a reference to a parameterized selector has too few given args.
      */
-    public function testTestScopeDataResolution()
+    public function testTooFewArgumentException()
     {
-        $this->markTestIncomplete('TODO');
+        $this->expectException('Magento\FunctionalTestingFramework\Exceptions\TestReferenceException');
+
+        $actionObject = new ActionObject('key123', 'fillField', [
+            'selector' => "{{SectionObject.elementObject('arg1')}}",
+            'userInput' => 'Input'
+        ]);
+        $elementObject = new ElementObject('elementObject', 'button', '#{{var1}} {{var2}}', null, '42', true);
+        $this->mockSectionHandlerWithElement($elementObject);
+
+        // Call the method under test
+        $actionObject->resolveReferences();
     }
 
     /**
-     * $$cestScopeData$$ (double dollar sign) should be replaced
+     * Action object should throw an exception if a reference to a parameterized selector has too many given args.
      */
-    public function testCestScopeDataResolution()
+    public function testTooManyArgumentException()
     {
-        $this->markTestIncomplete('TODO');
+        $this->expectException('Magento\FunctionalTestingFramework\Exceptions\TestReferenceException');
+
+        $actionObject = new ActionObject('key123', 'fillField', [
+            'selector' => "{{SectionObject.elementObject('arg1', 'arg2', 'arg3')}}",
+            'userInput' => 'Input'
+        ]);
+        $elementObject = new ElementObject('elementObject', 'button', '#{{var1}}', null, '42', true);
+        $this->mockSectionHandlerWithElement($elementObject);
+
+        // Call the method under test
+        $actionObject->resolveReferences();
+    }
+
+    private function mockSectionHandlerWithElement($elementObject)
+    {
+        $sectionObject = new SectionObject('SectionObject', ['elementObject' => $elementObject]);
+        $instance = AspectMock::double(SectionObjectHandler::class, ['getObject' => $sectionObject])
+            ->make(); // bypass the private constructor
+        AspectMock::double(SectionObjectHandler::class, ['getInstance' => $instance]);
+    }
+
+    private function mockDataHandlerWithData($dataObject)
+    {
+        $dataInstance = AspectMock::double(DataObjectHandler::class, ['getObject' => $dataObject])
+            ->make();
+        AspectMock::double(DataObjectHandler::class, ['getInstance' => $dataInstance]);
     }
 }
