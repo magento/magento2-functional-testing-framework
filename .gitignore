@@ -8,3 +8,5 @@ cghooks.lock
 src/Magento/FunctionalTestingFramework/Group/*.php
 .DS_Store
 build/*
+clover.xml
+coverage/

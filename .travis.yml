@@ -5,10 +5,7 @@ php:
 install: composer install --no-interaction --prefer-source
 env:
   matrix:
-    - VERIFICATION_TOOL=copyright-check
     - VERIFICATION_TOOL=phpunit-checks
     - VERIFICATION_TOOL=static-checks
 script:
   - bin/$VERIFICATION_TOOL
-after_script:
-  - if [ $VERIFICATION_TOOL == "phpunit-checks" ]; then php vendor/bin/codacycoverage phpunit; fi

@@ -1,6 +1,8 @@
 :: Copyright © Magento, Inc. All rights reserved.
 :: See COPYING.txt for license details.
 
+:: REMEMBER TO UPDATE THE BASH FILE
+
 @echo off
 @echo ===============================PHP CODE SNIFFER REPORT===============================
 call vendor\bin\phpcs .\src --standard=.\dev\tests\static\Magento
