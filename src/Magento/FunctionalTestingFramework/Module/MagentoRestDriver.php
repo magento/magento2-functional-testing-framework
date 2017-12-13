@@ -8,6 +8,7 @@ namespace Magento\FunctionalTestingFramework\Module;
 
 use Codeception\Module\REST;
 use Magento\FunctionalTestingFramework\Module\MagentoSequence;
+use Magento\FunctionalTestingFramework\Util\ConfigSanitizerUtil;
 use Flow\JSONPath;
 
 /**
@@ -107,7 +108,7 @@ class MagentoRestDriver extends REST
         if (empty($this->config['url']) || empty($this->config['username']) || empty($this->config['password'])) {
             return;
         }
-        $this->config['url'] = $_ENV['MAGENTO_BASE_URL'] . "rest/default/V1/";
+        $this->config['url'] = ConfigSanitizerUtil::sanitizeUrl($this->config['url']);
 
         $this->haveHttpHeader('Content-Type', 'application/json');
         $this->sendPOST(
