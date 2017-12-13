@@ -116,14 +116,32 @@ class OperationDefinitionObjectHandlerTest extends TestCase
         $expectedNestedMetadata1 = new OperationElement("id", "integer", "field", false, [], null);
         $expectedNestedMetadata2 = new OperationElement("name", "string", "field", true, [], null);
         $expectedNestedMetadata3 = new OperationElement("active", "boolean", "field", false, [], null);
-        $expectedOperation1 = new OperationElement("object", "objectType", "object", false, [],
-            [0 => $expectedNestedMetadata1, 1 => $expectedNestedMetadata2, 2 =>$expectedNestedMetadata3]);
+        $expectedOperation1 = new OperationElement(
+            "object",
+            "objectType",
+            "object",
+            false,
+            [],
+            [0 => $expectedNestedMetadata1, 1 => $expectedNestedMetadata2, 2 =>$expectedNestedMetadata3]
+        );
 
         $twoLevelNestedMetadata = new OperationElement("nestedFieldKey", "string", "field", false, [], null);
-        $oneLevelNestedMetadata = new OperationElement("nestedObjectKey", "nestedObjectType", "object", false, [],
-            [0 => $twoLevelNestedMetadata]);
-        $expectedOperation2 = new OperationElement("ObjectArray", "nestedObjectType", "nestedObjectKey", false,
-            ["nestedObjectKey" => $oneLevelNestedMetadata], null);
+        $oneLevelNestedMetadata = new OperationElement(
+            "nestedObjectKey",
+            "nestedObjectType",
+            "object",
+            false,
+            [],
+            [0 => $twoLevelNestedMetadata]
+        );
+        $expectedOperation2 = new OperationElement(
+            "ObjectArray",
+            "nestedObjectType",
+            "nestedObjectKey",
+            false,
+            ["nestedObjectKey" => $oneLevelNestedMetadata],
+            null
+        );
 
         // Set up mocked data output
         $this->setMockParserOutput($mockData);
@@ -139,7 +157,10 @@ class OperationDefinitionObjectHandlerTest extends TestCase
         $this->assertArrayHasKey("createoperationDataTypeName2", $operations);
 
         // perform asserts on $createOperationByName
-        $this->assertEquals([0 => 'testParameter: testHeader', 1 => "Content-Type: application/json"], $operationByName->getHeaders());
+        $this->assertEquals(
+            [0 => 'testParameter: testHeader', 1 => "Content-Type: application/json"],
+            $operationByName->getHeaders()
+        );
         $this->assertEquals("create", $operationByName->getOperation());
         $this->assertEquals("POST", $operationByName->getApiMethod());
         $this->assertEquals("V1/object", $operationByName->getApiUrl());
@@ -162,11 +183,17 @@ class OperationDefinitionObjectHandlerTest extends TestCase
     private function setMockParserOutput($data)
     {
         // clear section object handler value to inject parsed content
-        $property = new \ReflectionProperty(OperationDefinitionObjectHandler::class, 'DATA_DEFINITION_OBJECT_HANDLER');
+        $property = new \ReflectionProperty(
+            OperationDefinitionObjectHandler::class,
+            'DATA_DEFINITION_OBJECT_HANDLER'
+        );
         $property->setAccessible(true);
         $property->setValue(null);
 
-        $mockSectionParser = AspectMock::double(OperationDefinitionParser::class, ["readOperationMetadata" => $data])->make();
+        $mockSectionParser = AspectMock::double(
+            OperationDefinitionParser::class,
+            ["readOperationMetadata" => $data]
+        )->make();
         $instance = AspectMock::double(ObjectManager::class, ['create' => $mockSectionParser])->make();
         AspectMock::double(ObjectManagerFactory::class, ['getObjectManager' => $instance]);
     }
