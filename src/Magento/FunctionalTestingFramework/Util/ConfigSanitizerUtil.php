@@ -12,14 +12,23 @@ namespace Magento\FunctionalTestingFramework\Util;
 class ConfigSanitizerUtil
 {
     /**
-     * Sanitizes the given Webdriver Config's url and selenium env params.
+     * Sanitizes the given Webdriver Config's url and selenium env params, can be selective based on second argument.
      * @param array $config
+     * @param String[] $params
      * @return array
      */
-    public static function sanitizeWebDriverConfig($config)
+    public static function sanitizeWebDriverConfig($config, $params = ['url', 'selenium'])
     {
-        $config['url'] = self::sanitizeUrl($config['url']);
-        $config = self::sanitizeSeleniumEnvs($config);
+        self::validateConfigBasedVars($config);
+
+        if (array_key_exists('url', array_flip($params))) {
+            $config['url'] = self::sanitizeUrl($config['url']);
+        }
+
+        if (array_key_exists('selenium', array_flip($params))) {
+            $config = self::sanitizeSeleniumEnvs($config);
+        }
+
         return $config;
     }
 
@@ -46,11 +55,36 @@ class ConfigSanitizerUtil
     }
 
     /**
+     * Method which validates env vars have been properly read into the config. Method implemented as part of
+     * bug MQE-567
+     *
+     * @param array $config
+     * @return void
+     */
+    private static function validateConfigBasedVars($config)
+    {
+        $configStrings = array_filter($config, function ($value) {
+            return is_string($value);
+        });
+
+        foreach ($configStrings as $configKey => $configValue) {
+            $var = trim((String)$configValue, '%');
+            if (array_key_exists($var, $_ENV)) {
+                trigger_error(
+                    "Issue with setting configuration for test runs. Please make sure '{$var}' is "
+                    . "not duplicated as a system level variable",
+                    E_USER_ERROR
+                );
+            }
+        }
+    }
+
+    /**
      * Sanitizes and returns given URL.
      * @param string $url
      * @return string
      */
-    public static function sanitizeUrl($url)
+    private static function sanitizeUrl($url)
     {
         if ($url === "") {
             trigger_error("MAGENTO_BASE_URL must be defined in .env", E_USER_ERROR);
