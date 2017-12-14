@@ -6,12 +6,63 @@
 
 namespace tests\unit\Magento\FunctionalTestFramework\Page\Handlers;
 
+use AspectMock\Test as AspectMock;
+use Magento\FunctionalTestingFramework\ObjectManager;
+use Magento\FunctionalTestingFramework\ObjectManagerFactory;
+use Magento\FunctionalTestingFramework\Page\Handlers\PageObjectHandler;
+use Magento\FunctionalTestingFramework\XmlParser\PageParser;
 use PHPUnit\Framework\TestCase;
 
 class PageObjectHandlerTest extends TestCase
 {
-    public function testTodo()
+    public function testGetPageObject()
     {
-        $this->markTestIncomplete('TODO');
+        $mockData = [
+            "testPage1" => [
+                "url" => "testURL1",
+                "module" => "testModule1",
+                "section" => [
+                    "someSection1" => [],
+                    "someSection2" => []
+                ]
+            ],
+            "testPage2" => [
+                "url" => "testURL2",
+                "module" => "testModule2",
+                "parameterized" => true,
+                "section" => [
+                    "someSection1" => []
+                ]
+            ]];
+        $this->setMockParserOutput($mockData);
+
+        // get pages
+        $pageHandler = PageObjectHandler::getInstance();
+        $pages = $pageHandler->getAllObjects();
+        $page = $pageHandler->getObject('testPage1');
+        $invalidPage = $pageHandler->getObject('someInvalidPage');
+
+        // perform asserts
+        $this->assertCount(2, $pages);
+        $this->assertArrayHasKey("testPage1", $pages);
+        $this->assertArrayHasKey("testPage2", $pages);
+        $this->assertNull($invalidPage);
+    }
+
+    /**
+     * Function used to set mock for parser return and force init method to run between tests.
+     *
+     * @param array $data
+     */
+    private function setMockParserOutput($data)
+    {
+        // clear section object handler value to inject parsed content
+        $property = new \ReflectionProperty(PageObjectHandler::class, 'PAGE_DATA_PROCESSOR');
+        $property->setAccessible(true);
+        $property->setValue(null);
+
+        $mockSectionParser = AspectMock::double(PageParser::class, ["getData" => $data])->make();
+        $instance = AspectMock::double(ObjectManager::class, ['get' => $mockSectionParser])->make();
+        AspectMock::double(ObjectManagerFactory::class, ['getObjectManager' => $instance]);
     }
 }
