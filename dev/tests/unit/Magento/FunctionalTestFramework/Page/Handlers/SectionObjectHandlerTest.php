@@ -6,12 +6,66 @@
 
 namespace tests\unit\Magento\FunctionalTestFramework\Page\Handlers;
 
+use AspectMock\Test as AspectMock;
+use Magento\FunctionalTestingFramework\ObjectManager;
+use Magento\FunctionalTestingFramework\ObjectManagerFactory;
+use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
+use Magento\FunctionalTestingFramework\XmlParser\SectionParser;
+use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
 use PHPUnit\Framework\TestCase;
 
 class SectionObjectHandlerTest extends TestCase
 {
-    public function testTodo()
+    public function testGetSectionObject()
     {
-        $this->markTestIncomplete('TODO');
+        $mockData = [
+            "testSection1" => [
+                "element" => [
+                    "testElement" => [
+                        "type" => "input",
+                        "selector" => "#element"
+                    ]
+                ]
+            ],
+
+            "testSection2" => [
+                "element" => [
+                    "testElement" => [
+                        "type" => "input",
+                        "selector" => "#element"
+                    ]
+                ]
+            ]];
+        $this->setMockParserOutput($mockData);
+
+        // get sections
+        $sectionHandler = SectionObjectHandler::getInstance();
+        $sections = $sectionHandler->getAllObjects();
+        $section = $sectionHandler->getObject("testSection1");
+        $invalidSection = $sectionHandler->getObject("InvalidSection");
+
+        // perform asserts
+        $this->assertCount(2, $sections);
+        $this->assertArrayHasKey("testSection1", $sections);
+        $this->assertArrayHasKey("testSection2", $sections);
+        $this->assertNull($invalidSection);
+    }
+
+    /**
+     * Function used to set mock for parser return and force init method to run between tests.
+     *
+     * @param array $data
+     */
+    private function setMockParserOutput($data)
+    {
+        // clear section object handler value to inject parsed content
+        $property = new \ReflectionProperty(SectionObjectHandler::class, 'SECTION_DATA_PROCESSOR');
+        $property->setAccessible(true);
+        $property->setValue(null);
+
+        $mockSectionParser = AspectMock::double(SectionParser::class, ["getData" => $data])->make();
+        $instance = AspectMock::double(ObjectManager::class, ['get' => $mockSectionParser])->make();
+        AspectMock::double(ObjectManagerFactory::class, ['getObjectManager' => $instance]);
+
     }
 }
