@@ -53,7 +53,12 @@ class SectionReplacementCest
 		$I->click("#" . $createdData->getCreatedDataByName('firstname') . " .stringLiteral2");
 		$I->click("#" . $createdData->getCreatedDataByName('firstname') . "-stringLiteral2 .stringLiteral3");
 		$I->click("#" . $createdData->getCreatedDataByName('firstname') . "-stringLiteral2 ." . $createdData->getCreatedDataByName('firstname') . " [stringLiteral3]");
+		$I->click("#element .{$data}");
+		$I->click("#{$data1} .{$data2}");
+		$I->click("#{$data1}-{$data2} .{$data3}");
+		$I->click("#John-Doe .John [Tiberius]");
 		$I->click("#stringLiteral1-" . $createdData->getCreatedDataByName('firstname') . " .John");
+		$I->click("#stringLiteral1-" . $createdData->getCreatedDataByName('firstname') . " .{$data}");
 		$I->click("#stringLiteral1-" . $createdData->getCreatedDataByName('firstname') . " .".msq("uniqueData")."John");
 		$I->click("#stringLiteral1-" . $createdData->getCreatedDataByName('firstname') . " .Doe".msq("uniqueData"));
 	}

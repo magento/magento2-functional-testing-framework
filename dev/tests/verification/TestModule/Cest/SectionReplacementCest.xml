@@ -18,7 +18,6 @@
             <click stepKey="selectorReplaceThreeParam" selector="{{SampleSection.threeParamElement('stringLiteral1', 'stringLiteral2', 'stringLiteral3')}}"/>
             <click stepKey="selectorReplaceThreeParamOneDupe" selector="{{SampleSection.threeOneDuplicateParamElement('stringLiteral1', 'stringLiteral2', 'stringLiteral3')}}"/>
 
-
             <click stepKey="selectorReplaceOneParamDataRef" selector="{{SampleSection.oneParamElement(simpleData.firstname)}}"/>
             <click stepKey="selectorReplaceTwoParamDataRef" selector="{{SampleSection.twoParamElement(simpleData.firstname, simpleData.lastname)}}"/>
             <click stepKey="selectorReplaceThreeParamDataRef" selector="{{SampleSection.threeParamElement(simpleData.firstname, simpleData.lastname, simpleData.middlename)}}"/>
@@ -40,7 +39,14 @@
             <click stepKey="selectorReplaceThreeParamPersisted" selector="{{SampleSection.threeParamElement($createdData.firstname$, 'stringLiteral2', 'stringLiteral3')}}"/>
             <click stepKey="selectorReplaceThreeParamOneDupePersisted" selector="{{SampleSection.threeOneDuplicateParamElement($createdData.firstname$, 'stringLiteral2', 'stringLiteral3')}}"/>
 
-            <click stepKey="selectorReplaceThreeParamMixed" selector="{{SampleSection.threeParamElement('stringLiteral1', $createdData.firstname$, simpleData.firstname)}}"/>
+            <click stepKey="selectorReplaceOneParamVariable" selector="{{SampleSection.oneParamElement({$data})}}"/>
+            <click stepKey="selectorReplaceTwoParamVariable" selector="{{SampleSection.twoParamElement({$data1}, {$data2})}}"/>
+            <click stepKey="selectorReplaceThreeParamVariable" selector="{{SampleSection.threeParamElement({$data1}, {$data2}, {$data3})}}"/>
+            <click stepKey="selectorReplaceThreeParamVariableOneDupe" selector="{{SampleSection.threeOneDuplicateParamElement(simpleData.firstname, simpleData.lastname, simpleData.middlename)}}"/>
+
+
+            <click stepKey="selectorReplaceThreeParamMixed1" selector="{{SampleSection.threeParamElement('stringLiteral1', $createdData.firstname$, simpleData.firstname)}}"/>
+            <click stepKey="selectorReplaceThreeParamMixed2" selector="{{SampleSection.threeParamElement('stringLiteral1', $createdData.firstname$, {$data})}}"/>
             <click stepKey="selectorReplaceThreeParamMixedMSQPrefix" selector="{{SampleSection.threeParamElement('stringLiteral1', $createdData.firstname$, uniqueData.firstname)}}"/>
             <click stepKey="selectorReplaceThreeParamMixedMSQSuffix" selector="{{SampleSection.threeParamElement('stringLiteral1', $createdData.firstname$, uniqueData.lastname)}}"/>
         </test>

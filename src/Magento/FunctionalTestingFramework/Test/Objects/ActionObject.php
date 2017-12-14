@@ -27,6 +27,7 @@ class ActionObject
     const ACTION_ATTRIBUTE_SELECTOR = 'selector';
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER = '/\(.+\)/';
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/{{[\w.\[\]()\',$ ]+}}/';
+    const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN_WITH_PARAMS= '/{{[\w]+\.[\w]+\([\w ,.\'{$}]+\)}}/';
 
     /**
      * The unique identifier for the action
@@ -314,7 +315,10 @@ class ActionObject
      */
     private function findAndReplaceReferences($objectHandler, $inputString)
     {
-        preg_match_all(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN, $inputString, $matches);
+        //look for parameter area, if so use different regex
+        $regex = $this->resolveRegexPatternForReference($inputString);
+
+        preg_match_all($regex, $inputString, $matches);
 
         $outputString = $inputString;
 
@@ -355,6 +359,20 @@ class ActionObject
             $outputString = str_replace($match, $replacement, $outputString);
         }
         return $outputString;
+    }
+
+    /**
+     * Determines whether the given $inputString has (params), and returns the appropriate regex for use in matching.
+     * @param string $inputString
+     * @return string
+     */
+    private function resolveRegexPatternForReference($inputString)
+    {
+        if (preg_match(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER, $inputString) === 1) {
+            return ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN_WITH_PARAMS;
+        } else {
+            return ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN;
+        }
     }
 
     /**
@@ -430,13 +448,17 @@ class ActionObject
 
         //Attempt to Resolve {{data}} references to actual output. Trim parameter for whitespace before processing it.
         //If regex matched it means that it's either a 'StringLiteral' or $key.data$/$$key.data$$ reference.
+        //Elseif regex match for {$data}
         //Else assume it's a normal {{data.key}} reference and recurse through findAndReplace
         $resolvedParameters = [];
         foreach ($parameters as $parameter) {
             $parameter = trim($parameter);
-            preg_match_all("/[$'][\w\D]+[$']/", $parameter, $match);
-            if (!empty($match[0])) {
+            preg_match_all("/[$'][\w\D]+[$']/", $parameter, $stringOrPersistedMatch);
+            preg_match_all('/{\$[a-z][a-zA-Z\d]+}/', $parameter, $variableMatch);
+            if (!empty($stringOrPersistedMatch[0])) {
                 $resolvedParameters[] = ltrim(rtrim($parameter, "'"), "'");
+            } elseif (!empty($variableMatch[0])) {
+                $resolvedParameters[] = $parameter;
             } else {
                 $resolvedParameters[] = $this->findAndReplaceReferences(
                     DataObjectHandler::getInstance(),

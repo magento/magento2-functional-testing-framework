@@ -74,7 +74,7 @@
     </xs:complexType>
     <xs:complexType name="testType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="testTypeTags" />
+            <xs:group ref="testTypeTags"/>
             <xs:element type="annotationsType" name="annotations" minOccurs="0"/>
         </xs:choice>
         <xs:attribute type="xs:string" name="name"/>
@@ -96,25 +96,31 @@
             <xs:element type="amOnSubdomainType" name="amOnSubdomain" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="amOnUrlType" name="amOnUrl" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="appendFieldType" name="appendField" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="assertElementContainsAttributeType" name="assertElementContainsAttribute" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertElementContainsAttributeType" name="assertElementContainsAttribute" minOccurs="0"
+                        maxOccurs="unbounded"/>
             <xs:element type="attachFileType" name="attachFile" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="cancelPopupType" name="cancelPopup" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="checkOptionType" name="checkOption" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="clearFieldType" name="clearField" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="clickType" name="click" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="clickWithLeftButtonType" name="clickWithLeftButton" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="clickWithRightButtonType" name="clickWithRightButton" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="closeAdminNotificationType" name="closeAdminNotification" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="clickWithRightButtonType" name="clickWithRightButton" minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element type="closeAdminNotificationType" name="closeAdminNotification" minOccurs="0"
+                        maxOccurs="unbounded"/>
             <xs:element type="closeTabType" name="closeTab" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="commentType" name="comment" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="conditionalClickType" name="conditionalClick" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="updateDataType" name="updateData" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="getDataType" name="getData" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dontSeeType" name="dontSee" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="dontSeeCheckboxIsCheckedType" name="dontSeeCheckboxIsChecked" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeCheckboxIsCheckedType" name="dontSeeCheckboxIsChecked" minOccurs="0"
+                        maxOccurs="unbounded"/>
             <xs:element type="dontSeeCookieType" name="dontSeeCookie" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="dontSeeCurrentUrlEqualsType" name="dontSeeCurrentUrlEquals" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="dontSeeCurrentUrlMatchesType" name="dontSeeCurrentUrlMatches" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeCurrentUrlEqualsType" name="dontSeeCurrentUrlEquals" minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element type="dontSeeCurrentUrlMatchesType" name="dontSeeCurrentUrlMatches" minOccurs="0"
+                        maxOccurs="unbounded"/>
             <xs:element type="dontSeeElementType" name="dontSeeElement" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dontSeeElementInDOMType" name="dontSeeElementInDOM" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dontSeeInCurrentUrlType" name="dontSeeInCurrentUrl" minOccurs="0" maxOccurs="unbounded"/>
@@ -125,7 +131,8 @@
             <xs:element type="dontSeeInTitleType" name="dontSeeInTitle" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dontSeeJsErrorType" name="dontSeeJsError" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dontSeeLinkType" name="dontSeeLink" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="dontSeeOptionIsSelectedType" name="dontSeeOptionIsSelected" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeOptionIsSelectedType" name="dontSeeOptionIsSelected" minOccurs="0"
+                        maxOccurs="unbounded"/>
             <xs:element type="doubleClickType" name="doubleClick" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dragAndDropType" name="dragAndDrop" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="executeInSeleniumType" name="executeInSelenium" minOccurs="0" maxOccurs="unbounded"/>
@@ -159,12 +166,15 @@
             <xs:element type="saveSessionSnapshotType" name="saveSessionSnapshot" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="scrollToType" name="scrollTo" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="scrollToTopOfPageType" name="scrollToTopOfPage" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="searchAndMultiSelectOptionType" name="searchAndMultiSelectOption" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="searchAndMultiSelectOptionType" name="searchAndMultiSelectOption" minOccurs="0"
+                        maxOccurs="unbounded"/>
             <xs:element type="seeType" name="see" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="seeCheckboxIsCheckedType" name="seeCheckboxIsChecked" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="seeCheckboxIsCheckedType" name="seeCheckboxIsChecked" minOccurs="0"
+                        maxOccurs="unbounded"/>
             <xs:element type="seeCookieType" name="seeCookie" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="seeCurrentUrlEqualsType" name="seeCurrentUrlEquals" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="seeCurrentUrlMatchesType" name="seeCurrentUrlMatches" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="seeCurrentUrlMatchesType" name="seeCurrentUrlMatches" minOccurs="0"
+                        maxOccurs="unbounded"/>
             <xs:element type="seeElementType" name="seeElement" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="seeElementInDOMType" name="seeElementInDOM" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="seeInCurrentUrlType" name="seeInCurrentUrl" minOccurs="0" maxOccurs="unbounded"/>
@@ -189,16 +199,21 @@
             <xs:element type="unselectOptionType" name="unselectOption" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitType" name="wait" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForAjaxLoadType" name="waitForAjaxLoad" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="waitForElementChangeType" name="waitForElementChange" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForElementChangeType" name="waitForElementChange" minOccurs="0"
+                        maxOccurs="unbounded"/>
             <xs:element type="waitForElementType" name="waitForElement" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="waitForElementNotVisibleType" name="waitForElementNotVisible" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="waitForElementVisibleType" name="waitForElementVisible" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForElementNotVisibleType" name="waitForElementNotVisible" minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element type="waitForElementVisibleType" name="waitForElementVisible" minOccurs="0"
+                        maxOccurs="unbounded"/>
             <xs:element type="waitForJSType" name="waitForJS" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="waitForLoadingMaskToDisappearType" name="waitForLoadingMaskToDisappear" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForLoadingMaskToDisappearType" name="waitForLoadingMaskToDisappear" minOccurs="0"
+                        maxOccurs="unbounded"/>
             <xs:element type="waitForPageLoadType" name="waitForPageLoad" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForTextType" name="waitForText" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertArrayHasKeyType" name="assertArrayHasKey" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="assertArrayNotHasKeyType" name="assertArrayNotHasKey" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertArrayNotHasKeyType" name="assertArrayNotHasKey" minOccurs="0"
+                        maxOccurs="unbounded"/>
             <xs:element type="assertArraySubsetType" name="assertArraySubset" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertContainsType" name="assertContains" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertCountType" name="assertCount" minOccurs="0" maxOccurs="unbounded"/>
@@ -207,15 +222,18 @@
             <xs:element type="assertFalseType" name="assertFalse" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertFileExistsType" name="assertFileExists" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertFileNotExistsType" name="assertFileNotExists" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="assertGreaterOrEqualsType" name="assertGreaterOrEquals" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertGreaterOrEqualsType" name="assertGreaterOrEquals" minOccurs="0"
+                        maxOccurs="unbounded"/>
             <xs:element type="assertGreaterThanType" name="assertGreaterThan" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="assertGreaterThanOrEqualType" name="assertGreaterThanOrEqual" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertGreaterThanOrEqualType" name="assertGreaterThanOrEqual" minOccurs="0"
+                        maxOccurs="unbounded"/>
             <xs:element type="assertInstanceOfType" name="assertInstanceOf" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertInternalTypeType" name="assertInternalType" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertIsEmptyType" name="assertIsEmpty" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertLessOrEqualsType" name="assertLessOrEquals" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertLessThanType" name="assertLessThan" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="assertLessThanOrEqualType" name="assertLessThanOrEqual" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertLessThanOrEqualType" name="assertLessThanOrEqual" minOccurs="0"
+                        maxOccurs="unbounded"/>
             <xs:element type="assertNotContainsType" name="assertNotContains" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertNotEmptyType" name="assertNotEmpty" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertNotEqualsType" name="assertNotEquals" minOccurs="0" maxOccurs="unbounded"/>
@@ -226,8 +244,10 @@
             <xs:element type="assertNullType" name="assertNull" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertRegExpType" name="assertRegExp" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertSameType" name="assertSame" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="assertStringStartsNotWithType" name="assertStringStartsNotWith" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="assertStringStartsWithType" name="assertStringStartsWith" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertStringStartsNotWithType" name="assertStringStartsNotWith" minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element type="assertStringStartsWithType" name="assertStringStartsWith" minOccurs="0"
+                        maxOccurs="unbounded"/>
             <xs:element type="assertTrueType" name="assertTrue" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="expectExceptionType" name="expectException" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="failType" name="fail" minOccurs="0" maxOccurs="unbounded"/>
@@ -282,7 +302,6 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -293,7 +312,6 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -304,7 +322,6 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -316,7 +333,6 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -329,7 +345,6 @@
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="expectedValue"/>
                 <xs:attribute type="xs:string" name="attribute" use="required"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -341,7 +356,6 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -383,7 +397,6 @@
                 <xs:attribute type="xs:string" name="selector"/>
                 <xs:attribute type="xs:string" name="selectorArray"/>
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -514,7 +527,6 @@
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="selector"/>
                 <xs:attribute type="xs:string" name="selectorArray"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -536,7 +548,6 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -547,7 +558,6 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -558,7 +568,6 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -591,7 +600,6 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -604,7 +612,7 @@
                 <xs:attribute type="xs:string" name="selector"/>
                 <xs:attribute type="xs:string" name="selectorArray"/>
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="variable"/>
+
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -626,7 +634,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="variable"/>
+
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -647,7 +655,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="variable"/>
+
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -668,7 +676,6 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="url"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -680,7 +687,6 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -734,7 +740,6 @@
                 <xs:attribute type="xs:string" name="selector"/>
                 <xs:attribute type="xs:string" name="selectorArray"/>
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -746,7 +751,6 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="locale"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -758,8 +762,6 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="returnVariable" use="required"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -771,8 +773,6 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="returnVariable" use="required"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -783,8 +783,6 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
-                <xs:attribute type="xs:string" name="returnVariable" use="required"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -796,8 +794,6 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="returnVariable" use="required"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -807,7 +803,7 @@
     <xs:complexType name="grabPageSourceType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="returnVariable" use="required"/>
+
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -818,7 +814,6 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector" use="required"/>
-                <xs:attribute type="xs:string" name="returnVariable" use="required"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -830,7 +825,6 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector"/>
                 <xs:attribute type="xs:string" name="selectorArray"/>
-                <xs:attribute type="xs:string" name="returnVariable" use="required"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -842,7 +836,6 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="returnVariable"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -864,7 +857,6 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -885,7 +877,6 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="locale" use="required"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -945,7 +936,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="variable"/>
+
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -978,7 +969,6 @@
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -999,7 +989,6 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1021,7 +1010,6 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1068,7 +1056,6 @@
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="selector"/>
                 <xs:attribute type="xs:string" name="selectorArray"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1090,7 +1077,6 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1101,7 +1087,6 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1112,7 +1097,6 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1146,7 +1130,6 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1159,7 +1142,6 @@
                 <xs:attribute type="xs:string" name="selector"/>
                 <xs:attribute type="xs:string" name="selectorArray"/>
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1191,7 +1173,6 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1212,7 +1193,6 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1224,7 +1204,6 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="url"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1237,7 +1216,6 @@
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1249,7 +1227,6 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1262,7 +1239,6 @@
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1298,7 +1274,6 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector"/>
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1309,7 +1284,6 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1320,7 +1294,6 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1331,7 +1304,6 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1342,7 +1314,6 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1365,7 +1336,6 @@
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1473,7 +1443,6 @@
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="time"/>
                 <xs:attribute type="xs:string" name="selector"/>
-                <xs:attribute type="xs:string" name="variable"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1936,15 +1905,15 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
-    <xs:simpleType name="assertEnum" final="restriction" >
+    <xs:simpleType name="assertEnum" final="restriction">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="int" />
-            <xs:enumeration value="float" />
-            <xs:enumeration value="bool" />
-            <xs:enumeration value="string" />
-            <xs:enumeration value="variable" />
-            <xs:enumeration value="array" />
-            <xs:enumeration value="const" />
+            <xs:enumeration value="int"/>
+            <xs:enumeration value="float"/>
+            <xs:enumeration value="bool"/>
+            <xs:enumeration value="string"/>
+            <xs:enumeration value="variable"/>
+            <xs:enumeration value="array"/>
+            <xs:enumeration value="const"/>
         </xs:restriction>
     </xs:simpleType>
 </xs:schema>

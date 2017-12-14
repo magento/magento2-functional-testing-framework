@@ -46,7 +46,7 @@ class BasicFunctionalCest
 	 */
 	public function BasicFunctionalTest(AcceptanceTester $I)
 	{
-		$someVar = $I->grabValueFrom();
+		$someVarDefinition = $I->grabValueFrom();
 		$I->acceptPopup();
 		$I->amOnPage("/test/url");
 		$I->appendField(".functionalTestSelector", $someVar);
@@ -77,12 +77,12 @@ class BasicFunctionalCest
 		$I->executeJS("someJSFunction");
 		$I->fillField(".functionalTestSelector", "someInput");
 		$I->fillField(".functionalTestSelector", "0");
-		$grabAttributeVar = $I->grabAttributeFrom(".functionalTestSelector", "someInput");
-		$grabCookieVar = $I->grabCookie("grabCookieInput", ['domain' => 'www.google.com']);
-		$grabUrlVar = $I->grabFromCurrentUrl("/grabCurrentUrl");
-		$grabMultipleVar = $I->grabMultiple(".functionalTestSelector");
-		$I->grabTextFrom(".functionalTestSelector");
-		$grabValueVar = $I->grabValueFrom(".functionalTestSelector");
+		$grabAttributeFromKey1 = $I->grabAttributeFrom(".functionalTestSelector", "someInput");
+		$grabCookieKey1 = $I->grabCookie("grabCookieInput", ['domain' => 'www.google.com']);
+		$grabFromCurrentUrlKey1 = $I->grabFromCurrentUrl("/grabCurrentUrl");
+		$grabMultipleKey1 = $I->grabMultiple(".functionalTestSelector");
+		$grabTextFromKey1 = $I->grabTextFrom(".functionalTestSelector");
+		$grabValueFromKey1 = $I->grabValueFrom(".functionalTestSelector");
 		$I->makeScreenshot("screenShotInput");
 		$I->maximizeWindow();
 		$I->moveBack();

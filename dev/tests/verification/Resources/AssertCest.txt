@@ -43,7 +43,7 @@ class AssertCest
 		$UniquePerson = DataObjectHandler::getInstance()->getObject("UniquePerson");
 		$createData2 = new DataPersistenceHandler($UniquePerson);
 		$createData2->createEntity();
-		$text = $I->grabTextFrom(".copyright>span");
+		$grabTextFrom1 = $I->grabTextFrom(".copyright>span");
 		$I->comment("asserts without variable replacement");
 		$I->assertArrayHasKey("apple", ['orange' => 2, 'apple' => 1], "pass");
 		$I->assertArrayNotHasKey("kiwi", ['orange' => 2, 'apple' => 1], "pass");

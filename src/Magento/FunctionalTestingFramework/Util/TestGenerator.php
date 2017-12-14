@@ -163,11 +163,11 @@ class TestGenerator
             $hookPhp = $this->generateHooksPhp($cestObject->getHooks());
             $testsPhp = $this->generateTestsPhp($cestObject->getTests());
         } catch (TestReferenceException $e) {
-            throw new TestReferenceException($e->getMessage(). " in Cest \"" . $cestObject->getName() . "\"");
+            throw new TestReferenceException($e->getMessage() . " in Cest \"" . $cestObject->getName() . "\"");
         }
 
         $cestPhp = "<?php\n";
-        $cestPhp .= "namespace Magento\AcceptanceTest\\" .  $this->exportDirName ."\Backend;\n\n";
+        $cestPhp .= "namespace Magento\AcceptanceTest\\" . $this->exportDirName . "\Backend;\n\n";
         $cestPhp .= $usePhp;
         $cestPhp .= $classAnnotationsPhp;
         $cestPhp .= sprintf("class %s\n", $className);
@@ -387,17 +387,11 @@ class TestGenerator
             // Validate action attributes and print notice messages on violation.
             $this->validateXmlAttributesMutuallyExclusive($stepKey, $actionName, $customActionAttributes);
 
-            if (isset($customActionAttributes['returnVariable'])) {
-                $returnVariable = $customActionAttributes['returnVariable'];
-            }
-
             if (isset($customActionAttributes['attribute'])) {
                 $attribute = $customActionAttributes['attribute'];
             }
 
-            if (isset($customActionAttributes['variable'])) {
-                $input = $this->addDollarSign($customActionAttributes['variable']);
-            } elseif (isset($customActionAttributes['userInput']) && isset($customActionAttributes['url'])) {
+            if (isset($customActionAttributes['userInput']) && isset($customActionAttributes['url'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['userInput']);
                 $url = $this->addUniquenessFunctionCall($customActionAttributes['url']);
             } elseif (isset($customActionAttributes['userInput'])) {
@@ -407,6 +401,7 @@ class TestGenerator
             } elseif (isset($customActionAttributes['expectedValue'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['expectedValue']);
             }
+
             if (isset($customActionAttributes['expected'])) {
                 $assertExpected = $this->resolveValueByType(
                     $customActionAttributes['expected'],
@@ -778,7 +773,7 @@ class TestGenerator
                     break;
                 case "grabCookie":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
-                        $returnVariable,
+                        $stepKey,
                         $actor,
                         $actionName,
                         $input,
@@ -862,29 +857,37 @@ class TestGenerator
                 case "grabAttributeFrom":
                 case "grabMultiple":
                 case "grabFromCurrentUrl":
-                    if (isset($returnVariable)) {
-                        $testSteps .= $this->wrapFunctionCallWithReturnValue(
-                            $returnVariable,
-                            $actor,
-                            $actionName,
-                            $selector,
-                            $input
-                        );
-                    } else {
-                        $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input);
-                    }
+                    $testSteps .= $this->wrapFunctionCallWithReturnValue(
+                        $stepKey,
+                        $actor,
+                        $actionName,
+                        $selector,
+                        $input
+                    );
                     break;
+                case "grabTextFrom":
                 case "grabValueFrom":
-                    if (isset($returnVariable)) {
-                        $testSteps .= $this->wrapFunctionCallWithReturnValue(
-                            $returnVariable,
-                            $actor,
-                            $actionName,
-                            $selector
-                        );
-                    } else {
-                        $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector);
-                    }
+                    $testSteps .= $this->wrapFunctionCallWithReturnValue(
+                        $stepKey,
+                        $actor,
+                        $actionName,
+                        $selector
+                    );
+                    break;
+                case "grabPageSource":
+                    $testSteps .= $this->wrapFunctionCallWithReturnValue(
+                        $stepKey,
+                        $actor,
+                        $actionName
+                    );
+                    break;
+                case "grabCookie":
+                    $testSteps .= $this->wrapFunctionCallWithReturnValue(
+                        $stepKey,
+                        $actor,
+                        $actionName,
+                        $input
+                    );
                     break;
                 case "loginAsAdmin":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $username, $password);
@@ -939,7 +942,7 @@ class TestGenerator
                         $actor,
                         $actionName,
                         $selector,
-                        $this->stripWrappedQuotes($input),
+                        $input,
                         $parameterArray
                     );
                     break;
@@ -1032,18 +1035,7 @@ class TestGenerator
                     );
                     break;
                 default:
-                    if ($returnVariable) {
-                        $testSteps .= $this->wrapFunctionCallWithReturnValue(
-                            $returnVariable,
-                            $actor,
-                            $actionName,
-                            $selector,
-                            $input,
-                            $parameter
-                        );
-                    } else {
-                        $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input, $parameter);
-                    }
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input, $parameter);
             }
         }
 
@@ -1086,10 +1078,28 @@ class TestGenerator
             preg_match_all("/\\$[\w.\[\]]+\\$/", $outputArg, $matches);
             $this->replaceMatchesIntoArg($matches[0], $outputArg, "$");
 
+            //trim "{$variable}" into $variable
+            $outputArg = $this->trimVariableIfNeeded($outputArg);
+
             $outputString = str_replace($arg, $outputArg, $outputString);
         }
 
         return $outputString;
+    }
+
+    /**
+     * Trims given $input of "{$var}" to $var if needed. Returns $input if format fails.
+     * @param string $input
+     * @return string
+     */
+    private function trimVariableIfNeeded($input)
+    {
+        preg_match('/"{\$[a-z][a-zA-Z\d]+}"/', $input, $match);
+        if (isset($match[0])) {
+            return trim($input, '{}"');
+        } else {
+            return $input;
+        }
     }
 
     /**
@@ -1459,7 +1469,7 @@ class TestGenerator
      */
     private function validateParameterArray($paramArray)
     {
-        if (substr($paramArray, 0, 1) != "[" || substr($paramArray, strlen($paramArray)-1, 1)!= "]") {
+        if (substr($paramArray, 0, 1) != "[" || substr($paramArray, strlen($paramArray) - 1, 1) != "]") {
             throw new TestReferenceException("parameterArray must begin with `[` and end with `]");
         }
     }
@@ -1547,10 +1557,10 @@ class TestGenerator
     private function validateXmlAttributesMutuallyExclusive($key, $tagName, $attributes)
     {
         $rules = [
-            [   'attributes' => [
-                    'selector',
-                    'selectorArray',
-                ]
+            ['attributes' => [
+                'selector',
+                'selectorArray',
+            ]
             ],
             [
                 'attributes' => [

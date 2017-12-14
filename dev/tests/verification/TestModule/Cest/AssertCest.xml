@@ -14,7 +14,7 @@
         </before>
         <test name="AssertTest">
             <createData entity="UniquePerson" stepKey="createData2"/>
-            <grabTextFrom returnVariable="text" selector=".copyright>span" stepKey="grabTextFrom1"/>
+            <grabTextFrom selector=".copyright>span" stepKey="grabTextFrom1"/>
             <!-- asserts without variable replacement -->
             <comment stepKey="c1" userInput="asserts without variable replacement"/>
             <assertArrayHasKey stepKey="assertArrayHasKey" expected="apple" expectedType="string" actual="['orange' => 2, 'apple' => 1]" actualType="const" message="pass"/>
