@@ -190,11 +190,11 @@ class OperationDefinitionObjectHandlerTest extends TestCase
         $property->setAccessible(true);
         $property->setValue(null);
 
-        $mockSectionParser = AspectMock::double(
+        $mockOperationParser = AspectMock::double(
             OperationDefinitionParser::class,
             ["readOperationMetadata" => $data]
         )->make();
-        $instance = AspectMock::double(ObjectManager::class, ['create' => $mockSectionParser])->make();
+        $instance = AspectMock::double(ObjectManager::class, ['create' => $mockOperationParser])->make();
         AspectMock::double(ObjectManagerFactory::class, ['getObjectManager' => $instance]);
     }
 }
