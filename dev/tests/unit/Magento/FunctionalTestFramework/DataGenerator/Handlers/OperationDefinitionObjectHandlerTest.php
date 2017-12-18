@@ -7,6 +7,7 @@
 namespace tests\unit\Magento\FunctionalTestFramework\DataGenerator\Handlers;
 
 use AspectMock\Test as AspectMock;
+use Magento\FunctionalTestingFramework\DataGenerator\Objects\OperationDefinitionObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\OperationElement;
 use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
@@ -21,64 +22,95 @@ class OperationDefinitionObjectHandlerTest extends TestCase
 {
     public function testGetAllObjects()
     {
+        // Define data variables
+        $testDataTypeName1 = "operationDataTypeName";
+        $testDataTypeName2 = "operationDataTypeName2";
+        $testAuth = "adminOAuth";
+        $testUrl = "V1/object";
+        $testOperationType = "create";
+        $testMethod = "POST";
+        $testSuccessRegex = "/messages-message-success/";
+        $testContentType = "application/json";
+        $testHeaderParam = "testParameter";
+        $testHeaderValue = "testHeader";
+        // Nested data variables
+        $nestedObjectKey = "object";
+        $nestedObjectType = "objectType";
+        $nestedEntryKey1 = "id";
+        $nestedEntryValue1 = "integer";
+        $nestedEntryKey2 = "name";
+        $nestedEntryValue2 = "string";
+        $nestedEntryRequired2 = "true";
+        $nestedEntryKey3 = "active";
+        $nestedEntryValue3 = "boolean";
+        // Two Level nested data variables
+        $objectArrayKey = "ObjectArray";
+        $twiceNestedObjectKey = "nestedObjectKey";
+        $twiceNestedObjectType = "nestedObjectType";
+        $twiceNestedEntryKey = "nestedFieldKey";
+        $twiceNestedEntryValue = "string";
+
         // Operation Metadata. BE CAREFUL WHEN EDITING, Objects defined below rely on values in this array.
-        $mockData = ["operation" => [
+
+        $mockData = [OperationDefinitionObjectHandler::ENTITY_OPERATION_ROOT_TAG => [
             "testOperationName" => [
-                "dataType" => "operationDataTypeName",
-                "type" => "create",
-                "auth" => "adminOauth",
-                "url" => "/V1/object/",
-                "method" => "POST",
-                "successRegex" => "/messages-message-success/",
-                "contentType" => [
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $testDataTypeName1,
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $testOperationType,
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH => $testAuth,
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_URL => $testUrl,
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_METHOD => $testMethod,
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_SUCCESS_REGEX => $testSuccessRegex,
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_CONTENT_TYPE => [
                     0 => [
-                        "value" => "application/json"
+                        "value" => $testContentType
                     ]
                 ],
-                "header" => [
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_HEADER => [
                     0 => [
-                        "param" => "testParameter",
-                        "value" => "testHeader"
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_HEADER_PARAM => $testHeaderParam,
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_HEADER_VALUE => $testHeaderValue,
                     ]
                 ],
-                "param" => [
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_URL_PARAM => [
                     0 => [
-                        "key" => "testUrlParamKey",
-                        "value" => "testUrlParamValue"
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_URL_PARAM_KEY => "testUrlParamKey",
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_URL_PARAM_VALUE => "testUrlParamValue"
                     ]
                 ],
-                "object" => [
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT => [
                     0 => [
-                        "key" => "object",
-                        "dataType" => "objectType",
-                        "field" => [
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT_KEY => $nestedObjectKey,
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $nestedObjectType,
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
                             0 => [
-                                "key" => "id",
-                                "value" => "integer"
+                                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => $nestedEntryKey1,
+                                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => $nestedEntryValue1
                             ],
                             1 => [
-                                "key" => "name",
-                                "value" => "string",
-                                "required" => "true"
+                                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => $nestedEntryKey2,
+                                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => $nestedEntryValue2,
+                                OperationDefinitionObjectHandler::ENTITY_OPERATION_REQUIRED => $nestedEntryRequired2
                             ],
                             2 => [
-                                "key" => "active",
-                                "value" => "boolean"
+                                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => $nestedEntryKey3,
+                                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => $nestedEntryValue3
                             ]
                         ]
                     ]
                 ],
-                "array" => [
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY => [
                     0 => [
-                        "key" => "ObjectArray",
-                        "object" => [
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT_KEY => $objectArrayKey,
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT => [
                             0 => [
-                                "key" => "nestedObjectKey",
-                                "dataType" => "nestedObjectType",
-                                "field" => [
+                                OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT_KEY => $twiceNestedObjectKey,
+                                OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $twiceNestedObjectType,
+                                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
                                     0 => [
-                                        "key" => "nestedFieldKey",
-                                        "value" => "string"
+                                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY =>
+                                            $twiceNestedEntryKey,
+                                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE =>
+                                            $twiceNestedEntryValue
                                     ]
                                 ]
                             ]
@@ -87,24 +119,24 @@ class OperationDefinitionObjectHandlerTest extends TestCase
                 ]
             ],
             "testOperationName2" => [
-                "dataType" => "operationDataTypeName2",
-                "type" => "create",
-                "field" => [
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $testDataTypeName2,
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $testOperationType,
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
                     0 => [
-                        "key" => "id",
-                        "value" => "integer"
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => "id",
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => "integer"
                     ],
                     1 => [
-                        "key" => "name",
-                        "value" => "string"
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => "name",
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => "string"
                     ]
                 ],
-                "array" => [
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY => [
                     0 => [
-                        "key" => "arrayKey",
-                        "value" => [
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_KEY => "arrayKey",
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_VALUE => [
                             0 => [
-                                "value" => "string"
+                                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => "string"
                             ]
                         ]
                     ]
@@ -113,33 +145,51 @@ class OperationDefinitionObjectHandlerTest extends TestCase
         ]];
 
         //prepare OperationElements to compare against.
-        $expectedNestedMetadata1 = new OperationElement("id", "integer", "field", false, [], null);
-        $expectedNestedMetadata2 = new OperationElement("name", "string", "field", true, [], null);
-        $expectedNestedMetadata3 = new OperationElement("active", "boolean", "field", false, [], null);
+        $field = OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY;
+
+        $expectedNestedMetadata1 = new OperationElement($nestedEntryKey1, $nestedEntryValue1, $field, false, [], null);
+        $expectedNestedMetadata2 = new OperationElement(
+            $nestedEntryKey2,
+            $nestedEntryValue2,
+            $field,
+            $nestedEntryRequired2,
+            [],
+            null
+        );
+        $expectedNestedMetadata3 = new OperationElement($nestedEntryKey3, $nestedEntryValue3, $field, false, [], null);
         $expectedOperation1 = new OperationElement(
-            "object",
-            "objectType",
-            "object",
+            $nestedObjectKey,
+            $nestedObjectType,
+            OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT,
             false,
             [],
             [0 => $expectedNestedMetadata1, 1 => $expectedNestedMetadata2, 2 =>$expectedNestedMetadata3]
         );
 
-        $twoLevelNestedMetadata = new OperationElement("nestedFieldKey", "string", "field", false, [], null);
+        $twoLevelNestedMetadata = new OperationElement(
+            $twiceNestedEntryKey,
+            $twiceNestedEntryValue,
+            OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY,
+            false,
+            [],
+            null
+        );
+
         $oneLevelNestedMetadata = new OperationElement(
-            "nestedObjectKey",
-            "nestedObjectType",
-            "object",
+            $twiceNestedObjectKey,
+            $twiceNestedObjectType,
+            OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT,
             false,
             [],
             [0 => $twoLevelNestedMetadata]
         );
+
         $expectedOperation2 = new OperationElement(
-            "ObjectArray",
-            "nestedObjectType",
-            "nestedObjectKey",
+            $objectArrayKey,
+            $twiceNestedObjectType,
+            $twiceNestedObjectKey,
             false,
-            ["nestedObjectKey" => $oneLevelNestedMetadata],
+            [$twiceNestedObjectKey => $oneLevelNestedMetadata],
             null
         );
 
@@ -149,25 +199,26 @@ class OperationDefinitionObjectHandlerTest extends TestCase
         // get Operations
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
         $operations = $operationDefinitionManager->getAllObjects();
-        $operationByName = $operationDefinitionManager->getOperationDefinition("create", "operationDataTypeName");
+        $operationByName = $operationDefinitionManager->getOperationDefinition($testOperationType, $testDataTypeName1);
 
         // perform asserts on $operations
         $this->assertCount(2, $operations);
-        $this->assertArrayHasKey("createoperationDataTypeName", $operations);
-        $this->assertArrayHasKey("createoperationDataTypeName2", $operations);
+        $this->assertArrayHasKey($testOperationType . $testDataTypeName1, $operations);
+        $this->assertArrayHasKey($testOperationType . $testDataTypeName2, $operations);
 
         // perform asserts on $createOperationByName
         $this->assertEquals(
-            [0 => 'testParameter: testHeader', 1 => "Content-Type: application/json"],
+            [0 => "{$testHeaderParam}: {$testHeaderValue}",
+                1 =>  OperationDefinitionObject::HTTP_CONTENT_TYPE_HEADER . ": {$testContentType}"],
             $operationByName->getHeaders()
         );
-        $this->assertEquals("create", $operationByName->getOperation());
-        $this->assertEquals("POST", $operationByName->getApiMethod());
-        $this->assertEquals("V1/object", $operationByName->getApiUrl());
-        $this->assertEquals("operationDataTypeName", $operationByName->getDataType());
-        $this->assertEquals("application/json", $operationByName->getContentType());
-        $this->assertEquals("adminOauth", $operationByName->getAuth());
-        $this->assertEquals("/messages-message-success/", $operationByName->getSuccessRegex());
+        $this->assertEquals($testOperationType, $operationByName->getOperation());
+        $this->assertEquals($testMethod, $operationByName->getApiMethod());
+        $this->assertEquals($testUrl, $operationByName->getApiUrl());
+        $this->assertEquals($testDataTypeName1, $operationByName->getDataType());
+        $this->assertEquals($testContentType, $operationByName->getContentType());
+        $this->assertEquals($testAuth, $operationByName->getAuth());
+        $this->assertEquals($testSuccessRegex, $operationByName->getSuccessRegex());
 
         // perform asserts on the instantiated metadata in the $createOperationByName
         $this->assertEquals($expectedOperation1, $operationByName->getOperationMetadata()[0]);
