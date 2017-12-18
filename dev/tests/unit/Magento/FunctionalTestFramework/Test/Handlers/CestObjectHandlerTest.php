@@ -8,7 +8,6 @@ namespace Tests\unit\Magento\FunctionalTestFramework\Test\Handlers;
 
 use AspectMock\Test as AspectMock;
 
-use Go\Aop\Aspect;
 use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Test\Handlers\CestObjectHandler;
@@ -72,33 +71,34 @@ class CestObjectHandlerTest extends TestCase
     public function testGetCestObject()
     {
         // set up mock data
-        $mockData = [CestObjectExtractor::CEST_ROOT => [
-            $this->testCestName => [
-                CestObjectExtractor::NAME => $this->testCestName,
-                CestObjectExtractor::CEST_BEFORE_HOOK => [
-                    $this->testActionBeforeName => [
-                        ActionObjectExtractor::NODE_NAME => $this->testActionType,
-                        ActionObjectExtractor::TEST_STEP_MERGE_KEY => $this->testActionBeforeName
-                    ]
-                ],
-                CestObjectExtractor::CEST_AFTER_HOOK => [
-                    $this->testActionAfterName => [
-                        ActionObjectExtractor::NODE_NAME => $this->testActionType,
-                        ActionObjectExtractor::TEST_STEP_MERGE_KEY => $this->testActionAfterName
-
-                    ]
-                ],
-                CestObjectExtractor::CEST_ANNOTATIONS => [
-                    'group' => [['value' => 'test']]
-                ],
-                $this->testTestName => [
-                    $this->testTestActionName => [
-                        ActionObjectExtractor::NODE_NAME => $this->testActionType,
-                        ActionObjectExtractor::TEST_STEP_MERGE_KEY => $this->testTestActionName
+        $mockData = [
+            CestObjectExtractor::CEST_ROOT => [
+                $this->testCestName => [
+                    CestObjectExtractor::NAME => $this->testCestName,
+                    CestObjectExtractor::CEST_BEFORE_HOOK => [
+                        $this->testActionBeforeName => [
+                            ActionObjectExtractor::NODE_NAME => $this->testActionType,
+                            ActionObjectExtractor::TEST_STEP_MERGE_KEY => $this->testActionBeforeName
+                        ]
                     ],
+                    CestObjectExtractor::CEST_AFTER_HOOK => [
+                        $this->testActionAfterName => [
+                            ActionObjectExtractor::NODE_NAME => $this->testActionType,
+                            ActionObjectExtractor::TEST_STEP_MERGE_KEY => $this->testActionAfterName
+
+                        ]
+                    ],
+                    CestObjectExtractor::CEST_ANNOTATIONS => [
+                        'group' => [['value' => 'test']]
+                    ],
+                    $this->testTestName => [
+                        $this->testTestActionName => [
+                            ActionObjectExtractor::NODE_NAME => $this->testActionType,
+                            ActionObjectExtractor::TEST_STEP_MERGE_KEY => $this->testTestActionName
+                        ],
+                    ]
                 ]
             ]
-        ]
         ];
 
         $this->setMockParserOutput($mockData);
@@ -149,38 +149,40 @@ class CestObjectHandlerTest extends TestCase
     public function testGetCestsByGroup()
     {
         // set up mock data
-        $mockData = [CestObjectExtractor::CEST_ROOT => [
-            $this->testCestName => [
-                CestObjectExtractor::NAME => $this->testCestName,
-                CestObjectExtractor::CEST_ANNOTATIONS => [
-                    'group' => [['value' => 'test']]
-                ],
-                $this->testTestName => [
-                    $this->testTestActionName => [
-                        ActionObjectExtractor::NODE_NAME => $this->testActionType,
-                        ActionObjectExtractor::TEST_STEP_MERGE_KEY => $this->testTestActionName
-                    ],
-                ]
-            ],
-            $this->testCestName . '2' => [
-                CestObjectExtractor::NAME => $this->testCestName . '2',
-                $this->testTestName . 'Include' => [
-                    TestObjectExtractor::TEST_ANNOTATIONS => [
+        $mockData = [
+            CestObjectExtractor::CEST_ROOT => [
+                $this->testCestName => [
+                    CestObjectExtractor::NAME => $this->testCestName,
+                    CestObjectExtractor::CEST_ANNOTATIONS => [
                         'group' => [['value' => 'test']]
                     ],
-                    $this->testTestActionName => [
-                        ActionObjectExtractor::NODE_NAME => $this->testActionType,
-                        ActionObjectExtractor::TEST_STEP_MERGE_KEY => $this->testTestActionName
-                    ],
+                    $this->testTestName => [
+                        $this->testTestActionName => [
+                            ActionObjectExtractor::NODE_NAME => $this->testActionType,
+                            ActionObjectExtractor::TEST_STEP_MERGE_KEY => $this->testTestActionName
+                        ],
+                    ]
                 ],
-                $this->testTestName . 'Exclude' => [
-                    $this->testTestActionName => [
-                        ActionObjectExtractor::NODE_NAME => $this->testActionType,
-                        ActionObjectExtractor::TEST_STEP_MERGE_KEY => $this->testTestActionName
+                $this->testCestName . '2' => [
+                    CestObjectExtractor::NAME => $this->testCestName . '2',
+                    $this->testTestName . 'Include' => [
+                        TestObjectExtractor::TEST_ANNOTATIONS => [
+                            'group' => [['value' => 'test']]
+                        ],
+                        $this->testTestActionName => [
+                            ActionObjectExtractor::NODE_NAME => $this->testActionType,
+                            ActionObjectExtractor::TEST_STEP_MERGE_KEY => $this->testTestActionName
+                        ],
                     ],
+                    $this->testTestName . 'Exclude' => [
+                        $this->testTestActionName => [
+                            ActionObjectExtractor::NODE_NAME => $this->testActionType,
+                            ActionObjectExtractor::TEST_STEP_MERGE_KEY => $this->testTestActionName
+                        ],
+                    ]
                 ]
             ]
-        ]];
+        ];
 
         $this->setMockParserOutput($mockData);
 
