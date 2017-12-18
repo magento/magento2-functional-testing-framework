@@ -1,6 +1,23 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+1.1.0
+-----
+
+### Added
+* Added the `CUSTOM_MODULE_PATHS` env variable. This can be used to target paths, such as extensions, that are outside of the Magento directory for test generation.
+
+### Changed
+* The `waitForPageLoad` action will no longer close admin notification modals. These notifications can be closed with the `closeAdminNotification` action.
+
+### Removed
+* Removed the `returnVariable` attribute from all actions. Instead, the variable name will be the same as the `stepKey` for the action that it originated from.
+* Removed the `variable` attribute from all actions. Variables can now be referenced via the php style syntax `{$stepKeyHere}`
+
+### Fixed
+* Fixed a crash that could occur if a system level variable collided names with the .env file.
+* Fixed incorrect generation of the `unselectOption` when a `parameterArray` attribute is used.
+
 1.0.0
 ------
 
