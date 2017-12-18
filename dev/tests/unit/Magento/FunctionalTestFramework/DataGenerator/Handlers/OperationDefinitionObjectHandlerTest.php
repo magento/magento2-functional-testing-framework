@@ -20,21 +20,73 @@ use PHPUnit\Framework\TestCase;
  */
 class OperationDefinitionObjectHandlerTest extends TestCase
 {
-    public function testGetAllObjects()
+    public function testGetMultipleObjects()
     {
-        // Define data variables
-        $testDataTypeName1 = "operationDataTypeName";
-        $testDataTypeName2 = "operationDataTypeName2";
-        $testAuth = "adminOAuth";
-        $testUrl = "V1/object";
+        // Data Variables for Assertions
+        $dataType1 = "type1";
+        $operationType1 = "create";
+        $operationType2 = "update";
+
+        /**
+         * Parser Output. Just two simple pieces of metadata with 1 field each
+         * operationName
+         *      createType1
+         *          has field
+         *              key=id, value=integer
+         *      updateType1
+         *          has field
+         *              key=id, value=integer
+         */
+        $mockData = [OperationDefinitionObjectHandler::ENTITY_OPERATION_ROOT_TAG => [
+            "testOperationName" => [
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $dataType1,
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $operationType1,
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH => "auth",
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_URL => "V1/Type1",
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_METHOD => "POST",
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
+                    0 => [
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => "id",
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => "integer"
+                    ],
+                    ]
+                ],[
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $dataType1,
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $operationType2,
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH => "auth",
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_URL => "V1/Type1/{id}",
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_METHOD => "PUT",
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
+                    0 => [
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => "id",
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => "integer"
+                    ],
+                ]
+            ]]];
+        $this->setMockParserOutput($mockData);
+
+        //Perform Assertions
+        $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
+        $operations = $operationDefinitionManager->getAllObjects();
+        $this->assertArrayHasKey($operationType1 . $dataType1, $operations);
+        $this->assertArrayHasKey($operationType2 . $dataType1, $operations);
+
+    }
+
+    public function testObjectCreation()
+    {
+        // Data Variables for Assertions
+        $testDataTypeName1 = "type1";
+        $testAuth = "auth";
+        $testUrl = "V1/dataType";
         $testOperationType = "create";
         $testMethod = "POST";
         $testSuccessRegex = "/messages-message-success/";
         $testContentType = "application/json";
         $testHeaderParam = "testParameter";
         $testHeaderValue = "testHeader";
-        // Nested data variables
-        $nestedObjectKey = "object";
+        // Nested Object variables
+        $nestedObjectKey = "objectKey";
         $nestedObjectType = "objectType";
         $nestedEntryKey1 = "id";
         $nestedEntryValue1 = "integer";
@@ -43,15 +95,23 @@ class OperationDefinitionObjectHandlerTest extends TestCase
         $nestedEntryRequired2 = "true";
         $nestedEntryKey3 = "active";
         $nestedEntryValue3 = "boolean";
-        // Two Level nested data variables
-        $objectArrayKey = "ObjectArray";
-        $twiceNestedObjectKey = "nestedObjectKey";
-        $twiceNestedObjectType = "nestedObjectType";
-        $twiceNestedEntryKey = "nestedFieldKey";
-        $twiceNestedEntryValue = "string";
 
-        // Operation Metadata. BE CAREFUL WHEN EDITING, Objects defined below rely on values in this array.
-
+        /**
+         * Complex Object
+         *  testOperation
+         *      createType1
+         *          has contentType
+         *          has headers
+         *          has URL
+         *          has successRegex
+         *          has nested object
+         *              key nestedKey type nestedType
+         *              has 3 fields
+         *                  key id, value integer
+         *                  key name, value string, required TRUE
+         *                  key active, value boolean
+         *
+         */
         $mockData = [OperationDefinitionObjectHandler::ENTITY_OPERATION_ROOT_TAG => [
             "testOperationName" => [
                 OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $testDataTypeName1,
@@ -98,6 +158,79 @@ class OperationDefinitionObjectHandlerTest extends TestCase
                         ]
                     ]
                 ],
+            ]]];
+        // Prepare objects to compare against
+        $field = OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY;
+        $expectedNestedField = new OperationElement($nestedEntryKey1, $nestedEntryValue1, $field, false, [], null);
+        $expectedNestedField2 = new OperationElement(
+            $nestedEntryKey2,
+            $nestedEntryValue2,
+            $field,
+            $nestedEntryRequired2,
+            [],
+            null
+        );
+        $expectedNestedField3 = new OperationElement($nestedEntryKey3, $nestedEntryValue3, $field, false, [], null);
+        $expectedOperation = new OperationElement(
+            $nestedObjectKey,
+            $nestedObjectType,
+            OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT,
+            false,
+            [],
+            [0 => $expectedNestedField, 1 => $expectedNestedField2, 2 =>$expectedNestedField3]
+        );
+
+        // Set up mocked data output
+        $this->setMockParserOutput($mockData);
+
+        // Get Operation
+        $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
+        $operation = $operationDefinitionManager->getOperationDefinition($testOperationType, $testDataTypeName1);
+
+        // Perform Asserts
+        $this->assertEquals(
+            [0 => "{$testHeaderParam}: {$testHeaderValue}",
+                1 =>  OperationDefinitionObject::HTTP_CONTENT_TYPE_HEADER . ": {$testContentType}"],
+            $operation->getHeaders()
+        );
+        $this->assertEquals($testOperationType, $operation->getOperation());
+        $this->assertEquals($testMethod, $operation->getApiMethod());
+        $this->assertEquals($testUrl, $operation->getApiUrl());
+        $this->assertEquals($testDataTypeName1, $operation->getDataType());
+        $this->assertEquals($testContentType, $operation->getContentType());
+        $this->assertEquals($testAuth, $operation->getAuth());
+        $this->assertEquals($testSuccessRegex, $operation->getSuccessRegex());
+
+        // perform asserts on the instantiated metadata in the $createOperationByName
+        $this->assertEquals($expectedOperation, $operation->getOperationMetadata()[0]);
+    }
+
+    public function testObjectArrayCreation()
+    {
+        // Data Variables for Assertions
+        $dataType1 = "type1";
+        $operationType1 = "create";
+        $objectArrayKey = "ObjectArray";
+        $twiceNestedObjectKey = "nestedObjectKey";
+        $twiceNestedObjectType = "nestedObjectType";
+        $twiceNestedEntryKey = "nestedFieldKey";
+        $twiceNestedEntryValue = "string";
+        // Parser Output
+        /**
+         * Metadata with nested array of objects, with a single field
+         *  OperationName
+         *      createType1
+         *          has array with key ObjectArray
+         *              objects with key = nestedObjectKey, type = nestedObjectType
+         *                  has field with key = nestedFieldKey, value = string
+         */
+        $mockData = [OperationDefinitionObjectHandler::ENTITY_OPERATION_ROOT_TAG => [
+            "testOperationName" => [
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $dataType1,
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $operationType1,
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH => "auth",
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_URL => "V1/Type1",
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_METHOD => "POST",
                 OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY => [
                     0 => [
                         OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT_KEY => $objectArrayKey,
@@ -116,56 +249,8 @@ class OperationDefinitionObjectHandlerTest extends TestCase
                             ]
                         ]
                     ]
-                ]
-            ],
-            "testOperationName2" => [
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $testDataTypeName2,
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $testOperationType,
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
-                    0 => [
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => "id",
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => "integer"
-                    ],
-                    1 => [
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => "name",
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => "string"
-                    ]
-                ],
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY => [
-                    0 => [
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_KEY => "arrayKey",
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_VALUE => [
-                            0 => [
-                                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => "string"
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ]];
-
-        //prepare OperationElements to compare against.
-        $field = OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY;
-
-        $expectedNestedMetadata1 = new OperationElement($nestedEntryKey1, $nestedEntryValue1, $field, false, [], null);
-        $expectedNestedMetadata2 = new OperationElement(
-            $nestedEntryKey2,
-            $nestedEntryValue2,
-            $field,
-            $nestedEntryRequired2,
-            [],
-            null
-        );
-        $expectedNestedMetadata3 = new OperationElement($nestedEntryKey3, $nestedEntryValue3, $field, false, [], null);
-        $expectedOperation1 = new OperationElement(
-            $nestedObjectKey,
-            $nestedObjectType,
-            OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT,
-            false,
-            [],
-            [0 => $expectedNestedMetadata1, 1 => $expectedNestedMetadata2, 2 =>$expectedNestedMetadata3]
-        );
-
+                ]]]];
+        // Prepare Objects to compare against
         $twoLevelNestedMetadata = new OperationElement(
             $twiceNestedEntryKey,
             $twiceNestedEntryValue,
@@ -184,7 +269,7 @@ class OperationDefinitionObjectHandlerTest extends TestCase
             [0 => $twoLevelNestedMetadata]
         );
 
-        $expectedOperation2 = new OperationElement(
+        $expectedOperation = new OperationElement(
             $objectArrayKey,
             $twiceNestedObjectType,
             $twiceNestedObjectKey,
@@ -196,34 +281,81 @@ class OperationDefinitionObjectHandlerTest extends TestCase
         // Set up mocked data output
         $this->setMockParserOutput($mockData);
 
+        // Get Operation
+        $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
+        $operation = $operationDefinitionManager->getOperationDefinition($operationType1, $dataType1);
+        // Make Assertions
+
+        $this->assertEquals($expectedOperation, $operation->getOperationMetadata()[0]);
+    }
+
+    public function testLooseJsonCreation()
+    {
+        // Data Variables for Assertions
+        $dataType = "dataType";
+        $operationType = "create";
+        $entryKey = "id";
+        $entryValue = "integer";
+        $arrayKey = "arrayKey";
+        $arrayValue = "string";
+        /**
+         * Operation with no objects, just an entry and an array of strings
+         *  testOperationName
+         *      createDataType
+         *          has entry key = id, value = integer
+         *          has array key = arrayKey
+         *              fields of value = string
+         */
+        $mockData = [OperationDefinitionObjectHandler::ENTITY_OPERATION_ROOT_TAG => [
+            "testOperationName" => [
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $dataType,
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $operationType,
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
+                    0 => [
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => $entryKey,
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => $entryValue
+                    ]
+                ],
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY => [
+                    0 => [
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_KEY => $arrayKey,
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_VALUE => [
+                            0 => [
+                                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => $arrayValue
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]];
+        // Prepare Objects to assert against
+        $entry = new OperationElement(
+            $entryKey,
+            $entryValue,
+            OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY,
+            false,
+            [],
+            null
+        );
+        $array = new OperationElement(
+            $arrayKey,
+            $arrayValue,
+            OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY,
+            false,
+            [],
+            null
+        );
+
+        // Set up mocked data output
+        $this->setMockParserOutput($mockData);
+
         // get Operations
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
-        $operations = $operationDefinitionManager->getAllObjects();
-        $operationByName = $operationDefinitionManager->getOperationDefinition($testOperationType, $testDataTypeName1);
+        $operation = $operationDefinitionManager->getOperationDefinition($operationType, $dataType);
 
-        // perform asserts on $operations
-        $this->assertCount(2, $operations);
-        $this->assertArrayHasKey($testOperationType . $testDataTypeName1, $operations);
-        $this->assertArrayHasKey($testOperationType . $testDataTypeName2, $operations);
-
-        // perform asserts on $createOperationByName
-        $this->assertEquals(
-            [0 => "{$testHeaderParam}: {$testHeaderValue}",
-                1 =>  OperationDefinitionObject::HTTP_CONTENT_TYPE_HEADER . ": {$testContentType}"],
-            $operationByName->getHeaders()
-        );
-        $this->assertEquals($testOperationType, $operationByName->getOperation());
-        $this->assertEquals($testMethod, $operationByName->getApiMethod());
-        $this->assertEquals($testUrl, $operationByName->getApiUrl());
-        $this->assertEquals($testDataTypeName1, $operationByName->getDataType());
-        $this->assertEquals($testContentType, $operationByName->getContentType());
-        $this->assertEquals($testAuth, $operationByName->getAuth());
-        $this->assertEquals($testSuccessRegex, $operationByName->getSuccessRegex());
-
-        // perform asserts on the instantiated metadata in the $createOperationByName
-        $this->assertEquals($expectedOperation1, $operationByName->getOperationMetadata()[0]);
-        $this->assertEquals($expectedOperation2, $operationByName->getOperationMetadata()[1]);
-
+        // Perform Assertions
+        $this->assertEquals($entry, $operation->getOperationMetadata()[0]);
+        $this->assertEquals($array, $operation->getOperationMetadata()[1]);
     }
 
     /**
@@ -233,7 +365,7 @@ class OperationDefinitionObjectHandlerTest extends TestCase
      */
     private function setMockParserOutput($data)
     {
-        // clear section object handler value to inject parsed content
+        // clear Operation object handler value to inject parsed content
         $property = new \ReflectionProperty(
             OperationDefinitionObjectHandler::class,
             'DATA_DEFINITION_OBJECT_HANDLER'
