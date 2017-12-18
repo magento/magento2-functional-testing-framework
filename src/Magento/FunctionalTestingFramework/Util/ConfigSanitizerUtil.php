@@ -21,7 +21,7 @@ class ConfigSanitizerUtil
     {
         self::validateConfigBasedVars($config);
 
-        if (array_key_exists('url', array_flip($params))) {
+        if (in_array('url', $params)) {
             $config['url'] = self::sanitizeUrl($config['url']);
         }
 
