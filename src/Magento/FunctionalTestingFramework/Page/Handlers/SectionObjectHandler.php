@@ -12,109 +12,54 @@ use Magento\FunctionalTestingFramework\Page\Objects\ElementObject;
 use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
 use Magento\FunctionalTestingFramework\XmlParser\SectionParser;
 
-/**
- * Class SectionObjectHandler
- */
 class SectionObjectHandler implements ObjectHandlerInterface
 {
-    const TYPE = 'section';
-    const SUB_TYPE = 'element';
-    const ELEMENT_TYPE_ATTR = 'type';
-    const ELEMENT_SELECTOR_ATTR = 'selector';
-    const ELEMENT_LOCATOR_FUNC_ATTR = 'locatorFunction';
-    const ELEMENT_TIMEOUT_ATTR = 'timeout';
-    const ELEMENT_PARAMETERIZED = 'parameterized';
+    const SECTION = 'section';
+    const ELEMENT = 'element';
+    const TYPE = 'type';
+    const SELECTOR = 'selector';
+    const LOCATOR_FUNCTION = 'locatorFunction';
+    const TIMEOUT = 'timeout';
+    const PARAMETERIZED = 'parameterized';
 
     /**
-     * Singleton variable instance of class
+     * Singleton instance of this class
      *
      * @var SectionObjectHandler
      */
-    private static $SECTION_DATA_PROCESSOR;
+    private static $INSTANCE;
 
     /**
-     * Array containing all Section Objects
+     * All section objects. Set during initialize().
      *
-     * @var array
+     * @var SectionObject[]
      */
-    private $sectionData = [];
+    private $sectionObjects = [];
 
     /**
-     * Singleton method to return SectionArrayProcesor.
+     * Constructor
      *
-     * @return SectionObjectHandler
-     */
-    public static function getInstance()
-    {
-        if (! self::$SECTION_DATA_PROCESSOR) {
-            self::$SECTION_DATA_PROCESSOR = new SectionObjectHandler();
-            self::$SECTION_DATA_PROCESSOR->initSectionObjects();
-        }
-
-        return self::$SECTION_DATA_PROCESSOR;
-    }
-
-    /**
-     * SectionObjectHandler constructor.
      * @constructor
      */
     private function __construct()
     {
-        // private constructor
-    }
-
-    /**
-     * Returns the corresponding section array parsed from xml.
-     *
-     * @param string $sectionName
-     * @return SectionObject | null
-     */
-    public function getObject($sectionName)
-    {
-        if (array_key_exists($sectionName, $this->getAllObjects())) {
-            return $this->getAllObjects()[$sectionName];
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns all section arrays parsed from section xml.
-     *
-     * @return array
-     */
-    public function getAllObjects()
-    {
-        return $this->sectionData;
-    }
-
-    /**
-     * Parse section objects if it's not previously done.
-     *
-     * @return void
-     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
-     */
-    private function initSectionObjects()
-    {
         $objectManager = ObjectManagerFactory::getObjectManager();
-        /** @var $parser \Magento\FunctionalTestingFramework\XmlParser\SectionParser */
         $parser = $objectManager->get(SectionParser::class);
-        $parsedObjs = $parser->getData(self::TYPE);
+        $parserOutput = $parser->getData(self::SECTION);
 
-        if (!$parsedObjs) {
-            // No *Section.xml files found so give up
+        if (!$parserOutput) {
             return;
         }
 
-        foreach ($parsedObjs as $sectionName => $sectionData) {
-            // create elements
+        foreach ($parserOutput as $sectionName => $sectionData) {
             $elements = [];
-            foreach ($sectionData[SectionObjectHandler::SUB_TYPE] as $elementName => $elementData) {
-                $elementType = $elementData[SectionObjectHandler::ELEMENT_TYPE_ATTR];
-                $elementSelector = $elementData[SectionObjectHandler::ELEMENT_SELECTOR_ATTR] ?? null;
-                $elementLocatorFunc = $elementData[SectionObjectHandler::ELEMENT_LOCATOR_FUNC_ATTR] ?? null;
-                $elementTimeout = $elementData[SectionObjectHandler::ELEMENT_TIMEOUT_ATTR] ?? null;
-                $elementParameterized = $elementData[SectionObjectHandler::ELEMENT_PARAMETERIZED] ?? false;
+
+            foreach ($sectionData[SectionObjectHandler::ELEMENT] as $elementName => $elementData) {
+                $elementType = $elementData[SectionObjectHandler::TYPE];
+                $elementSelector = $elementData[SectionObjectHandler::SELECTOR] ?? null;
+                $elementLocatorFunc = $elementData[SectionObjectHandler::LOCATOR_FUNCTION] ?? null;
+                $elementTimeout = $elementData[SectionObjectHandler::TIMEOUT] ?? null;
+                $elementParameterized = $elementData[SectionObjectHandler::PARAMETERIZED] ?? false;
 
                 $elements[$elementName] = new ElementObject(
                     $elementName,
@@ -126,7 +71,46 @@ class SectionObjectHandler implements ObjectHandlerInterface
                 );
             }
 
-            $this->sectionData[$sectionName] = new SectionObject($sectionName, $elements);
+            $this->sectionObjects[$sectionName] = new SectionObject($sectionName, $elements);
         }
+    }
+
+    /**
+     * Initialize and/or return the singleton instance of this class
+     *
+     * @return SectionObjectHandler
+     */
+    public static function getInstance()
+    {
+        if (!self::$INSTANCE) {
+            self::$INSTANCE = new SectionObjectHandler();
+        }
+
+        return self::$INSTANCE;
+    }
+
+    /**
+     * Get a SectionObject by name
+     *
+     * @param string $name The section name
+     * @return SectionObject | null
+     */
+    public function getObject($name)
+    {
+        if (array_key_exists($name, $this->getAllObjects())) {
+            return $this->getAllObjects()[$name];
+        }
+
+        return null;
+    }
+
+    /**
+     * Get all SectionObjects
+     *
+     * @return SectionObject[]
+     */
+    public function getAllObjects()
+    {
+        return $this->sectionObjects;
     }
 }
