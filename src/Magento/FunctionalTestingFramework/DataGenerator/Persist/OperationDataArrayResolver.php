@@ -184,7 +184,7 @@ class OperationDataArrayResolver
 
         if ($elementData == null && $entityObject->getVarReference($operationKey) != null) {
             list($type, $field) = explode(
-                DataObjectHandler::VAR_ENTITY_FIELD_SEPARATOR,
+                DataObjectHandler::_SEPARATOR,
                 $entityObject->getVarReference($operationKey)
             );
 
