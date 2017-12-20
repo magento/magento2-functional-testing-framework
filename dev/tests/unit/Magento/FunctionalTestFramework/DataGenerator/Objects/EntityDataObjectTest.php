@@ -41,7 +41,6 @@ class EntityDataObjectTest extends TestCase
         // Perform Asserts
         $this->assertEquals("name", $dataObject->getName());
         $this->assertEquals("type", $dataObject->getType());
-        $this->assertEquals($data, $dataObject->getData());
     }
 
     public function testGetDataByName()
@@ -107,7 +106,6 @@ class EntityDataObjectTest extends TestCase
         $entities = ["linkedEntity1" => "linkedEntityType", "linkedEntity2" => "otherEntityType"];
         $dataObject = new EntityDataObject("name", "type", $data, $entities, null, null);
         // Perform Asserts
-        $this->assertCount(2, $dataObject->getLinkedEntities());
         $this->assertEquals("linkedEntity1", $dataObject->getLinkedEntitiesOfType("linkedEntityType")[0]);
         $this->assertEquals("linkedEntity2", $dataObject->getLinkedEntitiesOfType("otherEntityType")[0]);
     }
