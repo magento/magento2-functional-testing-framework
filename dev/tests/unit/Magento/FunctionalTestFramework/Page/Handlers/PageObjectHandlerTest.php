@@ -57,7 +57,7 @@ class PageObjectHandlerTest extends TestCase
     private function setMockParserOutput($data)
     {
         // clear section object handler value to inject parsed content
-        $property = new \ReflectionProperty(PageObjectHandler::class, 'PAGE_DATA_PROCESSOR');
+        $property = new \ReflectionProperty(PageObjectHandler::class, 'INSTANCE');
         $property->setAccessible(true);
         $property->setValue(null);
 
