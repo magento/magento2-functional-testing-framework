@@ -813,6 +813,7 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input, $parameterArray);
                     break;
                 case "selectOption":
+                case "unselectOption":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input, $parameterArray);
                     break;
                 case "submitForm":
@@ -934,7 +935,6 @@ class TestGenerator
                 case "loadSessionSnapshot":
                 case "seeInField":
                 case "seeOptionIsSelected":
-                case "unselectOption":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input);
                     break;
                 case "seeNumberOfElements":

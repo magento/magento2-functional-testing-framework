@@ -20,6 +20,14 @@
             <searchAndMultiSelectOption selector="#selector" parameterArray="['someKey' => {{simpleParamData.name}}]" stepKey="literalKeyToStatic"/>
             <searchAndMultiSelectOption selector="#selector" parameterArray="['someKey' => {{simpleParamData.uniqueNamePre}}]" stepKey="literalKeyToPrefixUnique"/>
             <searchAndMultiSelectOption selector="#selector" parameterArray="['someKey' => {{simpleParamData.uniqueNamePost}}]" stepKey="literalKeyToSuffixUnique"/>
+
+            <unselectOption selector="#selector" parameterArray="['foo']" stepKey="000"/>
+            <unselectOption selector="#selector" parameterArray="['foo','bar']" stepKey="001"/>
+            <unselectOption selector="#selector" parameterArray="[{{simpleParamData.name}}]" stepKey="002"/>
+            <unselectOption selector="#selector" parameterArray="[{{simpleParamData.uniqueNamePre}}]" stepKey="003"/>
+            <unselectOption selector="#selector" parameterArray="[{{simpleParamData.uniqueNamePost}}]" stepKey="004"/>
+            <unselectOption selector="#selector" parameterArray="[$simpleDataKey.name$]" stepKey="005"/>
+            <unselectOption selector="#selector" parameterArray="[{{simpleParamData.name}}, $simpleDataKey.name$]" stepKey="006"/>
         </test>
     </cest>
 </config>
