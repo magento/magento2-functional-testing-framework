@@ -11,7 +11,6 @@ use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
 use Magento\FunctionalTestingFramework\XmlParser\SectionParser;
-use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
 use PHPUnit\Framework\TestCase;
 
 class SectionObjectHandlerTest extends TestCase
@@ -35,7 +34,9 @@ class SectionObjectHandlerTest extends TestCase
                         "selector" => "#element"
                     ]
                 ]
-            ]];
+            ]
+        ];
+
         $this->setMockParserOutput($mockData);
 
         // get sections
@@ -52,20 +53,19 @@ class SectionObjectHandlerTest extends TestCase
     }
 
     /**
-     * Function used to set mock for parser return and force init method to run between tests.
+     * Set the mock parser return value
      *
      * @param array $data
      */
     private function setMockParserOutput($data)
     {
         // clear section object handler value to inject parsed content
-        $property = new \ReflectionProperty(SectionObjectHandler::class, 'SECTION_DATA_PROCESSOR');
+        $property = new \ReflectionProperty(SectionObjectHandler::class, "INSTANCE");
         $property->setAccessible(true);
         $property->setValue(null);
 
         $mockSectionParser = AspectMock::double(SectionParser::class, ["getData" => $data])->make();
-        $instance = AspectMock::double(ObjectManager::class, ['get' => $mockSectionParser])->make();
-        AspectMock::double(ObjectManagerFactory::class, ['getObjectManager' => $instance]);
-
+        $instance = AspectMock::double(ObjectManager::class, ["get" => $mockSectionParser])->make();
+        AspectMock::double(ObjectManagerFactory::class, ["getObjectManager" => $instance]);
     }
 }
