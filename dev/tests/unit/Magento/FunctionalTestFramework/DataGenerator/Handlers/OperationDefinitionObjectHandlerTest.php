@@ -368,7 +368,7 @@ class OperationDefinitionObjectHandlerTest extends TestCase
         // clear Operation object handler value to inject parsed content
         $property = new \ReflectionProperty(
             OperationDefinitionObjectHandler::class,
-            'DATA_DEFINITION_OBJECT_HANDLER'
+            'INSTANCE'
         );
         $property->setAccessible(true);
         $property->setValue(null);

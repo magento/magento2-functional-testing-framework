@@ -3,6 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magento\FunctionalTestingFramework\DataGenerator\Handlers;
 
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\OperationDefinitionObject;
@@ -42,73 +43,72 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
     const ENTITY_OPERATION_REQUIRED = 'required';
 
     /**
-     * Singleton Instance of class
+     * The singleton instance of this class
      *
      * @var OperationDefinitionObjectHandler
      */
-    private static $DATA_DEFINITION_OBJECT_HANDLER;
+    private static $INSTANCE;
 
     /**
-     * Array containing all Data Definition Objects
+     * An array containing all <operation>
      *
-     * @var array
+     * @var OperationDefinitionObject[]
      */
-    private $operationDefinitions = [];
+    private $operationDefinitionObjects = [];
 
     /**
-     * Object used to extract dataObjects from array into DataElements
+     * A helper used to convert the primitive array parser output into objects.
      *
      * @var OperationElementExtractor
      */
-    private $dataDefExtractor;
+    private $operationElementExtractor;
 
     /**
-     * Singleton method to return DataDefinitionProcessor.
+     * The constructor
+     */
+    private function __construct()
+    {
+        $this->operationElementExtractor = new OperationElementExtractor();
+    }
+
+    /**
+     * Return the singleton instance of this class
      *
      * @return OperationDefinitionObjectHandler
      */
     public static function getInstance()
     {
-        if (!self::$DATA_DEFINITION_OBJECT_HANDLER) {
-            self::$DATA_DEFINITION_OBJECT_HANDLER = new OperationDefinitionObjectHandler();
-            self::$DATA_DEFINITION_OBJECT_HANDLER->initDataDefinitions();
+        if (!self::$INSTANCE) {
+            self::$INSTANCE = new OperationDefinitionObjectHandler();
+            self::$INSTANCE->initialize();
         }
 
-        return self::$DATA_DEFINITION_OBJECT_HANDLER;
+        return self::$INSTANCE;
     }
 
     /**
-     * Returns a OperationDefinitionObject object based on name
+     * Return an <operation> by the "name" attribute
      *
-     * @param string $operationDefinitionName
+     * @param string $name
      * @return OperationDefinitionObject
      */
-    public function getObject($operationDefinitionName)
+    public function getObject($name)
     {
-        return $this->operationDefinitions[$operationDefinitionName];
+        return $this->getAllObjects()[$name];
     }
 
     /**
-     * Returns all data Definition objects
+     * Return all <operation>
      *
-     * @return array
+     * @return OperationDefinitionObject[]
      */
     public function getAllObjects()
     {
-        return $this->operationDefinitions;
+        return $this->operationDefinitionObjects;
     }
 
     /**
-     * DataDefintionArrayProcessor constructor.
-     */
-    private function __construct()
-    {
-        $this->dataDefExtractor = new OperationElementExtractor();
-    }
-
-    /**
-     * This method takes an operation such as create and a data type such as 'customer' and returns the corresponding
-     * data definition defined in metadata.xml
+     * Return an <operation> by operation and type. Eg. "create" and "address"
      *
      * @param string $operation
      * @param string $dataType
@@ -120,20 +120,22 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
     }
 
     /**
-     * This method reads all dataDefinitions from metadata xml into memory.
+     * Read metadata xml via the Magento parser and then convert the primitive array output
+     * into an array of objects.
+     *
      * @return void
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    private function initDataDefinitions()
+    private function initialize()
     {
         //TODO: Reduce CyclomaticComplexity/NPathComplexity/Length of method, remove warning suppression.
         $objectManager = ObjectManagerFactory::getObjectManager();
-        $metadataParser = $objectManager->create(OperationDefinitionParser::class);
-        foreach ($metadataParser->readOperationMetadata()
-                 [OperationDefinitionObjectHandler::ENTITY_OPERATION_ROOT_TAG] as $dataDefName => $opDefArray) {
+        $parser = $objectManager->create(OperationDefinitionParser::class);
+        $parserOutput = $parser->readOperationMetadata()[OperationDefinitionObjectHandler::ENTITY_OPERATION_ROOT_TAG];
+        foreach ($parserOutput as $dataDefName => $opDefArray) {
             $operation = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE];
             $dataType = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE];
             $url = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_URL] ?? null;
@@ -168,7 +170,7 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
             // extract relevant OperationObjects as OperationElements
             if (array_key_exists(OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT, $opDefArray)) {
                 foreach ($opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT] as $opElementArray) {
-                    $operationElements[] = $this->dataDefExtractor->extractOperationElement($opElementArray);
+                    $operationElements[] = $this->operationElementExtractor->extractOperationElement($opElementArray);
                 }
             }
 
@@ -195,7 +197,7 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
                         OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT,
                         $operationField
                     )) {
-                        $nestedDataElement = $this->dataDefExtractor->extractOperationElement(
+                        $nestedDataElement = $this->operationElementExtractor->extractOperationElement(
                             $operationField[OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT][0]
                         );
                         $subOperationElements[$nestedDataElement->getKey()] = $nestedDataElement;
@@ -217,7 +219,7 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
                 }
             }
 
-            $this->operationDefinitions[$operation . $dataType] = new OperationDefinitionObject(
+            $this->operationDefinitionObjects[$operation . $dataType] = new OperationDefinitionObject(
                 $dataDefName,
                 $operation,
                 $dataType,
