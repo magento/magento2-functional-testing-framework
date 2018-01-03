@@ -10,3 +10,4 @@ src/Magento/FunctionalTestingFramework/Group/*.php
 build/*
 clover.xml
 coverage/
+.vscode
