@@ -11,104 +11,87 @@ use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
 use Magento\FunctionalTestingFramework\XmlParser\PageParser;
 
-/**
- * Class PageObjectHandler
- */
 class PageObjectHandler implements ObjectHandlerInterface
 {
-    const TYPE = 'page';
-    const SUB_TYPE = 'section';
+    const PAGE = 'page';
+    const SECTION = 'section';
     const URL = 'url';
     const MODULE = 'module';
     const PARAMETERIZED = 'parameterized';
 
     /**
-     * Singleton class variable instance
+     * The singleton instance of this class
      *
      * @var PageObjectHandler
      */
-    private static $PAGE_DATA_PROCESSOR;
+    private static $INSTANCE;
 
     /**
      * Array containing all page objects
      *
-     * @var array
+     * @var PageObject[]
      */
-    private $pages = [];
+    private $pageObjects = [];
 
     /**
-     * Singleton method to return PageDataProcessor.
+     * Private constructor
+     */
+    private function __construct()
+    {
+        $objectManager = ObjectManagerFactory::getObjectManager();
+        $parser = $objectManager->get(PageParser::class);
+        $parserOutput = $parser->getData(self::PAGE);
+
+        if (!$parserOutput) {
+            // No *Page.xml files found so give up
+            return;
+        }
+
+        foreach ($parserOutput as $pageName => $pageData) {
+            $url = $pageData[self::URL];
+            $module = $pageData[self::MODULE];
+            $sectionNames = array_keys($pageData[self::SECTION]);
+            $parameterized = $pageData[self::PARAMETERIZED] ?? false;
+            $this->pageObjects[$pageName] = new PageObject($pageName, $url, $module, $sectionNames, $parameterized);
+        }
+    }
+
+    /**
+     * Singleton method to return PageObjectHandler.
      *
      * @return PageObjectHandler
      */
     public static function getInstance()
     {
-        if (!self::$PAGE_DATA_PROCESSOR) {
-            self::$PAGE_DATA_PROCESSOR = new PageObjectHandler();
-            self::$PAGE_DATA_PROCESSOR->initPageObjects();
+        if (!self::$INSTANCE) {
+            self::$INSTANCE = new PageObjectHandler();
         }
 
-        return self::$PAGE_DATA_PROCESSOR;
+        return self::$INSTANCE;
     }
 
     /**
-     * PageObjectHandler constructor.
-     */
-    private function __construct()
-    {
-        //private constructor
-    }
-
-    /**
-     * Takes a page name and returns an array parsed from xml.
+     * Return a page object by name
      *
-     * @param string $pageName
-     * @return PageObject | null
+     * @param string $name
+     * @return PageObject|null
      */
-    public function getObject($pageName)
+    public function getObject($name)
     {
-        if (array_key_exists($pageName, $this->pages)) {
-            return $this->getAllObjects()[$pageName];
+        if (array_key_exists($name, $this->pageObjects)) {
+            return $this->getAllObjects()[$name];
         }
 
         return null;
     }
 
     /**
-     * Return an array containing all pages parsed from xml.
+     * Return all page objects
      *
-     * @return array
+     * @return PageObject[]
      */
     public function getAllObjects()
     {
-        return $this->pages;
-    }
-
-    /**
-     * Executes parser code to read in page xml data.
-     *
-     * @return void
-     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
-     */
-    private function initPageObjects()
-    {
-        $objectManager = ObjectManagerFactory::getObjectManager();
-        /** @var $parser \Magento\FunctionalTestingFramework\XmlParser\PageParser */
-        $parser = $objectManager->get(PageParser::class);
-        $parsedObjs = $parser->getData(self::TYPE);
-
-        if (!$parsedObjs) {
-            // No *Page.xml files found so give up
-            return;
-        }
-
-        foreach ($parsedObjs as $pageName => $pageData) {
-            $url = $pageData[self::URL];
-            $module = $pageData[self::MODULE];
-            $sections = array_keys($pageData[self::SUB_TYPE]);
-            $parameterized = $pageData[self::PARAMETERIZED] ?? false;
-
-            $this->pages[$pageName] = new PageObject($pageName, $url, $module, $sections, $parameterized);
-        }
+        return $this->pageObjects;
     }
 }
