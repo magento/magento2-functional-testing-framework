@@ -13,6 +13,14 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
  */
 class EntityDataObject
 {
+    const NO_UNIQUE_PROCESS = 0;
+    const SUITE_UNIQUE_VALUE = 1;
+    const CEST_UNIQUE_VALUE = 2;
+    const SUITE_UNIQUE_NOTATION = 3;
+    const CEST_UNIQUE_NOTATION = 4;
+    const SUITE_UNIQUE_FUNCTION = 'msqs';
+    const CEST_UNIQUE_FUNCTION = 'msq';
+
     /**
      * Name of the entity
      *
@@ -30,52 +38,45 @@ class EntityDataObject
     /**
      * An array of required entity name to corresponding type
      *
-     * @var array
+     * @var string[]
      */
     private $linkedEntities = [];
 
     /**
      * An array of variable mappings for static data
      *
-     * @var array
+     * @var string[]
      */
     private $vars;
 
     /**
      * An array of Data Name to Data Value
      *
-     * @var array
+     * @var string[]
      */
     private $data = [];
-
-    const NO_UNIQUE_PROCESS = 0;
-    const SUITE_UNIQUE_VALUE = 1;
-    const CEST_UNIQUE_VALUE = 2;
-    const SUITE_UNIQUE_NOTATION = 3;
-    const CEST_UNIQUE_NOTATION = 4;
-    const SUITE_UNIQUE_FUNCTION = 'msqs';
-    const CEST_UNIQUE_FUNCTION = 'msq';
 
     /**
      * Array of data name and its uniqueness attribute value.
      *
-     * @var array
+     * @var string[]
      */
     private $uniquenessData = [];
 
     /**
-     * EntityDataObject constructor.
-     * @param string $entityName
-     * @param string $entityType
-     * @param array $data
-     * @param array $linkedEntities
-     * @param array $uniquenessData
-     * @param array $vars
+     * Constructor
+     *
+     * @param string $name
+     * @param string $type
+     * @param string[] $data
+     * @param string[] $linkedEntities
+     * @param string[] $uniquenessData
+     * @param string[] $vars
      */
-    public function __construct($entityName, $entityType, $data, $linkedEntities, $uniquenessData, $vars = [])
+    public function __construct($name, $type, $data, $linkedEntities, $uniquenessData, $vars = [])
     {
-        $this->name = $entityName;
-        $this->type = $entityType;
+        $this->name = $name;
+        $this->type = $type;
         $this->data = $data;
         $this->linkedEntities = $linkedEntities;
         if ($uniquenessData) {
@@ -86,17 +87,7 @@ class EntityDataObject
     }
 
     /**
-     * Getter for linked entity names
-     *
-     * @return array
-     */
-    public function getLinkedEntities()
-    {
-        return $this->linkedEntities;
-    }
-
-    /**
-     * Getter for entity name
+     * Get the name of this entity data object
      *
      * @return string
      */
@@ -106,7 +97,7 @@ class EntityDataObject
     }
 
     /**
-     * Getter for entity type
+     * Get the type of this entity data object
      *
      * @return string
      */
@@ -116,44 +107,37 @@ class EntityDataObject
     }
 
     /**
-     * Getter for Entity's data.
-     * @return array
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    /**
-     * This function retrieves data from an entity defined in xml.
+     * Get a piece of data by name and the desired uniqueness format.
      *
-     * @param string $dataName
-     * @param int $uniDataFormat
+     * @param string $name
+     * @param int $uniquenessFormat
      * @return string|null
      * @throws TestFrameworkException
      */
-    public function getDataByName($dataName, $uniDataFormat)
+    public function getDataByName($name, $uniquenessFormat)
     {
-        if (!$this->isValidUniqueDataFormat($uniDataFormat)) {
+        if (!$this->isValidUniqueDataFormat($uniquenessFormat)) {
             throw new TestFrameworkException(
-                sprintf('Invalid unique data format value: %s \n', $uniDataFormat)
+                sprintf('Invalid unique data format value: %s \n', $uniquenessFormat)
             );
         }
 
-        $name = strtolower($dataName);
+        $name_lower = strtolower($name);
 
-        if ($this->data !== null && array_key_exists($name, $this->data)) {
-            $uniData = $this->getUniquenessDataByName($dataName);
-            if (null === $uniData || $uniDataFormat == self::NO_UNIQUE_PROCESS) {
-                return $this->data[$name];
+        if ($this->data !== null && array_key_exists($name_lower, $this->data)) {
+            $uniquenessData = $this->getUniquenessDataByName($name_lower);
+            if (null === $uniquenessData || $uniquenessFormat == self::NO_UNIQUE_PROCESS) {
+                return $this->data[$name_lower];
             }
-            return $this->formatUniqueData($name, $uniData, $uniDataFormat);
+            return $this->formatUniqueData($name_lower, $uniquenessData, $uniquenessFormat);
         }
+
         return null;
     }
 
     /**
      * Formats and returns data based on given uniqueDataFormat and prefix/suffix.
+     *
      * @param string $name
      * @param string $uniqueData
      * @param string $uniqueDataFormat
@@ -200,6 +184,7 @@ class EntityDataObject
 
     /**
      * Performs a check that the given uniqueness function exists, throws an exception if it doesn't.
+     *
      * @param string $function
      * @param string $uniqueDataFormat
      * @return void
@@ -221,13 +206,13 @@ class EntityDataObject
      * Function which returns a reference to another entity (e.g. a var with entity="category" field="id" returns as
      * category->id)
      *
-     * @param string $dataKey
+     * @param string $key
      * @return string|null
      */
-    public function getVarReference($dataKey)
+    public function getVarReference($key)
     {
-        if (array_key_exists($dataKey, $this->vars)) {
-            return $this->vars[$dataKey];
+        if (array_key_exists($key, $this->vars)) {
+            return $this->vars[$key];
         }
 
         return null;
@@ -237,15 +222,15 @@ class EntityDataObject
      * This function takes an array of entityTypes indexed by name and a string that represents the type of interest.
      * The function returns an array of entityNames relevant to the specified type.
      *
-     * @param string $fieldType
+     * @param string $type
      * @return array
      */
-    public function getLinkedEntitiesOfType($fieldType)
+    public function getLinkedEntitiesOfType($type)
     {
         $groupedArray = [];
 
         foreach ($this->linkedEntities as $entityName => $entityType) {
-            if ($entityType == $fieldType) {
+            if ($entityType == $type) {
                 $groupedArray[] = $entityName;
             }
         }
