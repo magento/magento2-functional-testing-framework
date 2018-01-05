@@ -6,7 +6,7 @@
   */
 -->
 
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
     <section name="SampleSection">
         <element name="simpleElement" type="button" selector="#element"/>
@@ -18,4 +18,4 @@
         <element name="timeoutElement" type="button" selector="#foo" timeout="30"/>
         <element name="mergeElement" type="button" selector="#unMerge"/>
     </section>
-</config>
+</sections>

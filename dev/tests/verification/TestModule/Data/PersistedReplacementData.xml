@@ -7,7 +7,7 @@
   */
 -->
 
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd">
     <entity name="ReplacementPerson" type="samplePerson">
         <data key="firstname">John</data>
@@ -22,4 +22,4 @@
         <data key="lastName">Dane</data>
         <data key="mergedField">unmerged</data>
     </entity>
-</config>
+</entities>

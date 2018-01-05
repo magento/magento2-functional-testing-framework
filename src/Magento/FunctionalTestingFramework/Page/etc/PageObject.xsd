@@ -11,7 +11,7 @@
         <xs:documentation>The definition of a page object.</xs:documentation>
     </xs:annotation>
 
-    <xs:element name="config">
+    <xs:element name="pages">
         <xs:annotation>
             <xs:documentation>
                 The root element for configuration data.

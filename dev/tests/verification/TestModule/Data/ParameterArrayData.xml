@@ -6,11 +6,11 @@
   */
 -->
 
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd">
     <entity name="simpleParamData" type="data">
         <data key="name">name</data>
         <data key="uniqueNamePre" unique="prefix">prename</data>
         <data key="uniqueNamePost" unique="suffix">postname</data>
     </entity>
-</config>
+</entities>

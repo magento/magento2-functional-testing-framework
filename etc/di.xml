@@ -78,8 +78,8 @@
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\Page</argument>
             <argument name="idAttributes" xsi:type="array">
-                <item name="/config/page" xsi:type="string">name</item>
-                <item name="/config/page/section" xsi:type="string">name</item>
+                <item name="/pages/page" xsi:type="string">name</item>
+                <item name="/pages/page/section" xsi:type="string">name</item>
             </argument>
             <argument name="fileName" xsi:type="string">*Page.xml</argument>
             <argument name="defaultScope" xsi:type="string">Page</argument>
@@ -91,8 +91,8 @@
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\Section</argument>
             <argument name="idAttributes" xsi:type="array">
-                <item name="/config/section" xsi:type="string">name</item>
-                <item name="/config/section/element" xsi:type="string">name</item>
+                <item name="/sections/section" xsi:type="string">name</item>
+                <item name="/sections/section/element" xsi:type="string">name</item>
             </argument>
             <argument name="fileName" xsi:type="string">*Section.xml</argument>
             <argument name="defaultScope" xsi:type="string">Section</argument>
@@ -146,10 +146,10 @@
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\DataProfile</argument>
             <argument name="idAttributes" xsi:type="array">
-                <item name="/config/entity" xsi:type="string">name</item>
-                <item name="/config/entity/data" xsi:type="string">key</item>
-                <item name="/config/entity/array" xsi:type="string">key</item>
-                <item name="/config/entity/required-entity" xsi:type="string">name</item>
+                <item name="/entities/entity" xsi:type="string">name</item>
+                <item name="/entities/entity/data" xsi:type="string">key</item>
+                <item name="/entities/entity/array" xsi:type="string">key</item>
+                <item name="/entities/entity/required-entity" xsi:type="string">name</item>
             </argument>
             <argument name="fileName" xsi:type="string">*Data.xml</argument>
             <argument name="defaultScope" xsi:type="string">Data</argument>
@@ -179,10 +179,10 @@
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\Metadata</argument>
             <argument name="idAttributes" xsi:type="array">
-                <item name="/config/operation" xsi:type="string">name</item>
-                <item name="/config/operation/field" xsi:type="string">key</item>
-                <item name="/config/operation/array" xsi:type="string">key</item>
-                <item name="/config/operation/object" xsi:type="string">key</item>
+                <item name="/operations/operation" xsi:type="string">name</item>
+                <item name="/operations/operation/field" xsi:type="string">key</item>
+                <item name="/operations/operation/array" xsi:type="string">key</item>
+                <item name="/operations/operation/object" xsi:type="string">key</item>
             </argument>
             <argument name="fileName" xsi:type="string">*-meta.xml</argument>
             <argument name="defaultScope" xsi:type="string">Metadata</argument>
@@ -273,11 +273,17 @@
 
     <!--Config for Action Group -->
 
+    <virtualType name="Magento\FunctionalTestingFramework\Config\SchemaLocator\ActionGroup" type="Magento\FunctionalTestingFramework\Config\SchemaLocator">
+        <arguments>
+            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Test/etc/actionGroup.xsd</argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\ActionGroupData" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
         <arguments>
             <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\ActionGroupDataConverter</argument>
-            <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\TestData</argument>
+            <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\ActionGroup</argument>
             <argument name="idAttributes" xsi:type="array">
                 <item name="/actionGroups/actionGroup" xsi:type="string">name</item>
                 <item name="/actionGroups/actionGroup/arguments/argument" xsi:type="string">name</item>
