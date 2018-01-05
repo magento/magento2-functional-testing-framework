@@ -5,8 +5,8 @@
  */
 namespace Magento\FunctionalTestingFramework\Suite\Objects;
 
-use Magento\FunctionalTestingFramework\Test\Objects\CestHookObject;
-use Magento\FunctionalTestingFramework\Test\Objects\CestObject;
+use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
+use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 
 /**
  * Class SuiteObject
@@ -21,38 +21,38 @@ class SuiteObject
     private $name;
 
     /**
-     * Array of Cests to include for the suite.
+     * Array of Tests to include for the suite.
      *
-     * @var array
+     * @var TestObject[]
      */
-    private $includeCests = [];
+    private $includeTests = [];
 
     /**
-     * Array of Cests to exclude for the suite.
+     * Array of Tests to exclude for the suite.
      *
-     * @var array
+     * @var TestObject[]
      */
-    private $excludeCests = [];
+    private $excludeTests = [];
 
     /**
      * Array of before/after hooks to be executed for a suite.
      *
-     * @var array
+     * @var TestHookObject[]
      */
     private $hooks;
 
     /**
      * SuiteObject constructor.
      * @param string $name
-     * @param array $includeCests
-     * @param array $excludeCests
-     * @param array $hooks
+     * @param TestObject[] $includeTests
+     * @param TestObject[] $excludeTests
+     * @param TestHookObject[] $hooks
      */
-    public function __construct($name, $includeCests, $excludeCests, $hooks)
+    public function __construct($name, $includeTests, $excludeTests, $hooks)
     {
         $this->name = $name;
-        $this->includeCests = $includeCests;
-        $this->excludeCests = $excludeCests;
+        $this->includeTests = $includeTests;
+        $this->excludeTests = $excludeTests;
         $this->hooks = $hooks;
     }
 
@@ -67,76 +67,43 @@ class SuiteObject
     }
 
     /**
-     * Returns an array of Cest Objects based on specifications in exclude and include arrays.
+     * Returns an array of Test Objects based on specifications in exclude and include arrays.
      *
      * @return array
      */
-    public function getCests()
+    public function getTests()
     {
-        return $this->resolveCests($this->includeCests, $this->excludeCests);
+        return $this->resolveTests($this->includeTests, $this->excludeTests);
     }
 
     /**
-     * Takes an array of Cest Objects to include and an array of Cest Objects to exlucde. Loops through each Cest
-     * and determines any overlapping tests. Returns a resulting array of Cest Objects based on this logic. Exclusion is
+     * Takes an array of Test Objects to include and an array of Test Objects to exlucde. Loops through each Test
+     * and determines any overlapping tests. Returns a resulting array of Test Objects based on this logic. Exclusion is
      * preferred to exclusiong (i.e. a test is specified in both include and exclude, it will be excluded).
      *
-     * @param array $includeCests
-     * @param array $excludeCests
-     * @return array
+     * @param TestObject[] $includeTests
+     * @param TestObject[] $excludeTests
+     * @return TestObject[]
      */
-    private function resolveCests($includeCests, $excludeCests)
+    private function resolveTests($includeTests, $excludeTests)
     {
-        $finalCestList = $includeCests;
-        $matchingCests = array_intersect(array_keys($includeCests), array_keys($excludeCests));
+        $finalTestList = $includeTests;
+        $matchingTests = array_intersect(array_keys($includeTests), array_keys($excludeTests));
 
-        // filter out tests within cests here and any overlap
-        foreach ($matchingCests as $cestName) {
-            $testNamesForExclusion = array_keys($excludeCests[$cestName]->getTests());
-            $relevantTestNames = array_diff(array_keys($includeCests[$cestName]->getTests()), $testNamesForExclusion);
-
-            if (empty($relevantTestNames)) {
-                unset($finalCestList[$cestName]);
-                continue;
-            }
-
-            /** @var CestObject $tempCestObj */
-            $tempCestObj = $includeCests[$cestName];
-            $finalCestList[$tempCestObj->getName()] = new CestObject(
-                $tempCestObj->getName(),
-                $tempCestObj->getAnnotations(),
-                $this->resolveTests($relevantTestNames, $includeCests[$cestName]->getTests()),
-                $tempCestObj->getHooks()
-            );
+        // filter out tests for exclusion here
+        foreach ($matchingTests as $testName) {
+            unset($finalTestList[$testName]);
         }
 
-        if (empty($finalCestList)) {
+        if (empty($finalTestList)) {
             trigger_error(
                 "Current suite configuration for " .
-                $this->name . " contains no cests.",
+                $this->name . " contains no tests.",
                 E_USER_WARNING
             );
         }
 
-        return $finalCestList;
-    }
-
-    /**
-     * Takes an array of test names to be extracted from an array of test objects. Returns the resulting array of test
-     * objects contained within the applicable test names.
-     *
-     * @param array $relevantTestNames
-     * @param array $tests
-     * @return array
-     */
-    private function resolveTests($relevantTestNames, $tests)
-    {
-        $relevantTests = [];
-        foreach ($relevantTestNames as $testName) {
-            $relevantTests[$testName] = $tests[$testName];
-        }
-
-        return $relevantTests;
+        return $finalTestList;
     }
 
     /**
@@ -153,7 +120,7 @@ class SuiteObject
     /**
      * Getter for before hooks.
      *
-     * @return CestHookObject
+     * @return TestHookObject
      */
     public function getBeforeHook()
     {
@@ -163,7 +130,7 @@ class SuiteObject
     /**
      * Getter for after hooks.
      *
-     * @return CestHookObject
+     * @return TestHookObject
      */
     public function getAfterHook()
     {

@@ -8,10 +8,10 @@ namespace Magento\FunctionalTestingFramework\Util;
 
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
-use Magento\FunctionalTestingFramework\Test\Handlers\CestObjectHandler;
+use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
-use Magento\FunctionalTestingFramework\Test\Objects\CestObject;
+use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 
 /**
@@ -22,7 +22,6 @@ class TestGenerator
 {
 
     const REQUIRED_ENTITY_REFERENCE = 'createDataKey';
-    const TEST_SCOPE = 'Test';
     const GENERATED_DIR = '_generated';
 
     /**
@@ -40,19 +39,19 @@ class TestGenerator
     private $exportDirName;
 
     /**
-     * Array of CestObjects to be generated
+     * Array of testObjects to be generated
      *
      * @var array
      */
-    private $cests;
+    private $tests;
 
     /**
      * TestGenerator constructor.
      *
      * @param string $exportDir
-     * @param array $cests
+     * @param array $tests
      */
-    private function __construct($exportDir, $cests)
+    private function __construct($exportDir, $tests)
     {
         // private constructor for factory
         $this->exportDirName = $exportDir ?? self::GENERATED_DIR;
@@ -60,19 +59,19 @@ class TestGenerator
             TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . self::GENERATED_DIR . DIRECTORY_SEPARATOR . $exportDir,
             DIRECTORY_SEPARATOR
         );
-        $this->cests = $cests;
+        $this->tests = $tests;
     }
 
     /**
      * Singleton method to retrieve Test Generator
      *
      * @param string $dir
-     * @param array $cests
+     * @param array $tests
      * @return TestGenerator
      */
-    public static function getInstance($dir = null, $cests = null)
+    public static function getInstance($dir = null, $tests = null)
     {
-        return new TestGenerator($dir, $cests);
+        return new TestGenerator($dir, $tests);
     }
 
     /**
@@ -86,30 +85,31 @@ class TestGenerator
     }
 
     /**
-     * Load all Cest files as Objects using the Cest Array Processor.
+     * Load all Test files as Objects using the Test Object Handler.
      *
      * @return array
      */
-    private function loadAllCestObjects()
+    private function loadAllTestObjects()
     {
-        if ($this->cests === null) {
-            return CestObjectHandler::getInstance()->getAllObjects();
+        if ($this->tests === null) {
+            return TestObjectHandler::getInstance()->getAllObjects();
         }
 
-        return $this->cests;
+        return $this->tests;
     }
 
     /**
      * Create a single PHP file containing the $cestPhp using the $filename.
      * If the _generated directory doesn't exist it will be created.
      *
-     * @param string $cestPhp
+     * @param string $testPhp
      * @param string $filename
      * @return void
      * @throws \Exception
      */
-    private function createCestFile($cestPhp, $filename)
+    private function createCestFile($testPhp, $filename)
     {
+        $filename = $filename;
         $exportFilePath = $this->exportDirectory . DIRECTORY_SEPARATOR . $filename . ".php";
         $file = fopen($exportFilePath, 'w');
 
@@ -117,27 +117,27 @@ class TestGenerator
             throw new \Exception("Could not open the file!");
         }
 
-        fwrite($file, $cestPhp);
+        fwrite($file, $testPhp);
         fclose($file);
     }
 
     /**
-     * Assemble ALL PHP strings using the assembleAllCestPhp function. Loop over and pass each array item
+     * Assemble ALL PHP strings using the assembleAllTestPhp function. Loop over and pass each array item
      * to the createCestFile function.
      *
      * @param string $runConfig
      * @return void
      */
-    public function createAllCestFiles($runConfig = null)
+    public function createAllTestFiles($runConfig = null)
     {
         DirSetupUtil::createGroupDir($this->exportDirectory);
 
         // create our manifest file here
         $testManifest = new TestManifest($this->exportDirectory, $runConfig);
-        $cestPhpArray = $this->assembleAllCestPhp($testManifest);
+        $testPhpArray = $this->assembleAllTestPhp($testManifest);
 
-        foreach ($cestPhpArray as $cestPhpFile) {
-            $this->createCestFile($cestPhpFile[1], $cestPhpFile[0]);
+        foreach ($testPhpArray as $testPhpFile) {
+            $this->createCestFile($testPhpFile[1], $testPhpFile[0]);
         }
 
         if ($testManifest->getManifestConfig() === TestManifest::SINGLE_RUN_CONFIG) {
@@ -146,24 +146,24 @@ class TestGenerator
     }
 
     /**
-     * Assemble the entire PHP string for a single Test based on a Cest Object.
+     * Assemble the entire PHP string for a single Test based on a Test Object.
      * Create all of the PHP strings for a Test. Concatenate the strings together.
      *
-     * @param \Magento\FunctionalTestingFramework\Test\Objects\CestObject $cestObject
+     * @param \Magento\FunctionalTestingFramework\Test\Objects\TestObject $testObject
      * @throws TestReferenceException
      * @return string
      */
-    private function assembleCestPhp($cestObject)
+    private function assembleTestPhp($testObject)
     {
         $usePhp = $this->generateUseStatementsPhp();
-        $classAnnotationsPhp = $this->generateAnnotationsPhp($cestObject->getAnnotations(), "Cest");
-        $className = $cestObject->getName();
-        $className = str_replace(' ', '', $className);
+        $classAnnotationsPhp = $this->generateAnnotationsPhp($testObject->getAnnotations());
+
+        $className = $testObject->getCodeceptionName();
         try {
-            $hookPhp = $this->generateHooksPhp($cestObject->getHooks());
-            $testsPhp = $this->generateTestsPhp($cestObject->getTests());
+            $hookPhp = $this->generateHooksPhp($testObject->getHooks());
+            $testsPhp = $this->generateTestPhp($testObject);
         } catch (TestReferenceException $e) {
-            throw new TestReferenceException($e->getMessage() . " in Cest \"" . $cestObject->getName() . "\"");
+            throw new TestReferenceException($e->getMessage(). " in Test \"" . $testObject->getName() . "\"");
         }
 
         $cestPhp = "<?php\n";
@@ -180,24 +180,23 @@ class TestGenerator
     }
 
     /**
-     * Load ALL Cest objects. Loop over and pass each to the assembleCestPhp function.
+     * Load ALL Test objects. Loop over and pass each to the assembleTestPhp function.
      *
      * @param TestManifest $testManifest
      * @return array
      */
-    private function assembleAllCestPhp($testManifest)
+    private function assembleAllTestPhp($testManifest)
     {
-        $cestObjects = $this->loadAllCestObjects();
+        $testObjects = $this->loadAllTestObjects();
         $cestPhpArray = [];
 
-        foreach ($cestObjects as $cest) {
-            $name = str_replace(' ', '', $cest->getName());
-            $php = $this->assembleCestPhp($cest);
-            $cestPhpArray[] = [$name, $php];
+        foreach ($testObjects as $test) {
+            $php = $this->assembleTestPhp($test);
+            $cestPhpArray[] = [$test->getCodeceptionName(), $php];
 
             //write to manifest here if config is not single run
             if ($testManifest->getManifestConfig() != TestManifest::SINGLE_RUN_CONFIG) {
-                $testManifest->recordCest($cest->getName(), $cest->getTests());
+                $testManifest->recordCest($test->getCodeceptionName());
             }
         }
 
@@ -240,15 +239,13 @@ class TestGenerator
     /**
      * Generates Annotations PHP for given object, using given scope to determine indentation and additional output.
      * @param array $annotationsObject
-     * @param string $scope
+     * @param boolean $isMethod
      * @return string
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    private function generateAnnotationsPhp($annotationsObject, $scope)
+    private function generateAnnotationsPhp($annotationsObject, $isMethod = false)
     {
         //TODO: Refactor to deal with PHPMD.CyclomaticComplexity
-        if ($scope == self::TEST_SCOPE) {
+        if ($isMethod) {
             $indent = "\t";
         } else {
             $indent = "";
@@ -257,9 +254,68 @@ class TestGenerator
         $annotationsPhp = "{$indent}/**\n";
 
         foreach ($annotationsObject as $annotationType => $annotationName) {
-            if ($annotationType == "features") {
-                $features = "";
+            if (!$isMethod) {
+                $annotationsPhp.= $this->generateClassAnnotations($annotationType, $annotationName);
+            } else {
+                $annotationsPhp.= $this->generateMethodAnnotations($annotationType, $annotationName);
+            }
+        }
 
+        if ($isMethod) {
+            $annotationsPhp .= $this->generateMethodAnnotations();
+        }
+
+        $annotationsPhp .= "{$indent} */\n";
+
+        return $annotationsPhp;
+    }
+
+    /**
+     * Method which returns formatted method level annotation based on type and name(s).
+     *
+     * @param mixed $annotationType
+     * @param string|null $annotationName
+     * @return null|string
+     */
+    private function generateMethodAnnotations($annotationType = null, $annotationName = null)
+    {
+        $annotationToAppend = null;
+        $indent = "\t";
+
+        switch ($annotationType) {
+            case "severity":
+                $annotationToAppend = sprintf("{$indent} * @Severity(level = SeverityLevel::%s)\n", $annotationName[0]);
+                break;
+
+            case null:
+                $annotationToAppend = sprintf(
+                    "{$indent} * @Parameter(name = \"%s\", value=\"$%s\")\n",
+                    "AcceptanceTester",
+                    "I"
+                );
+                $annotationToAppend .= sprintf("{$indent} * @param %s $%s\n", "AcceptanceTester", "I");
+                $annotationToAppend .= "{$indent} * @return void\n";
+                break;
+        }
+
+        return $annotationToAppend;
+    }
+
+    /**
+     * Method which return formatted class level annotations based on type and name(s).
+     *
+     * @param string $annotationType
+     * @param mixed $annotationName
+     * @return null|string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    private function generateClassAnnotations($annotationType, $annotationName)
+    {
+        $annotationToAppend = null;
+
+        switch ($annotationType) {
+            case "features":
+                $features = "";
                 foreach ($annotationName as $name) {
                     $features .= sprintf("\"%s\"", $name);
 
@@ -267,13 +323,11 @@ class TestGenerator
                         $features .= ", ";
                     }
                 }
+                $annotationToAppend .= sprintf(" * @Features({%s})\n", $features);
+                break;
 
-                $annotationsPhp .= sprintf("{$indent} * @Features({%s})\n", $features);
-            }
-
-            if ($annotationType == "stories") {
+            case "stories":
                 $stories = "";
-
                 foreach ($annotationName as $name) {
                     $stories .= sprintf("\"%s\"", $name);
 
@@ -281,56 +335,33 @@ class TestGenerator
                         $stories .= ", ";
                     }
                 }
+                $annotationToAppend .= sprintf(" * @Stories({%s})\n", $stories);
+                break;
 
-                $annotationsPhp .= sprintf("{$indent} * @Stories({%s})\n", $stories);
-            }
+            case "title":
+                $annotationToAppend = sprintf(" * @Title(\"%s\")\n", $annotationName[0]);
+                break;
 
-            if ($annotationType == "title") {
-                $annotationsPhp .= sprintf("{$indent} * @Title(\"%s\")\n", $annotationName[0]);
-            }
+            case "description":
+                $annotationToAppend = sprintf(" * @Description(\"%s\")\n", $annotationName[0]);
+                break;
 
-            if ($annotationType == "description") {
-                $annotationsPhp .= sprintf("{$indent} * @Description(\"%s\")\n", $annotationName[0]);
-            }
+            case "testCaseId":
+                $annotationToAppend = sprintf(" * @TestCaseId(\"%s\")\n", $annotationName[0]);
+                break;
 
-            if ($annotationType == "severity") {
-                $annotationsPhp .= sprintf("{$indent} * @Severity(level = SeverityLevel::%s)\n", $annotationName[0]);
-            }
+            case "useCaseId":
+                $annotationToAppend = sprintf(" * @UseCaseId(\"%s\")\n", $annotationName[0]);
+                break;
 
-            if ($annotationType == "testCaseId") {
-                $annotationsPhp .= sprintf("{$indent} * @TestCaseId(\"%s\")\n", $annotationName[0]);
-            }
-
-            if ($annotationType == "useCaseId") {
-                $annotationsPhp .= sprintf("{$indent} * @UseCaseId(\"%s\")\n", $annotationName[0]);
-            }
-
-            if ($annotationType == "group") {
+            case "group":
                 foreach ($annotationName as $group) {
-                    $annotationsPhp .= sprintf("{$indent} * @group %s\n", $group);
+                    $annotationToAppend .= sprintf(" * @group %s\n", $group);
                 }
-            }
-
-            if ($annotationType == "env") {
-                foreach ($annotationName as $env) {
-                    $annotationsPhp .= sprintf("{$indent} * @env %s\n", $env);
-                }
-            }
+                break;
         }
 
-        if ($scope == self::TEST_SCOPE) {
-            $annotationsPhp .= sprintf(
-                "{$indent} * @Parameter(name = \"%s\", value=\"$%s\")\n",
-                "AcceptanceTester",
-                "I"
-            );
-            $annotationsPhp .= sprintf("{$indent} * @param %s $%s\n", "AcceptanceTester", "I");
-            $annotationsPhp .= "{$indent} * @return void\n";
-        }
-
-        $annotationsPhp .= "{$indent} */\n";
-
-        return $annotationsPhp;
+        return $annotationToAppend;
     }
 
     /**
@@ -533,7 +564,7 @@ class TestGenerator
                         $entity
                     );
 
-                    //HookObject End-Product needs to be created in the Class/Cest scope,
+                    //HookObject End-Product needs to be created in the Class scope,
                     //otherwise create them in the Test scope.
                     //Determine if there are required-entities and create array of required-entities for merging.
                     $requiredEntities = [];
@@ -616,7 +647,7 @@ class TestGenerator
                         $key
                     );
 
-                    //HookObject End-Product needs to be created in the Class/Cest scope,
+                    //HookObject End-Product needs to be created in the Class scope,
                     //otherwise create them in the Test scope.
                     //Determine if there are required-entities and create array of required-entities for merging.
                     $requiredEntities = [];
@@ -674,7 +705,7 @@ class TestGenerator
                         $entity
                     );
 
-                    //HookObject End-Product needs to be created in the Class/Cest scope,
+                    //HookObject End-Product needs to be created in the Class scope,
                     //otherwise create them in the Test scope.
                     //Determine if there are required-entities and create array of required-entities for merging.
                     $requiredEntities = [];
@@ -1258,35 +1289,29 @@ class TestGenerator
     /**
      * Creates a PHP string based on a <test> block.
      * Concatenates the Test Annotations PHP and Test PHP for a single Test.
-     * @param array $testsObject
+     * @param TestObject $test
      * @return string
      * @throws TestReferenceException
      */
-    private function generateTestsPhp($testsObject)
+    private function generateTestPhp($test)
     {
         $testPhp = "";
 
-        foreach ($testsObject as $test) {
-            $testName = $test->getName();
-            $testName = str_replace(' ', '', $testName);
-            $testAnnotations = $this->generateAnnotationsPhp($test->getAnnotations(), "Test");
-            $dependencies = 'AcceptanceTester $I';
-            try {
-                $steps = $this->generateStepsPhp($test->getOrderedActions());
-            } catch (TestReferenceException $e) {
-                throw new TestReferenceException($e->getMessage() . " in Test \"" . $test->getName() . "\"");
-            }
-
-            $testPhp .= $testAnnotations;
-            $testPhp .= sprintf("\tpublic function %s(%s)\n", $testName, $dependencies);
-            $testPhp .= "\t{\n";
-            $testPhp .= $steps;
-            $testPhp .= "\t}\n";
-
-            if (sizeof($testsObject) > 1) {
-                $testPhp .= "\n";
-            }
+        $testName = $test->getName();
+        $testName = str_replace(' ', '', $testName);
+        $testAnnotations = $this->generateAnnotationsPhp($test->getAnnotations(), true);
+        $dependencies = 'AcceptanceTester $I';
+        try {
+            $steps = $this->generateStepsPhp($test->getOrderedActions());
+        } catch (TestReferenceException $e) {
+            throw new TestReferenceException($e->getMessage() . " in Test \"" . $test->getName() . "\"");
         }
+
+        $testPhp .= $testAnnotations;
+        $testPhp .= sprintf("\tpublic function %s(%s)\n", $testName, $dependencies);
+        $testPhp .= "\t{\n";
+        $testPhp .= $steps;
+        $testPhp .= "\t}\n";
 
         return $testPhp;
     }

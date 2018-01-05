@@ -62,20 +62,16 @@ class TestManifest
     }
 
     /**
-     * Takes a cest name and set of tests, records the names in a file for codeception to consume.
+     * Takes a test name and set of tests, records the names in a file for codeception to consume.
      *
-     * @param string $cestName
-     * @param TestObject $tests
+     * @param string $testName
      * @return void
      */
-    public function recordCest($cestName, $tests)
+    public function recordCest($testName)
     {
         $fileResource = fopen($this->filePath, 'a');
-
-        foreach ($tests as $test) {
-            $line = $this->relativeDirPath . DIRECTORY_SEPARATOR . $cestName . '.php:' . $test->getName();
-            fwrite($fileResource, $line . PHP_EOL);
-        }
+        $line = $this->relativeDirPath . DIRECTORY_SEPARATOR . $testName . '.php';
+        fwrite($fileResource, $line . PHP_EOL);
 
         fclose($fileResource);
     }

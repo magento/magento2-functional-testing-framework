@@ -11,9 +11,11 @@ use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 /**
  * Class TestObjectExtractor
  */
-class TestObjectExtractor extends BaseCestObjectExtractor
+class TestObjectExtractor extends BaseObjectExtractor
 {
     const TEST_ANNOTATIONS = 'annotations';
+    const TEST_BEFORE_HOOK = 'before';
+    const TEST_AFTER_HOOK = 'after';
 
     /**
      * Action Object Extractor object
@@ -37,6 +39,13 @@ class TestObjectExtractor extends BaseCestObjectExtractor
     private $testEntityExtractor;
 
     /**
+     * Test Hook Object extractor
+     *
+     * @var TestHookObjectExtractor
+     */
+    private $testHookObjectExtractor;
+
+    /**
      * TestObjectExtractor constructor.
      */
     public function __construct()
@@ -44,48 +53,65 @@ class TestObjectExtractor extends BaseCestObjectExtractor
         $this->actionObjectExtractor = new ActionObjectExtractor();
         $this->annotationExtractor = new AnnotationExtractor();
         $this->testEntityExtractor = new TestEntityExtractor();
+        $this->testHookObjectExtractor = new TestHookObjectExtractor();
     }
 
     /**
      * This method takes and array of test data and strips away irrelevant tags. The data is converted into an array of
      * TestObjects.
      *
-     * @param array $cestTestData
-     * @return array
+     * @param array $testData
+     * @return TestObject
      */
-    public function extractTestData($cestTestData)
+    public function extractTestData($testData)
     {
-        $testObjects = [];
+        // validate the test name for blacklisted char (will cause allure report issues) MQE-483
+        TestNameValidationUtil::validateName($testData[self::NAME]);
 
-        // parse the tests
-        foreach ($cestTestData as $testName => $testData) {
-            if (!is_array($testData)) {
-                continue;
-            }
+        $testAnnotations = [];
+        $testHooks = [];
+        $filename = $testData['filename'] ?? null;
+        $testActions = $this->stripDescriptorTags(
+            $testData,
+            self::NODE_NAME,
+            self::NAME,
+            self::TEST_ANNOTATIONS,
+            self::TEST_BEFORE_HOOK,
+            self::TEST_AFTER_HOOK,
+            'filename'
+        );
 
-            // validate the test name for blacklisted char (will cause allure report issues) MQE-483
-            TestNameValidationUtil::validateName($testName);
+        if (array_key_exists(self::TEST_ANNOTATIONS, $testData)) {
+            $testAnnotations = $this->annotationExtractor->extractAnnotations($testData[self::TEST_ANNOTATIONS]);
+        }
 
-            $testAnnotations = [];
-            $testActions = $this->stripDescriptorTags(
-                $testData,
-                self::NODE_NAME,
-                self::NAME,
-                self::TEST_ANNOTATIONS
-            );
-
-            if (array_key_exists(self::TEST_ANNOTATIONS, $testData)) {
-                $testAnnotations = $this->annotationExtractor->extractAnnotations($testData[self::TEST_ANNOTATIONS]);
-            }
-
-            $testObjects[$testName] = new TestObject(
-                $testName,
-                $this->actionObjectExtractor->extractActions($testActions),
-                $testAnnotations,
-                $this->testEntityExtractor->extractTestEntities($testActions)
+        // extract before
+        if (array_key_exists(self::TEST_BEFORE_HOOK, $testData)) {
+            $testHooks[self::TEST_BEFORE_HOOK] = $this->testHookObjectExtractor->extractHook(
+                $testData[self::NAME],
+                'before',
+                $testData[self::TEST_BEFORE_HOOK]
             );
         }
 
-        return $testObjects;
+        // extract after
+        if (array_key_exists(self::TEST_AFTER_HOOK, $testData)) {
+            $testHooks[self::TEST_AFTER_HOOK] = $this->testHookObjectExtractor->extractHook(
+                $testData[self::NAME],
+                'after',
+                $testData[self::TEST_AFTER_HOOK]
+            );
+        }
+
+        // TODO extract filename info and store
+
+        return new TestObject(
+            $testData[self::NAME],
+            $this->actionObjectExtractor->extractActions($testActions),
+            $testAnnotations,
+            $testHooks,
+            $this->testEntityExtractor->extractTestEntities($testActions),
+            $filename
+        );
     }
 }

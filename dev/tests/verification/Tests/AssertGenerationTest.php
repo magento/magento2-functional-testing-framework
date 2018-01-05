@@ -5,13 +5,13 @@
  */
 namespace tests\verification\Tests;
 
-use Magento\FunctionalTestingFramework\Test\Handlers\CestObjectHandler;
+use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use PHPUnit\Framework\TestCase;
 
 class AssertGenerationTest extends TestCase
 {
-    const BASIC_ASSERT_CEST = 'AssertCest';
+    const BASIC_ASSERT_TEST = 'AssertTest';
     const RESOURCES_PATH = __DIR__ . '/../Resources';
 
     /**
@@ -19,20 +19,20 @@ class AssertGenerationTest extends TestCase
      */
     public function testAssertGeneration()
     {
-        $cest = CestObjectHandler::getInstance()->getObject(self::BASIC_ASSERT_CEST);
-        $test = TestGenerator::getInstance(null, [$cest]);
-        $test->createAllCestFiles();
+        $testObject = TestObjectHandler::getInstance()->getObject(self::BASIC_ASSERT_TEST);
+        $test = TestGenerator::getInstance(null, [$testObject]);
+        $test->createAllTestFiles();
 
-        $cestFile = $test->getExportDir() .
+        $testFile = $test->getExportDir() .
             DIRECTORY_SEPARATOR .
-            self::BASIC_ASSERT_CEST .
+            $testObject->getCodeceptionName() .
             ".php";
 
-        $this->assertTrue(file_exists($cestFile));
+        $this->assertTrue(file_exists($testFile));
 
         $this->assertFileEquals(
-            self::RESOURCES_PATH . DIRECTORY_SEPARATOR . self::BASIC_ASSERT_CEST . ".txt",
-            $cestFile
+            self::RESOURCES_PATH . DIRECTORY_SEPARATOR . $testObject->getName() . ".txt",
+            $testFile
         );
     }
 }

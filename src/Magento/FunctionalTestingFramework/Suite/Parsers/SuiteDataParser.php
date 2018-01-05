@@ -27,7 +27,7 @@ class SuiteDataParser
     }
 
     /**
-     * Returns an array of data based on *Cest.xml files
+     * Returns an array of data based on *Test.xml files
      *
      * @return array
      */

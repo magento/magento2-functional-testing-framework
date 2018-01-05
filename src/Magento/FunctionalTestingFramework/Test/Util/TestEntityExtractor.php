@@ -11,7 +11,7 @@ use Robo\Exception\TaskExitException;
 /**
  * Class TestEntityExtractor
  */
-class TestEntityExtractor extends BaseCestObjectExtractor
+class TestEntityExtractor extends BaseObjectExtractor
 {
     const TEST_STEP_ENTITY_CREATION = 'entity';
     const TEST_ENTITY_CREATION_KEY = 'key';
