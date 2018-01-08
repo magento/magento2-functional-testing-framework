@@ -25,7 +25,7 @@ class TestObject
     /**
      * Array which contains steps parsed in and are the default set
      *
-     * @var array
+     * @var ActionObject[]
      */
     private $parsedSteps = [];
 
@@ -37,25 +37,34 @@ class TestObject
     private $annotations = [];
 
     /**
-     * Array that contains test-defined data.
+     * Array which contains before and after actions to be excuted in scope of a single test.
+     *
      * @var array
      */
-    private $customData = [];
+    private $hooks = [];
+
+    /**
+     * Full path to xml file from which test was read.
+     * @var string
+     */
+    private $xmlFileSource;
 
     /**
      * TestObject constructor.
      *
      * @param string $name
-     * @param array $parsedSteps
+     * @param ActionObject[] $parsedSteps
      * @param array $annotations
-     * @param array $customData
+     * @param TestHookObject[] $hooks
+     * @param string $xmlFileSource
      */
-    public function __construct($name, $parsedSteps, $annotations, $customData = null)
+    public function __construct($name, $parsedSteps, $annotations, $hooks, $xmlFileSource = null)
     {
         $this->name = $name;
         $this->parsedSteps = $parsedSteps;
         $this->annotations = $annotations;
-        $this->customData = $customData;
+        $this->hooks = $hooks;
+        $this->xmlFileSource = $xmlFileSource;
     }
 
     /**
@@ -69,6 +78,20 @@ class TestObject
     }
 
     /**
+     * Getter for Codeception format name
+     *
+     * @return string
+     */
+    public function getCodeceptionName()
+    {
+        if (strpos($this->name, 'Cest') && substr($this->name, -4) == 'Cest') {
+            return $this->name;
+        }
+
+        return $this->name . 'Cest';
+    }
+
+    /**
      * Getter for the Test Annotations
      *
      * @return array
@@ -76,6 +99,16 @@ class TestObject
     public function getAnnotations()
     {
         return $this->annotations;
+    }
+
+    /**
+     * Returns hooks.
+     *
+     * @return array
+     */
+    public function getHooks()
+    {
+        return $this->hooks;
     }
 
     /**

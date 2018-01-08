@@ -12,7 +12,7 @@ use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 /**
  * Class ActionObjectExtractor
  */
-class ActionObjectExtractor extends BaseCestObjectExtractor
+class ActionObjectExtractor extends BaseObjectExtractor
 {
     const TEST_ACTION_BEFORE = 'before';
     const TEST_ACTION_AFTER = 'after';
@@ -32,7 +32,7 @@ class ActionObjectExtractor extends BaseCestObjectExtractor
     }
 
     /**
-     * This method takes an array of test actions read in from a CestHook or Test. The actions are stripped of
+     * This method takes an array of test actions read in from a TestHook or Test. The actions are stripped of
      * irrelevant tags and returned as an array of ActionObjects.
      *
      * @param array $testActions

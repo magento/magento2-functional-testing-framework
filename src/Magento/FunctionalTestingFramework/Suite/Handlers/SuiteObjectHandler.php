@@ -11,10 +11,9 @@ use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Suite\Parsers\SuiteDataParser;
 use Magento\FunctionalTestingFramework\Suite\Util\SuiteObjectExtractor;
-use Magento\FunctionalTestingFramework\Test\Handlers\CestObjectHandler;
-use Magento\FunctionalTestingFramework\Test\Objects\CestObject;
-use Magento\FunctionalTestingFramework\Test\Util\CestHookObjectExtractor;
-use Magento\FunctionalTestingFramework\Test\Util\CestObjectExtractor;
+use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
+use Magento\FunctionalTestingFramework\Test\Util\TestHookObjectExtractor;
+use Magento\FunctionalTestingFramework\Test\Util\ObjectExtractor;
 use Magento\Ui\Test\Unit\Component\PagingTest;
 
 /**
@@ -32,7 +31,7 @@ class SuiteObjectHandler implements ObjectHandlerInterface
     /**
      * Array of suite objects keyed by suite name.
      *
-     * @var array
+     * @var SuiteObject[]
      */
     private $suiteObjects;
 

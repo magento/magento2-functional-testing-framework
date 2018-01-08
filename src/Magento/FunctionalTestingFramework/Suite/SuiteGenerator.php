@@ -62,7 +62,7 @@ class SuiteGenerator
     }
 
     /**
-     * Function which takes a suite name and generates corresponding dir, cest files, group class, and updates
+     * Function which takes a suite name and generates corresponding dir, test files, group class, and updates
      * yml configuration for group run.
      *
      * @param string $suiteName
@@ -77,7 +77,7 @@ class SuiteGenerator
         $groupNamespace = null;
 
         DirSetupUtil::createGroupDir($fullPath);
-        $this->generateRelevantGroupTests($suiteName, $suite->getCests());
+        $this->generateRelevantGroupTests($suiteName, $suite->getTests());
 
         if ($suite->requiresGroupFile()) {
             // if the suite requires a group file, generate it and set the namespace
@@ -128,17 +128,17 @@ class SuiteGenerator
     }
 
     /**
-     * Function which takes a string which is the desired output directory (under _generated) and an array of cests
+     * Function which takes a string which is the desired output directory (under _generated) and an array of tests
      * relevant to the suite to be generated. The function takes this information and creates a new instance of the test
-     * generator which is then called to create all the cest files for the suite.
+     * generator which is then called to create all the test files for the suite.
      *
      * @param string $path
-     * @param array $cests
+     * @param array $tests
      * @return void
      */
-    private function generateRelevantGroupTests($path, $cests)
+    private function generateRelevantGroupTests($path, $tests)
     {
-        $testGenerator = TestGenerator::getInstance($path, $cests);
-        $testGenerator->createAllCestFiles();
+        $testGenerator = TestGenerator::getInstance($path, $tests);
+        $testGenerator->createAllTestFiles();
     }
 }

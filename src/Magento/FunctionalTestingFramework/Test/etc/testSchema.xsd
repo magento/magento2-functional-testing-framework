@@ -10,45 +10,17 @@
 
     <!-- Container types -->
 
-    <xs:element name="config" type="configType"/>
+    <xs:element name="tests" type="configType"/>
     <xs:complexType name="configType">
         <xs:sequence>
             <xs:choice>
-                <xs:element type="cestType" name="cest" maxOccurs="unbounded"/>
-                <xs:element type="actionsRefType" name="actionGroup" maxOccurs="unbounded"/>
+                <xs:element type="testType" name="test" maxOccurs="unbounded"/>
             </xs:choice>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="cestType">
-        <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element type="annotationsType" name="annotations" minOccurs="0"/>
-            <xs:element type="hookType" name="before" minOccurs="0"/>
-            <xs:element type="hookType" name="after" minOccurs="0"/>
-            <xs:element type="testType" name="test" maxOccurs="unbounded"/>
-        </xs:choice>
-        <xs:attribute type="xs:string" name="name" use="required"/>
-    </xs:complexType>
-    <xs:complexType name="actionsRefType">
-        <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="actionTypeTags"/>
-            <xs:element name="arguments" maxOccurs="1">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="argument" maxOccurs="unbounded" minOccurs="0">
-                            <xs:complexType>
-                                <xs:attribute type="xs:string" name="name" use="required"/>
-                                <xs:attribute type="xs:string" name="defaultValue"/>
-                            </xs:complexType>
-                        </xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-        </xs:choice>
-        <xs:attribute type="xs:string" name="name" use="required"/>
-    </xs:complexType>
+
     <xs:complexType name="annotationsType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element type="annotationType" name="env" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="features" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="stories" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="title" minOccurs="0" maxOccurs="unbounded"/>
@@ -74,8 +46,10 @@
     </xs:complexType>
     <xs:complexType name="testType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="testTypeTags"/>
-            <xs:element type="annotationsType" name="annotations" minOccurs="0"/>
+            <xs:group ref="testTypeTags" />
+            <xs:element type="hookType" name="before" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="hookType" name="after" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="annotationsType" name="annotations" minOccurs="0" maxOccurs="1"/>
         </xs:choice>
         <xs:attribute type="xs:string" name="name"/>
         <xs:attribute type="xs:boolean" name="remove" default="false"/>

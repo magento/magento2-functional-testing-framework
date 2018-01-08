@@ -6,53 +6,100 @@
 
 namespace tests\verification\Tests;
 
-use Magento\FunctionalTestingFramework\Test\Handlers\CestObjectHandler;
+use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use PHPUnit\Framework\TestCase;
 
 class ActionGroupMergeGenerationTest extends TestCase
 {
-    const MERGE_FUNCTIONAL_CEST = 'MergeFunctionalCest';
-    const ACTION_GROUP_FUNCTIONAL_CEST = "ActionGroupFunctionalCest";
     const RESOURCES_PATH = __DIR__ . '/../Resources';
 
     /**
-     * Tests flat generation of a hardcoded cest file with no external references.
+     * Tests flat generation of a hardcoded test file with no external references.
      */
-    public function testMergeFunctionalCest()
+    public function testBasicActionGroup()
     {
-        $this->runComparisonTest(self::MERGE_FUNCTIONAL_CEST);
+        $this->runComparisonTest('BasicActionGroupTest');
     }
 
     /**
-     * Test generation of a cest file with action group references.
+     * Test an ordinary action group with data
      */
-    public function testActionGroupFunctionalCest()
+    public function testActionGroupWithData()
     {
-        $this->runComparisonTest(self::ACTION_GROUP_FUNCTIONAL_CEST);
+        $this->runComparisonTest('ActionGroupWithDataTest');
     }
 
     /**
-     * Generate a Cest by name and assert that it equals the corresponding .txt source of truth
+     * Test an action group with data overridden in arguments
+     */
+    public function testActionGroupWithDataOverride()
+    {
+        $this->runComparisonTest('ActionGroupWithDataOverrideTest');
+    }
+
+    /**
+     * Test an action group with no default data
+     */
+    public function testActionGroupWithNoDefault()
+    {
+        $this->runComparisonTest('ActionGroupWithNoDefaultTest');
+    }
+
+    /**
+     * Test an action group with persisted data
+     */
+    public function testActionGroupWithPersistedData()
+    {
+        $this->runComparisonTest('ActionGroupWithPersistedData');
+    }
+
+    /**
+     * Test an action group with top level persisted data
+     */
+    public function testActionGroupWithTopLevelPersistedData()
+    {
+        $this->runComparisonTest('ActionGroupWithTopLevelPersistedData');
+    }
+
+    /**
+     * Test an action group called multiple times
+     */
+    public function testMultipleActionGroups()
+    {
+        $this->runComparisonTest('MultipleActionGroupsTest');
+    }
+
+    /**
+     * Test an action group with a merge counterpart
+     */
+    public function testMergedActionGroup()
+    {
+        $this->runComparisonTest('MergedActionGroupTest');
+    }
+
+    /**
+     * Test an action group with arguments named similarly to elements
+     */
+    public function testArgumentWithSameNameAsElement()
+    {
+        $this->runComparisonTest('ArgumentWithSameNameAsElement');
+    }
+
+    /**
+     * Generate a Test by name and assert that it equals the corresponding .txt source of truth
      *
-     * @param string $cestName
+     * @param string $testName
      */
-    private function runComparisonTest($cestName)
+    private function runComparisonTest($testName)
     {
-        $cest = CestObjectHandler::getInstance()->getObject($cestName);
-        $test = TestGenerator::getInstance(null, [$cest]);
-        $test->createAllCestFiles();
-
-        $cestFile = $test->getExportDir() .
-            DIRECTORY_SEPARATOR .
-            $cestName .
-            ".php";
-
-        $this->assertTrue(file_exists($cestFile));
+        $test = TestObjectHandler::getInstance()->getObject($testName);
+        $testHandler = TestGenerator::getInstance(null, [$test]);
+        $testHandler->createAllTestFiles();
 
         $this->assertFileEquals(
-            self::RESOURCES_PATH . DIRECTORY_SEPARATOR . $cestName . ".txt",
-            $cestFile
+            self::RESOURCES_PATH . DIRECTORY_SEPARATOR . $test->getName() . ".txt",
+            $testHandler->getExportDir() . DIRECTORY_SEPARATOR . $test->getCodeceptionName() . ".php"
         );
     }
 }

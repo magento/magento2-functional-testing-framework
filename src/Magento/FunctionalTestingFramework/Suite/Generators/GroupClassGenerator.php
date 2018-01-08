@@ -8,7 +8,7 @@ namespace Magento\FunctionalTestingFramework\Suite\Generators;
 
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
-use Magento\FunctionalTestingFramework\Test\Objects\CestHookObject;
+use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Mustache_Engine;
@@ -79,7 +79,7 @@ class GroupClassGenerator
     {
         $mustacheData = [];
         $mustacheData[self::SUITE_NAME_TAG] = $suiteObject->getName();
-        $mustacheData[self::TEST_COUNT_TAG] = count($suiteObject->getCests());
+        $mustacheData[self::TEST_COUNT_TAG] = count($suiteObject->getTests());
 
         $mustacheData[self::BEFORE_MUSTACHE_KEY] = $this->buildHookMustacheArray($suiteObject->getBeforeHook());
         $mustacheData[self::AFTER_MUSTACHE_KEY] = $this->buildHookMustacheArray($suiteObject->getAfterHook());
@@ -94,7 +94,7 @@ class GroupClassGenerator
     /**
      * Function which takes hook objects and transforms data into array for mustache template engine.
      *
-     * @param CestHookObject $hookObj
+     * @param TestHookObject $hookObj
      * @return array
      */
     private function buildHookMustacheArray($hookObj)

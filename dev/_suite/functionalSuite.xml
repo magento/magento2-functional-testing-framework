@@ -10,12 +10,12 @@
     <suite name="functionalSuite1">
         <include>
             <group name="include"/>
-            <cest name="SampleSuiteCest" test="IncludeTest"/>
-            <cest name="SampleSuite4Cest"/>
+            <test name="IncludeTest"/>
+            <module name="TestModule" file="SampleSuite2Test.xml"/>
         </include>
         <exclude>
             <group name="exclude"/>
-            <cest name="SampleSuite5Cest" test="ExcludeTest"/>
+            <test name="ExcludeTest2"/>
         </exclude>
     </suite>
 </suites>

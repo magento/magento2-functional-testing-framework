@@ -18,7 +18,7 @@ use Magento\FunctionalTestingFramework\Test\Util\ActionGroupObjectExtractor;
 class ActionGroupObjectHandler implements ObjectHandlerInterface
 {
     const BEFORE_AFTER_ERROR_MSG = "Merge Error - Steps cannot have both before and after attributes.\tTestStep='%s'";
-    const ACTION_GROUP_ROOT = 'config';
+    const ACTION_GROUP_ROOT = 'actionGroups';
     const ACTION_GROUP = 'actionGroup';
 
     /**

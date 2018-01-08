@@ -31,6 +31,16 @@ class File extends AbstractIterator
     }
 
     /**
+     * Return filename of current file object
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->data[$this->key()];
+    }
+
+    /**
      * Get file content
      *
      * @return string
@@ -41,7 +51,6 @@ class File extends AbstractIterator
             $this->cached[$this->current] = file_get_contents($this->current);
         }
         return $this->cached[$this->current];
-
     }
 
     /**
