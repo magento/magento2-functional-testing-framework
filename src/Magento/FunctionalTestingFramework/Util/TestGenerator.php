@@ -273,8 +273,8 @@ class TestGenerator
     /**
      * Method which returns formatted method level annotation based on type and name(s).
      *
-     * @param mixed $annotationType
-     * @param string|null $annotationName
+     * @param string $annotationType
+     * @param string $annotationName
      * @return null|string
      */
     private function generateMethodAnnotations($annotationType = null, $annotationName = null)
@@ -305,7 +305,7 @@ class TestGenerator
      * Method which return formatted class level annotations based on type and name(s).
      *
      * @param string $annotationType
-     * @param mixed $annotationName
+     * @param string $annotationName
      * @return null|string
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
