@@ -377,6 +377,7 @@ class TestGenerator
             $parameter = null;
             $dependentSelector = null;
             $visible = null;
+            $command = null;
 
             $assertExpected = null;
             $assertActual = null;
@@ -386,6 +387,10 @@ class TestGenerator
 
             // Validate action attributes and print notice messages on violation.
             $this->validateXmlAttributesMutuallyExclusive($stepKey, $actionName, $customActionAttributes);
+
+            if (isset($customActionAttributes['command'])) {
+                $command = $customActionAttributes['command'];
+            }
 
             if (isset($customActionAttributes['attribute'])) {
                 $attribute = $customActionAttributes['attribute'];
@@ -1033,6 +1038,9 @@ class TestGenerator
                         $actionName,
                         $assertMessage
                     );
+                    break;
+                case "magentoCLI":
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $this->wrapWithDoubleQuotes($command));
                     break;
                 default:
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input, $parameter);

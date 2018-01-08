@@ -17,6 +17,13 @@ use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Util\Uri;
 use Codeception\Util\ActionSequence;
+use Magento\AsynchronousOperations\Model\Operation;
+use Magento\FunctionalTestingFramework\DataGenerator\Objects\OperationDefinitionObject;
+use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\MagentoCLIExecutor;
+use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\WebapiExecutor;
+use Magento\FunctionalTestingFramework\DataGenerator\Persist\CurlHandler;
+use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
+use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
 use Magento\Setup\Exception;
 use Magento\FunctionalTestingFramework\Util\ConfigSanitizerUtil;
 use Yandex\Allure\Adapter\Support\AttachmentSupport;
@@ -313,6 +320,19 @@ class MagentoWebDriver extends WebDriver
     public function scrollToTopOfPage()
     {
         $this->executeJS('window.scrollTo(0,0);');
+    }
+
+    /**
+     * Takes given $command and executes it against exposed MTF CLI entry point.
+     * @param string $command
+     */
+    public function magentoCLI($command)
+    {
+        $apiURL = $this->config['url'] . $_ENV['MAGENTO_CLI_COMMAND_PATH'];
+        $executor = new CurlTransport();
+        $executor->write($apiURL . '?' . $_ENV['MAGENTO_CLI_COMMAND_PARAMETER'] . '=' . $command, [], CurlInterface::GET, []);
+        $response = $executor->read();
+        $executor->close();
     }
 
     /**
