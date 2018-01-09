@@ -6,11 +6,11 @@
   */
 -->
 
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
     <actionGroup name="FunctionalActionGroupForMerge">
         <see stepKey="myMergedSeeElement" selector=".merge .{{myArg.firstname}}" before="see1"/>
         <click stepKey="myMergedClick" selector=".merge .{{myArg.lastname}}" after="amOnPage1"/>
         <remove keyForRemoval="deleteMe"/>
     </actionGroup>
-</config>
+</actionGroups>

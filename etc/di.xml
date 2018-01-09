@@ -78,8 +78,8 @@
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\Page</argument>
             <argument name="idAttributes" xsi:type="array">
-                <item name="/config/page" xsi:type="string">name</item>
-                <item name="/config/page/section" xsi:type="string">name</item>
+                <item name="/pages/page" xsi:type="string">name</item>
+                <item name="/pages/page/section" xsi:type="string">name</item>
             </argument>
             <argument name="fileName" xsi:type="string">*Page.xml</argument>
             <argument name="defaultScope" xsi:type="string">Page</argument>
@@ -91,8 +91,8 @@
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\Section</argument>
             <argument name="idAttributes" xsi:type="array">
-                <item name="/config/section" xsi:type="string">name</item>
-                <item name="/config/section/element" xsi:type="string">name</item>
+                <item name="/sections/section" xsi:type="string">name</item>
+                <item name="/sections/section/element" xsi:type="string">name</item>
             </argument>
             <argument name="fileName" xsi:type="string">*Section.xml</argument>
             <argument name="defaultScope" xsi:type="string">Section</argument>
@@ -146,10 +146,10 @@
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\DataProfile</argument>
             <argument name="idAttributes" xsi:type="array">
-                <item name="/config/entity" xsi:type="string">name</item>
-                <item name="/config/entity/data" xsi:type="string">key</item>
-                <item name="/config/entity/array" xsi:type="string">key</item>
-                <item name="/config/entity/required-entity" xsi:type="string">name</item>
+                <item name="/entities/entity" xsi:type="string">name</item>
+                <item name="/entities/entity/data" xsi:type="string">key</item>
+                <item name="/entities/entity/array" xsi:type="string">key</item>
+                <item name="/entities/entity/required-entity" xsi:type="string">name</item>
             </argument>
             <argument name="fileName" xsi:type="string">*Data.xml</argument>
             <argument name="defaultScope" xsi:type="string">Data</argument>
@@ -179,10 +179,10 @@
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\Metadata</argument>
             <argument name="idAttributes" xsi:type="array">
-                <item name="/config/operation" xsi:type="string">name</item>
-                <item name="/config/operation/field" xsi:type="string">key</item>
-                <item name="/config/operation/array" xsi:type="string">key</item>
-                <item name="/config/operation/object" xsi:type="string">key</item>
+                <item name="/operations/operation" xsi:type="string">name</item>
+                <item name="/operations/operation/field" xsi:type="string">key</item>
+                <item name="/operations/operation/array" xsi:type="string">key</item>
+                <item name="/operations/operation/object" xsi:type="string">key</item>
             </argument>
             <argument name="fileName" xsi:type="string">*-meta.xml</argument>
             <argument name="defaultScope" xsi:type="string">Metadata</argument>
@@ -196,71 +196,60 @@
             <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\TestData" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
+    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\TestData" type="Magento\FunctionalTestingFramework\Config\Reader\TestFilesystem">
         <arguments>
             <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\TestDataConverter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\TestData</argument>
+            <!--argument name="domDocumentClass" xsi:type="string">Magento\FunctionalTestingFramework\Config\Dom\TestDom</argument-->
             <argument name="idAttributes" xsi:type="array">
-                <item name="/config/cest" xsi:type="string">name</item>
-                <item name="/config/cest/test" xsi:type="string">name</item>
-                <item name="/config/cest/test/actionGroup/argument" xsi:type="string">name</item>
-                <item name="/config/cest/test/createData/required-entity" xsi:type="string">createDataKey</item>
-                <item name="/config/cest/test/updateData/required-entity" xsi:type="string">createDataKey</item>
-                <item name="/config/cest/test/getData/required-entity" xsi:type="string">createDataKey</item>
-                <item name="/config/cest/test/(acceptPopup|actionGroup|amOnPage|amOnUrl|appendField|assertArraySubset|assertElementContainsAttribute|attachFile|cancelPopup|checkOption|clearField|click|clickWithLeftButton|clickWithRightButton|closeTab|comment|conditionalClick|createData|deleteData|updateData|getData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForLoadingMaskToDisappear|waitForPageLoad|waitForText|assertArrayHasKey|assertArrayNotHasKey|assertArraySubset|assertContains|assertCount|assertEmpty|assertEquals|assertFalse|assertFileExists|assertFileNotExists|assertGreaterOrEquals|assertGreaterThan|assertGreaterThanOrEqual|assertInstanceOf|assertInternalType|assertIsEmpty|assertLessOrEquals|assertLessThan|assertLessThanOrEqual|assertNotContains|assertNotEmpty|assertNotEquals|assertNotInstanceOf|assertNotNull|assertNotRegExp|assertNotSame|assertNull|assertRegExp|assertSame|assertStringStartsNotWith|assertStringStartsWith|assertTrue|expectException|fail)" xsi:type="string">stepKey</item>
-                <item name="/config/cest/test/remove" xsi:type="string">keyForRemoval</item>
-                <item name="/config/cest/before/remove" xsi:type="string">keyForRemoval</item>
-                <item name="/config/cest/after/remove" xsi:type="string">keyForRemoval</item>
+                <item name="/tests/test" xsi:type="string">name</item>
+                <item name="/tests/test/actionGroup/argument" xsi:type="string">name</item>
+                <item name="/tests/test/createData/required-entity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/updateData/required-entity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/getData/required-entity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/(acceptPopup|actionGroup|amOnPage|amOnUrl|appendField|assertArraySubset|assertElementContainsAttribute|attachFile|cancelPopup|checkOption|clearField|click|clickWithLeftButton|clickWithRightButton|closeTab|comment|conditionalClick|createData|deleteData|updateData|getData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForLoadingMaskToDisappear|waitForPageLoad|waitForText|assertArrayHasKey|assertArrayNotHasKey|assertArraySubset|assertContains|assertCount|assertEmpty|assertEquals|assertFalse|assertFileExists|assertFileNotExists|assertGreaterOrEquals|assertGreaterThan|assertGreaterThanOrEqual|assertInstanceOf|assertInternalType|assertIsEmpty|assertLessOrEquals|assertLessThan|assertLessThanOrEqual|assertNotContains|assertNotEmpty|assertNotEquals|assertNotInstanceOf|assertNotNull|assertNotRegExp|assertNotSame|assertNull|assertRegExp|assertSame|assertStringStartsNotWith|assertStringStartsWith|assertTrue|expectException|fail)" xsi:type="string">stepKey</item>
+                <item name="/tests/test/remove" xsi:type="string">keyForRemoval</item>
+                <item name="/tests/test/before/remove" xsi:type="string">keyForRemoval</item>
+                <item name="/tests/test/after/remove" xsi:type="string">keyForRemoval</item>
             </argument>
-            <argument name="fileName" xsi:type="string">*Cest.xml</argument>
-            <argument name="defaultScope" xsi:type="string">Cest</argument>
+            <argument name="fileName" xsi:type="string">*.xml</argument>
+            <argument name="defaultScope" xsi:type="string">Test</argument>
         </arguments>
     </virtualType>
 
     <virtualType name="Magento\FunctionalTestingFramework\Test\Config\Dom\ArrayNodeConfig" type="Magento\FunctionalTestingFramework\Config\Dom\ArrayNodeConfig">
         <arguments>
             <argument name="assocArrayAttributes" xsi:type="array">
-                <item name="/config/cest/test/(acceptPopup|actionGroup|amOnPage|amOnUrl|appendField|assertArraySubset|assertElementContainsAttribute|attachFile|cancelPopup|checkOption|clearField|click|clickWithLeftButton|clickWithRightButton|closeTab|comment|conditionalClick|createData|deleteData|updateData|getData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForLoadingMaskToDisappear|waitForPageLoad|waitForText|assertArrayHasKey|assertArrayNotHasKey|assertArraySubset|assertContains|assertCount|assertEmpty|assertEquals|assertFalse|assertFileExists|assertFileNotExists|assertGreaterOrEquals|assertGreaterThan|assertGreaterThanOrEqual|assertInstanceOf|assertInternalType|assertIsEmpty|assertLessOrEquals|assertLessThan|assertLessThanOrEqual|assertNotContains|assertNotEmpty|assertNotEquals|assertNotInstanceOf|assertNotNull|assertNotRegExp|assertNotSame|assertNull|assertRegExp|assertSame|assertStringStartsNotWith|assertStringStartsWith|assertTrue|expectException|fail)" xsi:type="string">stepKey</item>
-                <item name="/config/cest/before/(acceptPopup|actionGroup|amOnPage|amOnUrl|appendField|assertArraySubset|assertElementContainsAttribute|attachFile|cancelPopup|checkOption|clearField|click|clickWithLeftButton|clickWithRightButton|closeTab|comment|conditionalClick|createData|deleteData|updateData|getData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForLoadingMaskToDisappear|waitForPageLoad|waitForText|assertArrayHasKey|assertArrayNotHasKey|assertArraySubset|assertContains|assertCount|assertEmpty|assertEquals|assertFalse|assertFileExists|assertFileNotExists|assertGreaterOrEquals|assertGreaterThan|assertGreaterThanOrEqual|assertInstanceOf|assertInternalType|assertIsEmpty|assertLessOrEquals|assertLessThan|assertLessThanOrEqual|assertNotContains|assertNotEmpty|assertNotEquals|assertNotInstanceOf|assertNotNull|assertNotRegExp|assertNotSame|assertNull|assertRegExp|assertSame|assertStringStartsNotWith|assertStringStartsWith|assertTrue|expectException|fail)" xsi:type="string">stepKey</item>
-                <item name="/config/cest/after/(acceptPopup|actionGroup|amOnPage|amOnUrl|appendField|assertArraySubset|assertElementContainsAttribute|attachFile|cancelPopup|checkOption|clearField|click|clickWithLeftButton|clickWithRightButton|closeTab|comment|conditionalClick|createData|deleteData|updateData|getData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForLoadingMaskToDisappear|waitForPageLoad|waitForText|assertArrayHasKey|assertArrayNotHasKey|assertArraySubset|assertContains|assertCount|assertEmpty|assertEquals|assertFalse|assertFileExists|assertFileNotExists|assertGreaterOrEquals|assertGreaterThan|assertGreaterThanOrEqual|assertInstanceOf|assertInternalType|assertIsEmpty|assertLessOrEquals|assertLessThan|assertLessThanOrEqual|assertNotContains|assertNotEmpty|assertNotEquals|assertNotInstanceOf|assertNotNull|assertNotRegExp|assertNotSame|assertNull|assertRegExp|assertSame|assertStringStartsNotWith|assertStringStartsWith|assertTrue|expectException|fail)" xsi:type="string">stepKey</item>
-                <item name="/config/cest/test/remove" xsi:type="string">keyForRemoval</item>
-                <item name="/config/cest/before/remove" xsi:type="string">keyForRemoval</item>
-                <item name="/config/cest/after/remove" xsi:type="string">keyForRemoval</item>
-                <item name="/config/cest/test" xsi:type="string">name</item>
-                <item name="/config/cest" xsi:type="string">name</item>
-                <item name="/config/cest/test/createData/required-entity" xsi:type="string">createDataKey</item>
-                <item name="/config/cest/before/createData/required-entity" xsi:type="string">createDataKey</item>
-                <item name="/config/cest/after/createData/required-entity" xsi:type="string">createDataKey</item>
-                <item name="/config/cest/test/updateData/required-entity" xsi:type="string">createDataKey</item>
-                <item name="/config/cest/before/updateData/required-entity" xsi:type="string">createDataKey</item>
-                <item name="/config/cest/after/updateData/required-entity" xsi:type="string">createDataKey</item>
-                <item name="/config/cest/test/getData/required-entity" xsi:type="string">createDataKey</item>
-                <item name="/config/cest/before/getData/required-entity" xsi:type="string">createDataKey</item>
-                <item name="/config/cest/after/getData/required-entity" xsi:type="string">createDataKey</item>
-                <item name="/config/cest/test/actionGroup/argument" xsi:type="string">name</item>
+                <item name="/tests/test/(acceptPopup|actionGroup|amOnPage|amOnUrl|appendField|assertArraySubset|assertElementContainsAttribute|attachFile|cancelPopup|checkOption|clearField|click|clickWithLeftButton|clickWithRightButton|closeTab|comment|conditionalClick|createData|deleteData|updateData|getData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForLoadingMaskToDisappear|waitForPageLoad|waitForText|assertArrayHasKey|assertArrayNotHasKey|assertArraySubset|assertContains|assertCount|assertEmpty|assertEquals|assertFalse|assertFileExists|assertFileNotExists|assertGreaterOrEquals|assertGreaterThan|assertGreaterThanOrEqual|assertInstanceOf|assertInternalType|assertIsEmpty|assertLessOrEquals|assertLessThan|assertLessThanOrEqual|assertNotContains|assertNotEmpty|assertNotEquals|assertNotInstanceOf|assertNotNull|assertNotRegExp|assertNotSame|assertNull|assertRegExp|assertSame|assertStringStartsNotWith|assertStringStartsWith|assertTrue|expectException|fail)" xsi:type="string">stepKey</item>
+                <item name="/tests/test/before/(acceptPopup|actionGroup|amOnPage|amOnUrl|appendField|assertArraySubset|assertElementContainsAttribute|attachFile|cancelPopup|checkOption|clearField|click|clickWithLeftButton|clickWithRightButton|closeTab|comment|conditionalClick|createData|deleteData|updateData|getData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForLoadingMaskToDisappear|waitForPageLoad|waitForText|assertArrayHasKey|assertArrayNotHasKey|assertArraySubset|assertContains|assertCount|assertEmpty|assertEquals|assertFalse|assertFileExists|assertFileNotExists|assertGreaterOrEquals|assertGreaterThan|assertGreaterThanOrEqual|assertInstanceOf|assertInternalType|assertIsEmpty|assertLessOrEquals|assertLessThan|assertLessThanOrEqual|assertNotContains|assertNotEmpty|assertNotEquals|assertNotInstanceOf|assertNotNull|assertNotRegExp|assertNotSame|assertNull|assertRegExp|assertSame|assertStringStartsNotWith|assertStringStartsWith|assertTrue|expectException|fail)" xsi:type="string">stepKey</item>
+                <item name="/tests/test/after/(acceptPopup|actionGroup|amOnPage|amOnUrl|appendField|assertArraySubset|assertElementContainsAttribute|attachFile|cancelPopup|checkOption|clearField|click|clickWithLeftButton|clickWithRightButton|closeTab|comment|conditionalClick|createData|deleteData|updateData|getData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForLoadingMaskToDisappear|waitForPageLoad|waitForText|assertArrayHasKey|assertArrayNotHasKey|assertArraySubset|assertContains|assertCount|assertEmpty|assertEquals|assertFalse|assertFileExists|assertFileNotExists|assertGreaterOrEquals|assertGreaterThan|assertGreaterThanOrEqual|assertInstanceOf|assertInternalType|assertIsEmpty|assertLessOrEquals|assertLessThan|assertLessThanOrEqual|assertNotContains|assertNotEmpty|assertNotEquals|assertNotInstanceOf|assertNotNull|assertNotRegExp|assertNotSame|assertNull|assertRegExp|assertSame|assertStringStartsNotWith|assertStringStartsWith|assertTrue|expectException|fail)" xsi:type="string">stepKey</item>
+                <item name="/tests/test/remove" xsi:type="string">keyForRemoval</item>
+                <item name="/tests/test/before/remove" xsi:type="string">keyForRemoval</item>
+                <item name="/tests/test/after/remove" xsi:type="string">keyForRemoval</item>
+                <item name="/tests/test" xsi:type="string">name</item>
+                <item name="/tests/test/createData/required-entity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/before/createData/required-entity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/after/createData/required-entity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/updateData/required-entity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/before/updateData/required-entity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/after/updateData/required-entity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/getData/required-entity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/before/getData/required-entity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/after/getData/required-entity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/actionGroup/argument" xsi:type="string">name</item>
             </argument>
             <argument name="numericArrays" xsi:type="array">
-                <item name="/config/cest/annotations/env" xsi:type="string">/config/cest/annotations/env</item>
-                <item name="/config/cest/annotations/features" xsi:type="string">/config/cest/annotations/features</item>
-                <item name="/config/cest/annotations/stories" xsi:type="string">/config/cest/annotations/stories</item>
-                <item name="/config/cest/annotations/title" xsi:type="string">/config/cest/annotations/title</item>
-                <item name="/config/cest/annotations/description" xsi:type="string">/config/cest/annotations/description</item>
-                <item name="/config/cest/annotations/severity" xsi:type="string">/config/cest/annotations/severity</item>
-                <item name="/config/cest/annotations/testCaseId" xsi:type="string">/config/cest/annotations/testCaseId</item>
-                <item name="/config/cest/annotations/useCaseId" xsi:type="string">/config/cest/annotations/useCaseId</item>
-                <item name="/config/cest/annotations/group" xsi:type="string">/config/cest/annotations/group</item>
-                <item name="/config/cest/annotations/return" xsi:type="string">/config/cest/annotations/return</item>
-                <item name="/config/cest/test/annotations/features" xsi:type="string">/config/cest/test/annotations/features</item>
-                <item name="/config/cest/test/annotations/stories" xsi:type="string">/config/cest/test/annotations/stories</item>
-                <item name="/config/cest/test/annotations/title" xsi:type="string">/config/cest/test/annotations/title</item>
-                <item name="/config/cest/test/annotations/description" xsi:type="string">/config/cest/test/annotations/description</item>
-                <item name="/config/cest/test/annotations/severity" xsi:type="string">/config/cest/test/annotations/severity</item>
-                <item name="/config/cest/test/annotations/testCaseId" xsi:type="string">/config/cest/test/annotations/testCaseId</item>
-                <item name="/config/cest/test/annotations/useCaseId" xsi:type="string">/config/cest/test/annotations/useCaseId</item>
-                <item name="/config/cest/test/annotations/group" xsi:type="string">/config/cest/test/annotations/group</item>
-                <item name="/config/cest/test/annotations/env" xsi:type="string">/config/cest/test/annotations/env</item>
-                <item name="/config/cest/test/annotations/return" xsi:type="string">/config/cest/test/annotations/return</item>
+                <item name="/tests/test/annotations/features" xsi:type="string">/tests/test/annotations/features</item>
+                <item name="/tests/test/annotations/stories" xsi:type="string">/tests/test/annotations/stories</item>
+                <item name="/tests/test/annotations/title" xsi:type="string">/tests/test/annotations/title</item>
+                <item name="/tests/test/annotations/description" xsi:type="string">/tests/test/annotations/description</item>
+                <item name="/tests/test/annotations/severity" xsi:type="string">/tests/test/annotations/severity</item>
+                <item name="/tests/test/annotations/testCaseId" xsi:type="string">/tests/test/annotations/testCaseId</item>
+                <item name="/tests/test/annotations/useCaseId" xsi:type="string">/tests/test/annotations/useCaseId</item>
+                <item name="/tests/test/annotations/group" xsi:type="string">/tests/test/annotations/group</item>
+                <item name="/tests/test/annotations/env" xsi:type="string">/tests/test/annotations/env</item>
+                <item name="/tests/test/annotations/return" xsi:type="string">/tests/test/annotations/return</item>
             </argument>
         </arguments>
     </virtualType>
@@ -284,16 +273,22 @@
 
     <!--Config for Action Group -->
 
+    <virtualType name="Magento\FunctionalTestingFramework\Config\SchemaLocator\ActionGroup" type="Magento\FunctionalTestingFramework\Config\SchemaLocator">
+        <arguments>
+            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Test/etc/actionGroup.xsd</argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\ActionGroupData" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
         <arguments>
             <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\ActionGroupDataConverter</argument>
-            <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\TestData</argument>
+            <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\ActionGroup</argument>
             <argument name="idAttributes" xsi:type="array">
-                <item name="/config/actionGroup" xsi:type="string">name</item>
-                <item name="/config/actionGroup/arguments/argument" xsi:type="string">name</item>
-                <item name="/config/actionGroup/(acceptPopup|amOnPage|appendField|assertArraySubset|assertElementContainsAttribute|attachFile|cancelPopup|checkOption|clearField|click|clickWithLeftButton|clickWithRightButton|closeTab|comment|conditionalClick|createData|deleteData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForPageLoad|waitForText|assertArrayHasKey|assertArrayNotHasKey|assertArraySubset|assertContains|assertCount|assertEmpty|assertEquals|assertFalse|assertFileExists|assertFileNotExists|assertGreaterOrEquals|assertGreaterThan|assertGreaterThanOrEqual|assertInstanceOf|assertInternalType|assertIsEmpty|assertLessOrEquals|assertLessThan|assertLessThanOrEqual|assertNotContains|assertNotEmpty|assertNotEquals|assertNotInstanceOf|assertNotNull|assertNotRegExp|assertNotSame|assertNull|assertRegExp|assertSame|assertStringStartsNotWith|assertStringStartsWith|assertTrue|expectException|fail)" xsi:type="string">stepKey</item>
-                <item name="/config/actionGroup/remove" xsi:type="string">keyForRemoval</item>
+                <item name="/actionGroups/actionGroup" xsi:type="string">name</item>
+                <item name="/actionGroups/actionGroup/arguments/argument" xsi:type="string">name</item>
+                <item name="/actionGroups/actionGroup/(acceptPopup|amOnPage|appendField|assertArraySubset|assertElementContainsAttribute|attachFile|cancelPopup|checkOption|clearField|click|clickWithLeftButton|clickWithRightButton|closeTab|comment|conditionalClick|createData|deleteData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForPageLoad|waitForText|assertArrayHasKey|assertArrayNotHasKey|assertArraySubset|assertContains|assertCount|assertEmpty|assertEquals|assertFalse|assertFileExists|assertFileNotExists|assertGreaterOrEquals|assertGreaterThan|assertGreaterThanOrEqual|assertInstanceOf|assertInternalType|assertIsEmpty|assertLessOrEquals|assertLessThan|assertLessThanOrEqual|assertNotContains|assertNotEmpty|assertNotEquals|assertNotInstanceOf|assertNotNull|assertNotRegExp|assertNotSame|assertNull|assertRegExp|assertSame|assertStringStartsNotWith|assertStringStartsWith|assertTrue|expectException|fail)" xsi:type="string">stepKey</item>
+                <item name="/actionGroups/actionGroup/remove" xsi:type="string">keyForRemoval</item>
             </argument>
             <argument name="fileName" xsi:type="string">*ActionGroup.xml</argument>
             <argument name="defaultScope" xsi:type="string">ActionGroup</argument>
@@ -303,10 +298,10 @@
     <virtualType name="Magento\FunctionalTestingFramework\Test\Config\Dom\ActionGroupArrayNodeConfig" type="Magento\FunctionalTestingFramework\Config\Dom\ArrayNodeConfig">
         <arguments>
             <argument name="assocArrayAttributes" xsi:type="array">
-                <item name="/config/actionGroup/(acceptPopup|amOnPage|appendField|assertArraySubset|assertElementContainsAttribute|attachFile|cancelPopup|checkOption|clearField|click|clickWithLeftButton|clickWithRightButton|closeTab|comment|conditionalClick|createData|deleteData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForPageLoad|waitForText|assertArrayHasKey|assertArrayNotHasKey|assertArraySubset|assertContains|assertCount|assertEmpty|assertEquals|assertFalse|assertFileExists|assertFileNotExists|assertGreaterOrEquals|assertGreaterThan|assertGreaterThanOrEqual|assertInstanceOf|assertInternalType|assertIsEmpty|assertLessOrEquals|assertLessThan|assertLessThanOrEqual|assertNotContains|assertNotEmpty|assertNotEquals|assertNotInstanceOf|assertNotNull|assertNotRegExp|assertNotSame|assertNull|assertRegExp|assertSame|assertStringStartsNotWith|assertStringStartsWith|assertTrue|expectException|fail)" xsi:type="string">stepKey</item>
-                <item name="/config/actionGroup/remove" xsi:type="string">keyForRemoval</item>
-                <item name="/config/actionGroup" xsi:type="string">name</item>
-                <item name="/config/actionGroup/arguments/argument" xsi:type="string">name</item>
+                <item name="/actionGroups/actionGroup/(acceptPopup|amOnPage|appendField|assertArraySubset|assertElementContainsAttribute|attachFile|cancelPopup|checkOption|clearField|click|clickWithLeftButton|clickWithRightButton|closeTab|comment|conditionalClick|createData|deleteData|dontSee|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|executeJS|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|openNewTab|pauseExecution|performOn|pressKey|reloadPage|resetCookie|resizeWindow|scrollTo|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForPageLoad|waitForText|assertArrayHasKey|assertArrayNotHasKey|assertArraySubset|assertContains|assertCount|assertEmpty|assertEquals|assertFalse|assertFileExists|assertFileNotExists|assertGreaterOrEquals|assertGreaterThan|assertGreaterThanOrEqual|assertInstanceOf|assertInternalType|assertIsEmpty|assertLessOrEquals|assertLessThan|assertLessThanOrEqual|assertNotContains|assertNotEmpty|assertNotEquals|assertNotInstanceOf|assertNotNull|assertNotRegExp|assertNotSame|assertNull|assertRegExp|assertSame|assertStringStartsNotWith|assertStringStartsWith|assertTrue|expectException|fail)" xsi:type="string">stepKey</item>
+                <item name="/actionGroups/actionGroup/remove" xsi:type="string">keyForRemoval</item>
+                <item name="/actionGroups/actionGroup" xsi:type="string">name</item>
+                <item name="/actionGroups/actionGroup/arguments/argument" xsi:type="string">name</item>
             </argument>
         </arguments>
     </virtualType>
@@ -353,10 +348,10 @@
             <argument name="idAttributes" xsi:type="array">
                 <item name="/suites/suite" xsi:type="string">name</item>
                 <item name="/suites/suite/include/group" xsi:type="string">name</item>
-                <item name="/suites/suite/include/cest" xsi:type="string">name</item>
+                <item name="/suites/suite/include/test" xsi:type="string">name</item>
                 <item name="/suites/suite/include/module" xsi:type="string">name</item>
                 <item name="/suites/suite/exclude/group" xsi:type="string">name</item>
-                <item name="/suites/suite/exclude/cest" xsi:type="string">name</item>
+                <item name="/suites/suite/exclude/test" xsi:type="string">name</item>
                 <item name="/suites/suite/exclude/module" xsi:type="string">name</item>
             </argument>
             <argument name="fileName" xsi:type="string">*.xml</argument>
@@ -373,10 +368,10 @@
                 <item name="/suites/suite/before/createData/required-entity" xsi:type="string">createDataKey</item>
                 <item name="/suites/suite/after/createData/required-entity" xsi:type="string">createDataKey</item>
                 <item name="/suites/suite/include/group" xsi:type="string">name</item>
-                <item name="/suites/suite/include/cest" xsi:type="string">name</item>
+                <item name="/suites/suite/include/test" xsi:type="string">name</item>
                 <item name="/suites/suite/include/module" xsi:type="string">name</item>
                 <item name="/suites/suite/exclude/group" xsi:type="string">name</item>
-                <item name="/suites/suite/exclude/cest" xsi:type="string">name</item>
+                <item name="/suites/suite/exclude/test" xsi:type="string">name</item>
                 <item name="/suites/suite/exclude/module" xsi:type="string">name</item>
             </argument>
         </arguments>

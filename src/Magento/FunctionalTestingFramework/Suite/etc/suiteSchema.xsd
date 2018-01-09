@@ -17,11 +17,10 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
-    <xs:complexType name="cestSuiteOptionType">
+    <xs:complexType name="testSuiteOptionType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="name" use="required"/>
-                <xs:attribute type="xs:string" name="test" use="optional"/>
                 <xs:attribute type="xs:boolean" name="remove" use="optional"/>
             </xs:extension>
         </xs:simpleContent>
@@ -38,14 +37,14 @@
     <xs:complexType name="includeType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
             <xs:element type="groupSuiteOptionType" name="group" minOccurs="0"/>
-            <xs:element type="cestSuiteOptionType" name="cest" minOccurs="0"/>
+            <xs:element type="testSuiteOptionType" name="test" minOccurs="0"/>
             <xs:element type="moduleSuiteOptionType" name="module" minOccurs="0"/>
         </xs:choice>
     </xs:complexType>
     <xs:complexType name="excludeType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
             <xs:element type="groupSuiteOptionType" name="group" minOccurs="0"/>
-            <xs:element type="cestSuiteOptionType" name="cest" minOccurs="0"/>
+            <xs:element type="testSuiteOptionType" name="test" minOccurs="0"/>
             <xs:element type="moduleSuiteOptionType" name="module" minOccurs="0"/>
         </xs:choice>
     </xs:complexType>

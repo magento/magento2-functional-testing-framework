@@ -5,17 +5,17 @@
  */
 namespace tests\verification\Tests;
 
-use Magento\FunctionalTestingFramework\Test\Handlers\CestObjectHandler;
+use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use PHPUnit\Framework\TestCase;
 use tests\verification\Util\FileDiffUtil;
 
 class ReferenceReplacementGenerationTest extends TestCase
 {
-    const DATA_REPLACEMENT_CEST = 'DataReplacementCest';
-    const PERSISTED_REPLACEMENT_CEST = 'PersistedReplacementCest';
-    const PAGE_REPLACEMENT_CEST = 'PageReplacementCest';
-    const SECTION_REPLACEMENT_CEST = 'SectionReplacementCest';
+    const DATA_REPLACEMENT_TEST = 'DataReplacementTest';
+    const PERSISTED_REPLACEMENT_TEST = 'PersistedReplacementTest';
+    const PAGE_REPLACEMENT_TEST = 'PageReplacementTest';
+    const SECTION_REPLACEMENT_TEST = 'SectionReplacementTest';
     const RESOURCES_PATH = __DIR__ . '/../Resources';
 
     /**
@@ -23,7 +23,7 @@ class ReferenceReplacementGenerationTest extends TestCase
      */
     public function testDataReferenceReplacementCest()
     {
-        $this->runComparisonTest(self::DATA_REPLACEMENT_CEST);
+        $this->runComparisonTest(self::DATA_REPLACEMENT_TEST);
     }
 
     /**
@@ -31,7 +31,7 @@ class ReferenceReplacementGenerationTest extends TestCase
      */
     public function testPersistedeferenceReplacementCest()
     {
-        $this->runComparisonTest(self::PERSISTED_REPLACEMENT_CEST);
+        $this->runComparisonTest(self::PERSISTED_REPLACEMENT_TEST);
     }
 
     /**
@@ -39,7 +39,7 @@ class ReferenceReplacementGenerationTest extends TestCase
      */
     public function testPageReferenceReplacementCest()
     {
-        $this->runComparisonTest(self::PAGE_REPLACEMENT_CEST);
+        $this->runComparisonTest(self::PAGE_REPLACEMENT_TEST);
     }
 
     /**
@@ -47,29 +47,29 @@ class ReferenceReplacementGenerationTest extends TestCase
      */
     public function testSectionReferenceReplacementCest()
     {
-        $this->runComparisonTest(self::SECTION_REPLACEMENT_CEST);
+        $this->runComparisonTest(self::SECTION_REPLACEMENT_TEST);
     }
 
     /**
-     * Instantiates CestObjectHandler and TestGenerator, then compares given cest against flat txt equivalent.
-     * @param string $cestName
+     * Instantiates TestObjectHandler and TestGenerator, then compares given test against flat txt equivalent.
+     * @param string $testName
      */
-    private function runComparisonTest($cestName)
+    private function runComparisonTest($testName)
     {
-        $cest = CestObjectHandler::getInstance()->getObject($cestName);
-        $test = TestGenerator::getInstance(null, [$cest]);
-        $test->createAllCestFiles();
+        $testObject = TestObjectHandler::getInstance()->getObject($testName);
+        $test = TestGenerator::getInstance(null, [$testObject]);
+        $test->createAllTestFiles();
 
-        $cestFile = $test->getExportDir() .
+        $testFile = $test->getExportDir() .
             DIRECTORY_SEPARATOR .
-            $cestName .
+            $testObject->getCodeceptionName() .
             ".php";
 
-        $this->assertTrue(file_exists($cestFile));
+        $this->assertTrue(file_exists($testFile));
 
         $this->assertFileEquals(
-            self::RESOURCES_PATH . DIRECTORY_SEPARATOR . $cestName . ".txt",
-            $cestFile
+            self::RESOURCES_PATH . DIRECTORY_SEPARATOR . $testName . ".txt",
+            $testFile
         );
     }
 }

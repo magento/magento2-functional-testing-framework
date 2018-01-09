@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="LocatorFunctionTest">
+        <createData entity="ReplacementPerson" stepKey="data"/>
+
+        <click stepKey="SimpleLocator" selector="{{LocatorFunctionSection.simpleLocator}}"/>
+        <click stepKey="SimpleLocatorNonShorthand" selector="{{LocatorFunctionSection.simpleLocatorNonShorthand}}"/>
+        <click stepKey="ArrayLocator" selector="{{LocatorFunctionSection.arrayLocator}}"/>
+
+        <click stepKey="OneParamLiteral" selector="{{LocatorFunctionSection.simpleLocatorOneParam('string')}}"/>
+        <click stepKey="OneParamData" selector="{{LocatorFunctionSection.simpleLocatorOneParam(ReplacementPerson.firstname)}}"/>
+        <click stepKey="OneParamPersisted" selector="{{LocatorFunctionSection.simpleLocatorOneParam($data.key$)}}"/>
+
+        <click stepKey="TwoParamLiteral" selector="{{LocatorFunctionSection.simpleLocatorTwoParam('string1', 'string2')}}"/>
+        <click stepKey="TwoParamData" selector="{{LocatorFunctionSection.simpleLocatorTwoParam(ReplacementPerson.firstname, ReplacementPerson.lastname)}}"/>
+        <click stepKey="TwoParamPersisted" selector="{{LocatorFunctionSection.simpleLocatorTwoParam($data.key1$, $data.key2$)}}"/>
+
+        <click stepKey="TwoParamMix1" selector="{{LocatorFunctionSection.simpleLocatorTwoParam('string1', ReplacementPerson.firstname)}}"/>
+        <click stepKey="TwoParamMix2" selector="{{LocatorFunctionSection.simpleLocatorTwoParam('string1', $data.key1$)}}"/>
+        <click stepKey="TwoParamMix3" selector="{{LocatorFunctionSection.simpleLocatorTwoParam(ReplacementPerson.firstname, $data.key1$)}}"/>
+    </test>
+</tests>

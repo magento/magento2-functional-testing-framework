@@ -6,8 +6,8 @@
   */
 -->
 
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
     <actionGroup name="FunctionalActionGroup">
         <fillField selector="#foo" userInput="myData1" stepKey="fillField1"/>
         <fillField selector="#bar" userInput="myData2" stepKey="fillField2"/>
@@ -45,4 +45,4 @@
         <seeElement stepKey="see1" selector="{{SampleSection.simpleElement}}"/>
         <seeElement stepKey="see2" selector="{{SampleSection.simpleElementOneParam(simple.firstname)}}"/>
     </actionGroup>
-</config>
+</actionGroups>

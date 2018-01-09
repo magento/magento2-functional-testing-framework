@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:include schemaLocation="../../Test/etc/testSchema.xsd"/>
+    <xs:element name="actionGroups" type="actionGroupType"/>
+    <xs:complexType name="actionGroupType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element type="actionsRefType" name="actionGroup" maxOccurs="unbounded"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="actionsRefType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="actionTypeTags"/>
+            <xs:element name="arguments" maxOccurs="1">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="argument" maxOccurs="unbounded" minOccurs="0">
+                            <xs:complexType>
+                                <xs:attribute type="xs:string" name="name" use="required"/>
+                                <xs:attribute type="xs:string" name="defaultValue"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+    </xs:complexType>
+</xs:schema>

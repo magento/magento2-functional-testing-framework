@@ -17,15 +17,29 @@ class SuiteGenerationTest extends TestCase
     const CONFIG_YML_FILE = FW_BP . DIRECTORY_SEPARATOR . SuiteGenerator::YAML_CODECEPTION_CONFIG_FILENAME;
 
     const MANIFEST_RESULTS = [
-        'SampleSuite3Cest.php:IncludeTest',
-        'SampleSuite5Cest.php:additionalTest',
-        'SampleSuiteCest.php:IncludeTest',
-        'SampleSuite4Cest.php:IncludeTest'
+        'IncludeTest2Cest.php',
+        'additionalTestCest.php',
+        'IncludeTestCest.php',
+        'additionalIncludeTest2Cest.php'
     ];
 
+    /**
+     * Flag to track existence of config.yml file
+     *
+     * @var bool
+     */
     private static $YML_EXISTS_FLAG = false;
+
+    /**
+     * Array which stores state of any existing config.yml groups
+     *
+     * @var array
+     */
     private static $TEST_GROUPS = [];
 
+    /**
+     * Set up config.yml for testing
+     */
     public static function setUpBeforeClass()
     {
         if (file_exists(self::CONFIG_YML_FILE)) {
@@ -37,6 +51,9 @@ class SuiteGenerationTest extends TestCase
         fclose($configYml);
     }
 
+    /**
+     * Test basic generation of a suite
+     */
     public function testSuiteGeneration1()
     {
          $groupName = 'functionalSuite1';
@@ -79,9 +96,11 @@ class SuiteGenerationTest extends TestCase
             $cestName = explode(":", $expectedTestReference, 2);
             $this->assertFileExists($suiteResultBaseDir . $cestName[0]);
         }
-
     }
 
+    /**
+     * revert any changes made to config.yml
+     */
     public static function tearDownAfterClass()
     {
         // restore config if we see there was an original codeception.yml file

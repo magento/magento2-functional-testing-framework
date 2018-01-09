@@ -9,7 +9,7 @@ namespace Magento\FunctionalTestingFramework\Test\Util;
 /**
  * Class AnnotationExtractor
  */
-class AnnotationExtractor extends BaseCestObjectExtractor
+class AnnotationExtractor extends BaseObjectExtractor
 {
     const ANNOTATION_VALUE = 'value';
 
@@ -23,17 +23,17 @@ class AnnotationExtractor extends BaseCestObjectExtractor
 
     /**
      * This method trims away irrelevant tags and returns annotations used in the array passed. The annotations
-     * can be found in both Cests and their child element tests.
+     * can be found in both Tests and their child element tests.
      *
-     * @param array $cestAnnotations
+     * @param array $testAnnotations
      * @return array
      */
-    public function extractAnnotations($cestAnnotations)
+    public function extractAnnotations($testAnnotations)
     {
         $annotationObjects = [];
-        $annotations = $this->stripDescriptorTags($cestAnnotations, self::NODE_NAME);
+        $annotations = $this->stripDescriptorTags($testAnnotations, self::NODE_NAME);
 
-        // parse the Cest annotations
+        // parse the Test annotations
         foreach ($annotations as $annotationKey => $annotationData) {
             $annotationValues = [];
             foreach ($annotationData as $annotationValue) {

@@ -11,7 +11,7 @@ use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 /**
  * Class ActionGroupObjectExtractor
  */
-class ActionGroupObjectExtractor extends BaseCestObjectExtractor
+class ActionGroupObjectExtractor extends BaseObjectExtractor
 {
     const DEFAULT_VALUE = 'defaultValue';
     const ACTION_GROUP_ARGUMENTS = 'arguments';

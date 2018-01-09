@@ -6,7 +6,7 @@
   */
 -->
 
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
     <section name="LocatorFunctionSection">
         <element name="simpleLocator" type="button" locatorFunction="contains('label', 'Name')"/>
@@ -16,4 +16,4 @@
         <element name="arrayLocator" type="button" locatorFunction="find('img', ['title' => 'diagram'])"/>
         <element name="arrayLocatorTwoParam" type="button" locatorFunction="find({{arg1}}, {{arg2}})" parameterized="true"/>
     </section>
-</config>
+</sections>

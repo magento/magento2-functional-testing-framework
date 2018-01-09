@@ -6,7 +6,7 @@
   */
 -->
 
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
     <section name="SampleSection">
         <element name="oneParamElement" type="button" selector="#element .{{var1}}" parameterized="true"/>
@@ -16,4 +16,4 @@
         <element name="mergeElement" type="select" selector="#merge"/>
         <element name="newElement" type="select" selector="#newElement"/>
     </section>
-</config>
+</sections>

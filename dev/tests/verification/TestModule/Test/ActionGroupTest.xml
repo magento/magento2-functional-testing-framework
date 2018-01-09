@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="ActionGroupWithNoArguments">
+        <annotations>
+            <severity value="SEVERE"/>
+            <title value="Action Group With No Argument"/>
+        </annotations>
+        <actionGroup ref="actionGroupWithoutArguments" stepKey="actionGroup"/>
+    </test>
+
+    <test name="ActionGroupWithDefaultArgumentAndStringSelectorParam">
+        <annotations>
+            <severity value="SEVERE"/>
+            <title value="Action Group With Default Argument Value and Hardcoded Value in Param"/>
+        </annotations>
+
+        <actionGroup ref="actionGroupWithDefaultArgumentAndStringSelectorParam" stepKey="actionGroup"/>
+    </test>
+
+    <test name="ActionGroupWithPassedArgumentAndStringSelectorParam">
+        <annotations>
+            <severity value="SEVERE"/>
+            <title value="Action Group With Passed Argument Value and Hardcoded Value in Param"/>
+        </annotations>
+
+        <actionGroup ref="actionGroupWithDefaultArgumentAndStringSelectorParam" stepKey="actionGroup">
+            <argument name="someArgument" value="UniquePerson"/>
+        </actionGroup>
+    </test>
+
+    <test name="ActionGroupWithSingleParameterSelectorFromDefaultArgument">
+        <annotations>
+            <severity value="SEVERE"/>
+            <title value="Action Group With Default Argument Value and Argument Value in Param"/>
+        </annotations>
+
+        <actionGroup ref="actionGroupWithSingleParameterSelectorFromArgument" stepKey="actionGroup"/>
+    </test>
+
+    <test name="ActionGroupWithSingleParameterSelectorFromPassedArgument">
+        <annotations>
+            <severity value="SEVERE"/>
+            <title value="Action Group With Passed Argument Value and Argument Value in Param"/>
+        </annotations>
+
+        <actionGroup ref="actionGroupWithSingleParameterSelectorFromArgument" stepKey="actionGroup">
+            <argument name="someArgument" value="UniquePerson"/>
+        </actionGroup>
+    </test>
+
+    <test name="ActionGroupWithMultipleParameterSelectorsFromDefaultArgument">
+        <annotations>
+            <severity value="SEVERE"/>
+            <title value="Action Group With Passed Argument Value and Multiple Argument Values in Param"/>
+        </annotations>
+
+        <actionGroup ref="actionGroupWithMultipleParameterSelectorsFromArgument" stepKey="actionGroup"/>
+    </test>
+</tests>
