@@ -18,6 +18,7 @@ class PageObjectHandler implements ObjectHandlerInterface
     const URL = 'url';
     const MODULE = 'module';
     const PARAMETERIZED = 'parameterized';
+    const AREA = 'area';
 
     /**
      * The singleton instance of this class
@@ -52,7 +53,9 @@ class PageObjectHandler implements ObjectHandlerInterface
             $module = $pageData[self::MODULE];
             $sectionNames = array_keys($pageData[self::SECTION]);
             $parameterized = $pageData[self::PARAMETERIZED] ?? false;
-            $this->pageObjects[$pageName] = new PageObject($pageName, $url, $module, $sectionNames, $parameterized);
+            $area = $pageData[self::AREA];
+            $this->pageObjects[$pageName] =
+                new PageObject($pageName, $url, $module, $sectionNames, $parameterized, $area);
         }
     }
 

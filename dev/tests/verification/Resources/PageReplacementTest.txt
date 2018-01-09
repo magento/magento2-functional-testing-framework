@@ -38,5 +38,7 @@ class PageReplacementTestCest
 		$I->amOnPage("/John/StringLiteral2.html");
 		$I->amOnPage("/John/" . $datakey->getCreatedDataByName('firstname') . ".html");
 		$I->amOnPage("/" . $datakey->getCreatedDataByName('firstname') . "/StringLiteral2.html");
+		$I->amOnPage("/admin/backend");
+		$I->amOnUrl("http://myFullUrl.com/");
 	}
 }

@@ -18,5 +18,10 @@
         <amOnPage stepKey="twoParamPageStringData" url="{{TwoParamPage.url(simpleData.firstname, 'StringLiteral2')}}"/>
         <amOnPage stepKey="twoParamPageDataPersist" url="{{TwoParamPage.url(simpleData.firstname, $datakey.firstname$)}}"/>
         <amOnPage stepKey="twoParamPagePersistString" url="{{TwoParamPage.url($datakey.firstname$, 'StringLiteral2')}}"/>
+        <amOnPage stepKey="onAdminPage" url="{{AdminPage.url}}"/>
+        <amOnUrl stepKey="onExternalPage" url="{{ExternalPage.url}}"/>
+    </test>
+    <test name="ExternalPageTestBadReference">
+        <amOnPage stepKey="onExternalPage" url="{{ExternalPage.url}}"/>
     </test>
 </tests>
