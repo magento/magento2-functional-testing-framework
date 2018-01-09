@@ -143,6 +143,95 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
+     * Assert that the current webdriver url does not equal the expected string.
+     * 
+     * @param string $url
+     * @return void
+     */
+    public function dontSeeFullUrlEquals($url)
+    {
+        $this->assertNotEquals($url, $this->webDriver->getCurrentURL());
+    }
+
+    /**
+     * Assert that the current webdriver url does not match the expected regex.
+     * 
+     * @param string $url
+     * @return void
+     */
+    public function dontSeeFullUrlMatches($url)
+    {
+        $this->assertNotRegExp($url, $this->webDriver->getCurrentURL());
+    }
+
+    /**
+     * Assert that the current webdriver url does not contain the expected string.
+     * 
+     * @param string $url
+     * @return void
+     */
+    public function dontSeeInFullUrl($url)
+    {
+        $this->assertNotContains($url, $this->webDriver->getCurrentURL());
+    }
+
+    /**
+     * Return the current webdriver url or return the first matching capture group.
+     * 
+     * @param string|null $url
+     * @return string
+     */
+    public function grabFromFullUrl($url = null)
+    {
+        $fullUrl = $this->webDriver->getCurrentURL();
+        if (!$url) {
+            return $fullUrl;
+        }
+        $matches = [];
+        $res = preg_match($url, $fullUrl, $matches);
+        if (!$res) {
+            $this->fail("Couldn't match $url in " . $fullUrl);
+        }
+        if (!isset($matches[1])) {
+            $this->fail("Nothing to grab. A regex parameter with a capture group is required. Ex: '/(foo)(bar)/'");
+        }
+        return $matches[1];
+    }
+
+    /**
+     * Assert that the current webdriver url equals the expected string.
+     * 
+     * @param string $url
+     * @return void
+     */
+    public function seeFullUrlEquals($url)
+    {
+        $this->assertEquals($url, $this->webDriver->getCurrentURL());
+    }
+
+    /**
+     * Assert that the current webdriver url matches the expected regex.
+     * 
+     * @param string $url
+     * @return void
+     */
+    public function seeFullUrlMatches($url)
+    {
+        $this->assertRegExp($url, $this->webDriver->getCurrentURL());
+    }
+    
+    /**
+     * Assert that the current webdriver url contains the expected string.
+     * 
+     * @param string $url
+     * @return void
+     */
+    public function seeInFullUrl($url)
+    {
+        $this->assertContains($url, $this->webDriver->getCurrentURL());
+    }
+
+    /**
      * Close admin notification popup windows.
      *
      * @return void

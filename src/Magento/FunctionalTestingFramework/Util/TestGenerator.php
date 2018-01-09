@@ -273,8 +273,8 @@ class TestGenerator
     /**
      * Method which returns formatted method level annotation based on type and name(s).
      *
-     * @param mixed $annotationType
-     * @param string|null $annotationName
+     * @param string $annotationType
+     * @param string $annotationName
      * @return null|string
      */
     private function generateMethodAnnotations($annotationType = null, $annotationName = null)
@@ -305,7 +305,7 @@ class TestGenerator
      * Method which return formatted class level annotations based on type and name(s).
      *
      * @param string $annotationType
-     * @param mixed $annotationName
+     * @param string $annotationName
      * @return null|string
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
@@ -431,6 +431,8 @@ class TestGenerator
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['url']);
             } elseif (isset($customActionAttributes['expectedValue'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['expectedValue']);
+            } elseif (isset($customActionAttributes['regex'])) {
+                $input = $this->addUniquenessFunctionCall($customActionAttributes['regex']);
             }
 
             if (isset($customActionAttributes['expected'])) {
@@ -769,13 +771,18 @@ class TestGenerator
                     $testSteps .= $dataPersistenceHandlerFunctionCall;
                     $testSteps .= $getEntityFunctionCall;
                     break;
+                case "dontSeeFullUrlEquals":
+                case "dontSeeFullUrlMatches":
                 case "dontSeeCurrentUrlEquals":
                 case "dontSeeCurrentUrlMatches":
                 case "seeInPopup":
                 case "saveSessionSnapshot":
+                case "seeFullUrlEquals":
+                case "seeFullUrlMatches":
                 case "seeCurrentUrlEquals":
                 case "seeCurrentUrlMatches":
                 case "seeInTitle":
+                case "seeInFullUrl":
                 case "seeInCurrentUrl":
                 case "switchToIFrame":
                 case "switchToWindow":
@@ -889,6 +896,7 @@ class TestGenerator
                 case "grabAttributeFrom":
                 case "grabMultiple":
                 case "grabFromCurrentUrl":
+                case "grabFromFullUrl":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
@@ -959,6 +967,7 @@ class TestGenerator
                 case "click":
                 case "dontSeeInField":
                 case "dontSeeInCurrentUrl":
+                case "dontSeeInFullUrl":
                 case "dontSeeInTitle":
                 case "dontSeeInPageSource":
                 case "dontSeeOptionIsSelected":
