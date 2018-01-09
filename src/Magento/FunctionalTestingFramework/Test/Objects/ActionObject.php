@@ -368,7 +368,7 @@ class ActionObject
      */
     private function resolveRegexPatternForReference($inputString)
     {
-        if (preg_match(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER, $inputString) === 1) {
+        if (preg_match(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN_WITH_PARAMS, $inputString) === 1) {
             return ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN_WITH_PARAMS;
         } else {
             return ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN;
