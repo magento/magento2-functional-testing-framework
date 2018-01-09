@@ -55,6 +55,22 @@ class ConfigSanitizerUtil
     }
 
     /**
+     * Determines if CLI Command env variables are set, and sets them if they aren't.
+     * @param array $config
+     * @return array
+     */
+    public static function sanitizeCliCommandEnvs($config)
+    {
+        if (!isset($config['MAGENTO_CLI_COMMAND_PATH'])) {
+            $config['MAGENTO_CLI_COMMAND_PATH'] = "dev/tests/acceptance/utils/command.php";
+        }
+        if (!isset($config['MAGENTO_CLI_COMMAND_PARAMETER'])) {
+            $config['MAGENTO_CLI_COMMAND_PARAMETER'] = "command";
+        }
+        return $config;
+    }
+
+    /**
      * Method which validates env vars have been properly read into the config. Method implemented as part of
      * bug MQE-567
      *

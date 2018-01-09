@@ -1071,7 +1071,17 @@ class TestGenerator
                     );
                     break;
                 case "magentoCLI":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $this->wrapWithDoubleQuotes($command));
+                    $testSteps .= $this->wrapFunctionCallWithReturnValue(
+                        $stepKey,
+                        $actor,
+                        "executeMagentoCLICommand",
+                        $this->wrapWithDoubleQuotes($command)
+                    );
+                    $testSteps .= sprintf(
+                        "\t\t$%s->comment(\$%s);\n",
+                        $actor,
+                        $stepKey
+                    );
                     break;
                 default:
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input, $parameter);

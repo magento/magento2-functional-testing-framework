@@ -18,6 +18,7 @@ use Codeception\Exception\ModuleException;
 use Codeception\Util\Uri;
 use Codeception\Util\ActionSequence;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
+use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
 use Magento\Setup\Exception;
 use Magento\FunctionalTestingFramework\Util\ConfigSanitizerUtil;
 use Yandex\Allure\Adapter\Support\AttachmentSupport;
@@ -82,6 +83,7 @@ class MagentoWebDriver extends WebDriver
     public function _initialize()
     {
         $this->config = ConfigSanitizerUtil::sanitizeWebDriverConfig($this->config);
+        $this->config = ConfigSanitizerUtil::sanitizeCliCommandEnvs($this->config);
         parent::_initialize();
     }
 
@@ -89,6 +91,7 @@ class MagentoWebDriver extends WebDriver
     {
         parent::_resetConfig();
         $this->config = ConfigSanitizerUtil::sanitizeWebDriverConfig($this->config);
+        $this->config = ConfigSanitizerUtil::sanitizeCliCommandEnvs($this->config);
     }
 
     /**
@@ -317,16 +320,19 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * Takes given $command and executes it against exposed MTF CLI entry point.
+     * Takes given $command and executes it against exposed MTF CLI entry point. Returns response from server.
      * @param string $command
+     * @returns string
      */
-    public function magentoCLI($command)
+    public function executeMagentoCLICommand($command)
     {
-        $apiURL = $this->config['url'] . $_ENV['MAGENTO_CLI_COMMAND_PATH'];
+
+        $apiURL = $this->config['url'] . $this->config['MAGENTO_CLI_COMMAND_PATH'];
         $executor = new CurlTransport();
-        $executor->write($apiURL . '?' . $_ENV['MAGENTO_CLI_COMMAND_PARAMETER'] . '=' . $command, [], CurlInterface::GET, []);
+        $executor->write($apiURL, [$this->config['MAGENTO_CLI_COMMAND_PARAMETER'] => $command], CurlInterface::POST, []);
         $response = $executor->read();
         $executor->close();
+        return $response;
     }
 
     /**
