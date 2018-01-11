@@ -8,6 +8,7 @@ namespace Magento\FunctionalTestingFramework\DataGenerator\Persist;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\AdminExecutor;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\FrontendExecutor;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\WebapiExecutor;
+use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\WebapiNoAuthExecutor;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\OperationDefinitionObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\OperationDefinitionObject;
@@ -136,6 +137,9 @@ class CurlHandler
                 $this->requestData['customer_email'],
                 $this->requestData['customer_password']
             );
+        } elseif ($authorization === 'anonymous') {
+            $this->isJson = true;
+            $executor = new WebapiNoAuthExecutor($this->storeCode);
         }
 
         if (!$executor) {
