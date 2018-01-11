@@ -8,16 +8,22 @@
 
 <pages xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Page/etc/PageObject.xsd">
-    <page name="SamplePage" url="/{{var1}}/{{var2}}.html" module="SampleTests" parameterized="true">
+    <page name="SamplePage" url="/{{var1}}/{{var2}}.html" area="storefront" module="SampleTests" parameterized="true">
         <section name="SampleSection"/>
     </page>
-    <page name="NoParamPage" url="/page.html" module="SampleTests">
+    <page name="NoParamPage" url="/page.html" area="storefront" module="SampleTests">
         <section name="SampleSection"/>
     </page>
-    <page name="OneParamPage" url="/{{var1}}/page.html" module="SampleTests" parameterized="true">
+    <page name="OneParamPage" url="/{{var1}}/page.html" area="storefront" module="SampleTests" parameterized="true">
         <section name="SampleSection"/>
     </page>
-    <page name="TwoParamPage" url="/{{var1}}/{{var2}}.html" module="SampleTests" parameterized="true">
+    <page name="TwoParamPage" url="/{{var1}}/{{var2}}.html" area="storefront" module="SampleTests" parameterized="true">
+        <section name="SampleSection"/>
+    </page>
+    <page name="AdminPage" url="/backend" area="admin" module="SampleTests">
+        <section name="SampleSection"/>
+    </page>
+    <page name="ExternalPage" url="http://myFullUrl.com/" area="external" module="SampleTests">
         <section name="SampleSection"/>
     </page>
 </pages>

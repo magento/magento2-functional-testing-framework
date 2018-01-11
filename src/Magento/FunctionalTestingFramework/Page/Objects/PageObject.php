@@ -14,6 +14,8 @@ use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
  */
 class PageObject
 {
+    const ADMIN_AREA = 'admin';
+
     /**
      * Page name
      *
@@ -50,20 +52,29 @@ class PageObject
     private $sectionNames = [];
 
     /**
+     * String identifying the area the page belongs to
+     *
+     * @var string
+     */
+    private $area;
+
+    /**
      * PageObject constructor.
      * @param string $name
      * @param string $url
      * @param string $module
      * @param array $sections
      * @param bool $parameterized
+     * @param string $area
      */
-    public function __construct($name, $url, $module, $sections, $parameterized)
+    public function __construct($name, $url, $module, $sections, $parameterized, $area)
     {
         $this->name = $name;
         $this->url = $url;
         $this->module = $module;
         $this->sectionNames = $sections;
         $this->parameterized = $parameterized;
+        $this->area = $area;
     }
 
     /**
@@ -83,6 +94,11 @@ class PageObject
      */
     public function getUrl()
     {
+        if ($this->getArea() == self::ADMIN_AREA) {
+            $url = ltrim($this->url, '/');
+            return "/" . getenv('MAGENTO_BACKEND_NAME') . "/{$url}";
+        }
+
         return $this->url;
     }
 
@@ -94,6 +110,16 @@ class PageObject
     public function getModule()
     {
         return $this->module;
+    }
+
+    /**
+     * Getter for Page Area
+     *
+     * @return string
+     */
+    public function getArea()
+    {
+        return $this->area;
     }
 
     /**

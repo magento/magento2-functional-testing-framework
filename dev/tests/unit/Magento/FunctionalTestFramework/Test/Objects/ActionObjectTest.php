@@ -198,7 +198,7 @@ class ActionObjectTest extends TestCase
         $actionObject = new ActionObject('merge123', 'amOnPage', [
             'url' => '{{PageObject.url}}'
         ]);
-        $pageObject = new PageObject('PageObject', '/replacement/url.html', 'Test', [], false);
+        $pageObject = new PageObject('PageObject', '/replacement/url.html', 'Test', [], false, "test");
         $instance = AspectMock::double(PageObjectHandler::class, ['getObject' => $pageObject])
             ->make(); // bypass the private constructor
         AspectMock::double(PageObjectHandler::class, ['getInstance' => $instance]);

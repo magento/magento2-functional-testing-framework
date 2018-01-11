@@ -21,6 +21,7 @@ class ActionObject
 {
     const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray"];
     const SELECTOR_ENABLED_ATTRIBUTES = ['selector', 'dependentSelector', "selector1", "selector2", "function"];
+    const EXTERNAL_URL_AREA_INVALID_ACTIONS = ['amOnPage'];
     const MERGE_ACTION_ORDER_AFTER = 'after';
     const MERGE_ACTION_ORDER_BEFORE = 'before';
     const ACTION_ATTRIBUTE_URL = 'url';
@@ -332,6 +333,7 @@ class ActionObject
             // specify behavior depending on field
             switch (get_class($obj)) {
                 case PageObject::class:
+                    $this->validateUrlAreaAgainstActionType($obj);
                     $replacement = $obj->getUrl();
                     $parameterized = $obj->isParameterized();
                     break;
@@ -359,6 +361,22 @@ class ActionObject
             $outputString = str_replace($match, $replacement, $outputString);
         }
         return $outputString;
+    }
+
+    /**
+     * Validates the page objects area 'external' against a list of known incompatible types
+     *
+     * @param PageObject $obj
+     * @throws TestReferenceException
+     */
+    private function validateUrlAreaAgainstActionType($obj)
+    {
+        if ($obj->getArea() == 'external' &&
+            in_array($this->getType(), self::EXTERNAL_URL_AREA_INVALID_ACTIONS)) {
+            throw new TestReferenceException(
+                "Page of type 'external' is not compatible with action type '{$this->getType()}'"
+            );
+        }
     }
 
     /**

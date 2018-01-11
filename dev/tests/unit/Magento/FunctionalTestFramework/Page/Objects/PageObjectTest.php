@@ -19,7 +19,7 @@ class PageObjectTest extends TestCase
      */
     public function testHasSection()
     {
-        $page = new PageObject('name', 'urlPath', 'module', ['section1', 'section2'], false);
+        $page = new PageObject('name', 'urlPath', 'module', ['section1', 'section2'], false, 'area');
         $this->assertTrue($page->hasSection('section1'));
     }
 
@@ -28,7 +28,7 @@ class PageObjectTest extends TestCase
      */
     public function testDoesntHaveSection()
     {
-        $page = new PageObject('name', 'urlPath', 'module', ['section1', 'section2'], false);
+        $page = new PageObject('name', 'urlPath', 'module', ['section1', 'section2'], false, 'area');
         $this->assertFalse($page->hasSection('section3'));
     }
 }

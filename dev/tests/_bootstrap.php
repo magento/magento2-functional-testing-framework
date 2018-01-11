@@ -25,6 +25,7 @@ $TEST_ENVS = [
 
 foreach ($TEST_ENVS as $key => $value) {
     $_ENV[$key] = $value;
+    putenv("{$key}=${value}");
 }
 
 // Add our test module to the whitelist
