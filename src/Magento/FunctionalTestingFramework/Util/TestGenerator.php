@@ -503,7 +503,7 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['function'])) {
-                $function = $customActionAttributes['function'];
+                $function = $this->addUniquenessFunctionCall($customActionAttributes['function']);
             }
 
             if (isset($customActionAttributes['html'])) {
@@ -864,7 +864,7 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $function);
                     break;
                 case "executeJS":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $this->wrapWithDoubleQuotes($function));
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $function);
                     break;
                 case "performOn":
                 case "waitForElementChange":
@@ -874,7 +874,7 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
                         $actionName,
-                        $this->wrapWithDoubleQuotes($function),
+                        $function,
                         $time
                     );
                     break;
