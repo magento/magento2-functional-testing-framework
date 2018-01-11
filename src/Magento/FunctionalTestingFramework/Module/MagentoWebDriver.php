@@ -83,7 +83,6 @@ class MagentoWebDriver extends WebDriver
     public function _initialize()
     {
         $this->config = ConfigSanitizerUtil::sanitizeWebDriverConfig($this->config);
-        $this->config = ConfigSanitizerUtil::sanitizeCliCommandEnvs($this->config);
         parent::_initialize();
     }
 
@@ -91,7 +90,6 @@ class MagentoWebDriver extends WebDriver
     {
         parent::_resetConfig();
         $this->config = ConfigSanitizerUtil::sanitizeWebDriverConfig($this->config);
-        $this->config = ConfigSanitizerUtil::sanitizeCliCommandEnvs($this->config);
     }
 
     /**
