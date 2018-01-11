@@ -29,7 +29,7 @@ class DataObjectHandler implements ObjectHandlerInterface
     const _ENTITY_TYPE = 'entityType';
     const _ENTITY_KEY = 'entityKey';
     const _SEPARATOR = '->';
-    const _REQUIRED_ENTITY = 'required-entity';
+    const _REQUIRED_ENTITY = 'requiredEntity';
 
     /**
      * The singleton instance of this class

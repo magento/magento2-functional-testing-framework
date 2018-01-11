@@ -47,7 +47,7 @@
                     </xs:complexContent>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="required-entity" type="requiredEntityType" maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="requiredEntity" type="requiredEntityType" maxOccurs="unbounded" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation>
                         Element containing required entity to this parent entity.
