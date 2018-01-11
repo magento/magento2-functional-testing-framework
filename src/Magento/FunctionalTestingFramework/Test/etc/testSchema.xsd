@@ -95,9 +95,14 @@
                         maxOccurs="unbounded"/>
             <xs:element type="dontSeeCurrentUrlMatchesType" name="dontSeeCurrentUrlMatches" minOccurs="0"
                         maxOccurs="unbounded"/>
+            <xs:element type="dontSeeFullUrlEqualsType" name="dontSeeFullUrlEquals" minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element type="dontSeeFullUrlMatchesType" name="dontSeeFullUrlMatches" minOccurs="0"
+                        maxOccurs="unbounded"/>
             <xs:element type="dontSeeElementType" name="dontSeeElement" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dontSeeElementInDOMType" name="dontSeeElementInDOM" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dontSeeInCurrentUrlType" name="dontSeeInCurrentUrl" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeInFullUrlType" name="dontSeeInFullUrl" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dontSeeInFieldType" name="dontSeeInField" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dontSeeInFormFieldsType" name="dontSeeInFormFields" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dontSeeInPageSourceType" name="dontSeeInPageSource" minOccurs="0" maxOccurs="unbounded"/>
@@ -116,6 +121,7 @@
             <xs:element type="grabAttributeFromType" name="grabAttributeFrom" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="grabCookieType" name="grabCookie" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="grabFromCurrentUrlType" name="grabFromCurrentUrl" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="grabFromFullUrlType" name="grabFromFullUrl" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="grabMultipleType" name="grabMultiple" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="grabPageSourceType" name="grabPageSource" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="grabTextFromType" name="grabTextFrom" minOccurs="0" maxOccurs="unbounded"/>
@@ -150,9 +156,12 @@
             <xs:element type="seeCurrentUrlEqualsType" name="seeCurrentUrlEquals" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="seeCurrentUrlMatchesType" name="seeCurrentUrlMatches" minOccurs="0"
                         maxOccurs="unbounded"/>
+            <xs:element type="seeFullUrlEqualsType" name="seeFullUrlEquals" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="seeFullUrlMatchesType" name="seeFullUrlMatches" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="seeElementType" name="seeElement" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="seeElementInDOMType" name="seeElementInDOM" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="seeInCurrentUrlType" name="seeInCurrentUrl" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="seeInFullUrlType" name="seeInFullUrl" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="seeInFieldType" name="seeInField" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="seeInFormFieldsType" name="seeInFormFields" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="seeInPageSourceType" name="seeInPageSource" minOccurs="0" maxOccurs="unbounded"/>
@@ -542,7 +551,27 @@
     <xs:complexType name="dontSeeCurrentUrlMatchesType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="url"/>
+                <xs:attribute type="xs:string" name="regex"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="dontSeeFullUrlEqualsType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="url" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="dontSeeFullUrlMatchesType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="regex" use="required"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -575,6 +604,16 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="dontSeeInFullUrlType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="url" use="required"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -757,7 +796,17 @@
     <xs:complexType name="grabFromCurrentUrlType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="url"/>
+                <xs:attribute type="xs:string" name="regex"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="grabFromFullUrlType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="regex"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1080,7 +1129,27 @@
     <xs:complexType name="seeCurrentUrlMatchesType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="url"/>
+                <xs:attribute type="xs:string" name="regex"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="seeFullUrlEqualsType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="url" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="seeFullUrlMatchesType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="regex" use="required"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1114,6 +1183,16 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="seeInFullUrlType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="url" use="required"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>

@@ -57,7 +57,7 @@ class BasicFunctionalTestCest
 		$I->dontSeeCheckboxIsChecked(".functionalTestSelector");
 		$I->dontSeeCookie("someInput");
 		$I->dontSeeCurrentUrlEquals("/functionalUrl");
-		$I->dontSeeCurrentUrlMatches("/functionalUrl");
+		$I->dontSeeCurrentUrlMatches("/[0-9]+/");
 		$I->dontSeeElement(".functionalTestSelector");
 		$I->dontSeeElementInDOM(".functionalTestSelector");
 		$I->dontSeeInCurrentUrl("/functionalUrl");
@@ -99,7 +99,7 @@ class BasicFunctionalTestCest
 		$I->seeCheckboxIsChecked(".functionalTestSelector");
 		$I->seeCookie("someInput");
 		$I->seeCurrentUrlEquals("/functionalUrl");
-		$I->seeCurrentUrlMatches("/functionalUrl");
+		$I->seeCurrentUrlMatches("/[0-9]+/");
 		$I->seeElement(".functionalTestSelector");
 		$I->seeElementInDOM(".functionalTestSelector");
 		$I->seeInCurrentUrl("/functionalUrl");
@@ -126,5 +126,13 @@ class BasicFunctionalTestCest
 		$I->waitForElementVisible(".functionalTestSelector", 30);
 		$I->waitForJS("someJsFunction", 30);
 		$I->waitForText("someInput", 30, ".functionalTestSelector");
+		$I->dontSeeFullUrlEquals("www.magento.com");
+		$I->dontSeeFullUrlMatches("/[0-9]+/");
+		$I->dontSeeInFullUrl("https://www.magento.com");
+		$grabFromFullUrl1 = $I->grabFromFullUrl("/[0-9]+/");
+		$grabFromFullUrl2 = $I->grabFromFullUrl();
+		$I->seeFullUrlEquals("http://magento.com/something");
+		$I->seeFullUrlMatches("/[0-9]+/");
+		$I->seeInFullUrl("magento");
 	}
 }
