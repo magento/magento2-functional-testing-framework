@@ -16,6 +16,9 @@ class ActionGroupMergeGenerationTest extends TestCase
 
     /**
      * Tests flat generation of a hardcoded test file with no external references.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testBasicActionGroup()
     {
@@ -24,6 +27,9 @@ class ActionGroupMergeGenerationTest extends TestCase
 
     /**
      * Test an ordinary action group with data
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testActionGroupWithData()
     {
@@ -32,6 +38,9 @@ class ActionGroupMergeGenerationTest extends TestCase
 
     /**
      * Test an action group with data overridden in arguments
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testActionGroupWithDataOverride()
     {
@@ -40,6 +49,9 @@ class ActionGroupMergeGenerationTest extends TestCase
 
     /**
      * Test an action group with no default data
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testActionGroupWithNoDefault()
     {
@@ -48,6 +60,9 @@ class ActionGroupMergeGenerationTest extends TestCase
 
     /**
      * Test an action group with persisted data
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testActionGroupWithPersistedData()
     {
@@ -56,6 +71,9 @@ class ActionGroupMergeGenerationTest extends TestCase
 
     /**
      * Test an action group with top level persisted data
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testActionGroupWithTopLevelPersistedData()
     {
@@ -64,6 +82,9 @@ class ActionGroupMergeGenerationTest extends TestCase
 
     /**
      * Test an action group called multiple times
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testMultipleActionGroups()
     {
@@ -72,6 +93,9 @@ class ActionGroupMergeGenerationTest extends TestCase
 
     /**
      * Test an action group with a merge counterpart
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testMergedActionGroup()
     {
@@ -80,6 +104,9 @@ class ActionGroupMergeGenerationTest extends TestCase
 
     /**
      * Test an action group with arguments named similarly to elements
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testArgumentWithSameNameAsElement()
     {
@@ -90,6 +117,8 @@ class ActionGroupMergeGenerationTest extends TestCase
      * Generate a Test by name and assert that it equals the corresponding .txt source of truth
      *
      * @param string $testName
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     private function runComparisonTest($testName)
     {

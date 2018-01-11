@@ -49,6 +49,7 @@ class ActionGroupWithNoDefaultTestCest
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
+	 * @throws \Exception
 	 */
 	public function ActionGroupWithNoDefaultTest(AcceptanceTester $I)
 	{

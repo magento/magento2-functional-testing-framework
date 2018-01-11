@@ -20,6 +20,9 @@ class ReferenceReplacementGenerationTest extends TestCase
 
     /**
      * Tests replacement of {{data.key}} references.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testDataReferenceReplacementCest()
     {
@@ -28,6 +31,9 @@ class ReferenceReplacementGenerationTest extends TestCase
 
     /**
      * Tests replacement of $data.key$ references.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testPersistedeferenceReplacementCest()
     {
@@ -36,6 +42,9 @@ class ReferenceReplacementGenerationTest extends TestCase
 
     /**
      * Tests replacement of {{page.url}} references. Includes parameterized urls.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testPageReferenceReplacementCest()
     {
@@ -44,6 +53,9 @@ class ReferenceReplacementGenerationTest extends TestCase
 
     /**
      * Tests replacement of {{Section.Element}} references. Includes parameterized elements.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testSectionReferenceReplacementCest()
     {
@@ -53,6 +65,8 @@ class ReferenceReplacementGenerationTest extends TestCase
     /**
      * Instantiates TestObjectHandler and TestGenerator, then compares given test against flat txt equivalent.
      * @param string $testName
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     private function runComparisonTest($testName)
     {

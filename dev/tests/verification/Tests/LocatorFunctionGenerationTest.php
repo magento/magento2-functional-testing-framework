@@ -16,6 +16,9 @@ class LocatorFunctionGenerationTest extends TestCase
 
     /**
      * Tests generation of actions using elements that have a LocatorFunction.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testLocatorFunctionGeneration()
     {
