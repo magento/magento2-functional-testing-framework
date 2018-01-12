@@ -337,6 +337,10 @@ class Dom
     protected function initDom($xml)
     {
         $dom = new \DOMDocument();
+        if (strpos($xml, "MFTF_COMMON_TEST_ACTIONS") !== false) {
+            $testActions = str_replace("\n", "", file_get_contents($_ENV["FW_BP"] . "/etc/commonTestActions.txt"));
+            $xml = str_replace("MFTF_COMMON_TEST_ACTIONS", $testActions, $xml);
+        }
         $dom->loadXML($xml);
         if ($this->schemaFile) {
             $errors = self::validateDomDocument($dom, $this->schemaFile, $this->errorFormat);
