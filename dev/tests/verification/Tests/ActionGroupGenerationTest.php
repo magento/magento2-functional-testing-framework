@@ -15,6 +15,9 @@ class ActionGroupGenerationTest extends TestCase
 
     /**
      * Tests flat generation of a hardcoded test file with no external references.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     private function validateGenerateAndContents($testName)
     {
@@ -30,6 +33,9 @@ class ActionGroupGenerationTest extends TestCase
 
     /**
      * Test generation of a test referencing an action group with no arguments
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testActionGroupWithNoArguments()
     {
@@ -38,6 +44,9 @@ class ActionGroupGenerationTest extends TestCase
 
     /**
      * Test generation of a test referencing an action group with default arguments and string selector
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testActionGroupWithDefaultArgumentAndStringSelectorParam()
     {
@@ -46,6 +55,9 @@ class ActionGroupGenerationTest extends TestCase
 
     /**
      * Test generation of a test referencing an action group with passed arguments
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testActionGroupWithPassedArgumentAndStringSelectorParam()
     {
@@ -54,6 +66,9 @@ class ActionGroupGenerationTest extends TestCase
 
     /**
      * Test generation of a test referencing an action group with single parameter selector and default arguments
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testActionGroupWithSingleParameterSelectorFromDefaultArgument()
     {
@@ -62,6 +77,9 @@ class ActionGroupGenerationTest extends TestCase
 
     /**
      * Test generation of test referencing an action group with single parameter from a passed arguemnt
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testActionGroupWithSingleParameterSelectorFromPassedArgument()
     {
@@ -70,6 +88,9 @@ class ActionGroupGenerationTest extends TestCase
 
     /**
      * Test generation of a test referencing an action group with multiple parameter selectors and default arguments
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testActionGroupWithMultipleParameterSelectorsFromDefaultArgument()
     {

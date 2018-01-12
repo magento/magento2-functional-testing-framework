@@ -20,7 +20,8 @@ use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 class ActionObject
 {
     const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray"];
-    const SELECTOR_ENABLED_ATTRIBUTES = ['selector', 'dependentSelector', "selector1", "selector2"];
+    const SELECTOR_ENABLED_ATTRIBUTES = ['selector', 'dependentSelector', "selector1", "selector2", "function"];
+    const EXTERNAL_URL_AREA_INVALID_ACTIONS = ['amOnPage'];
     const MERGE_ACTION_ORDER_AFTER = 'after';
     const MERGE_ACTION_ORDER_BEFORE = 'before';
     const ACTION_ATTRIBUTE_URL = 'url';
@@ -332,6 +333,7 @@ class ActionObject
             // specify behavior depending on field
             switch (get_class($obj)) {
                 case PageObject::class:
+                    $this->validateUrlAreaAgainstActionType($obj);
                     $replacement = $obj->getUrl();
                     $parameterized = $obj->isParameterized();
                     break;
@@ -362,13 +364,30 @@ class ActionObject
     }
 
     /**
+     * Validates the page objects area 'external' against a list of known incompatible types
+     *
+     * @param PageObject $obj
+     * @return void
+     * @throws TestReferenceException
+     */
+    private function validateUrlAreaAgainstActionType($obj)
+    {
+        if ($obj->getArea() == 'external' &&
+            in_array($this->getType(), self::EXTERNAL_URL_AREA_INVALID_ACTIONS)) {
+            throw new TestReferenceException(
+                "Page of type 'external' is not compatible with action type '{$this->getType()}'"
+            );
+        }
+    }
+
+    /**
      * Determines whether the given $inputString has (params), and returns the appropriate regex for use in matching.
      * @param string $inputString
      * @return string
      */
     private function resolveRegexPatternForReference($inputString)
     {
-        if (preg_match(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER, $inputString) === 1) {
+        if (preg_match(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN_WITH_PARAMS, $inputString) === 1) {
             return ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN_WITH_PARAMS;
         } else {
             return ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN;

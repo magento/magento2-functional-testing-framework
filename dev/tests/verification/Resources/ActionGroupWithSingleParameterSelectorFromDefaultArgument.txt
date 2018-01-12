@@ -25,6 +25,7 @@ class ActionGroupWithSingleParameterSelectorFromDefaultArgumentCest
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
+	 * @throws \Exception
 	 */
 	public function ActionGroupWithSingleParameterSelectorFromDefaultArgument(AcceptanceTester $I)
 	{

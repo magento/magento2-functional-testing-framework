@@ -25,6 +25,7 @@ class ActionGroupWithMultipleParameterSelectorsFromDefaultArgumentCest
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
+	 * @throws \Exception
 	 */
 	public function ActionGroupWithMultipleParameterSelectorsFromDefaultArgument(AcceptanceTester $I)
 	{

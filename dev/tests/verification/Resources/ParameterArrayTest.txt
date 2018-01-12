@@ -23,6 +23,7 @@ class ParameterArrayTestCest
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
+	 * @throws \Exception
 	 */
 	public function ParameterArrayTest(AcceptanceTester $I)
 	{

@@ -38,7 +38,7 @@
         <dontSeeCheckboxIsChecked selector=".functionalTestSelector" stepKey="dontSeeCheckboxIsCheckedKey1"/>
         <dontSeeCookie userInput="someInput" stepKey="dontSeeCookieKey1"/>
         <dontSeeCurrentUrlEquals url="/functionalUrl" stepKey="dontSeeCurrentUrlEqualsKey1"/>
-        <dontSeeCurrentUrlMatches url="/functionalUrl" stepKey="dontSeeCurrentUrlMatchesKey1"/>
+        <dontSeeCurrentUrlMatches regex="/[0-9]+/" stepKey="dontSeeCurrentUrlMatchesKey1"/>
         <dontSeeElement selector=".functionalTestSelector" stepKey="dontSeeElementKey1"/>
         <dontSeeElementInDOM selector=".functionalTestSelector" stepKey="dontSeeElementInDOMKey1"/>
         <dontSeeInCurrentUrl url="/functionalUrl" stepKey="dontSeeInCurrentUrlKey1"/>
@@ -55,7 +55,7 @@
         <fillField selector=".functionalTestSelector" userInput="0" stepKey="fillFieldKey2" />
         <grabAttributeFrom selector=".functionalTestSelector" userInput="someInput" stepKey="grabAttributeFromKey1" />
         <grabCookie userInput="grabCookieInput" parameterArray="['domain' => 'www.google.com']" stepKey="grabCookieKey1" />
-        <grabFromCurrentUrl url="/grabCurrentUrl" stepKey="grabFromCurrentUrlKey1" />
+        <grabFromCurrentUrl regex="/grabCurrentUrl" stepKey="grabFromCurrentUrlKey1" />
         <grabMultiple selector=".functionalTestSelector" stepKey="grabMultipleKey1" />
         <grabTextFrom selector=".functionalTestSelector" stepKey="grabTextFromKey1" />
         <grabValueFrom selector=".functionalTestSelector" stepKey="grabValueFromKey1" />
@@ -78,7 +78,7 @@
         <seeCheckboxIsChecked selector=".functionalTestSelector" stepKey="seeCheckboxIsCheckedKey1"/>
         <seeCookie userInput="someInput" stepKey="seeCookieKey1"/>
         <seeCurrentUrlEquals url="/functionalUrl" stepKey="seeCurrentUrlEqualsKey1"/>
-        <seeCurrentUrlMatches url="/functionalUrl" stepKey="seeCurrentUrlMatchesKey1"/>
+        <seeCurrentUrlMatches regex="/[0-9]+/" stepKey="seeCurrentUrlMatchesKey1"/>
         <seeElement selector=".functionalTestSelector" stepKey="seeElementKey1"/>
         <seeElementInDOM selector=".functionalTestSelector" stepKey="seeElementInDOMKey1"/>
         <seeInCurrentUrl url="/functionalUrl" stepKey="seeInCurrentUrlKey1"/>
@@ -105,5 +105,13 @@
         <waitForElementVisible selector=".functionalTestSelector" time="30" stepKey="waitForElementVisibleKey1" />
         <waitForJS function="someJsFunction" time="30" stepKey="waitForJSKey1" />
         <waitForText selector=".functionalTestSelector" userInput="someInput" time="30" stepKey=""/>
+        <dontSeeFullUrlEquals url="www.magento.com" stepKey="dontSeeFullUrlEquals1"/>
+        <dontSeeFullUrlMatches regex="/[0-9]+/" stepKey="dontSeeFullUrlMatches1"/>
+        <dontSeeInFullUrl url="https://www.magento.com" stepKey="dontSeeInFullUrl1"/>
+        <grabFromFullUrl regex="/[0-9]+/" stepKey="grabFromFullUrl1"/>
+        <grabFromFullUrl stepKey="grabFromFullUrl2"/>
+        <seeFullUrlEquals url="http://magento.com/something" stepKey="seeFullUrlEquals1"/>
+        <seeFullUrlMatches regex="/[0-9]+/" stepKey="seeFullUrlMatches1"/>
+        <seeInFullUrl url="magento" stepKey="seeInFullUrl1"/>
     </test>
 </tests>
