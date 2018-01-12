@@ -130,7 +130,7 @@ class MagentoWebDriver extends WebDriver
      * @param string $url
      * @return void
      */
-    public function dontSeeFullUrlEquals($url)
+    public function dontSeeCurrentUrlEquals($url)
     {
         $this->assertNotEquals($url, $this->webDriver->getCurrentURL());
     }
@@ -138,41 +138,41 @@ class MagentoWebDriver extends WebDriver
     /**
      * Assert that the current webdriver url does not match the expected regex.
      *
-     * @param string $url
+     * @param string $regex
      * @return void
      */
-    public function dontSeeFullUrlMatches($url)
+    public function dontSeeCurrentUrlMatches($regex)
     {
-        $this->assertNotRegExp($url, $this->webDriver->getCurrentURL());
+        $this->assertNotRegExp($regex, $this->webDriver->getCurrentURL());
     }
 
     /**
      * Assert that the current webdriver url does not contain the expected string.
      *
-     * @param string $url
+     * @param string $needle
      * @return void
      */
-    public function dontSeeInFullUrl($url)
+    public function dontSeeInCurrentUrl($needle)
     {
-        $this->assertNotContains($url, $this->webDriver->getCurrentURL());
+        $this->assertNotContains($needle, $this->webDriver->getCurrentURL());
     }
 
     /**
      * Return the current webdriver url or return the first matching capture group.
      *
-     * @param string|null $url
+     * @param string|null $regex
      * @return string
      */
-    public function grabFromFullUrl($url = null)
+    public function grabFromCurrentUrl($regex = null)
     {
         $fullUrl = $this->webDriver->getCurrentURL();
-        if (!$url) {
+        if (!$regex) {
             return $fullUrl;
         }
         $matches = [];
-        $res = preg_match($url, $fullUrl, $matches);
+        $res = preg_match($regex, $fullUrl, $matches);
         if (!$res) {
-            $this->fail("Couldn't match $url in " . $fullUrl);
+            $this->fail("Couldn't match $regex in " . $fullUrl);
         }
         if (!isset($matches[1])) {
             $this->fail("Nothing to grab. A regex parameter with a capture group is required. Ex: '/(foo)(bar)/'");
@@ -186,7 +186,7 @@ class MagentoWebDriver extends WebDriver
      * @param string $url
      * @return void
      */
-    public function seeFullUrlEquals($url)
+    public function seeCurrentUrlEquals($url)
     {
         $this->assertEquals($url, $this->webDriver->getCurrentURL());
     }
@@ -194,23 +194,23 @@ class MagentoWebDriver extends WebDriver
     /**
      * Assert that the current webdriver url matches the expected regex.
      *
-     * @param string $url
+     * @param string $regex
      * @return void
      */
-    public function seeFullUrlMatches($url)
+    public function seeCurrentUrlMatches($regex)
     {
-        $this->assertRegExp($url, $this->webDriver->getCurrentURL());
+        $this->assertRegExp($regex, $this->webDriver->getCurrentURL());
     }
 
     /**
      * Assert that the current webdriver url contains the expected string.
      *
-     * @param string $url
+     * @param string $needle
      * @return void
      */
-    public function seeInFullUrl($url)
+    public function seeInCurrentUrl($needle)
     {
-        $this->assertContains($url, $this->webDriver->getCurrentURL());
+        $this->assertContains($needle, $this->webDriver->getCurrentURL());
     }
 
     /**

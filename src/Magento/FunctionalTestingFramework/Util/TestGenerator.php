@@ -779,19 +779,9 @@ class TestGenerator
                     $testSteps .= $dataPersistenceHandlerFunctionCall;
                     $testSteps .= $getEntityFunctionCall;
                     break;
-                case "dontSeeFullUrlEquals":
-                case "dontSeeFullUrlMatches":
-                case "dontSeeCurrentUrlEquals":
-                case "dontSeeCurrentUrlMatches":
                 case "seeInPopup":
                 case "saveSessionSnapshot":
-                case "seeFullUrlEquals":
-                case "seeFullUrlMatches":
-                case "seeCurrentUrlEquals":
-                case "seeCurrentUrlMatches":
                 case "seeInTitle":
-                case "seeInFullUrl":
-                case "seeInCurrentUrl":
                 case "switchToIFrame":
                 case "switchToWindow":
                 case "typeInPopup":
@@ -903,8 +893,6 @@ class TestGenerator
                     break;
                 case "grabAttributeFrom":
                 case "grabMultiple":
-                case "grabFromCurrentUrl":
-                case "grabFromFullUrl":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
@@ -964,7 +952,6 @@ class TestGenerator
                 case "click":
                 case "dontSeeInField":
                 case "dontSeeInCurrentUrl":
-                case "dontSeeInFullUrl":
                 case "dontSeeInTitle":
                 case "dontSeeInPageSource":
                 case "dontSeeOptionIsSelected":

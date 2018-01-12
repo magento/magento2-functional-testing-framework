@@ -125,13 +125,5 @@ class BasicFunctionalTestCest
 		$I->waitForElementVisible(".functionalTestSelector", 30);
 		$I->waitForJS("someJsFunction", 30);
 		$I->waitForText("someInput", 30, ".functionalTestSelector");
-		$I->dontSeeFullUrlEquals("www.magento.com");
-		$I->dontSeeFullUrlMatches("/[0-9]+/");
-		$I->dontSeeInFullUrl("https://www.magento.com");
-		$grabFromFullUrl1 = $I->grabFromFullUrl("/[0-9]+/");
-		$grabFromFullUrl2 = $I->grabFromFullUrl();
-		$I->seeFullUrlEquals("http://magento.com/something");
-		$I->seeFullUrlMatches("/[0-9]+/");
-		$I->seeInFullUrl("magento");
 	}
 }

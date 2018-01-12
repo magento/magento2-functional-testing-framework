@@ -105,13 +105,5 @@
         <waitForElementVisible selector=".functionalTestSelector" time="30" stepKey="waitForElementVisibleKey1" />
         <waitForJS function="someJsFunction" time="30" stepKey="waitForJSKey1" />
         <waitForText selector=".functionalTestSelector" userInput="someInput" time="30" stepKey=""/>
-        <dontSeeFullUrlEquals url="www.magento.com" stepKey="dontSeeFullUrlEquals1"/>
-        <dontSeeFullUrlMatches regex="/[0-9]+/" stepKey="dontSeeFullUrlMatches1"/>
-        <dontSeeInFullUrl url="https://www.magento.com" stepKey="dontSeeInFullUrl1"/>
-        <grabFromFullUrl regex="/[0-9]+/" stepKey="grabFromFullUrl1"/>
-        <grabFromFullUrl stepKey="grabFromFullUrl2"/>
-        <seeFullUrlEquals url="http://magento.com/something" stepKey="seeFullUrlEquals1"/>
-        <seeFullUrlMatches regex="/[0-9]+/" stepKey="seeFullUrlMatches1"/>
-        <seeInFullUrl url="magento" stepKey="seeInFullUrl1"/>
     </test>
 </tests>
