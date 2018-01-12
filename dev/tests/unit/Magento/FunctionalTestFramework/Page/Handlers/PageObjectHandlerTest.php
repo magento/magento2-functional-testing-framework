@@ -24,7 +24,8 @@ class PageObjectHandlerTest extends TestCase
                 "section" => [
                     "someSection1" => [],
                     "someSection2" => []
-                ]
+                ],
+                "area" => "test"
             ],
             "testPage2" => [
                 "url" => "testURL2",
@@ -32,7 +33,8 @@ class PageObjectHandlerTest extends TestCase
                 "parameterized" => true,
                 "section" => [
                     "someSection1" => []
-                ]
+                ],
+                "area" => "test"
             ]];
         $this->setMockParserOutput($mockData);
 

@@ -36,6 +36,7 @@ class PersistedReplacementTestCest
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
+	 * @throws \Exception
 	 */
 	public function PersistedReplacementTest(AcceptanceTester $I)
 	{

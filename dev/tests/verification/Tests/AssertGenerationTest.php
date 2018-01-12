@@ -16,6 +16,9 @@ class AssertGenerationTest extends TestCase
 
     /**
      * Tests assert generation.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testAssertGeneration()
     {

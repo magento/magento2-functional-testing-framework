@@ -49,6 +49,7 @@ class MultipleActionGroupsTestCest
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
+	 * @throws \Exception
 	 */
 	public function MultipleActionGroupsTest(AcceptanceTester $I)
 	{

@@ -36,6 +36,7 @@ class AssertTestCest
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
+	 * @throws \Exception
 	 */
 	public function AssertTest(AcceptanceTester $I)
 	{

@@ -184,13 +184,10 @@ class DataPersistenceHandler
             if (is_array($responseData)) {
                 $persistedData = $this->convertToFlatArray(array_merge($requestDataArray, $responseData));
             } else {
-                $persistedData = $requestDataArray;
+                $persistedData = $this->convertToFlatArray(array_merge($requestDataArray, ['return' => $responseData]));
             }
         } else {
-            $persistedData = array_merge(
-                $this->convertToFlatArray($requestDataArray),
-                ['return' => $response]
-            );
+            $persistedData = array_merge($this->convertToFlatArray($requestDataArray), ['return' => $response]);
         }
 
         $this->createdObject = new EntityDataObject(
