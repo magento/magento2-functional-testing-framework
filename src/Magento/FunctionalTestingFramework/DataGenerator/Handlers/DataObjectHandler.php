@@ -219,7 +219,7 @@ class DataObjectHandler implements ObjectHandlerInterface
     }
 
     /**
-     * Parses <required-entity> elements given entity, and returns them as an array of "EntityValue"=>"EntityType"
+     * Parses <requiredEntity> elements given entity, and returns them as an array of "EntityValue"=>"EntityType"
      *
      * @param string[] $entityData
      * @return string[]

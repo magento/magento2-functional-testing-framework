@@ -137,7 +137,7 @@ class GroupClassGenerator
                 continue;
             }
 
-            if ($attribute[ActionObjectExtractor::NODE_NAME] == 'required-entity') {
+            if ($attribute[ActionObjectExtractor::NODE_NAME] == 'requiredEntity') {
                 $requiredEntities[] = [self::ENTITY_NAME_TAG => $attribute[TestGenerator::REQUIRED_ENTITY_REFERENCE]];
             }
         }
