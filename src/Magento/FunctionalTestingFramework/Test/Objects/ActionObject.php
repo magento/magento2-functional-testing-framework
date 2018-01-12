@@ -367,6 +367,7 @@ class ActionObject
      * Validates the page objects area 'external' against a list of known incompatible types
      *
      * @param PageObject $obj
+     * @return void
      * @throws TestReferenceException
      */
     private function validateUrlAreaAgainstActionType($obj)
