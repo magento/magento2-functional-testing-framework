@@ -1,22 +1,29 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
-1.1.0
+2.0.0
 -----
 
-### Added
-* Added the `CUSTOM_MODULE_PATHS` env variable. This can be used to target paths, such as extensions, that are outside of the Magento directory for test generation.
+### Enhancements
+* Modularity
+    * Replaced the `<loginAsAdmin>` test action with an action group
+    * Added the .env file variable `CUSTOM_MODULE_PATHS` which can be used to point to any custom extensions that you may want to write tests against.
+    * Added the `<page area="..">` property to distinguish between admin and storefront.
+    * Added support for `SectionName.elementName` references in any `function` attributes
+* Customizability
+    * Changed page objects where `area="admin"` to prepend the `MAGENTO_BACKEND_NAME` value from the .env) file
+    * Added support for HTTP requests that do not require authentication
+* Readability
+    * Renamed `<config>` XML root nodes to match the content they contain, e.g. `<tests>` or `<pages>`
+    * Renamed all instances of the word *Cest* with *Test*. The *Cest* name will no longer be used in the MFTF project.
+* Maintainability
+    * Removed the `returnVariable` property from any test actions that return values. Instead, the `stepKey` property will be used as the name of the variable and be referenced as before.
 
-### Changed
-* The `waitForPageLoad` action will no longer close admin notification modals. These notifications can be closed with the `closeAdminNotification` action.
-
-### Removed
-* Removed the `returnVariable` attribute from all actions. Instead, the variable name will be the same as the `stepKey` for the action that it originated from.
-* Removed the `variable` attribute from all actions. Variables can now be referenced via the php style syntax `{$stepKeyHere}`
-
-### Fixed
-* Fixed a crash that could occur if a system level variable collided names with the .env file.
-* Fixed incorrect generation of the `unselectOption` when a `parameterArray` attribute is used.
+### Fixes
+* Fixed the `unselectOption.parameterArray` property to work as expected
+* Fixed a crash if you had a system environment variable set with the same name as any variable in the `.env` file
+* Fixed any actions that refer to *CurrentUrl*, such as `<seeInCurrentUrl>`, to now look at the full webdriver address.
+* Fixed the `<waitForPageLoad>` test action to not assume that you always want to dismiss UI notifications
 
 1.0.0
 ------
