@@ -12,7 +12,7 @@ Changes are compatible with Magento v2.3
     * Added the `<page area="..">` property to distinguish between admin and storefront.
     * Added support for `SectionName.elementName` references in any `function` attributes.
 * Customizability
-    * Changed page objects where `area="admin"` to prepend the `MAGENTO_BACKEND_NAME` value from the .env file.
+    * Changed page objects where `area="admin"` to prepend the `MAGENTO_BACKEND_NAME` value from the `.env` file.
     * Added support for HTTP requests that do not require authentication.
 * Readability
     * Renamed `<config>` XML root nodes to match the content they contain, e.g. `<tests>` or `<pages>`.
