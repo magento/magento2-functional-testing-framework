@@ -779,9 +779,14 @@ class TestGenerator
                     $testSteps .= $dataPersistenceHandlerFunctionCall;
                     $testSteps .= $getEntityFunctionCall;
                     break;
+                case "seeCurrentUrlEquals":
+                case "seeCurrentUrlMatches":
+                case "dontSeeCurrentUrlEquals":
+                case "dontSeeCurrentUrlMatches":
                 case "seeInPopup":
                 case "saveSessionSnapshot":
                 case "seeInTitle":
+                case "seeInCurrentUrl":
                 case "switchToIFrame":
                 case "switchToWindow":
                 case "typeInPopup":
@@ -893,6 +898,7 @@ class TestGenerator
                     break;
                 case "grabAttributeFrom":
                 case "grabMultiple":
+                case "grabFromCurrentUrl":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
