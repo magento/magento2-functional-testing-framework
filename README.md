@@ -1,6 +1,6 @@
 # Magento Functional Testing Framework
 
-[![Build Status](https://travis-ci.com/magento/magento2-functional-testing-framework.svg?token=3FCSKYBzqzZZAxa2jjcc&branch=Travis-Codacy-Integration-Fix)](https://travis-ci.com/magento/magento2-functional-testing-framework)
+[![Build Status](https://travis-ci.org/magento/magento2-functional-testing-framework.svg?branch=develop)](https://travis-ci.org/magento/magento2-functional-testing-framework)
 
 ----
 
