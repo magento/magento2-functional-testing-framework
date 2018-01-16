@@ -414,9 +414,9 @@ class MagentoWebDriver extends WebDriver
     public function executeMagentoCLICommand($command)
     {
 
-        $apiURL = $this->config['url'] . $_ENV['MAGENTO_CLI_COMMAND_PATH'];
+        $apiURL = $this->config['url'] . getenv('MAGENTO_CLI_COMMAND_PATH');
         $executor = new CurlTransport();
-        $executor->write($apiURL, [$_ENV['MAGENTO_CLI_COMMAND_PARAMETER'] => $command], CurlInterface::POST, []);
+        $executor->write($apiURL, [getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command], CurlInterface::POST, []);
         $response = $executor->read();
         $executor->close();
         return $response;
