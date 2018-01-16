@@ -17,7 +17,7 @@ class ConfigSanitizerUtil
      * @param String[] $params
      * @return array
      */
-    public static function sanitizeWebDriverConfig($config, $params = ['url', 'selenium', 'cli'])
+    public static function sanitizeWebDriverConfig($config, $params = ['url', 'selenium'])
     {
         self::validateConfigBasedVars($config);
 
@@ -27,10 +27,6 @@ class ConfigSanitizerUtil
 
         if (in_array('selenium', $params)) {
             $config = self::sanitizeSeleniumEnvs($config);
-        }
-
-        if (in_array('cli', $params)) {
-            $config = self::sanitizeCliCommandEnvs($config);
         }
 
         return $config;
@@ -54,22 +50,6 @@ class ConfigSanitizerUtil
         }
         if ($config['path'] == '%SELENIUM_PATH%') {
             $config['path'] = "/wd/hub";
-        }
-        return $config;
-    }
-
-    /**
-     * Determines if CLI Command env variables are set, and sets them if they aren't.
-     * @param array $config
-     * @return array
-     */
-    public static function sanitizeCliCommandEnvs($config)
-    {
-        if (!isset($config['MAGENTO_CLI_COMMAND_PATH'])) {
-            $config['MAGENTO_CLI_COMMAND_PATH'] = "dev/tests/acceptance/utils/command.php";
-        }
-        if (!isset($config['MAGENTO_CLI_COMMAND_PARAMETER'])) {
-            $config['MAGENTO_CLI_COMMAND_PARAMETER'] = "command";
         }
         return $config;
     }
