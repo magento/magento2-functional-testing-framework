@@ -1,6 +1,12 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.0.1
+-----
+
+### Fixes
+ * Fixed an issue with `group` annotation.
+
 2.0.0
 -----
 Changes are compatible with Magento v2.3
