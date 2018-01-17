@@ -19,7 +19,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
  */
 class ActionObject
 {
-    const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray"];
+    const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray", "expected", "actual"];
     const SELECTOR_ENABLED_ATTRIBUTES = ['selector', 'dependentSelector', "selector1", "selector2", "function"];
     const EXTERNAL_URL_AREA_INVALID_ACTIONS = ['amOnPage'];
     const MERGE_ACTION_ORDER_AFTER = 'after';
