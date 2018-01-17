@@ -338,7 +338,7 @@ class Dom
     {
         $dom = new \DOMDocument();
         if (strpos($xml, "MFTF_COMMON_TEST_ACTIONS") !== false) {
-            $testActions = str_replace("\n", "|", file_get_contents($_ENV["FW_BP"] . "/etc/commonTestActions.txt"));
+            $testActions = str_replace("\n", "|", file_get_contents(getenv("FW_BP") . "/etc/commonTestActions.txt"));
             $xml = str_replace("MFTF_COMMON_TEST_ACTIONS", $testActions, $xml);
         }
         $dom->loadXML($xml);
