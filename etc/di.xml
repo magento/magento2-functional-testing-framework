@@ -217,6 +217,7 @@
                 <item name="/tests/test/remove" xsi:type="string">keyForRemoval</item>
                 <item name="/tests/test/before/remove" xsi:type="string">keyForRemoval</item>
                 <item name="/tests/test/after/remove" xsi:type="string">keyForRemoval</item>
+                <item name="/tests/test/annotations(/group)+" xsi:type="string">value</item>
             </argument>
             <argument name="fileName" xsi:type="string">*.xml</argument>
             <argument name="defaultScope" xsi:type="string">Test</argument>

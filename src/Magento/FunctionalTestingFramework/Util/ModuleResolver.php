@@ -85,7 +85,7 @@ class ModuleResolver
      * @var array
      */
     protected $moduleBlacklist = [
-        'SampleTests',
+        'SampleTests', 'SampleTemplates'
     ];
 
     /**
