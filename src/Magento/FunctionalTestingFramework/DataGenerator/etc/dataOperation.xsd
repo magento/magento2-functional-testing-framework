@@ -88,6 +88,7 @@
             <xs:enumeration value="adminOauth" />
             <xs:enumeration value="adminFormKey" />
             <xs:enumeration value="customerFormKey" />
+            <xs:enumeration value="anonymous" />
         </xs:restriction>
     </xs:simpleType>
 </xs:schema>

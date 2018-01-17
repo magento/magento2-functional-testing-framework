@@ -5,21 +5,25 @@
  */
 namespace tests\verification\Tests;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use PHPUnit\Framework\TestCase;
-use tests\verification\Util\FileDiffUtil;
 
 class ReferenceReplacementGenerationTest extends TestCase
 {
     const DATA_REPLACEMENT_TEST = 'DataReplacementTest';
     const PERSISTED_REPLACEMENT_TEST = 'PersistedReplacementTest';
     const PAGE_REPLACEMENT_TEST = 'PageReplacementTest';
+    const ADMIN_PAGE_TEST = 'AdminPageTest';
     const SECTION_REPLACEMENT_TEST = 'SectionReplacementTest';
     const RESOURCES_PATH = __DIR__ . '/../Resources';
 
     /**
      * Tests replacement of {{data.key}} references.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testDataReferenceReplacementCest()
     {
@@ -28,6 +32,9 @@ class ReferenceReplacementGenerationTest extends TestCase
 
     /**
      * Tests replacement of $data.key$ references.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testPersistedeferenceReplacementCest()
     {
@@ -36,6 +43,9 @@ class ReferenceReplacementGenerationTest extends TestCase
 
     /**
      * Tests replacement of {{page.url}} references. Includes parameterized urls.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testPageReferenceReplacementCest()
     {
@@ -43,7 +53,19 @@ class ReferenceReplacementGenerationTest extends TestCase
     }
 
     /**
+     * Tests replacement of {{page.url}} reference for external page and incompatible action
+     */
+    public function testExternalPageBadReference()
+    {
+        $this->expectException(TestReferenceException::class);
+        $this->runComparisonTest("ExternalPageTestBadReference");
+    }
+
+    /**
      * Tests replacement of {{Section.Element}} references. Includes parameterized elements.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testSectionReferenceReplacementCest()
     {
@@ -53,6 +75,8 @@ class ReferenceReplacementGenerationTest extends TestCase
     /**
      * Instantiates TestObjectHandler and TestGenerator, then compares given test against flat txt equivalent.
      * @param string $testName
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     private function runComparisonTest($testName)
     {

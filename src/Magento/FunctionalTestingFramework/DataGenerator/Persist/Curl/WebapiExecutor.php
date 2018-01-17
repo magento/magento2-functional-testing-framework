@@ -70,7 +70,7 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
      *
      * @return void
      */
-    private function authorize()
+    protected function authorize()
     {
         $authUrl = parent::$baseUrl . 'rest/' . $this->storeCode . self::ADMIN_AUTH_URL;
         $authCreds = [

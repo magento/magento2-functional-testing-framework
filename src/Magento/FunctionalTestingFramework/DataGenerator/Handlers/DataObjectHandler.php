@@ -29,7 +29,7 @@ class DataObjectHandler implements ObjectHandlerInterface
     const _ENTITY_TYPE = 'entityType';
     const _ENTITY_KEY = 'entityKey';
     const _SEPARATOR = '->';
-    const _REQUIRED_ENTITY = 'required-entity';
+    const _REQUIRED_ENTITY = 'requiredEntity';
 
     /**
      * The singleton instance of this class
@@ -219,7 +219,7 @@ class DataObjectHandler implements ObjectHandlerInterface
     }
 
     /**
-     * Parses <required-entity> elements given entity, and returns them as an array of "EntityValue"=>"EntityType"
+     * Parses <requiredEntity> elements given entity, and returns them as an array of "EntityValue"=>"EntityType"
      *
      * @param string[] $entityData
      * @return string[]

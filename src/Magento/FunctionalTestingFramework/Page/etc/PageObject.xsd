@@ -63,6 +63,7 @@
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:boolean" name="parameterized" use="optional"/>
+            <xs:attribute type="pageArea" name="area" use="required"/>
             <xs:attributeGroup ref="removeAttribute"/>
         </xs:complexType>
     </xs:element>
@@ -95,4 +96,12 @@
             </xs:annotation>
         </xs:attribute>
     </xs:attributeGroup>
+
+    <xs:simpleType name="pageArea" final="restriction" >
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="admin" />
+            <xs:enumeration value="storefront" />
+            <xs:enumeration value="external" />
+        </xs:restriction>
+    </xs:simpleType>
 </xs:schema>

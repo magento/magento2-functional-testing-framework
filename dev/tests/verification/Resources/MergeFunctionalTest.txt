@@ -39,6 +39,7 @@ class MergeFunctionalTestCest
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
+	 * @throws \Exception
 	 */
 	public function BasicMergeTest(AcceptanceTester $I)
 	{
@@ -61,6 +62,7 @@ class MergeFunctionalTestCest
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
+	 * @throws \Exception
 	 */
 	public function MergedReferencesTest(AcceptanceTester $I)
 	{
