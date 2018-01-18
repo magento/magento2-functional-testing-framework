@@ -442,15 +442,15 @@ class TestGenerator
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['regex']);
             }
 
-            if (isset($customActionAttributes['expected'])) {
+            if (isset($customActionAttributes['expectedValue'])) {
                 $assertExpected = $this->resolveValueByType(
-                    $customActionAttributes['expected'],
+                    $customActionAttributes['expectedValue'],
                     isset($customActionAttributes['expectedType']) ? $customActionAttributes['expectedType'] : null
                 );
             }
-            if (isset($customActionAttributes['actual'])) {
+            if (isset($customActionAttributes['actualValue'])) {
                 $assertActual = $this->resolveValueByType(
-                    $customActionAttributes['actual'],
+                    $customActionAttributes['actualValue'],
                     isset($customActionAttributes['actualType']) ? $customActionAttributes['actualType'] : null
                 );
             }

@@ -21,6 +21,9 @@ class ActionObject
 {
     const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray", "expected", "actual"];
     const SELECTOR_ENABLED_ATTRIBUTES = ['selector', 'dependentSelector', "selector1", "selector2", "function"];
+    const ASSERTION_ATTRIBUTES = ["expectedResult" => "expected", "actualResult" => "actual"];
+    const ASSERTION_TYPE_ATTRIBUTE = "type";
+    const ASSERTION_VALUE_ATTRIBUTE = "value";
     const EXTERNAL_URL_AREA_INVALID_ACTIONS = ['amOnPage'];
     const MERGE_ACTION_ORDER_AFTER = 'after';
     const MERGE_ACTION_ORDER_BEFORE = 'before';
@@ -196,6 +199,32 @@ class ActionObject
             $this->resolveSelectorReferenceAndTimeout();
             $this->resolveUrlReference();
             $this->resolveDataInputReferences();
+        }
+    }
+
+    /**
+     * Trims actionAttributes and flattens expectedResult/actualResults, if necessary.
+     *
+     * @return void
+     */
+    public function trimAssertionAttributes()
+    {
+        $actionAttributeKeys = array_keys($this->actionAttributes);
+        $relevantKeys = array_keys(ActionObject::ASSERTION_ATTRIBUTES);
+        $relevantAssertionAttributes = array_intersect($actionAttributeKeys, $relevantKeys);
+
+        if (empty($relevantAssertionAttributes)) {
+            return;
+        }
+
+        // Flatten subArray into resolvedCustomAttributes as "prefixType" = given type, "prefixValue" = given value
+        foreach ($this->actionAttributes as $key => $subAttributes) {
+            $prefix = ActionObject::ASSERTION_ATTRIBUTES[$key];
+            $this->resolvedCustomAttributes[$prefix . ucfirst(ActionObject::ASSERTION_TYPE_ATTRIBUTE)] =
+                $subAttributes[ActionObject::ASSERTION_TYPE_ATTRIBUTE];
+            $this->resolvedCustomAttributes[$prefix . ucfirst(ActionObject::ASSERTION_VALUE_ATTRIBUTE)] =
+                $subAttributes[ActionObject::ASSERTION_VALUE_ATTRIBUTE];
+            unset($this->actionAttributes[$key]);
         }
     }
 
