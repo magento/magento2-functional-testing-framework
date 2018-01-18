@@ -106,6 +106,8 @@
             <grabValueFrom stepKey="grabvalue12"/>
             <loadSessionSnapshot stepKey="loadsession1"/>
             <loadSessionSnapshot stepKey="loadsession12"/>
+            <magentoCLI stepKey="magentocli1"/>
+            <magentoCLI stepKey="magentocli2"/>
             <makeScreenshot stepKey="screenshot1"/>
             <makeScreenshot stepKey="screenshot12"/>
             <maximizeWindow stepKey="maxwindow1"/>
@@ -318,6 +320,8 @@
             <grabValueFrom stepKey="grabvalue12"/>
             <loadSessionSnapshot stepKey="loadsession1"/>
             <loadSessionSnapshot stepKey="loadsession12"/>
+            <magentoCLI stepKey="magentocli1"/>
+            <magentoCLI stepKey="magentocli2"/>
             <makeScreenshot stepKey="screenshot1"/>
             <makeScreenshot stepKey="screenshot12"/>
             <maximizeWindow stepKey="maxwindow1"/>
@@ -529,6 +533,8 @@
         <grabValueFrom stepKey="grabvalue12"/>
         <loadSessionSnapshot stepKey="loadsession1"/>
         <loadSessionSnapshot stepKey="loadsession12"/>
+        <magentoCLI stepKey="magentocli1"/>
+        <magentoCLI stepKey="magentocli2"/>
         <makeScreenshot stepKey="screenshot1"/>
         <makeScreenshot stepKey="screenshot12"/>
         <maximizeWindow stepKey="maxwindow1"/>

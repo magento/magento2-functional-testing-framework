@@ -17,6 +17,8 @@ use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Util\Uri;
 use Codeception\Util\ActionSequence;
+use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
+use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
 use Magento\Setup\Exception;
 use Magento\FunctionalTestingFramework\Util\ConfigSanitizerUtil;
 use Yandex\Allure\Adapter\Support\AttachmentSupport;
@@ -388,6 +390,22 @@ class MagentoWebDriver extends WebDriver
     public function scrollToTopOfPage()
     {
         $this->executeJS('window.scrollTo(0,0);');
+    }
+
+    /**
+     * Takes given $command and executes it against exposed MTF CLI entry point. Returns response from server.
+     * @param string $command
+     * @returns string
+     */
+    public function executeMagentoCLICommand($command)
+    {
+
+        $apiURL = $this->config['url'] . getenv('MAGENTO_CLI_COMMAND_PATH');
+        $executor = new CurlTransport();
+        $executor->write($apiURL, [getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command], CurlInterface::POST, []);
+        $response = $executor->read();
+        $executor->close();
+        return $response;
     }
 
     /**
