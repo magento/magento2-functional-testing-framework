@@ -20,7 +20,6 @@ use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
  */
 class TestGenerator
 {
-
     const REQUIRED_ENTITY_REFERENCE = 'createDataKey';
     const GENERATED_DIR = '_generated';
 
@@ -242,6 +241,7 @@ class TestGenerator
 
     /**
      * Generates Annotations PHP for given object, using given scope to determine indentation and additional output.
+     *
      * @param array $annotationsObject
      * @param boolean $isMethod
      * @return string
@@ -374,6 +374,7 @@ class TestGenerator
      * Since nearly half of all Codeception methods don't share the same signature I had to setup a massive Case
      * statement to handle each unique action. At the bottom of the case statement there is a generic function that can
      * construct the PHP string for nearly half of all Codeception actions.
+     *
      * @param array $stepsObject
      * @param array|bool $hookObject
      * @return string
@@ -1092,6 +1093,7 @@ class TestGenerator
 
     /**
      * Resolves Locator:: in given $attribute if it is found.
+     *
      * @param string $attribute
      * @return string
      */
@@ -1107,6 +1109,7 @@ class TestGenerator
     /**
      * Resolves replacement of $input$ and $$input$$ in given function, recursing and replacing individual arguments
      * Also determines if each argument requires any quote replacement.
+     *
      * @param string $inputString
      * @param array $args
      * @return string
@@ -1138,6 +1141,7 @@ class TestGenerator
 
     /**
      * Trims given $input of "{$var}" to $var if needed. Returns $input if format fails.
+     *
      * @param string $input
      * @return string
      */
@@ -1152,7 +1156,8 @@ class TestGenerator
     }
 
     /**
-     * Replaces all matches into given outputArg with. Variable scope determined by delimiter given
+     * Replaces all matches into given outputArg with. Variable scope determined by delimiter given.
+     *
      * @param array $matches
      * @param string &$outputArg
      * @param string $delimiter
@@ -1190,6 +1195,7 @@ class TestGenerator
     /**
      * Processes an argument for $data.key$ and determines if it needs quote breaks on either ends.
      * Returns an output with quote breaks and replacement already done.
+     *
      * @param string $match
      * @param string $argument
      * @param string $replacement
@@ -1207,7 +1213,8 @@ class TestGenerator
     }
 
     /**
-     * Wraps all args inside function give with double quotes. Uses regex to locate arguments of function
+     * Wraps all args inside function give with double quotes. Uses regex to locate arguments of function.
+     *
      * @param string $functionRegex
      * @param string $input
      * @return string
@@ -1244,6 +1251,7 @@ class TestGenerator
 
     /**
      * Performs str_replace on variable reference, dependent on delimiter and returns exploded array.
+     *
      * @param string $reference
      * @param string $delimiter
      * @return array
@@ -1256,6 +1264,7 @@ class TestGenerator
 
     /**
      * Creates a PHP string for the _before/_after methods if the Test contains an <before> or <after> block.
+     *
      * @param array $hookObjects
      * @return string
      * @throws TestReferenceException
@@ -1265,27 +1274,34 @@ class TestGenerator
     {
         $hooks = "";
         $createData = false;
+
         foreach ($hookObjects as $hookObject) {
             $type = $hookObject->getType();
             $dependencies = 'AcceptanceTester $I';
 
             foreach ($hookObject->getActions() as $step) {
+
                 if (($step->getType() == "createData")
                     || ($step->getType() == "updateData")
                     || ($step->getType() == "getData")
                 ) {
                     $hooks .= "\t/**\n";
                     $hooks .= sprintf("\t  * @var DataPersistenceHandler $%s;\n", $step->getStepKey());
-                    $hooks .= "\t */\n";
+                    $hooks .= "\t  */\n";
                     $hooks .= sprintf("\tprotected $%s;\n\n", $step->getStepKey());
                     $createData = true;
                 } elseif ($step->getType() == "entity") {
                     $hooks .= "\t/**\n";
                     $hooks .= sprintf("\t  * @var EntityDataObject $%s;\n", $step->getStepKey());
-                    $hooks .= "\t */\n";
+                    $hooks .= "\t  */\n";
                     $hooks .= sprintf("\tprotected $%s;\n\n", $step->getCustomActionAttributes()['name']);
                 }
             }
+
+            $hooks .= "\t/**\n";
+            $hooks .= "\t  * @param AcceptanceTester \$I\n";
+            $hooks .= "\t  * @throws \Exception\n";
+            $hooks .= "\t  */\n";
 
             try {
                 $steps = $this->generateStepsPhp(
@@ -1308,6 +1324,7 @@ class TestGenerator
     /**
      * Creates a PHP string based on a <test> block.
      * Concatenates the Test Annotations PHP and Test PHP for a single Test.
+     *
      * @param TestObject $test
      * @return string
      * @throws TestReferenceException
@@ -1338,6 +1355,7 @@ class TestGenerator
 
     /**
      * Detects uniqueness function calls on given attribute, and calls addUniquenessFunctionCall on matches.
+     *
      * @param string $input
      * @return string
      */
