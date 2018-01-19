@@ -204,7 +204,8 @@ class ActionObject
     }
 
     /**
-     * Trims actionAttributes and flattens expectedResult/actualResults, if necessary.
+     * Flattens expectedResult/actualResults nested elements, if necessary.
+     * e.g. expectedResults[] -> ["expectedType" => "string", "expected" => "value"]
      * Warns user if they are using old Assertion syntax.
      *
      * @return void
@@ -213,7 +214,10 @@ class ActionObject
     {
         $actionAttributeKeys = array_keys($this->actionAttributes);
 
-        /** MQE-683 DEPRECATE OLD METHOD HERE */
+        /** MQE-683 DEPRECATE OLD METHOD HERE
+         * Checks if action has any of the old, single line attributes
+         * Throws a warning and returns, assuming old syntax is used.
+         */
         $oldAttributes = array_intersect($actionAttributeKeys, ActionObject::OLD_ASSERTION_ATTRIBUTES);
         if (!empty($oldAttributes)) {
             // @codingStandardsIgnoreStart
@@ -229,7 +233,7 @@ class ActionObject
             return;
         }
 
-        // Flatten subArray into resolvedCustomAttributes as "prefixType" = type, "prefix" = value
+        // Flatten nested Elements's type and value into key=>value entries
         foreach ($this->actionAttributes as $key => $subAttributes) {
             if (in_array($key, $relevantKeys)) {
                 $prefix = ActionObject::ASSERTION_ATTRIBUTES[$key];
