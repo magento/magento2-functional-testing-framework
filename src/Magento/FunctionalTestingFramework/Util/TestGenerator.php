@@ -436,21 +436,21 @@ class TestGenerator
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['userInput']);
             } elseif (isset($customActionAttributes['url'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['url']);
-            } elseif (isset($customActionAttributes['expectedValue'])) {
-                $input = $this->addUniquenessFunctionCall($customActionAttributes['expectedValue']);
+            } elseif (isset($customActionAttributes['expected'])) {
+                $input = $this->addUniquenessFunctionCall($customActionAttributes['expected']);
             } elseif (isset($customActionAttributes['regex'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['regex']);
             }
 
-            if (isset($customActionAttributes['expectedValue'])) {
+            if (isset($customActionAttributes['expected'])) {
                 $assertExpected = $this->resolveValueByType(
-                    $customActionAttributes['expectedValue'],
+                    $customActionAttributes['expected'],
                     isset($customActionAttributes['expectedType']) ? $customActionAttributes['expectedType'] : null
                 );
             }
-            if (isset($customActionAttributes['actualValue'])) {
+            if (isset($customActionAttributes['actual'])) {
                 $assertActual = $this->resolveValueByType(
-                    $customActionAttributes['actualValue'],
+                    $customActionAttributes['actual'],
                     isset($customActionAttributes['actualType']) ? $customActionAttributes['actualType'] : null
                 );
             }

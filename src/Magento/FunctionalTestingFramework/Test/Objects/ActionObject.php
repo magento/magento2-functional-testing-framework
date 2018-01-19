@@ -21,6 +21,7 @@ class ActionObject
 {
     const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray", "expected", "actual"];
     const SELECTOR_ENABLED_ATTRIBUTES = ['selector', 'dependentSelector', "selector1", "selector2", "function"];
+    const OLD_ASSERTION_ATTRIBUTES = ["expected", "expectedType", "actual", "actualType"];
     const ASSERTION_ATTRIBUTES = ["expectedResult" => "expected", "actualResult" => "actual"];
     const ASSERTION_TYPE_ATTRIBUTE = "type";
     const ASSERTION_VALUE_ATTRIBUTE = "value";
@@ -204,12 +205,23 @@ class ActionObject
 
     /**
      * Trims actionAttributes and flattens expectedResult/actualResults, if necessary.
+     * Warns user if they are using old Assertion syntax.
      *
      * @return void
      */
     public function trimAssertionAttributes()
     {
         $actionAttributeKeys = array_keys($this->actionAttributes);
+
+        /** MQE-683 DEPRECATE OLD METHOD HERE */
+        $oldAttributes = array_intersect($actionAttributeKeys, ActionObject::OLD_ASSERTION_ATTRIBUTES);
+        if (!empty($oldAttributes)) {
+            // @codingStandardsIgnoreStart
+            echo("WARNING: Use of one line Assertion actions will be deprecated in MFTF 3.0.0, please use nested syntax (Action: {$this->type} StepKey: {$this->stepKey})" . PHP_EOL);
+            // @codingStandardsIgnoreEnd
+            return;
+        }
+
         $relevantKeys = array_keys(ActionObject::ASSERTION_ATTRIBUTES);
         $relevantAssertionAttributes = array_intersect($actionAttributeKeys, $relevantKeys);
 
@@ -217,14 +229,16 @@ class ActionObject
             return;
         }
 
-        // Flatten subArray into resolvedCustomAttributes as "prefixType" = given type, "prefixValue" = given value
+        // Flatten subArray into resolvedCustomAttributes as "prefixType" = type, "prefix" = value
         foreach ($this->actionAttributes as $key => $subAttributes) {
-            $prefix = ActionObject::ASSERTION_ATTRIBUTES[$key];
-            $this->resolvedCustomAttributes[$prefix . ucfirst(ActionObject::ASSERTION_TYPE_ATTRIBUTE)] =
-                $subAttributes[ActionObject::ASSERTION_TYPE_ATTRIBUTE];
-            $this->resolvedCustomAttributes[$prefix . ucfirst(ActionObject::ASSERTION_VALUE_ATTRIBUTE)] =
-                $subAttributes[ActionObject::ASSERTION_VALUE_ATTRIBUTE];
-            unset($this->actionAttributes[$key]);
+            if (in_array($key, $relevantKeys)) {
+                $prefix = ActionObject::ASSERTION_ATTRIBUTES[$key];
+                $this->resolvedCustomAttributes[$prefix . ucfirst(ActionObject::ASSERTION_TYPE_ATTRIBUTE)] =
+                    $subAttributes[ActionObject::ASSERTION_TYPE_ATTRIBUTE];
+                $this->resolvedCustomAttributes[$prefix] =
+                    $subAttributes[ActionObject::ASSERTION_VALUE_ATTRIBUTE];
+                unset($this->actionAttributes[$key]);
+            }
         }
     }
 
