@@ -893,6 +893,14 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $input, $time, $selector);
                     break;
                 case "formatMoney":
+                    $testSteps .= $this->wrapFunctionCallWithReturnValue(
+                        $stepKey,
+                        $actor,
+                        $actionName,
+                        $input,
+                        $locale
+                    );
+                    break;
                 case "mSetLocale":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $input, $locale);
                     break;
