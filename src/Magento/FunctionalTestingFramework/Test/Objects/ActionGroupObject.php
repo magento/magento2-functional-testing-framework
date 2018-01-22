@@ -245,7 +245,7 @@ class ActionGroupObject
 
         // parameter replacements require changing of (arg.field) to ($arg.field$)
         if ($isParameter) {
-            $fullReplacement = str_replace($variable, trim($replacement, '$'), $fullVariable);
+            $fullReplacement = str_replace($variable, trim($replacement, '$'), trim($fullVariable, "'"));
             $newAttributeValue = str_replace($fullVariable, $scope . $fullReplacement . $scope, $newAttributeValue);
         } else {
             $newAttributeValue = str_replace('{{', $scope, str_replace('}}', $scope, $newAttributeValue));
