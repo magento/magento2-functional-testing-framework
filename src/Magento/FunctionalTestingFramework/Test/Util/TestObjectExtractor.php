@@ -97,17 +97,15 @@ class TestObjectExtractor extends BaseObjectExtractor
             );
         }
 
-        // extract after
         if (array_key_exists(self::TEST_AFTER_HOOK, $testData)) {
+            // extract after
             $testHooks[self::TEST_AFTER_HOOK] = $this->testHookObjectExtractor->extractHook(
                 $testData[self::NAME],
                 'after',
                 $testData[self::TEST_AFTER_HOOK]
             );
-        }
 
-        // extract failed
-        if (array_key_exists(self::TEST_AFTER_HOOK, $testData)) {
+            // extract failed
             $testHooks[self::TEST_FAILED_HOOK] = $this->testHookObjectExtractor->extractHook(
                 $testData[self::NAME],
                 'failed',
