@@ -25,7 +25,7 @@ class ConfigSanitizerUtil
             $config['url'] = self::sanitizeUrl($config['url']);
         }
 
-        if (array_key_exists('selenium', array_flip($params))) {
+        if (in_array('selenium', $params)) {
             $config = self::sanitizeSeleniumEnvs($config);
         }
 
