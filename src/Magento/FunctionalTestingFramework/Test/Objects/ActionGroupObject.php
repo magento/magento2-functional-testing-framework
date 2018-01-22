@@ -199,14 +199,14 @@ class ActionGroupObject
         // Check if arguments has a mapping for the given variableName
 
         if ($variableName === false) {
-            $variableName = $variable;
+            $variableName = trim($variable, "'");
         }
 
         if (!array_key_exists($variableName, $arguments)) {
             return $attributeValue;
         }
 
-        $isPersisted = strstr($arguments[$variableName], '$');
+        $isPersisted = preg_match('/\$[\w.]+\$/', $arguments[$variableName]);
         if ($isPersisted) {
             return $this->replacePersistedArgument(
                 $arguments[$variableName],
