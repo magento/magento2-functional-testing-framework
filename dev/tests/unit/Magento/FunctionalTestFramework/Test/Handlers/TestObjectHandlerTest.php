@@ -34,6 +34,7 @@ class TestObjectHandlerTest extends TestCase
         $testDataArrayBuilder = new TestDataArrayBuilder();
         $mockData = $testDataArrayBuilder
             ->withAnnotations()
+            ->withFailedHook()
             ->withAfterHook()
             ->withBeforeHook()
             ->withTestActions()
@@ -56,6 +57,12 @@ class TestObjectHandlerTest extends TestCase
             $testDataArrayBuilder->testActionType,
             []
         );
+        $expectedFailedActionObject = new ActionObject(
+            $testDataArrayBuilder->testActionAfterName,
+            $testDataArrayBuilder->testActionType,
+            []
+        );
+
         $expectedBeforeHookObject = new TestHookObject(
             TestObjectExtractor::TEST_BEFORE_HOOK,
             $testDataArrayBuilder->testName,
@@ -65,6 +72,11 @@ class TestObjectHandlerTest extends TestCase
             TestObjectExtractor::TEST_AFTER_HOOK,
             $testDataArrayBuilder->testName,
             [$expectedAfterActionObject]
+        );
+        $expectedFailedHookObject = new TestHookObject(
+            TestObjectExtractor::TEST_FAILED_HOOK,
+            $testDataArrayBuilder->testName,
+            [$expectedFailedActionObject]
         );
 
         $expectedTestActionObject = new ActionObject(
@@ -80,7 +92,8 @@ class TestObjectHandlerTest extends TestCase
             ],
             [
                 TestObjectExtractor::TEST_BEFORE_HOOK => $expectedBeforeHookObject,
-                TestObjectExtractor::TEST_AFTER_HOOK => $expectedAfterHookObject
+                TestObjectExtractor::TEST_AFTER_HOOK => $expectedAfterHookObject,
+                TestObjectExtractor::TEST_FAILED_HOOK => $expectedFailedHookObject
             ],
             []
         );

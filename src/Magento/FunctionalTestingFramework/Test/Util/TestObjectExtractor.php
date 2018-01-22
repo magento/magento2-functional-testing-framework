@@ -80,6 +80,7 @@ class TestObjectExtractor extends BaseObjectExtractor
             self::TEST_ANNOTATIONS,
             self::TEST_BEFORE_HOOK,
             self::TEST_AFTER_HOOK,
+            self::TEST_FAILED_HOOK,
             'filename'
         );
 
@@ -115,7 +116,6 @@ class TestObjectExtractor extends BaseObjectExtractor
         }
 
         // TODO extract filename info and store
-
         return new TestObject(
             $testData[self::NAME],
             $this->actionObjectExtractor->extractActions($testActions),
