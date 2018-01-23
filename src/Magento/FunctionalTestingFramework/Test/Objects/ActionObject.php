@@ -19,6 +19,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
  */
 class ActionObject
 {
+    const __ENV = "_ENV";
     const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray", "expected", "actual"];
     const SELECTOR_ENABLED_ATTRIBUTES = ['selector', 'dependentSelector', "selector1", "selector2", "function"];
     const EXTERNAL_URL_AREA_INVALID_ACTIONS = ['amOnPage'];
@@ -329,6 +330,11 @@ class ActionObject
             list($objName) = $this->stripAndSplitReference($match);
 
             $obj = $objectHandler->getObject($objName);
+
+            // Leave {{_ENV.VARIABLE}} references to be replaced in TestGenerator with getenv("VARIABLE")
+            if ($objName === ActionObject::__ENV) {
+                continue;
+            }
 
             // specify behavior depending on field
             switch (get_class($obj)) {
