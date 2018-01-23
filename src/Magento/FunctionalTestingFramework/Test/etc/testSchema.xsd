@@ -1435,10 +1435,7 @@
         <xs:sequence>
             <xs:element name="expectedResult" type="expectedResultType"/>
         </xs:sequence>
-        <xs:attribute type="xs:string" name="expected" use="optional"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
-        <xs:attribute type="xs:string" name="actual" use="optional"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="expectedValue" use="optional"/>
         <xs:attribute type="xs:string" name="stepKey" use="required"/>
         <xs:attribute type="xs:string" name="selector" use="required"/>
         <xs:attribute type="xs:string" name="attribute" use="required"/>

@@ -209,22 +209,22 @@
 
         <!-- assertElementContainsAttribute examples -->
         <assertElementContainsAttribute stepKey="assertElementContainsAttribute1" selector="#username" attribute="class">
-            <expectedResult type="const">admin__control-text</expectedResult>
+            <expectedResult type="string">admin__control-text</expectedResult>
         </assertElementContainsAttribute>
         <assertElementContainsAttribute stepKey="assertElementContainsAttribute2" selector="#username" attribute="name">
-            <expectedResult type="const">login[username]</expectedResult>
+            <expectedResult type="string">login[username]</expectedResult>
         </assertElementContainsAttribute>
         <assertElementContainsAttribute stepKey="assertElementContainsAttribute3" selector="#username" attribute="autofocus">
-            <expectedResult type="const">true</expectedResult>
+            <expectedResult type="string">true</expectedResult>
         </assertElementContainsAttribute>
         <assertElementContainsAttribute stepKey="assertElementContainsAttribute4" selector="#username" attribute="data-validate">
-            <expectedResult type="const">{required:true}</expectedResult>
+            <expectedResult type="string">{required:true}</expectedResult>
         </assertElementContainsAttribute>
         <assertElementContainsAttribute stepKey="assertElementContainsAttribute5" selector=".admin__menu-overlay" attribute="style">
-            <expectedResult type="const">display: none;</expectedResult>
+            <expectedResult type="string">display: none;</expectedResult>
         </assertElementContainsAttribute>
         <assertElementContainsAttribute stepKey="assertElementContainsAttribute6" selector=".admin__menu-overlay" attribute="border">
-            <expectedResult type="const">0</expectedResult>
+            <expectedResult type="string">0</expectedResult>
         </assertElementContainsAttribute>
         <assertElementContainsAttribute stepKey="assertElementContainsAttribute7" selector="#username" attribute="value">
             <expectedResult type="const">$createData2.firstname$</expectedResult>
