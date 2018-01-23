@@ -1519,6 +1519,12 @@ class TestGenerator
     }
     // @codingStandardsIgnoreEnd
 
+    /**
+     * Resolves {{_ENV.variable}} into getenv("variable") for test-runtime ENV referencing.
+     * @param string $inputString
+     * @param array $args
+     * @return string
+     */
     private function resolveEnvReferences($inputString, $args)
     {
         $envRegex = "/{{_ENV\.([\w]+)}}/";
