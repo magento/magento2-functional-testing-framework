@@ -24,7 +24,9 @@ use tests\unit\Util\TestDataArrayBuilder;
 class TestObjectHandlerTest extends TestCase
 {
     /**
-     * Basic test to validate array => test object conversion
+     * Basic test to validate array => test object conversion.
+     *
+     * @throws \Exception
      */
     public function testGetTestObject()
     {
@@ -32,6 +34,7 @@ class TestObjectHandlerTest extends TestCase
         $testDataArrayBuilder = new TestDataArrayBuilder();
         $mockData = $testDataArrayBuilder
             ->withAnnotations()
+            ->withFailedHook()
             ->withAfterHook()
             ->withBeforeHook()
             ->withTestActions()
@@ -54,17 +57,26 @@ class TestObjectHandlerTest extends TestCase
             $testDataArrayBuilder->testActionType,
             []
         );
+        $expectedFailedActionObject = new ActionObject(
+            $testDataArrayBuilder->testActionAfterName,
+            $testDataArrayBuilder->testActionType,
+            []
+        );
+
         $expectedBeforeHookObject = new TestHookObject(
             TestObjectExtractor::TEST_BEFORE_HOOK,
             $testDataArrayBuilder->testName,
-            [$expectedBeforeActionObject],
-            []
+            [$expectedBeforeActionObject]
         );
         $expectedAfterHookObject = new TestHookObject(
             TestObjectExtractor::TEST_AFTER_HOOK,
             $testDataArrayBuilder->testName,
-            [$expectedAfterActionObject],
-            []
+            [$expectedAfterActionObject]
+        );
+        $expectedFailedHookObject = new TestHookObject(
+            TestObjectExtractor::TEST_FAILED_HOOK,
+            $testDataArrayBuilder->testName,
+            [$expectedFailedActionObject]
         );
 
         $expectedTestActionObject = new ActionObject(
@@ -80,7 +92,8 @@ class TestObjectHandlerTest extends TestCase
             ],
             [
                 TestObjectExtractor::TEST_BEFORE_HOOK => $expectedBeforeHookObject,
-                TestObjectExtractor::TEST_AFTER_HOOK => $expectedAfterHookObject
+                TestObjectExtractor::TEST_AFTER_HOOK => $expectedAfterHookObject,
+                TestObjectExtractor::TEST_FAILED_HOOK => $expectedFailedHookObject
             ],
             []
         );
@@ -89,7 +102,9 @@ class TestObjectHandlerTest extends TestCase
     }
 
     /**
-     * Tests the function used to get a series of relevant tests by group
+     * Tests the function used to get a series of relevant tests by group.
+     *
+     * @throws \Exception
      */
     public function testGetTestsByGroup()
     {
@@ -120,6 +135,7 @@ class TestObjectHandlerTest extends TestCase
      * Function used to set mock for parser return and force init method to run between tests.
      *
      * @param array $data
+     * @throws \Exception
      */
     private function setMockParserOutput($data)
     {

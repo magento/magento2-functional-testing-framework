@@ -25,9 +25,13 @@ class BasicActionGroupTestCest
 {
 	/**
 	  * @var DataPersistenceHandler $createPersonParam;
-	 */
+	  */
 	protected $createPersonParam;
 
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
 	public function _before(AcceptanceTester $I)
 	{
 		$I->amGoingTo("create entity that has the stepKey: createPersonParam");

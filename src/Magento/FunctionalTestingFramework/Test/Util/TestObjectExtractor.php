@@ -16,6 +16,7 @@ class TestObjectExtractor extends BaseObjectExtractor
     const TEST_ANNOTATIONS = 'annotations';
     const TEST_BEFORE_HOOK = 'before';
     const TEST_AFTER_HOOK = 'after';
+    const TEST_FAILED_HOOK = 'failed';
 
     /**
      * Action Object Extractor object
@@ -62,6 +63,7 @@ class TestObjectExtractor extends BaseObjectExtractor
      *
      * @param array $testData
      * @return TestObject
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
     public function extractTestData($testData)
     {
@@ -78,6 +80,7 @@ class TestObjectExtractor extends BaseObjectExtractor
             self::TEST_ANNOTATIONS,
             self::TEST_BEFORE_HOOK,
             self::TEST_AFTER_HOOK,
+            self::TEST_FAILED_HOOK,
             'filename'
         );
 
@@ -94,17 +97,23 @@ class TestObjectExtractor extends BaseObjectExtractor
             );
         }
 
-        // extract after
         if (array_key_exists(self::TEST_AFTER_HOOK, $testData)) {
+            // extract after
             $testHooks[self::TEST_AFTER_HOOK] = $this->testHookObjectExtractor->extractHook(
                 $testData[self::NAME],
                 'after',
                 $testData[self::TEST_AFTER_HOOK]
             );
+
+            // extract failed
+            $testHooks[self::TEST_FAILED_HOOK] = $this->testHookObjectExtractor->extractHook(
+                $testData[self::NAME],
+                'failed',
+                $testData[self::TEST_AFTER_HOOK]
+            );
         }
 
         // TODO extract filename info and store
-
         return new TestObject(
             $testData[self::NAME],
             $this->actionObjectExtractor->extractActions($testActions),

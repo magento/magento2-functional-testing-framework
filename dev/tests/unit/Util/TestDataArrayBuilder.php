@@ -33,6 +33,13 @@ class TestDataArrayBuilder
     public $testActionAfterName = 'testActionAfter';
 
     /**
+     * Mock failed action name
+     *
+     * @var string
+     */
+    public $testActionFailedName = 'testActionFailed';
+
+    /**
      * Mock test action in test name
      *
      * @var string
@@ -60,6 +67,11 @@ class TestDataArrayBuilder
      * @var array
      */
     private $afterHook = [];
+
+    /**
+     * @var array
+     */
+    private $failedHook = [];
 
     /**
      * @var array
@@ -135,6 +147,27 @@ class TestDataArrayBuilder
     }
 
     /**
+     * Add a failed hook passed in by arg (or default if no arg)
+     *
+     * @param null $failedHook
+     * @return $this
+     */
+    public function withFailedHook($failedHook = null)
+    {
+        if ($failedHook == null) {
+            $this->failedHook = [$this->testActionFailedName => [
+                ActionObjectExtractor::NODE_NAME => $this->testActionType,
+                ActionObjectExtractor::TEST_STEP_MERGE_KEY => $this->testActionFailedName
+
+            ]];
+        } else {
+            $this->failedHook = $failedHook;
+        }
+
+        return $this;
+    }
+
+    /**
      * Add test actions passed in by arg (or default if no arg)
      *
      * @param array $actions
@@ -167,7 +200,8 @@ class TestDataArrayBuilder
                 TestObjectExtractor::NAME => $this->testName,
                 TestObjectExtractor::TEST_ANNOTATIONS => $this->annotations,
                 TestObjectExtractor::TEST_BEFORE_HOOK => $this->beforeHook,
-                TestObjectExtractor::TEST_AFTER_HOOK => $this->afterHook
+                TestObjectExtractor::TEST_AFTER_HOOK => $this->afterHook,
+                TestObjectExtractor::TEST_FAILED_HOOK => $this->failedHook
             ],
             $this->testActions
         )];
