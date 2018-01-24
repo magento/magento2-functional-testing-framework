@@ -312,7 +312,7 @@ class ActionObject
         foreach ($relevantDataAttributes as $dataAttribute) {
             $varInput = $this->actionAttributes[$dataAttribute];
             $replacement = $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $varInput);
-            if ($replacement) {
+            if ($replacement != null) {
                 $this->resolvedCustomAttributes[$dataAttribute] = $replacement;
             }
         }
