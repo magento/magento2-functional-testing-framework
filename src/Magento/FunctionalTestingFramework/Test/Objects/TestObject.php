@@ -37,7 +37,7 @@ class TestObject
     private $annotations = [];
 
     /**
-     * Array which contains before and after actions to be excuted in scope of a single test.
+     * Array which contains before and after actions to be executed in scope of a single test.
      *
      * @var array
      */

@@ -23,12 +23,29 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
  */
 class BasicFunctionalTestCest
 {
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
 	public function _before(AcceptanceTester $I)
 	{
 		$I->amOnPage("/beforeUrl");
 	}
 
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
 	public function _after(AcceptanceTester $I)
+	{
+		$I->amOnPage("/afterUrl");
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _failed(AcceptanceTester $I)
 	{
 		$I->amOnPage("/afterUrl");
 	}

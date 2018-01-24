@@ -23,13 +23,30 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
  */
 class MergeFunctionalTestCest
 {
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
 	public function _before(AcceptanceTester $I)
 	{
 		$I->amOnPage("/beforeUrl");
 		$I->see("#before2");
 	}
 
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
 	public function _after(AcceptanceTester $I)
+	{
+		$I->amOnPage("/afterUrl1");
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _failed(AcceptanceTester $I)
 	{
 		$I->amOnPage("/afterUrl1");
 	}
