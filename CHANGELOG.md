@@ -1,6 +1,21 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.0.2
+-----
+
+### Enhancements
+* Customizability
+    * Added the `<magentoCLI>` test action. Action takes the given `command=""` and passes it for execution in Magento Environment.
+        * Note: Installation step to enable above action has been added. See `Step 5` in the MFTF `Getting Started` article.
+* Maintainability
+    * Tests now run actions declared in `<after>` hook in both successful and failed test runs.
+
+### Fixes
+* Fixed inability to use `[]` characters within selector/url parameters.
+* Fixed a bug where the `<formatMoney>` action did not return a variable for test use.
+* Fixed a bug where the `<waitForLoadingMaskToDisappear>` action could not be used twice in an `<actionGroup>`.
+
 2.0.1
 -----
 
