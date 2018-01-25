@@ -63,4 +63,32 @@
 
         <actionGroup ref="actionGroupWithMultipleParameterSelectorsFromArgument" stepKey="actionGroup"/>
     </test>
+
+    <test name="ActionGroupWithSimpleDataUsageFromPassedArgument">
+        <annotations>
+            <severity value="SEVERE"/>
+            <title value="Action Group With Simple Data Usage From Passed Argument"/>
+        </annotations>
+
+        <actionGroup ref="actionGroupWithSimpleDataUsage" stepKey="actionGroup1">
+            <argument name="someArgument" value="overrideString"/>
+        </actionGroup>
+
+        <actionGroup ref="actionGroupWithSimpleDataUsage" stepKey="actionGroup2">
+            <argument name="someArgument" value="simpleData.firstname"/>
+        </actionGroup>
+
+        <actionGroup ref="actionGroupWithSimpleDataUsage" stepKey="actionGroup3">
+            <argument name="someArgument" value="$persisted.data$"/>
+        </actionGroup>
+    </test>
+
+    <test name="ActionGroupWithSimpleDataUsageFromDefaultArgument">
+        <annotations>
+            <severity value="SEVERE"/>
+            <title value="Action Group With Simple Data Usage From Default Argument"/>
+        </annotations>
+
+        <actionGroup ref="actionGroupWithSimpleDataUsage" stepKey="actionGroup"/>
+    </test>
 </tests>

@@ -24,6 +24,7 @@
                             <xs:complexType>
                                 <xs:attribute type="xs:string" name="name" use="required"/>
                                 <xs:attribute type="xs:string" name="defaultValue"/>
+                                <xs:attribute type="xs:boolean" name="simpleData" default="false"/>
                             </xs:complexType>
                         </xs:element>
                     </xs:sequence>

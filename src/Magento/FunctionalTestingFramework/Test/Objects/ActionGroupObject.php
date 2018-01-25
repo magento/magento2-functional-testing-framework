@@ -42,13 +42,19 @@ class ActionGroupObject
     private $arguments;
 
     /**
+     * An array used to store the default simple arguments if the user does not specify any
+     * @var
+     */
+    private $simpleArguments;
+
+    /**
      * ActionGroupObject constructor.
      *
      * @param string $name
      * @param string $arguments
      * @param array $actions
      */
-    public function __construct($name, $arguments, $actions)
+    public function __construct($name, $arguments, $simpleArguments, $actions)
     {
         $this->varAttributes = array_merge(
             ActionObject::SELECTOR_ENABLED_ATTRIBUTES,
@@ -57,6 +63,7 @@ class ActionGroupObject
         $this->varAttributes[] = ActionObject::ACTION_ATTRIBUTE_URL;
         $this->name = $name;
         $this->arguments = $arguments;
+        $this->simpleArguments = $simpleArguments;
         $this->parsedActions = $actions;
     }
 
@@ -205,6 +212,14 @@ class ActionGroupObject
         if (!array_key_exists($variableName, $arguments)) {
             return $attributeValue;
         }
+
+        /// TODO: CHECK IF ARGUMENT IS SIMPLE OR NOT.
+        ///
+        /// If simple determine if it's xml.data, $persisted.Data$, or stringLiteral
+        ///
+        /// If not simple, Do regular replacement
+        ///
+
 
         $isPersisted = preg_match('/\$[\w.]+\$/', $arguments[$variableName]);
         if ($isPersisted) {

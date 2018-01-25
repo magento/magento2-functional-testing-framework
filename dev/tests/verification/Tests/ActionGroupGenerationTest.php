@@ -96,4 +96,26 @@ class ActionGroupGenerationTest extends TestCase
     {
         $this->validateGenerateAndContents('ActionGroupWithMultipleParameterSelectorsFromDefaultArgument');
     }
+
+    /**
+     * Test generation of a test referencing an action group with simple passed data.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testActionGroupWithSimpleDataUsageFromPassedArgument()
+    {
+        $this->validateGenerateAndContents('ActionGroupWithSimpleDataUsageFromPassedArgument');
+    }
+
+    /**
+     * Test generation of a test referencing an action group with default data.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testActionGroupWithSimpleDataUsageFromDefaultArgument()
+    {
+        $this->validateGenerateAndContents('ActionGroupWithSimpleDataUsageFromDefaultArgument');
+    }
 }

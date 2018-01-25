@@ -15,6 +15,7 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
 {
     const DEFAULT_VALUE = 'defaultValue';
     const ACTION_GROUP_ARGUMENTS = 'arguments';
+    const ACTION_GROUP_SIMPLE_DATA = 'simpleData';
 
     /**
      * Action Object Extractor for converting actions into objects
@@ -40,6 +41,7 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
     public function extractActionGroup($actionGroupData)
     {
         $arguments = [];
+        $simpleArguments = [];
 
         $actionData = $this->stripDescriptorTags(
             $actionGroupData,
@@ -51,12 +53,14 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
         $actions = $this->actionObjectExtractor->extractActions($actionData);
 
         if (array_key_exists(self::ACTION_GROUP_ARGUMENTS, $actionGroupData)) {
-            $arguments = $this->extractArguments($actionGroupData[self::ACTION_GROUP_ARGUMENTS]);
+            $arguments = $this->extractArguments($actionGroupData[self::ACTION_GROUP_ARGUMENTS], false);
+            $simpleArguments = $this->extractArguments($actionGroupData[self::ACTION_GROUP_ARGUMENTS], true);
         }
 
         return new ActionGroupObject(
             $actionGroupData[self::NAME],
             $arguments,
+            $simpleArguments,
             $actions
         );
     }
@@ -66,9 +70,10 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
      * by argument name.
      *
      * @param array $arguments
+     * @param bool $simpleData
      * @return array
      */
-    private function extractArguments($arguments)
+    private function extractArguments($arguments, $simpleData)
     {
         $parsedArguments = [];
         $argData = $this->stripDescriptorTags(
@@ -77,9 +82,11 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
         );
 
         foreach ($argData as $argName => $argValue) {
-            $parsedArguments[$argName] = $argValue[self::DEFAULT_VALUE] ?? null;
+            $simpleArgument = $argValue[self::ACTION_GROUP_SIMPLE_DATA] ?? false;
+            if ($simpleArgument == $simpleData) {
+                $parsedArguments[$argName] = $argValue[self::DEFAULT_VALUE] ?? null;
+            }
         }
-
         return $parsedArguments;
     }
 }

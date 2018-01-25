@@ -34,4 +34,12 @@
 
         <see selector="{{SampleSection.threeParamElement(someArgument.firstname, someArgument.lastname, 'test')}}" userInput="{{someArgument.lastname}}" stepKey="seeLastName" />
     </actionGroup>
+
+    <actionGroup name="actionGroupWithSimpleDataUsage">
+        <arguments>
+            <argument name="someArgument" simpleData="true" defaultValue="stringLiteral"/>
+        </arguments>
+        <see stepKey="see1" selector="class.{{someArgument}}" userInput="{{someArgument}}"/>
+        <see selector="{{SampleSection.oneParamElement(someArgument)}}" userInput="{{someArgument}}" stepKey="see2" />
+    </actionGroup>
 </actionGroups>
