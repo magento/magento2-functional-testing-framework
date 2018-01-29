@@ -23,6 +23,9 @@
     <page name="AdminPage" url="/backend" area="admin" module="SampleTests">
         <section name="SampleSection"/>
     </page>
+    <page name="AdminOneParamPage" url="/{{var1}}/page.html" area="admin" module="SampleTests" parameterized="true">
+        <section name="SampleSection"/>
+    </page>
     <page name="ExternalPage" url="http://myFullUrl.com/" area="external" module="SampleTests">
         <section name="SampleSection"/>
     </page>

@@ -340,8 +340,11 @@ class ActionObject
             switch (get_class($obj)) {
                 case PageObject::class:
                     $this->validateUrlAreaAgainstActionType($obj);
-                    $replacement = $obj->getUrl();
                     $parameterized = $obj->isParameterized();
+                    $replacement = $this->resolveParameterization($parameterized, $obj->getUrl(), $match);
+                    if ($obj->getArea() == PageObject::ADMIN_AREA) {
+                        $replacement = "/{{_ENV.MAGENTO_BASE_URL}}/" . $replacement;
+                    }
                     break;
                 case SectionObject::class:
                     list(,$objField) = $this->stripAndSplitReference($match);
@@ -351,9 +354,11 @@ class ActionObject
                     $parameterized = $obj->getElement($objField)->isParameterized();
                     $replacement = $obj->getElement($objField)->getPrioritizedSelector();
                     $this->setTimeout($obj->getElement($objField)->getTimeout());
+                    $replacement = $this->resolveParameterization($parameterized, $replacement, $match);
                     break;
                 case EntityDataObject::class:
                     $replacement = $this->resolveEntityDataObjectReference($obj, $match);
+                    $replacement = $this->resolveParameterization($parameterized, $replacement, $match);
                     break;
             }
 
@@ -362,8 +367,6 @@ class ActionObject
             } elseif ($replacement == null) {
                 throw new TestReferenceException("Could not resolve entity reference " . $inputString);
             }
-
-            $replacement = $this->resolveParameterization($parameterized, $replacement, $match);
             $outputString = str_replace($match, $replacement, $outputString);
         }
         return $outputString;
