@@ -39,8 +39,8 @@ class PageReplacementTestCest
 		$I->amOnPage("/John/StringLiteral2.html");
 		$I->amOnPage("/John/" . $datakey->getCreatedDataByName('firstname') . ".html");
 		$I->amOnPage("/" . $datakey->getCreatedDataByName('firstname') . "/StringLiteral2.html");
-		$I->amOnPage("/" . getenv("MAGENTO_BASE_URL") . "//backend");
-		$I->amOnPage("/" . getenv("MAGENTO_BASE_URL") . "//StringLiteral/page.html");
+		$I->amOnPage("/" . getenv("BACKEND_NAME") . "//backend");
+		$I->amOnPage("/" . getenv("BACKEND_NAME") . "//StringLiteral/page.html");
 		$I->amOnUrl("http://myFullUrl.com/");
 	}
 }
