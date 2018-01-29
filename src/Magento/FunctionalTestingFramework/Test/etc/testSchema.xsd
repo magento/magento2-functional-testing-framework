@@ -186,8 +186,7 @@
             <xs:element type="waitForPageLoadType" name="waitForPageLoad" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForTextType" name="waitForText" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertArrayHasKeyType" name="assertArrayHasKey" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="assertArrayNotHasKeyType" name="assertArrayNotHasKey" minOccurs="0"
-                        maxOccurs="unbounded"/>
+            <xs:element type="assertArrayNotHasKeyType" name="assertArrayNotHasKey" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertArraySubsetType" name="assertArraySubset" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertContainsType" name="assertContains" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertCountType" name="assertCount" minOccurs="0" maxOccurs="unbounded"/>
@@ -196,18 +195,15 @@
             <xs:element type="assertFalseType" name="assertFalse" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertFileExistsType" name="assertFileExists" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertFileNotExistsType" name="assertFileNotExists" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="assertGreaterOrEqualsType" name="assertGreaterOrEquals" minOccurs="0"
-                        maxOccurs="unbounded"/>
+            <xs:element type="assertGreaterOrEqualsType" name="assertGreaterOrEquals" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertGreaterThanType" name="assertGreaterThan" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="assertGreaterThanOrEqualType" name="assertGreaterThanOrEqual" minOccurs="0"
-                        maxOccurs="unbounded"/>
+            <xs:element type="assertGreaterThanOrEqualType" name="assertGreaterThanOrEqual" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertInstanceOfType" name="assertInstanceOf" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertInternalTypeType" name="assertInternalType" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertIsEmptyType" name="assertIsEmpty" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertLessOrEqualsType" name="assertLessOrEquals" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertLessThanType" name="assertLessThan" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="assertLessThanOrEqualType" name="assertLessThanOrEqual" minOccurs="0"
-                        maxOccurs="unbounded"/>
+            <xs:element type="assertLessThanOrEqualType" name="assertLessThanOrEqual" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertNotContainsType" name="assertNotContains" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertNotEmptyType" name="assertNotEmpty" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertNotEqualsType" name="assertNotEquals" minOccurs="0" maxOccurs="unbounded"/>
@@ -218,10 +214,8 @@
             <xs:element type="assertNullType" name="assertNull" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertRegExpType" name="assertRegExp" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertSameType" name="assertSame" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="assertStringStartsNotWithType" name="assertStringStartsNotWith" minOccurs="0"
-                        maxOccurs="unbounded"/>
-            <xs:element type="assertStringStartsWithType" name="assertStringStartsWith" minOccurs="0"
-                        maxOccurs="unbounded"/>
+            <xs:element type="assertStringStartsNotWithType" name="assertStringStartsNotWith" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertStringStartsWithType" name="assertStringStartsWith" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertTrueType" name="assertTrue" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="expectExceptionType" name="expectException" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="failType" name="fail" minOccurs="0" maxOccurs="unbounded"/>
@@ -307,18 +301,6 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertElementContainsAttributeType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector" use="required"/>
-                <xs:attribute type="xs:string" name="expectedValue"/>
-                <xs:attribute type="xs:string" name="attribute" use="required"/>
                 <xs:attribute type="xs:string" name="stepKey" use="required"/>
                 <xs:attribute type="xs:string" name="before"/>
                 <xs:attribute type="xs:string" name="after"/>
@@ -1421,452 +1403,6 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
-    <xs:complexType name="assertArrayHasKeyType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertArrayNotHasKeyType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertArraySubsetType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:boolean" name="strict"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertContainsType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertCountType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertEmptyType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertEqualsType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="delta"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertFalseType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertFileExistsType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertFileNotExistsType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertGreaterOrEqualsType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertGreaterThanType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertGreaterThanOrEqualType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertInstanceOfType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertInternalTypeType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertIsEmptyType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertLessOrEqualsType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertLessThanType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertLessThanOrEqualType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertNotContainsType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertNotEmptyType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertNotEqualsType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="delta"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertNotInstanceOfType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertNotNullType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertNotRegExpType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertNotSameType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertNullType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertRegExpType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertSameType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertStringStartsNotWithType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertStringStartsWithType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="assertTrueType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="message"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="expectExceptionType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="expected" use="required"/>
-                <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-                <xs:attribute type="xs:string" name="actual" use="required"/>
-                <xs:attribute type="assertEnum" name="actualType" default="const"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
     <xs:complexType name="failType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -1888,4 +1424,503 @@
             <xs:enumeration value="const"/>
         </xs:restriction>
     </xs:simpleType>
+    <!-- ASSERTION TYPES -->
+    <!-- REMOVE expected/expectedType and actual/actualType in MQE-683-->
+    <xs:complexType name="assertionType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="delta" use="optional"/>
+        <xs:attribute type="xs:boolean" name="strict" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertElementContainsAttributeType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expectedValue" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="selector" use="required"/>
+        <xs:attribute type="xs:string" name="attribute" use="required"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertArrayHasKeyType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertArrayNotHasKeyType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertArraySubsetType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:boolean" name="strict" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertContainsType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertCountType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertEmptyType">
+        <xs:sequence>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertEqualsType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="delta" use="optional"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertFalseType">
+        <xs:sequence>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertFileExistsType">
+        <xs:sequence>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertFileNotExistsType">
+        <xs:sequence>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertGreaterOrEqualsType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertGreaterThanType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertGreaterThanOrEqualType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertInstanceOfType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertInternalTypeType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertIsEmptyType">
+        <xs:sequence>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertLessOrEqualsType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertLessThanType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertLessThanOrEqualType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertNotContainsType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertNotEmptyType">
+        <xs:sequence>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertNotEqualsType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="delta" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertNotInstanceOfType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertNotNullType">
+        <xs:sequence>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertNotRegExpType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertNotSameType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertNullType">
+        <xs:sequence>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertRegExpType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertSameType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertStringStartsNotWithType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertStringStartsWithType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="assertTrueType">
+        <xs:sequence>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="optional"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <xs:complexType name="expectExceptionType">
+        <xs:sequence minOccurs="0">
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expected" use="optional"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="actual" use="optional"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const" use="optional"/>
+        <xs:attribute type="xs:string" name="stepKey" use="required"/>
+        <xs:attribute type="xs:string" name="before"/>
+        <xs:attribute type="xs:string" name="after"/>
+    </xs:complexType>
+    <!-- END ASSERT TYPES -->
+    <xs:complexType name="expectedResultType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="assertEnum" name="type" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="actualResultType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="assertEnum" name="type" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
 </xs:schema>

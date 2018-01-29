@@ -166,6 +166,7 @@ class ActionMergeUtil
     {
         foreach ($parsedSteps as $parsedStep) {
             $parsedStep->resolveReferences();
+            $parsedStep->trimAssertionAttributes();
             if ($parsedStep->getLinkedAction()) {
                 $this->stepsToMerge[$parsedStep->getStepKey()] = $parsedStep;
             } else {
