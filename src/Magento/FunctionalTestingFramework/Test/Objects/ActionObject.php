@@ -343,7 +343,7 @@ class ActionObject
                     $parameterized = $obj->isParameterized();
                     $replacement = $this->resolveParameterization($parameterized, $obj->getUrl(), $match);
                     if ($obj->getArea() == PageObject::ADMIN_AREA) {
-                        $replacement = "/{{_ENV.MAGENTO_BASE_URL}}/" . $replacement;
+                        $replacement = "/{{_ENV.BACKEND_NAME}}/" . $replacement;
                     }
                     break;
                 case SectionObject::class:
