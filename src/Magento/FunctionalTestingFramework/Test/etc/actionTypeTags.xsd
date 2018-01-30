@@ -10,6 +10,7 @@
     <xs:include schemaLocation="Actions/seeActions.xsd"/>
     <xs:include schemaLocation="Actions/switchToActions.xsd"/>
     <xs:include schemaLocation="Actions/customActions.xsd"/>
+    <xs:include schemaLocation="Actions/commonAttributes.xsd"/>
 
     <xs:group name="actionTypeTags">
         <xs:choice>
@@ -68,9 +69,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="message" use="required"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -85,8 +86,8 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="stepKey"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -94,9 +95,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -104,9 +105,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -114,9 +115,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="url"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -125,9 +126,9 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -136,18 +137,18 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
     <xs:complexType name="cancelPopupType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -155,18 +156,18 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector" use="required"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
     <xs:complexType name="closeTabType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -174,9 +175,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput" use="required"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -185,9 +186,9 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector1" use="required"/>
                 <xs:attribute type="xs:string" name="selector2" use="required"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -195,9 +196,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="function" use="required"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -205,9 +206,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="function" use="required"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -217,9 +218,9 @@
                 <xs:attribute type="xs:string" name="selector"/>
                 <xs:attribute type="xs:string" name="selectorArray"/>
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -227,9 +228,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -237,36 +238,36 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
     <xs:complexType name="maximizeWindowType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
     <xs:complexType name="moveBackType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
     <xs:complexType name="moveForwardType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -277,27 +278,27 @@
                 <xs:attribute type="xs:string" name="selectorArray"/>
                 <xs:attribute type="xs:string" name="x"/>
                 <xs:attribute type="xs:string" name="y"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
     <xs:complexType name="openNewTabType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
     <xs:complexType name="pauseExecutionType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -306,9 +307,9 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="function" use="required"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -318,18 +319,18 @@
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
     <xs:complexType name="reloadPageType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -338,9 +339,9 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -349,9 +350,9 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="width" use="required"/>
                 <xs:attribute type="xs:string" name="height" use="required"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -359,9 +360,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -372,9 +373,9 @@
                 <xs:attribute type="xs:string" name="selectorArray"/>
                 <xs:attribute type="xs:string" name="x"/>
                 <xs:attribute type="xs:string" name="y"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -384,9 +385,9 @@
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -396,9 +397,9 @@
                 <xs:attribute type="xs:string" name="userInput" use="required"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
                 <xs:attribute type="xs:string" name="value" use="required"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -408,9 +409,9 @@
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="parameterArray" use="required"/>
                 <xs:attribute type="xs:string" name="button"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -418,9 +419,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -428,9 +429,9 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector" use="required"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -440,9 +441,9 @@
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="stepKey" use="required"/>
-                <xs:attribute type="xs:string" name="before"/>
-                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute ref="stepKey" use="required"/>
+                <xs:attribute ref="before"/>
+                <xs:attribute ref="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
