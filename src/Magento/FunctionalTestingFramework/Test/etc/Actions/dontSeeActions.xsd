@@ -1,0 +1,202 @@
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:group name="dontSeeTags">
+        <xs:choice>
+            <xs:element type="dontSeeType" name="dontSee" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeCheckboxIsCheckedType" name="dontSeeCheckboxIsChecked" minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element type="dontSeeCookieType" name="dontSeeCookie" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeCurrentUrlEqualsType" name="dontSeeCurrentUrlEquals" minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element type="dontSeeCurrentUrlMatchesType" name="dontSeeCurrentUrlMatches" minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element type="dontSeeElementType" name="dontSeeElement" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeElementInDOMType" name="dontSeeElementInDOM" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeInCurrentUrlType" name="dontSeeInCurrentUrl" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeInFieldType" name="dontSeeInField" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeInFormFieldsType" name="dontSeeInFormFields" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeInPageSourceType" name="dontSeeInPageSource" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeInSourceType" name="dontSeeInSource" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeInTitleType" name="dontSeeInTitle" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeJsErrorType" name="dontSeeJsError" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeLinkType" name="dontSeeLink" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeOptionIsSelectedType" name="dontSeeOptionIsSelected" minOccurs="0"
+                        maxOccurs="unbounded"/>
+        </xs:choice>
+    </xs:group>
+
+    <!-- Complex Types -->
+
+    <xs:complexType name="dontSeeType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selectorArray"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="dontSeeCheckboxIsCheckedType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="dontSeeCookieType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute type="xs:string" name="parameterArray"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="dontSeeCurrentUrlEqualsType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="url"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="dontSeeCurrentUrlMatchesType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="regex"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="dontSeeElementType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="parameterArray"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="dontSeeElementInDOMType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="parameterArray"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="dontSeeInCurrentUrlType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="url"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="dontSeeInFieldType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selectorArray"/>
+                <xs:attribute type="xs:string" name="userInput"/>
+
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="dontSeeInFormFieldsType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="parameterArray"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="dontSeeInPageSourceType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="userInput"/>
+
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="dontSeeInSourceType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="html" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="dontSeeInTitleType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="userInput"/>
+
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="dontSeeJsErrorType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="dontSeeLinkType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute type="xs:string" name="url"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="dontSeeOptionIsSelectedType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+</xs:schema>

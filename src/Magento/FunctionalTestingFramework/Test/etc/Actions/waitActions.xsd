@@ -1,0 +1,132 @@
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:group name="waitTags">
+        <xs:choice>
+            <xs:element type="waitType" name="wait" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForAjaxLoadType" name="waitForAjaxLoad" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForElementChangeType" name="waitForElementChange" minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element type="waitForElementType" name="waitForElement" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForElementNotVisibleType" name="waitForElementNotVisible" minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element type="waitForElementVisibleType" name="waitForElementVisible" minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element type="waitForJSType" name="waitForJS" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForLoadingMaskToDisappearType" name="waitForLoadingMaskToDisappear" minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element type="waitForPageLoadType" name="waitForPageLoad" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForTextType" name="waitForText" minOccurs="0" maxOccurs="unbounded"/>
+
+        </xs:choice>
+    </xs:group>
+
+    <!-- Complex Types -->
+
+    <xs:complexType name="waitType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="time"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="waitForAjaxLoadType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="time"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="waitForElementChangeType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="function" use="required"/>
+                <xs:attribute type="xs:string" name="time"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="waitForElementType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="time"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="waitForElementNotVisibleType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="time"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="waitForElementVisibleType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="time"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="waitForJSType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="function" use="required"/>
+                <xs:attribute type="xs:string" name="time"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="waitForLoadingMaskToDisappearType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="waitForPageLoadType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="time"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="waitForTextType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute type="xs:string" name="time"/>
+                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+</xs:schema>

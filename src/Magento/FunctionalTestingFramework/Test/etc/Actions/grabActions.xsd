@@ -1,0 +1,91 @@
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:group name="grabTags">
+        <xs:choice>
+            <xs:element type="grabAttributeFromType" name="grabAttributeFrom" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="grabCookieType" name="grabCookie" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="grabFromCurrentUrlType" name="grabFromCurrentUrl" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="grabMultipleType" name="grabMultiple" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="grabPageSourceType" name="grabPageSource" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="grabTextFromType" name="grabTextFrom" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="grabValueFromType" name="grabValueFrom" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+    </xs:group>
+
+    <!-- Complex Types -->
+
+    <xs:complexType name="grabAttributeFromType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="grabCookieType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute type="xs:string" name="parameterArray"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="grabFromCurrentUrlType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="regex"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="grabMultipleType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="grabPageSourceType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="grabTextFromType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="grabValueFromType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selectorArray"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+</xs:schema>

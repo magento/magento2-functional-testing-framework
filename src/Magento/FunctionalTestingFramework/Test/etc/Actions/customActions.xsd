@@ -1,0 +1,114 @@
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:group name="customTags">
+        <xs:choice>
+            <xs:element type="magentoCLIType" name="magentoCLI" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="closeAdminNotificationType" name="closeAdminNotification" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="searchAndMultiSelectOptionType" name="searchAndMultiSelectOption" minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element type="formatMoneyType" name="formatMoney" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="parseFloatType" name="parseFloat" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="mSetLocaleType" name="mSetLocale" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="mResetLocaleType" name="mResetLocale" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="scrollToTopOfPageType" name="scrollToTopOfPage" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="clearFieldType" name="clearField" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+    </xs:group>
+
+
+
+    <!-- Complex Types -->
+
+    <xs:complexType name="magentoCLIType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="command"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="closeAdminNotificationType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="searchAndMultiSelectOptionType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="parameterArray" use="required"/>
+                <xs:attribute type="xs:string" name="requiredAction"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="formatMoneyType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute type="xs:string" name="locale"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="parseFloatType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="mSetLocaleType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute type="xs:string" name="locale" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="mResetLocaleType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="scrollToTopOfPageType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="clearFieldType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+</xs:schema>

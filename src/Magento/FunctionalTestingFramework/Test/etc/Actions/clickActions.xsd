@@ -1,0 +1,76 @@
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:group name="clickTags">
+        <xs:choice>
+            <xs:element type="clickType" name="click" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="clickWithLeftButtonType" name="clickWithLeftButton" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="clickWithRightButtonType" name="clickWithRightButton" minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element type="doubleClickType" name="doubleClick" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="conditionalClickType" name="conditionalClick" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+    </xs:group>
+
+    <!-- Complex Types -->
+
+    <xs:complexType name="clickType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selectorArray"/>
+                <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="clickWithLeftButtonType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selectorArray"/>
+                <xs:attribute type="xs:string" name="x"/>
+                <xs:attribute type="xs:string" name="y"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="clickWithRightButtonType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector"/>
+                <xs:attribute type="xs:string" name="selectorArray"/>
+                <xs:attribute type="xs:string" name="x"/>
+                <xs:attribute type="xs:string" name="y"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="conditionalClickType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="dependentSelector" use="required"/>
+                <xs:attribute type="xs:boolean" name="visible" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="doubleClickType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute type="xs:string" name="stepKey" use="required"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+</xs:schema>
