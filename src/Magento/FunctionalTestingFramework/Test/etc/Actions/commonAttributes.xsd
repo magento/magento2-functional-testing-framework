@@ -20,4 +20,11 @@
             </xs:documentation>
         </xs:annotation>
     </xs:attribute>
+    <xs:attribute type="xs:string" name="selector" id="selector">
+        <xs:annotation>
+            <xs:documentation>
+                Selector to be used in test action.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
 </xs:schema>
