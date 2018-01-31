@@ -214,9 +214,13 @@
                 <item name="/tests/test/updateData/required-entity" xsi:type="string">createDataKey</item>
                 <item name="/tests/test/getData/required-entity" xsi:type="string">createDataKey</item>
                 <item name="/tests/test/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
+                <item name="/tests/test/before/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
+                <item name="/tests/test/after/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
                 <item name="/tests/test/remove" xsi:type="string">keyForRemoval</item>
                 <item name="/tests/test/before/remove" xsi:type="string">keyForRemoval</item>
                 <item name="/tests/test/after/remove" xsi:type="string">keyForRemoval</item>
+                <item name="/tests/test/before/createData/required-entity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/after/updateData/required-entity" xsi:type="string">createDataKey</item>
                 <item name="/tests/test/annotations(/group)+" xsi:type="string">value</item>
             </argument>
             <argument name="fileName" xsi:type="string">*.xml</argument>
