@@ -237,13 +237,13 @@ class DataPersistenceHandler
      *          'attribute_code' => 'code1',
      *          'value' => 'value1',
      *      ],
-            1 => [
+     *      1 => [
      *          'attribute_code' => 'code2',
      *          'value' => 'value2',
      *      ],
      *  ]
      *
-     * to
+     * To
      *
      * 'custom_attributes' => [
      *      'code1' => 'value1',
@@ -256,12 +256,12 @@ class DataPersistenceHandler
     private function convertCustomAndExtensionAttributesArray($arrayIn)
     {
         $keys = ['custom_attributes', 'extension_attributes'];
-        foreach($keys as $key) {
-            if(!array_key_exists($key, $arrayIn)) {
+        foreach ($keys as $key) {
+            if (!array_key_exists($key, $arrayIn)) {
                 continue;
             }
             $arrayCopy = $arrayIn[$key];
-            foreach($arrayCopy as $index => $attributes) {
+            foreach ($arrayCopy as $index => $attributes) {
                 $arrayIn[$key][$attributes['attribute_code']] = $attributes['value'];
             }
         }
