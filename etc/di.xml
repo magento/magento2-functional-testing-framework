@@ -244,6 +244,8 @@
                 <item name="/tests/test/before/getData/requiredEntity" xsi:type="string">createDataKey</item>
                 <item name="/tests/test/after/getData/requiredEntity" xsi:type="string">createDataKey</item>
                 <item name="/tests/test/actionGroup/argument" xsi:type="string">name</item>
+                <item name="/tests/test/before/actionGroup/argument" xsi:type="string">name</item>
+                <item name="/tests/test/after/actionGroup/argument" xsi:type="string">name</item>
             </argument>
             <argument name="numericArrays" xsi:type="array">
                 <item name="/tests/test/annotations/features" xsi:type="string">/tests/test/annotations/features</item>
