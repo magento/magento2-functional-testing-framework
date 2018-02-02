@@ -340,11 +340,8 @@ class ActionObject
             switch (get_class($obj)) {
                 case PageObject::class:
                     $this->validateUrlAreaAgainstActionType($obj);
+                    $replacement = $obj->getUrl();
                     $parameterized = $obj->isParameterized();
-                    $replacement = $this->resolveParameterization($parameterized, $obj->getUrl(), $match);
-                    if ($obj->getArea() == PageObject::ADMIN_AREA) {
-                        $replacement = "/{{_ENV.BACKEND_NAME}}/" . $replacement;
-                    }
                     break;
                 case SectionObject::class:
                     list(,$objField) = $this->stripAndSplitReference($match);
@@ -354,11 +351,9 @@ class ActionObject
                     $parameterized = $obj->getElement($objField)->isParameterized();
                     $replacement = $obj->getElement($objField)->getPrioritizedSelector();
                     $this->setTimeout($obj->getElement($objField)->getTimeout());
-                    $replacement = $this->resolveParameterization($parameterized, $replacement, $match);
                     break;
                 case EntityDataObject::class:
                     $replacement = $this->resolveEntityDataObjectReference($obj, $match);
-                    $replacement = $this->resolveParameterization($parameterized, $replacement, $match);
                     break;
             }
 
@@ -367,6 +362,13 @@ class ActionObject
             } elseif ($replacement == null) {
                 throw new TestReferenceException("Could not resolve entity reference " . $inputString);
             }
+
+            $replacement = $this->resolveParameterization($parameterized, $replacement, $match);
+
+            if (get_class($obj) == PageObject::class && $obj->getArea() == PageObject::ADMIN_AREA) {
+                $replacement = "/{{_ENV.BACKEND_NAME}}/" . $replacement;
+            }
+
             $outputString = str_replace($match, $replacement, $outputString);
         }
         return $outputString;
