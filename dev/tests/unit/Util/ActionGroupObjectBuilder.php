@@ -28,11 +28,18 @@ class ActionGroupObjectBuilder
     private $actionObjects = [];
 
     /**
-     * Action Group Object Builder default arguments.
+     * Action Group Object Builder default entity arguments.
      *
      * @var array
      */
     private $arguments = ['arg1' => 'data1'];
+
+    /**
+     * Action Group Object Builder default simple arguments.
+     *
+     * @var array
+     */
+    private $simpleArguments = ['simple' => 'data1'];
 
     /**
      * Setter for the Action Group Object name
@@ -55,6 +62,18 @@ class ActionGroupObjectBuilder
     public function withArguments($args)
     {
         $this->arguments = $args;
+        return $this;
+    }
+
+    /**
+     * Setter for the Action Group Object simpleArguments
+     *
+     * @param array $args
+     * @return ActionGroupObjectBuilder
+     */
+    public function withSimpleArguments($args)
+    {
+        $this->simpleArguments = $args;
         return $this;
     }
 
@@ -90,6 +109,7 @@ class ActionGroupObjectBuilder
         return new ActionGroupObject(
             $this->name,
             $this->arguments,
+            $this->simpleArguments,
             $this->actionObjects
         );
     }

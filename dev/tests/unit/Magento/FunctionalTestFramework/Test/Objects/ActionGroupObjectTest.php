@@ -53,6 +53,14 @@ class ActionGroupObjectTest extends TestCase
 
         $steps = $actionGroupUnderTest->getSteps(['arg1' => 'data2'], self::ACTION_GROUP_MERGE_KEY);
         $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => 'testValue2']);
+
+        // Simple Data
+        $actionGroupUnderTest = (new ActionGroupObjectBuilder())
+            ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{simple}}'])])
+            ->build();
+
+        $steps = $actionGroupUnderTest->getSteps(['simple' => 'data2.field2'], self::ACTION_GROUP_MERGE_KEY);
+        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => 'testValue2']);
     }
 
     /**
@@ -65,6 +73,14 @@ class ActionGroupObjectTest extends TestCase
             ->build();
 
         $steps = $actionGroupUnderTest->getSteps(['arg1' => '$data3$'], self::ACTION_GROUP_MERGE_KEY);
+        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => '$data3.field2$']);
+
+        // Simple Data
+        $actionGroupUnderTest = (new ActionGroupObjectBuilder())
+            ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{simple}}'])])
+            ->build();
+
+        $steps = $actionGroupUnderTest->getSteps(['simple' => '$data3.field2$'], self::ACTION_GROUP_MERGE_KEY);
         $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => '$data3.field2$']);
     }
 
@@ -111,6 +127,12 @@ class ActionGroupObjectTest extends TestCase
      */
     public function testGetStepsWithParameterizedArg()
     {
+        // Mock Entity Object Handler
+        $this->setEntityObjectHandlerReturn(function ($entityName) {
+            if ($entityName == "data2") {
+                return (new EntityDataObjectBuilder())->withDataFields(['field2' => 'testValue2'])->build();
+            }
+        });
         // mock the section object handler response
         $element = new ElementObject("element1", "textArea", ".selector {{var1}}", null, null, true);
         $section = new SectionObject("testSection", ["element1" => $element]);
@@ -120,13 +142,57 @@ class ActionGroupObjectTest extends TestCase
 
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withActionObjects(
-                [new ActionObject('action1', 'testAction', ['selector' => '{{section1.element1(arg1.field1)}}'])]
+                [new ActionObject('action1', 'testAction', ['selector' => '{{section1.element1(arg1.field2)}}'])]
             )
             ->build();
 
-        $steps = $actionGroupUnderTest->getSteps(['arg1' => '$someData$'], self::ACTION_GROUP_MERGE_KEY);
-        $this->assertOnMergeKeyAndActionValue($steps, ['selector' => '.selector $someData.field1$']);
+        // XML Data
+        $steps = $actionGroupUnderTest->getSteps(['arg1' => 'data2'], self::ACTION_GROUP_MERGE_KEY);
+        $this->assertOnMergeKeyAndActionValue($steps, ['selector' => '.selector testValue2']);
+
+        // Persisted Data
+        $steps = $actionGroupUnderTest->getSteps(['arg1' => '$data2$'], self::ACTION_GROUP_MERGE_KEY);
+        $this->assertOnMergeKeyAndActionValue($steps, ['selector' => '.selector $data2.field2$']);
     }
+
+    /**
+     * Tests a parameterized section reference in an action group resolved with user simpleArgs.
+     */
+    public function testGetStepsWithParameterizedSimpleArg()
+    {
+        // Mock Entity Object Handler
+        $this->setEntityObjectHandlerReturn(function ($entityName) {
+            if ($entityName == "data2") {
+                return (new EntityDataObjectBuilder())->withDataFields(['field2' => 'testValue2'])->build();
+            }
+        });
+        // mock the section object handler response
+        $element = new ElementObject("element1", "textArea", ".selector {{var1}}", null, null, true);
+        $section = new SectionObject("testSection", ["element1" => $element]);
+        // bypass the private constructor
+        $sectionInstance = AspectMock::double(SectionObjectHandler::class, ['getObject' => $section])->make();
+        AspectMock::double(SectionObjectHandler::class, ['getInstance' => $sectionInstance]);
+
+        $actionGroupUnderTest = (new ActionGroupObjectBuilder())
+            ->withActionObjects(
+                [new ActionObject('action1', 'testAction', ['selector' => '{{section1.element1(simple)}}'])]
+            )
+            ->build();
+
+        // String Literal
+        $steps = $actionGroupUnderTest->getSteps(['simple' => 'stringLiteral'], self::ACTION_GROUP_MERGE_KEY);
+        $this->assertOnMergeKeyAndActionValue($steps, ['selector' => '.selector stringLiteral']);
+
+        // XML Data
+        $steps = $actionGroupUnderTest->getSteps(['simple' => 'data2.field2'], self::ACTION_GROUP_MERGE_KEY);
+        $this->assertOnMergeKeyAndActionValue($steps, ['selector' => '.selector testValue2']);
+
+        // Persisted Data
+        $steps = $actionGroupUnderTest->getSteps(['simple' => '$someData.field1$'], self::ACTION_GROUP_MERGE_KEY);
+        $this->assertOnMergeKeyAndActionValue($steps, ['selector' => '.selector $someData.field1$']);
+
+    }
+
 
     /**
      * Tests a data reference in an action group resolved with a persisted reference used in another function.

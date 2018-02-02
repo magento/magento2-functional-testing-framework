@@ -31,5 +31,9 @@ class ActionGroupWithSimpleDataUsageFromPassedArgumentCest
 	{
 		$I->see("overrideString", "class.overrideString");
 		$I->see("overrideString", "#element .overrideString");
+		$I->see("John", "class.John");
+		$I->see("John", "#element .John");
+		$I->see($persisted->getCreatedDataByName('data'), "class." . $persisted->getCreatedDataByName('data'));
+		$I->see($persisted->getCreatedDataByName('data'), "#element ." . $persisted->getCreatedDataByName('data'));
 	}
 }

@@ -43,7 +43,7 @@ class ActionGroupObject
 
     /**
      * An array used to store the default simple arguments if the user does not specify any
-     * @var
+     * @var array
      */
     private $simpleArguments;
 
@@ -51,7 +51,8 @@ class ActionGroupObject
      * ActionGroupObject constructor.
      *
      * @param string $name
-     * @param string $arguments
+     * @param array $arguments
+     * @param array $simpleArguments
      * @param array $actions
      */
     public function __construct($name, $arguments, $simpleArguments, $actions)
@@ -78,7 +79,7 @@ class ActionGroupObject
     public function getSteps($arguments, $actionReferenceKey)
     {
         $mergeUtil = new ActionMergeUtil($this->name, "ActionGroup");
-        $args = $this->arguments;
+        $args = array_merge($this->arguments, $this->simpleArguments);
         $emptyArguments = array_keys($args, null, true);
         if (!empty($emptyArguments) && $arguments !== null) {
             $diff = array_diff($emptyArguments, array_keys($arguments));
@@ -213,13 +214,14 @@ class ActionGroupObject
             return $attributeValue;
         }
 
-        /// TODO: CHECK IF ARGUMENT IS SIMPLE OR NOT.
-        ///
-        /// If simple determine if it's xml.data, $persisted.Data$, or stringLiteral
-        ///
-        /// If not simple, Do regular replacement
-        ///
-
+        if (array_key_exists($variableName, $this->simpleArguments)) {
+            return $this->replaceSimpleArgument(
+                $arguments[$variableName],
+                $variableName,
+                $attributeValue,
+                $isInnerArgument
+            );
+        }
 
         $isPersisted = preg_match('/\$[\w.]+\$/', $arguments[$variableName]);
         if ($isPersisted) {
@@ -234,6 +236,61 @@ class ActionGroupObject
 
         //replace argument ONLY when there is no letters attached before after (ex. category.name vs categoryTreeButton)
         return preg_replace("/(?<![\w]){$variableName}(?![(\w])/", $arguments[$variableName], $attributeValue);
+    }
+
+    /**
+     * Resolves simple arguments depending on type passed in, and returns the appropriate format for simple replacement.
+     * Takes in boolean to determine if the replacement is being done with an inner argument (as in if it's a parameter)
+     *
+     * Example Type     Non Inner           Inner
+     * {{XML.DATA}}:    {{XML.DATA}}        XML.DATA
+     * $TEST.DATA$:     $TEST.DATA$         $TEST.DATA$
+     * stringLiteral    stringLiteral       'stringLiteral'
+     *
+     * @param string $argument
+     * @param boolean $isInnerArgument
+     * @return string
+     */
+    private function resolveSimpleArgument($argument, $isInnerArgument)
+    {
+        if (preg_match('/\$[\w]+\.[\w]+\$/', $argument)) {
+            //$persisted.data$ or $$persisted.data$$, notation not different if in parameter
+            return $argument;
+
+        } elseif (preg_match('/[\w]+\.[\w]+/', $argument)) {
+            //xml.data
+            if ($isInnerArgument) {
+                return $argument;
+            } else {
+                return "{{" . $argument . "}}";
+            }
+        } else {
+            //stringLiteral
+            if ($isInnerArgument) {
+                return "'" . $argument . "'";
+            } else {
+                return $argument;
+            }
+        }
+    }
+
+    /**
+     * Replaces any arguments that were declared as simpleData="true".
+     * Takes in isInnerArgument to determine what kind of replacement to expect: {{data}} vs section.element(data)
+     * @param string $argument
+     * @param string $variableName
+     * @param string $attributeValue
+     * @param boolean $isInnerArgument
+     * @return string
+     */
+    private function replaceSimpleArgument($argument, $variableName, $attributeValue, $isInnerArgument)
+    {
+        $argumentValue = $this->resolveSimpleArgument($argument, $isInnerArgument);
+        if ($isInnerArgument) {
+            return preg_replace("/(?<![\w]){$variableName}(?![(\w])/", $argumentValue, $attributeValue);
+        } else {
+            return preg_replace("/{{(?<![\w]){$variableName}(?![(\w])}}/", $argumentValue, $attributeValue);
+        }
     }
 
     /**
