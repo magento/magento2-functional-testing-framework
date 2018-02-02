@@ -52,9 +52,7 @@
             <xs:element type="requiredEntityType" name="requiredEntity" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
         <xs:attribute ref="entity" use="required"/>
-        <xs:attribute ref="stepKey" use="required"/>
-        <xs:attribute ref="before"/>
-        <xs:attribute ref="after"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
         <xs:attribute ref="storeCode"/>
     </xs:complexType>
 
@@ -66,10 +64,8 @@
             <xs:element type="requiredEntityType" name="requiredEntity" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
         <xs:attribute ref="entity" use="required"/>
-        <xs:attribute ref="stepKey" use="required"/>
         <xs:attribute ref="createDataKey" use="required"/>
-        <xs:attribute ref="before"/>
-        <xs:attribute ref="after"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
         <xs:attribute ref="storeCode"/>
     </xs:complexType>
 
@@ -80,9 +76,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute ref="createDataKey" use="required"/>
-                <xs:attribute ref="stepKey" use="required"/>
-                <xs:attribute ref="before"/>
-                <xs:attribute ref="after"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
                 <xs:attribute ref="storeCode"/>
             </xs:extension>
         </xs:simpleContent>
@@ -96,7 +90,6 @@
             <xs:element type="requiredEntityType" name="requiredEntity" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
         <xs:attribute ref="entity" use="required"/>
-        <xs:attribute ref="stepKey" use="required"/>
         <xs:attribute type="xs:integer" name="index">
             <xs:annotation>
                 <xs:documentation>
@@ -104,8 +97,7 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute ref="before"/>
-        <xs:attribute ref="after"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
         <xs:attribute ref="storeCode"/>
     </xs:complexType>
 
@@ -116,8 +108,8 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute ref="createDataKey" use="required"/>
-                <xs:attribute ref="before"/>
-                <xs:attribute ref="after"/>
+                <xs:attribute name="before"/>
+                <xs:attribute name="after"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>

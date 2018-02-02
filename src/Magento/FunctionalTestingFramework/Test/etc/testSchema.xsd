@@ -9,7 +9,6 @@
 <xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
     <xs:include schemaLocation="actionTypeTags.xsd"/>
-
     <!-- Container types -->
 
     <xs:element name="tests" type="configType"/>
@@ -49,9 +48,9 @@
     <xs:complexType name="testType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
             <xs:group ref="testTypeTags"/>
-            <xs:element type="hookType" name="before" minOccurs="0" maxOccurs="1"/>
-            <xs:element type="hookType" name="after" minOccurs="0" maxOccurs="1"/>
-            <xs:element type="annotationsType" name="annotations" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="hookType" name="before" minOccurs="0"/>
+            <xs:element type="hookType" name="after" minOccurs="0"/>
+            <xs:element type="annotationsType" name="annotations" minOccurs="0"/>
         </xs:choice>
         <xs:attribute type="xs:string" name="name"/>
         <xs:attribute type="xs:boolean" name="remove" default="false"/>
@@ -75,9 +74,7 @@
             </xs:element>
         </xs:sequence>
         <xs:attribute type="xs:string" name="ref" use="required"/>
-        <xs:attribute ref="stepKey" use="required"/>
-        <xs:attribute ref="before"/>
-        <xs:attribute ref="after"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
 
 </xs:schema>

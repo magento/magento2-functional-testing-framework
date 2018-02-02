@@ -27,9 +27,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="time"/>
-                <xs:attribute ref="stepKey" use="required"/>
-                <xs:attribute ref="before"/>
-                <xs:attribute ref="after"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -37,9 +35,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="time"/>
-                <xs:attribute ref="stepKey" use="required"/>
-                <xs:attribute ref="before"/>
-                <xs:attribute ref="after"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -49,9 +45,7 @@
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="function" use="required"/>
                 <xs:attribute type="xs:string" name="time"/>
-                <xs:attribute ref="stepKey" use="required"/>
-                <xs:attribute ref="before"/>
-                <xs:attribute ref="after"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -60,9 +54,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="time"/>
-                <xs:attribute ref="stepKey" use="required"/>
-                <xs:attribute ref="before"/>
-                <xs:attribute ref="after"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -71,9 +63,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="time"/>
-                <xs:attribute ref="stepKey" use="required"/>
-                <xs:attribute ref="before"/>
-                <xs:attribute ref="after"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -82,9 +72,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attribute type="xs:string" name="time"/>
-                <xs:attribute ref="stepKey" use="required"/>
-                <xs:attribute ref="before"/>
-                <xs:attribute ref="after"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -93,18 +81,14 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="function" use="required"/>
                 <xs:attribute type="xs:string" name="time"/>
-                <xs:attribute ref="stepKey" use="required"/>
-                <xs:attribute ref="before"/>
-                <xs:attribute ref="after"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
     <xs:complexType name="waitForLoadingMaskToDisappearType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute ref="stepKey" use="required"/>
-                <xs:attribute ref="before"/>
-                <xs:attribute ref="after"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -112,9 +96,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="time"/>
-                <xs:attribute ref="stepKey" use="required"/>
-                <xs:attribute ref="before"/>
-                <xs:attribute ref="after"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -124,9 +106,7 @@
                 <xs:attribute type="xs:string" name="userInput"/>
                 <xs:attribute type="xs:string" name="time"/>
                 <xs:attribute type="xs:string" name="selector"/>
-                <xs:attribute ref="stepKey" use="required"/>
-                <xs:attribute ref="before"/>
-                <xs:attribute ref="after"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>

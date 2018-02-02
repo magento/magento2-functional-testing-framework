@@ -17,9 +17,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="selector"/>
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute ref="stepKey" use="required"/>
-                <xs:attribute ref="before"/>
-                <xs:attribute ref="after"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -27,9 +25,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute ref="stepKey" use="required"/>
-                <xs:attribute ref="before"/>
-                <xs:attribute ref="after"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -37,9 +33,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute ref="stepKey" use="required"/>
-                <xs:attribute ref="before"/>
-                <xs:attribute ref="after"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -47,9 +41,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute ref="stepKey" use="required"/>
-                <xs:attribute ref="before"/>
-                <xs:attribute ref="after"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
