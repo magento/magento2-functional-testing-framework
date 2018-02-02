@@ -6,7 +6,7 @@
   */
 -->
 
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:include schemaLocation="../../Test/etc/testSchema.xsd"/>
     <xs:element name="actionGroups" type="actionGroupType"/>
     <xs:complexType name="actionGroupType">
@@ -17,7 +17,7 @@
     <xs:complexType name="actionsRefType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
             <xs:group ref="actionTypeTags"/>
-            <xs:element name="arguments" maxOccurs="1">
+            <xs:element name="arguments">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="argument" maxOccurs="unbounded" minOccurs="0">
