@@ -366,7 +366,7 @@ class ActionObject
             $replacement = $this->resolveParameterization($parameterized, $replacement, $match);
 
             if (get_class($obj) == PageObject::class && $obj->getArea() == PageObject::ADMIN_AREA) {
-                $replacement = "/{{_ENV.BACKEND_NAME}}/" . $replacement;
+                $replacement = "/{{_ENV.MAGENTO_BACKEND_NAME}}/" . $replacement;
             }
 
             $outputString = str_replace($match, $replacement, $outputString);
