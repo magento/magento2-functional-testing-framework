@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Test\Objects;
 
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
+use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 
 /**
  * Class TestHookObject
@@ -71,7 +72,15 @@ class TestHookObject
     public function getActions()
     {
         $mergeUtil = new ActionMergeUtil($this->parentName, $this->getType());
-        return $mergeUtil->resolveActionSteps($this->actions);
+        $mergedSteps = $mergeUtil->resolveActionSteps($this->actions);
+
+        // add explicit call to save screenshot in order to preserve state of application after failure
+        if ($this->getType() == TestObjectExtractor::TEST_FAILED_HOOK) {
+            $saveScreenshotStep = ["saveScreenshot" => new ActionObject("saveScreenshot", "saveScreenshot", [])];
+            $mergedSteps = $saveScreenshotStep + $mergedSteps;
+        }
+
+        return $mergedSteps;
     }
 
     /**

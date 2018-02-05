@@ -47,6 +47,7 @@ class BasicFunctionalTestCest
 	  */
 	public function _failed(AcceptanceTester $I)
 	{
+		$I->saveScreenshot();
 		$I->amOnPage("/afterUrl");
 	}
 

@@ -58,6 +58,7 @@ class ActionGroupWithDataTestCest
 	  */
 	public function _failed(AcceptanceTester $I)
 	{
+		$I->saveScreenshot();
 		$I->fillField("#foo", "myData1");
 		$I->fillField("#bar", "myData2");
 	}
