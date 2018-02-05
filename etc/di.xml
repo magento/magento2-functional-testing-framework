@@ -214,13 +214,10 @@
                 <item name="/tests/test/updateData/required-entity" xsi:type="string">createDataKey</item>
                 <item name="/tests/test/getData/required-entity" xsi:type="string">createDataKey</item>
                 <item name="/tests/test/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
-                <item name="/tests/test/before/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
-                <item name="/tests/test/after/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
+                <item name="/tests/test/(before|after)/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
                 <item name="/tests/test/remove" xsi:type="string">keyForRemoval</item>
-                <item name="/tests/test/before/remove" xsi:type="string">keyForRemoval</item>
-                <item name="/tests/test/after/remove" xsi:type="string">keyForRemoval</item>
-                <item name="/tests/test/before/createData/required-entity" xsi:type="string">createDataKey</item>
-                <item name="/tests/test/after/updateData/required-entity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/(before|after)/remove" xsi:type="string">keyForRemoval</item>
+                <item name="/tests/test/(before|after)/createData/required-entity" xsi:type="string">createDataKey</item>
                 <item name="/tests/test/annotations(/group)+" xsi:type="string">value</item>
             </argument>
             <argument name="fileName" xsi:type="string">*.xml</argument>
@@ -232,21 +229,16 @@
         <arguments>
             <argument name="assocArrayAttributes" xsi:type="array">
                 <item name="/tests/test/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
-                <item name="/tests/test/before/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
-                <item name="/tests/test/after/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
+                <item name="/tests/test/(before|after)/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
                 <item name="/tests/test/remove" xsi:type="string">keyForRemoval</item>
-                <item name="/tests/test/before/remove" xsi:type="string">keyForRemoval</item>
-                <item name="/tests/test/after/remove" xsi:type="string">keyForRemoval</item>
+                <item name="/tests/test/(before|after)/remove" xsi:type="string">keyForRemoval</item>
                 <item name="/tests/test" xsi:type="string">name</item>
                 <item name="/tests/test/createData/requiredEntity" xsi:type="string">createDataKey</item>
-                <item name="/tests/test/before/createData/requiredEntity" xsi:type="string">createDataKey</item>
-                <item name="/tests/test/after/createData/requiredEntity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/(before|after)/createData/requiredEntity" xsi:type="string">createDataKey</item>
                 <item name="/tests/test/updateData/requiredEntity" xsi:type="string">createDataKey</item>
-                <item name="/tests/test/before/updateData/requiredEntity" xsi:type="string">createDataKey</item>
-                <item name="/tests/test/after/updateData/requiredEntity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/(before|after)/updateData/requiredEntity" xsi:type="string">createDataKey</item>
                 <item name="/tests/test/getData/requiredEntity" xsi:type="string">createDataKey</item>
-                <item name="/tests/test/before/getData/requiredEntity" xsi:type="string">createDataKey</item>
-                <item name="/tests/test/after/getData/requiredEntity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/(before|after)/getData/requiredEntity" xsi:type="string">createDataKey</item>
                 <item name="/tests/test/actionGroup/argument" xsi:type="string">name</item>
             </argument>
             <argument name="numericArrays" xsi:type="array">
@@ -373,10 +365,8 @@
         <arguments>
             <argument name="assocArrayAttributes" xsi:type="array">
                 <item name="/suites/suite" xsi:type="string">name</item>
-                <item name="/suites/suite/before/(createData|deleteData)" xsi:type="string">stepKey</item>
-                <item name="/suites/suite/after/(createData|deleteData)" xsi:type="string">stepKey</item>
-                <item name="/suites/suite/before/createData/requiredEntity" xsi:type="string">createDataKey</item>
-                <item name="/suites/suite/after/createData/requiredEntity" xsi:type="string">createDataKey</item>
+                <item name="/suites/suite/(before|after)/(createData|deleteData)" xsi:type="string">stepKey</item>
+                <item name="/suites/suite/(before|after)/createData/requiredEntity" xsi:type="string">createDataKey</item>
                 <item name="/suites/suite/include/group" xsi:type="string">name</item>
                 <item name="/suites/suite/include/test" xsi:type="string">name</item>
                 <item name="/suites/suite/include/module" xsi:type="string">name</item>
