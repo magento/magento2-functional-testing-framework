@@ -1,6 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
 <xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
     <xs:include schemaLocation="commonAttributes.xsd"/>
+
     <xs:group name="customTags">
         <xs:choice>
             <xs:element type="magentoCLIType" name="magentoCLI" minOccurs="0" maxOccurs="unbounded"/>
@@ -15,61 +23,119 @@
         </xs:choice>
     </xs:group>
 
-
-
     <!-- Complex Types -->
 
     <xs:complexType name="magentoCLIType">
+        <xs:annotation>
+            <xs:documentation>
+                Executes given command against Magento CLI in test Magento instance.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="command"/>
+                <xs:attribute type="xs:string" name="command">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Magento CLI command to be executed. Can be given options just like normal CLI interaction.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="closeAdminNotificationType">
+        <xs:annotation>
+            <xs:documentation>
+                Closes Admin Notification prompt.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="searchAndMultiSelectOptionType">
+        <xs:annotation>
+            <xs:documentation>
+                Searches and Selects all given options in given Magento dropdown element.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector" use="required"/>
-                <xs:attribute type="xs:string" name="parameterArray" use="required"/>
-                <xs:attribute type="xs:string" name="requiredAction"/>
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="parameterArray" use="required"/>
+                <xs:attribute type="xs:boolean" name="requiredAction">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Determines if Multi Select needs to click "Done" after selections.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="formatMoneyType">
+        <xs:annotation>
+            <xs:documentation>
+                Formats given input to given locale. Returns formatted string for test use.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="locale"/>
+                <xs:attribute ref="userInput"/>
+                <xs:attribute type="xs:string" name="locale">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Locale to format given input. Defaults to 'en_US.UTF-8' if nothing is given.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="parseFloatType">
+        <xs:annotation>
+            <xs:documentation>
+                Parses given float number with thousands_sep. Returns float for test use.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute ref="userInput"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="mSetLocaleType">
+        <xs:annotation>
+            <xs:documentation>
+                Sets locale with given input as category, and locale as
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="locale" use="required"/>
+                <xs:attribute ref="userInput"/>
+                <xs:attribute type="xs:string" name="locale" use="required">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Locale to set. Ex. 'en_US.UTF-8'
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="mResetLocaleType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -77,20 +143,31 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="scrollToTopOfPageType">
+        <xs:annotation>
+            <xs:documentation>
+                Scrolls browser to the very top of the page.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attributeGroup ref="commonActionAttributes"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="clearFieldType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector" use="required"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
 
+    <xs:complexType name="clearFieldType">
+        <xs:annotation>
+            <xs:documentation>
+                Clears all input on given element.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
 </xs:schema>

@@ -1,3 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
 <xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
     <!-- partial grouped actions schema -->
@@ -61,235 +68,433 @@
             <xs:group ref="switchToTags"/>
             <xs:group ref="waitTags"/>
         </xs:choice>
-
     </xs:group>
 
     <!-- Complex Types -->
 
     <xs:complexType name="failType">
+        <xs:annotation>
+            <xs:documentation>
+                Fails and displays given message.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="message" use="required"/>
+                <xs:attribute type="xs:string" name="message" use="required">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Failure message to display in test log.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="removeActionType">
+        <xs:annotation>
+            <xs:documentation>
+                Removes a specific Test Action from base test. Should be used in Test Deltas, not in the base test.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="keyForRemoval" use="required"/>
+                <xs:attribute type="xs:string" name="keyForRemoval" use="required">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Step Key of action that should be removed.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="acceptPopupType">
+        <xs:annotation>
+            <xs:documentation>
+                Accepts the active JavaScript native popup window.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="amOnPageType">
+        <xs:annotation>
+            <xs:documentation>
+                Opens the page for the given URL. Given url is appended to MAGENTO_BASE_URL in env file.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
+                <xs:attribute ref="url" use="required"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="amOnSubdomainType">
+        <xs:annotation>
+            <xs:documentation>
+                Changes 'url' in webdriver configuration. Changes value of MAGENTO_BASE_URL for the duration of the test run. Does not open a page.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
+                <xs:attribute ref="url" use="required"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="amOnUrlType">
+        <xs:annotation>
+            <xs:documentation>
+                Opens the page for the given absolute URL, does not prepend MAGENTO_BASE_URL.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
+                <xs:attribute ref="url" use="required"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="appendFieldType">
+        <xs:annotation>
+            <xs:documentation>
+                Appends the given text to the given element.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector" use="required"/>
-                <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="userInput"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="attachFileType">
+        <xs:annotation>
+            <xs:documentation>
+                Attaches a file relative to the _data directory.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector" use="required"/>
-                <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="userInput"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="cancelPopupType">
+        <xs:annotation>
+            <xs:documentation>
+                Dismisses the active JavaScript popup.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="checkOptionType">
+        <xs:annotation>
+            <xs:documentation>
+                Ticks a checkbox. For radio buttons, use 'selectOptions' instead.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute ref="selector" use="required"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
     <xs:complexType name="closeTabType">
+        <xs:annotation>
+            <xs:documentation>
+                Closes the current browser tab and switches to previously active tab.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="commentType">
+        <xs:annotation>
+            <xs:documentation>
+                Outputs given comment directly to Test Log.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="userInput" use="required"/>
+                <xs:attribute ref="userInput" use="required"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="dragAndDropType">
+        <xs:annotation>
+            <xs:documentation>
+                Performs simple mouse drag-and-drop operation from selector1 to selector2.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector1" use="required"/>
-                <xs:attribute type="xs:string" name="selector2" use="required"/>
+                <xs:attribute type="xs:string" name="selector1" use="required">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Starting point selector for drag-and-drop.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute type="xs:string" name="selector2" use="required">
+                    <xs:annotation>
+                        <xs:documentation>
+                            End point selector for drag-and-drop.
+                        </xs:documentation>
+                    </xs:annotation></xs:attribute>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="executeInSeleniumType">
+        <xs:annotation>
+            <xs:documentation>
+                Allows you to use Selenium WebDriver methods directly. Last resort method, do not use regularly.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="function" use="required"/>
+                <xs:attribute ref="function" use="required"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="executeJSType">
+        <xs:annotation>
+            <xs:documentation>
+                Executes given JavaScript function.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="function" use="required"/>
+                <xs:attribute ref="function" use="required"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="fillFieldType">
+        <xs:annotation>
+            <xs:documentation>
+                Fills input or text area with the given string.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
-                <xs:attribute type="xs:string" name="selectorArray"/>
-                <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute ref="selector"/>
+                <xs:attribute ref="selectorArray"/>
+                <xs:attribute ref="userInput"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="loadSessionSnapshotType">
+        <xs:annotation>
+            <xs:documentation>
+                Loads given Session Snapshot.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute ref="userInput"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="makeScreenshotType">
+        <xs:annotation>
+            <xs:documentation>
+                Takes screen shot of current window. Can be given optional filename.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute ref="userInput"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="maximizeWindowType">
+        <xs:annotation>
+            <xs:documentation>
+                Maximizes current window.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="moveBackType">
+        <xs:annotation>
+            <xs:documentation>
+                Moves back in history.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="moveForwardType">
+        <xs:annotation>
+            <xs:documentation>
+                Moves forward in history.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="moveMouseOverType">
+        <xs:annotation>
+            <xs:documentation>
+                Moves mouse over the given element. Can be given x and y coordinates offset location of mouse on element (defaults to center if none are given)
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
-                <xs:attribute type="xs:string" name="selectorArray"/>
+                <xs:attribute ref="selector"/>
+                <xs:attribute ref="selectorArray"/>
                 <xs:attribute type="xs:string" name="x"/>
                 <xs:attribute type="xs:string" name="y"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="openNewTabType">
+        <xs:annotation>
+            <xs:documentation>
+                Opens a new browser tab and switches to it.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="pauseExecutionType">
+        <xs:annotation>
+            <xs:documentation>
+                Pauses test execution in debug mode. To proceed test, press "ENTER" in console. Useful for test writing.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="performOnType">
+        <xs:annotation>
+            <xs:documentation>
+                Performs given function on element.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector" use="required"/>
-                <xs:attribute type="xs:string" name="function" use="required"/>
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="function" use="required"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="pressKeyType">
+        <xs:annotation>
+            <xs:documentation>
+                Presses the given key on the given element.
+                To specify modifiers, use parameter array (ex. ['shift', 'a'] ).
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector" use="required"/>
-                <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="parameterArray"/>
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="userInput"/>
+                <xs:attribute ref="parameterArray"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="reloadPageType">
+        <xs:annotation>
+            <xs:documentation>
+                Reloads the current page.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="resetCookieType">
+        <xs:annotation>
+            <xs:documentation>
+                Unsets given cookie by name.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="parameterArray"/>
+                <xs:attribute ref="userInput"/>
+                <xs:attribute ref="parameterArray"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="resizeWindowType">
+        <xs:annotation>
+            <xs:documentation>
+                Resizes the current window to given width and height.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="width" use="required"/>
@@ -298,77 +503,139 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="saveSessionSnapshotType">
+        <xs:annotation>
+            <xs:documentation>
+                Saves session snapshot by given name.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute ref="userInput"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="scrollToType">
+        <xs:annotation>
+            <xs:documentation>
+                Moves to the middle of given element. Offset can be provided by passing in x/y.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector"/>
-                <xs:attribute type="xs:string" name="selectorArray"/>
+                <xs:attribute ref="selector"/>
+                <xs:attribute ref="selectorArray"/>
                 <xs:attribute type="xs:string" name="x"/>
                 <xs:attribute type="xs:string" name="y"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="selectOptionType">
+        <xs:annotation>
+            <xs:documentation>
+                Selects given option in given radio button group.
+                Can be given an array of options via parameterArray.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector" use="required"/>
-                <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="parameterArray"/>
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="userInput"/>
+                <xs:attribute ref="parameterArray"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="setCookieType">
+        <xs:annotation>
+            <xs:documentation>
+                Sets a cooked with the given name and value.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="userInput" use="required"/>
-                <xs:attribute type="xs:string" name="parameterArray"/>
-                <xs:attribute type="xs:string" name="value" use="required"/>
+                <xs:attribute ref="userInput" use="required"/>
+                <xs:attribute ref="parameterArray"/>
+                <xs:attribute type="xs:string" name="value" use="required">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Value of the cookie to be set.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="submitFormType">
+        <xs:annotation>
+            <xs:documentation>
+                Submits given form on page. Pass in form values via parameterArray (ex. ['login' => 'JohnDoe', 'password' => '123456'] ).
+                You can optionally specify what button’s value to include in the request.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector" use="required"/>
-                <xs:attribute type="xs:string" name="parameterArray" use="required"/>
-                <xs:attribute type="xs:string" name="button"/>
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="parameterArray" use="required"/>
+                <xs:attribute type="xs:string" name="button">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Selector to form's submit button.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="typeInPopupType">
+        <xs:annotation>
+            <xs:documentation>
+                Enters text into a native JavaScript prompt popup.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="userInput"/>
+                <xs:attribute ref="userInput"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="uncheckOptionType">
+        <xs:annotation>
+            <xs:documentation>
+                Unticks given checkbox.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector" use="required"/>
+                <xs:attribute ref="selector" use="required"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
     <xs:complexType name="unselectOptionType">
+        <xs:annotation>
+            <xs:documentation>
+                Unselects an option in the given select box. Options can be given via parameterArray.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="selector" use="required"/>
-                <xs:attribute type="xs:string" name="userInput"/>
-                <xs:attribute type="xs:string" name="parameterArray"/>
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="userInput"/>
+                <xs:attribute ref="parameterArray"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
