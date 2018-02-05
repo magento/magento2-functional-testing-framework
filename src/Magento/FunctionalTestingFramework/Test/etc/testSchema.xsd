@@ -65,15 +65,38 @@
     <!-- Action Group ref -->
 
     <xs:complexType name="actions">
+        <xs:annotation>
+            <xs:documentation>
+                Call to a defined Action Group, comprised of various repeatable test actions.
+            </xs:documentation>
+        </xs:annotation>
         <xs:sequence maxOccurs="unbounded" minOccurs="0">
             <xs:element name="argument">
                 <xs:complexType>
-                    <xs:attribute type="xs:string" name="name"/>
-                    <xs:attribute type="xs:string" name="value"/>
+                    <xs:attribute type="xs:string" name="name">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Argument's name, as it appears in the given actionGroup.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute type="xs:string" name="value">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Argument's value to be substituted.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
-        <xs:attribute type="xs:string" name="ref" use="required"/>
+        <xs:attribute type="xs:string" name="ref" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    Reference to desired Action Group's name.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
 
