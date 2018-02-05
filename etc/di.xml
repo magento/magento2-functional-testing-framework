@@ -199,7 +199,8 @@
 
     <virtualType name="Magento\FunctionalTestingFramework\Config\SchemaLocator\TestData" type="Magento\FunctionalTestingFramework\Config\SchemaLocator">
         <arguments>
-            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd</argument>
+            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Test/etc/mergedTestSchema.xsd</argument>
+            <argument name="perFileSchema" xsi:type="string">Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd</argument>
         </arguments>
     </virtualType>
     <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\TestData" type="Magento\FunctionalTestingFramework\Config\Reader\TestFilesystem">

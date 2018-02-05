@@ -3,34 +3,49 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magento\FunctionalTestingFramework\Config;
 
 /**
- * Class SchemaLocator
- * Scenario configuration schema locator
+ * Configuration schema locator.
  */
 class SchemaLocator implements \Magento\FunctionalTestingFramework\Config\SchemaLocatorInterface
 {
     /**
-     * XSD schema path
+     * Path to corresponding XSD file with validation rules for merged config.
      *
      * @var string
      */
-    protected $schemaPath;
+    private $schemaPath;
+
+    /**
+     * Path to corresponding XSD file with validation rules for separate config files.
+     *
+     * @var string
+     */
+    private $perFileSchema;
+
 
     /**
      * Class constructor
      *
      * @param string $schemaPath
+     * @param string|null $perFileSchema
      */
-    public function __construct($schemaPath)
+    public function __construct($schemaPath, $perFileSchema = null)
     {
         if (constant('FW_BP') && file_exists(FW_BP . DIRECTORY_SEPARATOR . $schemaPath)) {
-            $this->schemaPath =  FW_BP . DIRECTORY_SEPARATOR . $schemaPath;
+            $this->schemaPath = FW_BP . DIRECTORY_SEPARATOR . $schemaPath;
+            $this->perFileSchema = $perFileSchema === null
+                ? $this->schemaPath
+                : FW_BP . DIRECTORY_SEPARATOR . $perFileSchema;
         } else {
             $path = dirname(dirname(dirname(__DIR__)));
             $path = str_replace('\\', DIRECTORY_SEPARATOR, $path);
-            $this->schemaPath =  $path . DIRECTORY_SEPARATOR . $schemaPath;
+            $this->schemaPath = $path . DIRECTORY_SEPARATOR . $schemaPath;
+            $this->perFileSchema = $perFileSchema === null
+                ? $this->schemaPath
+                : $path . DIRECTORY_SEPARATOR . $perFileSchema;
         }
     }
 
@@ -51,6 +66,6 @@ class SchemaLocator implements \Magento\FunctionalTestingFramework\Config\Schema
      */
     public function getPerFileSchema()
     {
-        return null;
+        return $this->perFileSchema;
     }
 }
