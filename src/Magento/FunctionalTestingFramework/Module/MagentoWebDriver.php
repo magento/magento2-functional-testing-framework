@@ -514,6 +514,10 @@ class MagentoWebDriver extends WebDriver
 
         $this->addAttachment($this->pngReport, $test->getMetadata()->getName() . '.png', 'image/png');
         $this->addAttachment($this->htmlReport, $test->getMetadata()->getName() . '.html', 'text/html');
+
+        $this->debug("Failure due to : {$fail->getMessage()}");
+        $this->debug("Screenshot saved to {$this->pngReport}");
+        $this->debug("Html saved to {$this->htmlReport}");
     }
 
     /**
