@@ -11,7 +11,9 @@ use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
+use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
+use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 
 /**
@@ -1273,7 +1275,7 @@ class TestGenerator
     /**
      * Creates a PHP string for the _before/_after methods if the Test contains an <before> or <after> block.
      *
-     * @param array $hookObjects
+     * @param TestHookObject[] $hookObjects
      * @return string
      * @throws TestReferenceException
      * @throws \Exception
@@ -1289,6 +1291,10 @@ class TestGenerator
 
             foreach ($hookObject->getActions() as $step) {
 
+                if ($hookObject->getType() == TestObjectExtractor::TEST_FAILED_HOOK) {
+                    continue;
+                }
+
                 if (($step->getType() == "createData")
                     || ($step->getType() == "updateData")
                     || ($step->getType() == "getData")
@@ -1298,11 +1304,6 @@ class TestGenerator
                     $hooks .= "\t  */\n";
                     $hooks .= sprintf("\tprotected $%s;\n\n", $step->getStepKey());
                     $createData = true;
-                } elseif ($step->getType() == "entity") {
-                    $hooks .= "\t/**\n";
-                    $hooks .= sprintf("\t  * @var EntityDataObject $%s;\n", $step->getStepKey());
-                    $hooks .= "\t  */\n";
-                    $hooks .= sprintf("\tprotected $%s;\n\n", $step->getCustomActionAttributes()['name']);
                 }
             }
 
@@ -1318,6 +1319,12 @@ class TestGenerator
                 );
             } catch (TestReferenceException $e) {
                 throw new TestReferenceException($e->getMessage() . " in Element \"" . $type . "\"");
+            }
+
+            if ($hookObject->getType() == TestObjectExtractor::TEST_FAILED_HOOK) {
+                $steps.="\t\t";
+                $steps.='$this->_after($I);';
+                $steps.="\n";
             }
 
             $hooks .= sprintf("\tpublic function _{$type}(%s)\n", $dependencies);

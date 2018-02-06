@@ -45,9 +45,6 @@ class ActionObjectExtractor extends BaseObjectExtractor
 
         foreach ($testActions as $actionName => $actionData) {
             $stepKey = $actionData[self::TEST_STEP_MERGE_KEY];
-            if ($actionData[self::NODE_NAME] === TestEntityExtractor::TEST_STEP_ENTITY_CREATION) {
-                $actionData = $this->stripDataFields($actionData);
-            }
 
             $actionAttributes = $this->stripDescriptorTags(
                 $actionData,
@@ -111,24 +108,5 @@ class ActionObjectExtractor extends BaseObjectExtractor
         }
 
         return $actionAttributeArgData;
-    }
-
-    /**
-     * Function which checks an entity definition for type array and strips this key out (as data is not stores in this
-     * type of object).
-     *
-     * @param array $entityDataArray
-     * @return array
-     */
-    private function stripDataFields($entityDataArray)
-    {
-        $results = $entityDataArray;
-        foreach ($entityDataArray as $key => $attribute) {
-            if (is_array($attribute)) {
-                unset($results[$key]);
-            }
-        }
-
-        return $results;
     }
 }

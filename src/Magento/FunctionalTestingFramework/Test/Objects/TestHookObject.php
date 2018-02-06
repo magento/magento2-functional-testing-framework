@@ -74,12 +74,6 @@ class TestHookObject
         $mergeUtil = new ActionMergeUtil($this->parentName, $this->getType());
         $mergedSteps = $mergeUtil->resolveActionSteps($this->actions);
 
-        // add explicit call to save screenshot in order to preserve state of application after failure
-        if ($this->getType() == TestObjectExtractor::TEST_FAILED_HOOK) {
-            $saveScreenshotStep = ["saveScreenshot" => new ActionObject("saveScreenshot", "saveScreenshot", [])];
-            $mergedSteps = $saveScreenshotStep + $mergedSteps;
-        }
-
         return $mergedSteps;
     }
 
