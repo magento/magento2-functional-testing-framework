@@ -14,6 +14,7 @@ class XmlDuplicateGerationTest extends TestCase
 {
     const XML_DUPLICATE_TEST = 'XmlDuplicateTest';
     const XML_DUPLICATE_ACTIONGROUP = 'xmlDuplicateActionGroup';
+    const XML_DUPLICATE_MERGE_TEST = 'BasicDupedActionTest';
     const RESOURCES_PATH = __DIR__ . '/../Resources';
 
     /**
@@ -28,6 +29,15 @@ class XmlDuplicateGerationTest extends TestCase
     public function testDuplicatesInActionGroup()
     {
         $actionGroup = ActionGroupObjectHandler::getInstance()->getObject(self::XML_DUPLICATE_ACTIONGROUP);
+        $this->addToAssertionCount(1); // No exception thrown thus far, can assert dupes didn't cause an error.
+    }
+
+    /**
+     * Parser testing, makes sure test action nodes are marked as array.
+     */
+    public function testDuplicatesInMergeTest()
+    {
+        $testObject = TestObjectHandler::getInstance()->getObject(self::XML_DUPLICATE_MERGE_TEST);
         $this->addToAssertionCount(1); // No exception thrown thus far, can assert dupes didn't cause an error.
     }
 }
