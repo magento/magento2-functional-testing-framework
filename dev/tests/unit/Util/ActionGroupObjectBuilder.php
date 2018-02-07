@@ -39,7 +39,7 @@ class ActionGroupObjectBuilder
      *
      * @var array
      */
-    private $simpleArguments = ['simple' => 'data1'];
+    private $argumentTypes = ['arg1' => 'entity'];
 
     /**
      * Setter for the Action Group Object name
@@ -66,14 +66,14 @@ class ActionGroupObjectBuilder
     }
 
     /**
-     * Setter for the Action Group Object simpleArguments
+     * Setter for the Action Group Object $argumentTypes
      *
      * @param array $args
      * @return ActionGroupObjectBuilder
      */
-    public function withSimpleArguments($args)
+    public function withArgumentTypes($args)
     {
-        $this->simpleArguments = $args;
+        $this->argumentTypes = $args;
         return $this;
     }
 
@@ -109,7 +109,7 @@ class ActionGroupObjectBuilder
         return new ActionGroupObject(
             $this->name,
             $this->arguments,
-            $this->simpleArguments,
+            $this->argumentTypes,
             $this->actionObjects
         );
     }

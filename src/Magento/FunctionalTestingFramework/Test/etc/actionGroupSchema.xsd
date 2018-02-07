@@ -24,7 +24,7 @@
                             <xs:complexType>
                                 <xs:attribute type="xs:string" name="name" use="required"/>
                                 <xs:attribute type="xs:string" name="defaultValue"/>
-                                <xs:attribute type="xs:boolean" name="simpleData" default="false"/>
+                                <xs:attribute type="dataTypeEnum" name="data" default="entity"/>
                             </xs:complexType>
                         </xs:element>
                     </xs:sequence>
@@ -33,4 +33,13 @@
         </xs:choice>
         <xs:attribute type="xs:string" name="name" use="required"/>
     </xs:complexType>
+    <xs:simpleType name="dataTypeEnum" final="restriction">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="int"/>
+            <xs:enumeration value="float"/>
+            <xs:enumeration value="boolean"/>
+            <xs:enumeration value="string"/>
+            <xs:enumeration value="entity"/>
+        </xs:restriction>
+    </xs:simpleType>
 </xs:schema>

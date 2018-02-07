@@ -49,6 +49,7 @@ class ActionGroupObjectTest extends TestCase
 
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{arg1.field2}}'])])
+            ->withArgumentTypes(['arg1' => 'entity'])
             ->build();
 
         $steps = $actionGroupUnderTest->getSteps(['arg1' => 'data2'], self::ACTION_GROUP_MERGE_KEY);
@@ -57,6 +58,7 @@ class ActionGroupObjectTest extends TestCase
         // Simple Data
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{simple}}'])])
+            ->withArgumentTypes(['simple' => 'string'])
             ->build();
 
         $steps = $actionGroupUnderTest->getSteps(['simple' => 'data2.field2'], self::ACTION_GROUP_MERGE_KEY);
@@ -70,6 +72,7 @@ class ActionGroupObjectTest extends TestCase
     {
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{arg1.field2}}'])])
+            ->withArgumentTypes(['arg1' => 'entity'])
             ->build();
 
         $steps = $actionGroupUnderTest->getSteps(['arg1' => '$data3$'], self::ACTION_GROUP_MERGE_KEY);
@@ -78,6 +81,7 @@ class ActionGroupObjectTest extends TestCase
         // Simple Data
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{simple}}'])])
+            ->withArgumentTypes(['simple' => 'string'])
             ->build();
 
         $steps = $actionGroupUnderTest->getSteps(['simple' => '$data3.field2$'], self::ACTION_GROUP_MERGE_KEY);
@@ -144,6 +148,7 @@ class ActionGroupObjectTest extends TestCase
             ->withActionObjects(
                 [new ActionObject('action1', 'testAction', ['selector' => '{{section1.element1(arg1.field2)}}'])]
             )
+            ->withArgumentTypes(['arg1' => 'entity'])
             ->build();
 
         // XML Data
@@ -177,6 +182,7 @@ class ActionGroupObjectTest extends TestCase
             ->withActionObjects(
                 [new ActionObject('action1', 'testAction', ['selector' => '{{section1.element1(simple)}}'])]
             )
+            ->withArgumentTypes(['simple' => 'string'])
             ->build();
 
         // String Literal

@@ -15,7 +15,9 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
 {
     const DEFAULT_VALUE = 'defaultValue';
     const ACTION_GROUP_ARGUMENTS = 'arguments';
-    const ACTION_GROUP_SIMPLE_DATA = 'simpleData';
+    const ACTION_GROUP_DATA = 'data';
+    const ACTION_GROUP_DATA_ENTITY = 'entity';
+    const ACTION_GROUP_SIMPLE_DATA_TYPES = ['string', 'int', 'float', 'boolean'];
 
     /**
      * Action Object Extractor for converting actions into objects
@@ -41,7 +43,7 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
     public function extractActionGroup($actionGroupData)
     {
         $arguments = [];
-        $simpleArguments = [];
+        $argumentMap = [];
 
         $actionData = $this->stripDescriptorTags(
             $actionGroupData,
@@ -53,16 +55,34 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
         $actions = $this->actionObjectExtractor->extractActions($actionData);
 
         if (array_key_exists(self::ACTION_GROUP_ARGUMENTS, $actionGroupData)) {
-            $arguments = $this->extractArguments($actionGroupData[self::ACTION_GROUP_ARGUMENTS], false);
-            $simpleArguments = $this->extractArguments($actionGroupData[self::ACTION_GROUP_ARGUMENTS], true);
+            $arguments = $this->extractArguments($actionGroupData[self::ACTION_GROUP_ARGUMENTS]);
+            $argumentMap = $this->extractArgumentTypeMap($actionGroupData[self::ACTION_GROUP_ARGUMENTS]);
         }
 
         return new ActionGroupObject(
             $actionGroupData[self::NAME],
             $arguments,
-            $simpleArguments,
+            $argumentMap,
             $actions
         );
+    }
+
+    /**
+     * Extracts argName => dataType mapping.
+     * @param array $arguments
+     * @return array
+     */
+    private function extractArgumentTypeMap($arguments)
+    {
+        $parsedTypeMap = [];
+        $argData = $this->stripDescriptorTags(
+            $arguments,
+            self::NODE_NAME
+        );
+        foreach ($argData as $argName => $argValue) {
+            $parsedTypeMap[$argName] = $argValue[self::ACTION_GROUP_DATA] ?? self::ACTION_GROUP_DATA_ENTITY;
+        }
+        return $parsedTypeMap;
     }
 
     /**
@@ -70,10 +90,9 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
      * by argument name.
      *
      * @param array $arguments
-     * @param bool $simpleData
      * @return array
      */
-    private function extractArguments($arguments, $simpleData)
+    private function extractArguments($arguments)
     {
         $parsedArguments = [];
         $argData = $this->stripDescriptorTags(
@@ -82,10 +101,7 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
         );
 
         foreach ($argData as $argName => $argValue) {
-            $simpleArgument = $argValue[self::ACTION_GROUP_SIMPLE_DATA] ?? false;
-            if ($simpleArgument == $simpleData) {
-                $parsedArguments[$argName] = $argValue[self::DEFAULT_VALUE] ?? null;
-            }
+            $parsedArguments[$argName] = $argValue[self::DEFAULT_VALUE] ?? null;
         }
         return $parsedArguments;
     }

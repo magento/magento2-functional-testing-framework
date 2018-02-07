@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Test\Objects;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Test\Util\ActionGroupObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 
 /**
@@ -35,27 +36,28 @@ class ActionGroupObject
     private $parsedActions = [];
 
     /**
-     * An array used to store the default entities if the user does not specify any
+     * An array used to store argument names to values
      *
      * @var array
      */
     private $arguments;
 
     /**
-     * An array used to store the default simple arguments if the user does not specify any
+     * An array used to map argument names to types
+     *
      * @var array
      */
-    private $simpleArguments;
+    private $argumentTypes;
 
     /**
      * ActionGroupObject constructor.
      *
      * @param string $name
      * @param array $arguments
-     * @param array $simpleArguments
+     * @param array $argumentTypes
      * @param array $actions
      */
-    public function __construct($name, $arguments, $simpleArguments, $actions)
+    public function __construct($name, $arguments, $argumentTypes, $actions)
     {
         $this->varAttributes = array_merge(
             ActionObject::SELECTOR_ENABLED_ATTRIBUTES,
@@ -64,7 +66,7 @@ class ActionGroupObject
         $this->varAttributes[] = ActionObject::ACTION_ATTRIBUTE_URL;
         $this->name = $name;
         $this->arguments = $arguments;
-        $this->simpleArguments = $simpleArguments;
+        $this->argumentTypes = $argumentTypes;
         $this->parsedActions = $actions;
     }
 
@@ -79,7 +81,7 @@ class ActionGroupObject
     public function getSteps($arguments, $actionReferenceKey)
     {
         $mergeUtil = new ActionMergeUtil($this->name, "ActionGroup");
-        $args = array_merge($this->arguments, $this->simpleArguments);
+        $args = $this->arguments;
         $emptyArguments = array_keys($args, null, true);
         if (!empty($emptyArguments) && $arguments !== null) {
             $diff = array_diff($emptyArguments, array_keys($arguments));
@@ -214,7 +216,8 @@ class ActionGroupObject
             return $attributeValue;
         }
 
-        if (array_key_exists($variableName, $this->simpleArguments)) {
+        $argumentType = $this->argumentTypes[$variableName];
+        if (in_array($argumentType, ActionGroupObjectExtractor::ACTION_GROUP_SIMPLE_DATA_TYPES)) {
             return $this->replaceSimpleArgument(
                 $arguments[$variableName],
                 $variableName,
@@ -256,7 +259,6 @@ class ActionGroupObject
         if (preg_match('/\$[\w]+\.[\w]+\$/', $argument)) {
             //$persisted.data$ or $$persisted.data$$, notation not different if in parameter
             return $argument;
-
         } elseif (preg_match('/[\w]+\.[\w]+/', $argument)) {
             //xml.data
             if ($isInnerArgument) {
