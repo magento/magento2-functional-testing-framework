@@ -42,7 +42,6 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
     public function extractActionGroup($actionGroupData)
     {
         $arguments = [];
-        $argumentMap = [];
 
         $actionData = $this->stripDescriptorTags(
             $actionGroupData,

@@ -198,9 +198,7 @@ class ActionGroupObjectTest extends TestCase
         // Persisted Data
         $steps = $actionGroupUnderTest->getSteps(['simple' => '$someData.field1$'], self::ACTION_GROUP_MERGE_KEY);
         $this->assertOnMergeKeyAndActionValue($steps, ['selector' => '.selector $someData.field1$']);
-
     }
-
 
     /**
      * Tests a data reference in an action group resolved with a persisted reference used in another function.
