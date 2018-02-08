@@ -54,10 +54,16 @@ class TestHookObjectExtractor extends BaseObjectExtractor
         return $hook;
     }
 
+    /**
+     * Creates the default failed hook object with a single saveScreenshot action.
+     *
+     * @param string $parentName
+     * @return TestHookObject
+     */
     public function createDefaultFailedHook($parentName)
     {
 
-        $saveScreenshotStep = ["saveScreenshot" => new ActionObject("saveScreenshot", "saveScreenshot", [])];
+        $saveScreenshotStep = [new ActionObject("saveScreenshot", "saveScreenshot", [])];
 
         $hook = new TestHookObject(
             TestObjectExtractor::TEST_FAILED_HOOK,

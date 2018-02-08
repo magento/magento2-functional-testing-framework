@@ -99,7 +99,7 @@ class TestObjectExtractor extends BaseObjectExtractor
 
             // extract failed
             $testHooks[self::TEST_FAILED_HOOK] = $this->testHookObjectExtractor->createDefaultFailedHook(
-                $testData[self::TEST_AFTER_HOOK]
+                $testData[self::NAME]
             );
         }
 
