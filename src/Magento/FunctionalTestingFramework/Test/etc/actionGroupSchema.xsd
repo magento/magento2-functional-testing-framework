@@ -7,7 +7,7 @@
 -->
 
 <xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:include schemaLocation="../../Test/etc/testSchema.xsd"/>
+    <xs:include schemaLocation="../../Test/etc/actionTypeTags.xsd"/>
     <xs:element name="actionGroups" type="actionGroupType"/>
     <xs:complexType name="actionGroupType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">

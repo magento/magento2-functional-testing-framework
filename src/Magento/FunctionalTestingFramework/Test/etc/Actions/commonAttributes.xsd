@@ -4,7 +4,7 @@
   * Copyright © Magento, Inc. All rights reserved.
   * See COPYING.txt for license details.
   */
--->d
+-->
 <xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:attributeGroup name="commonActionAttributes">
         <xs:attribute type="xs:string" name="stepKey" use="required">
