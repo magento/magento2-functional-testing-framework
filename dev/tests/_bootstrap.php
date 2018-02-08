@@ -15,6 +15,9 @@ $kernel->init([
     'includePaths' => [PROJECT_ROOT . '/src']
 ]);
 
+// force php to generate
+$GLOBALS['FORCE_PHP_GENERATE'] = true;
+
 // Load needed framework env params
 $TEST_ENVS = [
     'MAGENTO_BASE_URL' => 'http://baseurl:8080',

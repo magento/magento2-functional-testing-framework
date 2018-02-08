@@ -182,7 +182,10 @@ class DataPersistenceHandler
                 $responseData = $responseData[$index];
             }
             if (is_array($responseData)) {
-                $persistedData = $this->convertToFlatArray(array_merge($requestDataArray, $responseData));
+                $persistedData = $this->convertToFlatArray(array_merge(
+                    $requestDataArray,
+                    $this->convertCustomAndExtensionAttributesArray($responseData)
+                ));
             } else {
                 $persistedData = $this->convertToFlatArray(array_merge($requestDataArray, ['return' => $responseData]));
             }
@@ -224,5 +227,44 @@ class DataPersistenceHandler
             }
         }
         return $arrayOut;
+    }
+
+    /**
+     * Convert custom_attributes and extension_attributes array from
+     * e.g.
+     * 'custom_attributes' => [
+     *      0 => [
+     *          'attribute_code' => 'code1',
+     *          'value' => 'value1',
+     *      ],
+     *      1 => [
+     *          'attribute_code' => 'code2',
+     *          'value' => 'value2',
+     *      ],
+     *  ]
+     *
+     * To
+     *
+     * 'custom_attributes' => [
+     *      'code1' => 'value1',
+     *      'code2' => 'value2',
+     *  ]
+     *
+     * @param array $arrayIn
+     * @return array
+     */
+    private function convertCustomAndExtensionAttributesArray($arrayIn)
+    {
+        $keys = ['custom_attributes', 'extension_attributes'];
+        foreach ($keys as $key) {
+            if (!array_key_exists($key, $arrayIn)) {
+                continue;
+            }
+            $arrayCopy = $arrayIn[$key];
+            foreach ($arrayCopy as $index => $attributes) {
+                $arrayIn[$key][$attributes['attribute_code']] = $attributes['value'];
+            }
+        }
+        return $arrayIn;
     }
 }

@@ -22,6 +22,10 @@ class ActionObject
     const __ENV = "_ENV";
     const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray", "expected", "actual"];
     const SELECTOR_ENABLED_ATTRIBUTES = ['selector', 'dependentSelector', "selector1", "selector2", "function"];
+    const OLD_ASSERTION_ATTRIBUTES = ["expected", "expectedType", "actual", "actualType"];
+    const ASSERTION_ATTRIBUTES = ["expectedResult" => "expected", "actualResult" => "actual"];
+    const ASSERTION_TYPE_ATTRIBUTE = "type";
+    const ASSERTION_VALUE_ATTRIBUTE = "value";
     const EXTERNAL_URL_AREA_INVALID_ACTIONS = ['amOnPage'];
     const MERGE_ACTION_ORDER_AFTER = 'after';
     const MERGE_ACTION_ORDER_BEFORE = 'before';
@@ -201,6 +205,49 @@ class ActionObject
     }
 
     /**
+     * Flattens expectedResult/actualResults nested elements, if necessary.
+     * e.g. expectedResults[] -> ["expectedType" => "string", "expected" => "value"]
+     * Warns user if they are using old Assertion syntax.
+     *
+     * @return void
+     */
+    public function trimAssertionAttributes()
+    {
+        $actionAttributeKeys = array_keys($this->actionAttributes);
+
+        /** MQE-683 DEPRECATE OLD METHOD HERE
+         * Checks if action has any of the old, single line attributes
+         * Throws a warning and returns, assuming old syntax is used.
+         */
+        $oldAttributes = array_intersect($actionAttributeKeys, ActionObject::OLD_ASSERTION_ATTRIBUTES);
+        if (!empty($oldAttributes)) {
+            // @codingStandardsIgnoreStart
+            echo("WARNING: Use of one line Assertion actions will be deprecated in MFTF 3.0.0, please use nested syntax (Action: {$this->type} StepKey: {$this->stepKey})" . PHP_EOL);
+            // @codingStandardsIgnoreEnd
+            return;
+        }
+
+        $relevantKeys = array_keys(ActionObject::ASSERTION_ATTRIBUTES);
+        $relevantAssertionAttributes = array_intersect($actionAttributeKeys, $relevantKeys);
+
+        if (empty($relevantAssertionAttributes)) {
+            return;
+        }
+
+        // Flatten nested Elements's type and value into key=>value entries
+        foreach ($this->actionAttributes as $key => $subAttributes) {
+            if (in_array($key, $relevantKeys)) {
+                $prefix = ActionObject::ASSERTION_ATTRIBUTES[$key];
+                $this->resolvedCustomAttributes[$prefix . ucfirst(ActionObject::ASSERTION_TYPE_ATTRIBUTE)] =
+                    $subAttributes[ActionObject::ASSERTION_TYPE_ATTRIBUTE];
+                $this->resolvedCustomAttributes[$prefix] =
+                    $subAttributes[ActionObject::ASSERTION_VALUE_ATTRIBUTE];
+                unset($this->actionAttributes[$key]);
+            }
+        }
+    }
+
+    /**
      * Look up the selector for SomeSectionName.ElementName and set it as the selector attribute in the
      * resolved custom attributes. Also set the timeout value.
      * e.g. {{SomeSectionName.ElementName}} becomes #login-button
@@ -266,7 +313,7 @@ class ActionObject
         foreach ($relevantDataAttributes as $dataAttribute) {
             $varInput = $this->actionAttributes[$dataAttribute];
             $replacement = $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $varInput);
-            if ($replacement) {
+            if ($replacement != null) {
                 $this->resolvedCustomAttributes[$dataAttribute] = $replacement;
             }
         }

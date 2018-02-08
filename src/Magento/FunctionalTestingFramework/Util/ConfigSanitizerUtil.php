@@ -84,7 +84,7 @@ class ConfigSanitizerUtil
      * @param string $url
      * @return string
      */
-    private static function sanitizeUrl($url)
+    public static function sanitizeUrl($url)
     {
         if ($url === "") {
             trigger_error("MAGENTO_BASE_URL must be defined in .env", E_USER_ERROR);
