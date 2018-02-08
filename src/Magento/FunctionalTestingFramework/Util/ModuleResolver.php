@@ -209,6 +209,20 @@ class ModuleResolver
         }
 
         $enabledModules = array_merge($enabledModules, $this->getModuleWhitelist());
+        $enabledDirectoryPaths = $this->getEnabledDirectoryPaths($enabledModules, $allModulePaths);
+
+        $this->enabledModulePaths = $this->applyCustomModuleMethods($enabledDirectoryPaths);
+        return $this->enabledModulePaths;
+    }
+
+    /**
+     * Runs through enabled modules and maps them known module paths by name.
+     * @param array $enabledModules
+     * @param array $allModulePaths
+     * @return array
+     */
+    private function getEnabledDirectoryPaths($enabledModules, $allModulePaths)
+    {
         $enabledDirectoryPaths = [];
         foreach ($enabledModules as $magentoModuleName) {
             $moduleShortName = explode('_', $magentoModuleName)[1];
@@ -218,9 +232,7 @@ class ModuleResolver
                 $enabledDirectoryPaths[$moduleShortName] = $allModulePaths[$moduleShortName];
             }
         }
-
-        $this->enabledModulePaths = $this->applyCustomModuleMethods($enabledDirectoryPaths);
-        return $this->enabledModulePaths;
+        return $enabledDirectoryPaths;
     }
 
     /**
