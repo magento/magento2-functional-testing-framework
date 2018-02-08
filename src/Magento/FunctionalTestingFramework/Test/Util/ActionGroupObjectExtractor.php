@@ -6,7 +6,9 @@
 
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
+use Magento\FunctionalTestingFramework\Data\Argument\Interpreter\Argument;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
+use Magento\FunctionalTestingFramework\Test\Objects\ArgumentObject;
 
 /**
  * Class ActionGroupObjectExtractor
@@ -15,9 +17,6 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
 {
     const DEFAULT_VALUE = 'defaultValue';
     const ACTION_GROUP_ARGUMENTS = 'arguments';
-    const ACTION_GROUP_DATA = 'data';
-    const ACTION_GROUP_DATA_ENTITY = 'entity';
-    const ACTION_GROUP_SIMPLE_DATA_TYPES = ['string', 'int', 'float', 'boolean'];
 
     /**
      * Action Object Extractor for converting actions into objects
@@ -56,33 +55,13 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
 
         if (array_key_exists(self::ACTION_GROUP_ARGUMENTS, $actionGroupData)) {
             $arguments = $this->extractArguments($actionGroupData[self::ACTION_GROUP_ARGUMENTS]);
-            $argumentMap = $this->extractArgumentTypeMap($actionGroupData[self::ACTION_GROUP_ARGUMENTS]);
         }
 
         return new ActionGroupObject(
             $actionGroupData[self::NAME],
             $arguments,
-            $argumentMap,
             $actions
         );
-    }
-
-    /**
-     * Extracts argName => dataType mapping.
-     * @param array $arguments
-     * @return array
-     */
-    private function extractArgumentTypeMap($arguments)
-    {
-        $parsedTypeMap = [];
-        $argData = $this->stripDescriptorTags(
-            $arguments,
-            self::NODE_NAME
-        );
-        foreach ($argData as $argName => $argValue) {
-            $parsedTypeMap[$argName] = $argValue[self::ACTION_GROUP_DATA] ?? self::ACTION_GROUP_DATA_ENTITY;
-        }
-        return $parsedTypeMap;
     }
 
     /**
@@ -101,7 +80,11 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
         );
 
         foreach ($argData as $argName => $argValue) {
-            $parsedArguments[$argName] = $argValue[self::DEFAULT_VALUE] ?? null;
+            $parsedArguments[] = new ArgumentObject(
+                $argValue[ArgumentObject::ARGUMENT_NAME],
+                $argValue[ArgumentObject::ARGUMENT_DEFAULT_VALUE] ?? null,
+                $argValue[ArgumentObject::ARGUMENT_DATA_TYPE] ?? ArgumentObject::ARGUMENT_DATA_ENTITY
+            );
         }
         return $parsedArguments;
     }

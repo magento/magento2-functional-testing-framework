@@ -43,21 +43,13 @@ class ActionGroupObject
     private $arguments;
 
     /**
-     * An array used to map argument names to types
-     *
-     * @var array
-     */
-    private $argumentTypes;
-
-    /**
      * ActionGroupObject constructor.
      *
      * @param string $name
-     * @param array $arguments
-     * @param array $argumentTypes
+     * @param ArgumentObject[] $arguments
      * @param array $actions
      */
-    public function __construct($name, $arguments, $argumentTypes, $actions)
+    public function __construct($name, $arguments, $actions)
     {
         $this->varAttributes = array_merge(
             ActionObject::SELECTOR_ENABLED_ATTRIBUTES,
@@ -66,7 +58,6 @@ class ActionGroupObject
         $this->varAttributes[] = ActionObject::ACTION_ATTRIBUTE_URL;
         $this->name = $name;
         $this->arguments = $arguments;
-        $this->argumentTypes = $argumentTypes;
         $this->parsedActions = $actions;
     }
 
@@ -82,7 +73,7 @@ class ActionGroupObject
     {
         $mergeUtil = new ActionMergeUtil($this->name, "ActionGroup");
         $args = $this->arguments;
-        $emptyArguments = array_keys($args, null, true);
+        $emptyArguments = $this->findEmptyDefaultArguments();
         if (!empty($emptyArguments) && $arguments !== null) {
             $diff = array_diff($emptyArguments, array_keys($arguments));
             if (!empty($diff)) {
@@ -93,11 +84,51 @@ class ActionGroupObject
             $error = 'Not enough arguments given for actionGroup "' . $this->name . '"';
             throw new TestReferenceException($error);
         }
-        if ($arguments) {
-            $args = array_merge($args, $arguments);
-        }
+        $args = $this->overrideDefaultArguments($arguments);
 
         return $mergeUtil->resolveActionSteps($this->getResolvedActionsWithArgs($args, $actionReferenceKey), true);
+    }
+
+    /**
+     * Finds and returns named list of $this->arguments that have no defaultValue
+     * @return array
+     */
+    private function findEmptyDefaultArguments()
+    {
+        $emptyDefaultArguments = [];
+        foreach ($this->arguments as $argumentObj) {
+            if ($argumentObj->getValue() === null) {
+                $emptyDefaultArguments[] = $argumentObj->getName();
+            }
+        }
+        return $emptyDefaultArguments;
+    }
+
+    /**
+     * Iterates through given $arguments and overrides ActionGroup's argument values, if any are found.
+     * @param array $arguments
+     * @return ArgumentObject[]
+     */
+    private function overrideDefaultArguments($arguments)
+    {
+        if ($arguments === null) {
+            return $this->arguments;
+        }
+        $newArgumentList = [];
+
+        // Clone $this->arguments to not override default argument definitions
+        foreach ($this->arguments as $argumentObj) {
+            $newArgumentList[] = clone $argumentObj;
+        }
+
+        foreach ($arguments as $argumentName => $argumentValue) {
+            $matchedArgument = $this->findArgumentByName($argumentName, $newArgumentList);
+            if (isset($matchedArgument)) {
+                $matchedArgument->overrideValue($argumentValue);
+            }
+        }
+
+        return $newArgumentList;
     }
 
     /**
@@ -212,24 +243,24 @@ class ActionGroupObject
             $variableName = trim($variable, "'");
         }
 
-        if (!array_key_exists($variableName, $arguments)) {
+        $matchedArgument = $this->findArgumentByName($variableName, $arguments);
+        if ($matchedArgument === null) {
             return $attributeValue;
         }
 
-        $argumentType = $this->argumentTypes[$variableName];
-        if (in_array($argumentType, ActionGroupObjectExtractor::ACTION_GROUP_SIMPLE_DATA_TYPES)) {
+        if (in_array($matchedArgument->getDataType(), ArgumentObject::ARGUMENT_SIMPLE_DATA_TYPES)) {
             return $this->replaceSimpleArgument(
-                $arguments[$variableName],
+                $matchedArgument->getResolvedValue($isInnerArgument),
                 $variableName,
                 $attributeValue,
                 $isInnerArgument
             );
         }
 
-        $isPersisted = preg_match('/\$[\w.]+\$/', $arguments[$variableName]);
+        $isPersisted = preg_match('/\$[\w.]+\$/', $matchedArgument->getResolvedValue($isInnerArgument));
         if ($isPersisted) {
             return $this->replacePersistedArgument(
-                $arguments[$variableName],
+                $matchedArgument->getResolvedValue($isInnerArgument),
                 $attributeValue,
                 $variable,
                 $variableName,
@@ -238,56 +269,24 @@ class ActionGroupObject
         }
 
         //replace argument ONLY when there is no letters attached before after (ex. category.name vs categoryTreeButton)
-        return preg_replace("/(?<![\w]){$variableName}(?![(\w])/", $arguments[$variableName], $attributeValue);
-    }
-
-    /**
-     * Resolves simple arguments depending on type passed in, and returns the appropriate format for simple replacement.
-     * Takes in boolean to determine if the replacement is being done with an inner argument (as in if it's a parameter)
-     *
-     * Example Type     Non Inner           Inner
-     * {{XML.DATA}}:    {{XML.DATA}}        XML.DATA
-     * $TEST.DATA$:     $TEST.DATA$         $TEST.DATA$
-     * stringLiteral    stringLiteral       'stringLiteral'
-     *
-     * @param string $argument
-     * @param boolean $isInnerArgument
-     * @return string
-     */
-    private function resolveSimpleArgument($argument, $isInnerArgument)
-    {
-        if (preg_match('/\$[\w]+\.[\w]+\$/', $argument)) {
-            //$persisted.data$ or $$persisted.data$$, notation not different if in parameter
-            return $argument;
-        } elseif (preg_match('/[\w]+\.[\w]+/', $argument)) {
-            //xml.data
-            if ($isInnerArgument) {
-                return $argument;
-            } else {
-                return "{{" . $argument . "}}";
-            }
-        } else {
-            //stringLiteral
-            if ($isInnerArgument) {
-                return "'" . $argument . "'";
-            } else {
-                return $argument;
-            }
-        }
+        return preg_replace(
+            "/(?<![\w]){$variableName}(?![(\w])/",
+            $matchedArgument->getResolvedValue($isInnerArgument),
+            $attributeValue
+        );
     }
 
     /**
      * Replaces any arguments that were declared as simpleData="true".
      * Takes in isInnerArgument to determine what kind of replacement to expect: {{data}} vs section.element(data)
-     * @param string $argument
+     * @param string $argumentValue
      * @param string $variableName
      * @param string $attributeValue
      * @param boolean $isInnerArgument
      * @return string
      */
-    private function replaceSimpleArgument($argument, $variableName, $attributeValue, $isInnerArgument)
+    private function replaceSimpleArgument($argumentValue, $variableName, $attributeValue, $isInnerArgument)
     {
-        $argumentValue = $this->resolveSimpleArgument($argument, $isInnerArgument);
         if ($isInnerArgument) {
             return preg_replace("/(?<![\w]){$variableName}(?![(\w])/", $argumentValue, $attributeValue);
         } else {
@@ -327,5 +326,25 @@ class ActionGroupObject
         }
 
         return $newAttributeValue;
+    }
+
+    /**
+     * Searches through ActionGroupObject's arguments and returns first argument wi
+     * @param string $name
+     * @param array $argumentList
+     * @return ArgumentObject|null
+     */
+    private function findArgumentByName($name, $argumentList)
+    {
+        $matchedArgument = array_filter(
+            $argumentList,
+            function ($e) use ($name) {
+                return $e->getName() == $name;
+            }
+        );
+        if (isset($matchedArgument[0])) {
+            return $matchedArgument[0];
+        }
+        return null;
     }
 }

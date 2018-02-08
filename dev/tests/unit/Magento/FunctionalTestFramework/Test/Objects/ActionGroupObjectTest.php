@@ -14,6 +14,7 @@ use Magento\FunctionalTestingFramework\Page\Objects\ElementObject;
 use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
+use Magento\FunctionalTestingFramework\Test\Objects\ArgumentObject;
 use PHPUnit\Framework\TestCase;
 use tests\unit\Util\ActionGroupObjectBuilder;
 use tests\unit\Util\EntityDataObjectBuilder;
@@ -49,7 +50,7 @@ class ActionGroupObjectTest extends TestCase
 
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{arg1.field2}}'])])
-            ->withArgumentTypes(['arg1' => 'entity'])
+            ->withArguments([new ArgumentObject('arg1', null, 'entity')])
             ->build();
 
         $steps = $actionGroupUnderTest->getSteps(['arg1' => 'data2'], self::ACTION_GROUP_MERGE_KEY);
@@ -58,7 +59,7 @@ class ActionGroupObjectTest extends TestCase
         // Simple Data
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{simple}}'])])
-            ->withArgumentTypes(['simple' => 'string'])
+            ->withArguments([new ArgumentObject('simple', null, 'string')])
             ->build();
 
         $steps = $actionGroupUnderTest->getSteps(['simple' => 'data2.field2'], self::ACTION_GROUP_MERGE_KEY);
@@ -72,7 +73,7 @@ class ActionGroupObjectTest extends TestCase
     {
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{arg1.field2}}'])])
-            ->withArgumentTypes(['arg1' => 'entity'])
+            ->withArguments([new ArgumentObject('arg1', null, 'entity')])
             ->build();
 
         $steps = $actionGroupUnderTest->getSteps(['arg1' => '$data3$'], self::ACTION_GROUP_MERGE_KEY);
@@ -81,7 +82,7 @@ class ActionGroupObjectTest extends TestCase
         // Simple Data
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{simple}}'])])
-            ->withArgumentTypes(['simple' => 'string'])
+            ->withArguments([new ArgumentObject('simple', null, 'string')])
             ->build();
 
         $steps = $actionGroupUnderTest->getSteps(['simple' => '$data3.field2$'], self::ACTION_GROUP_MERGE_KEY);
@@ -101,6 +102,7 @@ class ActionGroupObjectTest extends TestCase
 
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{arg1}}'])])
+            ->withArguments([new ArgumentObject('arg1', null, 'entity')])
             ->build();
 
         $steps = $actionGroupUnderTest->getSteps(['arg1' => 'data2.field2'], self::ACTION_GROUP_MERGE_KEY);
@@ -148,7 +150,7 @@ class ActionGroupObjectTest extends TestCase
             ->withActionObjects(
                 [new ActionObject('action1', 'testAction', ['selector' => '{{section1.element1(arg1.field2)}}'])]
             )
-            ->withArgumentTypes(['arg1' => 'entity'])
+            ->withArguments([new ArgumentObject('arg1', null, 'entity')])
             ->build();
 
         // XML Data
@@ -182,7 +184,7 @@ class ActionGroupObjectTest extends TestCase
             ->withActionObjects(
                 [new ActionObject('action1', 'testAction', ['selector' => '{{section1.element1(simple)}}'])]
             )
-            ->withArgumentTypes(['simple' => 'string'])
+            ->withArguments([new ArgumentObject('simple', null, 'string')])
             ->build();
 
         // String Literal
@@ -207,6 +209,7 @@ class ActionGroupObjectTest extends TestCase
     {
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{arg1.field1}}'])])
+            ->withArguments([new ArgumentObject('arg1', null, 'entity')])
             ->build();
 
         $steps = $actionGroupUnderTest->getSteps(['arg1' => '$$someData$$'], self::ACTION_GROUP_MERGE_KEY);
@@ -219,7 +222,7 @@ class ActionGroupObjectTest extends TestCase
     public function testExceptionOnMissingActions()
     {
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
-            ->withArguments(['arg1' => null])
+            ->withArguments([new ArgumentObject('arg1', null, 'entity')])
             ->build();
 
         $this->expectException(TestReferenceException::class);
@@ -233,7 +236,7 @@ class ActionGroupObjectTest extends TestCase
     public function testExceptionOnMissingArguments()
     {
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
-            ->withArguments(['arg1' => null])
+            ->withArguments([new ArgumentObject('arg1', null, 'entity')])
             ->build();
 
         $this->expectException(TestReferenceException::class);
