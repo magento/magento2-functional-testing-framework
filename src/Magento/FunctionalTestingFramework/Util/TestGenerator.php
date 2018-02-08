@@ -1501,6 +1501,8 @@ class TestGenerator
         }
         $output .= ");\n";
 
+        $output = $this->resolveEnvReferences($output, $args);
+
         return $this->resolveTestVariable($output, $args);
     }
 
@@ -1530,9 +1532,39 @@ class TestGenerator
         }
         $output .= ");\n";
 
+        $output = $this->resolveEnvReferences($output, $args);
+
         return $this->resolveTestVariable($output, $args);
     }
     // @codingStandardsIgnoreEnd
+
+    /**
+     * Resolves {{_ENV.variable}} into getenv("variable") for test-runtime ENV referencing.
+     * @param string $inputString
+     * @param array $args
+     * @return string
+     */
+    private function resolveEnvReferences($inputString, $args)
+    {
+        $envRegex = "/{{_ENV\.([\w]+)}}/";
+
+        $outputString = $inputString;
+
+        foreach ($args as $arg) {
+            preg_match_all($envRegex, $arg, $matches);
+            if (!empty($matches[0])) {
+                $fullMatch = $matches[0][0];
+                $envVariable = $matches[1][0];
+                unset($matches);
+                $replacement = "getenv(\"{$envVariable}\")";
+
+                $outputArg = $this->processQuoteBreaks($fullMatch, $arg, $replacement);
+                $outputString = str_replace($arg, $outputArg, $outputString);
+            }
+        }
+
+        return $outputString;
+    }
 
     /**
      * Validates parameter array format, making sure user has enclosed string with square brackets.
