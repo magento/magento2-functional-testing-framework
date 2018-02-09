@@ -21,6 +21,7 @@
         "sebastian/phpcpd": "~3.0",
         "brainmaestro/composer-git-hooks": "^2.3",
         "codeception/aspect-mock": "^2.0",
+        "goaop/framework": "2.1.2",
         "codacy/coverage": "^1.4",
         "phpmd/phpmd": "^2.6.0",
         "rregeer/phpunit-coverage-check": "^0.1.4"
