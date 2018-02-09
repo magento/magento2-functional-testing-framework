@@ -12,8 +12,8 @@
             <xs:complexContent>
                 <xs:restriction base="testType">
                     <xs:choice minOccurs="0" maxOccurs="unbounded">
-                        <xs:element type="annotationsType" name="annotations" minOccurs="0"/>
-                        <xs:element type="hookType" name="before" minOccurs="0">
+                        <xs:group ref="testTypeTags" />
+                        <xs:element type="hookType" name="before" minOccurs="0" maxOccurs="1">
                             <xs:unique name="uniqueActionInBefore">
                                 <xs:annotation>
                                     <xs:documentation>
@@ -24,7 +24,7 @@
                                 <xs:field xpath="@stepKey" />
                             </xs:unique>
                         </xs:element>
-                        <xs:element type="hookType" name="after" minOccurs="0">
+                        <xs:element type="hookType" name="after" minOccurs="0" maxOccurs="1">
                             <xs:unique name="uniqueActionInAfter">
                                 <xs:annotation>
                                     <xs:documentation>
@@ -35,17 +35,7 @@
                                 <xs:field xpath="@stepKey" />
                             </xs:unique>
                         </xs:element>
-                        <xs:element type="hookType" name="test" maxOccurs="unbounded">
-                            <xs:unique name="uniqueActionInTest">
-                                <xs:annotation>
-                                    <xs:documentation>
-                                        Step key should be unique in scope of file
-                                    </xs:documentation>
-                                </xs:annotation>
-                                <xs:selector xpath="*" />
-                                <xs:field xpath="@stepKey" />
-                            </xs:unique>
-                        </xs:element>
+                        <xs:element type="annotationsType" name="annotations" minOccurs="0" maxOccurs="1"/>
                     </xs:choice>
                 </xs:restriction>
             </xs:complexContent>

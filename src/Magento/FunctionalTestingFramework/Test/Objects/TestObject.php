@@ -44,12 +44,6 @@ class TestObject
     private $hooks = [];
 
     /**
-     * Full path to xml file from which test was read.
-     * @var string
-     */
-    private $xmlFileSource;
-
-    /**
      * TestObject constructor.
      *
      * @param string $name
@@ -64,7 +58,6 @@ class TestObject
         $this->parsedSteps = $parsedSteps;
         $this->annotations = $annotations;
         $this->hooks = $hooks;
-        $this->xmlFileSource = $xmlFileSource;
     }
 
     /**
@@ -129,6 +122,7 @@ class TestObject
     /**
      * Getter for the custom data
      * @return array|null
+     * @deprecated because no usages where found and property does not exist. Will be removed next major release.
      */
     public function getCustomData()
     {
