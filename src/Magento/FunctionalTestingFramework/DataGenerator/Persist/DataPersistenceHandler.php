@@ -184,7 +184,7 @@ class DataPersistenceHandler
             if (is_array($responseData)) {
                 $persistedData = $this->convertToFlatArray(array_merge(
                     $requestDataArray,
-                    $this->convertCustomAndExtensionAttributesArray($responseData)
+                    $this->convertCustomAttributesArray($responseData)
                 ));
             } else {
                 $persistedData = $this->convertToFlatArray(array_merge($requestDataArray, ['return' => $responseData]));
@@ -230,7 +230,7 @@ class DataPersistenceHandler
     }
 
     /**
-     * Convert custom_attributes and extension_attributes array from
+     * Convert custom_attributes array from
      * e.g.
      * 'custom_attributes' => [
      *      0 => [
@@ -253,9 +253,9 @@ class DataPersistenceHandler
      * @param array $arrayIn
      * @return array
      */
-    private function convertCustomAndExtensionAttributesArray($arrayIn)
+    private function convertCustomAttributesArray($arrayIn)
     {
-        $keys = ['custom_attributes', 'extension_attributes'];
+        $keys = ['custom_attributes'];
         foreach($keys as $key) {
             if(!array_key_exists($key, $arrayIn)) {
                 continue;
