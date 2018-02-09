@@ -8,16 +8,35 @@
 
 <xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:redefine schemaLocation="mergedTestSchema.xsd">
+        <xs:complexType name="configType">
+            <xs:complexContent>
+                <xs:restriction base="configType">
+                    <xs:choice>
+                        <xs:element type="testType" name="test" maxOccurs="unbounded">
+                            <xs:unique name="uniqueStepKeyInTestBlock">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        Step key should be unique in scope of 'test' node in current file
+                                    </xs:documentation>
+                                </xs:annotation>
+                                <xs:selector xpath="*" />
+                                <xs:field xpath="@stepKey" />
+                            </xs:unique>
+                        </xs:element>
+                    </xs:choice>
+                </xs:restriction>
+            </xs:complexContent>
+        </xs:complexType>
         <xs:complexType name="testType">
             <xs:complexContent>
                 <xs:restriction base="testType">
                     <xs:choice minOccurs="0" maxOccurs="unbounded">
                         <xs:group ref="testTypeTags" />
                         <xs:element type="hookType" name="before" minOccurs="0" maxOccurs="1">
-                            <xs:unique name="uniqueActionInBefore">
+                            <xs:unique name="uniqueStepKeyInBeforeBlock">
                                 <xs:annotation>
                                     <xs:documentation>
-                                        Step key should be unique in scope of file
+                                        Step key should be unique in scope of 'before' node in current file
                                     </xs:documentation>
                                 </xs:annotation>
                                 <xs:selector xpath="*" />
@@ -25,10 +44,10 @@
                             </xs:unique>
                         </xs:element>
                         <xs:element type="hookType" name="after" minOccurs="0" maxOccurs="1">
-                            <xs:unique name="uniqueActionInAfter">
+                            <xs:unique name="uniqueStepKeyInAfterBlock">
                                 <xs:annotation>
                                     <xs:documentation>
-                                        Step key should be unique in scope of file
+                                        Step key should be unique in scope of 'after' node in current file
                                     </xs:documentation>
                                 </xs:annotation>
                                 <xs:selector xpath="*" />

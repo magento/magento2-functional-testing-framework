@@ -50,9 +50,8 @@ class TestObject
      * @param ActionObject[] $parsedSteps
      * @param array $annotations
      * @param TestHookObject[] $hooks
-     * @param string $xmlFileSource
      */
-    public function __construct($name, $parsedSteps, $annotations, $hooks, $xmlFileSource = null)
+    public function __construct($name, $parsedSteps, $annotations, $hooks)
     {
         $this->name = $name;
         $this->parsedSteps = $parsedSteps;

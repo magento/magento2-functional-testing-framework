@@ -25,7 +25,6 @@ class SchemaLocator implements \Magento\FunctionalTestingFramework\Config\Schema
      */
     private $perFileSchema;
 
-
     /**
      * Class constructor
      *
