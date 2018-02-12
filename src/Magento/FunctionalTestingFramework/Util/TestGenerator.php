@@ -260,6 +260,10 @@ class TestGenerator
         $annotationsPhp = "{$indent}/**\n";
 
         foreach ($annotationsObject as $annotationType => $annotationName) {
+            //Remove conditional and output useCaseId upon completion of MQE-588
+            if ($annotationType == "useCaseId") {
+                continue;
+            }
             if (!$isMethod) {
                 $annotationsPhp.= $this->generateClassAnnotations($annotationType, $annotationName);
             } else {
