@@ -197,14 +197,14 @@
     <virtualType name="Magento\FunctionalTestingFramework\Config\SchemaLocator\TestData" type="Magento\FunctionalTestingFramework\Config\SchemaLocator">
         <arguments>
             <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Test/etc/mergedTestSchema.xsd</argument>
-            <argument name="perFileSchema" xsi:type="string">Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\TestData" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
+    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\TestData" type="Magento\FunctionalTestingFramework\Test\Config\Reader\Filesystem">
         <arguments>
             <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\TestDataConverter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\TestData</argument>
+            <argument name="domDocumentClass" xsi:type="string">Magento\FunctionalTestingFramework\Test\Config\Dom</argument>
             <argument name="idAttributes" xsi:type="array">
                 <item name="/tests/test" xsi:type="string">name</item>
                 <item name="/tests/test/remove" xsi:type="string">keyForRemoval</item>
