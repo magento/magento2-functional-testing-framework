@@ -18,8 +18,8 @@
             <amOnSubdomain stepKey="aosd2" url="1"/>
             <amOnUrl stepKey="aou1" url="1"/>
             <amOnUrl stepKey="aou2" url="1"/>
-            <appendField selector="1" stepKey="ap1"/>
-            <appendField selector="1" stepKey="ap2"/>
+            <appendField selector="1" stepKey="app1"/>
+            <appendField selector="1" stepKey="app2"/>
             <attachFile selector="1" stepKey="atf1"/>
             <attachFile selector="1" stepKey="atf2"/>
             <cancelPopup stepKey="cp1"/>
@@ -168,8 +168,8 @@
             <seeInField stepKey="seeinfield12"/>
             <seeInFormFields selector="2" parameterArray="[2]" stepKey="seeinformfields1"/>
             <seeInFormFields selector="2" parameterArray="[2]" stepKey="seeinformfields12"/>
-            <seeInPageSource html="1" stepKey="seeinsource1"/>
-            <seeInPageSource html="1" stepKey="seeinsource12"/>
+            <seeInPageSource html="1" stepKey="seeinpagesource1"/>
+            <seeInPageSource html="1" stepKey="seeinpagesource12"/>
             <seeInPopup stepKey="seeinpopup1"/>
             <seeInPopup stepKey="seeinpopup12"/>
             <seeInSource html="1" stepKey="seeinsource1"/>
@@ -234,8 +234,8 @@
             <amOnSubdomain stepKey="aosd2" url="1"/>
             <amOnUrl stepKey="aou1" url="1"/>
             <amOnUrl stepKey="aou2" url="1"/>
-            <appendField selector="1" stepKey="ap1"/>
-            <appendField selector="1" stepKey="ap2"/>
+            <appendField selector="1" stepKey="app1"/>
+            <appendField selector="1" stepKey="app2"/>
             <attachFile selector="1" stepKey="atf1"/>
             <attachFile selector="1" stepKey="atf2"/>
             <cancelPopup stepKey="cp1"/>
@@ -384,8 +384,8 @@
             <seeInField stepKey="seeinfield12"/>
             <seeInFormFields selector="2" parameterArray="[1]"  stepKey="seeinformfields1"/>
             <seeInFormFields selector="2" parameterArray="[1]"  stepKey="seeinformfields12"/>
-            <seeInPageSource html="1" stepKey="seeinsource1"/>
-            <seeInPageSource html="1" stepKey="seeinsource12"/>
+            <seeInPageSource html="1" stepKey="seeinpagesource1"/>
+            <seeInPageSource html="1" stepKey="seeinpagesource12"/>
             <seeInPopup stepKey="seeinpopup1"/>
             <seeInPopup stepKey="seeinpopup12"/>
             <seeInSource html="1" stepKey="seeinsource1"/>
@@ -449,8 +449,8 @@
         <amOnSubdomain stepKey="aosd2" url="1"/>
         <amOnUrl stepKey="aou1" url="1"/>
         <amOnUrl stepKey="aou2" url="1"/>
-        <appendField selector="1" stepKey="ap1"/>
-        <appendField selector="1" stepKey="ap2"/>
+        <appendField selector="1" stepKey="app1"/>
+        <appendField selector="1" stepKey="app2"/>
         <attachFile selector="1" stepKey="atf1"/>
         <attachFile selector="1" stepKey="atf2"/>
         <cancelPopup stepKey="cp1"/>
@@ -599,8 +599,8 @@
         <seeInField stepKey="seeinfield12"/>
         <seeInFormFields selector="2" parameterArray="[1]"  stepKey="seeinformfields1"/>
         <seeInFormFields selector="2" parameterArray="[1]"  stepKey="seeinformfields12"/>
-        <seeInPageSource html="1" stepKey="seeinsource1"/>
-        <seeInPageSource html="1" stepKey="seeinsource12"/>
+        <seeInPageSource html="1" stepKey="seeinpagesource1"/>
+        <seeInPageSource html="1" stepKey="seeinpagesource12"/>
         <seeInPopup stepKey="seeinpopup1"/>
         <seeInPopup stepKey="seeinpopup12"/>
         <seeInSource html="1" stepKey="seeinsource1"/>

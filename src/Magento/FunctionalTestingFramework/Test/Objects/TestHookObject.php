@@ -38,6 +38,7 @@ class TestHookObject
     /**
      * Array of Hook-defined data.
      * @var array|null
+     * @deprecated because no usage of property exist. Will be removed next major release.
      */
     private $customData = [];
 
@@ -72,14 +73,13 @@ class TestHookObject
     public function getActions()
     {
         $mergeUtil = new ActionMergeUtil($this->parentName, $this->getType());
-        $mergedSteps = $mergeUtil->resolveActionSteps($this->actions);
-
-        return $mergedSteps;
+        return $mergeUtil->resolveActionSteps($this->actions);
     }
 
     /**
      * Returns an array of customData to be interperpreted by the generator.
      * @return array|null
+     * @deprecated because no usages where found. Will be removed next major release.
      */
     public function getCustomData()
     {
