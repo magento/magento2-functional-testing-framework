@@ -83,6 +83,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
      *
      * @param \DOMElement $testNode
      * @param string $filename
+     * @return void
      * @throws XmlException
      */
     private function validateTestDomStepKeys($testNode, $filename)

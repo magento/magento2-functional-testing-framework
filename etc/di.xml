@@ -207,12 +207,13 @@
             <argument name="domDocumentClass" xsi:type="string">Magento\FunctionalTestingFramework\Test\Config\Dom</argument>
             <argument name="idAttributes" xsi:type="array">
                 <item name="/tests/test" xsi:type="string">name</item>
-                <item name="/tests/test/remove" xsi:type="string">keyForRemoval</item>
-                <item name="/tests/test/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
                 <item name="/tests/test/actionGroup/argument" xsi:type="string">name</item>
                 <item name="/tests/test/(createData|updateData|getData)/requiredEntity" xsi:type="string">createDataKey</item>
-                <item name="/tests/test/(before|after)/(createData|updateData|getData)/requiredEntity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
+                <item name="/tests/test/(before|after)/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
+                <item name="/tests/test/remove" xsi:type="string">keyForRemoval</item>
                 <item name="/tests/test/(before|after)/remove" xsi:type="string">keyForRemoval</item>
+                <item name="/tests/test/(before|after)/(createData|updateData|getData)/requiredEntity" xsi:type="string">createDataKey</item>
                 <item name="/tests/test/annotations(/group)+" xsi:type="string">value</item>
             </argument>
             <argument name="fileName" xsi:type="string">*.xml</argument>
@@ -223,14 +224,15 @@
     <virtualType name="Magento\FunctionalTestingFramework\Test\Config\Dom\ArrayNodeConfig" type="Magento\FunctionalTestingFramework\Config\Dom\ArrayNodeConfig">
         <arguments>
             <argument name="assocArrayAttributes" xsi:type="array">
-                <item name="/tests/test" xsi:type="string">name</item>
-                <item name="/tests/test/remove" xsi:type="string">keyForRemoval</item>
-                <item name="/tests/test/actionGroup/argument" xsi:type="string">name</item>
                 <item name="/tests/test/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
                 <item name="/tests/test/(before|after)/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
+                <item name="/tests/test/remove" xsi:type="string">keyForRemoval</item>
                 <item name="/tests/test/(before|after)/remove" xsi:type="string">keyForRemoval</item>
+                <item name="/tests/test" xsi:type="string">name</item>
                 <item name="/tests/test/(createData|updateData|getData)/requiredEntity" xsi:type="string">createDataKey</item>
                 <item name="/tests/test/(before|after)/(createData|updateData|getData)/requiredEntity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/actionGroup/argument" xsi:type="string">name</item>
+                <item name="/tests/test/(before|after)/actionGroup/argument" xsi:type="string">name</item>
             </argument>
             <argument name="numericArrays" xsi:type="array">
                 <item name="/tests/test/annotations/features" xsi:type="string">/tests/test/annotations/features</item>

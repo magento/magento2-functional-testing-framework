@@ -24,7 +24,11 @@ class Filesystem extends \Magento\FunctionalTestingFramework\Config\Reader\Files
         foreach ($fileList as $key => $content) {
             try {
                 if (!$configMerger) {
-                    $configMerger = $this->createConfigMerger($this->domDocumentClass, $content, $fileList->getFilename());
+                    $configMerger = $this->createConfigMerger(
+                        $this->domDocumentClass,
+                        $content,
+                        $fileList->getFilename()
+                    );
                 } else {
                     $configMerger->merge($content, $fileList->getFilename());
                 }
