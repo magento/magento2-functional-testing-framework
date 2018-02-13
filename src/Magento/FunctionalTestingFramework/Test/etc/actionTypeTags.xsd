@@ -95,7 +95,7 @@
     <xs:complexType name="removeActionType">
         <xs:annotation>
             <xs:documentation>
-                Removes a specific Test Action from base test. Should be used in Test Deltas, not in the base test.
+                Removes a specific Test Action from base test. Used in Test Deltas, do not use in base test.
             </xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
@@ -127,7 +127,7 @@
     <xs:complexType name="amOnPageType">
         <xs:annotation>
             <xs:documentation>
-                Opens the page for the given URL. Given url is appended to MAGENTO_BASE_URL in env file.
+                Opens the page for the given URL. Appends url attribute to MAGENTO_BASE_URL definition in env file.
             </xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
@@ -278,7 +278,7 @@
     <xs:complexType name="executeInSeleniumType">
         <xs:annotation>
             <xs:documentation>
-                Allows you to use Selenium WebDriver methods directly. Last resort method, do not use regularly.
+                Allows you to use Selenium WebDriver methods directly; last resort method, do not use regularly.
             </xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
@@ -389,7 +389,7 @@
     <xs:complexType name="moveMouseOverType">
         <xs:annotation>
             <xs:documentation>
-                Moves mouse over the given element. Can be given x and y coordinates offset location of mouse on element (defaults to center if none are given)
+                Moves mouse over the given element. Can be given x and y coordinates to offset location of mouse on element (defaults to center if none are given)
             </xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
@@ -539,7 +539,7 @@
         <xs:annotation>
             <xs:documentation>
                 Selects given option in given radio button group.
-                Can be given an array of options via parameterArray.
+                Can give an array of options via parameterArray.
             </xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
@@ -555,7 +555,7 @@
     <xs:complexType name="setCookieType">
         <xs:annotation>
             <xs:documentation>
-                Sets a cooked with the given name and value.
+                Sets a cookie with the given name and value.
             </xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
@@ -578,7 +578,7 @@
         <xs:annotation>
             <xs:documentation>
                 Submits given form on page. Pass in form values via parameterArray (ex. ['login' => 'JohnDoe', 'password' => '123456'] ).
-                You can optionally specify what button’s value to include in the request.
+                Optionally, you can specify a button value in the request.
             </xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
@@ -628,7 +628,7 @@
     <xs:complexType name="unselectOptionType">
         <xs:annotation>
             <xs:documentation>
-                Unselects an option in the given select box. Options can be given via parameterArray.
+                Deselect an option in the given select box. You can provide options using parameterArray.
             </xs:documentation>
         </xs:annotation>
         <xs:simpleContent>

@@ -68,7 +68,7 @@
     <xs:attribute type="xs:string" name="message">
         <xs:annotation>
             <xs:documentation>
-                Optional human readable hint that will be shown in logs if this assert fails.
+                Optional human readable hint shown in logs if this assert fails.
             </xs:documentation>
         </xs:annotation>
     </xs:attribute>
@@ -128,7 +128,7 @@
         <xs:attribute type="xs:string" name="attribute" use="required">
             <xs:annotation>
                 <xs:documentation>
-                    Attribute in given element to be asserted against.
+                    Attribute in given element to be assert against.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
@@ -316,7 +316,7 @@
     <xs:complexType name="assertGreaterOrEqualsType">
         <xs:annotation>
             <xs:documentation>
-                Asserts that given actual value is greater or equals expected value.
+                Asserts that given actual value is greater or equal to expected value.
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
@@ -352,7 +352,7 @@
     <xs:complexType name="assertGreaterThanOrEqualType">
         <xs:annotation>
             <xs:documentation>
-                Asserts that given actual value is greater than or equals expected value.
+                Asserts that given actual value is greater than or equal to expected value.
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
@@ -423,7 +423,7 @@
     <xs:complexType name="assertLessOrEqualsType">
         <xs:annotation>
             <xs:documentation>
-                Asserts that given actual less or equal to expected.
+                Asserts that given actual less than or equal to expected.
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
@@ -459,7 +459,7 @@
     <xs:complexType name="assertLessThanOrEqualType">
         <xs:annotation>
             <xs:documentation>
-                Asserts that given actual less than or equal expected.
+                Asserts that given actual less than or equal to expected.
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
