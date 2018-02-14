@@ -25,17 +25,33 @@
             <xs:element type="annotationType" name="stories" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="title" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="description" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="annotationType" name="severity" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="severityType" name="severity" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="testCaseId" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="useCaseId" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="group" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="return" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
     </xs:complexType>
+    <xs:simpleType name="severityEnum" final="restriction">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="MINOR"/>
+            <xs:enumeration value="AVERAGE"/>
+            <xs:enumeration value="MAJOR"/>
+            <xs:enumeration value="BLOCKER"/>
+            <xs:enumeration value="CRITICAL"/>
+        </xs:restriction>
+    </xs:simpleType>
     <xs:complexType name="annotationType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="value" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="severityType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="severityEnum" name="value" use="required"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
