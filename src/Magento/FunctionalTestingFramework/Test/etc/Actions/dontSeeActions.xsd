@@ -34,7 +34,7 @@
 
     <xs:complexType name="dontSeeType">
         <xs:annotation>
-            <xs:documentation>Asserts given text is not seen in page. Can be given selector/selectorArray to narrow down scope.</xs:documentation>
+            <xs:documentation>Asserts given text is not seen in page. Can be given selector/selectorArray to narrow scope.</xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -141,7 +141,7 @@
 
     <xs:complexType name="dontSeeInFieldType">
         <xs:annotation>
-            <xs:documentation>Asserts given input or textarea doesn't contain the given value.</xs:documentation>
+            <xs:documentation>Asserts given input or textarea does not contain the given value.</xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -155,7 +155,7 @@
 
     <xs:complexType name="dontSeeInFormFieldsType">
         <xs:annotation>
-            <xs:documentation>Asserts given array of form parameters are not set element with passed selector.</xs:documentation>
+            <xs:documentation>Asserts given array of form parameters are not set in given element.</xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -168,7 +168,7 @@
 
     <xs:complexType name="dontSeeInPageSourceType">
         <xs:annotation>
-            <xs:documentation>Asserts given page source doesn't contain given value.</xs:documentation>
+            <xs:documentation>Asserts given page source does not contain given value.</xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -180,7 +180,7 @@
 
     <xs:complexType name="dontSeeInSourceType">
         <xs:annotation>
-            <xs:documentation>Asserts that the current page doesn't contain the given value in its raw source code.</xs:documentation>
+            <xs:documentation>Asserts that the current page does not contain the given value in its raw source code.</xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -192,7 +192,7 @@
 
     <xs:complexType name="dontSeeInTitleType">
         <xs:annotation>
-            <xs:documentation>Asserts that the page title doesn't contain given value.</xs:documentation>
+            <xs:documentation>Asserts that the page title does not contain given value.</xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -215,7 +215,7 @@
 
     <xs:complexType name="dontSeeLinkType">
         <xs:annotation>
-            <xs:documentation>Asserts that the page doesn't contain a link with the given value. Can be narrowed to only links with href to given url.</xs:documentation>
+            <xs:documentation>Asserts that the page does not contain a link with the given value. Can narrow to only links with href to given url.</xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">

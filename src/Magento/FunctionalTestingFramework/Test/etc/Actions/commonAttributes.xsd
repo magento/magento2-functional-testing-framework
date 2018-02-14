@@ -10,7 +10,7 @@
         <xs:attribute type="xs:string" name="stepKey" use="required">
             <xs:annotation>
                 <xs:documentation>
-                    Test action's unique identifier.
+                    Unique identifier for test action.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
@@ -18,7 +18,7 @@
         <xs:attribute type="xs:string" name="before">
             <xs:annotation>
                 <xs:documentation>
-                    stepKey of action that must be executed next.
+                    stepKey of the next action.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
@@ -35,7 +35,7 @@
     <xs:attribute type="xs:string" name="userInput" id="userInput">
         <xs:annotation>
             <xs:documentation>
-                Data or value to be used in Test Action.
+                Data or value for Test Action.
             </xs:documentation>
         </xs:annotation>
     </xs:attribute>
@@ -43,7 +43,7 @@
     <xs:attribute type="xs:string" name="selector" id="selector">
         <xs:annotation>
             <xs:documentation>
-                Element selector Test Action should interact with.
+                Element selector for Test Action.
             </xs:documentation>
         </xs:annotation>
     </xs:attribute>
@@ -51,7 +51,7 @@
     <xs:attribute type="xs:string" name="selectorArray" id="selectorArray">
         <xs:annotation>
             <xs:documentation>
-                Array of selectors that Test Action should interact with.
+                Array of selectors for Test Action.
             </xs:documentation>
         </xs:annotation>
     </xs:attribute>
@@ -59,7 +59,7 @@
     <xs:attribute type="xs:string" name="parameterArray" id="parameterArray">
         <xs:annotation>
             <xs:documentation>
-                Array of Parameters to be used in test action. Requires formatting of "[item1, item2]" or "[item1 => value1, item2 => value2]".
+                Array of Parameters for in Test Action. Requires formatting of "[item1, item2]" or "[item1 => value1, item2 => value2]".
             </xs:documentation>
         </xs:annotation>
     </xs:attribute>
@@ -67,7 +67,7 @@
     <xs:attribute type="xs:string" name="url" id="url">
         <xs:annotation>
             <xs:documentation>
-                URL to be used in Test Action.
+                URL for Test Action.
             </xs:documentation>
         </xs:annotation>
     </xs:attribute>
@@ -75,7 +75,7 @@
     <xs:attribute type="xs:string" name="html" id="html">
         <xs:annotation>
             <xs:documentation>
-                Block of HTML to be used in Test Action. Use of this attribute is currently not fully supported.
+                Block of HTML for Test Action. Use of this attribute not currently supported.
             </xs:documentation>
         </xs:annotation>
     </xs:attribute>
