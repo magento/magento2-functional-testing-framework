@@ -1295,7 +1295,6 @@ class TestGenerator
             $dependencies = 'AcceptanceTester $I';
 
             foreach ($hookObject->getActions() as $step) {
-
                 if ($hookObject->getType() == TestObjectExtractor::TEST_FAILED_HOOK) {
                     continue;
                 }
@@ -1309,11 +1308,6 @@ class TestGenerator
                     $hooks .= "\t  */\n";
                     $hooks .= sprintf("\tprotected $%s;\n\n", $step->getStepKey());
                     $createData = true;
-                } elseif ($step->getType() == "entity") {
-                    $hooks .= "\t/**\n";
-                    $hooks .= sprintf("\t  * @var EntityDataObject $%s;\n", $step->getStepKey());
-                    $hooks .= "\t  */\n";
-                    $hooks .= sprintf("\tprotected $%s;\n\n", $step->getCustomActionAttributes()['name']);
                 }
             }
 
