@@ -483,4 +483,41 @@ class MagentoWebDriver extends WebDriver
         $this->addAttachment($pngReport, $test->getMetadata()->getName() . '.png', 'image/png');
         $this->addAttachment($htmlReport, $test->getMetadata()->getName() . '.html', 'text/html');
     }
+
+    /**
+     * Asserts that all items in the array are sorted by given direction. Can be given int, string, double, dates.
+     * Converts given date strings to epoch for comparison.
+     *
+     * @param array $itemArray
+     * @param string $direction
+     * @return void
+     */
+    public function assertArrayIsSorted($itemArray, $direction = "asc")
+    {
+        // Want to start at index 1, not index 0
+        $i = 1;
+        $elementTotal = count($itemArray);
+        $message = null;
+
+        if (strtotime($itemArray[0]) !== false) {
+            $message = "Array of dates converted to unix timestamp for comparison";
+            $itemArray = array_map('strtotime', $itemArray);
+        } else {
+            $itemArray = array_map('strtolower', $itemArray);
+        }
+
+        if ($direction = "asc") {
+            while ($elementTotal > $i) {
+                // $i >= $i-1
+                $this->assertLessThanOrEqual($itemArray[$i], $itemArray[$i-1], $message);
+                $i++;
+            }
+        } else {
+            while ($elementTotal > $i) {
+                // $i <= $i-1
+                $this->assertGreaterThanOrEqual($itemArray[$i], $itemArray[$i-1],  $message);
+                $i++;
+            }
+        }
+    }
 }
