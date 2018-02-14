@@ -11,7 +11,9 @@ use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
+use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
+use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 
 /**
@@ -258,6 +260,10 @@ class TestGenerator
         $annotationsPhp = "{$indent}/**\n";
 
         foreach ($annotationsObject as $annotationType => $annotationName) {
+            //Remove conditional and output useCaseId upon completion of MQE-588
+            if ($annotationType == "useCaseId") {
+                continue;
+            }
             if (!$isMethod) {
                 $annotationsPhp.= $this->generateClassAnnotations($annotationType, $annotationName);
             } else {
@@ -1274,7 +1280,7 @@ class TestGenerator
     /**
      * Creates a PHP string for the _before/_after methods if the Test contains an <before> or <after> block.
      *
-     * @param array $hookObjects
+     * @param TestHookObject[] $hookObjects
      * @return string
      * @throws TestReferenceException
      * @throws \Exception
@@ -1289,6 +1295,10 @@ class TestGenerator
             $dependencies = 'AcceptanceTester $I';
 
             foreach ($hookObject->getActions() as $step) {
+
+                if ($hookObject->getType() == TestObjectExtractor::TEST_FAILED_HOOK) {
+                    continue;
+                }
 
                 if (($step->getType() == "createData")
                     || ($step->getType() == "updateData")
@@ -1319,6 +1329,12 @@ class TestGenerator
                 );
             } catch (TestReferenceException $e) {
                 throw new TestReferenceException($e->getMessage() . " in Element \"" . $type . "\"");
+            }
+
+            if ($hookObject->getType() == TestObjectExtractor::TEST_FAILED_HOOK) {
+                $steps.="\t\t";
+                $steps.='$this->_after($I);';
+                $steps.="\n";
             }
 
             $hooks .= sprintf("\tpublic function _{$type}(%s)\n", $dependencies);

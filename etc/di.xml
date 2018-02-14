@@ -8,7 +8,7 @@
 
 <!-- Entity value gets replaced in Dom.php before reading $xml -->
 <!DOCTYPE config [
-        <!ENTITY commonTestActions "acceptPopup|actionGroup|amOnPage|amOnUrl|amOnSubdomain|appendField|assertArraySubset|assertElementContainsAttribute|attachFile|cancelPopup|checkOption|clearField|click|clickWithLeftButton|clickWithRightButton|closeTab|comment|conditionalClick|createData|deleteData|updateData|getData|dontSee|dontSeeJsError|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInFormFields|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|executeInSelenium|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|magentoCLI|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|mSetLocale|mResetLocale|openNewTab|pauseExecution|parseFloat|performOn|pressKey|reloadPage|resetCookie|submitForm|resizeWindow|saveSessionSnapshot|scrollTo|scrollToTopOfPage|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|submitForm|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForLoadingMaskToDisappear|waitForPageLoad|waitForText|assertArrayHasKey|assertArrayNotHasKey|assertArraySubset|assertContains|assertCount|assertEmpty|assertEquals|assertFalse|assertFileExists|assertFileNotExists|assertGreaterOrEquals|assertGreaterThan|assertGreaterThanOrEqual|assertInstanceOf|assertInternalType|assertIsEmpty|assertLessOrEquals|assertLessThan|assertLessThanOrEqual|assertNotContains|assertNotEmpty|assertNotEquals|assertNotInstanceOf|assertNotNull|assertNotRegExp|assertNotSame|assertNull|assertRegExp|assertSame|assertStringStartsNotWith|assertStringStartsWith|assertTrue|expectException|fail|dontSeeFullUrlEquals|dontSee|dontSeeFullUrlMatches|dontSeeInFullUrl|seeFullUrlEquals|seeFullUrlMatches|seeInFullUrl|grabFromFullUrl">
+        <!ENTITY commonTestActions "acceptPopup|actionGroup|amOnPage|amOnUrl|amOnSubdomain|appendField|assertArraySubset|assertElementContainsAttribute|attachFile|cancelPopup|checkOption|clearField|click|clickWithLeftButton|clickWithRightButton|closeAdminNotification|closeTab|comment|conditionalClick|createData|deleteData|updateData|getData|dontSee|dontSeeJsError|dontSeeCheckboxIsChecked|dontSeeCookie|dontSeeCurrentUrlEquals|dontSeeCurrentUrlMatches|dontSeeElement|dontSeeElementInDOM|dontSeeInCurrentUrl|dontSeeInField|dontSeeInFormFields|dontSeeInPageSource|dontSeeInSource|dontSeeInTitle|dontSeeLink|dontSeeOptionIsSelected|doubleClick|dragAndDrop|entity|executeJS|executeInSelenium|fillField|formatMoney|grabAttributeFrom|grabCookie|grabFromCurrentUrl|grabMultiple|grabPageSource|grabTextFrom|grabValueFrom|loadSessionSnapshot|loginAsAdmin|magentoCLI|makeScreenshot|maximizeWindow|moveBack|moveForward|moveMouseOver|mSetLocale|mResetLocale|openNewTab|pauseExecution|parseFloat|performOn|pressKey|reloadPage|resetCookie|submitForm|resizeWindow|saveSessionSnapshot|scrollTo|scrollToTopOfPage|searchAndMultiSelectOption|see|seeCheckboxIsChecked|seeCookie|seeCurrentUrlEquals|seeCurrentUrlMatches|seeElement|seeElementInDOM|seeInCurrentUrl|seeInField|seeInFormFields|seeInPageSource|seeInPopup|seeInSource|seeInTitle|seeLink|seeNumberOfElements|seeOptionIsSelected|selectOption|setCookie|submitForm|switchToIFrame|switchToNextTab|switchToPreviousTab|switchToWindow|typeInPopup|uncheckOption|unselectOption|wait|waitForAjaxLoad|waitForElement|waitForElementChange|waitForElementNotVisible|waitForElementVisible|waitForJS|waitForLoadingMaskToDisappear|waitForPageLoad|waitForText|assertArrayHasKey|assertArrayNotHasKey|assertArraySubset|assertContains|assertCount|assertEmpty|assertEquals|assertFalse|assertFileExists|assertFileNotExists|assertGreaterOrEquals|assertGreaterThan|assertGreaterThanOrEqual|assertInstanceOf|assertInternalType|assertIsEmpty|assertLessOrEquals|assertLessThan|assertLessThanOrEqual|assertNotContains|assertNotEmpty|assertNotEquals|assertNotInstanceOf|assertNotNull|assertNotRegExp|assertNotSame|assertNull|assertRegExp|assertSame|assertStringStartsNotWith|assertStringStartsWith|assertTrue|expectException|fail|dontSeeFullUrlEquals|dontSee|dontSeeFullUrlMatches|dontSeeInFullUrl|seeFullUrlEquals|seeFullUrlMatches|seeInFullUrl|grabFromFullUrl">
 ]>
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../src/Magento/FunctionalTestingFramework/ObjectManager/etc/config.xsd">
@@ -153,8 +153,7 @@
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\DataProfile</argument>
             <argument name="idAttributes" xsi:type="array">
                 <item name="/entities/entity" xsi:type="string">name</item>
-                <item name="/entities/entity/data" xsi:type="string">key</item>
-                <item name="/entities/entity/array" xsi:type="string">key</item>
+                <item name="/entities/entity/(data|array)" xsi:type="string">key</item>
                 <item name="/entities/entity/requiredEntity" xsi:type="string">name</item>
             </argument>
             <argument name="fileName" xsi:type="string">*Data.xml</argument>
@@ -186,9 +185,7 @@
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\Metadata</argument>
             <argument name="idAttributes" xsi:type="array">
                 <item name="/operations/operation" xsi:type="string">name</item>
-                <item name="/operations/operation/field" xsi:type="string">key</item>
-                <item name="/operations/operation/array" xsi:type="string">key</item>
-                <item name="/operations/operation/object" xsi:type="string">key</item>
+                <item name="/operations/operation/(field|array|object)" xsi:type="string">key</item>
             </argument>
             <argument name="fileName" xsi:type="string">*-meta.xml</argument>
             <argument name="defaultScope" xsi:type="string">Metadata</argument>
@@ -199,14 +196,15 @@
 
     <virtualType name="Magento\FunctionalTestingFramework\Config\SchemaLocator\TestData" type="Magento\FunctionalTestingFramework\Config\SchemaLocator">
         <arguments>
-            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd</argument>
+            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Test/etc/mergedTestSchema.xsd</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\TestData" type="Magento\FunctionalTestingFramework\Config\Reader\TestFilesystem">
+    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\TestData" type="Magento\FunctionalTestingFramework\Test\Config\Reader\Filesystem">
         <arguments>
             <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\TestDataConverter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\TestData</argument>
+            <argument name="domDocumentClass" xsi:type="string">Magento\FunctionalTestingFramework\Test\Config\Dom</argument>
             <argument name="idAttributes" xsi:type="array">
                 <item name="/tests/test" xsi:type="string">name</item>
                 <item name="/tests/test/actionGroup/argument" xsi:type="string">name</item>
@@ -234,6 +232,7 @@
                 <item name="/tests/test/(createData|updateData|getData)/requiredEntity" xsi:type="string">createDataKey</item>
                 <item name="/tests/test/(before|after)/(createData|updateData|getData)/requiredEntity" xsi:type="string">createDataKey</item>
                 <item name="/tests/test/actionGroup/argument" xsi:type="string">name</item>
+                <item name="/tests/test/(before|after)/actionGroup/argument" xsi:type="string">name</item>
             </argument>
             <argument name="numericArrays" xsi:type="array">
                 <item name="/tests/test/annotations/features" xsi:type="string">/tests/test/annotations/features</item>
@@ -271,7 +270,7 @@
 
     <virtualType name="Magento\FunctionalTestingFramework\Config\SchemaLocator\ActionGroup" type="Magento\FunctionalTestingFramework\Config\SchemaLocator">
         <arguments>
-            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Test/etc/actionGroup.xsd</argument>
+            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd</argument>
         </arguments>
     </virtualType>
 
@@ -345,12 +344,8 @@
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\SuiteData</argument>
             <argument name="idAttributes" xsi:type="array">
                 <item name="/suites/suite" xsi:type="string">name</item>
-                <item name="/suites/suite/include/group" xsi:type="string">name</item>
-                <item name="/suites/suite/include/test" xsi:type="string">name</item>
-                <item name="/suites/suite/include/module" xsi:type="string">name</item>
-                <item name="/suites/suite/exclude/group" xsi:type="string">name</item>
-                <item name="/suites/suite/exclude/test" xsi:type="string">name</item>
-                <item name="/suites/suite/exclude/module" xsi:type="string">name</item>
+                <item name="/suites/suite/include/(group|test|module)" xsi:type="string">name</item>
+                <item name="/suites/suite/exclude/(group|test|module)" xsi:type="string">name</item>
             </argument>
             <argument name="fileName" xsi:type="string">*.xml</argument>
             <argument name="defaultScope" xsi:type="string">_suite</argument>
@@ -363,12 +358,8 @@
                 <item name="/suites/suite" xsi:type="string">name</item>
                 <item name="/suites/suite/(before|after)/(createData|deleteData)" xsi:type="string">stepKey</item>
                 <item name="/suites/suite/(before|after)/createData/requiredEntity" xsi:type="string">createDataKey</item>
-                <item name="/suites/suite/include/group" xsi:type="string">name</item>
-                <item name="/suites/suite/include/test" xsi:type="string">name</item>
-                <item name="/suites/suite/include/module" xsi:type="string">name</item>
-                <item name="/suites/suite/exclude/group" xsi:type="string">name</item>
-                <item name="/suites/suite/exclude/test" xsi:type="string">name</item>
-                <item name="/suites/suite/exclude/module" xsi:type="string">name</item>
+                <item name="/suites/suite/include/(group|test|module)" xsi:type="string">name</item>
+                <item name="/suites/suite/exclude/(group|test|module)" xsi:type="string">name</item>
             </argument>
         </arguments>
     </virtualType>

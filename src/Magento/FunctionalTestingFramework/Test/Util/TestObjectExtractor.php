@@ -33,13 +33,6 @@ class TestObjectExtractor extends BaseObjectExtractor
     private $annotationExtractor;
 
     /**
-     * Test Entity Extractor object
-     *
-     * @var TestEntityExtractor
-     */
-    private $testEntityExtractor;
-
-    /**
      * Test Hook Object extractor
      *
      * @var TestHookObjectExtractor
@@ -53,7 +46,6 @@ class TestObjectExtractor extends BaseObjectExtractor
     {
         $this->actionObjectExtractor = new ActionObjectExtractor();
         $this->annotationExtractor = new AnnotationExtractor();
-        $this->testEntityExtractor = new TestEntityExtractor();
         $this->testHookObjectExtractor = new TestHookObjectExtractor();
     }
 
@@ -106,10 +98,8 @@ class TestObjectExtractor extends BaseObjectExtractor
             );
 
             // extract failed
-            $testHooks[self::TEST_FAILED_HOOK] = $this->testHookObjectExtractor->extractHook(
-                $testData[self::NAME],
-                'failed',
-                $testData[self::TEST_AFTER_HOOK]
+            $testHooks[self::TEST_FAILED_HOOK] = $this->testHookObjectExtractor->createDefaultFailedHook(
+                $testData[self::NAME]
             );
         }
 
@@ -119,7 +109,6 @@ class TestObjectExtractor extends BaseObjectExtractor
             $this->actionObjectExtractor->extractActions($testActions),
             $testAnnotations,
             $testHooks,
-            $this->testEntityExtractor->extractTestEntities($testActions),
             $filename
         );
     }

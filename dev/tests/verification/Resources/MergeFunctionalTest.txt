@@ -48,7 +48,8 @@ class MergeFunctionalTestCest
 	  */
 	public function _failed(AcceptanceTester $I)
 	{
-		$I->amOnPage("/afterUrl1");
+	    $I->saveScreenshot();
+	    $this->_after($I);
 	}
 
 	/**

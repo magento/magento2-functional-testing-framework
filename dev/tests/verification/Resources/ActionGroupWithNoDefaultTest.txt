@@ -58,8 +58,8 @@ class ActionGroupWithNoDefaultTestCest
 	  */
 	public function _failed(AcceptanceTester $I)
 	{
-		$I->fillField("#foo", "myData1");
-		$I->fillField("#bar", "myData2");
+		$I->saveScreenshot();
+		$this->_after($I);
 	}
 
 	/**
