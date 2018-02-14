@@ -15,7 +15,7 @@ interface FileResolverInterface
      *
      * @param string $filename
      * @param string $scope
-     * @return array
+     * @return array|\Magento\FunctionalTestingFramework\Util\Iterator\File
      */
     public function get($filename, $scope);
 }

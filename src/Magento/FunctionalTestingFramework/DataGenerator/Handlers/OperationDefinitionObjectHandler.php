@@ -21,6 +21,7 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
     const ENTITY_OPERATION_URL = 'url';
     const ENTITY_OPERATION_METHOD = 'method';
     const ENTITY_OPERATION_AUTH = 'auth';
+    const ENTITY_OPERATION_URL_AREA = 'area';
     const ENTITY_OPERATION_STORE_CODE = 'storeCode';
     const ENTITY_OPERATION_SUCCESS_REGEX = 'successRegex';
     const ENTITY_OPERATION_RETURN_REGEX = 'returnRegex';
@@ -148,6 +149,13 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
             $headers = [];
             $params = [];
             $operationElements = [];
+
+            // TODO remove this warning with 2.1.0 release
+            $backendName = getenv('MAGENTO_BACKEND_NAME');
+            if ($auth == "adminFormKey" && substr($url, 1, strlen($backendName)) == $backendName) {
+                print "\033[1;33mDEPRECATED: MFTF will now automatically append MAGENTO_BACKEND_NAME to adminFormKey " .
+                    "auth type operations by default, please update metadata: {$dataDefName}\033[0m\n";
+            }
 
             if (array_key_exists(OperationDefinitionObjectHandler::ENTITY_OPERATION_HEADER, $opDefArray)) {
                 foreach ($opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_HEADER] as $headerEntry) {
