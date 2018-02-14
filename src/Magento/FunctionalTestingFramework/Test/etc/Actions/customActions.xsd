@@ -118,7 +118,7 @@
     <xs:complexType name="mSetLocaleType">
         <xs:annotation>
             <xs:documentation>
-                Sets locale with given input as category, and locale as
+                Sets locale according to given locale and input.
             </xs:documentation>
         </xs:annotation>
         <xs:simpleContent>

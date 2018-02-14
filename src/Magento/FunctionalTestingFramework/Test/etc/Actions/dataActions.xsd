@@ -103,7 +103,7 @@
 
     <xs:complexType name="requiredEntityType">
         <xs:annotation>
-            <xs:documentation>Previously created entities that this operation requires (via createData)</xs:documentation>
+            <xs:documentation>Previously created entities that this operation requires (via createData).</xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">

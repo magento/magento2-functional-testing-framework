@@ -76,7 +76,7 @@
     <xs:complexType name="grabMultipleType">
         <xs:annotation>
             <xs:documentation>
-                Grabs either the text content, or attribute values, of nodes matched by selector. Returns all found in an array.
+                Grabs the text content or attribute values of nodes matched by selector, returns all found in an array.
             </xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
