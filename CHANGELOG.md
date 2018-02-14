@@ -9,7 +9,6 @@ Magento Functional Testing Framework Changelog
 
 2.0.0
 -----
-Changes are compatible with Magento v2.3
 
 ### Enhancements
 * Modularity
