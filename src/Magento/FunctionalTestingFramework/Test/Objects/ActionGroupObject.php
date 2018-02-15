@@ -72,36 +72,10 @@ class ActionGroupObject
     public function getSteps($arguments, $actionReferenceKey)
     {
         $mergeUtil = new ActionMergeUtil($this->name, "ActionGroup");
-        $args = $this->arguments;
-        $emptyArguments = $this->findEmptyDefaultArguments();
-        if (!empty($emptyArguments) && $arguments !== null) {
-            $diff = array_diff($emptyArguments, array_keys($arguments));
-            if (!empty($diff)) {
-                $error = 'Argument(s) missed (' . implode(", ", $diff) . ') for actionGroup "' . $this->name . '"';
-                throw new TestReferenceException($error);
-            }
-        } elseif (!empty($emptyArguments)) {
-            $error = 'Not enough arguments given for actionGroup "' . $this->name . '"';
-            throw new TestReferenceException($error);
-        }
-        $args = $this->overrideDefaultArguments($arguments);
+
+        $args = $this->resolveArguments($arguments);
 
         return $mergeUtil->resolveActionSteps($this->getResolvedActionsWithArgs($args, $actionReferenceKey), true);
-    }
-
-    /**
-     * Finds and returns named list of $this->arguments that have no defaultValue
-     * @return array
-     */
-    private function findEmptyDefaultArguments()
-    {
-        $emptyDefaultArguments = [];
-        foreach ($this->arguments as $argumentObj) {
-            if ($argumentObj->getValue() === null) {
-                $emptyDefaultArguments[] = $argumentObj->getName();
-            }
-        }
-        return $emptyDefaultArguments;
     }
 
     /**
@@ -109,16 +83,24 @@ class ActionGroupObject
      * @param array $arguments
      * @return ArgumentObject[]
      */
-    private function overrideDefaultArguments($arguments)
+    private function resolveArguments($arguments)
     {
-        if ($arguments === null) {
-            return $this->arguments;
-        }
         $newArgumentList = [];
+        $emptyArguments = [];
 
         // Clone $this->arguments to not override default argument definitions
         foreach ($this->arguments as $argumentObj) {
             $newArgumentList[] = clone $argumentObj;
+
+            if ($argumentObj->getValue() === null) {
+                $emptyArguments[] = $argumentObj->getName();
+            }
+        }
+
+        $this->validateEmptyArguments($emptyArguments, $arguments);
+
+        if ($arguments === null) {
+            return $this->arguments;
         }
 
         foreach ($arguments as $argumentName => $argumentValue) {
@@ -129,6 +111,29 @@ class ActionGroupObject
         }
 
         return $newArgumentList;
+    }
+
+    /**
+     * Takes a list of all Default Arguments that have no Default Value, and compares them to test invocation arguments
+     * If there are arguments with no default value and no test invocation value given, resolution is impossible.
+     *
+     * @param array $emptyArguments
+     * @param array $arguments
+     * @throws TestReferenceException
+     * @return void
+     */
+    private function validateEmptyArguments($emptyArguments, $arguments)
+    {
+        if (!empty($emptyArguments) && $arguments !== null) {
+            $diff = array_diff($emptyArguments, array_keys($arguments));
+            if (!empty($diff)) {
+                $error = 'Argument(s) missed (' . implode(", ", $diff) . ') for actionGroup "' . $this->name . '"';
+                throw new TestReferenceException($error);
+            }
+        } elseif (!empty($emptyArguments)) {
+            $error = 'Not enough arguments given for actionGroup "' . $this->name . '"';
+            throw new TestReferenceException($error);
+        }
     }
 
     /**
@@ -248,7 +253,7 @@ class ActionGroupObject
             return $attributeValue;
         }
 
-        if (in_array($matchedArgument->getDataType(), ArgumentObject::ARGUMENT_SIMPLE_DATA_TYPES)) {
+        if (in_array($matchedArgument->getDataType(), ArgumentObject::ARGUMENT_PRIMITIVE_DATA_TYPES)) {
             return $this->replaceSimpleArgument(
                 $matchedArgument->getResolvedValue($isInnerArgument),
                 $variableName,

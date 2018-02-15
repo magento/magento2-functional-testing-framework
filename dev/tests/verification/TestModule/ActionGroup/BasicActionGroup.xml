@@ -37,7 +37,7 @@
 
     <actionGroup name="actionGroupWithSimpleDataUsage">
         <arguments>
-            <argument name="someArgument" data="string" defaultValue="stringLiteral"/>
+            <argument name="someArgument" type="string" defaultValue="stringLiteral"/>
         </arguments>
         <see stepKey="see1" selector="class.{{someArgument}}" userInput="{{someArgument}}"/>
         <see selector="{{SampleSection.oneParamElement(someArgument)}}" userInput="{{someArgument}}" stepKey="see2" />

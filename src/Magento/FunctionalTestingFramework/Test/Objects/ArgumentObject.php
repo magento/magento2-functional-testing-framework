@@ -13,10 +13,10 @@ class ArgumentObject
 {
     const ARGUMENT_NAME = 'name';
     const ARGUMENT_DEFAULT_VALUE = 'defaultValue';
-    const ARGUMENT_DATA_TYPE = 'data';
+    const ARGUMENT_DATA_TYPE = 'type';
     const ARGUMENT_DATA_ENTITY = 'entity';
     const ARGUMENT_DATA_STRING = 'string';
-    const ARGUMENT_SIMPLE_DATA_TYPES = ['string', 'int', 'float', 'boolean'];
+    const ARGUMENT_PRIMITIVE_DATA_TYPES = ['string', 'int', 'float', 'boolean'];
 
     /**
      * Name of the argument.
@@ -96,7 +96,7 @@ class ArgumentObject
         if ($this->dataType === ArgumentObject::ARGUMENT_DATA_ENTITY) {
             return $this->value;
         } else {
-            return $this->resolveSimpleValueTypes($isInnerArgument);
+            return $this->resolvePrimitiveValueTypes($isInnerArgument);
         }
     }
 
@@ -112,7 +112,7 @@ class ArgumentObject
      * @param boolean $isInnerArgument
      * @return string
      */
-    private function resolveSimpleValueTypes($isInnerArgument)
+    private function resolvePrimitiveValueTypes($isInnerArgument)
     {
         if (preg_match('/\$[\w]+\.[\w]+\$/', $this->value)) {
             //$persisted.data$ or $$persisted.data$$, notation not different if in parameter

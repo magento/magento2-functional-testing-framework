@@ -24,7 +24,7 @@
                             <xs:complexType>
                                 <xs:attribute type="xs:string" name="name" use="required"/>
                                 <xs:attribute type="xs:string" name="defaultValue"/>
-                                <xs:attribute type="dataTypeEnum" name="data" default="entity"/>
+                                <xs:attribute type="dataTypeEnum" name="type" default="entity"/>
                             </xs:complexType>
                         </xs:element>
                     </xs:sequence>
