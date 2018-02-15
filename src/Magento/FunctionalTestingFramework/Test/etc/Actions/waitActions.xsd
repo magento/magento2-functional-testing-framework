@@ -61,7 +61,7 @@
     <xs:complexType name="waitForAjaxLoadType">
         <xs:annotation>
             <xs:documentation>
-                Wait Ajax loading to complete.
+                Wait for Ajax loading to complete.
             </xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
@@ -76,7 +76,7 @@
         <xs:annotation>
             <xs:documentation>
                 Wait up to given time for the given element to change.
-                Element “change” is determined by the given callback function which is called repeatedly until the return value evaluates to true.
+                Element “change” is determined by the given callback function, which is called repeatedly until the return value evaluates to true.
             </xs:documentation>
         </xs:annotation>
         <xs:simpleContent>

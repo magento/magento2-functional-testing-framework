@@ -127,7 +127,7 @@
     <xs:complexType name="amOnPageType">
         <xs:annotation>
             <xs:documentation>
-                Opens the page for the given URL. Appends url attribute to MAGENTO_BASE_URL definition in env file.
+                Opens the page for the given URL. Appends URL attribute to MAGENTO_BASE_URL definition in env file.
             </xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
@@ -141,7 +141,7 @@
     <xs:complexType name="amOnSubdomainType">
         <xs:annotation>
             <xs:documentation>
-                Changes 'url' in webdriver configuration. Changes value of MAGENTO_BASE_URL for the duration of the test run. Does not open a page.
+                Changes 'URL' in webdriver configuration. Changes value of MAGENTO_BASE_URL for the duration of the test run. Does not open a page.
             </xs:documentation>
         </xs:annotation>
         <xs:simpleContent>

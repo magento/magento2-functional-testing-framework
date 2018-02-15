@@ -51,7 +51,7 @@
     <xs:complexType name="seeType">
         <xs:annotation>
             <xs:documentation>
-                Asserts given text is seen in page. Can be given selector/selectorArray to narrow down scope.
+                Asserts given text is seen in page. Can be given selector or selectorArray to narrow scope.
             </xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
