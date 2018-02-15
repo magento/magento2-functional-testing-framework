@@ -4,27 +4,31 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magento\FunctionalTestingFramework\Config\Reader;
+namespace Magento\FunctionalTestingFramework\Test\Config\Reader;
 
-use Magento\FunctionalTestingFramework\Config\Dom\TestDom;
+use Magento\FunctionalTestingFramework\Util\Iterator\File;
 
-class TestFilesystem extends Filesystem
+class Filesystem extends \Magento\FunctionalTestingFramework\Config\Reader\Filesystem
 {
     /**
-     * Method to redirect file name passing into TestDom class
+     * Method to redirect file name passing into Dom class
      *
-     * @param array $fileList
+     * @param File $fileList
      * @return array
      * @throws \Exception
      */
     public function readFiles($fileList)
     {
-        /** @var \Magento\FunctionalTestingFramework\Config\Dom $configMerger */
+        /** @var \Magento\FunctionalTestingFramework\Test\Config\Dom $configMerger */
         $configMerger = null;
         foreach ($fileList as $key => $content) {
             try {
                 if (!$configMerger) {
-                    $configMerger = $this->createConfigMerger(TestDom::class, $content, $fileList->getFilename());
+                    $configMerger = $this->createConfigMerger(
+                        $this->domDocumentClass,
+                        $content,
+                        $fileList->getFilename()
+                    );
                 } else {
                     $configMerger->merge($content, $fileList->getFilename());
                 }

@@ -58,8 +58,8 @@ class TestObjectHandlerTest extends TestCase
             []
         );
         $expectedFailedActionObject = new ActionObject(
-            $testDataArrayBuilder->testActionAfterName,
-            $testDataArrayBuilder->testActionType,
+            'saveScreenshot',
+            'saveScreenshot',
             []
         );
 
@@ -95,7 +95,7 @@ class TestObjectHandlerTest extends TestCase
                 TestObjectExtractor::TEST_AFTER_HOOK => $expectedAfterHookObject,
                 TestObjectExtractor::TEST_FAILED_HOOK => $expectedFailedHookObject
             ],
-            []
+            null
         );
 
         $this->assertEquals($expectedTestObject, $actualTestObject);

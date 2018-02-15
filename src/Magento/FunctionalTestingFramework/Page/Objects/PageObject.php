@@ -94,11 +94,6 @@ class PageObject
      */
     public function getUrl()
     {
-        if ($this->getArea() == self::ADMIN_AREA) {
-            $url = ltrim($this->url, '/');
-            return "/" . getenv('MAGENTO_BACKEND_NAME') . "/{$url}";
-        }
-
         return $this->url;
     }
 

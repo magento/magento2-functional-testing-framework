@@ -201,6 +201,13 @@ class OperationDefinitionObject
             }
         }
 
+        // TODO remove this block of code as part of 2.1.0 release.
+        // Checks existing urls to validate backend name is not hardcoded to url.
+        $backendName = getenv('MAGENTO_BACKEND_NAME');
+        if ($this->getAuth() == 'adminFormKey' && substr($this->apiUrl, 0, strlen($backendName)) != $backendName) {
+            return "/{$backendName}/" . $this->apiUrl;
+        }
+
         return $this->apiUrl;
     }
 

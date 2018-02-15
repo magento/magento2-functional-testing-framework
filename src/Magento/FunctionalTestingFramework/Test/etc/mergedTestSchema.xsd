@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:include schemaLocation="actionTypeTags.xsd"/>
+    <!-- Container types -->
+
+    <xs:element name="tests" type="configType"/>
+    <xs:complexType name="configType">
+        <xs:sequence>
+            <xs:choice>
+                <xs:element type="testType" name="test" maxOccurs="unbounded"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="annotationsType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element type="annotationType" name="features" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="annotationType" name="stories" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="annotationType" name="title" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="annotationType" name="description" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="annotationType" name="severity" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="annotationType" name="testCaseId" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="annotationType" name="useCaseId" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="annotationType" name="group" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="annotationType" name="return" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="annotationType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="value" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="hookType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="testTypeTags"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="testType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="testTypeTags"/>
+            <xs:element type="hookType" name="before" minOccurs="0"/>
+            <xs:element type="hookType" name="after" minOccurs="0"/>
+            <xs:element type="annotationsType" name="annotations" minOccurs="0"/>
+        </xs:choice>
+        <xs:attribute type="xs:string" name="name"/>
+        <xs:attribute type="xs:boolean" name="remove" default="false"/>
+        <xs:attribute type="xs:string" name="filename"/>
+    </xs:complexType>
+    <xs:group name="testTypeTags">
+        <xs:choice>
+            <xs:group ref="actionTypeTags"/>
+            <xs:element type="actions" name="actionGroup" minOccurs="0"/>
+        </xs:choice>
+    </xs:group>
+
+    <!-- Action Group ref -->
+
+    <xs:complexType name="actions">
+        <xs:annotation>
+            <xs:documentation>
+                Call to a defined Action Group, comprised of various repeatable test actions.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="argument">
+                <xs:complexType>
+                    <xs:attribute type="xs:string" name="name">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Argument's name, as it appears in the given actionGroup.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute type="xs:string" name="value">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Argument's value to be substituted.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="ref" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    Reference to desired Action Group's name.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+</xs:schema>

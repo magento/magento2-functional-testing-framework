@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="HookActionsTest">
+        <before>
+            <createData entity="sampleCreatedEntity" stepKey="sampleCreateBefore"/>
+            <deleteData createDataKey="sampleCreateBefore" stepKey="sampleDeleteBefore"/>
+            <createData entity="sampleCreatedEntity" stepKey="sampleCreateForAfter"/>
+        </before>
+        <after>
+            <createData entity="sampleCreatedEntity" stepKey="sampleCreateAfter"/>
+            <deleteData createDataKey="sampleCreateForAfter" stepKey="sampleDeleteAfter"/>
+        </after>
+    </test>
+</tests>

@@ -135,7 +135,7 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
     /**
      * Read configuration files
      *
-     * @param array $fileList
+     * @param \Magento\FunctionalTestingFramework\Util\Iterator\File $fileList
      * @return array
      * @throws \Exception
      */
@@ -151,7 +151,7 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
                     $configMerger->merge($content);
                 }
             } catch (\Magento\FunctionalTestingFramework\Config\Dom\ValidationException $e) {
-                throw new \Exception("Invalid XML in file " . $key . ":\n" . $e->getMessage());
+                throw new \Exception("Invalid XML in file " . $fileList->getFilename() . ":\n" . $e->getMessage());
             }
         }
         if ($this->validationState->isValidationRequired()) {

@@ -13,6 +13,7 @@
         <data key="firstname">John</data>
         <data key="lastname">Doe</data>
         <data key="middlename">Tiberius</data>
+        <data key="favoriteIndex">0</data>
     </entity>
     <entity name="uniqueData" type="simpleData">
         <data key="firstname" unique="prefix">John</data>

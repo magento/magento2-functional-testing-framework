@@ -11,7 +11,9 @@ use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
+use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
+use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 
 /**
@@ -258,6 +260,10 @@ class TestGenerator
         $annotationsPhp = "{$indent}/**\n";
 
         foreach ($annotationsObject as $annotationType => $annotationName) {
+            //Remove conditional and output useCaseId upon completion of MQE-588
+            if ($annotationType == "useCaseId") {
+                continue;
+            }
             if (!$isMethod) {
                 $annotationsPhp.= $this->generateClassAnnotations($annotationType, $annotationName);
             } else {
@@ -1274,7 +1280,7 @@ class TestGenerator
     /**
      * Creates a PHP string for the _before/_after methods if the Test contains an <before> or <after> block.
      *
-     * @param array $hookObjects
+     * @param TestHookObject[] $hookObjects
      * @return string
      * @throws TestReferenceException
      * @throws \Exception
@@ -1289,6 +1295,9 @@ class TestGenerator
             $dependencies = 'AcceptanceTester $I';
 
             foreach ($hookObject->getActions() as $step) {
+                if ($hookObject->getType() == TestObjectExtractor::TEST_FAILED_HOOK) {
+                    continue;
+                }
 
                 if (($step->getType() == "createData")
                     || ($step->getType() == "updateData")
@@ -1299,11 +1308,6 @@ class TestGenerator
                     $hooks .= "\t  */\n";
                     $hooks .= sprintf("\tprotected $%s;\n\n", $step->getStepKey());
                     $createData = true;
-                } elseif ($step->getType() == "entity") {
-                    $hooks .= "\t/**\n";
-                    $hooks .= sprintf("\t  * @var EntityDataObject $%s;\n", $step->getStepKey());
-                    $hooks .= "\t  */\n";
-                    $hooks .= sprintf("\tprotected $%s;\n\n", $step->getCustomActionAttributes()['name']);
                 }
             }
 
@@ -1319,6 +1323,12 @@ class TestGenerator
                 );
             } catch (TestReferenceException $e) {
                 throw new TestReferenceException($e->getMessage() . " in Element \"" . $type . "\"");
+            }
+
+            if ($hookObject->getType() == TestObjectExtractor::TEST_FAILED_HOOK) {
+                $steps.="\t\t";
+                $steps.='$this->_after($I);';
+                $steps.="\n";
             }
 
             $hooks .= sprintf("\tpublic function _{$type}(%s)\n", $dependencies);
@@ -1501,6 +1511,8 @@ class TestGenerator
         }
         $output .= ");\n";
 
+        $output = $this->resolveEnvReferences($output, $args);
+
         return $this->resolveTestVariable($output, $args);
     }
 
@@ -1530,9 +1542,39 @@ class TestGenerator
         }
         $output .= ");\n";
 
+        $output = $this->resolveEnvReferences($output, $args);
+
         return $this->resolveTestVariable($output, $args);
     }
     // @codingStandardsIgnoreEnd
+
+    /**
+     * Resolves {{_ENV.variable}} into getenv("variable") for test-runtime ENV referencing.
+     * @param string $inputString
+     * @param array $args
+     * @return string
+     */
+    private function resolveEnvReferences($inputString, $args)
+    {
+        $envRegex = "/{{_ENV\.([\w]+)}}/";
+
+        $outputString = $inputString;
+
+        foreach ($args as $arg) {
+            preg_match_all($envRegex, $arg, $matches);
+            if (!empty($matches[0])) {
+                $fullMatch = $matches[0][0];
+                $envVariable = $matches[1][0];
+                unset($matches);
+                $replacement = "getenv(\"{$envVariable}\")";
+
+                $outputArg = $this->processQuoteBreaks($fullMatch, $arg, $replacement);
+                $outputString = str_replace($arg, $outputArg, $outputString);
+            }
+        }
+
+        return $outputString;
+    }
 
     /**
      * Validates parameter array format, making sure user has enclosed string with square brackets.

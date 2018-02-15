@@ -19,6 +19,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
  */
 class ActionObject
 {
+    const __ENV = "_ENV";
     const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray", "expected", "actual"];
     const SELECTOR_ENABLED_ATTRIBUTES = ['selector', 'dependentSelector', "selector1", "selector2", "function"];
     const OLD_ASSERTION_ATTRIBUTES = ["expected", "expectedType", "actual", "actualType"];
@@ -312,7 +313,7 @@ class ActionObject
         foreach ($relevantDataAttributes as $dataAttribute) {
             $varInput = $this->actionAttributes[$dataAttribute];
             $replacement = $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $varInput);
-            if ($replacement) {
+            if ($replacement != null) {
                 $this->resolvedCustomAttributes[$dataAttribute] = $replacement;
             }
         }
@@ -377,6 +378,11 @@ class ActionObject
 
             $obj = $objectHandler->getObject($objName);
 
+            // Leave {{_ENV.VARIABLE}} references to be replaced in TestGenerator with getenv("VARIABLE")
+            if ($objName === ActionObject::__ENV) {
+                continue;
+            }
+
             // specify behavior depending on field
             switch (get_class($obj)) {
                 case PageObject::class:
@@ -398,13 +404,16 @@ class ActionObject
                     break;
             }
 
-            if ($replacement == null && get_class($objectHandler) != DataObjectHandler::class) {
-                return $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $outputString);
-            } elseif ($replacement == null) {
-                throw new TestReferenceException("Could not resolve entity reference " . $inputString);
+            if ($replacement == null) {
+                if (get_class($objectHandler) != DataObjectHandler::class) {
+                    return $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $outputString);
+                } else {
+                    throw new TestReferenceException("Could not resolve entity reference " . $inputString);
+                }
             }
 
-            $replacement = $this->resolveParameterization($parameterized, $replacement, $match);
+            $replacement = $this->resolveParameterization($parameterized, $replacement, $match, $obj);
+
             $outputString = str_replace($match, $replacement, $outputString);
         }
         return $outputString;
@@ -468,16 +477,21 @@ class ActionObject
      * @param boolean $isParameterized
      * @param string $replacement
      * @param string $match
+     * @param object $object
      * @return string
      */
-    private function resolveParameterization($isParameterized, $replacement, $match)
+    private function resolveParameterization($isParameterized, $replacement, $match, $object)
     {
         if ($isParameterized) {
             $parameterList = $this->stripAndReturnParameters($match);
-            return $this->matchParameterReferences($replacement, $parameterList);
+            $resolvedReplacement = $this->matchParameterReferences($replacement, $parameterList);
         } else {
-            return $replacement;
+            $resolvedReplacement = $replacement;
         }
+        if (get_class($object) == PageObject::class && $object->getArea() == PageObject::ADMIN_AREA) {
+            $resolvedReplacement = "/{{_ENV.MAGENTO_BACKEND_NAME}}/" . $resolvedReplacement;
+        }
+        return $resolvedReplacement;
     }
 
     /**
