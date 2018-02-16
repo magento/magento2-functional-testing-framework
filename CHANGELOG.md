@@ -1,6 +1,39 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.0.3
+-----
+### Enhancements
+* Readability
+    * Added the ability to refer to `custom_attribute` data in persisted entities via `key` instead of index.
+        * ex. `url_key` in category entity: `$category.custom_attributes[3][value]$` and `$category.custom_attributes[url_key]$` are both valid.
+* Maintainability
+    * Added check for duplicate `stepKey` attributes at test generation. This check is scoped to `<testAction>` tags within a single `<test>` tag in a single file. 
+
+### Fixes
+* Fixed inability to use `<actionGroup>` with `<arguments>` in test hooks.
+* Fixed inability to use `0` as data in an entity.
+* Fixed an issue where using `<annotation>` tag of `<useCaseId>` would cause test generation failures.
+* Fixed an issue where the `<closeAdminNotification>` action could not be used twice in in a `<test>`.
+* Fixed an issue where specifying duplicate test actions in test delta's would cause generation errors.
+* Fixed an issue where test failure screenshots were being taken at the end of the test hook, as opposed to at the point of failure.
+* Operation `metadata` with an `auth` of type `adminFormKey` will now automatically append specified `MAGENTO_BACKEND_NAME` if necessary.
+
+2.0.2
+-----
+
+### Enhancements
+* Customizability
+    * Added the `<magentoCLI>` test action. Action takes the given `command=""` and passes it for execution in Magento Environment.
+        * Note: Installation step to enable above action has been added. See `Step 5` in the MFTF `Getting Started` article.
+* Maintainability
+    * Tests now run actions declared in `<after>` hook in both successful and failed test runs.
+
+### Fixes
+* Fixed inability to use `[]` characters within selector/url parameters.
+* Fixed a bug where the `<formatMoney>` action did not return a variable for test use.
+* Fixed a bug where the `<waitForLoadingMaskToDisappear>` action could not be used twice in an `<actionGroup>`.
+
 2.0.1
 -----
 
@@ -9,7 +42,6 @@ Magento Functional Testing Framework Changelog
 
 2.0.0
 -----
-Changes are compatible with Magento v2.3
 
 ### Enhancements
 * Modularity

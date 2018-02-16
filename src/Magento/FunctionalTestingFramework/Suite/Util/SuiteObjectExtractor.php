@@ -118,7 +118,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
                 case self::MODULE_TAG_NAME:
                     $testObjectList = array_merge($testObjectList, $this->extractModuleAndFiles(
                         $suiteRefData[self::NAME],
-                        $suiteRefData[self::MODULE_TAG_FILE_ATTRIBUTE ?? null]
+                        $suiteRefData[self::MODULE_TAG_FILE_ATTRIBUTE] ?? null
                     ));
                     break;
             }
@@ -198,8 +198,11 @@ class SuiteObjectExtractor extends BaseObjectExtractor
         );
 
         foreach ($xmlFiles as $xmlFile) {
-            $testObj = $this->resolveFilePathTestNames($xmlFile);
-            $testObjects[$testObj->getName()] = $testObj;
+            $testObjs = $this->resolveFilePathTestNames($xmlFile);
+
+            foreach ($testObjs as $testObj) {
+                $testObjects[$testObj->getName()] = $testObj;
+            }
         }
 
         return $testObjects;

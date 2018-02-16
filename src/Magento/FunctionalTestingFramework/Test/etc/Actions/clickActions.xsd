@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:include schemaLocation="commonAttributes.xsd"/>
+
+    <xs:group name="clickTags">
+        <xs:choice>
+            <xs:element type="clickType" name="click" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="clickWithLeftButtonType" name="clickWithLeftButton" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="clickWithRightButtonType" name="clickWithRightButton" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="doubleClickType" name="doubleClick" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="conditionalClickType" name="conditionalClick" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+    </xs:group>
+
+    <!-- Attributes -->
+    <xs:attribute type="xs:string" name="x">
+        <xs:annotation>
+            <xs:documentation>
+                X coordinate for click action.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute type="xs:string" name="y">
+        <xs:annotation>
+            <xs:documentation>
+                Y coordinate for click action.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <!-- Complex Types -->
+
+    <xs:complexType name="clickType">
+        <xs:annotation>
+            <xs:documentation>Clicks an element according to given selector or selectorArray.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector"/>
+                <xs:attribute ref="selectorArray"/>
+                <xs:attribute ref="userInput"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="clickWithLeftButtonType">
+        <xs:annotation>
+            <xs:documentation>Performs a Left Click on an element according to given selector or selectorArray, or on given x/y coordinate.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector"/>
+                <xs:attribute ref="selectorArray"/>
+                <xs:attribute ref="x"/>
+                <xs:attribute ref="y"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="clickWithRightButtonType">
+        <xs:annotation>
+            <xs:documentation>Performs a Right Click on an element according to given selector or selectorArray, or on given x/y coordinate.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector"/>
+                <xs:attribute ref="selectorArray"/>
+                <xs:attribute ref="x"/>
+                <xs:attribute ref="y"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="conditionalClickType">
+        <xs:annotation>
+            <xs:documentation>Performs a Click on an element according to given selector, only if dependentSelector visibility value matches given.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute type="xs:string" name="dependentSelector" use="required">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Element that is the subject of the conditional check.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute type="xs:boolean" name="visible" use="required">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Visibility modifier to the subject of the conditional check.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="doubleClickType">
+        <xs:annotation>
+            <xs:documentation>Clicks an element according to given selector.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+</xs:schema>
