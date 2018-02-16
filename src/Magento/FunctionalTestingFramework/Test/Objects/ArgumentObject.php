@@ -22,7 +22,7 @@ class ArgumentObject
      * Name of the argument.
      * @var string
      */
-    public $name;
+    private $name;
 
     /**
      * Value of the argument. DefaultValue on argument creation

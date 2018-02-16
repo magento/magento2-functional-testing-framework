@@ -88,12 +88,17 @@ class ActionGroupObject
         $newArgumentList = [];
         $emptyArguments = [];
 
-        // Clone $this->arguments to not override default argument definitions
         foreach ($this->arguments as $argumentObj) {
-            $newArgumentList[] = clone $argumentObj;
-
-            if ($argumentObj->getValue() === null) {
+            if ($arguments !== null && array_key_exists($argumentObj->getName(), $arguments)) {
+                $newArgumentList[] = new ArgumentObject(
+                    $argumentObj->getName(),
+                    $arguments[$argumentObj->getName()],
+                    $argumentObj->getDataType()
+                );
+            } elseif ($argumentObj->getValue() === null) {
                 $emptyArguments[] = $argumentObj->getName();
+            } else {
+                $newArgumentList[] = $argumentObj;
             }
         }
 
@@ -101,13 +106,6 @@ class ActionGroupObject
 
         if ($arguments === null) {
             return $this->arguments;
-        }
-
-        foreach ($arguments as $argumentName => $argumentValue) {
-            $matchedArgument = $this->findArgumentByName($argumentName, $newArgumentList);
-            if (isset($matchedArgument)) {
-                $matchedArgument->overrideValue($argumentValue);
-            }
         }
 
         return $newArgumentList;
