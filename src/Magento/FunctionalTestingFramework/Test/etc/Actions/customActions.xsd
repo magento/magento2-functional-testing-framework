@@ -20,6 +20,7 @@
             <xs:element type="mResetLocaleType" name="mResetLocale" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="scrollToTopOfPageType" name="scrollToTopOfPage" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="clearFieldType" name="clearField" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertArrayIsSortedType" name="assertArrayIsSorted" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
     </xs:group>
 
@@ -170,4 +171,32 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
+    <xs:complexType name="assertArrayIsSortedType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that array is sorted according to sort direction.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="parameterArray" use="required"/>
+                <xs:attribute name="sort" type="sortEnum" use="required"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:simpleType name="sortEnum" final="restriction">
+        <xs:annotation>
+            <xs:documentation>
+                Sort direction.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="asc"/>
+            <xs:enumeration value="desc"/>
+        </xs:restriction>
+    </xs:simpleType>
 </xs:schema>

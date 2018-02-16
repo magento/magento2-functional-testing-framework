@@ -423,6 +423,7 @@ class TestGenerator
             $dependentSelector = null;
             $visible = null;
             $command = null;
+            $sort = null;
 
             $assertExpected = null;
             $assertActual = null;
@@ -439,6 +440,10 @@ class TestGenerator
 
             if (isset($customActionAttributes['attribute'])) {
                 $attribute = $customActionAttributes['attribute'];
+            }
+
+            if (isset($customActionAttributes['sort'])) {
+                $sort = $customActionAttributes['sort'];
             }
 
             if (isset($customActionAttributes['userInput']) && isset($customActionAttributes['url'])) {
@@ -791,6 +796,14 @@ class TestGenerator
 
                     $testSteps .= $dataPersistenceHandlerFunctionCall;
                     $testSteps .= $getEntityFunctionCall;
+                    break;
+                case "assertArrayIsSorted":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionName,
+                        $parameterArray,
+                        $this->wrapWithDoubleQuotes($sort)
+                    );
                     break;
                 case "seeCurrentUrlEquals":
                 case "seeCurrentUrlMatches":

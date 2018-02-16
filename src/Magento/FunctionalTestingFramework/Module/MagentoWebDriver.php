@@ -547,7 +547,8 @@ class MagentoWebDriver extends WebDriver
         $elementTotal = count($itemArray);
         $message = null;
 
-        if (strtotime($itemArray[0]) !== false) {
+        // If value can be converted to a date and it isn't 1.1 number (strtotime is overzealous)
+        if (strtotime($itemArray[0]) !== false && !is_numeric($itemArray[0])) {
             $message = "Array of dates converted to unix timestamp for comparison";
             $itemArray = array_map('strtotime', $itemArray);
         } else {

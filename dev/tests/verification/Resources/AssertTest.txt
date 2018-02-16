@@ -49,6 +49,7 @@ class AssertTestCest
 		$createData2 = new DataPersistenceHandler($UniquePerson);
 		$createData2->createEntity();
 		$grabTextFrom1 = $I->grabTextFrom(".copyright>span");
+		$I->assertArrayIsSorted(["1", "2", "3", "4", "5"], "asc");
 		$I->comment("asserts without variable replacement");
 		$I->assertArrayHasKey("apple", ['orange' => 2, 'apple' => 1], "pass");
 		$I->assertArrayNotHasKey("kiwi", ['orange' => 2, 'apple' => 1], "pass");
