@@ -17,11 +17,12 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  * @Title("A Functional Cest")
+ * @group functional
  * @group mergeTest
  * @Features({"Merge Functional Cest"})
  * @Stories({"MQE-433"})
  */
-class MergeFunctionalTestCest
+class BasicMergeTestCest
 {
 	/**
 	  * @param AcceptanceTester $I
@@ -48,8 +49,8 @@ class MergeFunctionalTestCest
 	  */
 	public function _failed(AcceptanceTester $I)
 	{
-	    $I->saveScreenshot();
-	    $this->_after($I);
+		$I->saveScreenshot();
+		$this->_after($I);
 	}
 
 	/**
@@ -75,17 +76,4 @@ class MergeFunctionalTestCest
 		$I->see("#element .Jane");
 		$I->click("#step10MergedInResult");
 	}
-
-	/**
-	 * @Parameter(name = "AcceptanceTester", value="$I")
-	 * @param AcceptanceTester $I
-	 * @return void
-	 * @throws \Exception
-	 */
-	public function MergedReferencesTest(AcceptanceTester $I)
-	{
-		$I->fillField("#merge", "merged");
-		$I->fillField("#newElement", "newField");
-	}
-
 }

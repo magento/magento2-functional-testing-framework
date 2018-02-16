@@ -7,10 +7,9 @@ namespace tests\verification\Tests;
 
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
-use Magento\FunctionalTestingFramework\Util\TestGenerator;
-use PHPUnit\Framework\TestCase;
+use tests\util\MftfTestCase;
 
-class XmlDuplicateGerationTest extends TestCase
+class XmlDuplicateGerationTest extends MftfTestCase
 {
     const XML_DUPLICATE_TEST = 'XmlDuplicateTest';
     const XML_DUPLICATE_ACTIONGROUP = 'xmlDuplicateActionGroup';
@@ -22,13 +21,13 @@ class XmlDuplicateGerationTest extends TestCase
      */
     public function testDuplicatesInTest()
     {
-        $testObject = TestObjectHandler::getInstance()->getObject(self::XML_DUPLICATE_TEST);
+        TestObjectHandler::getInstance()->getObject(self::XML_DUPLICATE_TEST);
         $this->addToAssertionCount(1); // No exception thrown thus far, can assert dupes didn't cause an error.
     }
 
     public function testDuplicatesInActionGroup()
     {
-        $actionGroup = ActionGroupObjectHandler::getInstance()->getObject(self::XML_DUPLICATE_ACTIONGROUP);
+        ActionGroupObjectHandler::getInstance()->getObject(self::XML_DUPLICATE_ACTIONGROUP);
         $this->addToAssertionCount(1); // No exception thrown thus far, can assert dupes didn't cause an error.
     }
 
@@ -37,7 +36,7 @@ class XmlDuplicateGerationTest extends TestCase
      */
     public function testDuplicatesInMergeTest()
     {
-        $testObject = TestObjectHandler::getInstance()->getObject(self::XML_DUPLICATE_MERGE_TEST);
+        TestObjectHandler::getInstance()->getObject(self::XML_DUPLICATE_MERGE_TEST);
         $this->addToAssertionCount(1); // No exception thrown thus far, can assert dupes didn't cause an error.
     }
 }

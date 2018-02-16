@@ -8,10 +8,10 @@ namespace tests\verification\Tests;
 
 use Magento\FunctionalTestingFramework\Suite\SuiteGenerator;
 use Magento\FunctionalTestingFramework\Util\TestManifest;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
+use tests\util\MftfTestCase;
 
-class SuiteGenerationTest extends TestCase
+class SuiteGenerationTest extends MftfTestCase
 {
     const RESOURCES_DIR = TESTS_BP . DIRECTORY_SEPARATOR . 'verification' . DIRECTORY_SEPARATOR . 'Resources';
     const CONFIG_YML_FILE = FW_BP . DIRECTORY_SEPARATOR . SuiteGenerator::YAML_CODECEPTION_CONFIG_FILENAME;

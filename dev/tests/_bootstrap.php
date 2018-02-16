@@ -7,6 +7,7 @@
 error_reporting(~E_USER_NOTICE);
 define('PROJECT_ROOT', dirname(dirname(__DIR__)));
 require_once PROJECT_ROOT . '/vendor/autoload.php';
+require_once 'util/MftfTestCase.php';
 
 // Set up AspectMock
 $kernel = \AspectMock\Kernel::getInstance();

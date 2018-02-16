@@ -5,14 +5,10 @@
  */
 namespace tests\verification\Tests;
 
-use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
-use Magento\FunctionalTestingFramework\Util\TestGenerator;
-use PHPUnit\Framework\TestCase;
+use tests\util\MftfTestCase;
 
-class HookActionsTest extends TestCase
+class HookActionsTest extends MftfTestCase
 {
-    const RESOURCES_PATH = __DIR__ . '/../Resources';
-
     /**
      * Tests flat generation of a hardcoded test file with no external references.
      *
@@ -21,14 +17,6 @@ class HookActionsTest extends TestCase
      */
     public function testHookGenerationWithPersistedDeclarations()
     {
-        $testName = 'HookActionsTest';
-        $test = TestObjectHandler::getInstance()->getObject($testName);
-        $testHandler = TestGenerator::getInstance(null, [$test]);
-        $testHandler->createAllTestFiles();
-
-        $this->assertFileEquals(
-            self::RESOURCES_PATH . DIRECTORY_SEPARATOR . $testName . ".txt",
-            $testHandler->getExportDir() . DIRECTORY_SEPARATOR . $test->getCodeceptionName() . ".php"
-        );
+        $this->generateAndCompareTest('HookActionsTest');
     }
 }

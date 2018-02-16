@@ -5,32 +5,10 @@
  */
 namespace tests\verification\Tests;
 
-use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
-use Magento\FunctionalTestingFramework\Util\TestGenerator;
-use PHPUnit\Framework\TestCase;
+use tests\util\MftfTestCase;
 
-class ActionGroupGenerationTest extends TestCase
+class ActionGroupGenerationTest extends MftfTestCase
 {
-    const RESOURCES_PATH = __DIR__ . '/../Resources';
-
-    /**
-     * Tests flat generation of a hardcoded test file with no external references.
-     *
-     * @throws \Exception
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
-     */
-    private function validateGenerateAndContents($testName)
-    {
-        $test = TestObjectHandler::getInstance()->getObject($testName);
-        $testHandler = TestGenerator::getInstance(null, [$test]);
-        $testHandler->createAllTestFiles();
-
-        $this->assertFileEquals(
-            self::RESOURCES_PATH . DIRECTORY_SEPARATOR . $testName . ".txt",
-            $testHandler->getExportDir() . DIRECTORY_SEPARATOR . $test->getCodeceptionName() . ".php"
-        );
-    }
-
     /**
      * Test generation of a test referencing an action group with no arguments
      *
@@ -39,7 +17,7 @@ class ActionGroupGenerationTest extends TestCase
      */
     public function testActionGroupWithNoArguments()
     {
-        $this->validateGenerateAndContents('ActionGroupWithNoArguments');
+        $this->generateAndCompareTest('ActionGroupWithNoArguments');
     }
 
     /**
@@ -50,7 +28,7 @@ class ActionGroupGenerationTest extends TestCase
      */
     public function testActionGroupWithDefaultArgumentAndStringSelectorParam()
     {
-        $this->validateGenerateAndContents('ActionGroupWithDefaultArgumentAndStringSelectorParam');
+        $this->generateAndCompareTest('ActionGroupWithDefaultArgumentAndStringSelectorParam');
     }
 
     /**
@@ -61,7 +39,7 @@ class ActionGroupGenerationTest extends TestCase
      */
     public function testActionGroupWithPassedArgumentAndStringSelectorParam()
     {
-        $this->validateGenerateAndContents('ActionGroupWithPassedArgumentAndStringSelectorParam');
+        $this->generateAndCompareTest('ActionGroupWithPassedArgumentAndStringSelectorParam');
     }
 
     /**
@@ -72,7 +50,7 @@ class ActionGroupGenerationTest extends TestCase
      */
     public function testActionGroupWithSingleParameterSelectorFromDefaultArgument()
     {
-        $this->validateGenerateAndContents('ActionGroupWithSingleParameterSelectorFromDefaultArgument');
+        $this->generateAndCompareTest('ActionGroupWithSingleParameterSelectorFromDefaultArgument');
     }
 
     /**
@@ -83,7 +61,7 @@ class ActionGroupGenerationTest extends TestCase
      */
     public function testActionGroupWithSingleParameterSelectorFromPassedArgument()
     {
-        $this->validateGenerateAndContents('ActionGroupWithSingleParameterSelectorFromPassedArgument');
+        $this->generateAndCompareTest('ActionGroupWithSingleParameterSelectorFromPassedArgument');
     }
 
     /**
@@ -94,6 +72,6 @@ class ActionGroupGenerationTest extends TestCase
      */
     public function testActionGroupWithMultipleParameterSelectorsFromDefaultArgument()
     {
-        $this->validateGenerateAndContents('ActionGroupWithMultipleParameterSelectorsFromDefaultArgument');
+        $this->generateAndCompareTest('ActionGroupWithMultipleParameterSelectorsFromDefaultArgument');
     }
 }
