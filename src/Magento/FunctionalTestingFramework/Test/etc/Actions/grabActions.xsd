@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:include schemaLocation="commonAttributes.xsd"/>
+
+    <xs:group name="grabTags">
+        <xs:choice>
+            <xs:element type="grabAttributeFromType" name="grabAttributeFrom" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="grabCookieType" name="grabCookie" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="grabFromCurrentUrlType" name="grabFromCurrentUrl" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="grabMultipleType" name="grabMultiple" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="grabPageSourceType" name="grabPageSource" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="grabTextFromType" name="grabTextFrom" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="grabValueFromType" name="grabValueFrom" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+    </xs:group>
+
+    <!-- Complex Types -->
+
+    <xs:complexType name="grabAttributeFromType">
+        <xs:annotation>
+            <xs:documentation>
+                Grabs the attribute value based on the given element and attribute pair.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="userInput"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="grabCookieType">
+        <xs:annotation>
+            <xs:documentation>
+                Grabs a cookie value.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="userInput"/>
+                <xs:attribute ref="parameterArray"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="grabFromCurrentUrlType">
+        <xs:annotation>
+            <xs:documentation>
+                Grabs value from current URL according to given Regex. Returns first capturing group in given regex.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="regex">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Regex used to evaluate current URL.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="grabMultipleType">
+        <xs:annotation>
+            <xs:documentation>
+                Grabs the text content or attribute values of nodes matched by selector, returns all found in an array.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="userInput"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="grabPageSourceType">
+        <xs:annotation>
+            <xs:documentation>
+                Grabs current page source code.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="grabTextFromType">
+        <xs:annotation>
+            <xs:documentation>
+                Grabs all text contents from the given element.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="grabValueFromType">
+        <xs:annotation>
+            <xs:documentation>
+                Grabs value from given form field.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector"/>
+                <xs:attribute ref="selectorArray"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+</xs:schema>

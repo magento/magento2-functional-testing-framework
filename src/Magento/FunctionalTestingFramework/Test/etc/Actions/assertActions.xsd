@@ -1,0 +1,766 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:include schemaLocation="commonAttributes.xsd"/>
+
+    <xs:group name="assertTags">
+        <xs:choice>
+            <xs:element type="assertElementContainsAttributeType" name="assertElementContainsAttribute" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertArrayHasKeyType" name="assertArrayHasKey" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertArrayNotHasKeyType" name="assertArrayNotHasKey" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertArraySubsetType" name="assertArraySubset" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertContainsType" name="assertContains" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertCountType" name="assertCount" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertEmptyType" name="assertEmpty" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertEqualsType" name="assertEquals" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertFalseType" name="assertFalse" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertFileExistsType" name="assertFileExists" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertFileNotExistsType" name="assertFileNotExists" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertGreaterOrEqualsType" name="assertGreaterOrEquals" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertGreaterThanType" name="assertGreaterThan" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertGreaterThanOrEqualType" name="assertGreaterThanOrEqual" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertInstanceOfType" name="assertInstanceOf" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertInternalTypeType" name="assertInternalType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertIsEmptyType" name="assertIsEmpty" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertLessOrEqualsType" name="assertLessOrEquals" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertLessThanType" name="assertLessThan" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertLessThanOrEqualType" name="assertLessThanOrEqual" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertNotContainsType" name="assertNotContains" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertNotEmptyType" name="assertNotEmpty" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertNotEqualsType" name="assertNotEquals" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertNotInstanceOfType" name="assertNotInstanceOf" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertNotNullType" name="assertNotNull" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertNotRegExpType" name="assertNotRegExp" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertNotSameType" name="assertNotSame" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertNullType" name="assertNull" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertRegExpType" name="assertRegExp" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertSameType" name="assertSame" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertStringStartsNotWithType" name="assertStringStartsNotWith" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertStringStartsWithType" name="assertStringStartsWith" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertTrueType" name="assertTrue" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="expectExceptionType" name="expectException" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+    </xs:group>
+
+    <!-- Data Attributes -->
+    <xs:attribute type="xs:string" name="expected">
+        <xs:annotation>
+            <xs:documentation>
+                Assertion's Expected value. Cast by expectedType.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute type="xs:string" name="actual">
+        <xs:annotation>
+            <xs:documentation>
+                Assertion's Actual value. Cast by actualType.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute type="xs:string" name="message">
+        <xs:annotation>
+            <xs:documentation>
+                Optional human readable hint shown in logs if this assert fails.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute type="xs:boolean" name="strict">
+        <xs:annotation>
+            <xs:documentation>
+                Option strict parameter.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute type="xs:string" name="delta">
+        <xs:annotation>
+            <xs:documentation>
+                Option delta parameter that dictates how great a precision error is allowed to consider this assert true.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+    
+    <!-- Complex Types -->
+
+    <!-- ASSERTION TYPES -->
+    <!-- REMOVE expected/expectedType and actual/actualType in MQE-683-->
+    <xs:complexType name="assertionType">
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>        
+        <xs:attribute ref="message"/>
+        <xs:attribute ref="delta"/>
+        <xs:attribute ref="strict"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertElementContainsAttributeType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that a given element contains a specific attribute.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="expectedValue">
+            <xs:annotation>
+                <xs:documentation>
+                    Assertion's Expected value. Cast by expectedType.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="selector" use="required"/>
+        <xs:attribute type="xs:string" name="attribute" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    Attribute in given element to be assert against.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertArrayHasKeyType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given array has a key.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertArrayNotHasKeyType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given array does not contain a key.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>        
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertArraySubsetType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given array contains a subset array.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attribute ref="strict"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertContainsType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given array contains a value.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertCountType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that expected count is equal to actual count.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertEmptyType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given variable is empty.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertEqualsType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that two given variables are equal. Can be given a "delta" to allow precision tolerance in floating point comparison.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>        
+        <xs:attribute ref="delta"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertFalseType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given condition is false.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertFileExistsType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given file exists.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertFileNotExistsType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given file does not exist.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertGreaterOrEqualsType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given actual value is greater or equal to expected value.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertGreaterThanType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given actual value is greater than expected value.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertGreaterThanOrEqualType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given actual value is greater than or equal to expected value.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertInstanceOfType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given actual is an instance of expected class.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertInternalTypeType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given actual is internal type.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertIsEmptyType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given actual is empty.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertLessOrEqualsType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given actual less than or equal to expected.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertLessThanType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given actual less than expected.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertLessThanOrEqualType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given actual less than or equal to expected.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertNotContainsType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given array does not contain a value.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertNotEmptyType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given actual variable is not empty.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertNotEqualsType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that actual and expected are not equal. Can be given a "delta" to allow precision tolerance in floating point comparison.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>        
+        <xs:attribute ref="message"/>
+        <xs:attribute ref="delta"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertNotInstanceOfType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given actual is not an instance of a class.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertNotNullType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given actual is not null.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertNotRegExpType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given actual string does not match with expected pattern.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertNotSameType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given actual and expected are not the same.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertNullType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given actual is null.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertRegExpType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given actual string matches with expected pattern.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertSameType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that actual and expected are the same.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertStringStartsNotWithType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that actual string does not start with the expected prefix.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertStringStartsWithType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that actual string starts with the expected prefix.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertTrueType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given actual is true.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="expectExceptionType">
+        <xs:annotation>
+            <xs:documentation>
+                Handles and checks expected exception called inside actual callback function.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence minOccurs="0">
+            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="actualResult" type="actualResultType"/>
+        </xs:sequence>
+        <xs:attribute ref="expected"/>
+        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
+        <xs:attribute ref="actual"/>
+        <xs:attribute type="assertEnum" name="actualType" default="const"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <!-- END ASSERT TYPES -->
+    <xs:complexType name="expectedResultType">
+        <xs:annotation>
+            <xs:documentation>
+                Element containing the Expected value and a type to cast the given value as.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="assertEnum" name="type" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="actualResultType">
+        <xs:annotation>
+            <xs:documentation>
+                Element containing the Actual value and a type to cast the given value as.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="assertEnum" name="type" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:simpleType name="assertEnum" final="restriction">
+        <xs:annotation>
+            <xs:documentation>
+                Enumerator that casts linked value as different types of data.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="int"/>
+            <xs:enumeration value="float"/>
+            <xs:enumeration value="bool"/>
+            <xs:enumeration value="string"/>
+            <xs:enumeration value="variable"/>
+            <xs:enumeration value="array"/>
+            <xs:enumeration value="const"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

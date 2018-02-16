@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:include schemaLocation="commonAttributes.xsd"/>
+
+    <xs:group name="dontSeeTags">
+        <xs:choice>
+            <xs:element type="dontSeeType" name="dontSee" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeCheckboxIsCheckedType" name="dontSeeCheckboxIsChecked" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeCookieType" name="dontSeeCookie" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeCurrentUrlEqualsType" name="dontSeeCurrentUrlEquals" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeCurrentUrlMatchesType" name="dontSeeCurrentUrlMatches" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeElementType" name="dontSeeElement" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeElementInDOMType" name="dontSeeElementInDOM" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeInCurrentUrlType" name="dontSeeInCurrentUrl" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeInFieldType" name="dontSeeInField" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeInFormFieldsType" name="dontSeeInFormFields" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeInPageSourceType" name="dontSeeInPageSource" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeInSourceType" name="dontSeeInSource" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeInTitleType" name="dontSeeInTitle" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeJsErrorType" name="dontSeeJsError" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeLinkType" name="dontSeeLink" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="dontSeeOptionIsSelectedType" name="dontSeeOptionIsSelected" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+    </xs:group>
+
+    <!-- Complex Types -->
+
+    <xs:complexType name="dontSeeType">
+        <xs:annotation>
+            <xs:documentation>Asserts given text is not seen in page. Can be given selector/selectorArray to narrow scope.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="userInput"/>
+                <xs:attribute ref="selector"/>
+                <xs:attribute ref="selectorArray"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="dontSeeCheckboxIsCheckedType">
+        <xs:annotation>
+            <xs:documentation>Asserts specified checkbox is not checked.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="dontSeeCookieType">
+        <xs:annotation>
+            <xs:documentation>Asserts given cookie does not exist.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="userInput"/>
+                <xs:attribute ref="parameterArray"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="dontSeeCurrentUrlEqualsType">
+        <xs:annotation>
+            <xs:documentation>Asserts current Url does not match given Url.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="url"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="dontSeeCurrentUrlMatchesType">
+        <xs:annotation>
+            <xs:documentation>Asserts current Url does not match given regex.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="regex">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Regex used to evaluate current url.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="dontSeeElementType">
+        <xs:annotation>
+            <xs:documentation>Asserts specified element is invisible or is not present. Can also specify expected attributes of this element.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="parameterArray"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="dontSeeElementInDOMType">
+        <xs:annotation>
+            <xs:documentation>Asserts specified element is not present in DOM. Can also specify expected attributes of this element.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="parameterArray"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="dontSeeInCurrentUrlType">
+        <xs:annotation>
+            <xs:documentation>Asserts given portion of URL does not exist in full URL.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="url"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="dontSeeInFieldType">
+        <xs:annotation>
+            <xs:documentation>Asserts given input or textarea does not contain the given value.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector"/>
+                <xs:attribute ref="selectorArray"/>
+                <xs:attribute ref="userInput"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="dontSeeInFormFieldsType">
+        <xs:annotation>
+            <xs:documentation>Asserts given array of form parameters are not set in given element.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="parameterArray"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="dontSeeInPageSourceType">
+        <xs:annotation>
+            <xs:documentation>Asserts given page source does not contain given value.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="userInput"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="dontSeeInSourceType">
+        <xs:annotation>
+            <xs:documentation>Asserts that the current page does not contain the given value in its raw source code.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="html" use="required"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="dontSeeInTitleType">
+        <xs:annotation>
+            <xs:documentation>Asserts that the page title does not contain given value.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="userInput"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="dontSeeJsErrorType">
+        <xs:annotation>
+            <xs:documentation>Asserts that no JS errors are found in page log.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="dontSeeLinkType">
+        <xs:annotation>
+            <xs:documentation>Asserts that the page does not contain a link with the given value. Can narrow to only links with href to given url.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="userInput"/>
+                <xs:attribute ref="url"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="dontSeeOptionIsSelectedType">
+        <xs:annotation>
+            <xs:documentation>Asserts that given option in given element is not selected.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="userInput"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+</xs:schema>
