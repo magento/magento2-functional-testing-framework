@@ -95,8 +95,8 @@
     <!-- REMOVE expected/expectedType and actual/actualType in MQE-683-->
     <xs:complexType name="assertionType">
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -115,7 +115,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute type="xs:string" name="expectedValue">
             <xs:annotation>
@@ -142,8 +142,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -160,8 +160,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -178,8 +178,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -197,8 +197,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -215,8 +215,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -233,7 +233,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -250,8 +250,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -269,7 +269,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -286,7 +286,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -303,7 +303,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -320,8 +320,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -338,8 +338,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -356,8 +356,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -374,8 +374,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -392,8 +392,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -410,7 +410,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -427,8 +427,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -445,8 +445,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -463,8 +463,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -481,8 +481,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -499,7 +499,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -516,8 +516,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -535,8 +535,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -553,7 +553,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -570,8 +570,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -588,8 +588,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -606,7 +606,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -623,8 +623,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -641,8 +641,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -659,8 +659,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -677,8 +677,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -695,7 +695,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
@@ -712,8 +712,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence minOccurs="0">
-            <xs:element name="expectedResult" type="expectedResultType"/>
-            <xs:element name="actualResult" type="actualResultType"/>
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="expected"/>
         <xs:attribute type="assertEnum" name="expectedType" default="const"/>
