@@ -224,7 +224,7 @@ class ActionGroupObjectTest extends TestCase
             ->build();
 
         $this->expectException(TestReferenceException::class);
-        $this->expectExceptionMessageRegExp('/Argument\(s\) missed .* for actionGroup/');
+        $this->expectExceptionMessageRegExp('/Arguments missed .* for actionGroup/');
         $actionGroupUnderTest->getSteps(['arg2' => 'data1'], self::ACTION_GROUP_MERGE_KEY);
     }
 
@@ -238,7 +238,7 @@ class ActionGroupObjectTest extends TestCase
             ->build();
 
         $this->expectException(TestReferenceException::class);
-        $this->expectExceptionMessageRegExp('/Not enough arguments given for actionGroup .*/');
+        $this->expectExceptionMessageRegExp('/Arguments missed .* for actionGroup/');
         $actionGroupUnderTest->getSteps(null, self::ACTION_GROUP_MERGE_KEY);
     }
 

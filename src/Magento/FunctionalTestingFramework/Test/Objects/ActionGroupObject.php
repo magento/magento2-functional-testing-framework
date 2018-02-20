@@ -85,12 +85,12 @@ class ActionGroupObject
      */
     private function resolveArguments($arguments)
     {
-        $newArgumentList = [];
+        $resolvedArgumentList = [];
         $emptyArguments = [];
 
         foreach ($this->arguments as $argumentObj) {
             if ($arguments !== null && array_key_exists($argumentObj->getName(), $arguments)) {
-                $newArgumentList[] = new ArgumentObject(
+                $resolvedArgumentList[] = new ArgumentObject(
                     $argumentObj->getName(),
                     $arguments[$argumentObj->getName()],
                     $argumentObj->getDataType()
@@ -98,40 +98,16 @@ class ActionGroupObject
             } elseif ($argumentObj->getValue() === null) {
                 $emptyArguments[] = $argumentObj->getName();
             } else {
-                $newArgumentList[] = $argumentObj;
+                $resolvedArgumentList[] = $argumentObj;
             }
         }
 
-        $this->validateEmptyArguments($emptyArguments, $arguments);
-
-        if ($arguments === null) {
-            return $this->arguments;
-        }
-
-        return $newArgumentList;
-    }
-
-    /**
-     * Takes a list of all Default Arguments that have no Default Value, and compares them to test invocation arguments
-     * If there are arguments with no default value and no test invocation value given, resolution is impossible.
-     *
-     * @param array $emptyArguments
-     * @param array $arguments
-     * @throws TestReferenceException
-     * @return void
-     */
-    private function validateEmptyArguments($emptyArguments, $arguments)
-    {
-        if (!empty($emptyArguments) && $arguments !== null) {
-            $diff = array_diff($emptyArguments, array_keys($arguments));
-            if (!empty($diff)) {
-                $error = 'Argument(s) missed (' . implode(", ", $diff) . ') for actionGroup "' . $this->name . '"';
-                throw new TestReferenceException($error);
-            }
-        } elseif (!empty($emptyArguments)) {
-            $error = 'Not enough arguments given for actionGroup "' . $this->name . '"';
+        if (!empty($emptyArguments)) {
+            $error = 'Arguments missed (' . implode(", ", $emptyArguments) . ') for actionGroup "' . $this->name . '"';
             throw new TestReferenceException($error);
         }
+
+        return $resolvedArgumentList;
     }
 
     /**
