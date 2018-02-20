@@ -508,7 +508,7 @@ class MagentoWebDriver extends WebDriver
     {
         $this->debugWebDriverLogs($test);
 
-        if ($this->pngReport == null && $this->htmlReport == null) {
+        if ($this->pngReport === null && $this->htmlReport === null) {
             $this->saveScreenshot();
         }
 
@@ -530,43 +530,5 @@ class MagentoWebDriver extends WebDriver
         $outputDir = codecept_output_dir();
         $this->_saveScreenshot($this->pngReport = $outputDir . mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png');
         $this->_savePageSource($this->htmlReport = $outputDir . mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html');
-    }
-
-    /**
-     * Asserts that all items in the array are sorted by given direction. Can be given int, string, double, dates.
-     * Converts given date strings to epoch for comparison.
-     *
-     * @param array $itemArray
-     * @param string $direction
-     * @return void
-     */
-    public function assertArrayIsSorted($itemArray, $direction = "asc")
-    {
-        // Want to start at index 1, not index 0
-        $i = 1;
-        $elementTotal = count($itemArray);
-        $message = null;
-
-        // If value can be converted to a date and it isn't 1.1 number (strtotime is overzealous)
-        if (strtotime($itemArray[0]) !== false && !is_numeric($itemArray[0])) {
-            $message = "Array of dates converted to unix timestamp for comparison";
-            $itemArray = array_map('strtotime', $itemArray);
-        } else {
-            $itemArray = array_map('strtolower', $itemArray);
-        }
-
-        if ($direction = "asc") {
-            while ($elementTotal > $i) {
-                // $i >= $i-1
-                $this->assertLessThanOrEqual($itemArray[$i], $itemArray[$i-1], $message);
-                $i++;
-            }
-        } else {
-            while ($elementTotal > $i) {
-                // $i <= $i-1
-                $this->assertGreaterThanOrEqual($itemArray[$i], $itemArray[$i-1],  $message);
-                $i++;
-            }
-        }
     }
 }

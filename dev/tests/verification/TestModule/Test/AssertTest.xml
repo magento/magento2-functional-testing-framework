@@ -17,7 +17,9 @@
 
 
         <!-- custom asserts -->
-        <assertArrayIsSorted parameterArray="[1,2,3,4,5]" sort="asc" stepKey="assertSorted1"/>
+        <assertArrayIsSorted sortOrder="asc" stepKey="assertSorted1">
+            <array>[1,2,3,4,5]</array>
+        </assertArrayIsSorted>
 
         <!-- asserts without variable replacement -->
         <comment stepKey="c1" userInput="asserts without variable replacement"/>

@@ -205,7 +205,7 @@ class ActionObject
     }
 
     /**
-     * Flattens expectedResult/actualResults nested elements, if necessary.
+     * Flattens expectedResult/actualResults/array nested elements, if necessary.
      * e.g. expectedResults[] -> ["expectedType" => "string", "expected" => "value"]
      * Warns user if they are using old Assertion syntax.
      *
@@ -214,6 +214,11 @@ class ActionObject
     public function trimAssertionAttributes()
     {
         $actionAttributeKeys = array_keys($this->actionAttributes);
+
+        // Flatten AssertSorted "array" element to parameterArray
+        if (isset($this->actionAttributes["array"])) {
+            $this->resolvedCustomAttributes['parameterArray'] = $this->actionAttributes['array']['value'];
+        }
 
         /** MQE-683 DEPRECATE OLD METHOD HERE
          * Checks if action has any of the old, single line attributes

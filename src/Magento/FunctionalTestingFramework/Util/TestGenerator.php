@@ -423,7 +423,7 @@ class TestGenerator
             $dependentSelector = null;
             $visible = null;
             $command = null;
-            $sort = null;
+            $sortOrder = null;
 
             $assertExpected = null;
             $assertActual = null;
@@ -442,8 +442,8 @@ class TestGenerator
                 $attribute = $customActionAttributes['attribute'];
             }
 
-            if (isset($customActionAttributes['sort'])) {
-                $sort = $customActionAttributes['sort'];
+            if (isset($customActionAttributes['sortOrder'])) {
+                $sortOrder = $customActionAttributes['sortOrder'];
             }
 
             if (isset($customActionAttributes['userInput']) && isset($customActionAttributes['url'])) {
@@ -802,7 +802,7 @@ class TestGenerator
                         $actor,
                         $actionName,
                         $parameterArray,
-                        $this->wrapWithDoubleQuotes($sort)
+                        $this->wrapWithDoubleQuotes($sortOrder)
                     );
                     break;
                 case "seeCurrentUrlEquals":

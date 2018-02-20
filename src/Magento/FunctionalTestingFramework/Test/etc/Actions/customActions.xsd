@@ -178,13 +178,22 @@
                 Asserts that array is sorted according to sort direction.
             </xs:documentation>
         </xs:annotation>
+        <xs:sequence>
+            <xs:element name="array" type="arrayType"/>
+        </xs:sequence>
+        <xs:attribute name="sortOrder" type="sortEnum" use="required"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="arrayType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute ref="parameterArray" use="required"/>
-                <xs:attribute name="sort" type="sortEnum" use="required"/>
-                <xs:attributeGroup ref="commonActionAttributes"/>
+                <xs:annotation>
+                    <xs:documentation>
+                        Array to be asserted for proper sorting. Must be in parameterArray format (ex. [1,2,3,4,5] or [alpha, brontosaurus, zebra]).
+                    </xs:documentation>
+                </xs:annotation>
             </xs:extension>
-
         </xs:simpleContent>
     </xs:complexType>
 
