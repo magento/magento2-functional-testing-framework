@@ -144,6 +144,43 @@
             <actualResult type="bool">1</actualResult>
         </assertTrue>
 
+        <!-- asserts backward compatible -->
+        <comment stepKey="commentBackwardCompatible" userInput="asserts backward compatible"/>
+        <assertArrayHasKey stepKey="assertArrayHasKeyBackwardCompatible" expected="apple" expectedType="string" actual="['orange' => 2, 'apple' => 1]" actualType="const" message="pass"/>
+        <assertArrayNotHasKey stepKey="assertArrayNotHasKeyBackwardCompatible" expected="kiwi" expectedType="string" actual="['orange' => 2, 'apple' => 1]" message="pass"/>
+        <assertArraySubset stepKey="assertArraySubsetBackwardCompatible" expected="[1, 2]" actual="[1, 2, 3, 5]" message="pass"/>
+        <assertContains stepKey="assertContainsBackwardCompatible" expected="ab" expectedType="string" actual="['item1' => 'a', 'item2' => 'ab']" message="pass"/>
+        <assertCount stepKey="assertCountBackwardCompatible" expected="2" expectedType="int" actual="['a', 'b']" message="pass"/>
+        <assertEmpty stepKey="assertEmptyBackwardCompatible" actual="[]" message="pass"/>
+        <assertEquals stepKey="assertEquals1BackwardCompatible" expected="text" expectedType="variable" actual="Copyright © 2013-2017 Magento, Inc. All rights reserved." actualType="string" message="pass"/>
+        <assertEquals stepKey="assertEquals2BackwardCompatible" expected="Copyright © 2013-2017 Magento, Inc. All rights reserved." expectedType="string" actual="text" actualType="variable" message="pass"/>
+        <assertFalse stepKey="assertFalse1BackwardCompatible" actual="0" actualType="bool" message="pass"/>
+        <assertFileNotExists stepKey="assertFileNotExists1BackwardCompatible" actual="/out.txt" actualType="string" message="pass"/>
+        <assertFileNotExists stepKey="assertFileNotExists2BackwardCompatible" actual="$text" actualType="variable" message="pass"/>
+        <assertGreaterOrEquals stepKey="assertGreaterOrEqualsBackwardCompatible" expected="2" expectedType="int" actual="5" actualType="int" message="pass"/>
+        <assertGreaterThan stepKey="assertGreaterThanBackwardCompatible" expected="2" expectedType="int" actual="5" actualType="int" message="pass"/>
+        <assertGreaterThanOrEqual stepKey="assertGreaterThanOrEqualBackwardCompatible" expected="2" expectedType="int" actual="5" actualType="int" message="pass"/>
+        <assertInternalType stepKey="assertInternalType1BackwardCompatible" expected="string" expectedType="string" actual="xyz" actualType="string" message="pass"/>
+        <assertInternalType stepKey="assertInternalType2BackwardCompatible" expected="int" expectedType="string" actual="21" actualType="int" message="pass"/>
+        <assertInternalType stepKey="assertInternalType3BackwardCompatible" expected="string" expectedType="string" actual="$text" actualType="variable" message="pass"/>
+        <assertLessOrEquals stepKey="assertLessOrEqualBackwardCompatibles" expected="5" expectedType="int" actual="2" actualType="int" message="pass"/>
+        <assertLessThan stepKey="assertLessThanBackwardCompatible" expected="5" expectedType="int" actual="2" actualType="int" message="pass"/>
+        <assertLessThanOrEqual stepKey="assertLessThanOrEqualBackwardCompatible" expected="5" expectedType="int" actual="2" actualType="int" message="pass"/>
+        <assertNotContains stepKey="assertNotContains1BackwardCompatible" expected="bc" expectedType="string" actual="['item1' => 'a', 'item2' => 'ab']" message="pass"/>
+        <assertNotContains stepKey="assertNotContains2BackwardCompatible" expected="bc" expectedType="string" actual="text" actualType="variable" message="pass"/>
+        <assertNotEmpty stepKey="assertNotEmpty1BackwardCompatible" actual="[1, 2]" message="pass"/>
+        <assertNotEmpty stepKey="assertNotEmpty2BackwardCompatible" actual="text" actualType="variable" message="pass"/>
+        <assertNotEquals stepKey="assertNotEqualsBackwardCompatible" expected="2" expectedType="int" actual="5" actualType="int" message="pass" delta=""/>
+        <assertNotNull stepKey="assertNotNull1BackwardCompatible" actual="abc" actualType="string" message="pass"/>
+        <assertNotNull stepKey="assertNotNull2BackwardCompatible" actual="text" actualType="variable" message="pass"/>
+        <assertNotRegExp stepKey="assertNotRegExpBackwardCompatible" expected="/foo/" expectedType="string" actual="bar" actualType="string" message="pass"/>
+        <assertNotSame stepKey="assertNotSameBackwardCompatible" expected="log" expectedType="string" actual="tag" actualType="string" message="pass"/>
+        <assertRegExp stepKey="assertRegExpBackwardCompatible" expected="/foo/" expectedType="string" actual="foo" actualType="string" message="pass"/>
+        <assertSame stepKey="assertSameBackwardCompatible" expected="bar" expectedType="string" actual="bar" actualType="string" message="pass"/>
+        <assertStringStartsNotWith stepKey="assertStringStartsNotWithBackwardCompatible" expected="a" expectedType="string" actual="banana" actualType="string" message="pass"/>
+        <assertStringStartsWith stepKey="assertStringStartsWithBackwardCompatible" expected="a" expectedType="string" actual="apple" actualType="string" message="pass"/>
+        <assertTrue stepKey="assertTrueBackwardCompatible" actual="1" actualType="bool" message="pass"/>
+
         <!-- string type that use created data -->
         <comment stepKey="c2" userInput="string type that use created data"/>
         <assertStringStartsWith stepKey="assert1" message="fail">
