@@ -49,11 +49,17 @@ class PageObjectHandler implements ObjectHandlerInterface
         }
 
         foreach ($parserOutput as $pageName => $pageData) {
+            $area = $pageData[self::AREA];
             $url = $pageData[self::URL];
+
+            if ($area == 'admin') {
+                $url = ltrim($url, "/");
+            }
+
             $module = $pageData[self::MODULE];
             $sectionNames = array_keys($pageData[self::SECTION]);
             $parameterized = $pageData[self::PARAMETERIZED] ?? false;
-            $area = $pageData[self::AREA];
+
             $this->pageObjects[$pageName] =
                 new PageObject($pageName, $url, $module, $sectionNames, $parameterized, $area);
         }
