@@ -6,7 +6,13 @@
 
 namespace Magento\FunctionalTestingFramework\Module;
 
-
+/**
+ * Class MagentoAssert
+ *
+ * Contains all custom assert functions to be used in tests.
+ *
+ * @package Magento\FunctionalTestingFramework\Module
+ */
 class MagentoAssert extends \Codeception\Module
 {
     /**
