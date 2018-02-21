@@ -10,6 +10,7 @@ use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
 use Magento\FunctionalTestingFramework\XmlParser\PageParser;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 
 class PageObjectHandler implements ObjectHandlerInterface
 {
@@ -19,6 +20,7 @@ class PageObjectHandler implements ObjectHandlerInterface
     const MODULE = 'module';
     const PARAMETERIZED = 'parameterized';
     const AREA = 'area';
+    const NAME_BLACKLIST_ERROR_MSG = "Page names cannot contain non alphanumeric characters.\tPage='%s'";
 
     /**
      * The singleton instance of this class
@@ -49,6 +51,9 @@ class PageObjectHandler implements ObjectHandlerInterface
         }
 
         foreach ($parserOutput as $pageName => $pageData) {
+            if (preg_match('/[^a-zA-Z0-9_]/', $pageName)) {
+                throw new XmlException(sprintf(self::NAME_BLACKLIST_ERROR_MSG, $pageName));
+            }
             $url = $pageData[self::URL];
             $module = $pageData[self::MODULE];
             $sectionNames = array_keys($pageData[self::SECTION]);

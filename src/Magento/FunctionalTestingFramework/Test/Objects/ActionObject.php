@@ -32,8 +32,8 @@ class ActionObject
     const ACTION_ATTRIBUTE_URL = 'url';
     const ACTION_ATTRIBUTE_SELECTOR = 'selector';
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER = '/\(.+\)/';
-    const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/{{[\w.\[\]()\',$ ]+}}/';
-    const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN_WITH_PARAMS= '/{{[\w]+\.[\w]+\([\w ,.\'{$}]+\)}}/';
+    const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/{{[\w]+\.[\w]+}}/';
+    const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN_WITH_PARAMS= '/{{[\w]+\.[\w]+\(.+\)}}/';
 
     /**
      * The unique identifier for the action
@@ -338,7 +338,7 @@ class ActionObject
     }
 
     /**
-     * Returns an array containing all parameters found inside () block of test input.
+     * Returns an array containing all parameters found inside () block of test input. Expected delimiter is ', '.
      * Returns null if no parameters were found.
      *
      * @param string $reference
@@ -346,10 +346,25 @@ class ActionObject
      */
     private function stripAndReturnParameters($reference)
     {
+        // 'string', or 'string,!@#$%^&*()_+'
+        $literalParametersRegex = "/'[^']+'/";
+
         preg_match(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER, $reference, $matches);
         if (!empty($matches)) {
-            $strippedReference = str_replace(')', '', str_replace('(', '', $matches[0]));
-            return explode(',', $strippedReference);
+            $strippedReference = ltrim(rtrim($matches[0], ")"), "(");
+
+            // Pull out all 'string' references, as they can contain 'string with , comma in it'
+            preg_match_all($literalParametersRegex, $strippedReference, $literalReferences);
+            $strippedReference = preg_replace($literalParametersRegex, '&&stringReference&&', $strippedReference);
+
+            // Sanitize all 'string,data.field,$persisted.field$' => 'string, data.field, $persisted.field$' for return
+            $strippedReference = preg_replace('/,(?! )/', ', ', $strippedReference);
+
+            foreach ($literalReferences[0] as $key => $value) {
+                $strippedReference = preg_replace('/&&stringReference&&/', $value, $strippedReference, 1);
+            }
+
+            return explode(', ', $strippedReference);
         }
         return null;
     }

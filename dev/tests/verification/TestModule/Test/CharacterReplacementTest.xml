@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="CharacterReplacementTest">
+        <!--  -->
+        <click stepKey="allChars1" selector="{{SampleSection.oneParamElement('abcdefghijklmnopqrstuvwxyz1234567890')}}"/>
+        <click stepKey="allChars2" selector="{{SampleSection.oneParamElement('`~!@#$%^&amp;*()-_=+{}[]|\;:&quot;.,&gt;&lt;/?() $var')}}"/>
+        <click stepKey="allChars3" selector="{{SampleSection.twoParamElement('abcdefghijklmnopqrstuvwxyz1234567890','abcdefghijklmnopqrstuvwxyz1234567890')}}"/>
+        <click stepKey="allChars4" selector="{{SampleSection.twoParamElement('`~!@#$%^&amp;*()-_=+{}[]|\;:&quot;.,&gt;&lt;/?()','`~!@#$%^&amp;*()-_=+{}[]|\;:&quot;.,&gt;&lt;/?()')}}"/>
+    </test>
+</tests>

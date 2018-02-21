@@ -69,4 +69,13 @@ class ReferenceReplacementGenerationTest extends MftfTestCase
     {
         $this->generateAndCompareTest(self::SECTION_REPLACEMENT_TEST);
     }
+
+    /**
+     * Tests replacement of all characters into string literal references.
+     * Used to ensure users can input everything but single quotes into 'stringLiteral' in parameterized selectors
+     */
+    public function testCharacterReplacementCest()
+    {
+        $this->generateAndCompareTest("CharacterReplacementTest");
+    }
 }
