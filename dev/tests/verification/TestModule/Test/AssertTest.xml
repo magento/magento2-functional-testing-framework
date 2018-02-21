@@ -180,6 +180,13 @@
         <assertStringStartsNotWith stepKey="assertStringStartsNotWithBackwardCompatible" expected="a" expectedType="string" actual="banana" actualType="string" message="pass"/>
         <assertStringStartsWith stepKey="assertStringStartsWithBackwardCompatible" expected="a" expectedType="string" actual="apple" actualType="string" message="pass"/>
         <assertTrue stepKey="assertTrueBackwardCompatible" actual="1" actualType="bool" message="pass"/>
+        <assertElementContainsAttribute selector="#username" attribute="class" expectedValue="admin__control-text" stepKey="assertElementContainsAttributeBackwardCompatible"/>
+        <assertInstanceOf stepKey="assertInstanceOfBackwardCompatible" expected="User::class" actual="text" actualType="variable" message="pass"/>
+        <assertNotInstanceOf stepKey="assertNotInstanceOfBackwardCompatible" expected="User::class" actual="21" actualType="int" message="pass"/>
+        <assertFileExists stepKey="assertFileExistsBackwardCompatible" actual="text" actualType="variable" message="pass"/>
+        <assertIsEmpty stepKey="assertIsEmptyBackwardCompatible" actual="text" actualType="variable" message="pass"/>
+        <assertNull stepKey="assertNullBackwardCompatible" actual="text" actualType="variable" message="pass"/>
+        <expectException stepKey="expectExceptionBackwardCompatible" expected="new MyException('exception msg')" actual="function() {$this->doSomethingBad();}"/>
 
         <!-- string type that use created data -->
         <comment stepKey="c2" userInput="string type that use created data"/>

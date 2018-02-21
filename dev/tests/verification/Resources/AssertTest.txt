@@ -119,6 +119,13 @@ class AssertTestCest
 		$I->assertStringStartsNotWith("a", "banana", "pass");
 		$I->assertStringStartsWith("a", "apple", "pass");
 		$I->assertTrue(true, "pass");
+		$I->assertElementContainsAttribute("#username", "class", "admin__control-text");
+		$I->assertInstanceOf(User::class, $text, "pass");
+		$I->assertNotInstanceOf(User::class, 21, "pass");
+		$I->assertFileExists($text, "pass");
+		$I->assertIsEmpty($text, "pass");
+		$I->assertNull($text, "pass");
+		$I->expectException(new MyException('exception msg'), function() {$this->doSomethingBad();});
 		$I->comment("string type that use created data");
 		$I->assertStringStartsWith("D", $this->createData1->getCreatedDataByName('lastname') . ", " . $this->createData1->getCreatedDataByName('firstname'), "fail");
 		$I->assertStringStartsNotWith("W", $createData2->getCreatedDataByName('firstname') . ", " . $createData2->getCreatedDataByName('lastname'), "pass");
