@@ -271,18 +271,33 @@ class MagentoWebDriver extends WebDriver
         $this->waitForPageLoad();
         $this->waitForElementVisible($selectDropdown);
         $this->click($selectDropdown);
-        foreach ($options as $option) {
-            $this->waitForPageLoad();
-            $this->fillField($selectSearchText, '');
-            $this->waitForPageLoad();
-            $this->fillField($selectSearchText, $option);
-            $this->waitForPageLoad();
-            $this->click($selectSearchResult);
-        }
+
+        $this->selectMultipleOptions($selectSearchText, $selectSearchResult, $options);
+
         if ($requireAction) {
             $selectAction = $select . ' button[class=action-default]';
             $this->waitForPageLoad();
             $this->click($selectAction);
+        }
+    }
+
+    /**
+     * Select multiple options from a drop down using a filter and text field to narrow results.
+     *
+     * @param string $selectSearchTextField
+     * @param string $selectSearchResult
+     * @param string[] $options
+     * @return void
+     */
+    public function selectMultipleOptions($selectSearchTextField, $selectSearchResult, array $options)
+    {
+        foreach ($options as $option) {
+            $this->waitForPageLoad();
+            $this->fillField($selectSearchTextField, '');
+            $this->waitForPageLoad();
+            $this->fillField($selectSearchTextField, $option);
+            $this->waitForPageLoad();
+            $this->click($selectSearchResult);
         }
     }
 

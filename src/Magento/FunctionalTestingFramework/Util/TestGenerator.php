@@ -505,13 +505,15 @@ class TestGenerator
                 $selector = $this->resolveLocatorFunctionInAttribute($selector);
             }
 
-            if (isset($customActionAttributes['selector1'])) {
-                $selector1 = $this->addUniquenessFunctionCall($customActionAttributes['selector1']);
+            if (isset($customActionAttributes['selector1']) || isset($customActionAttributes['filterSelector'])) {
+                $selectorOneValue = $customActionAttributes['selector1'] ?? $customActionAttributes['filterSelector'];
+                $selector1 = $this->addUniquenessFunctionCall($selectorOneValue);
                 $selector1 = $this->resolveLocatorFunctionInAttribute($selector1);
             }
 
-            if (isset($customActionAttributes['selector2'])) {
-                $selector2 = $this->addUniquenessFunctionCall($customActionAttributes['selector2']);
+            if (isset($customActionAttributes['selector2']) || isset($customActionAttributes['optionSelector'])) {
+                $selectorTwoValue = $customActionAttributes['selector2'] ?? $customActionAttributes['optionSelector'];
+                $selector2 = $this->addUniquenessFunctionCall($selectorTwoValue);
                 $selector2 = $this->resolveLocatorFunctionInAttribute($selector2);
             }
 
@@ -875,6 +877,16 @@ class TestGenerator
                     break;
                 case "dragAndDrop":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector1, $selector2);
+                    break;
+                case "selectMultipleOptions":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionName,
+                        $selector1,
+                        $selector2,
+                        $input,
+                        $parameterArray
+                    );
                     break;
                 case "executeInSelenium":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $function);

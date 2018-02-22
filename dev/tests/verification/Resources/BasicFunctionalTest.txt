@@ -131,6 +131,7 @@ class BasicFunctionalTestCest
 		$I->seeNumberOfElements(".functionalTestSelector");
 		$I->seeOptionIsSelected(".functionalTestSelector", "someInput");
 		$I->selectOption(".functionalTestSelector");
+		$I->selectMultipleOptions(".filter", ".option", ['opt1',  'opt2']);
 		$I->setCookie("someInput", "someCookieValue");
 		$I->switchToIFrame("someInput");
 		$I->switchToNextTab();
