@@ -523,7 +523,7 @@ class MagentoWebDriver extends WebDriver
     {
         $this->debugWebDriverLogs($test);
 
-        if ($this->pngReport == null && $this->htmlReport == null) {
+        if ($this->pngReport === null && $this->htmlReport === null) {
             $this->saveScreenshot();
         }
 

@@ -21,6 +21,7 @@
             <xs:element type="mResetLocaleType" name="mResetLocale" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="scrollToTopOfPageType" name="scrollToTopOfPage" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="clearFieldType" name="clearField" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertArrayIsSortedType" name="assertArrayIsSorted" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
     </xs:group>
 
@@ -197,4 +198,41 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
+    <xs:complexType name="assertArrayIsSortedType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that array is sorted according to sort direction.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="array" type="arrayType"/>
+        </xs:sequence>
+        <xs:attribute name="sortOrder" type="sortEnum" use="required"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="arrayType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        Array to be asserted for proper sorting. Must be in parameterArray format (ex. [1,2,3,4,5] or [alpha, brontosaurus, zebra]).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:simpleType name="sortEnum" final="restriction">
+        <xs:annotation>
+            <xs:documentation>
+                Sort direction.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="asc"/>
+            <xs:enumeration value="desc"/>
+        </xs:restriction>
+    </xs:simpleType>
 </xs:schema>
