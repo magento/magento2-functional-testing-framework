@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:include schemaLocation="commonAttributes.xsd"/>
+
+    <xs:group name="seeTags">
+        <xs:choice>
+            <xs:element type="seeType" name="see" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="seeCheckboxIsCheckedType" name="seeCheckboxIsChecked" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="seeCookieType" name="seeCookie" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="seeCurrentUrlEqualsType" name="seeCurrentUrlEquals" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="seeCurrentUrlMatchesType" name="seeCurrentUrlMatches" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="seeElementType" name="seeElement" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="seeElementInDOMType" name="seeElementInDOM" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="seeInCurrentUrlType" name="seeInCurrentUrl" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="seeInFieldType" name="seeInField" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="seeInFormFieldsType" name="seeInFormFields" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="seeInPageSourceType" name="seeInPageSource" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="seeInPopupType" name="seeInPopup" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="seeInSourceType" name="seeInSource" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="seeInTitleType" name="seeInTitle" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="seeLinkType" name="seeLink" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="seeNumberOfElementsType" name="seeNumberOfElements" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="seeOptionIsSelectedType" name="seeOptionIsSelected" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+    </xs:group>
+
+    <!-- Complex Types -->
+
+    <xs:complexType name="seeOptionIsSelectedType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts given option is selected in given element.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="userInput"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="seeType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts given text is seen in page. Can be given selector or selectorArray to narrow scope.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="userInput"/>
+                <xs:attribute ref="selector"/>
+                <xs:attribute ref="selectorArray"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="seeCheckboxIsCheckedType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts specified checkbox is checked.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="seeCookieType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts given cookie exists.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="userInput"/>
+                <xs:attribute ref="parameterArray"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="seeCurrentUrlEqualsType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts current Url matches given Url.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="url"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="seeCurrentUrlMatchesType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts current Url matches given regex.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="regex"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="seeElementType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts specified element exists and is visible. Can also specify expected attributes of this element.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector"/>
+                <xs:attribute ref="selectorArray"/>
+                <xs:attribute ref="parameterArray"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="seeElementInDOMType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts specified element is present in DOM, even if it is invisible. Can also specify expected attributes of this element.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="parameterArray"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="seeInCurrentUrlType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts given portion of URL exists in full URL.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="url"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="seeInFieldType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts given input or textarea contains the given value.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector"/>
+                <xs:attribute ref="selectorArray"/>
+                <xs:attribute ref="userInput"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="seeInFormFieldsType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts given array of form parameters are set element with passed selector.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute type="xs:string" name="parameterArray" use="required"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="seeInPageSourceType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts given page source contains given value.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="html" use="required"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="seeInPopupType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts the active JavaScript popup contains the given value.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="userInput"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="seeInSourceType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that the current page contains the given value in its raw source code.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="html" use="required"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="seeInTitleType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that the page title contains given value.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="userInput"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="seeLinkType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that the page contains a link with the given value. Can be narrowed to only links with href to given url.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="userInput"/>
+                <xs:attribute ref="url"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="seeNumberOfElementsType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that there are a certain number of elements matched by the given selector on the page.
+                Can be given a parameterArray to specify an expected range instead of an exact number (ex. [1,5])
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="userInput"/>
+                <xs:attribute ref="parameterArray"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+</xs:schema>

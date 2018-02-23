@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:include schemaLocation="commonAttributes.xsd"/>
+
+    <xs:group name="waitTags">
+        <xs:choice>
+            <xs:element type="waitType" name="wait" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForAjaxLoadType" name="waitForAjaxLoad" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForElementChangeType" name="waitForElementChange" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForElementType" name="waitForElement" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForElementNotVisibleType" name="waitForElementNotVisible" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForElementVisibleType" name="waitForElementVisible" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForJSType" name="waitForJS" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForLoadingMaskToDisappearType" name="waitForLoadingMaskToDisappear" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForPageLoadType" name="waitForPageLoad" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForTextType" name="waitForText" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+    </xs:group>
+
+    <!-- Attributes -->
+
+    <xs:attribute type="xs:string" name="time">
+        <xs:annotation>
+            <xs:documentation>
+                Time in seconds.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute type="xs:string" name="function">
+        <xs:annotation>
+            <xs:documentation>
+                Call back function to be executed.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <!-- Complex Types -->
+
+    <xs:complexType name="waitType">
+        <xs:annotation>
+            <xs:documentation>
+                Wait for given time in seconds.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="time"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="waitForAjaxLoadType">
+        <xs:annotation>
+            <xs:documentation>
+                Wait for Ajax loading to complete.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="time"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="waitForElementChangeType">
+        <xs:annotation>
+            <xs:documentation>
+                Wait up to given time for the given element to change.
+                Element “change” is determined by the given callback function, which is called repeatedly until the return value evaluates to true.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="function" use="required"/>
+                <xs:attribute ref="time"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="waitForElementType">
+        <xs:annotation>
+            <xs:documentation>
+                Wait up to given time for element to appear on a page.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="time"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="waitForElementNotVisibleType">
+        <xs:annotation>
+            <xs:documentation>
+                Wait up to given time for element to be invisible on a page.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="time"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="waitForElementVisibleType">
+        <xs:annotation>
+            <xs:documentation>
+                Wait up to given time for element to be visible on a page.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="time"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="waitForJSType">
+        <xs:annotation>
+            <xs:documentation>
+                Executes given JS function and waits up to time given for it to return true.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="function" use="required"/>
+                <xs:attribute ref="time"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="waitForLoadingMaskToDisappearType">
+        <xs:annotation>
+            <xs:documentation>
+                Waits until Magento Loading Masks are not visible.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="waitForPageLoadType">
+        <xs:annotation>
+            <xs:documentation>
+                Waits up to given time for page to have finished loading..
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="time"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="waitForTextType">
+        <xs:annotation>
+            <xs:documentation>
+                Waits up to given time for given value to appear on the page.
+                Can be given selector to narrow down scope.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="userInput"/>
+                <xs:attribute ref="time"/>
+                <xs:attribute ref="selector"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+</xs:schema>

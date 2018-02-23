@@ -247,7 +247,7 @@ class ModuleResolver
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
-        print "Version Information: {$response}\n";
+        print "\nVersion Information: {$response}\n";
     }
 
     /**

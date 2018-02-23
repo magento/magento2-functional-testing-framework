@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:attributeGroup name="commonActionAttributes">
+        <xs:attribute type="xs:string" name="stepKey" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    Unique identifier for test action.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+
+        <xs:attribute type="xs:string" name="before">
+            <xs:annotation>
+                <xs:documentation>
+                    stepKey of the next action.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+
+        <xs:attribute type="xs:string" name="after">
+            <xs:annotation>
+                <xs:documentation>
+                    stepKey of preceding action.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+
+    <xs:attribute type="xs:string" name="userInput" id="userInput">
+        <xs:annotation>
+            <xs:documentation>
+                Data or value for Test Action.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute type="xs:string" name="selector" id="selector">
+        <xs:annotation>
+            <xs:documentation>
+                Element selector for Test Action.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute type="xs:string" name="selectorArray" id="selectorArray">
+        <xs:annotation>
+            <xs:documentation>
+                Array of selectors for Test Action.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute type="xs:string" name="parameterArray" id="parameterArray">
+        <xs:annotation>
+            <xs:documentation>
+                Array of Parameters for in Test Action. Requires formatting of "[item1, item2]" or "[item1 => value1, item2 => value2]".
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute type="xs:string" name="url" id="url">
+        <xs:annotation>
+            <xs:documentation>
+                URL for Test Action.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute type="xs:string" name="html" id="html">
+        <xs:annotation>
+            <xs:documentation>
+                Block of HTML for Test Action. Use of this attribute not currently supported.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+</xs:schema>

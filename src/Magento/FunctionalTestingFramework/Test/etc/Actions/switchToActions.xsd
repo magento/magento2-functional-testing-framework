@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:include schemaLocation="commonAttributes.xsd"/>
+
+    <xs:group name="switchToTags">
+        <xs:choice>
+            <xs:element type="switchToIFrameType" name="switchToIFrame" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="switchToNextTabType" name="switchToNextTab" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="switchToPreviousTabType" name="switchToPreviousTab" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="switchToWindowType" name="switchToWindow" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+    </xs:group>
+
+    <!-- Complex Types -->
+
+    <xs:complexType name="switchToIFrameType">
+        <xs:annotation>
+            <xs:documentation>
+                Switches to another frame on the page.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector"/>
+                <xs:attribute ref="userInput"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="switchToNextTabType">
+        <xs:annotation>
+            <xs:documentation>
+                Switches to next browser tab. Can be given an offset.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="userInput"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="switchToPreviousTabType">
+        <xs:annotation>
+            <xs:documentation>
+                Switches to previous browser tab. Can be given an offset.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="userInput"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="switchToWindowType">
+        <xs:annotation>
+            <xs:documentation>
+                Switches to another browser window by given name.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="userInput"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+</xs:schema>
