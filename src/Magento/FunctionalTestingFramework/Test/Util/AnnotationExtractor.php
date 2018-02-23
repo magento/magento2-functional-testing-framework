@@ -46,8 +46,10 @@ class AnnotationExtractor extends BaseObjectExtractor
         foreach ($annotations as $annotationKey => $annotationData) {
             $annotationValues = [];
             // Only transform severity annotation
-            if ($annotationKey == "Severity") {
-                $annotationObjects[$annotationKey] = $this->transformAllureSeverityToMagento($annotationData);
+            if ($annotationKey == "severity") {
+                $annotationObjects[$annotationKey] = $this->transformAllureSeverityToMagento(
+                    $annotationData[0]['value']
+                );
                 continue;
             }
 
@@ -64,12 +66,12 @@ class AnnotationExtractor extends BaseObjectExtractor
      * This method transforms Magento severity values from Severity annotation
      * Returns Allure annotation value
      *
-     * @param array $annotationData
+     * @param string $annotationData
      * @return array
      */
     public function transformAllureSeverityToMagento($annotationData)
     {
-        $annotationValue = strtoupper($annotationData[0]);
+        $annotationValue = strtoupper($annotationData);
         //Mapping Magento severity to Allure Severity
         //Attempts to resolve annotationValue reference against MAGENTO_TO_ALLURE_SEVERITY_MAP -
         // if not found returns without modification

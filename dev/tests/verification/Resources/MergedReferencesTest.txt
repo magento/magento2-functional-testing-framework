@@ -52,7 +52,7 @@ class MergedReferencesTestCest
 	}
 
 	/**
-	 * @Severity(level = SeverityLevel::CRITICAL)
+	 * @Severity(level = SeverityLevel::MAJOR)
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
