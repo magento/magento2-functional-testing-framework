@@ -35,9 +35,6 @@
     </xs:complexType>
     <xs:simpleType name="dataTypeEnum" final="restriction">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="int"/>
-            <xs:enumeration value="float"/>
-            <xs:enumeration value="boolean"/>
             <xs:enumeration value="string"/>
             <xs:enumeration value="entity"/>
         </xs:restriction>

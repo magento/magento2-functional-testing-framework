@@ -16,7 +16,6 @@ class ArgumentObject
     const ARGUMENT_DATA_TYPE = 'type';
     const ARGUMENT_DATA_ENTITY = 'entity';
     const ARGUMENT_DATA_STRING = 'string';
-    const ARGUMENT_PRIMITIVE_DATA_TYPES = ['string', 'int', 'float', 'boolean'];
 
     /**
      * Name of the argument.
@@ -96,12 +95,12 @@ class ArgumentObject
         if ($this->dataType === ArgumentObject::ARGUMENT_DATA_ENTITY) {
             return $this->value;
         } else {
-            return $this->resolvePrimitiveValueTypes($isInnerArgument);
+            return $this->resolveStringArgument($isInnerArgument);
         }
     }
 
     /**
-     * Resolves simple arguments depending on type, and returns the appropriate format for simple replacement.
+     * Resolves simple string arguments and returns the appropriate format for simple replacement.
      * Takes in boolean to determine if the replacement is being done with an inner argument (as in if it's a parameter)
      *
      * Example Type     Non Inner           Inner
@@ -112,7 +111,7 @@ class ArgumentObject
      * @param boolean $isInnerArgument
      * @return string
      */
-    private function resolvePrimitiveValueTypes($isInnerArgument)
+    private function resolveStringArgument($isInnerArgument)
     {
         if (preg_match('/\$[\w]+\.[\w]+\$/', $this->value)) {
             //$persisted.data$ or $$persisted.data$$, notation not different if in parameter

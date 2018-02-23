@@ -227,7 +227,7 @@ class ActionGroupObject
             return $attributeValue;
         }
 
-        if (in_array($matchedArgument->getDataType(), ArgumentObject::ARGUMENT_PRIMITIVE_DATA_TYPES)) {
+        if ($matchedArgument->getDataType() === ArgumentObject::ARGUMENT_DATA_STRING) {
             return $this->replaceSimpleArgument(
                 $matchedArgument->getResolvedValue($isInnerArgument),
                 $variableName,
@@ -321,8 +321,8 @@ class ActionGroupObject
                 return $e->getName() == $name;
             }
         );
-        if (isset($matchedArgument[0])) {
-            return $matchedArgument[0];
+        if (isset(array_values($matchedArgument)[0])) {
+            return array_values($matchedArgument)[0];
         }
         return null;
     }
