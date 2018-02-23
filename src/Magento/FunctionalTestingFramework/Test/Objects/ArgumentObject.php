@@ -113,25 +113,6 @@ class ArgumentObject
      */
     private function resolveStringArgument($isInnerArgument)
     {
-//        if (preg_match('/\$[\w]+\.[\w]+\$/', $this->value)) {
-//            //$persisted.data$ or $$persisted.data$$, notation not different if in parameter
-//            return $this->value;
-//        } elseif (preg_match('/[\w]+\.[\w]+/', $this->value)) {
-//            //xml.data
-//            if ($isInnerArgument) {
-//                return $this->value;
-//            } else {
-//                return "{{" . $this->value . "}}";
-//            }
-//        } else {
-//            //stringLiteral
-//            if ($isInnerArgument) {
-//                return "'" . $this->value . "'";
-//            } else {
-//                return $this->value;
-//            }
-//        }
-        //stringLiteral
         if ($isInnerArgument) {
             return "'" . $this->value . "'";
         } else {
