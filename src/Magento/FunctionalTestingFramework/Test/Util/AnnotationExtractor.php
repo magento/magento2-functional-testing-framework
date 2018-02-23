@@ -14,7 +14,7 @@ class AnnotationExtractor extends BaseObjectExtractor
     const ANNOTATION_VALUE = 'value';
     const MAGENTO_TO_ALLURE_SEVERITY_MAP = [
         "BLOCKER" => "BLOCKER",
-        "CRITICAL" => "MAJOR",
+        "CRITICAL" => "CRITICAL",
         "MAJOR" => "NORMAL",
         "AVERAGE" => "MINOR",
         "MINOR" => "TRIVIAL"
