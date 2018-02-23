@@ -346,8 +346,9 @@ class ActionObject
      */
     private function stripAndReturnParameters($reference)
     {
-        // 'string', or 'string,!@#$%^&*()_+'
+        // 'string', or 'string,!@#$%^&*()_+, '
         $literalParametersRegex = "/'[^']+'/";
+        $postCleanupDelimiter = "::::";
 
         preg_match(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER, $reference, $matches);
         if (!empty($matches)) {
@@ -357,14 +358,17 @@ class ActionObject
             preg_match_all($literalParametersRegex, $strippedReference, $literalReferences);
             $strippedReference = preg_replace($literalParametersRegex, '&&stringReference&&', $strippedReference);
 
-            // Sanitize all 'string,data.field,$persisted.field$' => 'string, data.field, $persisted.field$' for return
-            $strippedReference = preg_replace('/,(?! )/', ', ', $strippedReference);
+            // Sanitize all 'string, data.field,$persisted.field$' => 'string::::data.field::::$persisted.field$' for return
+            $strippedReference = preg_replace('/,/', ', ', $strippedReference);
+            $strippedReference = str_replace(',', $postCleanupDelimiter, $strippedReference);
+            $strippedReference = str_replace(' ', '', $strippedReference);
 
+            // Replace string references into string, needed to keep sequence
             foreach ($literalReferences[0] as $key => $value) {
                 $strippedReference = preg_replace('/&&stringReference&&/', $value, $strippedReference, 1);
             }
 
-            return explode(', ', $strippedReference);
+            return explode($postCleanupDelimiter, $strippedReference);
         }
         return null;
     }

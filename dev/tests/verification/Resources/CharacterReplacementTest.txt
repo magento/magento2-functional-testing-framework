@@ -28,8 +28,10 @@ class CharacterReplacementTestCest
 	public function CharacterReplacementTest(AcceptanceTester $I)
 	{
 		$I->click("#element .abcdefghijklmnopqrstuvwxyz1234567890");
-		$I->click("#element .`~!@#$%^&*()-_=+{}[]|\;:\".,></?()");
+		$I->click("#element .`~!@#$%^&*()-_=+{}[]|\;:\".,></?()3., ");
+		$I->click("#element .words, and, commas, and, spaces");
 		$I->click("#abcdefghijklmnopqrstuvwxyz1234567890 .abcdefghijklmnopqrstuvwxyz1234567890");
 		$I->click("#`~!@#$%^&*()-_=+{}[]|\;:\".,></?() .`~!@#$%^&*()-_=+{}[]|\;:\".,></?()");
+		$I->click("#words, and, commas, and, spaces .words, and, commas, and, spaces");
 	}
 }
