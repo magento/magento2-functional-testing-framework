@@ -56,14 +56,23 @@ class ActionGroupObjectTest extends TestCase
         $steps = $actionGroupUnderTest->getSteps(['arg1' => 'data2'], self::ACTION_GROUP_MERGE_KEY);
         $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => 'testValue2']);
 
-        // Simple Data
+        // entity.field as argument
+        $actionGroupUnderTest = (new ActionGroupObjectBuilder())
+            ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{arg1}}'])])
+            ->withArguments([new ArgumentObject('arg1', null, 'entity')])
+            ->build();
+
+        $steps = $actionGroupUnderTest->getSteps(['arg1' => 'data2.field2'], self::ACTION_GROUP_MERGE_KEY);
+        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => 'testValue2']);
+
+        // String Data
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{simple}}'])])
             ->withArguments([new ArgumentObject('simple', null, 'string')])
             ->build();
 
-        $steps = $actionGroupUnderTest->getSteps(['simple' => 'data2.field2'], self::ACTION_GROUP_MERGE_KEY);
-        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => 'testValue2']);
+        $steps = $actionGroupUnderTest->getSteps(['simple' => 'override'], self::ACTION_GROUP_MERGE_KEY);
+        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => 'override']);
     }
 
     /**
@@ -191,9 +200,9 @@ class ActionGroupObjectTest extends TestCase
         $steps = $actionGroupUnderTest->getSteps(['simple' => 'stringLiteral'], self::ACTION_GROUP_MERGE_KEY);
         $this->assertOnMergeKeyAndActionValue($steps, ['selector' => '.selector stringLiteral']);
 
-        // XML Data
+        // String Literal w/ data-like structure
         $steps = $actionGroupUnderTest->getSteps(['simple' => 'data2.field2'], self::ACTION_GROUP_MERGE_KEY);
-        $this->assertOnMergeKeyAndActionValue($steps, ['selector' => '.selector testValue2']);
+        $this->assertOnMergeKeyAndActionValue($steps, ['selector' => '.selector data2.field2']);
 
         // Persisted Data
         $steps = $actionGroupUnderTest->getSteps(['simple' => '$someData.field1$'], self::ACTION_GROUP_MERGE_KEY);

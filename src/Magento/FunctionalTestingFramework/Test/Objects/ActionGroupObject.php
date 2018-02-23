@@ -269,7 +269,8 @@ class ActionGroupObject
         if ($isInnerArgument) {
             return preg_replace("/(?<![\w]){$variableName}(?![(\w])/", $argumentValue, $attributeValue);
         } else {
-            return preg_replace("/{{(?<![\w]){$variableName}(?![(\w])}}/", $argumentValue, $attributeValue);
+//            return preg_replace("/{{(?<![\w]){$variableName}(?![(\w])}}/", $argumentValue, $attributeValue);
+            return str_replace("{{{$variableName}}}", $argumentValue, $attributeValue);
         }
     }
 

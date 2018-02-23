@@ -29,11 +29,13 @@ class ActionGroupWithSimpleDataUsageFromPassedArgumentCest
 	 */
 	public function ActionGroupWithSimpleDataUsageFromPassedArgument(AcceptanceTester $I)
 	{
-		$I->see("overrideString", "class.overrideString");
 		$I->see("overrideString", "#element .overrideString");
-		$I->see("John", "class.John");
-		$I->see("John", "#element .John");
-		$I->see($persisted->getCreatedDataByName('data'), "class." . $persisted->getCreatedDataByName('data'));
+		$I->see("1", "#element .1");
+		$I->see("1.5", "#element .1.5");
+		$I->see("true", "#element .true");
+		$I->see("simpleData.firstname", "#element .simpleData.firstname");
 		$I->see($persisted->getCreatedDataByName('data'), "#element ." . $persisted->getCreatedDataByName('data'));
+		$I->see("John", "#element .John");
+		$I->see($simpleData->getCreatedDataByName('firstname'), "#element ." . $simpleData->getCreatedDataByName('firstname'));
 	}
 }
