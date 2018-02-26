@@ -59,6 +59,13 @@ class ModuleResolver
     protected $moduleUrl = "rest/V1/modules";
 
     /**
+     * Url for magento version information.
+     *
+     * @var string
+     */
+    protected $versionUrl = "magento_version ";
+
+    /**
      * List of known directory that does not map to a Magento module.
      *
      * @var array
@@ -123,13 +130,15 @@ class ModuleResolver
             return $this->enabledModules;
         }
 
+        $this->printMagentoVersionInfo();
+
         $token = $this->getAdminToken();
         if (!$token || !is_string($token)) {
             $this->enabledModules = [];
             return $this->enabledModules;
         }
 
-        $url = $_ENV['MAGENTO_BASE_URL'] . $this->moduleUrl;
+        $url = ConfigSanitizerUtil::sanitizeUrl($_ENV['MAGENTO_BASE_URL']) . $this->moduleUrl;
 
         $headers = [
             'Authorization: Bearer ' . $token,
@@ -175,29 +184,70 @@ class ModuleResolver
         }
 
         $enabledModules = $this->getEnabledModules();
+        $forceGeneration = $GLOBALS['FORCE_PHP_GENERATE'] ?? false;
+
+        if (empty($enabledModules) && !$forceGeneration) {
+            trigger_error(
+                "Could not retrieve enabled modules from provided 'MAGENTO_BASE_URL'," .
+                "please make sure Magento is available at this url",
+                E_USER_ERROR
+            );
+        }
+
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
-        $allModulePaths = glob($modulePath . '*/*');
+
+        // Build an associative array of module name to existing module filepaths based on defined TEST MODULE PATH
+        $allModulePaths = [];
+        foreach (glob($modulePath . '*/*') as $modPath) {
+            $modName = basename($modPath);
+            $allModulePaths[$modName] = $modPath;
+        }
+
         if (empty($enabledModules)) {
             $this->enabledModulePaths = $this->applyCustomModuleMethods($allModulePaths);
             return $this->enabledModulePaths;
         }
 
         $enabledModules = array_merge($enabledModules, $this->getModuleWhitelist());
-        $enabledDirectories = [];
-        foreach ($enabledModules as $module) {
-            $directoryName = explode('_', $module)[1];
-            $enabledDirectories[$directoryName] = $directoryName;
-        }
+        $enabledDirectoryPaths = $this->getEnabledDirectoryPaths($enabledModules, $allModulePaths);
 
-        foreach ($allModulePaths as $index => $modulePath) {
-            $moduleShortName = basename($modulePath);
-            if (!isset($enabledDirectories[$moduleShortName]) && !isset($this->knownDirectories[$moduleShortName])) {
-                unset($allModulePaths[$index]);
+        $this->enabledModulePaths = $this->applyCustomModuleMethods($enabledDirectoryPaths);
+        return $this->enabledModulePaths;
+    }
+
+    /**
+     * Runs through enabled modules and maps them known module paths by name.
+     * @param array $enabledModules
+     * @param array $allModulePaths
+     * @return array
+     */
+    private function getEnabledDirectoryPaths($enabledModules, $allModulePaths)
+    {
+        $enabledDirectoryPaths = [];
+        foreach ($enabledModules as $magentoModuleName) {
+            $moduleShortName = explode('_', $magentoModuleName)[1];
+            if (!isset($this->knownDirectories[$moduleShortName]) && !isset($allModulePaths[$moduleShortName])) {
+                continue;
+            } else {
+                $enabledDirectoryPaths[$moduleShortName] = $allModulePaths[$moduleShortName];
             }
         }
+        return $enabledDirectoryPaths;
+    }
 
-        $this->enabledModulePaths = $this->applyCustomModuleMethods($allModulePaths);
-        return $this->enabledModulePaths;
+    /**
+     * Executes a REST call to the supplied Magento Base Url for version information to display during generation
+     *
+     * @return void
+     */
+    private function printMagentoVersionInfo()
+    {
+        $url = ConfigSanitizerUtil::sanitizeUrl($_ENV['MAGENTO_BASE_URL']) . $this->versionUrl;
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        print "\nVersion Information: {$response}\n";
     }
 
     /**
@@ -213,7 +263,7 @@ class ModuleResolver
             return false;
         }
 
-        $url = $_ENV['MAGENTO_BASE_URL'] . $this->adminTokenUrl;
+        $url = ConfigSanitizerUtil::sanitizeUrl($_ENV['MAGENTO_BASE_URL']) . $this->adminTokenUrl;
         $data = [
             'username' => $login,
             'password' => $password
@@ -255,7 +305,13 @@ class ModuleResolver
     protected function applyCustomModuleMethods($modulesPath)
     {
         $modulePathsResult = $this->removeBlacklistModules($modulesPath);
-        return array_merge($modulePathsResult, $this->getCustomModulePaths());
+        $customModulePaths = $this->getCustomModulePaths();
+
+        array_map(function ($value) {
+            print "Including module path: {$value}\n";
+        }, $customModulePaths);
+
+        return array_merge($modulePathsResult, $customModulePaths);
     }
 
     /**
@@ -267,9 +323,10 @@ class ModuleResolver
     private function removeBlacklistModules($modulePaths)
     {
         $modulePathsResult = $modulePaths;
-        foreach ($modulePathsResult as $index => $modulePath) {
-            if (in_array(basename($modulePath), $this->getModuleBlacklist())) {
-                unset($modulePathsResult[$index]);
+        foreach ($modulePathsResult as $moduleName => $modulePath) {
+            if (in_array($moduleName, $this->getModuleBlacklist())) {
+                unset($modulePathsResult[$moduleName]);
+                print "Excluding module: {$moduleName}\n";
             }
         }
 

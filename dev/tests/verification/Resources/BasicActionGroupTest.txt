@@ -25,9 +25,13 @@ class BasicActionGroupTestCest
 {
 	/**
 	  * @var DataPersistenceHandler $createPersonParam;
-	 */
+	  */
 	protected $createPersonParam;
 
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
 	public function _before(AcceptanceTester $I)
 	{
 		$I->amGoingTo("create entity that has the stepKey: createPersonParam");
@@ -39,7 +43,7 @@ class BasicActionGroupTestCest
 	}
 
 	/**
-	 * @Severity(level = SeverityLevel::CRITICAL)
+	 * @Severity(level = SeverityLevel::MAJOR)
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void

@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Module;
 
+use Codeception\Events;
 use Codeception\Module\WebDriver;
 use Codeception\Test\Descriptor;
 use Codeception\TestInterface;
@@ -21,6 +22,7 @@ use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
 use Magento\Setup\Exception;
 use Magento\FunctionalTestingFramework\Util\ConfigSanitizerUtil;
+use Yandex\Allure\Adapter\Event\TestCaseFinishedEvent;
 use Yandex\Allure\Adapter\Support\AttachmentSupport;
 
 /**
@@ -79,6 +81,27 @@ class MagentoWebDriver extends WebDriver
         LC_TIME => null,
         LC_MESSAGES => null,
     ];
+
+    /**
+     * Current Test Interface
+     *
+     * @var TestInterface
+     */
+    private $current_test;
+
+    /**
+     * Png image filepath for current test
+     *
+     * @var string
+     */
+    private $pngReport;
+
+    /**
+     * Html filepath for current test
+     *
+     * @var string
+     */
+    private $htmlReport;
 
     public function _initialize()
     {
@@ -248,18 +271,33 @@ class MagentoWebDriver extends WebDriver
         $this->waitForPageLoad();
         $this->waitForElementVisible($selectDropdown);
         $this->click($selectDropdown);
-        foreach ($options as $option) {
-            $this->waitForPageLoad();
-            $this->fillField($selectSearchText, '');
-            $this->waitForPageLoad();
-            $this->fillField($selectSearchText, $option);
-            $this->waitForPageLoad();
-            $this->click($selectSearchResult);
-        }
+
+        $this->selectMultipleOptions($selectSearchText, $selectSearchResult, $options);
+
         if ($requireAction) {
             $selectAction = $select . ' button[class=action-default]';
             $this->waitForPageLoad();
             $this->click($selectAction);
+        }
+    }
+
+    /**
+     * Select multiple options from a drop down using a filter and text field to narrow results.
+     *
+     * @param string $selectSearchTextField
+     * @param string $selectSearchResult
+     * @param string[] $options
+     * @return void
+     */
+    public function selectMultipleOptions($selectSearchTextField, $selectSearchResult, array $options)
+    {
+        foreach ($options as $option) {
+            $this->waitForPageLoad();
+            $this->fillField($selectSearchTextField, '');
+            $this->waitForPageLoad();
+            $this->fillField($selectSearchTextField, $option);
+            $this->waitForPageLoad();
+            $this->click($selectSearchResult);
         }
     }
 
@@ -465,22 +503,47 @@ class MagentoWebDriver extends WebDriver
         }
     }
 
+    public function _before(TestInterface $test)
+    {
+        $this->current_test = $test;
+        $this->htmlReport = null;
+        $this->pngReport = null;
+
+        parent::_before($test);
+    }
+
     /**
      * Override for _failed method in Codeception method. Adds png and html attachments to allure report
      * following parent execution of test failure processing.
+     *
      * @param TestInterface $test
      * @param \Exception $fail
      */
     public function _failed(TestInterface $test, $fail)
     {
-        parent::_failed($test, $fail);
+        $this->debugWebDriverLogs($test);
 
-        // Reconstruct file naming from codeception method
+        if ($this->pngReport === null && $this->htmlReport === null) {
+            $this->saveScreenshot();
+        }
+
+        $this->addAttachment($this->pngReport, $test->getMetadata()->getName() . '.png', 'image/png');
+        $this->addAttachment($this->htmlReport, $test->getMetadata()->getName() . '.html', 'text/html');
+
+        $this->debug("Failure due to : {$fail->getMessage()}");
+        $this->debug("Screenshot saved to {$this->pngReport}");
+        $this->debug("Html saved to {$this->htmlReport}");
+    }
+
+    /**
+     * Function which saves a screenshot of the current stat of the browser
+     */
+    public function saveScreenshot()
+    {
+        $test = $this->current_test;
         $filename = preg_replace('~\W~', '.', Descriptor::getTestSignature($test));
         $outputDir = codecept_output_dir();
-        $pngReport = $outputDir . mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png';
-        $htmlReport = $outputDir . mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html';
-        $this->addAttachment($pngReport, $test->getMetadata()->getName() . '.png', 'image/png');
-        $this->addAttachment($htmlReport, $test->getMetadata()->getName() . '.html', 'text/html');
+        $this->_saveScreenshot($this->pngReport = $outputDir . mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png');
+        $this->_savePageSource($this->htmlReport = $outputDir . mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html');
     }
 }

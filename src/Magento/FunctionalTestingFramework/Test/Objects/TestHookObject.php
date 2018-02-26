@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Test\Objects;
 
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
+use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 
 /**
  * Class TestHookObject
@@ -37,6 +38,7 @@ class TestHookObject
     /**
      * Array of Hook-defined data.
      * @var array|null
+     * @deprecated because no usage of property exist. Will be removed next major release.
      */
     private $customData = [];
 
@@ -77,6 +79,7 @@ class TestHookObject
     /**
      * Returns an array of customData to be interperpreted by the generator.
      * @return array|null
+     * @deprecated because no usages where found. Will be removed next major release.
      */
     public function getCustomData()
     {

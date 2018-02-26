@@ -1,0 +1,79 @@
+<?php
+namespace Magento\AcceptanceTest\_generated\Backend;
+
+use Magento\FunctionalTestingFramework\AcceptanceTester;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
+use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
+use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use \Codeception\Util\Locator;
+use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
+use Yandex\Allure\Adapter\Annotation\Title;
+use Yandex\Allure\Adapter\Annotation\Description;
+use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
+use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
+
+/**
+ * @Title("A Functional Cest")
+ * @group functional
+ * @group mergeTest
+ * @Features({"Merge Functional Cest"})
+ * @Stories({"MQE-433"})
+ */
+class BasicMergeTestCest
+{
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _before(AcceptanceTester $I)
+	{
+		$I->amOnPage("/beforeUrl");
+		$I->see("#before2");
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		$I->amOnPage("/afterUrl1");
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _failed(AcceptanceTester $I)
+	{
+		$I->saveScreenshot();
+		$this->_after($I);
+	}
+
+	/**
+	 * @Severity(level = SeverityLevel::MAJOR)
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function BasicMergeTest(AcceptanceTester $I)
+	{
+		$I->amOnPage("/step1");
+		$I->click("#step2");
+		$I->fillField("#username", "step3");
+		$I->click("#step4");
+		$I->fillField("#password", "step5");
+		$I->click("#step6Merged");
+		$I->click("#element .Jane .step7Merge");
+		$I->amOnPage("/Jane/Dane.html");
+		$I->fillField("#foo", "Jane");
+		$I->fillField("#bar", "Dane");
+		$I->searchAndMultiSelectOption("#foo", ["Jane", "Dane"]);
+		$I->see("#element .Jane");
+		$I->click("#step10MergedInResult");
+	}
+}

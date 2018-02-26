@@ -11,7 +11,9 @@ use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
+use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
+use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 
 /**
@@ -20,7 +22,6 @@ use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
  */
 class TestGenerator
 {
-
     const REQUIRED_ENTITY_REFERENCE = 'createDataKey';
     const GENERATED_DIR = '_generated';
 
@@ -242,6 +243,7 @@ class TestGenerator
 
     /**
      * Generates Annotations PHP for given object, using given scope to determine indentation and additional output.
+     *
      * @param array $annotationsObject
      * @param boolean $isMethod
      * @return string
@@ -258,6 +260,10 @@ class TestGenerator
         $annotationsPhp = "{$indent}/**\n";
 
         foreach ($annotationsObject as $annotationType => $annotationName) {
+            //Remove conditional and output useCaseId upon completion of MQE-588
+            if ($annotationType == "useCaseId") {
+                continue;
+            }
             if (!$isMethod) {
                 $annotationsPhp.= $this->generateClassAnnotations($annotationType, $annotationName);
             } else {
@@ -374,6 +380,7 @@ class TestGenerator
      * Since nearly half of all Codeception methods don't share the same signature I had to setup a massive Case
      * statement to handle each unique action. At the bottom of the case statement there is a generic function that can
      * construct the PHP string for nearly half of all Codeception actions.
+     *
      * @param array $stepsObject
      * @param array|bool $hookObject
      * @return string
@@ -416,6 +423,7 @@ class TestGenerator
             $dependentSelector = null;
             $visible = null;
             $command = null;
+            $sortOrder = null;
 
             $assertExpected = null;
             $assertActual = null;
@@ -434,6 +442,10 @@ class TestGenerator
                 $attribute = $customActionAttributes['attribute'];
             }
 
+            if (isset($customActionAttributes['sortOrder'])) {
+                $sortOrder = $customActionAttributes['sortOrder'];
+            }
+
             if (isset($customActionAttributes['userInput']) && isset($customActionAttributes['url'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['userInput']);
                 $url = $this->addUniquenessFunctionCall($customActionAttributes['url']);
@@ -442,7 +454,8 @@ class TestGenerator
             } elseif (isset($customActionAttributes['url'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['url']);
             } elseif (isset($customActionAttributes['expectedValue'])) {
-                $input = $this->addUniquenessFunctionCall($customActionAttributes['expectedValue']);
+                //For old Assert backwards Compatibility, remove when deprecating
+                $assertExpected = $this->addUniquenessFunctionCall($customActionAttributes['expectedValue']);
             } elseif (isset($customActionAttributes['regex'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['regex']);
             }
@@ -497,13 +510,15 @@ class TestGenerator
                 $selector = $this->resolveLocatorFunctionInAttribute($selector);
             }
 
-            if (isset($customActionAttributes['selector1'])) {
-                $selector1 = $this->addUniquenessFunctionCall($customActionAttributes['selector1']);
+            if (isset($customActionAttributes['selector1']) || isset($customActionAttributes['filterSelector'])) {
+                $selectorOneValue = $customActionAttributes['selector1'] ?? $customActionAttributes['filterSelector'];
+                $selector1 = $this->addUniquenessFunctionCall($selectorOneValue);
                 $selector1 = $this->resolveLocatorFunctionInAttribute($selector1);
             }
 
-            if (isset($customActionAttributes['selector2'])) {
-                $selector2 = $this->addUniquenessFunctionCall($customActionAttributes['selector2']);
+            if (isset($customActionAttributes['selector2']) || isset($customActionAttributes['optionSelector'])) {
+                $selectorTwoValue = $customActionAttributes['selector2'] ?? $customActionAttributes['optionSelector'];
+                $selector2 = $this->addUniquenessFunctionCall($selectorTwoValue);
                 $selector2 = $this->resolveLocatorFunctionInAttribute($selector2);
             }
 
@@ -784,6 +799,14 @@ class TestGenerator
                     $testSteps .= $dataPersistenceHandlerFunctionCall;
                     $testSteps .= $getEntityFunctionCall;
                     break;
+                case "assertArrayIsSorted":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionName,
+                        $parameterArray,
+                        $this->wrapWithDoubleQuotes($sortOrder)
+                    );
+                    break;
                 case "seeCurrentUrlEquals":
                 case "seeCurrentUrlMatches":
                 case "dontSeeCurrentUrlEquals":
@@ -868,6 +891,16 @@ class TestGenerator
                 case "dragAndDrop":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector1, $selector2);
                     break;
+                case "selectMultipleOptions":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionName,
+                        $selector1,
+                        $selector2,
+                        $input,
+                        $parameterArray
+                    );
+                    break;
                 case "executeInSelenium":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $function);
                     break;
@@ -898,6 +931,14 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $input, $time, $selector);
                     break;
                 case "formatMoney":
+                    $testSteps .= $this->wrapFunctionCallWithReturnValue(
+                        $stepKey,
+                        $actor,
+                        $actionName,
+                        $input,
+                        $locale
+                    );
+                    break;
                 case "mSetLocale":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $input, $locale);
                     break;
@@ -1024,8 +1065,8 @@ class TestGenerator
                     break;
                 case "assertElementContainsAttribute":
                     // If a blank string or null is passed in we need to pass a blank string to the function.
-                    if (empty($input)) {
-                        $input = '""';
+                    if (empty($assertExpected)) {
+                        $assertExpected = '""';
                     }
 
                     $testSteps .= $this->wrapFunctionCall(
@@ -1033,7 +1074,7 @@ class TestGenerator
                         $actionName,
                         $selector,
                         $this->wrapWithDoubleQuotes($attribute),
-                        $input
+                        $assertExpected
                     );
                     break;
                 case "assertEmpty":
@@ -1092,6 +1133,7 @@ class TestGenerator
 
     /**
      * Resolves Locator:: in given $attribute if it is found.
+     *
      * @param string $attribute
      * @return string
      */
@@ -1107,6 +1149,7 @@ class TestGenerator
     /**
      * Resolves replacement of $input$ and $$input$$ in given function, recursing and replacing individual arguments
      * Also determines if each argument requires any quote replacement.
+     *
      * @param string $inputString
      * @param array $args
      * @return string
@@ -1138,6 +1181,7 @@ class TestGenerator
 
     /**
      * Trims given $input of "{$var}" to $var if needed. Returns $input if format fails.
+     *
      * @param string $input
      * @return string
      */
@@ -1152,7 +1196,8 @@ class TestGenerator
     }
 
     /**
-     * Replaces all matches into given outputArg with. Variable scope determined by delimiter given
+     * Replaces all matches into given outputArg with. Variable scope determined by delimiter given.
+     *
      * @param array $matches
      * @param string &$outputArg
      * @param string $delimiter
@@ -1190,6 +1235,7 @@ class TestGenerator
     /**
      * Processes an argument for $data.key$ and determines if it needs quote breaks on either ends.
      * Returns an output with quote breaks and replacement already done.
+     *
      * @param string $match
      * @param string $argument
      * @param string $replacement
@@ -1207,7 +1253,8 @@ class TestGenerator
     }
 
     /**
-     * Wraps all args inside function give with double quotes. Uses regex to locate arguments of function
+     * Wraps all args inside function give with double quotes. Uses regex to locate arguments of function.
+     *
      * @param string $functionRegex
      * @param string $input
      * @return string
@@ -1244,6 +1291,7 @@ class TestGenerator
 
     /**
      * Performs str_replace on variable reference, dependent on delimiter and returns exploded array.
+     *
      * @param string $reference
      * @param string $delimiter
      * @return array
@@ -1256,7 +1304,8 @@ class TestGenerator
 
     /**
      * Creates a PHP string for the _before/_after methods if the Test contains an <before> or <after> block.
-     * @param array $hookObjects
+     *
+     * @param TestHookObject[] $hookObjects
      * @return string
      * @throws TestReferenceException
      * @throws \Exception
@@ -1265,27 +1314,32 @@ class TestGenerator
     {
         $hooks = "";
         $createData = false;
+
         foreach ($hookObjects as $hookObject) {
             $type = $hookObject->getType();
             $dependencies = 'AcceptanceTester $I';
 
             foreach ($hookObject->getActions() as $step) {
+                if ($hookObject->getType() == TestObjectExtractor::TEST_FAILED_HOOK) {
+                    continue;
+                }
+
                 if (($step->getType() == "createData")
                     || ($step->getType() == "updateData")
                     || ($step->getType() == "getData")
                 ) {
                     $hooks .= "\t/**\n";
                     $hooks .= sprintf("\t  * @var DataPersistenceHandler $%s;\n", $step->getStepKey());
-                    $hooks .= "\t */\n";
+                    $hooks .= "\t  */\n";
                     $hooks .= sprintf("\tprotected $%s;\n\n", $step->getStepKey());
                     $createData = true;
-                } elseif ($step->getType() == "entity") {
-                    $hooks .= "\t/**\n";
-                    $hooks .= sprintf("\t  * @var EntityDataObject $%s;\n", $step->getStepKey());
-                    $hooks .= "\t */\n";
-                    $hooks .= sprintf("\tprotected $%s;\n\n", $step->getCustomActionAttributes()['name']);
                 }
             }
+
+            $hooks .= "\t/**\n";
+            $hooks .= "\t  * @param AcceptanceTester \$I\n";
+            $hooks .= "\t  * @throws \Exception\n";
+            $hooks .= "\t  */\n";
 
             try {
                 $steps = $this->generateStepsPhp(
@@ -1294,6 +1348,12 @@ class TestGenerator
                 );
             } catch (TestReferenceException $e) {
                 throw new TestReferenceException($e->getMessage() . " in Element \"" . $type . "\"");
+            }
+
+            if ($hookObject->getType() == TestObjectExtractor::TEST_FAILED_HOOK) {
+                $steps.="\t\t";
+                $steps.='$this->_after($I);';
+                $steps.="\n";
             }
 
             $hooks .= sprintf("\tpublic function _{$type}(%s)\n", $dependencies);
@@ -1308,6 +1368,7 @@ class TestGenerator
     /**
      * Creates a PHP string based on a <test> block.
      * Concatenates the Test Annotations PHP and Test PHP for a single Test.
+     *
      * @param TestObject $test
      * @return string
      * @throws TestReferenceException
@@ -1338,6 +1399,7 @@ class TestGenerator
 
     /**
      * Detects uniqueness function calls on given attribute, and calls addUniquenessFunctionCall on matches.
+     *
      * @param string $input
      * @return string
      */
@@ -1474,6 +1536,8 @@ class TestGenerator
         }
         $output .= ");\n";
 
+        $output = $this->resolveEnvReferences($output, $args);
+
         return $this->resolveTestVariable($output, $args);
     }
 
@@ -1503,9 +1567,39 @@ class TestGenerator
         }
         $output .= ");\n";
 
+        $output = $this->resolveEnvReferences($output, $args);
+
         return $this->resolveTestVariable($output, $args);
     }
     // @codingStandardsIgnoreEnd
+
+    /**
+     * Resolves {{_ENV.variable}} into getenv("variable") for test-runtime ENV referencing.
+     * @param string $inputString
+     * @param array $args
+     * @return string
+     */
+    private function resolveEnvReferences($inputString, $args)
+    {
+        $envRegex = "/{{_ENV\.([\w]+)}}/";
+
+        $outputString = $inputString;
+
+        foreach ($args as $arg) {
+            preg_match_all($envRegex, $arg, $matches);
+            if (!empty($matches[0])) {
+                $fullMatch = $matches[0][0];
+                $envVariable = $matches[1][0];
+                unset($matches);
+                $replacement = "getenv(\"{$envVariable}\")";
+
+                $outputArg = $this->processQuoteBreaks($fullMatch, $arg, $replacement);
+                $outputString = str_replace($arg, $outputArg, $outputString);
+            }
+        }
+
+        return $outputString;
+    }
 
     /**
      * Validates parameter array format, making sure user has enclosed string with square brackets.

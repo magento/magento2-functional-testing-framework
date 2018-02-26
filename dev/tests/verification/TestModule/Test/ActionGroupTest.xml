@@ -9,7 +9,7 @@
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
     <test name="ActionGroupWithNoArguments">
         <annotations>
-            <severity value="SEVERE"/>
+            <severity value="BLOCKER"/>
             <title value="Action Group With No Argument"/>
         </annotations>
         <actionGroup ref="actionGroupWithoutArguments" stepKey="actionGroup"/>
@@ -17,7 +17,7 @@
 
     <test name="ActionGroupWithDefaultArgumentAndStringSelectorParam">
         <annotations>
-            <severity value="SEVERE"/>
+            <severity value="BLOCKER"/>
             <title value="Action Group With Default Argument Value and Hardcoded Value in Param"/>
         </annotations>
 
@@ -26,7 +26,7 @@
 
     <test name="ActionGroupWithPassedArgumentAndStringSelectorParam">
         <annotations>
-            <severity value="SEVERE"/>
+            <severity value="BLOCKER"/>
             <title value="Action Group With Passed Argument Value and Hardcoded Value in Param"/>
         </annotations>
 
@@ -37,7 +37,7 @@
 
     <test name="ActionGroupWithSingleParameterSelectorFromDefaultArgument">
         <annotations>
-            <severity value="SEVERE"/>
+            <severity value="BLOCKER"/>
             <title value="Action Group With Default Argument Value and Argument Value in Param"/>
         </annotations>
 
@@ -46,7 +46,7 @@
 
     <test name="ActionGroupWithSingleParameterSelectorFromPassedArgument">
         <annotations>
-            <severity value="SEVERE"/>
+            <severity value="BLOCKER"/>
             <title value="Action Group With Passed Argument Value and Argument Value in Param"/>
         </annotations>
 
@@ -57,7 +57,7 @@
 
     <test name="ActionGroupWithMultipleParameterSelectorsFromDefaultArgument">
         <annotations>
-            <severity value="SEVERE"/>
+            <severity value="BLOCKER"/>
             <title value="Action Group With Passed Argument Value and Multiple Argument Values in Param"/>
         </annotations>
 

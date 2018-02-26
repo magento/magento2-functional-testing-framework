@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:include schemaLocation="commonAttributes.xsd"/>
+
+    <xs:group name="customTags">
+        <xs:choice>
+            <xs:element type="magentoCLIType" name="magentoCLI" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="closeAdminNotificationType" name="closeAdminNotification" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="searchAndMultiSelectOptionType" name="searchAndMultiSelectOption" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="selectMultipleOptionsType" name="selectMultipleOptions" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="formatMoneyType" name="formatMoney" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="parseFloatType" name="parseFloat" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="mSetLocaleType" name="mSetLocale" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="mResetLocaleType" name="mResetLocale" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="scrollToTopOfPageType" name="scrollToTopOfPage" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="clearFieldType" name="clearField" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertArrayIsSortedType" name="assertArrayIsSorted" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+    </xs:group>
+
+    <!-- Complex Types -->
+
+    <xs:complexType name="magentoCLIType">
+        <xs:annotation>
+            <xs:documentation>
+                Executes given command against Magento CLI in test Magento instance.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="command">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Magento CLI command to be executed. Can be given options just like normal CLI interaction.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="closeAdminNotificationType">
+        <xs:annotation>
+            <xs:documentation>
+                Closes Admin Notification prompt.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="searchAndMultiSelectOptionType">
+        <xs:annotation>
+            <xs:documentation>
+                Searches and Selects all given options in given Magento dropdown element.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="parameterArray" use="required"/>
+                <xs:attribute type="xs:boolean" name="requiredAction">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Determines if Multi Select needs to click "Done" after selections.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="selectMultipleOptionsType">
+        <xs:annotation>
+            <xs:documentation>
+                Selects all given options in given Magento dropdown element.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="array" type="xs:string" minOccurs="0"/>
+        </xs:choice>
+        <xs:attribute type="xs:string" name="filterSelector" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The selector for the text filter field.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="optionSelector" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The selector used to select the corresponding options based on the filter field.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="formatMoneyType">
+        <xs:annotation>
+            <xs:documentation>
+                Formats given input to given locale. Returns formatted string for test use.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="userInput"/>
+                <xs:attribute type="xs:string" name="locale">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Locale to format given input. Defaults to 'en_US.UTF-8' if nothing is given.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="parseFloatType">
+        <xs:annotation>
+            <xs:documentation>
+                Parses given float number with thousands_sep. Returns float for test use.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="userInput"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="mSetLocaleType">
+        <xs:annotation>
+            <xs:documentation>
+                Sets locale according to given locale and input.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="userInput"/>
+                <xs:attribute type="xs:string" name="locale" use="required">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Locale to set. Ex. 'en_US.UTF-8'
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="mResetLocaleType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="scrollToTopOfPageType">
+        <xs:annotation>
+            <xs:documentation>
+                Scrolls browser to the very top of the page.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="clearFieldType">
+        <xs:annotation>
+            <xs:documentation>
+                Clears all input on given element.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="assertArrayIsSortedType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that array is sorted according to sort direction.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="array" type="arrayType"/>
+        </xs:sequence>
+        <xs:attribute name="sortOrder" type="sortEnum" use="required"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="arrayType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        Array to be asserted for proper sorting. Must be in parameterArray format (ex. [1,2,3,4,5] or [alpha, brontosaurus, zebra]).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:simpleType name="sortEnum" final="restriction">
+        <xs:annotation>
+            <xs:documentation>
+                Sort direction.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="asc"/>
+            <xs:enumeration value="desc"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

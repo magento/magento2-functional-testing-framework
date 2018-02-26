@@ -5,15 +5,10 @@
  */
 namespace tests\verification\Tests;
 
-use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
-use Magento\FunctionalTestingFramework\Util\TestGenerator;
-use PHPUnit\Framework\TestCase;
+use tests\util\MftfTestCase;
 
-class BasicCestGenerationTest extends TestCase
+class BasicCestGenerationTest extends MftfTestCase
 {
-    const BASIC_FUNCTIONAL_TEST = 'BasicFunctionalTest';
-    const RESOURCES_PATH = __DIR__ . '/../Resources';
-
     /**
      * Tests flat generation of a hardcoded test file with no external references.
      *
@@ -22,20 +17,6 @@ class BasicCestGenerationTest extends TestCase
      */
     public function testBasicGeneration()
     {
-        $testObject = TestObjectHandler::getInstance()->getObject(self::BASIC_FUNCTIONAL_TEST);
-        $test = TestGenerator::getInstance(null, [$testObject]);
-        $test->createAllTestFiles();
-
-        $cestFile = $test->getExportDir() .
-            DIRECTORY_SEPARATOR .
-            $testObject->getCodeceptionName() .
-            ".php";
-
-        $this->assertTrue(file_exists($cestFile));
-
-        $this->assertFileEquals(
-            self::RESOURCES_PATH . DIRECTORY_SEPARATOR . $testObject->getName() . ".txt",
-            $cestFile
-        );
+        $this->generateAndCompareTest('BasicFunctionalTest');
     }
 }

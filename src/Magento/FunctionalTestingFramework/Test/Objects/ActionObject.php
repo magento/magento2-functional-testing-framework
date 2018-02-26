@@ -19,8 +19,13 @@ use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
  */
 class ActionObject
 {
+    const __ENV = "_ENV";
     const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray", "expected", "actual"];
     const SELECTOR_ENABLED_ATTRIBUTES = ['selector', 'dependentSelector', "selector1", "selector2", "function"];
+    const OLD_ASSERTION_ATTRIBUTES = ["expected", "expectedType", "actual", "actualType"];
+    const ASSERTION_ATTRIBUTES = ["expectedResult" => "expected", "actualResult" => "actual"];
+    const ASSERTION_TYPE_ATTRIBUTE = "type";
+    const ASSERTION_VALUE_ATTRIBUTE = "value";
     const EXTERNAL_URL_AREA_INVALID_ACTIONS = ['amOnPage'];
     const MERGE_ACTION_ORDER_AFTER = 'after';
     const MERGE_ACTION_ORDER_BEFORE = 'before';
@@ -200,6 +205,54 @@ class ActionObject
     }
 
     /**
+     * Flattens expectedResult/actualResults/array nested elements, if necessary.
+     * e.g. expectedResults[] -> ["expectedType" => "string", "expected" => "value"]
+     * Warns user if they are using old Assertion syntax.
+     *
+     * @return void
+     */
+    public function trimAssertionAttributes()
+    {
+        $actionAttributeKeys = array_keys($this->actionAttributes);
+
+        // Flatten AssertSorted "array" element to parameterArray
+        if (isset($this->actionAttributes["array"])) {
+            $this->resolvedCustomAttributes['parameterArray'] = $this->actionAttributes['array']['value'];
+        }
+
+        /** MQE-683 DEPRECATE OLD METHOD HERE
+         * Checks if action has any of the old, single line attributes
+         * Throws a warning and returns, assuming old syntax is used.
+         */
+        $oldAttributes = array_intersect($actionAttributeKeys, ActionObject::OLD_ASSERTION_ATTRIBUTES);
+        if (!empty($oldAttributes)) {
+            // @codingStandardsIgnoreStart
+            echo("WARNING: Use of one line Assertion actions will be deprecated in MFTF 3.0.0, please use nested syntax (Action: {$this->type} StepKey: {$this->stepKey})" . PHP_EOL);
+            // @codingStandardsIgnoreEnd
+            return;
+        }
+
+        $relevantKeys = array_keys(ActionObject::ASSERTION_ATTRIBUTES);
+        $relevantAssertionAttributes = array_intersect($actionAttributeKeys, $relevantKeys);
+
+        if (empty($relevantAssertionAttributes)) {
+            return;
+        }
+
+        // Flatten nested Elements's type and value into key=>value entries
+        foreach ($this->actionAttributes as $key => $subAttributes) {
+            if (in_array($key, $relevantKeys)) {
+                $prefix = ActionObject::ASSERTION_ATTRIBUTES[$key];
+                $this->resolvedCustomAttributes[$prefix . ucfirst(ActionObject::ASSERTION_TYPE_ATTRIBUTE)] =
+                    $subAttributes[ActionObject::ASSERTION_TYPE_ATTRIBUTE];
+                $this->resolvedCustomAttributes[$prefix] =
+                    $subAttributes[ActionObject::ASSERTION_VALUE_ATTRIBUTE];
+                unset($this->actionAttributes[$key]);
+            }
+        }
+    }
+
+    /**
      * Look up the selector for SomeSectionName.ElementName and set it as the selector attribute in the
      * resolved custom attributes. Also set the timeout value.
      * e.g. {{SomeSectionName.ElementName}} becomes #login-button
@@ -265,7 +318,7 @@ class ActionObject
         foreach ($relevantDataAttributes as $dataAttribute) {
             $varInput = $this->actionAttributes[$dataAttribute];
             $replacement = $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $varInput);
-            if ($replacement) {
+            if ($replacement != null) {
                 $this->resolvedCustomAttributes[$dataAttribute] = $replacement;
             }
         }
@@ -330,6 +383,11 @@ class ActionObject
 
             $obj = $objectHandler->getObject($objName);
 
+            // Leave {{_ENV.VARIABLE}} references to be replaced in TestGenerator with getenv("VARIABLE")
+            if ($objName === ActionObject::__ENV) {
+                continue;
+            }
+
             // specify behavior depending on field
             switch (get_class($obj)) {
                 case PageObject::class:
@@ -351,13 +409,16 @@ class ActionObject
                     break;
             }
 
-            if ($replacement == null && get_class($objectHandler) != DataObjectHandler::class) {
-                return $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $outputString);
-            } elseif ($replacement == null) {
-                throw new TestReferenceException("Could not resolve entity reference " . $inputString);
+            if ($replacement == null) {
+                if (get_class($objectHandler) != DataObjectHandler::class) {
+                    return $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $outputString);
+                } else {
+                    throw new TestReferenceException("Could not resolve entity reference " . $inputString);
+                }
             }
 
-            $replacement = $this->resolveParameterization($parameterized, $replacement, $match);
+            $replacement = $this->resolveParameterization($parameterized, $replacement, $match, $obj);
+
             $outputString = str_replace($match, $replacement, $outputString);
         }
         return $outputString;
@@ -421,16 +482,21 @@ class ActionObject
      * @param boolean $isParameterized
      * @param string $replacement
      * @param string $match
+     * @param object $object
      * @return string
      */
-    private function resolveParameterization($isParameterized, $replacement, $match)
+    private function resolveParameterization($isParameterized, $replacement, $match, $object)
     {
         if ($isParameterized) {
             $parameterList = $this->stripAndReturnParameters($match);
-            return $this->matchParameterReferences($replacement, $parameterList);
+            $resolvedReplacement = $this->matchParameterReferences($replacement, $parameterList);
         } else {
-            return $replacement;
+            $resolvedReplacement = $replacement;
         }
+        if (get_class($object) == PageObject::class && $object->getArea() == PageObject::ADMIN_AREA) {
+            $resolvedReplacement = "/{{_ENV.MAGENTO_BACKEND_NAME}}/" . $resolvedReplacement;
+        }
+        return $resolvedReplacement;
     }
 
     /**

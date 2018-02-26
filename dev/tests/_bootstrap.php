@@ -7,6 +7,7 @@
 error_reporting(~E_USER_NOTICE);
 define('PROJECT_ROOT', dirname(dirname(__DIR__)));
 require_once PROJECT_ROOT . '/vendor/autoload.php';
+require_once 'util/MftfTestCase.php';
 
 // Set up AspectMock
 $kernel = \AspectMock\Kernel::getInstance();
@@ -14,6 +15,9 @@ $kernel->init([
     'debug' => true,
     'includePaths' => [PROJECT_ROOT . '/src']
 ]);
+
+// force php to generate
+$GLOBALS['FORCE_PHP_GENERATE'] = true;
 
 // Load needed framework env params
 $TEST_ENVS = [

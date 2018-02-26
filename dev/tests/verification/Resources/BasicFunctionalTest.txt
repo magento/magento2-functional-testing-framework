@@ -23,18 +23,36 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
  */
 class BasicFunctionalTestCest
 {
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
 	public function _before(AcceptanceTester $I)
 	{
 		$I->amOnPage("/beforeUrl");
 	}
 
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
 	public function _after(AcceptanceTester $I)
 	{
 		$I->amOnPage("/afterUrl");
 	}
 
 	/**
-	 * @Severity(level = SeverityLevel::CRITICAL)
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _failed(AcceptanceTester $I)
+	{
+		$I->saveScreenshot();
+		$this->_after($I);
+	}
+
+	/**
+	 * @Severity(level = SeverityLevel::MAJOR)
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
@@ -113,6 +131,7 @@ class BasicFunctionalTestCest
 		$I->seeNumberOfElements(".functionalTestSelector");
 		$I->seeOptionIsSelected(".functionalTestSelector", "someInput");
 		$I->selectOption(".functionalTestSelector");
+		$I->selectMultipleOptions(".filter", ".option", ['opt1',  'opt2']);
 		$I->setCookie("someInput", "someCookieValue");
 		$I->switchToIFrame("someInput");
 		$I->switchToNextTab();

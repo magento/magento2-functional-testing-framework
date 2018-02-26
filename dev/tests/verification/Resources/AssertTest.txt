@@ -21,9 +21,13 @@ class AssertTestCest
 {
 	/**
 	  * @var DataPersistenceHandler $createData1;
-	 */
+	  */
 	protected $createData1;
 
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
 	public function _before(AcceptanceTester $I)
 	{
 		$I->amGoingTo("create entity that has the stepKey: createData1");
@@ -45,6 +49,7 @@ class AssertTestCest
 		$createData2 = new DataPersistenceHandler($UniquePerson);
 		$createData2->createEntity();
 		$grabTextFrom1 = $I->grabTextFrom(".copyright>span");
+		$I->assertArrayIsSorted(["1", "2", "3", "4", "5"], "asc");
 		$I->comment("asserts without variable replacement");
 		$I->assertArrayHasKey("apple", ['orange' => 2, 'apple' => 1], "pass");
 		$I->assertArrayNotHasKey("kiwi", ['orange' => 2, 'apple' => 1], "pass");
@@ -82,7 +87,7 @@ class AssertTestCest
 		$I->assertTrue(true, "pass");
 		$I->comment("string type that use created data");
 		$I->assertStringStartsWith("D", $this->createData1->getCreatedDataByName('lastname') . ", " . $this->createData1->getCreatedDataByName('firstname'), "fail");
-		$I->assertStringStartsNotWith("W", $createData2->getCreatedDataByName('firstname') . " " . $createData2->getCreatedDataByName('lastname'), "pass");
+		$I->assertStringStartsNotWith("W", $createData2->getCreatedDataByName('firstname') . ", " . $createData2->getCreatedDataByName('lastname'), "pass");
 		$I->assertEquals($this->createData1->getCreatedDataByName('lastname'), $this->createData1->getCreatedDataByName('lastname'), "pass");
 		$I->comment("array type that use created data");
 		$I->assertArraySubset([$this->createData1->getCreatedDataByName('lastname'), $this->createData1->getCreatedDataByName('firstname')], [$this->createData1->getCreatedDataByName('lastname'), $this->createData1->getCreatedDataByName('firstname'), "1"], "pass");
@@ -101,7 +106,7 @@ class AssertTestCest
 		$I->fail($this->createData1->getCreatedDataByName('firstname') . " " . $this->createData1->getCreatedDataByName('lastname'));
 		$I->assertElementContainsAttribute("#username", "class", "admin__control-text");
 		$I->assertElementContainsAttribute("#username", "name", "login[username]");
-		$I->assertElementContainsAttribute("#username", "autofocus", "");
+		$I->assertElementContainsAttribute("#username", "autofocus", "true");
 		$I->assertElementContainsAttribute("#username", "data-validate", "{required:true}");
 		$I->assertElementContainsAttribute(".admin__menu-overlay", "style", "display: none;");
 		$I->assertElementContainsAttribute(".admin__menu-overlay", "border", "0");

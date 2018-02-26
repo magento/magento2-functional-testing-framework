@@ -13,7 +13,6 @@ use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 
 class DataObjectHandler implements ObjectHandlerInterface
 {
-    const __ENV = '_ENV';
     const _ENTITY = 'entity';
     const _NAME = 'name';
     const _TYPE = 'type';
@@ -56,7 +55,6 @@ class DataObjectHandler implements ObjectHandlerInterface
             return;
         }
         $this->entityDataObjects = $this->processParserOutput($parserOutput);
-        $this->entityDataObjects[self::__ENV] = $this->processEnvFile();
     }
 
     /**
@@ -98,37 +96,6 @@ class DataObjectHandler implements ObjectHandlerInterface
     public function getAllObjects()
     {
         return $this->entityDataObjects;
-    }
-
-    /**
-     * Convert the contents of the .env file into a single EntityDataObject so that the values can be accessed like
-     * normal data.
-     *
-     * @return EntityDataObject|null
-     */
-    private function processEnvFile()
-    {
-        // These constants are defined in the bootstrap file
-        $path = PROJECT_ROOT . DIRECTORY_SEPARATOR . '.env';
-
-        if (file_exists($path)) {
-            $vars = [];
-            $lines = file($path);
-
-            foreach ($lines as $line) {
-                $parts = explode("=", $line);
-                if (count($parts) != 2) {
-                    continue;
-                }
-                $key = strtolower(trim($parts[0]));
-                $value = trim($parts[1]);
-                $vars[$key] = $value;
-            }
-
-            return new EntityDataObject(self::__ENV, 'environment', $vars, null, null);
-        }
-
-        return null;
     }
 
     /**

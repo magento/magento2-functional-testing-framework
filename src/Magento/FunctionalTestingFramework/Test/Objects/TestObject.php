@@ -37,17 +37,11 @@ class TestObject
     private $annotations = [];
 
     /**
-     * Array which contains before and after actions to be excuted in scope of a single test.
+     * Array which contains before and after actions to be executed in scope of a single test.
      *
      * @var array
      */
     private $hooks = [];
-
-    /**
-     * Full path to xml file from which test was read.
-     * @var string
-     */
-    private $xmlFileSource;
 
     /**
      * TestObject constructor.
@@ -56,15 +50,13 @@ class TestObject
      * @param ActionObject[] $parsedSteps
      * @param array $annotations
      * @param TestHookObject[] $hooks
-     * @param string $xmlFileSource
      */
-    public function __construct($name, $parsedSteps, $annotations, $hooks, $xmlFileSource = null)
+    public function __construct($name, $parsedSteps, $annotations, $hooks)
     {
         $this->name = $name;
         $this->parsedSteps = $parsedSteps;
         $this->annotations = $annotations;
         $this->hooks = $hooks;
-        $this->xmlFileSource = $xmlFileSource;
     }
 
     /**
@@ -129,6 +121,7 @@ class TestObject
     /**
      * Getter for the custom data
      * @return array|null
+     * @deprecated because no usages where found and property does not exist. Will be removed next major release.
      */
     public function getCustomData()
     {

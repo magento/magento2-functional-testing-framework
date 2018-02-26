@@ -18,8 +18,8 @@
             <amOnSubdomain stepKey="aosd2" url="1"/>
             <amOnUrl stepKey="aou1" url="1"/>
             <amOnUrl stepKey="aou2" url="1"/>
-            <appendField selector="1" stepKey="ap1"/>
-            <appendField selector="1" stepKey="ap2"/>
+            <appendField selector="1" stepKey="app1"/>
+            <appendField selector="1" stepKey="app2"/>
             <attachFile selector="1" stepKey="atf1"/>
             <attachFile selector="1" stepKey="atf2"/>
             <cancelPopup stepKey="cp1"/>
@@ -34,6 +34,8 @@
             <clickWithLeftButton stepKey="clb2"/>
             <clickWithRightButton stepKey="crb1"/>
             <clickWithRightButton stepKey="crb2"/>
+            <closeAdminNotification stepKey="closeadminb1"/>
+            <closeAdminNotification stepKey="closeadminb2"/>
             <closeTab stepKey="clt1"/>
             <closeTab stepKey="clt2"/>
             <comment userInput="1" stepKey="comm1"/>
@@ -166,8 +168,8 @@
             <seeInField stepKey="seeinfield12"/>
             <seeInFormFields selector="2" parameterArray="[2]" stepKey="seeinformfields1"/>
             <seeInFormFields selector="2" parameterArray="[2]" stepKey="seeinformfields12"/>
-            <seeInPageSource html="1" stepKey="seeinsource1"/>
-            <seeInPageSource html="1" stepKey="seeinsource12"/>
+            <seeInPageSource html="1" stepKey="seeinpagesource1"/>
+            <seeInPageSource html="1" stepKey="seeinpagesource12"/>
             <seeInPopup stepKey="seeinpopup1"/>
             <seeInPopup stepKey="seeinpopup12"/>
             <seeInSource html="1" stepKey="seeinsource1"/>
@@ -232,8 +234,8 @@
             <amOnSubdomain stepKey="aosd2" url="1"/>
             <amOnUrl stepKey="aou1" url="1"/>
             <amOnUrl stepKey="aou2" url="1"/>
-            <appendField selector="1" stepKey="ap1"/>
-            <appendField selector="1" stepKey="ap2"/>
+            <appendField selector="1" stepKey="app1"/>
+            <appendField selector="1" stepKey="app2"/>
             <attachFile selector="1" stepKey="atf1"/>
             <attachFile selector="1" stepKey="atf2"/>
             <cancelPopup stepKey="cp1"/>
@@ -248,6 +250,8 @@
             <clickWithLeftButton stepKey="clb2"/>
             <clickWithRightButton stepKey="crb1"/>
             <clickWithRightButton stepKey="crb2"/>
+            <closeAdminNotification stepKey="closeadmina1"/>
+            <closeAdminNotification stepKey="closeadmina2"/>
             <closeTab stepKey="clt1"/>
             <closeTab stepKey="clt2"/>
             <comment userInput="1" stepKey="comm1"/>
@@ -380,8 +384,8 @@
             <seeInField stepKey="seeinfield12"/>
             <seeInFormFields selector="2" parameterArray="[1]"  stepKey="seeinformfields1"/>
             <seeInFormFields selector="2" parameterArray="[1]"  stepKey="seeinformfields12"/>
-            <seeInPageSource html="1" stepKey="seeinsource1"/>
-            <seeInPageSource html="1" stepKey="seeinsource12"/>
+            <seeInPageSource html="1" stepKey="seeinpagesource1"/>
+            <seeInPageSource html="1" stepKey="seeinpagesource12"/>
             <seeInPopup stepKey="seeinpopup1"/>
             <seeInPopup stepKey="seeinpopup12"/>
             <seeInSource html="1" stepKey="seeinsource1"/>
@@ -445,8 +449,8 @@
         <amOnSubdomain stepKey="aosd2" url="1"/>
         <amOnUrl stepKey="aou1" url="1"/>
         <amOnUrl stepKey="aou2" url="1"/>
-        <appendField selector="1" stepKey="ap1"/>
-        <appendField selector="1" stepKey="ap2"/>
+        <appendField selector="1" stepKey="app1"/>
+        <appendField selector="1" stepKey="app2"/>
         <attachFile selector="1" stepKey="atf1"/>
         <attachFile selector="1" stepKey="atf2"/>
         <cancelPopup stepKey="cp1"/>
@@ -461,6 +465,8 @@
         <clickWithLeftButton stepKey="clb2"/>
         <clickWithRightButton stepKey="crb1"/>
         <clickWithRightButton stepKey="crb2"/>
+        <closeAdminNotification stepKey="closeadmin1"/>
+        <closeAdminNotification stepKey="closeadmin2"/>
         <closeTab stepKey="clt1"/>
         <closeTab stepKey="clt2"/>
         <comment userInput="1" stepKey="comm1"/>
@@ -593,8 +599,8 @@
         <seeInField stepKey="seeinfield12"/>
         <seeInFormFields selector="2" parameterArray="[1]"  stepKey="seeinformfields1"/>
         <seeInFormFields selector="2" parameterArray="[1]"  stepKey="seeinformfields12"/>
-        <seeInPageSource html="1" stepKey="seeinsource1"/>
-        <seeInPageSource html="1" stepKey="seeinsource12"/>
+        <seeInPageSource html="1" stepKey="seeinpagesource1"/>
+        <seeInPageSource html="1" stepKey="seeinpagesource12"/>
         <seeInPopup stepKey="seeinpopup1"/>
         <seeInPopup stepKey="seeinpopup12"/>
         <seeInSource html="1" stepKey="seeinsource1"/>
@@ -649,5 +655,27 @@
         <waitForPageLoad stepKey="waitpageload12"/>
         <waitForText stepKey="waittext1"/>
         <waitForText stepKey="waittext12"/>
+    </test>
+
+    <test name="BasicDupedActionTest">
+        <before>
+            <createData entity="simpleData" stepKey="cb1">
+                <requiredEntity createDataKey="simpleData2"/>
+            </createData>
+            <amOnPage stepKey="aopb1" url="1"/>
+            <amOnPage stepKey="aopb2" url="2"/>
+        </before>
+        <after>
+            <createData entity="simpleData" stepKey="ca1">
+                <requiredEntity createDataKey="simpleData2"/>
+            </createData>
+            <amOnPage stepKey="aopf1" url="1"/>
+            <amOnPage stepKey="aopf2" url="2"/>
+        </after>
+        <createData entity="simpleData" stepKey="c1">
+            <requiredEntity createDataKey="simpleData2"/>
+        </createData>
+        <amOnPage stepKey="aop1" url="1"/>
+        <amOnPage stepKey="aop2" url="2"/>
     </test>
 </tests>

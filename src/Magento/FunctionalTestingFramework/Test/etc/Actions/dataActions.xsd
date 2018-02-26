@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:include schemaLocation="commonAttributes.xsd"/>
+
+    <xs:group name="dataOperationTags">
+        <xs:choice>
+            <xs:element type="createDataType" name="createData" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="deleteDataType" name="deleteData" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="updateDataType" name="updateData" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="getDataType" name="getData" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+    </xs:group>
+
+    <!-- Data Attributes -->
+    <xs:attribute type="xs:string" name="createDataKey">
+        <xs:annotation>
+            <xs:documentation>
+                Reference to the stepKey of a previously executed createData test action.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute type="xs:string" name="entity">
+        <xs:annotation>
+            <xs:documentation>
+                Name of entity to be used in data operation.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute type="xs:string" name="storeCode">
+        <xs:annotation>
+            <xs:documentation>
+                Store code that you wish to perform data operation against.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <!-- Complex Types -->
+    <xs:complexType name="createDataType">
+        <xs:annotation>
+            <xs:documentation>Create an entity (e.g. a category or product). In other words, make a POST request to the Magento API according to the data and metadata of the entity to be created.</xs:documentation>
+        </xs:annotation>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element type="requiredEntityType" name="requiredEntity" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+        <xs:attribute ref="entity" use="required"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+        <xs:attribute ref="storeCode"/>
+    </xs:complexType>
+
+    <xs:complexType name="updateDataType">
+        <xs:annotation>
+            <xs:documentation>Updates a previously created entity (via createData).</xs:documentation>
+        </xs:annotation>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element type="requiredEntityType" name="requiredEntity" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+        <xs:attribute ref="entity" use="required"/>
+        <xs:attribute ref="createDataKey" use="required"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+        <xs:attribute ref="storeCode"/>
+    </xs:complexType>
+
+    <xs:complexType name="deleteDataType">
+        <xs:annotation>
+            <xs:documentation>Deletes a previously created entity (via createData).</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="createDataKey" use="required"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+                <xs:attribute ref="storeCode"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="getDataType">
+        <xs:annotation>
+            <xs:documentation>Retrieves an entity. In other words, makes a GET request to the Magento API according to the data and metadata of the entity type that is requested.</xs:documentation>
+        </xs:annotation>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element type="requiredEntityType" name="requiredEntity" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+        <xs:attribute ref="entity" use="required"/>
+        <xs:attribute type="xs:integer" name="index">
+            <xs:annotation>
+                <xs:documentation>
+                    If getData is supposed to return an array of objects, grab only index instead.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+        <xs:attribute ref="storeCode"/>
+    </xs:complexType>
+
+    <xs:complexType name="requiredEntityType">
+        <xs:annotation>
+            <xs:documentation>Previously created entities that this operation requires (via createData).</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="createDataKey" use="required"/>
+                <xs:attribute name="before"/>
+                <xs:attribute name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+</xs:schema>

@@ -25,9 +25,13 @@ class ActionGroupWithNoDefaultTestCest
 {
 	/**
 	  * @var DataPersistenceHandler $createPersonParam;
-	 */
+	  */
 	protected $createPersonParam;
 
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
 	public function _before(AcceptanceTester $I)
 	{
 		$I->amGoingTo("create entity that has the stepKey: createPersonParam");
@@ -38,6 +42,10 @@ class ActionGroupWithNoDefaultTestCest
 		$I->fillField("#bar", "myData2");
 	}
 
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
 	public function _after(AcceptanceTester $I)
 	{
 		$I->fillField("#foo", "myData1");
@@ -45,7 +53,17 @@ class ActionGroupWithNoDefaultTestCest
 	}
 
 	/**
-	 * @Severity(level = SeverityLevel::CRITICAL)
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _failed(AcceptanceTester $I)
+	{
+		$I->saveScreenshot();
+		$this->_after($I);
+	}
+
+	/**
+	 * @Severity(level = SeverityLevel::MAJOR)
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void

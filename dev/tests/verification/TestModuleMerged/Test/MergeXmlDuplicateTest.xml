@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="BasicDupedActionTest">
+        <before>
+            <createData entity="simpleData" stepKey="cb3">
+                <requiredEntity createDataKey="simpleData2"/>
+            </createData>
+            <createData entity="simpleData" stepKey="cb4">
+                <requiredEntity createDataKey="simpleData2"/>
+            </createData>
+            <amOnPage stepKey="aopb3" url="3"/>
+            <amOnPage stepKey="aopb4" url="4"/>
+        </before>
+        <after>
+            <createData entity="simpleData" stepKey="ca3">
+                <requiredEntity createDataKey="simpleData2"/>
+            </createData>
+            <createData entity="simpleData" stepKey="c4">
+                <requiredEntity createDataKey="simpleData2"/>
+            </createData>
+            <amOnPage stepKey="aopf3" url="3"/>
+            <amOnPage stepKey="aopf4" url="4"/>
+        </after>
+        <createData entity="simpleData" stepKey="c3">
+            <requiredEntity createDataKey="simpleData2"/>
+        </createData>
+        <createData entity="simpleData" stepKey="c4">
+            <requiredEntity createDataKey="simpleData2"/>
+        </createData>
+        <amOnPage stepKey="aop3" url="3"/>
+        <amOnPage stepKey="aop4" url="4"/>
+    </test>
+</tests>
