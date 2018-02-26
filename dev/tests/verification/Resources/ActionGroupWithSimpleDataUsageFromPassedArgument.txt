@@ -37,5 +37,7 @@ class ActionGroupWithSimpleDataUsageFromPassedArgumentCest
 		$I->see($persisted->getCreatedDataByName('data'), "#element ." . $persisted->getCreatedDataByName('data'));
 		$I->see("John", "#element .John");
 		$I->see($simpleData->getCreatedDataByName('firstname'), "#element ." . $simpleData->getCreatedDataByName('firstname'));
+		$I->see($simpleData->getCreatedDataByName('firstname[0]'), "#element ." . $simpleData->getCreatedDataByName('firstname[0]'));
+		$I->see($simpleData->getCreatedDataByName('firstname[data_index]'), "#element ." . $simpleData->getCreatedDataByName('firstname[data_index]'));
 	}
 }

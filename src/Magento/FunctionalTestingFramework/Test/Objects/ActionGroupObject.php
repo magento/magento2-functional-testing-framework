@@ -236,7 +236,7 @@ class ActionGroupObject
             );
         }
 
-        $isPersisted = preg_match('/\$[\w.]+\$/', $matchedArgument->getResolvedValue($isInnerArgument));
+        $isPersisted = preg_match('/\$[\w.\[\]() ]+\$/', $matchedArgument->getResolvedValue($isInnerArgument));
         if ($isPersisted) {
             return $this->replacePersistedArgument(
                 $matchedArgument->getResolvedValue($isInnerArgument),
