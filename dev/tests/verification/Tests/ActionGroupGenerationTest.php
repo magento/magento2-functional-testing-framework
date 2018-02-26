@@ -83,7 +83,7 @@ class ActionGroupGenerationTest extends MftfTestCase
      */
     public function testActionGroupWithSimpleDataUsageFromPassedArgument()
     {
-        $this->validateGenerateAndContents('ActionGroupWithSimpleDataUsageFromPassedArgument');
+        $this->generateAndCompareTest('ActionGroupWithSimpleDataUsageFromPassedArgument');
     }
 
     /**
@@ -94,6 +94,6 @@ class ActionGroupGenerationTest extends MftfTestCase
      */
     public function testActionGroupWithSimpleDataUsageFromDefaultArgument()
     {
-        $this->validateGenerateAndContents('ActionGroupWithSimpleDataUsageFromDefaultArgument');
+        $this->generateAndCompareTest('ActionGroupWithSimpleDataUsageFromDefaultArgument');
     }
 }

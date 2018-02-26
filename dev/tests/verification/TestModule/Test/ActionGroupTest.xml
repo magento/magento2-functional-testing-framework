@@ -66,7 +66,7 @@
 
     <test name="ActionGroupWithSimpleDataUsageFromPassedArgument">
         <annotations>
-            <severity value="SEVERE"/>
+            <severity value="CRITICAL"/>
             <title value="Action Group With Simple Data Usage From Passed Argument"/>
         </annotations>
 
@@ -99,7 +99,7 @@
 
     <test name="ActionGroupWithSimpleDataUsageFromDefaultArgument">
         <annotations>
-            <severity value="SEVERE"/>
+            <severity value="CRITICAL"/>
             <title value="Action Group With Simple Data Usage From Default Argument"/>
         </annotations>
         <actionGroup ref="actionGroupWithStringUsage" stepKey="actionGroup"/>

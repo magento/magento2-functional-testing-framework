@@ -21,7 +21,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ActionGroupWithSimpleDataUsageFromPassedArgumentCest
 {
 	/**
-	 * @Severity(level = SeverityLevel::SEVERE)
+	 * @Severity(level = SeverityLevel::CRITICAL)
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
