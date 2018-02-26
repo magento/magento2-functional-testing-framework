@@ -42,6 +42,7 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
     const ENTITY_OPERATION_OBJECT_KEY = 'key';
     const ENTITY_OPERATION_OBJECT_VALUE = 'value';
     const ENTITY_OPERATION_REQUIRED = 'required';
+    const ENTITY_OPERATION_BACKEND_REMOVE = 'removeBackendName';
 
     /**
      * The singleton instance of this class
@@ -149,6 +150,7 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
             $headers = [];
             $params = [];
             $operationElements = [];
+            $removeBackend = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_BACKEND_REMOVE] ?? true;
 
             // TODO remove this warning with 2.1.0 release
             $backendName = getenv('MAGENTO_BACKEND_NAME');
@@ -238,6 +240,7 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
                 $params,
                 $operationElements,
                 $contentType,
+                $removeBackend,
                 $successRegex,
                 $returnRegex
             );
