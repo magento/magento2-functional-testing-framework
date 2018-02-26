@@ -43,7 +43,7 @@ class BasicActionGroupTestCest
 	}
 
 	/**
-	 * @Severity(level = SeverityLevel::MAJOR)
+	 * @Severity(level = SeverityLevel::CRITICAL)
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
