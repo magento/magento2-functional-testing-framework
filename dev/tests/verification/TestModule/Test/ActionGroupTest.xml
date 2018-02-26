@@ -63,4 +63,45 @@
 
         <actionGroup ref="actionGroupWithMultipleParameterSelectorsFromArgument" stepKey="actionGroup"/>
     </test>
+
+    <test name="ActionGroupWithSimpleDataUsageFromPassedArgument">
+        <annotations>
+            <severity value="CRITICAL"/>
+            <title value="Action Group With Simple Data Usage From Passed Argument"/>
+        </annotations>
+
+        <actionGroup ref="actionGroupWithStringUsage" stepKey="actionGroup1">
+            <argument name="someArgument" value="overrideString"/>
+        </actionGroup>
+        <actionGroup ref="actionGroupWithStringUsage" stepKey="actionGroup11">
+            <argument name="someArgument" value="1"/>
+        </actionGroup>
+        <actionGroup ref="actionGroupWithStringUsage" stepKey="actionGroup12">
+            <argument name="someArgument" value="1.5"/>
+        </actionGroup>
+        <actionGroup ref="actionGroupWithStringUsage" stepKey="actionGroup13">
+            <argument name="someArgument" value="true"/>
+        </actionGroup>
+        <actionGroup ref="actionGroupWithStringUsage" stepKey="actionGroup2">
+            <argument name="someArgument" value="simpleData.firstname"/>
+        </actionGroup>
+        <actionGroup ref="actionGroupWithStringUsage" stepKey="actionGroup3">
+            <argument name="someArgument" value="$persisted.data$"/>
+        </actionGroup>
+
+        <actionGroup ref="actionGroupWithEntityUsage" stepKey="actionGroup4">
+            <argument name="someArgument" value="simpleData.firstname"/>
+        </actionGroup>
+        <actionGroup ref="actionGroupWithStringUsage" stepKey="actionGroup5">
+            <argument name="someArgument" value="$simpleData.firstname$"/>
+        </actionGroup>
+    </test>
+
+    <test name="ActionGroupWithSimpleDataUsageFromDefaultArgument">
+        <annotations>
+            <severity value="CRITICAL"/>
+            <title value="Action Group With Simple Data Usage From Default Argument"/>
+        </annotations>
+        <actionGroup ref="actionGroupWithStringUsage" stepKey="actionGroup"/>
+    </test>
 </tests>
