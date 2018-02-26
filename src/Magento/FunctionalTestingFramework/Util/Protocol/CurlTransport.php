@@ -134,6 +134,7 @@ class CurlTransport implements CurlInterface
             CURLOPT_COOKIEFILE => '',
             CURLOPT_HTTPHEADER => $headers,
             CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
         ];
         switch ($method) {
             case CurlInterface::POST:
