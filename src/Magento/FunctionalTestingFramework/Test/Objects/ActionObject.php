@@ -358,7 +358,7 @@ class ActionObject
             preg_match_all($literalParametersRegex, $strippedReference, $literalReferences);
             $strippedReference = preg_replace($literalParametersRegex, '&&stringReference&&', $strippedReference);
 
-            // Sanitize all 'string, data.field,$persisted.field$' => 'string::::data.field::::$persisted.field$' for return
+            // Sanitize 'string, data.field,$persisted.field$' => 'string::::data.field::::$persisted.field$'
             $strippedReference = preg_replace('/,/', ', ', $strippedReference);
             $strippedReference = str_replace(',', $postCleanupDelimiter, $strippedReference);
             $strippedReference = str_replace(' ', '', $strippedReference);
