@@ -74,4 +74,26 @@ class ActionGroupGenerationTest extends MftfTestCase
     {
         $this->generateAndCompareTest('ActionGroupWithMultipleParameterSelectorsFromDefaultArgument');
     }
+
+    /**
+     * Test generation of a test referencing an action group with simple passed data.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testActionGroupWithSimpleDataUsageFromPassedArgument()
+    {
+        $this->generateAndCompareTest('ActionGroupWithSimpleDataUsageFromPassedArgument');
+    }
+
+    /**
+     * Test generation of a test referencing an action group with default data.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testActionGroupWithSimpleDataUsageFromDefaultArgument()
+    {
+        $this->generateAndCompareTest('ActionGroupWithSimpleDataUsageFromDefaultArgument');
+    }
 }

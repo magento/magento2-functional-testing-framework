@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Test\Objects;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Test\Util\ActionGroupObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 
 /**
@@ -35,7 +36,7 @@ class ActionGroupObject
     private $parsedActions = [];
 
     /**
-     * An array used to store the default entities if the user does not specify any
+     * An array used to store argument names to values
      *
      * @var array
      */
@@ -45,7 +46,7 @@ class ActionGroupObject
      * ActionGroupObject constructor.
      *
      * @param string $name
-     * @param string $arguments
+     * @param ArgumentObject[] $arguments
      * @param array $actions
      */
     public function __construct($name, $arguments, $actions)
@@ -71,23 +72,42 @@ class ActionGroupObject
     public function getSteps($arguments, $actionReferenceKey)
     {
         $mergeUtil = new ActionMergeUtil($this->name, "ActionGroup");
-        $args = $this->arguments;
-        $emptyArguments = array_keys($args, null, true);
-        if (!empty($emptyArguments) && $arguments !== null) {
-            $diff = array_diff($emptyArguments, array_keys($arguments));
-            if (!empty($diff)) {
-                $error = 'Argument(s) missed (' . implode(", ", $diff) . ') for actionGroup "' . $this->name . '"';
-                throw new TestReferenceException($error);
-            }
-        } elseif (!empty($emptyArguments)) {
-            $error = 'Not enough arguments given for actionGroup "' . $this->name . '"';
-            throw new TestReferenceException($error);
-        }
-        if ($arguments) {
-            $args = array_merge($args, $arguments);
-        }
+
+        $args = $this->resolveArguments($arguments);
 
         return $mergeUtil->resolveActionSteps($this->getResolvedActionsWithArgs($args, $actionReferenceKey), true);
+    }
+
+    /**
+     * Iterates through given $arguments and overrides ActionGroup's argument values, if any are found.
+     * @param array $arguments
+     * @return ArgumentObject[]
+     */
+    private function resolveArguments($arguments)
+    {
+        $resolvedArgumentList = [];
+        $emptyArguments = [];
+
+        foreach ($this->arguments as $argumentObj) {
+            if ($arguments !== null && array_key_exists($argumentObj->getName(), $arguments)) {
+                $resolvedArgumentList[] = new ArgumentObject(
+                    $argumentObj->getName(),
+                    $arguments[$argumentObj->getName()],
+                    $argumentObj->getDataType()
+                );
+            } elseif ($argumentObj->getValue() === null) {
+                $emptyArguments[] = $argumentObj->getName();
+            } else {
+                $resolvedArgumentList[] = $argumentObj;
+            }
+        }
+
+        if (!empty($emptyArguments)) {
+            $error = 'Arguments missed (' . implode(", ", $emptyArguments) . ') for actionGroup "' . $this->name . '"';
+            throw new TestReferenceException($error);
+        }
+
+        return $resolvedArgumentList;
     }
 
     /**
@@ -199,17 +219,27 @@ class ActionGroupObject
         // Check if arguments has a mapping for the given variableName
 
         if ($variableName === false) {
-            $variableName = $variable;
+            $variableName = trim($variable, "'");
         }
 
-        if (!array_key_exists($variableName, $arguments)) {
+        $matchedArgument = $this->findArgumentByName($variableName, $arguments);
+        if ($matchedArgument === null) {
             return $attributeValue;
         }
 
-        $isPersisted = strstr($arguments[$variableName], '$');
+        if ($matchedArgument->getDataType() === ArgumentObject::ARGUMENT_DATA_STRING) {
+            return $this->replaceSimpleArgument(
+                $matchedArgument->getResolvedValue($isInnerArgument),
+                $variableName,
+                $attributeValue,
+                $isInnerArgument
+            );
+        }
+
+        $isPersisted = preg_match('/\$[\w.\[\]() ]+\$/', $matchedArgument->getResolvedValue($isInnerArgument));
         if ($isPersisted) {
             return $this->replacePersistedArgument(
-                $arguments[$variableName],
+                $matchedArgument->getResolvedValue($isInnerArgument),
                 $attributeValue,
                 $variable,
                 $variableName,
@@ -218,7 +248,29 @@ class ActionGroupObject
         }
 
         //replace argument ONLY when there is no letters attached before after (ex. category.name vs categoryTreeButton)
-        return preg_replace("/(?<![\w]){$variableName}(?![(\w])/", $arguments[$variableName], $attributeValue);
+        return preg_replace(
+            "/(?<![\w]){$variableName}(?![(\w])/",
+            $matchedArgument->getResolvedValue($isInnerArgument),
+            $attributeValue
+        );
+    }
+
+    /**
+     * Replaces any arguments that were declared as simpleData="true".
+     * Takes in isInnerArgument to determine what kind of replacement to expect: {{data}} vs section.element(data)
+     * @param string $argumentValue
+     * @param string $variableName
+     * @param string $attributeValue
+     * @param boolean $isInnerArgument
+     * @return string
+     */
+    private function replaceSimpleArgument($argumentValue, $variableName, $attributeValue, $isInnerArgument)
+    {
+        if ($isInnerArgument) {
+            return preg_replace("/(?<![\w]){$variableName}(?![(\w])/", $argumentValue, $attributeValue);
+        } else {
+            return str_replace("{{{$variableName}}}", $argumentValue, $attributeValue);
+        }
     }
 
     /**
@@ -245,7 +297,7 @@ class ActionGroupObject
 
         // parameter replacements require changing of (arg.field) to ($arg.field$)
         if ($isParameter) {
-            $fullReplacement = str_replace($variable, trim($replacement, '$'), $fullVariable);
+            $fullReplacement = str_replace($variable, trim($replacement, '$'), trim($fullVariable, "'"));
             $newAttributeValue = str_replace($fullVariable, $scope . $fullReplacement . $scope, $newAttributeValue);
         } else {
             $newAttributeValue = str_replace('{{', $scope, str_replace('}}', $scope, $newAttributeValue));
@@ -253,5 +305,25 @@ class ActionGroupObject
         }
 
         return $newAttributeValue;
+    }
+
+    /**
+     * Searches through ActionGroupObject's arguments and returns first argument wi
+     * @param string $name
+     * @param array $argumentList
+     * @return ArgumentObject|null
+     */
+    private function findArgumentByName($name, $argumentList)
+    {
+        $matchedArgument = array_filter(
+            $argumentList,
+            function ($e) use ($name) {
+                return $e->getName() == $name;
+            }
+        );
+        if (isset(array_values($matchedArgument)[0])) {
+            return array_values($matchedArgument)[0];
+        }
+        return null;
     }
 }

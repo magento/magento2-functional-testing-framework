@@ -6,7 +6,9 @@
 
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
+use Magento\FunctionalTestingFramework\Data\Argument\Interpreter\Argument;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
+use Magento\FunctionalTestingFramework\Test\Objects\ArgumentObject;
 
 /**
  * Class ActionGroupObjectExtractor
@@ -77,9 +79,12 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
         );
 
         foreach ($argData as $argName => $argValue) {
-            $parsedArguments[$argName] = $argValue[self::DEFAULT_VALUE] ?? null;
+            $parsedArguments[] = new ArgumentObject(
+                $argValue[ArgumentObject::ARGUMENT_NAME],
+                $argValue[ArgumentObject::ARGUMENT_DEFAULT_VALUE] ?? null,
+                $argValue[ArgumentObject::ARGUMENT_DATA_TYPE] ?? ArgumentObject::ARGUMENT_DATA_ENTITY
+            );
         }
-
         return $parsedArguments;
     }
 }

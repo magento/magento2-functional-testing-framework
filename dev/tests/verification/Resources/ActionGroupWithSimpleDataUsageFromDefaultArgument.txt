@@ -16,19 +16,19 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("Action Group With No Argument")
+ * @Title("Action Group With Simple Data Usage From Default Argument")
  */
-class ActionGroupWithNoArgumentsCest
+class ActionGroupWithSimpleDataUsageFromDefaultArgumentCest
 {
 	/**
-	 * @Severity(level = SeverityLevel::BLOCKER)
+	 * @Severity(level = SeverityLevel::CRITICAL)
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupWithNoArguments(AcceptanceTester $I)
+	public function ActionGroupWithSimpleDataUsageFromDefaultArgument(AcceptanceTester $I)
 	{
-		$I->wait(1);
+		$I->see("stringLiteral", "#element .stringLiteral");
 	}
 }
