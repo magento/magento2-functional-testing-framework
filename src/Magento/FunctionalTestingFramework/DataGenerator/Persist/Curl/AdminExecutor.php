@@ -119,7 +119,7 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
     {
         $apiUrl = self::$adminUrl . $url;
 
-        if (!$this->removeBackend) {
+        if ($this->removeBackend) {
             $apiUrl = parent::$baseUrl . ltrim($url, '/');
         }
 

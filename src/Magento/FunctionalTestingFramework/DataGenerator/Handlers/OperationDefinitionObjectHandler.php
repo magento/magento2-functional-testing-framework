@@ -150,7 +150,7 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
             $headers = [];
             $params = [];
             $operationElements = [];
-            $removeBackend = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_BACKEND_REMOVE] ?? true;
+            $removeBackend = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_BACKEND_REMOVE] ?? false;
 
             // TODO remove this warning with 2.1.0 release
             $backendName = getenv('MAGENTO_BACKEND_NAME');
