@@ -42,7 +42,7 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
     const ENTITY_OPERATION_OBJECT_KEY = 'key';
     const ENTITY_OPERATION_OBJECT_VALUE = 'value';
     const ENTITY_OPERATION_REQUIRED = 'required';
-    const ENTITY_OPERATION_BACKEND_REMOVE = 'removeBackendName';
+    const ENTITY_OPERATION_BACKEND_REMOVE = 'removeBackend';
 
     /**
      * The singleton instance of this class
