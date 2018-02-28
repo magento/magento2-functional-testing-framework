@@ -46,7 +46,7 @@ class DataPersistenceHandler
      *
      * @param EntityDataObject $entityObject
      * @param array $dependentObjects
-     * @oaram array $customFields
+     * @param array $customFields
      */
     public function __construct($entityObject, $dependentObjects = [], $customFields = [])
     {
