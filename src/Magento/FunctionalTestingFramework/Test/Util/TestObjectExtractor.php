@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 
 /**
@@ -104,12 +105,16 @@ class TestObjectExtractor extends BaseObjectExtractor
         }
 
         // TODO extract filename info and store
-        return new TestObject(
-            $testData[self::NAME],
-            $this->actionObjectExtractor->extractActions($testActions),
-            $testAnnotations,
-            $testHooks,
-            $filename
-        );
+        try {
+            return new TestObject(
+                $testData[self::NAME],
+                $this->actionObjectExtractor->extractActions($testActions),
+                $testAnnotations,
+                $testHooks,
+                $filename
+            );
+        } catch (XmlException $exception) {
+            throw new XmlException($exception->getMessage() . ' in Test ' . $filename);
+        }
     }
 }

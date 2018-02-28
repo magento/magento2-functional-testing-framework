@@ -21,7 +21,8 @@ class ActionObjectExtractor extends BaseObjectExtractor
     const ACTION_GROUP_REF = 'ref';
     const ACTION_GROUP_ARGUMENTS = 'arguments';
     const ACTION_GROUP_ARG_VALUE = 'value';
-    const BEFORE_AFTER_ERROR_MSG = "Merge Error - Steps cannot have both before and after attributes.\tTestStep='%s'";
+    const BEFORE_AFTER_ERROR_MSG = "Merge Error - Steps cannot have both before and after attributes.\tStepKey='%s'";
+    const STEP_KEY_BLACKLIST_ERROR_MSG = "StepKeys cannot contain non alphanumeric characters.\tStepKey='%s'";
 
     /**
      * ActionObjectExtractor constructor.
@@ -45,6 +46,10 @@ class ActionObjectExtractor extends BaseObjectExtractor
 
         foreach ($testActions as $actionName => $actionData) {
             $stepKey = $actionData[self::TEST_STEP_MERGE_KEY];
+
+            if (preg_match('/[^a-zA-Z0-9_]/', $stepKey)) {
+                throw new XmlException(sprintf(self::STEP_KEY_BLACKLIST_ERROR_MSG, $actionName));
+            }
 
             $actionAttributes = $this->stripDescriptorTags(
                 $actionData,

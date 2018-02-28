@@ -29,6 +29,7 @@ class DataObjectHandler implements ObjectHandlerInterface
     const _ENTITY_KEY = 'entityKey';
     const _SEPARATOR = '->';
     const _REQUIRED_ENTITY = 'requiredEntity';
+    const DATA_NAME_ERROR_MSG = "Entity names cannot contain non alphanumeric characters.\tData='%s'";
 
     /**
      * The singleton instance of this class
@@ -110,6 +111,10 @@ class DataObjectHandler implements ObjectHandlerInterface
         $rawEntities = $parserOutput[self::_ENTITY];
 
         foreach ($rawEntities as $name => $rawEntity) {
+            if (preg_match('/[^a-zA-Z0-9_]/', $name)) {
+                throw new XmlException(sprintf(self::DATA_NAME_ERROR_MSG, $name));
+            }
+
             $type = $rawEntity[self::_TYPE];
             $data = [];
             $linkedEntities = [];

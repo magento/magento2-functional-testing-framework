@@ -108,6 +108,6 @@
         <waitForElementNotVisible selector=".functionalTestSelector" time="30" stepKey="waitForElementNotVisibleKey1" />
         <waitForElementVisible selector=".functionalTestSelector" time="30" stepKey="waitForElementVisibleKey1" />
         <waitForJS function="someJsFunction" time="30" stepKey="waitForJSKey1" />
-        <waitForText selector=".functionalTestSelector" userInput="someInput" time="30" stepKey=""/>
+        <waitForText selector=".functionalTestSelector" userInput="someInput" time="30" stepKey="waitForText1"/>
     </test>
 </tests>
