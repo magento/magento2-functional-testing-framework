@@ -46,6 +46,7 @@ class DataPersistenceHandler
      *
      * @param EntityDataObject $entityObject
      * @param array $dependentObjects
+     * @oaram array $customFields
      */
     public function __construct($entityObject, $dependentObjects = [], $customFields = [])
     {
@@ -284,8 +285,8 @@ class DataPersistenceHandler
      * Function to strip out any overwritten custom field uniqueness data. Takes the uniqueness array and the
      * customFields from the user and unsets any intersections.
      *
-     * @param $uniquenessData
-     * @param $customFields
+     * @param array $uniquenessData
+     * @param array $customFields
      * @return array
      */
     private function stripCustomFieldsFromUniquenessData($uniquenessData, $customFields)
