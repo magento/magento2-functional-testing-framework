@@ -13,6 +13,7 @@ use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
+use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 
@@ -598,9 +599,11 @@ class TestGenerator
                     //otherwise create them in the Test scope.
                     //Determine if there are required-entities and create array of required-entities for merging.
                     $requiredEntities = [];
+                    $customEntityFields =
+                        $customActionAttributes[ActionObjectExtractor::ACTION_OBJECT_PERSISTENCE_FIELDS] ?? [];
                     $requiredEntityObjects = [];
                     foreach ($customActionAttributes as $customAttribute) {
-                        if (is_array($customAttribute) && $customAttribute['nodeName'] = 'requiredEntity') {
+                        if (is_array($customAttribute) && $customAttribute['nodeName'] == 'requiredEntity') {
                             if ($hookObject) {
                                 $requiredEntities [] = "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
                                     "->getName() => " . "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
@@ -638,16 +641,18 @@ class TestGenerator
                         $createEntityFunctionCall .= ");\n";
                     }
 
-                    //If required-entities are defined, reassign dataObject to not overwrite the static definition.
-                    //Also, DataPersistenceHandler needs to be defined with customData array.
-                    if (!empty($requiredEntities)) {
-                        $dataPersistenceHandlerFunctionCall .= sprintf(
-                            ", [%s]);\n",
-                            implode(', ', $requiredEntityObjects)
-                        );
-                    } else {
-                        $dataPersistenceHandlerFunctionCall .= ");\n";
+                    // Add a reference to the requiredEntityObjects to the new DataPersistenceHandler. If there are none
+                    // defined, an empty array will be passed in to the constructor.
+                    $dataPersistenceHandlerFunctionCall .= sprintf(
+                        ", [%s]",
+                        implode(', ', $requiredEntityObjects)
+                    );
+
+                    if (count($customEntityFields) > 1) {
+                        $dataPersistenceHandlerFunctionCall .= ", \${$stepKey}Fields";
                     }
+
+                    $dataPersistenceHandlerFunctionCall .= ");\n";
                     $testSteps .= $dataPersistenceHandlerFunctionCall;
                     $testSteps .= $createEntityFunctionCall;
                     break;
@@ -1122,6 +1127,15 @@ class TestGenerator
                         $actor,
                         $stepKey
                     );
+                    break;
+                case "field":
+                    $fieldKey = $steps->getCustomActionAttributes()['key'];
+                    $argRef= "\t\t\$" . str_replace(
+                        ucfirst($fieldKey),
+                        "",
+                        $stepKey
+                    ) . "Fields['{$fieldKey}'] = ${input};\n";
+                    $testSteps.= $this->resolveTestVariable($argRef, [$input]);
                     break;
                 default:
                     $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input, $parameter);

@@ -37,13 +37,13 @@ class HookActionsTestCest
 	{
 		$I->amGoingTo("create entity that has the stepKey: sampleCreateBefore");
 		$sampleCreatedEntity = DataObjectHandler::getInstance()->getObject("sampleCreatedEntity");
-		$this->sampleCreateBefore = new DataPersistenceHandler($sampleCreatedEntity);
+		$this->sampleCreateBefore = new DataPersistenceHandler($sampleCreatedEntity, []);
 		$this->sampleCreateBefore->createEntity();
 		$I->amGoingTo("delete entity that has the createDataKey: sampleCreateBefore");
 		$this->sampleCreateBefore->deleteEntity();
 		$I->amGoingTo("create entity that has the stepKey: sampleCreateForAfter");
 		$sampleCreatedEntity = DataObjectHandler::getInstance()->getObject("sampleCreatedEntity");
-		$this->sampleCreateForAfter = new DataPersistenceHandler($sampleCreatedEntity);
+		$this->sampleCreateForAfter = new DataPersistenceHandler($sampleCreatedEntity, []);
 		$this->sampleCreateForAfter->createEntity();
 	}
 
@@ -60,7 +60,7 @@ class HookActionsTestCest
 	{
 		$I->amGoingTo("create entity that has the stepKey: sampleCreateAfter");
 		$sampleCreatedEntity = DataObjectHandler::getInstance()->getObject("sampleCreatedEntity");
-		$this->sampleCreateAfter = new DataPersistenceHandler($sampleCreatedEntity);
+		$this->sampleCreateAfter = new DataPersistenceHandler($sampleCreatedEntity, []);
 		$this->sampleCreateAfter->createEntity();
 		$I->amGoingTo("delete entity that has the createDataKey: sampleCreateForAfter");
 		$this->sampleCreateForAfter->deleteEntity();

@@ -32,7 +32,7 @@ class PersistedReplacementTestCest
 	{
 		$I->amGoingTo("create entity that has the stepKey: createData1");
 		$ReplacementPerson = DataObjectHandler::getInstance()->getObject("ReplacementPerson");
-		$this->createData1 = new DataPersistenceHandler($ReplacementPerson);
+		$this->createData1 = new DataPersistenceHandler($ReplacementPerson, []);
 		$this->createData1->createEntity();
 	}
 
@@ -46,7 +46,7 @@ class PersistedReplacementTestCest
 	{
 		$I->amGoingTo("create entity that has the stepKey: createdData");
 		$simpleData = DataObjectHandler::getInstance()->getObject("simpleData");
-		$createdData = new DataPersistenceHandler($simpleData);
+		$createdData = new DataPersistenceHandler($simpleData, []);
 		$createdData->createEntity();
 		$I->fillField("#selector", "StringBefore " . $createdData->getCreatedDataByName('firstname') . " StringAfter");
 		$I->fillField("#" . $createdData->getCreatedDataByName('firstname'), "input");

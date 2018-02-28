@@ -36,7 +36,7 @@ class ActionGroupWithPersistedDataCest
 	{
 		$I->amGoingTo("create entity that has the stepKey: createPersonParam");
 		$ReplacementPerson = DataObjectHandler::getInstance()->getObject("ReplacementPerson");
-		$this->createPersonParam = new DataPersistenceHandler($ReplacementPerson);
+		$this->createPersonParam = new DataPersistenceHandler($ReplacementPerson, []);
 		$this->createPersonParam->createEntity();
 		$I->fillField("#foo", "myData1");
 		$I->fillField("#bar", "myData2");
@@ -73,7 +73,7 @@ class ActionGroupWithPersistedDataCest
 	{
 		$I->amGoingTo("create entity that has the stepKey: createPerson");
 		$DefaultPerson = DataObjectHandler::getInstance()->getObject("DefaultPerson");
-		$createPerson = new DataPersistenceHandler($DefaultPerson);
+		$createPerson = new DataPersistenceHandler($DefaultPerson, []);
 		$createPerson->createEntity();
 		$I->amOnPage("/" . $createPerson->getCreatedDataByName('firstname') . "/" . $createPerson->getCreatedDataByName('lastname') . ".html");
 		$I->fillField("#foo", $createPerson->getCreatedDataByName('firstname'));

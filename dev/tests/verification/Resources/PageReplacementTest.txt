@@ -29,7 +29,7 @@ class PageReplacementTestCest
 	{
 		$I->amGoingTo("create entity that has the stepKey: datakey");
 		$simpleData = DataObjectHandler::getInstance()->getObject("simpleData");
-		$datakey = new DataPersistenceHandler($simpleData);
+		$datakey = new DataPersistenceHandler($simpleData, []);
 		$datakey->createEntity();
 		$I->amOnPage("/page.html");
 		$I->amOnPage("/StringLiteral/page.html");

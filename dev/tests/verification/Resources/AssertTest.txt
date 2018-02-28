@@ -32,7 +32,7 @@ class AssertTestCest
 	{
 		$I->amGoingTo("create entity that has the stepKey: createData1");
 		$ReplacementPerson = DataObjectHandler::getInstance()->getObject("ReplacementPerson");
-		$this->createData1 = new DataPersistenceHandler($ReplacementPerson);
+		$this->createData1 = new DataPersistenceHandler($ReplacementPerson, []);
 		$this->createData1->createEntity();
 	}
 
@@ -46,7 +46,7 @@ class AssertTestCest
 	{
 		$I->amGoingTo("create entity that has the stepKey: createData2");
 		$UniquePerson = DataObjectHandler::getInstance()->getObject("UniquePerson");
-		$createData2 = new DataPersistenceHandler($UniquePerson);
+		$createData2 = new DataPersistenceHandler($UniquePerson, []);
 		$createData2->createEntity();
 		$grabTextFrom1 = $I->grabTextFrom(".copyright>span");
 		$I->assertArrayIsSorted(["1", "2", "3", "4", "5"], "asc");

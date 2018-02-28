@@ -29,7 +29,7 @@ class LocatorFunctionTestCest
 	{
 		$I->amGoingTo("create entity that has the stepKey: data");
 		$ReplacementPerson = DataObjectHandler::getInstance()->getObject("ReplacementPerson");
-		$data = new DataPersistenceHandler($ReplacementPerson);
+		$data = new DataPersistenceHandler($ReplacementPerson, []);
 		$data->createEntity();
 		$I->click(Locator::contains("'label'", "'Name'"));
 		$I->click(Locator::contains("'label'", "'Name'"));

@@ -47,9 +47,21 @@ class DataPersistenceHandler
      * @param EntityDataObject $entityObject
      * @param array $dependentObjects
      */
-    public function __construct($entityObject, $dependentObjects = [])
+    public function __construct($entityObject, $dependentObjects = [], $customFields = [])
     {
-        $this->entityObject = clone $entityObject;
+        // merge any custom fields into a new EntityDataObject for the persistence handler
+        if (!empty($customFields)) {
+            $this->entityObject = new EntityDataObject(
+                $entityObject->getName(),
+                $entityObject->getType(),
+                array_merge($entityObject->getAllData(), $customFields),
+                $entityObject->getLinkedEntities(),
+                $this->stripCustomFieldsFromUniquenessData($entityObject->getUniquenessData(), $customFields),
+                $entityObject->getVarReferences()
+            );
+        } else {
+            $this->entityObject = clone $entityObject;
+        }
         $this->storeCode = 'default';
 
         foreach ($dependentObjects as $dependentObject) {
@@ -266,5 +278,24 @@ class DataPersistenceHandler
             }
         }
         return $arrayIn;
+    }
+
+    /**
+     * Function to strip out any overwritten custom field uniqueness data. Takes the uniqueness array and the
+     * customFields from the user and unsets any intersections.
+     *
+     * @param $uniquenessData
+     * @param $customFields
+     * @return array
+     */
+    private function stripCustomFieldsFromUniquenessData($uniquenessData, $customFields)
+    {
+        $newUniquenessArray = $uniquenessData;
+        $intersectingKeys = array_intersect_key($uniquenessData, $customFields);
+        foreach ($intersectingKeys as $customFieldKey => $customFieldValue) {
+            unset($newUniquenessArray[$customFieldKey]);
+        }
+
+        return $newUniquenessArray;
     }
 }

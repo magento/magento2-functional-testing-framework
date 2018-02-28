@@ -23,6 +23,11 @@ class ActionObjectExtractor extends BaseObjectExtractor
     const ACTION_GROUP_ARG_VALUE = 'value';
     const BEFORE_AFTER_ERROR_MSG = "Merge Error - Steps cannot have both before and after attributes.\tStepKey='%s'";
     const STEP_KEY_BLACKLIST_ERROR_MSG = "StepKeys cannot contain non alphanumeric characters.\tStepKey='%s'";
+    const DATA_PERSISTENCE_CUSTOM_FIELD = 'field';
+    const DATA_PERSISTENCE_CUSTOM_FIELD_KEY = 'key';
+    const ACTION_OBJECT_PERSISTENCE_FIELDS = 'customFields';
+    const ACTION_OBJECT_USER_INPUT = 'userInput';
+    const DATA_PERSISTENCE_ACTIONS = ['createData', 'deleteData', 'updateData'];
 
     /**
      * ActionObjectExtractor constructor.
@@ -75,6 +80,10 @@ class ActionObjectExtractor extends BaseObjectExtractor
                 $linkedAction = $actionData[self::TEST_ACTION_AFTER];
                 $order = self::TEST_ACTION_AFTER;
             }
+
+            $actions = $this->extractFieldActions($actionData, $actions);
+            $actionAttributes = $this->extractFieldReferences($actionData, $actionAttributes);
+
             // TODO this is to be implemented later. Currently the schema does not use or need return var.
             /*if (array_key_exists(ActionGroupObjectHandler::TEST_ACTION_RETURN_VARIABLE, $actionData)) {
                 $returnVariable = $actionData[ActionGroupObjectHandler::TEST_ACTION_RETURN_VARIABLE];
@@ -113,5 +122,67 @@ class ActionObjectExtractor extends BaseObjectExtractor
         }
 
         return $actionAttributeArgData;
+    }
+
+    /**
+     * Takes the array representing an action and validates it is a persistence type. If of type persistence,
+     * the function checks for any user specified fields to extract as separate actions to be resolved independently
+     * from the the persistence method.
+     *
+     * @param array $actionData
+     * @param array $actions
+     * @return array
+     */
+    private function extractFieldActions($actionData, $actions)
+    {
+        if (!in_array($actionData[self::NODE_NAME], self::DATA_PERSISTENCE_ACTIONS)) {
+            return $actions;
+        }
+
+        $fieldActions = [];
+        foreach ($actionData as $type => $data) {
+            // determine if field type is entity passed in
+            if (!is_array($data) || $data[self::NODE_NAME] != self::DATA_PERSISTENCE_CUSTOM_FIELD) {
+                continue;
+            }
+
+            // must append stepKey and userInput to resolve fields passed in properly via extractActions method
+            $fieldData = $data;
+            $fieldData[self::TEST_STEP_MERGE_KEY] = $actionData[self::TEST_STEP_MERGE_KEY]
+                . ucfirst($fieldData[self::DATA_PERSISTENCE_CUSTOM_FIELD_KEY]);
+            $fieldData[self::ACTION_OBJECT_USER_INPUT] = $fieldData['value'];
+            $fieldActions[] = $fieldData;
+        }
+
+        // merge resolved actions with those psased in and return
+        return array_merge($actions, $this->extractActions($fieldActions));
+    }
+
+    /**
+     * Takes the array representing an action and validates it is a persistence type. If of type persistence, the
+     * function creates a new set of attributes for the persistence method which represent a named list of fields and
+     * any other references (such as required entities etc.)
+     *
+     * @param array $actionData
+     * @param array $actionAttributes
+     * @return array
+     */
+    private function extractFieldReferences($actionData, $actionAttributes)
+    {
+        if (!in_array($actionData[self::NODE_NAME], self::DATA_PERSISTENCE_ACTIONS)) {
+            return $actionAttributes;
+        }
+
+        $attributes[self::ACTION_OBJECT_PERSISTENCE_FIELDS][self::NODE_NAME] = 'fields';
+        foreach ($actionAttributes as $attributeName => $attributeValue) {
+            if (!is_array($attributeValue) || $attributeValue[self::NODE_NAME] != self::DATA_PERSISTENCE_CUSTOM_FIELD) {
+                $attributes[$attributeName] = $attributeValue;
+                continue;
+            }
+
+            $attributes[self::ACTION_OBJECT_PERSISTENCE_FIELDS][] = $attributeName;
+        }
+
+        return $attributes;
     }
 }

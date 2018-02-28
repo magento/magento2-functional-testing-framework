@@ -107,6 +107,16 @@ class EntityDataObject
     }
 
     /**
+     * Getter for data array (field name to value)
+     *
+     * @return \string[]
+     */
+    public function getAllData()
+    {
+        return $this->data;
+    }
+
+    /**
      * Get a piece of data by name and the desired uniqueness format.
      *
      * @param string $name
@@ -236,6 +246,26 @@ class EntityDataObject
         }
 
         return $groupedArray;
+    }
+
+    /**
+     * Get array of entity names specified as associated to this entity.
+     *
+     * @return \string[]
+     */
+    public function getLinkedEntities()
+    {
+        return $this->linkedEntities;
+    }
+
+    /**
+     * Get array of var based fields defined in this entity.
+     *
+     * @return \string[]
+     */
+    public function getVarReferences()
+    {
+        return $this->vars;
     }
 
     /**

@@ -48,7 +48,7 @@ class SectionReplacementTestCest
 		$I->click("#Doe".msq("uniqueData")."-stringLiteral2 .Doe");
 		$I->amGoingTo("create entity that has the stepKey: createdData");
 		$simpleData = DataObjectHandler::getInstance()->getObject("simpleData");
-		$createdData = new DataPersistenceHandler($simpleData);
+		$createdData = new DataPersistenceHandler($simpleData, []);
 		$createdData->createEntity();
 		$I->click("#element ." . $createdData->getCreatedDataByName('firstname'));
 		$I->click("#" . $createdData->getCreatedDataByName('firstname') . " .stringLiteral2");

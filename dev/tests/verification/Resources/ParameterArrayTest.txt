@@ -29,7 +29,7 @@ class ParameterArrayTestCest
 	{
 		$I->amGoingTo("create entity that has the stepKey: simpleDataKey");
 		$simpleParamData = DataObjectHandler::getInstance()->getObject("simpleParamData");
-		$simpleDataKey = new DataPersistenceHandler($simpleParamData);
+		$simpleDataKey = new DataPersistenceHandler($simpleParamData, []);
 		$simpleDataKey->createEntity();
 		$I->searchAndMultiSelectOption("#selector", ["name"]);
 		$I->searchAndMultiSelectOption("#selector", [msq("simpleParamData")."prename"]);

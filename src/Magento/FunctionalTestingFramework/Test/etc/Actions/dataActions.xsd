@@ -50,6 +50,7 @@
         </xs:annotation>
         <xs:choice minOccurs="0" maxOccurs="unbounded">
             <xs:element type="requiredEntityType" name="requiredEntity" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="additionalFieldType" name="field" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
         <xs:attribute ref="entity" use="required"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
@@ -110,6 +111,17 @@
                 <xs:attribute ref="createDataKey" use="required"/>
                 <xs:attribute name="before"/>
                 <xs:attribute name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="additionalFieldType">
+        <xs:annotation>
+            <xs:documentation>field used to override defined fields from metadata or existing data definitions, during operation.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="key" use="required"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>

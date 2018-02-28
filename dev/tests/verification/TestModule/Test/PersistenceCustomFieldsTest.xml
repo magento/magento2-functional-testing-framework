@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="PersistenceCustomFieldsTest">
+        <before>
+            <createData entity="DefaultPerson" stepKey="createData1">
+                <field key="firstname">Mac</field>
+                <field key="lastname">{{simpleData.lastname}}</field>
+            </createData>
+            <createData entity="uniqueData" stepKey="createData2">
+                <requiredEntity createDataKey="createData1"/>
+                <field key="firstname">$$createData1.firstname$$</field>
+            </createData>
+        </before>
+        <createData entity="simpleData" stepKey="createdData">
+            <field key="favoriteIndex">1</field>
+            <field key="middlename">Kovacs</field>
+        </createData>
+        <createData entity="UniquePerson" stepKey="createdData3">
+            <requiredEntity createDataKey="createdData"/>
+            <field key="firstname">Takeshi</field>
+            <field key="lastname">Kovacs</field>
+        </createData>
+        <actionGroup ref="PersistenceActionGroup" stepKey="createdAG">
+            <argument name="arg1" value="string1"/>
+            <argument name="arg2" value="DefaultPerson.firstname"/>
+            <argument name="arg3" value="$createdData3.firstname$"/>
+        </actionGroup>
+    </test>
+</tests>

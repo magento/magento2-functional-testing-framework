@@ -36,7 +36,7 @@ class BasicActionGroupTestCest
 	{
 		$I->amGoingTo("create entity that has the stepKey: createPersonParam");
 		$ReplacementPerson = DataObjectHandler::getInstance()->getObject("ReplacementPerson");
-		$this->createPersonParam = new DataPersistenceHandler($ReplacementPerson);
+		$this->createPersonParam = new DataPersistenceHandler($ReplacementPerson, []);
 		$this->createPersonParam->createEntity();
 		$I->fillField("#foo", "myData1");
 		$I->fillField("#bar", "myData2");

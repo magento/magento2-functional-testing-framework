@@ -209,11 +209,13 @@
                 <item name="/tests/test" xsi:type="string">name</item>
                 <item name="/tests/test/actionGroup/argument" xsi:type="string">name</item>
                 <item name="/tests/test/(createData|updateData|getData)/requiredEntity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/(createData|updateData|getData)/field" xsi:type="string">key</item>
                 <item name="/tests/test/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
                 <item name="/tests/test/(before|after)/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
                 <item name="/tests/test/remove" xsi:type="string">keyForRemoval</item>
                 <item name="/tests/test/(before|after)/remove" xsi:type="string">keyForRemoval</item>
                 <item name="/tests/test/(before|after)/(createData|updateData|getData)/requiredEntity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/(before|after)/(createData|updateData|getData)/field" xsi:type="string">key</item>
                 <item name="/tests/test/annotations(/group)+" xsi:type="string">value</item>
             </argument>
             <argument name="fileName" xsi:type="string">*.xml</argument>
@@ -231,6 +233,8 @@
                 <item name="/tests/test" xsi:type="string">name</item>
                 <item name="/tests/test/(createData|updateData|getData)/requiredEntity" xsi:type="string">createDataKey</item>
                 <item name="/tests/test/(before|after)/(createData|updateData|getData)/requiredEntity" xsi:type="string">createDataKey</item>
+                <item name="/tests/test/(createData|updateData|getData)/field" xsi:type="string">key</item>
+                <item name="/tests/test/(before|after)/(createData|updateData|getData)/field" xsi:type="string">key</item>
                 <item name="/tests/test/actionGroup/argument" xsi:type="string">name</item>
                 <item name="/tests/test/(before|after)/actionGroup/argument" xsi:type="string">name</item>
             </argument>
@@ -284,6 +288,7 @@
                 <item name="/actionGroups/actionGroup/arguments/argument" xsi:type="string">name</item>
                 <item name="/actionGroups/actionGroup/(&commonTestActions;)" xsi:type="string">stepKey</item>
                 <item name="/actionGroups/actionGroup/(createData|updateData|getData)/requiredEntity" xsi:type="string">createDataKey</item>
+                <item name="/actionGroups/actionGroup/(createData|updateData|getData)/field" xsi:type="string">key</item>
                 <item name="/actionGroups/actionGroup/remove" xsi:type="string">keyForRemoval</item>
             </argument>
             <argument name="fileName" xsi:type="string">*ActionGroup.xml</argument>
@@ -299,6 +304,7 @@
                 <item name="/actionGroups/actionGroup" xsi:type="string">name</item>
                 <item name="/actionGroups/actionGroup/arguments/argument" xsi:type="string">name</item>
                 <item name="/actionGroups/actionGroup/(createData|updateData|getData)/requiredEntity" xsi:type="string">createDataKey</item>
+                <item name="/actionGroups/actionGroup/(createData|updateData|getData)/field" xsi:type="string">key</item>
             </argument>
         </arguments>
     </virtualType>
