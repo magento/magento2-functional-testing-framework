@@ -117,10 +117,11 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
      */
     public function write($url, $data = [], $method = CurlInterface::POST, $headers = [])
     {
+        $url = ltrim($url, "/");
         $apiUrl = self::$adminUrl . $url;
 
         if ($this->removeBackend) {
-            $apiUrl = parent::$baseUrl . ltrim($url, '/');
+            $apiUrl = parent::$baseUrl . $url;
         }
 
         if ($this->formKey) {

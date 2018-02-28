@@ -152,13 +152,6 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
             $operationElements = [];
             $removeBackend = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_BACKEND_REMOVE] ?? false;
 
-            // TODO remove this warning with 2.1.0 release
-            $backendName = getenv('MAGENTO_BACKEND_NAME');
-            if ($auth == "adminFormKey" && substr($url, 1, strlen($backendName)) == $backendName) {
-                print "\033[1;33mDEPRECATED: MFTF will now automatically append MAGENTO_BACKEND_NAME to adminFormKey " .
-                    "auth type operations by default, please update metadata: {$dataDefName}\033[0m\n";
-            }
-
             if (array_key_exists(OperationDefinitionObjectHandler::ENTITY_OPERATION_HEADER, $opDefArray)) {
                 foreach ($opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_HEADER] as $headerEntry) {
                     if (isset($headerEntry[OperationDefinitionObjectHandler::ENTITY_OPERATION_HEADER_VALUE])
