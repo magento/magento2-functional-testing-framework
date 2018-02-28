@@ -131,7 +131,7 @@ class CurlHandler
             $this->isJson = true;
             $executor = new WebapiExecutor($this->storeCode);
         } elseif ($authorization === 'adminFormKey') {
-            $executor = new AdminExecutor();
+            $executor = new AdminExecutor($this->operationDefinition->removeUrlBackend());
         } elseif ($authorization === 'customerFormKey') {
             $executor = new FrontendExecutor(
                 $this->requestData['customer_email'],

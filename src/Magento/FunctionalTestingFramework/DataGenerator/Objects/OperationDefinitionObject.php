@@ -105,6 +105,12 @@ class OperationDefinitionObject
     private $returnRegex;
 
     /**
+     * Determines if operation should remove backend_name from URL.
+     * @var bool
+     */
+    private $removeBackend;
+
+    /**
      * OperationDefinitionObject constructor.
      * @param string $name
      * @param string $operation
@@ -116,6 +122,7 @@ class OperationDefinitionObject
      * @param array $params
      * @param array $metaData
      * @param string $contentType
+     * @param bool $removeBackend
      * @param string $successRegex
      * @param string $returnRegex
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
@@ -131,6 +138,7 @@ class OperationDefinitionObject
         $params,
         $metaData,
         $contentType,
+        $removeBackend,
         $successRegex = null,
         $returnRegex = null
     ) {
@@ -145,6 +153,7 @@ class OperationDefinitionObject
         $this->operationMetadata = $metaData;
         $this->successRegex = $successRegex;
         $this->returnRegex = $returnRegex;
+        $this->removeBackend = $removeBackend;
         $this->apiUrl = null;
 
         if (!empty($contentType)) {
@@ -152,6 +161,7 @@ class OperationDefinitionObject
         } else {
             $this->contentType = 'application/x-www-form-urlencoded';
         }
+
         // add content type as a header
         $this->headers[] = self::HTTP_CONTENT_TYPE_HEADER . ': ' . $this->contentType;
     }
@@ -229,6 +239,16 @@ class OperationDefinitionObject
     public function getHeaders()
     {
         return $this->headers;
+    }
+
+    /**
+     * Getter for removeBackend
+     *
+     * @return bool
+     */
+    public function removeUrlBackend()
+    {
+        return $this->removeBackend;
     }
 
     /**

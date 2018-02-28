@@ -37,6 +37,12 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
     private $response;
 
     /**
+     * Should executor remove backend_name from api url
+     * @var bool
+     */
+    private $removeBackend;
+
+    /**
      * Backend url.
      *
      * @var string
@@ -45,15 +51,17 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
 
     /**
      * Constructor.
+     * @param bool $removeBackend
      *
      * @constructor
      */
-    public function __construct()
+    public function __construct($removeBackend)
     {
         if (!isset(parent::$baseUrl)) {
             parent::resolveBaseUrl();
         }
         self::$adminUrl = parent::$baseUrl . getenv('MAGENTO_BACKEND_NAME') . '/';
+        $this->removeBackend = $removeBackend;
         $this->transport = new CurlTransport();
         $this->authorize();
     }
@@ -110,6 +118,11 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
     public function write($url, $data = [], $method = CurlInterface::POST, $headers = [])
     {
         $apiUrl = self::$adminUrl . $url;
+
+        if ($this->removeBackend) {
+            $apiUrl = parent::$baseUrl . ltrim($url, '/');
+        }
+
         if ($this->formKey) {
             $data['form_key'] = $this->formKey;
         } else {

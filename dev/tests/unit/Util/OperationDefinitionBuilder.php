@@ -38,6 +38,12 @@ class OperationDefinitionBuilder
     private $metadata = [];
 
     /**
+     * Determines if api URL should remove magento_backend_name.
+     * @var bool
+     */
+    private $removeBackend;
+
+    /**
      * Function which builds an operation defintions based on the fields set by the user.
      *
      * @return OperationDefinitionObject
@@ -54,7 +60,8 @@ class OperationDefinitionBuilder
             null,
             null,
             $this->metadata,
-            null
+            null,
+            false
         );
     }
 
