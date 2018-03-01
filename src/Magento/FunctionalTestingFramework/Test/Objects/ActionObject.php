@@ -239,6 +239,19 @@ class ActionObject
             return;
         }
 
+        $actualOnlyTypes = ['assertEmpty', 'assertFalse', 'assertFileExists', 'assertFileNotExists',
+            'assertIsEmpty', 'assertNotEmpty', 'assertNotNull', 'assertNull', 'assertTrue'];
+        $expectedOnlyTypes = ['assertElementContainsAttribute'];
+
+        if (!in_array($this->type, array_merge($actualOnlyTypes, $expectedOnlyTypes))) {
+            if (!in_array('expectedResult', $relevantAssertionAttributes)
+                || !in_array('actualResult', $relevantAssertionAttributes)) {
+                // @codingStandardsIgnoreStart
+                throw new TestReferenceException("{$this->type} must have both an expectedResult and actualResult defined (stepKey: {$this->stepKey})");
+                // @codingStandardsIgnoreEnd
+            }
+        }
+
         // Flatten nested Elements's type and value into key=>value entries
         foreach ($this->actionAttributes as $key => $subAttributes) {
             if (in_array($key, $relevantKeys)) {
