@@ -94,7 +94,7 @@
     <!-- ASSERTION TYPES -->
     <!-- REMOVE expected/expectedType and actual/actualType in MQE-683-->
     <xs:complexType name="assertionType">
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -114,7 +114,7 @@
                 Asserts that a given element contains a specific attribute.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
         </xs:choice>
         <xs:attribute type="xs:string" name="expectedValue">
@@ -141,7 +141,7 @@
                 Asserts that given array has a key.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -159,7 +159,7 @@
                 Asserts that given array does not contain a key.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -177,7 +177,7 @@
                 Asserts that given array contains a subset array.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -214,7 +214,7 @@
                 Asserts that expected count is equal to actual count.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -232,7 +232,7 @@
                 Asserts that given variable is empty.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
         <xs:attribute ref="expected"/>
@@ -249,7 +249,7 @@
                 Asserts that two given variables are equal. Can be given a "delta" to allow precision tolerance in floating point comparison.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -268,7 +268,7 @@
                 Asserts that given condition is false.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
         <xs:attribute ref="expected"/>
@@ -285,7 +285,7 @@
                 Asserts that given file exists.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
         <xs:attribute ref="expected"/>
@@ -302,7 +302,7 @@
                 Asserts that given file does not exist.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
         <xs:attribute ref="expected"/>
@@ -319,7 +319,7 @@
                 Asserts that given actual value is greater or equal to expected value.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -337,7 +337,7 @@
                 Asserts that given actual value is greater than expected value.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -355,7 +355,7 @@
                 Asserts that given actual value is greater than or equal to expected value.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -373,7 +373,7 @@
                 Asserts that given actual is an instance of expected class.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -391,7 +391,7 @@
                 Asserts that given actual is internal type.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -409,7 +409,7 @@
                 Asserts that given actual is empty.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
         <xs:attribute ref="expected"/>
@@ -426,7 +426,7 @@
                 Asserts that given actual less than or equal to expected.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -444,7 +444,7 @@
                 Asserts that given actual less than expected.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -462,7 +462,7 @@
                 Asserts that given actual less than or equal to expected.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -480,7 +480,7 @@
                 Asserts that given array does not contain a value.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -498,7 +498,7 @@
                 Asserts that given actual variable is not empty.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
         <xs:attribute ref="expected"/>
@@ -515,7 +515,7 @@
                 Asserts that actual and expected are not equal. Can be given a "delta" to allow precision tolerance in floating point comparison.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -534,7 +534,7 @@
                 Asserts that given actual is not an instance of a class.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -552,7 +552,7 @@
                 Asserts that given actual is not null.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
         <xs:attribute ref="expected"/>
@@ -569,7 +569,7 @@
                 Asserts that given actual string does not match with expected pattern.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -587,7 +587,7 @@
                 Asserts that given actual and expected are not the same.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -605,7 +605,7 @@
                 Asserts that given actual is null.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
         <xs:attribute ref="expected"/>
@@ -622,7 +622,7 @@
                 Asserts that given actual string matches with expected pattern.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -640,7 +640,7 @@
                 Asserts that actual and expected are the same.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -658,7 +658,7 @@
                 Asserts that actual string does not start with the expected prefix.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -676,7 +676,7 @@
                 Asserts that actual string starts with the expected prefix.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
@@ -694,7 +694,7 @@
                 Asserts that given actual is true.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
         <xs:attribute ref="expected"/>
@@ -711,7 +711,7 @@
                 Handles and checks expected exception called inside actual callback function.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice minOccurs="0">
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
