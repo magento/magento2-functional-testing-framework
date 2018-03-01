@@ -130,7 +130,10 @@ class ModuleResolver
             return $this->enabledModules;
         }
 
-        $this->printMagentoVersionInfo();
+        $testGenerationPhase = $GLOBALS['GENERATE_TESTS'] ?? false;
+        if ($testGenerationPhase) {
+            $this->printMagentoVersionInfo();
+        }
 
         $token = $this->getAdminToken();
         if (!$token || !is_string($token)) {
