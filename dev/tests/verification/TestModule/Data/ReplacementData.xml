@@ -14,6 +14,9 @@
         <data key="lastname">Doe</data>
         <data key="middlename">Tiberius</data>
         <data key="favoriteIndex">0</data>
+        <array key="street">
+            <item>7700 West Parmer Lane</item>
+        </array>
     </entity>
     <entity name="uniqueData" type="simpleData">
         <data key="firstname" unique="prefix">John</data>

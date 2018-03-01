@@ -9,6 +9,8 @@
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
     <test name="CharacterReplacementTest">
+        <click stepKey="charsInSectionElement" selector="{{SampleSection.underscore_element}}"/>
+        <fillField stepKey="charsInDataRef" selector="{{SampleSection.underscore_element}}" userInput="{{simpleData.street[0]}}"/>
         <click stepKey="allChars1" selector="{{SampleSection.oneParamElement('abcdefghijklmnopqrstuvwxyz1234567890')}}"/>
         <click stepKey="allChars2" selector="{{SampleSection.oneParamElement('`~!@#$%^&amp;*()-_=+{}[]|\;:&quot;.,&gt;&lt;/?()$213., ')}}"/>
         <click stepKey="allChars3" selector="{{SampleSection.oneParamElement('words, and, commas, and, spaces')}}"/>
