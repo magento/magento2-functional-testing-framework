@@ -239,11 +239,14 @@ class ActionObject
             return;
         }
 
-        $actualOnlyTypes = ['assertEmpty', 'assertFalse', 'assertFileExists', 'assertFileNotExists',
-            'assertIsEmpty', 'assertNotEmpty', 'assertNotNull', 'assertNull', 'assertTrue'];
-        $expectedOnlyTypes = ['assertElementContainsAttribute'];
+        /** MQE-683 DEPRECATE OLD METHOD HERE
+         * Unnecessary validation, only needed for backwards compatibility
+         */
+        $singleChildTypes = ['assertEmpty', 'assertFalse', 'assertFileExists', 'assertFileNotExists',
+            'assertIsEmpty', 'assertNotEmpty', 'assertNotNull', 'assertNull', 'assertTrue',
+            'assertElementContainsAttribute'];
 
-        if (!in_array($this->type, array_merge($actualOnlyTypes, $expectedOnlyTypes))) {
+        if (!in_array($this->type, $singleChildTypes)) {
             if (!in_array('expectedResult', $relevantAssertionAttributes)
                 || !in_array('actualResult', $relevantAssertionAttributes)) {
                 // @codingStandardsIgnoreStart
