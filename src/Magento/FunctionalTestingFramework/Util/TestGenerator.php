@@ -688,7 +688,7 @@ class TestGenerator
                     $requiredEntities = [];
                     $requiredEntityObjects = [];
                     foreach ($customActionAttributes as $customAttribute) {
-                        if (is_array($customAttribute) && $customAttribute['nodeName'] = 'requiredEntity') {
+                        if (is_array($customAttribute) && $customAttribute['nodeName'] == 'requiredEntity') {
                             if ($hookObject) {
                                 $requiredEntities [] = "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
                                     "->getName() => " . "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
