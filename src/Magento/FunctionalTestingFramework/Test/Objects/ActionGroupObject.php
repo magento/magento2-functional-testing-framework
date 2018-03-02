@@ -339,8 +339,8 @@ class ActionGroupObject
         foreach ($actionAttributes as $attributeKey => $attributeValue) {
             foreach ($actionStepKeys as $key) {
                 if (!is_array($attributeValue) && strpos($attributeValue, $key)) {
-                    $actionAttributes[$attributeKey] = preg_replace(
-                        "/{$key}/",
+                    $actionAttributes[$attributeKey] = str_replace(
+                        $key,
                         $key . $actionGroupKey,
                         $attributeValue
                     );
