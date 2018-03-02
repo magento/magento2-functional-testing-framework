@@ -121,6 +121,7 @@ class ActionGroupObject
     private function getResolvedActionsWithArgs($arguments, $actionReferenceKey)
     {
         $resolvedActions = [];
+        $originalStepKeys = $this->extractOriginalStepKeys();
 
         // $regexPattern match on:   $matches[0] {{section.element(arg.field)}}
         // $matches[1] = section.element
@@ -151,12 +152,18 @@ class ActionGroupObject
                 }
             }
 
+            $mergedActionAttributes = $this->appendActionGroupKeyToKeyReferences(
+                array_merge($action->getCustomActionAttributes(), $newActionAttributes),
+                $originalStepKeys,
+                $actionReferenceKey
+            );
+
             // we append the action reference key to any linked action and the action's merge key as the user might
             // use this action group multiple times in the same test.
             $resolvedActions[$action->getStepKey() . $actionReferenceKey] = new ActionObject(
                 $action->getStepKey() . $actionReferenceKey,
                 $action->getType(),
-                array_merge($action->getCustomActionAttributes(), $newActionAttributes),
+                $mergedActionAttributes,
                 $action->getLinkedAction() == null ? null : $action->getLinkedAction() . $actionReferenceKey,
                 $action->getOrderOffset()
             );
@@ -305,6 +312,42 @@ class ActionGroupObject
         }
 
         return $newAttributeValue;
+    }
+
+    /**
+     * Finds and returns all original stepkeys of actions in actionGroup.
+     * @return string[]
+     */
+    private function extractOriginalStepKeys()
+    {
+        $originalKeys = [];
+        foreach ($this->parsedActions as $action) {
+            $originalKeys[] = $action->getStepKey();
+        }
+        return $originalKeys;
+    }
+
+    /**
+     * Loops through all actionAttributes and searches/replaces stepKey references with concatenated actionGroupKey.
+     * @param array $actionAttributes
+     * @param array $actionStepKeys
+     * @param string $actionGroupKey
+     * @return array
+     */
+    private function appendActionGroupKeyToKeyReferences($actionAttributes, $actionStepKeys, $actionGroupKey)
+    {
+        foreach ($actionAttributes as $attributeKey => $attributeValue) {
+            foreach ($actionStepKeys as $key) {
+                if (!is_array($attributeValue) && strpos($attributeValue, $key)) {
+                    $actionAttributes[$attributeKey] = preg_replace(
+                        "/{$key}/",
+                        $key . $actionGroupKey,
+                        $attributeValue
+                    );
+                }
+            }
+        }
+        return $actionAttributes;
     }
 
     /**
