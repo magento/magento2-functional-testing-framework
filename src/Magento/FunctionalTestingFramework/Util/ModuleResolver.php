@@ -126,11 +126,17 @@ class ModuleResolver
      */
     public function getEnabledModules()
     {
+        $testGenerationPhase = $GLOBALS['GENERATE_TESTS'] ?? false;
+
         if (isset($this->enabledModules)) {
             return $this->enabledModules;
+        } elseif (!isset($_ENV['MAGENTO_BASE_URL']) && $GLOBALS['FORCE_PHP_GENERATE'] ?? false == true) {
+            if ($testGenerationPhase) {
+                print "\nWARNING: No MAGENTO_BASE_URL defined in .env file, merging test files alphabetically.\n";
+            }
+            return null;
         }
 
-        $testGenerationPhase = $GLOBALS['GENERATE_TESTS'] ?? false;
         if ($testGenerationPhase) {
             $this->printMagentoVersionInfo();
         }
