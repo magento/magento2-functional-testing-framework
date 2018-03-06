@@ -154,5 +154,6 @@ class AssertTestCest
 		$I->assertElementContainsAttribute(".admin__menu-overlay", "border", "0");
 		$I->assertElementContainsAttribute("#username", "value", $createData2->getCreatedDataByName('firstname'));
 		$I->assertElementContainsAttribute("#username", "value", $this->createData1->getCreatedDataByName('firstname'));
+		$I->assertEquals("John", "Doe", "pass");
 	}
 }
