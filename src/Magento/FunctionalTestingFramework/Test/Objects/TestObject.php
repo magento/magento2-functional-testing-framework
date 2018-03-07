@@ -103,6 +103,11 @@ class TestObject
         return $this->hooks;
     }
 
+    /**
+     * Returns the number of a test actions contained within a single test (including before/after actions).
+     *
+     * @return int
+     */
     public function getTestActionCount()
     {
         $hookActions = 0;
