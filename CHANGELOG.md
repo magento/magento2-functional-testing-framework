@@ -1,6 +1,39 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.1.0
+-----
+### Enhancements
+* Traceability
+    * Severity in `<annotation>` tags now properly reflect Magento severity values. 
+* Modularity
+    * Added ability to pass in simple values to actionGroups via addition of `type` attribute in actionGroup `<argument>` declaration.
+        * For examples, see devdocs article on actionGroups.
+    * Merging resolution now depends on Magento instance's installed modules. This also means merging order now follows the expected module merging order.
+* Customizability
+    * Added `<assertArrayIsSorted>` action. This action takes in an array of data and asserts that the array is properly sorted, according to the provided `sortOrder`
+    * Added `<selectMultipleOptions>` action. This is a variation of `<searchAndSelectOptions>` that is given a `filterSelector`, `optionSelector`, and an `<array>` of options to select.
+        * For a working sample, see `SearchAndMultiselectActionGroup.xml` under `Catalog` in magento2ce.
+    * Test actions that deal with `<url...>` now utilize and grab the page's full url, not just the `/path?query#fragment` portion.
+    * All `<assert...>` actions support a clearer, more readable nested syntax.
+        * Both old and new syntax are supported. See devdocs `Assertions` article for examples.
+    * Added support for overriding a data-entity's `field` values during test runtime, prior to persistence via `<createData>` actions.
+    * Added `removeBackend="true"` attribute to `<operation>`. Only applicable to `operation` definitions of `type="adminFormKey"`, attribute prevents pre-pending of `MAGENTO_BACKEND_NAME` to the `url` specified.
+        * Specific to use case where `adminFormKey` operations don't follow `MAGENTO_BASE_URL/MAGENTO_BACKEND_NAME/MAGENTO_BACKEND_NAME/API_URL` format.
+* Readability
+    * Data Entities used in tests (`<test>`, `<page>`, `<section>`, `<element>`, `<data>`) now require alphanumeric naming.
+* Maintainability
+    * Documentation for all test actions have been added to XML schema. Turning on documentation hinting will display relevant information while writing test XML.
+    * All references to `.env` file contents are now resolved at test runtime, as opposed to generation.
+
+### Fixes
+* Fixed an issue with using the character `-` in parameterized selector references.
+    * Users should now be able to use any characters except for `'` when providing a `'stringLiteral'` to a parameterized selector/url.
+* Fixed an issue where entity substitution was not enabled in all `<assert...>` test actions.
+
+### GitHub Issues/Pull requests:
+* [#37](https://github.com/magento/magento2-functional-testing-framework/issues/37) -- Unable to make API requests using self signed certificate to HTTPS domain (fixed in [#39](https://github.com/magento/magento2-functional-testing-framework/pull/39))
+
 2.0.3
 -----
 ### Enhancements

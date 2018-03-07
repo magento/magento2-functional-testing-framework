@@ -104,6 +104,27 @@ class TestObject
     }
 
     /**
+     * Returns the number of a test actions contained within a single test (including before/after actions).
+     *
+     * @return int
+     */
+    public function getTestActionCount()
+    {
+        $hookActions = 0;
+        if (array_key_exists('before', $this->hooks)) {
+            $hookActions += count($this->hooks['before']->getActions());
+        }
+
+        if (array_key_exists('after', $this->hooks)) {
+            $hookActions += count($this->hooks['after']->getActions());
+        }
+
+        $testActions = count($this->getOrderedActions());
+
+        return $hookActions + $testActions;
+    }
+
+    /**
      * Method to return the value(s) of a corresponding annotation such as group.
      *
      * @param string $name

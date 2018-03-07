@@ -15,6 +15,8 @@ use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
+use Magento\FunctionalTestingFramework\Util\Manifest\BaseTestManifest;
+use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
@@ -129,24 +131,21 @@ class TestGenerator
      * to the createCestFile function.
      *
      * @param string $runConfig
+     * @param int $nodes
      * @return void
      * @throws TestReferenceException
      * @throws \Exception
      */
-    public function createAllTestFiles($runConfig = null)
+    public function createAllTestFiles($runConfig = null, $nodes = null)
     {
         DirSetupUtil::createGroupDir($this->exportDirectory);
 
         // create our manifest file here
-        $testManifest = new TestManifest($this->exportDirectory, $runConfig);
-        $testPhpArray = $this->assembleAllTestPhp($testManifest);
+        $testManifest = TestManifestFactory::makeManifest($this->exportDirectory, $runConfig);
+        $testPhpArray = $this->assembleAllTestPhp($testManifest, $nodes);
 
         foreach ($testPhpArray as $testPhpFile) {
             $this->createCestFile($testPhpFile[1], $testPhpFile[0]);
-        }
-
-        if ($testManifest->getManifestConfig() === TestManifest::SINGLE_RUN_CONFIG) {
-            $testManifest->recordPathToExportDir();
         }
     }
 
@@ -188,13 +187,15 @@ class TestGenerator
     /**
      * Load ALL Test objects. Loop over and pass each to the assembleTestPhp function.
      *
-     * @param TestManifest $testManifest
+     * @param BaseTestManifest $testManifest
+     * @param int $nodes
      * @return array
      * @throws TestReferenceException
      * @throws \Exception
      */
-    private function assembleAllTestPhp($testManifest)
+    private function assembleAllTestPhp($testManifest, $nodes)
     {
+        /** @var TestObject[] $testObjects */
         $testObjects = $this->loadAllTestObjects();
         $cestPhpArray = [];
 
@@ -203,10 +204,10 @@ class TestGenerator
             $cestPhpArray[] = [$test->getCodeceptionName(), $php];
 
             //write to manifest here if config is not single run
-            if ($testManifest->getManifestConfig() != TestManifest::SINGLE_RUN_CONFIG) {
-                $testManifest->recordCest($test->getCodeceptionName());
-            }
+            $testManifest->addTest($test);
         }
+
+        $testManifest->generate($nodes);
 
         return $cestPhpArray;
     }
@@ -690,7 +691,7 @@ class TestGenerator
                     $requiredEntities = [];
                     $requiredEntityObjects = [];
                     foreach ($customActionAttributes as $customAttribute) {
-                        if (is_array($customAttribute) && $customAttribute['nodeName'] = 'requiredEntity') {
+                        if (is_array($customAttribute) && $customAttribute['nodeName'] == 'requiredEntity') {
                             if ($hookObject) {
                                 $requiredEntities [] = "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
                                     "->getName() => " . "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
