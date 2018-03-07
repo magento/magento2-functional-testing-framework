@@ -86,8 +86,12 @@ class ConfigSanitizerUtil
      */
     public static function sanitizeUrl($url)
     {
+        $forceGenerate = $GLOBALS['FORCE_PHP_GENERATE'] ?? false;
         if ($url === "") {
-            trigger_error("MAGENTO_BASE_URL must be defined in .env", E_USER_ERROR);
+            if ($forceGenerate === false) {
+                trigger_error("MAGENTO_BASE_URL must be defined in .env", E_USER_ERROR);
+            }
+            return $url;
         }
 
         if (filter_var($url, FILTER_VALIDATE_URL) === true) {

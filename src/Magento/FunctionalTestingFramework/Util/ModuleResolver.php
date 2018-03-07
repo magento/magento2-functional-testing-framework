@@ -130,11 +130,6 @@ class ModuleResolver
 
         if (isset($this->enabledModules)) {
             return $this->enabledModules;
-        } elseif (!isset($_ENV['MAGENTO_BASE_URL']) && $GLOBALS['FORCE_PHP_GENERATE'] ?? false == true) {
-            if ($testGenerationPhase) {
-                print "\nWARNING: No MAGENTO_BASE_URL defined in .env file, merging test files alphabetically.\n";
-            }
-            return null;
         }
 
         if ($testGenerationPhase) {
@@ -147,7 +142,7 @@ class ModuleResolver
             return $this->enabledModules;
         }
 
-        $url = ConfigSanitizerUtil::sanitizeUrl($_ENV['MAGENTO_BASE_URL']) . $this->moduleUrl;
+        $url = ConfigSanitizerUtil::sanitizeUrl(getenv('MAGENTO_BASE_URL')) . $this->moduleUrl;
 
         $headers = [
             'Authorization: Bearer ' . $token,
@@ -258,6 +253,11 @@ class ModuleResolver
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
+
+        if (!$response) {
+            $response = "No version information available.";
+        }
+
         print "\nVersion Information: {$response}\n";
     }
 
