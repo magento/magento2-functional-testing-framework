@@ -27,11 +27,11 @@ class ActionGroupWithStepKeyReferencesCest
 	 */
 	public function ActionGroupWithStepKeyReferences(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the stepKey: createSimpleDataactionGroup");
+		$I->amGoingTo("create entity that has the stepKey: createSimpleDataActionGroup");
 		$simpleData = DataObjectHandler::getInstance()->getObject("simpleData");
-		$createSimpleDataactionGroup = new DataPersistenceHandler($simpleData, []);
-		$createSimpleDataactionGroup->createEntity();
-		$grabTextDataactionGroup = $I->grabTextFrom(".class");
-		$I->fillField(".{$grabTextDataactionGroup}", $createSimpleDataactionGroup->getCreatedDataByName('field'));
+		$createSimpleDataActionGroup = new DataPersistenceHandler($simpleData, []);
+		$createSimpleDataActionGroup->createEntity();
+		$grabTextDataActionGroup = $I->grabTextFrom(".class");
+		$I->fillField(".{$grabTextDataActionGroup}", $createSimpleDataActionGroup->getCreatedDataByName('field'));
 	}
 }
