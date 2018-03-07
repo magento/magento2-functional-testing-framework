@@ -21,7 +21,15 @@ class ActionObject
 {
     const __ENV = "_ENV";
     const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray", "expected", "actual"];
-    const SELECTOR_ENABLED_ATTRIBUTES = ['selector', 'dependentSelector', "selector1", "selector2", "function"];
+    const SELECTOR_ENABLED_ATTRIBUTES = [
+        'selector',
+        'dependentSelector',
+        "selector1",
+        "selector2",
+        "function",
+        'filterSelector',
+        'optionSelector'
+    ];
     const OLD_ASSERTION_ATTRIBUTES = ["expected", "expectedType", "actual", "actualType"];
     const ASSERTION_ATTRIBUTES = ["expectedResult" => "expected", "actualResult" => "actual"];
     const ASSERTION_TYPE_ATTRIBUTE = "type";
@@ -214,11 +222,6 @@ class ActionObject
     public function trimAssertionAttributes()
     {
         $actionAttributeKeys = array_keys($this->actionAttributes);
-
-        // Flatten AssertSorted "array" element to parameterArray
-        if (isset($this->actionAttributes["array"])) {
-            $this->resolvedCustomAttributes['parameterArray'] = $this->actionAttributes['array']['value'];
-        }
 
         /** MQE-683 DEPRECATE OLD METHOD HERE
          * Checks if action has any of the old, single line attributes
