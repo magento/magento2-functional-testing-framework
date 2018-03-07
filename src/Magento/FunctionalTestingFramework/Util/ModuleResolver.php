@@ -200,14 +200,7 @@ class ModuleResolver
             );
         }
 
-        $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
-
-        // Build an associative array of module name to existing module filepaths based on defined TEST MODULE PATH
-        $allModulePaths = [];
-        foreach (glob($modulePath . '*/*') as $modPath) {
-            $modName = basename($modPath);
-            $allModulePaths[$modName] = $modPath;
-        }
+        $allModulePaths = $this->aggregateTestModulePaths();
 
         if (empty($enabledModules)) {
             $this->enabledModulePaths = $this->applyCustomModuleMethods($allModulePaths);
@@ -219,6 +212,69 @@ class ModuleResolver
 
         $this->enabledModulePaths = $this->applyCustomModuleMethods($enabledDirectoryPaths);
         return $this->enabledModulePaths;
+    }
+
+    /**
+     * Retrieves all module directories which might contain pertinent test code.
+     *
+     * @return array
+     */
+    private function aggregateTestModulePaths()
+    {
+        $allModulePaths = [];
+        $appCodeTestPaths = [];
+        $testModuleCodePaths = [];
+
+        // Define the Module paths from app/code
+        $appCodePath = dirname(dirname(dirname(PROJECT_ROOT)))
+            . DIRECTORY_SEPARATOR
+            . 'app' . DIRECTORY_SEPARATOR
+            . 'code' . DIRECTORY_SEPARATOR
+            . 'Magento';
+
+        // Define the Module paths from defualt TESTS_MODULE_PATH
+        $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
+
+        if (file_exists($appCodePath)) {
+            $appCodeTestPaths = glob($appCodePath . '*/*/Test/Acceptance');
+        }
+
+        // Build an associative array of module name to existing module filepaths based on app/code path
+        foreach ($appCodeTestPaths as $appCodePath) {
+            $mainModName = basename(str_replace('/Test/Acceptance', '', $appCodePath));
+            $allModulePaths[$mainModName][] = $appCodePath;
+        }
+
+        // TODO IMPROVE THIS TO ONLY GREP RELEVANT .XML FILES
+        if (file_exists($modulePath)) {
+            $testModuleCodePaths = glob($modulePath . '*/*');
+        }
+
+        // Add to associative array of module name to existing module filepaths based on defined TEST MODULE PATH
+        foreach ($testModuleCodePaths as $modPath) {
+            $modName = basename($modPath);
+            $allModulePaths[$modName][] = $modPath;
+        }
+
+        return $allModulePaths;
+    }
+
+    /**
+     * Takes a multidimensional array of module paths and flattens to return a one dimensional array of test paths
+     *
+     * @param array $modulePaths
+     * @return array
+     */
+    private function flattenAllModulePaths($modulePaths)
+    {
+        $it = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($modulePaths));
+        $resultArray = [];
+
+        foreach ($it as $value) {
+            $resultArray[] = $value;
+        }
+
+        return $resultArray;
     }
 
     /**
@@ -325,7 +381,7 @@ class ModuleResolver
             print "Including module path: {$value}\n";
         }, $customModulePaths);
 
-        return array_merge($modulePathsResult, $customModulePaths);
+        return $this->flattenAllModulePaths(array_merge($modulePathsResult, $customModulePaths));
     }
 
     /**
