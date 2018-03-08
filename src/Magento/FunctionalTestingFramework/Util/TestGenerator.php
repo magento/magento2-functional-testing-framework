@@ -385,23 +385,22 @@ class TestGenerator
      * statement to handle each unique action. At the bottom of the case statement there is a generic function that can
      * construct the PHP string for nearly half of all Codeception actions.
      *
-     * @param array $stepsObject
+     * @param array $actionObjects
      * @param array|bool $hookObject
      * @return string
      * @throws TestReferenceException
      * @throws \Exception
      * @SuppressWarnings(PHPMD)
      */
-    private function generateStepsPhp($stepsObject, $hookObject = false)
+    private function generateStepsPhp($actionObjects, $hookObject = false)
     {
         //TODO: Refactor Method according to PHPMD warnings, remove @SuppressWarnings accordingly.
         $testSteps = "";
 
-        foreach ($stepsObject as $steps) {
+        foreach ($actionObjects as $actionObject) {
             $actor = "I";
-            $actionObject = $steps;
-            $stepKey = $steps->getStepKey();
-            $customActionAttributes = $steps->getCustomActionAttributes();
+            $stepKey = $actionObject->getStepKey();
+            $customActionAttributes = $actionObject->getCustomActionAttributes();
             $attribute = null;
             $selector = null;
             $selector1 = null;
@@ -1138,13 +1137,13 @@ class TestGenerator
                     );
                     break;
                 case "field":
-                    $fieldKey = $steps->getCustomActionAttributes()['key'];
+                    $fieldKey = $actionObject->getCustomActionAttributes()['key'];
                     $argRef= "\t\t\$" . str_replace(
                         ucfirst($fieldKey),
                         "",
                         $stepKey
                     ) . "Fields['{$fieldKey}'] = ${input};\n";
-                    $testSteps.= $this->resolveTestVariable($argRef, [$input], $actionObject);
+                    $testSteps.= $this->resolveTestVariable($argRef, [$input], $actionObject->getActionGroupOrigin());
                     break;
                 default:
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input, $parameter);
@@ -1179,7 +1178,7 @@ class TestGenerator
      * @return string
      * @throws \Exception
      */
-    private function resolveTestVariable($inputString, $args, $actionObject)
+    private function resolveTestVariable($inputString, $args, $actionOrigin)
     {
         $outputString = $inputString;
 
@@ -1200,7 +1199,7 @@ class TestGenerator
             //trim "{$variable}" into $variable
             $outputArg = $this->trimVariableIfNeeded($outputArg);
 
-            $outputArg = $this->resolveStepKeyReferences($outputArg, $actionObject->getActionGroupOrigin());
+            $outputArg = $this->resolveStepKeyReferences($outputArg, $actionOrigin);
 
             $outputString = str_replace($arg, $outputArg, $outputString);
         }
@@ -1572,7 +1571,7 @@ class TestGenerator
      * Wrap parameters into a function call.
      *
      * @param string $actor
-     * @param string $action
+     * @param actionObject $action
      * @param array ...$args
      * @return string
      * @throws \Exception
@@ -1595,7 +1594,7 @@ class TestGenerator
 
         $output = $this->resolveEnvReferences($output, $args);
 
-        return $this->resolveTestVariable($output, $args, $action);
+        return $this->resolveTestVariable($output, $args, $action->getActionGroupOrigin());
     }
 
     /**
@@ -1626,7 +1625,7 @@ class TestGenerator
 
         $output = $this->resolveEnvReferences($output, $args);
 
-        return $this->resolveTestVariable($output, $args, $action);
+        return $this->resolveTestVariable($output, $args, $action->getActionGroupOrigin());
     }
     // @codingStandardsIgnoreEnd
 
