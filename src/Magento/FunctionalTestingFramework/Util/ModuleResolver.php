@@ -222,41 +222,59 @@ class ModuleResolver
     private function aggregateTestModulePaths()
     {
         $allModulePaths = [];
-        $appCodeTestPaths = [];
-        $testModuleCodePaths = [];
 
+        // TODO update these paths when we switch a composer based pathing
         // Define the Module paths from app/code
         $appCodePath = dirname(dirname(dirname(PROJECT_ROOT)))
             . DIRECTORY_SEPARATOR
             . 'app' . DIRECTORY_SEPARATOR
-            . 'code' . DIRECTORY_SEPARATOR
-            . 'Magento';
+            . 'code' . DIRECTORY_SEPARATOR;
 
-        // Define the Module paths from defualt TESTS_MODULE_PATH
+        // Define the Module paths from default TESTS_MODULE_PATH
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
 
-        if (file_exists($appCodePath)) {
-            $appCodeTestPaths = glob($appCodePath . '*/*/Test/Acceptance');
-        }
+        // Define the Module paths from vendor modules
+        $vendorCodePath = dirname(dirname(dirname(PROJECT_ROOT)))
+            . DIRECTORY_SEPARATOR
+            . 'vendor' . DIRECTORY_SEPARATOR;
 
-        // Build an associative array of module name to existing module filepaths based on app/code path
-        foreach ($appCodeTestPaths as $appCodePath) {
-            $mainModName = basename(str_replace('/Test/Acceptance', '', $appCodePath));
-            $allModulePaths[$mainModName][] = $appCodePath;
-        }
+        $codePathsToPattern = [
+            $appCodePath => '/Test/Acceptance',
+            $modulePath => '',
+            $vendorCodePath => '/Test/Acceptance'
+        ];
 
-        // TODO IMPROVE THIS TO ONLY GREP RELEVANT .XML FILES
-        if (file_exists($modulePath)) {
-            $testModuleCodePaths = glob($modulePath . '*/*');
-        }
-
-        // Add to associative array of module name to existing module filepaths based on defined TEST MODULE PATH
-        foreach ($testModuleCodePaths as $modPath) {
-            $modName = basename($modPath);
-            $allModulePaths[$modName][] = $modPath;
+        foreach ($codePathsToPattern as $codePath => $pattern) {
+            $allModulePaths = array_merge_recursive($allModulePaths, $this->globRelevantPaths($codePath, $pattern));
         }
 
         return $allModulePaths;
+    }
+
+    /**
+     * Function which takes a code path and a pattern and determines if there are any matching subdir paths. Matches
+     * are returned as an associative array keyed by basename (the last dir excluding pattern) to an array containing
+     * the matching path.
+     *
+     * @param string $testPath
+     * @param string $pattern
+     * @return array
+     */
+    private function globRelevantPaths($testPath, $pattern)
+    {
+        $modulePaths = [];
+        $relevantPaths = [];
+
+        if (file_exists($testPath)) {
+            $relevantPaths = glob($testPath . '*/*' . $pattern);
+        }
+
+        foreach ($relevantPaths as $codePath) {
+            $mainModName = basename(trim($codePath, $pattern));
+            $modulePaths[$mainModName][] = $codePath;
+        }
+
+        return $modulePaths;
     }
 
     /**
