@@ -248,6 +248,7 @@ class ModuleResolver
     private function printMagentoVersionInfo()
     {
         $url = ConfigSanitizerUtil::sanitizeUrl($_ENV['MAGENTO_BASE_URL']) . $this->versionUrl;
+        print "Fetching version information from {$url}";
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
