@@ -46,6 +46,7 @@ class DataReplacementTestCest
 		$I->amOnUrl("Doe".msq("uniqueData").".html");
 		$I->searchAndMultiSelectOption("#selector", ["John", "Doe".msq("uniqueData")]);
 		$I->searchAndMultiSelectOption("#selector", [msq("uniqueData")."John", "Doe".msq("uniqueData")]);
+		$I->selectMultipleOptions("#Doe".msq("uniqueData"), "#element", [msq("uniqueData")."John", "Doe".msq("uniqueData")]);
 		$I->fillField(".selector", "0");
 	}
 }

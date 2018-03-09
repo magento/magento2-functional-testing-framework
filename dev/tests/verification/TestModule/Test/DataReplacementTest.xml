@@ -30,6 +30,9 @@
         <amOnUrl stepKey="urlReplaceMSQSuffix" url="{{uniqueData.lastname}}.html"/>
         <searchAndMultiSelectOption stepKey="parameterArrayReplacementMSQSuffix" selector="#selector" parameterArray="[{{simpleData.firstname}}, {{uniqueData.lastname}}]"/>
         <searchAndMultiSelectOption stepKey="parameterArrayReplacementMSQBoth" selector="#selector" parameterArray="[{{uniqueData.firstname}}, {{uniqueData.lastname}}]"/>
+        <selectMultipleOptions filterSelector="#{{uniqueData.lastname}}" optionSelector="{{SampleSection.simpleElement}}" stepKey="multiSelectDataReplacement">
+            <array>[{{uniqueData.firstname}}, {{uniqueData.lastname}}]</array>
+        </selectMultipleOptions>
 
         <fillField stepKey="insertZero" selector=".selector" userInput="{{simpleData.favoriteIndex}}"/>
     </test>
