@@ -227,7 +227,9 @@ class ActionObject
         $oldAttributes = array_intersect($actionAttributeKeys, ActionObject::OLD_ASSERTION_ATTRIBUTES);
         if (!empty($oldAttributes)) {
             // @codingStandardsIgnoreStart
-            echo("WARNING: Use of one line Assertion actions will be deprecated in MFTF 3.0.0, please use nested syntax (Action: {$this->type} StepKey: {$this->stepKey})" . PHP_EOL);
+            if ($GLOBALS['GENERATE_TESTS'] ?? false == true) {
+                echo("WARNING: Use of one line Assertion actions will be deprecated in MFTF 3.0.0, please use nested syntax (Action: {$this->type} StepKey: {$this->stepKey})" . PHP_EOL);
+            }
             // @codingStandardsIgnoreEnd
             return;
         }
@@ -239,21 +241,7 @@ class ActionObject
             return;
         }
 
-        /** MQE-683 DEPRECATE OLD METHOD HERE
-         * Unnecessary validation, only needed for backwards compatibility
-         */
-        $singleChildTypes = ['assertEmpty', 'assertFalse', 'assertFileExists', 'assertFileNotExists',
-            'assertIsEmpty', 'assertNotEmpty', 'assertNotNull', 'assertNull', 'assertTrue',
-            'assertElementContainsAttribute'];
-
-        if (!in_array($this->type, $singleChildTypes)) {
-            if (!in_array('expectedResult', $relevantAssertionAttributes)
-                || !in_array('actualResult', $relevantAssertionAttributes)) {
-                // @codingStandardsIgnoreStart
-                throw new TestReferenceException("{$this->type} must have both an expectedResult and actualResult defined (stepKey: {$this->stepKey})");
-                // @codingStandardsIgnoreEnd
-            }
-        }
+        $this->validateAssertionSchema($relevantAssertionAttributes);
 
         // Flatten nested Elements's type and value into key=>value entries
         foreach ($this->actionAttributes as $key => $subAttributes) {
@@ -264,6 +252,31 @@ class ActionObject
                 $this->resolvedCustomAttributes[$prefix] =
                     $subAttributes[ActionObject::ASSERTION_VALUE_ATTRIBUTE];
                 unset($this->actionAttributes[$key]);
+            }
+        }
+    }
+
+    /**
+     * Validates that the given assertion attributes have valid schema according to nested assertion syntax.
+     * @param array $attributes
+     * @return void
+     * @throws TestReferenceException
+     */
+    private function validateAssertionSchema($attributes)
+    {
+        /** MQE-683 DEPRECATE OLD METHOD HERE
+         * Unnecessary validation, only needed for backwards compatibility
+         */
+        $singleChildTypes = ['assertEmpty', 'assertFalse', 'assertFileExists', 'assertFileNotExists',
+            'assertIsEmpty', 'assertNotEmpty', 'assertNotNull', 'assertNull', 'assertTrue',
+            'assertElementContainsAttribute'];
+
+        if (!in_array($this->type, $singleChildTypes)) {
+            if (!in_array('expectedResult', $attributes)
+                || !in_array('actualResult', $attributes)) {
+                // @codingStandardsIgnoreStart
+                throw new TestReferenceException("{$this->type} must have both an expectedResult and actualResult defined (stepKey: {$this->stepKey})");
+                // @codingStandardsIgnoreEnd
             }
         }
     }

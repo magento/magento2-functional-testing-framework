@@ -126,11 +126,12 @@ class ModuleResolver
      */
     public function getEnabledModules()
     {
+        $testGenerationPhase = $GLOBALS['GENERATE_TESTS'] ?? false;
+
         if (isset($this->enabledModules)) {
             return $this->enabledModules;
         }
 
-        $testGenerationPhase = $GLOBALS['GENERATE_TESTS'] ?? false;
         if ($testGenerationPhase) {
             $this->printMagentoVersionInfo();
         }
@@ -141,7 +142,7 @@ class ModuleResolver
             return $this->enabledModules;
         }
 
-        $url = ConfigSanitizerUtil::sanitizeUrl($_ENV['MAGENTO_BASE_URL']) . $this->moduleUrl;
+        $url = ConfigSanitizerUtil::sanitizeUrl(getenv('MAGENTO_BASE_URL')) . $this->moduleUrl;
 
         $headers = [
             'Authorization: Bearer ' . $token,
@@ -253,6 +254,11 @@ class ModuleResolver
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
+
+        if (!$response) {
+            $response = "No version information available.";
+        }
+
         print "\nVersion Information: {$response}\n";
     }
 
