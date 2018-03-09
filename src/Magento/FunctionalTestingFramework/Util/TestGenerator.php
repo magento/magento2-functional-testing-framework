@@ -1594,7 +1594,7 @@ class TestGenerator
 
         $output = $this->resolveEnvReferences($output, $args);
 
-        return $this->resolveTestVariable($output, $args, $action->getActionGroupOrigin());
+        return $this->resolveTestVariable($output, $args, $action->getActionOrigin());
     }
 
     /**
@@ -1625,7 +1625,7 @@ class TestGenerator
 
         $output = $this->resolveEnvReferences($output, $args);
 
-        return $this->resolveTestVariable($output, $args, $action->getActionGroupOrigin());
+        return $this->resolveTestVariable($output, $args, $action->getActionOrigin());
     }
     // @codingStandardsIgnoreEnd
 

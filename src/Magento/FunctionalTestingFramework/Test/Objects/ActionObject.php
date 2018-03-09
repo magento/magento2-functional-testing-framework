@@ -85,11 +85,11 @@ class ActionObject
     private $timeout;
 
     /**
-     * Array with two items, if this actionObject was created as the result of an actionGroup call:
+     * An array with items containing information of the origin of this action.
      *
      * @var array
      */
-    private $actionGroupOrigin = [];
+    private $actionOrigin = [];
 
     /**
      * ActionObject constructor.
@@ -99,7 +99,7 @@ class ActionObject
      * @param array $actionAttributes
      * @param string|null $linkedAction
      * @param string $order
-     * @param array $actionGroupOrigin
+     * @param array $actionOrigin
      */
     public function __construct(
         $stepKey,
@@ -107,13 +107,13 @@ class ActionObject
         $actionAttributes,
         $linkedAction = null,
         $order = ActionObject::MERGE_ACTION_ORDER_BEFORE,
-        $actionGroupOrigin = null
+        $actionOrigin = null
     ) {
         $this->stepKey = $stepKey;
         $this->type = $type;
         $this->actionAttributes = $actionAttributes;
         $this->linkedAction = $linkedAction;
-        $this->actionGroupOrigin = $actionGroupOrigin;
+        $this->actionOrigin = $actionOrigin;
 
         if ($order == ActionObject::MERGE_ACTION_ORDER_AFTER) {
             $this->orderOffset = 1;
@@ -141,13 +141,13 @@ class ActionObject
     }
 
     /**
-     * Getter for actionGroupOrigin
+     * Getter for actionOrigin
      *
      * @return string
      */
-    public function getActionGroupOrigin()
+    public function getActionOrigin()
     {
-        return $this->actionGroupOrigin;
+        return $this->actionOrigin;
     }
 
     /**
