@@ -270,7 +270,7 @@ class ModuleResolver
         }
 
         foreach ($relevantPaths as $codePath) {
-            $mainModName = basename(trim($codePath, $pattern));
+            $mainModName = basename(str_replace($pattern, '', $codePath));
             $modulePaths[$mainModName][] = $codePath;
         }
 
