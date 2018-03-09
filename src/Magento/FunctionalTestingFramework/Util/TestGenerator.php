@@ -295,6 +295,30 @@ class TestGenerator
         $indent = "\t";
 
         switch ($annotationType) {
+            case "features":
+                $features = "";
+                foreach ($annotationName as $name) {
+                    $features .= sprintf("\"%s\"", $name);
+
+                    if (next($annotationName)) {
+                        $features .= ", ";
+                    }
+                }
+                $annotationToAppend .= sprintf("{$indent} * @Features({%s})\n", $features);
+                break;
+
+            case "stories":
+                $stories = "";
+                foreach ($annotationName as $name) {
+                    $stories .= sprintf("\"%s\"", $name);
+
+                    if (next($annotationName)) {
+                        $stories .= ", ";
+                    }
+                }
+                $annotationToAppend .= sprintf("{$indent} * @Stories({%s})\n", $stories);
+                break;
+
             case "severity":
                 $annotationToAppend = sprintf("{$indent} * @Severity(level = SeverityLevel::%s)\n", $annotationName[0]);
                 break;
@@ -327,29 +351,6 @@ class TestGenerator
         $annotationToAppend = null;
 
         switch ($annotationType) {
-            case "features":
-                $features = "";
-                foreach ($annotationName as $name) {
-                    $features .= sprintf("\"%s\"", $name);
-
-                    if (next($annotationName)) {
-                        $features .= ", ";
-                    }
-                }
-                $annotationToAppend .= sprintf(" * @Features({%s})\n", $features);
-                break;
-
-            case "stories":
-                $stories = "";
-                foreach ($annotationName as $name) {
-                    $stories .= sprintf("\"%s\"", $name);
-
-                    if (next($annotationName)) {
-                        $stories .= ", ";
-                    }
-                }
-                $annotationToAppend .= sprintf(" * @Stories({%s})\n", $stories);
-                break;
 
             case "title":
                 $annotationToAppend = sprintf(" * @Title(\"%s\")\n", $annotationName[0]);

@@ -19,8 +19,6 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
  * @Title("A Functional Cest")
  * @group functional
  * @group mergeTest
- * @Features({"Merge Functional Cest"})
- * @Stories({"MQE-433"})
  */
 class BasicMergeTestCest
 {
@@ -55,6 +53,8 @@ class BasicMergeTestCest
 
 	/**
 	 * @Severity(level = SeverityLevel::CRITICAL)
+	 * @Features({"Merge Functional Cest"})
+	 * @Stories({"MQE-433"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
