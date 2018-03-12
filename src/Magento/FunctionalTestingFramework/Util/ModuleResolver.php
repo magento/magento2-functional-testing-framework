@@ -63,7 +63,7 @@ class ModuleResolver
      *
      * @var string
      */
-    protected $versionUrl = "magento_version ";
+    protected $versionUrl = "magento_version";
 
     /**
      * List of known directory that does not map to a Magento module.
