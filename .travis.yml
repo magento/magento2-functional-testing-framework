@@ -9,3 +9,5 @@ env:
     - VERIFICATION_TOOL=static-checks
 script:
   - bin/$VERIFICATION_TOOL
+after_success:
+  - travis_retry php vendor/bin/coveralls
