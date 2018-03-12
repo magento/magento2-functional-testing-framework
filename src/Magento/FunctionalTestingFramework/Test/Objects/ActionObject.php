@@ -226,6 +226,7 @@ class ActionObject
     public function resolveReferences()
     {
         if (empty($this->resolvedCustomAttributes)) {
+            $this->trimAssertionAttributes();
             $this->resolveSelectorReferenceAndTimeout();
             $this->resolveUrlReference();
             $this->resolveDataInputReferences();
@@ -270,9 +271,9 @@ class ActionObject
         foreach ($this->actionAttributes as $key => $subAttributes) {
             if (in_array($key, $relevantKeys)) {
                 $prefix = ActionObject::ASSERTION_ATTRIBUTES[$key];
-                $this->resolvedCustomAttributes[$prefix . ucfirst(ActionObject::ASSERTION_TYPE_ATTRIBUTE)] =
+                $this->actionAttributes[$prefix . ucfirst(ActionObject::ASSERTION_TYPE_ATTRIBUTE)] =
                     $subAttributes[ActionObject::ASSERTION_TYPE_ATTRIBUTE];
-                $this->resolvedCustomAttributes[$prefix] =
+                $this->actionAttributes[$prefix] =
                     $subAttributes[ActionObject::ASSERTION_VALUE_ATTRIBUTE];
                 unset($this->actionAttributes[$key]);
             }

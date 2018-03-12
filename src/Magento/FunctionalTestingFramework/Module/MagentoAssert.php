@@ -36,7 +36,7 @@ class MagentoAssert extends \Codeception\Module
             $data = array_map('strtolower', $data);
         }
 
-        if ($sortOrder = "asc") {
+        if ($sortOrder == "asc") {
             for ($i = 1; $i < $elementTotal; $i++) {
                 // $i >= $i-1
                 $this->assertLessThanOrEqual($data[$i], $data[$i-1], $message);

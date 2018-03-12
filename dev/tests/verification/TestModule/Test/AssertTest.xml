@@ -283,5 +283,11 @@
         <assertElementContainsAttribute stepKey="assertElementContainsAttribute8" selector="#username" attribute="value">
             <expectedResult type="const">$$createData1.firstname$$</expectedResult>
         </assertElementContainsAttribute>
+
+        <!-- assert entity resolution -->
+        <assertEquals stepKey="assertEqualsEntity" message="pass">
+            <expectedResult type="string">{{simpleData.firstname}}</expectedResult>
+            <actualResult type="string">{{simpleData.lastname}}</actualResult>
+        </assertEquals>
     </test>
 </tests>
