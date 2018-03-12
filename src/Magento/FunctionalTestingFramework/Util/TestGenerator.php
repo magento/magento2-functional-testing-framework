@@ -1143,7 +1143,7 @@ class TestGenerator
                         "",
                         $stepKey
                     ) . "Fields['{$fieldKey}'] = ${input};\n";
-                    $testSteps.= $this->resolveTestVariable($argRef, [$input], $actionObject->getActionGroupOrigin());
+                    $testSteps.= $this->resolveTestVariable($argRef, [$input], $actionObject->getActionOrigin());
                     break;
                 default:
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input, $parameter);
@@ -1174,7 +1174,7 @@ class TestGenerator
      *
      * @param string $inputString
      * @param array $args
-     * @param ActionObject $actionObject
+     * @param array $actionOrigin
      * @return string
      * @throws \Exception
      */
