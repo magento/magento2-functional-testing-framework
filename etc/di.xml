@@ -182,14 +182,18 @@
             <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/DataGenerator/etc/dataOperation.xsd</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\Metadata" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
+    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\Metadata" type="Magento\FunctionalTestingFramework\DataGenerator\Config\Reader\Filesystem">
         <arguments>
             <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
+            <argument name="domDocumentClass" xsi:type="string">Magento\FunctionalTestingFramework\DataGenerator\Config\Dom</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\Metadata</argument>
             <argument name="idAttributes" xsi:type="array">
                 <item name="/operations/operation" xsi:type="string">name</item>
-                <item name="/operations/operation/(field|array|object)" xsi:type="string">key</item>
+                <item name="/operations/operation/(field|array)" xsi:type="string">key</item>
+            </argument>
+            <argument name="mergeablePaths" xsi:type="array">
+                <item name="/operations/operation/object" xsi:type="string"/>
             </argument>
             <argument name="fileName" xsi:type="string">*-meta.xml</argument>
             <argument name="defaultScope" xsi:type="string">Metadata</argument>
