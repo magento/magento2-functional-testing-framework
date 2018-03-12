@@ -50,4 +50,14 @@ class NodeMergingConfig
         }
         return null;
     }
+
+    /**
+     * Getter to return nodePathMatcher for convenience
+     *
+     * @return NodePathMatcher
+     */
+    public function getNodePathMatcher()
+    {
+        return $this->nodePathMatcher;
+    }
 }

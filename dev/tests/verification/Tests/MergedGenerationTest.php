@@ -5,6 +5,7 @@
  */
 namespace tests\verification\Tests;
 
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use tests\util\MftfTestCase;
 
 class MergedGenerationTest extends MftfTestCase
@@ -29,5 +30,14 @@ class MergedGenerationTest extends MftfTestCase
     public function testMergedReferences()
     {
         $this->generateAndCompareTest('MergedReferencesTest');
+    }
+
+    /**
+     * Tests the merging of requiredEntity elements in Data, MQE-838
+     */
+    public function testParsedArray()
+    {
+        $entity = DataObjectHandler::getInstance()->getObject('testEntity');
+        $this->assertCount(3, $entity->getLinkedEntities());
     }
 }
