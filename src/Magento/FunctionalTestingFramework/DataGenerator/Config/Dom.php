@@ -88,7 +88,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
      * An exception is possible if original document contains multiple nodes for identifier
      *
      * @param string $nodePath
-     * @oaram boolean $isMergeablePath
+     * @param boolean $isMergeablePath
      * @throws \Exception
      * @return \DOMElement|null
      */
