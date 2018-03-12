@@ -93,6 +93,13 @@ class ActionObject
     private $timeout;
 
     /**
+     * An array with items containing information of the origin of this action.
+     *
+     * @var array
+     */
+    private $actionOrigin = [];
+
+    /**
      * ActionObject constructor.
      *
      * @param string $stepKey
@@ -100,18 +107,21 @@ class ActionObject
      * @param array $actionAttributes
      * @param string|null $linkedAction
      * @param string $order
+     * @param array $actionOrigin
      */
     public function __construct(
         $stepKey,
         $type,
         $actionAttributes,
         $linkedAction = null,
-        $order = ActionObject::MERGE_ACTION_ORDER_BEFORE
+        $order = ActionObject::MERGE_ACTION_ORDER_BEFORE,
+        $actionOrigin = null
     ) {
         $this->stepKey = $stepKey;
         $this->type = $type;
         $this->actionAttributes = $actionAttributes;
         $this->linkedAction = $linkedAction;
+        $this->actionOrigin = $actionOrigin;
 
         if ($order == ActionObject::MERGE_ACTION_ORDER_AFTER) {
             $this->orderOffset = 1;
@@ -136,6 +146,16 @@ class ActionObject
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Getter for actionOrigin
+     *
+     * @return string
+     */
+    public function getActionOrigin()
+    {
+        return $this->actionOrigin;
     }
 
     /**

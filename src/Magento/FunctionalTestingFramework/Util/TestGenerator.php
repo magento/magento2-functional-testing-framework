@@ -8,7 +8,9 @@ namespace Magento\FunctionalTestingFramework\Util;
 
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
+use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
@@ -384,23 +386,22 @@ class TestGenerator
      * statement to handle each unique action. At the bottom of the case statement there is a generic function that can
      * construct the PHP string for nearly half of all Codeception actions.
      *
-     * @param array $stepsObject
+     * @param array $actionObjects
      * @param array|bool $hookObject
      * @return string
      * @throws TestReferenceException
      * @throws \Exception
      * @SuppressWarnings(PHPMD)
      */
-    private function generateStepsPhp($stepsObject, $hookObject = false)
+    private function generateStepsPhp($actionObjects, $hookObject = false)
     {
         //TODO: Refactor Method according to PHPMD warnings, remove @SuppressWarnings accordingly.
         $testSteps = "";
 
-        foreach ($stepsObject as $steps) {
+        foreach ($actionObjects as $actionObject) {
             $actor = "I";
-            $actionName = $steps->getType();
-            $stepKey = $steps->getStepKey();
-            $customActionAttributes = $steps->getCustomActionAttributes();
+            $stepKey = $actionObject->getStepKey();
+            $customActionAttributes = $actionObject->getCustomActionAttributes();
             $attribute = null;
             $selector = null;
             $selector1 = null;
@@ -435,7 +436,7 @@ class TestGenerator
             $assertDelta = null;
 
             // Validate action attributes and print notice messages on violation.
-            $this->validateXmlAttributesMutuallyExclusive($stepKey, $actionName, $customActionAttributes);
+            $this->validateXmlAttributesMutuallyExclusive($stepKey, $actionObject->getType(), $customActionAttributes);
 
             if (isset($customActionAttributes['command'])) {
                 $command = $customActionAttributes['command'];
@@ -492,7 +493,7 @@ class TestGenerator
                 $time = $customActionAttributes['timeout'];
             }
 
-            if (isset($customActionAttributes['parameterArray']) && $actionName != 'pressKey') {
+            if (isset($customActionAttributes['parameterArray']) && $actionObject->getType() != 'pressKey') {
                 // validate the param array is in the correct format
                 $this->validateParameterArray($customActionAttributes['parameterArray']);
 
@@ -581,7 +582,7 @@ class TestGenerator
                 $visible = $customActionAttributes['visible'];
             }
 
-            switch ($actionName) {
+            switch ($actionObject->getType()) {
                 case "createData":
                     $entity = $customActionAttributes['entity'];
                     //Add an informative statement to help the user debug test runs
@@ -809,7 +810,7 @@ class TestGenerator
                 case "assertArrayIsSorted":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
-                        $actionName,
+                        $actionObject,
                         $parameterArray,
                         $this->wrapWithDoubleQuotes($sortOrder)
                     );
@@ -827,11 +828,11 @@ class TestGenerator
                 case "typeInPopup":
                 case "dontSee":
                 case "see":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $input, $selector);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $input, $selector);
                     break;
                 case "switchToNextTab":
                 case "switchToPreviousTab":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $this->stripWrappedQuotes($input));
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $this->stripWrappedQuotes($input));
                     break;
                 case "clickWithLeftButton":
                 case "clickWithRightButton":
@@ -840,18 +841,18 @@ class TestGenerator
                     if (!$selector) {
                         $selector = 'null';
                     }
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $x, $y);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $x, $y);
                     break;
                 case "dontSeeCookie":
                 case "resetCookie":
                 case "seeCookie":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $input, $parameterArray);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $input, $parameterArray);
                     break;
                 case "grabCookie":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
-                        $actionName,
+                        $actionObject,
                         $input,
                         $parameterArray
                     );
@@ -862,7 +863,7 @@ class TestGenerator
                 case "seeElement":
                 case "seeElementInDOM":
                 case "seeInFormFields":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $parameterArray);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $parameterArray);
                     break;
                 case "pressKey":
                     $parameterArray = $customActionAttributes['parameterArray'] ?? null;
@@ -886,22 +887,22 @@ class TestGenerator
                         // put the array together as a string to be passed as args
                         $parameterArray = implode(",", $tmpParameterArray);
                     }
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input, $parameterArray);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input, $parameterArray);
                     break;
                 case "selectOption":
                 case "unselectOption":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input, $parameterArray);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input, $parameterArray);
                     break;
                 case "submitForm":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $parameterArray, $button);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $parameterArray, $button);
                     break;
                 case "dragAndDrop":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector1, $selector2);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector1, $selector2);
                     break;
                 case "selectMultipleOptions":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
-                        $actionName,
+                        $actionObject,
                         $selector1,
                         $selector2,
                         $input,
@@ -909,19 +910,19 @@ class TestGenerator
                     );
                     break;
                 case "executeInSelenium":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $function);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $function);
                     break;
                 case "executeJS":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $function);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $function);
                     break;
                 case "performOn":
                 case "waitForElementChange":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $function, $time);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $function, $time);
                     break;
                 case "waitForJS":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
-                        $actionName,
+                        $actionObject,
                         $function,
                         $time
                     );
@@ -931,23 +932,23 @@ class TestGenerator
                 case "waitForElement":
                 case "waitForElementVisible":
                 case "waitForElementNotVisible":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $time);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $time);
                     break;
                 case "waitForPageLoad":
                 case "waitForText":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $input, $time, $selector);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $input, $time, $selector);
                     break;
                 case "formatMoney":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
-                        $actionName,
+                        $actionObject,
                         $input,
                         $locale
                     );
                     break;
                 case "mSetLocale":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $input, $locale);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $input, $locale);
                     break;
                 case "grabAttributeFrom":
                 case "grabMultiple":
@@ -955,7 +956,7 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
-                        $actionName,
+                        $actionObject,
                         $selector,
                         $input
                     );
@@ -965,7 +966,7 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
-                        $actionName,
+                        $actionObject,
                         $selector
                     );
                     break;
@@ -973,16 +974,16 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
-                        $actionName
+                        $actionObject
                     );
                     break;
                 case "resizeWindow":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $width, $height);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $width, $height);
                     break;
                 case "searchAndMultiSelectOption":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
-                        $actionName,
+                        $actionObject,
                         $selector,
                         $input,
                         $parameterArray,
@@ -991,12 +992,12 @@ class TestGenerator
                     break;
                 case "seeLink":
                 case "dontSeeLink":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $input, $url);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $input, $url);
                     break;
                 case "setCookie":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
-                        $actionName,
+                        $actionObject,
                         $selector,
                         $input,
                         $value,
@@ -1018,12 +1019,12 @@ class TestGenerator
                 case "loadSessionSnapshot":
                 case "seeInField":
                 case "seeOptionIsSelected":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input);
                     break;
                 case "seeNumberOfElements":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
-                        $actionName,
+                        $actionObject,
                         $selector,
                         $input,
                         $parameterArray
@@ -1033,10 +1034,16 @@ class TestGenerator
                 case "seeInSource":
                 case "dontSeeInSource":
                     // TODO: Need to fix xml parser to allow parsing html.
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $html);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $html);
                     break;
                 case "conditionalClick":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $dependentSelector, $visible);
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $selector,
+                        $dependentSelector,
+                        $visible
+                    );
                     break;
                 case "assertEquals":
                 case "assertGreaterOrEquals":
@@ -1063,7 +1070,7 @@ class TestGenerator
                 case "expectException":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
-                        $actionName,
+                        $actionObject,
                         $assertExpected,
                         $assertActual,
                         $assertMessage,
@@ -1078,7 +1085,7 @@ class TestGenerator
 
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
-                        $actionName,
+                        $actionObject,
                         $selector,
                         $this->wrapWithDoubleQuotes($attribute),
                         $assertExpected
@@ -1095,7 +1102,7 @@ class TestGenerator
                 case "assertTrue":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
-                        $actionName,
+                        $actionObject,
                         $assertActual,
                         $assertMessage
                     );
@@ -1103,7 +1110,7 @@ class TestGenerator
                 case "assertArraySubset":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
-                        $actionName,
+                        $actionObject,
                         $assertExpected,
                         $assertActual,
                         $assertIsStrict,
@@ -1113,7 +1120,7 @@ class TestGenerator
                 case "fail":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
-                        $actionName,
+                        $actionObject,
                         $assertMessage
                     );
                     break;
@@ -1121,7 +1128,7 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
-                        "executeMagentoCLICommand",
+                        $actionObject,
                         $this->wrapWithDoubleQuotes($command)
                     );
                     $testSteps .= sprintf(
@@ -1131,16 +1138,16 @@ class TestGenerator
                     );
                     break;
                 case "field":
-                    $fieldKey = $steps->getCustomActionAttributes()['key'];
+                    $fieldKey = $actionObject->getCustomActionAttributes()['key'];
                     $argRef= "\t\t\$" . str_replace(
                         ucfirst($fieldKey),
                         "",
                         $stepKey
                     ) . "Fields['{$fieldKey}'] = ${input};\n";
-                    $testSteps.= $this->resolveTestVariable($argRef, [$input]);
+                    $testSteps.= $this->resolveTestVariable($argRef, [$input], $actionObject->getActionOrigin());
                     break;
                 default:
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionName, $selector, $input, $parameter);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input, $parameter);
             }
         }
 
@@ -1168,15 +1175,19 @@ class TestGenerator
      *
      * @param string $inputString
      * @param array $args
+     * @param array $actionOrigin
      * @return string
      * @throws \Exception
      */
-    private function resolveTestVariable($inputString, $args)
+    private function resolveTestVariable($inputString, $args, $actionOrigin)
     {
         $outputString = $inputString;
 
         //Loop through each argument, replace and then replace
         foreach ($args as $arg) {
+            if ($arg == null) {
+                continue;
+            }
             $outputArg = $arg;
             // Match on any $$data.key$$ found inside arg, matches[0] will be array of $$data.key$$
             preg_match_all("/\\$\\$[\w.\[\]]+\\$\\$/", $outputArg, $matches);
@@ -1188,6 +1199,8 @@ class TestGenerator
 
             //trim "{$variable}" into $variable
             $outputArg = $this->trimVariableIfNeeded($outputArg);
+
+            $outputArg = $this->resolveStepKeyReferences($outputArg, $actionOrigin);
 
             $outputString = str_replace($arg, $outputArg, $outputString);
         }
@@ -1266,6 +1279,34 @@ class TestGenerator
         //Matches on '"" . ' and ' . ""', but not on '\"" . ' and ' . "\"'.
         $outputArg = preg_replace('/(?(?<![\\\\])"" \. )| \. ""/', "", $outputArg);
         return $outputArg;
+    }
+
+    /**
+     * Replaces any occurrences of stepKeys in input, if they are found within the given actionGroup.
+     * Necessary to allow for use of grab/createData actions in actionGroups.
+     * @param string $input
+     * @param array $actionGroupOrigin
+     * @return string
+     */
+    private function resolveStepKeyReferences($input, $actionGroupOrigin)
+    {
+        if ($actionGroupOrigin == null) {
+            return $input;
+        }
+        $output = $input;
+
+        $actionGroup = ActionGroupObjectHandler::getInstance()->getObject(
+            $actionGroupOrigin[ActionGroupObject::ACTION_GROUP_ORIGIN_NAME]
+        );
+        $stepKeys = $actionGroup->extractStepKeys();
+        $testInvocationKey = ucfirst($actionGroupOrigin[ActionGroupObject::ACTION_GROUP_ORIGIN_TEST_REF]);
+
+        foreach ($stepKeys as $stepKey) {
+            if (strpos($output, $stepKey)) {
+                $output = str_replace($stepKey, $stepKey . $testInvocationKey, $output);
+            }
+        }
+        return $output;
     }
 
     /**
@@ -1531,7 +1572,7 @@ class TestGenerator
      * Wrap parameters into a function call.
      *
      * @param string $actor
-     * @param string $action
+     * @param actionObject $action
      * @param array ...$args
      * @return string
      * @throws \Exception
@@ -1539,7 +1580,7 @@ class TestGenerator
     private function wrapFunctionCall($actor, $action, ...$args)
     {
         $isFirst = true;
-        $output = sprintf("\t\t$%s->%s(", $actor, $action);
+        $output = sprintf("\t\t$%s->%s(", $actor, $action->getType());
         for ($i = 0; $i < count($args); $i++) {
             if (null === $args[$i]) {
                 continue;
@@ -1554,7 +1595,7 @@ class TestGenerator
 
         $output = $this->resolveEnvReferences($output, $args);
 
-        return $this->resolveTestVariable($output, $args);
+        return $this->resolveTestVariable($output, $args, $action->getActionOrigin());
     }
 
     /**
@@ -1570,7 +1611,7 @@ class TestGenerator
     private function wrapFunctionCallWithReturnValue($returnVariable, $actor, $action, ...$args)
     {
         $isFirst = true;
-        $output = sprintf("\t\t$%s = $%s->%s(", $returnVariable, $actor, $action);
+        $output = sprintf("\t\t$%s = $%s->%s(", $returnVariable, $actor, $action->getType());
         for ($i = 0; $i < count($args); $i++) {
             if (null === $args[$i]) {
                 continue;
@@ -1585,7 +1626,7 @@ class TestGenerator
 
         $output = $this->resolveEnvReferences($output, $args);
 
-        return $this->resolveTestVariable($output, $args);
+        return $this->resolveTestVariable($output, $args, $action->getActionOrigin());
     }
     // @codingStandardsIgnoreEnd
 

@@ -68,20 +68,20 @@ class PersistenceCustomFieldsTestCest
 		$UniquePerson = DataObjectHandler::getInstance()->getObject("UniquePerson");
 		$createdData3 = new DataPersistenceHandler($UniquePerson, [$createdData], $createdData3Fields);
 		$createdData3->createEntity();
-		$createDataAG1createdAGFields['firstname'] = "string1";
-		$I->amGoingTo("create entity that has the stepKey: createDataAG1createdAG");
+		$createDataAG1CreatedAGFields['firstname'] = "string1";
+		$I->amGoingTo("create entity that has the stepKey: createDataAG1CreatedAG");
 		$simpleData = DataObjectHandler::getInstance()->getObject("simpleData");
-		$createDataAG1createdAG = new DataPersistenceHandler($simpleData, [], $createDataAG1createdAGFields);
-		$createDataAG1createdAG->createEntity();
-		$createDataAG2createdAGFields['firstname'] = "Jane";
-		$I->amGoingTo("create entity that has the stepKey: createDataAG2createdAG");
+		$createDataAG1CreatedAG = new DataPersistenceHandler($simpleData, [], $createDataAG1CreatedAGFields);
+		$createDataAG1CreatedAG->createEntity();
+		$createDataAG2CreatedAGFields['firstname'] = "Jane";
+		$I->amGoingTo("create entity that has the stepKey: createDataAG2CreatedAG");
 		$simpleData = DataObjectHandler::getInstance()->getObject("simpleData");
-		$createDataAG2createdAG = new DataPersistenceHandler($simpleData, [], $createDataAG2createdAGFields);
-		$createDataAG2createdAG->createEntity();
-		$createDataAG3createdAGFields['firstname'] = $createdData3->getCreatedDataByName('firstname');
-		$I->amGoingTo("create entity that has the stepKey: createDataAG3createdAG");
+		$createDataAG2CreatedAG = new DataPersistenceHandler($simpleData, [], $createDataAG2CreatedAGFields);
+		$createDataAG2CreatedAG->createEntity();
+		$createDataAG3CreatedAGFields['firstname'] = $createdData3->getCreatedDataByName('firstname');
+		$I->amGoingTo("create entity that has the stepKey: createDataAG3CreatedAG");
 		$simpleData = DataObjectHandler::getInstance()->getObject("simpleData");
-		$createDataAG3createdAG = new DataPersistenceHandler($simpleData, [], $createDataAG3createdAGFields);
-		$createDataAG3createdAG->createEntity();
+		$createDataAG3CreatedAG = new DataPersistenceHandler($simpleData, [], $createDataAG3CreatedAGFields);
+		$createDataAG3CreatedAG->createEntity();
 	}
 }

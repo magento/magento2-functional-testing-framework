@@ -45,4 +45,9 @@
         <seeElement stepKey="see1" selector="{{SampleSection.simpleElement}}"/>
         <seeElement stepKey="see2" selector="{{SampleSection.simpleElementOneParam(simple.firstname)}}"/>
     </actionGroup>
+    <actionGroup name="FunctionActionGroupWithStepKeyReferences">
+        <createData entity="simpleData" stepKey="createSimpleData"/>
+        <grabTextFrom selector=".class" stepKey="grabTextData"/>
+        <fillField stepKey="fill1" selector=".{$grabTextData}" userInput="$createSimpleData.field$"/>
+    </actionGroup>
 </actionGroups>
