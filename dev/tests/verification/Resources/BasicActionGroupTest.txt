@@ -18,8 +18,6 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 /**
  * @Title("A Functional Cest")
  * @group functional
- * @Features({"Action Group Functional Cest"})
- * @Stories({"MQE-433"})
  */
 class BasicActionGroupTestCest
 {
@@ -44,6 +42,8 @@ class BasicActionGroupTestCest
 
 	/**
 	 * @Severity(level = SeverityLevel::CRITICAL)
+	 * @Features({"Action Group Functional Cest"})
+	 * @Stories({"MQE-433"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
