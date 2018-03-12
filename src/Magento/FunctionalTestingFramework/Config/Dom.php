@@ -113,8 +113,6 @@ class Dom
      * @param \DOMElement $node
      * @param string $parentPath path to parent node
      * @return void
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     protected function mergeNode(\DOMElement $node, $parentPath)
     {
@@ -124,44 +122,59 @@ class Dom
 
         /* Update matched node attributes and value */
         if ($matchedNode) {
-
-            //different node type
-            if ($this->typeAttributeName
-                && $node->hasAttribute($this->typeAttributeName)
-                && $matchedNode->hasAttribute($this->typeAttributeName)
-                && $node->getAttribute($this->typeAttributeName)
-                !== $matchedNode->getAttribute($this->typeAttributeName)
-            ) {
-                $this->replaceNodeValue($parentPath, $node, $matchedNode);
-                return;
-            }
-
-            $this->mergeAttributes($matchedNode, $node);
-            if ($node->nodeValue === '' && $matchedNode->nodeValue !== '' && $matchedNode->childNodes->length === 1) {
-                $this->replaceNodeValue($parentPath, $node, $matchedNode);
-            }
-            if (!$node->hasChildNodes()) {
-                return;
-            }
-            /* override node value */
-            if ($this->isTextNode($node)) {
-                /* skip the case when the matched node has children, otherwise they get overridden */
-                if (!$matchedNode->hasChildNodes() || $this->isTextNode($matchedNode)) {
-                    $matchedNode->nodeValue = $node->childNodes->item(0)->nodeValue;
-                }
-            } else {
-                /* recursive merge for all child nodes */
-                foreach ($node->childNodes as $childNode) {
-                    if ($childNode instanceof \DOMElement) {
-                        $this->mergeNode($childNode, $path);
-                    }
-                }
-            }
+            $this->mergeMatchingNode($node, $parentPath, $matchedNode, $path);
         } else {
             /* Add node as is to the document under the same parent element */
             $parentMatchedNode = $this->getMatchedNode($parentPath);
             $newNode = $this->dom->importNode($node, true);
             $parentMatchedNode->appendChild($newNode);
+        }
+    }
+
+    /**
+     * Function to process matching node merges. Broken into shared logic for extending classes.
+     *
+     * @param \DomElement $node
+     * @param string $parentPath
+     * @param |DomElement $matchedNode
+     * @param string $path
+     * @return void
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    protected function mergeMatchingNode(\DomElement $node, $parentPath, $matchedNode, $path)
+    {
+        //different node type
+        if ($this->typeAttributeName
+            && $node->hasAttribute($this->typeAttributeName)
+            && $matchedNode->hasAttribute($this->typeAttributeName)
+            && $node->getAttribute($this->typeAttributeName)
+            !== $matchedNode->getAttribute($this->typeAttributeName)
+        ) {
+            $this->replaceNodeValue($parentPath, $node, $matchedNode);
+            return;
+        }
+
+        $this->mergeAttributes($matchedNode, $node);
+        if ($node->nodeValue === '' && $matchedNode->nodeValue !== '' && $matchedNode->childNodes->length === 1) {
+            $this->replaceNodeValue($parentPath, $node, $matchedNode);
+        }
+        if (!$node->hasChildNodes()) {
+            return;
+        }
+        /* override node value */
+        if ($this->isTextNode($node)) {
+            /* skip the case when the matched node has children, otherwise they get overridden */
+            if (!$matchedNode->hasChildNodes() || $this->isTextNode($matchedNode)) {
+                $matchedNode->nodeValue = $node->childNodes->item(0)->nodeValue;
+            }
+        } else {
+            /* recursive merge for all child nodes */
+            foreach ($node->childNodes as $childNode) {
+                if ($childNode instanceof \DOMElement) {
+                    $this->mergeNode($childNode, $path);
+                }
+            }
         }
     }
 
@@ -174,7 +187,7 @@ class Dom
      *
      * @return void
      */
-    private function replaceNodeValue($parentPath, \DOMElement $node, \DOMElement $matchedNode)
+    protected function replaceNodeValue($parentPath, \DOMElement $node, \DOMElement $matchedNode)
     {
         $parentMatchedNode = $this->getMatchedNode($parentPath);
         $newNode = $this->dom->importNode($node, true);

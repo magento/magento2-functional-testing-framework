@@ -118,7 +118,6 @@ class DataObjectHandler implements ObjectHandlerInterface
             $type = $rawEntity[self::_TYPE];
             $data = [];
             $linkedEntities = [];
-            $values = [];
             $uniquenessData = [];
             $vars = [];
 
@@ -134,12 +133,8 @@ class DataObjectHandler implements ObjectHandlerInterface
             if (array_key_exists(self::_ARRAY, $rawEntity)) {
                 $arrays = $rawEntity[self::_ARRAY];
                 foreach ($arrays as $array) {
-                    $items = $array[self::_ITEM];
-                    foreach ($items as $item) {
-                        $values[] = $item[self::_VALUE];
-                    }
-                    $key = $array[self::_KEY];
-                    $data[strtolower($key)] = $values;
+                    $key = strtolower($array[self::_KEY]);
+                    $data[$key] = $this->processArray($array[self::_ITEM], $data, $key);
                 }
             }
 
@@ -153,6 +148,24 @@ class DataObjectHandler implements ObjectHandlerInterface
         }
 
         return $entityDataObjects;
+    }
+
+    /**
+     * Takes an array of items and a top level entity data array and merges in elements from parsed entity definitions.
+     *
+     * @param array $arrayItems
+     * @param array $data
+     * @param string $key
+     * @return array
+     */
+    private function processArray($arrayItems, $data, $key)
+    {
+        $items = [];
+        foreach ($arrayItems as $item) {
+            $items[] = $item[self::_VALUE];
+        }
+
+        return array_merge($items, $data[$key] ?? []);
     }
 
     /**

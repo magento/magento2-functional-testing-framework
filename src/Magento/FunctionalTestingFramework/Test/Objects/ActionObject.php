@@ -21,7 +21,15 @@ class ActionObject
 {
     const __ENV = "_ENV";
     const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray", "expected", "actual"];
-    const SELECTOR_ENABLED_ATTRIBUTES = ['selector', 'dependentSelector', "selector1", "selector2", "function"];
+    const SELECTOR_ENABLED_ATTRIBUTES = [
+        'selector',
+        'dependentSelector',
+        "selector1",
+        "selector2",
+        "function",
+        'filterSelector',
+        'optionSelector'
+    ];
     const OLD_ASSERTION_ATTRIBUTES = ["expected", "expectedType", "actual", "actualType"];
     const ASSERTION_ATTRIBUTES = ["expectedResult" => "expected", "actualResult" => "actual"];
     const ASSERTION_TYPE_ATTRIBUTE = "type";
@@ -85,6 +93,13 @@ class ActionObject
     private $timeout;
 
     /**
+     * An array with items containing information of the origin of this action.
+     *
+     * @var array
+     */
+    private $actionOrigin = [];
+
+    /**
      * ActionObject constructor.
      *
      * @param string $stepKey
@@ -92,18 +107,21 @@ class ActionObject
      * @param array $actionAttributes
      * @param string|null $linkedAction
      * @param string $order
+     * @param array $actionOrigin
      */
     public function __construct(
         $stepKey,
         $type,
         $actionAttributes,
         $linkedAction = null,
-        $order = ActionObject::MERGE_ACTION_ORDER_BEFORE
+        $order = ActionObject::MERGE_ACTION_ORDER_BEFORE,
+        $actionOrigin = null
     ) {
         $this->stepKey = $stepKey;
         $this->type = $type;
         $this->actionAttributes = $actionAttributes;
         $this->linkedAction = $linkedAction;
+        $this->actionOrigin = $actionOrigin;
 
         if ($order == ActionObject::MERGE_ACTION_ORDER_AFTER) {
             $this->orderOffset = 1;
@@ -128,6 +146,16 @@ class ActionObject
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Getter for actionOrigin
+     *
+     * @return string
+     */
+    public function getActionOrigin()
+    {
+        return $this->actionOrigin;
     }
 
     /**
@@ -216,11 +244,6 @@ class ActionObject
     {
         $actionAttributeKeys = array_keys($this->actionAttributes);
 
-        // Flatten AssertSorted "array" element to parameterArray
-        if (isset($this->actionAttributes["array"])) {
-            $this->resolvedCustomAttributes['parameterArray'] = $this->actionAttributes['array']['value'];
-        }
-
         /** MQE-683 DEPRECATE OLD METHOD HERE
          * Checks if action has any of the old, single line attributes
          * Throws a warning and returns, assuming old syntax is used.
@@ -228,7 +251,9 @@ class ActionObject
         $oldAttributes = array_intersect($actionAttributeKeys, ActionObject::OLD_ASSERTION_ATTRIBUTES);
         if (!empty($oldAttributes)) {
             // @codingStandardsIgnoreStart
-            echo("WARNING: Use of one line Assertion actions will be deprecated in MFTF 3.0.0, please use nested syntax (Action: {$this->type} StepKey: {$this->stepKey})" . PHP_EOL);
+            if ($GLOBALS['GENERATE_TESTS'] ?? false == true) {
+                echo("WARNING: Use of one line Assertion actions will be deprecated in MFTF 3.0.0, please use nested syntax (Action: {$this->type} StepKey: {$this->stepKey})" . PHP_EOL);
+            }
             // @codingStandardsIgnoreEnd
             return;
         }
@@ -240,21 +265,7 @@ class ActionObject
             return;
         }
 
-        /** MQE-683 DEPRECATE OLD METHOD HERE
-         * Unnecessary validation, only needed for backwards compatibility
-         */
-        $singleChildTypes = ['assertEmpty', 'assertFalse', 'assertFileExists', 'assertFileNotExists',
-            'assertIsEmpty', 'assertNotEmpty', 'assertNotNull', 'assertNull', 'assertTrue',
-            'assertElementContainsAttribute'];
-
-        if (!in_array($this->type, $singleChildTypes)) {
-            if (!in_array('expectedResult', $relevantAssertionAttributes)
-                || !in_array('actualResult', $relevantAssertionAttributes)) {
-                // @codingStandardsIgnoreStart
-                throw new TestReferenceException("{$this->type} must have both an expectedResult and actualResult defined (stepKey: {$this->stepKey})");
-                // @codingStandardsIgnoreEnd
-            }
-        }
+        $this->validateAssertionSchema($relevantAssertionAttributes);
 
         // Flatten nested Elements's type and value into key=>value entries
         foreach ($this->actionAttributes as $key => $subAttributes) {
@@ -265,6 +276,31 @@ class ActionObject
                 $this->actionAttributes[$prefix] =
                     $subAttributes[ActionObject::ASSERTION_VALUE_ATTRIBUTE];
                 unset($this->actionAttributes[$key]);
+            }
+        }
+    }
+
+    /**
+     * Validates that the given assertion attributes have valid schema according to nested assertion syntax.
+     * @param array $attributes
+     * @return void
+     * @throws TestReferenceException
+     */
+    private function validateAssertionSchema($attributes)
+    {
+        /** MQE-683 DEPRECATE OLD METHOD HERE
+         * Unnecessary validation, only needed for backwards compatibility
+         */
+        $singleChildTypes = ['assertEmpty', 'assertFalse', 'assertFileExists', 'assertFileNotExists',
+            'assertIsEmpty', 'assertNotEmpty', 'assertNotNull', 'assertNull', 'assertTrue',
+            'assertElementContainsAttribute'];
+
+        if (!in_array($this->type, $singleChildTypes)) {
+            if (!in_array('expectedResult', $attributes)
+                || !in_array('actualResult', $attributes)) {
+                // @codingStandardsIgnoreStart
+                throw new TestReferenceException("{$this->type} must have both an expectedResult and actualResult defined (stepKey: {$this->stepKey})");
+                // @codingStandardsIgnoreEnd
             }
         }
     }

@@ -21,7 +21,7 @@ use tests\unit\Util\EntityDataObjectBuilder;
 
 class ActionGroupObjectTest extends TestCase
 {
-    const ACTION_GROUP_MERGE_KEY = 'testKey';
+    const ACTION_GROUP_MERGE_KEY = 'TestKey';
 
     /**
      * Tests a string literal in an action group

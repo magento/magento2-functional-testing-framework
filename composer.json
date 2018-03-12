@@ -14,7 +14,8 @@
         "epfremme/swagger-php": "^2.0",
         "flow/jsonpath": ">0.2",
         "fzaninotto/faker": "^1.6",
-        "mustache/mustache": "~2.5"
+        "mustache/mustache": "~2.5",
+        "php-coveralls/php-coveralls": "^1.0"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "1.5.3",

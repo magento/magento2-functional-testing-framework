@@ -22,4 +22,8 @@
         <data key="firstname" unique="prefix">John</data>
         <data key="lastname" unique="suffix">Doe</data>
     </entity>
+    <entity name="testEntity" type="sample">
+        <data key="sampleField2">moreData</data>
+        <requiredEntity type="test2">originalValue2</requiredEntity>
+    </entity>
 </entities>

@@ -64,6 +64,11 @@ class ActionObjectExtractor extends BaseObjectExtractor
             $linkedAction = null;
             $order = null;
 
+            // Flatten AssertSorted "array" element to parameterArray
+            if (isset($actionData["array"])) {
+                $actionAttributes['parameterArray'] = $actionData['array']['value'];
+            }
+
             if ($actionData[self::NODE_NAME] === self::ACTION_GROUP_TAG) {
                 $actionAttributes = $this->processActionGroupArgs($actionAttributes);
             }

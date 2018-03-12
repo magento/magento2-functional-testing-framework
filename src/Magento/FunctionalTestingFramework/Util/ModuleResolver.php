@@ -63,7 +63,7 @@ class ModuleResolver
      *
      * @var string
      */
-    protected $versionUrl = "magento_version ";
+    protected $versionUrl = "magento_version";
 
     /**
      * List of known directory that does not map to a Magento module.
@@ -126,11 +126,12 @@ class ModuleResolver
      */
     public function getEnabledModules()
     {
+        $testGenerationPhase = $GLOBALS['GENERATE_TESTS'] ?? false;
+
         if (isset($this->enabledModules)) {
             return $this->enabledModules;
         }
 
-        $testGenerationPhase = $GLOBALS['GENERATE_TESTS'] ?? false;
         if ($testGenerationPhase) {
             $this->printMagentoVersionInfo();
         }
@@ -141,7 +142,7 @@ class ModuleResolver
             return $this->enabledModules;
         }
 
-        $url = ConfigSanitizerUtil::sanitizeUrl($_ENV['MAGENTO_BASE_URL']) . $this->moduleUrl;
+        $url = ConfigSanitizerUtil::sanitizeUrl(getenv('MAGENTO_BASE_URL')) . $this->moduleUrl;
 
         $headers = [
             'Authorization: Bearer ' . $token,
@@ -199,14 +200,7 @@ class ModuleResolver
             );
         }
 
-        $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
-
-        // Build an associative array of module name to existing module filepaths based on defined TEST MODULE PATH
-        $allModulePaths = [];
-        foreach (glob($modulePath . '*/*') as $modPath) {
-            $modName = basename($modPath);
-            $allModulePaths[$modName] = $modPath;
-        }
+        $allModulePaths = $this->aggregateTestModulePaths();
 
         if (empty($enabledModules)) {
             $this->enabledModulePaths = $this->applyCustomModuleMethods($allModulePaths);
@@ -218,6 +212,87 @@ class ModuleResolver
 
         $this->enabledModulePaths = $this->applyCustomModuleMethods($enabledDirectoryPaths);
         return $this->enabledModulePaths;
+    }
+
+    /**
+     * Retrieves all module directories which might contain pertinent test code.
+     *
+     * @return array
+     */
+    private function aggregateTestModulePaths()
+    {
+        $allModulePaths = [];
+
+        // TODO update these paths when we switch a composer based pathing
+        // Define the Module paths from app/code
+        $appCodePath = dirname(dirname(dirname(PROJECT_ROOT)))
+            . DIRECTORY_SEPARATOR
+            . 'app' . DIRECTORY_SEPARATOR
+            . 'code' . DIRECTORY_SEPARATOR;
+
+        // Define the Module paths from default TESTS_MODULE_PATH
+        $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
+
+        // Define the Module paths from vendor modules
+        $vendorCodePath = dirname(dirname(dirname(PROJECT_ROOT)))
+            . DIRECTORY_SEPARATOR
+            . 'vendor' . DIRECTORY_SEPARATOR;
+
+        $codePathsToPattern = [
+            $appCodePath => '/Test/Acceptance',
+            $modulePath => '',
+            $vendorCodePath => '/Test/Acceptance'
+        ];
+
+        foreach ($codePathsToPattern as $codePath => $pattern) {
+            $allModulePaths = array_merge_recursive($allModulePaths, $this->globRelevantPaths($codePath, $pattern));
+        }
+
+        return $allModulePaths;
+    }
+
+    /**
+     * Function which takes a code path and a pattern and determines if there are any matching subdir paths. Matches
+     * are returned as an associative array keyed by basename (the last dir excluding pattern) to an array containing
+     * the matching path.
+     *
+     * @param string $testPath
+     * @param string $pattern
+     * @return array
+     */
+    private function globRelevantPaths($testPath, $pattern)
+    {
+        $modulePaths = [];
+        $relevantPaths = [];
+
+        if (file_exists($testPath)) {
+            $relevantPaths = glob($testPath . '*/*' . $pattern);
+        }
+
+        foreach ($relevantPaths as $codePath) {
+            $mainModName = basename(str_replace($pattern, '', $codePath));
+            $modulePaths[$mainModName][] = $codePath;
+        }
+
+        return $modulePaths;
+    }
+
+    /**
+     * Takes a multidimensional array of module paths and flattens to return a one dimensional array of test paths
+     *
+     * @param array $modulePaths
+     * @return array
+     */
+    private function flattenAllModulePaths($modulePaths)
+    {
+        $it = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($modulePaths));
+        $resultArray = [];
+
+        foreach ($it as $value) {
+            $resultArray[] = $value;
+        }
+
+        return $resultArray;
     }
 
     /**
@@ -248,10 +323,16 @@ class ModuleResolver
     private function printMagentoVersionInfo()
     {
         $url = ConfigSanitizerUtil::sanitizeUrl($_ENV['MAGENTO_BASE_URL']) . $this->versionUrl;
+        print "Fetching version information from {$url}";
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
+
+        if (!$response) {
+            $response = "No version information available.";
+        }
+
         print "\nVersion Information: {$response}\n";
     }
 
@@ -318,7 +399,7 @@ class ModuleResolver
             print "Including module path: {$value}\n";
         }, $customModulePaths);
 
-        return array_merge($modulePathsResult, $customModulePaths);
+        return $this->flattenAllModulePaths(array_merge($modulePathsResult, $customModulePaths));
     }
 
     /**

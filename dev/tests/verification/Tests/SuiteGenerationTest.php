@@ -79,7 +79,7 @@ class SuiteGenerationTest extends MftfTestCase
             DIRECTORY_SEPARATOR;
 
         // Validate test manifest contents
-        $actualManifest = $suiteResultBaseDir . TestManifest::TEST_MANIFEST_FILENAME;
+        $actualManifest = $suiteResultBaseDir . 'testManifest.txt';
         $actualTestReferences = explode(PHP_EOL, file_get_contents($actualManifest));
 
         for ($i = 0; $i < count($actualTestReferences); $i++) {

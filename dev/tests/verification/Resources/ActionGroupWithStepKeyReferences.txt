@@ -16,51 +16,22 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("A Functional Cest")
- * @group functional
  */
-class MergedReferencesTestCest
+class ActionGroupWithStepKeyReferencesCest
 {
 	/**
-	  * @param AcceptanceTester $I
-	  * @throws \Exception
-	  */
-	public function _before(AcceptanceTester $I)
-	{
-		$I->amOnPage("/beforeUrl");
-	}
-
-	/**
-	  * @param AcceptanceTester $I
-	  * @throws \Exception
-	  */
-	public function _after(AcceptanceTester $I)
-	{
-		$I->amOnPage("/afterUrl");
-	}
-
-	/**
-	  * @param AcceptanceTester $I
-	  * @throws \Exception
-	  */
-	public function _failed(AcceptanceTester $I)
-	{
-		$I->saveScreenshot();
-		$this->_after($I);
-	}
-
-	/**
-	 * @Severity(level = SeverityLevel::CRITICAL)
-	 * @Features({"Merge Functional Cest"})
-	 * @Stories({"MQE-433"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function MergedReferencesTest(AcceptanceTester $I)
+	public function ActionGroupWithStepKeyReferences(AcceptanceTester $I)
 	{
-		$I->fillField("#merge", "merged");
-		$I->fillField("#newElement", "newField");
+		$I->amGoingTo("create entity that has the stepKey: createSimpleDataActionGroup");
+		$simpleData = DataObjectHandler::getInstance()->getObject("simpleData");
+		$createSimpleDataActionGroup = new DataPersistenceHandler($simpleData, []);
+		$createSimpleDataActionGroup->createEntity();
+		$grabTextDataActionGroup = $I->grabTextFrom(".class");
+		$I->fillField(".{$grabTextDataActionGroup}", $createSimpleDataActionGroup->getCreatedDataByName('field'));
 	}
 }

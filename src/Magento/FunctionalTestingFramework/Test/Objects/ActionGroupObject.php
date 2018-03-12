@@ -15,6 +15,9 @@ use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
  */
 class ActionGroupObject
 {
+    const ACTION_GROUP_ORIGIN_NAME = "actionGroupName";
+    const ACTION_GROUP_ORIGIN_TEST_REF = "testInvocationRef";
+
     /**
      * Array of variable-enabled attributes.
      * @var array
@@ -153,12 +156,14 @@ class ActionGroupObject
 
             // we append the action reference key to any linked action and the action's merge key as the user might
             // use this action group multiple times in the same test.
-            $resolvedActions[$action->getStepKey() . $actionReferenceKey] = new ActionObject(
-                $action->getStepKey() . $actionReferenceKey,
+            $resolvedActions[$action->getStepKey() . ucfirst($actionReferenceKey)] = new ActionObject(
+                $action->getStepKey() . ucfirst($actionReferenceKey),
                 $action->getType(),
                 array_merge($action->getCustomActionAttributes(), $newActionAttributes),
-                $action->getLinkedAction() == null ? null : $action->getLinkedAction() . $actionReferenceKey,
-                $action->getOrderOffset()
+                $action->getLinkedAction() == null ? null : $action->getLinkedAction() . ucfirst($actionReferenceKey),
+                $action->getOrderOffset(),
+                [self::ACTION_GROUP_ORIGIN_NAME => $this->name,
+                    self::ACTION_GROUP_ORIGIN_TEST_REF => $actionReferenceKey]
             );
         }
 
@@ -305,6 +310,19 @@ class ActionGroupObject
         }
 
         return $newAttributeValue;
+    }
+
+    /**
+     * Finds and returns all original stepkeys of actions in actionGroup.
+     * @return string[]
+     */
+    public function extractStepKeys()
+    {
+        $originalKeys = [];
+        foreach ($this->parsedActions as $action) {
+            $originalKeys[] = $action->getStepKey();
+        }
+        return $originalKeys;
     }
 
     /**

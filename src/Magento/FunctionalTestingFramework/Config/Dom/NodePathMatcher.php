@@ -30,7 +30,7 @@ class NodePathMatcher
      * @param string $xpath
      * @return string
      */
-    protected function simplifyXpath($xpath)
+    public function simplifyXpath($xpath)
     {
         $result = $xpath;
         $result = preg_replace('/\[@[^\]]+?\]/', '', $result);

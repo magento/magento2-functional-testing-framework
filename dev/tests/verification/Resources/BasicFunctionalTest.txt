@@ -18,8 +18,6 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 /**
  * @Title("A Functional Cest")
  * @group functional
- * @Features({"Basic Functional Cest"})
- * @Stories({"MQE-305"})
  */
 class BasicFunctionalTestCest
 {
@@ -53,6 +51,8 @@ class BasicFunctionalTestCest
 
 	/**
 	 * @Severity(level = SeverityLevel::CRITICAL)
+	 * @Features({"Basic Functional Cest"})
+	 * @Stories({"MQE-305"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
@@ -97,7 +97,7 @@ class BasicFunctionalTestCest
 		$grabMultipleKey1 = $I->grabMultiple(".functionalTestSelector");
 		$grabTextFromKey1 = $I->grabTextFrom(".functionalTestSelector");
 		$grabValueFromKey1 = $I->grabValueFrom(".functionalTestSelector");
-		$magentoCli1 = $I->executeMagentoCLICommand("maintenance:enable");
+		$magentoCli1 = $I->magentoCLI("maintenance:enable");
 		$I->comment($magentoCli1);
 		$I->makeScreenshot("screenShotInput");
 		$I->maximizeWindow();

@@ -110,4 +110,8 @@
         </annotations>
         <actionGroup ref="actionGroupWithStringUsage" stepKey="actionGroup"/>
     </test>
+
+    <test name="ActionGroupWithStepKeyReferences">
+        <actionGroup ref="FunctionActionGroupWithStepKeyReferences" stepKey="actionGroup"/>
+    </test>
 </tests>
