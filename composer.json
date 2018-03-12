@@ -14,8 +14,7 @@
         "epfremme/swagger-php": "^2.0",
         "flow/jsonpath": ">0.2",
         "fzaninotto/faker": "^1.6",
-        "mustache/mustache": "~2.5",
-        "php-coveralls/php-coveralls": "^1.0"
+        "mustache/mustache": "~2.5"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "1.5.3",
@@ -25,7 +24,9 @@
         "goaop/framework": "2.1.2",
         "codacy/coverage": "^1.4",
         "phpmd/phpmd": "^2.6.0",
-        "rregeer/phpunit-coverage-check": "^0.1.4"
+        "rregeer/phpunit-coverage-check": "^0.1.4",
+        "php-coveralls/php-coveralls": "^1.0",
+        "symfony/stopwatch": "~3.4.6"
     },
     "autoload": {
         "psr-4": {
