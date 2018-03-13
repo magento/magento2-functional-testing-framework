@@ -1,6 +1,26 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.1.1
+-----
+### Enhancements
+* Modularity
+    * MFTF now supports the existence of tests as composer package dependencies or as living alongside core modules. Supported paths:
+        * `magento2ce/vendor/[vendor]/[module]/Test/Acceptance`
+        * `magento2ce/app/code/[vendor]/[module]/Test/Acceptance`
+* Maintainability
+    * Robo command `generate:tests` now accepts a `--nodes` argument that specifies the number of test manifest files to generate for parallel configuration.
+
+### Fixes
+* Data returned by `grab` and `createData` actions can now be used in `<actionGroup>` test steps by their `stepKey` reference.
+* Fixed an issue where `<requiredEntity>` elements inside `<entity>` data xml would overwrite one another when merged.
+* Fixed an issue where `<object>` elements inside `<operation>` metadata xml would overwrite one another when merged.
+* Nested assertion syntax now correctly allows for values passed in to resolve `{{entity.data}}` references.
+* Test action `<selectMultiOption>` now correctly resolves entity references passed in to `filterSelector` and `optionSelector`.
+* The robo command `generate:tests --force` no longer requires a `MAGENTO_BASE_URL` to be defined in the `.env` file.
+* All `feature` and `story` annotations now live under in the method and not class level in output test php.
+    * This is to work around a bug with the Allure-Codeception adapter version `1.2.6`, which was a dependency update in MFTF `2.1.0`.
+
 2.1.0
 -----
 ### Enhancements
