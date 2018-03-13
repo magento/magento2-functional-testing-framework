@@ -9,7 +9,7 @@ Magento Functional Testing Framework Changelog
         * `magento2ce/vendor/[vendor]/[module]/Test/Acceptance`
         * `magento2ce/app/code/[vendor]/[module]/Test/Acceptance`
 * Maintainability
-    * Robo command `generate:tests` now accepts a `--nodes` argument that specifies the number of test manifest files to generate.
+    * Robo command `generate:tests` now accepts a `--nodes` argument that specifies the number of test manifest files to generate for parallel configuration.
 
 ### Fixes
 * Data returned by `grab` and `createData` actions can now be used in `<actionGroup>` test steps by their `stepKey` reference.
