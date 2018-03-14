@@ -463,8 +463,9 @@ class ActionObject
             }
 
             if ($obj == null) {
+                // keep initial values for subsequent logic
                 $replacement = null;
-                $parameterized = null;
+                $parameterized = false;
             } elseif (get_class($obj) == PageObject::class) {
                 $this->validateUrlAreaAgainstActionType($obj);
                 $replacement = $obj->getUrl();
