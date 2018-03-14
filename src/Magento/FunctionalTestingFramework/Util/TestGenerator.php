@@ -97,7 +97,7 @@ class TestGenerator
      */
     private function loadAllTestObjects()
     {
-        if ($this->tests === null) {
+        if ($this->tests === null|| empty($this->tests)) {
             return TestObjectHandler::getInstance()->getAllObjects();
         }
 
