@@ -3,6 +3,7 @@ Magento Functional Testing Framework Changelog
 
 2.1.2
 -----
+### Enhancements
 * Added support for PHP version 7.2
 
 2.1.1
