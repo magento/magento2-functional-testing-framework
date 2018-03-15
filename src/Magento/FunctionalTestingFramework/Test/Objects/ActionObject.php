@@ -438,6 +438,8 @@ class ActionObject
      * @param string $inputString
      * @return string | null
      * @throws \Exception
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function findAndReplaceReferences($objectHandler, $inputString)
     {
@@ -460,25 +462,24 @@ class ActionObject
                 continue;
             }
 
-            // specify behavior depending on field
-            switch (get_class($obj)) {
-                case PageObject::class:
-                    $this->validateUrlAreaAgainstActionType($obj);
-                    $replacement = $obj->getUrl();
-                    $parameterized = $obj->isParameterized();
-                    break;
-                case SectionObject::class:
-                    list(,$objField) = $this->stripAndSplitReference($match);
-                    if ($obj->getElement($objField) == null) {
-                        throw new TestReferenceException("Could not resolve entity reference " . $inputString);
-                    }
-                    $parameterized = $obj->getElement($objField)->isParameterized();
-                    $replacement = $obj->getElement($objField)->getPrioritizedSelector();
-                    $this->setTimeout($obj->getElement($objField)->getTimeout());
-                    break;
-                case EntityDataObject::class:
-                    $replacement = $this->resolveEntityDataObjectReference($obj, $match);
-                    break;
+            if ($obj == null) {
+                // keep initial values for subsequent logic
+                $replacement = null;
+                $parameterized = false;
+            } elseif (get_class($obj) == PageObject::class) {
+                $this->validateUrlAreaAgainstActionType($obj);
+                $replacement = $obj->getUrl();
+                $parameterized = $obj->isParameterized();
+            } elseif (get_class($obj) == SectionObject::class) {
+                list(,$objField) = $this->stripAndSplitReference($match);
+                if ($obj->getElement($objField) == null) {
+                    throw new TestReferenceException("Could not resolve entity reference " . $inputString);
+                }
+                $parameterized = $obj->getElement($objField)->isParameterized();
+                $replacement = $obj->getElement($objField)->getPrioritizedSelector();
+                $this->setTimeout($obj->getElement($objField)->getTimeout());
+            } elseif (get_class($obj) == EntityDataObject::class) {
+                $replacement = $this->resolveEntityDataObjectReference($obj, $match);
             }
 
             if ($replacement == null) {
