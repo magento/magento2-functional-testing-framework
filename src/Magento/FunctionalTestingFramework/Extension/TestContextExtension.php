@@ -10,24 +10,33 @@ use \Codeception\Events;
 
 /**
  * Class TestContextExtension
+ * @SuppressWarnings(PHPMD.UnusedPrivateField)
  */
 class TestContextExtension extends \Codeception\Extension
 {
+    /**
+     * Codeception Events Mapping to methods
+     * @var array
+     */
     public static $events = [
         Events::TEST_BEFORE => 'beforeTest',
     ];
+
+    /**
+     * Static variable for keeping track of test phase.
+     * @var string
+     */
+    private static $testPhase;
 
     const TEST_PHASE_BEFORE = "before";
     const TEST_PHASE_TEST = "test";
     const TEST_PHASE_AFTER = "after";
 
-    private static $testPhase;
-
     /**
-     * Codeception event listener function, triggered on activation of before hook.
-     * @param \Codeception\Event\TestEvent $e
+     * Codeception event listener function, triggered on activation of test execution.
+     * @return void
      */
-    public function beforeTest(\Codeception\Event\TestEvent $e)
+    public function beforeTest()
     {
         TestContextExtension::$testPhase = TestContextExtension::TEST_PHASE_BEFORE;
     }
@@ -35,6 +44,7 @@ class TestContextExtension extends \Codeception\Extension
     /**
      * Public setter for testPhase
      * @param string $testPhase
+     * @return void
      */
     public static function setTestPhase(string $testPhase)
     {
@@ -49,5 +59,4 @@ class TestContextExtension extends \Codeception\Extension
     {
         return TestContextExtension::$testPhase;
     }
-
 }

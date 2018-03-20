@@ -5,6 +5,7 @@ use Magento\FunctionalTestingFramework\AcceptanceTester;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\FunctionalTestingFramework\Extension\TestContextExtension;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -28,6 +29,7 @@ class BasicMergeTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
+		TestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_BEFORE);
 		$I->amOnPage("/beforeUrl");
 		$I->see("#before2");
 	}
@@ -38,6 +40,7 @@ class BasicMergeTestCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
+		TestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_AFTER);
 		$I->amOnPage("/afterUrl1");
 	}
 
@@ -48,7 +51,12 @@ class BasicMergeTestCest
 	public function _failed(AcceptanceTester $I)
 	{
 		$I->saveScreenshot();
-		$this->_after($I);
+		if (TestContextExtension::getTestPhase() !==TestContextExtension::TEST_PHASE_AFTER) {
+			try {
+				$this->_after($I);
+			} catch (\Exception $failedException) {
+			}
+		}
 	}
 
 	/**
@@ -62,6 +70,7 @@ class BasicMergeTestCest
 	 */
 	public function BasicMergeTest(AcceptanceTester $I)
 	{
+		TestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_TEST);
 		$I->amOnPage("/step1");
 		$I->click("#step2");
 		$I->fillField("#username", "step3");

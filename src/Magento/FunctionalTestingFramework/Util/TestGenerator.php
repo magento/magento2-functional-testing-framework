@@ -1367,6 +1367,7 @@ class TestGenerator
      * @return string
      * @throws TestReferenceException
      * @throws \Exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function generateHooksPhp($hookObjects)
     {
@@ -1411,20 +1412,23 @@ class TestGenerator
             $testPhaseSetter = "";
 
             if ($hookObject->getType() == TestObjectExtractor::TEST_AFTER_HOOK) {
-                $testPhaseSetter .= "\t\tTestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_AFTER);\n";
-            } else if ($hookObject->getType() == TestObjectExtractor::TEST_BEFORE_HOOK) {
-                $testPhaseSetter .= "\t\tTestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_BEFORE);\n";
+                $testPhaseSetter .= "\t\tTestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_AFTER);";
+                $testPhaseSetter .= "\n";
+            } elseif ($hookObject->getType() == TestObjectExtractor::TEST_BEFORE_HOOK) {
+                $testPhaseSetter .= "\t\tTestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_BEFORE);";
+                $testPhaseSetter .= "\n";
             }
 
             $steps = $testPhaseSetter . $steps;
 
             if ($hookObject->getType() == TestObjectExtractor::TEST_FAILED_HOOK) {
-                $failedHook ="\t\t" . 'if (TestContextExtension::getTestPhase() !== TestContextExtension::TEST_PHASE_AFTER) {' . "\n";
-                $failedHook.="\t\t\t" . 'try {' . "\n";
-                $failedHook.="\t\t\t\t" . '$this->_after($I);' . "\n";
-                $failedHook.="\t\t\t" . '} catch (\Exception $failedException) {' . "\n";
-                $failedHook.="\t\t\t" . '}' . "\n";
-                $failedHook.="\t\t" . '}' . "\n";
+                $failedHook = "\t\t" . 'if (TestContextExtension::getTestPhase() !==';
+                $failedHook .= "TestContextExtension::TEST_PHASE_AFTER) {" . "\n";
+                $failedHook .= "\t\t\t" . 'try {' . "\n";
+                $failedHook .= "\t\t\t\t" . '$this->_after($I);' . "\n";
+                $failedHook .= "\t\t\t" . '} catch (\Exception $failedException) {' . "\n";
+                $failedHook .= "\t\t\t" . '}' . "\n";
+                $failedHook .= "\t\t" . '}' . "\n";
                 $steps = $steps . $failedHook;
             }
 

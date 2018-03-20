@@ -5,6 +5,7 @@ use Magento\FunctionalTestingFramework\AcceptanceTester;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\FunctionalTestingFramework\Extension\TestContextExtension;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -32,6 +33,7 @@ class ActionGroupWithDataOverrideTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
+		TestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_BEFORE);
 		$I->amGoingTo("create entity that has the stepKey: createPersonParam");
 		$ReplacementPerson = DataObjectHandler::getInstance()->getObject("ReplacementPerson");
 		$this->createPersonParam = new DataPersistenceHandler($ReplacementPerson, []);
@@ -46,6 +48,7 @@ class ActionGroupWithDataOverrideTestCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
+		TestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_AFTER);
 		$I->fillField("#foo", "myData1");
 		$I->fillField("#bar", "myData2");
 	}
@@ -57,7 +60,12 @@ class ActionGroupWithDataOverrideTestCest
 	public function _failed(AcceptanceTester $I)
 	{
 		$I->saveScreenshot();
-		$this->_after($I);
+		if (TestContextExtension::getTestPhase() !==TestContextExtension::TEST_PHASE_AFTER) {
+			try {
+				$this->_after($I);
+			} catch (\Exception $failedException) {
+			}
+		}
 	}
 
 	/**
@@ -71,6 +79,7 @@ class ActionGroupWithDataOverrideTestCest
 	 */
 	public function ActionGroupWithDataOverrideTest(AcceptanceTester $I)
 	{
+		TestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_TEST);
 		$I->amOnPage("/someUrl");
 		$I->amOnPage("/John/Doe.html");
 		$I->fillField("#foo", "John");

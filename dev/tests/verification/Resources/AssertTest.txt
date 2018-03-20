@@ -5,6 +5,7 @@ use Magento\FunctionalTestingFramework\AcceptanceTester;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\FunctionalTestingFramework\Extension\TestContextExtension;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -30,6 +31,7 @@ class AssertTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
+		TestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_BEFORE);
 		$I->amGoingTo("create entity that has the stepKey: createData1");
 		$ReplacementPerson = DataObjectHandler::getInstance()->getObject("ReplacementPerson");
 		$this->createData1 = new DataPersistenceHandler($ReplacementPerson, []);
@@ -44,6 +46,7 @@ class AssertTestCest
 	 */
 	public function AssertTest(AcceptanceTester $I)
 	{
+		TestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_TEST);
 		$I->amGoingTo("create entity that has the stepKey: createData2");
 		$UniquePerson = DataObjectHandler::getInstance()->getObject("UniquePerson");
 		$createData2 = new DataPersistenceHandler($UniquePerson, []);

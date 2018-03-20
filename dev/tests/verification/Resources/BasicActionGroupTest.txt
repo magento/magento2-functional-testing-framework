@@ -5,6 +5,7 @@ use Magento\FunctionalTestingFramework\AcceptanceTester;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\FunctionalTestingFramework\Extension\TestContextExtension;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -32,6 +33,7 @@ class BasicActionGroupTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
+		TestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_BEFORE);
 		$I->amGoingTo("create entity that has the stepKey: createPersonParam");
 		$ReplacementPerson = DataObjectHandler::getInstance()->getObject("ReplacementPerson");
 		$this->createPersonParam = new DataPersistenceHandler($ReplacementPerson, []);
@@ -51,6 +53,7 @@ class BasicActionGroupTestCest
 	 */
 	public function BasicActionGroupTest(AcceptanceTester $I)
 	{
+		TestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_TEST);
 		$I->amOnPage("/someUrl");
 		$I->fillField("#foo", "myData1");
 		$I->fillField("#bar", "myData2");
