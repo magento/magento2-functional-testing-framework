@@ -897,7 +897,7 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $parameterArray, $button);
                     break;
                 case "dragAndDrop":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector1, $selector2);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector1, $selector2, $x, $y);
                     break;
                 case "selectMultipleOptions":
                     $testSteps .= $this->wrapFunctionCall(

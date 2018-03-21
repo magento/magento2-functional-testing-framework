@@ -88,6 +88,7 @@ class BasicFunctionalTestCest
 		$I->dontSeeOptionIsSelected(".functionalTestSelector", "someInput");
 		$I->doubleClick(".functionalTestSelector");
 		$I->dragAndDrop(".functionalTestSelector", ".functionalTestSelector2");
+		$I->dragAndDrop(".functionalTestSelector", ".functionalTestSelector2", 100, 900);
 		$I->executeJS("someJSFunction");
 		$I->fillField(".functionalTestSelector", "someInput");
 		$I->fillField(".functionalTestSelector", "0");

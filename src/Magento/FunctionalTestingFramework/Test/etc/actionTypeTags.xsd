@@ -269,7 +269,22 @@
                         <xs:documentation>
                             End point selector for drag-and-drop.
                         </xs:documentation>
-                    </xs:annotation></xs:attribute>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute type="xs:string" name="x">
+                    <xs:annotation>
+                        <xs:documentation>
+                            X offset for drag-and-drop destination.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute type="xs:string" name="y">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Y offset for drag-and-drop destination.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
