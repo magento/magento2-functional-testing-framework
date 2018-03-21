@@ -913,7 +913,12 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $function);
                     break;
                 case "executeJS":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $function);
+                    $testSteps .= $this->wrapFunctionCallWithReturnValue(
+                        $stepKey,
+                        $actor,
+                        $actionObject,
+                        $function
+                    );
                     break;
                 case "performOn":
                 case "waitForElementChange":
