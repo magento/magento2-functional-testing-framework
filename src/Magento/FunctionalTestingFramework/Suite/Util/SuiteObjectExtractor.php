@@ -40,6 +40,8 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      * @param array $parsedSuiteData
      * @return array
      * @throws XmlException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function parseSuiteDataIntoObjects($parsedSuiteData)
     {
@@ -64,6 +66,19 @@ class SuiteObjectExtractor extends BaseObjectExtractor
             }
 
             $suiteHooks = [];
+
+            //Check for collisions between suite name and existing group name
+            $suiteName = $parsedSuite[self::NAME];
+            $testGroupConflicts = TestObjectHandler::getInstance()->getTestsByGroup($suiteName);
+            if (!empty($testGroupConflicts)) {
+                $testGroupConflictsFileNames = "";
+                foreach ($testGroupConflicts as $test) {
+                    $testGroupConflictsFileNames .= $test->getFilename() . "\n";
+                }
+                $exceptionmessage = "\"Suite names and Group names can not have the same value. \t\n" .
+                    "Suite: \"{$suiteName}\" also exists as a group annotation in: \n{$testGroupConflictsFileNames}";
+                throw new XmlException($exceptionmessage);
+            }
 
             //extract include and exclude references
             $groupTestsToInclude = $parsedSuite[self::INCLUDE_TAG_NAME] ?? [];
