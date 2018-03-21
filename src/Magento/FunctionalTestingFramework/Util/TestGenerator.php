@@ -1588,6 +1588,9 @@ class TestGenerator
             if (!$isFirst) {
                 $output .= ', ';
             }
+            if ($args[$i] === "") {
+                $args[$i] = '"' . $args[$i] . '"';
+            }
             $output .= $args[$i];
             $isFirst = false;
         }
@@ -1618,6 +1621,9 @@ class TestGenerator
             }
             if (!$isFirst) {
                 $output .= ', ';
+            }
+            if ($args[$i] === "") {
+                $args[$i] = '"' . $args[$i] . '"';
             }
             $output .= $args[$i];
             $isFirst = false;

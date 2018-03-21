@@ -20,7 +20,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 class ActionObject
 {
     const __ENV = "_ENV";
-    const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray", "expected", "actual"];
+    const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray", "expected", "actual", "x", "y"];
     const SELECTOR_ENABLED_ATTRIBUTES = [
         'selector',
         'dependentSelector',
@@ -40,7 +40,7 @@ class ActionObject
     const ACTION_ATTRIBUTE_URL = 'url';
     const ACTION_ATTRIBUTE_SELECTOR = 'selector';
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER = '/\(.+\)/';
-    const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/{{[\w]+\.[\w\[\]]+}}/';
+    const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/{{[\w]+\.?[\w\[\]]+}}/';
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN_WITH_PARAMS= '/{{[\w]+\.[\w]+\(.+\)}}/';
 
     /**
@@ -371,7 +371,7 @@ class ActionObject
         foreach ($relevantDataAttributes as $dataAttribute) {
             $varInput = $this->actionAttributes[$dataAttribute];
             $replacement = $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $varInput);
-            if ($replacement != null) {
+            if ($replacement !== null) {
                 $this->resolvedCustomAttributes[$dataAttribute] = $replacement;
             }
         }
@@ -482,7 +482,7 @@ class ActionObject
                 $replacement = $this->resolveEntityDataObjectReference($obj, $match);
             }
 
-            if ($replacement == null) {
+            if ($replacement === null) {
                 if (get_class($objectHandler) != DataObjectHandler::class) {
                     return $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $outputString);
                 } else {
