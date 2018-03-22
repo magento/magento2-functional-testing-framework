@@ -6,6 +6,7 @@
 namespace Magento\FunctionalTestingFramework\Suite\Util;
 
 use Exception;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
@@ -37,6 +38,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      *
      * @param array $parsedSuiteData
      * @return array
+     * @throws XmlException
      */
     public function parseSuiteDataIntoObjects($parsedSuiteData)
     {
@@ -77,6 +79,12 @@ class SuiteObjectExtractor extends BaseObjectExtractor
                     TestObjectExtractor::TEST_AFTER_HOOK,
                     $parsedSuite[TestObjectExtractor::TEST_AFTER_HOOK]
                 );
+            }
+            if (count($suiteHooks) == 1) {
+                throw new XmlException(sprintf(
+                    "Suites that contain hooks must contain both a 'before' and an 'after' hook. Suite: \"%s\"",
+                    $parsedSuite[self::NAME]
+                ));
             }
 
             // create the new suite object

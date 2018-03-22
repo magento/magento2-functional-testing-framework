@@ -19,7 +19,8 @@ class {{suiteName}} extends \Codeception\GroupObject
     public static $group = '{{suiteName}}';
     private static $TEST_COUNT = {{testCount}};
     private static $CURRENT_TEST_RUN = 0;
-
+    private static $HOOK_EXECUTION_INIT = "\n/******** Beginning execution of {{suiteName}} suite %s block ********/\n";
+    private static $HOOK_EXECUTION_END = "\n/******** Execution of {{suiteName}} suite %s block complete ********/\n";
     {{#var}}
     private ${{stepKey}};
     {{/var}}
@@ -31,7 +32,11 @@ class {{suiteName}} extends \Codeception\GroupObject
         self::$CURRENT_TEST_RUN++;
 
         if (self::$CURRENT_TEST_RUN == 1) {
-            {{> dataPersistence}}
+            print sprintf(self::$HOOK_EXECUTION_INIT, "before");
+
+            {{> testActions}}
+
+            print sprintf(self::$HOOK_EXECUTION_END, "before");
         }
     }
     {{/before}}
@@ -40,14 +45,11 @@ class {{suiteName}} extends \Codeception\GroupObject
     public function _after(\Codeception\Event\TestEvent $e)
     {
         if (self::$CURRENT_TEST_RUN == self::$TEST_COUNT) {
-            {{> dataPersistence}}
-        }
-    }
+            print sprintf(self::$HOOK_EXECUTION_INIT, "after");
 
-    public function _failed(\Codeception\Event\TestEvent $e)
-    {
-        if (self::$CURRENT_TEST_RUN == self::$TEST_COUNT) {
-            {{> dataPersistence}}
+            {{> testActions}}
+
+            print sprintf(self::$HOOK_EXECUTION_END, "after");
         }
     }
     {{/after}}

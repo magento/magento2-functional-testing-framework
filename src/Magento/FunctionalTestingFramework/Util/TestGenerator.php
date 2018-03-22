@@ -388,18 +388,18 @@ class TestGenerator
      *
      * @param array $actionObjects
      * @param array|bool $hookObject
+     * @param string $actor
      * @return string
      * @throws TestReferenceException
      * @throws \Exception
      * @SuppressWarnings(PHPMD)
      */
-    private function generateStepsPhp($actionObjects, $hookObject = false)
+    public function generateStepsPhp($actionObjects, $hookObject = false, $actor = "I")
     {
         //TODO: Refactor Method according to PHPMD warnings, remove @SuppressWarnings accordingly.
         $testSteps = "";
 
         foreach ($actionObjects as $actionObject) {
-            $actor = "I";
             $stepKey = $actionObject->getStepKey();
             $customActionAttributes = $actionObject->getCustomActionAttributes();
             $attribute = null;
