@@ -223,7 +223,6 @@ class ModuleResolver
     {
         $allModulePaths = [];
 
-        // TODO update these paths when we switch a composer based pathing
         // Define the Module paths from app/code
         $appCodePath = MAGENTO_BP
             . DIRECTORY_SEPARATOR
