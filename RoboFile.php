@@ -22,7 +22,7 @@ class RoboFile extends \Robo\Tasks
     {
         $this->_exec('cp -vn .env.example .env');
         $this->_exec('cp -vf codeception.dist.yml codeception.yml');
-        $this->_exec('cp -vf dev' . DIRECTORY_SEPARATOR . 'tests'. DIRECTORY_SEPARATOR .'MFTF.suite.dist.yml dev' . DIRECTORY_SEPARATOR . 'tests'. DIRECTORY_SEPARATOR .'MFTF.suite.yml');
+        $this->_exec('cp -vf dev' . DIRECTORY_SEPARATOR . 'tests'.  DIRECTORY_SEPARATOR . 'functional' . DIRECTORY_SEPARATOR .'MFTF.suite.dist.yml dev' . DIRECTORY_SEPARATOR . 'tests'.  DIRECTORY_SEPARATOR . 'functional' . DIRECTORY_SEPARATOR .'MFTF.suite.yml');
     }
 
     /**
