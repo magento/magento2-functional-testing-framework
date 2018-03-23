@@ -76,7 +76,8 @@
         </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute ref="createDataKey" use="required"/>
+                <xs:attribute ref="url"/>
+                <xs:attribute ref="createDataKey"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
                 <xs:attribute ref="storeCode"/>
             </xs:extension>

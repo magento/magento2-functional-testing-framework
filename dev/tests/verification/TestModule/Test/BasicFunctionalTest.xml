@@ -34,6 +34,8 @@
         <clickWithRightButton selector=".functionalTestSelector" stepKey="clickWithRightButtonKey1"/>
         <closeTab stepKey="closeTabKey1"/>
         <conditionalClick selector=".functionalTestSelector" dependentSelector=".functionalDependentTestSelector" visible="true" stepKey="conditionalClickKey1"/>
+        <deleteData stepKey="deleteKey1" createDataKey="createKey1"/>
+        <deleteData stepKey="deleteKey2" url="/V1/categories{$grabbedData}"/>
         <dontSee userInput="someInput" selector=".functionalTestSelector" stepKey="dontSeeKey1" />
         <dontSeeCheckboxIsChecked selector=".functionalTestSelector" stepKey="dontSeeCheckboxIsCheckedKey1"/>
         <dontSeeCookie userInput="someInput" stepKey="dontSeeCookieKey1"/>

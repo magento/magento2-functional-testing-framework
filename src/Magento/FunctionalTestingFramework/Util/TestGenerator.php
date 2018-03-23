@@ -457,6 +457,7 @@ class TestGenerator
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['userInput']);
             } elseif (isset($customActionAttributes['url'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['url']);
+                $url = $this->addUniquenessFunctionCall($customActionAttributes['url']);
             } elseif (isset($customActionAttributes['expectedValue'])) {
                 //For old Assert backwards Compatibility, remove when deprecating
                 $assertExpected = $this->addUniquenessFunctionCall($customActionAttributes['expectedValue']);
@@ -660,18 +661,37 @@ class TestGenerator
                     $testSteps .= $createEntityFunctionCall;
                     break;
                 case "deleteData":
-                    $key = $customActionAttributes['createDataKey'];
-                    //Add an informative statement to help the user debug test runs
-                    $testSteps .= sprintf(
-                        "\t\t$%s->amGoingTo(\"delete entity that has the createDataKey: %s\");\n",
-                        $actor,
-                        $key
-                    );
+                    if (isset($customActionAttributes['createDataKey'])) {
+                        $key = $customActionAttributes['createDataKey'];
+                        //Add an informative statement to help the user debug test runs
+                        $testSteps .= sprintf(
+                            "\t\t$%s->amGoingTo(\"delete entity that has the createDataKey: %s\");\n",
+                            $actor,
+                            $key
+                        );
 
-                    if ($hookObject) {
-                        $testSteps .= sprintf("\t\t\$this->%s->deleteEntity();\n", $key);
+                        if ($hookObject) {
+                            $testSteps .= sprintf("\t\t\$this->%s->deleteEntity();\n", $key);
+                        } else {
+                            $testSteps .= sprintf("\t\t$%s->deleteEntity();\n", $key);
+                        }
                     } else {
-                        $testSteps .= sprintf("\t\t$%s->deleteEntity();\n", $key);
+                        $output = sprintf(
+                            "\t\t$%s->deleteByUrl(%s",
+                            $actor,
+                            $url
+                        );
+                        $storeCode = null;
+                        if (isset($customActionAttributes["storeCode"])) {
+                            $storeCode = $customActionAttributes["storeCode"];
+                            $output .= sprintf(
+                                ", %s",
+                                $storeCode
+                            );
+                        }
+                        $output .= ");\n";
+                        $output = $this->resolveEnvReferences($output, [$url, $storeCode]);
+                        $testSteps .= $this->resolveTestVariable($output, [$url, $storeCode], null);
                     }
                     break;
                 case "updateData":
