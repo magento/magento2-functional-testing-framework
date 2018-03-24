@@ -168,8 +168,7 @@ class TestObject
     public function getDebugInformation()
     {
         $debugInformation = [];
-        $mergeUtil = new ActionMergeUtil($this->getName(), "Test");
-        $orderList  = $mergeUtil->resolveActionSteps($this->parsedSteps);
+        $orderList = $this->getOrderedActions();
 
         foreach ($orderList as $action) {
             $debugInformation[] = "\t" . $action->getType() . ' ' . $action->getStepKey();
