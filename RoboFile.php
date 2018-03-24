@@ -3,6 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
 
 /** This is project's console commands configuration for Robo task runner.
  *
@@ -43,7 +44,7 @@ class RoboFile extends \Robo\Tasks
      * @param array $opts
      * @return void
      */
-    function generateTests($opts = ['config' => null, 'force' => true, 'nodes' => null])
+    function generateTests($opts = ['config' => null, 'force' => true, 'nodes' => null, 'debug' => false])
     {
         $GLOBALS['GENERATE_TESTS'] = true;
 
@@ -51,9 +52,12 @@ class RoboFile extends \Robo\Tasks
         {
             $GLOBALS['FORCE_PHP_GENERATE'] = true;
         }
+        
+        $output = $this->getOutput() ?? null;
 
         require 'dev' . DIRECTORY_SEPARATOR . 'tests'. DIRECTORY_SEPARATOR . 'functional' . DIRECTORY_SEPARATOR . '_bootstrap.php';
-        \Magento\FunctionalTestingFramework\Util\TestGenerator::getInstance()->createAllTestFiles($opts['config'], $opts['nodes']);
+        \Magento\FunctionalTestingFramework\Util\TestGenerator::getInstance()
+            ->createAllTestFiles($opts['config'], $opts['nodes'], $opts['debug'], $output);
         $this->say("Generate Tests Command Run");
     }
 
