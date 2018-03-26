@@ -60,6 +60,8 @@ class BasicFunctionalTestCest
 	 */
 	public function BasicFunctionalTest(AcceptanceTester $I)
 	{
+		$I->comment("");
+		$I->comment("");
 		$someVarDefinition = $I->grabValueFrom();
 		$I->acceptPopup();
 		$I->amOnPage("/test/url");

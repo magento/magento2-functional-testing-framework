@@ -30,4 +30,8 @@
         <data key="x">200</data>
         <data key="y">300</data>
     </entity>
+    <entity name="emptyData" type="backend">
+        <data key="noData"></data>
+        <data key="definitelyNoData"/>
+    </entity>
 </entities>
