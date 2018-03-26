@@ -70,6 +70,8 @@ class BasicFunctionalTestCest
 		$I->click(".functionalTestSelector");
 		$I->clickWithLeftButton(".functionalTestSelector");
 		$I->clickWithRightButton(".functionalTestSelector");
+		$I->clickWithLeftButton("#element#element .200", 200, 300);
+		$I->clickWithRightButton("#element .4123#element", 200, 300);
 		$I->closeTab();
 		$I->conditionalClick(".functionalTestSelector", ".functionalDependentTestSelector", true);
 		$I->dontSee("someInput", ".functionalTestSelector");

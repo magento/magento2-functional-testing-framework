@@ -26,4 +26,8 @@
         <data key="sampleField2">moreData</data>
         <requiredEntity type="test2">originalValue2</requiredEntity>
     </entity>
+    <entity name="offset" type="simpleData">
+        <data key="x">200</data>
+        <data key="y">300</data>
+    </entity>
 </entities>
