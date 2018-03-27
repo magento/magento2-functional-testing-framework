@@ -12,13 +12,13 @@ class SingleRunTestManifest extends DefaultTestManifest
 
     /**
      * SingleRunTestManifest constructor.
-     * @param string $path
+     * @param string $manifestPath
+     * @param string $testPath
      */
-    public function __construct($path)
+    public function __construct($manifestPath, $testPath)
     {
-        $this->manifestPath = $path . DIRECTORY_SEPARATOR . 'testManifest.txt';
-        parent::__construct($path, self::SINGLE_RUN_CONFIG);
-
+        parent::__construct($manifestPath, $testPath);
+        $this->runTypeConfig = self::SINGLE_RUN_CONFIG;
         $fileResource = fopen($this->manifestPath, 'w');
         fclose($fileResource);
     }

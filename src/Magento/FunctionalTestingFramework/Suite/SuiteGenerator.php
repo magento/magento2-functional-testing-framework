@@ -119,7 +119,8 @@ class SuiteGenerator
 
         $ymlArray[self::YAML_GROUPS_TAG][$suiteName] = [$relativeSuitePath];
 
-        if ($groupNamespace) {
+        if ($groupNamespace &&
+            !in_array($groupNamespace, $ymlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG])) {
             $ymlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG][] = $groupNamespace;
         }
 

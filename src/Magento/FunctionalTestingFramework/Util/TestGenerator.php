@@ -29,6 +29,7 @@ class TestGenerator
 {
     const REQUIRED_ENTITY_REFERENCE = 'createDataKey';
     const GENERATED_DIR = '_generated';
+    const DEFAULT_DIR = 'default';
 
     /**
      * Path to the export dir.
@@ -60,11 +61,13 @@ class TestGenerator
     private function __construct($exportDir, $tests)
     {
         // private constructor for factory
-        $this->exportDirName = $exportDir ?? self::GENERATED_DIR;
-        $this->exportDirectory = rtrim(
-            TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . self::GENERATED_DIR . DIRECTORY_SEPARATOR . $exportDir,
-            DIRECTORY_SEPARATOR
-        );
+        $this->exportDirName = $exportDir ?? self::DEFAULT_DIR;
+        $exportDir = $exportDir ?? self::DEFAULT_DIR;
+        $this->exportDirectory = TESTS_MODULE_PATH
+            . DIRECTORY_SEPARATOR
+            . self::GENERATED_DIR
+            . DIRECTORY_SEPARATOR
+            . $exportDir;
         $this->tests = $tests;
     }
 
@@ -97,7 +100,7 @@ class TestGenerator
      */
     private function loadAllTestObjects()
     {
-        if ($this->tests === null) {
+        if ($this->tests === null || empty($this->tests)) {
             return TestObjectHandler::getInstance()->getAllObjects();
         }
 
@@ -141,7 +144,11 @@ class TestGenerator
         DirSetupUtil::createGroupDir($this->exportDirectory);
 
         // create our manifest file here
-        $testManifest = TestManifestFactory::makeManifest($this->exportDirectory, $runConfig);
+        $testManifest = TestManifestFactory::makeManifest(
+            dirname($this->exportDirectory),
+            $this->exportDirectory,
+            $runConfig
+        );
         $testPhpArray = $this->assembleAllTestPhp($testManifest, $nodes);
 
         foreach ($testPhpArray as $testPhpFile) {
@@ -172,7 +179,7 @@ class TestGenerator
         }
 
         $cestPhp = "<?php\n";
-        $cestPhp .= "namespace Magento\AcceptanceTest\\" . $this->exportDirName . "\Backend;\n\n";
+        $cestPhp .= "namespace Magento\AcceptanceTest\\_" . $this->exportDirName . "\Backend;\n\n";
         $cestPhp .= $usePhp;
         $cestPhp .= $classAnnotationsPhp;
         $cestPhp .= sprintf("class %s\n", $className);
@@ -388,18 +395,18 @@ class TestGenerator
      *
      * @param array $actionObjects
      * @param array|bool $hookObject
+     * @param string $actor
      * @return string
      * @throws TestReferenceException
      * @throws \Exception
      * @SuppressWarnings(PHPMD)
      */
-    private function generateStepsPhp($actionObjects, $hookObject = false)
+    public function generateStepsPhp($actionObjects, $hookObject = false, $actor = "I")
     {
         //TODO: Refactor Method according to PHPMD warnings, remove @SuppressWarnings accordingly.
         $testSteps = "";
 
         foreach ($actionObjects as $actionObject) {
-            $actor = "I";
             $stepKey = $actionObject->getStepKey();
             $customActionAttributes = $actionObject->getCustomActionAttributes();
             $attribute = null;
@@ -832,7 +839,7 @@ class TestGenerator
                     break;
                 case "switchToNextTab":
                 case "switchToPreviousTab":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $this->stripWrappedQuotes($input));
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $input);
                     break;
                 case "clickWithLeftButton":
                 case "clickWithRightButton":
@@ -1583,6 +1590,9 @@ class TestGenerator
             if (!$isFirst) {
                 $output .= ', ';
             }
+            if ($args[$i] === "") {
+                $args[$i] = '"' . $args[$i] . '"';
+            }
             $output .= $args[$i];
             $isFirst = false;
         }
@@ -1613,6 +1623,9 @@ class TestGenerator
             }
             if (!$isFirst) {
                 $output .= ', ';
+            }
+            if ($args[$i] === "") {
+                $args[$i] = '"' . $args[$i] . '"';
             }
             $output .= $args[$i];
             $isFirst = false;
