@@ -839,7 +839,7 @@ class TestGenerator
                     break;
                 case "switchToNextTab":
                 case "switchToPreviousTab":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $this->stripWrappedQuotes($input));
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $input);
                     break;
                 case "clickWithLeftButton":
                 case "clickWithRightButton":
@@ -1595,6 +1595,9 @@ class TestGenerator
             if (!$isFirst) {
                 $output .= ', ';
             }
+            if ($args[$i] === "") {
+                $args[$i] = '"' . $args[$i] . '"';
+            }
             $output .= $args[$i];
             $isFirst = false;
         }
@@ -1625,6 +1628,9 @@ class TestGenerator
             }
             if (!$isFirst) {
                 $output .= ', ';
+            }
+            if ($args[$i] === "") {
+                $args[$i] = '"' . $args[$i] . '"';
             }
             $output .= $args[$i];
             $isFirst = false;
