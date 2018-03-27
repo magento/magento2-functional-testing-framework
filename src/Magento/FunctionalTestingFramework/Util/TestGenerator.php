@@ -225,7 +225,6 @@ class TestGenerator
         $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;\n";
         $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;\n";
         $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;\n";
-        $useStatementsPhp .= "use Magento\FunctionalTestingFramework\Extension\TestContextExtension;\n";
         $useStatementsPhp .= "use \Codeception\Util\Locator;\n";
 
         $allureStatements = [
@@ -1409,29 +1408,6 @@ class TestGenerator
                 throw new TestReferenceException($e->getMessage() . " in Element \"" . $type . "\"");
             }
 
-            $testPhaseSetter = "";
-
-            if ($hookObject->getType() == TestObjectExtractor::TEST_AFTER_HOOK) {
-                $testPhaseSetter .= "\t\tTestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_AFTER);";
-                $testPhaseSetter .= "\n";
-            } elseif ($hookObject->getType() == TestObjectExtractor::TEST_BEFORE_HOOK) {
-                $testPhaseSetter .= "\t\tTestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_BEFORE);";
-                $testPhaseSetter .= "\n";
-            }
-
-            $steps = $testPhaseSetter . $steps;
-
-            if ($hookObject->getType() == TestObjectExtractor::TEST_FAILED_HOOK) {
-                $failedHook = "\t\t" . 'if (TestContextExtension::getTestPhase() !==';
-                $failedHook .= "TestContextExtension::TEST_PHASE_AFTER) {" . "\n";
-                $failedHook .= "\t\t\t" . 'try {' . "\n";
-                $failedHook .= "\t\t\t\t" . '$this->_after($I);' . "\n";
-                $failedHook .= "\t\t\t" . '} catch (\Exception $failedException) {' . "\n";
-                $failedHook .= "\t\t\t" . '}' . "\n";
-                $failedHook .= "\t\t" . '}' . "\n";
-                $steps = $steps . $failedHook;
-            }
-
             $hooks .= sprintf("\tpublic function _{$type}(%s)\n", $dependencies);
             $hooks .= "\t{\n";
             $hooks .= $steps;
@@ -1467,7 +1443,6 @@ class TestGenerator
         $testPhp .= $testAnnotations;
         $testPhp .= sprintf("\tpublic function %s(%s)\n", $testName, $dependencies);
         $testPhp .= "\t{\n";
-        $testPhp .= "\t\tTestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_TEST);\n";
         $testPhp .= $steps;
         $testPhp .= "\t}\n";
 

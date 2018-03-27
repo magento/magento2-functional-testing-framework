@@ -14,49 +14,58 @@ use \Codeception\Events;
  */
 class TestContextExtension extends \Codeception\Extension
 {
+    const TEST_PHASE_AFTER = "_after";
+
     /**
      * Codeception Events Mapping to methods
      * @var array
      */
     public static $events = [
-        Events::TEST_BEFORE => 'beforeTest',
+        Events::TEST_FAIL => 'testFail',
     ];
 
     /**
-     * Static variable for keeping track of test phase.
-     * @var string
-     */
-    private static $testPhase;
-
-    const TEST_PHASE_BEFORE = "before";
-    const TEST_PHASE_TEST = "test";
-    const TEST_PHASE_AFTER = "after";
-
-    /**
-     * Codeception event listener function, triggered on activation of test execution.
+     * Codeception event listener function, triggered on test failure.
+     * @param \Codeception\Event\FailEvent $e
      * @return void
      */
-    public function beforeTest()
+    public function testFail(\Codeception\Event\FailEvent $e)
     {
-        TestContextExtension::$testPhase = TestContextExtension::TEST_PHASE_BEFORE;
+        $cest = $e->getTest();
+        $context = $this->extractContext($e->getFail()->getTrace(), $cest->getTestMethod());
+        // Do not attempt to run _after if failure was in the _after block
+        // Try to run _after but catch exceptions to prevent them from overwriting original failure.
+        if ($context != TestContextExtension::TEST_PHASE_AFTER) {
+            try {
+                $actorClass = $e->getTest()->getMetadata()->getCurrent('actor');
+                $I = new $actorClass($cest->getScenario());
+                call_user_func(\Closure::bind(
+                    function () use ($cest, $I) {
+                        $cest->executeHook($I, 'after');
+                    },
+                    null,
+                    $cest
+                ));
+            } catch (\Exception $e) {
+                // Do not rethrow Exception
+            }
+        }
     }
 
     /**
-     * Public setter for testPhase
-     * @param string $testPhase
-     * @return void
-     */
-    public static function setTestPhase(string $testPhase)
-    {
-        TestContextExtension::$testPhase = $testPhase;
-    }
-
-    /**
-     * Getter for testPhase
+     * Extracts hook method from trace, looking specifically for the cest class given.
+     * @param array $trace
+     * @param string $class
      * @return string
      */
-    public static function getTestPhase()
+    public function extractContext($trace, $class)
     {
-        return TestContextExtension::$testPhase;
+        foreach($trace as $entry) {
+            $traceClass = $entry["class"] ?? null;
+            if (strpos($traceClass, $class) != 0) {
+                return $entry["function"];
+            }
+        }
+        return null;
     }
 }
