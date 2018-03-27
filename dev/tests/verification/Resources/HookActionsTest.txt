@@ -5,7 +5,6 @@ use Magento\FunctionalTestingFramework\AcceptanceTester;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
-use Magento\FunctionalTestingFramework\Extension\TestContextExtension;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -36,7 +35,6 @@ class HookActionsTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		TestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_BEFORE);
 		$I->amGoingTo("create entity that has the stepKey: sampleCreateBefore");
 		$sampleCreatedEntity = DataObjectHandler::getInstance()->getObject("sampleCreatedEntity");
 		$this->sampleCreateBefore = new DataPersistenceHandler($sampleCreatedEntity, []);
@@ -60,7 +58,6 @@ class HookActionsTestCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
-		TestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_AFTER);
 		$I->amGoingTo("create entity that has the stepKey: sampleCreateAfter");
 		$sampleCreatedEntity = DataObjectHandler::getInstance()->getObject("sampleCreatedEntity");
 		$this->sampleCreateAfter = new DataPersistenceHandler($sampleCreatedEntity, []);
@@ -76,12 +73,6 @@ class HookActionsTestCest
 	public function _failed(AcceptanceTester $I)
 	{
 		$I->saveScreenshot();
-		if (TestContextExtension::getTestPhase() !==TestContextExtension::TEST_PHASE_AFTER) {
-			try {
-				$this->_after($I);
-			} catch (\Exception $failedException) {
-			}
-		}
 	}
 
 	/**
@@ -92,6 +83,5 @@ class HookActionsTestCest
 	 */
 	public function HookActionsTest(AcceptanceTester $I)
 	{
-		TestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_TEST);
 	}
 }

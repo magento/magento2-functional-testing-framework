@@ -5,7 +5,6 @@ use Magento\FunctionalTestingFramework\AcceptanceTester;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
-use Magento\FunctionalTestingFramework\Extension\TestContextExtension;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -33,7 +32,6 @@ class ArgumentWithSameNameAsElementCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		TestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_BEFORE);
 		$I->amGoingTo("create entity that has the stepKey: createPersonParam");
 		$ReplacementPerson = DataObjectHandler::getInstance()->getObject("ReplacementPerson");
 		$this->createPersonParam = new DataPersistenceHandler($ReplacementPerson, []);
@@ -48,7 +46,6 @@ class ArgumentWithSameNameAsElementCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
-		TestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_AFTER);
 		$I->fillField("#foo", "myData1");
 		$I->fillField("#bar", "myData2");
 	}
@@ -60,12 +57,6 @@ class ArgumentWithSameNameAsElementCest
 	public function _failed(AcceptanceTester $I)
 	{
 		$I->saveScreenshot();
-		if (TestContextExtension::getTestPhase() !==TestContextExtension::TEST_PHASE_AFTER) {
-			try {
-				$this->_after($I);
-			} catch (\Exception $failedException) {
-			}
-		}
 	}
 
 	/**
@@ -79,7 +70,6 @@ class ArgumentWithSameNameAsElementCest
 	 */
 	public function ArgumentWithSameNameAsElement(AcceptanceTester $I)
 	{
-		TestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_TEST);
 		$I->seeElement("#element");
 		$I->seeElement("#element .John");
 	}

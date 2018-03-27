@@ -5,7 +5,6 @@ use Magento\FunctionalTestingFramework\AcceptanceTester;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
-use Magento\FunctionalTestingFramework\Extension\TestContextExtension;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -30,7 +29,6 @@ class ActionGroupWithPassedArgumentAndStringSelectorParamCest
 	 */
 	public function ActionGroupWithPassedArgumentAndStringSelectorParam(AcceptanceTester $I)
 	{
-		TestContextExtension::setTestPhase(TestContextExtension::TEST_PHASE_TEST);
 		$I->see("John".msq("UniquePerson"), "#element .test1");
 	}
 }

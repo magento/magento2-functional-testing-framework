@@ -60,7 +60,7 @@ class TestContextExtension extends \Codeception\Extension
      */
     public function extractContext($trace, $class)
     {
-        foreach($trace as $entry) {
+        foreach ($trace as $entry) {
             $traceClass = $entry["class"] ?? null;
             if (strpos($traceClass, $class) != 0) {
                 return $entry["function"];
