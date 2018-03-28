@@ -435,7 +435,7 @@ class MagentoWebDriver extends WebDriver
      * @param string $command
      * @returns string
      */
-    public function executeMagentoCLICommand($command)
+    public function magentoCLI($command)
     {
 
         $apiURL = $this->config['url'] . getenv('MAGENTO_CLI_COMMAND_PATH');
@@ -527,6 +527,10 @@ class MagentoWebDriver extends WebDriver
             $this->saveScreenshot();
         }
 
+        if ($this->current_test == null) {
+            throw new \RuntimeException("Suite condition failure: \n" . $fail->getMessage());
+        }
+
         $this->addAttachment($this->pngReport, $test->getMetadata()->getName() . '.png', 'image/png');
         $this->addAttachment($this->htmlReport, $test->getMetadata()->getName() . '.html', 'text/html');
 
@@ -540,8 +544,12 @@ class MagentoWebDriver extends WebDriver
      */
     public function saveScreenshot()
     {
-        $test = $this->current_test;
-        $filename = preg_replace('~\W~', '.', Descriptor::getTestSignature($test));
+        $testDescription = "unknown." . uniqid();
+        if ($this->current_test != null) {
+            $testDescription = Descriptor::getTestSignature($this->current_test);
+        }
+
+        $filename = preg_replace('~\W~', '.', $testDescription);
         $outputDir = codecept_output_dir();
         $this->_saveScreenshot($this->pngReport = $outputDir . mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png');
         $this->_savePageSource($this->htmlReport = $outputDir . mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html');
