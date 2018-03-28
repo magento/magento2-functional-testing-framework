@@ -57,7 +57,6 @@ class ActionGroupWithPersistedDataCest
 	public function _failed(AcceptanceTester $I)
 	{
 		$I->saveScreenshot();
-		$this->_after($I);
 	}
 
 	/**

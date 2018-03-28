@@ -1373,6 +1373,7 @@ class TestGenerator
      * @return string
      * @throws TestReferenceException
      * @throws \Exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function generateHooksPhp($hookObjects)
     {
@@ -1412,12 +1413,6 @@ class TestGenerator
                 );
             } catch (TestReferenceException $e) {
                 throw new TestReferenceException($e->getMessage() . " in Element \"" . $type . "\"");
-            }
-
-            if ($hookObject->getType() == TestObjectExtractor::TEST_FAILED_HOOK) {
-                $steps.="\t\t";
-                $steps.='$this->_after($I);';
-                $steps.="\n";
             }
 
             $hooks .= sprintf("\tpublic function _{$type}(%s)\n", $dependencies);

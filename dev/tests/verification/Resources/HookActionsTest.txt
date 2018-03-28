@@ -73,7 +73,6 @@ class HookActionsTestCest
 	public function _failed(AcceptanceTester $I)
 	{
 		$I->saveScreenshot();
-		$this->_after($I);
 	}
 
 	/**
