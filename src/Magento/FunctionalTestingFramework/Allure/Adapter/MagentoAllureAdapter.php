@@ -21,6 +21,8 @@ use Codeception\Event\SuiteEvent;
 
 class MagentoAllureAdapter extends AllureAdapter
 {
+    private $uuid;
+
     /**
      * Variable name used for extracting group argument to codecept run commaned
      *
@@ -81,19 +83,41 @@ class MagentoAllureAdapter extends AllureAdapter
             $suite
         ));
 
-        $event = new TestSuiteStartedEvent($suiteName);
-        if (class_exists($suiteName, false)) {
-            $annotationManager = new Annotation\AnnotationManager(
-                Annotation\AnnotationProvider::getClassAnnotations($suiteName)
-            );
-            $annotationManager->updateTestSuiteEvent($event);
-        }
-        $this->uuid = $event->getUuid();
-        $this->getLifecycle()->fire($event);
-       // unset($event);
+        //change suiteEvent
+        $changeSuiteEvent = new SuiteEvent(
+            $suiteEvent->getSuite(),
+            $suiteEvent->getResult(),
+            $suiteEvent->getSettings()
+        );
+
+        // call parent function
+        parent::suiteBefore($changeSuiteEvent);
+//
+//        $event = new TestSuiteStartedEvent($suiteName);
+//        if (class_exists($suiteName, false)) {
+//            $annotationManager = new Annotation\AnnotationManager(
+//                Annotation\AnnotationProvider::getClassAnnotations($suiteName)
+//            );
+//            $annotationManager->updateTestSuiteEvent($event);
+//        }
+//
+////        $uuid = "";
+//        $uuid = call_user_func(\Closure::bind(
+//            function () use ($uuid, $event) {
+//                return $this->uuid;
+//        },
+//            null,
+//            $this
+//        ));
+////        $this->uuid = $uuid;
+//
+//        $this->uuid = $event->getUuid();
+//
+//
+//        $this->getLifecycle()->fire($event);
+//       // unset($event);
     }
 
 
-    public function suiteAfter()
 }
 
