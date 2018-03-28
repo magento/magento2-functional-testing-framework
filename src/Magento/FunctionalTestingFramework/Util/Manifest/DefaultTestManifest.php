@@ -28,13 +28,13 @@ class DefaultTestManifest extends BaseTestManifest
 
     /**
      * DefaultTestManifest constructor.
-     * @param string $path
+     * @param string $manifestPath
+     * @param string $testPath
      */
-    public function __construct($path)
+    public function __construct($manifestPath, $testPath)
     {
-        $this->manifestPath = $path . DIRECTORY_SEPARATOR . 'testManifest.txt';
-        parent::__construct($path, self::DEFAULT_CONFIG);
-
+        $this->manifestPath = $manifestPath . DIRECTORY_SEPARATOR . 'testManifest.txt';
+        parent::__construct($testPath, self::DEFAULT_CONFIG);
         $fileResource = fopen($this->manifestPath, 'w');
         fclose($fileResource);
     }

@@ -26,7 +26,11 @@ class GroupClassGenerator
     const REQUIRED_ENTITY_KEY = 'requiredEntities';
     const LAST_REQUIRED_ENTITY_TAG = 'last';
     const MUSTACHE_VAR_TAG = 'var';
-
+    const MAGENTO_CLI_COMMAND_COMMAND = 'command';
+    const DATA_PERSISTENCE_ACTIONS = ["createData", "deleteData"];
+    const REPLACEMENT_ACTIONS = [
+        'comment' => 'print'
+    ];
     const GROUP_DIR_NAME = 'Group';
 
     /**
@@ -83,12 +87,28 @@ class GroupClassGenerator
 
         $mustacheData[self::BEFORE_MUSTACHE_KEY] = $this->buildHookMustacheArray($suiteObject->getBeforeHook());
         $mustacheData[self::AFTER_MUSTACHE_KEY] = $this->buildHookMustacheArray($suiteObject->getAfterHook());
-        $mustacheData[self::MUSTACHE_VAR_TAG] = array_merge(
-            $mustacheData[self::BEFORE_MUSTACHE_KEY]['createData'] ?? [],
-            $mustacheData[self::AFTER_MUSTACHE_KEY]['createData'] ?? []
+        $mustacheData[self::MUSTACHE_VAR_TAG] = $this->extractClassVar(
+            $mustacheData[self::BEFORE_MUSTACHE_KEY],
+            $mustacheData[self::AFTER_MUSTACHE_KEY]
         );
 
         return $this->mustacheEngine->render(self::MUSTACHE_TEMPLATE_NAME, $mustacheData);
+    }
+
+    /**
+     * Function which takes the before and after arrays containing the steps for the hook objects and extracts
+     * any variables names needed by the class template.
+     *
+     * @param array $beforeArray
+     * @param array $afterArray
+     * @return array
+     */
+    private function extractClassVar($beforeArray, $afterArray)
+    {
+        $beforeVar = $beforeArray[self::MUSTACHE_VAR_TAG] ?? [];
+        $afterVar = $afterArray[self::MUSTACHE_VAR_TAG] ?? [];
+
+        return array_merge($beforeVar, $afterVar);
     }
 
     /**
@@ -100,24 +120,110 @@ class GroupClassGenerator
     private function buildHookMustacheArray($hookObj)
     {
         $mustacheHookArray = [];
+        $actions = [];
+        $hasWebDriverActions = false;
         foreach ($hookObj->getActions() as $action) {
             /** @var ActionObject $action */
-            $entityArray = [];
-            $entityArray[self::ENTITY_MERGE_KEY] = $action->getStepKey();
-            $entityArray[self::ENTITY_NAME_TAG] =
-                $action->getCustomActionAttributes()['entity'] ??
-                $action->getCustomActionAttributes()[TestGenerator::REQUIRED_ENTITY_REFERENCE];
+            $index = count($actions);
+            if (!in_array($action->getType(), self::DATA_PERSISTENCE_ACTIONS)) {
+                if (!$hasWebDriverActions) {
+                    $hasWebDriverActions = true;
+                }
 
-            // if there is more than 1 custom attribute, we can assume there are required entities
-            if (count($action->getCustomActionAttributes()) > 1) {
-                $entityArray[self::REQUIRED_ENTITY_KEY] =
-                    $this->buildReqEntitiesMustacheArray($action->getCustomActionAttributes());
+                $actions = $this->buildWebDriverActionsMustacheArray($action, $actions, $index);
+                continue;
             }
 
-            $mustacheHookArray[$action->getType()][] = $entityArray;
+            // add these as vars to be created a class level in the template
+            if ($action->getType() == 'createData') {
+                $mustacheHookArray[self::MUSTACHE_VAR_TAG][] = [self::ENTITY_MERGE_KEY => $action->getStepKey()];
+            }
+
+            $entityArray = [];
+            $entityArray[self::ENTITY_MERGE_KEY] = $action->getStepKey();
+            $entityArray[$action->getType()] = $action->getStepKey();
+
+            $entityArray = $this->buildPersistenceMustacheArray($action, $entityArray);
+            $actions[$index] = $entityArray;
+        }
+        $mustacheHookArray['actions'] = $actions;
+        if ($hasWebDriverActions) {
+            array_unshift($mustacheHookArray['actions'], ['webDriverInit' => true]);
+            $mustacheHookArray['actions'][] = ['webDriverReset' => true];
         }
 
         return $mustacheHookArray;
+    }
+
+    /**
+     * Takes an action object and array of generated action steps. Converst the action object into generated php and
+     * appends the entry to the given array. The result is returned by the function.
+     *
+     * @param ActionObject $action
+     * @param array $actionEntries
+     * @return array
+     */
+    private function buildWebDriverActionsMustacheArray($action, $actionEntries)
+    {
+        $step = TestGenerator::getInstance()->generateStepsPhp([$action], false, 'webDriver');
+        $rawPhp = str_replace(["\t", "\n"], "", $step);
+        $multipleCommands = explode(";", $rawPhp, -1);
+        foreach ($multipleCommands as $command) {
+            $actionEntries = $this->replaceReservedTesterFunctions($command . ";", $actionEntries, 'webDriver');
+        }
+
+        return $actionEntries;
+    }
+
+    /**
+     * Takes a generated php step, an array containing generated php entries for the template, and the actor name
+     * for the generated step.
+     *
+     * @param string $formattedStep
+     * @param array $actionEntries
+     * @param string $actor
+     * @return array
+     */
+    private function replaceReservedTesterFunctions($formattedStep, $actionEntries, $actor)
+    {
+        foreach (self::REPLACEMENT_ACTIONS as $testAction => $replacement) {
+            $testActionCall = "\${$actor}->{$testAction}";
+            if (substr($formattedStep, 0, strlen($testActionCall)) == $testActionCall) {
+                $resultingStep = str_replace($testActionCall, $replacement, $formattedStep);
+                $actionEntries[] = ['action' => $resultingStep];
+            } else {
+                $actionEntries[] = ['action' => $formattedStep];
+            }
+        }
+
+        return $actionEntries;
+    }
+
+    /**
+     * Takes an action object of persistence type and formats an array entiry for mustache template interpretation.
+     *
+     * @param ActionObject $action
+     * @param array $entityArray
+     * @return array
+     */
+    private function buildPersistenceMustacheArray($action, $entityArray)
+    {
+        $entityArray[self::ENTITY_NAME_TAG] =
+            $action->getCustomActionAttributes()['entity'] ??
+            $action->getCustomActionAttributes()[TestGenerator::REQUIRED_ENTITY_REFERENCE];
+
+        // append entries for any required entities to this entry
+        if (array_key_exists('requiredEntities', $action->getCustomActionAttributes())) {
+            $entityArray[self::REQUIRED_ENTITY_KEY] =
+                $this->buildReqEntitiesMustacheArray($action->getCustomActionAttributes());
+        }
+
+        // append entries for customFields if specified by the user.
+        if (array_key_exists('customFields', $action->getCustomActionAttributes())) {
+            $entityArray['customFields'] = $action->getStepKey() . 'Fields';
+        }
+        
+        return $entityArray;
     }
 
     /**

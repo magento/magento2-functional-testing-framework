@@ -80,13 +80,13 @@ class RoboFile extends \Robo\Tasks
     }
 
     /**
-     * Run all Functional tests.
+     * Run all MFTF tests.
      *
      * @return void
      */
-    function functional()
+    function mftf()
     {
-        $this->_exec('.' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'codecept run functional --skip-group skip');
+        $this->_exec('.' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'codecept run MFTF --skip-group skip');
     }
 
     /**
