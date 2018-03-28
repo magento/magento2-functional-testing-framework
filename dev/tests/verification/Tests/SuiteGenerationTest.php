@@ -6,6 +6,7 @@
 
 namespace tests\verification\Tests;
 
+use Magento\Framework\Module\Dir;
 use Magento\FunctionalTestingFramework\Suite\SuiteGenerator;
 use Magento\FunctionalTestingFramework\Util\TestManifest;
 use Symfony\Component\Yaml\Yaml;
@@ -79,7 +80,7 @@ class SuiteGenerationTest extends MftfTestCase
             DIRECTORY_SEPARATOR;
 
         // Validate test manifest contents
-        $actualManifest = $suiteResultBaseDir . 'testManifest.txt';
+        $actualManifest = dirname($suiteResultBaseDir). DIRECTORY_SEPARATOR . 'testManifest.txt';
         $actualTestReferences = explode(PHP_EOL, file_get_contents($actualManifest));
 
         for ($i = 0; $i < count($actualTestReferences); $i++) {

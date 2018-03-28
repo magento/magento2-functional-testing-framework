@@ -19,21 +19,22 @@ class TestManifestFactory
     /**
      * Static function which takes path and config to return the appropriate manifest output type.
      *
-     * @param String $path
+     * @param String $manifestPath
+     * @param String $testPath
      * @param String $runConfig
      * @return BaseTestManifest
      */
-    public static function makeManifest($path, $runConfig)
+    public static function makeManifest($manifestPath, $testPath, $runConfig)
     {
         switch ($runConfig) {
             case 'singleRun':
-                return new SingleRunTestManifest($path);
+                return new SingleRunTestManifest($manifestPath, $testPath);
 
             case 'parallel':
-                return new ParallelTestManifest($path);
+                return new ParallelTestManifest($manifestPath, $testPath);
 
             default:
-                return new DefaultTestManifest($path);
+                return new DefaultTestManifest($manifestPath, $testPath);
 
         }
     }
