@@ -6,9 +6,6 @@
 namespace Magento\FunctionalTestingFramework\Allure\Adapter;
 
 use Yandex\Allure\Adapter\AllureAdapter;
-use Yandex\Allure\Adapter\Annotation;
-use Yandex\Allure\Adapter\Event\TestSuiteEvent;
-use Yandex\Allure\Adapter\Event\TestSuiteStartedEvent;
 use Codeception\Event\SuiteEvent;
 
 /**
@@ -21,8 +18,6 @@ use Codeception\Event\SuiteEvent;
 
 class MagentoAllureAdapter extends AllureAdapter
 {
-    private $uuid;
-
     /**
      * Variable name used for extracting group argument to codecept run commaned
      *
@@ -72,8 +67,6 @@ class MagentoAllureAdapter extends AllureAdapter
         $suite = $suiteEvent->getSuite();
         $group = implode(".", $this->groups);
         $suiteName = ($suite->getName())."-{$group}";
-        //cant access protected property of suiteEvent
-        //$suiteEvent->suite['name'] = $suiteName;
 
         call_user_func(\Closure::bind(
             function () use ($suite, $suiteName) {
@@ -92,30 +85,6 @@ class MagentoAllureAdapter extends AllureAdapter
 
         // call parent function
         parent::suiteBefore($changeSuiteEvent);
-//
-//        $event = new TestSuiteStartedEvent($suiteName);
-//        if (class_exists($suiteName, false)) {
-//            $annotationManager = new Annotation\AnnotationManager(
-//                Annotation\AnnotationProvider::getClassAnnotations($suiteName)
-//            );
-//            $annotationManager->updateTestSuiteEvent($event);
-//        }
-//
-////        $uuid = "";
-//        $uuid = call_user_func(\Closure::bind(
-//            function () use ($uuid, $event) {
-//                return $this->uuid;
-//        },
-//            null,
-//            $this
-//        ));
-////        $this->uuid = $uuid;
-//
-//        $this->uuid = $event->getUuid();
-//
-//
-//        $this->getLifecycle()->fire($event);
-//       // unset($event);
     }
 
 
