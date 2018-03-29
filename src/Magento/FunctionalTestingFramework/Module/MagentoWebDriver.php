@@ -119,7 +119,7 @@ class MagentoWebDriver extends WebDriver
         $this->config = ConfigSanitizerUtil::sanitizeWebDriverConfig($this->config);
     }
 
-    public function getDefaultWaitTimeout()
+    public static function getDefaultWaitTimeout()
     {
         return getenv('WAIT_TIMEOUT') ?: self::DEFAULT_WAIT_TIMEOUT;
     }
