@@ -18,9 +18,9 @@ class MagentoWebDriverTest extends TestCase
     {
         $this->assertEquals(MagentoWebDriver::getDefaultWaitTimeout(), MagentoWebDriver::DEFAULT_WAIT_TIMEOUT);
 
-        $envFile = new \Dotenv\Dotenv(__DIR__ . '/../../../../../../');
+        $envFile = new \Dotenv\Dotenv(__DIR__ . '/../../../../../../', '.env.example');
         $envFile->load();
 
-        $this->assertEquals(MagentoWebDriver::getDefaultWaitTimeout(), 20);
+        $this->assertEquals(MagentoWebDriver::getDefaultWaitTimeout(), getenv('WAIT_TIMEOUT'));
     }
 }
