@@ -871,7 +871,7 @@ class TestGenerator
                     break;
                 case "switchToNextTab":
                 case "switchToPreviousTab":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $this->stripWrappedQuotes($input));
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $input);
                     break;
                 case "clickWithLeftButton":
                 case "clickWithRightButton":
@@ -1405,6 +1405,7 @@ class TestGenerator
      * @return string
      * @throws TestReferenceException
      * @throws \Exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function generateHooksPhp($hookObjects)
     {
@@ -1444,12 +1445,6 @@ class TestGenerator
                 );
             } catch (TestReferenceException $e) {
                 throw new TestReferenceException($e->getMessage() . " in Element \"" . $type . "\"");
-            }
-
-            if ($hookObject->getType() == TestObjectExtractor::TEST_FAILED_HOOK) {
-                $steps.="\t\t";
-                $steps.='$this->_after($I);';
-                $steps.="\n";
             }
 
             $hooks .= sprintf("\tpublic function _{$type}(%s)\n", $dependencies);
@@ -1627,6 +1622,9 @@ class TestGenerator
             if (!$isFirst) {
                 $output .= ', ';
             }
+            if ($args[$i] === "") {
+                $args[$i] = '"' . $args[$i] . '"';
+            }
             $output .= $args[$i];
             $isFirst = false;
         }
@@ -1657,6 +1655,9 @@ class TestGenerator
             }
             if (!$isFirst) {
                 $output .= ', ';
+            }
+            if ($args[$i] === "") {
+                $args[$i] = '"' . $args[$i] . '"';
             }
             $output .= $args[$i];
             $isFirst = false;
