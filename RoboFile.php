@@ -33,6 +33,7 @@ class RoboFile extends \Robo\Tasks
      */
     function buildProject()
     {
+        $this->writeln("<error>This command will be removed in MFTF v3.0.0. Please use bin/mftf build:project instead.</error>\n");
         $this->cloneFiles();
         $this->_exec('vendor'. DIRECTORY_SEPARATOR .'bin'. DIRECTORY_SEPARATOR .'codecept build');
     }
@@ -52,10 +53,31 @@ class RoboFile extends \Robo\Tasks
             $GLOBALS['FORCE_PHP_GENERATE'] = true;
         }
 
-        require 'dev' . DIRECTORY_SEPARATOR . 'tests'. DIRECTORY_SEPARATOR . 'functional' . DIRECTORY_SEPARATOR . '_bootstrap.php';
+        require 'dev' . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'functional' . DIRECTORY_SEPARATOR . '_bootstrap.php';
+
+        if (!$this->isProjectBuilt()) {
+            throw new Exception('Please run vendor/bin/robo build:project and configure your environment (.env) first.');
+        }
+
         \Magento\FunctionalTestingFramework\Util\TestGenerator::getInstance()
             ->createAllTestFiles($opts['config'], $opts['nodes'], $opts['debug']);
         $this->say("Generate Tests Command Run");
+    }
+
+    /**
+     * Check if MFTF has been properly configured
+     * @return bool
+     */
+    private function isProjectBuilt()
+    {
+        $actorFile = __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Magento' . DIRECTORY_SEPARATOR . 'FunctionalTestingFramework' . DIRECTORY_SEPARATOR . '_generated' . DIRECTORY_SEPARATOR . 'AcceptanceTesterActions.php';
+
+        $login = getenv('MAGENTO_ADMIN_USERNAME');
+        $password = getenv('MAGENTO_ADMIN_PASSWORD');
+        $baseUrl = getenv('MAGENTO_BASE_URL');
+        $backendName = getenv('MAGENTO_BACKEND_NAME');
+
+        return (file_exists($actorFile) && $login && $password && $baseUrl && $backendName);
     }
 
     /**
@@ -80,13 +102,13 @@ class RoboFile extends \Robo\Tasks
     }
 
     /**
-     * Run all Functional tests.
+     * Run all MFTF tests.
      *
      * @return void
      */
-    function functional()
+    function mftf()
     {
-        $this->_exec('.' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'codecept run functional --skip-group skip');
+        $this->_exec('.' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'codecept run MFTF --skip-group skip');
     }
 
     /**

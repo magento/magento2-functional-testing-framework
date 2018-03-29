@@ -29,6 +29,7 @@ class TestGenerator
 {
     const REQUIRED_ENTITY_REFERENCE = 'createDataKey';
     const GENERATED_DIR = '_generated';
+    const DEFAULT_DIR = 'default';
 
     /**
      * Path to the export dir.
@@ -67,11 +68,13 @@ class TestGenerator
     private function __construct($exportDir, $tests)
     {
         // private constructor for factory
-        $this->exportDirName = $exportDir ?? self::GENERATED_DIR;
-        $this->exportDirectory = rtrim(
-            TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . self::GENERATED_DIR . DIRECTORY_SEPARATOR . $exportDir,
-            DIRECTORY_SEPARATOR
-        );
+        $this->exportDirName = $exportDir ?? self::DEFAULT_DIR;
+        $exportDir = $exportDir ?? self::DEFAULT_DIR;
+        $this->exportDirectory = TESTS_MODULE_PATH
+            . DIRECTORY_SEPARATOR
+            . self::GENERATED_DIR
+            . DIRECTORY_SEPARATOR
+            . $exportDir;
         $this->tests = $tests;
         $this->consoleOutput = new \Symfony\Component\Console\Output\ConsoleOutput();
     }
@@ -148,6 +151,7 @@ class TestGenerator
     public function createAllTestFiles($runConfig = null, $nodes = null, $debug = false)
     {
         DirSetupUtil::createGroupDir($this->exportDirectory);
+
         // create our manifest file here
         $testManifest = TestManifestFactory::makeManifest(
             dirname($this->exportDirectory),
@@ -184,7 +188,7 @@ class TestGenerator
         }
 
         $cestPhp = "<?php\n";
-        $cestPhp .= "namespace Magento\AcceptanceTest\\" . $this->exportDirName . "\Backend;\n\n";
+        $cestPhp .= "namespace Magento\AcceptanceTest\\_" . $this->exportDirName . "\Backend;\n\n";
         $cestPhp .= $usePhp;
         $cestPhp .= $classAnnotationsPhp;
         $cestPhp .= sprintf("class %s\n", $className);
@@ -423,18 +427,18 @@ class TestGenerator
      *
      * @param array $actionObjects
      * @param array|bool $hookObject
+     * @param string $actor
      * @return string
      * @throws TestReferenceException
      * @throws \Exception
      * @SuppressWarnings(PHPMD)
      */
-    private function generateStepsPhp($actionObjects, $hookObject = false)
+    public function generateStepsPhp($actionObjects, $hookObject = false, $actor = "I")
     {
         //TODO: Refactor Method according to PHPMD warnings, remove @SuppressWarnings accordingly.
         $testSteps = "";
 
         foreach ($actionObjects as $actionObject) {
-            $actor = "I";
             $stepKey = $actionObject->getStepKey();
             $customActionAttributes = $actionObject->getCustomActionAttributes();
             $attribute = null;

@@ -106,6 +106,7 @@
             <xs:enumeration value="multiselect"/>
             <xs:enumeration value="wysiwyg"/>
             <xs:enumeration value="iframe"/>
+            <xs:enumeration value="block"/>
         </xs:restriction>
     </xs:simpleType>
 

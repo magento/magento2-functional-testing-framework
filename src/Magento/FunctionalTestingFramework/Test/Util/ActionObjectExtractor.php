@@ -178,7 +178,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
             return $actionAttributes;
         }
 
-        $attributes[self::ACTION_OBJECT_PERSISTENCE_FIELDS][self::NODE_NAME] = 'fields';
+        $attributes = [];
         foreach ($actionAttributes as $attributeName => $attributeValue) {
             if (!is_array($attributeValue) || $attributeValue[self::NODE_NAME] != self::DATA_PERSISTENCE_CUSTOM_FIELD) {
                 $attributes[$attributeName] = $attributeValue;
@@ -186,6 +186,10 @@ class ActionObjectExtractor extends BaseObjectExtractor
             }
 
             $attributes[self::ACTION_OBJECT_PERSISTENCE_FIELDS][] = $attributeName;
+        }
+
+        if (array_key_exists(self::ACTION_OBJECT_PERSISTENCE_FIELDS, $attributes)) {
+            $attributes[self::ACTION_OBJECT_PERSISTENCE_FIELDS][self::NODE_NAME] = 'fields';
         }
 
         return $attributes;
