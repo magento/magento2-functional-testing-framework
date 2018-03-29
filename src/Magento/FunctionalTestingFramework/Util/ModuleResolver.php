@@ -233,7 +233,7 @@ class ModuleResolver
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
 
         // Define the Module paths from vendor modules
-        $vendorCodePath = MAGENTO_BP
+        $vendorCodePath = PROJECT_ROOT
             . DIRECTORY_SEPARATOR
             . 'vendor' . DIRECTORY_SEPARATOR;
 
