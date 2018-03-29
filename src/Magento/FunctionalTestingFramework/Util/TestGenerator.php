@@ -669,17 +669,26 @@ class TestGenerator
                 case "deleteData":
                     $key = $customActionAttributes['createDataKey'];
                     //Add an informative statement to help the user debug test runs
-                    $testSteps .= sprintf(
+                    $contextSetter = sprintf(
                         "\t\t$%s->amGoingTo(\"delete entity that has the createDataKey: %s\");\n",
                         $actor,
                         $key
                     );
-
+                    $deleteEntityFunctionCall = "";
                     if ($hookObject) {
-                        $testSteps .= sprintf("\t\t\$this->%s->deleteEntity();\n", $key);
+                        $deleteEntityFunctionCall .= sprintf("\t\t\$this->%s->deleteEntity(", $key);
                     } else {
-                        $testSteps .= sprintf("\t\t$%s->deleteEntity();\n", $key);
+                        $deleteEntityFunctionCall .= sprintf("\t\t$%s->deleteEntity(", $key);
                     }
+
+                    if (isset($customActionAttributes['storeCode'])) {
+                        $deleteEntityFunctionCall .= sprintf("\"%s\");\n", $customActionAttributes['storeCode']);
+                    } else {
+                        $deleteEntityFunctionCall .= ");\n";
+                    }
+
+                    $testSteps .= $contextSetter;
+                    $testSteps .= $deleteEntityFunctionCall;
                     break;
                 case "updateData":
                     $key = $customActionAttributes['createDataKey'];
@@ -728,7 +737,7 @@ class TestGenerator
                     }
 
                     if (isset($customActionAttributes['storeCode'])) {
-                        $updateEntityFunctionCall .= sprintf("\"%s\");\n", $customActionAttributes['storeCode']);
+                        $updateEntityFunctionCall .= sprintf(", \"%s\");\n", $customActionAttributes['storeCode']);
                     } else {
                         $updateEntityFunctionCall .= ");\n";
                     }
@@ -789,7 +798,7 @@ class TestGenerator
                     }
 
                     if (isset($customActionAttributes['index'])) {
-                        $getEntityFunctionCall .= sprintf("%s", (int)$customActionAttributes['index']);
+                        $getEntityFunctionCall .= sprintf(", %s", (int)$customActionAttributes['index']);
                     } else {
                         $getEntityFunctionCall .= 'null';
                     }
