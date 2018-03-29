@@ -20,8 +20,6 @@ use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
-use Robo\Common\IO;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class TestGenerator
@@ -29,8 +27,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class TestGenerator
 {
-    use IO;
-
     const REQUIRED_ENTITY_REFERENCE = 'createDataKey';
     const GENERATED_DIR = '_generated';
 
@@ -56,6 +52,13 @@ class TestGenerator
     private $tests;
 
     /**
+     * Symfony console output interface.
+     *
+     * @var \Symfony\Component\Console\Output\ConsoleOutput
+     */
+    private $consoleOutput;
+
+    /**
      * TestGenerator constructor.
      *
      * @param string $exportDir
@@ -70,6 +73,7 @@ class TestGenerator
             DIRECTORY_SEPARATOR
         );
         $this->tests = $tests;
+        $this->consoleOutput = new \Symfony\Component\Console\Output\ConsoleOutput();
     }
 
     /**
@@ -137,20 +141,19 @@ class TestGenerator
      * @param string $runConfig
      * @param int $nodes
      * @param bool $debug
-     * @param OutputInterface|null $output
      * @return void
      * @throws TestReferenceException
      * @throws \Exception
      */
-    public function createAllTestFiles($runConfig = null, $nodes = null, $debug = false, $output = null)
+    public function createAllTestFiles($runConfig = null, $nodes = null, $debug = false)
     {
         DirSetupUtil::createGroupDir($this->exportDirectory);
-        if ($output !== null) {
-            $this->setOutput($output);
-        }
-
         // create our manifest file here
-        $testManifest = TestManifestFactory::makeManifest($this->exportDirectory, $runConfig);
+        $testManifest = TestManifestFactory::makeManifest(
+            dirname($this->exportDirectory),
+            $this->exportDirectory,
+            $runConfig
+        );
         $testPhpArray = $this->assembleAllTestPhp($testManifest, $nodes, $debug);
 
         foreach ($testPhpArray as $testPhpFile) {
@@ -219,7 +222,7 @@ class TestGenerator
             $debugInformation = $test->getDebugInformation();
 
             $this->debug($debugInformation, $debug);
-            $this->debug('Finish creating test ' . $test->getCodeceptionName(), $debug);
+            $this->debug('Finish creating test ' . $test->getCodeceptionName() . PHP_EOL, $debug);
         }
 
         $testManifest->generate($nodes);
@@ -239,7 +242,7 @@ class TestGenerator
         if ($debug && $messages) {
             $messages = (array) $messages;
             foreach ($messages as $message) {
-                $this->say($message);
+                $this->consoleOutput->writeln($message);
             }
         }
     }
