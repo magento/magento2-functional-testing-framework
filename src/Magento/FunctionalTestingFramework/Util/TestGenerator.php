@@ -135,11 +135,12 @@ class TestGenerator
      *
      * @param string $runConfig
      * @param int $nodes
+     * @param TestObject[] $testsToIgnore
      * @return void
      * @throws TestReferenceException
      * @throws \Exception
      */
-    public function createAllTestFiles($runConfig = null, $nodes = null)
+    public function createAllTestFiles($runConfig = null, $nodes = null, $testsToIgnore = [])
     {
         DirSetupUtil::createGroupDir($this->exportDirectory);
 
@@ -149,8 +150,8 @@ class TestGenerator
             $this->exportDirectory,
             $runConfig
         );
-        $testPhpArray = $this->assembleAllTestPhp($testManifest, $nodes);
 
+        $testPhpArray = $this->assembleAllTestPhp($testManifest, $nodes, $testsToIgnore);
         foreach ($testPhpArray as $testPhpFile) {
             $this->createCestFile($testPhpFile[1], $testPhpFile[0]);
         }
@@ -196,14 +197,16 @@ class TestGenerator
      *
      * @param BaseTestManifest $testManifest
      * @param int $nodes
+     * @param TestObject[] $testsToIgnore
      * @return array
      * @throws TestReferenceException
      * @throws \Exception
      */
-    private function assembleAllTestPhp($testManifest, $nodes)
+    private function assembleAllTestPhp($testManifest, $nodes, $testsToIgnore)
     {
         /** @var TestObject[] $testObjects */
         $testObjects = $this->loadAllTestObjects();
+        $testObjects = array_diff_key($testObjects, $testsToIgnore);
         $cestPhpArray = [];
 
         foreach ($testObjects as $test) {
