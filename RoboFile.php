@@ -44,7 +44,7 @@ class RoboFile extends \Robo\Tasks
      * @param array $opts
      * @return void
      */
-    function generateTests($opts = ['config' => null, 'force' => true, 'nodes' => null])
+    function generateTests($opts = ['config' => null, 'force' => true, 'nodes' => null, 'debug' => false])
     {
         $GLOBALS['GENERATE_TESTS'] = true;
 
@@ -59,7 +59,8 @@ class RoboFile extends \Robo\Tasks
             throw new Exception('Please run vendor/bin/robo build:project and configure your environment (.env) first.');
         }
 
-        \Magento\FunctionalTestingFramework\Util\TestGenerator::getInstance()->createAllTestFiles($opts['config'], $opts['nodes']);
+        \Magento\FunctionalTestingFramework\Util\TestGenerator::getInstance()
+            ->createAllTestFiles($opts['config'], $opts['nodes'], $opts['debug']);
         $this->say("Generate Tests Command Run");
     }
 

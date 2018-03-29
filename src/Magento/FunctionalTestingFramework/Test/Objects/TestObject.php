@@ -159,4 +159,21 @@ class TestObject
         $mergeUtil = new ActionMergeUtil($this->getName(), "Test");
         return $mergeUtil->resolveActionSteps($this->parsedSteps);
     }
+
+    /**
+     * Get information about actions and steps in test.
+     *
+     * @return array
+     */
+    public function getDebugInformation()
+    {
+        $debugInformation = [];
+        $orderList = $this->getOrderedActions();
+
+        foreach ($orderList as $action) {
+            $debugInformation[] = "\t" . $action->getType() . ' ' . $action->getStepKey();
+        }
+
+        return $debugInformation;
+    }
 }

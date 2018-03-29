@@ -53,6 +53,13 @@ class TestGenerator
     private $tests;
 
     /**
+     * Symfony console output interface.
+     *
+     * @var \Symfony\Component\Console\Output\ConsoleOutput
+     */
+    private $consoleOutput;
+
+    /**
      * TestGenerator constructor.
      *
      * @param string $exportDir
@@ -69,6 +76,7 @@ class TestGenerator
             . DIRECTORY_SEPARATOR
             . $exportDir;
         $this->tests = $tests;
+        $this->consoleOutput = new \Symfony\Component\Console\Output\ConsoleOutput();
     }
 
     /**
@@ -135,11 +143,12 @@ class TestGenerator
      *
      * @param string $runConfig
      * @param int $nodes
+     * @param bool $debug
      * @return void
      * @throws TestReferenceException
      * @throws \Exception
      */
-    public function createAllTestFiles($runConfig = null, $nodes = null)
+    public function createAllTestFiles($runConfig = null, $nodes = null, $debug = false)
     {
         DirSetupUtil::createGroupDir($this->exportDirectory);
 
@@ -149,7 +158,7 @@ class TestGenerator
             $this->exportDirectory,
             $runConfig
         );
-        $testPhpArray = $this->assembleAllTestPhp($testManifest, $nodes);
+        $testPhpArray = $this->assembleAllTestPhp($testManifest, $nodes, $debug);
 
         foreach ($testPhpArray as $testPhpFile) {
             $this->createCestFile($testPhpFile[1], $testPhpFile[0]);
@@ -196,27 +205,50 @@ class TestGenerator
      *
      * @param BaseTestManifest $testManifest
      * @param int $nodes
+     * @param bool $debug
      * @return array
      * @throws TestReferenceException
      * @throws \Exception
      */
-    private function assembleAllTestPhp($testManifest, $nodes)
+    private function assembleAllTestPhp($testManifest, $nodes, $debug = false)
     {
         /** @var TestObject[] $testObjects */
         $testObjects = $this->loadAllTestObjects();
         $cestPhpArray = [];
 
         foreach ($testObjects as $test) {
+            $this->debug('Start creating test: ' . $test->getCodeceptionName(), $debug);
             $php = $this->assembleTestPhp($test);
             $cestPhpArray[] = [$test->getCodeceptionName(), $php];
 
             //write to manifest here if config is not single run
             $testManifest->addTest($test);
+            $debugInformation = $test->getDebugInformation();
+
+            $this->debug($debugInformation, $debug);
+            $this->debug('Finish creating test ' . $test->getCodeceptionName() . PHP_EOL, $debug);
         }
 
         $testManifest->generate($nodes);
 
         return $cestPhpArray;
+    }
+
+    /**
+     * Output information in console when debug flag is enabled.
+     *
+     * @param array|string $messages
+     * @param bool $debug
+     * @return void
+     */
+    private function debug($messages, $debug = false)
+    {
+        if ($debug && $messages) {
+            $messages = (array) $messages;
+            foreach ($messages as $message) {
+                $this->consoleOutput->writeln($message);
+            }
+        }
     }
 
     /**
