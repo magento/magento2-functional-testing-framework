@@ -119,6 +119,11 @@ class MagentoWebDriver extends WebDriver
         $this->config = ConfigSanitizerUtil::sanitizeWebDriverConfig($this->config);
     }
 
+    /**
+     * Retrieve default timeout in seconds for 'wait*' actions
+     *
+     * @return int
+     */
     public static function getDefaultWaitTimeout()
     {
         return getenv('WAIT_TIMEOUT') ?: self::DEFAULT_WAIT_TIMEOUT;
@@ -318,7 +323,7 @@ class MagentoWebDriver extends WebDriver
      */
     public function wait($timeout = null)
     {
-        $timeout = $timeout ?? $this->getDefaultWaitTimeout();
+        $timeout = $timeout ?? self::getDefaultWaitTimeout();
 
         if ($timeout >= 1000) {
             throw new TestRuntimeException(
@@ -341,7 +346,7 @@ class MagentoWebDriver extends WebDriver
      */
     public function waitForElementChange($element, \Closure $callback, $timeout = null)
     {
-        $timeout = $timeout ?? $this->getDefaultWaitTimeout();
+        $timeout = $timeout ?? self::getDefaultWaitTimeout();
 
         $el = $this->matchFirstOrFail($this->baseElement, $element);
         $checker = function () use ($el, $callback) {
@@ -359,7 +364,7 @@ class MagentoWebDriver extends WebDriver
      */
     public function waitForElement($element, $timeout = null)
     {
-        $timeout = $timeout ?? $this->getDefaultWaitTimeout();
+        $timeout = $timeout ?? self::getDefaultWaitTimeout();
 
         $condition = WebDriverExpectedCondition::presenceOfElementLocated($this->getLocator($element));
         $this->webDriver->wait($timeout)->until($condition);
@@ -374,7 +379,7 @@ class MagentoWebDriver extends WebDriver
      */
     public function waitForElementVisible($element, $timeout = null)
     {
-        $timeout = $timeout ?? $this->getDefaultWaitTimeout();
+        $timeout = $timeout ?? self::getDefaultWaitTimeout();
 
         $condition = WebDriverExpectedCondition::visibilityOfElementLocated($this->getLocator($element));
         $this->webDriver->wait($timeout)->until($condition);
@@ -389,7 +394,7 @@ class MagentoWebDriver extends WebDriver
      */
     public function waitForElementNotVisible($element, $timeout = null)
     {
-        $timeout = $timeout ?? $this->getDefaultWaitTimeout();
+        $timeout = $timeout ?? self::getDefaultWaitTimeout();
 
         $condition = WebDriverExpectedCondition::invisibilityOfElementLocated($this->getLocator($element));
         $this->webDriver->wait($timeout)->until($condition);
@@ -405,7 +410,7 @@ class MagentoWebDriver extends WebDriver
      */
     public function waitForText($text, $timeout = null, $selector = null)
     {
-        $timeout = $timeout ?? $this->getDefaultWaitTimeout();
+        $timeout = $timeout ?? self::getDefaultWaitTimeout();
 
         $message = sprintf(
             'Waited for %d secs but text %s still not found',
@@ -431,7 +436,7 @@ class MagentoWebDriver extends WebDriver
      */
     public function waitForJS($script, $timeout = null)
     {
-        $timeout = $timeout ?? $this->getDefaultWaitTimeout();
+        $timeout = $timeout ?? self::getDefaultWaitTimeout();
 
         $condition = function ($wd) use ($script) {
             return $wd->executeScript($script);
@@ -451,7 +456,7 @@ class MagentoWebDriver extends WebDriver
      */
     public function waitForAjaxLoad($timeout = null)
     {
-        $timeout = $timeout ?? $this->getDefaultWaitTimeout();
+        $timeout = $timeout ?? self::getDefaultWaitTimeout();
 
         try {
             $this->waitForJS('return !!window.jQuery && window.jQuery.active == 0;', $timeout);
@@ -470,7 +475,7 @@ class MagentoWebDriver extends WebDriver
      */
     public function waitForPageLoad($timeout = null)
     {
-        $timeout = $timeout ?? $this->getDefaultWaitTimeout();
+        $timeout = $timeout ?? self::getDefaultWaitTimeout();
 
         $this->waitForJS('return document.readyState == "complete"', $timeout);
         $this->waitForAjaxLoad($timeout);
