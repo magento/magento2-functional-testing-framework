@@ -33,6 +33,7 @@ class RoboFile extends \Robo\Tasks
      */
     function buildProject()
     {
+        $this->writeln("<error>This command will be removed in MFTF v3.0.0. Please use bin/mftf build:project instead.</error>\n");
         $this->cloneFiles();
         $this->_exec('vendor'. DIRECTORY_SEPARATOR .'bin'. DIRECTORY_SEPARATOR .'codecept build');
     }
