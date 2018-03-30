@@ -194,7 +194,7 @@ class TestGenerator
             $hookPhp = $this->generateHooksPhp($testObject->getHooks());
             $testsPhp = $this->generateTestPhp($testObject);
         } catch (TestReferenceException $e) {
-            throw new TestReferenceException($e->getMessage(). " in Test \"" . $testObject->getName() . "\"");
+            throw new TestReferenceException($e->getMessage() . " in Test \"" . $testObject->getName() . "\"");
         }
 
         $cestPhp = "<?php\n";
@@ -252,7 +252,7 @@ class TestGenerator
     private function debug($messages)
     {
         if ($this->debug && $messages) {
-            $messages = (array) $messages;
+            $messages = (array)$messages;
             foreach ($messages as $message) {
                 $this->consoleOutput->writeln($message);
             }
@@ -316,9 +316,9 @@ class TestGenerator
                 continue;
             }
             if (!$isMethod) {
-                $annotationsPhp.= $this->generateClassAnnotations($annotationType, $annotationName);
+                $annotationsPhp .= $this->generateClassAnnotations($annotationType, $annotationName);
             } else {
-                $annotationsPhp.= $this->generateMethodAnnotations($annotationType, $annotationName);
+                $annotationsPhp .= $this->generateMethodAnnotations($annotationType, $annotationName);
             }
         }
 
@@ -544,10 +544,9 @@ class TestGenerator
                 // validate the param array is in the correct format
                 $this->validateParameterArray($customActionAttributes['parameterArray']);
 
-                $parameterArray = "[" . $this->addUniquenessToParamArray(
-                        $customActionAttributes['parameterArray']
-                    )
-                    . "]";
+                $parameterArray = "[";
+                $parameterArray .= $this->addUniquenessToParamArray($customActionAttributes['parameterArray']);
+                $parameterArray .= "]";
             }
 
             if (isset($customActionAttributes['requiredAction'])) {
@@ -1186,12 +1185,9 @@ class TestGenerator
                     break;
                 case "field":
                     $fieldKey = $actionObject->getCustomActionAttributes()['key'];
-                    $argRef= "\t\t\$" . str_replace(
-                            ucfirst($fieldKey),
-                            "",
-                            $stepKey
-                        ) . "Fields['{$fieldKey}'] = ${input};\n";
-                    $testSteps.= $this->resolveTestVariable($argRef, [$input], $actionObject->getActionOrigin());
+                    $argRef = "\t\t\$";
+                    $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) . "Fields['{$fieldKey}'] = ${input};\n";
+                    $testSteps .= $this->resolveTestVariable($argRef, [$input], $actionObject->getActionOrigin());
                     break;
                 default:
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input, $parameter);
@@ -1804,10 +1800,11 @@ class TestGenerator
     private function validateXmlAttributesMutuallyExclusive($key, $tagName, $attributes)
     {
         $rules = [
-            ['attributes' => [
-                'selector',
-                'selectorArray',
-            ]
+            [
+                'attributes' => [
+                    'selector',
+                    'selectorArray',
+                ]
             ],
             [
                 'attributes' => [
