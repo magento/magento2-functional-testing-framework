@@ -19,7 +19,7 @@ class SingleRunTestManifest extends DefaultTestManifest
     {
         parent::__construct($manifestPath, $testPath);
         $this->runTypeConfig = self::SINGLE_RUN_CONFIG;
-        $fileResource = fopen($this->manifestPath, 'w');
+        $fileResource = fopen($this->manifestPath, 'a');
         fclose($fileResource);
     }
 

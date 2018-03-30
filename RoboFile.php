@@ -41,27 +41,28 @@ class RoboFile extends \Robo\Tasks
     /**
      * Generate all Tests in PHP.
      *
+     * @param array $tests
      * @param array $opts
      * @return void
      */
-    function generateTests($opts = ['config' => null, 'force' => true, 'nodes' => null, 'debug' => false])
+    function generateTests(array $tests, $opts = ['config' => null, 'force' => true, 'nodes' => null, 'debug' => false])
     {
+        require 'dev' . DIRECTORY_SEPARATOR . 'tests'. DIRECTORY_SEPARATOR . 'functional' . DIRECTORY_SEPARATOR . '_bootstrap.php';
         $GLOBALS['GENERATE_TESTS'] = true;
-
-        if ($opts['force'])
-        {
+        if (!$this->isProjectBuilt()) {
+            $this->say("<info>Please run bin/mftf build:project and configure your environment (.env) first.</info>");
+            exit(\Robo\Result::EXITCODE_ERROR);
+        }
+        $testsObjects = [];
+        foreach ($tests as $test) {
+            $testsObjects[] = Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler::getInstance()->getObject($test);
+        }
+        if ($opts['force']) {
             $GLOBALS['FORCE_PHP_GENERATE'] = true;
         }
-
-        require 'dev' . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'functional' . DIRECTORY_SEPARATOR . '_bootstrap.php';
-
-        if (!$this->isProjectBuilt()) {
-            throw new Exception('Please run vendor/bin/robo build:project and configure your environment (.env) first.');
-        }
-
-        \Magento\FunctionalTestingFramework\Util\TestGenerator::getInstance()
-            ->createAllTestFiles($opts['config'], $opts['nodes'], $opts['debug']);
-        $this->say("Generate Tests Command Run");
+        $testsReferencedInSuites = \Magento\FunctionalTestingFramework\Suite\SuiteGenerator::getInstance()->generateAllSuites($opts['config']);
+        \Magento\FunctionalTestingFramework\Util\TestGenerator::getInstance(null, $testsObjects, $opts['debug'])->createAllTestFiles($opts['config'], $opts['nodes'], $testsReferencedInSuites);
+        $this->say("<comment>Generate Tests Command Run</comment>");
     }
 
     /**
@@ -72,12 +73,12 @@ class RoboFile extends \Robo\Tasks
     {
         $actorFile = __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Magento' . DIRECTORY_SEPARATOR . 'FunctionalTestingFramework' . DIRECTORY_SEPARATOR . '_generated' . DIRECTORY_SEPARATOR . 'AcceptanceTesterActions.php';
 
-        $login = getenv('MAGENTO_ADMIN_USERNAME');
-        $password = getenv('MAGENTO_ADMIN_PASSWORD');
-        $baseUrl = getenv('MAGENTO_BASE_URL');
-        $backendName = getenv('MAGENTO_BACKEND_NAME');
-
-        return (file_exists($actorFile) && $login && $password && $baseUrl && $backendName);
+        $login = !empty(getenv('MAGENTO_ADMIN_USERNAME'));
+        $password = !empty(getenv('MAGENTO_ADMIN_PASSWORD'));
+        $baseUrl = !empty(getenv('MAGENTO_BASE_URL'));
+        $backendName = !empty(getenv('MAGENTO_BACKEND_NAME'));
+        $test = (file_exists($actorFile) && $login && $password && $baseUrl && $backendName);
+        return $test;
     }
 
     /**

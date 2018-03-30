@@ -60,12 +60,20 @@ class TestGenerator
     private $consoleOutput;
 
     /**
+     * Debug flag.
+     *
+     * @var bool
+     */
+    private $debug;
+
+    /**
      * TestGenerator constructor.
      *
      * @param string $exportDir
      * @param array $tests
+     * @param bool $debug
      */
-    private function __construct($exportDir, $tests)
+    private function __construct($exportDir, $tests, $debug = false)
     {
         // private constructor for factory
         $this->exportDirName = $exportDir ?? self::DEFAULT_DIR;
@@ -77,6 +85,7 @@ class TestGenerator
             . $exportDir;
         $this->tests = $tests;
         $this->consoleOutput = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $this->debug = $debug;
     }
 
     /**
@@ -84,11 +93,12 @@ class TestGenerator
      *
      * @param string $dir
      * @param array $tests
+     * @param bool $debug
      * @return TestGenerator
      */
-    public static function getInstance($dir = null, $tests = null)
+    public static function getInstance($dir = null, $tests = null, $debug = false)
     {
-        return new TestGenerator($dir, $tests);
+        return new TestGenerator($dir, $tests, $debug);
     }
 
     /**
@@ -143,12 +153,12 @@ class TestGenerator
      *
      * @param string $runConfig
      * @param int $nodes
-     * @param bool $debug
+     * @param TestObject[] $testsToIgnore
      * @return void
      * @throws TestReferenceException
      * @throws \Exception
      */
-    public function createAllTestFiles($runConfig = null, $nodes = null, $debug = false)
+    public function createAllTestFiles($runConfig = null, $nodes = null, $testsToIgnore = [])
     {
         DirSetupUtil::createGroupDir($this->exportDirectory);
 
@@ -158,8 +168,8 @@ class TestGenerator
             $this->exportDirectory,
             $runConfig
         );
-        $testPhpArray = $this->assembleAllTestPhp($testManifest, $nodes, $debug);
 
+        $testPhpArray = $this->assembleAllTestPhp($testManifest, $nodes, $testsToIgnore);
         foreach ($testPhpArray as $testPhpFile) {
             $this->createCestFile($testPhpFile[1], $testPhpFile[0]);
         }
@@ -205,19 +215,18 @@ class TestGenerator
      *
      * @param BaseTestManifest $testManifest
      * @param int $nodes
-     * @param bool $debug
+     * @param array $testsToIgnore
      * @return array
-     * @throws TestReferenceException
-     * @throws \Exception
      */
-    private function assembleAllTestPhp($testManifest, $nodes, $debug = false)
+    private function assembleAllTestPhp($testManifest, $nodes, array $testsToIgnore)
     {
         /** @var TestObject[] $testObjects */
         $testObjects = $this->loadAllTestObjects();
+        $testObjects = array_diff_key($testObjects, $testsToIgnore);
         $cestPhpArray = [];
 
         foreach ($testObjects as $test) {
-            $this->debug('Start creating test: ' . $test->getCodeceptionName(), $debug);
+            $this->debug("<comment>Start creating test: " . $test->getCodeceptionName() . "</comment>");
             $php = $this->assembleTestPhp($test);
             $cestPhpArray[] = [$test->getCodeceptionName(), $php];
 
@@ -225,8 +234,8 @@ class TestGenerator
             $testManifest->addTest($test);
             $debugInformation = $test->getDebugInformation();
 
-            $this->debug($debugInformation, $debug);
-            $this->debug('Finish creating test ' . $test->getCodeceptionName() . PHP_EOL, $debug);
+            $this->debug($debugInformation);
+            $this->debug("<comment>Finish creating test: " . $test->getCodeceptionName() . "</comment>" . PHP_EOL);
         }
 
         $testManifest->generate($nodes);
@@ -238,12 +247,11 @@ class TestGenerator
      * Output information in console when debug flag is enabled.
      *
      * @param array|string $messages
-     * @param bool $debug
      * @return void
      */
-    private function debug($messages, $debug = false)
+    private function debug($messages)
     {
-        if ($debug && $messages) {
+        if ($this->debug && $messages) {
             $messages = (array) $messages;
             foreach ($messages as $message) {
                 $this->consoleOutput->writeln($message);
@@ -537,9 +545,9 @@ class TestGenerator
                 $this->validateParameterArray($customActionAttributes['parameterArray']);
 
                 $parameterArray = "[" . $this->addUniquenessToParamArray(
-                    $customActionAttributes['parameterArray']
-                )
-                . "]";
+                        $customActionAttributes['parameterArray']
+                    )
+                    . "]";
             }
 
             if (isset($customActionAttributes['requiredAction'])) {
@@ -1179,10 +1187,10 @@ class TestGenerator
                 case "field":
                     $fieldKey = $actionObject->getCustomActionAttributes()['key'];
                     $argRef= "\t\t\$" . str_replace(
-                        ucfirst($fieldKey),
-                        "",
-                        $stepKey
-                    ) . "Fields['{$fieldKey}'] = ${input};\n";
+                            ucfirst($fieldKey),
+                            "",
+                            $stepKey
+                        ) . "Fields['{$fieldKey}'] = ${input};\n";
                     $testSteps.= $this->resolveTestVariable($argRef, [$input], $actionObject->getActionOrigin());
                     break;
                 default:
