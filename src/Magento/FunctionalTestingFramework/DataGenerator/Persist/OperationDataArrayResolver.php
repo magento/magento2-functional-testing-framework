@@ -136,8 +136,8 @@ class OperationDataArrayResolver
             } else {
 
                 $operationElementProperty = null;
-                if(strpos($operationElementType, '.') !== false){
-                    $operationElementComponents = explode('.',$operationElementType);
+                if (strpos($operationElementType, '.') !== false) {
+                    $operationElementComponents = explode('.', $operationElementType);
                     $operationElementType = $operationElementComponents[0];
                     $operationElementProperty = $operationElementComponents[1];
                 }
@@ -155,21 +155,22 @@ class OperationDataArrayResolver
                 }
                 foreach ($entityNamesOfType as $entityName) {
 
-                    if($operationElementProperty === null) {
+                    if ($operationElementProperty === null) {
                         $operationDataSubArray = $this->resolveNonPrimitiveElement(
                             $entityName,
                             $operationElement,
                             $operation,
                             $fromArray
                         );
-                    }else {
+                    } else {
                         $linkedEntityObj = $this->resolveLinkedEntityObject($entityName);
-                        $operationDataSubArray = $linkedEntityObj->getDataByName($operationElementProperty,0);
+                        $operationDataSubArray = $linkedEntityObj->getDataByName($operationElementProperty, 0);
 
-                        if($operationDataSubArray === null)
+                        if ($operationDataSubArray === null) {
                             throw new \Exception(
                                 sprintf('Property %s not found in entity %s \n', $operationElementProperty, $entityName)
                             );
+                        }
                     }
 
                     if ($operationElement->getType() == OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY) {
