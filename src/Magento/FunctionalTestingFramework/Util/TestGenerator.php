@@ -1507,10 +1507,15 @@ class TestGenerator
         $testName = str_replace(' ', '', $testName);
         $testAnnotations = $this->generateAnnotationsPhp($test->getAnnotations(), true);
         $dependencies = 'AcceptanceTester $I';
-        try {
-            $steps = $this->generateStepsPhp($test->getOrderedActions());
-        } catch (TestReferenceException $e) {
-            throw new TestReferenceException($e->getMessage() . " in Test \"" . $test->getName() . "\"");
+        if ($test->isSkipped()) {
+            $steps = "\t\t" . '$scenario->skip("This test is skipped");' . "\n";
+            $dependencies .= ', \Codeception\Scenario $scenario';
+        } else {
+            try {
+                $steps = $this->generateStepsPhp($test->getOrderedActions());
+            } catch (TestReferenceException $e) {
+                throw new TestReferenceException($e->getMessage() . " in Test \"" . $test->getName() . "\"");
+            }
         }
 
         $testPhp .= $testAnnotations;
