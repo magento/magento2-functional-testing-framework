@@ -1245,6 +1245,9 @@ class TestGenerator
 
             $outputArg = $this->resolveStepKeyReferences($outputArg, $actionOrigin);
 
+            $arg = $this->resolveEnvReferences($arg, [$arg]);
+            $outputArg = $this->resolveEnvReferences($outputArg, [$outputArg]);
+
             $outputString = str_replace($arg, $outputArg, $outputString);
         }
 
