@@ -207,16 +207,14 @@ class CurlHandler
                 $dataItem = $matchedParams[1][$paramKey];
                 preg_match_all("/(.+?)\./", $dataItem, $matchedParent);
 
-                if (!empty($matchedParent) && !empty($matchedParent[0]))
-                {
+                if (!empty($matchedParent) && !empty($matchedParent[0])) {
                     $paramEntityParent = $matchedParent[1][0];
                     $dataItem = preg_replace('/^'.$matchedParent[0][0].'/', '', $dataItem);
                 }
 
                 foreach ($entityObjects as $entityObject) {
 
-                    if ($paramEntityParent === "" || $entityObject->getType() == $paramEntityParent)
-                    {
+                    if ($paramEntityParent === "" || $entityObject->getType() == $paramEntityParent) {
                         $param = $entityObject->getDataByName(
                             $dataItem,
                             EntityDataObject::CEST_UNIQUE_VALUE
