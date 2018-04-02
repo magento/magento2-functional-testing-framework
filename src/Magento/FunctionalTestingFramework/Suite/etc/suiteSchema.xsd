@@ -48,17 +48,17 @@
             <xs:element type="moduleSuiteOptionType" name="module" minOccurs="0"/>
         </xs:choice>
     </xs:complexType>
-    <xs:complexType name="suiteHookType">
-        <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="dataOperationTags" maxOccurs="unbounded" minOccurs="0"/>
-        </xs:choice>
-    </xs:complexType>
+    <!--<xs:complexType name="suiteHookType">-->
+        <!--<xs:choice minOccurs="0" maxOccurs="unbounded">-->
+            <!--<xs:group ref="dataOperationTags" maxOccurs="unbounded" minOccurs="0"/>-->
+        <!--</xs:choice>-->
+    <!--</xs:complexType>-->
     <xs:complexType name="suiteType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
             <xs:element type="includeType" name="include" maxOccurs="1"/>
             <xs:element type="excludeType" name="exclude" maxOccurs="1"/>
-            <xs:element type="suiteHookType" name="before" maxOccurs="1"/>
-            <xs:element type="suiteHookType" name="after" maxOccurs="1"/>
+            <xs:element type="hookType" name="before" maxOccurs="1"/>
+            <xs:element type="hookType" name="after" maxOccurs="1"/>
         </xs:choice>
         <xs:attribute type="xs:string" name="name"/>
     </xs:complexType>

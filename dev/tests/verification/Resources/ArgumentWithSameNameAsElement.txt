@@ -1,5 +1,5 @@
 <?php
-namespace Magento\AcceptanceTest\_generated\Backend;
+namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
@@ -57,7 +57,6 @@ class ArgumentWithSameNameAsElementCest
 	public function _failed(AcceptanceTester $I)
 	{
 		$I->saveScreenshot();
-		$this->_after($I);
 	}
 
 	/**

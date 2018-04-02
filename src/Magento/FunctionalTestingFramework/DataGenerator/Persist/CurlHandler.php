@@ -206,7 +206,7 @@ class CurlHandler
                         EntityDataObject::CEST_UNIQUE_VALUE
                     );
                     if (null !== $param) {
-                        $urlOut = str_replace($paramValue, $param, $urlIn);
+                        $urlOut = str_replace($paramValue, $param, $urlOut);
                         continue;
                     }
                 }

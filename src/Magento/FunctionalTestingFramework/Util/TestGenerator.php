@@ -23,12 +23,13 @@ use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 
 /**
  * Class TestGenerator
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD)
  */
 class TestGenerator
 {
     const REQUIRED_ENTITY_REFERENCE = 'createDataKey';
     const GENERATED_DIR = '_generated';
+    const DEFAULT_DIR = 'default';
 
     /**
      * Path to the export dir.
@@ -52,20 +53,39 @@ class TestGenerator
     private $tests;
 
     /**
+     * Symfony console output interface.
+     *
+     * @var \Symfony\Component\Console\Output\ConsoleOutput
+     */
+    private $consoleOutput;
+
+    /**
+     * Debug flag.
+     *
+     * @var bool
+     */
+    private $debug;
+
+    /**
      * TestGenerator constructor.
      *
      * @param string $exportDir
      * @param array $tests
+     * @param bool $debug
      */
-    private function __construct($exportDir, $tests)
+    private function __construct($exportDir, $tests, $debug = false)
     {
         // private constructor for factory
-        $this->exportDirName = $exportDir ?? self::GENERATED_DIR;
-        $this->exportDirectory = rtrim(
-            TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . self::GENERATED_DIR . DIRECTORY_SEPARATOR . $exportDir,
-            DIRECTORY_SEPARATOR
-        );
+        $this->exportDirName = $exportDir ?? self::DEFAULT_DIR;
+        $exportDir = $exportDir ?? self::DEFAULT_DIR;
+        $this->exportDirectory = TESTS_MODULE_PATH
+            . DIRECTORY_SEPARATOR
+            . self::GENERATED_DIR
+            . DIRECTORY_SEPARATOR
+            . $exportDir;
         $this->tests = $tests;
+        $this->consoleOutput = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $this->debug = $debug;
     }
 
     /**
@@ -73,11 +93,12 @@ class TestGenerator
      *
      * @param string $dir
      * @param array $tests
+     * @param bool $debug
      * @return TestGenerator
      */
-    public static function getInstance($dir = null, $tests = null)
+    public static function getInstance($dir = null, $tests = null, $debug = false)
     {
-        return new TestGenerator($dir, $tests);
+        return new TestGenerator($dir, $tests, $debug);
     }
 
     /**
@@ -97,7 +118,7 @@ class TestGenerator
      */
     private function loadAllTestObjects()
     {
-        if ($this->tests === null) {
+        if ($this->tests === null || empty($this->tests)) {
             return TestObjectHandler::getInstance()->getAllObjects();
         }
 
@@ -132,18 +153,23 @@ class TestGenerator
      *
      * @param string $runConfig
      * @param int $nodes
+     * @param TestObject[] $testsToIgnore
      * @return void
      * @throws TestReferenceException
      * @throws \Exception
      */
-    public function createAllTestFiles($runConfig = null, $nodes = null)
+    public function createAllTestFiles($runConfig = null, $nodes = null, $testsToIgnore = [])
     {
         DirSetupUtil::createGroupDir($this->exportDirectory);
 
         // create our manifest file here
-        $testManifest = TestManifestFactory::makeManifest($this->exportDirectory, $runConfig);
-        $testPhpArray = $this->assembleAllTestPhp($testManifest, $nodes);
+        $testManifest = TestManifestFactory::makeManifest(
+            dirname($this->exportDirectory),
+            $this->exportDirectory,
+            $runConfig
+        );
 
+        $testPhpArray = $this->assembleAllTestPhp($testManifest, $nodes, $testsToIgnore);
         foreach ($testPhpArray as $testPhpFile) {
             $this->createCestFile($testPhpFile[1], $testPhpFile[0]);
         }
@@ -168,11 +194,11 @@ class TestGenerator
             $hookPhp = $this->generateHooksPhp($testObject->getHooks());
             $testsPhp = $this->generateTestPhp($testObject);
         } catch (TestReferenceException $e) {
-            throw new TestReferenceException($e->getMessage(). " in Test \"" . $testObject->getName() . "\"");
+            throw new TestReferenceException($e->getMessage() . " in Test \"" . $testObject->getName() . "\"");
         }
 
         $cestPhp = "<?php\n";
-        $cestPhp .= "namespace Magento\AcceptanceTest\\" . $this->exportDirName . "\Backend;\n\n";
+        $cestPhp .= "namespace Magento\AcceptanceTest\\_" . $this->exportDirName . "\Backend;\n\n";
         $cestPhp .= $usePhp;
         $cestPhp .= $classAnnotationsPhp;
         $cestPhp .= sprintf("class %s\n", $className);
@@ -189,27 +215,48 @@ class TestGenerator
      *
      * @param BaseTestManifest $testManifest
      * @param int $nodes
+     * @param array $testsToIgnore
      * @return array
-     * @throws TestReferenceException
-     * @throws \Exception
      */
-    private function assembleAllTestPhp($testManifest, $nodes)
+    private function assembleAllTestPhp($testManifest, $nodes, array $testsToIgnore)
     {
         /** @var TestObject[] $testObjects */
         $testObjects = $this->loadAllTestObjects();
+        $testObjects = array_diff_key($testObjects, $testsToIgnore);
         $cestPhpArray = [];
 
         foreach ($testObjects as $test) {
+            $this->debug("<comment>Start creating test: " . $test->getCodeceptionName() . "</comment>");
             $php = $this->assembleTestPhp($test);
             $cestPhpArray[] = [$test->getCodeceptionName(), $php];
 
             //write to manifest here if config is not single run
             $testManifest->addTest($test);
+            $debugInformation = $test->getDebugInformation();
+
+            $this->debug($debugInformation);
+            $this->debug("<comment>Finish creating test: " . $test->getCodeceptionName() . "</comment>" . PHP_EOL);
         }
 
         $testManifest->generate($nodes);
 
         return $cestPhpArray;
+    }
+
+    /**
+     * Output information in console when debug flag is enabled.
+     *
+     * @param array|string $messages
+     * @return void
+     */
+    private function debug($messages)
+    {
+        if ($this->debug && $messages) {
+            $messages = (array)$messages;
+            foreach ($messages as $message) {
+                $this->consoleOutput->writeln($message);
+            }
+        }
     }
 
     /**
@@ -269,9 +316,9 @@ class TestGenerator
                 continue;
             }
             if (!$isMethod) {
-                $annotationsPhp.= $this->generateClassAnnotations($annotationType, $annotationName);
+                $annotationsPhp .= $this->generateClassAnnotations($annotationType, $annotationName);
             } else {
-                $annotationsPhp.= $this->generateMethodAnnotations($annotationType, $annotationName);
+                $annotationsPhp .= $this->generateMethodAnnotations($annotationType, $annotationName);
             }
         }
 
@@ -388,18 +435,18 @@ class TestGenerator
      *
      * @param array $actionObjects
      * @param array|bool $hookObject
+     * @param string $actor
      * @return string
      * @throws TestReferenceException
      * @throws \Exception
      * @SuppressWarnings(PHPMD)
      */
-    private function generateStepsPhp($actionObjects, $hookObject = false)
+    public function generateStepsPhp($actionObjects, $hookObject = false, $actor = "I")
     {
         //TODO: Refactor Method according to PHPMD warnings, remove @SuppressWarnings accordingly.
         $testSteps = "";
 
         foreach ($actionObjects as $actionObject) {
-            $actor = "I";
             $stepKey = $actionObject->getStepKey();
             $customActionAttributes = $actionObject->getCustomActionAttributes();
             $attribute = null;
@@ -497,10 +544,9 @@ class TestGenerator
                 // validate the param array is in the correct format
                 $this->validateParameterArray($customActionAttributes['parameterArray']);
 
-                $parameterArray = "[" . $this->addUniquenessToParamArray(
-                    $customActionAttributes['parameterArray']
-                )
-                . "]";
+                $parameterArray = "[";
+                $parameterArray .= $this->addUniquenessToParamArray($customActionAttributes['parameterArray']);
+                $parameterArray .= "]";
             }
 
             if (isset($customActionAttributes['requiredAction'])) {
@@ -832,7 +878,7 @@ class TestGenerator
                     break;
                 case "switchToNextTab":
                 case "switchToPreviousTab":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $this->stripWrappedQuotes($input));
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $input);
                     break;
                 case "clickWithLeftButton":
                 case "clickWithRightButton":
@@ -1139,12 +1185,9 @@ class TestGenerator
                     break;
                 case "field":
                     $fieldKey = $actionObject->getCustomActionAttributes()['key'];
-                    $argRef= "\t\t\$" . str_replace(
-                        ucfirst($fieldKey),
-                        "",
-                        $stepKey
-                    ) . "Fields['{$fieldKey}'] = ${input};\n";
-                    $testSteps.= $this->resolveTestVariable($argRef, [$input], $actionObject->getActionOrigin());
+                    $argRef = "\t\t\$";
+                    $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) . "Fields['{$fieldKey}'] = ${input};\n";
+                    $testSteps .= $this->resolveTestVariable($argRef, [$input], $actionObject->getActionOrigin());
                     break;
                 default:
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input, $parameter);
@@ -1366,6 +1409,7 @@ class TestGenerator
      * @return string
      * @throws TestReferenceException
      * @throws \Exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function generateHooksPhp($hookObjects)
     {
@@ -1405,12 +1449,6 @@ class TestGenerator
                 );
             } catch (TestReferenceException $e) {
                 throw new TestReferenceException($e->getMessage() . " in Element \"" . $type . "\"");
-            }
-
-            if ($hookObject->getType() == TestObjectExtractor::TEST_FAILED_HOOK) {
-                $steps.="\t\t";
-                $steps.='$this->_after($I);';
-                $steps.="\n";
             }
 
             $hooks .= sprintf("\tpublic function _{$type}(%s)\n", $dependencies);
@@ -1588,6 +1626,9 @@ class TestGenerator
             if (!$isFirst) {
                 $output .= ', ';
             }
+            if ($args[$i] === "") {
+                $args[$i] = '"' . $args[$i] . '"';
+            }
             $output .= $args[$i];
             $isFirst = false;
         }
@@ -1618,6 +1659,9 @@ class TestGenerator
             }
             if (!$isFirst) {
                 $output .= ', ';
+            }
+            if ($args[$i] === "") {
+                $args[$i] = '"' . $args[$i] . '"';
             }
             $output .= $args[$i];
             $isFirst = false;
@@ -1756,10 +1800,11 @@ class TestGenerator
     private function validateXmlAttributesMutuallyExclusive($key, $tagName, $attributes)
     {
         $rules = [
-            ['attributes' => [
-                'selector',
-                'selectorArray',
-            ]
+            [
+                'attributes' => [
+                    'selector',
+                    'selectorArray',
+                ]
             ],
             [
                 'attributes' => [
