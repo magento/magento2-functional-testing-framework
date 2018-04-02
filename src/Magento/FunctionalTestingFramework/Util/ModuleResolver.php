@@ -223,9 +223,8 @@ class ModuleResolver
     {
         $allModulePaths = [];
 
-        // TODO update these paths when we switch a composer based pathing
         // Define the Module paths from app/code
-        $appCodePath = dirname(dirname(dirname(PROJECT_ROOT)))
+        $appCodePath = MAGENTO_BP
             . DIRECTORY_SEPARATOR
             . 'app' . DIRECTORY_SEPARATOR
             . 'code' . DIRECTORY_SEPARATOR;
@@ -234,7 +233,7 @@ class ModuleResolver
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
 
         // Define the Module paths from vendor modules
-        $vendorCodePath = dirname(dirname(dirname(PROJECT_ROOT)))
+        $vendorCodePath = PROJECT_ROOT
             . DIRECTORY_SEPARATOR
             . 'vendor' . DIRECTORY_SEPARATOR;
 
