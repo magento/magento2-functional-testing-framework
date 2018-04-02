@@ -6,6 +6,7 @@
 namespace Magento\FunctionalTestingFramework\Suite\Util;
 
 use Exception;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
@@ -37,15 +38,25 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      *
      * @param array $parsedSuiteData
      * @return array
+     * @throws XmlException
      */
     public function parseSuiteDataIntoObjects($parsedSuiteData)
     {
         $suiteObjects = [];
         $testHookObjectExtractor = new TestHookObjectExtractor();
+
+        // make sure there are suites defined before trying to parse as objects.
+        if (!array_key_exists(self::SUITE_ROOT_TAG, $parsedSuiteData)) {
+            return $suiteObjects;
+        }
+
         foreach ($parsedSuiteData[self::SUITE_ROOT_TAG] as $parsedSuite) {
             if (!is_array($parsedSuite)) {
                 // skip non array items parsed from suite (suite objects will always be arrays)
                 continue;
+            }
+            if ($parsedSuite[self::NAME] == 'default') {
+                throw new XmlException("A Suite can not have the name \"default\"");
             }
 
             $suiteHooks = [];
@@ -77,6 +88,12 @@ class SuiteObjectExtractor extends BaseObjectExtractor
                     TestObjectExtractor::TEST_AFTER_HOOK,
                     $parsedSuite[TestObjectExtractor::TEST_AFTER_HOOK]
                 );
+            }
+            if (count($suiteHooks) == 1) {
+                throw new XmlException(sprintf(
+                    "Suites that contain hooks must contain both a 'before' and an 'after' hook. Suite: \"%s\"",
+                    $parsedSuite[self::NAME]
+                ));
             }
 
             // create the new suite object

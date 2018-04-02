@@ -322,6 +322,10 @@ class ModuleResolver
      */
     private function printMagentoVersionInfo()
     {
+        $forceGeneration = $GLOBALS['FORCE_PHP_GENERATE'] ?? false;
+        if ($forceGeneration) {
+            return;
+        }
         $url = ConfigSanitizerUtil::sanitizeUrl(getenv('MAGENTO_BASE_URL')) . $this->versionUrl;
         print "Fetching version information from {$url}";
         $ch = curl_init($url);
