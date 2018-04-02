@@ -35,14 +35,17 @@ class MagentoAllureAdapter extends AllureAdapter
     /**
      * Initialize from parent with group value
      *
-     * @params array $ignoredAnnotations
-     * @return AllureAdapter
+     * @param array $ignoredAnnotations
+     * @return void
      */
+
+    // @codingStandardsIgnoreStart
     public function _initialize(array $ignoredAnnotations = [])
     {
         $this->groups = $this->getGroup($this->groupKey);
         parent::_initialize($ignoredAnnotations);
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * Array of group values passed to test runner command
@@ -86,7 +89,4 @@ class MagentoAllureAdapter extends AllureAdapter
         // call parent function
         parent::suiteBefore($changeSuiteEvent);
     }
-
-
 }
-
