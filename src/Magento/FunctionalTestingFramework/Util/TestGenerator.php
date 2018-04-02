@@ -1872,6 +1872,7 @@ class TestGenerator
      *
      * @param string $page
      * @throws \Exception
+     * @return void
      */
     public function amOnPage($page)
     {
