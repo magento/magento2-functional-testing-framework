@@ -91,7 +91,7 @@ class BasicFunctionalTestCest
 		$I->dontSeeOptionIsSelected(".functionalTestSelector", "someInput");
 		$I->doubleClick(".functionalTestSelector");
 		$I->dragAndDrop(".functionalTestSelector", ".functionalTestSelector2");
-		$I->executeJS("someJSFunction");
+		$executeJSKey1 = $I->executeJS("someJSFunction");
 		$I->fillField(".functionalTestSelector", "someInput");
 		$I->fillField(".functionalTestSelector", "0");
 		$grabAttributeFromKey1 = $I->grabAttributeFrom(".functionalTestSelector", "someInput");
