@@ -447,16 +447,18 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * Runs a DELETE request against the url given.
+     * Runs DELETE request to delete a Magento entity against the url given.
      * @param string $url
      * @param int $storeCode
      * @return string
      */
-    public function deleteByUrl($url, $storeCode = null)
+    public function deleteEntityByUrl($url, $storeCode = null)
     {
         $executor = new WebapiExecutor($storeCode);
         $executor->write($url, [], CurlInterface::DELETE, []);
-        return $executor->read();
+        $response = $executor->read();
+        $executor->close();
+        return $response;
     }
 
     /**

@@ -677,7 +677,7 @@ class TestGenerator
                         }
                     } else {
                         $output = sprintf(
-                            "\t\t$%s->deleteByUrl(%s",
+                            "\t\t$%s->deleteEntityByUrl(%s",
                             $actor,
                             $url
                         );
