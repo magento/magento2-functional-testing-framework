@@ -5,6 +5,7 @@
  */
 namespace Magento\FunctionalTestingFramework\Allure\Adapter;
 
+use Magento\FunctionalTestingFramework\Data\Argument\Interpreter\NullType;
 use Yandex\Allure\Adapter\AllureAdapter;
 use Codeception\Event\SuiteEvent;
 
@@ -30,7 +31,7 @@ class MagentoAllureAdapter extends AllureAdapter
      *
      * @var array
      */
-    protected $groups;
+    protected $group;
 
     /**
      * Initialize from parent with group value
@@ -42,7 +43,7 @@ class MagentoAllureAdapter extends AllureAdapter
     // @codingStandardsIgnoreStart
     public function _initialize(array $ignoredAnnotations = [])
     {
-        $this->groups = $this->getGroup($this->groupKey);
+        $this->group = $this->getGroup($this->groupKey);
         parent::_initialize($ignoredAnnotations);
     }
     // @codingStandardsIgnoreEnd
@@ -51,12 +52,14 @@ class MagentoAllureAdapter extends AllureAdapter
      * Array of group values passed to test runner command
      *
      * @param String $groupKey
-     * @return array
+     * @return String
      */
     private function getGroup($groupKey)
     {
-        $groups = $this->options[$groupKey];
-        return $groups;
+        if(!($this->options[$groupKey] == Null)){
+            return $this->options[$groupKey][0];
+        }
+        return null;
     }
 
     /**
@@ -67,25 +70,27 @@ class MagentoAllureAdapter extends AllureAdapter
      */
     public function suiteBefore(SuiteEvent $suiteEvent)
     {
-        $suite = $suiteEvent->getSuite();
-        $group = implode(".", $this->groups);
-        $suiteName = ($suite->getName())."-{$group}";
+        $changeSuiteEvent = $suiteEvent;
 
-        call_user_func(\Closure::bind(
-            function () use ($suite, $suiteName) {
-                $suite->name = $suiteName;
-            },
-            null,
-            $suite
-        ));
+        if ($this->group != null) {
+            $suite = $suiteEvent->getSuite();
+            $suiteName = ($suite->getName()) . "-{$this->group}";
 
-        //change suiteEvent
-        $changeSuiteEvent = new SuiteEvent(
-            $suiteEvent->getSuite(),
-            $suiteEvent->getResult(),
-            $suiteEvent->getSettings()
-        );
+            call_user_func(\Closure::bind(
+                function () use ($suite, $suiteName) {
+                    $suite->name = $suiteName;
+                },
+                null,
+                $suite
+            ));
 
+            //change suiteEvent
+            $changeSuiteEvent = new SuiteEvent(
+                $suiteEvent->getSuite(),
+                $suiteEvent->getResult(),
+                $suiteEvent->getSettings()
+            );
+        }
         // call parent function
         parent::suiteBefore($changeSuiteEvent);
     }
