@@ -232,9 +232,7 @@ class TestGenerator
             $php = $this->assembleTestPhp($test);
             $cestPhpArray[] = [$test->getCodeceptionName(), $php];
 
-
             $debugInformation = $test->getDebugInformation();
-
             $this->debug($debugInformation);
             $this->debug("<comment>Finish creating test: " . $test->getCodeceptionName() . "</comment>" . PHP_EOL);
 
