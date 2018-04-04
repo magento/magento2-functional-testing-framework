@@ -1685,13 +1685,14 @@ class TestGenerator
      * @param array $args
      * @return string
      */
-    private function resolveEnvReferences($inputString, $args)
+    private function resolveEnvReferences($inputString, &$args)
     {
         $envRegex = "/{{_ENV\.([\w]+)}}/";
 
         $outputString = $inputString;
+        $newArgs = [];
 
-        foreach ($args as $arg) {
+        foreach ($args as $key => $arg) {
             preg_match_all($envRegex, $arg, $matches);
             if (!empty($matches[0])) {
                 $fullMatch = $matches[0][0];
@@ -1701,9 +1702,12 @@ class TestGenerator
 
                 $outputArg = $this->processQuoteBreaks($fullMatch, $arg, $replacement);
                 $outputString = str_replace($arg, $outputArg, $outputString);
+                $newArgs[$key] = $outputArg;
             }
         }
 
+        // override passed in args for use later.
+        $args = array_merge($args, $newArgs);
         return $outputString;
     }
 
