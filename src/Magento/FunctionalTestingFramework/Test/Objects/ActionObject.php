@@ -20,7 +20,16 @@ use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 class ActionObject
 {
     const __ENV = "_ENV";
-    const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray", "expected", "actual", "x", "y", "expectedResult", "actualResult"];
+    const DATA_ENABLED_ATTRIBUTES = [
+        "userInput",
+        "parameterArray",
+        "expected",
+        "actual",
+        "x",
+        "y",
+        "expectedResult",
+        "actualResult"
+    ];
     const SELECTOR_ENABLED_ATTRIBUTES = [
         'selector',
         'dependentSelector',

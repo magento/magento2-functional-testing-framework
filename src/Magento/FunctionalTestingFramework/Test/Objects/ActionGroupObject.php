@@ -130,7 +130,10 @@ class ActionGroupObject
             $newActionAttributes = [];
 
             if (!empty($varAttributes)) {
-                $newActionAttributes = $this->resolveAttributesWithArguments($arguments, $action->getCustomActionAttributes());
+                $newActionAttributes = $this->resolveAttributesWithArguments(
+                    $arguments,
+                    $action->getCustomActionAttributes()
+                );
             }
 
             // we append the action reference key to any linked action and the action's merge key as the user might
@@ -166,7 +169,10 @@ class ActionGroupObject
         foreach ($attributes as $attributeKey => $attributeValue) {
 
             if (is_array($attributeValue)) {
-                $newActionAttributes[$attributeKey] = $this->resolveAttributesWithArguments($arguments, $attributeValue);
+                $newActionAttributes[$attributeKey] = $this->resolveAttributesWithArguments(
+                    $arguments,
+                    $attributeValue
+                );
                 continue;
             }
 
