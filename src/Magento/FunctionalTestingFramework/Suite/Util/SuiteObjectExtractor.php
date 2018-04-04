@@ -44,10 +44,19 @@ class SuiteObjectExtractor extends BaseObjectExtractor
     {
         $suiteObjects = [];
         $testHookObjectExtractor = new TestHookObjectExtractor();
+
+        // make sure there are suites defined before trying to parse as objects.
+        if (!array_key_exists(self::SUITE_ROOT_TAG, $parsedSuiteData)) {
+            return $suiteObjects;
+        }
+
         foreach ($parsedSuiteData[self::SUITE_ROOT_TAG] as $parsedSuite) {
             if (!is_array($parsedSuite)) {
                 // skip non array items parsed from suite (suite objects will always be arrays)
                 continue;
+            }
+            if ($parsedSuite[self::NAME] == 'default') {
+                throw new XmlException("A Suite can not have the name \"default\"");
             }
 
             $suiteHooks = [];

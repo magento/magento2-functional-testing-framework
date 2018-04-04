@@ -21,7 +21,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 class ActionObject
 {
     const __ENV = "_ENV";
-    const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray", "expected", "actual"];
+    const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray", "expected", "actual", "x", "y"];
     const SELECTOR_ENABLED_ATTRIBUTES = [
         'selector',
         'dependentSelector',
@@ -42,8 +42,7 @@ class ActionObject
     const ACTION_ATTRIBUTE_URL = 'url';
     const ACTION_ATTRIBUTE_SELECTOR = 'selector';
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER = '/\(.+\)/';
-    const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/{{[\w]+\.[\w\[\]]+}}/';
-    const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN_WITH_PARAMS= '/{{[\w]+\.[\w]+\(.+\)}}/';
+    const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/({{[\w]+\.[\w\[\]]+}})|({{[\w]+\.[\w]+\(.+\)}})/';
 
     /**
      * The unique identifier for the action
@@ -376,7 +375,7 @@ class ActionObject
         foreach ($relevantDataAttributes as $dataAttribute) {
             $varInput = $this->actionAttributes[$dataAttribute];
             $replacement = $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $varInput);
-            if ($replacement != null) {
+            if ($replacement !== null) {
                 $this->resolvedCustomAttributes[$dataAttribute] = $replacement;
             }
         }
@@ -449,7 +448,7 @@ class ActionObject
     private function findAndReplaceReferences($objectHandler, $inputString)
     {
         //look for parameter area, if so use different regex
-        $regex = $this->resolveRegexPatternForReference($inputString);
+        $regex = ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN;
 
         preg_match_all($regex, $inputString, $matches);
 
@@ -487,7 +486,7 @@ class ActionObject
                 $replacement = $this->resolveEntityDataObjectReference($obj, $match);
             }
 
-            if ($replacement == null) {
+            if ($replacement === null) {
                 if (get_class($objectHandler) != DataObjectHandler::class) {
                     return $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $outputString);
                 } else {
@@ -538,20 +537,6 @@ class ActionObject
             throw new TestReferenceException(
                 "Page of type 'external' is not compatible with action type '{$this->getType()}'"
             );
-        }
-    }
-
-    /**
-     * Determines whether the given $inputString has (params), and returns the appropriate regex for use in matching.
-     * @param string $inputString
-     * @return string
-     */
-    private function resolveRegexPatternForReference($inputString)
-    {
-        if (preg_match(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN_WITH_PARAMS, $inputString) === 1) {
-            return ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN_WITH_PARAMS;
-        } else {
-            return ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN;
         }
     }
 
