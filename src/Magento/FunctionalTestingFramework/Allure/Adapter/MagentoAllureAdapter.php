@@ -20,44 +20,14 @@ use Codeception\Event\SuiteEvent;
 class MagentoAllureAdapter extends AllureAdapter
 {
     /**
-     * Variable name used for extracting group argument to codecept run commaned
-     *
-     * @var string
-     */
-    protected $groupKey = "groups";
-
-    /**
-     * Array of group values from test runner command to append to allure suitename
-     *
-     * @var array
-     */
-    protected $group;
-
-    /**
-     * Initialize from parent with group value
-     *
-     * @param array $ignoredAnnotations
-     * @return void
-     */
-
-    // @codingStandardsIgnoreStart
-    public function _initialize(array $ignoredAnnotations = [])
-    {
-        $this->group = $this->getGroup($this->groupKey);
-        parent::_initialize($ignoredAnnotations);
-    }
-    // @codingStandardsIgnoreEnd
-
-    /**
      * Array of group values passed to test runner command
      *
-     * @param String $groupKey
      * @return String
      */
-    private function getGroup($groupKey)
+    private function getGroup()
     {
-        if(!($this->options[$groupKey] == Null)){
-            return $this->options[$groupKey][0];
+        if ($this->options['groups'] != null) {
+            return $this->options['groups'][0];
         }
         return null;
     }
@@ -72,9 +42,9 @@ class MagentoAllureAdapter extends AllureAdapter
     {
         $changeSuiteEvent = $suiteEvent;
 
-        if ($this->group != null) {
+        if ($this->getGroup() != null) {
             $suite = $suiteEvent->getSuite();
-            $suiteName = ($suite->getName()) . "-{$this->group}";
+            $suiteName = ($suite->getName()) . "-{$this->getGroup()}";
 
             call_user_func(\Closure::bind(
                 function () use ($suite, $suiteName) {
