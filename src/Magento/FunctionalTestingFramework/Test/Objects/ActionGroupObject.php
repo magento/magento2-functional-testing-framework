@@ -125,33 +125,12 @@ class ActionGroupObject
     {
         $resolvedActions = [];
 
-        // $regexPattern match on:   $matches[0] {{section.element(arg.field)}}
-        // $matches[1] = section.element
-        // $matches[2] = arg.field
-        $regexPattern = '/{{([\w.\[\]]+)\(*([\w.$\',\s\[\]]+)*\)*}}/';
-
         foreach ($this->parsedActions as $action) {
             $varAttributes = array_intersect($this->varAttributes, array_keys($action->getCustomActionAttributes()));
             $newActionAttributes = [];
 
             if (!empty($varAttributes)) {
-                // 1 check to see if we have pertinent var
-                foreach ($varAttributes as $varAttribute) {
-                    $attributeValue = $action->getCustomActionAttributes()[$varAttribute];
-                    preg_match_all($regexPattern, $attributeValue, $matches);
-                    if (empty($matches[0])) {
-                        continue;
-                    }
-
-                    //get rid of full match {{arg.field(arg.field)}}
-                    array_shift($matches);
-
-                    $newActionAttributes[$varAttribute] = $this->replaceAttributeArguments(
-                        $arguments,
-                        $attributeValue,
-                        $matches
-                    );
-                }
+                $newActionAttributes = $this->resolveAttributesWithArguments($arguments, $action->getCustomActionAttributes());
             }
 
             // we append the action reference key to any linked action and the action's merge key as the user might
@@ -159,7 +138,7 @@ class ActionGroupObject
             $resolvedActions[$action->getStepKey() . ucfirst($actionReferenceKey)] = new ActionObject(
                 $action->getStepKey() . ucfirst($actionReferenceKey),
                 $action->getType(),
-                array_merge($action->getCustomActionAttributes(), $newActionAttributes),
+                array_replace_recursive($action->getCustomActionAttributes(), $newActionAttributes),
                 $action->getLinkedAction() == null ? null : $action->getLinkedAction() . ucfirst($actionReferenceKey),
                 $action->getOrderOffset(),
                 [self::ACTION_GROUP_ORIGIN_NAME => $this->name,
@@ -168,6 +147,46 @@ class ActionGroupObject
         }
 
         return $resolvedActions;
+    }
+
+    /**
+     * Resolves all references to arguments in attributes, and subAttributes.
+     * @param array $arguments
+     * @param array $attributes
+     * @return array
+     */
+    private function resolveAttributesWithArguments($arguments, $attributes)
+    {
+        // $regexPattern match on:   $matches[0] {{section.element(arg.field)}}
+        // $matches[1] = section.element
+        // $matches[2] = arg.field
+        $regexPattern = '/{{([\w.\[\]]+)\(*([\w.$\',\s\[\]]+)*\)*}}/';
+
+        $newActionAttributes = [];
+        foreach ($attributes as $attributeKey => $attributeValue) {
+
+            if (is_array($attributeValue)) {
+                $newActionAttributes[$attributeKey] = $this->resolveAttributesWithArguments($arguments, $attributeValue);
+                continue;
+            }
+
+            preg_match_all($regexPattern, $attributeValue, $matches);
+
+            if (empty($matches[0])) {
+                continue;
+            }
+
+            //get rid of full match {{arg.field(arg.field)}}
+            array_shift($matches);
+
+            $newActionAttributes[$attributeKey] = $this->replaceAttributeArguments(
+                $arguments,
+                $attributeValue,
+                $matches
+            );
+        }
+        return $newActionAttributes;
+
     }
 
     /**
