@@ -118,13 +118,23 @@ class SuiteObject
     }
 
     /**
+     * Getter for the Hook Array which contains the before/after objects.
+     *
+     * @return TestHookObject[]
+     */
+    public function getHooks()
+    {
+        return $this->hooks;
+    }
+
+    /**
      * Getter for before hooks.
      *
      * @return TestHookObject
      */
     public function getBeforeHook()
     {
-        return $this->hooks['before'];
+        return $this->hooks['before'] ?? null;
     }
 
     /**
@@ -134,6 +144,6 @@ class SuiteObject
      */
     public function getAfterHook()
     {
-        return $this->hooks['after'];
+        return $this->hooks['after'] ?? null;
     }
 }
