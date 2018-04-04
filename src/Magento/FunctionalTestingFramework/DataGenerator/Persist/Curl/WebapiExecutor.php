@@ -62,9 +62,6 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
         }
 
         $this->storeCode = $storeCode;
-        if ($storeCode !== null) {
-            $this->storeCode = "{$storeCode}/";
-        }
         $this->transport = new CurlTransport();
         $this->authorize();
     }
