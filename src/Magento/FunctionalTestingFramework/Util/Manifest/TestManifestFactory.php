@@ -33,6 +33,10 @@ class TestManifestFactory
             case 'parallel':
                 return new ParallelTestManifest($manifestPath, $testPath);
 
+            case 'suite':
+                // the suite does not have its own manifest but instead is handled by the other suite types.
+                return null;
+
             default:
                 return new DefaultTestManifest($manifestPath, $testPath);
 

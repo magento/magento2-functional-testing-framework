@@ -7,8 +7,12 @@
 namespace Magento\FunctionalTestingFramework\Util\Manifest;
 
 use Magento\Framework\Exception\RuntimeException;
+use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
+use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
+use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
+use Magento\FunctionalTestingFramework\Util\Sorter\ParallelGroupSorter;
 
 class ParallelTestManifest extends BaseTestManifest
 {
@@ -20,6 +24,13 @@ class ParallelTestManifest extends BaseTestManifest
      * @var string[]
      */
     private $testNameToSize = [];
+
+    /**
+     * An instance of the group sorter which will take suites and tests organizing them to be run together.
+     *
+     * @var ParallelGroupSorter
+     */
+    private $parallelGroupSorter;
 
     /**
      * Path to the directory that will contain all test group files
@@ -37,6 +48,7 @@ class ParallelTestManifest extends BaseTestManifest
     public function __construct($manifestPath, $testPath)
     {
         $this->dirPath = $manifestPath . DIRECTORY_SEPARATOR . 'groups';
+        $this->parallelGroupSorter = new ParallelGroupSorter();
         parent::__construct($testPath, self::PARALLEL_CONFIG);
     }
 
@@ -54,43 +66,56 @@ class ParallelTestManifest extends BaseTestManifest
     /**
      * Function which generates the actual manifest once the relevant tests have been added to the array.
      *
-     * @param int $nodes
+     * @param array $testsReferencedInSuites
+     * @param int $lines
      * @return void
      */
-    public function generate($nodes = null)
+    public function generate($testsReferencedInSuites, $lines = null)
     {
-        if ($nodes == null) {
-            $nodes = 2;
-        }
-
         DirSetupUtil::createGroupDir($this->dirPath);
-        arsort($this->testNameToSize);
-        $node = $nodes;
+        $testGroups = $this->parallelGroupSorter->getTestsGroupedBySize(
+            $testsReferencedInSuites,
+            $this->testNameToSize,
+            $lines
+        );
 
-        foreach (array_keys($this->testNameToSize) as $testName) {
-            $node = $this->getNodeOrder($node, $nodes);
-            $nodeString = strval($node);
-            $fileResource = fopen($this->dirPath . DIRECTORY_SEPARATOR .  "group{$nodeString}.txt", 'a');
-            $line = $this->relativeDirPath . DIRECTORY_SEPARATOR . $testName . '.php';
-            fwrite($fileResource, $line . PHP_EOL);
-            fclose($fileResource);
+        foreach ($testGroups as $groupNumber => $groupContents) {
+            $this->generateGroupFile($groupContents, $groupNumber);
         }
     }
 
     /**
-     * Function which independently iterates node position based on number of desired nodes.
+     * Function which simply returns the private sorter used by the manifest.
      *
-     * @param int $currentNode
-     * @param int $nodes
-     * @return int
+     * @return ParallelGroupSorter
      */
-    private function getNodeOrder($currentNode, $nodes)
+    public function getSorter()
     {
-        $adjustedRef = $currentNode + 1;
-        if ($adjustedRef <= $nodes) {
-            return $currentNode + 1;
-        }
+        return $this->parallelGroupSorter;
+    }
 
-        return 1;
+    /**
+     * Function which takes an array containing entries representing the test execution as well as the associated group
+     * for the entry in order to generate a txt file used by devops for parllel execution in Jenkins.
+     *
+     * @param array $testGroup
+     * @param int $nodeNumber
+     * @return void
+     */
+    private function generateGroupFile($testGroup, $nodeNumber)
+    {
+        $suites = $this->parallelGroupSorter->getResultingSuites();
+        foreach ($testGroup as $entryName => $testValue) {
+            $fileResource = fopen($this->dirPath . DIRECTORY_SEPARATOR . "group{$nodeNumber}.txt", 'a');
+
+            $line = null;
+            if (array_key_exists($entryName, $suites)) {
+                $line = "-g {$entryName}";
+            } else {
+                $line = $this->relativeDirPath . DIRECTORY_SEPARATOR . $entryName . '.php';
+            }
+            fwrite($fileResource, $line . PHP_EOL);
+            fclose($fileResource);
+        }
     }
 }
