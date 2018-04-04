@@ -42,25 +42,36 @@ class SuiteGenerator
     private $groupClassGenerator;
 
     /**
-     * SuiteGenerator constructor.
+     * Multidimensional array which represents a custom suite configuration (e.g. certain tests run within a suite etc.)
+     *
+     * @var array
      */
-    private function __construct()
+    private $suiteReferences;
+
+    /**
+     * SuiteGenerator constructor.
+     *
+     * @param array $suiteReferences
+     */
+    private function __construct($suiteReferences)
     {
         $this->groupClassGenerator = new GroupClassGenerator();
+        $this->suiteReferences = $suiteReferences;
     }
 
     /**
      * Singleton method which is used to retrieve the instance of the suite generator.
      *
+     * @param array $suiteReferences
      * @return SuiteGenerator
      */
-    public static function getInstance()
+    public static function getInstance($suiteReferences = [])
     {
         if (!self::$SUITE_GENERATOR_INSTANCE) {
             // clear any previous configurations before any generation occurs.
             self::clearPreviousGroupPreconditions();
             self::clearPreviousSessionConfigEntries();
-            self::$SUITE_GENERATOR_INSTANCE = new SuiteGenerator();
+            self::$SUITE_GENERATOR_INSTANCE = new SuiteGenerator($suiteReferences);
         }
 
         return self::$SUITE_GENERATOR_INSTANCE;
@@ -79,6 +90,8 @@ class SuiteGenerator
         if (get_class($testManifest) == ParallelTestManifest::class) {
             /** @var  ParallelTestManifest $testManifest */
             $suites = $testManifest->getSorter()->getResultingSuites();
+        } elseif (!empty($this->suiteReferences)) {
+            $suites = array_intersect_key($suites, $this->suiteReferences);
         }
 
         foreach ($suites as $suite) {
@@ -96,11 +109,22 @@ class SuiteGenerator
     {
         $testsReferencedInSuites = [];
         $suites = SuiteObjectHandler::getInstance()->getAllObjects();
+
+        // see if we have a specific suite configuration.
+        if (!empty($this->suiteReferences)) {
+            $suites = array_intersect_key($suites, $this->suiteReferences);
+        }
+
         foreach ($suites as $suite) {
             /** @var SuiteObject $suite */
             $test_keys = array_keys($suite->getTests());
-            $testToSuiteName = array_fill_keys($test_keys, [$suite->getName()]);
 
+            // see if we need to filter which tests we'll be generating.
+            if (array_key_exists($suite->getName(), $this->suiteReferences)) {
+                $test_keys = $this->suiteReferences[$suite->getName()] ?? $test_keys;
+            }
+
+            $testToSuiteName = array_fill_keys($test_keys, [$suite->getName()]);
             $testsReferencedInSuites = array_merge_recursive($testsReferencedInSuites, $testToSuiteName);
         }
 
@@ -135,7 +159,19 @@ class SuiteGenerator
         $groupNamespace = null;
 
         DirSetupUtil::createGroupDir($fullPath);
-        $this->generateRelevantGroupTests($suiteName, $suiteObject->getTests());
+
+        $relevantTests = $suiteObject->getTests();
+        if (array_key_exists($suiteName, $this->suiteReferences)) {
+            $testReferences = $this->suiteReferences[$suiteName] ?? [];
+            $tmpRelevantTests = null;
+            array_walk($testReferences, function ($value) use (&$tmpRelevantTests, $relevantTests) {
+                $tmpRelevantTests[$value] = $relevantTests[$value];
+            });
+
+            $relevantTests = $tmpRelevantTests ?? $relevantTests;
+        }
+
+        $this->generateRelevantGroupTests($suiteName, $relevantTests);
 
         if ($suiteObject->requiresGroupFile()) {
             // if the suite requires a group file, generate it and set the namespace
