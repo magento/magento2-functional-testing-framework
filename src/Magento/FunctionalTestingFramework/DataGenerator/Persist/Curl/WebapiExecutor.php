@@ -76,7 +76,7 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
      */
     protected function authorize()
     {
-        $authUrl = parent::$baseUrl . 'rest/' . $this->storeCode . trim(self::ADMIN_AUTH_URL, '/');
+        $authUrl = $this->getFormattedUrl(self::ADMIN_AUTH_URL);
         $authCreds = [
             'username' => getenv('MAGENTO_ADMIN_USERNAME'),
             'password' => getenv('MAGENTO_ADMIN_PASSWORD')
@@ -101,7 +101,7 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
     public function write($url, $data = [], $method = CurlInterface::POST, $headers = [])
     {
         $this->transport->write(
-            parent::$baseUrl . 'rest/' . $this->storeCode  . trim($url, '/'),
+            $this->getFormattedUrl($url),
             json_encode($data, JSON_PRETTY_PRINT),
             $method,
             array_unique(array_merge($headers, $this->headers))
@@ -141,5 +141,20 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
     public function close()
     {
         $this->transport->close();
+    }
+
+    /**
+     * Builds and returns URL for request, appending storeCode if needed.
+     * @param string $resource
+     * @return string
+     */
+    public function getFormattedUrl($resource)
+    {
+        $urlResult = parent::$baseUrl . 'rest/';
+        if ($this->storeCode != null) {
+            $urlResult .= $this->storeCode . "/";
+        }
+        $urlResult.= trim($resource, "/");
+        return $urlResult;
     }
 }

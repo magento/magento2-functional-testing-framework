@@ -438,6 +438,7 @@ class TestGenerator
             $visible = null;
             $command = null;
             $sortOrder = null;
+            $storeCode = null;
 
             $assertExpected = null;
             $assertActual = null;
@@ -592,6 +593,9 @@ class TestGenerator
                 $visible = $customActionAttributes['visible'];
             }
 
+            if (isset($customActionAttributes['storeCode'])) {
+                $storeCode = $customActionAttributes['storeCode'];
+            }
             switch ($actionObject->getType()) {
                 case "createData":
                     $entity = $customActionAttributes['entity'];
@@ -648,8 +652,8 @@ class TestGenerator
                         );
                     }
 
-                    if (isset($customActionAttributes['storeCode'])) {
-                        $createEntityFunctionCall .= sprintf("\"%s\");\n", $customActionAttributes['storeCode']);
+                    if (isset($storeCode)) {
+                        $createEntityFunctionCall .= sprintf("\"%s\");\n", $storeCode);
                     } else {
                         $createEntityFunctionCall .= ");\n";
                     }
@@ -684,8 +688,8 @@ class TestGenerator
                         $deleteEntityFunctionCall .= sprintf("\t\t$%s->deleteEntity(", $key);
                     }
 
-                    if (isset($customActionAttributes['storeCode'])) {
-                        $deleteEntityFunctionCall .= sprintf("\"%s\");\n", $customActionAttributes['storeCode']);
+                    if (isset($storeCode)) {
+                        $deleteEntityFunctionCall .= sprintf("\"%s\");\n", $storeCode);
                     } else {
                         $deleteEntityFunctionCall .= ");\n";
                     }
@@ -739,8 +743,8 @@ class TestGenerator
                         );
                     }
 
-                    if (isset($customActionAttributes['storeCode'])) {
-                        $updateEntityFunctionCall .= sprintf(", \"%s\");\n", $customActionAttributes['storeCode']);
+                    if (isset($storeCode)) {
+                        $updateEntityFunctionCall .= sprintf(", \"%s\");\n", $storeCode);
                     } else {
                         $updateEntityFunctionCall .= ");\n";
                     }
@@ -806,8 +810,8 @@ class TestGenerator
                         $getEntityFunctionCall .= 'null';
                     }
 
-                    if (isset($customActionAttributes['storeCode'])) {
-                        $getEntityFunctionCall .= sprintf(", \"%s\");\n", $customActionAttributes['storeCode']);
+                    if (isset($storeCode)) {
+                        $getEntityFunctionCall .= sprintf(", \"%s\");\n", $storeCode);
                     } else {
                         $getEntityFunctionCall .= ");\n";
                     }
