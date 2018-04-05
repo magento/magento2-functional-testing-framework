@@ -18,6 +18,7 @@ use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Util\Uri;
 use Codeception\Util\ActionSequence;
+use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\WebapiExecutor;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
 use Magento\Setup\Exception;
@@ -437,10 +438,24 @@ class MagentoWebDriver extends WebDriver
      */
     public function magentoCLI($command)
     {
-
         $apiURL = $this->config['url'] . getenv('MAGENTO_CLI_COMMAND_PATH');
         $executor = new CurlTransport();
         $executor->write($apiURL, [getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command], CurlInterface::POST, []);
+        $response = $executor->read();
+        $executor->close();
+        return $response;
+    }
+
+    /**
+     * Runs DELETE request to delete a Magento entity against the url given.
+     * @param string $url
+     * @param int $storeCode
+     * @return string
+     */
+    public function deleteEntityByUrl($url, $storeCode = null)
+    {
+        $executor = new WebapiExecutor($storeCode);
+        $executor->write($url, [], CurlInterface::DELETE, []);
         $response = $executor->read();
         $executor->close();
         return $response;
