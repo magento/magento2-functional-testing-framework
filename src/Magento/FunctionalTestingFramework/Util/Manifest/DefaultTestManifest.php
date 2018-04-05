@@ -62,10 +62,11 @@ class DefaultTestManifest extends BaseTestManifest
     /**
      * Function which outputs a list of all test files to the defined testManifest.txt file.
      *
+     * @param array $testsReferencedInSuites
      * @param int|null $nodes
      * @return void
      */
-    public function generate($nodes = null)
+    public function generate($testsReferencedInSuites, $nodes = null)
     {
         $fileResource = fopen($this->manifestPath, 'a');
 
@@ -74,7 +75,30 @@ class DefaultTestManifest extends BaseTestManifest
             fwrite($fileResource, $line . PHP_EOL);
         }
 
+        $this->generateSuiteEntries($testsReferencedInSuites, $fileResource);
+
         fclose($fileResource);
+    }
+
+    /**
+     * Function which takes the test suites passed to the manifest and generates corresponding entries in the manifest.
+     *
+     * @param array $testsReferencedInSuites
+     * @param resource $fileResource
+     * @return void
+     */
+    protected function generateSuiteEntries($testsReferencedInSuites, $fileResource)
+    {
+        // get the names of available suites
+        $suiteNames = [];
+        array_walk($testsReferencedInSuites, function ($value) use (&$suiteNames) {
+            $suiteNames = array_unique(array_merge($value, $suiteNames));
+        });
+
+        foreach ($suiteNames as $suiteName) {
+            $line = "-g {$suiteName}";
+            fwrite($fileResource, $line . PHP_EOL);
+        }
     }
 
     /**

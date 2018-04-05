@@ -8,6 +8,7 @@ namespace Magento\FunctionalTestingFramework\Test\Util;
 
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
+use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
 
 /**
  * Class TestObjectExtractor
@@ -61,7 +62,7 @@ class TestObjectExtractor extends BaseObjectExtractor
     public function extractTestData($testData)
     {
         // validate the test name for blacklisted char (will cause allure report issues) MQE-483
-        TestNameValidationUtil::validateName($testData[self::NAME]);
+        NameValidationUtil::validateName($testData[self::NAME], "Test");
 
         $testAnnotations = [];
         $testHooks = [];

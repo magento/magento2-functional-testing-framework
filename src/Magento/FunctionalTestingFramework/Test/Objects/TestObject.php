@@ -44,19 +44,28 @@ class TestObject
     private $hooks = [];
 
     /**
+     * String of filename of test
+     *
+     * @var String
+     */
+    private $filename;
+
+    /**
      * TestObject constructor.
      *
      * @param string $name
      * @param ActionObject[] $parsedSteps
      * @param array $annotations
      * @param TestHookObject[] $hooks
+     * @param String $filename
      */
-    public function __construct($name, $parsedSteps, $annotations, $hooks)
+    public function __construct($name, $parsedSteps, $annotations, $hooks, $filename = null)
     {
         $this->name = $name;
         $this->parsedSteps = $parsedSteps;
         $this->annotations = $annotations;
         $this->hooks = $hooks;
+        $this->filename = $filename;
     }
 
     /**
@@ -67,6 +76,16 @@ class TestObject
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Getter for the Test Filename
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
     }
 
     /**

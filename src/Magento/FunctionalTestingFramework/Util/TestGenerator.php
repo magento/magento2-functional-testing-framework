@@ -154,7 +154,7 @@ class TestGenerator
      * @param string $runConfig
      * @param int $nodes
      * @param TestObject[] $testsToIgnore
-     * @return void
+     * @return BaseTestManifest
      * @throws TestReferenceException
      * @throws \Exception
      */
@@ -173,6 +173,8 @@ class TestGenerator
         foreach ($testPhpArray as $testPhpFile) {
             $this->createCestFile($testPhpFile[1], $testPhpFile[0]);
         }
+
+        return $testManifest;
     }
 
     /**
@@ -230,15 +232,19 @@ class TestGenerator
             $php = $this->assembleTestPhp($test);
             $cestPhpArray[] = [$test->getCodeceptionName(), $php];
 
-            //write to manifest here if config is not single run
-            $testManifest->addTest($test);
             $debugInformation = $test->getDebugInformation();
-
             $this->debug($debugInformation);
             $this->debug("<comment>Finish creating test: " . $test->getCodeceptionName() . "</comment>" . PHP_EOL);
+
+            //write to manifest here if manifest is not null
+            if ($testManifest != null) {
+                $testManifest->addTest($test);
+            }
         }
 
-        $testManifest->generate($nodes);
+        if ($testManifest != null) {
+            $testManifest->generate($testsToIgnore, intval($nodes));
+        }
 
         return $cestPhpArray;
     }
@@ -475,6 +481,7 @@ class TestGenerator
             $visible = null;
             $command = null;
             $sortOrder = null;
+            $storeCode = null;
 
             $assertExpected = null;
             $assertActual = null;
@@ -504,6 +511,7 @@ class TestGenerator
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['userInput']);
             } elseif (isset($customActionAttributes['url'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['url']);
+                $url = $this->addUniquenessFunctionCall($customActionAttributes['url']);
             } elseif (isset($customActionAttributes['expectedValue'])) {
                 //For old Assert backwards Compatibility, remove when deprecating
                 $assertExpected = $this->addUniquenessFunctionCall($customActionAttributes['expectedValue']);
@@ -628,6 +636,9 @@ class TestGenerator
                 $visible = $customActionAttributes['visible'];
             }
 
+            if (isset($customActionAttributes['storeCode'])) {
+                $storeCode = $customActionAttributes['storeCode'];
+            }
             switch ($actionObject->getType()) {
                 case "createData":
                     $entity = $customActionAttributes['entity'];
@@ -684,8 +695,8 @@ class TestGenerator
                         );
                     }
 
-                    if (isset($customActionAttributes['storeCode'])) {
-                        $createEntityFunctionCall .= sprintf("\"%s\");\n", $customActionAttributes['storeCode']);
+                    if (isset($storeCode)) {
+                        $createEntityFunctionCall .= sprintf("\"%s\");\n", $storeCode);
                     } else {
                         $createEntityFunctionCall .= ");\n";
                     }
@@ -706,18 +717,32 @@ class TestGenerator
                     $testSteps .= $createEntityFunctionCall;
                     break;
                 case "deleteData":
-                    $key = $customActionAttributes['createDataKey'];
-                    //Add an informative statement to help the user debug test runs
-                    $testSteps .= sprintf(
-                        "\t\t$%s->amGoingTo(\"delete entity that has the createDataKey: %s\");\n",
-                        $actor,
-                        $key
-                    );
+                    if (isset($customActionAttributes['createDataKey'])) {
+                        $key = $customActionAttributes['createDataKey'];
+                        //Add an informative statement to help the user debug test runs
+                        $contextSetter = sprintf(
+                            "\t\t$%s->amGoingTo(\"delete entity that has the createDataKey: %s\");\n",
+                            $actor,
+                            $key
+                        );
+                        $deleteEntityFunctionCall = "";
 
-                    if ($hookObject) {
-                        $testSteps .= sprintf("\t\t\$this->%s->deleteEntity();\n", $key);
+                        if ($hookObject) {
+                            $deleteEntityFunctionCall .= sprintf("\t\t\$this->%s->deleteEntity();\n", $key);
+                        } else {
+                            $deleteEntityFunctionCall .= sprintf("\t\t$%s->deleteEntity();\n", $key);
+                        }
+
+                        $testSteps .= $contextSetter;
+                        $testSteps .= $deleteEntityFunctionCall;
                     } else {
-                        $testSteps .= sprintf("\t\t$%s->deleteEntity();\n", $key);
+                        $output = sprintf(
+                            "\t\t$%s->deleteEntityByUrl(%s);\n",
+                            $actor,
+                            $url
+                        );
+                        $output = $this->resolveEnvReferences($output, [$url]);
+                        $testSteps .= $this->resolveTestVariable($output, [$url], null);
                     }
                     break;
                 case "updateData":
@@ -766,8 +791,8 @@ class TestGenerator
                         );
                     }
 
-                    if (isset($customActionAttributes['storeCode'])) {
-                        $updateEntityFunctionCall .= sprintf("\"%s\");\n", $customActionAttributes['storeCode']);
+                    if (isset($storeCode)) {
+                        $updateEntityFunctionCall .= sprintf(", \"%s\");\n", $storeCode);
                     } else {
                         $updateEntityFunctionCall .= ");\n";
                     }
@@ -828,13 +853,13 @@ class TestGenerator
                     }
 
                     if (isset($customActionAttributes['index'])) {
-                        $getEntityFunctionCall .= sprintf("%s", (int)$customActionAttributes['index']);
+                        $getEntityFunctionCall .= sprintf(", %s", (int)$customActionAttributes['index']);
                     } else {
                         $getEntityFunctionCall .= 'null';
                     }
 
-                    if (isset($customActionAttributes['storeCode'])) {
-                        $getEntityFunctionCall .= sprintf(", \"%s\");\n", $customActionAttributes['storeCode']);
+                    if (isset($storeCode)) {
+                        $getEntityFunctionCall .= sprintf(", \"%s\");\n", $storeCode);
                     } else {
                         $getEntityFunctionCall .= ");\n";
                     }
