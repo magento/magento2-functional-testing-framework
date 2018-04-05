@@ -86,6 +86,7 @@ class SuiteGenerationTest extends MftfTestCase
 
         // Validate tests have been generated
         $dirContents = array_diff(scandir($suiteResultBaseDir), ['..', '.']);
+
         foreach ($expectedContents as $expectedFile) {
             $this->assertTrue(in_array($expectedFile, $dirContents));
         }

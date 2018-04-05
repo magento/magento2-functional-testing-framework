@@ -7,10 +7,10 @@
 namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
 
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
-use Magento\FunctionalTestingFramework\Test\Util\TestNameValidationUtil;
+use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
 use PHPUnit\Framework\TestCase;
 
-class TestNameValidationUtilTest extends TestCase
+class NameValidationUtilTest extends TestCase
 {
     /**
      * Validate name with curly braces throws exception
@@ -69,6 +69,6 @@ class TestNameValidationUtilTest extends TestCase
     private function validateBlacklistedTestName($testName)
     {
         $this->expectException(XmlException::class);
-        TestNameValidationUtil::validateName($testName);
+        NameValidationUtil::validateName($testName, "Test");
     }
 }

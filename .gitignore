@@ -11,3 +11,6 @@ build/*
 clover.xml
 coverage/
 .vscode
+codeception.yml
+dev/tests/functional/MFTF.suite.yml
+dev/tests/functional/_output
