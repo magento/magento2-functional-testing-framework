@@ -13,6 +13,7 @@ use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Util\BaseObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\TestHookObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
+use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
 
 class SuiteObjectExtractor extends BaseObjectExtractor
 {
@@ -55,6 +56,9 @@ class SuiteObjectExtractor extends BaseObjectExtractor
                 // skip non array items parsed from suite (suite objects will always be arrays)
                 continue;
             }
+
+            // validate the name used isn't using special char or the "default" reserved name
+            NameValidationUtil::validateName($parsedSuite[self::NAME], 'Suite');
             if ($parsedSuite[self::NAME] == 'default') {
                 throw new XmlException("A Suite can not have the name \"default\"");
             }
