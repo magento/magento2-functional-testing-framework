@@ -63,7 +63,7 @@ class DataPersistenceHandler
         } else {
             $this->entityObject = clone $entityObject;
         }
-        $this->storeCode = 'default';
+        $this->storeCode = null;
 
         foreach ($dependentObjects as $dependentObject) {
             $this->dependentObjects[] = $dependentObject->getCreatedObject();
@@ -96,16 +96,11 @@ class DataPersistenceHandler
      *
      * @param string $updateDataName
      * @param array $updateDependentObjects
-     * @param string $storeCode
      * @return void
      */
 
-    public function updateEntity($updateDataName, $updateDependentObjects = [], $storeCode = null)
+    public function updateEntity($updateDataName, $updateDependentObjects = [])
     {
-        if (!empty($storeCode)) {
-            $this->storeCode = $storeCode;
-        }
-
         foreach ($updateDependentObjects as $dependentObject) {
             $this->dependentObjects[] = $dependentObject->getCreatedObject();
         }
@@ -146,14 +141,10 @@ class DataPersistenceHandler
     /**
      * Function which executes a delete request based on specific operation metadata
      *
-     * @param string $storeCode
      * @return void
      */
-    public function deleteEntity($storeCode = null)
+    public function deleteEntity()
     {
-        if (!empty($storeCode)) {
-            $this->storeCode = $storeCode;
-        }
         $curlHandler = new CurlHandler('delete', $this->createdObject, $this->storeCode);
         $curlHandler->executeRequest($this->dependentObjects);
     }
