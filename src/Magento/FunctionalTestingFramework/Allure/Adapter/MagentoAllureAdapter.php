@@ -44,7 +44,7 @@ class MagentoAllureAdapter extends AllureAdapter
 
         if ($this->getGroup() != null) {
             $suite = $suiteEvent->getSuite();
-            $suiteName = ($suite->getName()) . "-{$this->getGroup()}";
+            $suiteName = ($suite->getName()) . "\\" . $this->getGroup();
 
             call_user_func(\Closure::bind(
                 function () use ($suite, $suiteName) {
