@@ -17,13 +17,6 @@ class SuiteGenerationTest extends MftfTestCase
     const RESOURCES_DIR = TESTS_BP . DIRECTORY_SEPARATOR . 'verification' . DIRECTORY_SEPARATOR . 'Resources';
     const CONFIG_YML_FILE = FW_BP . DIRECTORY_SEPARATOR . SuiteGenerator::YAML_CODECEPTION_CONFIG_FILENAME;
 
-    const MANIFEST_RESULTS = [
-        'IncludeTest2Cest.php',
-        'additionalTestCest.php',
-        'IncludeTestCest.php',
-        'additionalIncludeTest2Cest.php'
-    ];
-
     /**
      * Flag to track existence of config.yml file
      *
@@ -48,6 +41,11 @@ class SuiteGenerationTest extends MftfTestCase
             return;
         }
 
+        // destroy manifest file if it exists
+        if (file_exists(self::getManifestFilePath())) {
+            unlink(self::getManifestFilePath());
+        }
+
         $configYml = fopen(self::CONFIG_YML_FILE, "w");
         fclose($configYml);
     }
@@ -58,6 +56,13 @@ class SuiteGenerationTest extends MftfTestCase
     public function testSuiteGeneration1()
     {
          $groupName = 'functionalSuite1';
+
+        $expectedContents = [
+           'additionalTestCest.php',
+           'additionalIncludeTest2Cest.php',
+           'IncludeTest2Cest.php',
+           'IncludeTestCest.php'
+        ];
 
         // Generate the Suite
         SuiteGenerator::getInstance()->generateSuite($groupName);
@@ -79,23 +84,11 @@ class SuiteGenerationTest extends MftfTestCase
             $groupName .
             DIRECTORY_SEPARATOR;
 
-        // Validate test manifest contents
-        $actualManifest = dirname($suiteResultBaseDir). DIRECTORY_SEPARATOR . 'testManifest.txt';
-        $actualTestReferences = explode(PHP_EOL, file_get_contents($actualManifest));
+        // Validate tests have been generated
+        $dirContents = array_diff(scandir($suiteResultBaseDir), ['..', '.']);
 
-        for ($i = 0; $i < count($actualTestReferences); $i++) {
-            if (empty($actualTestReferences[$i])) {
-                continue;
-            }
-
-            $this->assertStringEndsWith(self::MANIFEST_RESULTS[$i], $actualTestReferences[$i]);
-            $this->assertNotFalse(strpos($actualTestReferences[$i], $groupName));
-        }
-
-        // Validate expected php files exist
-        foreach (self::MANIFEST_RESULTS as $expectedTestReference) {
-            $cestName = explode(":", $expectedTestReference, 2);
-            $this->assertFileExists($suiteResultBaseDir . $cestName[0]);
+        foreach ($expectedContents as $expectedFile) {
+            $this->assertTrue(in_array($expectedFile, $dirContents));
         }
     }
 
@@ -116,5 +109,21 @@ class SuiteGenerationTest extends MftfTestCase
         }
 
         unlink(self::CONFIG_YML_FILE);
+    }
+
+    /**
+     * Getter for manifest file path
+     *
+     * @return string
+     */
+    private static function getManifestFilePath()
+    {
+        return TESTS_BP .
+            DIRECTORY_SEPARATOR .
+            "verification" .
+            DIRECTORY_SEPARATOR .
+            "_generated" .
+            DIRECTORY_SEPARATOR .
+            'testManifest.txt';
     }
 }

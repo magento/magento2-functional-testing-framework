@@ -7,6 +7,7 @@ namespace Magento\FunctionalTestingFramework\Test\Objects;
 
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
 use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
@@ -20,7 +21,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 class ActionObject
 {
     const __ENV = "_ENV";
-    const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray", "expected", "actual"];
+    const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray", "expected", "actual", "x", "y"];
     const SELECTOR_ENABLED_ATTRIBUTES = [
         'selector',
         'dependentSelector',
@@ -34,14 +35,14 @@ class ActionObject
     const ASSERTION_ATTRIBUTES = ["expectedResult" => "expected", "actualResult" => "actual"];
     const ASSERTION_TYPE_ATTRIBUTE = "type";
     const ASSERTION_VALUE_ATTRIBUTE = "value";
+    const DELETE_DATA_MUTUAL_EXCLUSIVE_ATTRIBUTES = ["url", "createDataKey"];
     const EXTERNAL_URL_AREA_INVALID_ACTIONS = ['amOnPage'];
     const MERGE_ACTION_ORDER_AFTER = 'after';
     const MERGE_ACTION_ORDER_BEFORE = 'before';
     const ACTION_ATTRIBUTE_URL = 'url';
     const ACTION_ATTRIBUTE_SELECTOR = 'selector';
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER = '/\(.+\)/';
-    const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/{{[\w]+\.[\w\[\]]+}}/';
-    const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN_WITH_PARAMS= '/{{[\w]+\.[\w]+\(.+\)}}/';
+    const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/({{[\w]+\.[\w\[\]]+}})|({{[\w]+\.[\w]+\(.+\)}})/';
 
     /**
      * The unique identifier for the action
@@ -230,6 +231,9 @@ class ActionObject
             $this->resolveSelectorReferenceAndTimeout();
             $this->resolveUrlReference();
             $this->resolveDataInputReferences();
+            if ($this->getType() == "deleteData") {
+                $this->validateMutuallyExclusiveAttributes(self::DELETE_DATA_MUTUAL_EXCLUSIVE_ATTRIBUTES);
+            }
         }
     }
 
@@ -371,7 +375,7 @@ class ActionObject
         foreach ($relevantDataAttributes as $dataAttribute) {
             $varInput = $this->actionAttributes[$dataAttribute];
             $replacement = $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $varInput);
-            if ($replacement != null) {
+            if ($replacement !== null) {
                 $this->resolvedCustomAttributes[$dataAttribute] = $replacement;
             }
         }
@@ -444,7 +448,7 @@ class ActionObject
     private function findAndReplaceReferences($objectHandler, $inputString)
     {
         //look for parameter area, if so use different regex
-        $regex = $this->resolveRegexPatternForReference($inputString);
+        $regex = ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN;
 
         preg_match_all($regex, $inputString, $matches);
 
@@ -482,7 +486,7 @@ class ActionObject
                 $replacement = $this->resolveEntityDataObjectReference($obj, $match);
             }
 
-            if ($replacement == null) {
+            if ($replacement === null) {
                 if (get_class($objectHandler) != DataObjectHandler::class) {
                     return $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $outputString);
                 } else {
@@ -495,6 +499,28 @@ class ActionObject
             $outputString = str_replace($match, $replacement, $outputString);
         }
         return $outputString;
+    }
+
+    /**
+     * Validates that the mutually exclusive attributes passed in don't all occur.
+     * @param array $attributes
+     * @return void
+     * @throws TestReferenceException
+     */
+    private function validateMutuallyExclusiveAttributes(array $attributes)
+    {
+        $matches = array_intersect($attributes, array_keys($this->getCustomActionAttributes()));
+        if (count($matches) > 1) {
+            throw new TestReferenceException(
+                "Actions of type '{$this->getType()}' must only contain one attribute of types '"
+                . implode("', '", $attributes) . "'"
+            );
+        } elseif (count($matches) == 0) {
+            throw new TestReferenceException(
+                "Actions of type '{$this->getType()}' must contain at least one attribute of types '"
+                . implode("', '", $attributes) . "'"
+            );
+        }
     }
 
     /**
@@ -511,20 +537,6 @@ class ActionObject
             throw new TestReferenceException(
                 "Page of type 'external' is not compatible with action type '{$this->getType()}'"
             );
-        }
-    }
-
-    /**
-     * Determines whether the given $inputString has (params), and returns the appropriate regex for use in matching.
-     * @param string $inputString
-     * @return string
-     */
-    private function resolveRegexPatternForReference($inputString)
-    {
-        if (preg_match(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN_WITH_PARAMS, $inputString) === 1) {
-            return ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN_WITH_PARAMS;
-        } else {
-            return ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN;
         }
     }
 

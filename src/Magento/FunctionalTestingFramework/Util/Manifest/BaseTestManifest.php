@@ -57,8 +57,9 @@ abstract class BaseTestManifest
     /**
      * Function which generates the actual manifest(s) once the relevant tests have been added to the array.
      *
+     * @param array $testsReferencedInSuites
      * @param int|null $nodes
      * @return void
      */
-    abstract public function generate($nodes = null);
+    abstract public function generate($testsReferencedInSuites, $nodes = null);
 }

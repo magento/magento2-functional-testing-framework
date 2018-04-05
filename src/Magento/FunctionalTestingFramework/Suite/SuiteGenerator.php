@@ -12,6 +12,8 @@ use Magento\FunctionalTestingFramework\Suite\Generators\GroupClassGenerator;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
+use Magento\FunctionalTestingFramework\Util\Manifest\BaseTestManifest;
+use Magento\FunctionalTestingFramework\Util\Manifest\ParallelTestManifest;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Symfony\Component\Yaml\Yaml;
 
@@ -55,10 +57,54 @@ class SuiteGenerator
     public static function getInstance()
     {
         if (!self::$SUITE_GENERATOR_INSTANCE) {
+            // clear any previous configurations before any generation occurs.
+            self::clearPreviousGroupPreconditions();
+            self::clearPreviousSessionConfigEntries();
             self::$SUITE_GENERATOR_INSTANCE = new SuiteGenerator();
         }
 
         return self::$SUITE_GENERATOR_INSTANCE;
+    }
+
+    /**
+     * Function which takes all suite configurations and generates to appropriate directory, updating yml configuration
+     * as needed. Returns an array of all tests generated keyed by test name.
+     *
+     * @param BaseTestManifest $testManifest
+     * @return void
+     */
+    public function generateAllSuites($testManifest)
+    {
+        $suites = SuiteObjectHandler::getInstance()->getAllObjects();
+        if (get_class($testManifest) == ParallelTestManifest::class) {
+            /** @var  ParallelTestManifest $testManifest */
+            $suites = $testManifest->getSorter()->getResultingSuites();
+        }
+
+        foreach ($suites as $suite) {
+            // during a parallel config run we must generate only after we have data around how a suite will be split
+            $this->generateSuiteFromObject($suite);
+        }
+    }
+
+    /**
+     * Returns an array of tests contained within suites as keys pointed at the name of their corresponding suite.
+     *
+     * @return array
+     */
+    public function getTestsReferencedInSuites()
+    {
+        $testsReferencedInSuites = [];
+        $suites = SuiteObjectHandler::getInstance()->getAllObjects();
+        foreach ($suites as $suite) {
+            /** @var SuiteObject $suite */
+            $test_keys = array_keys($suite->getTests());
+            $testToSuiteName = array_fill_keys($test_keys, [$suite->getName()]);
+
+            $testsReferencedInSuites = array_merge_recursive($testsReferencedInSuites, $testToSuiteName);
+        }
+
+        return $testsReferencedInSuites;
     }
 
     /**
@@ -72,16 +118,28 @@ class SuiteGenerator
     {
         /**@var SuiteObject $suite **/
         $suite = SuiteObjectHandler::getInstance()->getObject($suiteName);
+        $this->generateSuiteFromObject($suite);
+    }
+
+    /**
+     * Function which takes a suite object and generates all relevant supporting files and classes.
+     *
+     * @param SuiteObject $suiteObject
+     * @return void
+     */
+    public function generateSuiteFromObject($suiteObject)
+    {
+        $suiteName = $suiteObject->getName();
         $relativePath = TestGenerator::GENERATED_DIR . DIRECTORY_SEPARATOR . $suiteName;
         $fullPath = TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . $relativePath;
         $groupNamespace = null;
 
         DirSetupUtil::createGroupDir($fullPath);
-        $this->generateRelevantGroupTests($suiteName, $suite->getTests());
+        $this->generateRelevantGroupTests($suiteName, $suiteObject->getTests());
 
-        if ($suite->requiresGroupFile()) {
+        if ($suiteObject->requiresGroupFile()) {
             // if the suite requires a group file, generate it and set the namespace
-            $groupNamespace = $this->groupClassGenerator->generateGroupClass($suite);
+            $groupNamespace = $this->groupClassGenerator->generateGroupClass($suiteObject);
         }
 
         $this->appendEntriesToConfig($suiteName, $fullPath, $groupNamespace);
@@ -100,32 +158,53 @@ class SuiteGenerator
      */
     private function appendEntriesToConfig($suiteName, $suitePath, $groupNamespace)
     {
-        $configYmlPath = dirname(dirname(TESTS_BP)) . DIRECTORY_SEPARATOR;
-        $configYmlFile = $configYmlPath . self::YAML_CODECEPTION_CONFIG_FILENAME;
-        $defaultConfigYmlFile = $configYmlPath . self::YAML_CODECEPTION_DIST_FILENAME;
         $relativeSuitePath = substr($suitePath, strlen(dirname(dirname(TESTS_BP))) + 1);
 
-        $ymlContents = null;
-        if (file_exists($configYmlFile)) {
-            $ymlContents = file_get_contents($configYmlFile);
-        } else {
-            $ymlContents = file_get_contents($defaultConfigYmlFile);
-        }
-
-        $ymlArray = Yaml::parse($ymlContents) ?? [];
+        $ymlArray = self::getYamlFileContents();
         if (!array_key_exists(self::YAML_GROUPS_TAG, $ymlArray)) {
             $ymlArray[self::YAML_GROUPS_TAG]= [];
         }
 
-        $ymlArray[self::YAML_GROUPS_TAG][$suiteName] = [$relativeSuitePath];
-
-        if ($groupNamespace &&
-            !in_array($groupNamespace, $ymlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG])) {
+        if ($groupNamespace) {
             $ymlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG][] = $groupNamespace;
         }
+        $ymlArray[self::YAML_GROUPS_TAG][$suiteName] = [$relativeSuitePath];
 
         $ymlText = self::YAML_COPYRIGHT_TEXT . Yaml::dump($ymlArray, 10);
-        file_put_contents($configYmlFile, $ymlText);
+        file_put_contents(self::getYamlConfigFilePath() . self::YAML_CODECEPTION_CONFIG_FILENAME, $ymlText);
+    }
+
+    /**
+     * Function which takes the current config.yml array and clears any previous configuration for suite group object
+     * files.
+     *
+     * @return void
+     */
+    private static function clearPreviousSessionConfigEntries()
+    {
+        $ymlArray = self::getYamlFileContents();
+        $newYmlArray = $ymlArray;
+        // if the yaml entries haven't already been cleared
+        if (array_key_exists(self::YAML_EXTENSIONS_TAG, $ymlArray)) {
+            foreach ($ymlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG] as $key => $entry) {
+                if (preg_match('/(Group\\\\.*)/', $entry)) {
+                    unset($newYmlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG][$key]);
+                }
+
+            }
+
+            // needed for proper yml file generation based on indices
+            $newYmlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG] =
+                array_values($newYmlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG]);
+
+        }
+
+        if (array_key_exists(self::YAML_GROUPS_TAG, $newYmlArray)) {
+            unset($newYmlArray[self::YAML_GROUPS_TAG]);
+        }
+
+        $ymlText = self::YAML_COPYRIGHT_TEXT . Yaml::dump($newYmlArray, 10);
+        file_put_contents(self::getYamlConfigFilePath() . self::YAML_CODECEPTION_CONFIG_FILENAME, $ymlText);
     }
 
     /**
@@ -140,6 +219,47 @@ class SuiteGenerator
     private function generateRelevantGroupTests($path, $tests)
     {
         $testGenerator = TestGenerator::getInstance($path, $tests);
-        $testGenerator->createAllTestFiles();
+        $testGenerator->createAllTestFiles('suite');
+    }
+
+    /**
+     * Function which on first execution deletes all generate php in the MFTF Group directory
+     *
+     * @return void
+     */
+    private static function clearPreviousGroupPreconditions()
+    {
+        $groupFilePath = GroupClassGenerator::getGroupDirPath();
+        array_map('unlink', glob("$groupFilePath*.php"));
+    }
+
+    /**
+     * Function to return contents of codeception.yml file for config changes.
+     *
+     * @return array
+     */
+    private static function getYamlFileContents()
+    {
+        $configYmlFile = self::getYamlConfigFilePath() . self::YAML_CODECEPTION_CONFIG_FILENAME;
+        $defaultConfigYmlFile = self::getYamlConfigFilePath() . self::YAML_CODECEPTION_DIST_FILENAME;
+
+        $ymlContents = null;
+        if (file_exists($configYmlFile)) {
+            $ymlContents = file_get_contents($configYmlFile);
+        } else {
+            $ymlContents = file_get_contents($defaultConfigYmlFile);
+        }
+
+        return Yaml::parse($ymlContents) ?? [];
+    }
+
+    /**
+     * Static getter for the Config yml filepath (as path cannot be stored in a const)
+     *
+     * @return string
+     */
+    private static function getYamlConfigFilePath()
+    {
+        return dirname(dirname(TESTS_BP)) . DIRECTORY_SEPARATOR;
     }
 }

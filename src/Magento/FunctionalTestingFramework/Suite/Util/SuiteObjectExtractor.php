@@ -13,6 +13,7 @@ use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Util\BaseObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\TestHookObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
+use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
 
 class SuiteObjectExtractor extends BaseObjectExtractor
 {
@@ -39,21 +40,45 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      * @param array $parsedSuiteData
      * @return array
      * @throws XmlException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function parseSuiteDataIntoObjects($parsedSuiteData)
     {
         $suiteObjects = [];
         $testHookObjectExtractor = new TestHookObjectExtractor();
+
+        // make sure there are suites defined before trying to parse as objects.
+        if (!array_key_exists(self::SUITE_ROOT_TAG, $parsedSuiteData)) {
+            return $suiteObjects;
+        }
+
         foreach ($parsedSuiteData[self::SUITE_ROOT_TAG] as $parsedSuite) {
             if (!is_array($parsedSuite)) {
                 // skip non array items parsed from suite (suite objects will always be arrays)
                 continue;
             }
+
+            // validate the name used isn't using special char or the "default" reserved name
+            NameValidationUtil::validateName($parsedSuite[self::NAME], 'Suite');
             if ($parsedSuite[self::NAME] == 'default') {
                 throw new XmlException("A Suite can not have the name \"default\"");
             }
 
             $suiteHooks = [];
+
+            //Check for collisions between suite name and existing group name
+            $suiteName = $parsedSuite[self::NAME];
+            $testGroupConflicts = TestObjectHandler::getInstance()->getTestsByGroup($suiteName);
+            if (!empty($testGroupConflicts)) {
+                $testGroupConflictsFileNames = "";
+                foreach ($testGroupConflicts as $test) {
+                    $testGroupConflictsFileNames .= $test->getFilename() . "\n";
+                }
+                $exceptionmessage = "\"Suite names and Group names can not have the same value. \t\n" .
+                    "Suite: \"{$suiteName}\" also exists as a group annotation in: \n{$testGroupConflictsFileNames}";
+                throw new XmlException($exceptionmessage);
+            }
 
             //extract include and exclude references
             $groupTestsToInclude = $parsedSuite[self::INCLUDE_TAG_NAME] ?? [];

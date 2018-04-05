@@ -42,6 +42,7 @@ $RELATIVE_TESTS_MODULE_PATH = DIRECTORY_SEPARATOR . 'verification';
 
 defined('TESTS_BP') || define('TESTS_BP', __DIR__);
 defined('TESTS_MODULE_PATH') || define('TESTS_MODULE_PATH', TESTS_BP . $RELATIVE_TESTS_MODULE_PATH);
+defined('MAGENTO_BP') || define('MAGENTO_BP', __DIR__);
 
 $utilDir = DIRECTORY_SEPARATOR . 'Util'. DIRECTORY_SEPARATOR . '*.php';
 

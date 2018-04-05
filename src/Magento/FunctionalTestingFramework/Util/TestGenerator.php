@@ -23,7 +23,7 @@ use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 
 /**
  * Class TestGenerator
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD)
  */
 class TestGenerator
 {
@@ -53,12 +53,27 @@ class TestGenerator
     private $tests;
 
     /**
+     * Symfony console output interface.
+     *
+     * @var \Symfony\Component\Console\Output\ConsoleOutput
+     */
+    private $consoleOutput;
+
+    /**
+     * Debug flag.
+     *
+     * @var bool
+     */
+    private $debug;
+
+    /**
      * TestGenerator constructor.
      *
      * @param string $exportDir
      * @param array $tests
+     * @param bool $debug
      */
-    private function __construct($exportDir, $tests)
+    private function __construct($exportDir, $tests, $debug = false)
     {
         // private constructor for factory
         $this->exportDirName = $exportDir ?? self::DEFAULT_DIR;
@@ -69,6 +84,8 @@ class TestGenerator
             . DIRECTORY_SEPARATOR
             . $exportDir;
         $this->tests = $tests;
+        $this->consoleOutput = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $this->debug = $debug;
     }
 
     /**
@@ -76,11 +93,12 @@ class TestGenerator
      *
      * @param string $dir
      * @param array $tests
+     * @param bool $debug
      * @return TestGenerator
      */
-    public static function getInstance($dir = null, $tests = null)
+    public static function getInstance($dir = null, $tests = null, $debug = false)
     {
-        return new TestGenerator($dir, $tests);
+        return new TestGenerator($dir, $tests, $debug);
     }
 
     /**
@@ -135,11 +153,12 @@ class TestGenerator
      *
      * @param string $runConfig
      * @param int $nodes
-     * @return void
+     * @param TestObject[] $testsToIgnore
+     * @return BaseTestManifest
      * @throws TestReferenceException
      * @throws \Exception
      */
-    public function createAllTestFiles($runConfig = null, $nodes = null)
+    public function createAllTestFiles($runConfig = null, $nodes = null, $testsToIgnore = [])
     {
         DirSetupUtil::createGroupDir($this->exportDirectory);
 
@@ -149,11 +168,13 @@ class TestGenerator
             $this->exportDirectory,
             $runConfig
         );
-        $testPhpArray = $this->assembleAllTestPhp($testManifest, $nodes);
 
+        $testPhpArray = $this->assembleAllTestPhp($testManifest, $nodes, $testsToIgnore);
         foreach ($testPhpArray as $testPhpFile) {
             $this->createCestFile($testPhpFile[1], $testPhpFile[0]);
         }
+
+        return $testManifest;
     }
 
     /**
@@ -175,7 +196,7 @@ class TestGenerator
             $hookPhp = $this->generateHooksPhp($testObject->getHooks());
             $testsPhp = $this->generateTestPhp($testObject);
         } catch (TestReferenceException $e) {
-            throw new TestReferenceException($e->getMessage(). " in Test \"" . $testObject->getName() . "\"");
+            throw new TestReferenceException($e->getMessage() . " in Test \"" . $testObject->getName() . "\"");
         }
 
         $cestPhp = "<?php\n";
@@ -196,27 +217,52 @@ class TestGenerator
      *
      * @param BaseTestManifest $testManifest
      * @param int $nodes
+     * @param array $testsToIgnore
      * @return array
-     * @throws TestReferenceException
-     * @throws \Exception
      */
-    private function assembleAllTestPhp($testManifest, $nodes)
+    private function assembleAllTestPhp($testManifest, $nodes, array $testsToIgnore)
     {
         /** @var TestObject[] $testObjects */
         $testObjects = $this->loadAllTestObjects();
+        $testObjects = array_diff_key($testObjects, $testsToIgnore);
         $cestPhpArray = [];
 
         foreach ($testObjects as $test) {
+            $this->debug("<comment>Start creating test: " . $test->getCodeceptionName() . "</comment>");
             $php = $this->assembleTestPhp($test);
             $cestPhpArray[] = [$test->getCodeceptionName(), $php];
 
-            //write to manifest here if config is not single run
-            $testManifest->addTest($test);
+            $debugInformation = $test->getDebugInformation();
+            $this->debug($debugInformation);
+            $this->debug("<comment>Finish creating test: " . $test->getCodeceptionName() . "</comment>" . PHP_EOL);
+
+            //write to manifest here if manifest is not null
+            if ($testManifest != null) {
+                $testManifest->addTest($test);
+            }
         }
 
-        $testManifest->generate($nodes);
+        if ($testManifest != null) {
+            $testManifest->generate($testsToIgnore, intval($nodes));
+        }
 
         return $cestPhpArray;
+    }
+
+    /**
+     * Output information in console when debug flag is enabled.
+     *
+     * @param array|string $messages
+     * @return void
+     */
+    private function debug($messages)
+    {
+        if ($this->debug && $messages) {
+            $messages = (array)$messages;
+            foreach ($messages as $message) {
+                $this->consoleOutput->writeln($message);
+            }
+        }
     }
 
     /**
@@ -276,9 +322,9 @@ class TestGenerator
                 continue;
             }
             if (!$isMethod) {
-                $annotationsPhp.= $this->generateClassAnnotations($annotationType, $annotationName);
+                $annotationsPhp .= $this->generateClassAnnotations($annotationType, $annotationName);
             } else {
-                $annotationsPhp.= $this->generateMethodAnnotations($annotationType, $annotationName);
+                $annotationsPhp .= $this->generateMethodAnnotations($annotationType, $annotationName);
             }
         }
 
@@ -435,6 +481,7 @@ class TestGenerator
             $visible = null;
             $command = null;
             $sortOrder = null;
+            $storeCode = null;
 
             $assertExpected = null;
             $assertActual = null;
@@ -464,6 +511,7 @@ class TestGenerator
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['userInput']);
             } elseif (isset($customActionAttributes['url'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['url']);
+                $url = $this->addUniquenessFunctionCall($customActionAttributes['url']);
             } elseif (isset($customActionAttributes['expectedValue'])) {
                 //For old Assert backwards Compatibility, remove when deprecating
                 $assertExpected = $this->addUniquenessFunctionCall($customActionAttributes['expectedValue']);
@@ -504,10 +552,9 @@ class TestGenerator
                 // validate the param array is in the correct format
                 $this->validateParameterArray($customActionAttributes['parameterArray']);
 
-                $parameterArray = "[" . $this->addUniquenessToParamArray(
-                    $customActionAttributes['parameterArray']
-                )
-                . "]";
+                $parameterArray = "[";
+                $parameterArray .= $this->addUniquenessToParamArray($customActionAttributes['parameterArray']);
+                $parameterArray .= "]";
             }
 
             if (isset($customActionAttributes['requiredAction'])) {
@@ -589,6 +636,9 @@ class TestGenerator
                 $visible = $customActionAttributes['visible'];
             }
 
+            if (isset($customActionAttributes['storeCode'])) {
+                $storeCode = $customActionAttributes['storeCode'];
+            }
             switch ($actionObject->getType()) {
                 case "createData":
                     $entity = $customActionAttributes['entity'];
@@ -645,8 +695,8 @@ class TestGenerator
                         );
                     }
 
-                    if (isset($customActionAttributes['storeCode'])) {
-                        $createEntityFunctionCall .= sprintf("\"%s\");\n", $customActionAttributes['storeCode']);
+                    if (isset($storeCode)) {
+                        $createEntityFunctionCall .= sprintf("\"%s\");\n", $storeCode);
                     } else {
                         $createEntityFunctionCall .= ");\n";
                     }
@@ -667,18 +717,32 @@ class TestGenerator
                     $testSteps .= $createEntityFunctionCall;
                     break;
                 case "deleteData":
-                    $key = $customActionAttributes['createDataKey'];
-                    //Add an informative statement to help the user debug test runs
-                    $testSteps .= sprintf(
-                        "\t\t$%s->amGoingTo(\"delete entity that has the createDataKey: %s\");\n",
-                        $actor,
-                        $key
-                    );
+                    if (isset($customActionAttributes['createDataKey'])) {
+                        $key = $customActionAttributes['createDataKey'];
+                        //Add an informative statement to help the user debug test runs
+                        $contextSetter = sprintf(
+                            "\t\t$%s->amGoingTo(\"delete entity that has the createDataKey: %s\");\n",
+                            $actor,
+                            $key
+                        );
+                        $deleteEntityFunctionCall = "";
 
-                    if ($hookObject) {
-                        $testSteps .= sprintf("\t\t\$this->%s->deleteEntity();\n", $key);
+                        if ($hookObject) {
+                            $deleteEntityFunctionCall .= sprintf("\t\t\$this->%s->deleteEntity();\n", $key);
+                        } else {
+                            $deleteEntityFunctionCall .= sprintf("\t\t$%s->deleteEntity();\n", $key);
+                        }
+
+                        $testSteps .= $contextSetter;
+                        $testSteps .= $deleteEntityFunctionCall;
                     } else {
-                        $testSteps .= sprintf("\t\t$%s->deleteEntity();\n", $key);
+                        $output = sprintf(
+                            "\t\t$%s->deleteEntityByUrl(%s);\n",
+                            $actor,
+                            $url
+                        );
+                        $output = $this->resolveEnvReferences($output, [$url]);
+                        $testSteps .= $this->resolveTestVariable($output, [$url], null);
                     }
                     break;
                 case "updateData":
@@ -727,8 +791,8 @@ class TestGenerator
                         );
                     }
 
-                    if (isset($customActionAttributes['storeCode'])) {
-                        $updateEntityFunctionCall .= sprintf("\"%s\");\n", $customActionAttributes['storeCode']);
+                    if (isset($storeCode)) {
+                        $updateEntityFunctionCall .= sprintf(", \"%s\");\n", $storeCode);
                     } else {
                         $updateEntityFunctionCall .= ");\n";
                     }
@@ -789,13 +853,13 @@ class TestGenerator
                     }
 
                     if (isset($customActionAttributes['index'])) {
-                        $getEntityFunctionCall .= sprintf("%s", (int)$customActionAttributes['index']);
+                        $getEntityFunctionCall .= sprintf(", %s", (int)$customActionAttributes['index']);
                     } else {
                         $getEntityFunctionCall .= 'null';
                     }
 
-                    if (isset($customActionAttributes['storeCode'])) {
-                        $getEntityFunctionCall .= sprintf(", \"%s\");\n", $customActionAttributes['storeCode']);
+                    if (isset($storeCode)) {
+                        $getEntityFunctionCall .= sprintf(", \"%s\");\n", $storeCode);
                     } else {
                         $getEntityFunctionCall .= ");\n";
                     }
@@ -839,7 +903,7 @@ class TestGenerator
                     break;
                 case "switchToNextTab":
                 case "switchToPreviousTab":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $this->stripWrappedQuotes($input));
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $input);
                     break;
                 case "clickWithLeftButton":
                 case "clickWithRightButton":
@@ -920,7 +984,12 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $function);
                     break;
                 case "executeJS":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $function);
+                    $testSteps .= $this->wrapFunctionCallWithReturnValue(
+                        $stepKey,
+                        $actor,
+                        $actionObject,
+                        $function
+                    );
                     break;
                 case "performOn":
                 case "waitForElementChange":
@@ -1146,12 +1215,9 @@ class TestGenerator
                     break;
                 case "field":
                     $fieldKey = $actionObject->getCustomActionAttributes()['key'];
-                    $argRef= "\t\t\$" . str_replace(
-                        ucfirst($fieldKey),
-                        "",
-                        $stepKey
-                    ) . "Fields['{$fieldKey}'] = ${input};\n";
-                    $testSteps.= $this->resolveTestVariable($argRef, [$input], $actionObject->getActionOrigin());
+                    $argRef = "\t\t\$";
+                    $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) . "Fields['{$fieldKey}'] = ${input};\n";
+                    $testSteps .= $this->resolveTestVariable($argRef, [$input], $actionObject->getActionOrigin());
                     break;
                 default:
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input, $parameter);
@@ -1373,6 +1439,7 @@ class TestGenerator
      * @return string
      * @throws TestReferenceException
      * @throws \Exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function generateHooksPhp($hookObjects)
     {
@@ -1412,12 +1479,6 @@ class TestGenerator
                 );
             } catch (TestReferenceException $e) {
                 throw new TestReferenceException($e->getMessage() . " in Element \"" . $type . "\"");
-            }
-
-            if ($hookObject->getType() == TestObjectExtractor::TEST_FAILED_HOOK) {
-                $steps.="\t\t";
-                $steps.='$this->_after($I);';
-                $steps.="\n";
             }
 
             $hooks .= sprintf("\tpublic function _{$type}(%s)\n", $dependencies);
@@ -1595,6 +1656,9 @@ class TestGenerator
             if (!$isFirst) {
                 $output .= ', ';
             }
+            if ($args[$i] === "") {
+                $args[$i] = '"' . $args[$i] . '"';
+            }
             $output .= $args[$i];
             $isFirst = false;
         }
@@ -1625,6 +1689,9 @@ class TestGenerator
             }
             if (!$isFirst) {
                 $output .= ', ';
+            }
+            if ($args[$i] === "") {
+                $args[$i] = '"' . $args[$i] . '"';
             }
             $output .= $args[$i];
             $isFirst = false;
@@ -1763,10 +1830,11 @@ class TestGenerator
     private function validateXmlAttributesMutuallyExclusive($key, $tagName, $attributes)
     {
         $rules = [
-            ['attributes' => [
-                'selector',
-                'selectorArray',
-            ]
+            [
+                'attributes' => [
+                    'selector',
+                    'selectorArray',
+                ]
             ],
             [
                 'attributes' => [
