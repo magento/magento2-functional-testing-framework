@@ -853,7 +853,7 @@ class TestGenerator
                     }
 
                     if (isset($customActionAttributes['index'])) {
-                        $getEntityFunctionCall .= sprintf(", %s", (int)$customActionAttributes['index']);
+                        $getEntityFunctionCall .= sprintf("%s", (int)$customActionAttributes['index']);
                     } else {
                         $getEntityFunctionCall .= 'null';
                     }
