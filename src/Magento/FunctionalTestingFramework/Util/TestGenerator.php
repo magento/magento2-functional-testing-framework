@@ -8,6 +8,7 @@ namespace Magento\FunctionalTestingFramework\Util;
 
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
@@ -151,30 +152,23 @@ class TestGenerator
      * Assemble ALL PHP strings using the assembleAllTestPhp function. Loop over and pass each array item
      * to the createCestFile function.
      *
-     * @param string $runConfig
-     * @param int $nodes
-     * @param TestObject[] $testsToIgnore
-     * @return BaseTestManifest
+     * @param BaseTestManifest $testManifest
+     * @param array $testsToIgnore
+     * @return void
      * @throws TestReferenceException
      * @throws \Exception
      */
-    public function createAllTestFiles($runConfig = null, $nodes = null, $testsToIgnore = [])
+    public function createAllTestFiles($testManifest = null, $testsToIgnore = null)
     {
         DirSetupUtil::createGroupDir($this->exportDirectory);
+        if ($testsToIgnore === null) {
+            $testsToIgnore = SuiteObjectHandler::getInstance()->getAllTestReferences();
+        }
 
-        // create our manifest file here
-        $testManifest = TestManifestFactory::makeManifest(
-            dirname($this->exportDirectory),
-            $this->exportDirectory,
-            $runConfig
-        );
-
-        $testPhpArray = $this->assembleAllTestPhp($testManifest, $nodes, $testsToIgnore);
+        $testPhpArray = $this->assembleAllTestPhp($testManifest, $testsToIgnore);
         foreach ($testPhpArray as $testPhpFile) {
             $this->createCestFile($testPhpFile[1], $testPhpFile[0]);
         }
-
-        return $testManifest;
     }
 
     /**
@@ -216,11 +210,10 @@ class TestGenerator
      * Load ALL Test objects. Loop over and pass each to the assembleTestPhp function.
      *
      * @param BaseTestManifest $testManifest
-     * @param int $nodes
      * @param array $testsToIgnore
      * @return array
      */
-    private function assembleAllTestPhp($testManifest, $nodes, array $testsToIgnore)
+    private function assembleAllTestPhp($testManifest, array $testsToIgnore)
     {
         /** @var TestObject[] $testObjects */
         $testObjects = $this->loadAllTestObjects();
@@ -240,10 +233,6 @@ class TestGenerator
             if ($testManifest != null) {
                 $testManifest->addTest($test);
             }
-        }
-
-        if ($testManifest != null) {
-            $testManifest->generate($testsToIgnore, intval($nodes));
         }
 
         return $cestPhpArray;

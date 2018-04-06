@@ -6,8 +6,6 @@
 namespace Magento\FunctionalTestingFramework\Util\Sorter;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
-use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
-use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 
 class ParallelGroupSorter
@@ -17,7 +15,7 @@ class ParallelGroupSorter
      *
      * @var array
      */
-    private $compositeSuiteObjects = [];
+    private $suiteConfig = [];
 
     /**
      * ParallelGroupSorter constructor.
@@ -30,13 +28,13 @@ class ParallelGroupSorter
     /**
      * Function which returns tests and suites split according to desired number of lines divded into groups.
      *
-     * @param array $testNameToSuiteName
+     * @param array $suiteConfiguration
      * @param array $testNameToSize
      * @param integer $lines
      * @return array
      * @throws TestFrameworkException
      */
-    public function getTestsGroupedBySize($testNameToSuiteName, $testNameToSize, $lines)
+    public function getTestsGroupedBySize($suiteConfiguration, $testNameToSize, $lines)
     {
         // we must have the lines argument in order to create the test groups
         if ($lines == 0) {
@@ -47,7 +45,7 @@ class ParallelGroupSorter
         }
 
         $testGroups = [];
-        $splitSuiteNamesToTests = $this->createGroupsWithinSuites($testNameToSuiteName, $lines);
+        $splitSuiteNamesToTests = $this->createGroupsWithinSuites($suiteConfiguration, $lines);
         $splitSuiteNamesToSize = $this->getSuiteToSize($splitSuiteNamesToTests);
         $entriesForGeneration = array_merge($testNameToSize, $splitSuiteNamesToSize);
         arsort($entriesForGeneration);
@@ -76,9 +74,9 @@ class ParallelGroupSorter
      *
      * @return array
      */
-    public function getResultingSuites()
+    public function getResultingSuiteConfig()
     {
-        return $this->compositeSuiteObjects;
+        return $this->suiteConfig;
     }
 
     /**
@@ -139,22 +137,14 @@ class ParallelGroupSorter
      * Function which takes an array of test names mapped to suite name and a size limitation for each group of tests.
      * The function divides suites that are over the specified limit and returns the resulting suites in an array.
      *
-     * @param array $testNameToSuiteName
+     * @param array $suiteConfiguration
      * @param integer $lineLimit
      * @return array
      */
-    private function createGroupsWithinSuites($testNameToSuiteName, $lineLimit)
+    private function createGroupsWithinSuites($suiteConfiguration, $lineLimit)
     {
-        $suiteNameToTestNames = [];
-        $suiteNameToSize = [];
-        array_walk($testNameToSuiteName, function ($value, $key) use (&$suiteNameToTestNames, &$suiteNameToSize) {
-            $testActionCount = TestObjectHandler::getInstance()->getObject($key)->getTestActionCount();
-            foreach ($value as $suite) {
-                $suiteNameToTestNames[$suite][$key] = $testActionCount;
-                $currentSize = $suiteNameToSize[$suite] ?? 0;
-                $suiteNameToSize[$suite] = $currentSize + $testActionCount;
-            }
-        });
+        $suiteNameToTestSize = $this->getSuiteNameToTestSize($suiteConfiguration);
+        $suiteNameToSize = $this->getSuiteToSize($suiteNameToTestSize);
 
         // divide the suites up within the array
         $suitesForResize = array_filter($suiteNameToSize, function ($val) use ($lineLimit) {
@@ -162,22 +152,42 @@ class ParallelGroupSorter
         });
 
         // remove the suites for resize from the original list
-        $remainingSuites = array_diff_key($suiteNameToTestNames, $suitesForResize);
+        $remainingSuites = array_diff_key($suiteNameToTestSize, $suitesForResize);
 
         foreach ($remainingSuites as $remainingSuite => $tests) {
-            $this->addSuiteAsObject($remainingSuite, null, null);
+            $this->addSuiteToConfig($remainingSuite, null, $tests);
         }
 
         $resultingGroups = [];
         foreach ($suitesForResize as $suiteName => $suiteSize) {
             $resultingGroups = array_merge(
                 $resultingGroups,
-                $this->splitTestSuite($suiteName, $suiteNameToTestNames[$suiteName], $lineLimit)
+                $this->splitTestSuite($suiteName, $suiteNameToTestSize[$suiteName], $lineLimit)
             );
         }
 
         // merge the resulting divisions with the appropriately sized suites
         return array_merge($remainingSuites, $resultingGroups);
+    }
+
+    /**
+     * Function which takes the given suite configuration and returns an array of suite to test size.
+     *
+     * @param array $suiteConfiguration
+     * @return array
+     */
+    private function getSuiteNameToTestSize($suiteConfiguration)
+    {
+        $suiteNameToTestSize = [];
+        foreach ($suiteConfiguration as $suite => $test) {
+            foreach ($test as $testName) {
+                $suiteNameToTestSize[$suite][$testName] = TestObjectHandler::getInstance()
+                    ->getObject($testName)
+                    ->getTestActionCount();
+            }
+        }
+
+        return $suiteNameToTestSize;
     }
 
     /**
@@ -227,7 +237,7 @@ class ParallelGroupSorter
 
             $group = $this->createTestGroup($lineLimit, $test, $size, $availableTests);
             $split_suites["{$suiteName}_${split_count}"] = $group;
-            $this->addSuiteAsObject($suiteName, "{$suiteName}_${split_count}", $group);
+            $this->addSuiteToConfig($suiteName, "{$suiteName}_${split_count}", $group);
 
             $availableTests = array_diff($availableTests, $group);
             $split_count++;
@@ -246,25 +256,13 @@ class ParallelGroupSorter
      * @param array $tests
      * @return void
      */
-    private function addSuiteAsObject($originalSuiteName, $newSuiteName, $tests)
+    private function addSuiteToConfig($originalSuiteName, $newSuiteName, $tests)
     {
-        /** @var SuiteObject $originalSuite */
-        $originalSuite = SuiteObjectHandler::getInstance()->getObject($originalSuiteName);
-        if ($newSuiteName == null && $tests == null) {
-            $this->compositeSuiteObjects[$originalSuiteName] = $originalSuite;
+        if ($newSuiteName == null) {
+            $this->suiteConfig[$originalSuiteName] = array_keys($tests);
             return;
         }
 
-        $newSuiteTests = [];
-        foreach ($tests as $test => $lines) {
-            $newSuiteTests[$test] = TestObjectHandler::getInstance()->getObject($test);
-        }
-
-        $this->compositeSuiteObjects[$newSuiteName] = new SuiteObject(
-            $newSuiteName,
-            $newSuiteTests,
-            [],
-            $originalSuite->getHooks()
-        );
+        $this->suiteConfig[$originalSuiteName][$newSuiteName] = array_keys($tests);
     }
 }

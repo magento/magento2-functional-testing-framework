@@ -36,16 +36,17 @@ class DefaultTestManifest extends BaseTestManifest
 
     /**
      * DefaultTestManifest constructor.
-     * @param string $manifestPath
+     *
+     * @param array $suiteConfiguration
      * @param string $testPath
      */
-    public function __construct($manifestPath, $testPath)
+    public function __construct($suiteConfiguration, $testPath)
     {
-        $this->manifestPath = $manifestPath . DIRECTORY_SEPARATOR . 'testManifest.txt';
+        $this->manifestPath = dirname($testPath) . DIRECTORY_SEPARATOR . 'testManifest.txt';
         $this->cleanManifest($this->manifestPath);
-        parent::__construct($testPath, self::DEFAULT_CONFIG);
-        $fileResource = fopen($this->manifestPath, 'a');
-        fclose($fileResource);
+        parent::__construct($testPath, self::DEFAULT_CONFIG, $suiteConfiguration);
+//        $fileResource = fopen($this->manifestPath, 'a');
+//        fclose($fileResource);
     }
 
     /**
@@ -62,11 +63,9 @@ class DefaultTestManifest extends BaseTestManifest
     /**
      * Function which outputs a list of all test files to the defined testManifest.txt file.
      *
-     * @param array $testsReferencedInSuites
-     * @param int|null $nodes
      * @return void
      */
-    public function generate($testsReferencedInSuites, $nodes = null)
+    public function generate()
     {
         $fileResource = fopen($this->manifestPath, 'a');
 
@@ -75,7 +74,7 @@ class DefaultTestManifest extends BaseTestManifest
             fwrite($fileResource, $line . PHP_EOL);
         }
 
-        $this->generateSuiteEntries($testsReferencedInSuites, $fileResource);
+        $this->generateSuiteEntries($fileResource);
 
         fclose($fileResource);
     }
@@ -83,19 +82,12 @@ class DefaultTestManifest extends BaseTestManifest
     /**
      * Function which takes the test suites passed to the manifest and generates corresponding entries in the manifest.
      *
-     * @param array $testsReferencedInSuites
      * @param resource $fileResource
      * @return void
      */
-    protected function generateSuiteEntries($testsReferencedInSuites, $fileResource)
+    protected function generateSuiteEntries($fileResource)
     {
-        // get the names of available suites
-        $suiteNames = [];
-        array_walk($testsReferencedInSuites, function ($value) use (&$suiteNames) {
-            $suiteNames = array_unique(array_merge($value, $suiteNames));
-        });
-
-        foreach ($suiteNames as $suiteName) {
+        foreach ($this->getSuiteConfig() as $suiteName => $tests) {
             $line = "-g {$suiteName}";
             fwrite($fileResource, $line . PHP_EOL);
         }

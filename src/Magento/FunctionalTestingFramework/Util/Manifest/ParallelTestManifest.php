@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Util\Manifest;
 
+use Codeception\Suite;
 use Magento\Framework\Exception\RuntimeException;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
@@ -26,6 +27,13 @@ class ParallelTestManifest extends BaseTestManifest
     private $testNameToSize = [];
 
     /**
+     * Class variable to store resulting group config.
+     *
+     * @var array
+     */
+    private $testGroups;
+
+    /**
      * An instance of the group sorter which will take suites and tests organizing them to be run together.
      *
      * @var ParallelGroupSorter
@@ -42,14 +50,14 @@ class ParallelTestManifest extends BaseTestManifest
     /**
      * TestManifest constructor.
      *
-     * @param string $manifestPath
+     * @param array $suiteConfiguration
      * @param string $testPath
      */
-    public function __construct($manifestPath, $testPath)
+    public function __construct($suiteConfiguration, $testPath)
     {
-        $this->dirPath = $manifestPath . DIRECTORY_SEPARATOR . 'groups';
+        $this->dirPath = dirname($testPath) . DIRECTORY_SEPARATOR . 'groups';
         $this->parallelGroupSorter = new ParallelGroupSorter();
-        parent::__construct($testPath, self::PARALLEL_CONFIG);
+        parent::__construct($testPath, self::PARALLEL_CONFIG, $suiteConfiguration);
     }
 
     /**
@@ -64,22 +72,33 @@ class ParallelTestManifest extends BaseTestManifest
     }
 
     /**
-     * Function which generates the actual manifest once the relevant tests have been added to the array.
+     * Function which generates test groups based on arg passed. The function builds groups using the args as an upper
+     * limit.
      *
-     * @param array $testsReferencedInSuites
      * @param int $lines
      * @return void
      */
-    public function generate($testsReferencedInSuites, $lines = null)
+    public function createTestGroups($lines)
     {
-        DirSetupUtil::createGroupDir($this->dirPath);
-        $testGroups = $this->parallelGroupSorter->getTestsGroupedBySize(
-            $testsReferencedInSuites,
+        $this->testGroups = $this->parallelGroupSorter->getTestsGroupedBySize(
+            $this->getSuiteConfig(),
             $this->testNameToSize,
             $lines
         );
 
-        foreach ($testGroups as $groupNumber => $groupContents) {
+        $this->suiteConfiguration = $this->parallelGroupSorter->getResultingSuiteConfig();
+    }
+
+    /**
+     * Function which generates the actual manifest once the relevant tests have been added to the array.
+     *
+     * @return void
+     */
+    public function generate()
+    {
+        DirSetupUtil::createGroupDir($this->dirPath);
+
+        foreach ($this->testGroups as $groupNumber => $groupContents) {
             $this->generateGroupFile($groupContents, $groupNumber);
         }
     }
@@ -104,7 +123,7 @@ class ParallelTestManifest extends BaseTestManifest
      */
     private function generateGroupFile($testGroup, $nodeNumber)
     {
-        $suites = $this->parallelGroupSorter->getResultingSuites();
+        $suites = $this->parallelGroupSorter->getResultingSuiteConfig();
         foreach ($testGroup as $entryName => $testValue) {
             $fileResource = fopen($this->dirPath . DIRECTORY_SEPARATOR . "group{$nodeNumber}.txt", 'a');
 
