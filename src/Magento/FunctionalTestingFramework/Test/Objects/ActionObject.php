@@ -496,6 +496,10 @@ class ActionObject
 
             $replacement = $this->resolveParameterization($parameterized, $replacement, $match, $obj);
 
+            if (is_array($replacement)) {
+                $replacement = '["' . implode('","', $replacement) . '"]';
+            }
+
             $outputString = str_replace($match, $replacement, $outputString);
         }
         return $outputString;
