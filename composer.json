@@ -51,5 +51,6 @@
         "hooks": {
             "pre-push": "bin/all-checks"
         }
-    }
+    },
+    "bin": ["bin/mftf"]
 }

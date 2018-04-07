@@ -31,12 +31,13 @@ class ParallelTestManifest extends BaseTestManifest
     /**
      * TestManifest constructor.
      *
-     * @param string $path
+     * @param string $manifestPath
+     * @param string $testPath
      */
-    public function __construct($path)
+    public function __construct($manifestPath, $testPath)
     {
-        $this->dirPath = $path . DIRECTORY_SEPARATOR . 'groups';
-        parent::__construct($path, self::PARALLEL_CONFIG);
+        $this->dirPath = $manifestPath . DIRECTORY_SEPARATOR . 'groups';
+        parent::__construct($testPath, self::PARALLEL_CONFIG);
     }
 
     /**
