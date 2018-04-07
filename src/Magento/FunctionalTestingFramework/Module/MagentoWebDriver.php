@@ -13,13 +13,11 @@ use Codeception\TestInterface;
 use Facebook\WebDriver\WebDriverSelect;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\Exception\NoSuchElementException;
-use Facebook\WebDriver\WebDriverExpectedCondition;
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Util\Uri;
 use Codeception\Util\ActionSequence;
-use Codeception\Util\Locator;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
 use Magento\Setup\Exception;
@@ -56,8 +54,6 @@ class MagentoWebDriver extends WebDriver
         '//div[contains(@class, "admin__form-loading-mask")]',
         '//div[@data-role="spinner"]'
     ];
-
-    const DEFAULT_WAIT_TIMEOUT = 10;
 
     /**
      * The module required fields, to be set in the suite .yml configuration file.
@@ -117,16 +113,6 @@ class MagentoWebDriver extends WebDriver
     {
         parent::_resetConfig();
         $this->config = ConfigSanitizerUtil::sanitizeWebDriverConfig($this->config);
-    }
-
-    /**
-     * Retrieve default timeout in seconds for 'wait*' actions
-     *
-     * @return int
-     */
-    public static function getDefaultWaitTimeout()
-    {
-        return getenv('WAIT_TIMEOUT') ?: self::DEFAULT_WAIT_TIMEOUT;
     }
 
     /**
@@ -316,147 +302,13 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * Wait for $timeout seconds.
-     *
-     * @param int|float $timeout secs
-     * @throws \Codeception\Exception\TestRuntimeException
-     */
-    public function wait($timeout = null)
-    {
-        $timeout = $timeout ?? self::getDefaultWaitTimeout();
-
-        if ($timeout >= 1000) {
-            throw new TestRuntimeException(
-                "
-                Waiting for more then 1000 seconds: 16.6667 mins\n
-                Please note that wait method accepts number of seconds as parameter."
-            );
-        }
-        usleep($timeout * 1000000);
-    }
-
-    /**
-     * Waits up to $timeout seconds for the given element to change.
-     *
-     * @param $element
-     * @param \Closure $callback
-     * @param int $timeout seconds
-     * @throws \Codeception\Exception\ElementNotFound
-     * @throws \Exception
-     */
-    public function waitForElementChange($element, \Closure $callback, $timeout = null)
-    {
-        $timeout = $timeout ?? self::getDefaultWaitTimeout();
-
-        $el = $this->matchFirstOrFail($this->baseElement, $element);
-        $checker = function () use ($el, $callback) {
-            return $callback($el);
-        };
-        $this->webDriver->wait($timeout)->until($checker);
-    }
-
-    /**
-     * Waits up to $timeout seconds for an element to appear on the page.
-     *
-     * @param $element
-     * @param int $timeout seconds
-     * @throws \Exception
-     */
-    public function waitForElement($element, $timeout = null)
-    {
-        $timeout = $timeout ?? self::getDefaultWaitTimeout();
-
-        $condition = WebDriverExpectedCondition::presenceOfElementLocated($this->getLocator($element));
-        $this->webDriver->wait($timeout)->until($condition);
-    }
-
-    /**
-     * Waits up to $timeout seconds for the given element to be visible on the page.
-     *
-     * @param $element
-     * @param int $timeout seconds
-     * @throws \Exception
-     */
-    public function waitForElementVisible($element, $timeout = null)
-    {
-        $timeout = $timeout ?? self::getDefaultWaitTimeout();
-
-        $condition = WebDriverExpectedCondition::visibilityOfElementLocated($this->getLocator($element));
-        $this->webDriver->wait($timeout)->until($condition);
-    }
-
-    /**
-     * Waits up to $timeout seconds for the given element to become invisible.
-     *
-     * @param $element
-     * @param int $timeout seconds
-     * @throws \Exception
-     */
-    public function waitForElementNotVisible($element, $timeout = null)
-    {
-        $timeout = $timeout ?? self::getDefaultWaitTimeout();
-
-        $condition = WebDriverExpectedCondition::invisibilityOfElementLocated($this->getLocator($element));
-        $this->webDriver->wait($timeout)->until($condition);
-    }
-
-    /**
-     * Waits up to $timeout seconds for the given string to appear on the page.
-     *
-     * @param string $text
-     * @param int $timeout seconds
-     * @param string $selector optional
-     * @throws \Exception
-     */
-    public function waitForText($text, $timeout = null, $selector = null)
-    {
-        $timeout = $timeout ?? self::getDefaultWaitTimeout();
-
-        $message = sprintf(
-            'Waited for %d secs but text %s still not found',
-            $timeout,
-            Locator::humanReadableString($text)
-        );
-        if (!$selector) {
-            $condition = WebDriverExpectedCondition::elementTextContains(WebDriverBy::xpath('//body'), $text);
-            $this->webDriver->wait($timeout)->until($condition, $message);
-            return;
-        }
-
-        $condition = WebDriverExpectedCondition::elementTextContains($this->getLocator($selector), $text);
-        $this->webDriver->wait($timeout)->until($condition, $message);
-    }
-
-    /**
-     * Executes JavaScript and waits up to $timeout seconds for it to return true.
-     *
-     * @param string $script
-     * @param int $timeout seconds
-     * @throws \Exception
-     */
-    public function waitForJS($script, $timeout = null)
-    {
-        $timeout = $timeout ?? self::getDefaultWaitTimeout();
-
-        $condition = function ($wd) use ($script) {
-            return $wd->executeScript($script);
-        };
-        $message = sprintf(
-            'Waited for %d secs but script %s still not executed',
-            $timeout,
-            Locator::humanReadableString($script)
-        );
-        $this->webDriver->wait($timeout)->until($condition, $message);
-    }
-
-    /**
      * Wait for all Ajax calls to finish.
      *
      * @param int $timeout
      */
     public function waitForAjaxLoad($timeout = null)
     {
-        $timeout = $timeout ?? self::getDefaultWaitTimeout();
+        $timeout = $timeout ?? $this->_getConfig()['pageload_timeout'];
 
         try {
             $this->waitForJS('return !!window.jQuery && window.jQuery.active == 0;', $timeout);
@@ -475,7 +327,7 @@ class MagentoWebDriver extends WebDriver
      */
     public function waitForPageLoad($timeout = null)
     {
-        $timeout = $timeout ?? self::getDefaultWaitTimeout();
+        $timeout = $timeout ?? $this->_getConfig()['pageload_timeout'];
 
         $this->waitForJS('return document.readyState == "complete"', $timeout);
         $this->waitForAjaxLoad($timeout);
