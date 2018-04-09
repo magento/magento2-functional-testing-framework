@@ -366,7 +366,7 @@
                 <item name="/suites/suite/exclude/(group|test|module)" xsi:type="string">name</item>
             </argument>
             <argument name="fileName" xsi:type="string">*.xml</argument>
-            <argument name="defaultScope" xsi:type="string">_suite</argument>
+            <argument name="defaultScope" xsi:type="string">Suite</argument>
         </arguments>
     </virtualType>
 
