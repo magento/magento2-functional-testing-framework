@@ -14,6 +14,8 @@ use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 use Magento\FunctionalTestingFramework\Util\Sorter\ParallelGroupSorter;
+use RecursiveArrayIterator;
+use RecursiveIteratorIterator;
 
 class ParallelTestManifest extends BaseTestManifest
 {
@@ -97,9 +99,10 @@ class ParallelTestManifest extends BaseTestManifest
     public function generate()
     {
         DirSetupUtil::createGroupDir($this->dirPath);
+        $suites = $this->getFlattenedSuiteConfiguration($this->parallelGroupSorter->getResultingSuiteConfig());
 
         foreach ($this->testGroups as $groupNumber => $groupContents) {
-            $this->generateGroupFile($groupContents, $groupNumber);
+            $this->generateGroupFile($groupContents, $groupNumber, $suites);
         }
     }
 
@@ -115,15 +118,16 @@ class ParallelTestManifest extends BaseTestManifest
 
     /**
      * Function which takes an array containing entries representing the test execution as well as the associated group
-     * for the entry in order to generate a txt file used by devops for parllel execution in Jenkins.
+     * for the entry in order to generate a txt file used by devops for parllel execution in Jenkins. The results
+     * are checked against a flattened list of suites in order to generate proper entries.
      *
      * @param array $testGroup
      * @param int $nodeNumber
+     * @param array $suites
      * @return void
      */
-    private function generateGroupFile($testGroup, $nodeNumber)
+    private function generateGroupFile($testGroup, $nodeNumber, $suites)
     {
-        $suites = $this->parallelGroupSorter->getResultingSuiteConfig();
         foreach ($testGroup as $entryName => $testValue) {
             $fileResource = fopen($this->dirPath . DIRECTORY_SEPARATOR . "group{$nodeNumber}.txt", 'a');
 
@@ -136,5 +140,28 @@ class ParallelTestManifest extends BaseTestManifest
             fwrite($fileResource, $line . PHP_EOL);
             fclose($fileResource);
         }
+    }
+
+    /**
+     * Function which recusrively parses a given potentially multidimensional array of suites containing their split
+     * groups. The result is a flattened array of suite names to relevant tests for generation of the manifest.
+     *
+     * @param array $multiDimensionalSuites
+     * @return array
+     */
+    private function getFlattenedSuiteConfiguration($multiDimensionalSuites)
+    {
+        $suites = [];
+        foreach ($multiDimensionalSuites as $suiteName => $suiteContent) {
+            $value = array_values($suiteContent)[0];
+            if (is_array($value)) {
+                $suites = array_merge($suites, $this->getFlattenedSuiteConfiguration($suiteContent));
+                continue;
+            }
+
+            $suites[$suiteName] = $suiteContent;
+        }
+
+        return $suites;
     }
 }

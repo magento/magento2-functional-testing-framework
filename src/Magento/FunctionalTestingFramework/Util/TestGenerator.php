@@ -113,14 +113,28 @@ class TestGenerator
     }
 
     /**
-     * Load all Test files as Objects using the Test Object Handler.
+     * Load all Test files as Objects using the Test Object Handler, additionally validates test references being loaded
+     * for validity.
      *
+     * @param array $testsToIgnore
      * @return array
      */
-    private function loadAllTestObjects()
+    private function loadAllTestObjects($testsToIgnore)
     {
         if ($this->tests === null || empty($this->tests)) {
-            return TestObjectHandler::getInstance()->getAllObjects();
+            $testObjects = TestObjectHandler::getInstance()->getAllObjects();
+            return array_diff_key($testObjects, $testsToIgnore);
+        }
+
+        // If we have a custom configuration, we need to check the tests passed in to insure that we can generate
+        // them in the current context.
+        $invalidTestObjects = array_intersect_key($this->tests, $testsToIgnore);
+        if (!empty($invalidTestObjects)) {
+            $errorMsg = "Cannot reference the following tests for generation without accompanying suite:\n";
+            array_walk($invalidTestObjects, function ($value, $key) use (&$errorMsg) {
+                $errorMsg.= "\t{$key}\n";
+            });
+            throw new TestReferenceException($errorMsg);
         }
 
         return $this->tests;
@@ -216,19 +230,7 @@ class TestGenerator
     private function assembleAllTestPhp($testManifest, array $testsToIgnore)
     {
         /** @var TestObject[] $testObjects */
-        $testObjects = $this->loadAllTestObjects();
-
-        // We need to check the tests passed in to insure that we can generate them in the current context.
-        $invalidTestObjects = array_intersect_key($testObjects, $testsToIgnore);
-        if (!empty($invalidTestObjects)) {
-            $errorMsg = "Cannot reference the following tests for generation without accompanying suite:\n";
-            array_walk($invalidTestObjects, function ($value, $key) use (&$errorMsg) {
-                $errorMsg.= "\t{$key}\n";
-            });
-            throw new TestReferenceException($errorMsg);
-        }
-
-        $testObjects = array_diff_key($testObjects, $testsToIgnore);
+        $testObjects = $this->loadAllTestObjects($testsToIgnore);
         $cestPhpArray = [];
 
         foreach ($testObjects as $test) {
