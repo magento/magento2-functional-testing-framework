@@ -217,6 +217,17 @@ class TestGenerator
     {
         /** @var TestObject[] $testObjects */
         $testObjects = $this->loadAllTestObjects();
+
+        // We need to check the tests passed in to insure that we can generate them in the current context.
+        $invalidTestObjects = array_intersect_key($testObjects, $testsToIgnore);
+        if (!empty($invalidTestObjects)) {
+            $errorMsg = "Cannot reference the following tests for generation without accompanying suite:\n";
+            array_walk($invalidTestObjects, function ($value, $key) use (&$errorMsg) {
+                $errorMsg.= "\t{$key}\n";
+            });
+            throw new TestReferenceException($errorMsg);
+        }
+
         $testObjects = array_diff_key($testObjects, $testsToIgnore);
         $cestPhpArray = [];
 

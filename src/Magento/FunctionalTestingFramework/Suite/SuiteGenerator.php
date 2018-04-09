@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Suite;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Suite\Generators\GroupClassGenerator;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
@@ -156,6 +157,7 @@ class SuiteGenerator
 
         $relevantTests = [];
         if (!empty($tests)) {
+            $this->validateTestsReferencedInSuite($suiteName, $tests, $originalSuiteName);
             foreach ($tests as $testName) {
                 $relevantTests[$testName] = TestObjectHandler::getInstance()->getObject($testName);
             }
@@ -168,6 +170,34 @@ class SuiteGenerator
 
         $this->appendEntriesToConfig($suiteName, $fullPath, $groupNamespace);
         print "Suite ${suiteName} generated to ${relativePath}.\n";
+    }
+
+    /**
+     * Function which validates tests passed in as custom configuration against the configuration defined by the user to
+     * prevent possible invalid test configurations from executing.
+     *
+     * @param string $suiteName
+     * @param array $testsReferenced
+     * @param string $originalSuiteName
+     * @return void
+     * @throws TestReferenceException
+     */
+    private function validateTestsReferencedInSuite($suiteName, $testsReferenced, $originalSuiteName)
+    {
+        $suiteRef = $originalSuiteName ?? $suiteName;
+        $possibleTestRef = SuiteObjectHandler::getInstance()->getObject($suiteRef)->getTests();
+        $invalidTestRef = null;
+        $errorMsg = "Cannot reference tests not declared as part of {$suiteRef}:\n ";
+
+        array_walk($testsReferenced, function ($value) use (&$invalidTestRef, $possibleTestRef, &$errorMsg) {
+            if (!array_key_exists($value, $possibleTestRef)) {
+                $invalidTestRef.= "\t{$value}\n";
+            }
+        });
+
+        if ($invalidTestRef != null) {
+            throw new TestReferenceException($errorMsg . $invalidTestRef);
+        }
     }
 
     /**

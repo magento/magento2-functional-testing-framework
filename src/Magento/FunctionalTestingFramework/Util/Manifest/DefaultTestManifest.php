@@ -45,8 +45,6 @@ class DefaultTestManifest extends BaseTestManifest
         $this->manifestPath = dirname($testPath) . DIRECTORY_SEPARATOR . 'testManifest.txt';
         $this->cleanManifest($this->manifestPath);
         parent::__construct($testPath, self::DEFAULT_CONFIG, $suiteConfiguration);
-//        $fileResource = fopen($this->manifestPath, 'a');
-//        fclose($fileResource);
     }
 
     /**
