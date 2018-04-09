@@ -695,7 +695,7 @@ class TestGenerator
                         );
                     }
 
-                    if (isset($storeCode)) {
+                    if ($storeCode) {
                         $createEntityFunctionCall .= sprintf("\"%s\");\n", $storeCode);
                     } else {
                         $createEntityFunctionCall .= ");\n";
@@ -792,7 +792,7 @@ class TestGenerator
                         );
                     }
 
-                    if (isset($storeCode)) {
+                    if ($storeCode) {
                         $updateEntityFunctionCall .= sprintf(", \"%s\");\n", $storeCode);
                     } else {
                         $updateEntityFunctionCall .= ");\n";
@@ -859,7 +859,7 @@ class TestGenerator
                         $getEntityFunctionCall .= 'null';
                     }
 
-                    if (isset($storeCode)) {
+                    if ($storeCode) {
                         $getEntityFunctionCall .= sprintf(", \"%s\");\n", $storeCode);
                     } else {
                         $getEntityFunctionCall .= ");\n";
@@ -1255,9 +1255,9 @@ class TestGenerator
      */
     private function resolveTestVariable($args, $actionOrigin)
     {
-        //Loop through each argument, replace and then replace
+        $newArgs = [];
         foreach ($args as $key => $arg) {
-            if ($arg == null) {
+            if ($arg === null) {
                 continue;
             }
             $outputArg = $arg;
@@ -1274,10 +1274,10 @@ class TestGenerator
 
             $outputArg = $this->resolveStepKeyReferences($outputArg, $actionOrigin);
 
-            $args[$key] = $outputArg;
+            $newArgs[$key] = $outputArg;
         }
 
-        return $args;
+        return $newArgs;
     }
 
     /**
@@ -1659,9 +1659,9 @@ class TestGenerator
         if (!is_array($args)) {
             $args = [$args];
         }
-        $newArgs = $this->resolveEnvReferences($args);
-        $newArgs = $this->resolveTestVariable($newArgs, $action->getActionOrigin());
-        $output .= implode(", ", array_filter($newArgs, function($value) { return $value !== null; })) . ");\n";
+        $args = $this->resolveEnvReferences($args);
+        $args = $this->resolveTestVariable($args, $action->getActionOrigin());
+        $output .= implode(", ", array_filter($args, function($value) { return $value !== null; })) . ");\n";
         return $output;
     }
 
@@ -1690,9 +1690,9 @@ class TestGenerator
         if (!is_array($args)) {
             $args = [$args];
         }
-        $newArgs = $this->resolveEnvReferences($args);
-        $newArgs = $this->resolveTestVariable($newArgs, $action->getActionOrigin());
-        $output .= implode(", ", array_filter($newArgs, function($value) { return $value !== null; })) . ");\n";
+        $args = $this->resolveEnvReferences($args);
+        $args = $this->resolveTestVariable($args, $action->getActionOrigin());
+        $output .= implode(", ", array_filter($args, function($value) { return $value !== null; })) . ");\n";
         return $output;
     }
     // @codingStandardsIgnoreEnd
@@ -1717,12 +1717,14 @@ class TestGenerator
                 $replacement = "getenv(\"{$envVariable}\")";
 
                 $outputArg = $this->processQuoteBreaks($fullMatch, $arg, $replacement);
-                $args[$key] = $outputArg;
+                $newArgs[$key] = $outputArg;
+                continue;
             }
+            $newArgs[$key] = $arg;
         }
 
         // override passed in args for use later.
-        return $args;
+        return $newArgs;
     }
 
     /**
