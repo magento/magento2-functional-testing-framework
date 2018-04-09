@@ -33,20 +33,20 @@ class DataReplacementTestCest
 		$I->conditionalClick("Doe", "#John", true);
 		$I->amOnUrl("John.html");
 		$I->searchAndMultiSelectOption("#selector", ["John", "Doe"]);
-		$I->fillField("#selector", "StringBefore ".msq("uniqueData")."John StringAfter");
-		$I->fillField("#".msq("uniqueData")."John", "input");
-		$I->dragAndDrop("#".msq("uniqueData")."John", msq("uniqueData")."John");
-		$I->conditionalClick(msq("uniqueData")."John", "#".msq("uniqueData")."John", true);
-		$I->amOnUrl(msq("uniqueData")."John.html");
-		$I->searchAndMultiSelectOption("#selector", [msq("uniqueData")."John", "Doe"]);
-		$I->fillField("#selector", "StringBefore Doe".msq("uniqueData")." StringAfter");
-		$I->fillField("#Doe".msq("uniqueData"), "input");
-		$I->dragAndDrop("#Doe".msq("uniqueData"), "Doe".msq("uniqueData"));
-		$I->conditionalClick("Doe".msq("uniqueData"), "#Doe".msq("uniqueData"), true);
-		$I->amOnUrl("Doe".msq("uniqueData").".html");
-		$I->searchAndMultiSelectOption("#selector", ["John", "Doe".msq("uniqueData")]);
-		$I->searchAndMultiSelectOption("#selector", [msq("uniqueData")."John", "Doe".msq("uniqueData")]);
-		$I->selectMultipleOptions("#Doe".msq("uniqueData"), "#element", [msq("uniqueData")."John", "Doe".msq("uniqueData")]);
+		$I->fillField("#selector", "StringBefore " . msq("uniqueData") . "John StringAfter");
+		$I->fillField("#" . msq("uniqueData") . "John", "input");
+		$I->dragAndDrop("#" . msq("uniqueData") . "John", msq("uniqueData") . "John");
+		$I->conditionalClick(msq("uniqueData") . "John", "#" . msq("uniqueData") . "John", true);
+		$I->amOnUrl(msq("uniqueData") . "John.html");
+		$I->searchAndMultiSelectOption("#selector", [msq("uniqueData") . "John", "Doe"]);
+		$I->fillField("#selector", "StringBefore Doe" . msq("uniqueData") . " StringAfter");
+		$I->fillField("#Doe" . msq("uniqueData"), "input");
+		$I->dragAndDrop("#Doe" . msq("uniqueData"), "Doe" . msq("uniqueData"));
+		$I->conditionalClick("Doe" . msq("uniqueData"), "#Doe" . msq("uniqueData"), true);
+		$I->amOnUrl("Doe" . msq("uniqueData") . ".html");
+		$I->searchAndMultiSelectOption("#selector", ["John", "Doe" . msq("uniqueData")]);
+		$I->searchAndMultiSelectOption("#selector", [msq("uniqueData") . "John", "Doe" . msq("uniqueData")]);
+		$I->selectMultipleOptions("#Doe" . msq("uniqueData"), "#element", [msq("uniqueData") . "John", "Doe" . msq("uniqueData")]);
 		$I->fillField(".selector", "0");
 	}
 }
