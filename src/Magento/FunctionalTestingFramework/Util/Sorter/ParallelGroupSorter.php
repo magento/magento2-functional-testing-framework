@@ -62,7 +62,7 @@ class ParallelGroupSorter
             $testGroups[$nodeNumber] = $testGroup;
 
             // unset the test which have been used.
-            $testNameToSizeForUse = array_diff($testNameToSizeForUse, $testGroup);
+            $testNameToSizeForUse = array_diff_key($testNameToSizeForUse, $testGroup);
             $nodeNumber++;
         }
 
