@@ -89,6 +89,19 @@ class TestObject
     }
 
     /**
+     * Getter for the skip_test boolean
+     *
+     * @return string
+     */
+    public function isSkipped()
+    {
+        if (array_key_exists('group', $this->annotations) && (in_array("skip", $this->annotations['group']))) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Getter for Codeception format name
      *
      * @return string
