@@ -26,14 +26,16 @@ class SingleRunTestManifest extends DefaultTestManifest
     /**
      * Function which generates the actual manifest once the relevant tests have been added to the array.
      *
+     * @param array $testsReferencedInSuites
      * @param int|null $nodes
      * @return void
      */
-    public function generate($nodes = null)
+    public function generate($testsReferencedInSuites, $nodes = null)
     {
         $fileResource = fopen($this->manifestPath, 'a');
         $line = $this->relativeDirPath . DIRECTORY_SEPARATOR;
         fwrite($fileResource, $line . PHP_EOL);
+        $this->generateSuiteEntries($testsReferencedInSuites, $fileResource);
         fclose($fileResource);
     }
 }

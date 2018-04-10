@@ -81,7 +81,7 @@ class CurlHandler
      * @param EntityDataObject $entityObject
      * @param string $storeCode
      */
-    public function __construct($operation, $entityObject, $storeCode = 'default')
+    public function __construct($operation, $entityObject, $storeCode = null)
     {
         $this->operation = $operation;
         $this->entityObject = $entityObject;
