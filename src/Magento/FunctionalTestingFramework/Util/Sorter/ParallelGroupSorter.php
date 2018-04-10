@@ -76,6 +76,10 @@ class ParallelGroupSorter
      */
     public function getResultingSuiteConfig()
     {
+        if (empty($this->suiteConfig)) {
+            return null;
+        }
+
         return $this->suiteConfig;
     }
 

@@ -97,7 +97,7 @@ class TestGenerator
      * @param bool $debug
      * @return TestGenerator
      */
-    public static function getInstance($dir = null, $tests = null, $debug = false)
+    public static function getInstance($dir = null, $tests = [], $debug = false)
     {
         return new TestGenerator($dir, $tests, $debug);
     }
@@ -174,6 +174,11 @@ class TestGenerator
      */
     public function createAllTestFiles($testManifest = null, $testsToIgnore = null)
     {
+        if ($this->tests === null) {
+            // no-op if the test configuration is null
+            return;
+        }
+
         DirSetupUtil::createGroupDir($this->exportDirectory);
         if ($testsToIgnore === null) {
             $testsToIgnore = SuiteObjectHandler::getInstance()->getAllTestReferences();

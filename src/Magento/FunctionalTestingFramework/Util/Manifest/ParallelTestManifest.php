@@ -99,7 +99,7 @@ class ParallelTestManifest extends BaseTestManifest
     public function generate()
     {
         DirSetupUtil::createGroupDir($this->dirPath);
-        $suites = $this->getFlattenedSuiteConfiguration($this->parallelGroupSorter->getResultingSuiteConfig());
+        $suites = $this->getFlattenedSuiteConfiguration($this->suiteConfiguration ?? []);
 
         foreach ($this->testGroups as $groupNumber => $groupContents) {
             $this->generateGroupFile($groupContents, $groupNumber, $suites);

@@ -79,8 +79,11 @@ abstract class BaseTestManifest
      */
     public function getSuiteConfig()
     {
-        $suiteToTestNames = [];
+        if ($this->suiteConfiguration === null) {
+            return [];
+        }
 
+        $suiteToTestNames = [];
         if (empty($this->suiteConfiguration)) {
             // if there is no configuration passed we can assume the user wants all suites generated as specified.
             foreach (SuiteObjectHandler::getInstance()->getAllObjects() as $suite => $suiteObj) {
