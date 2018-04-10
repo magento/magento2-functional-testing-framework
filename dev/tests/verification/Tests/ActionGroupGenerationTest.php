@@ -107,4 +107,15 @@ class ActionGroupGenerationTest extends MftfTestCase
     {
         $this->generateAndCompareTest('ActionGroupWithStepKeyReferences');
     }
+
+    /**
+     * Test generation of a test referencing an action group that uses stepKey references (grabFrom/CreateData)
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testActionGroupWithNestedArgument()
+    {
+        $this->generateAndCompareTest('ActionGroupUsingNestedArgument');
+    }
 }
