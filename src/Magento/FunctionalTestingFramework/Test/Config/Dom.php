@@ -58,7 +58,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
             foreach ($testNodes as $testNode) {
                 /** @var \DOMElement $testNode */
                 $testNode->setAttribute(self::TEST_META_FILENAME_ATTRIBUTE, $filename);
-                $this->validateTestDomStepKeys($testNode, $filename);
+                $this->validateDomStepKeys($testNode, $filename, 'Test');
             }
         }
 
@@ -83,10 +83,11 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
      *
      * @param \DOMElement $testNode
      * @param string $filename
+     * @param string $type
      * @return void
      * @throws XmlException
      */
-    private function validateTestDomStepKeys($testNode, $filename)
+    protected function validateDomStepKeys($testNode, $filename, $type)
     {
         $childNodes = $testNode->childNodes;
 
@@ -99,7 +100,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
             }
 
             if (in_array($currentNode->nodeName, self::TEST_HOOK_NAMES)) {
-                $this->validateTestDomStepKeys($currentNode, $filename);
+                $this->validateDomStepKeys($currentNode, $filename, $type);
             }
 
             if ($currentNode->hasAttribute('stepKey')) {
@@ -116,7 +117,9 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
                 $stepKeyError .= "\tstepKey: {$duplicateValue} is used more than once.\n";
             }
 
-            throw new XmlException("Tests cannot use stepKey more than once!\t\n{$stepKeyError}\tin file: {$filename}");
+            throw new XmlException(
+                "{$type}s cannot use stepKey more than once!\t\n{$stepKeyError}\tin file: {$filename}"
+            );
         }
     }
 }
