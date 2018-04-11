@@ -76,15 +76,6 @@ class ParallelGroupSorterTest extends TestCase
 
         AspectMock::double(TestObjectHandler::class, ['getInstance' => $mockHandler])->make();
 
-        // mock a suite object
-        $mockSuite = AspectMock::double(SuiteObject::class, [
-            'getBeforeHook' => null,
-            'getAfterHook' => null,
-            'getName' => 'mockSuite1'
-        ])->make();
-        $mockSuiteHandler = AspectMock::double(SuiteObjectHandler::class, ['getObject' => $mockSuite])->make();
-        AspectMock::double(SuiteObjectHandler::class, ['getInstance' => $mockSuiteHandler]);
-
         // create test to size array
         $sampleTestArray = [
             'test1' => 100,
@@ -96,8 +87,7 @@ class ParallelGroupSorterTest extends TestCase
 
         // create mock suite references
         $sampleSuiteArray = [
-            'mockTest1' => ['mockSuite1'],
-            'mockTest2' => ['mockSuite1']
+            'mockSuite1' => ['mockTest1', 'mockTest2']
         ];
 
         // perform sort

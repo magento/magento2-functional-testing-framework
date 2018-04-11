@@ -79,6 +79,26 @@ class SuiteObjectHandler implements ObjectHandlerInterface
     }
 
     /**
+     * Function which return all tests referenced by suites.
+     *
+     * @return array
+     */
+    public function getAllTestReferences()
+    {
+        $testsReferencedInSuites = [];
+        $suites = $this->getAllObjects();
+
+        foreach ($suites as $suite) {
+            /** @var SuiteObject $suite */
+            $test_keys = array_keys($suite->getTests());
+            $testToSuiteName = array_fill_keys($test_keys, [$suite->getName()]);
+            $testsReferencedInSuites = array_merge_recursive($testsReferencedInSuites, $testToSuiteName);
+        }
+
+        return $testsReferencedInSuites;
+    }
+
+    /**
      * Method to parse all suite data xml into objects.
      *
      * @return void

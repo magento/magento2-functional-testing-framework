@@ -6,14 +6,13 @@
 
 namespace Magento\FunctionalTestingFramework\Suite;
 
-use Magento\Framework\Phrase;
-use Magento\Framework\Validator\Exception;
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Suite\Generators\GroupClassGenerator;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
+use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 use Magento\FunctionalTestingFramework\Util\Manifest\BaseTestManifest;
-use Magento\FunctionalTestingFramework\Util\Manifest\ParallelTestManifest;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Symfony\Component\Yaml\Yaml;
 
@@ -75,15 +74,23 @@ class SuiteGenerator
      */
     public function generateAllSuites($testManifest)
     {
-        $suites = SuiteObjectHandler::getInstance()->getAllObjects();
-        if (get_class($testManifest) == ParallelTestManifest::class) {
-            /** @var  ParallelTestManifest $testManifest */
-            $suites = $testManifest->getSorter()->getResultingSuites();
+        $suites = array_keys(SuiteObjectHandler::getInstance()->getAllObjects());
+        if ($testManifest != null) {
+            $suites = $testManifest->getSuiteConfig();
         }
 
-        foreach ($suites as $suite) {
-            // during a parallel config run we must generate only after we have data around how a suite will be split
-            $this->generateSuiteFromObject($suite);
+        foreach ($suites as $suiteName => $suiteContent) {
+            $firstElement = array_values($suiteContent)[0];
+
+            // if the first element is a string we know that we simply have an array of tests
+            if (is_string($firstElement)) {
+                $this->generateSuiteFromTest($suiteName, $suiteContent);
+            }
+
+            // if our first element is an array we know that we have split the suites
+            if (is_array($firstElement)) {
+                $this->generateSplitSuiteFromTest($suiteName, $suiteContent);
+            }
         }
     }
 
@@ -96,11 +103,22 @@ class SuiteGenerator
     {
         $testsReferencedInSuites = [];
         $suites = SuiteObjectHandler::getInstance()->getAllObjects();
+
+        // see if we have a specific suite configuration.
+        if (!empty($this->suiteReferences)) {
+            $suites = array_intersect_key($suites, $this->suiteReferences);
+        }
+
         foreach ($suites as $suite) {
             /** @var SuiteObject $suite */
             $test_keys = array_keys($suite->getTests());
-            $testToSuiteName = array_fill_keys($test_keys, [$suite->getName()]);
 
+            // see if we need to filter which tests we'll be generating.
+            if (array_key_exists($suite->getName(), $this->suiteReferences)) {
+                $test_keys = $this->suiteReferences[$suite->getName()] ?? $test_keys;
+            }
+
+            $testToSuiteName = array_fill_keys($test_keys, [$suite->getName()]);
             $testsReferencedInSuites = array_merge_recursive($testsReferencedInSuites, $testToSuiteName);
         }
 
@@ -117,33 +135,123 @@ class SuiteGenerator
     public function generateSuite($suiteName)
     {
         /**@var SuiteObject $suite **/
-        $suite = SuiteObjectHandler::getInstance()->getObject($suiteName);
-        $this->generateSuiteFromObject($suite);
+        $this->generateSuiteFromTest($suiteName, []);
     }
 
     /**
-     * Function which takes a suite object and generates all relevant supporting files and classes.
+     * Function which takes a suite name and a set of test names. The function then generates all relevant supporting
+     * files and classes for the suite. The function takes an optional argument for suites which are split by a parallel
+     * run so that any pre/post conditions can be duplicated.
      *
-     * @param SuiteObject $suiteObject
+     * @param string $suiteName
+     * @param array $tests
+     * @param string $originalSuiteName
      * @return void
      */
-    public function generateSuiteFromObject($suiteObject)
+    private function generateSuiteFromTest($suiteName, $tests = [], $originalSuiteName = null)
     {
-        $suiteName = $suiteObject->getName();
         $relativePath = TestGenerator::GENERATED_DIR . DIRECTORY_SEPARATOR . $suiteName;
-        $fullPath = TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . $relativePath;
-        $groupNamespace = null;
+        $fullPath = TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . $relativePath . DIRECTORY_SEPARATOR;
 
         DirSetupUtil::createGroupDir($fullPath);
-        $this->generateRelevantGroupTests($suiteName, $suiteObject->getTests());
 
-        if ($suiteObject->requiresGroupFile()) {
-            // if the suite requires a group file, generate it and set the namespace
-            $groupNamespace = $this->groupClassGenerator->generateGroupClass($suiteObject);
+        $relevantTests = [];
+        if (!empty($tests)) {
+            $this->validateTestsReferencedInSuite($suiteName, $tests, $originalSuiteName);
+            foreach ($tests as $testName) {
+                $relevantTests[$testName] = TestObjectHandler::getInstance()->getObject($testName);
+            }
+        } else {
+            $relevantTests = SuiteObjectHandler::getInstance()->getObject($suiteName)->getTests();
         }
+
+        $this->generateRelevantGroupTests($suiteName, $relevantTests);
+        $groupNamespace = $this->generateGroupFile($suiteName, $relevantTests, $originalSuiteName);
 
         $this->appendEntriesToConfig($suiteName, $fullPath, $groupNamespace);
         print "Suite ${suiteName} generated to ${relativePath}.\n";
+    }
+
+    /**
+     * Function which validates tests passed in as custom configuration against the configuration defined by the user to
+     * prevent possible invalid test configurations from executing.
+     *
+     * @param string $suiteName
+     * @param array $testsReferenced
+     * @param string $originalSuiteName
+     * @return void
+     * @throws TestReferenceException
+     */
+    private function validateTestsReferencedInSuite($suiteName, $testsReferenced, $originalSuiteName)
+    {
+        $suiteRef = $originalSuiteName ?? $suiteName;
+        $possibleTestRef = SuiteObjectHandler::getInstance()->getObject($suiteRef)->getTests();
+        $invalidTestRef = null;
+        $errorMsg = "Cannot reference tests not declared as part of {$suiteRef}:\n ";
+
+        array_walk($testsReferenced, function ($value) use (&$invalidTestRef, $possibleTestRef, &$errorMsg) {
+            if (!array_key_exists($value, $possibleTestRef)) {
+                $invalidTestRef.= "\t{$value}\n";
+            }
+        });
+
+        if ($invalidTestRef != null) {
+            throw new TestReferenceException($errorMsg . $invalidTestRef);
+        }
+    }
+
+    /**
+     * Function for generating split groups of tests (following a parallel execution). Takes a paralle suite config
+     * and generates applicable suites.
+     *
+     * @param string $suiteName
+     * @param array $suiteContent
+     * @return void
+     */
+    private function generateSplitSuiteFromTest($suiteName, $suiteContent)
+    {
+        foreach ($suiteContent as $suiteSplitName => $tests) {
+            $this->generateSuiteFromTest($suiteSplitName, $tests, $suiteName);
+        }
+    }
+
+    /**
+     * Function which takes a suite name, array of tests, and an original suite name. The function takes these args
+     * and generates a group file which captures suite level preconditions.
+     *
+     * @param string $suiteName
+     * @param array $tests
+     * @param string $originalSuiteName
+     * @return null|string
+     */
+    private function generateGroupFile($suiteName, $tests, $originalSuiteName)
+    {
+        // if there's an original suite name we know that this test came from a split group.
+        if ($originalSuiteName) {
+            // create the new suite object
+            /** @var SuiteObject $originalSuite */
+            $originalSuite = SuiteObjectHandler::getInstance()->getObject($originalSuiteName);
+            $suiteObject = new SuiteObject(
+                $suiteName,
+                $tests,
+                [],
+                $originalSuite->getHooks()
+            );
+        } else {
+            $suiteObject = SuiteObjectHandler::getInstance()->getObject($suiteName);
+            // we have to handle the case when there is a custom configuration for an existing suite.
+            if (count($suiteObject->getTests()) != count($tests)) {
+                return $this->generateGroupFile($suiteName, $tests, $suiteName);
+            }
+        }
+
+        if (!$suiteObject->requiresGroupFile()) {
+            // if we do not require a group file we don't need a namespace
+            return null;
+        }
+
+        // if the suite requires a group file, generate it and set the namespace
+        return $this->groupClassGenerator->generateGroupClass($suiteObject);
     }
 
     /**
@@ -219,7 +327,7 @@ class SuiteGenerator
     private function generateRelevantGroupTests($path, $tests)
     {
         $testGenerator = TestGenerator::getInstance($path, $tests);
-        $testGenerator->createAllTestFiles('suite');
+        $testGenerator->createAllTestFiles(null, []);
     }
 
     /**
