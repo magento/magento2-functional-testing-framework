@@ -8,6 +8,7 @@ namespace Magento\FunctionalTestingFramework\Util;
 
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
@@ -96,7 +97,7 @@ class TestGenerator
      * @param bool $debug
      * @return TestGenerator
      */
-    public static function getInstance($dir = null, $tests = null, $debug = false)
+    public static function getInstance($dir = null, $tests = [], $debug = false)
     {
         return new TestGenerator($dir, $tests, $debug);
     }
@@ -112,14 +113,28 @@ class TestGenerator
     }
 
     /**
-     * Load all Test files as Objects using the Test Object Handler.
+     * Load all Test files as Objects using the Test Object Handler, additionally validates test references being loaded
+     * for validity.
      *
+     * @param array $testsToIgnore
      * @return array
      */
-    private function loadAllTestObjects()
+    private function loadAllTestObjects($testsToIgnore)
     {
         if ($this->tests === null || empty($this->tests)) {
-            return TestObjectHandler::getInstance()->getAllObjects();
+            $testObjects = TestObjectHandler::getInstance()->getAllObjects();
+            return array_diff_key($testObjects, $testsToIgnore);
+        }
+
+        // If we have a custom configuration, we need to check the tests passed in to insure that we can generate
+        // them in the current context.
+        $invalidTestObjects = array_intersect_key($this->tests, $testsToIgnore);
+        if (!empty($invalidTestObjects)) {
+            $errorMsg = "Cannot reference the following tests for generation without accompanying suite:\n";
+            array_walk($invalidTestObjects, function ($value, $key) use (&$errorMsg) {
+                $errorMsg.= "\t{$key}\n";
+            });
+            throw new TestReferenceException($errorMsg);
         }
 
         return $this->tests;
@@ -151,30 +166,28 @@ class TestGenerator
      * Assemble ALL PHP strings using the assembleAllTestPhp function. Loop over and pass each array item
      * to the createCestFile function.
      *
-     * @param string $runConfig
-     * @param int $nodes
-     * @param TestObject[] $testsToIgnore
-     * @return BaseTestManifest
+     * @param BaseTestManifest $testManifest
+     * @param array $testsToIgnore
+     * @return void
      * @throws TestReferenceException
      * @throws \Exception
      */
-    public function createAllTestFiles($runConfig = null, $nodes = null, $testsToIgnore = [])
+    public function createAllTestFiles($testManifest = null, $testsToIgnore = null)
     {
+        if ($this->tests === null) {
+            // no-op if the test configuration is null
+            return;
+        }
+
         DirSetupUtil::createGroupDir($this->exportDirectory);
+        if ($testsToIgnore === null) {
+            $testsToIgnore = SuiteObjectHandler::getInstance()->getAllTestReferences();
+        }
 
-        // create our manifest file here
-        $testManifest = TestManifestFactory::makeManifest(
-            dirname($this->exportDirectory),
-            $this->exportDirectory,
-            $runConfig
-        );
-
-        $testPhpArray = $this->assembleAllTestPhp($testManifest, $nodes, $testsToIgnore);
+        $testPhpArray = $this->assembleAllTestPhp($testManifest, $testsToIgnore);
         foreach ($testPhpArray as $testPhpFile) {
             $this->createCestFile($testPhpFile[1], $testPhpFile[0]);
         }
-
-        return $testManifest;
     }
 
     /**
@@ -216,15 +229,13 @@ class TestGenerator
      * Load ALL Test objects. Loop over and pass each to the assembleTestPhp function.
      *
      * @param BaseTestManifest $testManifest
-     * @param int $nodes
      * @param array $testsToIgnore
      * @return array
      */
-    private function assembleAllTestPhp($testManifest, $nodes, array $testsToIgnore)
+    private function assembleAllTestPhp($testManifest, array $testsToIgnore)
     {
         /** @var TestObject[] $testObjects */
-        $testObjects = $this->loadAllTestObjects();
-        $testObjects = array_diff_key($testObjects, $testsToIgnore);
+        $testObjects = $this->loadAllTestObjects($testsToIgnore);
         $cestPhpArray = [];
 
         foreach ($testObjects as $test) {
@@ -240,10 +251,6 @@ class TestGenerator
             if ($testManifest != null) {
                 $testManifest->addTest($test);
             }
-        }
-
-        if ($testManifest != null) {
-            $testManifest->generate($testsToIgnore, intval($nodes));
         }
 
         return $cestPhpArray;
@@ -854,7 +861,7 @@ class TestGenerator
                     }
 
                     if (isset($customActionAttributes['index'])) {
-                        $getEntityFunctionCall .= sprintf(", %s", (int)$customActionAttributes['index']);
+                        $getEntityFunctionCall .= sprintf("%s", (int)$customActionAttributes['index']);
                     } else {
                         $getEntityFunctionCall .= 'null';
                     }
@@ -1506,10 +1513,15 @@ class TestGenerator
         $testName = str_replace(' ', '', $testName);
         $testAnnotations = $this->generateAnnotationsPhp($test->getAnnotations(), true);
         $dependencies = 'AcceptanceTester $I';
-        try {
-            $steps = $this->generateStepsPhp($test->getOrderedActions());
-        } catch (TestReferenceException $e) {
-            throw new TestReferenceException($e->getMessage() . " in Test \"" . $test->getName() . "\"");
+        if ($test->isSkipped()) {
+            $steps = "\t\t" . '$scenario->skip("This test is skipped");' . "\n";
+            $dependencies .= ', \Codeception\Scenario $scenario';
+        } else {
+            try {
+                $steps = $this->generateStepsPhp($test->getOrderedActions());
+            } catch (TestReferenceException $e) {
+                throw new TestReferenceException($e->getMessage() . " in Test \"" . $test->getName() . "\"");
+            }
         }
 
         $testPhp .= $testAnnotations;
