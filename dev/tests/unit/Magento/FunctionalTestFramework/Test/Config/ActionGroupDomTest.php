@@ -5,7 +5,7 @@
  */
 namespace Tests\unit\Magento\FunctionalTestFramework\Test\Config;
 
-use Magento\FunctionalTestingFramework\Exceptions\XmlException;
+use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
 use Magento\FunctionalTestingFramework\Test\Config\ActionGroupDom;
 use PHPUnit\Framework\TestCase;
 
@@ -23,10 +23,10 @@ class ActionGroupDomTest extends TestCase
             </actionGroup>
          </actionGroups>";
 
-        $actionDom = new ActionGroupDom($sampleXml, 'test.xml');
-        $this->expectException(XmlException::class);
+        $exceptionCollector = new ExceptionCollector();
+        $actionDom = new ActionGroupDom($sampleXml, 'dupeStepKeyActionGroup.xml', $exceptionCollector);
 
-        // an exception is only thrown for Action Group files.
-        $actionDom->initDom($sampleXml, 'dupeStepKeyActionGroup.xml');
+        $this->expectException(\Exception::class);
+        $exceptionCollector->throwException();
     }
 }
