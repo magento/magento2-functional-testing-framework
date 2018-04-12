@@ -238,8 +238,8 @@ class ModuleResolver
             . 'vendor' . DIRECTORY_SEPARATOR;
 
         $codePathsToPattern = [
-            $appCodePath => '/Test/Acceptance',
             $modulePath => '',
+            $appCodePath => '/Test/Acceptance',
             $vendorCodePath => '/Test/Acceptance'
         ];
 
