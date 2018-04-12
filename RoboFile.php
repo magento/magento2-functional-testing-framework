@@ -49,7 +49,6 @@ class RoboFile extends \Robo\Tasks
     {
         require 'dev' . DIRECTORY_SEPARATOR . 'tests'. DIRECTORY_SEPARATOR . 'functional' . DIRECTORY_SEPARATOR . '_bootstrap.php';
         $GLOBALS['GENERATE_TESTS'] = true;
-
         if (!$this->isProjectBuilt()) {
             $this->say("<info>Please run bin/mftf build:project and configure your environment (.env) first.</info>");
             exit(\Robo\Result::EXITCODE_ERROR);
