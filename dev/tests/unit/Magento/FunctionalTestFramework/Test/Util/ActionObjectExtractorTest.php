@@ -1,11 +1,8 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: imeron
- * Date: 4/10/18
- * Time: 11:39 AM
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
  */
-
 namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
 
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
