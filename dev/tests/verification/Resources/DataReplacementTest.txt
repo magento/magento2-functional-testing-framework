@@ -39,6 +39,8 @@ class DataReplacementTestCest
 		$I->conditionalClick(msq("uniqueData") . "John", "#" . msq("uniqueData") . "John", true);
 		$I->amOnUrl(msq("uniqueData") . "John.html");
 		$I->searchAndMultiSelectOption("#selector", [msq("uniqueData") . "John", "Doe"]);
+		$I->click("#" . msq("uniqueData") . "John#" . msq("uniqueData") . "John");
+		$I->click("#Doe" . msq("uniqueData") . "#Doe" . msq("uniqueData"));
 		$I->fillField("#selector", "StringBefore Doe" . msq("uniqueData") . " StringAfter");
 		$I->fillField("#Doe" . msq("uniqueData"), "input");
 		$I->dragAndDrop("#Doe" . msq("uniqueData"), "Doe" . msq("uniqueData"));

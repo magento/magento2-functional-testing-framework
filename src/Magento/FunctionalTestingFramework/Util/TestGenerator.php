@@ -1569,7 +1569,7 @@ class TestGenerator
 
         //Match on msq(\"entityName\")
         preg_match_all('/' . EntityDataObject::CEST_UNIQUE_FUNCTION . '\(\\\\"[\w]+\\\\"\)/', $output, $matches);
-        foreach ($matches[0] as $match) {
+        foreach (array_unique($matches[0]) as $match) {
             preg_match('/\\\\"([\w]+)\\\\"/', $match, $entityMatch);
             $entity = $entityMatch[1];
             $output = str_replace($match, '" . msq("' . $entity . '") . "', $output);
