@@ -16,8 +16,12 @@ $kernel->init([
     'includePaths' => [PROJECT_ROOT . '/src']
 ]);
 
-// force php to generate
-$GLOBALS['FORCE_PHP_GENERATE'] = true;
+// set mftf appplication context
+\Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::create(
+    true,
+    \Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::GENERATION_PHASE,
+    true
+);
 
 // Load needed framework env params
 $TEST_ENVS = [

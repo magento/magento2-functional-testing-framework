@@ -6,7 +6,9 @@
 
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
+use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
 
@@ -109,7 +111,7 @@ class TestObjectExtractor extends BaseObjectExtractor
         try {
             return new TestObject(
                 $testData[self::NAME],
-                $this->actionObjectExtractor->extractActions($testActions),
+                $this->actionObjectExtractor->extractActions($testActions, $testData[self::NAME]),
                 $testAnnotations,
                 $testHooks,
                 $filename
