@@ -114,4 +114,10 @@
     <test name="ActionGroupWithStepKeyReferences">
         <actionGroup ref="FunctionActionGroupWithStepKeyReferences" stepKey="actionGroup"/>
     </test>
+
+    <test name="ActionGroupUsingNestedArgument">
+        <actionGroup ref="actionGroupWithNestedArgument" stepKey="actionGroup">
+            <argument name="count" value="99"/>
+        </actionGroup>
+    </test>
 </tests>

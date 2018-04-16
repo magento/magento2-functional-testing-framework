@@ -1,5 +1,5 @@
 <?php
-namespace Magento\AcceptanceTest\_generated\Backend;
+namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
@@ -46,7 +46,6 @@ class BasicFunctionalTestCest
 	public function _failed(AcceptanceTester $I)
 	{
 		$I->saveScreenshot();
-		$this->_after($I);
 	}
 
 	/**
@@ -60,6 +59,8 @@ class BasicFunctionalTestCest
 	 */
 	public function BasicFunctionalTest(AcceptanceTester $I)
 	{
+		$I->comment("");
+		$I->comment("");
 		$someVarDefinition = $I->grabValueFrom();
 		$I->acceptPopup();
 		$I->amOnPage("/test/url");
@@ -70,8 +71,13 @@ class BasicFunctionalTestCest
 		$I->click(".functionalTestSelector");
 		$I->clickWithLeftButton(".functionalTestSelector");
 		$I->clickWithRightButton(".functionalTestSelector");
+		$I->clickWithLeftButton("#element#element .200", 200, 300);
+		$I->clickWithRightButton("#element .4123#element", 200, 300);
 		$I->closeTab();
 		$I->conditionalClick(".functionalTestSelector", ".functionalDependentTestSelector", true);
+		$I->amGoingTo("delete entity that has the createDataKey: createKey1");
+		$createKey1->deleteEntity();
+		$I->deleteEntityByUrl("/V1/categories{$grabbedData}");
 		$I->dontSee("someInput", ".functionalTestSelector");
 		$I->dontSeeCheckboxIsChecked(".functionalTestSelector");
 		$I->dontSeeCookie("someInput");
@@ -89,7 +95,7 @@ class BasicFunctionalTestCest
 		$I->doubleClick(".functionalTestSelector");
 		$I->dragAndDrop(".functionalTestSelector", ".functionalTestSelector2");
 		$I->dragAndDrop(".functionalTestSelector", ".functionalTestSelector2", 100, 900);
-		$I->executeJS("someJSFunction");
+		$executeJSKey1 = $I->executeJS("someJSFunction");
 		$I->fillField(".functionalTestSelector", "someInput");
 		$I->fillField(".functionalTestSelector", "0");
 		$grabAttributeFromKey1 = $I->grabAttributeFrom(".functionalTestSelector", "someInput");

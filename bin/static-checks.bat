@@ -5,7 +5,7 @@
 
 @echo off
 @echo ===============================PHP CODE SNIFFER REPORT===============================
-call vendor\bin\phpcs .\src --standard=.\dev\tests\static\Magento
+call vendor\bin\phpcs .\src --standard=.\dev\tests\static\Magento --ignore=src\Magento\FunctionalTestingFramework\Group,src\Magento\FunctionalTestingFramework\AcceptanceTester.php
 call vendor\bin\phpcs .\dev\tests\unit --standard=.\dev\tests\static\Magento
 call vendor\bin\phpcs .\dev\tests\verification --standard=.\dev\tests\static\Magento --ignore=dev\tests\verification\_generated
 
@@ -13,7 +13,7 @@ call vendor\bin\phpcs .\dev\tests\verification --standard=.\dev\tests\static\Mag
 call vendor\bin\phpcpd .\src
 
 @echo "===============================PHP MESS DETECTOR REPORT===============================
-vendor\bin\phpmd .\src text \dev\tests\static\Magento\CodeMessDetector\ruleset.xml --exclude _generated
+vendor\bin\phpmd .\src text \dev\tests\static\Magento\CodeMessDetector\ruleset.xml --exclude _generated,src\Magento\FunctionalTestingFramework\Group,src\Magento\FunctionalTestingFramework\AcceptanceTester.php
 
 @echo ===============================MAGENTO COPYRIGHT REPORT===============================
 echo msgbox "INFO:Copyright check currently not run as part of .bat implementation" > "%temp%\popup.vbs"

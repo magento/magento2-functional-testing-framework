@@ -22,6 +22,8 @@
         <after>
             <amOnPage url="/afterUrl" stepKey="afterAmOnPageKey"/>
         </after>
+        <comment stepKey="basicCommentWithNoData" userInput="{{emptyData.noData}}"/>
+        <comment stepKey="basicCommentWithDefinitelyNoData" userInput="{{emptyData.definitelyNoData}}"/>
         <grabValueFrom stepKey="someVarDefinition"/>
         <acceptPopup stepKey="acceptPopupKey1"/>
         <amOnPage stepKey="amOnPageKey1" url="/test/url"/>
@@ -32,8 +34,12 @@
         <click selector=".functionalTestSelector" stepKey="clickKey1"/>
         <clickWithLeftButton selector=".functionalTestSelector" stepKey="clickWithLeftButtonKey1"/>
         <clickWithRightButton selector=".functionalTestSelector" stepKey="clickWithRightButtonKey1"/>
+        <clickWithLeftButton selector="{{SampleSection.simpleElement}}{{SampleSection.simpleElementOneParam(offset.x)}}" x="{{offset.x}}" y="{{offset.y}}" stepKey="clickWithLeftButtonKeyXY1" />
+        <clickWithRightButton selector="{{SampleSection.simpleElementOneParam('4123')}}{{SampleSection.simpleElement}}" x="{{offset.x}}" y="{{offset.y}}" stepKey="clickWithRightButtonKeyXY1" />
         <closeTab stepKey="closeTabKey1"/>
         <conditionalClick selector=".functionalTestSelector" dependentSelector=".functionalDependentTestSelector" visible="true" stepKey="conditionalClickKey1"/>
+        <deleteData stepKey="deleteKey1" createDataKey="createKey1"/>
+        <deleteData stepKey="deleteKey2" url="/V1/categories{$grabbedData}"/>
         <dontSee userInput="someInput" selector=".functionalTestSelector" stepKey="dontSeeKey1" />
         <dontSeeCheckboxIsChecked selector=".functionalTestSelector" stepKey="dontSeeCheckboxIsCheckedKey1"/>
         <dontSeeCookie userInput="someInput" stepKey="dontSeeCookieKey1"/>

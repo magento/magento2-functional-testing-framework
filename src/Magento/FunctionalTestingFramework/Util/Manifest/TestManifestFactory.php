@@ -6,6 +6,9 @@
 
 namespace Magento\FunctionalTestingFramework\Util\Manifest;
 
+use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
+use Magento\FunctionalTestingFramework\Util\TestGenerator;
+
 class TestManifestFactory
 {
     /**
@@ -19,21 +22,28 @@ class TestManifestFactory
     /**
      * Static function which takes path and config to return the appropriate manifest output type.
      *
-     * @param String $path
      * @param String $runConfig
+     * @param array $suiteConfiguration
+     * @param String $testPath
      * @return BaseTestManifest
      */
-    public static function makeManifest($path, $runConfig)
+    public static function makeManifest($runConfig, $suiteConfiguration, $testPath = TestGenerator::DEFAULT_DIR)
     {
+        $testDirFullPath = TESTS_MODULE_PATH
+        . DIRECTORY_SEPARATOR
+        . TestGenerator::GENERATED_DIR
+        . DIRECTORY_SEPARATOR
+        . $testPath;
+
         switch ($runConfig) {
             case 'singleRun':
-                return new SingleRunTestManifest($path);
+                return new SingleRunTestManifest($suiteConfiguration, $testDirFullPath);
 
             case 'parallel':
-                return new ParallelTestManifest($path);
+                return new ParallelTestManifest($suiteConfiguration, $testDirFullPath);
 
             default:
-                return new DefaultTestManifest($path);
+                return new DefaultTestManifest($suiteConfiguration, $testDirFullPath);
 
         }
     }

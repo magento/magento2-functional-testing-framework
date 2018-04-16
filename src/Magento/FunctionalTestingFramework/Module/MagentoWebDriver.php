@@ -19,6 +19,7 @@ use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Util\Uri;
 use Codeception\Util\ActionSequence;
+use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\WebapiExecutor;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
 use Magento\Setup\Exception;
@@ -436,12 +437,25 @@ class MagentoWebDriver extends WebDriver
      * @param string $command
      * @returns string
      */
-    public function executeMagentoCLICommand($command)
+    public function magentoCLI($command)
     {
-
         $apiURL = $this->config['url'] . getenv('MAGENTO_CLI_COMMAND_PATH');
         $executor = new CurlTransport();
         $executor->write($apiURL, [getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command], CurlInterface::POST, []);
+        $response = $executor->read();
+        $executor->close();
+        return $response;
+    }
+
+    /**
+     * Runs DELETE request to delete a Magento entity against the url given.
+     * @param string $url
+     * @return string
+     */
+    public function deleteEntityByUrl($url)
+    {
+        $executor = new WebapiExecutor(null);
+        $executor->write($url, [], CurlInterface::DELETE, []);
         $response = $executor->read();
         $executor->close();
         return $response;
@@ -552,6 +566,10 @@ class MagentoWebDriver extends WebDriver
             $this->saveScreenshot();
         }
 
+        if ($this->current_test == null) {
+            throw new \RuntimeException("Suite condition failure: \n" . $fail->getMessage());
+        }
+
         $this->addAttachment($this->pngReport, $test->getMetadata()->getName() . '.png', 'image/png');
         $this->addAttachment($this->htmlReport, $test->getMetadata()->getName() . '.html', 'text/html');
 
@@ -565,8 +583,12 @@ class MagentoWebDriver extends WebDriver
      */
     public function saveScreenshot()
     {
-        $test = $this->current_test;
-        $filename = preg_replace('~\W~', '.', Descriptor::getTestSignature($test));
+        $testDescription = "unknown." . uniqid();
+        if ($this->current_test != null) {
+            $testDescription = Descriptor::getTestSignature($this->current_test);
+        }
+
+        $filename = preg_replace('~\W~', '.', $testDescription);
         $outputDir = codecept_output_dir();
         $this->_saveScreenshot($this->pngReport = $outputDir . mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png');
         $this->_savePageSource($this->htmlReport = $outputDir . mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html');

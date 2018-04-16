@@ -286,11 +286,12 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\ActionGroupData" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
+    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\ActionGroupData" type="Magento\FunctionalTestingFramework\Test\Config\Reader\Filesystem">
         <arguments>
             <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\ActionGroupDataConverter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\ActionGroup</argument>
+            <argument name="domDocumentClass" xsi:type="string">Magento\FunctionalTestingFramework\Test\Config\ActionGroupDom</argument>
             <argument name="idAttributes" xsi:type="array">
                 <item name="/actionGroups/actionGroup" xsi:type="string">name</item>
                 <item name="/actionGroups/actionGroup/arguments/argument" xsi:type="string">name</item>
@@ -358,11 +359,15 @@
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\SuiteData</argument>
             <argument name="idAttributes" xsi:type="array">
                 <item name="/suites/suite" xsi:type="string">name</item>
+                <item name="/suites/suite/(before|after)/remove" xsi:type="string">keyForRemoval</item>
+                <item name="/suites/suite/(before|after)/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
+                <item name="/suites/suite/(before|after)/createData/requiredEntity" xsi:type="string">createDataKey</item>
+                <item name="/suites/suite/(before|after)/createData/field" xsi:type="string">key</item>
                 <item name="/suites/suite/include/(group|test|module)" xsi:type="string">name</item>
                 <item name="/suites/suite/exclude/(group|test|module)" xsi:type="string">name</item>
             </argument>
             <argument name="fileName" xsi:type="string">*.xml</argument>
-            <argument name="defaultScope" xsi:type="string">_suite</argument>
+            <argument name="defaultScope" xsi:type="string">Suite</argument>
         </arguments>
     </virtualType>
 
@@ -370,8 +375,10 @@
         <arguments>
             <argument name="assocArrayAttributes" xsi:type="array">
                 <item name="/suites/suite" xsi:type="string">name</item>
-                <item name="/suites/suite/(before|after)/(createData|deleteData)" xsi:type="string">stepKey</item>
+                <item name="/suites/suite/(before|after)/remove" xsi:type="string">keyForRemoval</item>
+                <item name="/suites/suite/(before|after)/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
                 <item name="/suites/suite/(before|after)/createData/requiredEntity" xsi:type="string">createDataKey</item>
+                <item name="/suites/suite/(before|after)/createData/field" xsi:type="string">key</item>
                 <item name="/suites/suite/include/(group|test|module)" xsi:type="string">name</item>
                 <item name="/suites/suite/exclude/(group|test|module)" xsi:type="string">name</item>
             </argument>
