@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Test\Config;
 
+use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Config\Dom\NodeMergingConfig;
 use Magento\FunctionalTestingFramework\Config\Dom\NodePathMatcher;
@@ -21,6 +22,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
      * TestDom constructor.
      * @param string $xml
      * @param string $filename
+     * @param ExceptionCollector $exceptionCollector
      * @param array $idAttributes
      * @param string $typeAttributeName
      * @param string $schemaFile
@@ -29,6 +31,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
     public function __construct(
         $xml,
         $filename,
+        $exceptionCollector,
         array $idAttributes = [],
         $typeAttributeName = null,
         $schemaFile = null,
@@ -38,7 +41,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
         $this->nodeMergingConfig = new NodeMergingConfig(new NodePathMatcher(), $idAttributes);
         $this->typeAttributeName = $typeAttributeName;
         $this->errorFormat = $errorFormat;
-        $this->dom = $this->initDom($xml, $filename);
+        $this->dom = $this->initDom($xml, $filename, $exceptionCollector);
         $this->rootNamespace = $this->dom->lookupNamespaceUri($this->dom->namespaceURI);
     }
 
@@ -47,9 +50,10 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
      *
      * @param string $xml
      * @param string|null $filename
+     * @param ExceptionCollector $exceptionCollector
      * @return \DOMDocument
      */
-    public function initDom($xml, $filename = null)
+    public function initDom($xml, $filename = null, $exceptionCollector = null)
     {
         $dom = parent::initDom($xml);
 
@@ -58,7 +62,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
             foreach ($testNodes as $testNode) {
                 /** @var \DOMElement $testNode */
                 $testNode->setAttribute(self::TEST_META_FILENAME_ATTRIBUTE, $filename);
-                $this->validateTestDomStepKeys($testNode, $filename);
+                $this->validateDomStepKeys($testNode, $filename, 'Test', $exceptionCollector);
             }
         }
 
@@ -70,11 +74,12 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
      *
      * @param string $xml
      * @param string|null $filename
+     * @param ExceptionCollector $exceptionCollector
      * @return void
      */
-    public function merge($xml, $filename = null)
+    public function merge($xml, $filename = null, $exceptionCollector = null)
     {
-        $dom = $this->initDom($xml, $filename);
+        $dom = $this->initDom($xml, $filename, $exceptionCollector);
         $this->mergeNode($dom->documentElement, '');
     }
 
@@ -83,10 +88,12 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
      *
      * @param \DOMElement $testNode
      * @param string $filename
+     * @param string $type
+     * @param ExceptionCollector $exceptionCollector
      * @return void
      * @throws XmlException
      */
-    private function validateTestDomStepKeys($testNode, $filename)
+    protected function validateDomStepKeys($testNode, $filename, $type, $exceptionCollector)
     {
         $childNodes = $testNode->childNodes;
 
@@ -99,7 +106,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
             }
 
             if (in_array($currentNode->nodeName, self::TEST_HOOK_NAMES)) {
-                $this->validateTestDomStepKeys($currentNode, $filename);
+                $this->validateDomStepKeys($currentNode, $filename, $type, $exceptionCollector);
             }
 
             if ($currentNode->hasAttribute('stepKey')) {
@@ -116,7 +123,8 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
                 $stepKeyError .= "\tstepKey: {$duplicateValue} is used more than once.\n";
             }
 
-            throw new XmlException("Tests cannot use stepKey more than once!\t\n{$stepKeyError}\tin file: {$filename}");
+            $errorMsg = "{$type}s cannot use stepKey more than once.\t\n{$stepKeyError}\tin file: {$filename}";
+            $exceptionCollector->addError($filename, $errorMsg);
         }
     }
 }
