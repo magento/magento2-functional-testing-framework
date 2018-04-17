@@ -286,11 +286,12 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\ActionGroupData" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
+    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\ActionGroupData" type="Magento\FunctionalTestingFramework\Test\Config\Reader\Filesystem">
         <arguments>
             <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\ActionGroupDataConverter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\ActionGroup</argument>
+            <argument name="domDocumentClass" xsi:type="string">Magento\FunctionalTestingFramework\Test\Config\ActionGroupDom</argument>
             <argument name="idAttributes" xsi:type="array">
                 <item name="/actionGroups/actionGroup" xsi:type="string">name</item>
                 <item name="/actionGroups/actionGroup/arguments/argument" xsi:type="string">name</item>

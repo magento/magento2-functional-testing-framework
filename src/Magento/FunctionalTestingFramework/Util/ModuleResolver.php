@@ -6,6 +6,8 @@
 
 namespace Magento\FunctionalTestingFramework\Util;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+
 /**
  * Class ModuleResolver, resolve module path based on enabled modules of target Magento instance.
  *
@@ -126,13 +128,11 @@ class ModuleResolver
      */
     public function getEnabledModules()
     {
-        $testGenerationPhase = $GLOBALS['GENERATE_TESTS'] ?? false;
-
         if (isset($this->enabledModules)) {
             return $this->enabledModules;
         }
 
-        if ($testGenerationPhase) {
+        if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
             $this->printMagentoVersionInfo();
         }
 
@@ -190,9 +190,7 @@ class ModuleResolver
         }
 
         $enabledModules = $this->getEnabledModules();
-        $forceGeneration = $GLOBALS['FORCE_PHP_GENERATE'] ?? false;
-
-        if (empty($enabledModules) && !$forceGeneration) {
+        if (empty($enabledModules) && !MftfApplicationConfig::getConfig()->forceGenerateEnabled()) {
             trigger_error(
                 "Could not retrieve enabled modules from provided 'MAGENTO_BASE_URL'," .
                 "please make sure Magento is available at this url",
@@ -321,12 +319,13 @@ class ModuleResolver
      */
     private function printMagentoVersionInfo()
     {
-        $forceGeneration = $GLOBALS['FORCE_PHP_GENERATE'] ?? false;
-        if ($forceGeneration) {
+
+        if (MftfApplicationConfig::getConfig()->forceGenerateEnabled()) {
             return;
         }
         $url = ConfigSanitizerUtil::sanitizeUrl(getenv('MAGENTO_BASE_URL')) . $this->versionUrl;
-        print "Fetching version information from {$url}";
+        print "Fetching version information from {$url}\n";
+
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -336,7 +335,9 @@ class ModuleResolver
             $response = "No version information available.";
         }
 
-        print "\nVersion Information: {$response}\n";
+        if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
+            print "\nVersion Information: {$response}\n";
+        }
     }
 
     /**
