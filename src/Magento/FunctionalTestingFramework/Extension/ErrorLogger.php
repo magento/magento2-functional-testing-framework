@@ -13,19 +13,59 @@ namespace Magento\FunctionalTestingFramework\Extension;
 class ErrorLogger
 {
     /**
-     * Gets webdriver log, prints out javascript errors when encountered.
+     * Error Logger Instance
+     * @var ErrorLogger
+     */
+    private static $errorLogger;
+
+    /**
+     * Singleton method to return ErrorLogger.
+     * @return ErrorLogger
+     */
+    public static function getInstance()
+    {
+        if (!self::$errorLogger) {
+            self::$errorLogger = new ErrorLogger();
+        }
+
+        return self::$errorLogger;
+    }
+
+    /**
+     * ErrorLogger constructor.
+     */
+    private function __construct()
+    {
+        // private constructor
+    }
+
+    /**
+     * Loops through stepEvent for browser log entries
      * @param \Facebook\WebDriver\Remote\RemoteWebDriver $webDriver
      * @param \Codeception\Event\StepEvent $stepEvent
      * @return void
      */
-    public static function logJsError($webDriver, $stepEvent)
+    public function logErrors($webDriver, $stepEvent)
     {
-        $logEntries = $webDriver->manage()->getLog("browser");
-        foreach ($logEntries as $entry) {
+        //Types available should be "server", "browser", "driver". Only care about browser at the moment.
+        $browserLogEntries = $webDriver->manage()->getLog("browser");
+        foreach ($browserLogEntries as $entry) {
             if ($entry["source"] === "javascript") {
-                //TODO Add to overall log
-                $stepEvent->getTest()->getScenario()->comment("JS ERROR({$entry["level"]}) - " . $entry["message"]);
+                $this->logError("javascript", $stepEvent, $entry);
             }
         }
+    }
+
+    /**
+     * Logs errors to console/report.
+     * @param string $type
+     * @param \Codeception\Event\StepEvent $stepEvent
+     * @param array $entry
+     * @return void
+     */
+    private function logError($type, $stepEvent, $entry)
+    {
+        //TODO Add to overall log
+        $stepEvent->getTest()->getScenario()->comment("{$type} ERROR({$entry["level"]}) - " . $entry["message"]);
     }
 }

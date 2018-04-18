@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Extension;
 
 use \Codeception\Events;
+use Magento\FunctionalTestingFramework\Extension\ErrorLogger;
 
 /**
  * Class TestContextExtension
@@ -79,6 +80,6 @@ class TestContextExtension extends \Codeception\Extension
     public function afterStep(\Codeception\Event\StepEvent $e)
     {
         $webDriver = $this->getModule("\Magento\FunctionalTestingFramework\Module\MagentoWebDriver")->webDriver;
-        ErrorLogger::logJsError($webDriver, $e);
+        ErrorLogger::getInstance()->logErrors($webDriver, $e);
     }
 }
