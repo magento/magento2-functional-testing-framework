@@ -10,13 +10,8 @@ if ($webDriver->webDriver != null) {
 
 // initialize the webdriver session
 $webDriver->_initializeSession();
-try {
-    // execute user specified actions
 {{/webDriverInit}}
 {{#webDriverReset}}
-} catch (\Exception $e) {
-    print $e->getMessage();
-}
 
 // reset configuration and close session
 $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver')->_resetConfig();
@@ -24,7 +19,7 @@ $webDriver->webDriver->close();
 $webDriver->webDriver = null;
 {{/webDriverReset}}
 {{#action}}
-    {{{action}}}
+{{{action}}}
 {{/action}}
 {{#createData}}
 ${{entityName}} = DataObjectHandler::getInstance()->getObject("{{entityName}}");

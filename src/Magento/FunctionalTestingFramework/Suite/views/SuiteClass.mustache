@@ -34,7 +34,11 @@ class {{suiteName}} extends \Codeception\GroupObject
         if (self::$CURRENT_TEST_RUN == 1) {
             print sprintf(self::$HOOK_EXECUTION_INIT, "before");
 
-            {{> testActions}}
+            try {
+                {{> testActions}}
+            } catch (\Exception $e) {
+                print $e->getMessage();
+            }
 
             print sprintf(self::$HOOK_EXECUTION_END, "before");
         }
@@ -47,7 +51,12 @@ class {{suiteName}} extends \Codeception\GroupObject
         if (self::$CURRENT_TEST_RUN == self::$TEST_COUNT) {
             print sprintf(self::$HOOK_EXECUTION_INIT, "after");
 
-            {{> testActions}}
+            try {
+                {{> testActions}}
+            } catch (\Exception $e) {
+                print $e->getMessage();
+            }
+
 
             print sprintf(self::$HOOK_EXECUTION_END, "after");
         }
