@@ -495,6 +495,10 @@ class ActionObject
                 $this->setTimeout($obj->getElement($objField)->getTimeout());
             } elseif (get_class($obj) == EntityDataObject::class) {
                 $replacement = $this->resolveEntityDataObjectReference($obj, $match);
+
+                if (is_array($replacement)) {
+                    $replacement = '["' . implode('","', array_map('addSlashes', $replacement)) . '"]';
+                }
             }
 
             if ($replacement === null) {
@@ -503,9 +507,6 @@ class ActionObject
                 } else {
                     throw new TestReferenceException("Could not resolve entity reference " . $inputString);
                 }
-            }
-            elseif (is_array($replacement)) {
-                $replacement = '["' . implode('","', array_map('addSlashes',$replacement)) . '"]';
             }
 
             $replacement = $this->resolveParameterization($parameterized, $replacement, $match, $obj);
