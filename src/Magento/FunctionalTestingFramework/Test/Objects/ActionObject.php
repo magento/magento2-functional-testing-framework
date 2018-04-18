@@ -493,12 +493,11 @@ class ActionObject
                     throw new TestReferenceException("Could not resolve entity reference " . $inputString);
                 }
             }
+            elseif (is_array($replacement)) {
+                $replacement = '["' . implode('","', array_map('addSlashes',$replacement)) . '"]';
+            }
 
             $replacement = $this->resolveParameterization($parameterized, $replacement, $match, $obj);
-
-            if (is_array($replacement)) {
-                $replacement = '["' . implode('","', $replacement) . '"]';
-            }
 
             $outputString = str_replace($match, $replacement, $outputString);
         }

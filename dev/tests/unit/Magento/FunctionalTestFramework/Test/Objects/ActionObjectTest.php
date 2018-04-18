@@ -268,7 +268,8 @@ class ActionObjectTest extends TestCase
         $entityDataObject = new EntityDataObject('EntityDataObject', 'test', [
             'values' => [
                 'value1',
-                'value2'
+                'value2',
+                '"My" Value'
             ]
         ], [], '', '');
         $this->mockDataHandlerWithData($entityDataObject);
@@ -279,7 +280,7 @@ class ActionObjectTest extends TestCase
         // Verify
         $expected = [
             'selector' => '#selector',
-            'userInput' => '["value1","value2"]'
+            'userInput' => '["value1","value2","\"My\" Value"]'
         ];
         $this->assertEquals($expected, $actionObject->getCustomActionAttributes());
     }
