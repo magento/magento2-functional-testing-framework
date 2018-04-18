@@ -16,19 +16,18 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("Action Group With Passed Argument Value and Hardcoded Value in Param")
  */
-class ActionGroupWithPassedArgumentAndStringSelectorParamCest
+class ActionGroupUsingNestedArgumentCest
 {
 	/**
-	 * @Severity(level = SeverityLevel::BLOCKER)
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupWithPassedArgumentAndStringSelectorParam(AcceptanceTester $I)
+	public function ActionGroupUsingNestedArgument(AcceptanceTester $I)
 	{
-		$I->see("John" . msq("UniquePerson"), "#element .test1");
+		$grabProductsActionGroup = $I->grabMultiple("selector");
+		$I->assertCount(99, $grabProductsActionGroup);
 	}
 }

@@ -9,11 +9,13 @@ namespace Magento\FunctionalTestingFramework\Config\FileResolver;
 use Magento\FunctionalTestingFramework\Config\FileResolverInterface;
 use Magento\FunctionalTestingFramework\Util\Iterator\File;
 
-class Root implements FileResolverInterface
+class Root extends Module
 {
+    const ROOT_SUITE_DIR = "_suite";
 
     /**
-     * Retrieve the list of configuration files with given name that relate to specified scope at the tests level
+     * Retrieve the list of configuration files with given name that relate to specified scope at the root level as well
+     * as any extension based suite configuration.
      *
      * @param string $filename
      * @param string $scope
@@ -21,8 +23,19 @@ class Root implements FileResolverInterface
      */
     public function get($filename, $scope)
     {
-        $paths = glob(dirname(TESTS_BP) . DIRECTORY_SEPARATOR . $scope . DIRECTORY_SEPARATOR . $filename);
+        // first pick up the root level test suite dir
+        $paths = glob(
+            dirname(TESTS_BP) . DIRECTORY_SEPARATOR . self::ROOT_SUITE_DIR
+            . DIRECTORY_SEPARATOR . $filename
+        );
 
-        return new File($paths);
+        // then merge this path into the module based paths
+        // Since we are sharing this code with Module based resolution we will unncessarily glob against modules in the
+        // dev/tests dir tree, however as we plan to migrate to app/code this will be a temporary unneeded check.
+        $paths = array_merge($paths, $this->getPaths($filename, $scope));
+
+        // create and return the iterator for these file paths
+        $iterator = new File($paths);
+        return $iterator;
     }
 }

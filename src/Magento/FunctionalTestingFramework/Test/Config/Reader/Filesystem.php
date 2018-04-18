@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Test\Config\Reader;
 
+use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
 use Magento\FunctionalTestingFramework\Util\Iterator\File;
 
 class Filesystem extends \Magento\FunctionalTestingFramework\Config\Reader\Filesystem
@@ -19,6 +20,8 @@ class Filesystem extends \Magento\FunctionalTestingFramework\Config\Reader\Files
      */
     public function readFiles($fileList)
     {
+        $exceptionCollector = new ExceptionCollector();
+        $errors = [];
         /** @var \Magento\FunctionalTestingFramework\Test\Config\Dom $configMerger */
         $configMerger = null;
         foreach ($fileList as $key => $content) {
@@ -27,17 +30,18 @@ class Filesystem extends \Magento\FunctionalTestingFramework\Config\Reader\Files
                     $configMerger = $this->createConfigMerger(
                         $this->domDocumentClass,
                         $content,
-                        $fileList->getFilename()
+                        $fileList->getFilename(),
+                        $exceptionCollector
                     );
                 } else {
-                    $configMerger->merge($content, $fileList->getFilename());
+                    $configMerger->merge($content, $fileList->getFilename(), $exceptionCollector);
                 }
             } catch (\Magento\FunctionalTestingFramework\Config\Dom\ValidationException $e) {
                 throw new \Exception("Invalid XML in file " . $key . ":\n" . $e->getMessage());
             }
         }
+        $exceptionCollector->throwException();
         if ($this->validationState->isValidationRequired()) {
-            $errors = [];
             if ($configMerger && !$configMerger->validate($this->schemaFile, $errors)) {
                 $message = "Invalid Document \n";
                 throw new \Exception($message . implode("\n", $errors));
@@ -57,14 +61,16 @@ class Filesystem extends \Magento\FunctionalTestingFramework\Config\Reader\Files
      * @param string $mergerClass
      * @param string $initialContents
      * @param string $filename
+     * @param ExceptionCollector $exceptionCollector
      * @return \Magento\FunctionalTestingFramework\Config\Dom
      * @throws \UnexpectedValueException
      */
-    protected function createConfigMerger($mergerClass, $initialContents, $filename = null)
+    protected function createConfigMerger($mergerClass, $initialContents, $filename = null, $exceptionCollector = null)
     {
         $result = new $mergerClass(
             $initialContents,
             $filename,
+            $exceptionCollector,
             $this->idAttributes,
             null,
             $this->perFileSchema

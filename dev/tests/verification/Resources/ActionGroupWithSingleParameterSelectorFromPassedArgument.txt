@@ -29,6 +29,6 @@ class ActionGroupWithSingleParameterSelectorFromPassedArgumentCest
 	 */
 	public function ActionGroupWithSingleParameterSelectorFromPassedArgument(AcceptanceTester $I)
 	{
-		$I->see("Doe", "#element .John".msq("UniquePerson"));
+		$I->see("Doe", "#element .John" . msq("UniquePerson"));
 	}
 }
