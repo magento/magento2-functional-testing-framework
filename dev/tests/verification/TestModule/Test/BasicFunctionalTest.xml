@@ -73,6 +73,7 @@
         <moveMouseOver selector=".functionalTestSelector" stepKey="moveMouseOverKey1"/>
         <openNewTab stepKey="openNewTabKey1"/>
         <pauseExecution stepKey="pauseExecutionKey1"/>
+        <performOn selector="#selector" function="function(\WebDriverElement $el) {return $el->isDisplayed();}" stepKey="performOnKey1"/>
         <pressKey selector="#page" userInput="a" stepKey="pressKey1"/>
         <pressKey selector="#page" parameterArray="[['ctrl','a'],'new']" stepKey="pressKey2"/>
         <pressKey selector="#page" parameterArray="[['shift','111'],'1','x']" stepKey="pressKey3"/>
@@ -113,6 +114,7 @@
         <waitForElement time="30" selector=".functionalTestSelector" stepKey="waitForElementKey1" />
         <waitForElementNotVisible selector=".functionalTestSelector" time="30" stepKey="waitForElementNotVisibleKey1" />
         <waitForElementVisible selector=".functionalTestSelector" time="30" stepKey="waitForElementVisibleKey1" />
+        <waitForElementChange selector="#selector" function="function(\WebDriverElement $el) {return $el->isDisplayed();}" stepKey="waitForElementChangeKey1"/>
         <waitForJS function="someJsFunction" time="30" stepKey="waitForJSKey1" />
         <waitForText selector=".functionalTestSelector" userInput="someInput" time="30" stepKey="waitForText1"/>
     </test>

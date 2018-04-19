@@ -112,6 +112,7 @@ class BasicFunctionalTestCest
 		$I->moveMouseOver(".functionalTestSelector");
 		$I->openNewTab();
 		$I->pauseExecution();
+		$I->performOn("#selector", function(\WebDriverElement $el) {return $el->isDisplayed();});
 		$I->pressKey("#page", "a");
 		$I->pressKey("#page", ['ctrl','a'],'new');
 		$I->pressKey("#page", ['shift','111'],'1','x');
@@ -150,6 +151,7 @@ class BasicFunctionalTestCest
 		$I->waitForElement(".functionalTestSelector", 30);
 		$I->waitForElementNotVisible(".functionalTestSelector", 30);
 		$I->waitForElementVisible(".functionalTestSelector", 30);
+		$I->waitForElementChange("#selector", function(\WebDriverElement $el) {return $el->isDisplayed();});
 		$I->waitForJS("someJsFunction", 30);
 		$I->waitForText("someInput", 30, ".functionalTestSelector");
 	}
