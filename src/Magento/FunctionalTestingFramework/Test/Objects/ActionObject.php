@@ -47,6 +47,7 @@ class ActionObject
     const ASSERTION_VALUE_ATTRIBUTE = "value";
     const DELETE_DATA_MUTUAL_EXCLUSIVE_ATTRIBUTES = ["url", "createDataKey"];
     const EXTERNAL_URL_AREA_INVALID_ACTIONS = ['amOnPage'];
+    const FUNCTION_CLOSURE_ACTIONS = ['waitForElementChange', 'performOn'];
     const MERGE_ACTION_ORDER_AFTER = 'after';
     const MERGE_ACTION_ORDER_BEFORE = 'before';
     const ACTION_ATTRIBUTE_URL = 'url';
@@ -495,6 +496,10 @@ class ActionObject
                 $this->setTimeout($obj->getElement($objField)->getTimeout());
             } elseif (get_class($obj) == EntityDataObject::class) {
                 $replacement = $this->resolveEntityDataObjectReference($obj, $match);
+
+                if (is_array($replacement)) {
+                    $replacement = '["' . implode('","', array_map('addSlashes', $replacement)) . '"]';
+                }
             }
 
             if ($replacement === null) {

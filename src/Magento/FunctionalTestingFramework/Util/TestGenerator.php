@@ -597,6 +597,10 @@ class TestGenerator
 
             if (isset($customActionAttributes['function'])) {
                 $function = $this->addUniquenessFunctionCall($customActionAttributes['function']);
+                if (in_array($actionObject->getType(), ActionObject::FUNCTION_CLOSURE_ACTIONS)) {
+                    // Argument must be a closure function, not a string.
+                    $function = trim($function, '"');
+                }
             }
 
             if (isset($customActionAttributes['html'])) {
@@ -1576,26 +1580,17 @@ class TestGenerator
      */
     private function addUniquenessFunctionCall($input)
     {
-        $output = '';
+        $output = $this->wrapWithDoubleQuotes($input);
 
-        preg_match('/' . EntityDataObject::CEST_UNIQUE_FUNCTION . '\("[\w]+"\)/', $input, $matches);
-        if (!empty($matches)) {
-            $parts = preg_split('/' . EntityDataObject::CEST_UNIQUE_FUNCTION . '\("[\w]+"\)/', $input, -1);
-            for ($i = 0; $i < count($parts); $i++) {
-                $parts[$i] = $this->stripWrappedQuotes($parts[$i]);
-            }
-            if (!empty($parts[0])) {
-                $output = $this->wrapWithDoubleQuotes($parts[0]);
-            }
-            $output .= $output === '' ? $matches[0] : '.' . $matches[0];
-            if (!empty($parts[1])) {
-                $output .= '.' . $this->wrapWithDoubleQuotes($parts[1]);
-            }
-        } else {
-            $output = $this->wrapWithDoubleQuotes($input);
+        //Match on msq(\"entityName\")
+        preg_match_all('/' . EntityDataObject::CEST_UNIQUE_FUNCTION . '\(\\\\"[\w]+\\\\"\)/', $output, $matches);
+        foreach (array_unique($matches[0]) as $match) {
+            preg_match('/\\\\"([\w]+)\\\\"/', $match, $entityMatch);
+            $entity = $entityMatch[1];
+            $output = str_replace($match, '" . msq("' . $entity . '") . "', $output);
         }
-
-        return $output;
+        // trim unnecessary "" . and . ""
+        return preg_replace('/(?(?<![\\\\])"" \. )| \. ""/', "", $output);
     }
 
     /**

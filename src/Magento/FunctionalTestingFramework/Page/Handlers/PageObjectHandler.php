@@ -62,7 +62,7 @@ class PageObjectHandler implements ObjectHandlerInterface
             }
 
             $module = $pageData[self::MODULE];
-            $sectionNames = array_keys($pageData[self::SECTION]);
+            $sectionNames = array_keys($pageData[self::SECTION] ?? []);
             $parameterized = $pageData[self::PARAMETERIZED] ?? false;
 
             $this->pageObjects[$pageName] =
