@@ -495,6 +495,10 @@ class ActionObject
                 $this->setTimeout($obj->getElement($objField)->getTimeout());
             } elseif (get_class($obj) == EntityDataObject::class) {
                 $replacement = $this->resolveEntityDataObjectReference($obj, $match);
+
+                if (is_array($replacement)) {
+                    $replacement = '["' . implode('","', array_map('addSlashes', $replacement)) . '"]';
+                }
             }
 
             if ($replacement === null) {
