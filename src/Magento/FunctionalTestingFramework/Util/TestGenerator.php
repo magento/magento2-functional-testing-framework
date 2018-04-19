@@ -702,7 +702,7 @@ class TestGenerator
                         );
                     }
 
-                    if (isset($storeCode)) {
+                    if ($storeCode) {
                         $createEntityFunctionCall .= sprintf("\"%s\");\n", $storeCode);
                     } else {
                         $createEntityFunctionCall .= ");\n";
@@ -743,13 +743,14 @@ class TestGenerator
                         $testSteps .= $contextSetter;
                         $testSteps .= $deleteEntityFunctionCall;
                     } else {
+                        $url = $this->resolveEnvReferences([$url])[0];
+                        $url = $this->resolveTestVariable([$url], null)[0];
                         $output = sprintf(
                             "\t\t$%s->deleteEntityByUrl(%s);\n",
                             $actor,
                             $url
                         );
-                        $output = $this->resolveEnvReferences($output, [$url]);
-                        $testSteps .= $this->resolveTestVariable($output, [$url], null);
+                        $testSteps .= $output;
                     }
                     break;
                 case "updateData":
@@ -798,7 +799,7 @@ class TestGenerator
                         );
                     }
 
-                    if (isset($storeCode)) {
+                    if ($storeCode) {
                         $updateEntityFunctionCall .= sprintf(", \"%s\");\n", $storeCode);
                     } else {
                         $updateEntityFunctionCall .= ");\n";
@@ -865,7 +866,7 @@ class TestGenerator
                         $getEntityFunctionCall .= 'null';
                     }
 
-                    if (isset($storeCode)) {
+                    if ($storeCode) {
                         $getEntityFunctionCall .= sprintf(", \"%s\");\n", $storeCode);
                     } else {
                         $getEntityFunctionCall .= ");\n";
@@ -1222,9 +1223,10 @@ class TestGenerator
                     break;
                 case "field":
                     $fieldKey = $actionObject->getCustomActionAttributes()['key'];
+                    $input = $this->resolveTestVariable([$input], $actionObject->getActionOrigin())[0];
                     $argRef = "\t\t\$";
                     $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) . "Fields['{$fieldKey}'] = ${input};\n";
-                    $testSteps .= $this->resolveTestVariable($argRef, [$input], $actionObject->getActionOrigin());
+                    $testSteps .= $argRef;
                     break;
                 default:
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input, $parameter);
@@ -1253,19 +1255,16 @@ class TestGenerator
      * Resolves replacement of $input$ and $$input$$ in given function, recursing and replacing individual arguments
      * Also determines if each argument requires any quote replacement.
      *
-     * @param string $inputString
      * @param array $args
      * @param array $actionOrigin
-     * @return string
+     * @return array
      * @throws \Exception
      */
-    private function resolveTestVariable($inputString, $args, $actionOrigin)
+    private function resolveTestVariable($args, $actionOrigin)
     {
-        $outputString = $inputString;
-
-        //Loop through each argument, replace and then replace
-        foreach ($args as $arg) {
-            if ($arg == null) {
+        $newArgs = [];
+        foreach ($args as $key => $arg) {
+            if ($arg === null) {
                 continue;
             }
             $outputArg = $arg;
@@ -1282,10 +1281,10 @@ class TestGenerator
 
             $outputArg = $this->resolveStepKeyReferences($outputArg, $actionOrigin);
 
-            $outputString = str_replace($arg, $outputArg, $outputString);
+            $newArgs[$key] = $outputArg;
         }
 
-        return $outputString;
+        return $newArgs;
     }
 
     /**
@@ -1577,26 +1576,17 @@ class TestGenerator
      */
     private function addUniquenessFunctionCall($input)
     {
-        $output = '';
+        $output = $this->wrapWithDoubleQuotes($input);
 
-        preg_match('/' . EntityDataObject::CEST_UNIQUE_FUNCTION . '\("[\w]+"\)/', $input, $matches);
-        if (!empty($matches)) {
-            $parts = preg_split('/' . EntityDataObject::CEST_UNIQUE_FUNCTION . '\("[\w]+"\)/', $input, -1);
-            for ($i = 0; $i < count($parts); $i++) {
-                $parts[$i] = $this->stripWrappedQuotes($parts[$i]);
-            }
-            if (!empty($parts[0])) {
-                $output = $this->wrapWithDoubleQuotes($parts[0]);
-            }
-            $output .= $output === '' ? $matches[0] : '.' . $matches[0];
-            if (!empty($parts[1])) {
-                $output .= '.' . $this->wrapWithDoubleQuotes($parts[1]);
-            }
-        } else {
-            $output = $this->wrapWithDoubleQuotes($input);
+        //Match on msq(\"entityName\")
+        preg_match_all('/' . EntityDataObject::CEST_UNIQUE_FUNCTION . '\(\\\\"[\w]+\\\\"\)/', $output, $matches);
+        foreach (array_unique($matches[0]) as $match) {
+            preg_match('/\\\\"([\w]+)\\\\"/', $match, $entityMatch);
+            $entity = $entityMatch[1];
+            $output = str_replace($match, '" . msq("' . $entity . '") . "', $output);
         }
-
-        return $output;
+        // trim unnecessary "" . and . ""
+        return preg_replace('/(?(?<![\\\\])"" \. )| \. ""/', "", $output);
     }
 
     /**
@@ -1665,20 +1655,17 @@ class TestGenerator
             if (null === $args[$i]) {
                 continue;
             }
-            if (!$isFirst) {
-                $output .= ', ';
-            }
             if ($args[$i] === "") {
                 $args[$i] = '"' . $args[$i] . '"';
             }
-            $output .= $args[$i];
-            $isFirst = false;
         }
-        $output .= ");\n";
-
-        $output = $this->resolveEnvReferences($output, $args);
-
-        return $this->resolveTestVariable($output, $args, $action->getActionOrigin());
+        if (!is_array($args)) {
+            $args = [$args];
+        }
+        $args = $this->resolveEnvReferences($args);
+        $args = $this->resolveTestVariable($args, $action->getActionOrigin());
+        $output .= implode(", ", array_filter($args, function($value) { return $value !== null; })) . ");\n";
+        return $output;
     }
 
     /**
@@ -1699,36 +1686,32 @@ class TestGenerator
             if (null === $args[$i]) {
                 continue;
             }
-            if (!$isFirst) {
-                $output .= ', ';
-            }
             if ($args[$i] === "") {
                 $args[$i] = '"' . $args[$i] . '"';
             }
-            $output .= $args[$i];
-            $isFirst = false;
         }
-        $output .= ");\n";
-
-        $output = $this->resolveEnvReferences($output, $args);
-
-        return $this->resolveTestVariable($output, $args, $action->getActionOrigin());
+        if (!is_array($args)) {
+            $args = [$args];
+        }
+        $args = $this->resolveEnvReferences($args);
+        $args = $this->resolveTestVariable($args, $action->getActionOrigin());
+        $output .= implode(", ", array_filter($args, function($value) { return $value !== null; })) . ");\n";
+        return $output;
     }
     // @codingStandardsIgnoreEnd
 
     /**
      * Resolves {{_ENV.variable}} into getenv("variable") for test-runtime ENV referencing.
-     * @param string $inputString
      * @param array $args
-     * @return string
+     * @return array
      */
-    private function resolveEnvReferences($inputString, $args)
+    private function resolveEnvReferences($args)
     {
         $envRegex = "/{{_ENV\.([\w]+)}}/";
 
-        $outputString = $inputString;
+        $newArgs = [];
 
-        foreach ($args as $arg) {
+        foreach ($args as $key => $arg) {
             preg_match_all($envRegex, $arg, $matches);
             if (!empty($matches[0])) {
                 $fullMatch = $matches[0][0];
@@ -1737,11 +1720,14 @@ class TestGenerator
                 $replacement = "getenv(\"{$envVariable}\")";
 
                 $outputArg = $this->processQuoteBreaks($fullMatch, $arg, $replacement);
-                $outputString = str_replace($arg, $outputArg, $outputString);
+                $newArgs[$key] = $outputArg;
+                continue;
             }
+            $newArgs[$key] = $arg;
         }
 
-        return $outputString;
+        // override passed in args for use later.
+        return $newArgs;
     }
 
     /**

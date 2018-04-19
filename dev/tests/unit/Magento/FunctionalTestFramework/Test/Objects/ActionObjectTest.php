@@ -256,6 +256,36 @@ class ActionObjectTest extends TestCase
     }
 
     /**
+     * {{EntityDataObject.values}} should be replaced with ["value1","value2"]
+     */
+    public function testResolveArrayData()
+    {
+        // Set up mocks
+        $actionObject = new ActionObject('merge123', 'fillField', [
+            'selector' => '#selector',
+            'userInput' => '{{EntityDataObject.values}}'
+        ]);
+        $entityDataObject = new EntityDataObject('EntityDataObject', 'test', [
+            'values' => [
+                'value1',
+                'value2',
+                '"My" Value'
+            ]
+        ], [], '', '');
+        $this->mockDataHandlerWithData($entityDataObject);
+
+        // Call the method under test
+        $actionObject->resolveReferences();
+
+        // Verify
+        $expected = [
+            'selector' => '#selector',
+            'userInput' => '["value1","value2","\"My\" Value"]'
+        ];
+        $this->assertEquals($expected, $actionObject->getCustomActionAttributes());
+    }
+
+    /**
      * Action object should throw an exception if a reference to a parameterized selector has too few given args.
      */
     public function testTooFewArgumentException()

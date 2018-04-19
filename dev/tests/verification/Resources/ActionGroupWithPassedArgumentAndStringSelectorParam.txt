@@ -29,6 +29,6 @@ class ActionGroupWithPassedArgumentAndStringSelectorParamCest
 	 */
 	public function ActionGroupWithPassedArgumentAndStringSelectorParam(AcceptanceTester $I)
 	{
-		$I->see("John".msq("UniquePerson"), "#element .test1");
+		$I->see("John" . msq("UniquePerson"), "#element .test1");
 	}
 }

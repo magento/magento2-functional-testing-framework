@@ -17,6 +17,7 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
 {
     const DEFAULT_VALUE = 'defaultValue';
     const ACTION_GROUP_ARGUMENTS = 'arguments';
+    const FILENAME = 'filename';
 
     /**
      * Action Object Extractor for converting actions into objects
@@ -47,9 +48,11 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
             $actionGroupData,
             self::NODE_NAME,
             self::ACTION_GROUP_ARGUMENTS,
-            self::NAME
+            self::NAME,
+            self::FILENAME
         );
 
+        // TODO filename is now available to the ActionGroupObject, integrate this into debug and error statements
         $actions = $this->actionObjectExtractor->extractActions($actionData);
 
         if (array_key_exists(self::ACTION_GROUP_ARGUMENTS, $actionGroupData)) {

@@ -5,6 +5,7 @@
  */
 namespace Magento\FunctionalTestingFramework\Test\Objects;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
@@ -264,7 +265,8 @@ class ActionObject
         $oldAttributes = array_intersect($actionAttributeKeys, ActionObject::OLD_ASSERTION_ATTRIBUTES);
         if (!empty($oldAttributes)) {
             // @codingStandardsIgnoreStart
-            if ($GLOBALS['GENERATE_TESTS'] ?? false == true) {
+            $appConfig = MftfApplicationConfig::getConfig();
+            if ($appConfig->getPhase() == MftfApplicationConfig::GENERATION_PHASE && $appConfig->verboseEnabled()) {
                 echo("WARNING: Use of one line Assertion actions will be deprecated in MFTF 3.0.0, please use nested syntax (Action: {$this->type} StepKey: {$this->stepKey})" . PHP_EOL);
             }
             // @codingStandardsIgnoreEnd
@@ -493,6 +495,10 @@ class ActionObject
                 $this->setTimeout($obj->getElement($objField)->getTimeout());
             } elseif (get_class($obj) == EntityDataObject::class) {
                 $replacement = $this->resolveEntityDataObjectReference($obj, $match);
+
+                if (is_array($replacement)) {
+                    $replacement = '["' . implode('","', array_map('addSlashes', $replacement)) . '"]';
+                }
             }
 
             if ($replacement === null) {

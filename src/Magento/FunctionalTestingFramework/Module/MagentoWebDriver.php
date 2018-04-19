@@ -472,7 +472,7 @@ class MagentoWebDriver extends WebDriver
     {
         $el = $this->_findElements($dependentSelector);
         if (sizeof($el) > 1) {
-            throw new \Exception("more than one element matches selector " . $selector);
+            throw new \Exception("more than one element matches selector " . $dependentSelector);
         }
 
         $clickCondition = null;
