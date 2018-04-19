@@ -20,7 +20,7 @@ class Module implements FileResolverInterface
      *
      * @var ModuleResolver
      */
-    private $moduleResolver;
+    protected $moduleResolver;
 
     /**
      * Module constructor.
@@ -41,6 +41,20 @@ class Module implements FileResolverInterface
      */
     public function get($filename, $scope)
     {
+        $iterator = new File($this->getPaths($filename, $scope));
+        return $iterator;
+    }
+
+    /**
+     * Function which takes a string representing filename and a scope represnting directory scope to glob for matched
+     * patterns against. Returns the file matching the patterns given by the module resolver.
+     *
+     * @param string $filename
+     * @param string $scope
+     * @return array
+     */
+    protected function getPaths($filename, $scope)
+    {
         $modulesPath = $this->moduleResolver->getModulesPath();
         $paths = [];
         foreach ($modulesPath as $modulePath) {
@@ -48,7 +62,6 @@ class Module implements FileResolverInterface
             $paths = array_merge($paths, glob($path));
         }
 
-        $iterator = new File($paths);
-        return $iterator;
+        return $paths;
     }
 }
