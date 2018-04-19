@@ -8,6 +8,7 @@ namespace Magento\FunctionalTestingFramework\DataGenerator\Persist;
 
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
 /**
  * Class DataPersistenceHandler
@@ -75,6 +76,7 @@ class DataPersistenceHandler
      *
      * @param string $storeCode
      * @return void
+     * @throws TestFrameworkException
      */
     public function createEntity($storeCode = null)
     {
@@ -97,6 +99,8 @@ class DataPersistenceHandler
      * @param string $updateDataName
      * @param array $updateDependentObjects
      * @return void
+     * @throws TestFrameworkException
+     * @throws \Exception
      */
 
     public function updateEntity($updateDataName, $updateDependentObjects = [])
@@ -121,6 +125,7 @@ class DataPersistenceHandler
      * @param integer|null $index
      * @param string $storeCode
      * @return void
+     * @throws TestFrameworkException
      */
 
     public function getEntity($index = null, $storeCode = null)
@@ -142,6 +147,7 @@ class DataPersistenceHandler
      * Function which executes a delete request based on specific operation metadata
      *
      * @return void
+     * @throws TestFrameworkException
      */
     public function deleteEntity()
     {
@@ -163,6 +169,7 @@ class DataPersistenceHandler
      * Returns a specific data value based on the CreatedObject's definition.
      * @param string $dataName
      * @return string
+     * @throws TestFrameworkException
      */
     public function getCreatedDataByName($dataName)
     {

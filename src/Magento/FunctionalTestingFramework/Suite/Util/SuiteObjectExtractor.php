@@ -42,6 +42,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      * @throws XmlException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @throws \Exception
      */
     public function parseSuiteDataIntoObjects($parsedSuiteData)
     {
@@ -133,6 +134,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      *
      * @param array $suiteReferences
      * @return array
+     * @throws \Exception
      */
     private function extractTestObjectsFromSuiteRef($suiteReferences)
     {
@@ -169,6 +171,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      * @param string $moduleName
      * @param string $moduleFilePath
      * @return array
+     * @throws \Exception
      */
     private function extractModuleAndFiles($moduleName, $moduleFilePath)
     {
@@ -219,6 +222,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      *
      * @param string $moduleName
      * @return array
+     * @throws \Exception
      */
     private function resolveModulePathTestNames($moduleName)
     {

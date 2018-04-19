@@ -100,6 +100,7 @@ class CurlHandler
      * @param array $dependentEntities
      * @return array | null
      * @throws TestFrameworkException
+     * @throws \Exception
      */
     public function executeRequest($dependentEntities)
     {

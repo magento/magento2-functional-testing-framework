@@ -9,6 +9,7 @@ use Magento\FunctionalTestingFramework\DataGenerator\Objects\OperationDefinition
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\OperationElement;
 use Magento\FunctionalTestingFramework\DataGenerator\Parsers\OperationDefinitionParser;
 use Magento\FunctionalTestingFramework\DataGenerator\Util\OperationElementExtractor;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 
@@ -125,6 +126,8 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
      * into an array of objects.
      *
      * @return void
+     * @throws \Exception
+     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)

@@ -8,6 +8,7 @@ namespace Magento\FunctionalTestingFramework\DataGenerator\Handlers;
 
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Parsers\DataProfileSchemaParser;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 
@@ -104,6 +105,7 @@ class DataObjectHandler implements ObjectHandlerInterface
      *
      * @param string[] $parserOutput primitive array output from the Magento parser
      * @return EntityDataObject[]
+     * @throws XmlException
      */
     private function processParserOutput($parserOutput)
     {

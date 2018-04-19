@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Page\Objects;
 
 
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
 
 /**
@@ -143,6 +144,7 @@ class PageObject
      *
      * @param string $sectionName
      * @return SectionObject | null
+     * @throws XmlException
      */
     public function getSection($sectionName)
     {

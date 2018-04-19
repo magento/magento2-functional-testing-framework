@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Suite\Generators;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
@@ -69,6 +70,7 @@ class GroupClassGenerator
      *
      * @param SuiteObject $suiteObject
      * @return string
+     * @throws TestReferenceException
      */
     public function generateGroupClass($suiteObject)
     {
@@ -85,6 +87,7 @@ class GroupClassGenerator
      *
      * @param SuiteObject $suiteObject
      * @return string;
+     * @throws TestReferenceException
      */
     private function createClassContent($suiteObject)
     {
@@ -123,6 +126,7 @@ class GroupClassGenerator
      *
      * @param TestHookObject $hookObj
      * @return array
+     * @throws TestReferenceException
      */
     private function buildHookMustacheArray($hookObj)
     {
@@ -170,6 +174,7 @@ class GroupClassGenerator
      * @param ActionObject $action
      * @param array $actionEntries
      * @return array
+     * @throws TestReferenceException
      */
     private function buildWebDriverActionsMustacheArray($action, $actionEntries)
     {
