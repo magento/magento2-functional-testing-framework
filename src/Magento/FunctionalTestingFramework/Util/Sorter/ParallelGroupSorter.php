@@ -243,7 +243,7 @@ class ParallelGroupSorter
             $split_suites["{$suiteName}_${split_count}"] = $group;
             $this->addSuiteToConfig($suiteName, "{$suiteName}_${split_count}", $group);
 
-            $availableTests = array_diff($availableTests, $group);
+            $availableTests = array_diff_key($availableTests, $group);
             $split_count++;
         }
 
