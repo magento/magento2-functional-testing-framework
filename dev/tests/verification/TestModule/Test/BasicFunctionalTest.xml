@@ -56,6 +56,7 @@
         <dontSeeOptionIsSelected selector=".functionalTestSelector" userInput="someInput" stepKey="dontSeeOptionIsSelectedKey1" />
         <doubleClick selector=".functionalTestSelector" stepKey="doubleClickKey1"/>
         <dragAndDrop selector1=".functionalTestSelector" selector2=".functionalTestSelector2" stepKey="dragAndDropKey1" />
+        <dragAndDrop selector1=".functionalTestSelector" selector2=".functionalTestSelector2" stepKey="dragAndDropKey2" x="100" y="900"/>
         <executeJS function="someJSFunction" stepKey="executeJSKey1"/>
         <fillField selector=".functionalTestSelector" userInput="someInput" stepKey="fillFieldKey1" />
         <fillField selector=".functionalTestSelector" userInput="0" stepKey="fillFieldKey2" />
