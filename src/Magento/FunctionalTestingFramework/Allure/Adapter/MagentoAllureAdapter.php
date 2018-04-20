@@ -6,6 +6,7 @@
 namespace Magento\FunctionalTestingFramework\Allure\Adapter;
 
 use Magento\FunctionalTestingFramework\Data\Argument\Interpreter\NullType;
+use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Yandex\Allure\Adapter\AllureAdapter;
 use Codeception\Event\SuiteEvent;
 
@@ -44,7 +45,7 @@ class MagentoAllureAdapter extends AllureAdapter
 
         if ($this->getGroup() != null) {
             $suite = $suiteEvent->getSuite();
-            $suiteName = ($suite->getName()) . "\\" . $this->getGroup();
+            $suiteName = ($suite->getName()) . "\\" . $this->sanitizeGroupName($this->getGroup());
 
             call_user_func(\Closure::bind(
                 function () use ($suite, $suiteName) {
@@ -63,5 +64,31 @@ class MagentoAllureAdapter extends AllureAdapter
         }
         // call parent function
         parent::suiteBefore($changeSuiteEvent);
+    }
+
+    /**
+     * Function which santizes any group names changed by the framework for execution in order to consolidate reporting.
+     *
+     * @param string $group
+     * @return string
+     */
+    private function sanitizeGroupName($group)
+    {
+        $suiteNames = array_keys(SuiteObjectHandler::getInstance()->getAllObjects());
+        $exactMatch = in_array($group, $suiteNames);
+
+        // if this is an existing suite name we dont' need to worry about changing it
+        if ($exactMatch || strpos($group, "_") === false) {
+            return $group;
+        }
+
+        // if we can't find this group in the generated suites we have to assume that the group was split for generation
+        $groupNameSplit = explode("_", $group);
+        array_pop($groupNameSplit);
+        $originalName = implode("_", $groupNameSplit);
+
+        // confirm our original name is one of the existing suite names otherwise just return the original group name
+        $originalName = in_array($originalName, $suiteNames) ? $originalName : $group;
+        return $originalName;
     }
 }
