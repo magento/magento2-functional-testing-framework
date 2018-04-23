@@ -132,6 +132,10 @@ class TestObject
      */
     public function getHooks()
     {
+        // if this test is skipped we do not want any before/after actions to generate as the tests will not run
+        if ($this->isSkipped()) {
+            return [];
+        }
         return $this->hooks;
     }
 
@@ -142,6 +146,11 @@ class TestObject
      */
     public function getTestActionCount()
     {
+        // a skipped action results in a single skip being appended to the beginning of the test and no execution
+        if ($this->isSkipped()) {
+            return 1;
+        }
+
         $hookActions = 0;
         if (array_key_exists('before', $this->hooks)) {
             $hookActions += count($this->hooks['before']->getActions());
@@ -152,7 +161,6 @@ class TestObject
         }
 
         $testActions = count($this->getOrderedActions());
-
         return $hookActions + $testActions;
     }
 

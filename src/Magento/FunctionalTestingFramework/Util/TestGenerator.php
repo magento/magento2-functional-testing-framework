@@ -597,6 +597,10 @@ class TestGenerator
 
             if (isset($customActionAttributes['function'])) {
                 $function = $this->addUniquenessFunctionCall($customActionAttributes['function']);
+                if (in_array($actionObject->getType(), ActionObject::FUNCTION_CLOSURE_ACTIONS)) {
+                    // Argument must be a closure function, not a string.
+                    $function = trim($function, '"');
+                }
             }
 
             if (isset($customActionAttributes['html'])) {
@@ -976,7 +980,7 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $parameterArray, $button);
                     break;
                 case "dragAndDrop":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector1, $selector2);
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector1, $selector2, $x, $y);
                     break;
                 case "selectMultipleOptions":
                     $testSteps .= $this->wrapFunctionCall(

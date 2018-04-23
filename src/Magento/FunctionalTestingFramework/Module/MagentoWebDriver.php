@@ -13,6 +13,7 @@ use Codeception\TestInterface;
 use Facebook\WebDriver\WebDriverSelect;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\Exception\NoSuchElementException;
+use Facebook\WebDriver\Interactions\WebDriverActions;
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
@@ -524,6 +525,36 @@ class MagentoWebDriver extends WebDriver
         $this->pngReport = null;
 
         parent::_before($test);
+    }
+
+    /**
+     * Override for codeception's default dragAndDrop to include offset options.
+     * @param string $source
+     * @param string $target
+     * @param int $xOffset
+     * @param int $yOffset
+     * @return void
+     */
+    public function dragAndDrop($source, $target, $xOffset = null, $yOffset = null)
+    {
+        if ($xOffset !== null || $yOffset !== null) {
+            $snodes = $this->matchFirstOrFail($this->baseElement, $source);
+            $tnodes = $this->matchFirstOrFail($this->baseElement, $target);
+
+            $targetX = intval($tnodes->getLocation()->getX() + $xOffset);
+            $targetY = intval($tnodes->getLocation()->getY() + $yOffset);
+
+            $travelX = intval($targetX - $snodes->getLocation()->getX());
+            $travelY = intval($targetY - $snodes->getLocation()->getY());
+
+            $action = new WebDriverActions($this->webDriver);
+            $action->moveToElement($snodes)->perform();
+            $action->clickAndHold($snodes)->perform();
+            $action->moveByOffset($travelX, $travelY)->perform();
+            $action->release()->perform();
+        } else {
+            parent::dragAndDrop($source, $target);
+        }
     }
 
     /**
