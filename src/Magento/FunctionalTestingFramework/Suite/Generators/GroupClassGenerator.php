@@ -132,6 +132,7 @@ class GroupClassGenerator
         foreach ($hookObj->getActions() as $action) {
             /** @var ActionObject $action */
             $index = count($actions);
+            //deleteData contains either url or createDataKey, if it contains the former it needs special formatting
             if ($action->getType() !== "createData"
                 && !array_key_exists(TestGenerator::REQUIRED_ENTITY_REFERENCE, $action->getCustomActionAttributes())) {
                 if (!$hasWebDriverActions) {
