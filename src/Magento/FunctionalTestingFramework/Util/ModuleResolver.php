@@ -237,8 +237,8 @@ class ModuleResolver
 
         $codePathsToPattern = [
             $modulePath => '',
-            $appCodePath => '/Test/MFTF',
-            $vendorCodePath => '/Test/MFTF'
+            $appCodePath => '/Test/Mftf',
+            $vendorCodePath => '/Test/Mftf'
         ];
 
         foreach ($codePathsToPattern as $codePath => $pattern) {
