@@ -81,7 +81,7 @@ class CurlHandler
      * @param EntityDataObject $entityObject
      * @param string $storeCode
      */
-    public function __construct($operation, $entityObject, $storeCode = 'default')
+    public function __construct($operation, $entityObject, $storeCode = null)
     {
         $this->operation = $operation;
         $this->entityObject = $entityObject;
@@ -206,7 +206,7 @@ class CurlHandler
                         EntityDataObject::CEST_UNIQUE_VALUE
                     );
                     if (null !== $param) {
-                        $urlOut = str_replace($paramValue, $param, $urlIn);
+                        $urlOut = str_replace($paramValue, $param, $urlOut);
                         continue;
                     }
                 }

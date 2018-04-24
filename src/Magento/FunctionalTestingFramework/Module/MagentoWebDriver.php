@@ -13,11 +13,13 @@ use Codeception\TestInterface;
 use Facebook\WebDriver\WebDriverSelect;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\Exception\NoSuchElementException;
+use Facebook\WebDriver\Interactions\WebDriverActions;
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Util\Uri;
 use Codeception\Util\ActionSequence;
+use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\WebapiExecutor;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
 use Magento\Setup\Exception;
@@ -435,12 +437,25 @@ class MagentoWebDriver extends WebDriver
      * @param string $command
      * @returns string
      */
-    public function executeMagentoCLICommand($command)
+    public function magentoCLI($command)
     {
-
         $apiURL = $this->config['url'] . getenv('MAGENTO_CLI_COMMAND_PATH');
         $executor = new CurlTransport();
         $executor->write($apiURL, [getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command], CurlInterface::POST, []);
+        $response = $executor->read();
+        $executor->close();
+        return $response;
+    }
+
+    /**
+     * Runs DELETE request to delete a Magento entity against the url given.
+     * @param string $url
+     * @return string
+     */
+    public function deleteEntityByUrl($url)
+    {
+        $executor = new WebapiExecutor(null);
+        $executor->write($url, [], CurlInterface::DELETE, []);
         $response = $executor->read();
         $executor->close();
         return $response;
@@ -458,7 +473,7 @@ class MagentoWebDriver extends WebDriver
     {
         $el = $this->_findElements($dependentSelector);
         if (sizeof($el) > 1) {
-            throw new \Exception("more than one element matches selector " . $selector);
+            throw new \Exception("more than one element matches selector " . $dependentSelector);
         }
 
         $clickCondition = null;
@@ -513,6 +528,36 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
+     * Override for codeception's default dragAndDrop to include offset options.
+     * @param string $source
+     * @param string $target
+     * @param int $xOffset
+     * @param int $yOffset
+     * @return void
+     */
+    public function dragAndDrop($source, $target, $xOffset = null, $yOffset = null)
+    {
+        if ($xOffset !== null || $yOffset !== null) {
+            $snodes = $this->matchFirstOrFail($this->baseElement, $source);
+            $tnodes = $this->matchFirstOrFail($this->baseElement, $target);
+
+            $targetX = intval($tnodes->getLocation()->getX() + $xOffset);
+            $targetY = intval($tnodes->getLocation()->getY() + $yOffset);
+
+            $travelX = intval($targetX - $snodes->getLocation()->getX());
+            $travelY = intval($targetY - $snodes->getLocation()->getY());
+
+            $action = new WebDriverActions($this->webDriver);
+            $action->moveToElement($snodes)->perform();
+            $action->clickAndHold($snodes)->perform();
+            $action->moveByOffset($travelX, $travelY)->perform();
+            $action->release()->perform();
+        } else {
+            parent::dragAndDrop($source, $target);
+        }
+    }
+
+    /**
      * Override for _failed method in Codeception method. Adds png and html attachments to allure report
      * following parent execution of test failure processing.
      *
@@ -525,6 +570,10 @@ class MagentoWebDriver extends WebDriver
 
         if ($this->pngReport === null && $this->htmlReport === null) {
             $this->saveScreenshot();
+        }
+
+        if ($this->current_test == null) {
+            throw new \RuntimeException("Suite condition failure: \n" . $fail->getMessage());
         }
 
         $this->addAttachment($this->pngReport, $test->getMetadata()->getName() . '.png', 'image/png');
@@ -540,8 +589,12 @@ class MagentoWebDriver extends WebDriver
      */
     public function saveScreenshot()
     {
-        $test = $this->current_test;
-        $filename = preg_replace('~\W~', '.', Descriptor::getTestSignature($test));
+        $testDescription = "unknown." . uniqid();
+        if ($this->current_test != null) {
+            $testDescription = Descriptor::getTestSignature($this->current_test);
+        }
+
+        $filename = preg_replace('~\W~', '.', $testDescription);
         $outputDir = codecept_output_dir();
         $this->_saveScreenshot($this->pngReport = $outputDir . mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png');
         $this->_savePageSource($this->htmlReport = $outputDir . mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html');

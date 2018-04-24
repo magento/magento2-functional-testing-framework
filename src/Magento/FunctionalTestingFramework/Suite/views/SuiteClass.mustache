@@ -17,9 +17,11 @@ use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHand
 class {{suiteName}} extends \Codeception\GroupObject
 {
     public static $group = '{{suiteName}}';
-    private static $TEST_COUNT = {{testCount}};
-    private static $CURRENT_TEST_RUN = 0;
-
+    private $testCount = {{testCount}};
+    private $preconditionFailure = null;
+    private $currentTestRun = 0;
+    private static $HOOK_EXECUTION_INIT = "\n/******** Beginning execution of {{suiteName}} suite %s block ********/\n";
+    private static $HOOK_EXECUTION_END = "\n/******** Execution of {{suiteName}} suite %s block complete ********/\n";
     {{#var}}
     private ${{stepKey}};
     {{/var}}
@@ -28,10 +30,28 @@ class {{suiteName}} extends \Codeception\GroupObject
     public function _before(\Codeception\Event\TestEvent $e)
     {
         // increment test count per execution
-        self::$CURRENT_TEST_RUN++;
+        $this->currentTestRun++;
+        $this->executePreConditions();
 
-        if (self::$CURRENT_TEST_RUN == 1) {
-            {{> dataPersistence}}
+        if ($this->preconditionFailure != null) {
+            //if our preconditions fail, we need to mark all the tests as incomplete.
+            $e->getTest()->getMetadata()->setIncomplete($this->preconditionFailure);
+        }
+    }
+
+
+    private function executePreConditions()
+    {
+        if ($this->currentTestRun == 1) {
+            print sprintf(self::$HOOK_EXECUTION_INIT, "before");
+
+            try {
+                {{> testActions}}
+            } catch (\Exception $exception) {
+                $this->preconditionFailure = $exception->getMessage();
+            }
+
+            print sprintf(self::$HOOK_EXECUTION_END, "before");
         }
     }
     {{/before}}
@@ -39,15 +59,22 @@ class {{suiteName}} extends \Codeception\GroupObject
     {{#after}}
     public function _after(\Codeception\Event\TestEvent $e)
     {
-        if (self::$CURRENT_TEST_RUN == self::$TEST_COUNT) {
-            {{> dataPersistence}}
-        }
+        $this->executePostConditions();
     }
 
-    public function _failed(\Codeception\Event\TestEvent $e)
+
+    private function executePostConditions()
     {
-        if (self::$CURRENT_TEST_RUN == self::$TEST_COUNT) {
-            {{> dataPersistence}}
+        if ($this->currentTestRun == $this->testCount) {
+            print sprintf(self::$HOOK_EXECUTION_INIT, "after");
+
+            try {
+                {{> testActions}}
+            } catch (\Exception $exception) {
+                print $exception->getMessage();
+            }
+
+            print sprintf(self::$HOOK_EXECUTION_END, "after");
         }
     }
     {{/after}}

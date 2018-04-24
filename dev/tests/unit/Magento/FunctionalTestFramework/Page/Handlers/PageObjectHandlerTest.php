@@ -51,6 +51,25 @@ class PageObjectHandlerTest extends TestCase
         $this->assertNull($invalidPage);
     }
 
+    public function testGetEmptyPage()
+    {
+        $mockData = [
+            "testPage1" => [
+                "url" => "testURL1",
+                "module" => "testModule1",
+                "section" => [
+                ],
+                "area" => "test"
+            ]];
+        $this->setMockParserOutput($mockData);
+
+        // get pages
+        $page = PageObjectHandler::getInstance()->getObject('testPage1');
+
+        // Empty page has been read in and gotten without an exception being thrown.
+        $this->addToAssertionCount(1);
+    }
+
     /**
      * Function used to set mock for parser return and force init method to run between tests.
      *

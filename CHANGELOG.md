@@ -1,6 +1,56 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.2.0
+-----
+### Enhancements  
+* Traceability
+    * Javascript errors are now logged and reported in test output.
+    * Test failures are no longer overwritten by failures in an `<after>` hook.
+    * Tests will no longer execute an `<after>` hook twice if a failure triggered in the `<after>` hook.
+    * Tests marked with `<group value="skip">` will now appear in generated Allure reports.
+        * Along with the above, the `robo group` command no longer omits the `skip` group (skipped tests are picked up but not fully executed).
+* Modularity
+    * MFTF no longer relies on relative pathing to determine its path to tests or Magento (favoring composer information if available).
+    * Tests and test materials are now read in from Magento modules as well as extensions in addition to `dev/tests/acceptance`.
+        * See DevDocs `Getting Started` for details on expected paths and merge order.
+* Customizability
+    * Creation of Suites is now supported
+        * `<suite>` can include tests via `name`, module, or `<group>` tags.
+        * Consolidation of preconditions can be achieved via use of `<before/after>` tags in a `<suite>`
+            * All normal test actions are supported
+            * Data returned from actions is not available for reference in subsequent tests (`createData` or `grab` actions).
+        * `robo generate:tests` generates all suites and tests, and can be given a JSON configuration to generate specific test/suites.
+        * See MFTF Devdocs "Suite" page for more details.
+    * `<deleteData>` may now be called against a `url` instead of a stepKey reference.
+    * `<dragAndDrop>` may now be given an additional `x/y` offset.
+    * `<executeJS>` now returns a variable based on what the executed script returns.
+    * Added `<element>` `type="block"`.
+    * `<page>` elements may now be blank (contain no child sections).
+* Maintainability
+    * `robo generate:tests --config parallel` now accepts a `--lines` argument, for grouping and sorting based on test length.
+    * `robo generate:tests` now checks for:
+        * Duplicate step keys within an `actionGroup`.
+        * Ambiguous or invalid `stepKey` references (in merge files).
+    * `robo generate:tests` now suppresses warnings by default. The command now accepts a `--verbose` flag to show full output including warnings.
+
+### Fixes
+* Exception message for the `<conditionalClick>` action now correctly references the `selector` given.
+* Usage of multiple parameterized elements in a `selector` now correctly resolves all element references.
+* Usage of multiple uniqueness references on the same entity now generate correctly.
+* Persisted entity references are correctly interpolated with `<page>` url of `type="admin"`.
+* Metadata that contains 2 or more params in its `url` now correctly resolve parameters.
+* Arguments can now be passed to `x` and `y` attributes in `actionGroup`.
+* Arguments can now be passed to nested `<assert*>` action elements.
+* The `<seeInField>` action can now be used to assert against empty strings.
+* Empty `<data>` elements within an `<entity>` now generate correctly.
+* Mapping of the `<magentoCLI>` to the custom command has been fixed.
+
+### GitHub Issues/Pull requests:
+* [#89](https://github.com/magento/magento2-functional-testing-framework/pull/89) -- Add ability to use array entities as arguments.
+* [#68](https://github.com/magento/magento2-functional-testing-framework/issues/68) -- Excessive double quotes are being generated in WaitForElementChange method arguments (fixed in [#103](https://github.com/magento/magento2-functional-testing-framework/pull/103))
+* [#31](https://github.com/magento/magento2-functional-testing-framework/issues/31) -- Can't run tests without a store having "default" store code (fixed in [#86](https://github.com/magento/magento2-functional-testing-framework/pull/86))
+
 2.1.2
 -----
 ### Enhancements

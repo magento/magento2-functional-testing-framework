@@ -1,0 +1,32 @@
+{{#actions}}
+{{#webDriverInit}}
+$webDriver = $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver');
+
+// close any open sessions
+if ($webDriver->webDriver != null) {
+    $webDriver->webDriver->close();
+    $webDriver->webDriver = null;
+}
+
+// initialize the webdriver session
+$webDriver->_initializeSession();
+{{/webDriverInit}}
+{{#webDriverReset}}
+
+// reset configuration and close session
+$this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver')->_resetConfig();
+$webDriver->webDriver->close();
+$webDriver->webDriver = null;
+{{/webDriverReset}}
+{{#action}}
+{{{action}}}
+{{/action}}
+{{#createData}}
+${{entityName}} = DataObjectHandler::getInstance()->getObject("{{entityName}}");
+$this->{{stepKey}} = new DataPersistenceHandler(${{entityName}}, [{{#requiredEntities}}$this->{{entityName}}{{^last}}, {{/last}}{{/requiredEntities}}]{{#customFields}}, ${{customFields}}{{/customFields}});
+$this->{{stepKey}}->createEntity();
+{{/createData}}
+{{#deleteData}}
+$this->{{entityName}}->deleteEntity();
+{{/deleteData}}
+{{/actions}}

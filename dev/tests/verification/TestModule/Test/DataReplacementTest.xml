@@ -22,6 +22,8 @@
         <conditionalClick stepKey="dependentSelectorReplaceMSQPrefix" dependentSelector="#{{uniqueData.firstname}}" selector="{{uniqueData.firstname}}" visible="true"/>
         <amOnUrl stepKey="urlReplaceMSQPrefix" url="{{uniqueData.firstname}}.html"/>
         <searchAndMultiSelectOption stepKey="parameterArrayReplacementMSQPrefix" selector="#selector" parameterArray="[{{uniqueData.firstname}}, {{simpleData.lastname}}]"/>
+        <click stepKey="selectorReplaceDupedMSQPrefix" selector="#{{uniqueData.firstname}}#{{uniqueData.firstname}}"/>
+        <click stepKey="selectorReplaceDupedMSQSuffix" selector="#{{uniqueData.lastname}}#{{uniqueData.lastname}}"/>
 
         <fillField stepKey="inputReplaceMSQSuffix" selector="#selector" userInput="StringBefore {{uniqueData.lastname}} StringAfter"/>
         <fillField stepKey="selectorReplaceMSQSuffix" selector="#{{uniqueData.lastname}}" userInput="input"/>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="DevDocsTest">
+        <annotations>
+            <features value="DevDocs available"/>
+            <stories value="MFTF DevDocs available"/>
+            <title value="Magento Functional Testing Framework Documentation is available."/>
+            <description value="Magento Functional Testing Framework Documentation is available."/>
+            <severity value="CRITICAL"/>
+            <group value="mftf"/>
+        </annotations>
+
+        <amOnPage stepKey="openMFTFDevDocPage" url="{{MFTFDocPage.url}}" />
+        <see stepKey="verifyPageIntroText" selector="{{contentSection.pageIntro}}" userInput="Introduction to the Magento Functional Testing Framework" />
+    </test>
+</tests>
