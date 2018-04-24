@@ -17,7 +17,7 @@
         "flow/jsonpath": ">0.2",
         "fzaninotto/faker": "^1.6",
         "mustache/mustache": "~2.5",
-        "symfony/process": ">=2.7 <3.4",
+        "symfony/process": "^2.8 || ^3.1 || ^4.0",
         "vlucas/phpdotenv": "^2.4"
     },
     "require-dev": {
