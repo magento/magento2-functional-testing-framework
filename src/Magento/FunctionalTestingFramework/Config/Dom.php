@@ -215,6 +215,14 @@ class Dom
     protected function mergeAttributes($baseNode, $mergeNode)
     {
         foreach ($mergeNode->attributes as $attribute) {
+            // Do not overwrite filename of base node
+            if ($attribute->name === "filename") {
+                $baseNode->setAttribute(
+                    $this->getAttributeName($attribute),
+                    $baseNode->getAttribute("filename") . "," . $attribute->value
+                );
+                continue;
+            }
             $baseNode->setAttribute($this->getAttributeName($attribute), $attribute->value);
         }
     }

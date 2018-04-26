@@ -88,6 +88,7 @@ class TestObjectHandlerTest extends TestCase
             $testDataArrayBuilder->testName,
             [$expectedTestActionObject],
             [
+                'features' => ['NO MODULE DETECTED'],
                 'group' => ['test']
             ],
             [
@@ -99,6 +100,15 @@ class TestObjectHandlerTest extends TestCase
         );
 
         $this->assertEquals($expectedTestObject, $actualTestObject);
+    }
+
+    /**
+     * Tests basic getting of a test that has a fileName
+     */
+    public function testGetTestWithFileName()
+    {
+        $this->markTestIncomplete();
+        //TODO
     }
 
     /**

@@ -69,6 +69,9 @@ class TestObjectExtractor extends BaseObjectExtractor
         $testAnnotations = [];
         $testHooks = [];
         $filename = $testData['filename'] ?? null;
+        $fileNames = explode(",", $filename);
+        $baseFileName = $fileNames[0];
+        $module = $this->extractModuleName($baseFileName);
         $testActions = $this->stripDescriptorTags(
             $testData,
             self::NODE_NAME,
@@ -83,6 +86,9 @@ class TestObjectExtractor extends BaseObjectExtractor
         if (array_key_exists(self::TEST_ANNOTATIONS, $testData)) {
             $testAnnotations = $this->annotationExtractor->extractAnnotations($testData[self::TEST_ANNOTATIONS]);
         }
+
+        //Override features with module name if present, populates it otherwise
+        $testAnnotations["features"] = [$module];
 
         // extract before
         if (array_key_exists(self::TEST_BEFORE_HOOK, $testData)) {
@@ -119,5 +125,34 @@ class TestObjectExtractor extends BaseObjectExtractor
         } catch (XmlException $exception) {
             throw new XmlException($exception->getMessage() . ' in Test ' . $filename);
         }
+    }
+
+    /**
+     * Extracts module name from the path given
+     * @param string $path
+     * @return string
+     */
+    private function extractModuleName($path)
+    {
+        if ($path === "") {
+            return "NO MODULE DETECTED";
+        }
+        $positions = [];
+        $lastPos = 0;
+        while (($lastPos = strpos($path, DIRECTORY_SEPARATOR, $lastPos))!== false) {
+            $positions[] = $lastPos;
+            $lastPos = $lastPos + strlen(DIRECTORY_SEPARATOR);
+        }
+        $slashBeforeModule = $positions[count($positions)-3];
+        $slashAfterModule = $positions[count($positions)-2];
+        $output = substr($path, $slashBeforeModule+1, $slashAfterModule-$slashBeforeModule-1);
+
+        //Check if file was actually from app/code or vendor
+        if ($output === "Mftf") {
+            $slashBeforeModule = $positions[count($positions)-5];
+            $slashAfterModule = $positions[count($positions)-4];
+            $output = substr($path, $slashBeforeModule+1, $slashAfterModule-$slashBeforeModule-1);
+        }
+        return $output;
     }
 }
