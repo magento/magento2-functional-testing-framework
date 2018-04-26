@@ -13,9 +13,13 @@
         </include>
         <before>
             <amOnPage url="some.url" stepKey="before"/>
+            <createData entity="createThis" stepKey="create">
+                <field key="someKey"/>
+            </createData>
         </before>
         <after>
             <amOnPage url="some.url" stepKey="after"/>
+            <deleteData url="deleteThis" stepKey="delete"/>
         </after>
     </suite>
 </suites>

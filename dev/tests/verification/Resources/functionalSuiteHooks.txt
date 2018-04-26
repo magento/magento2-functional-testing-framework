@@ -22,6 +22,7 @@ class functionalSuiteHooks extends \Codeception\GroupObject
     private $currentTestRun = 0;
     private static $HOOK_EXECUTION_INIT = "\n/******** Beginning execution of functionalSuiteHooks suite %s block ********/\n";
     private static $HOOK_EXECUTION_END = "\n/******** Execution of functionalSuiteHooks suite %s block complete ********/\n";
+    private $create;
 
     public function _before(\Codeception\Event\TestEvent $e)
     {
@@ -53,6 +54,10 @@ class functionalSuiteHooks extends \Codeception\GroupObject
                 // initialize the webdriver session
                 $webDriver->_initializeSession();
                 $webDriver->amOnPage("some.url");
+                $createFields['someKey'] = ;
+                $createThis = DataObjectHandler::getInstance()->getObject("createThis");
+                $this->create = new DataPersistenceHandler($createThis, [], $createFields);
+                $this->create->createEntity();
                 
                 // reset configuration and close session
                 $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver')->_resetConfig();
@@ -89,6 +94,7 @@ class functionalSuiteHooks extends \Codeception\GroupObject
                 // initialize the webdriver session
                 $webDriver->_initializeSession();
                 $webDriver->amOnPage("some.url");
+                $webDriver->deleteEntityByUrl("deleteThis");
                 
                 // reset configuration and close session
                 $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver')->_resetConfig();
