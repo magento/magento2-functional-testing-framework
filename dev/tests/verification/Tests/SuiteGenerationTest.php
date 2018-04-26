@@ -205,6 +205,54 @@ class SuiteGenerationTest extends MftfTestCase
     }
 
     /**
+     * Test generation of parallel suite groups
+     */
+    public function testSuiteGenerationSingleRun()
+    {
+        //using functionalSuite2 to avoid directory caching
+        $groupName = 'functionalSuite2';
+
+        $expectedContents = [
+            'additionalTestCest.php',
+            'additionalIncludeTest2Cest.php',
+            'IncludeTest2Cest.php',
+            'IncludeTestCest.php'
+        ];
+
+        //createParallelManifest
+        /** @var ParallelTestManifest $parallelManifest */
+        $singleRunManifest = TestManifestFactory::makeManifest("singleRun", ["functionalSuite2" => []]);
+
+        // Generate the Suite
+        SuiteGenerator::getInstance()->generateAllSuites($singleRunManifest);
+        $singleRunManifest->generate();
+
+        // Validate console message and add group name for later deletion
+        $this->expectOutputRegex('/Suite .* generated to .*/');
+        self::$TEST_GROUPS[] = $groupName;
+
+        // Validate Yaml file updated
+        $yml = Yaml::parse(file_get_contents(self::CONFIG_YML_FILE));
+        $this->assertArrayHasKey($groupName, $yml['groups']);
+
+        $suiteResultBaseDir = self::GENERATE_RESULT_DIR .
+            DIRECTORY_SEPARATOR .
+            $groupName .
+            DIRECTORY_SEPARATOR;
+
+        // Validate tests have been generated
+        $dirContents = array_diff(scandir($suiteResultBaseDir), ['..', '.']);
+
+        foreach ($expectedContents as $expectedFile) {
+            $this->assertTrue(in_array($expectedFile, $dirContents));
+        }
+
+        $expectedManifest = "dev/tests/verification/_generated/default/" . PHP_EOL . "-g functionalSuite2" . PHP_EOL;
+
+        $this->assertEquals($expectedManifest, file_get_contents(self::getManifestFilePath()));
+    }
+
+    /**
      * revert any changes made to config.yml
      * remove _generated directory
      */

@@ -18,4 +18,15 @@
             <test name="ExcludeTest2"/>
         </exclude>
     </suite>
+    <suite name="functionalSuite2">
+        <include>
+            <group name="include"/>
+            <test name="IncludeTest"/>
+            <module name="TestModule" file="SampleSuite2Test.xml"/>
+        </include>
+        <exclude>
+            <group name="exclude"/>
+            <test name="ExcludeTest2"/>
+        </exclude>
+    </suite>
 </suites>
