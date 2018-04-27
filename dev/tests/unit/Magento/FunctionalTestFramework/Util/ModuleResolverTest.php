@@ -37,7 +37,7 @@ class ModuleResolverTest extends TestCase
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, null);
         $this->assertEquals(
-            ['/git/magento2-functional-testing-framework/dev/tests/verification/TestModule'],
+            [TESTS_BP . DIRECTORY_SEPARATOR . 'verification' . DIRECTORY_SEPARATOR . 'TestModule'],
             $resolver->getModulesPath()
         );
     }
