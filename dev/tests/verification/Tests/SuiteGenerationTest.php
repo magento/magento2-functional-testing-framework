@@ -136,7 +136,7 @@ class SuiteGenerationTest extends MftfTestCase
 
         // Validate Yaml file updated
         $yml = Yaml::parse(file_get_contents(self::CONFIG_YML_FILE));
-        $this->assertEquals($expectedGroups, array_keys($yml['groups']));
+        $this->assertArraySubset(array_keys($yml['groups']), $expectedGroups);
 
         foreach ($expectedGroups as $expectedFolder) {
             $suiteResultBaseDir = self::GENERATE_RESULT_DIR .
