@@ -54,6 +54,11 @@ class SuiteGenerationTest extends MftfTestCase
             unlink(self::getManifestFilePath());
         }
 
+        // destroy _generated if it exists
+        if (file_exists(self::GENERATE_RESULT_DIR)) {
+            DirSetupUtil::rmdirRecursive(self::GENERATE_RESULT_DIR);
+        }
+
         $configYml = fopen(self::CONFIG_YML_FILE, "w");
         fclose($configYml);
     }
