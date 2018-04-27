@@ -137,22 +137,12 @@ class TestObjectExtractor extends BaseObjectExtractor
         if ($path === "") {
             return "NO MODULE DETECTED";
         }
-        $positions = [];
-        $lastPos = 0;
-        while (($lastPos = strpos($path, DIRECTORY_SEPARATOR, $lastPos))!== false) {
-            $positions[] = $lastPos;
-            $lastPos = $lastPos + strlen(DIRECTORY_SEPARATOR);
+        $paths = explode(DIRECTORY_SEPARATOR, $path);
+        if ($paths[count($paths)-3] == "Mftf") {
+            // app/code/Magento/[Analytics]/Test/Mftf/Test/SomeText.xml
+            return $paths[count($paths)-5];
         }
-        $slashBeforeModule = $positions[count($positions)-3];
-        $slashAfterModule = $positions[count($positions)-2];
-        $output = substr($path, $slashBeforeModule+1, $slashAfterModule-$slashBeforeModule-1);
-
-        //Check if file was actually from app/code or vendor
-        if ($output === "Mftf") {
-            $slashBeforeModule = $positions[count($positions)-5];
-            $slashAfterModule = $positions[count($positions)-4];
-            $output = substr($path, $slashBeforeModule+1, $slashAfterModule-$slashBeforeModule-1);
-        }
-        return $output;
+        // dev/tests/acceptance/tests/functional/Magento/FunctionalTest/[Analytics]/Test/SomeText.xml
+        return $paths[count($paths)-3];
     }
 }
