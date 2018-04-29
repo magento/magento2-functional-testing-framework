@@ -27,7 +27,6 @@ class GroupClassGenerator
     const LAST_REQUIRED_ENTITY_TAG = 'last';
     const MUSTACHE_VAR_TAG = 'var';
     const MAGENTO_CLI_COMMAND_COMMAND = 'command';
-    const DATA_PERSISTENCE_ACTIONS = ["createData", "deleteData"];
     const REPLACEMENT_ACTIONS = [
         'comment' => 'print'
     ];
@@ -39,6 +38,16 @@ class GroupClassGenerator
      * @var Mustache_Engine
      */
     private $mustacheEngine;
+
+    /**
+     * Static function to return group directory path for precondition files.
+     *
+     * @return string
+     */
+    public static function getGroupDirPath()
+    {
+        return dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . self::GROUP_DIR_NAME . DIRECTORY_SEPARATOR;
+    }
 
     /**
      * GroupClassGenerator constructor
@@ -64,10 +73,7 @@ class GroupClassGenerator
     {
         $classContent = $this->createClassContent($suiteObject);
         $configEntry = self::GROUP_DIR_NAME . DIRECTORY_SEPARATOR . $suiteObject->getName();
-        $filePath = dirname(dirname(__DIR__)) .
-            DIRECTORY_SEPARATOR .
-            $configEntry .
-            '.php';
+        $filePath = self::getGroupDirPath() . $suiteObject->getName() . '.php';
         file_put_contents($filePath, $classContent);
 
         return  str_replace(DIRECTORY_SEPARATOR, "\\", $configEntry);
@@ -122,10 +128,13 @@ class GroupClassGenerator
         $mustacheHookArray = [];
         $actions = [];
         $hasWebDriverActions = false;
+
         foreach ($hookObj->getActions() as $action) {
             /** @var ActionObject $action */
             $index = count($actions);
-            if (!in_array($action->getType(), self::DATA_PERSISTENCE_ACTIONS)) {
+            //deleteData contains either url or createDataKey, if it contains the former it needs special formatting
+            if ($action->getType() !== "createData"
+                && !array_key_exists(TestGenerator::REQUIRED_ENTITY_REFERENCE, $action->getCustomActionAttributes())) {
                 if (!$hasWebDriverActions) {
                     $hasWebDriverActions = true;
                 }

@@ -5,16 +5,12 @@
  */
 namespace Magento\FunctionalTestingFramework\Suite\Handlers;
 
-use Exception;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Suite\Parsers\SuiteDataParser;
 use Magento\FunctionalTestingFramework\Suite\Util\SuiteObjectExtractor;
-use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
-use Magento\FunctionalTestingFramework\Test\Util\TestHookObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\ObjectExtractor;
-use Magento\Ui\Test\Unit\Component\PagingTest;
 
 /**
  * Class SuiteObjectHandler
@@ -80,6 +76,26 @@ class SuiteObjectHandler implements ObjectHandlerInterface
     public function getAllObjects()
     {
         return $this->suiteObjects;
+    }
+
+    /**
+     * Function which return all tests referenced by suites.
+     *
+     * @return array
+     */
+    public function getAllTestReferences()
+    {
+        $testsReferencedInSuites = [];
+        $suites = $this->getAllObjects();
+
+        foreach ($suites as $suite) {
+            /** @var SuiteObject $suite */
+            $test_keys = array_keys($suite->getTests());
+            $testToSuiteName = array_fill_keys($test_keys, [$suite->getName()]);
+            $testsReferencedInSuites = array_merge_recursive($testsReferencedInSuites, $testToSuiteName);
+        }
+
+        return $testsReferencedInSuites;
     }
 
     /**

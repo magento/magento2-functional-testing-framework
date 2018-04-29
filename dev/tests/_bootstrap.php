@@ -16,8 +16,12 @@ $kernel->init([
     'includePaths' => [PROJECT_ROOT . '/src']
 ]);
 
-// force php to generate
-$GLOBALS['FORCE_PHP_GENERATE'] = true;
+// set mftf appplication context
+\Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::create(
+    true,
+    \Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::GENERATION_PHASE,
+    true
+);
 
 // Load needed framework env params
 $TEST_ENVS = [
@@ -42,6 +46,7 @@ $RELATIVE_TESTS_MODULE_PATH = DIRECTORY_SEPARATOR . 'verification';
 
 defined('TESTS_BP') || define('TESTS_BP', __DIR__);
 defined('TESTS_MODULE_PATH') || define('TESTS_MODULE_PATH', TESTS_BP . $RELATIVE_TESTS_MODULE_PATH);
+defined('MAGENTO_BP') || define('MAGENTO_BP', __DIR__);
 
 $utilDir = DIRECTORY_SEPARATOR . 'Util'. DIRECTORY_SEPARATOR . '*.php';
 

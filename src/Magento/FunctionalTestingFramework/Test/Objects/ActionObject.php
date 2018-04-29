@@ -5,8 +5,10 @@
  */
 namespace Magento\FunctionalTestingFramework\Test\Objects;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
 use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
@@ -20,7 +22,16 @@ use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 class ActionObject
 {
     const __ENV = "_ENV";
-    const DATA_ENABLED_ATTRIBUTES = ["userInput", "parameterArray", "expected", "actual", "x", "y"];
+    const DATA_ENABLED_ATTRIBUTES = [
+        "userInput",
+        "parameterArray",
+        "expected",
+        "actual",
+        "x",
+        "y",
+        "expectedResult",
+        "actualResult"
+    ];
     const SELECTOR_ENABLED_ATTRIBUTES = [
         'selector',
         'dependentSelector',
@@ -34,7 +45,9 @@ class ActionObject
     const ASSERTION_ATTRIBUTES = ["expectedResult" => "expected", "actualResult" => "actual"];
     const ASSERTION_TYPE_ATTRIBUTE = "type";
     const ASSERTION_VALUE_ATTRIBUTE = "value";
+    const DELETE_DATA_MUTUAL_EXCLUSIVE_ATTRIBUTES = ["url", "createDataKey"];
     const EXTERNAL_URL_AREA_INVALID_ACTIONS = ['amOnPage'];
+    const FUNCTION_CLOSURE_ACTIONS = ['waitForElementChange', 'performOn'];
     const MERGE_ACTION_ORDER_AFTER = 'after';
     const MERGE_ACTION_ORDER_BEFORE = 'before';
     const ACTION_ATTRIBUTE_URL = 'url';
@@ -229,6 +242,9 @@ class ActionObject
             $this->resolveSelectorReferenceAndTimeout();
             $this->resolveUrlReference();
             $this->resolveDataInputReferences();
+            if ($this->getType() == "deleteData") {
+                $this->validateMutuallyExclusiveAttributes(self::DELETE_DATA_MUTUAL_EXCLUSIVE_ATTRIBUTES);
+            }
         }
     }
 
@@ -250,7 +266,8 @@ class ActionObject
         $oldAttributes = array_intersect($actionAttributeKeys, ActionObject::OLD_ASSERTION_ATTRIBUTES);
         if (!empty($oldAttributes)) {
             // @codingStandardsIgnoreStart
-            if ($GLOBALS['GENERATE_TESTS'] ?? false == true) {
+            $appConfig = MftfApplicationConfig::getConfig();
+            if ($appConfig->getPhase() == MftfApplicationConfig::GENERATION_PHASE && $appConfig->verboseEnabled()) {
                 echo("WARNING: Use of one line Assertion actions will be deprecated in MFTF 3.0.0, please use nested syntax (Action: {$this->type} StepKey: {$this->stepKey})" . PHP_EOL);
             }
             // @codingStandardsIgnoreEnd
@@ -479,6 +496,10 @@ class ActionObject
                 $this->setTimeout($obj->getElement($objField)->getTimeout());
             } elseif (get_class($obj) == EntityDataObject::class) {
                 $replacement = $this->resolveEntityDataObjectReference($obj, $match);
+
+                if (is_array($replacement)) {
+                    $replacement = '["' . implode('","', array_map('addSlashes', $replacement)) . '"]';
+                }
             }
 
             if ($replacement === null) {
@@ -494,6 +515,28 @@ class ActionObject
             $outputString = str_replace($match, $replacement, $outputString);
         }
         return $outputString;
+    }
+
+    /**
+     * Validates that the mutually exclusive attributes passed in don't all occur.
+     * @param array $attributes
+     * @return void
+     * @throws TestReferenceException
+     */
+    private function validateMutuallyExclusiveAttributes(array $attributes)
+    {
+        $matches = array_intersect($attributes, array_keys($this->getCustomActionAttributes()));
+        if (count($matches) > 1) {
+            throw new TestReferenceException(
+                "Actions of type '{$this->getType()}' must only contain one attribute of types '"
+                . implode("', '", $attributes) . "'"
+            );
+        } elseif (count($matches) == 0) {
+            throw new TestReferenceException(
+                "Actions of type '{$this->getType()}' must contain at least one attribute of types '"
+                . implode("', '", $attributes) . "'"
+            );
+        }
     }
 
     /**

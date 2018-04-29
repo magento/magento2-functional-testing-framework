@@ -16,6 +16,7 @@
 
         <fillField stepKey="inputReplace" selector="#selector" userInput="StringBefore $createdData.firstname$ StringAfter"/>
         <fillField stepKey="selectorReplace" selector="#$createdData.firstname$" userInput="input"/>
+        <fillField stepKey="selectorReplace2" selector="#{{_ENV.MAGENTO_BASE_URL}}#$createdData.firstname$" userInput="input"/>
         <dragAndDrop stepKey="selector12Replace" selector1="#$createdData.firstname$" selector2="$createdData.lastname$"/>
         <conditionalClick stepKey="dependentSelectorReplace" dependentSelector="#$createdData.firstname$" selector="$createdData.lastname$" visible="true"/>
         <amOnUrl stepKey="urlReplace" url="$createdData.firstname$.html"/>

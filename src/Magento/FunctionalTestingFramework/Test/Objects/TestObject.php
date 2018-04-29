@@ -44,19 +44,28 @@ class TestObject
     private $hooks = [];
 
     /**
+     * String of filename of test
+     *
+     * @var String
+     */
+    private $filename;
+
+    /**
      * TestObject constructor.
      *
      * @param string $name
      * @param ActionObject[] $parsedSteps
      * @param array $annotations
      * @param TestHookObject[] $hooks
+     * @param String $filename
      */
-    public function __construct($name, $parsedSteps, $annotations, $hooks)
+    public function __construct($name, $parsedSteps, $annotations, $hooks, $filename = null)
     {
         $this->name = $name;
         $this->parsedSteps = $parsedSteps;
         $this->annotations = $annotations;
         $this->hooks = $hooks;
+        $this->filename = $filename;
     }
 
     /**
@@ -67,6 +76,29 @@ class TestObject
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Getter for the Test Filename
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+
+    /**
+     * Getter for the skip_test boolean
+     *
+     * @return string
+     */
+    public function isSkipped()
+    {
+        if (array_key_exists('group', $this->annotations) && (in_array("skip", $this->annotations['group']))) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -100,6 +132,10 @@ class TestObject
      */
     public function getHooks()
     {
+        // if this test is skipped we do not want any before/after actions to generate as the tests will not run
+        if ($this->isSkipped()) {
+            return [];
+        }
         return $this->hooks;
     }
 
@@ -110,6 +146,11 @@ class TestObject
      */
     public function getTestActionCount()
     {
+        // a skipped action results in a single skip being appended to the beginning of the test and no execution
+        if ($this->isSkipped()) {
+            return 1;
+        }
+
         $hookActions = 0;
         if (array_key_exists('before', $this->hooks)) {
             $hookActions += count($this->hooks['before']->getActions());
@@ -120,7 +161,6 @@ class TestObject
         }
 
         $testActions = count($this->getOrderedActions());
-
         return $hookActions + $testActions;
     }
 

@@ -75,6 +75,9 @@ class BasicFunctionalTestCest
 		$I->clickWithRightButton("#element .4123#element", 200, 300);
 		$I->closeTab();
 		$I->conditionalClick(".functionalTestSelector", ".functionalDependentTestSelector", true);
+		$I->amGoingTo("delete entity that has the createDataKey: createKey1");
+		$createKey1->deleteEntity();
+		$I->deleteEntityByUrl("/V1/categories{$grabbedData}");
 		$I->dontSee("someInput", ".functionalTestSelector");
 		$I->dontSeeCheckboxIsChecked(".functionalTestSelector");
 		$I->dontSeeCookie("someInput");
@@ -91,7 +94,8 @@ class BasicFunctionalTestCest
 		$I->dontSeeOptionIsSelected(".functionalTestSelector", "someInput");
 		$I->doubleClick(".functionalTestSelector");
 		$I->dragAndDrop(".functionalTestSelector", ".functionalTestSelector2");
-		$I->executeJS("someJSFunction");
+		$I->dragAndDrop(".functionalTestSelector", ".functionalTestSelector2", 100, 900);
+		$executeJSKey1 = $I->executeJS("someJSFunction");
 		$I->fillField(".functionalTestSelector", "someInput");
 		$I->fillField(".functionalTestSelector", "0");
 		$grabAttributeFromKey1 = $I->grabAttributeFrom(".functionalTestSelector", "someInput");
@@ -109,6 +113,7 @@ class BasicFunctionalTestCest
 		$I->moveMouseOver(".functionalTestSelector");
 		$I->openNewTab();
 		$I->pauseExecution();
+		$I->performOn("#selector", function(\WebDriverElement $el) {return $el->isDisplayed();});
 		$I->pressKey("#page", "a");
 		$I->pressKey("#page", ['ctrl','a'],'new');
 		$I->pressKey("#page", ['shift','111'],'1','x');
@@ -147,6 +152,7 @@ class BasicFunctionalTestCest
 		$I->waitForElement(".functionalTestSelector", 30);
 		$I->waitForElementNotVisible(".functionalTestSelector", 30);
 		$I->waitForElementVisible(".functionalTestSelector", 30);
+		$I->waitForElementChange("#selector", function(\WebDriverElement $el) {return $el->isDisplayed();});
 		$I->waitForJS("someJsFunction", 30);
 		$I->waitForText("someInput", 30, ".functionalTestSelector");
 	}

@@ -48,4 +48,15 @@
         </arguments>
         <see selector="{{SampleSection.oneParamElement(someArgument)}}" userInput="{{someArgument}}" stepKey="see1" />
     </actionGroup>
+
+    <actionGroup name="actionGroupWithNestedArgument">
+        <arguments>
+            <argument name="count" defaultValue="10" type="string"/>
+        </arguments>
+        <grabMultiple selector="selector" stepKey="grabProducts"/>
+        <assertCount stepKey="assertCount">
+            <expectedResult type="int">{{count}}</expectedResult>
+            <actualResult type="variable">grabProducts</actualResult>
+        </assertCount>
+    </actionGroup>
 </actionGroups>
