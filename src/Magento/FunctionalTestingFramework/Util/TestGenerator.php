@@ -1866,19 +1866,4 @@ class TestGenerator
         $message .= '" can be use for action "' . $tagName . "\".\n";
         print $message;
     }
-
-    /**
-     * Go to a page and wait for ajax requests to finish
-     *
-     * @param string $page
-     * @throws \Exception
-     * @return void
-     */
-    public function amOnPage($page)
-    {
-        $url = Uri::appendPath($this->config['url'], $page);
-        $this->debugSection('GET', $url);
-        $this->webDriver->get($url);
-        $this->waitForPageLoad();
-    }
 }

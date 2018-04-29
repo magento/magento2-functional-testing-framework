@@ -554,4 +554,17 @@ class MagentoWebDriver extends WebDriver
         $this->_saveScreenshot($this->pngReport = $outputDir . mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png');
         $this->_savePageSource($this->htmlReport = $outputDir . mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html');
     }
+
+    /**
+     * Go to a page and wait for ajax requests to finish
+     *
+     * @param string $page
+     * @throws \Exception
+     * @return void
+     */
+    public function amOnPage($page)
+    {
+        parent::amOnPage($page)
+        $this->waitForPageLoad();
+    }
 }
