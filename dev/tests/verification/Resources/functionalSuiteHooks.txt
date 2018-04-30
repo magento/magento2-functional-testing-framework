@@ -54,7 +54,7 @@ class functionalSuiteHooks extends \Codeception\GroupObject
                 // initialize the webdriver session
                 $webDriver->_initializeSession();
                 $webDriver->amOnPage("some.url");
-                $createFields['someKey'] = ;
+                $createFields['someKey'] = "dataHere";
                 $createThis = DataObjectHandler::getInstance()->getObject("createThis");
                 $this->create = new DataPersistenceHandler($createThis, [], $createFields);
                 $this->create->createEntity();

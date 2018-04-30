@@ -6,7 +6,7 @@
   */
 -->
 
-<suites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../src/Magento/FunctionalTestingFramework/Suite/etc/suiteSchema.xsd">
+<suites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../src/Magento/FunctionalTestingFramework/Suite/etc/suiteSchema.xsd">
     <suite name="functionalSuiteHooks">
         <include>
             <test name="IncludeTest"/>
@@ -14,7 +14,7 @@
         <before>
             <amOnPage url="some.url" stepKey="before"/>
             <createData entity="createThis" stepKey="create">
-                <field key="someKey"/>
+                <field key="someKey">dataHere</field>
             </createData>
         </before>
         <after>

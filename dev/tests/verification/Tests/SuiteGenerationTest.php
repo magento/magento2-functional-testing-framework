@@ -6,9 +6,12 @@
 
 namespace tests\verification\Tests;
 
+use AspectMock\Test as AspectMock;
 use Magento\Framework\Module\Dir;
+use Magento\FunctionalTestingFramework\Config\FileResolver\Root;
 use Magento\FunctionalTestingFramework\Suite\SuiteGenerator;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
+use Magento\FunctionalTestingFramework\Util\Iterator\File;
 use Magento\FunctionalTestingFramework\Util\Manifest\ParallelTestManifest;
 use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
 use Symfony\Component\Yaml\Yaml;
@@ -16,6 +19,7 @@ use tests\util\MftfTestCase;
 
 class SuiteGenerationTest extends MftfTestCase
 {
+    const TESTS_BP = DIRECTORY_SEPARATOR;
     const RESOURCES_DIR = TESTS_BP . DIRECTORY_SEPARATOR . 'verification' . DIRECTORY_SEPARATOR . 'Resources';
     const CONFIG_YML_FILE = FW_BP . DIRECTORY_SEPARATOR . SuiteGenerator::YAML_CODECEPTION_CONFIG_FILENAME;
     const GENERATE_RESULT_DIR = TESTS_BP .
@@ -49,11 +53,6 @@ class SuiteGenerationTest extends MftfTestCase
             return;
         }
 
-        // destroy manifest file if it exists
-        if (file_exists(self::getManifestFilePath())) {
-            unlink(self::getManifestFilePath());
-        }
-
         // destroy _generated if it exists
         if (file_exists(self::GENERATE_RESULT_DIR)) {
             DirSetupUtil::rmdirRecursive(self::GENERATE_RESULT_DIR);
@@ -68,7 +67,7 @@ class SuiteGenerationTest extends MftfTestCase
      */
     public function testSuiteGeneration1()
     {
-         $groupName = 'functionalSuite1';
+        $groupName = 'functionalSuite1';
 
         $expectedContents = [
            'additionalTestCest.php',
