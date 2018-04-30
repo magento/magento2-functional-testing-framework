@@ -609,7 +609,7 @@ class MagentoWebDriver extends WebDriver
      */
     public function amOnPage($page)
     {
-        parent::amOnPage($page)
+        parent::amOnPage($page);
         $this->waitForPageLoad();
     }
 }
