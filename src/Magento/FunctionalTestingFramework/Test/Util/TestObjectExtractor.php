@@ -21,6 +21,8 @@ class TestObjectExtractor extends BaseObjectExtractor
     const TEST_BEFORE_HOOK = 'before';
     const TEST_AFTER_HOOK = 'after';
     const TEST_FAILED_HOOK = 'failed';
+    const TEST_BEFORE_ATTRIBUTE = 'before';
+    const TEST_AFTER_ATTRIBUTE = 'after';
 
     /**
      * Action Object Extractor object
@@ -85,7 +87,7 @@ class TestObjectExtractor extends BaseObjectExtractor
         }
 
         // extract before
-        if (array_key_exists(self::TEST_BEFORE_HOOK, $testData)) {
+        if (array_key_exists(self::TEST_BEFORE_HOOK, $testData) && is_array($testData[self::TEST_BEFORE_HOOK])) {
             $testHooks[self::TEST_BEFORE_HOOK] = $this->testHookObjectExtractor->extractHook(
                 $testData[self::NAME],
                 'before',
@@ -93,7 +95,7 @@ class TestObjectExtractor extends BaseObjectExtractor
             );
         }
 
-        if (array_key_exists(self::TEST_AFTER_HOOK, $testData)) {
+        if (array_key_exists(self::TEST_AFTER_HOOK, $testData) && is_array($testData[self::TEST_AFTER_HOOK])) {
             // extract after
             $testHooks[self::TEST_AFTER_HOOK] = $this->testHookObjectExtractor->extractHook(
                 $testData[self::NAME],

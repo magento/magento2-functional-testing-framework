@@ -18,7 +18,7 @@ class ActionMergeUtil
 {
     const STEP_MISSING_ERROR_MSG =
         "Merge Error - Step could not be found in either TestXML or DeltaXML.
-        \t%s = '%s'\tTestStep='%s'\tLinkedStep'%s'";
+        \t%s: '%s'\tTestStep: '%s'\tLinkedStep: '%s'";
 
     const WAIT_ATTR = 'timeout';
     const WAIT_ACTION_NAME = 'waitForPageLoad';

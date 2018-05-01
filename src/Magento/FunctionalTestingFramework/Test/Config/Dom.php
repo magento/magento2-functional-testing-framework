@@ -17,6 +17,8 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
     const TEST_META_FILENAME_ATTRIBUTE = 'filename';
     const TEST_META_NAME_ATTRIBUTE = 'name';
     const TEST_HOOK_NAMES = ["after", "before"];
+    const TEST_MERGE_POINTER_BEFORE = "before";
+    const TEST_MERGE_POINTER_AFTER = "after";
 
     /**
      * TestDom constructor.
@@ -63,6 +65,23 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
                 /** @var \DOMElement $testNode */
                 $testNode->setAttribute(self::TEST_META_FILENAME_ATTRIBUTE, $filename);
                 $this->validateDomStepKeys($testNode, $filename, 'Test', $exceptionCollector);
+                if ($testNode->getAttribute(self::TEST_MERGE_POINTER_AFTER) !== "") {
+                    $this->appendMergePointerToActions(
+                        $testNode,
+                        self::TEST_MERGE_POINTER_AFTER,
+                        $testNode->getAttribute(self::TEST_MERGE_POINTER_AFTER),
+                        $filename,
+                        $exceptionCollector
+                    );
+                } elseif ($testNode->getAttribute(self::TEST_MERGE_POINTER_BEFORE) !== "") {
+                    $this->appendMergePointerToActions(
+                        $testNode,
+                        self::TEST_MERGE_POINTER_BEFORE,
+                        $testNode->getAttribute(self::TEST_MERGE_POINTER_BEFORE),
+                        $filename,
+                        $exceptionCollector
+                    );
+                }
             }
         }
 
@@ -81,6 +100,36 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
     {
         $dom = $this->initDom($xml, $filename, $exceptionCollector);
         $this->mergeNode($dom->documentElement, '');
+    }
+
+    /**
+     * Parses DOM Structure's actions and appends a before/after attribute along with the parent's stepkey reference.
+     *
+     * @param \DOMElement $testNode
+     * @param string $pointerType
+     * @param string $pointerKey
+     * @param string $filename
+     * @param ExceptionCollector $exceptionCollector
+     * @return void
+     */
+    protected function appendMergePointerToActions($testNode, $pointerType, $pointerKey, $filename, $exceptionCollector)
+    {
+        $childNodes = $testNode->childNodes;
+        for ($i = 0; $i < $childNodes->length; $i++) {
+            $currentNode = $childNodes->item($i);
+            if (!is_a($currentNode, \DOMElement::class)) {
+                continue;
+            }
+            if ($currentNode->hasAttribute('stepKey')) {
+                if ($currentNode->hasAttribute($pointerType) && $testNode->hasAttribute($pointerType)) {
+                    $errorMsg = "Actions cannot have a before/after pointer if they are in a test that provides a merge pointer.";
+                    $errorMsg .= "\n\tstepKey: {$currentNode->getAttribute('stepKey')}\tin file: {$filename}";
+                    $exceptionCollector->addError($filename, $errorMsg);
+                    continue;
+                }
+                $currentNode->setAttribute($pointerType, $pointerKey);
+            }
+        }
     }
 
     /**
