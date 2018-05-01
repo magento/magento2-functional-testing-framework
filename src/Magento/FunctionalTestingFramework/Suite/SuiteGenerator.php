@@ -74,10 +74,7 @@ class SuiteGenerator
      */
     public function generateAllSuites($testManifest)
     {
-        $suites = array_keys(SuiteObjectHandler::getInstance()->getAllObjects());
-        if ($testManifest != null) {
-            $suites = $testManifest->getSuiteConfig();
-        }
+        $suites = $testManifest->getSuiteConfig();
 
         foreach ($suites as $suiteName => $suiteContent) {
             $firstElement = array_values($suiteContent)[0];
@@ -92,37 +89,6 @@ class SuiteGenerator
                 $this->generateSplitSuiteFromTest($suiteName, $suiteContent);
             }
         }
-    }
-
-    /**
-     * Returns an array of tests contained within suites as keys pointed at the name of their corresponding suite.
-     *
-     * @return array
-     */
-    public function getTestsReferencedInSuites()
-    {
-        $testsReferencedInSuites = [];
-        $suites = SuiteObjectHandler::getInstance()->getAllObjects();
-
-        // see if we have a specific suite configuration.
-        if (!empty($this->suiteReferences)) {
-            $suites = array_intersect_key($suites, $this->suiteReferences);
-        }
-
-        foreach ($suites as $suite) {
-            /** @var SuiteObject $suite */
-            $test_keys = array_keys($suite->getTests());
-
-            // see if we need to filter which tests we'll be generating.
-            if (array_key_exists($suite->getName(), $this->suiteReferences)) {
-                $test_keys = $this->suiteReferences[$suite->getName()] ?? $test_keys;
-            }
-
-            $testToSuiteName = array_fill_keys($test_keys, [$suite->getName()]);
-            $testsReferencedInSuites = array_merge_recursive($testsReferencedInSuites, $testToSuiteName);
-        }
-
-        return $testsReferencedInSuites;
     }
 
     /**
