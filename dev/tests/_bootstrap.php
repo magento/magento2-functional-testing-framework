@@ -13,7 +13,14 @@ require_once 'util/MftfTestCase.php';
 $kernel = \AspectMock\Kernel::getInstance();
 $kernel->init([
     'debug' => true,
-    'includePaths' => [PROJECT_ROOT . '/src']
+    'includePaths' => [PROJECT_ROOT . '/src'],
+    'cacheDir' => PROJECT_ROOT .
+        DIRECTORY_SEPARATOR .
+        'dev' .
+        DIRECTORY_SEPARATOR .
+        'tests' .
+        DIRECTORY_SEPARATOR .
+        '.cache'
 ]);
 
 // set mftf appplication context

@@ -6,6 +6,7 @@
 
 namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
 
+use AspectMock\Proxy\Verifier;
 use AspectMock\Test as AspectMock;
 
 use Magento\FunctionalTestingFramework\ObjectManager;
@@ -15,6 +16,14 @@ use PHPUnit\Framework\TestCase;
 
 class ModuleResolverTest extends TestCase
 {
+    /**
+     * remove all registered test doubles
+     */
+    protected function tearDown()
+    {
+        AspectMock::clean();
+    }
+
     /**
      * Validate that Paths that are already set are returned
      * @throws \Exception
@@ -33,13 +42,59 @@ class ModuleResolverTest extends TestCase
      */
     public function testGetModulePathsAggregate()
     {
-        $this->setMockResolverClass(false, ["Magento_TestModule"]);
+        $this->setMockResolverClass(false, null, null, null, ['example/paths']);
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, null);
         $this->assertEquals(
-            [TESTS_BP . DIRECTORY_SEPARATOR . 'verification' . DIRECTORY_SEPARATOR . 'TestModule'],
+            ['example/paths', 'example/paths', 'example/paths'],
             $resolver->getModulesPath()
         );
+    }
+
+    /**
+     * Validate correct path locations are fed into globRelevantPaths
+     * @throws \Exception
+     */
+    public function testGetModulePathsLocations()
+    {
+        $mockResolver = $this->setMockResolverClass(false, null, null, null, ['example/paths']);
+        $resolver = ModuleResolver::getInstance();
+        $this->setMockResolverProperties($resolver, null, null);
+        $this->assertEquals(
+            ['example/paths', 'example/paths', 'example/paths'],
+            $resolver->getModulesPath()
+        );
+
+        // Define the Module paths from app/code
+        $appCodePath = MAGENTO_BP
+            . DIRECTORY_SEPARATOR
+            . 'app' . DIRECTORY_SEPARATOR
+            . 'code' . DIRECTORY_SEPARATOR;
+
+        // Define the Module paths from default TESTS_MODULE_PATH
+        $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
+
+        // Define the Module paths from vendor modules
+        $vendorCodePath = PROJECT_ROOT
+            . DIRECTORY_SEPARATOR
+            . 'vendor' . DIRECTORY_SEPARATOR;
+
+        $mockResolver->verifyInvoked('globRelevantPaths', [$modulePath, '']);
+        $mockResolver->verifyInvoked('globRelevantPaths', [$appCodePath, '/Test/Mftf']);
+        $mockResolver->verifyInvoked('globRelevantPaths', [$vendorCodePath, '/Test/Mftf']);
+    }
+
+    /**
+     * Validate custom modules are added
+     * @throws \Exception
+     */
+    public function testGetCustomModulePath()
+    {
+        $this->setMockResolverClass(false, ["Magento_TestModule"], null, null, [], ['otherPath']);
+        $this->expectOutputString("Including module path: otherPath" . PHP_EOL);
+        $resolver = ModuleResolver::getInstance();
+        $this->setMockResolverProperties($resolver, null, null, null);
+        $this->assertEquals(['otherPath'], $resolver->getModulesPath());
     }
 
     /**
@@ -48,10 +103,11 @@ class ModuleResolverTest extends TestCase
      */
     public function testGetModulePathsBlacklist()
     {
-        $this->setMockResolverClass(false, ["Magento_TestModule"]);
+        $this->setMockResolverClass(false, ["Magento_TestModule"], null, null, ['somePath']);
+        $this->expectOutputString("Excluding module: 0" . PHP_EOL);
         $resolver = ModuleResolver::getInstance();
-        $this->setMockResolverProperties($resolver, null, null, ["TestModule"]);
-        $this->assertEquals([], $resolver->getModulesPath());
+        $this->setMockResolverProperties($resolver, null, null, ["somePath"]);
+        $this->assertEquals(['somePath', 'somePath'], $resolver->getModulesPath());
     }
 
     /**
@@ -60,7 +116,7 @@ class ModuleResolverTest extends TestCase
      */
     public function testGetModulePathsNoAdminToken()
     {
-        $this->setMockResolverClass(false, null, ["example/paths"]);
+        $this->setMockResolverClass(false, null, ["example/paths"], []);
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, null);
         $this->assertEquals(["example/paths"], $resolver->getModulesPath());
@@ -70,12 +126,22 @@ class ModuleResolverTest extends TestCase
      * Function used to set mock for parser return and force init method to run between tests.
      *
      * @param string $mockToken
-     * @param array $mockModules
+     * @param array $mockGetModules
      * @param string[] $mockCustomMethods
+     * @param string[] $mockGlob
+     * @param string[] $mockRelativePaths
+     * @param string[] $mockCustomModules
      * @throws \Exception
+     * @return Verifier ModuleResolver double
      */
-    private function setMockResolverClass($mockToken = null, $mockModules = null, $mockCustomMethods = null)
-    {
+    private function setMockResolverClass(
+        $mockToken = null,
+        $mockGetModules = null,
+        $mockCustomMethods = null,
+        $mockGlob = null,
+        $mockRelativePaths = null,
+        $mockCustomModules = null
+    ) {
         $property = new \ReflectionProperty(ModuleResolver::class, 'instance');
         $property->setAccessible(true);
         $property->setValue(null);
@@ -85,20 +151,34 @@ class ModuleResolverTest extends TestCase
             $mockMethods['getAdminToken'] = $mockToken;
         }
         if (isset($mockModules)) {
-            $mockMethods['getEnabledModules'] = $mockModules;
+            $mockMethods['getEnabledModules'] = $mockGetModules;
         }
         if (isset($mockCustomMethods)) {
             $mockMethods['applyCustomModuleMethods'] = $mockCustomMethods;
+        }
+        if (isset($mockGlob)) {
+            $mockMethods['globRelevantWrapper'] = $mockGlob;
+        }
+        if (isset($mockRelativePaths)) {
+            $mockMethods['globRelevantPaths'] = $mockRelativePaths;
+        }
+        if (isset($mockCustomModules)) {
+            $mockMethods['getCustomModulePaths'] = $mockCustomModules;
         }
         $mockMethods['printMagentoVersionInfo'] = null;
 
         $mockResolver = AspectMock::double(
             ModuleResolver::class,
             $mockMethods
+        );
+        $instance = AspectMock::double(
+            ObjectManager::class,
+            ['create' => $mockResolver->make(), 'get' => null]
         )->make();
-        $instance = AspectMock::double(ObjectManager::class, ['create' => $mockResolver, 'get' => null])->make();
         // bypass the private constructor
         AspectMock::double(ObjectManagerFactory::class, ['getObjectManager' => $instance]);
+
+        return $mockResolver;
     }
 
     /**
@@ -107,6 +187,7 @@ class ModuleResolverTest extends TestCase
      * @param ModuleResolver $instance
      * @param array $mockPaths
      * @param array $mockModules
+     * @param array $mockBlacklist
      * @throws \Exception
      */
     private function setMockResolverProperties($instance, $mockPaths = null, $mockModules = null, $mockBlacklist = [])
