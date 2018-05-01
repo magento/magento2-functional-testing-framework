@@ -24,6 +24,7 @@
         "squizlabs/php_codesniffer": "1.5.3",
         "sebastian/phpcpd": "~3.0",
         "brainmaestro/composer-git-hooks": "^2.3",
+        "doctrine/cache": "<1.7.0",
         "codeception/aspect-mock": "^3.0",
         "goaop/framework": "2.2.0",
         "codacy/coverage": "^1.4",
