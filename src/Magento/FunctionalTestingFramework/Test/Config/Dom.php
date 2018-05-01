@@ -122,7 +122,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
             }
             if ($currentNode->hasAttribute('stepKey')) {
                 if ($currentNode->hasAttribute($pointerType) && $testNode->hasAttribute($pointerType)) {
-                    $errorMsg = "Actions cannot have a before/after pointer if they are in a test that provides a merge pointer.";
+                    $errorMsg = "Actions cannot have merge pointers if contained in tests that has a merge pointer.";
                     $errorMsg .= "\n\tstepKey: {$currentNode->getAttribute('stepKey')}\tin file: {$filename}";
                     $exceptionCollector->addError($filename, $errorMsg);
                     continue;
