@@ -10,6 +10,7 @@ use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Config\Dom\NodeMergingConfig;
 use Magento\FunctionalTestingFramework\Config\Dom\NodePathMatcher;
+use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 
 class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
 {
@@ -106,28 +107,35 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
      * Parses DOM Structure's actions and appends a before/after attribute along with the parent's stepkey reference.
      *
      * @param \DOMElement $testNode
-     * @param string $pointerType
-     * @param string $pointerKey
+     * @param string $insertType
+     * @param string $insertKey
      * @param string $filename
      * @param ExceptionCollector $exceptionCollector
      * @return void
      */
-    protected function appendMergePointerToActions($testNode, $pointerType, $pointerKey, $filename, $exceptionCollector)
+    protected function appendMergePointerToActions($testNode, $insertType, $insertKey, $filename, $exceptionCollector)
     {
         $childNodes = $testNode->childNodes;
+        $previousStepKey = $insertKey;
+        $actionInsertType = ActionObject::MERGE_ACTION_ORDER_AFTER;
+        if ($insertType == self::TEST_MERGE_POINTER_BEFORE) {
+            $actionInsertType = ActionObject::MERGE_ACTION_ORDER_BEFORE;
+        }
         for ($i = 0; $i < $childNodes->length; $i++) {
             $currentNode = $childNodes->item($i);
             if (!is_a($currentNode, \DOMElement::class)) {
                 continue;
             }
             if ($currentNode->hasAttribute('stepKey')) {
-                if ($currentNode->hasAttribute($pointerType) && $testNode->hasAttribute($pointerType)) {
+                if ($currentNode->hasAttribute($insertType) && $testNode->hasAttribute($insertType)) {
                     $errorMsg = "Actions cannot have merge pointers if contained in tests that has a merge pointer.";
                     $errorMsg .= "\n\tstepKey: {$currentNode->getAttribute('stepKey')}\tin file: {$filename}";
                     $exceptionCollector->addError($filename, $errorMsg);
-                    continue;
                 }
-                $currentNode->setAttribute($pointerType, $pointerKey);
+                $currentNode->setAttribute($actionInsertType, $previousStepKey);
+                $previousStepKey = $currentNode->getAttribute('stepKey');
+                // All actions after the first need to insert AFTER.
+                $actionInsertType = ActionObject::MERGE_ACTION_ORDER_AFTER;
             }
         }
     }

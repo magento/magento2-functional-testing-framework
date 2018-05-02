@@ -182,4 +182,10 @@
             <actionGroup ref="FunctionalActionGroup" stepKey="afterGroup"/>
         </after>
     </test>
+    <test name="ActionGroupMergedViaInsertBefore">
+        <actionGroup ref="FunctionalActionGroupForMassMergeBefore" stepKey="keyone"/>
+    </test>
+    <test name="ActionGroupMergedViaInsertAfter">
+        <actionGroup ref="FunctionalActionGroupForMassMergeAfter" stepKey="keyone"/>
+    </test>
 </tests>

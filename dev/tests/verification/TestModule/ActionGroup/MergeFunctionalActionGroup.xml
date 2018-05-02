@@ -13,4 +13,16 @@
         <click stepKey="myMergedClick" selector=".merge .{{myArg.lastname}}" after="amOnPage1"/>
         <remove keyForRemoval="deleteMe"/>
     </actionGroup>
+
+    <actionGroup name="FunctionalActionGroupForMassMergeBefore" insertBefore="fillField2">
+        <click stepKey="clickOne" selector="#mergeOne"/>
+        <click stepKey="clickTwo" selector="#mergeTwo"/>
+        <click stepKey="clickThree" selector="#mergeThree"/>
+    </actionGroup>
+
+    <actionGroup name="FunctionalActionGroupForMassMergeAfter" insertAfter="fillField2">
+        <click stepKey="clickOne" selector="#mergeOne"/>
+        <click stepKey="clickTwo" selector="#mergeTwo"/>
+        <click stepKey="clickThree" selector="#mergeThree"/>
+    </actionGroup>
 </actionGroups>
