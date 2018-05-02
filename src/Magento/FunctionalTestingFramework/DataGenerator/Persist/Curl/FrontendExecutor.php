@@ -62,6 +62,8 @@ class FrontendExecutor extends AbstractExecutor implements CurlInterface
      *
      * @param string $customerEmail
      * @param string $customerPassWord
+     *
+     * @throws TestFrameworkException
      */
     public function __construct($customerEmail, $customerPassWord)
     {

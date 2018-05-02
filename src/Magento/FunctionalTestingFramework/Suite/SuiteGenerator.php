@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Suite;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Suite\Generators\GroupClassGenerator;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
@@ -71,6 +72,7 @@ class SuiteGenerator
      *
      * @param BaseTestManifest $testManifest
      * @return void
+     * @throws \Exception
      */
     public function generateAllSuites($testManifest)
     {
@@ -97,6 +99,7 @@ class SuiteGenerator
      *
      * @param string $suiteName
      * @return void
+     * @throws \Exception
      */
     public function generateSuite($suiteName)
     {
@@ -113,6 +116,8 @@ class SuiteGenerator
      * @param array $tests
      * @param string $originalSuiteName
      * @return void
+     * @throws TestReferenceException
+     * @throws XmlException
      */
     private function generateSuiteFromTest($suiteName, $tests = [], $originalSuiteName = null)
     {
@@ -147,6 +152,7 @@ class SuiteGenerator
      * @param string $originalSuiteName
      * @return void
      * @throws TestReferenceException
+     * @throws XmlException
      */
     private function validateTestsReferencedInSuite($suiteName, $testsReferenced, $originalSuiteName)
     {
@@ -173,6 +179,7 @@ class SuiteGenerator
      * @param string $suiteName
      * @param array $suiteContent
      * @return void
+     * @throws \Exception
      */
     private function generateSplitSuiteFromTest($suiteName, $suiteContent)
     {
@@ -189,6 +196,8 @@ class SuiteGenerator
      * @param array $tests
      * @param string $originalSuiteName
      * @return null|string
+     * @throws XmlException
+     * @throws TestReferenceException
      */
     private function generateGroupFile($suiteName, $tests, $originalSuiteName)
     {
@@ -289,6 +298,7 @@ class SuiteGenerator
      * @param string $path
      * @param array $tests
      * @return void
+     * @throws TestReferenceException
      */
     private function generateRelevantGroupTests($path, $tests)
     {

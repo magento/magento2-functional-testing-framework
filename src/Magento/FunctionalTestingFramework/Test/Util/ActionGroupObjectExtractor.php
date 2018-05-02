@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
 use Magento\FunctionalTestingFramework\Data\Argument\Interpreter\Argument;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ArgumentObject;
 
@@ -39,6 +40,7 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
      *
      * @param array $actionGroupData
      * @return ActionGroupObject
+     * @throws XmlException
      */
     public function extractActionGroup($actionGroupData)
     {

@@ -234,6 +234,8 @@ class ActionObject
      *   userInput
      *
      * @return void
+     * @throws TestReferenceException
+     * @throws XmlException
      */
     public function resolveReferences()
     {
@@ -254,6 +256,7 @@ class ActionObject
      * Warns user if they are using old Assertion syntax.
      *
      * @return void
+     * @throws TestReferenceException
      */
     public function trimAssertionAttributes()
     {
@@ -327,6 +330,8 @@ class ActionObject
      * e.g. {{SomeSectionName.ElementName}} becomes #login-button
      *
      * @return void
+     * @throws XmlException
+     * @throws \Exception
      */
     private function resolveSelectorReferenceAndTimeout()
     {
@@ -353,6 +358,8 @@ class ActionObject
      * e.g. {{SomePageName}} becomes http://localhost:76543/some/url
      *
      * @return void
+     * @throws TestReferenceException
+     * @throws XmlException
      */
     private function resolveUrlReference()
     {
@@ -374,6 +381,8 @@ class ActionObject
      * e.g. {{CustomerEntityFoo.FirstName}} becomes Jerry
      *
      * @return void
+     * @throws TestReferenceException
+     * @throws \Exception
      */
     private function resolveDataInputReferences()
     {
@@ -453,7 +462,7 @@ class ActionObject
      * @param ObjectHandlerInterface $objectHandler
      * @param string $inputString
      * @return string | null
-     * @throws \Exception
+     * @throws TestReferenceException | \Exception
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
@@ -585,6 +594,7 @@ class ActionObject
      * @param string $match
      * @param object $object
      * @return string
+     * @throws \Exception
      */
     private function resolveParameterization($isParameterized, $replacement, $match, $object)
     {
