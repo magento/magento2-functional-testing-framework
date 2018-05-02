@@ -17,8 +17,8 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
     const TEST_META_FILENAME_ATTRIBUTE = 'filename';
     const TEST_META_NAME_ATTRIBUTE = 'name';
     const TEST_HOOK_NAMES = ["after", "before"];
-    const TEST_MERGE_POINTER_BEFORE = "before";
-    const TEST_MERGE_POINTER_AFTER = "after";
+    const TEST_MERGE_POINTER_BEFORE = "insertBefore";
+    const TEST_MERGE_POINTER_AFTER = "insertAfter";
 
     /**
      * TestDom constructor.

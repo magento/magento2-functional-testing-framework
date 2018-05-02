@@ -23,6 +23,9 @@ class TestObjectExtractor extends BaseObjectExtractor
     const TEST_FAILED_HOOK = 'failed';
     const TEST_BEFORE_ATTRIBUTE = 'before';
     const TEST_AFTER_ATTRIBUTE = 'after';
+    const TEST_INSERT_BEFORE = 'insertBefore';
+    const TEST_INSERT_AFTER = 'insertAfter';
+    const TEST_FILENAME = 'filename';
 
     /**
      * Action Object Extractor object
@@ -79,7 +82,9 @@ class TestObjectExtractor extends BaseObjectExtractor
             self::TEST_BEFORE_HOOK,
             self::TEST_AFTER_HOOK,
             self::TEST_FAILED_HOOK,
-            'filename'
+            self::TEST_INSERT_BEFORE,
+            self::TEST_INSERT_AFTER,
+            self::TEST_FILENAME
         );
 
         if (array_key_exists(self::TEST_ANNOTATIONS, $testData)) {
