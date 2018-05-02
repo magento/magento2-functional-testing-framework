@@ -2,7 +2,7 @@
     "name": "magento/magento2-functional-testing-framework",
     "description": "Magento2 Functional Testing Framework",
     "type": "library",
-    "version": "2.1.2",
+    "version": "2.2.0",
     "license": "AGPL-3.0",
     "keywords": ["magento", "automation", "functional", "testing"],
     "config": {
@@ -17,7 +17,7 @@
         "flow/jsonpath": ">0.2",
         "fzaninotto/faker": "^1.6",
         "mustache/mustache": "~2.5",
-        "symfony/process": ">=2.7 <3.4",
+        "symfony/process": "^2.8 || ^3.1 || ^4.0",
         "vlucas/phpdotenv": "^2.4"
     },
     "require-dev": {

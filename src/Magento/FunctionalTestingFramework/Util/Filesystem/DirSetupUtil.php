@@ -26,17 +26,19 @@ class DirSetupUtil
      */
     public static function createGroupDir($fullPath)
     {
+        //prevent redundant calls to these directories
+        $sanitizedPath = rtrim($fullPath, DIRECTORY_SEPARATOR);
         // make sure we haven't already cleaned up this directory at any point before deletion
-        if (in_array($fullPath, self::$DIR_CONTEXT)) {
+        if (in_array($sanitizedPath, self::$DIR_CONTEXT)) {
             return;
         }
 
-        if (file_exists($fullPath)) {
-            self::rmDirRecursive($fullPath);
+        if (file_exists($sanitizedPath)) {
+            self::rmDirRecursive($sanitizedPath);
         }
 
-        mkdir($fullPath, 0777, true);
-        self::$DIR_CONTEXT[] = $fullPath;
+        mkdir($sanitizedPath, 0777, true);
+        self::$DIR_CONTEXT[] = $sanitizedPath;
     }
 
     /**
