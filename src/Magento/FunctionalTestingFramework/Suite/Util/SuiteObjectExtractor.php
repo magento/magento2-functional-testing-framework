@@ -89,11 +89,6 @@ class SuiteObjectExtractor extends BaseObjectExtractor
             $includeTests = $this->extractTestObjectsFromSuiteRef($groupTestsToInclude);
             $excludeTests = $this->extractTestObjectsFromSuiteRef($groupTestsToExclude);
 
-            // add all test if include tests is completely empty
-            if (empty($includeTests)) {
-                $includeTests = TestObjectHandler::getInstance()->getAllObjects();
-            }
-
             // parse any object hooks
             if (array_key_exists(TestObjectExtractor::TEST_BEFORE_HOOK, $parsedSuite)) {
                 $suiteHooks[TestObjectExtractor::TEST_BEFORE_HOOK] = $testHookObjectExtractor->extractHook(
@@ -109,11 +104,30 @@ class SuiteObjectExtractor extends BaseObjectExtractor
                     $parsedSuite[TestObjectExtractor::TEST_AFTER_HOOK]
                 );
             }
+
             if (count($suiteHooks) == 1) {
                 throw new XmlException(sprintf(
                     "Suites that contain hooks must contain both a 'before' and an 'after' hook. Suite: \"%s\"",
                     $parsedSuite[self::NAME]
                 ));
+            }
+            // check if suite hooks are empty/not included and there are no included tests/groups/modules
+            $noHooks = count($suiteHooks) == 0 ||
+                (
+                    empty($suiteHooks['before']->getActions()) &&
+                    empty($suiteHooks['after']->getActions())
+                );
+            // if suite body is empty throw error
+            if ($noHooks && empty($includeTests) && empty($excludeTests)) {
+                throw new XmlException(sprintf(
+                    "Suites must not be empty. Suite: \"%s\"",
+                    $parsedSuite[self::NAME]
+                ));
+            }
+
+            // add all test if include tests is completely empty
+            if (empty($includeTests)) {
+                $includeTests = TestObjectHandler::getInstance()->getAllObjects();
             }
 
             // create the new suite object
