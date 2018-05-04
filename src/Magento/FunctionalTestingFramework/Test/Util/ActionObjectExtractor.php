@@ -48,6 +48,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
      * @param string $testName
      * @return array
      * @throws XmlException
+     * @throws TestReferenceException
      */
     public function extractActions($testActions, $testName = null)
     {
@@ -162,6 +163,8 @@ class ActionObjectExtractor extends BaseObjectExtractor
      * @param array $actionData
      * @param array $actions
      * @return array
+     * @throws XmlException
+     * @throws TestReferenceException
      */
     private function extractFieldActions($actionData, $actions)
     {
