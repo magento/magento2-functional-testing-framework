@@ -16,8 +16,6 @@ use PHPUnit\Framework\TestCase;
 
 class ModuleResolverTest extends TestCase
 {
-    private $index = 0;
-
     /**
      * remove all registered test doubles
      */
