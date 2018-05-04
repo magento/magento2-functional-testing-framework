@@ -13,6 +13,7 @@ use Magento\FunctionalTestingFramework\Suite\Generators\GroupClassGenerator;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Suite\Parsers\SuiteDataParser;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
+use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
 use Magento\FunctionalTestingFramework\Util\Manifest\DefaultTestManifest;
 use PHPUnit\Framework\TestCase;
@@ -85,6 +86,30 @@ class SuiteGeneratorTest extends TestCase
 
         // assert that expected suites are generated
         $this->expectOutputString("Suite basicTestSuite generated to _generated/basicTestSuite." . PHP_EOL);
+    }
+
+    /**
+     * Tests attempting to generate a suite with no included/excluded tests and no hooks
+     * @throws \Exception
+     */
+    public function testGenerateEmptySuite()
+    {
+        $suiteDataArrayBuilder = new SuiteDataArrayBuilder();
+        $mockData = $suiteDataArrayBuilder
+            ->withName('basicTestSuite')
+            ->build();
+        unset($mockData['suites']['basicTestSuite'][TestObjectExtractor::TEST_BEFORE_HOOK]);
+        unset($mockData['suites']['basicTestSuite'][TestObjectExtractor::TEST_AFTER_HOOK]);
+
+        $mockTestData = null;
+        $this->setMockTestAndSuiteParserOutput($mockTestData, $mockData);
+
+        // set expected error message
+        $this->expectExceptionMessage("Suites must not be empty. Suite: \"basicTestSuite\"");
+
+        // parse and generate suite object with mocked data
+        $mockSuiteGenerator = SuiteGenerator::getInstance();
+        $mockSuiteGenerator->generateSuite("basicTestSuite");
     }
 
     /**
