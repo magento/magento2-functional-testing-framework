@@ -16,6 +16,8 @@ use PHPUnit\Framework\TestCase;
 
 class ModuleResolverTest extends TestCase
 {
+    private $index = 0;
+
     /**
      * remove all registered test doubles
      */
@@ -103,11 +105,26 @@ class ModuleResolverTest extends TestCase
      */
     public function testGetModulePathsBlacklist()
     {
-        $this->setMockResolverClass(false, ["Magento_TestModule"], null, null, ['somePath']);
-        $this->expectOutputString("Excluding module: 0" . PHP_EOL);
+        $this->setMockResolverClass(
+            false,
+            null,
+            null,
+            null,
+            function ($arg1, $arg2) {
+                if ($arg2 === "") {
+                    $mockValue = ["somePath" => "somePath"];
+                } elseif (strpos($arg1, "app")) {
+                    $mockValue = ["otherPath" => "otherPath"];
+                } else {
+                    $mockValue = ["lastPath" => "lastPath"];
+                }
+                return $mockValue;
+            }
+        );
+        $this->expectOutputString("Excluding module: somePath" . PHP_EOL);
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, null, ["somePath"]);
-        $this->assertEquals(['somePath', 'somePath'], $resolver->getModulesPath());
+        $this->assertEquals(["otherPath", "lastPath"], $resolver->getModulesPath());
     }
 
     /**
