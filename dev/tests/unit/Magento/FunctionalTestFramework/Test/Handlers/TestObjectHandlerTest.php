@@ -142,6 +142,44 @@ class TestObjectHandlerTest extends TestCase
     }
 
     /**
+     * Tests the function used to parse and determine a test's Module (used in allure Features annotation)
+     *
+     * @throws \Exception
+     */
+    public function testGetTestWithModuleName()
+    {
+        // set up Test Data
+        $moduleExpected = "SomeTestModule";
+        $filepath = DIRECTORY_SEPARATOR .
+            "user" .
+            "magento2ce" . DIRECTORY_SEPARATOR .
+            "dev" . DIRECTORY_SEPARATOR .
+            "tests" . DIRECTORY_SEPARATOR .
+            "acceptance" . DIRECTORY_SEPARATOR .
+            "tests" . DIRECTORY_SEPARATOR .
+            $moduleExpected . DIRECTORY_SEPARATOR .
+            "Tests" . DIRECTORY_SEPARATOR .
+            "text.xml";
+        // set up mock data
+        $testDataArrayBuilder = new TestDataArrayBuilder();
+        $mockData = $testDataArrayBuilder
+            ->withAnnotations()
+            ->withFailedHook()
+            ->withAfterHook()
+            ->withBeforeHook()
+            ->withTestActions()
+            ->withFileName($filepath)
+            ->build();
+        $this->setMockParserOutput(['tests' => $mockData]);
+        // Execute Test Method
+        $toh = TestObjectHandler::getInstance();
+        $actualTestObject = $toh->getObject($testDataArrayBuilder->testName);
+        $moduleName = $actualTestObject->getAnnotations()["features"][0];
+        //performAsserts
+        $this->assertEquals($moduleExpected, $moduleName);
+    }
+
+    /**
      * Function used to set mock for parser return and force init method to run between tests.
      *
      * @param array $data

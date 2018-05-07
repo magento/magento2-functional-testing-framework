@@ -134,11 +134,13 @@ class TestObjectExtractor extends BaseObjectExtractor
      */
     private function extractModuleName($path)
     {
-        if ($path === "") {
+        if (empty($path)) {
             return "NO MODULE DETECTED";
         }
         $paths = explode(DIRECTORY_SEPARATOR, $path);
-        if ($paths[count($paths)-3] == "Mftf") {
+        if (!isset($paths[count($paths)-3])) {
+            return "NO MODULE DETECTED";
+        } elseif ($paths[count($paths)-3] == "Mftf") {
             // app/code/Magento/[Analytics]/Test/Mftf/Test/SomeText.xml
             return $paths[count($paths)-5];
         }
