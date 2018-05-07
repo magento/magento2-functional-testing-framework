@@ -191,6 +191,8 @@ class ActionObjectTest extends TestCase
 
     /**
      * {{PageObject.url}} should be replaced with someUrl.html
+     *
+     * @throws /Exception
      */
     public function testResolveUrl()
     {
@@ -209,6 +211,40 @@ class ActionObjectTest extends TestCase
         // Verify
         $expected = [
             'url' => '/replacement/url.html'
+        ];
+        $this->assertEquals($expected, $actionObject->getCustomActionAttributes());
+    }
+
+    /**
+     * {{PageObject}} should not be replaced and should elicit a warning in console
+     *
+     * @throws /Exception
+     */
+    public function testResolveUrlWithNoAttribute()
+    {
+        // Set up mocks
+        $actionObject = new ActionObject('merge123', 'amOnPage', [
+            'url' => '{{PageObject}}'
+        ]);
+        $pageObject = new PageObject('PageObject', '/replacement/url.html', 'Test', [], false, "test");
+        $pageObjectList = ["PageObject" => $pageObject];
+        $instance = AspectMock::double(
+            PageObjectHandler::class,
+            ['getObject' => $pageObject, 'getAllObjects' => $pageObjectList]
+        )->make(); // bypass the private constructor
+        AspectMock::double(PageObjectHandler::class, ['getInstance' => $instance]);
+
+        // Expect this warning to get generated
+        $this->expectOutputString(
+            "WARNING: Page url attribute not found for {{PageObject}} and is required for amOnPage." . PHP_EOL
+        );
+
+        // Call the method under test
+        $actionObject->resolveReferences();
+
+        // Verify
+        $expected = [
+            'url' => '{{PageObject}}'
         ];
         $this->assertEquals($expected, $actionObject->getCustomActionAttributes());
     }

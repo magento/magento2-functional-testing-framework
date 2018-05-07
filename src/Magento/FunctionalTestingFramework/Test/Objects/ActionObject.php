@@ -372,6 +372,13 @@ class ActionObject
         $replacement = $this->findAndReplaceReferences(PageObjectHandler::getInstance(), $url);
         if ($replacement) {
             $this->resolvedCustomAttributes[ActionObject::ACTION_ATTRIBUTE_URL] = $replacement;
+            $allPages = PageObjectHandler::getInstance()->getAllObjects();
+            if (
+                $replacement === $url
+                && array_key_exists(trim($url, "{}"), $allPages)
+            ) {
+                echo("WARNING: Page url attribute not found for ${url} and is required for $this->type." . PHP_EOL);
+            }
         }
     }
 
