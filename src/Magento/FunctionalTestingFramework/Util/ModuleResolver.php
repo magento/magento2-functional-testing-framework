@@ -263,7 +263,7 @@ class ModuleResolver
         $relevantPaths = [];
 
         if (file_exists($testPath)) {
-            $relevantPaths = glob($testPath . '*/*' . $pattern);
+            $relevantPaths = $this->globRelevantWrapper($testPath, $pattern);
         }
 
         foreach ($relevantPaths as $codePath) {
@@ -272,6 +272,18 @@ class ModuleResolver
         }
 
         return $modulePaths;
+    }
+
+    /**
+     * Glob wrapper for globRelevantPaths function
+     *
+     * @param string $testPath
+     * @param string $pattern
+     * @return array
+     */
+    private static function globRelevantWrapper($testPath, $pattern)
+    {
+        return glob($testPath . '*/*' . $pattern);
     }
 
     /**
