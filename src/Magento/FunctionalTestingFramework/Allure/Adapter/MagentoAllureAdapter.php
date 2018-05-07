@@ -8,7 +8,9 @@ namespace Magento\FunctionalTestingFramework\Allure\Adapter;
 use Magento\FunctionalTestingFramework\Data\Argument\Interpreter\NullType;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Yandex\Allure\Adapter\AllureAdapter;
+use Yandex\Allure\Adapter\Event\StepStartedEvent;
 use Codeception\Event\SuiteEvent;
+use Codeception\Event\StepEvent;
 
 /**
  * Class MagentoAllureAdapter
@@ -90,5 +92,29 @@ class MagentoAllureAdapter extends AllureAdapter
         // confirm our original name is one of the existing suite names otherwise just return the original group name
         $originalName = in_array($originalName, $suiteNames) ? $originalName : $group;
         return $originalName;
+    }
+
+    /**
+     * Override of parent method, only different to prevent replacing of . to •
+     *
+     * @param StepEvent $stepEvent
+     * @return void
+     */
+    public function stepBefore(StepEvent $stepEvent)
+    {
+        //Hard set to 200; we don't expose this config in MFTF
+        $argumentsLength = 200;
+        $stepAction = $stepEvent->getStep()->getHumanizedActionWithoutArguments();
+        $stepArgs = $stepEvent->getStep()->getArgumentsAsString($argumentsLength);
+
+        if (!trim($stepAction)) {
+            $stepAction = $stepEvent->getStep()->getMetaStep()->getHumanizedActionWithoutArguments();
+            $stepArgs = $stepEvent->getStep()->getMetaStep()->getArgumentsAsString($argumentsLength);
+        }
+
+        $stepName = $stepAction . ' ' . $stepArgs;
+
+        $this->emptyStep = false;
+        $this->getLifecycle()->fire(new StepStartedEvent($stepName));
     }
 }
