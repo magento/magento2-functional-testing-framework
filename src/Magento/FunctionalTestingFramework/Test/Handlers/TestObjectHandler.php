@@ -5,6 +5,7 @@
  */
 namespace Magento\FunctionalTestingFramework\Test\Handlers;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
@@ -62,12 +63,12 @@ class TestObjectHandler implements ObjectHandlerInterface
      *
      * @param string $testName
      * @return TestObject
+     * @throws TestReferenceException
      */
     public function getObject($testName)
     {
         if (!array_key_exists($testName, $this->tests)) {
-            trigger_error("Test ${testName} not defined in xml.", E_USER_ERROR);
-            return null;
+            throw new TestReferenceException("Test ${testName} not defined in xml.");
         }
 
         return $this->tests[$testName];

@@ -9,6 +9,8 @@ namespace Magento\FunctionalTestingFramework\Test\Objects;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
+use Magento\FunctionalTestingFramework\Test\Util\ObjectExtension;
+use Magento\Setup\Exception;
 
 /**
  * Class TestObject
@@ -51,6 +53,13 @@ class TestObject
     private $filename;
 
     /**
+     * String of filename of test
+     *
+     * @var String
+     */
+    private $parentTest;
+
+    /**
      * TestObject constructor.
      *
      * @param string $name
@@ -58,14 +67,16 @@ class TestObject
      * @param array $annotations
      * @param TestHookObject[] $hooks
      * @param String $filename
+     * @param String $parentTest
      */
-    public function __construct($name, $parsedSteps, $annotations, $hooks, $filename = null)
+    public function __construct($name, $parsedSteps, $annotations, $hooks, $filename = null, $parentTest = null)
     {
         $this->name = $name;
         $this->parsedSteps = $parsedSteps;
         $this->annotations = $annotations;
         $this->hooks = $hooks;
         $this->filename = $filename;
+        $this->parentTest = $parentTest;
     }
 
     /**
@@ -86,6 +97,16 @@ class TestObject
     public function getFilename()
     {
         return $this->filename;
+    }
+
+    /**
+     * Getter for the Parent Test Name
+     *
+     * @return string
+     */
+    public function getParentName()
+    {
+        return $this->parentTest;
     }
 
     /**
@@ -193,11 +214,13 @@ class TestObject
      * This method calls a function to merge custom steps and returns the resulting ordered set of steps.
      *
      * @return array
+     * @throws /Exception
      */
     public function getOrderedActions()
     {
+        $extendedSteps = ObjectExtension::resolveReferencedExtensions($this, $this->parsedSteps);
         $mergeUtil = new ActionMergeUtil($this->getName(), "Test");
-        return $mergeUtil->resolveActionSteps($this->parsedSteps);
+        return $mergeUtil->resolveActionSteps($extendedSteps);
     }
 
     /**
