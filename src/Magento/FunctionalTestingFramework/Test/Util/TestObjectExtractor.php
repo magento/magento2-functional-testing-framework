@@ -138,7 +138,7 @@ class TestObjectExtractor extends BaseObjectExtractor
             return "NO MODULE DETECTED";
         }
         $paths = explode(DIRECTORY_SEPARATOR, $path);
-        if (!isset($paths[count($paths)-3])) {
+        if (count($paths) < 3) {
             return "NO MODULE DETECTED";
         } elseif ($paths[count($paths)-3] == "Mftf") {
             // app/code/Magento/[Analytics]/Test/Mftf/Test/SomeText.xml
