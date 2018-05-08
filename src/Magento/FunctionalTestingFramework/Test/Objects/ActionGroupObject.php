@@ -85,6 +85,7 @@ class ActionGroupObject
      * Iterates through given $arguments and overrides ActionGroup's argument values, if any are found.
      * @param array $arguments
      * @return ArgumentObject[]
+     * @throws TestReferenceException
      */
     private function resolveArguments($arguments)
     {
