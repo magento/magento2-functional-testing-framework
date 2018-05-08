@@ -182,4 +182,9 @@
             <actionGroup ref="FunctionalActionGroup" stepKey="afterGroup"/>
         </after>
     </test>
+    <test name="PersistedAndXmlEntityArguments">
+        <actionGroup ref="FunctionalActionGroupWithXmlAndPersistedData" stepKey="afterGroup">
+            <argument name="persistedData" value="$persistedInTest$"/>
+        </actionGroup>
+    </test>
 </tests>

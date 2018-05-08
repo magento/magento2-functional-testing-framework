@@ -332,8 +332,12 @@ class ActionGroupObject
             $fullReplacement = str_replace($variable, trim($replacement, '$'), trim($fullVariable, "'"));
             $newAttributeValue = str_replace($fullVariable, $scope . $fullReplacement . $scope, $newAttributeValue);
         } else {
-            $newAttributeValue = str_replace('{{', $scope, str_replace('}}', $scope, $newAttributeValue));
-            $newAttributeValue = str_replace($variable, trim($replacement, '$'), $newAttributeValue);
+            $fullReplacement = str_replace($variable, trim($replacement, '$'), $fullVariable);
+            $newAttributeValue = str_replace(
+                '{{' . $fullVariable . '}}',
+                $scope . $fullReplacement . $scope,
+                $newAttributeValue
+            );
         }
 
         return $newAttributeValue;
