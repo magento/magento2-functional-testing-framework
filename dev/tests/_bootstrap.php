@@ -13,7 +13,14 @@ require_once 'util/MftfTestCase.php';
 $kernel = \AspectMock\Kernel::getInstance();
 $kernel->init([
     'debug' => true,
-    'includePaths' => [PROJECT_ROOT . '/src']
+    'includePaths' => [PROJECT_ROOT . '/src'],
+    'cacheDir' => PROJECT_ROOT .
+        DIRECTORY_SEPARATOR .
+        'dev' .
+        DIRECTORY_SEPARATOR .
+        'tests' .
+        DIRECTORY_SEPARATOR .
+        '.cache'
 ]);
 
 // set mftf appplication context
@@ -60,6 +67,27 @@ foreach (sortInterfaces($functionalUtilFiles) as $functionalUtilFile) {
 $unitUtilFiles = glob(TESTS_BP . DIRECTORY_SEPARATOR . 'unit' . $utilDir);
 foreach (sortInterfaces($unitUtilFiles) as $unitUtilFile) {
     require($unitUtilFile);
+}
+
+
+// Mocks suite files location getter return to get files in verification/_suite Directory
+// This mocks the paths of the suite files but still parses the xml files
+$suiteDirectory =  TESTS_BP . DIRECTORY_SEPARATOR . "verification" . DIRECTORY_SEPARATOR . "_suite";
+
+$paths = [
+    $suiteDirectory . DIRECTORY_SEPARATOR . 'functionalSuite.xml',
+    $suiteDirectory . DIRECTORY_SEPARATOR . 'functionalSuiteHooks.xml'
+];
+
+// create and return the iterator for these file paths
+$iterator = new Magento\FunctionalTestingFramework\Util\Iterator\File($paths);
+try {
+    AspectMock\Test::double(
+        Magento\FunctionalTestingFramework\Config\FileResolver\Root::class,
+        ['get' => $iterator]
+    )->make();
+} catch (Exception $e) {
+    echo "Suite directory not mocked.";
 }
 
 function sortInterfaces($files)

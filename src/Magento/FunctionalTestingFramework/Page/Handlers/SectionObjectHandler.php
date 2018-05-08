@@ -43,6 +43,7 @@ class SectionObjectHandler implements ObjectHandlerInterface
      * Constructor
      *
      * @constructor
+     * @throws XmlException
      */
     private function __construct()
     {
@@ -93,6 +94,7 @@ class SectionObjectHandler implements ObjectHandlerInterface
      * Initialize and/or return the singleton instance of this class
      *
      * @return SectionObjectHandler
+     * @throws XmlException
      */
     public static function getInstance()
     {

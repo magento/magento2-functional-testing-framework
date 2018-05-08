@@ -5,6 +5,7 @@
  */
 namespace Magento\FunctionalTestingFramework\Suite\Handlers;
 
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
@@ -43,6 +44,7 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      * Function to enforce singleton design pattern
      *
      * @return ObjectHandlerInterface
+     * @throws XmlException
      */
     public static function getInstance()
     {
@@ -103,6 +105,7 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      *
      * @return void
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     * @throws XmlException
      */
     private function initSuiteData()
     {

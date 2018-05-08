@@ -11,6 +11,7 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\OperationDefinitio
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\OperationElement;
 use Magento\FunctionalTestingFramework\DataGenerator\Util\OperationElementExtractor;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
 class OperationDataArrayResolver
 {
@@ -174,6 +175,7 @@ class OperationDataArrayResolver
      * @param string $operationKey
      * @param string $operationElementType
      * @return array|string
+     * @throws TestFrameworkException
      */
     private function resolvePrimitiveReference($entityObject, $operationKey, $operationElementType)
     {
@@ -234,6 +236,7 @@ class OperationDataArrayResolver
      * @param EntityDataObject $entityObject
      * @param string $operationElementValue
      * @return EntityDataObject|null
+     * @throws \Exception
      */
     private function resolveOperationObjectAndEntityData($entityObject, $operationElementValue)
     {
@@ -258,6 +261,7 @@ class OperationDataArrayResolver
      * @param string $operation
      * @param bool $fromArray
      * @return array
+     * @throws \Exception
      */
     private function resolveNonPrimitiveElement($entityName, $operationElement, $operation, $fromArray = false)
     {
@@ -290,6 +294,7 @@ class OperationDataArrayResolver
      *
      * @param string $entityName
      * @return EntityDataObject
+     * @throws \Exception
      */
     private function resolveLinkedEntityObject($entityName)
     {
