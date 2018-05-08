@@ -15,14 +15,14 @@
     </actionGroup>
 
     <actionGroup name="FunctionalActionGroupForMassMergeBefore" insertBefore="fillField2">
-        <click stepKey="clickOne" selector="#mergeOne"/>
-        <click stepKey="clickTwo" selector="#mergeTwo"/>
-        <click stepKey="clickThree" selector="#mergeThree"/>
+        <click stepKey="mergeAfterBaz" selector="#foo2"/>
+        <click stepKey="mergeAfterFoo2" selector="#bar2"/>
+        <click stepKey="mergeAfterBar2" selector="#baz2"/>
     </actionGroup>
 
     <actionGroup name="FunctionalActionGroupForMassMergeAfter" insertAfter="fillField2">
-        <click stepKey="clickOne" selector="#mergeOne"/>
-        <click stepKey="clickTwo" selector="#mergeTwo"/>
-        <click stepKey="clickThree" selector="#mergeThree"/>
+        <click stepKey="mergeAfterBaz" selector="#foo2"/>
+        <click stepKey="mergeAfterFoo2" selector="#bar2"/>
+        <click stepKey="mergeAfterBar2" selector="#baz2"/>
     </actionGroup>
 </actionGroups>

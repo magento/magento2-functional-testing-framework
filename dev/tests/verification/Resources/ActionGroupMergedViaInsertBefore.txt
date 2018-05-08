@@ -28,9 +28,9 @@ class ActionGroupMergedViaInsertBeforeCest
 	public function ActionGroupMergedViaInsertBefore(AcceptanceTester $I)
 	{
 		$I->fillField("#foo", "foo");
-		$I->click("#mergeOne");
-		$I->click("#mergeTwo");
-		$I->click("#mergeThree");
+		$I->click("#foo2");
+		$I->click("#bar2");
+		$I->click("#baz2");
 		$I->fillField("#bar", "bar");
 		$I->fillField("#baz", "baz");
 	}

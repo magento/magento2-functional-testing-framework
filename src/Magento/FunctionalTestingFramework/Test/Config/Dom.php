@@ -123,20 +123,18 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
         }
         for ($i = 0; $i < $childNodes->length; $i++) {
             $currentNode = $childNodes->item($i);
-            if (!is_a($currentNode, \DOMElement::class)) {
+            if (!is_a($currentNode, \DOMElement::class) || !$currentNode->hasAttribute('stepKey')) {
                 continue;
             }
-            if ($currentNode->hasAttribute('stepKey')) {
-                if ($currentNode->hasAttribute($insertType) && $testNode->hasAttribute($insertType)) {
-                    $errorMsg = "Actions cannot have merge pointers if contained in tests that has a merge pointer.";
-                    $errorMsg .= "\n\tstepKey: {$currentNode->getAttribute('stepKey')}\tin file: {$filename}";
-                    $exceptionCollector->addError($filename, $errorMsg);
-                }
-                $currentNode->setAttribute($actionInsertType, $previousStepKey);
-                $previousStepKey = $currentNode->getAttribute('stepKey');
-                // All actions after the first need to insert AFTER.
-                $actionInsertType = ActionObject::MERGE_ACTION_ORDER_AFTER;
+            if ($currentNode->hasAttribute($insertType) && $testNode->hasAttribute($insertType)) {
+                $errorMsg = "Actions cannot have merge pointers if contained in tests that has a merge pointer.";
+                $errorMsg .= "\n\tstepKey: {$currentNode->getAttribute('stepKey')}\tin file: {$filename}";
+                $exceptionCollector->addError($filename, $errorMsg);
             }
+            $currentNode->setAttribute($actionInsertType, $previousStepKey);
+            $previousStepKey = $currentNode->getAttribute('stepKey');
+            // All actions after the first need to insert AFTER.
+            $actionInsertType = ActionObject::MERGE_ACTION_ORDER_AFTER;
         }
     }
 
