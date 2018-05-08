@@ -188,4 +188,9 @@
     <test name="ActionGroupMergedViaInsertAfter">
         <actionGroup ref="FunctionalActionGroupForMassMergeAfter" stepKey="keyone"/>
     </test>
+    <test name="PersistedAndXmlEntityArguments">
+        <actionGroup ref="FunctionalActionGroupWithXmlAndPersistedData" stepKey="afterGroup">
+            <argument name="persistedData" value="$persistedInTest$"/>
+        </actionGroup>
+    </test>
 </tests>

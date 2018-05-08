@@ -152,6 +152,7 @@ class EntityDataObject
      * @param string $uniqueData
      * @param string $uniqueDataFormat
      * @return null|string
+     * @throws TestFrameworkException
      */
     private function formatUniqueData($name, $uniqueData, $uniqueDataFormat)
     {

@@ -5,6 +5,7 @@
  */
 namespace Magento\FunctionalTestingFramework\Test\Handlers;
 
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
@@ -36,6 +37,7 @@ class TestObjectHandler implements ObjectHandlerInterface
      * Singleton method to return TestObjectHandler.
      *
      * @return TestObjectHandler
+     * @throws XmlException
      */
     public static function getInstance()
     {
@@ -106,6 +108,7 @@ class TestObjectHandler implements ObjectHandlerInterface
      *
      * @return void
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     * @throws XmlException
      */
     private function initTestData()
     {

@@ -60,4 +60,11 @@
         <fillField selector="#bar" userInput="bar" stepKey="fillField2"/>
         <fillField selector="#baz" userInput="baz" stepKey="fillField3"/>
     </actionGroup>
+    <actionGroup name="FunctionalActionGroupWithXmlAndPersistedData">
+        <arguments>
+            <argument name="xmlData" defaultValue="uniqueData"/>
+            <argument name="persistedData"/>
+        </arguments>
+        <seeInCurrentUrl url="/{{persistedData.urlKey}}.html?___store={{xmlData.firstname}}" stepKey="checkUrl"/>
+    </actionGroup>
 </actionGroups>

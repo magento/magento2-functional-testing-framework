@@ -71,6 +71,8 @@ class ActionMergeUtil
      * @param array $parsedSteps
      * @param bool $skipActionGroupResolution
      * @return array
+     * @throws TestReferenceException
+     * @throws XmlException
      */
     public function resolveActionSteps($parsedSteps, $skipActionGroupResolution = false)
     {
@@ -119,6 +121,7 @@ class ActionMergeUtil
      *
      * @param array $parsedSteps
      * @return void
+     * @throws XmlException
      */
     private function mergeActions($parsedSteps)
     {

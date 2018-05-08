@@ -64,7 +64,7 @@ class TestObjectExtractor extends BaseObjectExtractor
      *
      * @param array $testData
      * @return TestObject
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
+     * @throws \Exception
      */
     public function extractTestData($testData)
     {

@@ -54,6 +54,7 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
      * @param bool $removeBackend
      *
      * @constructor
+     * @throws TestFrameworkException
      */
     public function __construct($removeBackend)
     {
