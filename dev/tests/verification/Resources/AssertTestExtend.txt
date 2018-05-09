@@ -20,6 +20,23 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class AssertTestExtendCest
 {
 	/**
+	  * @var DataPersistenceHandler $createData1;
+	  */
+	protected $createData1;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _before(AcceptanceTester $I)
+	{
+		$I->amGoingTo("create entity that has the stepKey: createData1");
+		$ReplacementPerson = DataObjectHandler::getInstance()->getObject("ReplacementPerson");
+		$this->createData1 = new DataPersistenceHandler($ReplacementPerson, []);
+		$this->createData1->createEntity();
+	}
+
+	/**
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void

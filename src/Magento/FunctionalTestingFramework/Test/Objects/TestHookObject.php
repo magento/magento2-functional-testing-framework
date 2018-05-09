@@ -66,6 +66,16 @@ class TestHookObject
     }
 
     /**
+     * Getter for hook parent name
+     *
+     * @return string
+     */
+    public function getParentName()
+    {
+        return $this->parentName;
+    }
+
+    /**
      * Returns an array of action objects to be executed within the hook.
      *
      * @return array

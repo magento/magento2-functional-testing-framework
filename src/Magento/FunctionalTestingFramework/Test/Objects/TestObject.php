@@ -147,7 +147,7 @@ class TestObject
     /**
      * Returns hooks.
      *
-     * @return array
+     * @return TestHookObject[]
      */
     public function getHooks()
     {

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="ParentExtendedTest">
+        <annotations>
+            <severity value="AVERAGE"/>
+            <title value="Parent"/>
+            <group value="Parent"/>
+            <features value="Parent"/>
+            <stories value="Parent"/>
+        </annotations>
+        <before>
+            <amOnPage url="/beforeUrl" stepKey="beforeAmOnPageKey"/>
+        </before>
+        <after>
+            <amOnPage url="/afterUrl" stepKey="afterAmOnPageKey"/>
+        </after>
+        <comment stepKey="basicCommentWithNoData" userInput="Parent Comment"/>
+    </test>
+
+    <test name="ChildExtendedTest" extends="ParentExtendedTest">
+        <annotations>
+            <severity value="MINOR"/>
+            <title value="Child"/>
+            <group value="Child"/>
+            <features value="Child"/>
+            <stories value="Child"/>
+        </annotations>
+        <before>
+            <amOnPage url="/slightlyDifferentBeforeUrl" stepKey="beforeAmOnPageKey"/>
+            <amOnPage url="/firstUrl" stepKey="firstBeforeAmOnPageKey" before="beforeAmOnPageKey"/>
+            <amOnPage url="/lastUrl" stepKey="lastBefore" after="beforeAmOnPageKey"/>
+        </before>
+        <comment stepKey="basicCommentWithNoData" userInput="Different Input"/>
+        <comment stepKey="lastStepKey" userInput="Last Comment"/>
+        <comment stepKey="beforeBasicCommentWithNoData" userInput="Before Comment" before="basicCommentWithNoData"/>
+        <comment stepKey="afterBasicCommentWithNoData" userInput="After Comment" after="basicCommentWithNoData"/>
+    </test>
+</tests>

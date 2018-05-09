@@ -12,8 +12,8 @@ use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
+use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
-use Magento\Setup\Exception;
 
 class ObjectExtension
 {
@@ -50,11 +50,35 @@ class ObjectExtension
         }
         $referencedTestSteps = $parentTest->getOrderedActions();
         $newSteps = array_merge($referencedTestSteps, $testObject->getOrderedActions());
+
+        $testHooks = $testObject->getHooks();
+        $parentHooks = $parentTest->getHooks();
+
+        foreach ($testHooks as $key => $hook) {
+            if (array_key_exists($key, $parentHooks)) {
+                $testHookActions = array_merge($parentHooks[$key]->getActions(), $testHooks[$key]->getActions());
+                $newTestHook = new TestHookObject(
+                    $parentHooks[$key]->getType(),
+                    $parentHooks[$key]->getParentName(),
+                    $testHookActions
+                );
+                $testHooks[$key] = $newTestHook;
+            } else {
+                $testHooks[$key] = $hook;
+            }
+        }
+
+        foreach ($parentHooks as $key => $hook) {
+            if (!array_key_exists($key, $testHooks)) {
+                $testHooks[$key] = $hook;
+            }
+        }
+
         $extendedTest = new TestObject(
             $testObject->getName(),
             $newSteps,
             $testObject->getAnnotations(),
-            $testObject->getHooks(),
+            $testHooks,
             $testObject->getFilename(),
             $testObject->getParentName()
         );

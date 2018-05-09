@@ -60,7 +60,27 @@
         </assertCount>
     </actionGroup>
 
-    <actionGroup name="extendTestActionGroup" extends="actionGroupWithNestedArgument">
-        <grabMultiple selector="not_a_selector" stepKey="grabProducts"/>
+    <actionGroup name="ActionGroupToExtend">
+        <arguments>
+            <argument name="count" type="string"/>
+        </arguments>
+        <grabMultiple selector="selector" stepKey="grabProducts"/>
+        <assertCount stepKey="assertCount">
+            <expectedResult type="int">{{count}}</expectedResult>
+            <actualResult type="variable">grabProducts</actualResult>
+        </assertCount>
+    </actionGroup>
+
+    <actionGroup name="extendTestActionGroup" extends="ActionGroupToExtend">
+        <arguments>
+            <argument name="otherCount" type="string"/>
+        </arguments>
+        <grabMultiple selector="notASelector" stepKey="grabProducts"/>
+        <comment userInput="New Input After" stepKey="afterGrabProducts" after="grabProducts"/>
+        <comment userInput="New Input Before" stepKey="beforeGrabProducts" before="grabProducts"/>
+        <assertCount stepKey="assertSecondCount">
+            <expectedResult type="int">{{otherCount}}</expectedResult>
+            <actualResult type="variable">grabProducts</actualResult>
+        </assertCount>
     </actionGroup>
 </actionGroups>

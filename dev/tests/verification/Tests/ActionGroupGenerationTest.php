@@ -129,4 +129,26 @@ class ActionGroupGenerationTest extends MftfTestCase
     {
         $this->generateAndCompareTest('PersistedAndXmlEntityArguments');
     }
+
+    /**
+     * Test generation of a test referencing an action group which is referenced by another action group
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testActionGroupToExtend()
+    {
+        $this->generateAndCompareTest('ActionGroupToExtend');
+    }
+
+    /**
+     * Test generation of a test referencing an action group that references another action group
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testExtendedActionGroup()
+    {
+        $this->generateAndCompareTest('ExtendedActionGroup');
+    }
 }
