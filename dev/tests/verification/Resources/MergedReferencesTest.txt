@@ -50,7 +50,7 @@ class MergedReferencesTestCest
 
 	/**
 	 * @Severity(level = SeverityLevel::CRITICAL)
-	 * @Features({"Merge Functional Cest"})
+	 * @Features({"TestModule"})
 	 * @Stories({"MQE-433"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
