@@ -8,6 +8,7 @@ namespace Magento\FunctionalTestingFramework\Test\Util;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
+use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
@@ -23,14 +24,14 @@ class ObjectExtension
      * @return array
      * @throws TestReferenceException|XmlException
      */
-    public static function resolveReferencedExtensions($extensionObject, $parsedItems)
+    public static function resolveReferencedExtensions($extensionObject, $parsedItems = null)
     {
         if ($extensionObject->getParentName() === null) {
-            return $parsedItems;
+            return $extensionObject->getActions();
         }
         if ($extensionObject instanceof TestObject) {
             return self::extendTest($extensionObject, $parsedItems);
-        } elseif (is_a($extensionObject, "ActionGroupObject")) {
+        } elseif ($extensionObject instanceof ActionGroupObject) {
             return self::extendActionGroup($extensionObject, $parsedItems);
         } else {
             return $parsedItems;
@@ -61,7 +62,7 @@ class ObjectExtension
             );
         }
 
-        if ($parentTest->getParentName() === null) {
+        if ($parentTest->getParentName() !== null) {
             throw new XmlException(
                 "Cannot extend a test that already extends another test. Test: " . $parentTest->getName()
             );
@@ -72,22 +73,44 @@ class ObjectExtension
         return $newSteps;
     }
 
-//    /**
-//     * Resolves test references for extending action group objects
-//     *
-//     * @param ActionGroupObject $actionGroupObject
-//     * @param array $parsedActions
-//     * @return array
-//     * @throws TestReferenceException
-//     */
-//    private static function extendActionGroup($actionGroupObject, $parsedActions)
-//    {
-////        try {
-////            $testReference = $testObject->getAnnotationByName("extends");
-////        } catch (\Error $error) {
-////            throw new TestReferenceException($error);
-////        }
-////        $testObject->addReferences($testReference);
-//        return $parsedActions;
-//    }
+    /**
+     * Resolves test references for extending action group objects
+     *
+     * @param ActionGroupObject $actionGroupObject
+     * @param array $parsedActions
+     * @return array
+     * @throws TestReferenceException|XmlException
+     */
+    private static function extendActionGroup($actionGroupObject, $parsedActions)
+    {
+        try {
+            $parentActionGroup =
+                ActionGroupObjectHandler::getInstance()->getObject($actionGroupObject->getParentName());
+        } catch (TestReferenceException $error) {
+            throw new XmlException(
+                "Parent Action Group " .
+                $actionGroupObject->getParentName() .
+                " not defined for Test " .
+                $actionGroupObject->getName() .
+                "." .
+                PHP_EOL
+            );
+        }
+
+        if ($parentActionGroup->getParentName() !== null) {
+            throw new XmlException(
+                "Cannot extend an action group that already extends another action group. " .
+                $parentActionGroup->getName()
+            );
+        }
+        echo("Extending Action Group: " .
+            $parentActionGroup->getName() .
+            " => " .
+            $actionGroupObject->getName() .
+            PHP_EOL
+        );
+        $referencedActions = $parentActionGroup->getActions();
+        $newActions = array_merge($referencedActions, $parsedActions);
+        return $newActions;
+    }
 }

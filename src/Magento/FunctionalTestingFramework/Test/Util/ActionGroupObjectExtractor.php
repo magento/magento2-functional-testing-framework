@@ -19,6 +19,7 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
     const DEFAULT_VALUE = 'defaultValue';
     const ACTION_GROUP_ARGUMENTS = 'arguments';
     const FILENAME = 'filename';
+    const EXTENDS_ACTION_GROUP = 'extends';
 
     /**
      * Action Object Extractor for converting actions into objects
@@ -46,12 +47,14 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
     {
         $arguments = [];
 
+        $actionGroupReference = $actionGroupData[self::EXTENDS_ACTION_GROUP] ?? null;
         $actionData = $this->stripDescriptorTags(
             $actionGroupData,
             self::NODE_NAME,
             self::ACTION_GROUP_ARGUMENTS,
             self::NAME,
-            self::FILENAME
+            self::FILENAME,
+            self::EXTENDS_ACTION_GROUP
         );
 
         // TODO filename is now available to the ActionGroupObject, integrate this into debug and error statements
@@ -64,7 +67,8 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
         return new ActionGroupObject(
             $actionGroupData[self::NAME],
             $arguments,
-            $actions
+            $actions,
+            $actionGroupReference
         );
     }
 

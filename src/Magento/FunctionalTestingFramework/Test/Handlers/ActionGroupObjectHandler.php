@@ -5,12 +5,15 @@
  */
 namespace Magento\FunctionalTestingFramework\Test\Handlers;
 
+use bar\foo\baz\Object;
+use Magento\Backend\App\Action;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Parsers\ActionGroupDataParser;
 use Magento\FunctionalTestingFramework\Test\Util\ActionGroupObjectExtractor;
+use Magento\FunctionalTestingFramework\Test\Util\ObjectExtension;
 
 /**
  * Class ActionGroupObjectHandler
@@ -66,8 +69,9 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
      */
     public function getObject($actionGroupName)
     {
-        if (array_key_exists($actionGroupName, $this->getAllObjects())) {
-            return $this->getAllObjects()[$actionGroupName];
+        if (array_key_exists($actionGroupName, $this->actionGroups)) {
+            $actionGroupObject = $this->actionGroups[$actionGroupName];
+            return $this->extendActionGroup($actionGroupObject);
         }
 
         return null;
@@ -80,6 +84,9 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
      */
     public function getAllObjects()
     {
+        foreach ($this->actionGroups as $index => $actionGroup) {
+            $this->actionGroups[$index] = $this->extendActionGroup($actionGroup);
+        }
         return $this->actionGroups;
     }
 
@@ -105,5 +112,35 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
             $this->actionGroups[$actionGroupName] =
                 $actionGroupObjectExtractor->extractActionGroup($actionGroupData);
         }
+    }
+
+    /**
+     * This method checks if the action group is extended and creates a new action group object accordingly
+     *
+     * @param ActionGroupObject $actionGroupObject
+     * @return ActionGroupObject
+     */
+    private function extendActionGroup($actionGroupObject)
+    {
+        if ($actionGroupObject->getParentName() !== null) {
+            $extendedSteps = ObjectExtension::resolveReferencedExtensions(
+                $actionGroupObject,
+                $actionGroupObject->getActions()
+            );
+
+            $extendedArguments = array_merge(
+                $actionGroupObject->getArguments(),
+                ActionGroupObjectHandler::getInstance()->getObject($actionGroupObject->getParentName())->getArguments()
+            );
+
+            $extendedActionGroup = new ActionGroupObject(
+                $actionGroupObject->getName(),
+                $extendedArguments,
+                $extendedSteps,
+                $actionGroupObject->getParentName()
+            );
+            return $extendedActionGroup;
+        }
+        return $actionGroupObject;
     }
 }

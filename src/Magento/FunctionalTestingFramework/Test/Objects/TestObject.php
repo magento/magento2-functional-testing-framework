@@ -218,9 +218,9 @@ class TestObject
      */
     public function getOrderedActions()
     {
-        $extendedSteps = ObjectExtension::resolveReferencedExtensions($this, $this->parsedSteps);
+//        $extendedSteps = ObjectExtension::resolveReferencedExtensions($this, $this->parsedSteps);
         $mergeUtil = new ActionMergeUtil($this->getName(), "Test");
-        return $mergeUtil->resolveActionSteps($extendedSteps);
+        return $mergeUtil->resolveActionSteps($this->parsedSteps);
     }
 
     /**

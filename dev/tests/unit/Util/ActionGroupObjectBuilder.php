@@ -35,6 +35,13 @@ class ActionGroupObjectBuilder
     private $arguments = [];
 
     /**
+     * Action Group Object Builder default name
+     *
+     * @var string
+     */
+    private $extends = null;
+
+    /**
      * Setter for the Action Group Object name
      *
      * @param string $name
@@ -90,7 +97,8 @@ class ActionGroupObjectBuilder
         return new ActionGroupObject(
             $this->name,
             $this->arguments,
-            $this->actionObjects
+            $this->actionObjects,
+            $this->extends
         );
     }
 }

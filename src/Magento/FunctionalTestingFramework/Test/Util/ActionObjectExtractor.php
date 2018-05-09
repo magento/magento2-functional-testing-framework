@@ -90,7 +90,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
                 $returnVariable = $actionData[ActionGroupObjectHandler::TEST_ACTION_RETURN_VARIABLE];
             }*/
 
-            $actions[] = new ActionObject(
+            $actions[$stepKey] = new ActionObject(
                 $stepKey,
                 $actionData[self::NODE_NAME],
                 $actionAttributes,

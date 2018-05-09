@@ -11,6 +11,7 @@ use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
+use Magento\FunctionalTestingFramework\Test\Util\ObjectExtension;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 
 /**
@@ -70,8 +71,9 @@ class TestObjectHandler implements ObjectHandlerInterface
         if (!array_key_exists($testName, $this->tests)) {
             throw new TestReferenceException("Test ${testName} not defined in xml.");
         }
+        $testObject = $this->tests[$testName];
 
-        return $this->tests[$testName];
+        return $this->extendTest($testObject);
     }
 
     /**
@@ -81,6 +83,9 @@ class TestObjectHandler implements ObjectHandlerInterface
      */
     public function getAllObjects()
     {
+        foreach ($this->tests as $index => $test) {
+            $this->tests[$index] = $this->extendTest($test);
+        }
         return $this->tests;
     }
 
@@ -130,5 +135,31 @@ class TestObjectHandler implements ObjectHandlerInterface
 
             $this->tests[$testName] = $testObjectExtractor->extractTestData($testData);
         }
+    }
+
+    /**
+     * This method checks if the test is extended and creates a new test object accordingly
+     *
+     * @param TestObject $testObject
+     * @return TestObject
+     */
+    private function extendTest($testObject)
+    {
+        if ($testObject->getParentName() !== null) {
+            $extendedSteps = ObjectExtension::resolveReferencedExtensions(
+                $testObject,
+                $testObject->getOrderedActions()
+            );
+            $extendedTest = new TestObject(
+                $testObject->getName(),
+                $extendedSteps,
+                $testObject->getAnnotations(),
+                $testObject->getHooks(),
+                $testObject->getFilename(),
+                $testObject->getParentName()
+            );
+            return $extendedTest;
+        }
+        return $testObject;
     }
 }

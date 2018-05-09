@@ -290,4 +290,14 @@
             <actualResult type="string">{{simpleData.lastname}}</actualResult>
         </assertEquals>
     </test>
+    <test name="AssertTestExtend" extends="AssertTest">
+        <comment stepKey="c1" userInput="new text"/>
+        <comment stepKey="c3" userInput="new text 2"/>
+        <assertTrue stepKey="assertTrue" message="pass">
+            <actualResult type="bool">0</actualResult>
+        </assertTrue>
+        <comment stepKey="newStepKey" userInput="new Text 4"/>
+        <comment stepKey="newStepKeyBefore" userInput="new Text5 " before="c1"/>
+        <comment stepKey="newStepKeyAfter" userInput="new Text 3 " after="c3"/>
+    </test>
 </tests>

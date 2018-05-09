@@ -19,4 +19,9 @@ class AssertGenerationTest extends MftfTestCase
     {
         $this->generateAndCompareTest('AssertTest');
     }
+
+    public function testAssertExtendGeneration()
+    {
+        $this->generateAndCompareTest('AssertTestExtend');
+    }
 }
