@@ -78,6 +78,18 @@ class ActionGroupObjectBuilder
     }
 
     /**
+     * Setter for the Action Group Object extended objects
+     *
+     * @param string $extendedActionGroup
+     * @return ActionGroupObjectBuilder
+     */
+    public function withExtendedAction($extendedActionGroup)
+    {
+        $this->extends = $extendedActionGroup;
+        return $this;
+    }
+
+    /**
      * ActionGroupObjectBuilder constructor.
      */
     public function __construct()

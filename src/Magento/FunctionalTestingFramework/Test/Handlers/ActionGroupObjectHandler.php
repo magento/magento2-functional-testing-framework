@@ -5,7 +5,6 @@
  */
 namespace Magento\FunctionalTestingFramework\Test\Handlers;
 
-use Magento\Backend\App\Action;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
