@@ -37,6 +37,7 @@ class PersistedReplacementTestCest
 	}
 
 	/**
+	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void

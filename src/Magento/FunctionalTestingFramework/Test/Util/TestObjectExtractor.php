@@ -74,6 +74,9 @@ class TestObjectExtractor extends BaseObjectExtractor
         $testAnnotations = [];
         $testHooks = [];
         $filename = $testData['filename'] ?? null;
+        $fileNames = explode(",", $filename);
+        $baseFileName = $fileNames[0];
+        $module = $this->extractModuleName($baseFileName);
         $testActions = $this->stripDescriptorTags(
             $testData,
             self::NODE_NAME,
@@ -90,6 +93,9 @@ class TestObjectExtractor extends BaseObjectExtractor
         if (array_key_exists(self::TEST_ANNOTATIONS, $testData)) {
             $testAnnotations = $this->annotationExtractor->extractAnnotations($testData[self::TEST_ANNOTATIONS]);
         }
+
+        //Override features with module name if present, populates it otherwise
+        $testAnnotations["features"] = [$module];
 
         // extract before
         if (array_key_exists(self::TEST_BEFORE_HOOK, $testData) && is_array($testData[self::TEST_BEFORE_HOOK])) {
@@ -126,5 +132,26 @@ class TestObjectExtractor extends BaseObjectExtractor
         } catch (XmlException $exception) {
             throw new XmlException($exception->getMessage() . ' in Test ' . $filename);
         }
+    }
+
+    /**
+     * Extracts module name from the path given
+     * @param string $path
+     * @return string
+     */
+    private function extractModuleName($path)
+    {
+        if (empty($path)) {
+            return "NO MODULE DETECTED";
+        }
+        $paths = explode(DIRECTORY_SEPARATOR, $path);
+        if (count($paths) < 3) {
+            return "NO MODULE DETECTED";
+        } elseif ($paths[count($paths)-3] == "Mftf") {
+            // app/code/Magento/[Analytics]/Test/Mftf/Test/SomeText.xml
+            return $paths[count($paths)-5];
+        }
+        // dev/tests/acceptance/tests/functional/Magento/FunctionalTest/[Analytics]/Test/SomeText.xml
+        return $paths[count($paths)-3];
     }
 }
