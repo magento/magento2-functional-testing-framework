@@ -9,8 +9,6 @@ namespace Magento\FunctionalTestingFramework\Test\Objects;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
-use Magento\FunctionalTestingFramework\Test\Util\ObjectExtension;
-use Magento\Setup\Exception;
 
 /**
  * Class TestObject
@@ -214,11 +212,9 @@ class TestObject
      * This method calls a function to merge custom steps and returns the resulting ordered set of steps.
      *
      * @return array
-     * @throws /Exception
      */
     public function getOrderedActions()
     {
-//        $extendedSteps = ObjectExtension::resolveReferencedExtensions($this, $this->parsedSteps);
         $mergeUtil = new ActionMergeUtil($this->getName(), "Test");
         return $mergeUtil->resolveActionSteps($this->parsedSteps);
     }

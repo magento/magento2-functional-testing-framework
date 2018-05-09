@@ -5,7 +5,6 @@
  */
 namespace Magento\FunctionalTestingFramework\Test\Handlers;
 
-use bar\foo\baz\Object;
 use Magento\Backend\App\Action;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
@@ -123,23 +122,7 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
     private function extendActionGroup($actionGroupObject)
     {
         if ($actionGroupObject->getParentName() !== null) {
-            $extendedSteps = ObjectExtension::resolveReferencedExtensions(
-                $actionGroupObject,
-                $actionGroupObject->getActions()
-            );
-
-            $extendedArguments = array_merge(
-                $actionGroupObject->getArguments(),
-                ActionGroupObjectHandler::getInstance()->getObject($actionGroupObject->getParentName())->getArguments()
-            );
-
-            $extendedActionGroup = new ActionGroupObject(
-                $actionGroupObject->getName(),
-                $extendedArguments,
-                $extendedSteps,
-                $actionGroupObject->getParentName()
-            );
-            return $extendedActionGroup;
+            return ObjectExtension::extendActionGroup($actionGroupObject);
         }
         return $actionGroupObject;
     }

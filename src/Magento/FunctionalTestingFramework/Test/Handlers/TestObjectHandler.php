@@ -146,19 +146,7 @@ class TestObjectHandler implements ObjectHandlerInterface
     private function extendTest($testObject)
     {
         if ($testObject->getParentName() !== null) {
-            $extendedSteps = ObjectExtension::resolveReferencedExtensions(
-                $testObject,
-                $testObject->getOrderedActions()
-            );
-            $extendedTest = new TestObject(
-                $testObject->getName(),
-                $extendedSteps,
-                $testObject->getAnnotations(),
-                $testObject->getHooks(),
-                $testObject->getFilename(),
-                $testObject->getParentName()
-            );
-            return $extendedTest;
+            return ObjectExtension::extendTest($testObject);
         }
         return $testObject;
     }
