@@ -220,6 +220,16 @@ class TestObject
     }
 
     /**
+     * This method returns currently parsed steps
+     *
+     * @return array
+     */
+    public function getUnresolvedSteps()
+    {
+        return $this->parsedSteps;
+    }
+
+    /**
      * Get information about actions and steps in test.
      *
      * @return array

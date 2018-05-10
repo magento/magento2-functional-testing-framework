@@ -390,7 +390,7 @@ class ActionGroupObject
     /**
      * Getter for the Action Group Actions
      *
-     * @return array
+     * @return ActionObject[]
      */
     public function getActions()
     {

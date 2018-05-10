@@ -19,7 +19,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
  * @Title("Child")
  * @group Child
  */
-class ChildExtendedTestCest
+class ChildExtendedTestMergingCest
 {
 	/**
 	  * @param AcceptanceTester $I
@@ -28,7 +28,7 @@ class ChildExtendedTestCest
 	public function _before(AcceptanceTester $I)
 	{
 		$I->amOnPage("/firstUrl");
-		$I->amOnPage("/slightlyDifferentBeforeUrl");
+		$I->amOnPage("/beforeUrl");
 		$I->amOnPage("/lastUrl");
 	}
 
@@ -59,10 +59,10 @@ class ChildExtendedTestCest
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ChildExtendedTest(AcceptanceTester $I)
+	public function ChildExtendedTestMerging(AcceptanceTester $I)
 	{
 		$I->comment("Before Comment");
-		$I->comment("Different Input");
+		$I->comment("Parent Comment");
 		$I->comment("After Comment");
 		$I->comment("Last Comment");
 	}

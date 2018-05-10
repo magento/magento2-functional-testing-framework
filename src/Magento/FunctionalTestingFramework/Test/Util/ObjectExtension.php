@@ -27,6 +27,7 @@ class ObjectExtension
      */
     public static function extendTest($testObject)
     {
+        // Check to see if the parent test exists
         try {
             $parentTest = TestObjectHandler::getInstance()->getObject($testObject->getParentName());
         } catch (TestReferenceException $error) {
@@ -40,6 +41,7 @@ class ObjectExtension
             );
         }
 
+        // Check to see if the parent test is already an extended test
         if ($parentTest->getParentName() !== null) {
             throw new XmlException(
                 "Cannot extend a test that already extends another test. Test: " . $parentTest->getName()
@@ -48,15 +50,21 @@ class ObjectExtension
         if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
             echo("Extending Test: " . $parentTest->getName() . " => " . $testObject->getName() . PHP_EOL);
         }
-        $referencedTestSteps = $parentTest->getOrderedActions();
-        $newSteps = array_merge($referencedTestSteps, $testObject->getOrderedActions());
+
+        // Get steps for both the parent and the child tests
+        $referencedTestSteps = $parentTest->getUnresolvedSteps();
+        $newSteps = array_merge($referencedTestSteps, $testObject->getUnresolvedSteps());
 
         $testHooks = $testObject->getHooks();
         $parentHooks = $parentTest->getHooks();
 
+        // Get the hooks for each Test merge changes from the child hooks to the parent hooks into the child hooks
         foreach ($testHooks as $key => $hook) {
             if (array_key_exists($key, $parentHooks)) {
-                $testHookActions = array_merge($parentHooks[$key]->getActions(), $testHooks[$key]->getActions());
+                $testHookActions = array_merge(
+                    $parentHooks[$key]->getUnresolvedActions(),
+                    $testHooks[$key]->getUnresolvedActions()
+                );
                 $newTestHook = new TestHookObject(
                     $parentHooks[$key]->getType(),
                     $parentHooks[$key]->getParentName(),
@@ -68,12 +76,14 @@ class ObjectExtension
             }
         }
 
+        // Add parent hooks to child if they did not originally exist on the child
         foreach ($parentHooks as $key => $hook) {
             if (!array_key_exists($key, $testHooks)) {
                 $testHooks[$key] = $hook;
             }
         }
 
+        // Create new Test object to return
         $extendedTest = new TestObject(
             $testObject->getName(),
             $newSteps,
@@ -94,10 +104,9 @@ class ObjectExtension
      */
     public static function extendActionGroup($actionGroupObject)
     {
-        try {
-            $parentActionGroup =
-                ActionGroupObjectHandler::getInstance()->getObject($actionGroupObject->getParentName());
-        } catch (XmlException $error) {
+        // Check to see if the parent action group exists
+        $parentActionGroup = ActionGroupObjectHandler::getInstance()->getObject($actionGroupObject->getParentName());
+        if ($parentActionGroup == null) {
             throw new XmlException(
                 "Parent Action Group " .
                 $actionGroupObject->getParentName() .
@@ -108,6 +117,7 @@ class ObjectExtension
             );
         }
 
+        // Check to see if the parent action group is already an extended action group
         if ($parentActionGroup->getParentName() !== null) {
             throw new XmlException(
                 "Cannot extend an action group that already extends another action group. " .
@@ -123,6 +133,7 @@ class ObjectExtension
             );
         }
 
+        // Get steps for both the parent and the child action groups
         $referencedActions = $parentActionGroup->getActions();
         $newActions = array_merge($referencedActions, $actionGroupObject->getActions());
         $extendedArguments = array_merge(
@@ -130,6 +141,7 @@ class ObjectExtension
             $parentActionGroup->getArguments()
         );
 
+        // Create new Action Group object to return
         $extendedActionGroup = new ActionGroupObject(
             $actionGroupObject->getName(),
             $extendedArguments,

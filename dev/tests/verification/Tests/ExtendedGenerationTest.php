@@ -21,13 +21,46 @@ class ExtendedGenerationTest extends MftfTestCase
     }
 
     /**
-     * Tests generation of test that extends based on another test
+     * Tests generation of test that extends based on another test when replacing actions
      *
      * @throws \Exception
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
-    public function testExtendedTestGeneration()
+    public function testExtendedTestGenerationReplaceStepKey()
     {
-        $this->generateAndCompareTest('ChildExtendedTest');
+        $this->generateAndCompareTest('ChildExtendedTestReplace');
+    }
+
+    /**
+     * Tests generation of test that extends based on another test when replacing actions in hooks
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testExtendedTestGenerationReplaceHook()
+    {
+        $this->generateAndCompareTest('ChildExtendedTestReplaceHook');
+    }
+
+    /**
+     * Tests generation of test that extends based on another test when merging actions
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testExtendedTestGenerationMergeActions()
+    {
+        $this->generateAndCompareTest('ChildExtendedTestMerging');
+    }
+
+    /**
+     * Tests generation of test that extends based on another test when adding hooks
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testExtendedTestGenerationAddHooks()
+    {
+        $this->generateAndCompareTest('ChildExtendedTestAddHooks');
     }
 }

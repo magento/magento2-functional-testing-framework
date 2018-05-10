@@ -87,6 +87,16 @@ class TestHookObject
     }
 
     /**
+     * Returns an array of unresolved actions
+     *
+     * @return array
+     */
+    public function getUnresolvedActions()
+    {
+        return $this->actions;
+    }
+
+    /**
      * Returns an array of customData to be interperpreted by the generator.
      * @return array|null
      * @deprecated because no usages where found. Will be removed next major release.

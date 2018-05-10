@@ -25,7 +25,18 @@
         <comment stepKey="basicCommentWithNoData" userInput="Parent Comment"/>
     </test>
 
-    <test name="ChildExtendedTest" extends="ParentExtendedTest">
+    <test name="ChildExtendedTestReplace" extends="ParentExtendedTest">
+        <annotations>
+            <severity value="MINOR"/>
+            <title value="Child"/>
+            <group value="Child"/>
+            <features value="Child"/>
+            <stories value="Child"/>
+        </annotations>
+        <comment stepKey="basicCommentWithNoData" userInput="Different Input"/>
+    </test>
+
+    <test name="ChildExtendedTestReplaceHook" extends="ParentExtendedTest">
         <annotations>
             <severity value="MINOR"/>
             <title value="Child"/>
@@ -35,12 +46,50 @@
         </annotations>
         <before>
             <amOnPage url="/slightlyDifferentBeforeUrl" stepKey="beforeAmOnPageKey"/>
+        </before>
+    </test>
+
+    <test name="ChildExtendedTestMerging" extends="ParentExtendedTest">
+        <annotations>
+            <severity value="MINOR"/>
+            <title value="Child"/>
+            <group value="Child"/>
+            <features value="Child"/>
+            <stories value="Child"/>
+        </annotations>
+        <before>
             <amOnPage url="/firstUrl" stepKey="firstBeforeAmOnPageKey" before="beforeAmOnPageKey"/>
             <amOnPage url="/lastUrl" stepKey="lastBefore" after="beforeAmOnPageKey"/>
         </before>
-        <comment stepKey="basicCommentWithNoData" userInput="Different Input"/>
         <comment stepKey="lastStepKey" userInput="Last Comment"/>
         <comment stepKey="beforeBasicCommentWithNoData" userInput="Before Comment" before="basicCommentWithNoData"/>
         <comment stepKey="afterBasicCommentWithNoData" userInput="After Comment" after="basicCommentWithNoData"/>
+    </test>
+
+    <test name="ParentExtendedTestNoHooks">
+        <annotations>
+            <severity value="AVERAGE"/>
+            <title value="Parent"/>
+            <group value="Parent"/>
+            <features value="Parent"/>
+            <stories value="Parent"/>
+        </annotations>
+        <comment stepKey="basicCommentWithNoData" userInput="Parent Comment"/>
+    </test>
+
+    <test name="ChildExtendedTestAddHooks">
+        <annotations>
+            <severity value="AVERAGE"/>
+            <title value="Parent"/>
+            <group value="Parent"/>
+            <features value="Parent"/>
+            <stories value="Parent"/>
+        </annotations>
+        <before>
+            <amOnPage url="/beforeUrl" stepKey="beforeAmOnPageKey"/>
+        </before>
+        <after>
+            <amOnPage url="/afterUrl" stepKey="afterAmOnPageKey"/>
+        </after>
     </test>
 </tests>
