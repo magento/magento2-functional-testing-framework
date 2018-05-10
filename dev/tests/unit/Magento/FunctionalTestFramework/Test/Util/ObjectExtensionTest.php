@@ -266,6 +266,7 @@ class ObjectExtensionTest extends TestCase
         ];
         $this->setMockTestOutput(null, $mockActionGroupData);
 
+        $this->expectOutputString("Extending Action Group: mockParentActionGroup => mockSimpleActionGroup" . PHP_EOL);
         $this->expectExceptionMessage(
             "Cannot extend an action group that already extends another action group. " . $mockSimpleActionGroup['name']
         );

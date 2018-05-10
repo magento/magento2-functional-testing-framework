@@ -51,7 +51,7 @@ class TestObject
     private $filename;
 
     /**
-     * String of filename of test
+     * String of parent test
      *
      * @var String
      */
