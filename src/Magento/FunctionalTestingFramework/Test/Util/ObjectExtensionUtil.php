@@ -183,17 +183,15 @@ class ObjectExtensionUtil
      */
     private function processRemoveActions($actions)
     {
+        $cleanedActions = [];
+
+        // remove actions merged that are of type 'remove'
         foreach ($actions as $actionName => $actionData) {
-            if ($actionData->getType() == "remove") {
-                $removalKey = $actionData->getCustomActionAttributes()['keyForRemoval'];
-                if (!array_key_exists($removalKey, $actions)) {
-                    throw new XmlException("Referenced action for removal does not exist: $removalKey." . PHP_EOL);
-                }
-                unset($actions[$removalKey]);
-                unset($actions[$actionName]);
+            if ($actionData->getType() != "remove") {
+                $cleanedActions[$actionName] = $actionData;
             }
         }
 
-        return $actions;
+        return $cleanedActions;
     }
 }

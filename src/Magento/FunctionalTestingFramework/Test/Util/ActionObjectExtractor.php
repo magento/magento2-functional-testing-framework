@@ -60,7 +60,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
             if ($actionData['nodeName'] != self::ACTION_EXTEND_REMOVE) {
                 $stepKey = $actionData[self::TEST_STEP_MERGE_KEY];
             } else {
-                $stepKey = '__' . self::ACTION_EXTEND_REMOVE . '__' . $actionData['keyForRemoval'];
+                $stepKey = $actionData['keyForRemoval'];
             }
 
             if (preg_match('/[^a-zA-Z0-9_]/', $stepKey)) {

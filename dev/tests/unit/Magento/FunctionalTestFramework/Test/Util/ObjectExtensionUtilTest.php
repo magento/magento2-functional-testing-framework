@@ -145,42 +145,6 @@ class ObjectExtensionUtilTest extends TestCase
     }
 
     /**
-     * Tests generating a test that extends another test
-     * @throws \Exception
-     */
-    public function testGenerateExtendedTestWithRemove()
-    {
-        $mockActions = [
-            "mockStep" => ["nodeName" => "mockNode", "stepKey" => "mockStep"]
-        ];
-
-        $mockRemoveActions = [
-            "mockRemoveStep" => ["nodeName" => 'remove', "keyForRemoval" => "notMockStep"]
-        ];
-
-        $testDataArrayBuilder = new TestDataArrayBuilder();
-        $mockSimpleTest = $testDataArrayBuilder
-            ->withName('simpleTest')
-            ->withTestActions($mockActions)
-            ->build();
-
-        $mockExtendedTest = $testDataArrayBuilder
-            ->withName('extendedTest')
-            ->withTestReference("simpleTest")
-            ->withTestActions($mockRemoveActions)
-            ->build();
-
-        $mockTestData = ['tests' => array_merge($mockSimpleTest, $mockExtendedTest)];
-        $this->setMockTestOutput($mockTestData);
-
-        $this->expectOutputString("Extending Test: simpleTest => extendedTest" . PHP_EOL);
-        $this->expectExceptionMessage("Referenced action for removal does not exist: notMockStep." . PHP_EOL);
-
-        // parse and generate test object with mocked data
-        $testObject = TestObjectHandler::getInstance()->getObject('extendedTest');
-    }
-
-    /**
      * Tests generating an action group that extends another action group
      * @throws \Exception
      */
