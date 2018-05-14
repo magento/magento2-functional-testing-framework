@@ -87,9 +87,13 @@ class Flat implements ConverterInterface
                     );
                 }
 
-                if ($nodeName == self::REMOVE_ACTION && empty($node->parentNode->getAttribute('extends'))) {
-                    unset($value[$node->getAttribute(self::REMOVE_KEY_ATTRIBUTE)]);
-                    continue;
+                if ($nodeName == self::REMOVE_ACTION) {
+                    if (empty($node->parentNode->getAttribute('extends'))) {
+                        unset($value[$node->getAttribute(self::REMOVE_KEY_ATTRIBUTE)]);
+                        continue;
+                    }
+                    $keyForRemoval = $node->getAttribute('keyForRemoval');
+                    $node->setAttribute('stepKey', $keyForRemoval);
                 }
 
                 $nodeData = $this->convertXml($node, $nodePath);

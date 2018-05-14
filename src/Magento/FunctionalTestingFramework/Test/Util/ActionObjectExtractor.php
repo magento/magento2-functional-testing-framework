@@ -57,11 +57,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
         $stepKeyRefs = [];
 
         foreach ($testActions as $actionName => $actionData) {
-            if ($actionData['nodeName'] != self::ACTION_EXTEND_REMOVE) {
-                $stepKey = $actionData[self::TEST_STEP_MERGE_KEY];
-            } else {
-                $stepKey = $actionData['keyForRemoval'];
-            }
+            $stepKey = $actionData[self::TEST_STEP_MERGE_KEY];
 
             if (preg_match('/[^a-zA-Z0-9_]/', $stepKey)) {
                 throw new XmlException(sprintf(self::STEP_KEY_BLACKLIST_ERROR_MSG, $actionName));
