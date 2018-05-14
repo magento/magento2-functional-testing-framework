@@ -78,9 +78,7 @@ class ActionGroupObject
 
         $args = $this->resolveArguments($arguments);
 
-        $otherItem = $this->getResolvedActionsWithArgs($args, $actionReferenceKey);
-
-        return $mergeUtil->resolveActionSteps($otherItem, true);
+        return $mergeUtil->resolveActionSteps($this->getResolvedActionsWithArgs($args, $actionReferenceKey), true);
     }
 
     /**
@@ -133,6 +131,7 @@ class ActionGroupObject
             $replacementStepKeys[$action->getStepKey()] = $action->getStepKey() . ucfirst($actionReferenceKey);
             $varAttributes = array_intersect($this->varAttributes, array_keys($action->getCustomActionAttributes()));
 
+            // replace createDataKey attributes inside the action group
             $resolvedActionAttributes = $this->replaceCreateDataKeys($action, $replacementStepKeys);
 
             $newActionAttributes = [];
