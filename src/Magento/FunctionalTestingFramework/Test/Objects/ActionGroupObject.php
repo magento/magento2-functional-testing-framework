@@ -133,18 +133,7 @@ class ActionGroupObject
             $replacementStepKeys[$action->getStepKey()] = $action->getStepKey() . ucfirst($actionReferenceKey);
             $varAttributes = array_intersect($this->varAttributes, array_keys($action->getCustomActionAttributes()));
 
-            $resolvedActionAttributes = [];
-
-            foreach ($action->getCustomActionAttributes() as $actionAttribute => $actionAttributeDetails) {
-                if (is_array($actionAttributeDetails)) {
-                    if (array_key_exists('createDataKey', $actionAttributeDetails)) {
-                        $actionAttributeDetails['createDataKey'] =
-                            $replacementStepKeys[$actionAttributeDetails['createDataKey']] ??
-                            $actionAttributeDetails['createDataKey'];
-                    }
-                }
-                $resolvedActionAttributes[$actionAttribute] = $actionAttributeDetails;
-            }
+            $resolvedActionAttributes = $this->replaceCreateDataKeys($action, $replacementStepKeys);
 
             $newActionAttributes = [];
 
@@ -392,5 +381,30 @@ class ActionGroupObject
             return array_values($matchedArgument)[0];
         }
         return null;
+    }
+
+    /**
+     * Replaces references to step keys used earlier in an action group
+     *
+     * @param ActionObject $action
+     * @param array $replacementStepKeys
+     * @return ActionObject[]
+     */
+    private function replaceCreateDataKeys($action, $replacementStepKeys)
+    {
+        $resolvedActionAttributes = [];
+
+        foreach ($action->getCustomActionAttributes() as $actionAttribute => $actionAttributeDetails) {
+            if (is_array($actionAttributeDetails)) {
+                if (array_key_exists('createDataKey', $actionAttributeDetails)) {
+                    $actionAttributeDetails['createDataKey'] =
+                        $replacementStepKeys[$actionAttributeDetails['createDataKey']] ??
+                        $actionAttributeDetails['createDataKey'];
+                }
+            }
+            $resolvedActionAttributes[$actionAttribute] = $actionAttributeDetails;
+        }
+
+        return $resolvedActionAttributes;
     }
 }
