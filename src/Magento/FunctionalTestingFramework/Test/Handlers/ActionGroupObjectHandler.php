@@ -11,7 +11,7 @@ use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Parsers\ActionGroupDataParser;
 use Magento\FunctionalTestingFramework\Test\Util\ActionGroupObjectExtractor;
-use Magento\FunctionalTestingFramework\Test\Util\ObjectExtension;
+use Magento\FunctionalTestingFramework\Test\Util\ObjectExtensionUtil;
 
 /**
  * Class ActionGroupObjectHandler
@@ -82,8 +82,8 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
      */
     public function getAllObjects()
     {
-        foreach ($this->actionGroups as $index => $actionGroup) {
-            $this->actionGroups[$index] = $this->extendActionGroup($actionGroup);
+        foreach ($this->actionGroups as $actionGroupName => $actionGroup) {
+            $this->actionGroups[$actionGroupName] = $this->extendActionGroup($actionGroup);
         }
         return $this->actionGroups;
     }
@@ -121,7 +121,8 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
     private function extendActionGroup($actionGroupObject)
     {
         if ($actionGroupObject->getParentName() !== null) {
-            return ObjectExtension::extendActionGroup($actionGroupObject);
+            $extendUtil = new ObjectExtensionUtil();
+            return $extendUtil->extendActionGroup($actionGroupObject);
         }
         return $actionGroupObject;
     }

@@ -11,7 +11,7 @@ use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
-use Magento\FunctionalTestingFramework\Test\Util\ObjectExtension;
+use Magento\FunctionalTestingFramework\Test\Util\ObjectExtensionUtil;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 
 /**
@@ -83,8 +83,8 @@ class TestObjectHandler implements ObjectHandlerInterface
      */
     public function getAllObjects()
     {
-        foreach ($this->tests as $index => $test) {
-            $this->tests[$index] = $this->extendTest($test);
+        foreach ($this->tests as $testName => $test) {
+            $this->tests[$testName] = $this->extendTest($test);
         }
         return $this->tests;
     }
@@ -146,7 +146,8 @@ class TestObjectHandler implements ObjectHandlerInterface
     private function extendTest($testObject)
     {
         if ($testObject->getParentName() !== null) {
-            return ObjectExtension::extendTest($testObject);
+            $extendUtil = new ObjectExtensionUtil();
+            return $extendUtil->extendTest($testObject);
         }
         return $testObject;
     }

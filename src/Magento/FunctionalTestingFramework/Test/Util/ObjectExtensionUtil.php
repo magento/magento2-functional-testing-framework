@@ -15,8 +15,15 @@ use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 
-class ObjectExtension
+class ObjectExtensionUtil
 {
+    /**
+     * ObjectExtensionUtil constructor.
+     */
+    public function __construct()
+    {
+        // empty
+    }
 
     /**
      * Resolves test references for extending test objects
@@ -25,7 +32,7 @@ class ObjectExtension
      * @return TestObject
      * @throws TestReferenceException|XmlException
      */
-    public static function extendTest($testObject)
+    public function extendTest($testObject)
     {
         // Check to see if the parent test exists
         try {
@@ -102,7 +109,7 @@ class ObjectExtension
      * @return ActionGroupObject
      * @throws XmlException
      */
-    public static function extendActionGroup($actionGroupObject)
+    public function extendActionGroup($actionGroupObject)
     {
         // Check to see if the parent action group exists
         $parentActionGroup = ActionGroupObjectHandler::getInstance()->getObject($actionGroupObject->getParentName());
