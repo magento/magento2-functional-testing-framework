@@ -78,7 +78,9 @@ class ActionGroupObject
 
         $args = $this->resolveArguments($arguments);
 
-        return $mergeUtil->resolveActionSteps($this->getResolvedActionsWithArgs($args, $actionReferenceKey), true);
+        $otherItem = $this->getResolvedActionsWithArgs($args, $actionReferenceKey);
+
+        return $mergeUtil->resolveActionSteps($otherItem, true);
     }
 
     /**
@@ -125,15 +127,31 @@ class ActionGroupObject
     private function getResolvedActionsWithArgs($arguments, $actionReferenceKey)
     {
         $resolvedActions = [];
+        $replacementStepKeys = [];
 
         foreach ($this->parsedActions as $action) {
+            $replacementStepKeys[$action->getStepKey()] = $action->getStepKey() . ucfirst($actionReferenceKey);
             $varAttributes = array_intersect($this->varAttributes, array_keys($action->getCustomActionAttributes()));
+
+            $resolvedActionAttributes = [];
+
+            foreach ($action->getCustomActionAttributes() as $actionAttribute => $actionAttributeDetails) {
+                if (is_array($actionAttributeDetails)) {
+                    if (array_key_exists('createDataKey', $actionAttributeDetails)) {
+                        $actionAttributeDetails['createDataKey'] =
+                            $replacementStepKeys[$actionAttributeDetails['createDataKey']] ??
+                            $actionAttributeDetails['createDataKey'];
+                    }
+                }
+                $resolvedActionAttributes[$actionAttribute] = $actionAttributeDetails;
+            }
+
             $newActionAttributes = [];
 
             if (!empty($varAttributes)) {
                 $newActionAttributes = $this->resolveAttributesWithArguments(
                     $arguments,
-                    $action->getCustomActionAttributes()
+                    $resolvedActionAttributes
                 );
             }
 
@@ -142,7 +160,7 @@ class ActionGroupObject
             $resolvedActions[$action->getStepKey() . ucfirst($actionReferenceKey)] = new ActionObject(
                 $action->getStepKey() . ucfirst($actionReferenceKey),
                 $action->getType(),
-                array_replace_recursive($action->getCustomActionAttributes(), $newActionAttributes),
+                array_replace_recursive($resolvedActionAttributes, $newActionAttributes),
                 $action->getLinkedAction() == null ? null : $action->getLinkedAction() . ucfirst($actionReferenceKey),
                 $action->getOrderOffset(),
                 [self::ACTION_GROUP_ORIGIN_NAME => $this->name,

@@ -120,4 +120,10 @@
             <argument name="count" value="99"/>
         </actionGroup>
     </test>
+
+    <test name="ActionGroupUsingCreateData">
+        <before>
+            <actionGroup ref="actionGroupWithCreateData" stepKey="Key1"/>
+        </before>
+    </test>
 </tests>

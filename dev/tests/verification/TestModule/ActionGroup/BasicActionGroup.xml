@@ -59,4 +59,11 @@
             <actualResult type="variable">grabProducts</actualResult>
         </assertCount>
     </actionGroup>
+
+    <actionGroup name="actionGroupWithCreateData">
+        <createData entity="ApiCategory" stepKey="createCategory"/>
+        <createData entity="ApiConfigurableProduct" stepKey="createConfigProduct">
+            <requiredEntity createDataKey="createCategory"/>
+        </createData>
+    </actionGroup>
 </actionGroups>
