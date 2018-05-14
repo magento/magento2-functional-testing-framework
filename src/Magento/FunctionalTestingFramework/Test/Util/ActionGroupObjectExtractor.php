@@ -19,6 +19,8 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
     const DEFAULT_VALUE = 'defaultValue';
     const ACTION_GROUP_ARGUMENTS = 'arguments';
     const FILENAME = 'filename';
+    const ACTION_GROUP_INSERT_BEFORE = "insertBefore";
+    const ACTION_GROUP_INSERT_AFTER = "insertAfter";
 
     /**
      * Action Object Extractor for converting actions into objects
@@ -51,7 +53,9 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
             self::NODE_NAME,
             self::ACTION_GROUP_ARGUMENTS,
             self::NAME,
-            self::FILENAME
+            self::FILENAME,
+            self::ACTION_GROUP_INSERT_BEFORE,
+            self::ACTION_GROUP_INSERT_AFTER
         );
 
         // TODO filename is now available to the ActionGroupObject, integrate this into debug and error statements
