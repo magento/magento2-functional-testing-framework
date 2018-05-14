@@ -37,6 +37,13 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
     private $actionGroups = [];
 
     /**
+     * Instance of ObjectExtensionUtil class
+     *
+     * @var ObjectExtensionUtil
+     */
+    private $extendUtil;
+
+    /**
      * Singleton getter for instance of ActionGroupObjectHandler
      *
      * @return ActionGroupObjectHandler
@@ -56,7 +63,7 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
      */
     private function __construct()
     {
-        // private constructor
+        $this->extendUtil = new ObjectExtensionUtil();
     }
 
     /**
@@ -121,8 +128,7 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
     private function extendActionGroup($actionGroupObject)
     {
         if ($actionGroupObject->getParentName() !== null) {
-            $extendUtil = new ObjectExtensionUtil();
-            return $extendUtil->extendActionGroup($actionGroupObject);
+            return $this->extendUtil->extendActionGroup($actionGroupObject);
         }
         return $actionGroupObject;
     }

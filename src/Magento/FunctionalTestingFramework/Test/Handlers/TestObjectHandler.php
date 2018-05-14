@@ -36,6 +36,13 @@ class TestObjectHandler implements ObjectHandlerInterface
     private $tests = [];
 
     /**
+     * Instance of ObjectExtensionUtil class
+     *
+     * @var ObjectExtensionUtil
+     */
+    private $extendUtil;
+
+    /**
      * Singleton method to return TestObjectHandler.
      *
      * @return TestObjectHandler
@@ -56,7 +63,7 @@ class TestObjectHandler implements ObjectHandlerInterface
      */
     private function __construct()
     {
-        // private constructor
+        $this->extendUtil = new ObjectExtensionUtil();
     }
 
     /**
@@ -146,8 +153,7 @@ class TestObjectHandler implements ObjectHandlerInterface
     private function extendTest($testObject)
     {
         if ($testObject->getParentName() !== null) {
-            $extendUtil = new ObjectExtensionUtil();
-            return $extendUtil->extendTest($testObject);
+            return $this->extendUtil->extendTest($testObject);
         }
         return $testObject;
     }

@@ -87,8 +87,6 @@ class Flat implements ConverterInterface
                     );
                 }
 
-                //$node->parentNode->getAttribute('extends')
-
                 if ($nodeName == self::REMOVE_ACTION && empty($node->parentNode->getAttribute('extends'))) {
                     unset($value[$node->getAttribute(self::REMOVE_KEY_ATTRIBUTE)]);
                     continue;
