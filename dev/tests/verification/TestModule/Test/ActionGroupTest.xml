@@ -133,4 +133,8 @@
             <argument name="otherCount" value="8000"/>
         </actionGroup>
     </test>
+
+    <test name="ExtendedRemoveActionGroup">
+        <actionGroup ref="extendRemoveTestActionGroup" stepKey="actionGroup"/>
+    </test>
 </tests>

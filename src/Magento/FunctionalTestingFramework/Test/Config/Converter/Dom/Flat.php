@@ -16,6 +16,7 @@ class Flat implements ConverterInterface
 {
     const REMOVE_ACTION = 'remove';
     const REMOVE_KEY_ATTRIBUTE = 'keyForRemoval';
+    const EXTENDS_ATTRIBUTE = 'extends';
 
     /**
      * Array node configuration.
@@ -86,7 +87,9 @@ class Flat implements ConverterInterface
                     );
                 }
 
-                if ($nodeName == self::REMOVE_ACTION) {
+                //$node->parentNode->getAttribute('extends')
+
+                if ($nodeName == self::REMOVE_ACTION && empty($node->parentNode->getAttribute('extends'))) {
                     unset($value[$node->getAttribute(self::REMOVE_KEY_ATTRIBUTE)]);
                     continue;
                 }

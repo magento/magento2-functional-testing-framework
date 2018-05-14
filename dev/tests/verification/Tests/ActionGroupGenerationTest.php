@@ -151,4 +151,15 @@ class ActionGroupGenerationTest extends MftfTestCase
     {
         $this->generateAndCompareTest('ExtendedActionGroup');
     }
+
+    /**
+     * Test generation of a test referencing an action group that references another action group but removes an action
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testExtendedRemoveActionGroup()
+    {
+        $this->generateAndCompareTest('ExtendedRemoveActionGroup');
+    }
 }

@@ -31,6 +31,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
     const ACTION_OBJECT_PERSISTENCE_FIELDS = 'customFields';
     const ACTION_OBJECT_USER_INPUT = 'userInput';
     const DATA_PERSISTENCE_ACTIONS = ['createData', 'deleteData', 'updateData'];
+    const ACTION_EXTEND_REMOVE = 'remove';
 
     /**
      * ActionObjectExtractor constructor.
@@ -56,7 +57,11 @@ class ActionObjectExtractor extends BaseObjectExtractor
         $stepKeyRefs = [];
 
         foreach ($testActions as $actionName => $actionData) {
-            $stepKey = $actionData[self::TEST_STEP_MERGE_KEY];
+            if ($actionData['nodeName'] != self::ACTION_EXTEND_REMOVE) {
+                $stepKey = $actionData[self::TEST_STEP_MERGE_KEY];
+            } else {
+                $stepKey = '__' . self::ACTION_EXTEND_REMOVE . '__' . $actionData['keyForRemoval'];
+            }
 
             if (preg_match('/[^a-zA-Z0-9_]/', $stepKey)) {
                 throw new XmlException(sprintf(self::STEP_KEY_BLACKLIST_ERROR_MSG, $actionName));

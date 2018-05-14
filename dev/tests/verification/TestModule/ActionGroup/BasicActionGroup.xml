@@ -83,4 +83,12 @@
             <actualResult type="variable">grabProducts</actualResult>
         </assertCount>
     </actionGroup>
+
+    <actionGroup name="extendBasicActionGroup">
+        <comment stepKey="removeMe" userInput="This Should Be Removed"/>
+    </actionGroup>
+
+    <actionGroup name="extendRemoveTestActionGroup" extends="extendBasicActionGroup">
+        <remove keyForRemoval="removeMe"/>
+    </actionGroup>
 </actionGroups>

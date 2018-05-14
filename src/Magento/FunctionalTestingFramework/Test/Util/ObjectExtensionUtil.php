@@ -11,6 +11,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
+use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
@@ -60,35 +61,9 @@ class ObjectExtensionUtil
 
         // Get steps for both the parent and the child tests
         $referencedTestSteps = $parentTest->getUnresolvedSteps();
-        $newSteps = array_merge($referencedTestSteps, $testObject->getUnresolvedSteps());
+        $newSteps = $this->processRemoveActions(array_merge($referencedTestSteps, $testObject->getUnresolvedSteps()));
 
-        $testHooks = $testObject->getHooks();
-        $parentHooks = $parentTest->getHooks();
-
-        // Get the hooks for each Test merge changes from the child hooks to the parent hooks into the child hooks
-        foreach ($testHooks as $key => $hook) {
-            if (array_key_exists($key, $parentHooks)) {
-                $testHookActions = array_merge(
-                    $parentHooks[$key]->getUnresolvedActions(),
-                    $testHooks[$key]->getUnresolvedActions()
-                );
-                $newTestHook = new TestHookObject(
-                    $parentHooks[$key]->getType(),
-                    $parentHooks[$key]->getParentName(),
-                    $testHookActions
-                );
-                $testHooks[$key] = $newTestHook;
-            } else {
-                $testHooks[$key] = $hook;
-            }
-        }
-
-        // Add parent hooks to child if they did not originally exist on the child
-        foreach ($parentHooks as $key => $hook) {
-            if (!array_key_exists($key, $testHooks)) {
-                $testHooks[$key] = $hook;
-            }
-        }
+        $testHooks = $this->resolveExtendedHooks($testObject, $parentTest);
 
         // Create new Test object to return
         $extendedTest = new TestObject(
@@ -142,7 +117,8 @@ class ObjectExtensionUtil
 
         // Get steps for both the parent and the child action groups
         $referencedActions = $parentActionGroup->getActions();
-        $newActions = array_merge($referencedActions, $actionGroupObject->getActions());
+        $newActions = $this->processRemoveActions(array_merge($referencedActions, $actionGroupObject->getActions()));
+
         $extendedArguments = array_merge(
             $actionGroupObject->getArguments(),
             $parentActionGroup->getArguments()
@@ -156,5 +132,68 @@ class ObjectExtensionUtil
             $actionGroupObject->getParentName()
         );
         return $extendedActionGroup;
+    }
+
+        /**
+         * Resolves test references for extending test objects
+         *
+         * @param TestObject $testObject
+         * @param TestObject $parentTestObject
+         * @return TestHookObject[] $testHooks
+         */
+    private function resolveExtendedHooks($testObject, $parentTestObject)
+    {
+        $testHooks = $testObject->getHooks();
+        $parentHooks = $parentTestObject->getHooks();
+
+        // Get the hooks for each Test merge changes from the child hooks to the parent hooks into the child hooks
+        foreach ($testHooks as $key => $hook) {
+            if (array_key_exists($key, $parentHooks)) {
+                $testHookActions = array_merge(
+                    $parentHooks[$key]->getUnresolvedActions(),
+                    $testHooks[$key]->getUnresolvedActions()
+                );
+                $newTestHook = new TestHookObject(
+                    $parentHooks[$key]->getType(),
+                    $parentHooks[$key]->getParentName(),
+                    $testHookActions
+                );
+                $testHooks[$key] = $newTestHook;
+            } else {
+                $testHooks[$key] = $hook;
+            }
+        }
+
+        // Add parent hooks to child if they did not originally exist on the child
+        foreach ($parentHooks as $key => $hook) {
+            if (!array_key_exists($key, $testHooks)) {
+                $testHooks[$key] = $hook;
+            }
+        }
+
+        return $testHooks;
+    }
+
+    /**
+     * Resolves test references for removing actions in extended test
+     *
+     * @param ActionObject[] $actions
+     * @return ActionObject[]
+     * @throws XmlException
+     */
+    private function processRemoveActions($actions)
+    {
+        foreach ($actions as $actionName => $actionData) {
+            if ($actionData->getType() == "remove") {
+                $removalKey = $actionData->getCustomActionAttributes()['keyForRemoval'];
+                if (!array_key_exists($removalKey, $actions)) {
+                    throw new XmlException("Referenced action for removal does not exist: $removalKey." . PHP_EOL);
+                }
+                unset($actions[$removalKey]);
+                unset($actions[$actionName]);
+            }
+        }
+
+        return $actions;
     }
 }

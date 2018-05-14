@@ -66,6 +66,17 @@
         <comment stepKey="afterBasicCommentWithNoData" userInput="After Comment" after="basicCommentWithNoData"/>
     </test>
 
+    <test name="ChildExtendedTestRemoveAction" extends="ParentExtendedTest">
+        <annotations>
+            <severity value="CRITICAL"/>
+            <title value="Child"/>
+            <group value="Child"/>
+            <features value="Child"/>
+            <stories value="Child"/>
+        </annotations>
+        <remove keyForRemoval="basicCommentWithNoData"/>
+    </test>
+
     <test name="ParentExtendedTestNoHooks">
         <annotations>
             <severity value="AVERAGE"/>
