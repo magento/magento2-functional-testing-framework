@@ -16,20 +16,23 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("Action Group With Passed Argument Value and Multiple Argument Values in Param")
  */
-class ActionGroupWithMultipleParameterSelectorsFromDefaultArgumentCest
+class ActionGroupMergedViaInsertAfterCest
 {
 	/**
-	 * @Severity(level = SeverityLevel::BLOCKER)
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupWithMultipleParameterSelectorsFromDefaultArgument(AcceptanceTester $I)
+	public function ActionGroupMergedViaInsertAfter(AcceptanceTester $I)
 	{
-		$I->see("Doe", "#John-Doe .test");
+		$I->fillField("#foo", "foo");
+		$I->fillField("#bar", "bar");
+		$I->click("#foo2");
+		$I->click("#bar2");
+		$I->click("#baz2");
+		$I->fillField("#baz", "baz");
 	}
 }

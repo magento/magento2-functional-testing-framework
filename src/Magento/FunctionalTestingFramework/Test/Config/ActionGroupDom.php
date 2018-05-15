@@ -30,9 +30,25 @@ class ActionGroupDom extends Dom
                 /** @var \DOMElement $actionGroupNode */
                 $actionGroupNode->setAttribute(self::TEST_META_FILENAME_ATTRIBUTE, $filename);
                 $this->validateDomStepKeys($actionGroupNode, $filename, 'Action Group', $exceptionCollector);
+                if ($actionGroupNode->getAttribute(self::TEST_MERGE_POINTER_AFTER) !== "") {
+                    $this->appendMergePointerToActions(
+                        $actionGroupNode,
+                        self::TEST_MERGE_POINTER_AFTER,
+                        $actionGroupNode->getAttribute(self::TEST_MERGE_POINTER_AFTER),
+                        $filename,
+                        $exceptionCollector
+                    );
+                } elseif ($actionGroupNode->getAttribute(self::TEST_MERGE_POINTER_BEFORE) !== "") {
+                    $this->appendMergePointerToActions(
+                        $actionGroupNode,
+                        self::TEST_MERGE_POINTER_BEFORE,
+                        $actionGroupNode->getAttribute(self::TEST_MERGE_POINTER_BEFORE),
+                        $filename,
+                        $exceptionCollector
+                    );
+                }
             }
         }
-
         return $dom;
     }
 }

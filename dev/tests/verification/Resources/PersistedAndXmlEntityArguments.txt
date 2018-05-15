@@ -16,20 +16,18 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("Action Group With Passed Argument Value and Multiple Argument Values in Param")
  */
-class ActionGroupWithMultipleParameterSelectorsFromDefaultArgumentCest
+class PersistedAndXmlEntityArgumentsCest
 {
 	/**
-	 * @Severity(level = SeverityLevel::BLOCKER)
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupWithMultipleParameterSelectorsFromDefaultArgument(AcceptanceTester $I)
+	public function PersistedAndXmlEntityArguments(AcceptanceTester $I)
 	{
-		$I->see("Doe", "#John-Doe .test");
+		$I->seeInCurrentUrl("/" . $persistedInTest->getCreatedDataByName('urlKey') . ".html?___store=" . msq("uniqueData") . "John");
 	}
 }

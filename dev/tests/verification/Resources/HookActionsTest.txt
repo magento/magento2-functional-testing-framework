@@ -76,6 +76,7 @@ class HookActionsTestCest
 	}
 
 	/**
+	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void

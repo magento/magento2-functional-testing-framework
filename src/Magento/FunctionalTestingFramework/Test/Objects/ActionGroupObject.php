@@ -137,6 +137,12 @@ class ActionGroupObject
                 );
             }
 
+            // translate 0/1 back to before/after
+            $orderOffset = ActionObject::MERGE_ACTION_ORDER_BEFORE;
+            if ($action->getOrderOffset() === 1) {
+                $orderOffset = ActionObject::MERGE_ACTION_ORDER_AFTER;
+            }
+
             // we append the action reference key to any linked action and the action's merge key as the user might
             // use this action group multiple times in the same test.
             $resolvedActions[$action->getStepKey() . ucfirst($actionReferenceKey)] = new ActionObject(
@@ -144,7 +150,7 @@ class ActionGroupObject
                 $action->getType(),
                 array_replace_recursive($action->getCustomActionAttributes(), $newActionAttributes),
                 $action->getLinkedAction() == null ? null : $action->getLinkedAction() . ucfirst($actionReferenceKey),
-                $action->getOrderOffset(),
+                $orderOffset,
                 [self::ACTION_GROUP_ORIGIN_NAME => $this->name,
                     self::ACTION_GROUP_ORIGIN_TEST_REF => $actionReferenceKey]
             );
@@ -332,8 +338,12 @@ class ActionGroupObject
             $fullReplacement = str_replace($variable, trim($replacement, '$'), trim($fullVariable, "'"));
             $newAttributeValue = str_replace($fullVariable, $scope . $fullReplacement . $scope, $newAttributeValue);
         } else {
-            $newAttributeValue = str_replace('{{', $scope, str_replace('}}', $scope, $newAttributeValue));
-            $newAttributeValue = str_replace($variable, trim($replacement, '$'), $newAttributeValue);
+            $fullReplacement = str_replace($variable, trim($replacement, '$'), $fullVariable);
+            $newAttributeValue = str_replace(
+                '{{' . $fullVariable . '}}',
+                $scope . $fullReplacement . $scope,
+                $newAttributeValue
+            );
         }
 
         return $newAttributeValue;
