@@ -143,4 +143,15 @@
             <actionGroup ref="actionGroupWithCreateData" stepKey="Key1"/>
         </before>
     </test>
+
+    <test name="ActionGroupContainsStepKeyInArgText">
+        <before>
+            <actionGroup ref="actionGroupContainsStepKeyInArgValue" stepKey="actionGroup">
+                <argument name="sameStepKeyAsArg" value="arg1"/>
+            </actionGroup>
+        </before>
+        <actionGroup ref="actionGroupContainsStepKeyInArgValue" stepKey="actionGroup">
+            <argument name="sameStepKeyAsArg" value="arg1"/>
+        </actionGroup>
+    </test>
 </tests>
