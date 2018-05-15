@@ -31,7 +31,6 @@ class ActionObjectExtractor extends BaseObjectExtractor
     const ACTION_OBJECT_PERSISTENCE_FIELDS = 'customFields';
     const ACTION_OBJECT_USER_INPUT = 'userInput';
     const DATA_PERSISTENCE_ACTIONS = ['createData', 'deleteData', 'updateData'];
-    const ACTION_EXTEND_REMOVE = 'remove';
 
     /**
      * ActionObjectExtractor constructor.
