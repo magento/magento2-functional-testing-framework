@@ -74,4 +74,15 @@ class ExtendedGenerationTest extends MftfTestCase
     {
         $this->generateAndCompareTest('ChildExtendedTestRemoveAction');
     }
+
+    /**
+     * Tests generation of test that extends based on another test when removing an action
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testExtendedTestGenerationRemoveHookAction()
+    {
+        $this->generateAndCompareTest('ChildExtendedTestRemoveHookAction');
+    }
 }

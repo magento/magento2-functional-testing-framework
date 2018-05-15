@@ -103,4 +103,17 @@
             <amOnPage url="/afterUrl" stepKey="afterAmOnPageKey"/>
         </after>
     </test>
+
+    <test name="ChildExtendedTestRemoveHookAction" extends="ParentExtendedTest">
+        <annotations>
+            <severity value="CRITICAL"/>
+            <title value="Child"/>
+            <group value="Child"/>
+            <features value="Child"/>
+            <stories value="Child"/>
+        </annotations>
+        <before>
+            <remove keyForRemoval="beforeAmOnPageKey"/>
+        </before>
+    </test>
 </tests>

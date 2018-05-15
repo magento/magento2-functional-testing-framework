@@ -153,10 +153,12 @@ class ObjectExtensionUtil
                     $parentHooks[$key]->getUnresolvedActions(),
                     $testHooks[$key]->getUnresolvedActions()
                 );
+                $cleanedTestHookActions = $this->processRemoveActions($testHookActions);
+
                 $newTestHook = new TestHookObject(
                     $parentHooks[$key]->getType(),
                     $parentHooks[$key]->getParentName(),
-                    $testHookActions
+                    $cleanedTestHookActions
                 );
                 $testHooks[$key] = $newTestHook;
             } else {
