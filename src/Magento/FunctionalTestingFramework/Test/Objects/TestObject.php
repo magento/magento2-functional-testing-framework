@@ -236,9 +236,9 @@ class TestObject
      */
     public function skipTest()
     {
-        if (array_key_exists('group', $this->annotations)) {
+        if (array_key_exists('group', $this->annotations) && !in_array('skip', $this->annotations['group'])) {
             array_push($this->annotations['group'], 'skip');
-        } else {
+        } elseif (!array_key_exists('group', $this->annotations)) {
             $this->annotations['group'] = ['skip'];
         }
     }
