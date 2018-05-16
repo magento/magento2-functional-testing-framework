@@ -18,4 +18,8 @@
         <requiredEntity type="test">originalValue</requiredEntity>
         <requiredEntity type="test3">originalValue3</requiredEntity>
     </entity>
+    <entity name="testExtendSimpleParamData" type="data" extends="simpleParamData">
+        <data key="name">otherName</data>
+        <data key="nameExtend">extendName</data>
+    </entity>
 </entities>

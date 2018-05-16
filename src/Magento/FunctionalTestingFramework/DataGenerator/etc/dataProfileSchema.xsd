@@ -77,6 +77,13 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute type="xs:string" name="extends">
+            <xs:annotation>
+                <xs:documentation>
+                    Name of the entity that is extended.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="dataType">

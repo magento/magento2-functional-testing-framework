@@ -28,4 +28,10 @@
         <unselectOption selector="#selector" parameterArray="[$simpleDataKey.name$]" stepKey="005"/>
         <unselectOption selector="#selector" parameterArray="[{{simpleParamData.name}}, $simpleDataKey.name$]" stepKey="006"/>
     </test>
+
+    <test name="ExtendedParameterArrayTest">
+        <createData entity="testExtendSimpleParamData" stepKey="simpleDataKey"/>
+        <searchAndMultiSelectOption selector="#selector" parameterArray="[{{testExtendSimpleParamData.name}}]" stepKey="xmlSimpleReplace"/>
+        <searchAndMultiSelectOption selector="#selector" parameterArray="[{{testExtendSimpleParamData.nameExtend}}]" stepKey="xmlSimpleReplace2"/>
+    </test>
 </tests>

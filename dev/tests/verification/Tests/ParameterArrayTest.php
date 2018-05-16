@@ -19,4 +19,15 @@ class ParameterArrayTest extends MftfTestCase
     {
         $this->generateAndCompareTest('ParameterArrayTest');
     }
+
+    /**
+     * Tests flat generation of a hardcoded test file with no external references.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testExtendedParameterArrayGeneration()
+    {
+        $this->generateAndCompareTest('ExtendedParameterArrayTest');
+    }
 }

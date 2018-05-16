@@ -17,6 +17,7 @@ class OperationElementExtractor
     const OPERATION_OBJECT_ENTRY = 'field';
     const OPERATION_OBJECT_OBJ_NAME = 'object';
     const OPERATION_OBJECT_ARRAY_VALUE = 'value';
+    const OPERATION_OBJECT_EXTENDS = 'extends';
 
     /**
      * OperationElementExtractor constructor.
@@ -43,6 +44,11 @@ class OperationElementExtractor
 
         $operationElements = [];
         $nestedOperationElements = [];
+        $operationExtends = null;
+
+        if (array_key_exists(OperationElementExtractor::OPERATION_OBJECT_EXTENDS, $operationElementArray)) {
+            $operationExtends = $operationElementArray[OperationElementExtractor::OPERATION_OBJECT_EXTENDS];
+        }
 
         // extract nested entries
         if (array_key_exists(OperationElementExtractor::OPERATION_OBJECT_ENTRY, $operationElementArray)) {
@@ -79,7 +85,8 @@ class OperationElementExtractor
             OperationElementExtractor::OPERATION_OBJECT_OBJ_NAME,
             $operationElementArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_REQUIRED] ?? null,
             $nestedOperationElements,
-            $operationElements
+            $operationElements,
+            $operationExtends
         );
     }
 
