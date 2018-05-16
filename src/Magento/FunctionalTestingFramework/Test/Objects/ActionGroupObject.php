@@ -394,12 +394,10 @@ class ActionGroupObject
         $resolvedActionAttributes = [];
 
         foreach ($action->getCustomActionAttributes() as $actionAttribute => $actionAttributeDetails) {
-            if (is_array($actionAttributeDetails)) {
-                if (array_key_exists('createDataKey', $actionAttributeDetails)) {
-                    $actionAttributeDetails['createDataKey'] =
-                        $replacementStepKeys[$actionAttributeDetails['createDataKey']] ??
-                        $actionAttributeDetails['createDataKey'];
-                }
+            if (is_array($actionAttributeDetails) && array_key_exists('createDataKey', $actionAttributeDetails)) {
+                $actionAttributeDetails['createDataKey'] =
+                    $replacementStepKeys[$actionAttributeDetails['createDataKey']] ??
+                    $actionAttributeDetails['createDataKey'];
             }
             $resolvedActionAttributes[$actionAttribute] = $actionAttributeDetails;
         }
