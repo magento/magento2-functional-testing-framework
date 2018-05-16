@@ -50,7 +50,7 @@ class ParentExtendedTestCest
 
 	/**
 	 * @Severity(level = SeverityLevel::MINOR)
-	 * @Features({"Parent"})
+	 * @Features({"TestModule"})
 	 * @Stories({"Parent"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I

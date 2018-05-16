@@ -52,7 +52,7 @@ class ChildExtendedTestMergingCest
 
 	/**
 	 * @Severity(level = SeverityLevel::TRIVIAL)
-	 * @Features({"Child"})
+	 * @Features({"TestModule"})
 	 * @Stories({"Child"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I

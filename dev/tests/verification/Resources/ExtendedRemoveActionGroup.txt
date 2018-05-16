@@ -20,6 +20,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ExtendedRemoveActionGroupCest
 {
 	/**
+	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void

@@ -49,7 +49,7 @@ class ChildExtendedTestRemoveHookActionCest
 
 	/**
 	 * @Severity(level = SeverityLevel::CRITICAL)
-	 * @Features({"Child"})
+	 * @Features({"TestModule"})
 	 * @Stories({"Child"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
