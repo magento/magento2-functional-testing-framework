@@ -105,7 +105,7 @@ class ObjectExtensionUtilTest extends TestCase
         $mockTestData = ['tests' => array_merge($mockExtendedTest)];
         $this->setMockTestOutput($mockTestData);
 
-        $this->expectExceptionMessage("Parent Test simpleTest not defined for Test extendedTest.");
+        $this->expectOutputString("Parent Test simpleTest not defined for Test extendedTest. Skipping Test." . PHP_EOL);
 
         // parse and generate test object with mocked data
         TestObjectHandler::getInstance()->getObject('extendedTest');

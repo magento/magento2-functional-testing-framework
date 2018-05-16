@@ -39,14 +39,17 @@ class ObjectExtensionUtil
         try {
             $parentTest = TestObjectHandler::getInstance()->getObject($testObject->getParentName());
         } catch (TestReferenceException $error) {
-            throw new XmlException(
-                "Parent Test " .
-                $testObject->getParentName() .
-                " not defined for Test " .
-                $testObject->getName() .
-                "." .
-                PHP_EOL
-            );
+            if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
+                echo(
+                    "Parent Test " .
+                    $testObject->getParentName() .
+                    " not defined for Test " .
+                    $testObject->getName() .
+                    ". Skipping Test." .
+                    PHP_EOL);
+            }
+            $testObject->skipTest();
+            return $testObject;
         }
 
         // Check to see if the parent test is already an extended test

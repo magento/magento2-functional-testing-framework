@@ -230,6 +230,20 @@ class TestObject
     }
 
     /**
+     * This method sets the test as skipped
+     *
+     * @return void
+     */
+    public function skipTest()
+    {
+        if (array_key_exists('group', $this->annotations)) {
+            array_push($this->annotations['group'], 'skip');
+        } else {
+            $this->annotations['group'] = ['skip'];
+        }
+    }
+
+    /**
      * Get information about actions and steps in test.
      *
      * @return array

@@ -85,4 +85,15 @@ class ExtendedGenerationTest extends MftfTestCase
     {
         $this->generateAndCompareTest('ChildExtendedTestRemoveHookAction');
     }
+
+    /**
+     * Tests generation of test that attemps to extend a test that doesn't exist
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testExtendedTestGenerationNoParent()
+    {
+        $this->generateAndCompareTest('ChildExtendedTestNoParent');
+    }
 }
