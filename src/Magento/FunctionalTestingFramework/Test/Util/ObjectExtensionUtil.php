@@ -48,8 +48,8 @@ class ObjectExtensionUtil
                     ". Skipping Test." .
                     PHP_EOL);
             }
-            $testObject->skipTest();
-            return $testObject;
+            $skippedTest = $this->skipTest($testObject);
+            return $skippedTest;
         }
 
         // Check to see if the parent test is already an extended test
@@ -198,5 +198,34 @@ class ObjectExtensionUtil
         }
 
         return $cleanedActions;
+    }
+
+    /**
+     * This method returns a skipped form of the Test Object
+     *
+     * @param TestObject $testObject
+     * @return TestObject
+     */
+    public function skipTest($testObject)
+    {
+        $annotations = $testObject->getAnnotations();
+
+        // Add skip to the group array if it doesn't already exist
+        if (array_key_exists('group', $annotations) && !in_array('skip', $annotations['group'])) {
+            array_push($annotations['group'], 'skip');
+        } elseif (!array_key_exists('group', $annotations)) {
+            $annotations['group'] = ['skip'];
+        }
+
+        $skippedTest = new TestObject(
+            $testObject->getName(),
+            [],
+            $annotations,
+            [],
+            $testObject->getFilename(),
+            $testObject->getParentName()
+        );
+
+        return $skippedTest;
     }
 }
