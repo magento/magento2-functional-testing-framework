@@ -19,6 +19,8 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
     const DEFAULT_VALUE = 'defaultValue';
     const ACTION_GROUP_ARGUMENTS = 'arguments';
     const FILENAME = 'filename';
+    const ACTION_GROUP_INSERT_BEFORE = "insertBefore";
+    const ACTION_GROUP_INSERT_AFTER = "insertAfter";
     const EXTENDS_ACTION_GROUP = 'extends';
 
     /**
@@ -54,6 +56,8 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
             self::ACTION_GROUP_ARGUMENTS,
             self::NAME,
             self::FILENAME,
+            self::ACTION_GROUP_INSERT_BEFORE,
+            self::ACTION_GROUP_INSERT_AFTER,
             self::EXTENDS_ACTION_GROUP
         );
 

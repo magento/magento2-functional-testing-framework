@@ -50,7 +50,7 @@ class BasicFunctionalTestCest
 
 	/**
 	 * @Severity(level = SeverityLevel::CRITICAL)
-	 * @Features({"Basic Functional Cest"})
+	 * @Features({"TestModule"})
 	 * @Stories({"MQE-305"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I

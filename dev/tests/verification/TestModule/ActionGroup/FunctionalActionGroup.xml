@@ -50,6 +50,16 @@
         <grabTextFrom selector=".class" stepKey="grabTextData"/>
         <fillField stepKey="fill1" selector=".{$grabTextData}" userInput="$createSimpleData.field$"/>
     </actionGroup>
+    <actionGroup name="FunctionalActionGroupForMassMergeBefore">
+        <fillField selector="#foo" userInput="foo" stepKey="fillField1"/>
+        <fillField selector="#bar" userInput="bar" stepKey="fillField2"/>
+        <fillField selector="#baz" userInput="baz" stepKey="fillField3"/>
+    </actionGroup>
+    <actionGroup name="FunctionalActionGroupForMassMergeAfter">
+        <fillField selector="#foo" userInput="foo" stepKey="fillField1"/>
+        <fillField selector="#bar" userInput="bar" stepKey="fillField2"/>
+        <fillField selector="#baz" userInput="baz" stepKey="fillField3"/>
+    </actionGroup>
     <actionGroup name="FunctionalActionGroupWithXmlAndPersistedData">
         <arguments>
             <argument name="xmlData" defaultValue="uniqueData"/>

@@ -119,4 +119,14 @@
         <waitForJS function="someJsFunction" time="30" stepKey="waitForJSKey1" />
         <waitForText selector=".functionalTestSelector" userInput="someInput" time="30" stepKey="waitForText1"/>
     </test>
+    <test name="MergeMassViaInsertBefore">
+        <fillField selector="#foo" userInput="foo" stepKey="fillField1"/>
+        <fillField selector="#bar" userInput="bar" stepKey="fillField2"/>
+        <fillField selector="#baz" userInput="baz" stepKey="fillField3"/>
+    </test>
+    <test name="MergeMassViaInsertAfter">
+        <fillField selector="#foo" userInput="foo" stepKey="fillField1"/>
+        <fillField selector="#bar" userInput="bar" stepKey="fillField2"/>
+        <fillField selector="#baz" userInput="baz" stepKey="fillField3"/>
+    </test>
 </tests>

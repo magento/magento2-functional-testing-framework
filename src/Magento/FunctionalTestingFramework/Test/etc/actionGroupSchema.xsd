@@ -33,6 +33,8 @@
         </xs:choice>
         <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute type="xs:string" name="filename"/>
+        <xs:attribute type="xs:string" name="insertBefore"/>
+        <xs:attribute type="xs:string" name="insertAfter"/>
         <xs:attribute type="xs:string" name="extends"/>
     </xs:complexType>
     <xs:simpleType name="dataTypeEnum" final="restriction">

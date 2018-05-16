@@ -61,7 +61,7 @@ class ArgumentWithSameNameAsElementCest
 
 	/**
 	 * @Severity(level = SeverityLevel::CRITICAL)
-	 * @Features({"Action Group Functional Cest"})
+	 * @Features({"TestModule"})
 	 * @Stories({"MQE-433"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I

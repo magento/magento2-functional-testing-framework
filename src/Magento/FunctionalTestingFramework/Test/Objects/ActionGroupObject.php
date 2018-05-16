@@ -147,8 +147,13 @@ class ActionGroupObject
                     $action->getCustomActionAttributes()
                 );
             }
-            $order = boolval($action->getOrderOffset()) ?
-                ActionObject::MERGE_ACTION_ORDER_AFTER : ActionObject::MERGE_ACTION_ORDER_BEFORE;
+
+            // translate 0/1 back to before/after
+            $orderOffset = ActionObject::MERGE_ACTION_ORDER_BEFORE;
+            if ($action->getOrderOffset() === 1) {
+                $orderOffset = ActionObject::MERGE_ACTION_ORDER_AFTER;
+            }
+
             // we append the action reference key to any linked action and the action's merge key as the user might
             // use this action group multiple times in the same test.
             $resolvedActions[$action->getStepKey() . ucfirst($actionReferenceKey)] = new ActionObject(
@@ -156,7 +161,7 @@ class ActionGroupObject
                 $action->getType(),
                 array_replace_recursive($action->getCustomActionAttributes(), $newActionAttributes),
                 $action->getLinkedAction() == null ? null : $action->getLinkedAction() . ucfirst($actionReferenceKey),
-                $order,
+                $orderOffset,
                 [self::ACTION_GROUP_ORIGIN_NAME => $this->name,
                     self::ACTION_GROUP_ORIGIN_TEST_REF => $actionReferenceKey]
             );
