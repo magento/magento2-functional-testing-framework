@@ -7,8 +7,10 @@
 namespace Magento\FunctionalTestingFramework\Test\Objects;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Util\ActionGroupObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
+use Magento\FunctionalTestingFramework\Test\Util\ObjectExtension;
 
 /**
  * Class ActionGroupObject
@@ -46,13 +48,21 @@ class ActionGroupObject
     private $arguments;
 
     /**
+     * String of parent Action Group
+     *
+     * @var String
+     */
+    private $parentActionGroup;
+
+    /**
      * ActionGroupObject constructor.
      *
      * @param string $name
      * @param ArgumentObject[] $arguments
      * @param array $actions
+     * @param string $parentActionGroup
      */
-    public function __construct($name, $arguments, $actions)
+    public function __construct($name, $arguments, $actions, $parentActionGroup)
     {
         $this->varAttributes = array_merge(
             ActionObject::SELECTOR_ENABLED_ATTRIBUTES,
@@ -62,6 +72,7 @@ class ActionGroupObject
         $this->name = $name;
         $this->arguments = $arguments;
         $this->parsedActions = $actions;
+        $this->parentActionGroup = $parentActionGroup;
     }
 
     /**
@@ -143,6 +154,12 @@ class ActionGroupObject
                 );
             }
 
+            // translate 0/1 back to before/after
+            $orderOffset = ActionObject::MERGE_ACTION_ORDER_BEFORE;
+            if ($action->getOrderOffset() === 1) {
+                $orderOffset = ActionObject::MERGE_ACTION_ORDER_AFTER;
+            }
+
             // we append the action reference key to any linked action and the action's merge key as the user might
             // use this action group multiple times in the same test.
             $resolvedActions[$action->getStepKey() . ucfirst($actionReferenceKey)] = new ActionObject(
@@ -150,7 +167,7 @@ class ActionGroupObject
                 $action->getType(),
                 array_replace_recursive($resolvedActionAttributes, $newActionAttributes),
                 $action->getLinkedAction() == null ? null : $action->getLinkedAction() . ucfirst($actionReferenceKey),
-                $action->getOrderOffset(),
+                $orderOffset,
                 [self::ACTION_GROUP_ORIGIN_NAME => $this->name,
                     self::ACTION_GROUP_ORIGIN_TEST_REF => $actionReferenceKey]
             );
@@ -360,6 +377,46 @@ class ActionGroupObject
             $originalKeys[] = $action->getStepKey();
         }
         return $originalKeys;
+    }
+
+    /**
+     * Getter for the Action Group Name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Getter for the Parent Action Group Name
+     *
+     * @return string
+     */
+    public function getParentName()
+    {
+        return $this->parentActionGroup;
+    }
+
+    /**
+     * Getter for the Action Group Actions
+     *
+     * @return ActionObject[]
+     */
+    public function getActions()
+    {
+        return $this->parsedActions;
+    }
+
+    /**
+     * Getter for the Action Group Arguments
+     *
+     * @return array
+     */
+    public function getArguments()
+    {
+        return $this->arguments;
     }
 
     /**

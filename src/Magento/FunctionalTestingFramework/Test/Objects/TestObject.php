@@ -51,6 +51,13 @@ class TestObject
     private $filename;
 
     /**
+     * String of parent test
+     *
+     * @var String
+     */
+    private $parentTest;
+
+    /**
      * TestObject constructor.
      *
      * @param string $name
@@ -58,14 +65,16 @@ class TestObject
      * @param array $annotations
      * @param TestHookObject[] $hooks
      * @param String $filename
+     * @param String $parentTest
      */
-    public function __construct($name, $parsedSteps, $annotations, $hooks, $filename = null)
+    public function __construct($name, $parsedSteps, $annotations, $hooks, $filename = null, $parentTest = null)
     {
         $this->name = $name;
         $this->parsedSteps = $parsedSteps;
         $this->annotations = $annotations;
         $this->hooks = $hooks;
         $this->filename = $filename;
+        $this->parentTest = $parentTest;
     }
 
     /**
@@ -86,6 +95,16 @@ class TestObject
     public function getFilename()
     {
         return $this->filename;
+    }
+
+    /**
+     * Getter for the Parent Test Name
+     *
+     * @return string
+     */
+    public function getParentName()
+    {
+        return $this->parentTest;
     }
 
     /**
@@ -128,7 +147,7 @@ class TestObject
     /**
      * Returns hooks.
      *
-     * @return array
+     * @return TestHookObject[]
      */
     public function getHooks()
     {
@@ -198,6 +217,16 @@ class TestObject
     {
         $mergeUtil = new ActionMergeUtil($this->getName(), "Test");
         return $mergeUtil->resolveActionSteps($this->parsedSteps);
+    }
+
+    /**
+     * This method returns currently parsed steps
+     *
+     * @return array
+     */
+    public function getUnresolvedSteps()
+    {
+        return $this->parsedSteps;
     }
 
     /**

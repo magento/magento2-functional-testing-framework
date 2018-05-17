@@ -16,28 +16,20 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("A Functional Cest")
- * @group functional
+ * @Title("Child")
+ * @group Child
  */
-class MergedActionGroupTestCest
+class ChildExtendedTestMergingCest
 {
-	/**
-	  * @var DataPersistenceHandler $createPersonParam;
-	  */
-	protected $createPersonParam;
-
 	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the stepKey: createPersonParam");
-		$ReplacementPerson = DataObjectHandler::getInstance()->getObject("ReplacementPerson");
-		$this->createPersonParam = new DataPersistenceHandler($ReplacementPerson, []);
-		$this->createPersonParam->createEntity();
-		$I->fillField("#foo", "myData1");
-		$I->fillField("#bar", "myData2");
+		$I->amOnPage("/firstUrl");
+		$I->amOnPage("/beforeUrl");
+		$I->amOnPage("/lastUrl");
 	}
 
 	/**
@@ -46,8 +38,7 @@ class MergedActionGroupTestCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
-		$I->fillField("#foo", "myData1");
-		$I->fillField("#bar", "myData2");
+		$I->amOnPage("/afterUrl");
 	}
 
 	/**
@@ -60,19 +51,19 @@ class MergedActionGroupTestCest
 	}
 
 	/**
-	 * @Severity(level = SeverityLevel::CRITICAL)
+	 * @Severity(level = SeverityLevel::TRIVIAL)
 	 * @Features({"TestModule"})
-	 * @Stories({"MQE-433"})
+	 * @Stories({"Child"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function MergedActionGroupTest(AcceptanceTester $I)
+	public function ChildExtendedTestMerging(AcceptanceTester $I)
 	{
-		$I->see(".merge .Jane");
-		$I->see("#element .Jane");
-		$I->amOnPage("/Jane/Dane.html");
-		$I->click(".merge .Dane");
+		$I->comment("Before Comment");
+		$I->comment("Parent Comment");
+		$I->comment("After Comment");
+		$I->comment("Last Comment");
 	}
 }

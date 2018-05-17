@@ -116,9 +116,26 @@
     </test>
 
     <test name="ActionGroupUsingNestedArgument">
-        <actionGroup ref="actionGroupWithNestedArgument" stepKey="actionGroup">
+        <actionGroup ref="ActionGroupToExtend" stepKey="actionGroup">
             <argument name="count" value="99"/>
         </actionGroup>
+    </test>
+
+    <test name="ActionGroupToExtend">
+        <actionGroup ref="ActionGroupToExtend" stepKey="actionGroup">
+            <argument name="count" value="99"/>
+        </actionGroup>
+    </test>
+
+    <test name="ExtendedActionGroup">
+        <actionGroup ref="extendTestActionGroup" stepKey="actionGroup">
+            <argument name="count" value="99"/>
+            <argument name="otherCount" value="8000"/>
+        </actionGroup>
+    </test>
+
+    <test name="ExtendedRemoveActionGroup">
+        <actionGroup ref="extendRemoveTestActionGroup" stepKey="actionGroup"/>
     </test>
 
     <test name="ActionGroupUsingCreateData">

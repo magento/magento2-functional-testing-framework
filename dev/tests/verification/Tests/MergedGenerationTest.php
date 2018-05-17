@@ -40,4 +40,26 @@ class MergedGenerationTest extends MftfTestCase
         $entity = DataObjectHandler::getInstance()->getObject('testEntity');
         $this->assertCount(3, $entity->getLinkedEntities());
     }
+
+    /**
+     * Tests generation of a test merge file via insertBefore
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testMergeMassViaInsertBefore()
+    {
+        $this->generateAndCompareTest('MergeMassViaInsertBefore');
+    }
+
+    /**
+     * Tests generation of a test merge file via insertBefore
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testMergeMassViaInsertAfter()
+    {
+        $this->generateAndCompareTest('MergeMassViaInsertAfter');
+    }
 }
