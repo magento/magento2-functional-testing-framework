@@ -137,4 +137,10 @@
     <test name="ExtendedRemoveActionGroup">
         <actionGroup ref="extendRemoveTestActionGroup" stepKey="actionGroup"/>
     </test>
+
+    <test name="ActionGroupUsingCreateData">
+        <before>
+            <actionGroup ref="actionGroupWithCreateData" stepKey="Key1"/>
+        </before>
+    </test>
 </tests>

@@ -136,15 +136,21 @@ class ActionGroupObject
     private function getResolvedActionsWithArgs($arguments, $actionReferenceKey)
     {
         $resolvedActions = [];
+        $replacementStepKeys = [];
 
         foreach ($this->parsedActions as $action) {
+            $replacementStepKeys[$action->getStepKey()] = $action->getStepKey() . ucfirst($actionReferenceKey);
             $varAttributes = array_intersect($this->varAttributes, array_keys($action->getCustomActionAttributes()));
+
+            // replace createDataKey attributes inside the action group
+            $resolvedActionAttributes = $this->replaceCreateDataKeys($action, $replacementStepKeys);
+
             $newActionAttributes = [];
 
             if (!empty($varAttributes)) {
                 $newActionAttributes = $this->resolveAttributesWithArguments(
                     $arguments,
-                    $action->getCustomActionAttributes()
+                    $resolvedActionAttributes
                 );
             }
 
@@ -159,7 +165,7 @@ class ActionGroupObject
             $resolvedActions[$action->getStepKey() . ucfirst($actionReferenceKey)] = new ActionObject(
                 $action->getStepKey() . ucfirst($actionReferenceKey),
                 $action->getType(),
-                array_replace_recursive($action->getCustomActionAttributes(), $newActionAttributes),
+                array_replace_recursive($resolvedActionAttributes, $newActionAttributes),
                 $action->getLinkedAction() == null ? null : $action->getLinkedAction() . ucfirst($actionReferenceKey),
                 $orderOffset,
                 [self::ACTION_GROUP_ORIGIN_NAME => $this->name,
@@ -431,5 +437,28 @@ class ActionGroupObject
             return array_values($matchedArgument)[0];
         }
         return null;
+    }
+
+    /**
+     * Replaces references to step keys used earlier in an action group
+     *
+     * @param ActionObject $action
+     * @param array $replacementStepKeys
+     * @return ActionObject[]
+     */
+    private function replaceCreateDataKeys($action, $replacementStepKeys)
+    {
+        $resolvedActionAttributes = [];
+
+        foreach ($action->getCustomActionAttributes() as $actionAttribute => $actionAttributeDetails) {
+            if (is_array($actionAttributeDetails) && array_key_exists('createDataKey', $actionAttributeDetails)) {
+                $actionAttributeDetails['createDataKey'] =
+                    $replacementStepKeys[$actionAttributeDetails['createDataKey']] ??
+                    $actionAttributeDetails['createDataKey'];
+            }
+            $resolvedActionAttributes[$actionAttribute] = $actionAttributeDetails;
+        }
+
+        return $resolvedActionAttributes;
     }
 }
