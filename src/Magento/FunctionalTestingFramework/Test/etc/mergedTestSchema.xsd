@@ -72,6 +72,7 @@
         <xs:attribute type="xs:string" name="filename"/>
         <xs:attribute type="xs:string" name="insertBefore"/>
         <xs:attribute type="xs:string" name="insertAfter"/>
+        <xs:attribute type="xs:string" name="extends"/>
     </xs:complexType>
     <xs:group name="testTypeTags">
         <xs:choice>

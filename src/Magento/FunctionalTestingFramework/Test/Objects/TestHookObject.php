@@ -66,6 +66,16 @@ class TestHookObject
     }
 
     /**
+     * Getter for hook parent name
+     *
+     * @return string
+     */
+    public function getParentName()
+    {
+        return $this->parentName;
+    }
+
+    /**
      * Returns an array of action objects to be executed within the hook.
      *
      * @return array
@@ -74,6 +84,16 @@ class TestHookObject
     {
         $mergeUtil = new ActionMergeUtil($this->parentName, $this->getType());
         return $mergeUtil->resolveActionSteps($this->actions);
+    }
+
+    /**
+     * Returns an array of unresolved actions
+     *
+     * @return array
+     */
+    public function getUnresolvedActions()
+    {
+        return $this->actions;
     }
 
     /**

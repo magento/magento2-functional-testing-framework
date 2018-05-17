@@ -87,6 +87,11 @@ class TestDataArrayBuilder
     private $testActions = [];
 
     /**
+     * @var array
+     */
+    private $testReference = null;
+
+    /**
      * @param $name
      * @return $this
      */
@@ -213,6 +218,21 @@ class TestDataArrayBuilder
     }
 
     /**
+     * Add test reference passed in by arg (or default if no arg)
+     *
+     * @param string $reference
+     * @return $this
+     */
+    public function withTestReference($reference = null)
+    {
+        if ($reference != null) {
+            $this->testReference = $reference;
+        }
+
+        return $this;
+    }
+
+    /**
      * Output the resulting test data array based on parameters set in the object
      *
      * @return array
@@ -227,7 +247,8 @@ class TestDataArrayBuilder
                 TestObjectExtractor::TEST_BEFORE_HOOK => $this->beforeHook,
                 TestObjectExtractor::TEST_AFTER_HOOK => $this->afterHook,
                 TestObjectExtractor::TEST_FAILED_HOOK => $this->failedHook,
-                "filename" => $this->filename
+                "filename" => $this->filename,
+                "extends" => $this->testReference
             ],
             $this->testActions
         )];

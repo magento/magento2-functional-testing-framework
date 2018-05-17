@@ -16,6 +16,8 @@ class Flat implements ConverterInterface
 {
     const REMOVE_ACTION = 'remove';
     const REMOVE_KEY_ATTRIBUTE = 'keyForRemoval';
+    const EXTENDS_ATTRIBUTE = 'extends';
+    const TEST_HOOKS = ['before', 'after'];
 
     /**
      * Array node configuration.
@@ -87,8 +89,19 @@ class Flat implements ConverterInterface
                 }
 
                 if ($nodeName == self::REMOVE_ACTION) {
-                    unset($value[$node->getAttribute(self::REMOVE_KEY_ATTRIBUTE)]);
-                    continue;
+                    // Check to see if the test extends for this remove action
+                    $parentHookExtends = in_array($node->parentNode->nodeName, self::TEST_HOOKS)
+                        && !empty($node->parentNode->parentNode->getAttribute('extends'));
+                    $test_extends = $parentHookExtends || !empty($node->parentNode->getAttribute('extends'));
+
+                    // If the test does extend, don't remove the remove action and set the stepkey
+                    if ($test_extends) {
+                        $keyForRemoval = $node->getAttribute('keyForRemoval');
+                        $node->setAttribute('stepKey', $keyForRemoval);
+                    } else {
+                        unset($value[$node->getAttribute(self::REMOVE_KEY_ATTRIBUTE)]);
+                        continue;
+                    }
                 }
 
                 $nodeData = $this->convertXml($node, $nodePath);

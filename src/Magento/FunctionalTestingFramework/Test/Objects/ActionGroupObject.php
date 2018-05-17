@@ -7,8 +7,10 @@
 namespace Magento\FunctionalTestingFramework\Test\Objects;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Util\ActionGroupObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
+use Magento\FunctionalTestingFramework\Test\Util\ObjectExtension;
 
 /**
  * Class ActionGroupObject
@@ -46,13 +48,21 @@ class ActionGroupObject
     private $arguments;
 
     /**
+     * String of parent Action Group
+     *
+     * @var String
+     */
+    private $parentActionGroup;
+
+    /**
      * ActionGroupObject constructor.
      *
      * @param string $name
      * @param ArgumentObject[] $arguments
      * @param array $actions
+     * @param string $parentActionGroup
      */
-    public function __construct($name, $arguments, $actions)
+    public function __construct($name, $arguments, $actions, $parentActionGroup)
     {
         $this->varAttributes = array_merge(
             ActionObject::SELECTOR_ENABLED_ATTRIBUTES,
@@ -62,6 +72,7 @@ class ActionGroupObject
         $this->name = $name;
         $this->arguments = $arguments;
         $this->parsedActions = $actions;
+        $this->parentActionGroup = $parentActionGroup;
     }
 
     /**
@@ -360,6 +371,46 @@ class ActionGroupObject
             $originalKeys[] = $action->getStepKey();
         }
         return $originalKeys;
+    }
+
+    /**
+     * Getter for the Action Group Name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Getter for the Parent Action Group Name
+     *
+     * @return string
+     */
+    public function getParentName()
+    {
+        return $this->parentActionGroup;
+    }
+
+    /**
+     * Getter for the Action Group Actions
+     *
+     * @return ActionObject[]
+     */
+    public function getActions()
+    {
+        return $this->parsedActions;
+    }
+
+    /**
+     * Getter for the Action Group Arguments
+     *
+     * @return array
+     */
+    public function getArguments()
+    {
+        return $this->arguments;
     }
 
     /**

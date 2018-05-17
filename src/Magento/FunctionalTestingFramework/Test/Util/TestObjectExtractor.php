@@ -77,6 +77,7 @@ class TestObjectExtractor extends BaseObjectExtractor
         $fileNames = explode(",", $filename);
         $baseFileName = $fileNames[0];
         $module = $this->extractModuleName($baseFileName);
+        $testReference = $testData['extends'] ?? null;
         $testActions = $this->stripDescriptorTags(
             $testData,
             self::NODE_NAME,
@@ -87,7 +88,8 @@ class TestObjectExtractor extends BaseObjectExtractor
             self::TEST_FAILED_HOOK,
             self::TEST_INSERT_BEFORE,
             self::TEST_INSERT_AFTER,
-            self::TEST_FILENAME
+            self::TEST_FILENAME,
+            'extends'
         );
 
         if (array_key_exists(self::TEST_ANNOTATIONS, $testData)) {
@@ -127,7 +129,8 @@ class TestObjectExtractor extends BaseObjectExtractor
                 $this->actionObjectExtractor->extractActions($testActions, $testData[self::NAME]),
                 $testAnnotations,
                 $testHooks,
-                $filename
+                $filename,
+                $testReference
             );
         } catch (XmlException $exception) {
             throw new XmlException($exception->getMessage() . ' in Test ' . $filename);
