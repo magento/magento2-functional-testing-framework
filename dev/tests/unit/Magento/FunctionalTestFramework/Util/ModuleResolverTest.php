@@ -17,14 +17,6 @@ use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 class ModuleResolverTest extends MagentoTestCase
 {
     /**
-     * remove all registered test doubles
-     */
-    protected function tearDown()
-    {
-        AspectMock::clean();
-    }
-
-    /**
      * Validate that Paths that are already set are returned
      * @throws \Exception
      */
