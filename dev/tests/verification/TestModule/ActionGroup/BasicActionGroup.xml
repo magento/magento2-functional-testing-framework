@@ -98,4 +98,11 @@
             <requiredEntity createDataKey="createCategory"/>
         </createData>
     </actionGroup>
+
+    <actionGroup name="actionGroupContainsStepKeyInArgValue">
+        <arguments>
+            <argument name="sameStepKeyAsArg" type="string" defaultValue="stringLiteral"/>
+        </arguments>
+        <see selector=".selector" userInput="{{sameStepKeyAsArg}}" stepKey="arg1" />
+    </actionGroup>
 </actionGroups>
