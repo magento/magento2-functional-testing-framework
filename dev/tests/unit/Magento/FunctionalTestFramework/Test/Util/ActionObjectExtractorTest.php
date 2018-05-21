@@ -7,9 +7,9 @@ namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
 
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 
-class ActionObjectExtractorTest extends TestCase
+class ActionObjectExtractorTest extends MagentoTestCase
 {
     /** @var  ActionObjectExtractor */
     private $testActionObjectExtractor;

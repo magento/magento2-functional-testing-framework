@@ -7,7 +7,7 @@ namespace tests\verification\Tests;
 
 use tests\util\MftfTestCase;
 
-class ParameterArrayTest extends MftfTestCase
+class ExtendedDataTest extends MftfTestCase
 {
     /**
      * Tests flat generation of a hardcoded test file with no external references.
@@ -15,8 +15,8 @@ class ParameterArrayTest extends MftfTestCase
      * @throws \Exception
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
-    public function testParameterArrayGeneration()
+    public function testExtendedParameterArrayGeneration()
     {
-        $this->generateAndCompareTest('ParameterArrayTest');
+        $this->generateAndCompareTest('ExtendParentDataTest');
     }
 }

@@ -15,13 +15,21 @@ use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ArgumentObject;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 use tests\unit\Util\ActionGroupObjectBuilder;
 use tests\unit\Util\EntityDataObjectBuilder;
 
-class ActionGroupObjectTest extends TestCase
+class ActionGroupObjectTest extends MagentoTestCase
 {
     const ACTION_GROUP_MERGE_KEY = 'TestKey';
+
+    /**
+     * Teardown for removing AspectMock Double References
+     */
+    protected function tearDown()
+    {
+        AspectMock::clean();
+    }
 
     /**
      * Tests a string literal in an action group

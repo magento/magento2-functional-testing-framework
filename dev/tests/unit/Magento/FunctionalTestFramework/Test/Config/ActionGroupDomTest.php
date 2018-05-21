@@ -7,9 +7,9 @@ namespace Tests\unit\Magento\FunctionalTestFramework\Test\Config;
 
 use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
 use Magento\FunctionalTestingFramework\Test\Config\ActionGroupDom;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 
-class ActionGroupDomTest extends TestCase
+class ActionGroupDomTest extends MagentoTestCase
 {
     /**
      * Test Action Group duplicate step key validation

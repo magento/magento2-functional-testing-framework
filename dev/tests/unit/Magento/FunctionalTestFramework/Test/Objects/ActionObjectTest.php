@@ -15,13 +15,21 @@ use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
 use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 
 /**
  * Class ActionObjectTest
  */
-class ActionObjectTest extends TestCase
+class ActionObjectTest extends MagentoTestCase
 {
+    /**
+     * Teardown for removing AspectMock Double References
+     */
+    protected function tearDown()
+    {
+        AspectMock::clean();
+    }
+
     /**
      * The order offset should be 0 when the action is instantiated with 'before'
      */

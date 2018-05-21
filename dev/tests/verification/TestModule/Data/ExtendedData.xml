@@ -8,14 +8,16 @@
 
 <entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd">
-    <entity name="simpleParamData" type="data">
+    <entity name="parentData" type="data">
         <data key="name">name</data>
         <data key="uniqueNamePre" unique="prefix">prename</data>
         <data key="uniqueNamePost" unique="suffix">postname</data>
     </entity>
-    <entity name="testEntity" type="sample">
-        <data key="sampleField">value1</data>
-        <requiredEntity type="test">originalValue</requiredEntity>
-        <requiredEntity type="test3">originalValue3</requiredEntity>
+    <entity name="extendParentData" type="extendParentData" extends="parentData">
+        <data key="name">otherName</data>
+        <data key="nameExtend">extendName</data>
+        <data key="uniqueNamePost">item</data>
+        <data key="anotherUniqueNamePre" unique="suffix">postnameExtend</data>
+        <requiredEntity type="item">value</requiredEntity>
     </entity>
 </entities>

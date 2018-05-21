@@ -11,11 +11,19 @@ use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 use tests\unit\Util\DataObjectHandlerReflectionUtil;
 
-class ActionMergeUtilTest extends TestCase
+class ActionMergeUtilTest extends MagentoTestCase
 {
+    /**
+     * Teardown for removing AspectMock Double References
+     */
+    protected function tearDown()
+    {
+        AspectMock::clean();
+    }
+
     /**
      * Test to validate actions are properly ordered during a merge.
      *

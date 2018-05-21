@@ -6,7 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\DataGenerator\Objects;
 
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 
 /**
  * The following function declarations override the global function_exists and declare msq/msqs for use
@@ -32,7 +32,7 @@ function msqs($id = null)
 /**
  * Class EntityDataObjectTest
  */
-class EntityDataObjectTest extends TestCase
+class EntityDataObjectTest extends MagentoTestCase
 {
     public function testBasicGetters()
     {

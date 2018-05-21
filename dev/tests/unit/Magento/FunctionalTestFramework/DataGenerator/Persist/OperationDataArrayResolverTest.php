@@ -9,12 +9,12 @@ use AspectMock\Test as AspectMock;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\OperationDefinitionObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\OperationDataArrayResolver;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 use tests\unit\Util\EntityDataObjectBuilder;
 use tests\unit\Util\OperationDefinitionBuilder;
 use tests\unit\Util\OperationElementBuilder;
 
-class OperationDataArrayResolverTest extends TestCase
+class OperationDataArrayResolverTest extends MagentoTestCase
 {
     const NESTED_METADATA_EXPECTED_RESULT = ["parentType" => [
         "name" => "Hopper",
@@ -34,6 +34,14 @@ class OperationDataArrayResolverTest extends TestCase
             ["city" => "Austin", "state" => "Texas", "zip" => 78701],
         ]
     ]];
+
+    /**
+     * Teardown for removing AspectMock Double References
+     */
+    protected function tearDown()
+    {
+        AspectMock::clean();
+    }
 
     /**
      * Test a basic metadata resolve between primitive values and a primitive data set

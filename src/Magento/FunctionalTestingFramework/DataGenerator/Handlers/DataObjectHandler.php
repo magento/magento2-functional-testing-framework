@@ -93,7 +93,6 @@ class DataObjectHandler implements ObjectHandlerInterface
     public function getObject($name)
     {
         if (array_key_exists($name, $this->entityDataObjects)) {
-            $item = $this->extendDataObject($this->entityDataObjects[$name]);
             return $this->extendDataObject($this->entityDataObjects[$name]);
         }
 
@@ -135,6 +134,7 @@ class DataObjectHandler implements ObjectHandlerInterface
             $linkedEntities = [];
             $uniquenessData = [];
             $vars = [];
+            $parentEntity = null;
 
             if (array_key_exists(self::_DATA, $rawEntity)) {
                 $data = $this->processDataElements($rawEntity);
@@ -157,7 +157,19 @@ class DataObjectHandler implements ObjectHandlerInterface
                 $vars = $this->processVarElements($rawEntity);
             }
 
-            $entityDataObject = new EntityDataObject($name, $type, $data, $linkedEntities, $uniquenessData, $vars);
+            if (array_key_exists(self::_EXTENDS, $rawEntity)) {
+                $parentEntity = $rawEntity[self::_EXTENDS];
+            }
+
+            $entityDataObject = new EntityDataObject(
+                $name,
+                $type,
+                $data,
+                $linkedEntities,
+                $uniquenessData,
+                $vars,
+                $parentEntity
+            );
 
             $entityDataObjects[$entityDataObject->getName()] = $entityDataObject;
         }

@@ -12,9 +12,9 @@ use AspectMock\Test as AspectMock;
 use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Util\ModuleResolver;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 
-class ModuleResolverTest extends TestCase
+class ModuleResolverTest extends MagentoTestCase
 {
     /**
      * remove all registered test doubles
