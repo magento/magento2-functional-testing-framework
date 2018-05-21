@@ -17,14 +17,6 @@ use tests\unit\Util\DataObjectHandlerReflectionUtil;
 class ActionMergeUtilTest extends MagentoTestCase
 {
     /**
-     * Teardown for removing AspectMock Double References
-     */
-    protected function tearDown()
-    {
-        AspectMock::clean();
-    }
-
-    /**
      * Test to validate actions are properly ordered during a merge.
      *
      * @return void

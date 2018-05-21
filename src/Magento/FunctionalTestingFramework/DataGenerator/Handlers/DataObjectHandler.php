@@ -6,7 +6,6 @@
 
 namespace Magento\FunctionalTestingFramework\DataGenerator\Handlers;
 
-use Magento\FunctionalTestingFramework\Config\Data;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Parsers\DataProfileSchemaParser;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;

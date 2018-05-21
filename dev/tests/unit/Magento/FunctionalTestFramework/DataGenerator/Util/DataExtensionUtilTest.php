@@ -18,14 +18,6 @@ use AspectMock\Test as AspectMock;
  */
 class EntityDataExtensionTest extends MagentoTestCase
 {
-    /**
-     * Teardown for removing AspectMock Double References
-     */
-    protected function tearDown()
-    {
-        AspectMock::clean();
-    }
-
     public function testNoParentData()
     {
         $extendedDataObject = [

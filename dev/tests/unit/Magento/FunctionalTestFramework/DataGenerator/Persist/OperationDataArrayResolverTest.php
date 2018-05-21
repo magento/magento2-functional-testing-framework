@@ -36,14 +36,6 @@ class OperationDataArrayResolverTest extends MagentoTestCase
     ]];
 
     /**
-     * Teardown for removing AspectMock Double References
-     */
-    protected function tearDown()
-    {
-        AspectMock::clean();
-    }
-
-    /**
      * Test a basic metadata resolve between primitive values and a primitive data set
      * <object>
      *  <field>stringField</field>

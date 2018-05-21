@@ -23,14 +23,6 @@ use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 class ActionObjectTest extends MagentoTestCase
 {
     /**
-     * Teardown for removing AspectMock Double References
-     */
-    protected function tearDown()
-    {
-        AspectMock::clean();
-    }
-
-    /**
      * The order offset should be 0 when the action is instantiated with 'before'
      */
     public function testConstructOrderBefore()

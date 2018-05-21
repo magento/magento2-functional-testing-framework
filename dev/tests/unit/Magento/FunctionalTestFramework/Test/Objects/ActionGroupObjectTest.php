@@ -24,14 +24,6 @@ class ActionGroupObjectTest extends MagentoTestCase
     const ACTION_GROUP_MERGE_KEY = 'TestKey';
 
     /**
-     * Teardown for removing AspectMock Double References
-     */
-    protected function tearDown()
-    {
-        AspectMock::clean();
-    }
-
-    /**
      * Tests a string literal in an action group
      */
     public function testGetStepsWithDefaultCase()
