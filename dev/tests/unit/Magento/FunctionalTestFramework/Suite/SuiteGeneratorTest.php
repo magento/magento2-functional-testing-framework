@@ -19,6 +19,7 @@ use Magento\FunctionalTestingFramework\Util\Manifest\DefaultTestManifest;
 use PHPUnit\Framework\TestCase;
 use tests\unit\Util\SuiteDataArrayBuilder;
 use tests\unit\Util\TestDataArrayBuilder;
+use tests\unit\Util\TestLoggingUtil;
 
 class SuiteGeneratorTest extends TestCase
 {
@@ -32,6 +33,15 @@ class SuiteGeneratorTest extends TestCase
             'clearPreviousSessionConfigEntries' => null,
             'appendEntriesToConfig' => null
         ]);
+    }
+
+    /**
+     * Before test functionality
+     * @return void
+     */
+    public function setUp()
+    {
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
 
     /**
@@ -63,7 +73,11 @@ class SuiteGeneratorTest extends TestCase
         $mockSuiteGenerator->generateSuite("basicTestSuite");
 
         // assert that expected suite is generated
-        $this->expectOutputString("Suite basicTestSuite generated to _generated/basicTestSuite." . PHP_EOL);
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'info',
+            "suite generated",
+            ['suite' => 'basicTestSuite', 'relative_path' => "_generated/basicTestSuite"]
+        );
     }
 
     /**
@@ -96,7 +110,11 @@ class SuiteGeneratorTest extends TestCase
         $mockSuiteGenerator->generateAllSuites($exampleTestManifest);
 
         // assert that expected suites are generated
-        $this->expectOutputString("Suite basicTestSuite generated to _generated/basicTestSuite." . PHP_EOL);
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'info',
+            "suite generated",
+            ['suite' => 'basicTestSuite', 'relative_path' => "_generated/basicTestSuite"]
+        );
     }
 
     /**
@@ -180,5 +198,13 @@ class SuiteGeneratorTest extends TestCase
         $property = new \ReflectionProperty(SuiteGenerator::class, 'groupClassGenerator');
         $property->setAccessible(true);
         $property->setValue($instance, $instance);
+    }
+
+    /**
+     * clean up function runs after all tests
+     */
+    public static function tearDownAfterClass()
+    {
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 }
