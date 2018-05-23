@@ -78,11 +78,12 @@
             <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\Page" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
+    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\Page" type="Magento\FunctionalTestingFramework\Page\Config\Reader\Filesystem">
         <arguments>
             <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\Page</argument>
+            <argument name="domDocumentClass" xsi:type="string">Magento\FunctionalTestingFramework\Page\Config\Dom</argument>
             <argument name="idAttributes" xsi:type="array">
                 <item name="/pages/page" xsi:type="string">name</item>
                 <item name="/pages/page/section" xsi:type="string">name</item>
