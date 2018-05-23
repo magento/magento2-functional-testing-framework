@@ -26,7 +26,7 @@
     <page name="AdminOneParamPage" url="/{{var1}}/page.html" area="admin" module="TestModule_Magento" parameterized="true">
         <section name="SampleSection"/>
     </page>
-    <page name="ExternalPage" url="http://myFullUrl.com/" area="external" module="SampleTests">
+    <page name="ExternalPage" url="http://myFullUrl.com/" area="external" module="TestModule_Magento">
         <section name="SampleSection"/>
     </page>
 </pages>
