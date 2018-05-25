@@ -8,28 +8,23 @@ namespace tests\verification\Tests;
 
 use Magento\FunctionalTestingFramework\Suite\SuiteGenerator;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
+use Magento\FunctionalTestingFramework\Util\Manifest\DefaultTestManifest;
 use Magento\FunctionalTestingFramework\Util\Manifest\ParallelTestManifest;
 use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
+use PHPUnit\Util\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 use tests\util\MftfTestCase;
 
 class SuiteGenerationTest extends MftfTestCase
 {
     const RESOURCES_DIR = TESTS_BP . DIRECTORY_SEPARATOR . 'verification' . DIRECTORY_SEPARATOR . 'Resources';
-    const CONFIG_YML_FILE = FW_BP . DIRECTORY_SEPARATOR . SuiteGenerator::YAML_CODECEPTION_CONFIG_FILENAME;
+    const CONFIG_YML_FILE = TESTS_BP . DIRECTORY_SEPARATOR . SuiteGenerator::YAML_CODECEPTION_CONFIG_FILENAME;
     const GENERATE_RESULT_DIR = TESTS_BP .
         DIRECTORY_SEPARATOR .
         "verification" .
         DIRECTORY_SEPARATOR .
         "_generated" .
         DIRECTORY_SEPARATOR;
-
-    /**
-     * Flag to track existence of config.yml file
-     *
-     * @var bool
-     */
-    private static $YML_EXISTS_FLAG = false;
 
     /**
      * Array which stores state of any existing config.yml groups
@@ -43,18 +38,20 @@ class SuiteGenerationTest extends MftfTestCase
      */
     public static function setUpBeforeClass()
     {
-        if (file_exists(self::CONFIG_YML_FILE)) {
-            self::$YML_EXISTS_FLAG = true;
-            return;
-        }
-
         // destroy _generated if it exists
         if (file_exists(self::GENERATE_RESULT_DIR)) {
             DirSetupUtil::rmdirRecursive(self::GENERATE_RESULT_DIR);
         }
+    }
 
-        $configYml = fopen(self::CONFIG_YML_FILE, "w");
-        fclose($configYml);
+    public function setUp()
+    {
+        // copy config yml file to test dir
+        $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
+        $fileSystem->copy(
+            realpath(FW_BP . '/etc/config/codeception.dist.yml'),
+            self::CONFIG_YML_FILE
+        );
     }
 
     /**
@@ -200,7 +197,6 @@ class SuiteGenerationTest extends MftfTestCase
             self::RESOURCES_PATH . DIRECTORY_SEPARATOR . $groupName . ".txt",
             $groupFile
         );
-
     }
 
     /**
@@ -219,7 +215,7 @@ class SuiteGenerationTest extends MftfTestCase
         ];
 
         //createParallelManifest
-        /** @var ParallelTestManifest $parallelManifest */
+        /** @var DefaultTestManifest $parallelManifest */
         $singleRunManifest = TestManifestFactory::makeManifest("singleRun", ["functionalSuite2" => []]);
 
         // Generate the Suite
@@ -246,7 +242,7 @@ class SuiteGenerationTest extends MftfTestCase
             $this->assertTrue(in_array($expectedFile, $dirContents));
         }
 
-        $expectedManifest = "dev/tests/verification/_generated/default/" . PHP_EOL . "-g functionalSuite2" . PHP_EOL;
+        $expectedManifest = "verification/_generated/default/" . PHP_EOL . "-g functionalSuite2" . PHP_EOL;
 
         $this->assertEquals($expectedManifest, file_get_contents(self::getManifestFilePath()));
     }
@@ -257,26 +253,13 @@ class SuiteGenerationTest extends MftfTestCase
      */
     public function tearDown()
     {
-        // restore config if we see there was an original codeception.yml file
-        if (self::$YML_EXISTS_FLAG) {
-            $yml = Yaml::parse(file_get_contents(self::CONFIG_YML_FILE));
-            foreach (self::$TEST_GROUPS as $testGroup) {
-                unset($yml['groups'][$testGroup]);
-            }
-
-            file_put_contents(self::CONFIG_YML_FILE, Yaml::dump($yml, 10));
-        }
         DirSetupUtil::rmdirRecursive(self::GENERATE_RESULT_DIR);
-    }
 
-    /**
-     * Remove yml if created during tests and did not exist before
-     */
-    public static function tearDownAfterClass()
-    {
-        if (!self::$YML_EXISTS_FLAG) {
-            unlink(self::CONFIG_YML_FILE);
-        }
+        // delete config yml file from test dir
+        $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
+        $fileSystem->remove(
+            self::CONFIG_YML_FILE
+        );
     }
 
     /**

@@ -14,14 +14,15 @@ modules:
         - \Magento\FunctionalTestingFramework\Module\MagentoWebDriver
         - \Magento\FunctionalTestingFramework\Helper\Acceptance
         - \Magento\FunctionalTestingFramework\Helper\MagentoFakerData
+        - \Magento\FunctionalTestingFramework\Module\MagentoSequence
         - \Magento\FunctionalTestingFramework\Module\MagentoAssert
         - Asserts
     config:
         \Magento\FunctionalTestingFramework\Module\MagentoWebDriver:
             url: "%MAGENTO_BASE_URL%"
             backend_name: "%MAGENTO_BACKEND_NAME%"
-            browser: '%BROWSER%'
-            window_size: maximize
+            browser: 'chrome'
+            window_size: 1280x1024
             username: "%MAGENTO_ADMIN_USERNAME%"
             password: "%MAGENTO_ADMIN_PASSWORD%"
             pageload_timeout: 30
@@ -31,5 +32,5 @@ modules:
             path: %SELENIUM_PATH%
             capabilities:
               chromeOptions:
-                args: ["--start-maximized", "--disable-extensions", "--enable-automation"]
+                args: ["--incognito", "--disable-extensions", "--enable-automation"]
 
