@@ -237,8 +237,8 @@ class ModuleResolver
 
         $codePathsToPattern = [
             $modulePath => '',
-            $appCodePath => '/Test/Mftf',
-            $vendorCodePath => '/Test/Mftf'
+            $appCodePath => DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR . 'Mftf',
+            $vendorCodePath => DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR . 'Mftf'
         ];
 
         foreach ($codePathsToPattern as $codePath => $pattern) {
@@ -283,7 +283,7 @@ class ModuleResolver
      */
     private static function globRelevantWrapper($testPath, $pattern)
     {
-        return glob($testPath . '*/*' . $pattern);
+        return glob($testPath . '*' . DIRECTORY_SEPARATOR . '*' . $pattern);
     }
 
     /**
