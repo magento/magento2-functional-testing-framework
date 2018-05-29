@@ -13,7 +13,7 @@
         <data key="uniqueNamePre" unique="prefix">prename</data>
         <data key="uniqueNamePost" unique="suffix">postname</data>
     </entity>
-    <entity name="extendParentData" type="extendParentData" extends="parentData">
+    <entity name="extendParentData" extends="parentData">
         <data key="name">otherName</data>
         <data key="nameExtend">extendName</data>
         <data key="uniqueNamePost">item</data>

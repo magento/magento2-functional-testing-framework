@@ -56,6 +56,9 @@ class DataExtensionUtil
             echo("Extending Data: " . $parentEntity->getName() . " => " . $entityObject->getName() . PHP_EOL);
         }
 
+        //get parent entity type if child does not have a type
+        $newType = $entityObject->getType() ?? $parentEntity->getType();
+
         // Get all data for both parent and child and merge
         $referencedData = $parentEntity->getAllData();
         $newData = array_merge($referencedData, $entityObject->getAllData());
@@ -84,7 +87,7 @@ class DataExtensionUtil
         // Create new Test object to return
         $extendedEntity = new EntityDataObject(
             $entityObject->getName(),
-            $parentEntity->getType(),
+            $newType,
             $newData,
             $newLinkedReferences,
             $newUniqueReferences,
