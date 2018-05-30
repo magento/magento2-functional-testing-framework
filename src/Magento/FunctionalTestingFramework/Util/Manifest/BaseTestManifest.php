@@ -43,7 +43,8 @@ abstract class BaseTestManifest
     public function __construct($path, $runConfig, $suiteConfiguration)
     {
         $this->runTypeConfig = $runConfig;
-        $this->relativeDirPath = substr($path, strlen(dirname(dirname(TESTS_BP))) + 1);
+        $relativeDirPath = substr($path, strlen(TESTS_BP));
+        $this->relativeDirPath = ltrim($relativeDirPath, DIRECTORY_SEPARATOR);
         $this->suiteConfiguration = $suiteConfiguration;
     }
 

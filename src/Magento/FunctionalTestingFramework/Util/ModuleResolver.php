@@ -229,6 +229,7 @@ class ModuleResolver
 
         // Define the Module paths from default TESTS_MODULE_PATH
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
+        $modulePath = rtrim($modulePath, DIRECTORY_SEPARATOR);
 
         // Define the Module paths from vendor modules
         $vendorCodePath = PROJECT_ROOT

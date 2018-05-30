@@ -16,9 +16,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 use Magento\FunctionalTestingFramework\Util\Env\EnvProcessor;
+use Symfony\Component\Yaml\Yaml;
 
 class BuildProjectCommand extends Command
 {
+    const DEFAULT_YAML_INLINE_DEPTH = 10;
+
     /**
      * Env processor manages .env files.
      *
@@ -33,9 +36,9 @@ class BuildProjectCommand extends Command
      */
     protected function configure()
     {
-        $this->setName('build:project');
-        $this->setDescription('Generate configuration files for the project. Build the Codeception project.');
-        $this->envProcessor = new EnvProcessor(BP . DIRECTORY_SEPARATOR . '.env');
+        $this->setName('build:project')
+            ->setDescription('Generate configuration files for the project. Build the Codeception project.');
+        $this->envProcessor = new EnvProcessor(TESTS_BP . DIRECTORY_SEPARATOR . '.env');
         $env = $this->envProcessor->getEnv();
         foreach ($env as $key => $value) {
             $this->addOption($key, null, InputOption::VALUE_REQUIRED, '', $value);
@@ -49,22 +52,12 @@ class BuildProjectCommand extends Command
      * @param OutputInterface $output
      * @return void
      * @throws \Symfony\Component\Console\Exception\LogicException
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $fileSystem = new Filesystem();
-        $fileSystem->copy(
-            BP . DIRECTORY_SEPARATOR . 'codeception.dist.yml',
-            BP . DIRECTORY_SEPARATOR . 'codeception.yml'
-        );
-        $output->writeln("codeception.yml configuration successfully applied.\n");
-        $fileSystem->copy(
-            BP . DIRECTORY_SEPARATOR . 'dev' . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR .
-            'functional' . DIRECTORY_SEPARATOR . 'MFTF.suite.dist.yml',
-            BP . DIRECTORY_SEPARATOR . 'dev' . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR .
-            'functional' . DIRECTORY_SEPARATOR . 'MFTF.suite.yml'
-        );
-        $output->writeln("MFTF.suite.yml configuration successfully applied.\n");
+        $this->generateConfigFiles($output);
 
         $setupEnvCommand = new SetupEnvCommand();
         $commandInput = [];
@@ -78,12 +71,58 @@ class BuildProjectCommand extends Command
         $commandInput = new ArrayInput($commandInput);
         $setupEnvCommand->run($commandInput, $output);
 
-        $process = new Process('vendor/bin/codecept build');
-        $process->run();
-        if ($process->isSuccessful()) {
-            $output->writeln("Codeception build run successfully.\n");
+
+        // TODO can we just import the codecept symfony command?
+        $codeceptBuildCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') .  ' build';
+        $process = new Process($codeceptBuildCommand);
+        $process->setWorkingDirectory(TESTS_BP);
+        $process->run(
+            function ($type, $buffer) use ($output) {
+                if ($output->isVerbose()) {
+                    $output->write($buffer);
+                }
+            }
+        );
+    }
+
+    /**
+     * Generates needed codeception configuration files to the TEST_BP directory
+     *
+     * @param OutputInterface $output
+     * @return void
+     */
+    private function generateConfigFiles(OutputInterface $output)
+    {
+        $fileSystem = new Filesystem();
+        //Find travel path from codeception.yml to FW_BP
+        $relativePath = $fileSystem->makePathRelative(FW_BP, TESTS_BP);
+
+        if (!$fileSystem->exists(TESTS_BP . DIRECTORY_SEPARATOR . 'codeception.yml')) {
+            // read in the codeception.yml file
+            $configDistYml = Yaml::parse(file_get_contents(realpath(FW_BP . "/etc/config/codeception.dist.yml")));
+            $configDistYml['paths']['support'] = $relativePath . 'src/Magento/FunctionalTestingFramework';
+            $configDistYml['paths']['envs'] = $relativePath . 'etc/_envs';
+            $configYmlText = Yaml::dump($configDistYml, self::DEFAULT_YAML_INLINE_DEPTH);
+
+            // dump output to new codeception.yml file
+            file_put_contents(TESTS_BP . DIRECTORY_SEPARATOR . 'codeception.yml', $configYmlText);
+            $output->writeln("codeception.yml configuration successfully applied.");
         }
 
-        $output->writeln('<info>The project built successfully.</info>');
+        if ($output->isVerbose()) {
+            $output->writeln("codeception.yml applied to " . TESTS_BP . DIRECTORY_SEPARATOR . 'codeception.yml');
+        }
+
+        // copy the functional suite yml, this will only copy if there are differences between the template the destination
+        $fileSystem->copy(
+            realpath(FW_BP . '/etc/config/functional.suite.dist.yml'),
+            TESTS_BP . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'functional.suite.yml'
+        );
+        $output->writeln('functional.suite.yml configuration successfully applied.');
+
+        if ($output->isVerbose()) {
+            $output->writeln("functional.suite.yml applied to " .
+                TESTS_BP . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'functional.suite.yml');
+        }
     }
 }
