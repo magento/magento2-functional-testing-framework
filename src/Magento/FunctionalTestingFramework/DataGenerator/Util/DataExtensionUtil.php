@@ -30,7 +30,7 @@ class DataExtensionUtil
      */
     public function extendEntity($entityObject)
     {
-        // Check to see if the parent test exists
+        // Check to see if the parent entity exists
         $parentEntity = DataObjectHandler::getInstance()->getObject($entityObject->getParentName());
         if ($parentEntity == null) {
             throw new XmlException(
@@ -43,7 +43,7 @@ class DataExtensionUtil
             );
         }
 
-        // Check to see if the parent test is already an extended test
+        // Check to see if the parent entity is already an extended entity
         if ($parentEntity->getParentName() !== null) {
             throw new XmlException(
                 "Cannot extend an entity that already extends another entity. Entity: " .
@@ -83,8 +83,7 @@ class DataExtensionUtil
             }
         }
 
-        // Create new Test object to return
-        // Create new Test object to return
+        // Create new entity object to return
         $extendedEntity = new EntityDataObject(
             $entityObject->getName(),
             $newType,
