@@ -94,11 +94,13 @@ class Dom
      * Merge $xml into DOM document
      *
      * @param string $xml
+     * @param string $filename
+     * @param ExceptionCollector $exceptionCollector
      * @return void
      */
-    public function merge($xml)
+    public function merge($xml, $filename = null, $exceptionCollector = null)
     {
-        $dom = $this->initDom($xml);
+        $dom = $this->initDom($xml, $filename, $exceptionCollector);
         $this->mergeNode($dom->documentElement, '');
     }
 

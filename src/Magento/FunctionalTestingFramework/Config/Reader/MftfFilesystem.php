@@ -4,12 +4,12 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magento\FunctionalTestingFramework\Test\Config\Reader;
+namespace Magento\FunctionalTestingFramework\Config\Reader;
 
 use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
 use Magento\FunctionalTestingFramework\Util\Iterator\File;
 
-class Filesystem extends \Magento\FunctionalTestingFramework\Config\Reader\Filesystem
+class MftfFilesystem extends \Magento\FunctionalTestingFramework\Config\Reader\Filesystem
 {
     /**
      * Method to redirect file name passing into Dom class
