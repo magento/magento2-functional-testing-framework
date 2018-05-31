@@ -32,6 +32,7 @@ try {
     $application->add(new Magento\FunctionalTestingFramework\Console\GenerateTestsCommand());
     $application->add(new Magento\FunctionalTestingFramework\Console\RunTestGroupCommand());
     $application->add(new Magento\FunctionalTestingFramework\Console\RunTestCommand());
+    $application->add(new Magento\FunctionalTestingFramework\Console\GenerateDevUrnCommand());
     $application->run();
 } catch (\Exception $e) {
     while ($e) {
