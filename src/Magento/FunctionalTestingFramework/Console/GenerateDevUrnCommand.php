@@ -36,7 +36,7 @@ class GenerateDevUrnCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return void
-     * @throws \Symfony\Component\Console\Exception\LogicException
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -47,68 +47,49 @@ class GenerateDevUrnCommand extends Command
             throw new TestFrameworkException("misc.xml not found in given path '{$miscXmlFilePath}'");
         }
 
-        $xml = simplexml_load_file($miscXmlFile);
+        $dom = new \DOMDocument('1.0');
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+        $dom->loadXML(file_get_contents($miscXmlFile));
 
         //Locate ProjectResources node, create one if none are found.
         $nodeForWork = null;
-        foreach($xml->component as $child) {
-            if ((string)$child->attributes()->name === 'ProjectResources') {
+        foreach($dom->getElementsByTagName('component') as $child) {
+            if ($child->getAttribute('name') === 'ProjectResources') {
                 $nodeForWork = $child;
             }
         }
         if ($nodeForWork === null) {
-            $nodeForWork = new \SimpleXMLElement('<component name="ProjectResources"/>');
+            $project = $dom->getElementsByTagName('project')[0];
+            $nodeForWork = $dom->createElement('component');
+            $nodeForWork->setAttribute('name', 'ProjectResources');
+            $project->appendChild($nodeForWork);
         }
 
         //Extract url=>location mappings that already exist, add MFTF URNs and reappend
         $resources = [];
-        foreach($nodeForWork->xpath("//resource") as $child) {
-            $resources[(string)$child->attributes()->url] = (string)$child->attributes()->location;
-            $this->removeFromXml($child);
+        $resourceNodes = $nodeForWork->getElementsByTagName('resource');
+        $resourceCount = $resourceNodes->length;
+        for ($i = 0; $i < $resourceCount; $i++) {
+            $child = $resourceNodes[0];
+            $resources[$child->getAttribute('url')] = $child->getAttribute('location');
+            $child->parentNode->removeChild($child);
         }
 
         $resources = array_merge($resources, $this->generateResourcesArray());
 
         foreach ($resources as $url => $location) {
-            $resourceNode = new \SimpleXMLElement('<resource/>');
-            $resourceNode->addAttribute('url', $url);
-            $resourceNode->addAttribute('location', $location);
-            $this->appendToXml($nodeForWork, $resourceNode);
+            $resourceNode = $dom->createElement('resource');
+            $resourceNode->setAttribute('url', $url);
+            $resourceNode->setAttribute('location', $location);
+            $nodeForWork->appendChild($resourceNode);
         }
 
-        //Remove old node and reappend
-        $this->removeFromXml($nodeForWork);
-        $this->appendToXml($xml, $nodeForWork);
-
         //Format and save output
-        $dom = new \DOMDocument('1.0');
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = true;
-        $dom->loadXML($xml->asXML());
         $dom->save($miscXmlFile);
         $output->writeln("MFTF URN mapping successfully added to {$miscXmlFile}.");
-    }
-
-    /**
-     * Appends SimpleXmlElement to the given SimpleXmlElement parent.
-     * @param \SimpleXMLElement $to
-     * @param \SimpleXMLElement $from
-     * @return void
-     */
-    private function appendToXml(\SimpleXMLElement $to, \SimpleXMLElement $from) {
-        $toDom = dom_import_simplexml($to);
-        $fromDom = dom_import_simplexml($from);
-        $toDom->appendChild($toDom->ownerDocument->importNode($fromDom, true));
-    }
-
-    /**
-     * Remove given SimleXmlElement child from child's parent node.
-     * @param \SimpleXMLElement $child
-     * @return void
-     */
-    private function removeFromXml(\SimpleXMLElement $child) {
-        $dom = dom_import_simplexml($child);
-        $dom->parentNode->removeChild($dom);
     }
 
     /**
