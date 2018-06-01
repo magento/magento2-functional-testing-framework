@@ -11,6 +11,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
  * Class ActionObjectExtractor
@@ -90,7 +91,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
                 $returnVariable = $actionData[ActionGroupObjectHandler::TEST_ACTION_RETURN_VARIABLE];
             }*/
 
-            $actions[] = new ActionObject(
+            $actions[$stepKey] = new ActionObject(
                 $stepKey,
                 $actionData[self::NODE_NAME],
                 $actionAttributes,
@@ -243,12 +244,10 @@ class ActionObjectExtractor extends BaseObjectExtractor
         }, ARRAY_FILTER_USE_BOTH);
 
         if (!empty($invalidStepRef)) {
-            $errorMsg = "Invalid ordering configuration in test {$testName} with step key(s):\n";
-            array_walk($invalidStepRef, function ($value, $key) use (&$errorMsg) {
-                $errorMsg.="\t{$key}\n";
-            });
-
-            throw new TestReferenceException($errorMsg);
+            throw new TestReferenceException(
+                "Invalid ordering configuration in test",
+                ['test' => $testName, 'stepKey' => array_keys($invalidStepRef)]
+            );
         }
 
         // check for ambiguous references to step keys (multiple refs across test merges).
@@ -256,16 +255,11 @@ class ActionObjectExtractor extends BaseObjectExtractor
             return count($value) > 1;
         });
 
-        $multipleActionsError = "";
         foreach ($atRiskStepRef as $stepKey => $stepRefs) {
-            $multipleActionsError.= "multiple actions referencing step key {$stepKey} in test {$testName}:\n";
-            array_walk($stepRefs, function ($value) use (&$multipleActionsError) {
-                $multipleActionsError.= "\t{$value}\n";
-            });
-        }
-
-        if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-            print $multipleActionsError;
+            LoggingUtil::getInstance()->getLogger(ActionObjectExtractor::class)->warn(
+                'multiple actions referencing step key',
+                ['test' => $testName, 'stepKey' => $stepKey, 'ref' => $stepRefs]
+            );
         }
     }
 }

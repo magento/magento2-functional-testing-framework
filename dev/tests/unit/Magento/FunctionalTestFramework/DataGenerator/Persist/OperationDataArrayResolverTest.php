@@ -13,6 +13,7 @@ use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 use tests\unit\Util\EntityDataObjectBuilder;
 use tests\unit\Util\OperationDefinitionBuilder;
 use tests\unit\Util\OperationElementBuilder;
+use tests\unit\Util\TestLoggingUtil;
 
 class OperationDataArrayResolverTest extends MagentoTestCase
 {
@@ -34,6 +35,15 @@ class OperationDataArrayResolverTest extends MagentoTestCase
             ["city" => "Austin", "state" => "Texas", "zip" => 78701],
         ]
     ]];
+
+    /**
+     * Before test functionality
+     * @return void
+     */
+    public function setUp()
+    {
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
+    }
 
     /**
      * Test a basic metadata resolve between primitive values and a primitive data set
@@ -343,5 +353,14 @@ class OperationDataArrayResolverTest extends MagentoTestCase
 
         // Do assert on result here
         $this->assertEquals(self::NESTED_METADATA_ARRAY_RESULT, $result);
+    }
+
+    /**
+     * After class functionality
+     * @return void
+     */
+    public static function tearDownAfterClass()
+    {
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 }

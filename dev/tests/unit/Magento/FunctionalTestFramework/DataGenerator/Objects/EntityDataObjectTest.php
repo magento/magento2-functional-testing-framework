@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\DataGenerator\Objects;
 
 use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\TestLoggingUtil;
 
 /**
  * The following function declarations override the global function_exists and declare msq/msqs for use
@@ -34,6 +35,15 @@ function msqs($id = null)
  */
 class EntityDataObjectTest extends MagentoTestCase
 {
+    /**
+     * Before test functionality
+     * @return void
+     */
+    public function setUp()
+    {
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
+    }
+
     public function testBasicGetters()
     {
         $data = ["datakey1" => "value1"];
@@ -108,5 +118,14 @@ class EntityDataObjectTest extends MagentoTestCase
         // Perform Asserts
         $this->assertEquals("linkedEntity1", $dataObject->getLinkedEntitiesOfType("linkedEntityType")[0]);
         $this->assertEquals("linkedEntity2", $dataObject->getLinkedEntitiesOfType("otherEntityType")[0]);
+    }
+
+    /**
+     * After class functionality
+     * @return void
+     */
+    public static function tearDownAfterClass()
+    {
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 }

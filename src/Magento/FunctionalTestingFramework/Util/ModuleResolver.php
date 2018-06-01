@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Util;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
  * Class ModuleResolver, resolve module path based on enabled modules of target Magento instance.
@@ -191,11 +192,13 @@ class ModuleResolver
 
         $enabledModules = $this->getEnabledModules();
         if (empty($enabledModules) && !MftfApplicationConfig::getConfig()->forceGenerateEnabled()) {
-            trigger_error(
-                "Could not retrieve enabled modules from provided 'MAGENTO_BASE_URL'," .
-                "please make sure Magento is available at this url",
-                E_USER_ERROR
+            $errorMsg = 'Could not retrieve enabled modules from provided MAGENTO_BASE_URL ' .
+                'please make sure Magento is available at this url';
+            LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->error(
+                $errorMsg,
+                ['MAGENTO_BASE_URL' => getenv('MAGENTO_BASE_URL')]
             );
+            trigger_error($errorMsg, E_USER_ERROR);
         }
 
         $allModulePaths = $this->aggregateTestModulePaths();
@@ -229,6 +232,7 @@ class ModuleResolver
 
         // Define the Module paths from default TESTS_MODULE_PATH
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
+        $modulePath = rtrim($modulePath, DIRECTORY_SEPARATOR);
 
         // Define the Module paths from vendor modules
         $vendorCodePath = PROJECT_ROOT
@@ -237,8 +241,8 @@ class ModuleResolver
 
         $codePathsToPattern = [
             $modulePath => '',
-            $appCodePath => '/Test/Mftf',
-            $vendorCodePath => '/Test/Mftf'
+            $appCodePath => DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR . 'Mftf',
+            $vendorCodePath => DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR . 'Mftf'
         ];
 
         foreach ($codePathsToPattern as $codePath => $pattern) {
@@ -269,6 +273,13 @@ class ModuleResolver
         foreach ($relevantPaths as $codePath) {
             $mainModName = basename(str_replace($pattern, '', $codePath));
             $modulePaths[$mainModName][] = $codePath;
+
+            if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
+                LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->debug(
+                    "including module",
+                    ['module' => $mainModName, 'path' => $codePath]
+                );
+            }
         }
 
         return $modulePaths;
@@ -283,7 +294,7 @@ class ModuleResolver
      */
     private static function globRelevantWrapper($testPath, $pattern)
     {
-        return glob($testPath . '*/*' . $pattern);
+        return glob($testPath . '*' . DIRECTORY_SEPARATOR . '*' . $pattern);
     }
 
     /**
@@ -336,7 +347,10 @@ class ModuleResolver
             return;
         }
         $url = ConfigSanitizerUtil::sanitizeUrl(getenv('MAGENTO_BASE_URL')) . $this->versionUrl;
-        print "Fetching version information from {$url}\n";
+        LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
+            "Fetching version information.",
+            ['url' => $url]
+        );
 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
@@ -347,9 +361,10 @@ class ModuleResolver
             $response = "No version information available.";
         }
 
-        if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-            print "\nVersion Information: {$response}\n";
-        }
+        LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
+            'version information',
+            ['version' => $response]
+        );
     }
 
     /**
@@ -412,7 +427,10 @@ class ModuleResolver
         $customModulePaths = $this->getCustomModulePaths();
 
         array_map(function ($value) {
-            print "Including module path: {$value}\n";
+            LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
+                "including custom module",
+                ['module' => $value]
+            );
         }, $customModulePaths);
 
         return $this->flattenAllModulePaths(array_merge($modulePathsResult, $customModulePaths));
@@ -430,7 +448,10 @@ class ModuleResolver
         foreach ($modulePathsResult as $moduleName => $modulePath) {
             if (in_array($moduleName, $this->getModuleBlacklist())) {
                 unset($modulePathsResult[$moduleName]);
-                print "Excluding module: {$moduleName}\n";
+                LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
+                    "excluding module",
+                    ['module' => $moduleName]
+                );
             }
         }
 

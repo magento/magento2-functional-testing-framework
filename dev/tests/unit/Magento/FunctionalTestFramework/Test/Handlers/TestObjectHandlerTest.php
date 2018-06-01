@@ -66,12 +66,12 @@ class TestObjectHandlerTest extends MagentoTestCase
         $expectedBeforeHookObject = new TestHookObject(
             TestObjectExtractor::TEST_BEFORE_HOOK,
             $testDataArrayBuilder->testName,
-            [$expectedBeforeActionObject]
+            ["testActionBefore" => $expectedBeforeActionObject]
         );
         $expectedAfterHookObject = new TestHookObject(
             TestObjectExtractor::TEST_AFTER_HOOK,
             $testDataArrayBuilder->testName,
-            [$expectedAfterActionObject]
+            ["testActionAfter" => $expectedAfterActionObject]
         );
         $expectedFailedHookObject = new TestHookObject(
             TestObjectExtractor::TEST_FAILED_HOOK,
@@ -86,7 +86,7 @@ class TestObjectHandlerTest extends MagentoTestCase
         );
         $expectedTestObject = new TestObject(
             $testDataArrayBuilder->testName,
-            [$expectedTestActionObject],
+            ["testActionInTest" => $expectedTestActionObject],
             [
                 'features' => ['NO MODULE DETECTED'],
                 'group' => ['test']

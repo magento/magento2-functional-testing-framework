@@ -13,6 +13,7 @@ use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Manifest\BaseTestManifest;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Symfony\Component\Yaml\Yaml;
@@ -140,7 +141,10 @@ class SuiteGenerator
         $groupNamespace = $this->generateGroupFile($suiteName, $relevantTests, $originalSuiteName);
 
         $this->appendEntriesToConfig($suiteName, $fullPath, $groupNamespace);
-        print "Suite ${suiteName} generated to ${relativePath}.\n";
+        LoggingUtil::getInstance()->getLogger(SuiteGenerator::class)->info(
+            "suite generated",
+            ['suite' => $suiteName, 'relative_path' => $relativePath]
+        );
     }
 
     /**
@@ -158,17 +162,12 @@ class SuiteGenerator
     {
         $suiteRef = $originalSuiteName ?? $suiteName;
         $possibleTestRef = SuiteObjectHandler::getInstance()->getObject($suiteRef)->getTests();
-        $invalidTestRef = null;
-        $errorMsg = "Cannot reference tests not declared as part of {$suiteRef}:\n ";
+        $errorMsg = "Cannot reference tests whcih are not declared as part of suite.";
 
-        array_walk($testsReferenced, function ($value) use (&$invalidTestRef, $possibleTestRef, &$errorMsg) {
-            if (!array_key_exists($value, $possibleTestRef)) {
-                $invalidTestRef.= "\t{$value}\n";
-            }
-        });
+        $invalidTestRef = array_diff($testsReferenced, array_keys($possibleTestRef));
 
-        if ($invalidTestRef != null) {
-            throw new TestReferenceException($errorMsg . $invalidTestRef);
+        if (!empty($invalidTestRef)) {
+            throw new TestReferenceException($errorMsg, ['suite' => $suiteRef, 'test' => $invalidTestRef]);
         }
     }
 
@@ -241,7 +240,8 @@ class SuiteGenerator
      */
     private function appendEntriesToConfig($suiteName, $suitePath, $groupNamespace)
     {
-        $relativeSuitePath = substr($suitePath, strlen(dirname(dirname(TESTS_BP))) + 1);
+        $relativeSuitePath = substr($suitePath, strlen(TESTS_BP));
+        $relativeSuitePath = ltrim($relativeSuitePath, DIRECTORY_SEPARATOR);
 
         $ymlArray = self::getYamlFileContents();
         if (!array_key_exists(self::YAML_GROUPS_TAG, $ymlArray)) {
@@ -344,6 +344,6 @@ class SuiteGenerator
      */
     private static function getYamlConfigFilePath()
     {
-        return dirname(dirname(TESTS_BP)) . DIRECTORY_SEPARATOR;
+        return TESTS_BP . DIRECTORY_SEPARATOR;
     }
 }

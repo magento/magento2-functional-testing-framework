@@ -19,9 +19,30 @@ use Magento\FunctionalTestingFramework\Util\Manifest\DefaultTestManifest;
 use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 use tests\unit\Util\SuiteDataArrayBuilder;
 use tests\unit\Util\TestDataArrayBuilder;
+use tests\unit\Util\TestLoggingUtil;
 
 class SuiteGeneratorTest extends MagentoTestCase
 {
+
+    /**
+     * Setup entry append and clear for Suite Generator
+     */
+    public static function setUpBeforeClass()
+    {
+        AspectMock::double(SuiteGenerator::class, [
+            'clearPreviousSessionConfigEntries' => null,
+            'appendEntriesToConfig' => null
+        ]);
+    }
+
+    /**
+     * Before test functionality
+     * @return void
+     */
+    public function setUp()
+    {
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
+    }
 
     /**
      * Tests generating a single suite given a set of parsed test data
@@ -52,7 +73,11 @@ class SuiteGeneratorTest extends MagentoTestCase
         $mockSuiteGenerator->generateSuite("basicTestSuite");
 
         // assert that expected suite is generated
-        $this->expectOutputString("Suite basicTestSuite generated to _generated/basicTestSuite." . PHP_EOL);
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'info',
+            "suite generated",
+            ['suite' => 'basicTestSuite', 'relative_path' => "_generated" . DIRECTORY_SEPARATOR . "basicTestSuite"]
+        );
     }
 
     /**
@@ -80,12 +105,16 @@ class SuiteGeneratorTest extends MagentoTestCase
         $this->setMockTestAndSuiteParserOutput($mockTestData, $mockData);
 
         // parse and retrieve suite object with mocked data
-        $exampleTestManifest = new DefaultTestManifest([], "sample/path");
+        $exampleTestManifest = new DefaultTestManifest([], "sample" . DIRECTORY_SEPARATOR . "path");
         $mockSuiteGenerator = SuiteGenerator::getInstance();
         $mockSuiteGenerator->generateAllSuites($exampleTestManifest);
 
         // assert that expected suites are generated
-        $this->expectOutputString("Suite basicTestSuite generated to _generated/basicTestSuite." . PHP_EOL);
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'info',
+            "suite generated",
+            ['suite' => 'basicTestSuite', 'relative_path' => "_generated" . DIRECTORY_SEPARATOR . "basicTestSuite"]
+        );
     }
 
     /**
@@ -169,6 +198,14 @@ class SuiteGeneratorTest extends MagentoTestCase
         $property = new \ReflectionProperty(SuiteGenerator::class, 'groupClassGenerator');
         $property->setAccessible(true);
         $property->setValue($instance, $instance);
+    }
 
+    /**
+     * clean up function runs after all tests
+     */
+    public static function tearDownAfterClass()
+    {
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
+        parent::tearDownAfterClass();
     }
 }

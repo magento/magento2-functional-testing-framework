@@ -17,7 +17,7 @@ class MagentoTestCase extends TestCase
     /**
      * Teardown for removing AspectMock Double References
      */
-    protected function tearDown()
+    public static function tearDownAfterClass()
     {
         AspectMock::clean();
     }

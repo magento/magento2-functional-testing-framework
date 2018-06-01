@@ -15,6 +15,7 @@ use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
 use Magento\FunctionalTestingFramework\Page\Handlers\PageObjectHandler;
 use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
  * Class ActionObject
@@ -271,7 +272,10 @@ class ActionObject
             // @codingStandardsIgnoreStart
             $appConfig = MftfApplicationConfig::getConfig();
             if ($appConfig->getPhase() == MftfApplicationConfig::GENERATION_PHASE && $appConfig->verboseEnabled()) {
-                echo("WARNING: Use of one line Assertion actions will be deprecated in MFTF 3.0.0, please use nested syntax (Action: {$this->type} StepKey: {$this->stepKey})" . PHP_EOL);
+                LoggingUtil::getInstance()->getLogger(ActionObject::class)->warning(
+                    "use of one line Assertion actions will be deprecated in MFTF 3.0.0, please use nested syntax",
+                    ["action" => $this->type, "stepKey" => $this->stepKey]
+                );
             }
             // @codingStandardsIgnoreEnd
             return;
@@ -318,7 +322,10 @@ class ActionObject
             if (!in_array('expectedResult', $attributes)
                 || !in_array('actualResult', $attributes)) {
                 // @codingStandardsIgnoreStart
-                throw new TestReferenceException("{$this->type} must have both an expectedResult and actualResult defined (stepKey: {$this->stepKey})");
+                throw new TestReferenceException(
+                    "{$this->type} must have both an expectedResult and actualResult defined (stepKey: {$this->stepKey})",
+                    ["action" => $this->type, "stepKey" => $this->stepKey]
+                );
                 // @codingStandardsIgnoreEnd
             }
         }
@@ -372,6 +379,14 @@ class ActionObject
         $replacement = $this->findAndReplaceReferences(PageObjectHandler::getInstance(), $url);
         if ($replacement) {
             $this->resolvedCustomAttributes[ActionObject::ACTION_ATTRIBUTE_URL] = $replacement;
+            $allPages = PageObjectHandler::getInstance()->getAllObjects();
+            if ($replacement === $url && array_key_exists(trim($url, "{}"), $allPages)
+            ) {
+                LoggingUtil::getInstance()->getLogger(ActionObject::class)->warning(
+                    "page url attribute not found and is required",
+                    ["action" => $this->type, "url" => $url, "stepKey" => $this->stepKey]
+                );
+            }
         }
     }
 
@@ -498,7 +513,7 @@ class ActionObject
             } elseif (get_class($obj) == SectionObject::class) {
                 list(,$objField) = $this->stripAndSplitReference($match);
                 if ($obj->getElement($objField) == null) {
-                    throw new TestReferenceException("Could not resolve entity reference " . $inputString);
+                    throw new TestReferenceException("Could not resolve entity reference", ["input" => $inputString]);
                 }
                 $parameterized = $obj->getElement($objField)->isParameterized();
                 $replacement = $obj->getElement($objField)->getPrioritizedSelector();
@@ -515,7 +530,7 @@ class ActionObject
                 if (get_class($objectHandler) != DataObjectHandler::class) {
                     return $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $outputString);
                 } else {
-                    throw new TestReferenceException("Could not resolve entity reference " . $inputString);
+                    throw new TestReferenceException("Could not resolve entity reference", ["input" => $inputString]);
                 }
             }
 
@@ -538,12 +553,14 @@ class ActionObject
         if (count($matches) > 1) {
             throw new TestReferenceException(
                 "Actions of type '{$this->getType()}' must only contain one attribute of types '"
-                . implode("', '", $attributes) . "'"
+                . implode("', '", $attributes) . "'",
+                ["type" => $this->getType(), "attributes" => $attributes]
             );
         } elseif (count($matches) == 0) {
             throw new TestReferenceException(
                 "Actions of type '{$this->getType()}' must contain at least one attribute of types '"
-                . implode("', '", $attributes) . "'"
+                . implode("', '", $attributes) . "'",
+                ["type" => $this->getType(), "attributes" => $attributes]
             );
         }
     }
@@ -560,7 +577,8 @@ class ActionObject
         if ($obj->getArea() == 'external' &&
             in_array($this->getType(), self::EXTERNAL_URL_AREA_INVALID_ACTIONS)) {
             throw new TestReferenceException(
-                "Page of type 'external' is not compatible with action type '{$this->getType()}'"
+                "Page of type 'external' is not compatible with action type '{$this->getType()}'",
+                ["type" => $this->getType()]
             );
         }
     }
@@ -633,12 +651,14 @@ class ActionObject
             }
             throw new TestReferenceException(
                 "Parameter Resolution Failed: Not enough parameters given for reference " .
-                $reference . ". Parameters Given: " . $parametersGiven
+                $reference . ". Parameters Given: " . $parametersGiven,
+                ["reference" => $reference, "parametersGiven" => $parametersGiven]
             );
         } elseif (count($varMatches[0]) < count($parameters)) {
             throw new TestReferenceException(
                 "Parameter Resolution Failed: Too many parameters given for reference " .
-                $reference . ". Parameters Given: " . implode(", ", $parameters)
+                $reference . ". Parameters Given: " . implode(", ", $parameters),
+                ["reference" => $reference, "parametersGiven" => $parameters]
             );
         }
 

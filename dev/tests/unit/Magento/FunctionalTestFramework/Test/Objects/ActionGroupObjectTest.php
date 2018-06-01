@@ -18,10 +18,20 @@ use Magento\FunctionalTestingFramework\Test\Objects\ArgumentObject;
 use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 use tests\unit\Util\ActionGroupObjectBuilder;
 use tests\unit\Util\EntityDataObjectBuilder;
+use tests\unit\Util\TestLoggingUtil;
 
 class ActionGroupObjectTest extends MagentoTestCase
 {
     const ACTION_GROUP_MERGE_KEY = 'TestKey';
+
+    /**
+     * Before test functionality
+     * @return void
+     */
+    public function setUp()
+    {
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
+    }
 
     /**
      * Tests a string literal in an action group
@@ -283,5 +293,14 @@ class ActionGroupObjectTest extends MagentoTestCase
         $action = $actions[$expectedMergeKey];
         $this->assertEquals($expectedMergeKey, $action->getStepKey());
         $this->assertEquals($expectedValue, $action->getCustomActionAttributes());
+    }
+
+    /**
+     * After class functionality
+     * @return void
+     */
+    public static function tearDownAfterClass()
+    {
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 }

@@ -5,11 +5,13 @@
  */
 namespace Magento\FunctionalTestingFramework\Test\Handlers;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
+use Magento\FunctionalTestingFramework\Test\Util\ObjectExtensionUtil;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 
 /**
@@ -34,6 +36,13 @@ class TestObjectHandler implements ObjectHandlerInterface
     private $tests = [];
 
     /**
+     * Instance of ObjectExtensionUtil class
+     *
+     * @var ObjectExtensionUtil
+     */
+    private $extendUtil;
+
+    /**
      * Singleton method to return TestObjectHandler.
      *
      * @return TestObjectHandler
@@ -54,7 +63,7 @@ class TestObjectHandler implements ObjectHandlerInterface
      */
     private function __construct()
     {
-        // private constructor
+        $this->extendUtil = new ObjectExtensionUtil();
     }
 
     /**
@@ -62,15 +71,16 @@ class TestObjectHandler implements ObjectHandlerInterface
      *
      * @param string $testName
      * @return TestObject
+     * @throws TestReferenceException
      */
     public function getObject($testName)
     {
         if (!array_key_exists($testName, $this->tests)) {
-            trigger_error("Test ${testName} not defined in xml.", E_USER_ERROR);
-            return null;
+            throw new TestReferenceException("Test ${testName} not defined in xml.");
         }
+        $testObject = $this->tests[$testName];
 
-        return $this->tests[$testName];
+        return $this->extendTest($testObject);
     }
 
     /**
@@ -80,6 +90,9 @@ class TestObjectHandler implements ObjectHandlerInterface
      */
     public function getAllObjects()
     {
+        foreach ($this->tests as $testName => $test) {
+            $this->tests[$testName] = $this->extendTest($test);
+        }
         return $this->tests;
     }
 
@@ -129,5 +142,19 @@ class TestObjectHandler implements ObjectHandlerInterface
 
             $this->tests[$testName] = $testObjectExtractor->extractTestData($testData);
         }
+    }
+
+    /**
+     * This method checks if the test is extended and creates a new test object accordingly
+     *
+     * @param TestObject $testObject
+     * @return TestObject
+     */
+    private function extendTest($testObject)
+    {
+        if ($testObject->getParentName() !== null) {
+            return $this->extendUtil->extendTest($testObject);
+        }
+        return $testObject;
     }
 }

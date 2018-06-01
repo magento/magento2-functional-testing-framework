@@ -18,6 +18,15 @@ use AspectMock\Test as AspectMock;
  */
 class EntityDataExtensionTest extends MagentoTestCase
 {
+    /**
+     * Before method functionality
+     * @return void
+     */
+    protected function setUp()
+    {
+        AspectMock::clean();
+    }
+
     public function testNoParentData()
     {
         $extendedDataObject = [
@@ -142,6 +151,5 @@ class EntityDataExtensionTest extends MagentoTestCase
         AspectMock::double(ObjectManagerFactory::class, [
             'getObjectManager' => $mockObjectManager
         ]);
-
     }
 }
