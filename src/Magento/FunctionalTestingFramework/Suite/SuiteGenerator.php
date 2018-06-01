@@ -241,7 +241,8 @@ class SuiteGenerator
      */
     private function appendEntriesToConfig($suiteName, $suitePath, $groupNamespace)
     {
-        $relativeSuitePath = substr($suitePath, strlen(dirname(dirname(TESTS_BP))) + 1);
+        $relativeSuitePath = substr($suitePath, strlen(TESTS_BP));
+        $relativeSuitePath = ltrim($relativeSuitePath, DIRECTORY_SEPARATOR);
 
         $ymlArray = self::getYamlFileContents();
         if (!array_key_exists(self::YAML_GROUPS_TAG, $ymlArray)) {
@@ -344,6 +345,6 @@ class SuiteGenerator
      */
     private static function getYamlConfigFilePath()
     {
-        return dirname(dirname(TESTS_BP)) . DIRECTORY_SEPARATOR;
+        return TESTS_BP . DIRECTORY_SEPARATOR;
     }
 }

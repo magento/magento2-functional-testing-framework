@@ -6,14 +6,18 @@
 
 error_reporting(~E_USER_NOTICE);
 define('PROJECT_ROOT', dirname(dirname(__DIR__)));
-require_once PROJECT_ROOT . '/vendor/autoload.php';
-require_once 'util/MftfTestCase.php';
+
+$vendorAutoloadPath = realpath(PROJECT_ROOT . '/vendor/autoload.php');
+$mftfTestCasePath = realpath(PROJECT_ROOT . '/dev/tests/util/MftfTestCase.php');
+
+require_once $vendorAutoloadPath;
+require_once $mftfTestCasePath;
 
 // Set up AspectMock
 $kernel = \AspectMock\Kernel::getInstance();
 $kernel->init([
     'debug' => true,
-    'includePaths' => [PROJECT_ROOT . '/src'],
+    'includePaths' => [PROJECT_ROOT . DIRECTORY_SEPARATOR . 'src'],
     'cacheDir' => PROJECT_ROOT .
         DIRECTORY_SEPARATOR .
         'dev' .

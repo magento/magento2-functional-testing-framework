@@ -24,6 +24,17 @@ class SuiteGeneratorTest extends MagentoTestCase
 {
 
     /**
+     * Setup entry append and clear for Suite Generator
+     */
+    public static function setUpBeforeClass()
+    {
+        AspectMock::double(SuiteGenerator::class, [
+            'clearPreviousSessionConfigEntries' => null,
+            'appendEntriesToConfig' => null
+        ]);
+    }
+
+    /**
      * Tests generating a single suite given a set of parsed test data
      * @throws \Exception
      */
@@ -169,6 +180,5 @@ class SuiteGeneratorTest extends MagentoTestCase
         $property = new \ReflectionProperty(SuiteGenerator::class, 'groupClassGenerator');
         $property->setAccessible(true);
         $property->setValue($instance, $instance);
-
     }
 }

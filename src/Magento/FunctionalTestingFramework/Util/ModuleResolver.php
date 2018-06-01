@@ -229,6 +229,7 @@ class ModuleResolver
 
         // Define the Module paths from default TESTS_MODULE_PATH
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
+        $modulePath = rtrim($modulePath, DIRECTORY_SEPARATOR);
 
         // Define the Module paths from vendor modules
         $vendorCodePath = PROJECT_ROOT
@@ -237,8 +238,8 @@ class ModuleResolver
 
         $codePathsToPattern = [
             $modulePath => '',
-            $appCodePath => '/Test/Mftf',
-            $vendorCodePath => '/Test/Mftf'
+            $appCodePath => DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR . 'Mftf',
+            $vendorCodePath => DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR . 'Mftf'
         ];
 
         foreach ($codePathsToPattern as $codePath => $pattern) {
@@ -283,7 +284,7 @@ class ModuleResolver
      */
     private static function globRelevantWrapper($testPath, $pattern)
     {
-        return glob($testPath . '*/*' . $pattern);
+        return glob($testPath . '*' . DIRECTORY_SEPARATOR . '*' . $pattern);
     }
 
     /**

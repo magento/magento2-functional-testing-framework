@@ -59,4 +59,50 @@
             <actualResult type="variable">grabProducts</actualResult>
         </assertCount>
     </actionGroup>
+
+    <actionGroup name="ActionGroupToExtend">
+        <arguments>
+            <argument name="count" type="string"/>
+        </arguments>
+        <grabMultiple selector="selector" stepKey="grabProducts"/>
+        <assertCount stepKey="assertCount">
+            <expectedResult type="int">{{count}}</expectedResult>
+            <actualResult type="variable">grabProducts</actualResult>
+        </assertCount>
+    </actionGroup>
+
+    <actionGroup name="extendTestActionGroup" extends="ActionGroupToExtend">
+        <arguments>
+            <argument name="otherCount" type="string"/>
+        </arguments>
+        <grabMultiple selector="notASelector" stepKey="grabProducts"/>
+        <comment userInput="New Input After" stepKey="afterGrabProducts" after="grabProducts"/>
+        <comment userInput="New Input Before" stepKey="beforeGrabProducts" before="grabProducts"/>
+        <assertCount stepKey="assertSecondCount">
+            <expectedResult type="int">{{otherCount}}</expectedResult>
+            <actualResult type="variable">grabProducts</actualResult>
+        </assertCount>
+    </actionGroup>
+
+    <actionGroup name="extendBasicActionGroup">
+        <comment stepKey="removeMe" userInput="This Should Be Removed"/>
+    </actionGroup>
+
+    <actionGroup name="extendRemoveTestActionGroup" extends="extendBasicActionGroup">
+        <remove keyForRemoval="removeMe"/>
+    </actionGroup>
+
+    <actionGroup name="actionGroupWithCreateData">
+        <createData entity="ApiCategory" stepKey="createCategory"/>
+        <createData entity="ApiConfigurableProduct" stepKey="createConfigProduct">
+            <requiredEntity createDataKey="createCategory"/>
+        </createData>
+    </actionGroup>
+
+    <actionGroup name="actionGroupContainsStepKeyInArgValue">
+        <arguments>
+            <argument name="sameStepKeyAsArg" type="string" defaultValue="stringLiteral"/>
+        </arguments>
+        <see selector=".selector" userInput="{{sameStepKeyAsArg}}" stepKey="arg1" />
+    </actionGroup>
 </actionGroups>

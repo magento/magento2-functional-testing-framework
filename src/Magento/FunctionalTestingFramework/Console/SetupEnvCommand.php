@@ -31,9 +31,9 @@ class SetupEnvCommand extends Command
      */
     protected function configure()
     {
-        $this->setName('setup:env');
-        $this->setDescription("Generate .env file.");
-        $this->envProcessor = new EnvProcessor(BP . DIRECTORY_SEPARATOR . '.env');
+        $this->setName('setup:env')
+            ->setDescription("Generate .env file.");
+        $this->envProcessor = new EnvProcessor(TESTS_BP . DIRECTORY_SEPARATOR . '.env');
         $env = $this->envProcessor->getEnv();
         foreach ($env as $key => $value) {
             $this->addOption($key, null, InputOption::VALUE_REQUIRED, '', $value);
@@ -59,6 +59,6 @@ class SetupEnvCommand extends Command
             $userEnv[$key] = $input->getOption($key);
         }
         $this->envProcessor->putEnvFile($userEnv);
-        $output->writeln(".env configuration successfully applied.\n");
+        $output->writeln(".env configuration successfully applied.");
     }
 }

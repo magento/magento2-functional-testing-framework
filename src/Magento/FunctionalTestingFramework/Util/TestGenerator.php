@@ -1385,9 +1385,18 @@ class TestGenerator
         $testInvocationKey = ucfirst($actionGroupOrigin[ActionGroupObject::ACTION_GROUP_ORIGIN_TEST_REF]);
 
         foreach ($stepKeys as $stepKey) {
-            if (strpos($output, $stepKey)) {
-                $output = str_replace($stepKey, $stepKey . $testInvocationKey, $output);
+            // MQE-1011
+            $stepKeyVarRef = "$" . $stepKey;
+            $classVarRef = "\$this->$stepKey";
+
+            if (strpos($output, $stepKeyVarRef) !== false) {
+                $output = str_replace($stepKeyVarRef, $stepKeyVarRef . $testInvocationKey, $output);
             }
+
+            if (strpos($output, $classVarRef) !== false) {
+                $output = str_replace($classVarRef, $classVarRef . $testInvocationKey, $output);
+            }
+
         }
         return $output;
     }

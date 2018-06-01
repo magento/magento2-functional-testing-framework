@@ -7,8 +7,10 @@
 namespace Magento\FunctionalTestingFramework\Test\Objects;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Util\ActionGroupObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
+use Magento\FunctionalTestingFramework\Test\Util\ObjectExtension;
 
 /**
  * Class ActionGroupObject
@@ -46,13 +48,21 @@ class ActionGroupObject
     private $arguments;
 
     /**
+     * String of parent Action Group
+     *
+     * @var String
+     */
+    private $parentActionGroup;
+
+    /**
      * ActionGroupObject constructor.
      *
      * @param string $name
      * @param ArgumentObject[] $arguments
      * @param array $actions
+     * @param string $parentActionGroup
      */
-    public function __construct($name, $arguments, $actions)
+    public function __construct($name, $arguments, $actions, $parentActionGroup)
     {
         $this->varAttributes = array_merge(
             ActionObject::SELECTOR_ENABLED_ATTRIBUTES,
@@ -62,6 +72,7 @@ class ActionGroupObject
         $this->name = $name;
         $this->arguments = $arguments;
         $this->parsedActions = $actions;
+        $this->parentActionGroup = $parentActionGroup;
     }
 
     /**
@@ -125,15 +136,21 @@ class ActionGroupObject
     private function getResolvedActionsWithArgs($arguments, $actionReferenceKey)
     {
         $resolvedActions = [];
+        $replacementStepKeys = [];
 
         foreach ($this->parsedActions as $action) {
+            $replacementStepKeys[$action->getStepKey()] = $action->getStepKey() . ucfirst($actionReferenceKey);
             $varAttributes = array_intersect($this->varAttributes, array_keys($action->getCustomActionAttributes()));
+
+            // replace createDataKey attributes inside the action group
+            $resolvedActionAttributes = $this->replaceCreateDataKeys($action, $replacementStepKeys);
+
             $newActionAttributes = [];
 
             if (!empty($varAttributes)) {
                 $newActionAttributes = $this->resolveAttributesWithArguments(
                     $arguments,
-                    $action->getCustomActionAttributes()
+                    $resolvedActionAttributes
                 );
             }
 
@@ -148,7 +165,7 @@ class ActionGroupObject
             $resolvedActions[$action->getStepKey() . ucfirst($actionReferenceKey)] = new ActionObject(
                 $action->getStepKey() . ucfirst($actionReferenceKey),
                 $action->getType(),
-                array_replace_recursive($action->getCustomActionAttributes(), $newActionAttributes),
+                array_replace_recursive($resolvedActionAttributes, $newActionAttributes),
                 $action->getLinkedAction() == null ? null : $action->getLinkedAction() . ucfirst($actionReferenceKey),
                 $orderOffset,
                 [self::ACTION_GROUP_ORIGIN_NAME => $this->name,
@@ -363,6 +380,46 @@ class ActionGroupObject
     }
 
     /**
+     * Getter for the Action Group Name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Getter for the Parent Action Group Name
+     *
+     * @return string
+     */
+    public function getParentName()
+    {
+        return $this->parentActionGroup;
+    }
+
+    /**
+     * Getter for the Action Group Actions
+     *
+     * @return ActionObject[]
+     */
+    public function getActions()
+    {
+        return $this->parsedActions;
+    }
+
+    /**
+     * Getter for the Action Group Arguments
+     *
+     * @return array
+     */
+    public function getArguments()
+    {
+        return $this->arguments;
+    }
+
+    /**
      * Searches through ActionGroupObject's arguments and returns first argument wi
      * @param string $name
      * @param array $argumentList
@@ -380,5 +437,28 @@ class ActionGroupObject
             return array_values($matchedArgument)[0];
         }
         return null;
+    }
+
+    /**
+     * Replaces references to step keys used earlier in an action group
+     *
+     * @param ActionObject $action
+     * @param array $replacementStepKeys
+     * @return ActionObject[]
+     */
+    private function replaceCreateDataKeys($action, $replacementStepKeys)
+    {
+        $resolvedActionAttributes = [];
+
+        foreach ($action->getCustomActionAttributes() as $actionAttribute => $actionAttributeDetails) {
+            if (is_array($actionAttributeDetails) && array_key_exists('createDataKey', $actionAttributeDetails)) {
+                $actionAttributeDetails['createDataKey'] =
+                    $replacementStepKeys[$actionAttributeDetails['createDataKey']] ??
+                    $actionAttributeDetails['createDataKey'];
+            }
+            $resolvedActionAttributes[$actionAttribute] = $actionAttributeDetails;
+        }
+
+        return $resolvedActionAttributes;
     }
 }
