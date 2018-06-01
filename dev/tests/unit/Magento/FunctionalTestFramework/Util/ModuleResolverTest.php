@@ -11,17 +11,37 @@ use AspectMock\Test as AspectMock;
 
 use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\ModuleResolver;
 use PHPUnit\Framework\TestCase;
+use tests\unit\Util\TestLoggingUtil;
 
 class ModuleResolverTest extends TestCase
 {
+    /**
+     * Before test functionality
+     * @return void
+     */
+    public function setUp()
+    {
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
+    }
+
     /**
      * remove all registered test doubles
      */
     protected function tearDown()
     {
         AspectMock::clean();
+    }
+
+    /**
+     * After class functionality
+     * @return void
+     */
+    public static function tearDownAfterClass()
+    {
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 
     /**
@@ -91,10 +111,14 @@ class ModuleResolverTest extends TestCase
     public function testGetCustomModulePath()
     {
         $this->setMockResolverClass(false, ["Magento_TestModule"], null, null, [], ['otherPath']);
-        $this->expectOutputString("Including module path: otherPath" . PHP_EOL);
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, null, null);
         $this->assertEquals(['otherPath'], $resolver->getModulesPath());
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'info',
+            'including custom module',
+            ['module' => 'otherPath']
+        );
     }
 
     /**
@@ -119,10 +143,14 @@ class ModuleResolverTest extends TestCase
                 return $mockValue;
             }
         );
-        $this->expectOutputString("Excluding module: somePath" . PHP_EOL);
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, null, ["somePath"]);
         $this->assertEquals(["otherPath", "lastPath"], $resolver->getModulesPath());
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'info',
+            'excluding module',
+            ['module' => 'somePath']
+        );
     }
 
     /**
