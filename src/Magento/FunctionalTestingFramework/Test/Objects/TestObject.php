@@ -15,11 +15,13 @@ use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
  */
 class TestObject
 {
+    const WAIT_TIME_ATTRIBUTE = 'time';
+
     const TEST_ACTION_WEIGHT = [
         'waitForPageLoad' => 1500,
         'amOnPage' => 1000,
         'waitForLoadingMaskToDisappear' => 500,
-        'wait' => 'time',
+        'wait' => self::WAIT_TIME_ATTRIBUTE,
         'comment' => 5,
         'assertCount' => 5,
         'closeAdminNotification' => 10
@@ -208,7 +210,7 @@ class TestObject
             /** @var ActionObject $action */
             if (array_key_exists($action->getType(), self::TEST_ACTION_WEIGHT)) {
                 $weight = self::TEST_ACTION_WEIGHT[$action->getType()];
-                if (is_string($weight) && $weight === 'time') {
+                if ($weight === self::WAIT_TIME_ATTRIBUTE) {
                     $weight = intval($action->getCustomActionAttributes()[$weight]) * 1000;
                 }
 

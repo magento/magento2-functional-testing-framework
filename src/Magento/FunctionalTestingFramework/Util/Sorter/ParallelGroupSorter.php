@@ -237,9 +237,9 @@ class ParallelGroupSorter
     private function splitTestSuite($suiteName, $tests, $maxTime)
     {
         arsort($tests);
-        $split_suites = [];
+        $splitSuites = [];
         $availableTests = $tests;
-        $split_count = 0;
+        $splitCount = 0;
 
         foreach ($tests as $test => $size) {
             if (!array_key_exists($test, $availableTests)) {
@@ -247,14 +247,14 @@ class ParallelGroupSorter
             }
 
             $group = $this->createTestGroup($maxTime, $test, $size, $availableTests);
-            $split_suites["{$suiteName}_${split_count}"] = $group;
-            $this->addSuiteToConfig($suiteName, "{$suiteName}_${split_count}", $group);
+            $splitSuites["{$suiteName}_${splitCount}"] = $group;
+            $this->addSuiteToConfig($suiteName, "{$suiteName}_${splitCount}", $group);
 
             $availableTests = array_diff_key($availableTests, $group);
-            $split_count++;
+            $splitCount++;
         }
 
-        return $split_suites;
+        return $splitSuites;
     }
 
     /**
