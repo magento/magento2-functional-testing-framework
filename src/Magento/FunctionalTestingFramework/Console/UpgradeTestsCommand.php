@@ -50,6 +50,7 @@ class UpgradeTestsCommand extends Command
         foreach ($finder->files() as $file) {
             $result = include($file->getRealPath());
             LoggingUtil::getInstance()->getLogger(GenerateDevUrnCommand::class)->info($result);
+            $output->writeln($result);
         }
     }
 }
