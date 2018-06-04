@@ -62,7 +62,7 @@ class GenerateDevUrnCommand extends Command
             }
         }
         if ($nodeForWork === null) {
-            $project = $dom->getElementsByTagName('project')[0];
+            $project = $dom->getElementsByTagName('project')->item(0);
             $nodeForWork = $dom->createElement('component');
             $nodeForWork->setAttribute('name', 'ProjectResources');
             $project->appendChild($nodeForWork);
@@ -87,9 +87,7 @@ class GenerateDevUrnCommand extends Command
             $nodeForWork->appendChild($resourceNode);
         }
 
-        //Format and save output
-        $dom->preserveWhiteSpace = false;
-        $dom->formatOutput = true;
+        //Save output
         $dom->save($miscXmlFile);
         $output->writeln("MFTF URN mapping successfully added to {$miscXmlFile}.");
     }
