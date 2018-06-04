@@ -16,6 +16,7 @@ use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Manifest\BaseTestManifest;
 use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
@@ -130,11 +131,10 @@ class TestGenerator
         // them in the current context.
         $invalidTestObjects = array_intersect_key($this->tests, $testsToIgnore);
         if (!empty($invalidTestObjects)) {
-            $errorMsg = "Cannot reference the following tests for generation without accompanying suite:\n";
-            array_walk($invalidTestObjects, function ($value, $key) use (&$errorMsg) {
-                $errorMsg.= "\t{$key}\n";
-            });
-            throw new TestReferenceException($errorMsg);
+            throw new TestReferenceException(
+                "Cannot reference test configuration for generation without accompanying suite.",
+                ['tests' => array_keys($invalidTestObjects)]
+            );
         }
 
         return $this->tests;
@@ -155,7 +155,7 @@ class TestGenerator
         $file = fopen($exportFilePath, 'w');
 
         if (!$file) {
-            throw new \Exception("Could not open the file!");
+            throw new \Exception("Could not open the file.");
         }
 
         fwrite($file, $testPhp);

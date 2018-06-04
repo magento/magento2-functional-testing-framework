@@ -6,7 +6,9 @@
 
 namespace Magento\FunctionalTestingFramework\DataGenerator\Objects;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
  * Class EntityDataObject
@@ -126,10 +128,16 @@ class EntityDataObject
      */
     public function getDataByName($name, $uniquenessFormat)
     {
+        if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
+            LoggingUtil::getInstance()->getLogger(EntityDataObject::class)
+                ->debug("Fetching data field from entity", ["entity" => $this->getName(), "field" => $name]);
+        }
+
         if (!$this->isValidUniqueDataFormat($uniquenessFormat)) {
-            throw new TestFrameworkException(
-                sprintf('Invalid unique data format value: %s \n', $uniquenessFormat)
-            );
+            $exceptionMessage = sprintf("Invalid unique data format value: %s \n", $uniquenessFormat);
+            LoggingUtil::getInstance()->getLogger(EntityDataObject::class)
+                ->error($exceptionMessage, ["entity" => $this->getName(), "field" => $name]);
+            throw new TestFrameworkException($exceptionMessage);
         }
 
         $name_lower = strtolower($name);
@@ -204,12 +212,12 @@ class EntityDataObject
     private function checkUniquenessFunctionExists($function, $uniqueDataFormat)
     {
         if (!function_exists($function)) {
-            throw new TestFrameworkException(
-                sprintf(
-                    'Unique data format value: %s can only be used when running cests.\n',
-                    $uniqueDataFormat
-                )
+            $exceptionMessage = sprintf(
+                'Unique data format value: %s can only be used when running cests.\n',
+                $uniqueDataFormat
             );
+
+            throw new TestFrameworkException($exceptionMessage);
         }
     }
 

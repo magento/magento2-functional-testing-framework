@@ -5,6 +5,7 @@
  */
 namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
 
+use AspectMock\Proxy\Verifier;
 use AspectMock\Test as AspectMock;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
@@ -12,11 +13,24 @@ use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Parsers\ActionGroupDataParser;
 use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+use Monolog\Handler\TestHandler;
+use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 use tests\unit\Util\TestDataArrayBuilder;
+use tests\unit\Util\TestLoggingUtil;
 
 class ObjectExtensionUtilTest extends TestCase
 {
+    /**
+     * Before test functionality
+     * @return void
+     */
+    public function setUp()
+    {
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
+    }
+
     /**
      * Tests generating a test that extends another test
      * @throws \Exception
@@ -41,10 +55,15 @@ class ObjectExtensionUtilTest extends TestCase
         $mockTestData = ['tests' => array_merge($mockSimpleTest, $mockExtendedTest)];
         $this->setMockTestOutput($mockTestData);
 
-        $this->expectOutputString("Extending Test: simpleTest => extendedTest" . PHP_EOL);
-
         // parse and generate test object with mocked data
         $testObject = TestObjectHandler::getInstance()->getObject('extendedTest');
+
+        // assert log statement is correct
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'debug',
+            'extending test',
+            ['parent' => 'simpleTest', 'test' => 'extendedTest']
+        );
 
         // assert that expected test is generated
         $this->assertEquals($testObject->getParentName(), "simpleTest");
@@ -79,10 +98,15 @@ class ObjectExtensionUtilTest extends TestCase
         $mockTestData = ['tests' => array_merge($mockSimpleTest, $mockExtendedTest)];
         $this->setMockTestOutput($mockTestData);
 
-        $this->expectOutputString("Extending Test: simpleTest => extendedTest" . PHP_EOL);
-
         // parse and generate test object with mocked data
         $testObject = TestObjectHandler::getInstance()->getObject('extendedTest');
+
+        // assert log statement is correct
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'debug',
+            'extending test',
+            ['parent' => 'simpleTest', 'test' => 'extendedTest']
+        );
 
         // assert that expected test is generated
         $this->assertEquals($testObject->getParentName(), "simpleTest");
@@ -105,10 +129,15 @@ class ObjectExtensionUtilTest extends TestCase
         $mockTestData = ['tests' => array_merge($mockExtendedTest)];
         $this->setMockTestOutput($mockTestData);
 
-        $this->expectOutputString("Parent Test simpleTest not defined for Test extendedTest. Skipping Test." . PHP_EOL);
-
         // parse and generate test object with mocked data
         TestObjectHandler::getInstance()->getObject('extendedTest');
+
+        // validate log statement
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'debug',
+            "parent test not defined. test will be skipped",
+            ['parent' => 'simpleTest', 'test' => 'extendedTest']
+        );
     }
 
     /**
@@ -137,11 +166,18 @@ class ObjectExtensionUtilTest extends TestCase
         $mockTestData = ['tests' => array_merge($mockParentTest, $mockSimpleTest, $mockExtendedTest)];
         $this->setMockTestOutput($mockTestData);
 
-        $this->expectOutputString("Extending Test: anotherTest => simpleTest" . PHP_EOL);
         $this->expectExceptionMessage("Cannot extend a test that already extends another test. Test: simpleTest");
 
         // parse and generate test object with mocked data
         TestObjectHandler::getInstance()->getObject('extendedTest');
+
+        // validate log statement
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'debug',
+            "parent test not defined. test will be skipped",
+            ['parent' => 'simpleTest', 'test' => 'extendedTest']
+        );
+        $this->expectOutputString("Extending Test: anotherTest => simpleTest" . PHP_EOL);
     }
 
     /**
@@ -186,10 +222,15 @@ class ObjectExtensionUtilTest extends TestCase
         ];
         $this->setMockTestOutput(null, $mockActionGroupData);
 
-        $this->expectOutputString("Extending Action Group: mockSimpleActionGroup => mockExtendedActionGroup" . PHP_EOL);
-
         // parse and generate test object with mocked data
         $actionGroupObject = ActionGroupObjectHandler::getInstance()->getObject('mockExtendedActionGroup');
+
+        // validate log statement
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'debug',
+            'extending action group:',
+            ['parent' => $mockSimpleActionGroup['name'], 'actionGroup' => $mockExtendedActionGroup['name']]
+        );
 
         // assert that expected test is generated
         $this->assertEquals("mockSimpleActionGroup", $actionGroupObject->getParentName());
@@ -266,13 +307,24 @@ class ObjectExtensionUtilTest extends TestCase
         ];
         $this->setMockTestOutput(null, $mockActionGroupData);
 
-        $this->expectOutputString("Extending Action Group: mockParentActionGroup => mockSimpleActionGroup" . PHP_EOL);
         $this->expectExceptionMessage(
             "Cannot extend an action group that already extends another action group. " . $mockSimpleActionGroup['name']
         );
 
         // parse and generate test object with mocked data
-        ActionGroupObjectHandler::getInstance()->getObject('mockExtendedActionGroup');
+        try {
+            ActionGroupObjectHandler::getInstance()->getObject('mockExtendedActionGroup');
+        } catch (\Exception $e) {
+            // validate log statement
+            TestLoggingUtil::getInstance()->validateMockLogStatement(
+                'error',
+                "Cannot extend an action group that already extends another action group. " .
+                $mockSimpleActionGroup['name'],
+                ['parent' => $mockSimpleActionGroup['name'], 'actionGroup' => $mockSimpleActionGroup['name']]
+            );
+
+            throw $e;
+        }
     }
 
     /**
@@ -314,5 +366,14 @@ class ObjectExtensionUtilTest extends TestCase
         )->make();
         // bypass the private constructor
         AspectMock::double(ObjectManagerFactory::class, ['getObjectManager' => $instance]);
+    }
+
+    /**
+     * After class functionality
+     * @return void
+     */
+    public static function tearDownAfterClass()
+    {
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 }

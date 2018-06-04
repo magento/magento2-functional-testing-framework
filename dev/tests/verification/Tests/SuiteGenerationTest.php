@@ -13,6 +13,7 @@ use Magento\FunctionalTestingFramework\Util\Manifest\ParallelTestManifest;
 use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
 use PHPUnit\Util\Filesystem;
 use Symfony\Component\Yaml\Yaml;
+use tests\unit\Util\TestLoggingUtil;
 use tests\util\MftfTestCase;
 
 class SuiteGenerationTest extends MftfTestCase
@@ -52,6 +53,8 @@ class SuiteGenerationTest extends MftfTestCase
             realpath(FW_BP . '/etc/config/codeception.dist.yml'),
             self::CONFIG_YML_FILE
         );
+
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
 
     /**
@@ -71,8 +74,13 @@ class SuiteGenerationTest extends MftfTestCase
         // Generate the Suite
         SuiteGenerator::getInstance()->generateSuite($groupName);
 
-        // Validate console message and add group name for later deletion
-        $this->expectOutputRegex('/Suite .* generated to .*/');
+        // Validate log message and add group name for later deletion
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'info',
+            "suite generated",
+            ['suite' => $groupName, 'relative_path' => "_generated/$groupName"]
+        );
+
         self::$TEST_GROUPS[] = $groupName;
 
         // Validate Yaml file updated
@@ -121,8 +129,14 @@ class SuiteGenerationTest extends MftfTestCase
         $parallelManifest->createTestGroups(1);
         SuiteGenerator::getInstance()->generateAllSuites($parallelManifest);
 
-        // Validate console message and add group name for later deletion
-        $this->expectOutputRegex('/Suite .* generated to .*/');
+        // Validate log message (for final group) and add group name for later deletion
+        $expectedGroup = $expectedGroups[count($expectedGroups)-1] ;
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'info',
+            "suite generated",
+            ['suite' => $expectedGroup, 'relative_path' => "_generated/$expectedGroup"]
+        );
+
         self::$TEST_GROUPS[] = $groupName;
 
         // Validate Yaml file updated
@@ -158,8 +172,12 @@ class SuiteGenerationTest extends MftfTestCase
         // Generate the Suite
         SuiteGenerator::getInstance()->generateSuite($groupName);
 
-        // Validate console message and add group name for later deletion
-        $this->expectOutputRegex('/Suite .* generated to .*/');
+        // Validate log message and add group name for later deletion
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'info',
+            "suite generated",
+            ['suite' => $groupName, 'relative_path' => "_generated/$groupName"]
+        );
         self::$TEST_GROUPS[] = $groupName;
 
         // Validate Yaml file updated
@@ -222,8 +240,12 @@ class SuiteGenerationTest extends MftfTestCase
         SuiteGenerator::getInstance()->generateAllSuites($singleRunManifest);
         $singleRunManifest->generate();
 
-        // Validate console message and add group name for later deletion
-        $this->expectOutputRegex('/Suite .* generated to .*/');
+        // Validate log message and add group name for later deletion
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'info',
+            "suite generated",
+            ['suite' => $groupName, 'relative_path' => "_generated/$groupName"]
+        );
         self::$TEST_GROUPS[] = $groupName;
 
         // Validate Yaml file updated
@@ -260,6 +282,14 @@ class SuiteGenerationTest extends MftfTestCase
         $fileSystem->remove(
             self::CONFIG_YML_FILE
         );
+    }
+
+    /**
+     * Remove yml if created during tests and did not exist before
+     */
+    public static function tearDownAfterClass()
+    {
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 
     /**
