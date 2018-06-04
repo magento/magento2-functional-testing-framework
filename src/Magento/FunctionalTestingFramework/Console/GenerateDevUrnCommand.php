@@ -44,9 +44,11 @@ class GenerateDevUrnCommand extends Command
         $miscXmlFile = realpath($miscXmlFilePath);
 
         if ($miscXmlFile === false) {
-            throw new TestFrameworkException("misc.xml not found in given path '{$miscXmlFilePath}'");
+            $exceptionMessage = "misc.xml not found in given path '{$miscXmlFilePath}'";
+            LoggingUtil::getInstance()->getLogger(GenerateDevUrnCommand::class)
+                ->error($exceptionMessage);
+            throw new TestFrameworkException($exceptionMessage);
         }
-
         $dom = new \DOMDocument('1.0');
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = true;
