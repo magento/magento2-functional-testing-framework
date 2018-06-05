@@ -4,6 +4,7 @@
  * See COPYING.txt for license details.
  */
 namespace Magento\FunctionalTestingFramework\Config\Reader;
+
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
@@ -211,7 +212,8 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
         if (empty($content)) {
             if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
                 LoggingUtil::getInstance()->getLogger(Filesystem::class)->warn(
-                    "XML File is empty.", ["File" => $fileName]
+                    "XML File is empty.",
+                    ["File" => $fileName]
                 );
             }
             return false;
