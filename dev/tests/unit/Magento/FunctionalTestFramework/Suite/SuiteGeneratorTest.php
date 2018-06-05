@@ -16,12 +16,12 @@ use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
 use Magento\FunctionalTestingFramework\Util\Manifest\DefaultTestManifest;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 use tests\unit\Util\SuiteDataArrayBuilder;
 use tests\unit\Util\TestDataArrayBuilder;
 use tests\unit\Util\TestLoggingUtil;
 
-class SuiteGeneratorTest extends TestCase
+class SuiteGeneratorTest extends MagentoTestCase
 {
 
     /**
@@ -76,7 +76,7 @@ class SuiteGeneratorTest extends TestCase
         TestLoggingUtil::getInstance()->validateMockLogStatement(
             'info',
             "suite generated",
-            ['suite' => 'basicTestSuite', 'relative_path' => "_generated/basicTestSuite"]
+            ['suite' => 'basicTestSuite', 'relative_path' => "_generated" . DIRECTORY_SEPARATOR . "basicTestSuite"]
         );
     }
 
@@ -105,7 +105,7 @@ class SuiteGeneratorTest extends TestCase
         $this->setMockTestAndSuiteParserOutput($mockTestData, $mockData);
 
         // parse and retrieve suite object with mocked data
-        $exampleTestManifest = new DefaultTestManifest([], "sample/path");
+        $exampleTestManifest = new DefaultTestManifest([], "sample" . DIRECTORY_SEPARATOR . "path");
         $mockSuiteGenerator = SuiteGenerator::getInstance();
         $mockSuiteGenerator->generateAllSuites($exampleTestManifest);
 
@@ -113,7 +113,7 @@ class SuiteGeneratorTest extends TestCase
         TestLoggingUtil::getInstance()->validateMockLogStatement(
             'info',
             "suite generated",
-            ['suite' => 'basicTestSuite', 'relative_path' => "_generated/basicTestSuite"]
+            ['suite' => 'basicTestSuite', 'relative_path' => "_generated" . DIRECTORY_SEPARATOR . "basicTestSuite"]
         );
     }
 
@@ -206,5 +206,6 @@ class SuiteGeneratorTest extends TestCase
     public static function tearDownAfterClass()
     {
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
+        parent::tearDownAfterClass();
     }
 }

@@ -6,7 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\DataGenerator\Objects;
 
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 use tests\unit\Util\TestLoggingUtil;
 
 /**
@@ -33,7 +33,7 @@ function msqs($id = null)
 /**
  * Class EntityDataObjectTest
  */
-class EntityDataObjectTest extends TestCase
+class EntityDataObjectTest extends MagentoTestCase
 {
     /**
      * Before test functionality

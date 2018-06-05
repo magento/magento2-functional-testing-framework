@@ -12,12 +12,12 @@ use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Parsers\DataProfileSchemaParser;
 use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 
 /**
  * Class DataObjectHandlerTest
  */
-class DataObjectHandlerTest extends TestCase
+class DataObjectHandlerTest extends MagentoTestCase
 {
     // All tests share this array, feel free to add but be careful modifying or removing
     const PARSER_OUTPUT = [

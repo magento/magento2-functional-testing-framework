@@ -18,10 +18,10 @@ use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 use tests\unit\Util\TestDataArrayBuilder;
 
-class TestObjectHandlerTest extends TestCase
+class TestObjectHandlerTest extends MagentoTestCase
 {
     /**
      * Basic test to validate array => test object conversion.

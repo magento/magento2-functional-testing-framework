@@ -66,6 +66,13 @@ class EntityDataObject
     private $uniquenessData = [];
 
     /**
+     * String of parent Entity
+     *
+     * @var string
+     */
+    private $parentEntity;
+
+    /**
      * Constructor
      *
      * @param string $name
@@ -74,8 +81,9 @@ class EntityDataObject
      * @param string[] $linkedEntities
      * @param string[] $uniquenessData
      * @param string[] $vars
+     * @param string $parentEntity
      */
-    public function __construct($name, $type, $data, $linkedEntities, $uniquenessData, $vars = [])
+    public function __construct($name, $type, $data, $linkedEntities, $uniquenessData, $vars = [], $parentEntity = null)
     {
         $this->name = $name;
         $this->type = $type;
@@ -86,6 +94,7 @@ class EntityDataObject
         }
 
         $this->vars = $vars;
+        $this->parentEntity = $parentEntity;
     }
 
     /**
@@ -151,6 +160,16 @@ class EntityDataObject
         }
 
         return null;
+    }
+
+    /**
+     * Getter for data parent
+     *
+     * @return \string
+     */
+    public function getParentName()
+    {
+        return $this->parentEntity;
     }
 
     /**
