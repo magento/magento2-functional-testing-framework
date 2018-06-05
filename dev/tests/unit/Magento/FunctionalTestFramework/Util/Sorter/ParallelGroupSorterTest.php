@@ -11,9 +11,9 @@ use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Util\Sorter\ParallelGroupSorter;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 
-class ParallelGroupSorterTest extends TestCase
+class ParallelGroupSorterTest extends MagentoTestCase
 {
     /**
      * Test a basic sort of available tests based on size

@@ -1,0 +1,41 @@
+<?php
+namespace Magento\AcceptanceTest\_default\Backend;
+
+use Magento\FunctionalTestingFramework\AcceptanceTester;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
+use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
+use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use \Codeception\Util\Locator;
+use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
+use Yandex\Allure\Adapter\Annotation\Title;
+use Yandex\Allure\Adapter\Annotation\Description;
+use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
+use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
+
+/**
+ */
+class ExtendParentDataTestCest
+{
+	/**
+	 * @Features({"TestModule"})
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function ExtendParentDataTest(AcceptanceTester $I)
+	{
+		$I->amGoingTo("create entity that has the stepKey: simpleDataKey");
+		$extendParentData = DataObjectHandler::getInstance()->getObject("extendParentData");
+		$simpleDataKey = new DataPersistenceHandler($extendParentData, []);
+		$simpleDataKey->createEntity();
+		$I->searchAndMultiSelectOption("#selector", ["otherName"]);
+		$I->searchAndMultiSelectOption("#selector", ["extendName"]);
+		$I->searchAndMultiSelectOption("#selector", ["item"]);
+		$I->searchAndMultiSelectOption("#selector", [msq("extendParentData") . "prename"]);
+		$I->searchAndMultiSelectOption("#selector", ["postnameExtend" . msq("extendParentData")]);
+	}
+}
