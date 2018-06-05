@@ -61,6 +61,11 @@ class GenerateTestsCommand extends Command
             throw new TestFrameworkException("JSON could not be parsed: " . json_last_error_msg());
         }
 
+        if ($config === 'parallel' && $time <= 0) {
+            // stop execution if the user has given us an invalid argument for time argument during parallel generation
+            throw new TestFrameworkException("time option cannot be less than or equal to 0");
+        }
+
         $testConfiguration = $this->createTestConfiguration($json, $tests, $force, $verbose);
 
         // create our manifest file here
