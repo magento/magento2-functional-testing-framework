@@ -143,7 +143,7 @@ class TestObjectHandler implements ObjectHandlerInterface
 
             $this->tests[$testName] = $testObjectExtractor->extractTestData($testData);
         }
-        AnnotationExtractor::validateStoryTitleUniqueness();
+        $testObjectExtractor->getAnnotationExtractor()->validateStoryTitleUniqueness();
     }
 
     /**

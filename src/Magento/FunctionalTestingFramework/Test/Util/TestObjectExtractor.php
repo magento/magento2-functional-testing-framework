@@ -68,6 +68,15 @@ class TestObjectExtractor extends BaseObjectExtractor
     }
 
     /**
+     * Getter for AnnotationExtractor
+     * @return AnnotationExtractor
+     */
+    public function getAnnotationExtractor()
+    {
+        return $this->annotationExtractor;
+    }
+
+    /**
      * This method takes and array of test data and strips away irrelevant tags. The data is converted into an array of
      * TestObjects.
      *

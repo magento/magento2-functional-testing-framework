@@ -18,7 +18,7 @@ class AnnotationExtractor extends BaseObjectExtractor
      * e.g. $storyToTitleMappings['storyAnnotation'] = ['testName' => 'titleAnnotation']
      * @var array
      */
-    private static $storyToTitleMappings = [];
+    private $storyToTitleMappings = [];
 
     const ANNOTATION_VALUE = 'value';
     const MAGENTO_TO_ALLURE_SEVERITY_MAP = [
@@ -47,7 +47,6 @@ class AnnotationExtractor extends BaseObjectExtractor
      */
     public function extractAnnotations($testAnnotations, $filename)
     {
-
         $annotationObjects = [];
         $annotations = $this->stripDescriptorTags($testAnnotations, self::NODE_NAME);
 
@@ -83,7 +82,7 @@ class AnnotationExtractor extends BaseObjectExtractor
         if (isset($annotations['stories']) && isset($annotations['title'])) {
             $story = $annotations['stories'][0];
             $title = $annotations['title'][0];
-            self::$storyToTitleMappings[$story][$filename] = $title;
+            $this->storyToTitleMappings[$story . "/" . $title][] = $filename;
         }
     }
 
@@ -92,25 +91,19 @@ class AnnotationExtractor extends BaseObjectExtractor
      * @throws XmlException
      * @return void
      */
-    public static function validateStoryTitleUniqueness()
+    public function validateStoryTitleUniqueness()
     {
         $dupes = [];
-        foreach (self::$storyToTitleMappings as $story => $titles) {
-            if (count($titles) > count(array_unique($titles))) {
-                // find and populate list of dupes
-                $titleCounts = array_count_values($titles);
-                // remove all titles that only occur once
-                $titleCounts = array_diff($titleCounts, [1]);
-                foreach ($titleCounts as $title => $count) {
-                    $testNames = array_keys($titles, $title);
-                    $dupes[$story.":::".$title] = "'" . implode("', '", $testNames) . "'";
-                }
+
+        foreach ($this->storyToTitleMappings as $storyTitle => $files) {
+            if (count($files) > 1) {
+                $dupes[$storyTitle] = "'" . implode("', '", $files) . "'";
             }
         }
         if (!empty($dupes)) {
             $message = "Story and Title annotation pairs must be unique:\n\n";
             foreach ($dupes as $storyTitle => $tests) {
-                $storyTitleArray = explode(":::", $storyTitle);
+                $storyTitleArray = explode("/", $storyTitle);
                 $story = $storyTitleArray[0];
                 $title = $storyTitleArray[1];
                 $message .= "Story: '{$story}' Title: '{$title}' in Tests {$tests}\n\n";
