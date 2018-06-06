@@ -150,6 +150,13 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
                 } else {
                     $configMerger->merge($content);
                 }
+                if ($this->validationState->isValidationRequired()) {
+                    $errors = [];
+                    if ($configMerger && !$configMerger->validate($this->schemaFile, $errors)) {
+                        $message = $fileList->getFilename() . PHP_EOL . "Invalid Document \n";
+                        throw new \Exception($message . implode("\n", $errors));
+                    }
+                }
             } catch (\Magento\FunctionalTestingFramework\Config\Dom\ValidationException $e) {
                 throw new \Exception("Invalid XML in file " . $fileList->getFilename() . ":\n" . $e->getMessage());
             }

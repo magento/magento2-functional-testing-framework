@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Config\Reader;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
 use Magento\FunctionalTestingFramework\Util\Iterator\File;
 
@@ -36,6 +37,14 @@ class MftfFilesystem extends \Magento\FunctionalTestingFramework\Config\Reader\F
                 } else {
                     $configMerger->merge($content, $fileList->getFilename(), $exceptionCollector);
                 }
+                if (MftfApplicationConfig::getConfig()->debugEnabled()) {
+                    if ($this->validationState->isValidationRequired()) {
+                        if ($configMerger && !$configMerger->validate($this->schemaFile, $errors)) {
+                            $message = "Invalid Document: " . PHP_EOL . $fileList->getFilename() . PHP_EOL;
+                            throw new \Exception($message . implode("\n", $errors));
+                        }
+                    }
+                }
             } catch (\Magento\FunctionalTestingFramework\Config\Dom\ValidationException $e) {
                 throw new \Exception("Invalid XML in file " . $key . ":\n" . $e->getMessage());
             }
@@ -43,7 +52,7 @@ class MftfFilesystem extends \Magento\FunctionalTestingFramework\Config\Reader\F
         $exceptionCollector->throwException();
         if ($this->validationState->isValidationRequired()) {
             if ($configMerger && !$configMerger->validate($this->schemaFile, $errors)) {
-                $message = "Invalid Document \n";
+                $message = "Invalid Document: " . PHP_EOL;
                 throw new \Exception($message . implode("\n", $errors));
             }
         }
