@@ -102,7 +102,10 @@ class TestObjectExtractor extends BaseObjectExtractor
         );
 
         if (array_key_exists(self::TEST_ANNOTATIONS, $testData)) {
-            $testAnnotations = $this->annotationExtractor->extractAnnotations($testData[self::TEST_ANNOTATIONS]);
+            $testAnnotations = $this->annotationExtractor->extractAnnotations(
+                $testData[self::TEST_ANNOTATIONS],
+                $testData[self::NAME]
+            );
         }
 
         //Override features with module name if present, populates it otherwise
