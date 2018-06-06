@@ -10,8 +10,18 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
+/**
+ * Class UpdateTestSchemaPaths
+ * @package Magento\FunctionalTestingFramework\Upgrade
+ */
 class UpdateTestSchemaPaths implements UpgradeInterface
 {
+    /**
+     * Upgrades all test xml files, replacing relative schema paths to URN.
+     *
+     * @param InputInterface $input
+     * @return string
+     */
     public function execute(InputInterface $input)
     {
         $relativeToUrn = [

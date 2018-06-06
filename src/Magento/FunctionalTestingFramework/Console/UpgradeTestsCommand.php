@@ -22,6 +22,11 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class UpgradeTestsCommand extends Command
 {
+    /**
+     * Pool of upgrade scripts to run
+     *
+     * @var array
+     */
     private $upgradePool = [
         'UpdateTestSchemaPaths'
     ];
