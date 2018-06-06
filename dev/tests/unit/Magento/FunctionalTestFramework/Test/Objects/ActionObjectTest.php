@@ -15,13 +15,23 @@ use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
 use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
-use PHPUnit\Framework\TestCase;
+use tests\unit\Util\TestLoggingUtil;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 
 /**
  * Class ActionObjectTest
  */
-class ActionObjectTest extends TestCase
+class ActionObjectTest extends MagentoTestCase
 {
+    /**
+     * Before test functionality
+     * @return void
+     */
+    public function setUp()
+    {
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
+    }
+
     /**
      * The order offset should be 0 when the action is instantiated with 'before'
      */
@@ -234,13 +244,15 @@ class ActionObjectTest extends TestCase
         )->make(); // bypass the private constructor
         AspectMock::double(PageObjectHandler::class, ['getInstance' => $instance]);
 
-        // Expect this warning to get generated
-        $this->expectOutputString(
-            "WARNING: Page url attribute not found for {{PageObject}} and is required for amOnPage." . PHP_EOL
-        );
-
         // Call the method under test
         $actionObject->resolveReferences();
+
+        // Expect this warning to get generated
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            "warning",
+            "page url attribute not found and is required",
+            ['action' => $actionObject->getType(), 'url' => '{{PageObject}}', 'stepKey' => $actionObject->getStepKey()]
+        );
 
         // Verify
         $expected = [
@@ -370,5 +382,14 @@ class ActionObjectTest extends TestCase
         $dataInstance = AspectMock::double(DataObjectHandler::class, ['getObject' => $dataObject])
             ->make();
         AspectMock::double(DataObjectHandler::class, ['getInstance' => $dataInstance]);
+    }
+
+    /**
+     * After class functionality
+     * @return void
+     */
+    public static function tearDownAfterClass()
+    {
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 }

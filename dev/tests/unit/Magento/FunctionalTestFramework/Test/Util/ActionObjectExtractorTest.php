@@ -7,9 +7,10 @@ namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
 
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\TestLoggingUtil;
 
-class ActionObjectExtractorTest extends TestCase
+class ActionObjectExtractorTest extends MagentoTestCase
 {
     /** @var  ActionObjectExtractor */
     private $testActionObjectExtractor;
@@ -20,6 +21,7 @@ class ActionObjectExtractorTest extends TestCase
     public function setUp()
     {
         $this->testActionObjectExtractor = new ActionObjectExtractor();
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
 
     /**
@@ -42,19 +44,27 @@ class ActionObjectExtractorTest extends TestCase
     public function testInvalidMergeOrderReference()
     {
         $invalidArray = $this->createBasicActionObjectArray('invalidTestAction1', 'invalidTestAction1');
-
         $this->expectException('\Magento\FunctionalTestingFramework\Exceptions\TestReferenceException');
-        $expectedExceptionMessage = "Invalid ordering configuration in test TestWithSelfReferencingStepKey with step" .
-            " key(s):\n\tinvalidTestAction1\n";
-        $this->expectExceptionMessage($expectedExceptionMessage);
+        try {
+            $this->testActionObjectExtractor->extractActions($invalidArray, 'TestWithSelfReferencingStepKey');
+        } catch (\Exception $e) {
+            TestLoggingUtil::getInstance()->validateMockLogStatement(
+                'error',
+                'Line 103: Invalid ordering configuration in test',
+                [
+                    'test' => 'TestWithSelfReferencingStepKey',
+                    'stepKey' => ['invalidTestAction1']
+                ]
+            );
 
-        $this->testActionObjectExtractor->extractActions($invalidArray, 'TestWithSelfReferencingStepKey');
+            throw $e;
+        }
     }
 
     /**
      * Validates a warning is printed to the console when multiple actions reference the same actions for merging.
      */
-    public function testAmbiguousMergeOrderRefernece()
+    public function testAmbiguousMergeOrderReference()
     {
         $ambiguousArray = $this->createBasicActionObjectArray('testAction1');
         $ambiguousArray = array_merge(
@@ -67,12 +77,16 @@ class ActionObjectExtractorTest extends TestCase
             $this->createBasicActionObjectArray('testAction3', null, 'testAction1')
         );
 
-        $outputString = "multiple actions referencing step key testAction1 in test AmbiguousRefTest:\n" .
-            "\ttestAction2\n" .
-            "\ttestAction3\n";
-
-        $this->expectOutputString($outputString);
         $this->testActionObjectExtractor->extractActions($ambiguousArray, 'AmbiguousRefTest');
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'warning',
+            'multiple actions referencing step key',
+            [
+                'test' => 'AmbiguousRefTest',
+                'stepKey' => 'testAction1',
+                'ref' => ['testAction2', 'testAction3']
+            ]
+        );
     }
 
     /**
@@ -102,5 +116,13 @@ class ActionObjectExtractorTest extends TestCase
         }
 
         return $baseArray;
+    }
+
+    /**
+     * clean up function runs after all tests
+     */
+    public static function tearDownAfterClass()
+    {
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 }

@@ -11,17 +11,29 @@ use AspectMock\Test as AspectMock;
 
 use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\ModuleResolver;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\TestLoggingUtil;
 
-class ModuleResolverTest extends TestCase
+class ModuleResolverTest extends MagentoTestCase
 {
     /**
-     * remove all registered test doubles
+     * Before test functionality
+     * @return void
      */
-    protected function tearDown()
+    public function setUp()
     {
-        AspectMock::clean();
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
+    }
+
+    /**
+     * After class functionality
+     * @return void
+     */
+    public static function tearDownAfterClass()
+    {
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 
     /**
@@ -32,8 +44,8 @@ class ModuleResolverTest extends TestCase
     {
         $this->setMockResolverClass();
         $resolver = ModuleResolver::getInstance();
-        $this->setMockResolverProperties($resolver, ["example/paths"]);
-        $this->assertEquals(["example/paths"], $resolver->getModulesPath());
+        $this->setMockResolverProperties($resolver, ["example" . DIRECTORY_SEPARATOR . "paths"]);
+        $this->assertEquals(["example" . DIRECTORY_SEPARATOR . "paths"], $resolver->getModulesPath());
     }
 
     /**
@@ -42,11 +54,15 @@ class ModuleResolverTest extends TestCase
      */
     public function testGetModulePathsAggregate()
     {
-        $this->setMockResolverClass(false, null, null, null, ['example/paths']);
+        $this->setMockResolverClass(false, null, null, null, ["example" . DIRECTORY_SEPARATOR . "paths"]);
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, null);
         $this->assertEquals(
-            ['example/paths', 'example/paths', 'example/paths'],
+            [
+                "example" . DIRECTORY_SEPARATOR . "paths",
+                "example" . DIRECTORY_SEPARATOR . "paths",
+                "example" . DIRECTORY_SEPARATOR . "paths"
+            ],
             $resolver->getModulesPath()
         );
     }
@@ -57,11 +73,21 @@ class ModuleResolverTest extends TestCase
      */
     public function testGetModulePathsLocations()
     {
-        $mockResolver = $this->setMockResolverClass(false, null, null, null, ['example/paths']);
+        $mockResolver = $this->setMockResolverClass(
+            false,
+            null,
+            null,
+            null,
+            ["example" . DIRECTORY_SEPARATOR . "paths"]
+        );
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, null);
         $this->assertEquals(
-            ['example/paths', 'example/paths', 'example/paths'],
+            [
+                "example" . DIRECTORY_SEPARATOR . "paths",
+                "example" . DIRECTORY_SEPARATOR . "paths",
+                "example" . DIRECTORY_SEPARATOR . "paths"
+            ],
             $resolver->getModulesPath()
         );
 
@@ -80,8 +106,14 @@ class ModuleResolverTest extends TestCase
             . 'vendor' . DIRECTORY_SEPARATOR;
 
         $mockResolver->verifyInvoked('globRelevantPaths', [$modulePath, '']);
-        $mockResolver->verifyInvoked('globRelevantPaths', [$appCodePath, '/Test/Mftf']);
-        $mockResolver->verifyInvoked('globRelevantPaths', [$vendorCodePath, '/Test/Mftf']);
+        $mockResolver->verifyInvoked(
+            'globRelevantPaths',
+            [$appCodePath, DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR .'Mftf']
+        );
+        $mockResolver->verifyInvoked(
+            'globRelevantPaths',
+            [$vendorCodePath, DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR .'Mftf']
+        );
     }
 
     /**
@@ -91,10 +123,14 @@ class ModuleResolverTest extends TestCase
     public function testGetCustomModulePath()
     {
         $this->setMockResolverClass(false, ["Magento_TestModule"], null, null, [], ['otherPath']);
-        $this->expectOutputString("Including module path: otherPath" . PHP_EOL);
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, null, null);
         $this->assertEquals(['otherPath'], $resolver->getModulesPath());
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'info',
+            'including custom module',
+            ['module' => 'otherPath']
+        );
     }
 
     /**
@@ -119,10 +155,14 @@ class ModuleResolverTest extends TestCase
                 return $mockValue;
             }
         );
-        $this->expectOutputString("Excluding module: somePath" . PHP_EOL);
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, null, ["somePath"]);
         $this->assertEquals(["otherPath", "lastPath"], $resolver->getModulesPath());
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'info',
+            'excluding module',
+            ['module' => 'somePath']
+        );
     }
 
     /**
@@ -131,10 +171,10 @@ class ModuleResolverTest extends TestCase
      */
     public function testGetModulePathsNoAdminToken()
     {
-        $this->setMockResolverClass(false, null, ["example/paths"], []);
+        $this->setMockResolverClass(false, null, ["example" . DIRECTORY_SEPARATOR . "paths"], []);
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, null);
-        $this->assertEquals(["example/paths"], $resolver->getModulesPath());
+        $this->assertEquals(["example" . DIRECTORY_SEPARATOR . "paths"], $resolver->getModulesPath());
     }
 
     /**
@@ -218,5 +258,14 @@ class ModuleResolverTest extends TestCase
         $property = new \ReflectionProperty(ModuleResolver::class, 'moduleBlacklist');
         $property->setAccessible(true);
         $property->setValue($instance, $mockBlacklist);
+    }
+
+    /**
+     * After method functionality
+     * @return void
+     */
+    protected function tearDown()
+    {
+        AspectMock::clean();
     }
 }

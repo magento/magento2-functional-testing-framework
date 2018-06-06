@@ -10,6 +10,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
+use Magento\FunctionalTestingFramework\Util\ModulePathExtractor;
 use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
 
 /**
@@ -49,6 +50,13 @@ class TestObjectExtractor extends BaseObjectExtractor
     private $testHookObjectExtractor;
 
     /**
+     * Module Path extractor
+     *
+     * @var ModulePathExtractor
+     */
+    private $modulePathExtractor;
+
+    /**
      * TestObjectExtractor constructor.
      */
     public function __construct()
@@ -56,6 +64,7 @@ class TestObjectExtractor extends BaseObjectExtractor
         $this->actionObjectExtractor = new ActionObjectExtractor();
         $this->annotationExtractor = new AnnotationExtractor();
         $this->testHookObjectExtractor = new TestHookObjectExtractor();
+        $this->modulePathExtractor = new ModulePathExtractor();
     }
 
     /**
@@ -76,7 +85,7 @@ class TestObjectExtractor extends BaseObjectExtractor
         $filename = $testData['filename'] ?? null;
         $fileNames = explode(",", $filename);
         $baseFileName = $fileNames[0];
-        $module = $this->extractModuleName($baseFileName);
+        $module = $this->modulePathExtractor->extractModuleName($baseFileName);
         $testReference = $testData['extends'] ?? null;
         $testActions = $this->stripDescriptorTags(
             $testData,
@@ -135,26 +144,5 @@ class TestObjectExtractor extends BaseObjectExtractor
         } catch (XmlException $exception) {
             throw new XmlException($exception->getMessage() . ' in Test ' . $filename);
         }
-    }
-
-    /**
-     * Extracts module name from the path given
-     * @param string $path
-     * @return string
-     */
-    private function extractModuleName($path)
-    {
-        if (empty($path)) {
-            return "NO MODULE DETECTED";
-        }
-        $paths = explode(DIRECTORY_SEPARATOR, $path);
-        if (count($paths) < 3) {
-            return "NO MODULE DETECTED";
-        } elseif ($paths[count($paths)-3] == "Mftf") {
-            // app/code/Magento/[Analytics]/Test/Mftf/Test/SomeText.xml
-            return $paths[count($paths)-5];
-        }
-        // dev/tests/acceptance/tests/functional/Magento/FunctionalTest/[Analytics]/Test/SomeText.xml
-        return $paths[count($paths)-3];
     }
 }

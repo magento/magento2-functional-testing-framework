@@ -6,7 +6,9 @@
 
 namespace Magento\FunctionalTestingFramework\DataGenerator\Objects;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
  * Class EntityDataObject
@@ -64,6 +66,13 @@ class EntityDataObject
     private $uniquenessData = [];
 
     /**
+     * String of parent Entity
+     *
+     * @var string
+     */
+    private $parentEntity;
+
+    /**
      * Constructor
      *
      * @param string $name
@@ -72,8 +81,9 @@ class EntityDataObject
      * @param string[] $linkedEntities
      * @param string[] $uniquenessData
      * @param string[] $vars
+     * @param string $parentEntity
      */
-    public function __construct($name, $type, $data, $linkedEntities, $uniquenessData, $vars = [])
+    public function __construct($name, $type, $data, $linkedEntities, $uniquenessData, $vars = [], $parentEntity = null)
     {
         $this->name = $name;
         $this->type = $type;
@@ -84,6 +94,7 @@ class EntityDataObject
         }
 
         $this->vars = $vars;
+        $this->parentEntity = $parentEntity;
     }
 
     /**
@@ -126,10 +137,16 @@ class EntityDataObject
      */
     public function getDataByName($name, $uniquenessFormat)
     {
+        if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
+            LoggingUtil::getInstance()->getLogger(EntityDataObject::class)
+                ->debug("Fetching data field from entity", ["entity" => $this->getName(), "field" => $name]);
+        }
+
         if (!$this->isValidUniqueDataFormat($uniquenessFormat)) {
-            throw new TestFrameworkException(
-                sprintf('Invalid unique data format value: %s \n', $uniquenessFormat)
-            );
+            $exceptionMessage = sprintf("Invalid unique data format value: %s \n", $uniquenessFormat);
+            LoggingUtil::getInstance()->getLogger(EntityDataObject::class)
+                ->error($exceptionMessage, ["entity" => $this->getName(), "field" => $name]);
+            throw new TestFrameworkException($exceptionMessage);
         }
 
         $name_lower = strtolower($name);
@@ -143,6 +160,16 @@ class EntityDataObject
         }
 
         return null;
+    }
+
+    /**
+     * Getter for data parent
+     *
+     * @return \string
+     */
+    public function getParentName()
+    {
+        return $this->parentEntity;
     }
 
     /**
@@ -204,12 +231,12 @@ class EntityDataObject
     private function checkUniquenessFunctionExists($function, $uniqueDataFormat)
     {
         if (!function_exists($function)) {
-            throw new TestFrameworkException(
-                sprintf(
-                    'Unique data format value: %s can only be used when running cests.\n',
-                    $uniqueDataFormat
-                )
+            $exceptionMessage = sprintf(
+                'Unique data format value: %s can only be used when running cests.\n',
+                $uniqueDataFormat
             );
+
+            throw new TestFrameworkException($exceptionMessage);
         }
     }
 
