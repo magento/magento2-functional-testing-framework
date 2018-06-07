@@ -148,7 +148,7 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
         $configMerger = null;
         foreach ($fileList as $key => $content) {
             //check if file is empty and continue to next if it is
-            if (!$this->verifyFileStatus($content, $fileList->getFilename())) {
+            if (!$this->verifyFileEmpty($content, $fileList->getFilename())) {
                 continue;
             }
             try {
@@ -207,7 +207,7 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
      * @param string $fileName
      * @return bool
      */
-    protected function verifyFileStatus($content, $fileName)
+    protected function verifyFileEmpty($content, $fileName)
     {
         if (empty($content)) {
             if (MftfApplicationConfig::getConfig()->verboseEnabled()) {

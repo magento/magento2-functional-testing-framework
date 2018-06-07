@@ -26,7 +26,7 @@ class MftfFilesystem extends \Magento\FunctionalTestingFramework\Config\Reader\F
         $configMerger = null;
         foreach ($fileList as $key => $content) {
             //check if file is empty and continue to next if it is
-            if (!parent::verifyFileStatus($content, $fileList->getFilename())) {
+            if (!parent::verifyFileEmpty($content, $fileList->getFilename())) {
                 continue;
             }
             try {
