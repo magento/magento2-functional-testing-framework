@@ -22,7 +22,6 @@ class MftfFilesystem extends \Magento\FunctionalTestingFramework\Config\Reader\F
     public function readFiles($fileList)
     {
         $exceptionCollector = new ExceptionCollector();
-        $errors = [];
         /** @var \Magento\FunctionalTestingFramework\Test\Config\Dom $configMerger */
         $configMerger = null;
         foreach ($fileList as $key => $content) {
@@ -38,24 +37,14 @@ class MftfFilesystem extends \Magento\FunctionalTestingFramework\Config\Reader\F
                     $configMerger->merge($content, $fileList->getFilename(), $exceptionCollector);
                 }
                 if (MftfApplicationConfig::getConfig()->debugEnabled()) {
-                    if ($this->validationState->isValidationRequired()) {
-                        if ($configMerger && !$configMerger->validate($this->schemaFile, $errors)) {
-                            $message = "Invalid Document: " . PHP_EOL . $fileList->getFilename() . PHP_EOL;
-                            throw new \Exception($message . implode("\n", $errors));
-                        }
-                    }
+                    $this->validateSchema($configMerger, $fileList->getFilename());
                 }
             } catch (\Magento\FunctionalTestingFramework\Config\Dom\ValidationException $e) {
                 throw new \Exception("Invalid XML in file " . $key . ":\n" . $e->getMessage());
             }
         }
         $exceptionCollector->throwException();
-        if ($this->validationState->isValidationRequired()) {
-            if ($configMerger && !$configMerger->validate($this->schemaFile, $errors)) {
-                $message = "Invalid Document: " . PHP_EOL;
-                throw new \Exception($message . implode("\n", $errors));
-            }
-        }
+        $this->validateSchema($configMerger, $fileList->getFilename());
 
         $output = [];
         if ($configMerger) {
