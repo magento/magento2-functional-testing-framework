@@ -22,7 +22,4 @@
         <amOnPage stepKey="oneParamAdminPageString" url="{{AdminOneParamPage.url('StringLiteral')}}"/>
         <amOnUrl stepKey="onExternalPage" url="{{ExternalPage.url}}"/>
     </test>
-    <test name="ExternalPageTestBadReference">
-        <amOnPage stepKey="onExternalPage" url="{{ExternalPage.url}}"/>
-    </test>
 </tests>
