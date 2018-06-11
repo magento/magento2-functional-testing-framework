@@ -16,10 +16,18 @@
             <createData entity="createThis" stepKey="create">
                 <field key="someKey">dataHere</field>
             </createData>
+            <actionGroup ref="actionGroupWithTwoArguments" stepKey="AC">
+                <argument name="somePerson" value="simpleData"/>
+                <argument name="anotherPerson" value="uniqueData"/>
+            </actionGroup>
         </before>
         <after>
             <amOnPage url="some.url" stepKey="after"/>
             <deleteData url="deleteThis" stepKey="delete"/>
+            <actionGroup ref="actionGroupWithTwoArguments" stepKey="AC">
+                <argument name="somePerson" value="simpleData"/>
+                <argument name="anotherPerson" value="uniqueData"/>
+            </actionGroup>
         </after>
     </suite>
 </suites>
