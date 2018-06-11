@@ -27,8 +27,8 @@ class UpgradeTestsCommand extends Command
      *
      * @var array
      */
-    private $upgradePool = [
-        'UpdateTestSchemaPaths'
+    public $upgradePool = [
+        \Magento\FunctionalTestingFramework\Upgrade\UpdateTestSchemaPaths::class
     ];
 
     /**
@@ -54,8 +54,7 @@ class UpgradeTestsCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         foreach ($this->upgradePool as $upgradeClass) {
-            $fullClassName = 'Magento\FunctionalTestingFramework\Upgrade\\' . $upgradeClass;
-            $upgrade = new $fullClassName();
+            $upgrade = new $upgradeClass();
             $upgradeOutput = $upgrade->execute($input);
             LoggingUtil::getInstance()->getLogger(GenerateDevUrnCommand::class)->info($upgradeOutput);
             $output->writeln($upgradeOutput);
