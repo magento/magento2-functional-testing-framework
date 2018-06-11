@@ -11,7 +11,6 @@
     <test name="BasicActionGroupTest">
         <annotations>
             <severity value="CRITICAL"/>
-            <title value="A Functional Cest"/>
             <group value="functional"/>
             <features value="Action Group Functional Cest"/>
             <stories value="MQE-433"/>
@@ -27,7 +26,6 @@
     <test name="ActionGroupWithDataTest">
         <annotations>
             <severity value="CRITICAL"/>
-            <title value="A Functional Cest"/>
             <group value="functional"/>
             <features value="Action Group Functional Cest"/>
             <stories value="MQE-433"/>
@@ -46,7 +44,6 @@
     <test name="ActionGroupWithDataOverrideTest">
         <annotations>
             <severity value="CRITICAL"/>
-            <title value="A Functional Cest"/>
             <group value="functional"/>
             <features value="Action Group Functional Cest"/>
             <stories value="MQE-433"/>
@@ -67,7 +64,6 @@
     <test name="ActionGroupWithNoDefaultTest">
         <annotations>
             <severity value="CRITICAL"/>
-            <title value="A Functional Cest"/>
             <group value="functional"/>
             <features value="Action Group Functional Cest"/>
             <stories value="MQE-433"/>
@@ -88,7 +84,6 @@
     <test name="ActionGroupWithPersistedData">
         <annotations>
             <severity value="CRITICAL"/>
-            <title value="A Functional Cest"/>
             <group value="functional"/>
             <features value="Action Group Functional Cest"/>
             <stories value="MQE-433"/>
@@ -108,7 +103,6 @@
     <test name="ActionGroupWithTopLevelPersistedData">
         <annotations>
             <severity value="CRITICAL"/>
-            <title value="A Functional Cest"/>
             <group value="functional"/>
             <features value="Action Group Functional Cest"/>
             <stories value="MQE-433"/>
@@ -127,7 +121,6 @@
     <test name="MultipleActionGroupsTest">
         <annotations>
             <severity value="CRITICAL"/>
-            <title value="A Functional Cest"/>
             <group value="functional"/>
             <features value="Action Group Functional Cest"/>
             <stories value="MQE-433"/>
@@ -149,7 +142,6 @@
     <test name="MergedActionGroupTest">
         <annotations>
             <severity value="CRITICAL"/>
-            <title value="A Functional Cest"/>
             <group value="functional"/>
             <features value="Action Group Functional Cest"/>
             <stories value="MQE-433"/>
@@ -168,7 +160,6 @@
     <test name="ArgumentWithSameNameAsElement">
         <annotations>
             <severity value="CRITICAL"/>
-            <title value="A Functional Cest"/>
             <group value="functional"/>
             <features value="Action Group Functional Cest"/>
             <stories value="MQE-433"/>

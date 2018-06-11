@@ -11,7 +11,7 @@
     <test name="ParentExtendedTest">
         <annotations>
             <severity value="AVERAGE"/>
-            <title value="Parent"/>
+            <title value="ParentExtendedTest"/>
             <group value="Parent"/>
             <features value="Parent"/>
             <stories value="Parent"/>
@@ -28,7 +28,7 @@
     <test name="ChildExtendedTestReplace" extends="ParentExtendedTest">
         <annotations>
             <severity value="MINOR"/>
-            <title value="Child"/>
+            <title value="ChildExtendedTestReplace"/>
             <group value="Child"/>
             <features value="Child"/>
             <stories value="Child"/>
@@ -39,7 +39,7 @@
     <test name="ChildExtendedTestReplaceHook" extends="ParentExtendedTest">
         <annotations>
             <severity value="MINOR"/>
-            <title value="Child"/>
+            <title value="ChildExtendedTestReplaceHook"/>
             <group value="Child"/>
             <features value="Child"/>
             <stories value="Child"/>
@@ -52,7 +52,7 @@
     <test name="ChildExtendedTestMerging" extends="ParentExtendedTest">
         <annotations>
             <severity value="MINOR"/>
-            <title value="Child"/>
+            <title value="ChildExtendedTestMerging"/>
             <group value="Child"/>
             <features value="Child"/>
             <stories value="Child"/>
@@ -69,7 +69,7 @@
     <test name="ChildExtendedTestRemoveAction" extends="ParentExtendedTest">
         <annotations>
             <severity value="CRITICAL"/>
-            <title value="Child"/>
+            <title value="ChildExtendedTestRemoveAction"/>
             <group value="Child"/>
             <features value="Child"/>
             <stories value="Child"/>
@@ -80,7 +80,7 @@
     <test name="ParentExtendedTestNoHooks">
         <annotations>
             <severity value="AVERAGE"/>
-            <title value="Parent"/>
+            <title value="ParentExtendedTestNoHooks"/>
             <group value="Parent"/>
             <features value="Parent"/>
             <stories value="Parent"/>
@@ -91,7 +91,7 @@
     <test name="ChildExtendedTestAddHooks">
         <annotations>
             <severity value="AVERAGE"/>
-            <title value="Parent"/>
+            <title value="ChildExtendedTestAddHooks"/>
             <group value="Parent"/>
             <features value="Parent"/>
             <stories value="Parent"/>
@@ -107,7 +107,7 @@
     <test name="ChildExtendedTestRemoveHookAction" extends="ParentExtendedTest">
         <annotations>
             <severity value="CRITICAL"/>
-            <title value="Child"/>
+            <title value="ChildExtendedTestRemoveHookAction"/>
             <group value="Child"/>
             <features value="Child"/>
             <stories value="Child"/>
@@ -120,7 +120,7 @@
     <test name="ChildExtendedTestNoParent" extends="ThisTestDoesNotExist">
         <annotations>
             <severity value="CRITICAL"/>
-            <title value="Child"/>
+            <title value="ChildExtendedTestNoParent"/>
             <group value="Child"/>
             <features value="Child"/>
             <stories value="Child"/>

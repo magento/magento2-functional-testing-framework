@@ -35,7 +35,7 @@ class GenerateTestsCommand extends Command
             ->addArgument('name', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'name(s) of specific tests to generate')
             ->addOption("config", 'c', InputOption::VALUE_REQUIRED, 'default, singleRun, or parallel', 'default')
             ->addOption("force", 'f',InputOption::VALUE_NONE, 'force generation of tests regardless of Magento Instance Configuration')
-            ->addOption('lines', 'l', InputOption::VALUE_REQUIRED, 'Used in combination with a parallel configuration, determines desired group size', 500)
+            ->addOption('time', 'i', InputOption::VALUE_REQUIRED, 'Used in combination with a parallel configuration, determines desired group size (in minutes)', 10)
             ->addOption('tests', 't', InputOption::VALUE_REQUIRED, 'A parameter accepting a JSON string used to determine the test configuration')
             ->addOption('debug', 'd', InputOption::VALUE_NONE, 'run extra validation when generating tests');
     }
@@ -46,7 +46,7 @@ class GenerateTestsCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return void
-     * @throws \Symfony\Component\Console\Exception\LogicException
+     * @throws \Symfony\Component\Console\Exception\LogicException|TestFrameworkException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -54,13 +54,18 @@ class GenerateTestsCommand extends Command
         $config = $input->getOption('config');
         $json = $input->getOption('tests');
         $force = $input->getOption('force');
-        $lines = $input->getOption('lines');
+        $time = $input->getOption('time') * 60 * 1000; // convert from minutes to milliseconds
         $debug = $input->getOption('debug');
         $verbose = $output->isVerbose();
 
         if ($json !== null && !json_decode($json)) {
             // stop execution if we have failed to properly parse any json passed in by the user
             throw new TestFrameworkException("JSON could not be parsed: " . json_last_error_msg());
+        }
+
+        if ($config === 'parallel' && $time <= 0) {
+            // stop execution if the user has given us an invalid argument for time argument during parallel generation
+            throw new TestFrameworkException("time option cannot be less than or equal to 0");
         }
 
         $testConfiguration = $this->createTestConfiguration($json, $tests, $force, $debug, $verbose);
@@ -71,13 +76,13 @@ class GenerateTestsCommand extends Command
 
         if ($config == 'parallel') {
             /** @var ParallelTestManifest $testManifest */
-            $testManifest->createTestGroups($lines);
+            $testManifest->createTestGroups($time);
         }
 
         SuiteGenerator::getInstance()->generateAllSuites($testManifest);
         $testManifest->generate();
 
-        print "Generate Tests Command Run" . PHP_EOL;
+       $output->writeln("Generate Tests Command Run");
     }
 
     /**

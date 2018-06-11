@@ -13,6 +13,7 @@ use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
 use Magento\FunctionalTestingFramework\Test\Util\ObjectExtensionUtil;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
+use Magento\FunctionalTestingFramework\Test\Util\AnnotationExtractor;
 
 /**
  * Class TestObjectHandler
@@ -142,6 +143,7 @@ class TestObjectHandler implements ObjectHandlerInterface
 
             $this->tests[$testName] = $testObjectExtractor->extractTestData($testData);
         }
+        $testObjectExtractor->getAnnotationExtractor()->validateStoryTitleUniqueness();
     }
 
     /**
