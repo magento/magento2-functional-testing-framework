@@ -77,7 +77,7 @@ class EnvProcessor
             $envContents = $this->parseEnvFileLines($envFile);
         }
 
-        return array_diff_key($this->parseEnvFileLines($envExampleFile), $envContents);
+        return array_merge($this->parseEnvFileLines($envExampleFile), $envContents);
     }
 
     private function parseEnvFileLines(array $file): array
