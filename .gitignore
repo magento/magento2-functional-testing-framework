@@ -14,4 +14,5 @@ coverage/
 codeception.yml
 dev/tests/functional/MFTF.suite.yml
 dev/tests/functional/_output
+dev/mftf.log
 dev/tests/mftf.log
