@@ -6,7 +6,12 @@
 namespace Magento\FunctionalTestingFramework\Test\Config;
 
 use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
+use Magento\FunctionalTestingFramework\Util\Validation\DuplicateNodeValidationUtil;
 
+/**
+ * MFTF actionGroup.xml configuration XML DOM utility
+ * @package Magento\FunctionalTestingFramework\Test\Config
+ */
 class ActionGroupDom extends Dom
 {
     const ACTION_GROUP_FILE_NAME_ENDING = "ActionGroup.xml";
@@ -29,7 +34,30 @@ class ActionGroupDom extends Dom
             foreach ($actionGroupNodes as $actionGroupNode) {
                 /** @var \DOMElement $actionGroupNode */
                 $actionGroupNode->setAttribute(self::TEST_META_FILENAME_ATTRIBUTE, $filename);
-                $this->validateDomStepKeys($actionGroupNode, $filename, 'Action Group', $exceptionCollector);
+                DuplicateNodeValidationUtil::validateChildUniqueness(
+                    $actionGroupNode,
+                    $filename,
+                    'stepKey',
+                    $exceptionCollector
+                );
+                $beforeNode = $actionGroupNode->getElementsByTagName('before')->item(0);
+                $afterNode = $actionGroupNode->getElementsByTagName('after')->item(0);
+                if (isset($beforeNode)) {
+                    DuplicateNodeValidationUtil::validateChildUniqueness(
+                        $beforeNode,
+                        $filename,
+                        'stepKey',
+                        $exceptionCollector
+                    );
+                }
+                if (isset($afterNode)) {
+                    DuplicateNodeValidationUtil::validateChildUniqueness(
+                        $afterNode,
+                        $filename,
+                        'stepKey',
+                        $exceptionCollector
+                    );
+                }
                 if ($actionGroupNode->getAttribute(self::TEST_MERGE_POINTER_AFTER) !== "") {
                     $this->appendMergePointerToActions(
                         $actionGroupNode,

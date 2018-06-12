@@ -11,9 +11,16 @@ use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
 use Magento\FunctionalTestingFramework\Config\Dom\NodeMergingConfig;
 use Magento\FunctionalTestingFramework\Config\Dom\NodePathMatcher;
 use Magento\FunctionalTestingFramework\Util\ModulePathExtractor;
+use Magento\FunctionalTestingFramework\Util\Validation\DuplicateNodeValidationUtil;
 
-class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
+/**
+ * MFTF page.xml configuration XML DOM utility
+ * @package Magento\FunctionalTestingFramework\Page\Config
+ */
+class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
 {
+    const PAGE_META_FILENAME_ATTRIBUTE = "filename";
+
     /**
      * Module Path extractor
      *
@@ -22,7 +29,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
     private $modulePathExtractor;
 
     /**
-     * TestDom constructor.
+     * PageDom constructor.
      * @param string $xml
      * @param string $filename
      * @param ExceptionCollector $exceptionCollector
@@ -61,6 +68,8 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
     {
         $dom = parent::initDom($xml);
 
+        $pagesNode = $dom->getElementsByTagName('pages')->item(0);
+        DuplicateNodeValidationUtil::validateChildUniqueness($pagesNode, $filename, 'name', $exceptionCollector);
         $pageNodes = $dom->getElementsByTagName('page');
         $currentModule =
             $this->modulePathExtractor->extractModuleName($filename) .
@@ -78,6 +87,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
                     );
                 }
             }
+            $pageNode->setAttribute(self::PAGE_META_FILENAME_ATTRIBUTE, $filename);
         }
         return $dom;
     }
