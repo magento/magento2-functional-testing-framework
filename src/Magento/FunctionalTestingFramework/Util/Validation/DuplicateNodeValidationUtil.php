@@ -48,7 +48,7 @@ class DuplicateNodeValidationUtil
         if (count($duplicates) > 0) {
             $keyError = "";
             foreach ($duplicates as $duplicateKey => $duplicateValue) {
-                $keyError .= "\tstepKey: {$duplicateValue} is used more than once.\n";
+                $keyError .= "\t{$uniqueKey}: {$duplicateValue} is used more than once.\n";
             }
 
             $errorMsg = "{$type} cannot use {$uniqueKey}s more than once.\t\n{$keyError}\tin file: {$filename}";
