@@ -9,6 +9,8 @@ namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
 use AspectMock\Proxy\Verifier;
 use AspectMock\Test as AspectMock;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
@@ -166,15 +168,41 @@ class ModuleResolverTest extends MagentoTestCase
     }
 
     /**
-     * Validate that getEnabledModules returns correctly with no admin token
+     * Validate that getEnabledModules errors out when no Admin Token is returned and --force is false
      * @throws \Exception
      */
     public function testGetModulePathsNoAdminToken()
     {
+        // Set --force to false
+        $this->mockForceGenerate(false);
+
+        // Mock ModuleResolver and $enabledModulesPath
         $this->setMockResolverClass(false, null, ["example" . DIRECTORY_SEPARATOR . "paths"], []);
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, null);
-        $this->assertEquals(["example" . DIRECTORY_SEPARATOR . "paths"], $resolver->getModulesPath());
+
+        // Cannot Generate if no --force was passed in and no Admin Token is returned succesfully
+        $this->expectException(TestFrameworkException::class);
+        $resolver->getModulesPath();
+    }
+
+    /**
+     * Validates that getAdminToken is not called when --force is enabled
+     */
+    public function testGetAdminTokenNotCalledWhenForce()
+    {
+        // Set --force to true
+        $this->mockForceGenerate(true);
+
+        // Mock ModuleResolver and applyCustomModuleMethods()
+        $mockResolver = $this->setMockResolverClass();
+        $resolver = ModuleResolver::getInstance();
+        $this->setMockResolverProperties($resolver, null, null);
+        $resolver->getModulesPath();
+        $mockResolver->verifyNeverInvoked("getAdminToken");
+
+        // verifyNeverInvoked does not add to assertion count
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -258,6 +286,25 @@ class ModuleResolverTest extends MagentoTestCase
         $property = new \ReflectionProperty(ModuleResolver::class, 'moduleBlacklist');
         $property->setAccessible(true);
         $property->setValue($instance, $mockBlacklist);
+    }
+
+    /**
+     * Mocks MftfApplicationConfig->forceGenerateEnabled()
+     * @param $forceGenerate
+     * @throws \Exception
+     * @return void
+     */
+    private function mockForceGenerate($forceGenerate)
+    {
+        $mockConfig = AspectMock::double(
+            MftfApplicationConfig::class,
+            ['forceGenerateEnabled' => $forceGenerate]
+        );
+        $instance = AspectMock::double(
+            ObjectManager::class,
+            ['create' => $mockConfig->make(), 'get' => null]
+        )->make();
+        AspectMock::double(ObjectManagerFactory::class, ['getObjectManager' => $instance]);
     }
 
     /**
