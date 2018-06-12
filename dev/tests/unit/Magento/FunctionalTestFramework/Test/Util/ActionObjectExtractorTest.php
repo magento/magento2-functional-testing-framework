@@ -90,6 +90,15 @@ class ActionObjectExtractorTest extends MagentoTestCase
     }
 
     /**
+     * Tests basic action object extraction with an empty stepKey
+     */
+    public function testEmptyStepKey()
+    {
+        $this->expectExceptionMessage("StepKeys cannot be empty.	Action='sampleAction'");
+        $this->testActionObjectExtractor->extractActions($this->createBasicActionObjectArray(""));
+    }
+
+    /**
      * Utility function to return mock parser output for testing extraction into ActionObjects.
      *
      * @param string $stepKey
