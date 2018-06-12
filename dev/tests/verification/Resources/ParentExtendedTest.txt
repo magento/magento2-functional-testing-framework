@@ -16,7 +16,7 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("Parent")
+ * @Title("ParentExtendedTest")
  * @group Parent
  */
 class ParentExtendedTestCest
