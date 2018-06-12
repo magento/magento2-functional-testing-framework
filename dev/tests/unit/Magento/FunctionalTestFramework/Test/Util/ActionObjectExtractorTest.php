@@ -50,7 +50,7 @@ class ActionObjectExtractorTest extends MagentoTestCase
         } catch (\Exception $e) {
             TestLoggingUtil::getInstance()->validateMockLogStatement(
                 'error',
-                'Line 103: Invalid ordering configuration in test',
+                'Line 108: Invalid ordering configuration in test',
                 [
                     'test' => 'TestWithSelfReferencingStepKey',
                     'stepKey' => ['invalidTestAction1']
