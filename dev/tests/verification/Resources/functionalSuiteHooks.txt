@@ -58,6 +58,7 @@ class functionalSuiteHooks extends \Codeception\GroupObject
                 $createThis = DataObjectHandler::getInstance()->getObject("createThis");
                 $this->create = new DataPersistenceHandler($createThis, [], $createFields);
                 $this->create->createEntity();
+                $webDriver->see("John", msq("uniqueData") . "John");
                 
                 // reset configuration and close session
                 $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver')->_resetConfig();
@@ -95,6 +96,7 @@ class functionalSuiteHooks extends \Codeception\GroupObject
                 $webDriver->_initializeSession();
                 $webDriver->amOnPage("some.url");
                 $webDriver->deleteEntityByUrl("deleteThis");
+                $webDriver->see("John", msq("uniqueData") . "John");
                 
                 // reset configuration and close session
                 $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver')->_resetConfig();
