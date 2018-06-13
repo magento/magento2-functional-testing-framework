@@ -29,7 +29,14 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
     private $modulePathExtractor;
 
     /**
-     * PageDom constructor.
+     * NodeValidationUtil
+     *
+     * @var DuplicateNodeValidationUtil
+     */
+    private $validationUtil;
+
+    /**
+     * Page Dom constructor.
      * @param string $xml
      * @param string $filename
      * @param ExceptionCollector $exceptionCollector
@@ -47,13 +54,17 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
         $schemaFile = null,
         $errorFormat = self::ERROR_FORMAT_DEFAULT
     ) {
-        $this->schemaFile = $schemaFile;
-        $this->nodeMergingConfig = new NodeMergingConfig(new NodePathMatcher(), $idAttributes);
-        $this->typeAttributeName = $typeAttributeName;
-        $this->errorFormat = $errorFormat;
         $this->modulePathExtractor = new ModulePathExtractor();
-        $this->dom = $this->initDom($xml, $filename, $exceptionCollector);
-        $this->rootNamespace = $this->dom->lookupNamespaceUri($this->dom->namespaceURI);
+        $this->validationUtil = new DuplicateNodeValidationUtil('name', $exceptionCollector);
+        parent::__construct(
+            $xml,
+            $filename,
+            $exceptionCollector,
+            $idAttributes,
+            $typeAttributeName,
+            $schemaFile,
+            $errorFormat
+        );
     }
 
     /**
@@ -61,15 +72,14 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
      *
      * @param string $xml
      * @param string|null $filename
-     * @param ExceptionCollector $exceptionCollector
      * @return \DOMDocument
      */
-    public function initDom($xml, $filename = null, $exceptionCollector = null)
+    public function initDom($xml, $filename = null)
     {
         $dom = parent::initDom($xml);
 
         $pagesNode = $dom->getElementsByTagName('pages')->item(0);
-        DuplicateNodeValidationUtil::validateChildUniqueness($pagesNode, $filename, 'name', $exceptionCollector);
+        $this->validationUtil->validateChildUniqueness($pagesNode, $filename);
         $pageNodes = $dom->getElementsByTagName('page');
         $currentModule =
             $this->modulePathExtractor->extractModuleName($filename) .

@@ -27,14 +27,57 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
     const TEST_MERGE_POINTER_AFTER = "insertAfter";
 
     /**
+     * NodeValidationUtil
+     * @var DuplicateNodeValidationUtil
+     */
+    protected $validationUtil;
+
+    /**
+     * ExceptionCollector
+     * @var ExceptionCollector
+     */
+    private $exceptionCollector;
+
+    /**
+     * Metadata Dom constructor.
+     * @param string $xml
+     * @param string $filename
+     * @param ExceptionCollector $exceptionCollector
+     * @param array $idAttributes
+     * @param string $typeAttributeName
+     * @param string $schemaFile
+     * @param string $errorFormat
+     */
+    public function __construct(
+        $xml,
+        $filename,
+        $exceptionCollector,
+        array $idAttributes = [],
+        $typeAttributeName = null,
+        $schemaFile = null,
+        $errorFormat = self::ERROR_FORMAT_DEFAULT
+    ) {
+        $this->validationUtil = new DuplicateNodeValidationUtil('stepKey', $exceptionCollector);
+        $this->exceptionCollector = $exceptionCollector;
+        parent::__construct(
+            $xml,
+            $filename,
+            $exceptionCollector,
+            $idAttributes,
+            $typeAttributeName,
+            $schemaFile,
+            $errorFormat
+        );
+    }
+
+    /**
      * Takes a dom element from xml and appends the filename based on location
      *
      * @param string $xml
      * @param string|null $filename
-     * @param ExceptionCollector $exceptionCollector
      * @return \DOMDocument
      */
-    public function initDom($xml, $filename = null, $exceptionCollector = null)
+    public function initDom($xml, $filename = null)
     {
         $dom = parent::initDom($xml);
 
@@ -48,42 +91,34 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
                         $testNode,
                         self::TEST_MERGE_POINTER_AFTER,
                         $testNode->getAttribute(self::TEST_MERGE_POINTER_AFTER),
-                        $filename,
-                        $exceptionCollector
+                        $filename
                     );
                 } elseif ($testNode->getAttribute(self::TEST_MERGE_POINTER_BEFORE) !== "") {
                     $this->appendMergePointerToActions(
                         $testNode,
                         self::TEST_MERGE_POINTER_BEFORE,
                         $testNode->getAttribute(self::TEST_MERGE_POINTER_BEFORE),
-                        $filename,
-                        $exceptionCollector
+                        $filename
                     );
                 }
 
-                DuplicateNodeValidationUtil::validateChildUniqueness(
+                $this->validationUtil->validateChildUniqueness(
                     $testNode,
-                    $filename,
-                    'stepKey',
-                    $exceptionCollector
+                    $filename
                 );
                 $beforeNode = $testNode->getElementsByTagName('before')->item(0);
                 $afterNode = $testNode->getElementsByTagName('after')->item(0);
 
                 if (isset($beforeNode)) {
-                    DuplicateNodeValidationUtil::validateChildUniqueness(
+                    $this->validationUtil->validateChildUniqueness(
                         $beforeNode,
-                        $filename,
-                        'stepKey',
-                        $exceptionCollector
+                        $filename
                     );
                 }
                 if (isset($afterNode)) {
-                    DuplicateNodeValidationUtil::validateChildUniqueness(
+                    $this->validationUtil->validateChildUniqueness(
                         $afterNode,
-                        $filename,
-                        'stepKey',
-                        $exceptionCollector
+                        $filename
                     );
                 }
             }
@@ -99,10 +134,9 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
      * @param string $insertType
      * @param string $insertKey
      * @param string $filename
-     * @param ExceptionCollector $exceptionCollector
      * @return void
      */
-    protected function appendMergePointerToActions($testNode, $insertType, $insertKey, $filename, $exceptionCollector)
+    protected function appendMergePointerToActions($testNode, $insertType, $insertKey, $filename)
     {
         $childNodes = $testNode->childNodes;
         $previousStepKey = $insertKey;
@@ -118,7 +152,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
             if ($currentNode->hasAttribute($insertType) && $testNode->hasAttribute($insertType)) {
                 $errorMsg = "Actions cannot have merge pointers if contained in tests that has a merge pointer.";
                 $errorMsg .= "\n\tstepKey: {$currentNode->getAttribute('stepKey')}\tin file: {$filename}";
-                $exceptionCollector->addError($filename, $errorMsg);
+                $this->exceptionCollector->addError($filename, $errorMsg);
             }
             $currentNode->setAttribute($actionInsertType, $previousStepKey);
             $previousStepKey = $currentNode->getAttribute('stepKey');

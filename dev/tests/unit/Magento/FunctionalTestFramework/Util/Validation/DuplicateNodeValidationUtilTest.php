@@ -31,11 +31,13 @@ class DuplicateNodeValidationUtilTest extends MagentoTestCase
         $filename = "file";
 
         // Perform Test
-        $exceptionCollector = new ExceptionCollector();
         $dom = new \DOMDocument();
         $dom->loadXML($xml);
         $testNode = $dom->getElementsByTagName('test')->item(0);
-        DuplicateNodeValidationUtil::validateChildUniqueness(
+
+        $exceptionCollector = new ExceptionCollector();
+        $validator = new DuplicateNodeValidationUtil($uniqueIdentifier, $exceptionCollector);
+        $validator->validateChildUniqueness(
             $testNode,
             $filename,
             $uniqueIdentifier,

@@ -16,15 +16,36 @@ use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 class DuplicateNodeValidationUtil
 {
     /**
+     * Key to use as unique identifier in validation
+     * @var string
+     */
+    private $uniqueKey;
+
+    /**
+     * ExceptionColletor used to catch errors.
+     * @var ExceptionCollector
+     */
+    private $exceptionCollector;
+
+    /**
+     * DuplicateNodeValidationUtil constructor.
+     * @param string $uniqueKey
+     * @param ExceptionCollector $exceptionCollector
+     */
+    public function __construct($uniqueKey, $exceptionCollector)
+    {
+        $this->uniqueKey = $uniqueKey;
+        $this->exceptionCollector = $exceptionCollector;
+    }
+
+    /**
      * Parses through parent's children to find and flag duplicate values in given uniqueKey.
      *
      * @param \DOMElement $parentNode
      * @param string $filename
-     * @param string $uniqueKey
-     * @param ExceptionCollector $exceptionCollector
      * @return void
      */
-    public static function validateChildUniqueness(\DOMElement $parentNode, $filename, $uniqueKey, $exceptionCollector)
+    public function validateChildUniqueness(\DOMElement $parentNode, $filename)
     {
         $childNodes = $parentNode->childNodes;
         $type = ucfirst($parentNode->tagName);
@@ -37,22 +58,22 @@ class DuplicateNodeValidationUtil
                 continue;
             }
 
-            if ($currentNode->hasAttribute($uniqueKey)) {
-                $keyValues[] = $currentNode->getAttribute($uniqueKey);
+            if ($currentNode->hasAttribute($this->uniqueKey)) {
+                $keyValues[] = $currentNode->getAttribute($this->uniqueKey);
             }
         }
 
         $withoutDuplicates = array_unique($keyValues);
-        $duplicates = array_diff_assoc($keyValues, $withoutDuplicates);
 
-        if (count($duplicates) > 0) {
+        if (count($withoutDuplicates) != count($keyValues)) {
+            $duplicates = array_diff_assoc($keyValues, $withoutDuplicates);
             $keyError = "";
             foreach ($duplicates as $duplicateKey => $duplicateValue) {
-                $keyError .= "\t{$uniqueKey}: {$duplicateValue} is used more than once.\n";
+                $keyError .= "\t{$this->uniqueKey}: {$duplicateValue} is used more than once.\n";
             }
 
-            $errorMsg = "{$type} cannot use {$uniqueKey}s more than once.\t\n{$keyError}\tin file: {$filename}";
-            $exceptionCollector->addError($filename, $errorMsg);
+            $errorMsg = "{$type} cannot use {$this->uniqueKey}s more than once.\t\n{$keyError}\tin file: {$filename}";
+            $this->exceptionCollector->addError($filename, $errorMsg);
         }
     }
 }

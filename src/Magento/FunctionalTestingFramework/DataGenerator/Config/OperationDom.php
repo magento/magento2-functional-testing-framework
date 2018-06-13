@@ -20,14 +20,50 @@ class OperationDom extends \Magento\FunctionalTestingFramework\Config\MftfDom
     const METADATA_META_FILENAME_ATTRIBUTE = "filename";
 
     /**
+     * NodeValidationUtil
+     * @var DuplicateNodeValidationUtil
+     */
+    private $validationUtil;
+
+    /**
+     * Metadata Dom constructor.
+     * @param string $xml
+     * @param string $filename
+     * @param ExceptionCollector $exceptionCollector
+     * @param array $idAttributes
+     * @param string $typeAttributeName
+     * @param string $schemaFile
+     * @param string $errorFormat
+     */
+    public function __construct(
+        $xml,
+        $filename,
+        $exceptionCollector,
+        array $idAttributes = [],
+        $typeAttributeName = null,
+        $schemaFile = null,
+        $errorFormat = self::ERROR_FORMAT_DEFAULT
+    ) {
+        $this->validationUtil = new DuplicateNodeValidationUtil('key', $exceptionCollector);
+        parent::__construct(
+            $xml,
+            $filename,
+            $exceptionCollector,
+            $idAttributes,
+            $typeAttributeName,
+            $schemaFile,
+            $errorFormat
+        );
+    }
+
+    /**
      * Takes a dom element from xml and appends the filename based on location
      *
      * @param string $xml
      * @param string|null $filename
-     * @param ExceptionCollector $exceptionCollector
      * @return \DOMDocument
      */
-    public function initDom($xml, $filename = null, $exceptionCollector = null)
+    public function initDom($xml, $filename = null)
     {
         $dom = parent::initDom($xml);
 
@@ -38,9 +74,7 @@ class OperationDom extends \Magento\FunctionalTestingFramework\Config\MftfDom
                 $operationNode->setAttribute(self::METADATA_META_FILENAME_ATTRIBUTE, $filename);
                 $this->validateOperationElements(
                     $operationNode,
-                    $filename,
-                    'key',
-                    $exceptionCollector
+                    $filename
                 );
             }
         }
@@ -52,13 +86,11 @@ class OperationDom extends \Magento\FunctionalTestingFramework\Config\MftfDom
      * Recurse through child elements and validate uniqueKeys
      * @param \DOMElement $parentNode
      * @param string $filename
-     * @param string $uniqueKey
-     * @param ExceptionCollector $exceptionCollector
      * @return void
      */
-    public function validateOperationElements(\DOMElement $parentNode, $filename, $uniqueKey, $exceptionCollector)
+    public function validateOperationElements(\DOMElement $parentNode, $filename)
     {
-        DuplicateNodeValidationUtil::validateChildUniqueness(
+        $this->validationUtil->validateChildUniqueness(
             $parentNode,
             $filename,
             $uniqueKey,

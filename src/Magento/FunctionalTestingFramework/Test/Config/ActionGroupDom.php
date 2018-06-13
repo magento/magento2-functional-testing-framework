@@ -22,10 +22,9 @@ class ActionGroupDom extends Dom
      *
      * @param string $xml
      * @param string|null $filename
-     * @param ExceptionCollector $exceptionCollector
      * @return \DOMDocument
      */
-    public function initDom($xml, $filename = null, $exceptionCollector = null)
+    public function initDom($xml, $filename = null)
     {
         $dom = parent::initDom($xml);
 
@@ -34,28 +33,22 @@ class ActionGroupDom extends Dom
             foreach ($actionGroupNodes as $actionGroupNode) {
                 /** @var \DOMElement $actionGroupNode */
                 $actionGroupNode->setAttribute(self::TEST_META_FILENAME_ATTRIBUTE, $filename);
-                DuplicateNodeValidationUtil::validateChildUniqueness(
+                $this->validationUtil->validateChildUniqueness(
                     $actionGroupNode,
-                    $filename,
-                    'stepKey',
-                    $exceptionCollector
+                    $filename
                 );
                 $beforeNode = $actionGroupNode->getElementsByTagName('before')->item(0);
                 $afterNode = $actionGroupNode->getElementsByTagName('after')->item(0);
                 if (isset($beforeNode)) {
-                    DuplicateNodeValidationUtil::validateChildUniqueness(
+                    $this->validationUtil->validateChildUniqueness(
                         $beforeNode,
-                        $filename,
-                        'stepKey',
-                        $exceptionCollector
+                        $filename
                     );
                 }
                 if (isset($afterNode)) {
-                    DuplicateNodeValidationUtil::validateChildUniqueness(
+                    $this->validationUtil->validateChildUniqueness(
                         $afterNode,
-                        $filename,
-                        'stepKey',
-                        $exceptionCollector
+                        $filename
                     );
                 }
                 if ($actionGroupNode->getAttribute(self::TEST_MERGE_POINTER_AFTER) !== "") {
@@ -63,16 +56,14 @@ class ActionGroupDom extends Dom
                         $actionGroupNode,
                         self::TEST_MERGE_POINTER_AFTER,
                         $actionGroupNode->getAttribute(self::TEST_MERGE_POINTER_AFTER),
-                        $filename,
-                        $exceptionCollector
+                        $filename
                     );
                 } elseif ($actionGroupNode->getAttribute(self::TEST_MERGE_POINTER_BEFORE) !== "") {
                     $this->appendMergePointerToActions(
                         $actionGroupNode,
                         self::TEST_MERGE_POINTER_BEFORE,
                         $actionGroupNode->getAttribute(self::TEST_MERGE_POINTER_BEFORE),
-                        $filename,
-                        $exceptionCollector
+                        $filename
                     );
                 }
             }

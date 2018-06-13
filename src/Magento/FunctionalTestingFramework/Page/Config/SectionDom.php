@@ -22,20 +22,56 @@ class SectionDom extends \Magento\FunctionalTestingFramework\Config\MftfDom
     const SECTION_META_FILENAME_ATTRIBUTE = "filename";
 
     /**
+     * NodeValidationUtil
+     * @var DuplicateNodeValidationUtil
+     */
+    private $validationUtil;
+
+    /**
+     * Entity Dom constructor.
+     * @param string $xml
+     * @param string $filename
+     * @param ExceptionCollector $exceptionCollector
+     * @param array $idAttributes
+     * @param string $typeAttributeName
+     * @param string $schemaFile
+     * @param string $errorFormat
+     */
+    public function __construct(
+        $xml,
+        $filename,
+        $exceptionCollector,
+        array $idAttributes = [],
+        $typeAttributeName = null,
+        $schemaFile = null,
+        $errorFormat = self::ERROR_FORMAT_DEFAULT
+    ) {
+        $this->validationUtil = new DuplicateNodeValidationUtil('name', $exceptionCollector);
+        parent::__construct(
+            $xml,
+            $filename,
+            $exceptionCollector,
+            $idAttributes,
+            $typeAttributeName,
+            $schemaFile,
+            $errorFormat
+        );
+    }
+
+    /**
      * Takes a dom element from xml and appends the filename based on location
      *
      * @param string $xml
      * @param string|null $filename
-     * @param ExceptionCollector $exceptionCollector
      * @return \DOMDocument
      */
-    public function initDom($xml, $filename = null, $exceptionCollector = null)
+    public function initDom($xml, $filename = null)
     {
         $dom = parent::initDom($xml);
         $sectionNodes = $dom->getElementsByTagName('section');
         foreach ($sectionNodes as $sectionNode) {
             $sectionNode->setAttribute(self::SECTION_META_FILENAME_ATTRIBUTE, $filename);
-            DuplicateNodeValidationUtil::validateChildUniqueness($sectionNode, $filename, 'name', $exceptionCollector);
+            $this->validationUtil->validateChildUniqueness($sectionNode, $filename);
         }
         return $dom;
     }
