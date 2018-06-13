@@ -56,9 +56,10 @@ class ModuleResolverTest extends MagentoTestCase
      */
     public function testGetModulePathsAggregate()
     {
-        $this->setMockResolverClass(false, null, null, null, ["example" . DIRECTORY_SEPARATOR . "paths"]);
+        $this->mockForceGenerate(false);
+        $this->setMockResolverClass(false, null, null, null, ["example" => "example" . DIRECTORY_SEPARATOR . "paths"]);
         $resolver = ModuleResolver::getInstance();
-        $this->setMockResolverProperties($resolver, null, null);
+        $this->setMockResolverProperties($resolver, null, [0 => "Magento_example"]);
         $this->assertEquals(
             [
                 "example" . DIRECTORY_SEPARATOR . "paths",
@@ -75,12 +76,13 @@ class ModuleResolverTest extends MagentoTestCase
      */
     public function testGetModulePathsLocations()
     {
+        $this->mockForceGenerate(false);
         $mockResolver = $this->setMockResolverClass(
-            false,
+            true,
+            [0 => "magento_example"],
             null,
             null,
-            null,
-            ["example" . DIRECTORY_SEPARATOR . "paths"]
+            ["example" => "example" . DIRECTORY_SEPARATOR . "paths"]
         );
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, null);
@@ -206,6 +208,43 @@ class ModuleResolverTest extends MagentoTestCase
     }
 
     /**
+     * Verify the getAdminToken method returns throws an exception if ENV is not fully loaded.
+     */
+    public function testGetAdminTokenWithMissingEnv()
+    {
+        // Set --force to true
+        $this->mockForceGenerate(false);
+
+        // Unset env
+        unset($_ENV['MAGENTO_ADMIN_USERNAME']);
+
+        // Mock ModuleResolver and applyCustomModuleMethods()
+        $mockResolver = $this->setMockResolverClass();
+        $resolver = ModuleResolver::getInstance();
+
+        // Expect exception
+        $this->expectException(TestFrameworkException::class);
+        $resolver->getModulesPath();
+    }
+
+    /**
+     * Verify the getAdminToken method returns throws an exception if Token was bad.
+     */
+    public function testGetAdminTokenWithBadResponse()
+    {
+        // Set --force to true
+        $this->mockForceGenerate(false);
+
+        // Mock ModuleResolver and applyCustomModuleMethods()
+        $mockResolver = $this->setMockResolverClass();
+        $resolver = ModuleResolver::getInstance();
+
+        // Expect exception
+        $this->expectException(TestFrameworkException::class);
+        $resolver->getModulesPath();
+    }
+
+    /**
      * Function used to set mock for parser return and force init method to run between tests.
      *
      * @param string $mockToken
@@ -233,7 +272,7 @@ class ModuleResolverTest extends MagentoTestCase
         if (isset($mockToken)) {
             $mockMethods['getAdminToken'] = $mockToken;
         }
-        if (isset($mockModules)) {
+        if (isset($mockGetModules)) {
             $mockMethods['getEnabledModules'] = $mockGetModules;
         }
         if (isset($mockCustomMethods)) {
@@ -248,7 +287,7 @@ class ModuleResolverTest extends MagentoTestCase
         if (isset($mockCustomModules)) {
             $mockMethods['getCustomModulePaths'] = $mockCustomModules;
         }
-        $mockMethods['printMagentoVersionInfo'] = null;
+//        $mockMethods['printMagentoVersionInfo'] = null;
 
         $mockResolver = AspectMock::double(
             ModuleResolver::class,
@@ -313,6 +352,11 @@ class ModuleResolverTest extends MagentoTestCase
      */
     protected function tearDown()
     {
+        // re set env
+        if (!isset($_ENV['MAGENTO_ADMIN_USERNAME'])) {
+            $_ENV['MAGENTO_ADMIN_USERNAME'] = "admin";
+        }
+
         AspectMock::clean();
     }
 }
