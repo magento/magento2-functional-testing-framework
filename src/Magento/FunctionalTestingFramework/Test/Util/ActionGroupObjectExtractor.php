@@ -65,7 +65,7 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
         try {
             $actions = $this->actionObjectExtractor->extractActions($actionData);
         } catch (\Exception $error) {
-            throw new XmlException($error->getMessage() . " in " . $actionGroupData[self::FILENAME]);
+            throw new XmlException($error->getMessage() . " in Action Group " . $actionGroupData[self::FILENAME]);
         }
 
         if (array_key_exists(self::ACTION_GROUP_ARGUMENTS, $actionGroupData)) {

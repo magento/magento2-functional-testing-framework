@@ -28,7 +28,9 @@ class ActionGroupObjectExtractorTest extends MagentoTestCase
      */
     public function testEmptyStepKey()
     {
-        $this->expectExceptionMessage("StepKeys cannot be empty.	Action='sampleAction' in filename.xml");
+        $this->expectExceptionMessage(
+            "StepKeys cannot be empty.	Action='sampleAction' in Action Group filename.xml"
+        );
         $this->testActionGroupObjectExtractor->extractActionGroup($this->createBasicActionObjectArray(""));
     }
 
