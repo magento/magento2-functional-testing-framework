@@ -56,7 +56,7 @@ class UpdateTestSchemaPaths implements UpgradeInterface
 
         $fileSystem = new Filesystem();
         $testsUpdated = 0;
-        foreach($finder->files() as $file) {
+        foreach ($finder->files() as $file) {
             $count = 0;
             $contents = $file->getContents();
             $contents = preg_replace($relativePatterns, $urns, $contents, -1, $count);
