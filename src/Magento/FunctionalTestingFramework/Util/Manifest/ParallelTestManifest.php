@@ -70,22 +70,22 @@ class ParallelTestManifest extends BaseTestManifest
      */
     public function addTest($testObject)
     {
-        $this->testNameToSize[$testObject->getCodeceptionName()] = $testObject->getTestActionCount();
+        $this->testNameToSize[$testObject->getCodeceptionName()] = $testObject->getEstimatedDuration();
     }
 
     /**
      * Function which generates test groups based on arg passed. The function builds groups using the args as an upper
      * limit.
      *
-     * @param int $lines
+     * @param int $time
      * @return void
      */
-    public function createTestGroups($lines)
+    public function createTestGroups($time)
     {
         $this->testGroups = $this->parallelGroupSorter->getTestsGroupedBySize(
             $this->getSuiteConfig(),
             $this->testNameToSize,
-            $lines
+            $time
         );
 
         $this->suiteConfiguration = $this->parallelGroupSorter->getResultingSuiteConfig();

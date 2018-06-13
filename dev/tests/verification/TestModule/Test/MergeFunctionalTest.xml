@@ -11,7 +11,7 @@
     <test name="BasicMergeTest">
         <annotations>
             <severity value="CRITICAL"/>
-            <title value="A Functional Cest"/>
+            <title value="BasicMergeTest"/>
             <group value="functional"/>
             <features value="Merge Functional Cest"/>
             <stories value="MQE-433"/>
@@ -31,7 +31,7 @@
     <test name="MergedReferencesTest">
         <annotations>
             <severity value="CRITICAL"/>
-            <title value="A Functional Cest"/>
+            <title value="MergedReferencesTest"/>
             <group value="functional"/>
             <features value="Merge Functional Cest"/>
             <stories value="MQE-433"/>
