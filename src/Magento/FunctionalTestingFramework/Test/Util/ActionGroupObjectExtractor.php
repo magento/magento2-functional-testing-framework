@@ -62,7 +62,11 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
         );
 
         // TODO filename is now available to the ActionGroupObject, integrate this into debug and error statements
-        $actions = $this->actionObjectExtractor->extractActions($actionData);
+        try {
+            $actions = $this->actionObjectExtractor->extractActions($actionData);
+        } catch (\Exception $error) {
+            throw new XmlException($error->getMessage() . " in " . $actionGroupData[self::FILENAME]);
+        }
 
         if (array_key_exists(self::ACTION_GROUP_ARGUMENTS, $actionGroupData)) {
             $arguments = $this->extractArguments($actionGroupData[self::ACTION_GROUP_ARGUMENTS]);
