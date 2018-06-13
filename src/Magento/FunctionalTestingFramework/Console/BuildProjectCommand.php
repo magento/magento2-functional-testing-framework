@@ -76,6 +76,8 @@ class BuildProjectCommand extends Command
         $codeceptBuildCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') .  ' build';
         $process = new Process($codeceptBuildCommand);
         $process->setWorkingDirectory(TESTS_BP);
+        $process->setIdleTimeout(600);
+        $process->setTimeout(0);
         $process->run(
             function ($type, $buffer) use ($output) {
                 if ($output->isVerbose()) {
