@@ -37,5 +37,6 @@
         </selectMultipleOptions>
 
         <fillField stepKey="insertZero" selector=".selector" userInput="{{simpleData.favoriteIndex}}"/>
+        <magentoCLI stepKey="insertCommand" command="do something {{uniqueData.lastname}} with uniqueness"/>
     </test>
 </tests>

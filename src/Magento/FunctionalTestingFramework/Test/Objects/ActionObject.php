@@ -31,7 +31,8 @@ class ActionObject
         "x",
         "y",
         "expectedResult",
-        "actualResult"
+        "actualResult",
+        "command"
     ];
     const SELECTOR_ENABLED_ATTRIBUTES = [
         'selector',
@@ -40,7 +41,8 @@ class ActionObject
         "selector2",
         "function",
         'filterSelector',
-        'optionSelector'
+        'optionSelector',
+        "command"
     ];
     const OLD_ASSERTION_ATTRIBUTES = ["expected", "expectedType", "actual", "actualType"];
     const ASSERTION_ATTRIBUTES = ["expectedResult" => "expected", "actualResult" => "actual"];
