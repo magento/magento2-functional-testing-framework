@@ -128,7 +128,7 @@ class DataObjectHandler implements ObjectHandlerInterface
                 throw new XmlException(sprintf(self::DATA_NAME_ERROR_MSG, $name));
             }
 
-            $type = $rawEntity[self::_TYPE];
+            $type = $rawEntity[self::_TYPE] ?? null;
             $data = [];
             $linkedEntities = [];
             $uniquenessData = [];

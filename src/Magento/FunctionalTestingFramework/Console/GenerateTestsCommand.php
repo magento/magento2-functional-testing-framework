@@ -77,7 +77,10 @@ class GenerateTestsCommand extends Command
             $testManifest->createTestGroups($time);
         }
 
-        SuiteGenerator::getInstance()->generateAllSuites($testManifest);
+        if (empty($tests)) {
+            SuiteGenerator::getInstance()->generateAllSuites($testManifest);
+        }
+
         $testManifest->generate();
 
        $output->writeln("Generate Tests Command Run");
