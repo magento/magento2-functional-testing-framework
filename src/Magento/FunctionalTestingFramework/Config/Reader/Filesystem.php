@@ -157,17 +157,14 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
                 } else {
                     $configMerger->merge($content);
                 }
+                if (MftfApplicationConfig::getConfig()->debugEnabled()) {
+                    $this->validateSchema($configMerger, $fileList->getFilename());
+                }
             } catch (\Magento\FunctionalTestingFramework\Config\Dom\ValidationException $e) {
                 throw new \Exception("Invalid XML in file " . $fileList->getFilename() . ":\n" . $e->getMessage());
             }
         }
-        if ($this->validationState->isValidationRequired()) {
-            $errors = [];
-            if ($configMerger && !$configMerger->validate($this->schemaFile, $errors)) {
-                $message = "Invalid Document \n";
-                throw new \Exception($message . implode("\n", $errors));
-            }
-        }
+        $this->validateSchema($configMerger);
 
         $output = [];
         if ($configMerger) {
@@ -219,5 +216,24 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
             return false;
         }
         return true;
+    }
+
+    /**
+     * Validate read xml against expected schema
+     *
+     * @param string $configMerger
+     * @param string $filename
+     * @throws \Exception
+     * @return void
+     */
+    protected function validateSchema($configMerger, $filename = null)
+    {
+        if ($this->validationState->isValidationRequired()) {
+            $errors = [];
+            if ($configMerger && !$configMerger->validate($this->schemaFile, $errors)) {
+                $message = $filename ? $filename . PHP_EOL . "Invalid Document \n" : PHP_EOL . "Invalid Document \n";
+                throw new \Exception($message . implode("\n", $errors));
+            }
+        }
     }
 }

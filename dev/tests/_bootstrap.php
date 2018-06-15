@@ -31,7 +31,8 @@ $kernel->init([
 \Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::create(
     true,
     \Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::GENERATION_PHASE,
-    true
+    true,
+    false
 );
 
 // Load needed framework env params
