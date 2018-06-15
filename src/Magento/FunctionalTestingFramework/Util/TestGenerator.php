@@ -500,7 +500,7 @@ class TestGenerator
             $this->validateXmlAttributesMutuallyExclusive($stepKey, $actionObject->getType(), $customActionAttributes);
 
             if (isset($customActionAttributes['command'])) {
-                $command = $customActionAttributes['command'];
+                $command = $this->addUniquenessFunctionCall($customActionAttributes['command']);
             }
 
             if (isset($customActionAttributes['attribute'])) {
@@ -1217,7 +1217,7 @@ class TestGenerator
                         $stepKey,
                         $actor,
                         $actionObject,
-                        $this->wrapWithDoubleQuotes($command)
+                        $command
                     );
                     $testSteps .= sprintf(
                         "\t\t$%s->comment(\$%s);\n",
