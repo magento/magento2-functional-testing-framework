@@ -51,7 +51,7 @@ class UpgradeTestsCommand extends Command
         $upgradeScriptObjects = $this->upgradeScriptsList->getUpgradeScripts();
         foreach ($upgradeScriptObjects as $upgradeScriptObject) {
             $upgradeOutput = $upgradeScriptObject->execute($input);
-            LoggingUtil::getInstance()->getLogger(GenerateDevUrnCommand::class)->info($upgradeOutput);
+            LoggingUtil::getInstance()->getLogger(get_class($upgradeScriptObject))->info($upgradeOutput);
             $output->writeln($upgradeOutput);
         }
     }
