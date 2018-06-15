@@ -35,6 +35,13 @@ class MftfApplicationConfig
     private $verboseEnabled;
 
     /**
+     * Determines whether the user would like to execute mftf in a verbose run.
+     *
+     * @var bool
+     */
+    private $debugEnabled;
+
+    /**
      * MftfApplicationConfig Singelton Instance
      *
      * @var MftfApplicationConfig
@@ -47,10 +54,15 @@ class MftfApplicationConfig
      * @param bool $forceGenerate
      * @param string $phase
      * @param bool $verboseEnabled
+     * @param bool $debugEnabled
      * @throws TestFrameworkException
      */
-    private function __construct($forceGenerate = false, $phase = self::EXECUTION_PHASE, $verboseEnabled = null)
-    {
+    private function __construct(
+        $forceGenerate = false,
+        $phase = self::EXECUTION_PHASE,
+        $verboseEnabled = null,
+        $debugEnabled = null
+    ) {
         $this->forceGenerate = $forceGenerate;
 
         if (!in_array($phase, self::MFTF_PHASES)) {
@@ -59,6 +71,7 @@ class MftfApplicationConfig
 
         $this->phase = $phase;
         $this->verboseEnabled = $verboseEnabled;
+        $this->debugEnabled = $debugEnabled;
     }
 
     /**
@@ -68,12 +81,14 @@ class MftfApplicationConfig
      * @param bool $forceGenerate
      * @param string $phase
      * @param bool $verboseEnabled
+     * @param bool $debugEnabled
      * @return void
      */
-    public static function create($forceGenerate, $phase, $verboseEnabled)
+    public static function create($forceGenerate, $phase, $verboseEnabled, $debugEnabled)
     {
         if (self::$MFTF_APPLICATION_CONTEXT == null) {
-            self::$MFTF_APPLICATION_CONTEXT = new MftfApplicationConfig($forceGenerate, $phase, $verboseEnabled);
+            self::$MFTF_APPLICATION_CONTEXT =
+                new MftfApplicationConfig($forceGenerate, $phase, $verboseEnabled, $debugEnabled);
         }
     }
 
@@ -113,6 +128,17 @@ class MftfApplicationConfig
     public function verboseEnabled()
     {
         return $this->verboseEnabled ?? getenv('MFTF_DEBUG');
+    }
+
+    /**
+     * Returns a boolean indicating whether the user has indicated a debug run, which will lengthy validation
+     * with some extra error messaging to be run
+     *
+     * @return bool
+     */
+    public function debugEnabled()
+    {
+        return $this->debugEnabled ?? getenv('MFTF_DEBUG');
     }
 
     /**
