@@ -21,6 +21,7 @@ use Symfony\Component\Yaml\Yaml;
 class BuildProjectCommand extends Command
 {
     const DEFAULT_YAML_INLINE_DEPTH = 10;
+    const CREDENTIALS_FILE_PATH = TESTS_BP . DIRECTORY_SEPARATOR . '.credentials.example';
 
     /**
      * Env processor manages .env files.
@@ -70,6 +71,7 @@ class BuildProjectCommand extends Command
         }
         $commandInput = new ArrayInput($commandInput);
         $setupEnvCommand->run($commandInput, $output);
+
 
 
         // TODO can we just import the codecept symfony command?
@@ -126,5 +128,12 @@ class BuildProjectCommand extends Command
             $output->writeln("functional.suite.yml applied to " .
                 TESTS_BP . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'functional.suite.yml');
         }
+
+        $fileSystem->copy(
+            FW_BP . '/etc/config/.credentials.example',
+            self::CREDENTIALS_FILE_PATH
+        );
+
+        $output->writeln('.credentials.example successfully applied.');
     }
 }

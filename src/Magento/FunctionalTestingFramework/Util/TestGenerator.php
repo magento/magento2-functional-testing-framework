@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Util;
 
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
@@ -285,6 +286,7 @@ class TestGenerator
         $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;\n";
         $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;\n";
         $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;\n";
+        $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;\n";
         $useStatementsPhp .= "use \Codeception\Util\Locator;\n";
 
         $allureStatements = [
@@ -747,7 +749,7 @@ class TestGenerator
                         $testSteps .= $contextSetter;
                         $testSteps .= $deleteEntityFunctionCall;
                     } else {
-                        $url = $this->resolveEnvReferences([$url])[0];
+                        $url = $this->resolveAllRuntimeReferences([$url])[0];
                         $url = $this->resolveTestVariable([$url], null)[0];
                         $output = sprintf(
                             "\t\t$%s->deleteEntityByUrl(%s);\n",
@@ -1675,7 +1677,7 @@ class TestGenerator
         if (!is_array($args)) {
             $args = [$args];
         }
-        $args = $this->resolveEnvReferences($args);
+        $args = $this->resolveAllRuntimeReferences($args);
         $args = $this->resolveTestVariable($args, $action->getActionOrigin());
         $output .= implode(", ", array_filter($args, function($value) { return $value !== null; })) . ");\n";
         return $output;
@@ -1706,7 +1708,7 @@ class TestGenerator
         if (!is_array($args)) {
             $args = [$args];
         }
-        $args = $this->resolveEnvReferences($args);
+        $args = $this->resolveAllRuntimeReferences($args);
         $args = $this->resolveTestVariable($args, $action->getActionOrigin());
         $output .= implode(", ", array_filter($args, function($value) { return $value !== null; })) . ");\n";
         return $output;
@@ -1716,21 +1718,21 @@ class TestGenerator
     /**
      * Resolves {{_ENV.variable}} into getenv("variable") for test-runtime ENV referencing.
      * @param array $args
+     * @param string $regex
+     * @param string $func
      * @return array
      */
-    private function resolveEnvReferences($args)
+    private function resolveRuntimeReference($args, $regex, $func)
     {
-        $envRegex = "/{{_ENV\.([\w]+)}}/";
-
         $newArgs = [];
 
         foreach ($args as $key => $arg) {
-            preg_match_all($envRegex, $arg, $matches);
+            preg_match_all($regex, $arg, $matches);
             if (!empty($matches[0])) {
                 $fullMatch = $matches[0][0];
-                $envVariable = $matches[1][0];
+                $refVariable = $matches[1][0];
                 unset($matches);
-                $replacement = "getenv(\"{$envVariable}\")";
+                $replacement = "{$func}(\"{$refVariable}\")";
 
                 $outputArg = $this->processQuoteBreaks($fullMatch, $arg, $replacement);
                 $newArgs[$key] = $outputArg;
@@ -1741,6 +1743,28 @@ class TestGenerator
 
         // override passed in args for use later.
         return $newArgs;
+    }
+
+    /**
+     * Takes a predefined list of potentially matching special paramts and they needed function replacement and performs
+     * replacements on the tests args.
+     *
+     * @param array $args
+     * @return array
+     */
+    private function resolveAllRuntimeReferences($args)
+    {
+        $runtimeReferenceRegex = [
+            "/{{_ENV\.([\w]+)}}/" => 'getenv',
+            "/{{_CREDS\.([\w]+)}}/" => 'CredentialStore::getInstance()->getSecret'
+        ];
+
+        $argResult = $args;
+        foreach ($runtimeReferenceRegex as $regex => $func) {
+            $argResult = $this->resolveRuntimeReference($argResult, $regex, $func);
+        }
+
+        return $argResult;
     }
 
     /**
