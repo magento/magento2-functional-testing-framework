@@ -11,6 +11,42 @@ use PHPUnit\Framework\TestCase;
 
 class ModulePathExtractorTest extends TestCase
 {
+    const EXTENSION_PATH = "app"
+    . DIRECTORY_SEPARATOR
+    . "code"
+    . DIRECTORY_SEPARATOR
+    . "TestExtension"
+    . DIRECTORY_SEPARATOR
+    . "[Analytics]"
+    . DIRECTORY_SEPARATOR
+    . "Test"
+    . DIRECTORY_SEPARATOR
+    . "Mftf"
+    . DIRECTORY_SEPARATOR
+    . "Test"
+    . DIRECTORY_SEPARATOR
+    . "SomeText.xml";
+
+    const MAGENTO_PATH = "dev"
+    . DIRECTORY_SEPARATOR
+    . "tests"
+    . DIRECTORY_SEPARATOR
+    . "acceptance"
+    . DIRECTORY_SEPARATOR
+    . "tests"
+    . DIRECTORY_SEPARATOR
+    . "functional"
+    . DIRECTORY_SEPARATOR
+    . "Magento"
+    . DIRECTORY_SEPARATOR
+    . "FunctionalTest"
+    . DIRECTORY_SEPARATOR
+    . "[Analytics]"
+    . DIRECTORY_SEPARATOR
+    . "Test"
+    . DIRECTORY_SEPARATOR
+    . "SomeText.xml";
+
     /**
      * Validate correct module is returned for dev/tests path
      * @throws \Exception
@@ -21,7 +57,7 @@ class ModulePathExtractorTest extends TestCase
         $this->assertEquals(
             '[Analytics]',
             $modulePathExtractor->extractModuleName(
-                "dev/tests/acceptance/tests/functional/Magento/FunctionalTest/[Analytics]/Test/SomeText.xml"
+                self::MAGENTO_PATH
             )
         );
     }
@@ -36,7 +72,7 @@ class ModulePathExtractorTest extends TestCase
         $this->assertEquals(
             '[Analytics]',
             $modulePathExtractor->extractModuleName(
-                "app/code/Magento/[Analytics]/Test/Mftf/Test/SomeText.xml"
+                self::EXTENSION_PATH
             )
         );
     }
@@ -51,7 +87,7 @@ class ModulePathExtractorTest extends TestCase
         $this->assertEquals(
             'Magento',
             $modulePathExtractor->getExtensionPath(
-                "dev/tests/acceptance/tests/functional/Magento/FunctionalTest/[Analytics]/Test/SomeText.xml"
+                self::MAGENTO_PATH
             )
         );
     }
@@ -66,7 +102,7 @@ class ModulePathExtractorTest extends TestCase
         $this->assertEquals(
             'TestExtension',
             $modulePathExtractor->getExtensionPath(
-                "app/code/TestExtension/[Analytics]/Test/Mftf/Test/SomeText.xml"
+                self::EXTENSION_PATH
             )
         );
     }

@@ -50,7 +50,15 @@ class SuiteGenerationTest extends MftfTestCase
         // copy config yml file to test dir
         $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
         $fileSystem->copy(
-            realpath(FW_BP . '/etc/config/codeception.dist.yml'),
+            realpath(
+                FW_BP
+                . DIRECTORY_SEPARATOR
+                . 'etc'
+                . DIRECTORY_SEPARATOR
+                . 'config'
+                . DIRECTORY_SEPARATOR
+                . 'codeception.dist.yml'
+            ),
             self::CONFIG_YML_FILE
         );
 
@@ -78,7 +86,7 @@ class SuiteGenerationTest extends MftfTestCase
         TestLoggingUtil::getInstance()->validateMockLogStatement(
             'info',
             "suite generated",
-            ['suite' => $groupName, 'relative_path' => "_generated/$groupName"]
+            ['suite' => $groupName, 'relative_path' => "_generated" . DIRECTORY_SEPARATOR . $groupName]
         );
 
         self::$TEST_GROUPS[] = $groupName;
@@ -134,7 +142,7 @@ class SuiteGenerationTest extends MftfTestCase
         TestLoggingUtil::getInstance()->validateMockLogStatement(
             'info',
             "suite generated",
-            ['suite' => $expectedGroup, 'relative_path' => "_generated/$expectedGroup"]
+            ['suite' => $expectedGroup, 'relative_path' => "_generated" . DIRECTORY_SEPARATOR . $expectedGroup]
         );
 
         self::$TEST_GROUPS[] = $groupName;
@@ -176,7 +184,7 @@ class SuiteGenerationTest extends MftfTestCase
         TestLoggingUtil::getInstance()->validateMockLogStatement(
             'info',
             "suite generated",
-            ['suite' => $groupName, 'relative_path' => "_generated/$groupName"]
+            ['suite' => $groupName, 'relative_path' => "_generated" . DIRECTORY_SEPARATOR . $groupName]
         );
         self::$TEST_GROUPS[] = $groupName;
 
@@ -244,7 +252,7 @@ class SuiteGenerationTest extends MftfTestCase
         TestLoggingUtil::getInstance()->validateMockLogStatement(
             'info',
             "suite generated",
-            ['suite' => $groupName, 'relative_path' => "_generated/$groupName"]
+            ['suite' => $groupName, 'relative_path' => "_generated" . DIRECTORY_SEPARATOR . $groupName]
         );
         self::$TEST_GROUPS[] = $groupName;
 
@@ -264,7 +272,15 @@ class SuiteGenerationTest extends MftfTestCase
             $this->assertTrue(in_array($expectedFile, $dirContents));
         }
 
-        $expectedManifest = "verification/_generated/default/" . PHP_EOL . "-g functionalSuite2" . PHP_EOL;
+        $expectedManifest = "verification"
+            . DIRECTORY_SEPARATOR
+            . "_generated"
+            . DIRECTORY_SEPARATOR
+            . "default"
+            . DIRECTORY_SEPARATOR
+            . PHP_EOL
+            . "-g functionalSuite2"
+            . PHP_EOL;
 
         $this->assertEquals($expectedManifest, file_get_contents(self::getManifestFilePath()));
     }

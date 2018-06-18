@@ -15,13 +15,13 @@ use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
 use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
-use PHPUnit\Framework\TestCase;
 use tests\unit\Util\TestLoggingUtil;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 
 /**
  * Class ActionObjectTest
  */
-class ActionObjectTest extends TestCase
+class ActionObjectTest extends MagentoTestCase
 {
     /**
      * Before test functionality

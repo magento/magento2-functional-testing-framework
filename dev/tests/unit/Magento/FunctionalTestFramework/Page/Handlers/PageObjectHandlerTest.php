@@ -11,9 +11,9 @@ use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Page\Handlers\PageObjectHandler;
 use Magento\FunctionalTestingFramework\XmlParser\PageParser;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 
-class PageObjectHandlerTest extends TestCase
+class PageObjectHandlerTest extends MagentoTestCase
 {
     public function testGetPageObject()
     {

@@ -68,6 +68,8 @@ class RunTestGroupCommand extends Command
 
         $process = new Process($codeceptionCommand);
         $process->setWorkingDirectory(TESTS_BP);
+        $process->setIdleTimeout(600);
+        $process->setTimeout(0);
         $process->run(
             function ($type, $buffer) use ($output) {
                 $output->write($buffer);

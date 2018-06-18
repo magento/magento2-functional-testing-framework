@@ -8,9 +8,9 @@ namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
 
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 
-class NameValidationUtilTest extends TestCase
+class NameValidationUtilTest extends MagentoTestCase
 {
     /**
      * Validate name with curly braces throws exception

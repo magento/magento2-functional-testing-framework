@@ -77,7 +77,7 @@ class EnvProcessor
             $envContents = $this->parseEnvFileLines($envFile);
         }
 
-        return array_diff_key($this->parseEnvFileLines($envExampleFile), $envContents);
+        return array_merge($this->parseEnvFileLines($envExampleFile), $envContents);
     }
 
     private function parseEnvFileLines(array $file): array
@@ -106,11 +106,7 @@ class EnvProcessor
             $envData .= $key . '=' . $value . PHP_EOL;
         }
 
-        if ($this->envExists) {
-            file_put_contents($this->envFile, $envData, FILE_APPEND);
-        } else {
-            file_put_contents($this->envFile, $envData);
-        }
+        file_put_contents($this->envFile, $envData);
     }
 
     /**

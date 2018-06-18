@@ -15,6 +15,18 @@ use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
  */
 class TestObject
 {
+    const WAIT_TIME_ATTRIBUTE = 'time';
+
+    const TEST_ACTION_WEIGHT = [
+        'waitForPageLoad' => 1500,
+        'amOnPage' => 1000,
+        'waitForLoadingMaskToDisappear' => 500,
+        'wait' => self::WAIT_TIME_ATTRIBUTE,
+        'comment' => 5,
+        'assertCount' => 5,
+        'closeAdminNotification' => 10
+    ];
+
     /**
      * Name of the test
      *
@@ -159,28 +171,57 @@ class TestObject
     }
 
     /**
-     * Returns the number of a test actions contained within a single test (including before/after actions).
+     * Returns the estimated duration of a single test (including before/after actions).
      *
      * @return int
      */
-    public function getTestActionCount()
+    public function getEstimatedDuration()
     {
         // a skipped action results in a single skip being appended to the beginning of the test and no execution
         if ($this->isSkipped()) {
             return 1;
         }
 
-        $hookActions = 0;
+        $hookTime = 0;
         if (array_key_exists('before', $this->hooks)) {
-            $hookActions += count($this->hooks['before']->getActions());
+            $hookTime += $this->calculateWeightedActionTimes($this->hooks['before']->getActions());
         }
 
         if (array_key_exists('after', $this->hooks)) {
-            $hookActions += count($this->hooks['after']->getActions());
+            $hookTime += $this->calculateWeightedActionTimes($this->hooks['after']->getActions());
         }
 
-        $testActions = count($this->getOrderedActions());
-        return $hookActions + $testActions;
+        $testTime = $this->calculateWeightedActionTimes($this->getOrderedActions());
+
+        return $hookTime + $testTime;
+    }
+
+    /**
+     * Function which takes a set of actions and estimates time for completion based on action type.
+     *
+     * @param ActionObject[] $actions
+     * @return int
+     */
+    private function calculateWeightedActionTimes($actions)
+    {
+        $actionTime = 0;
+        // search for any actions of special type
+        foreach ($actions as $action) {
+            /** @var ActionObject $action */
+            if (array_key_exists($action->getType(), self::TEST_ACTION_WEIGHT)) {
+                $weight = self::TEST_ACTION_WEIGHT[$action->getType()];
+                if ($weight === self::WAIT_TIME_ATTRIBUTE) {
+                    $weight = intval($action->getCustomActionAttributes()[$weight]) * 1000;
+                }
+
+                $actionTime += $weight;
+                continue;
+            }
+
+            $actionTime += 50;
+        }
+
+        return $actionTime;
     }
 
     /**
