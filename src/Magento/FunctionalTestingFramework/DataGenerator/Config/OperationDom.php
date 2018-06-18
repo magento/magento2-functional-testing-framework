@@ -92,9 +92,7 @@ class OperationDom extends \Magento\FunctionalTestingFramework\Config\MftfDom
     {
         $this->validationUtil->validateChildUniqueness(
             $parentNode,
-            $filename,
-            $uniqueKey,
-            $exceptionCollector
+            $filename
         );
         $childNodes = $parentNode->childNodes;
 
@@ -105,9 +103,7 @@ class OperationDom extends \Magento\FunctionalTestingFramework\Config\MftfDom
             }
             $this->validateOperationElements(
                 $currentNode,
-                $filename,
-                $uniqueKey,
-                $exceptionCollector
+                $filename
             );
         }
     }
