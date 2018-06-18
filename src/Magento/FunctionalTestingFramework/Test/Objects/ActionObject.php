@@ -23,6 +23,12 @@ use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 class ActionObject
 {
     const __ENV = "_ENV";
+    const __CREDS = "_CREDS";
+    const RUNTIME_REFERENCES = [
+        self::__ENV,
+        self::__CREDS
+    ];
+
     const DATA_ENABLED_ATTRIBUTES = [
         "userInput",
         "parameterArray",
@@ -499,8 +505,8 @@ class ActionObject
 
             $obj = $objectHandler->getObject($objName);
 
-            // Leave {{_ENV.VARIABLE}} references to be replaced in TestGenerator with getenv("VARIABLE")
-            if ($objName === ActionObject::__ENV) {
+            // Leave runtime references to be replaced in TestGenerator with getter function accessing "VARIABLE"
+            if (in_array($objName, ActionObject::RUNTIME_REFERENCES)) {
                 continue;
             }
 

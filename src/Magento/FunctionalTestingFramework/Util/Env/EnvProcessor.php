@@ -106,11 +106,7 @@ class EnvProcessor
             $envData .= $key . '=' . $value . PHP_EOL;
         }
 
-        if ($this->envExists) {
-            file_put_contents($this->envFile, $envData, FILE_APPEND);
-        } else {
-            file_put_contents($this->envFile, $envData);
-        }
+        file_put_contents($this->envFile, $envData);
     }
 
     /**

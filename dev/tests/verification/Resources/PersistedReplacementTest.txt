@@ -5,6 +5,7 @@ use Magento\FunctionalTestingFramework\AcceptanceTester;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -52,6 +53,7 @@ class PersistedReplacementTestCest
 		$I->fillField("#selector", "StringBefore " . $createdData->getCreatedDataByName('firstname') . " StringAfter");
 		$I->fillField("#" . $createdData->getCreatedDataByName('firstname'), "input");
 		$I->fillField("#" . getenv("MAGENTO_BASE_URL") . "#" . $createdData->getCreatedDataByName('firstname'), "input");
+		$I->fillField("#" . CredentialStore::getInstance()->getSecret("SECRET_PARAM") . "#" . $createdData->getCreatedDataByName('firstname'), "input");
 		$I->dragAndDrop("#" . $createdData->getCreatedDataByName('firstname'), $createdData->getCreatedDataByName('lastname'));
 		$I->conditionalClick($createdData->getCreatedDataByName('lastname'), "#" . $createdData->getCreatedDataByName('firstname'), true);
 		$I->amOnUrl($createdData->getCreatedDataByName('firstname') . ".html");
