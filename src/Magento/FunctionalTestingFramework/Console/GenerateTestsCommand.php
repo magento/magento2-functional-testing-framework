@@ -1,5 +1,4 @@
 <?php
-// @codingStandardsIgnoreFile
 /**
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
@@ -32,12 +31,28 @@ class GenerateTestsCommand extends Command
     {
         $this->setName('generate:tests')
             ->setDescription('This command generates all test files and suites based on xml declarations')
-            ->addArgument('name', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'name(s) of specific tests to generate')
-            ->addOption("config", 'c', InputOption::VALUE_REQUIRED, 'default, singleRun, or parallel', 'default')
-            ->addOption("force", 'f',InputOption::VALUE_NONE, 'force generation of tests regardless of Magento Instance Configuration')
-            ->addOption('time', 'i', InputOption::VALUE_REQUIRED, 'Used in combination with a parallel configuration, determines desired group size (in minutes)', 10)
-            ->addOption('tests', 't', InputOption::VALUE_REQUIRED, 'A parameter accepting a JSON string used to determine the test configuration')
-            ->addOption('debug', 'd', InputOption::VALUE_NONE, 'run extra validation when generating tests');
+            ->addArgument(
+                'name',
+                InputArgument::OPTIONAL | InputArgument::IS_ARRAY,
+                'name(s) of specific tests to generate'
+            )->addOption("config", 'c', InputOption::VALUE_REQUIRED, 'default, singleRun, or parallel', 'default')
+            ->addOption(
+                "force",
+                'f',
+                InputOption::VALUE_NONE,
+                'force generation of tests regardless of Magento Instance Configuration'
+            )->addOption(
+                'time',
+                'i',
+                InputOption::VALUE_REQUIRED,
+                'Used in combination with a parallel configuration, determines desired group size (in minutes)',
+                10
+            )->addOption(
+                'tests',
+                't',
+                InputOption::VALUE_REQUIRED,
+                'A parameter accepting a JSON string used to determine the test configuration'
+            )->addOption('debug', 'd', InputOption::VALUE_NONE, 'run extra validation when generating tests');
     }
 
     /**
@@ -85,7 +100,7 @@ class GenerateTestsCommand extends Command
 
         $testManifest->generate();
 
-       $output->writeln("Generate Tests Command Run");
+        $output->writeln("Generate Tests Command Run");
     }
 
     /**
@@ -137,7 +152,8 @@ class GenerateTestsCommand extends Command
      * @throws TestFrameworkException
      * @return array
      */
-    private function parseTestsConfigJson($json, array $testConfiguration) {
+    private function parseTestsConfigJson($json, array $testConfiguration)
+    {
         if ($json === null) {
             return $testConfiguration;
         }
@@ -145,7 +161,8 @@ class GenerateTestsCommand extends Command
         $jsonTestConfiguration = [];
         $testConfigArray = json_decode($json, true);
 
-        $jsonTestConfiguration['tests'] = $testConfigArray['tests'] ?? null;;
+        $jsonTestConfiguration['tests'] = $testConfigArray['tests'] ?? null;
+        ;
         $jsonTestConfiguration['suites'] = $testConfigArray['suites'] ?? null;
         return $jsonTestConfiguration;
     }

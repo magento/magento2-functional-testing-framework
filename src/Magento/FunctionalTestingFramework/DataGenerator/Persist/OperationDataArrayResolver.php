@@ -125,7 +125,6 @@ class OperationDataArrayResolver
                         $operationElementType,
                         $elementData
                     );
-
                 } elseif ($operationElement->isRequired()) {
                     throw new \Exception(sprintf(
                         self::EXCEPTION_REQUIRED_DATA,
@@ -198,7 +197,6 @@ class OperationDataArrayResolver
                 }
 
                 return $elementDatas;
-
             }
 
             $entity = $this->getDependentEntitiesOfType($type)[0];

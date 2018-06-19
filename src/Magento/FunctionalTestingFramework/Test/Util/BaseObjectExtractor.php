@@ -22,7 +22,6 @@ class BaseObjectExtractor
         // empty
     }
 
-    // @codingStandardsIgnoreStart
     /**
      * This method takes an array of data and an array representing irrelevant tags. The method strips
      * the data passed in of the irrelevant tags and returns the result.
@@ -40,5 +39,4 @@ class BaseObjectExtractor
 
         return $results;
     }
-    // @codingStandardsIgnoreEnd
 }

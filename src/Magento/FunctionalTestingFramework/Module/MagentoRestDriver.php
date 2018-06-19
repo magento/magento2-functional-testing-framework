@@ -49,7 +49,6 @@ use Flow\JSONPath;
  * Conflicts with SOAP module
  *
  */
-// @codingStandardsIgnoreFile
 class MagentoRestDriver extends REST
 {
     /**
@@ -120,7 +119,9 @@ class MagentoRestDriver extends REST
         $this->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
         $this->haveHttpHeader('Authorization', 'Bearer ' . $token);
         self::$adminTokens[$this->config['username']] = $token;
+        // @codingStandardsIgnoreStart
         $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoSequence')->_initialize();
+        // @codingStandardsIgnoreEnd
     }
 
     /**
@@ -144,8 +145,8 @@ class MagentoRestDriver extends REST
      */
     public function getAdminAuthToken($username = null, $password = null, $newToken = false)
     {
-        $username = !is_null($username) ? $username : $this->config['username'];
-        $password = !is_null($password) ? $password : $this->config['password'];
+        $username = $username !== null ? $username : $this->config['username'];
+        $password = $password !== null ? $password : $this->config['password'];
 
         // Use existing token if it exists
         if (!$newToken
@@ -171,8 +172,8 @@ class MagentoRestDriver extends REST
      */
     public function amAdminTokenAuthenticated($username = null, $password = null, $newToken = false)
     {
-        $username = !is_null($username) ? $username : $this->config['username'];
-        $password = !is_null($password) ? $password : $this->config['password'];
+        $username = $username !== null ? $username : $this->config['username'];
+        $password = $password !== null ? $password : $this->config['password'];
 
         $this->haveHttpHeader('Content-Type', 'application/json');
         if ($newToken || !isset(self::$adminTokens[$username])) {
@@ -218,7 +219,7 @@ class MagentoRestDriver extends REST
         }
         $this->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
 
-        if (!$decode && is_null($grabByJsonPath)) {
+        if (!$decode && $grabByJsonPath === null) {
             return $this->grabResponse();
         } elseif (!$decode) {
             return $this->grabDataFromResponseByJsonPath($grabByJsonPath);

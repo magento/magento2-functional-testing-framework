@@ -107,7 +107,6 @@ class AnnotationExtractor extends BaseObjectExtractor
                 $story = $storyTitleArray[0];
                 $title = $storyTitleArray[1];
                 $message .= "Story: '{$story}' Title: '{$title}' in Tests {$tests}\n\n";
-
             }
             throw new XmlException($message);
         }

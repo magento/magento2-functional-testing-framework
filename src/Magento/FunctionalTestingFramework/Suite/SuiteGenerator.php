@@ -273,13 +273,11 @@ class SuiteGenerator
                 if (preg_match('/(Group\\\\.*)/', $entry)) {
                     unset($newYmlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG][$key]);
                 }
-
             }
 
             // needed for proper yml file generation based on indices
             $newYmlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG] =
                 array_values($newYmlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG]);
-
         }
 
         if (array_key_exists(self::YAML_GROUPS_TAG, $newYmlArray)) {

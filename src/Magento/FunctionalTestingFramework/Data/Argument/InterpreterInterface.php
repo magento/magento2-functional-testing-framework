@@ -8,7 +8,6 @@ namespace Magento\FunctionalTestingFramework\Data\Argument;
 /**
  * Interface that encapsulates complexity of expression computation
  */
-// @codingStandardsIgnoreFile
 interface InterpreterInterface
 {
     /**

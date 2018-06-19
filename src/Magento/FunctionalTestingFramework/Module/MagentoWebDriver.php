@@ -45,7 +45,6 @@ use Yandex\Allure\Adapter\Support\AttachmentSupport;
  *             browser: chrome
  * ```
  */
-// @codingStandardsIgnoreFile
 class MagentoWebDriver extends WebDriver
 {
     use AttachmentSupport;
@@ -250,9 +249,9 @@ class MagentoWebDriver extends WebDriver
         // Cheating here for the minute. Still working on the best method to deal with this issue.
         try {
             $this->executeJS("jQuery('.modal-popup').remove(); jQuery('.modals-overlay').remove();");
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
     }
-
 
     /**
      * Search for and Select multiple options from a Magento Multi-Select drop down menu.
@@ -343,7 +342,7 @@ class MagentoWebDriver extends WebDriver
      */
     public function waitForLoadingMaskToDisappear()
     {
-        foreach( self::$loadingMasksLocators as $maskLocator) {
+        foreach (self::$loadingMasksLocators as $maskLocator) {
             // Get count of elements found for looping.
             // Elements are NOT useful for interaction, as they cannot be fed to codeception actions.
             $loadingMaskElements = $this->_findElements($maskLocator);
@@ -391,7 +390,8 @@ class MagentoWebDriver extends WebDriver
      * @param string $floatString
      * @return float
      */
-    public function parseFloat($floatString){
+    public function parseFloat($floatString)
+    {
         $floatString = str_replace(',', '', $floatString);
         return floatval($floatString);
     }
@@ -417,7 +417,7 @@ class MagentoWebDriver extends WebDriver
     public function mResetLocale()
     {
         foreach (self::$localeAll as $c => $l) {
-            if (!is_null($l)) {
+            if ($l !== null) {
                 setlocale($c, $l);
                 self::$localeAll[$c] = null;
             }

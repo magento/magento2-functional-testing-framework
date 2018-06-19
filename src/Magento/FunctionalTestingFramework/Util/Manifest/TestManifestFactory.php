@@ -44,7 +44,6 @@ class TestManifestFactory
 
             default:
                 return new DefaultTestManifest($suiteConfiguration, $testDirFullPath);
-
         }
     }
 }

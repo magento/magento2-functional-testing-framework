@@ -40,7 +40,7 @@ class Reader extends \Magento\FunctionalTestingFramework\Config\Reader\Filesyste
         ValidationStateInterface $validationState,
         $fileName = 'scenario.xml',
         $idAttributes = [],
-        $domDocumentClass = 'Magento\FunctionalTestingFramework\Config\Dom',
+        $domDocumentClass = Magento\FunctionalTestingFramework\Config\Dom::class,
         $defaultScope = 'etc'
     ) {
         $this->fileResolver = $fileResolver;

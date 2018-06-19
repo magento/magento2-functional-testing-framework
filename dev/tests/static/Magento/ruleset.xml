@@ -26,4 +26,9 @@
     <rule ref="Squiz.Commenting.DocCommentAlignment"/>
     <rule ref="Squiz.Functions.GlobalFunction"/>
     <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
+
+    <!-- Codeception Webdriver violates this, cannot fix -->
+    <rule ref="PSR2.Methods.MethodDeclaration.Underscore">
+        <severity>0</severity>
+    </rule>
 </ruleset>

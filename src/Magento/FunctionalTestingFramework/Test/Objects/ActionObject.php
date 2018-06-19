@@ -277,7 +277,6 @@ class ActionObject
          */
         $oldAttributes = array_intersect($actionAttributeKeys, ActionObject::OLD_ASSERTION_ATTRIBUTES);
         if (!empty($oldAttributes)) {
-            // @codingStandardsIgnoreStart
             $appConfig = MftfApplicationConfig::getConfig();
             if ($appConfig->getPhase() == MftfApplicationConfig::GENERATION_PHASE && $appConfig->verboseEnabled()) {
                 LoggingUtil::getInstance()->getLogger(ActionObject::class)->warning(
@@ -285,7 +284,6 @@ class ActionObject
                     ["action" => $this->type, "stepKey" => $this->stepKey]
                 );
             }
-            // @codingStandardsIgnoreEnd
             return;
         }
 
@@ -329,12 +327,10 @@ class ActionObject
         if (!in_array($this->type, $singleChildTypes)) {
             if (!in_array('expectedResult', $attributes)
                 || !in_array('actualResult', $attributes)) {
-                // @codingStandardsIgnoreStart
                 throw new TestReferenceException(
-                    "{$this->type} must have both an expectedResult and actualResult defined (stepKey: {$this->stepKey})",
+                    "{$this->type} must have both an expectedResult & actualResult defined (stepKey: {$this->stepKey})",
                     ["action" => $this->type, "stepKey" => $this->stepKey]
                 );
-                // @codingStandardsIgnoreEnd
             }
         }
     }

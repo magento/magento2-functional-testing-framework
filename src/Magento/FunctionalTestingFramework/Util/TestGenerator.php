@@ -415,7 +415,6 @@ class TestGenerator
         $annotationToAppend = null;
 
         switch ($annotationType) {
-
             case "title":
                 $annotationToAppend = sprintf(" * @Title(\"%s\")\n", $annotationName[0]);
                 break;
@@ -1398,7 +1397,6 @@ class TestGenerator
             if (strpos($output, $classVarRef) !== false) {
                 $output = str_replace($classVarRef, $classVarRef . $testInvocationKey, $output);
             }
-
         }
         return $output;
     }

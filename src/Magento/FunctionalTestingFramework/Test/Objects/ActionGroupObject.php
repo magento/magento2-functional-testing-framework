@@ -191,7 +191,6 @@ class ActionGroupObject
 
         $newActionAttributes = [];
         foreach ($attributes as $attributeKey => $attributeValue) {
-
             if (is_array($attributeValue)) {
                 // attributes with child elements are parsed as an array, need make recursive call to resolve children
                 $newActionAttributes[$attributeKey] = $this->resolveAttributesWithArguments(
@@ -217,7 +216,6 @@ class ActionGroupObject
             );
         }
         return $newActionAttributes;
-
     }
 
     /**

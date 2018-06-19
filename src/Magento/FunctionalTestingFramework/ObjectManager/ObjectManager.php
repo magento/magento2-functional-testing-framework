@@ -13,7 +13,7 @@ class ObjectManager implements \Magento\FunctionalTestingFramework\ObjectManager
 {
     /**
      * Create instance with call time arguments.
-     * 
+     *
      * @var \Magento\FunctionalTestingFramework\ObjectManager\FactoryInterface
      */
     protected $factory;

@@ -1,5 +1,4 @@
 <?php
-// @codingStandardsIgnoreFile
 /**
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
@@ -72,8 +71,6 @@ class BuildProjectCommand extends Command
         $commandInput = new ArrayInput($commandInput);
         $setupEnvCommand->run($commandInput, $output);
 
-
-
         // TODO can we just import the codecept symfony command?
         $codeceptBuildCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') .  ' build';
         $process = new Process($codeceptBuildCommand);
@@ -117,7 +114,7 @@ class BuildProjectCommand extends Command
             $output->writeln("codeception.yml applied to " . TESTS_BP . DIRECTORY_SEPARATOR . 'codeception.yml');
         }
 
-        // copy the functional suite yml, this will only copy if there are differences between the template the destination
+        // copy the functional suite yml, will only copy if there are differences between the template the destination
         $fileSystem->copy(
             realpath(FW_BP . '/etc/config/functional.suite.dist.yml'),
             TESTS_BP . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'functional.suite.yml'

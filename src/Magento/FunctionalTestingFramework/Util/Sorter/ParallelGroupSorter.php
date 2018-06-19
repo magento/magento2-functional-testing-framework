@@ -110,7 +110,6 @@ class ParallelGroupSorter
                 }
 
                 unset($testNameToSizeForUse[$testNameForUse]);
-
             }
         }
 
