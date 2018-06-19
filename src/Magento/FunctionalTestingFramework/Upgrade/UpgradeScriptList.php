@@ -9,6 +9,7 @@ namespace Magento\FunctionalTestingFramework\Upgrade;
 
 /**
  * Class UpgradeScriptList has a list of scripts.
+ * @codingStandardsIgnoreFile
  */
 class UpgradeScriptList implements UpgradeScriptListInterface
 {

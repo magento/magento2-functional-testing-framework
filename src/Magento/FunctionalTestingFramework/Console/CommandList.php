@@ -3,12 +3,14 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 declare(strict_types=1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
 /**
  * Class CommandList has a list of commands.
+ * @codingStandardsIgnoreFile
  */
 class CommandList implements CommandListInterface
 {
