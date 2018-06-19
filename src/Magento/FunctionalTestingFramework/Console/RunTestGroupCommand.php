@@ -42,8 +42,8 @@ class RunTestGroupCommand extends Command
      *
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return void
-     * @throws \Symfony\Component\Console\Exception\LogicException
+     * @return int|null|void
+     * @throws \Exception
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
@@ -82,6 +82,7 @@ class RunTestGroupCommand extends Command
      *
      * @param array $groups
      * @return string
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
     private function getGroupAndSuiteConfiguration(array $groups)
     {

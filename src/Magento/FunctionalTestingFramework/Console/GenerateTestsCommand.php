@@ -46,7 +46,9 @@ class GenerateTestsCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return void
-     * @throws \Symfony\Component\Console\Exception\LogicException|TestFrameworkException
+     * @throws TestFrameworkException
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -97,6 +99,8 @@ class GenerateTestsCommand extends Command
      * @param bool $debug
      * @param bool $verbose
      * @return array
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
     private function createTestConfiguration($json, array $tests, bool $force, bool $debug, bool $verbose)
     {
@@ -134,10 +138,10 @@ class GenerateTestsCommand extends Command
      *
      * @param string $json
      * @param array $testConfiguration
-     * @throws TestFrameworkException
      * @return array
      */
-    private function parseTestsConfigJson($json, array $testConfiguration) {
+    private function parseTestsConfigJson($json, array $testConfiguration)
+    {
         if ($json === null) {
             return $testConfiguration;
         }
