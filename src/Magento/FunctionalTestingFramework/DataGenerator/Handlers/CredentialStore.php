@@ -14,11 +14,18 @@ use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 class CredentialStore
 {
     /**
-     * Singletone instnace
+     * Singleton instance
      *
      * @var CredentialStore
      */
     private static $INSTANCE = null;
+
+    /**
+     * Initial vector for open_ssl encryption.
+     *
+     * @var string
+     */
+    private $iv = null;
 
     /**
      * Key/Value paris of credential names and their corresponding values
@@ -47,6 +54,7 @@ class CredentialStore
     private function __construct()
     {
         $this->readInCredentialsFile();
+        $this->encryptionKey = openssl_random_pseudo_bytes(16);
     }
 
     /**
@@ -103,8 +111,19 @@ class CredentialStore
 
             list($key, $value) = explode("=", $credValue);
             if (!empty($value)) {
-                $this->credentials[$key] = $value;
+                $this->credentials[$key] = openssl_encrypt($value, "AES-128-ECB", 0, $this->iv);
             }
         }
+    }
+
+    /**
+     * Takes a value encrypted at runtime and descrypts using the object's initial vector.
+     *
+     * @param string $value
+     * @return string
+     */
+    public function decryptSecretValue($value)
+    {
+        return openssl_decrypt($value, "AES-128-ECB", 0, $this->iv);
     }
 }

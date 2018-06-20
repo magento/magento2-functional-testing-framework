@@ -210,7 +210,7 @@ class TestGenerator
             $hookPhp = $this->generateHooksPhp($testObject->getHooks());
             $testsPhp = $this->generateTestPhp($testObject);
         } catch (TestReferenceException $e) {
-            throw new TestReferenceException($e->getMessage() . " in Test \"" . $testObject->getName() . "\"");
+            throw new TestReferenceException($e->getMessage() . "\n" . $testObject->getFilename());
         }
 
         $cestPhp = "<?php\n";

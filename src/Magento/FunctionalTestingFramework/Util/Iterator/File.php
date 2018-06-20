@@ -37,6 +37,10 @@ class File extends AbstractIterator
      */
     public function getFilename()
     {
+        if ($this->current == null) {
+            return null;
+        }
+
         return $this->data[$this->key()];
     }
 

@@ -48,9 +48,9 @@ class ActionObjectExtractorTest extends MagentoTestCase
         try {
             $this->testActionObjectExtractor->extractActions($invalidArray, 'TestWithSelfReferencingStepKey');
         } catch (\Exception $e) {
-            TestLoggingUtil::getInstance()->validateMockLogStatement(
+            TestLoggingUtil::getInstance()->validateMockLogStatmentRegex(
                 'error',
-                'Line 108: Invalid ordering configuration in test',
+                '/Line \d*: Invalid ordering configuration in test/',
                 [
                     'test' => 'TestWithSelfReferencingStepKey',
                     'stepKey' => ['invalidTestAction1']

@@ -6,25 +6,18 @@
 
 namespace Magento\FunctionalTestingFramework\Module;
 
-use Codeception\Events;
 use Codeception\Module\WebDriver;
 use Codeception\Test\Descriptor;
 use Codeception\TestInterface;
-use Facebook\WebDriver\WebDriverSelect;
-use Facebook\WebDriver\WebDriverBy;
-use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Interactions\WebDriverActions;
-use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Util\Uri;
-use Codeception\Util\ActionSequence;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\WebapiExecutor;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
-use Magento\Setup\Exception;
 use Magento\FunctionalTestingFramework\Util\ConfigSanitizerUtil;
-use Yandex\Allure\Adapter\Event\TestCaseFinishedEvent;
 use Yandex\Allure\Adapter\Support\AttachmentSupport;
 
 /**
@@ -44,6 +37,8 @@ use Yandex\Allure\Adapter\Support\AttachmentSupport;
  *             password: admin_password
  *             browser: chrome
  * ```
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class MagentoWebDriver extends WebDriver
 {
@@ -60,6 +55,8 @@ class MagentoWebDriver extends WebDriver
         '//div[contains(@class, "admin__form-loading-mask")]',
         '//div[@data-role="spinner"]'
     ];
+
+    const STEP_OBJ_BACKTRACE_POS = 2;
 
     /**
      * The module required fields, to be set in the suite .yml configuration file.
@@ -594,6 +591,19 @@ class MagentoWebDriver extends WebDriver
         } else {
             parent::dragAndDrop($source, $target);
         }
+    }
+
+    /**
+     * @param $field
+     * @param $value
+     */
+    public function fillSecretField($field, $value)
+    {
+        // to protect any secrets from being printed to console the values are executed only at the webdriver level as a
+        // decrypted value
+
+        $decryptedValue = CredentialStore::getInstance()->decryptSecretValue($value);
+        $this->fillField($field, $decryptedValue);
     }
 
     /**

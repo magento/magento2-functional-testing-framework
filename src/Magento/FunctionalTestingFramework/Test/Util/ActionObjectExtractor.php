@@ -59,6 +59,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
 
         foreach ($testActions as $actionName => $actionData) {
             $stepKey = $actionData[self::TEST_STEP_MERGE_KEY];
+            $actionType = $actionData[self::NODE_NAME];
 
             if (empty($stepKey)) {
                 throw new XmlException(sprintf(self::STEP_KEY_EMPTY_ERROR_MSG, $actionData['nodeName']));
@@ -79,10 +80,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
                 $actionAttributes['parameterArray'] = $actionData['array']['value'];
             }
 
-            if ($actionData[self::NODE_NAME] === self::ACTION_GROUP_TAG) {
-                $actionAttributes = $this->processActionGroupArgs($actionAttributes);
-            }
-
+            $actionAttributes = $this->processActionGroupArgs($actionType, $actionAttributes);
             $linkedAction = $this->processLinkedActions($actionName, $actionData);
             $actions = $this->extractFieldActions($actionData, $actions);
             $actionAttributes = $this->extractFieldReferences($actionData, $actionAttributes);
@@ -98,7 +96,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
 
             $actions[$stepKey] = new ActionObject(
                 $stepKey,
-                $actionData[self::NODE_NAME],
+                $actionType,
                 $actionAttributes,
                 $linkedAction['stepKey'],
                 $linkedAction['order']
@@ -142,11 +140,16 @@ class ActionObjectExtractor extends BaseObjectExtractor
      * Takes the action group reference and parses out arguments as an array that can be passed to override defaults
      * defined in the action group xml.
      *
+     * @param string $actionType
      * @param array $actionAttributeData
      * @return array
      */
-    private function processActionGroupArgs($actionAttributeData)
+    private function processActionGroupArgs($actionType, $actionAttributeData)
     {
+        if ($actionType !== self::ACTION_GROUP_TAG) {
+            return $actionAttributeData;
+        }
+
         $actionAttributeArgData = [];
         foreach ($actionAttributeData as $attributeDataKey => $attributeDataValues) {
             if ($attributeDataKey == self::ACTION_GROUP_REF) {
