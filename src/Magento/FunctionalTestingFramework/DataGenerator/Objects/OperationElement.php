@@ -45,17 +45,17 @@ class OperationElement
 
     /**
      * Required attribute, used to determine if values need to be cast before insertion.
-     * @var bool
+     * @var boolean
      */
     private $required;
 
     /**
      * OperationElement constructor.
-     * @param string $key
-     * @param string $value
-     * @param string $type
-     * @param bool $required
-     * @param array $nestedElements
+     * @param string     $key
+     * @param string     $value
+     * @param string     $type
+     * @param boolean    $required
+     * @param array      $nestedElements
      * @param null|array $nestedMetadata
      */
     public function __construct($key, $value, $type, $required, $nestedElements = [], $nestedMetadata = null)
@@ -105,7 +105,7 @@ class OperationElement
     /**
      * Accessor for required attribute
      *
-     * @return bool
+     * @return boolean
      */
     public function isRequired()
     {

@@ -59,14 +59,6 @@ class MagentoRestDriver extends REST
     const HTTP_METHOD_PUT = 'PUT';
     const HTTP_METHOD_POST = 'POST';
 
-    protected static $categoryEndpoint = 'categories';
-    protected static $productEndpoint = 'products';
-    protected static $productAttributesEndpoint = 'products/attributes';
-    protected static $productAttributesOptionsEndpoint = 'products/attributes/%s/options';
-    protected static $productAttributeSetEndpoint = 'products/attribute-sets/attributes';
-    protected static $configurableProductEndpoint = 'configurable-products/%s/options';
-    protected static $customersEndpoint = 'customers';
-
     /**
      * Module required fields.
      *
@@ -100,6 +92,7 @@ class MagentoRestDriver extends REST
      * Before suite.
      *
      * @param array $settings
+     * @return void
      */
     public function _beforeSuite($settings = [])
     {
@@ -126,6 +119,7 @@ class MagentoRestDriver extends REST
 
     /**
      * After suite.
+     * @return void
      */
     public function _afterSuite()
     {
@@ -136,9 +130,9 @@ class MagentoRestDriver extends REST
     /**
      * Get admin auth token by username and password.
      *
-     * @param string $username
-     * @param string $password
-     * @param bool $newToken
+     * @param string  $username
+     * @param string  $password
+     * @param boolean $newToken
      * @return string
      * @part json
      * @part xml
@@ -164,11 +158,12 @@ class MagentoRestDriver extends REST
     /**
      * Admin token authentication for a given user.
      *
-     * @param string $username
-     * @param string $password
-     * @param bool $newToken
+     * @param string  $username
+     * @param string  $password
+     * @param boolean $newToken
      * @part json
      * @part xml
+     * @return void
      */
     public function amAdminTokenAuthenticated($username = null, $password = null, $newToken = false)
     {
@@ -188,11 +183,11 @@ class MagentoRestDriver extends REST
     /**
      * Send REST API request.
      *
-     * @param string $endpoint
-     * @param string $httpMethod
-     * @param array $params
-     * @param string $grabByJsonPath
-     * @param bool $decode
+     * @param string  $endpoint
+     * @param string  $httpMethod
+     * @param array   $params
+     * @param string  $grabByJsonPath
+     * @param boolean $decode
      * @return mixed
      * @throws \LogicException
      * @part json
@@ -252,8 +247,8 @@ class MagentoRestDriver extends REST
     /**
      * Create a simple product in Magento.
      *
-     * @param int $categoryId
-     * @param array $simpleProductData
+     * @param integer $categoryId
+     * @param array   $simpleProductData
      * @return array|mixed
      * @part json
      * @part xml
@@ -274,8 +269,8 @@ class MagentoRestDriver extends REST
     /**
      * Create a configurable product in Magento.
      *
-     * @param int $categoryId
-     * @param array $configurableProductData
+     * @param integer $categoryId
+     * @param array   $configurableProductData
      * @return array|mixed
      * @part json
      * @part xml
@@ -383,7 +378,7 @@ class MagentoRestDriver extends REST
     /**
      * Create a customer in Magento.
      *
-     * @param array $customerData
+     * @param array  $customerData
      * @param string $password
      * @return array|mixed
      * @part json
@@ -446,9 +441,9 @@ class MagentoRestDriver extends REST
     /**
      * Get simple product api data.
      *
-     * @param string $type
+     * @param string  $type
      * @param integer $categoryId
-     * @param array $productData
+     * @param array   $productData
      * @return array
      * @part json
      * @part xml
@@ -514,7 +509,7 @@ class MagentoRestDriver extends REST
     /**
      * Get customer data including password.
      *
-     * @param array $customerData
+     * @param array  $customerData
      * @param string $password
      * @return array
      * @part json
@@ -527,7 +522,7 @@ class MagentoRestDriver extends REST
 
     /**
      * @param string $code
-     * @param array $attributeData
+     * @param array  $attributeData
      * @return array
      * @part json
      * @part xml
@@ -626,10 +621,10 @@ class MagentoRestDriver extends REST
     }
 
     /**
-     * @param array $configurableProductOptions
-     * @param array $childProductIds
-     * @param array $configurableProduct
-     * @param int $categoryId
+     * @param array   $configurableProductOptions
+     * @param array   $childProductIds
+     * @param array   $configurableProduct
+     * @param integer $categoryId
      * @return array
      * @part json
      * @part xml
@@ -656,9 +651,9 @@ class MagentoRestDriver extends REST
     }
 
     /**
-     * @param $attributeCode
-     * @param int $attributeSetId
-     * @param int $attributeGroupId
+     * @param string  $attributeCode
+     * @param integer $attributeSetId
+     * @param integer $attributeGroupId
      * @return array
      * @part json
      * @part xml

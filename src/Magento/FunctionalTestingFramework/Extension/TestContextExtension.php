@@ -56,7 +56,7 @@ class TestContextExtension extends \Codeception\Extension
 
     /**
      * Extracts hook method from trace, looking specifically for the cest class given.
-     * @param array $trace
+     * @param array  $trace
      * @param string $class
      * @return string
      */

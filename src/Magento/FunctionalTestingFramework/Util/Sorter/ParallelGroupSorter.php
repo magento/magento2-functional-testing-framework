@@ -28,8 +28,8 @@ class ParallelGroupSorter
     /**
      * Function which returns tests and suites split according to desired number of lines divded into groups.
      *
-     * @param array $suiteConfiguration
-     * @param array $testNameToSize
+     * @param array   $suiteConfiguration
+     * @param array   $testNameToSize
      * @param integer $time
      * @return array
      * @throws TestFrameworkException
@@ -89,9 +89,9 @@ class ParallelGroupSorter
      * the group.
      *
      * @param integer $timeMaximum
-     * @param string $testName
+     * @param string  $testName
      * @param integer $testSize
-     * @param array $testNameToSizeForUse
+     * @param array   $testNameToSizeForUse
      * @return array
      */
     private function createTestGroup($timeMaximum, $testName, $testSize, $testNameToSizeForUse)
@@ -120,7 +120,7 @@ class ParallelGroupSorter
      * Function which takes a group of available tests mapped to size and a desired number of lines matching with the
      * test of closest size and returning.
      *
-     * @param array $testGroup
+     * @param array   $testGroup
      * @param integer $desiredValue
      * @return string
      */
@@ -147,7 +147,7 @@ class ParallelGroupSorter
      * Function which takes an array of test names mapped to suite name and a size limitation for each group of tests.
      * The function divides suites that are over the specified limit and returns the resulting suites in an array.
      *
-     * @param array $suiteConfiguration
+     * @param array   $suiteConfiguration
      * @param integer $lineLimit
      * @return array
      */
@@ -228,8 +228,8 @@ class ParallelGroupSorter
      * Input {suitename = 'sample', tests = ['test1' => 100,'test2' => 150, 'test3' => 300], linelimit = 275}
      * Result { ['sample_01' => ['test3' => 300], 'sample_02' => ['test2' => 150, 'test1' => 100]] }
      *
-     * @param string $suiteName
-     * @param array $tests
+     * @param string  $suiteName
+     * @param array   $tests
      * @param integer $maxTime
      * @return array
      */
@@ -263,7 +263,7 @@ class ParallelGroupSorter
      *
      * @param string $originalSuiteName
      * @param string $newSuiteName
-     * @param array $tests
+     * @param array  $tests
      * @return void
      */
     private function addSuiteToConfig($originalSuiteName, $newSuiteName, $tests)

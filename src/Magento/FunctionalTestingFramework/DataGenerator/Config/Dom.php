@@ -29,8 +29,8 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
      * The path to ID attribute name should not include any attribute notations or modifiers -- only node names
      *
      * @param string $xml
-     * @param array $idAttributes
-     * @param array $mergeablePaths
+     * @param array  $idAttributes
+     * @param array  $mergeablePaths
      * @param string $typeAttributeName
      * @param string $schemaFile
      * @param string $errorFormat
@@ -61,7 +61,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
      * 3. Append new node if original document doesn't have the same node
      *
      * @param \DOMElement $node
-     * @param string $parentPath path to parent node
+     * @param string      $parentPath Path to parent node.
      * @return void
      */
     public function mergeNode(\DOMElement $node, $parentPath)
@@ -87,7 +87,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
      * Getter for node by path, overridden to include validation flag for mergeable entries
      * An exception is possible if original document contains multiple nodes for identifier
      *
-     * @param string $nodePath
+     * @param string  $nodePath
      * @param boolean $isMergeablePath
      * @throws \Exception
      * @return \DOMElement|null

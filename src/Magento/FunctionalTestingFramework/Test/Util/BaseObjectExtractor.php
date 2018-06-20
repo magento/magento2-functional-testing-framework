@@ -27,7 +27,7 @@ class BaseObjectExtractor
      * the data passed in of the irrelevant tags and returns the result.
      *
      * @param array $data
-     * @param array $tags
+     * @param array ...$tags
      * @return array
      */
     protected function stripDescriptorTags($data, ...$tags)

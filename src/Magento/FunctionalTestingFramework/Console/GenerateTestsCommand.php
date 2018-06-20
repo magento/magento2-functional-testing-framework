@@ -58,7 +58,7 @@ class GenerateTestsCommand extends Command
     /**
      * Executes the current command.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      * @return void
      * @throws \Symfony\Component\Console\Exception\LogicException|TestFrameworkException
@@ -106,11 +106,11 @@ class GenerateTestsCommand extends Command
     /**
      * Function which builds up a configuration including test and suites for consumption of Magento generation methods.
      *
-     * @param string $json
-     * @param array $tests
-     * @param bool $force
-     * @param bool $debug
-     * @param bool $verbose
+     * @param string  $json
+     * @param array   $tests
+     * @param boolean $force
+     * @param boolean $debug
+     * @param boolean $verbose
      * @return array
      */
     private function createTestConfiguration($json, array $tests, bool $force, bool $debug, bool $verbose)
@@ -148,7 +148,7 @@ class GenerateTestsCommand extends Command
      * passed in by the user. The result is a testConfiguration array.
      *
      * @param string $json
-     * @param array $testConfiguration
+     * @param array  $testConfiguration
      * @throws TestFrameworkException
      * @return array
      */

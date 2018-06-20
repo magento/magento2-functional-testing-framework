@@ -30,7 +30,7 @@ class PageParser implements ParserInterface
     /**
      * PageParser Constructor
      * @param ObjectManagerInterface $objectManager
-     * @param DataInterface $configData
+     * @param DataInterface          $configData
      */
     public function __construct(ObjectManagerInterface $objectManager, DataInterface $configData)
     {

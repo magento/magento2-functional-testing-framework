@@ -48,6 +48,11 @@ use Yandex\Allure\Adapter\Support\AttachmentSupport;
 class MagentoWebDriver extends WebDriver
 {
     use AttachmentSupport;
+
+    /**
+     * List of known magento loading masks by selector
+     * @var array
+     */
     public static $loadingMasksLocators = [
         '//div[contains(@class, "loading-mask")]',
         '//div[contains(@class, "admin_data-grid-loading-mask")]',
@@ -104,12 +109,21 @@ class MagentoWebDriver extends WebDriver
      */
     private $htmlReport;
 
+    /**
+     * Sanitizes config, then initializes using parent.
+     * @return void
+     */
     public function _initialize()
     {
         $this->config = ConfigSanitizerUtil::sanitizeWebDriverConfig($this->config);
         parent::_initialize();
     }
 
+    /**
+     * Calls parent reset, then re-sanitizes config
+     *
+     * @return void
+     */
     public function _resetConfig()
     {
         parent::_resetConfig();
@@ -257,10 +271,11 @@ class MagentoWebDriver extends WebDriver
      * Search for and Select multiple options from a Magento Multi-Select drop down menu.
      * e.g. The drop down menu you use to assign Products to Categories.
      *
-     * @param $select
-     * @param array $options
-     * @param bool $requireAction
+     * @param string  $select
+     * @param array   $options
+     * @param boolean $requireAction
      * @throws \Exception
+     * @return void
      */
     public function searchAndMultiSelectOption($select, array $options, $requireAction = false)
     {
@@ -285,8 +300,8 @@ class MagentoWebDriver extends WebDriver
     /**
      * Select multiple options from a drop down using a filter and text field to narrow results.
      *
-     * @param string $selectSearchTextField
-     * @param string $selectSearchResult
+     * @param string   $selectSearchTextField
+     * @param string   $selectSearchResult
      * @param string[] $options
      * @return void
      */
@@ -305,7 +320,8 @@ class MagentoWebDriver extends WebDriver
     /**
      * Wait for all Ajax calls to finish.
      *
-     * @param int $timeout
+     * @param integer $timeout
+     * @return void
      */
     public function waitForAjaxLoad($timeout = null)
     {
@@ -323,8 +339,9 @@ class MagentoWebDriver extends WebDriver
     /**
      * Wait for all JavaScript to finish executing.
      *
-     * @param int $timeout
+     * @param integer $timeout
      * @throws \Exception
+     * @return void
      */
     public function waitForPageLoad($timeout = null)
     {
@@ -339,6 +356,7 @@ class MagentoWebDriver extends WebDriver
      * Wait for all visible loading masks to disappear. Gets all elements by mask selector, then loops over them.
      *
      * @throws \Exception
+     * @return void
      */
     public function waitForLoadingMaskToDisappear()
     {
@@ -358,6 +376,7 @@ class MagentoWebDriver extends WebDriver
      * Verify that there are no JavaScript errors in the console.
      *
      * @throws ModuleException
+     * @return void
      */
     public function dontSeeJsError()
     {
@@ -370,7 +389,7 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * @param float $money
+     * @param float  $money
      * @param string $locale
      * @return array
      */
@@ -397,8 +416,9 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * @param int $category
-     * @param string $locale
+     * @param integer $category
+     * @param string  $locale
+     * @return void
      */
     public function mSetLocale(int $category, $locale)
     {
@@ -413,6 +433,7 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Reset Locale setting.
+     * @return void
      */
     public function mResetLocale()
     {
@@ -426,6 +447,7 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Scroll to the Top of the Page.
+     * @return void
      */
     public function scrollToTopOfPage()
     {
@@ -435,7 +457,7 @@ class MagentoWebDriver extends WebDriver
     /**
      * Takes given $command and executes it against exposed MTF CLI entry point. Returns response from server.
      * @param string $command
-     * @returns string
+     * @return string
      */
     public function magentoCLI($command)
     {
@@ -464,10 +486,11 @@ class MagentoWebDriver extends WebDriver
     /**
      * Conditional click for an area that should be visible
      *
-     * @param string $selector
-     * @param string $dependentSelector
-     * @param bool $visible
+     * @param string  $selector
+     * @param string  $dependentSelector
+     * @param boolean $visible
      * @throws \Exception
+     * @return void
      */
     public function conditionalClick($selector, $dependentSelector, $visible)
     {
@@ -492,6 +515,7 @@ class MagentoWebDriver extends WebDriver
      * Clear the given Text Field or Textarea
      *
      * @param string $selector
+     * @return void
      */
     public function clearField($selector)
     {
@@ -503,7 +527,8 @@ class MagentoWebDriver extends WebDriver
      *
      * @param string $selector
      * @param string $attribute
-     * @param $value
+     * @param string $value
+     * @return void
      */
     public function assertElementContainsAttribute($selector, $attribute, $value)
     {
@@ -518,6 +543,11 @@ class MagentoWebDriver extends WebDriver
         }
     }
 
+    /**
+     * Sets current test to the given test, and resets test failure artifacts to null
+     * @param TestInterface $test
+     * @return void
+     */
     public function _before(TestInterface $test)
     {
         $this->current_test = $test;
@@ -529,10 +559,10 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Override for codeception's default dragAndDrop to include offset options.
-     * @param string $source
-     * @param string $target
-     * @param int $xOffset
-     * @param int $yOffset
+     * @param string  $source
+     * @param string  $target
+     * @param integer $xOffset
+     * @param integer $yOffset
      * @return void
      */
     public function dragAndDrop($source, $target, $xOffset = null, $yOffset = null)
@@ -562,7 +592,8 @@ class MagentoWebDriver extends WebDriver
      * following parent execution of test failure processing.
      *
      * @param TestInterface $test
-     * @param \Exception $fail
+     * @param \Exception    $fail
+     * @return void
      */
     public function _failed(TestInterface $test, $fail)
     {
@@ -586,6 +617,7 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Function which saves a screenshot of the current stat of the browser
+     * @return void
      */
     public function saveScreenshot()
     {

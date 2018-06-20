@@ -23,13 +23,13 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
 
     /**
      * TestDom constructor.
-     * @param string $xml
-     * @param string $filename
+     * @param string             $xml
+     * @param string             $filename
      * @param ExceptionCollector $exceptionCollector
-     * @param array $idAttributes
-     * @param string $typeAttributeName
-     * @param string $schemaFile
-     * @param string $errorFormat
+     * @param array              $idAttributes
+     * @param string             $typeAttributeName
+     * @param string             $schemaFile
+     * @param string             $errorFormat
      */
     public function __construct(
         $xml,
@@ -51,8 +51,8 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
     /**
      * Takes a dom element from xml and appends the filename based on location
      *
-     * @param string $xml
-     * @param string|null $filename
+     * @param string             $xml
+     * @param string|null        $filename
      * @param ExceptionCollector $exceptionCollector
      * @return \DOMDocument
      */
@@ -92,8 +92,8 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
     /**
      * Redirects any merges into the init method for appending xml filename
      *
-     * @param string $xml
-     * @param string|null $filename
+     * @param string             $xml
+     * @param string|null        $filename
      * @param ExceptionCollector $exceptionCollector
      * @return void
      */
@@ -106,10 +106,10 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
     /**
      * Parses DOM Structure's actions and appends a before/after attribute along with the parent's stepkey reference.
      *
-     * @param \DOMElement $testNode
-     * @param string $insertType
-     * @param string $insertKey
-     * @param string $filename
+     * @param \DOMElement        $testNode
+     * @param string             $insertType
+     * @param string             $insertKey
+     * @param string             $filename
      * @param ExceptionCollector $exceptionCollector
      * @return void
      */
@@ -141,9 +141,9 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
     /**
      * Parses an individual DOM structure for repeated stepKey attributes
      *
-     * @param \DOMElement $testNode
-     * @param string $filename
-     * @param string $type
+     * @param \DOMElement        $testNode
+     * @param string             $filename
+     * @param string             $type
      * @param ExceptionCollector $exceptionCollector
      * @return void
      * @throws XmlException

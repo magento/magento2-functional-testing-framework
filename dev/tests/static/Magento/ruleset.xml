@@ -19,6 +19,10 @@
     <rule ref="Magento.LiteralNamespaces.LiteralNamespaces">
         <exclude-pattern>*/_files/*</exclude-pattern>
     </rule>
+    <rule ref="Magento.Commenting.FunctionComment">
+        <exclude-pattern>*/dev/tests*</exclude-pattern>
+    </rule>
+    <rule ref="Magento.Commenting.VariableComment"/>
 
     <rule ref="Generic.Functions.CallTimePassByReference"/>
     <rule ref="Generic.PHP.DeprecatedFunctions"/>
@@ -27,7 +31,7 @@
     <rule ref="Squiz.Functions.GlobalFunction"/>
     <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
 
-    <!-- Codeception Webdriver violates this, cannot fix -->
+    <!-- Codeception Webdriver violates this, cannot fix as we extend from them -->
     <rule ref="PSR2.Methods.MethodDeclaration.Underscore">
         <severity>0</severity>
     </rule>

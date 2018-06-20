@@ -43,7 +43,7 @@ class RunTestGroupCommand extends Command
     /**
      * Executes the current command.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      * @return void
      * @throws \Symfony\Component\Console\Exception\LogicException

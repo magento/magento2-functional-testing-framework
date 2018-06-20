@@ -46,8 +46,8 @@ class DataPersistenceHandler
      * DataPersistenceHandler constructor.
      *
      * @param EntityDataObject $entityObject
-     * @param array $dependentObjects
-     * @param array $customFields
+     * @param array            $dependentObjects
+     * @param array            $customFields
      */
     public function __construct($entityObject, $dependentObjects = [], $customFields = [])
     {
@@ -97,12 +97,11 @@ class DataPersistenceHandler
      * Function which executes a put request based on specific operation metadata.
      *
      * @param string $updateDataName
-     * @param array $updateDependentObjects
+     * @param array  $updateDependentObjects
      * @return void
      * @throws TestFrameworkException
      * @throws \Exception
      */
-
     public function updateEntity($updateDataName, $updateDependentObjects = [])
     {
         foreach ($updateDependentObjects as $dependentObject) {
@@ -123,11 +122,10 @@ class DataPersistenceHandler
      * Function which executes a get request on specific operation metadata.
      *
      * @param integer|null $index
-     * @param string $storeCode
+     * @param string       $storeCode
      * @return void
      * @throws TestFrameworkException
      */
-
     public function getEntity($index = null, $storeCode = null)
     {
         if (!empty($storeCode)) {
@@ -181,8 +179,8 @@ class DataPersistenceHandler
      *
      * @param string|array $response
      * @param integer|null $index
-     * @param array $requestDataArray
-     * @param bool $isJson
+     * @param array        $requestDataArray
+     * @param boolean      $isJson
      * @return void
      */
     private function setCreatedObject($response, $index, $requestDataArray, $isJson)
@@ -216,7 +214,7 @@ class DataPersistenceHandler
     /**
      * Convert an multi-dimensional array to flat array.
      *
-     * @param array $arrayIn
+     * @param array  $arrayIn
      * @param string $rootKey
      * @return array
      */

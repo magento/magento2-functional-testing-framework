@@ -86,7 +86,7 @@ class OperationElementExtractor
     /**
      * Creates and Adds relevant DataElements from data entries defined within dataObject array
      *
-     * @param array &$operationElements
+     * @param array $operationElements
      * @param array $operationFieldArray
      * @return void
      */
@@ -105,7 +105,7 @@ class OperationElementExtractor
     /**
      * Creates and Adds relevant DataElements from data arrays defined within dataObject array
      *
-     * @param array &$operationArrayData
+     * @param array $operationArrayData
      * @param array $operationArrayArray
      * @return void
      */

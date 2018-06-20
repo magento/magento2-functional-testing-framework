@@ -50,17 +50,17 @@ class ActionGroupObject
     /**
      * String of parent Action Group
      *
-     * @var String
+     * @var string
      */
     private $parentActionGroup;
 
     /**
      * ActionGroupObject constructor.
      *
-     * @param string $name
+     * @param string           $name
      * @param ArgumentObject[] $arguments
-     * @param array $actions
-     * @param string $parentActionGroup
+     * @param array            $actions
+     * @param string           $parentActionGroup
      */
     public function __construct($name, $arguments, $actions, $parentActionGroup)
     {
@@ -78,7 +78,7 @@ class ActionGroupObject
     /**
      * Gets the ordered steps including merged waits
      *
-     * @param array $arguments
+     * @param array  $arguments
      * @param string $actionReferenceKey
      * @return array
      * @throws TestReferenceException
@@ -129,7 +129,7 @@ class ActionGroupObject
      * Function which takes a set of arguments to be appended to an action objects fields returns resulting
      * action objects with proper argument.field references.
      *
-     * @param array $arguments
+     * @param array  $arguments
      * @param string $actionReferenceKey
      * @return array
      */
@@ -222,9 +222,9 @@ class ActionGroupObject
      * Function that takes an array of replacement arguments, and matches them with args in an actionGroup's attribute.
      * Determines if the replacement arguments are persisted data, and replaces them accordingly.
      *
-     * @param array $arguments
+     * @param array  $arguments
      * @param string $attributeValue
-     * @param array $matches
+     * @param array  $matches
      * @return string
      */
     private function replaceAttributeArguments($arguments, $attributeValue, $matches)
@@ -255,10 +255,10 @@ class ActionGroupObject
     /**
      * Replace attribute arguments in variable.
      *
-     * @param string $variable
-     * @param array $arguments
-     * @param string $attributeValue
-     * @param bool $isInnerArgument
+     * @param string  $variable
+     * @param array   $arguments
+     * @param string  $attributeValue
+     * @param boolean $isInnerArgument
      * @return string
      */
     private function replaceAttributeArgumentInVariable(
@@ -311,9 +311,9 @@ class ActionGroupObject
     /**
      * Replaces any arguments that were declared as simpleData="true".
      * Takes in isInnerArgument to determine what kind of replacement to expect: {{data}} vs section.element(data)
-     * @param string $argumentValue
-     * @param string $variableName
-     * @param string $attributeValue
+     * @param string  $argumentValue
+     * @param string  $variableName
+     * @param string  $attributeValue
      * @param boolean $isInnerArgument
      * @return string
      */
@@ -328,10 +328,10 @@ class ActionGroupObject
 
     /**
      * Replaces args with replacements given, behavior is specific to persisted arguments.
-     * @param string $replacement
-     * @param string $attributeValue
-     * @param string $fullVariable
-     * @param string $variable
+     * @param string  $replacement
+     * @param string  $attributeValue
+     * @param string  $fullVariable
+     * @param string  $variable
      * @param boolean $isParameter
      * @return string
      */
@@ -420,7 +420,7 @@ class ActionGroupObject
     /**
      * Searches through ActionGroupObject's arguments and returns first argument wi
      * @param string $name
-     * @param array $argumentList
+     * @param array  $argumentList
      * @return ArgumentObject|null
      */
     private function findArgumentByName($name, $argumentList)
@@ -441,7 +441,7 @@ class ActionGroupObject
      * Replaces references to step keys used earlier in an action group
      *
      * @param ActionObject $action
-     * @param array $replacementStepKeys
+     * @param array        $replacementStepKeys
      * @return ActionObject[]
      */
     private function replaceCreateDataKeys($action, $replacementStepKeys)

@@ -38,7 +38,7 @@ class EnvProcessor
     /**
      * Boolean indicating existence of env file
      *
-     * @var bool
+     * @var boolean
      */
     private $envExists;
 

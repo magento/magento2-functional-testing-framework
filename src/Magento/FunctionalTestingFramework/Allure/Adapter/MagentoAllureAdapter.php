@@ -25,7 +25,7 @@ class MagentoAllureAdapter extends AllureAdapter
     /**
      * Array of group values passed to test runner command
      *
-     * @return String
+     * @return string
      */
     private function getGroup()
     {

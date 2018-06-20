@@ -60,9 +60,9 @@ class OperationDataArrayResolver
      * structure for the request of the desired entity type.
      *
      * @param EntityDataObject $entityObject
-     * @param array $operationMetadata
-     * @param string $operation
-     * @param bool $fromArray
+     * @param array            $operationMetadata
+     * @param string           $operation
+     * @param boolean          $fromArray
      * @return array
      * @throws \Exception
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -171,8 +171,8 @@ class OperationDataArrayResolver
      * entities.
      *
      * @param EntityDataObject $entityObject
-     * @param string $operationKey
-     * @param string $operationElementType
+     * @param string           $operationKey
+     * @param string           $operationElementType
      * @return array|string
      * @throws TestFrameworkException
      */
@@ -232,7 +232,7 @@ class OperationDataArrayResolver
      * the object.
      *
      * @param EntityDataObject $entityObject
-     * @param string $operationElementValue
+     * @param string           $operationElementValue
      * @return EntityDataObject|null
      * @throws \Exception
      */
@@ -254,10 +254,10 @@ class OperationDataArrayResolver
     /**
      * Resolves DataObjects and pre-defined metadata (in other operation.xml file) referenced by the operation
      *
-     * @param string $entityName
+     * @param string           $entityName
      * @param OperationElement $operationElement
-     * @param string $operation
-     * @param bool $fromArray
+     * @param string           $operation
+     * @param boolean          $fromArray
      * @return array
      * @throws \Exception
      */
@@ -323,7 +323,7 @@ class OperationDataArrayResolver
      * Get the current sequence number for an entity.
      *
      * @param string $entityName
-     * @return int
+     * @return integer
      */
     private static function getSequence($entityName)
     {

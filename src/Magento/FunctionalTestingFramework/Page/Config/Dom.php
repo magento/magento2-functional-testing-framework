@@ -23,13 +23,13 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
 
     /**
      * TestDom constructor.
-     * @param string $xml
-     * @param string $filename
+     * @param string             $xml
+     * @param string             $filename
      * @param ExceptionCollector $exceptionCollector
-     * @param array $idAttributes
-     * @param string $typeAttributeName
-     * @param string $schemaFile
-     * @param string $errorFormat
+     * @param array              $idAttributes
+     * @param string             $typeAttributeName
+     * @param string             $schemaFile
+     * @param string             $errorFormat
      */
     public function __construct(
         $xml,
@@ -52,8 +52,8 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
     /**
      * Takes a dom element from xml and appends the filename based on location
      *
-     * @param string $xml
-     * @param string|null $filename
+     * @param string             $xml
+     * @param string|null        $filename
      * @param ExceptionCollector $exceptionCollector
      * @return \DOMDocument
      */

@@ -13,7 +13,7 @@ class SingleRunTestManifest extends DefaultTestManifest
     /**
      * SingleRunTestManifest constructor.
      *
-     * @param array $suiteConfiguration
+     * @param array  $suiteConfiguration
      * @param string $testPath
      */
     public function __construct($suiteConfiguration, $testPath)

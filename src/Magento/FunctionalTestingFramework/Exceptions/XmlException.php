@@ -16,7 +16,7 @@ class XmlException extends \Exception
     /**
      * XmlException constructor.
      * @param string $message
-     * @param array $context
+     * @param array  $context
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function __construct($message, $context = [])

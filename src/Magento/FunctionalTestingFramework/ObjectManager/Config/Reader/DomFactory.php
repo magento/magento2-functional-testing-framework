@@ -30,7 +30,7 @@ class DomFactory
      * Factory constructor
      *
      * @param \Magento\FunctionalTestingFramework\ObjectManagerInterface $objectManager
-     * @param string $instanceName
+     * @param string                                                     $instanceName
      */
     public function __construct(
         \Magento\FunctionalTestingFramework\ObjectManagerInterface $objectManager,
