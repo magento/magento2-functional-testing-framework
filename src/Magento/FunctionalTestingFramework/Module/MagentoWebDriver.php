@@ -438,11 +438,19 @@ class MagentoWebDriver extends WebDriver
      * @param string $arguments
      * @return string
      */
-    public function magentoCLI($command, $arguments)
+    public function magentoCLI($command, $arguments = null)
     {
         $apiURL = $this->config['url'] . getenv('MAGENTO_CLI_COMMAND_PATH');
         $executor = new CurlTransport();
-        $executor->write($apiURL, [getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command], CurlInterface::POST, [$arguments]);
+        $executor->write(
+            $apiURL,
+            [
+                getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command,
+                'arguments' => $arguments
+            ],
+            CurlInterface::POST,
+            []
+        );
         $response = $executor->read();
         $executor->close();
         return $response;
