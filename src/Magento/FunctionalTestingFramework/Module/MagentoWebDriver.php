@@ -435,13 +435,14 @@ class MagentoWebDriver extends WebDriver
     /**
      * Takes given $command and executes it against exposed MTF CLI entry point. Returns response from server.
      * @param string $command
-     * @returns string
+     * @param string $arguments
+     * @return string
      */
-    public function magentoCLI($command)
+    public function magentoCLI($command, $arguments)
     {
         $apiURL = $this->config['url'] . getenv('MAGENTO_CLI_COMMAND_PATH');
         $executor = new CurlTransport();
-        $executor->write($apiURL, [getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command], CurlInterface::POST, []);
+        $executor->write($apiURL, [getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command], CurlInterface::POST, [$arguments]);
         $response = $executor->read();
         $executor->close();
         return $response;

@@ -489,6 +489,7 @@ class TestGenerator
             $dependentSelector = null;
             $visible = null;
             $command = null;
+            $arguments = null;
             $sortOrder = null;
             $storeCode = null;
 
@@ -503,6 +504,9 @@ class TestGenerator
 
             if (isset($customActionAttributes['command'])) {
                 $command = $this->addUniquenessFunctionCall($customActionAttributes['command']);
+            }
+            if (isset($customActionAttributes['arguments'])) {
+                $arguments = $this->addUniquenessFunctionCall($customActionAttributes['arguments']);
             }
 
             if (isset($customActionAttributes['attribute'])) {
@@ -1219,7 +1223,8 @@ class TestGenerator
                         $stepKey,
                         $actor,
                         $actionObject,
-                        $command
+                        $command,
+                        $arguments
                     );
                     $testSteps .= sprintf(
                         "\t\t$%s->comment(\$%s);\n",
