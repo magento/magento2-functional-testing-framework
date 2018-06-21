@@ -28,6 +28,12 @@ class AnnotationExtractor extends BaseObjectExtractor
         "AVERAGE" => "MINOR",
         "MINOR" => "TRIVIAL"
     ];
+    const REQUIRED_ANNOTATIONS = [
+        "stories",
+        "title",
+        "description",
+        "severity"
+    ];
 
     /**
      * AnnotationExtractor constructor.
@@ -67,7 +73,18 @@ class AnnotationExtractor extends BaseObjectExtractor
             }
             $annotationObjects[$annotationKey] = $annotationValues;
         }
+
+        // Check if test is missing any annotations
+        $missingAnnotations = array_flip(array_diff_key(array_flip(self::REQUIRED_ANNOTATIONS), $annotationObjects));
+
+        if (!empty($missingAnnotations)) {
+            $message = "Test {$filename} is missing required annotations:\n";
+            $message .= implode("\n", $missingAnnotations);
+            throw new XmlException($message, []);
+        }
+
         $this->addStoryTitleToMap($annotationObjects, $filename);
+
         return $annotationObjects;
     }
 
