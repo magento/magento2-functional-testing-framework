@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Config\Reader;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
 use Magento\FunctionalTestingFramework\Util\Iterator\File;
 
@@ -21,10 +22,13 @@ class MftfFilesystem extends \Magento\FunctionalTestingFramework\Config\Reader\F
     public function readFiles($fileList)
     {
         $exceptionCollector = new ExceptionCollector();
-        $errors = [];
         /** @var \Magento\FunctionalTestingFramework\Test\Config\Dom $configMerger */
         $configMerger = null;
         foreach ($fileList as $key => $content) {
+            //check if file is empty and continue to next if it is
+            if (!parent::verifyFileEmpty($content, $fileList->getFilename())) {
+                continue;
+            }
             try {
                 if (!$configMerger) {
                     $configMerger = $this->createConfigMerger(
@@ -36,17 +40,15 @@ class MftfFilesystem extends \Magento\FunctionalTestingFramework\Config\Reader\F
                 } else {
                     $configMerger->merge($content, $fileList->getFilename(), $exceptionCollector);
                 }
+                if (MftfApplicationConfig::getConfig()->debugEnabled()) {
+                    $this->validateSchema($configMerger, $fileList->getFilename());
+                }
             } catch (\Magento\FunctionalTestingFramework\Config\Dom\ValidationException $e) {
                 throw new \Exception("Invalid XML in file " . $key . ":\n" . $e->getMessage());
             }
         }
         $exceptionCollector->throwException();
-        if ($this->validationState->isValidationRequired()) {
-            if ($configMerger && !$configMerger->validate($this->schemaFile, $errors)) {
-                $message = "Invalid Document \n";
-                throw new \Exception($message . implode("\n", $errors));
-            }
-        }
+        $this->validateSchema($configMerger, $fileList->getFilename());
 
         $output = [];
         if ($configMerger) {

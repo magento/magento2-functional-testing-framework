@@ -50,7 +50,7 @@ class ActionObjectExtractorTest extends MagentoTestCase
         } catch (\Exception $e) {
             TestLoggingUtil::getInstance()->validateMockLogStatement(
                 'error',
-                'Line 103: Invalid ordering configuration in test',
+                'Line 108: Invalid ordering configuration in test',
                 [
                     'test' => 'TestWithSelfReferencingStepKey',
                     'stepKey' => ['invalidTestAction1']
@@ -87,6 +87,15 @@ class ActionObjectExtractorTest extends MagentoTestCase
                 'ref' => ['testAction2', 'testAction3']
             ]
         );
+    }
+
+    /**
+     * Tests basic action object extraction with an empty stepKey
+     */
+    public function testEmptyStepKey()
+    {
+        $this->expectExceptionMessage("StepKeys cannot be empty.	Action='sampleAction'");
+        $this->testActionObjectExtractor->extractActions($this->createBasicActionObjectArray(""));
     }
 
     /**

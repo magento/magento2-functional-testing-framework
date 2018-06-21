@@ -6,11 +6,20 @@
 
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
+
 /**
  * Class AnnotationExtractor
  */
 class AnnotationExtractor extends BaseObjectExtractor
 {
+    /**
+     * Mappings of all Test => title mappings, indexed by Story
+     * e.g. $storyToTitleMappings['storyAnnotation'] = ['testName' => 'titleAnnotation']
+     * @var array
+     */
+    private $storyToTitleMappings = [];
+
     const ANNOTATION_VALUE = 'value';
     const MAGENTO_TO_ALLURE_SEVERITY_MAP = [
         "BLOCKER" => "BLOCKER",
@@ -33,11 +42,11 @@ class AnnotationExtractor extends BaseObjectExtractor
      * can be found in both Tests and their child element tests.
      *
      * @param array $testAnnotations
+     * @param string $filename
      * @return array
      */
-    public function extractAnnotations($testAnnotations)
+    public function extractAnnotations($testAnnotations, $filename)
     {
-
         $annotationObjects = [];
         $annotations = $this->stripDescriptorTags($testAnnotations, self::NODE_NAME);
 
@@ -58,8 +67,50 @@ class AnnotationExtractor extends BaseObjectExtractor
             }
             $annotationObjects[$annotationKey] = $annotationValues;
         }
-
+        $this->addStoryTitleToMap($annotationObjects, $filename);
         return $annotationObjects;
+    }
+
+    /**
+     * Adds story/title/filename combination to static map
+     * @param array $annotations
+     * @param string $filename
+     * @return void
+     */
+    public function addStoryTitleToMap($annotations, $filename)
+    {
+        if (isset($annotations['stories']) && isset($annotations['title'])) {
+            $story = $annotations['stories'][0];
+            $title = $annotations['title'][0];
+            $this->storyToTitleMappings[$story . "/" . $title][] = $filename;
+        }
+    }
+
+    /**
+     * Validates that all Story/Title combinations are unique, builds list of violators if found.
+     * @throws XmlException
+     * @return void
+     */
+    public function validateStoryTitleUniqueness()
+    {
+        $dupes = [];
+
+        foreach ($this->storyToTitleMappings as $storyTitle => $files) {
+            if (count($files) > 1) {
+                $dupes[$storyTitle] = "'" . implode("', '", $files) . "'";
+            }
+        }
+        if (!empty($dupes)) {
+            $message = "Story and Title annotation pairs must be unique:\n\n";
+            foreach ($dupes as $storyTitle => $tests) {
+                $storyTitleArray = explode("/", $storyTitle);
+                $story = $storyTitleArray[0];
+                $title = $storyTitleArray[1];
+                $message .= "Story: '{$story}' Title: '{$title}' in Tests {$tests}\n\n";
+
+            }
+            throw new XmlException($message);
+        }
     }
 
     /**

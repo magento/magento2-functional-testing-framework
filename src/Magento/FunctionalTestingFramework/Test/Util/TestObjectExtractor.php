@@ -68,6 +68,15 @@ class TestObjectExtractor extends BaseObjectExtractor
     }
 
     /**
+     * Getter for AnnotationExtractor
+     * @return AnnotationExtractor
+     */
+    public function getAnnotationExtractor()
+    {
+        return $this->annotationExtractor;
+    }
+
+    /**
      * This method takes and array of test data and strips away irrelevant tags. The data is converted into an array of
      * TestObjects.
      *
@@ -102,7 +111,10 @@ class TestObjectExtractor extends BaseObjectExtractor
         );
 
         if (array_key_exists(self::TEST_ANNOTATIONS, $testData)) {
-            $testAnnotations = $this->annotationExtractor->extractAnnotations($testData[self::TEST_ANNOTATIONS]);
+            $testAnnotations = $this->annotationExtractor->extractAnnotations(
+                $testData[self::TEST_ANNOTATIONS],
+                $testData[self::NAME]
+            );
         }
 
         //Override features with module name if present, populates it otherwise

@@ -363,6 +363,7 @@
             <argument name="idAttributes" xsi:type="array">
                 <item name="/suites/suite" xsi:type="string">name</item>
                 <item name="/suites/suite/(before|after)/remove" xsi:type="string">keyForRemoval</item>
+                <item name="/suites/suite/(before|after)/actionGroup/argument" xsi:type="string">name</item>
                 <item name="/suites/suite/(before|after)/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
                 <item name="/suites/suite/(before|after)/createData/requiredEntity" xsi:type="string">createDataKey</item>
                 <item name="/suites/suite/(before|after)/createData/field" xsi:type="string">key</item>
@@ -379,6 +380,7 @@
             <argument name="assocArrayAttributes" xsi:type="array">
                 <item name="/suites/suite" xsi:type="string">name</item>
                 <item name="/suites/suite/(before|after)/remove" xsi:type="string">keyForRemoval</item>
+                <item name="/suites/suite/(before|after)/actionGroup/argument" xsi:type="string">name</item>
                 <item name="/suites/suite/(before|after)/(actionGroup|&commonTestActions;)" xsi:type="string">stepKey</item>
                 <item name="/suites/suite/(before|after)/createData/requiredEntity" xsi:type="string">createDataKey</item>
                 <item name="/suites/suite/(before|after)/createData/field" xsi:type="string">key</item>

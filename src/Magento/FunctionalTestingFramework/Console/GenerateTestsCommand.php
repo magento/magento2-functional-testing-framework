@@ -36,7 +36,8 @@ class GenerateTestsCommand extends Command
             ->addOption("config", 'c', InputOption::VALUE_REQUIRED, 'default, singleRun, or parallel', 'default')
             ->addOption("force", 'f',InputOption::VALUE_NONE, 'force generation of tests regardless of Magento Instance Configuration')
             ->addOption('time', 'i', InputOption::VALUE_REQUIRED, 'Used in combination with a parallel configuration, determines desired group size (in minutes)', 10)
-            ->addOption('tests', 't', InputOption::VALUE_REQUIRED, 'A parameter accepting a JSON string used to determine the test configuration');
+            ->addOption('tests', 't', InputOption::VALUE_REQUIRED, 'A parameter accepting a JSON string used to determine the test configuration')
+            ->addOption('debug', 'd', InputOption::VALUE_NONE, 'run extra validation when generating tests');
     }
 
     /**
@@ -45,7 +46,9 @@ class GenerateTestsCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return void
-     * @throws \Symfony\Component\Console\Exception\LogicException|TestFrameworkException
+     * @throws TestFrameworkException
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -54,6 +57,7 @@ class GenerateTestsCommand extends Command
         $json = $input->getOption('tests');
         $force = $input->getOption('force');
         $time = $input->getOption('time') * 60 * 1000; // convert from minutes to milliseconds
+        $debug = $input->getOption('debug');
         $verbose = $output->isVerbose();
 
         if ($json !== null && !json_decode($json)) {
@@ -66,7 +70,7 @@ class GenerateTestsCommand extends Command
             throw new TestFrameworkException("time option cannot be less than or equal to 0");
         }
 
-        $testConfiguration = $this->createTestConfiguration($json, $tests, $force, $verbose);
+        $testConfiguration = $this->createTestConfiguration($json, $tests, $force, $debug, $verbose);
 
         // create our manifest file here
         $testManifest = TestManifestFactory::makeManifest($config, $testConfiguration['suites']);
@@ -77,7 +81,10 @@ class GenerateTestsCommand extends Command
             $testManifest->createTestGroups($time);
         }
 
-        SuiteGenerator::getInstance()->generateAllSuites($testManifest);
+        if (empty($tests)) {
+            SuiteGenerator::getInstance()->generateAllSuites($testManifest);
+        }
+
         $testManifest->generate();
 
        $output->writeln("Generate Tests Command Run");
@@ -89,16 +96,20 @@ class GenerateTestsCommand extends Command
      * @param string $json
      * @param array $tests
      * @param bool $force
+     * @param bool $debug
      * @param bool $verbose
      * @return array
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
-    private function createTestConfiguration($json, array $tests, bool $force, bool $verbose)
+    private function createTestConfiguration($json, array $tests, bool $force, bool $debug, bool $verbose)
     {
         // set our application configuration so we can references the user options in our framework
         MftfApplicationConfig::create(
             $force,
             MftfApplicationConfig::GENERATION_PHASE,
-            $verbose
+            $verbose,
+            $debug
         );
 
         $testConfiguration = [];
@@ -127,10 +138,10 @@ class GenerateTestsCommand extends Command
      *
      * @param string $json
      * @param array $testConfiguration
-     * @throws TestFrameworkException
      * @return array
      */
-    private function parseTestsConfigJson($json, array $testConfiguration) {
+    private function parseTestsConfigJson($json, array $testConfiguration)
+    {
         if ($json === null) {
             return $testConfiguration;
         }

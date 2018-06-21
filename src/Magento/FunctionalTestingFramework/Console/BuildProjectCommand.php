@@ -21,6 +21,7 @@ use Symfony\Component\Yaml\Yaml;
 class BuildProjectCommand extends Command
 {
     const DEFAULT_YAML_INLINE_DEPTH = 10;
+    const CREDENTIALS_FILE_PATH = TESTS_BP . DIRECTORY_SEPARATOR . '.credentials.example';
 
     /**
      * Env processor manages .env files.
@@ -37,7 +38,8 @@ class BuildProjectCommand extends Command
     protected function configure()
     {
         $this->setName('build:project')
-            ->setDescription('Generate configuration files for the project. Build the Codeception project.');
+            ->setDescription('Generate configuration files for the project. Build the Codeception project.')
+            ->addOption("upgrade", 'u', InputOption::VALUE_NONE, 'upgrade existing MFTF tests according to last major release requiements');
         $this->envProcessor = new EnvProcessor(TESTS_BP . DIRECTORY_SEPARATOR . '.env');
         $env = $this->envProcessor->getEnv();
         foreach ($env as $key => $value) {
@@ -57,6 +59,10 @@ class BuildProjectCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $resetCommand = new CleanProjectCommand();
+        $resetOptions = new ArrayInput([]);
+        $resetCommand->run($resetOptions, $output);
+
         $this->generateConfigFiles($output);
 
         $setupEnvCommand = new SetupEnvCommand();
@@ -72,10 +78,13 @@ class BuildProjectCommand extends Command
         $setupEnvCommand->run($commandInput, $output);
 
 
+
         // TODO can we just import the codecept symfony command?
         $codeceptBuildCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') .  ' build';
         $process = new Process($codeceptBuildCommand);
         $process->setWorkingDirectory(TESTS_BP);
+        $process->setIdleTimeout(600);
+        $process->setTimeout(0);
         $process->run(
             function ($type, $buffer) use ($output) {
                 if ($output->isVerbose()) {
@@ -83,6 +92,12 @@ class BuildProjectCommand extends Command
                 }
             }
         );
+
+        if ($input->getOption('upgrade')) {
+            $upgradeCommand = new UpgradeTestsCommand();
+            $upgradeOptions = new ArrayInput(['path' => TESTS_MODULE_PATH]);
+            $upgradeCommand->run($upgradeOptions, $output);
+        }
     }
 
     /**
@@ -124,5 +139,12 @@ class BuildProjectCommand extends Command
             $output->writeln("functional.suite.yml applied to " .
                 TESTS_BP . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'functional.suite.yml');
         }
+
+        $fileSystem->copy(
+            FW_BP . '/etc/config/.credentials.example',
+            self::CREDENTIALS_FILE_PATH
+        );
+
+        $output->writeln('.credentials.example successfully applied.');
     }
 }
