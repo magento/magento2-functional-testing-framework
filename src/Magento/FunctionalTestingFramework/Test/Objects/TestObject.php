@@ -126,7 +126,7 @@ class TestObject
      */
     public function isSkipped()
     {
-        // TODO remove elseif when group skip is no longer allowed
+        // TODO deprecation|deprecate MFTF 3.0.0 remove elseif when group skip is no longer allowed
         if (array_key_exists('skip', $this->annotations)) {
             return true;
         } elseif (array_key_exists('group', $this->annotations) && (in_array("skip", $this->annotations['group']))) {
