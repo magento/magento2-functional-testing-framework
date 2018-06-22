@@ -29,6 +29,7 @@
             <xs:element type="annotationType" name="testCaseId" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="useCaseId" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="group" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="skipType" name="skip" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="annotationType" name="return" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
     </xs:complexType>
@@ -52,6 +53,18 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="severityEnum" name="value" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="skipType">
+        <xs:sequence maxOccurs="unbounded">
+            <xs:element type="issueType" name="issueId" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="issueType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="value" use="required"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>

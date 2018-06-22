@@ -437,6 +437,12 @@ class TestGenerator
                     $annotationToAppend .= sprintf(" * @group %s\n", $group);
                 }
                 break;
+
+            case "skip":
+                foreach ($annotationName as $issue) {
+                    $annotationToAppend .= sprintf(" * @skipIssueId %s\n", $issue);
+                }
+                break;
         }
 
         return $annotationToAppend;
