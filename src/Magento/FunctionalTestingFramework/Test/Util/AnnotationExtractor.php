@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
  * Class AnnotationExtractor
@@ -74,14 +75,7 @@ class AnnotationExtractor extends BaseObjectExtractor
             $annotationObjects[$annotationKey] = $annotationValues;
         }
 
-        // Check if test is missing any annotations
-        $missingAnnotations = array_flip(array_diff_key(array_flip(self::REQUIRED_ANNOTATIONS), $annotationObjects));
-
-        if (!empty($missingAnnotations)) {
-            $message = "Test {$filename} is missing required annotations:\n";
-            $message .= implode("\n", $missingAnnotations);
-            throw new XmlException($message, []);
-        }
+        $this->validateMissingAnnotations($annotationObjects, $filename);
 
         $this->addStoryTitleToMap($annotationObjects, $filename);
 
@@ -100,6 +94,25 @@ class AnnotationExtractor extends BaseObjectExtractor
             $story = $annotations['stories'][0];
             $title = $annotations['title'][0];
             $this->storyToTitleMappings[$story . "/" . $title][] = $filename;
+        }
+    }
+
+    /**
+     * Validates given annotations against list of required annotations.
+     * @param array $annotationObjects
+     * @return void
+     */
+    private function validateMissingAnnotations($annotationObjects, $filename)
+    {
+        //TODO 3.0.0 Turn this into an error
+        $missingAnnotations = array_flip(array_diff_key(array_flip(self::REQUIRED_ANNOTATIONS), $annotationObjects));
+
+        if (!empty($missingAnnotations)) {
+            $message = "Test {$filename} is missing required annotations:";
+            LoggingUtil::getInstance()->getLogger(ActionObject::class)->warning(
+                $message,
+                ["testName" => $filename, "missingAnnotations" => implode(", ", $missingAnnotations)]
+            );
         }
     }
 
