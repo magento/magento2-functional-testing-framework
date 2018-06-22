@@ -62,12 +62,23 @@ class AnnotationExtractor extends BaseObjectExtractor
                 );
                 continue;
             }
+
             if ($annotationKey == "skip") {
                 $annotationData = $annotationData['issueId'];
                 $this->validateSkippedIssues($annotationData, $filename);
             }
+
             foreach ($annotationData as $annotationValue) {
                 $annotationValues[] = $annotationValue[self::ANNOTATION_VALUE];
+            }
+
+            if ($annotationKey == "group" && in_array("skip", $annotationValues)) {
+                print(
+                    "Test: $filename" .
+                    PHP_EOL .
+                    "Use of group skip will be deprecated in MFTF 3.0.0. Please update tests to use skip tags." .
+                    PHP_EOL
+                );
             }
 
             $annotationObjects[$annotationKey] = $annotationValues;

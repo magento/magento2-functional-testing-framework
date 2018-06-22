@@ -130,7 +130,6 @@ class TestObject
         if (array_key_exists('skip', $this->annotations)) {
             return true;
         } elseif (array_key_exists('group', $this->annotations) && (in_array("skip", $this->annotations['group']))) {
-            print("Use of group skip will be deprecated in MFTF 3.0.0. Please update tests to use skip tags.");
             return true;
         }
         return false;
