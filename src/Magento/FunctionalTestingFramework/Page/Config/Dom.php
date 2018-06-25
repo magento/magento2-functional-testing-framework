@@ -37,8 +37,8 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
 
     /**
      * Page Dom constructor.
-     * @param string $xml
-     * @param string $filename
+     * @param string             $xml
+     * @param string             $filename
      * @param ExceptionCollector $exceptionCollector
      * @param array              $idAttributes
      * @param string             $typeAttributeName
@@ -70,7 +70,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
     /**
      * Takes a dom element from xml and appends the filename based on location
      *
-     * @param string $xml
+     * @param string      $xml
      * @param string|null $filename
      * @return \DOMDocument
      */

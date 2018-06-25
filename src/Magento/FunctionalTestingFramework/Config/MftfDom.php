@@ -21,13 +21,13 @@ class MftfDom extends \Magento\FunctionalTestingFramework\Config\Dom
 {
     /**
      * MftfDom constructor.
-     * @param string $xml
-     * @param string $filename
+     * @param string             $xml
+     * @param string             $filename
      * @param ExceptionCollector $exceptionCollector
-     * @param array $idAttributes
-     * @param string $typeAttributeName
-     * @param string $schemaFile
-     * @param string $errorFormat
+     * @param array              $idAttributes
+     * @param string             $typeAttributeName
+     * @param string             $schemaFile
+     * @param string             $errorFormat
      */
     public function __construct(
         $xml,
@@ -49,8 +49,8 @@ class MftfDom extends \Magento\FunctionalTestingFramework\Config\Dom
     /**
      * Redirects any merges into the init method for appending xml filename
      *
-     * @param string $xml
-     * @param string|null $filename
+     * @param string             $xml
+     * @param string|null        $filename
      * @param ExceptionCollector $exceptionCollector
      * @return void
      */

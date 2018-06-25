@@ -40,8 +40,8 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
 
     /**
      * Metadata Dom constructor.
-     * @param string $xml
-     * @param string $filename
+     * @param string             $xml
+     * @param string             $filename
      * @param ExceptionCollector $exceptionCollector
      * @param array              $idAttributes
      * @param string             $typeAttributeName
@@ -73,7 +73,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
     /**
      * Takes a dom element from xml and appends the filename based on location
      *
-     * @param string $xml
+     * @param string      $xml
      * @param string|null $filename
      * @return \DOMDocument
      */
@@ -131,9 +131,9 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
      * Parses DOM Structure's actions and appends a before/after attribute along with the parent's stepkey reference.
      *
      * @param \DOMElement $testNode
-     * @param string $insertType
-     * @param string $insertKey
-     * @param string $filename
+     * @param string      $insertType
+     * @param string      $insertKey
+     * @param string      $filename
      * @return void
      */
     protected function appendMergePointerToActions($testNode, $insertType, $insertKey, $filename)

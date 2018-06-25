@@ -45,7 +45,7 @@ class RunTestGroupCommand extends Command
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return int|null|void
+     * @return integer|null|void
      * @throws \Exception
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)

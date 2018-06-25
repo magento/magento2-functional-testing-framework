@@ -36,7 +36,7 @@ class GenerateSuiteCommand extends Command
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return int|null|void
+     * @return integer|null|void
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
