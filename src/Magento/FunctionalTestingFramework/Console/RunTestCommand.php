@@ -38,8 +38,8 @@ class RunTestCommand extends Command
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return void
-     * @throws \Symfony\Component\Console\Exception\LogicException
+     * @return int|null|void
+     * @throws \Exception
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */

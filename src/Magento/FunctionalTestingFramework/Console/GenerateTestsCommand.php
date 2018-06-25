@@ -61,7 +61,9 @@ class GenerateTestsCommand extends Command
      * @param InputInterface  $input
      * @param OutputInterface $output
      * @return void
-     * @throws \Symfony\Component\Console\Exception\LogicException|TestFrameworkException
+     * @throws TestFrameworkException
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -112,6 +114,8 @@ class GenerateTestsCommand extends Command
      * @param boolean $debug
      * @param boolean $verbose
      * @return array
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
     private function createTestConfiguration($json, array $tests, bool $force, bool $debug, bool $verbose)
     {
