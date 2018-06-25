@@ -138,10 +138,11 @@ class AnnotationExtractor extends BaseObjectExtractor
      */
     public function validateSkippedIssues($issues, $filename)
     {
-        foreach ($issues as $issueId)
-        if (empty($issueId['value'])) {
-            $message = "issueId for skipped tests cannot be empty. Test: $filename";
-            throw new XmlException($message);
+        foreach ($issues as $issueId) {
+            if (empty($issueId['value'])) {
+                $message = "issueId for skipped tests cannot be empty. Test: $filename";
+                throw new XmlException($message);
+            }
         }
     }
 
