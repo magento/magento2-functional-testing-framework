@@ -14,29 +14,21 @@ use Magento\FunctionalTestingFramework\Util\ModulePathExtractor;
 use Magento\FunctionalTestingFramework\Util\Validation\DuplicateNodeValidationUtil;
 
 /**
- * MFTF page.xml configuration XML DOM utility
+ * MFTF section.xml configuration XML DOM utility
  * @package Magento\FunctionalTestingFramework\Page\Config
  */
-class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
+class SectionDom extends \Magento\FunctionalTestingFramework\Config\MftfDom
 {
-    const PAGE_META_FILENAME_ATTRIBUTE = "filename";
-
-    /**
-     * Module Path extractor
-     *
-     * @var ModulePathExtractor
-     */
-    private $modulePathExtractor;
+    const SECTION_META_FILENAME_ATTRIBUTE = "filename";
 
     /**
      * NodeValidationUtil
-     *
      * @var DuplicateNodeValidationUtil
      */
     private $validationUtil;
 
     /**
-     * Page Dom constructor.
+     * Entity Dom constructor.
      * @param string $xml
      * @param string $filename
      * @param ExceptionCollector $exceptionCollector
@@ -54,7 +46,6 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
         $schemaFile = null,
         $errorFormat = self::ERROR_FORMAT_DEFAULT
     ) {
-        $this->modulePathExtractor = new ModulePathExtractor();
         $this->validationUtil = new DuplicateNodeValidationUtil('name', $exceptionCollector);
         parent::__construct(
             $xml,
@@ -77,27 +68,10 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
     public function initDom($xml, $filename = null)
     {
         $dom = parent::initDom($xml);
-
-        $pagesNode = $dom->getElementsByTagName('pages')->item(0);
-        $this->validationUtil->validateChildUniqueness($pagesNode, $filename);
-        $pageNodes = $dom->getElementsByTagName('page');
-        $currentModule =
-            $this->modulePathExtractor->extractModuleName($filename) .
-            '_' .
-            $this->modulePathExtractor->getExtensionPath($filename);
-        foreach ($pageNodes as $pageNode) {
-            $pageModule = $pageNode->getAttribute("module");
-            $pageName = $pageNode->getAttribute("name");
-            if ($pageModule !== $currentModule) {
-                if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-                    print(
-                        "Page Module does not match path Module. " .
-                        "(Page, Module): ($pageName, $pageModule) - Path Module: $currentModule" .
-                        PHP_EOL
-                    );
-                }
-            }
-            $pageNode->setAttribute(self::PAGE_META_FILENAME_ATTRIBUTE, $filename);
+        $sectionNodes = $dom->getElementsByTagName('section');
+        foreach ($sectionNodes as $sectionNode) {
+            $sectionNode->setAttribute(self::SECTION_META_FILENAME_ATTRIBUTE, $filename);
+            $this->validationUtil->validateChildUniqueness($sectionNode, $filename);
         }
         return $dom;
     }

@@ -11,13 +11,13 @@ use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
 use Magento\FunctionalTestingFramework\Util\Validation\DuplicateNodeValidationUtil;
 
 /**
- * MFTF actionGroup.xml configuration XML DOM utility
+ * MFTF metadata.xml configuration XML DOM utility
  * @package Magento\FunctionalTestingFramework\DataGenerator\Config
  */
-class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
+class OperationDom extends \Magento\FunctionalTestingFramework\Config\MftfDom
 {
-    const DATA_FILE_NAME_ENDING = "Data";
-    const DATA_META_FILENAME_ATTRIBUTE = "filename";
+    const METADATA_FILE_NAME_ENDING = "meta";
+    const METADATA_META_FILENAME_ATTRIBUTE = "filename";
 
     /**
      * NodeValidationUtil
@@ -26,7 +26,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
     private $validationUtil;
 
     /**
-     * Entity Dom constructor.
+     * Metadata Dom constructor.
      * @param string $xml
      * @param string $filename
      * @param ExceptionCollector $exceptionCollector
@@ -67,18 +67,44 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
     {
         $dom = parent::initDom($xml);
 
-        if (strpos($filename, self::DATA_FILE_NAME_ENDING)) {
-            $entityNodes = $dom->getElementsByTagName('entity');
-            foreach ($entityNodes as $entityNode) {
-                /** @var \DOMElement $entityNode */
-                $entityNode->setAttribute(self::DATA_META_FILENAME_ATTRIBUTE, $filename);
-                $this->validationUtil->validateChildUniqueness(
-                    $entityNode,
+        if (strpos($filename, self::METADATA_FILE_NAME_ENDING)) {
+            $operationNodes = $dom->getElementsByTagName('operation');
+            foreach ($operationNodes as $operationNode) {
+                /** @var \DOMElement $operationNode */
+                $operationNode->setAttribute(self::METADATA_META_FILENAME_ATTRIBUTE, $filename);
+                $this->validateOperationElements(
+                    $operationNode,
                     $filename
                 );
             }
         }
 
         return $dom;
+    }
+
+    /**
+     * Recurse through child elements and validate uniqueKeys
+     * @param \DOMElement $parentNode
+     * @param string $filename
+     * @return void
+     */
+    public function validateOperationElements(\DOMElement $parentNode, $filename)
+    {
+        $this->validationUtil->validateChildUniqueness(
+            $parentNode,
+            $filename
+        );
+        $childNodes = $parentNode->childNodes;
+
+        for ($i = 0; $i < $childNodes->length; $i++) {
+            $currentNode = $childNodes->item($i);
+            if (!is_a($currentNode, \DOMElement::class)) {
+                continue;
+            }
+            $this->validateOperationElements(
+                $currentNode,
+                $filename
+            );
+        }
     }
 }

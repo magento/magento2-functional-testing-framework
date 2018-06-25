@@ -11,8 +11,13 @@ use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Config\Dom\NodeMergingConfig;
 use Magento\FunctionalTestingFramework\Config\Dom\NodePathMatcher;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
+use Magento\FunctionalTestingFramework\Util\Validation\DuplicateNodeValidationUtil;
 
-class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
+/**
+ * MFTF test.xml configuration XML DOM utility
+ * @package Magento\FunctionalTestingFramework\Test\Config
+ */
+class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
 {
     const TEST_FILE_NAME_ENDING = 'Test';
     const TEST_META_FILENAME_ATTRIBUTE = 'filename';
@@ -22,7 +27,19 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
     const TEST_MERGE_POINTER_AFTER = "insertAfter";
 
     /**
-     * TestDom constructor.
+     * NodeValidationUtil
+     * @var DuplicateNodeValidationUtil
+     */
+    protected $validationUtil;
+
+    /**
+     * ExceptionCollector
+     * @var ExceptionCollector
+     */
+    private $exceptionCollector;
+
+    /**
+     * Metadata Dom constructor.
      * @param string $xml
      * @param string $filename
      * @param ExceptionCollector $exceptionCollector
@@ -40,12 +57,17 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
         $schemaFile = null,
         $errorFormat = self::ERROR_FORMAT_DEFAULT
     ) {
-        $this->schemaFile = $schemaFile;
-        $this->nodeMergingConfig = new NodeMergingConfig(new NodePathMatcher(), $idAttributes);
-        $this->typeAttributeName = $typeAttributeName;
-        $this->errorFormat = $errorFormat;
-        $this->dom = $this->initDom($xml, $filename, $exceptionCollector);
-        $this->rootNamespace = $this->dom->lookupNamespaceUri($this->dom->namespaceURI);
+        $this->validationUtil = new DuplicateNodeValidationUtil('stepKey', $exceptionCollector);
+        $this->exceptionCollector = $exceptionCollector;
+        parent::__construct(
+            $xml,
+            $filename,
+            $exceptionCollector,
+            $idAttributes,
+            $typeAttributeName,
+            $schemaFile,
+            $errorFormat
+        );
     }
 
     /**
@@ -53,10 +75,9 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
      *
      * @param string $xml
      * @param string|null $filename
-     * @param ExceptionCollector $exceptionCollector
      * @return \DOMDocument
      */
-    public function initDom($xml, $filename = null, $exceptionCollector = null)
+    public function initDom($xml, $filename = null)
     {
         $dom = parent::initDom($xml);
 
@@ -65,22 +86,39 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
             foreach ($testNodes as $testNode) {
                 /** @var \DOMElement $testNode */
                 $testNode->setAttribute(self::TEST_META_FILENAME_ATTRIBUTE, $filename);
-                $this->validateDomStepKeys($testNode, $filename, 'Test', $exceptionCollector);
                 if ($testNode->getAttribute(self::TEST_MERGE_POINTER_AFTER) !== "") {
                     $this->appendMergePointerToActions(
                         $testNode,
                         self::TEST_MERGE_POINTER_AFTER,
                         $testNode->getAttribute(self::TEST_MERGE_POINTER_AFTER),
-                        $filename,
-                        $exceptionCollector
+                        $filename
                     );
                 } elseif ($testNode->getAttribute(self::TEST_MERGE_POINTER_BEFORE) !== "") {
                     $this->appendMergePointerToActions(
                         $testNode,
                         self::TEST_MERGE_POINTER_BEFORE,
                         $testNode->getAttribute(self::TEST_MERGE_POINTER_BEFORE),
-                        $filename,
-                        $exceptionCollector
+                        $filename
+                    );
+                }
+
+                $this->validationUtil->validateChildUniqueness(
+                    $testNode,
+                    $filename
+                );
+                $beforeNode = $testNode->getElementsByTagName('before')->item(0);
+                $afterNode = $testNode->getElementsByTagName('after')->item(0);
+
+                if (isset($beforeNode)) {
+                    $this->validationUtil->validateChildUniqueness(
+                        $beforeNode,
+                        $filename
+                    );
+                }
+                if (isset($afterNode)) {
+                    $this->validationUtil->validateChildUniqueness(
+                        $afterNode,
+                        $filename
                     );
                 }
             }
@@ -90,30 +128,15 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
     }
 
     /**
-     * Redirects any merges into the init method for appending xml filename
-     *
-     * @param string $xml
-     * @param string|null $filename
-     * @param ExceptionCollector $exceptionCollector
-     * @return void
-     */
-    public function merge($xml, $filename = null, $exceptionCollector = null)
-    {
-        $dom = $this->initDom($xml, $filename, $exceptionCollector);
-        $this->mergeNode($dom->documentElement, '');
-    }
-
-    /**
      * Parses DOM Structure's actions and appends a before/after attribute along with the parent's stepkey reference.
      *
      * @param \DOMElement $testNode
      * @param string $insertType
      * @param string $insertKey
      * @param string $filename
-     * @param ExceptionCollector $exceptionCollector
      * @return void
      */
-    protected function appendMergePointerToActions($testNode, $insertType, $insertKey, $filename, $exceptionCollector)
+    protected function appendMergePointerToActions($testNode, $insertType, $insertKey, $filename)
     {
         $childNodes = $testNode->childNodes;
         $previousStepKey = $insertKey;
@@ -129,57 +152,12 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Dom
             if ($currentNode->hasAttribute($insertType) && $testNode->hasAttribute($insertType)) {
                 $errorMsg = "Actions cannot have merge pointers if contained in tests that has a merge pointer.";
                 $errorMsg .= "\n\tstepKey: {$currentNode->getAttribute('stepKey')}\tin file: {$filename}";
-                $exceptionCollector->addError($filename, $errorMsg);
+                $this->exceptionCollector->addError($filename, $errorMsg);
             }
             $currentNode->setAttribute($actionInsertType, $previousStepKey);
             $previousStepKey = $currentNode->getAttribute('stepKey');
             // All actions after the first need to insert AFTER.
             $actionInsertType = ActionObject::MERGE_ACTION_ORDER_AFTER;
-        }
-    }
-
-    /**
-     * Parses an individual DOM structure for repeated stepKey attributes
-     *
-     * @param \DOMElement $testNode
-     * @param string $filename
-     * @param string $type
-     * @param ExceptionCollector $exceptionCollector
-     * @return void
-     * @throws XmlException
-     */
-    protected function validateDomStepKeys($testNode, $filename, $type, $exceptionCollector)
-    {
-        $childNodes = $testNode->childNodes;
-
-        $keyValues = [];
-        for ($i = 0; $i < $childNodes->length; $i++) {
-            $currentNode = $childNodes->item($i);
-
-            if (!is_a($currentNode, \DOMElement::class)) {
-                continue;
-            }
-
-            if (in_array($currentNode->nodeName, self::TEST_HOOK_NAMES)) {
-                $this->validateDomStepKeys($currentNode, $filename, $type, $exceptionCollector);
-            }
-
-            if ($currentNode->hasAttribute('stepKey')) {
-                $keyValues[] = $currentNode->getAttribute('stepKey');
-            }
-        }
-
-        $withoutDuplicates = array_unique($keyValues);
-        $duplicates = array_diff_assoc($keyValues, $withoutDuplicates);
-
-        if (count($duplicates) > 0) {
-            $stepKeyError = "";
-            foreach ($duplicates as $duplicateKey => $duplicateValue) {
-                $stepKeyError .= "\tstepKey: {$duplicateValue} is used more than once.\n";
-            }
-
-            $errorMsg = "{$type}s cannot use stepKey more than once.\t\n{$stepKeyError}\tin file: {$filename}";
-            $exceptionCollector->addError($filename, $errorMsg);
         }
     }
 }
