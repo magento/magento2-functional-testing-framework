@@ -99,7 +99,7 @@ abstract class AbstractIterator implements \Iterator, \Countable
     /**
      * Get data key of the current data element
      *
-     * @return int|string
+     * @return integer|string
      */
     public function key()
     {
@@ -109,7 +109,7 @@ abstract class AbstractIterator implements \Iterator, \Countable
     /**
      * To make iterator countable
      *
-     * @return int
+     * @return integer
      */
     public function count()
     {

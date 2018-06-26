@@ -114,7 +114,7 @@ class SuiteGenerator
      * run so that any pre/post conditions can be duplicated.
      *
      * @param string $suiteName
-     * @param array $tests
+     * @param array  $tests
      * @param string $originalSuiteName
      * @return void
      * @throws TestReferenceException
@@ -152,7 +152,7 @@ class SuiteGenerator
      * prevent possible invalid test configurations from executing.
      *
      * @param string $suiteName
-     * @param array $testsReferenced
+     * @param array  $testsReferenced
      * @param string $originalSuiteName
      * @return void
      * @throws TestReferenceException
@@ -176,7 +176,7 @@ class SuiteGenerator
      * and generates applicable suites.
      *
      * @param string $suiteName
-     * @param array $suiteContent
+     * @param array  $suiteContent
      * @return void
      * @throws \Exception
      */
@@ -192,7 +192,7 @@ class SuiteGenerator
      * and generates a group file which captures suite level preconditions.
      *
      * @param string $suiteName
-     * @param array $tests
+     * @param array  $tests
      * @param string $originalSuiteName
      * @return null|string
      * @throws XmlException
@@ -273,13 +273,11 @@ class SuiteGenerator
                 if (preg_match('/(Group\\\\.*)/', $entry)) {
                     unset($newYmlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG][$key]);
                 }
-
             }
 
             // needed for proper yml file generation based on indices
             $newYmlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG] =
                 array_values($newYmlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG]);
-
         }
 
         if (array_key_exists(self::YAML_GROUPS_TAG, $newYmlArray)) {
@@ -296,7 +294,7 @@ class SuiteGenerator
      * generator which is then called to create all the test files for the suite.
      *
      * @param string $path
-     * @param array $tests
+     * @param array  $tests
      * @return void
      * @throws TestReferenceException
      */

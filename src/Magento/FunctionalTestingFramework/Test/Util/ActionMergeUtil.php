@@ -68,8 +68,8 @@ class ActionMergeUtil
     /**
      * Method to execute merge of steps and insert wait steps.
      *
-     * @param array $parsedSteps
-     * @param bool $skipActionGroupResolution
+     * @param array   $parsedSteps
+     * @param boolean $skipActionGroupResolution
      * @return array
      * @throws TestReferenceException
      * @throws XmlException

@@ -142,7 +142,7 @@ class ActionMergeUtilTest extends MagentoTestCase
             ActionObject::MERGE_ACTION_ORDER_BEFORE
         );
 
-        $this->expectException("\Magento\FunctionalTestingFramework\Exceptions\XmlException");
+        $this->expectException(\Magento\FunctionalTestingFramework\Exceptions\XmlException::class);
 
         $actionMergeUtil = new ActionMergeUtil("actionMergeUtilTest", "TestCase");
         $actionMergeUtil->resolveActionSteps($actionObjects);

@@ -1,5 +1,4 @@
 <?php
-// @codingStandardsIgnoreFile
 /**
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
@@ -27,16 +26,19 @@ class RunTestCommand extends Command
     {
         $this->setName("run:test")
             ->setDescription("generation and execution of test(s) defined in xml")
-            ->addArgument('name', InputArgument::REQUIRED | InputArgument::IS_ARRAY, "name of tests to generate and execute")
-            ->addOption('skip-generate', 'k', InputOption::VALUE_NONE, "skip generation and execute existing test");
+            ->addArgument(
+                'name',
+                InputArgument::REQUIRED | InputArgument::IS_ARRAY,
+                "name of tests to generate and execute"
+            )->addOption('skip-generate', 'k', InputOption::VALUE_NONE, "skip generation and execute existing test");
     }
 
     /**
      * Executes the current command.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return int|null|void
+     * @return integer|null|void
      * @throws \Exception
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)

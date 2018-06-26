@@ -46,7 +46,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
      * This method takes an array of test actions read in from a TestHook or Test. The actions are stripped of
      * irrelevant tags and returned as an array of ActionObjects.
      *
-     * @param array $testActions
+     * @param array  $testActions
      * @param string $testName
      * @return array
      * @throws XmlException
@@ -115,7 +115,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
      * Returns an array with keys corresponding to the linked action's stepKey and order.
      *
      * @param string $actionName
-     * @param array $actionData
+     * @param array  $actionData
      * @return array
      * @throws XmlException
      */
@@ -232,7 +232,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
     /**
      * Function which validates stepKey references within mergeable actions
      *
-     * @param array $stepKeyRefs
+     * @param array  $stepKeyRefs
      * @param string $testName
      * @return void
      * @throws TestReferenceException

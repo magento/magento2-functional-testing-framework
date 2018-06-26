@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\DataGenerator\Objects;
 
 use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use tests\unit\Util\TestLoggingUtil;
 
 /**
@@ -87,12 +88,11 @@ class EntityDataObjectTest extends MagentoTestCase
         $dataObject = new EntityDataObject("name", "type", $data, null, null, $vars);
         // Perform Asserts
         $this->assertEquals("id", $dataObject->getVarReference("someOtherEntity"));
-
     }
 
     public function testGetDataByNameInvalidUniquenessFormatValue()
     {
-        $this->expectException("Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException");
+        $this->expectException(TestFrameworkException::class);
         $data = ["datakey1" => "value1", "datakey2" => "value2", "datakey3" => "value3"];
         $dataObject = new EntityDataObject("name", "type", $data, null, null, null);
         // Trigger Exception
@@ -102,7 +102,7 @@ class EntityDataObjectTest extends MagentoTestCase
     public function testUniquenessFunctionsDontExist()
     {
         $this->markTestIncomplete('Test fails, as msqMock is always declared in test runs.');
-        $this->expectException("Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException");
+        $this->expectException(TestFrameworkException::class);
         $data = ["datakey1" => "value1", "datakey2" => "value2", "datakey3" => "value3"];
         $uniquenessKeys = ["datakey1" => "suffix"];
         $dataObject = new EntityDataObject("name", "type", $data, null, $uniquenessKeys, null);

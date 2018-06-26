@@ -52,7 +52,7 @@ class ParallelTestManifest extends BaseTestManifest
     /**
      * TestManifest constructor.
      *
-     * @param array $suiteConfiguration
+     * @param array  $suiteConfiguration
      * @param string $testPath
      */
     public function __construct($suiteConfiguration, $testPath)
@@ -77,7 +77,7 @@ class ParallelTestManifest extends BaseTestManifest
      * Function which generates test groups based on arg passed. The function builds groups using the args as an upper
      * limit.
      *
-     * @param int $time
+     * @param integer $time
      * @return void
      */
     public function createTestGroups($time)
@@ -121,9 +121,9 @@ class ParallelTestManifest extends BaseTestManifest
      * for the entry in order to generate a txt file used by devops for parllel execution in Jenkins. The results
      * are checked against a flattened list of suites in order to generate proper entries.
      *
-     * @param array $testGroup
-     * @param int $nodeNumber
-     * @param array $suites
+     * @param array   $testGroup
+     * @param integer $nodeNumber
+     * @param array   $suites
      * @return void
      */
     private function generateGroupFile($testGroup, $nodeNumber, $suites)
