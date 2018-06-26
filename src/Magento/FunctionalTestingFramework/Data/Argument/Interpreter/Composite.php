@@ -28,7 +28,7 @@ class Composite implements InterpreterInterface
 
     /**
      * Composite constructor.
-     * @param array $interpreters
+     * @param array  $interpreters
      * @param string $discriminator
      * @throws \InvalidArgumentException
      */
@@ -47,6 +47,7 @@ class Composite implements InterpreterInterface
 
     /**
      * {@inheritdoc}
+     * @return mixed
      * @throws \InvalidArgumentException
      */
     public function evaluate(array $data)
@@ -65,7 +66,7 @@ class Composite implements InterpreterInterface
     /**
      * Register interpreter instance under a given unique name
      *
-     * @param string $name
+     * @param string               $name
      * @param InterpreterInterface $instance
      * @return void
      * @throws \InvalidArgumentException

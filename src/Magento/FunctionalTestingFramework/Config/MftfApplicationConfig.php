@@ -16,7 +16,7 @@ class MftfApplicationConfig
     /**
      * Determines whether the user has specified a force option for generation
      *
-     * @var bool
+     * @var boolean
      */
     private $forceGenerate;
 
@@ -30,14 +30,14 @@ class MftfApplicationConfig
     /**
      * Determines whether the user would like to execute mftf in a verbose run.
      *
-     * @var bool
+     * @var boolean
      */
     private $verboseEnabled;
 
     /**
      * Determines whether the user would like to execute mftf in a verbose run.
      *
-     * @var bool
+     * @var boolean
      */
     private $debugEnabled;
 
@@ -51,10 +51,10 @@ class MftfApplicationConfig
     /**
      * MftfApplicationConfig constructor.
      *
-     * @param bool $forceGenerate
-     * @param string $phase
-     * @param bool $verboseEnabled
-     * @param bool $debugEnabled
+     * @param boolean $forceGenerate
+     * @param string  $phase
+     * @param boolean $verboseEnabled
+     * @param boolean $debugEnabled
      * @throws TestFrameworkException
      */
     private function __construct(
@@ -78,10 +78,10 @@ class MftfApplicationConfig
      * Creates an instance of the configuration instance for reference once application has started. This function
      * returns void and is only run once during the lifetime of the application.
      *
-     * @param bool $forceGenerate
-     * @param string $phase
-     * @param bool $verboseEnabled
-     * @param bool $debugEnabled
+     * @param boolean $forceGenerate
+     * @param string  $phase
+     * @param boolean $verboseEnabled
+     * @param boolean $debugEnabled
      * @return void
      */
     public static function create($forceGenerate, $phase, $verboseEnabled, $debugEnabled)
@@ -112,7 +112,7 @@ class MftfApplicationConfig
     /**
      * Returns a booelan indiciating whether or not the user has indicated a forced generation.
      *
-     * @return bool
+     * @return boolean
      */
     public function forceGenerateEnabled()
     {
@@ -123,7 +123,7 @@ class MftfApplicationConfig
      * Returns a boolean indicating whether the user has indicated a verbose run, which will cause all applicable
      * text to print to the console.
      *
-     * @return bool
+     * @return boolean
      */
     public function verboseEnabled()
     {
@@ -134,7 +134,7 @@ class MftfApplicationConfig
      * Returns a boolean indicating whether the user has indicated a debug run, which will lengthy validation
      * with some extra error messaging to be run
      *
-     * @return bool
+     * @return boolean
      */
     public function debugEnabled()
     {

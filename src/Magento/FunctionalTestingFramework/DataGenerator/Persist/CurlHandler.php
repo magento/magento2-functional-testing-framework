@@ -58,7 +58,7 @@ class CurlHandler
     /**
      * If the content type is Json.
      *
-     * @var bool
+     * @var boolean
      */
     private $isJson;
 
@@ -77,9 +77,9 @@ class CurlHandler
     /**
      * ApiSubObject constructor.
      *
-     * @param string $operation
+     * @param string           $operation
      * @param EntityDataObject $entityObject
-     * @param string $storeCode
+     * @param string           $storeCode
      */
     public function __construct($operation, $entityObject, $storeCode = null)
     {
@@ -179,7 +179,7 @@ class CurlHandler
     /**
      * If content type of a request is Json.
      *
-     * @return bool
+     * @return boolean
      */
     public function isContentTypeJson()
     {
@@ -190,7 +190,7 @@ class CurlHandler
      * Resolve rul reference from entity objects.
      *
      * @param string $urlIn
-     * @param array $entityObjects
+     * @param array  $entityObjects
      * @return string
      */
     private function resolveUrlReference($urlIn, $entityObjects)

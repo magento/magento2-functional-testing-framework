@@ -1,5 +1,4 @@
 <?php
-// @codingStandardsIgnoreFile
 /**
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
@@ -39,7 +38,7 @@ class EnvProcessor
     /**
      * Boolean indicating existence of env file
      *
-     * @var bool
+     * @var boolean
      */
     private $envExists;
 
@@ -80,6 +79,11 @@ class EnvProcessor
         return array_merge($this->parseEnvFileLines($envExampleFile), $envContents);
     }
 
+    /**
+     * Iterates through env and returns array of file contents.
+     * @param array $file
+     * @return array
+     */
     private function parseEnvFileLines(array $file): array
     {
         $fileArray = [];

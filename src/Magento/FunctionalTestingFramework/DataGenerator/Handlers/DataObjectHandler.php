@@ -114,7 +114,7 @@ class DataObjectHandler implements ObjectHandlerInterface
     /**
      * Convert the parser output into a collection of EntityDataObjects
      *
-     * @param string[] $parserOutput primitive array output from the Magento parser
+     * @param string[] $parserOutput Primitive array output from the Magento parser.
      * @return EntityDataObject[]
      * @throws XmlException
      */
@@ -179,8 +179,8 @@ class DataObjectHandler implements ObjectHandlerInterface
     /**
      * Takes an array of items and a top level entity data array and merges in elements from parsed entity definitions.
      *
-     * @param array $arrayItems
-     * @param array $data
+     * @param array  $arrayItems
+     * @param array  $data
      * @param string $key
      * @return array
      */

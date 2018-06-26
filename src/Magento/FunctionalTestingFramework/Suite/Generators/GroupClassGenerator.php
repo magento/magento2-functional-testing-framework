@@ -173,7 +173,7 @@ class GroupClassGenerator
      * appends the entry to the given array. The result is returned by the function.
      *
      * @param ActionObject $action
-     * @param array $actionEntries
+     * @param array        $actionEntries
      * @return array
      * @throws TestReferenceException
      */
@@ -194,7 +194,7 @@ class GroupClassGenerator
      * for the generated step.
      *
      * @param string $formattedStep
-     * @param array $actionEntries
+     * @param array  $actionEntries
      * @param string $actor
      * @return array
      */
@@ -217,7 +217,7 @@ class GroupClassGenerator
      * Takes an action object of persistence type and formats an array entiry for mustache template interpretation.
      *
      * @param ActionObject $action
-     * @param array $entityArray
+     * @param array        $entityArray
      * @return array
      */
     private function buildPersistenceMustacheArray($action, $entityArray)

@@ -24,14 +24,14 @@ class Reader extends \Magento\FunctionalTestingFramework\Config\Reader\Filesyste
 
     /**
      * Reader constructor.
-     * @param FileResolverInterface $fileResolver
-     * @param ConverterInterface $converter
-     * @param SchemaLocatorInterface $schemaLocator
+     * @param FileResolverInterface    $fileResolver
+     * @param ConverterInterface       $converter
+     * @param SchemaLocatorInterface   $schemaLocator
      * @param ValidationStateInterface $validationState
-     * @param string $fileName
-     * @param array $idAttributes
-     * @param string $domDocumentClass
-     * @param string $defaultScope
+     * @param string                   $fileName
+     * @param array                    $idAttributes
+     * @param string                   $domDocumentClass
+     * @param string                   $defaultScope
      */
     public function __construct(
         FileResolverInterface $fileResolver,
@@ -40,7 +40,7 @@ class Reader extends \Magento\FunctionalTestingFramework\Config\Reader\Filesyste
         ValidationStateInterface $validationState,
         $fileName = 'scenario.xml',
         $idAttributes = [],
-        $domDocumentClass = 'Magento\FunctionalTestingFramework\Config\Dom',
+        $domDocumentClass = Magento\FunctionalTestingFramework\Config\Dom::class,
         $defaultScope = 'etc'
     ) {
         $this->fileResolver = $fileResolver;

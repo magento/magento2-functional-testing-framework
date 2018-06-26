@@ -45,6 +45,5 @@ class DuplicateNodeValidationUtilTest extends MagentoTestCase
         );
         $this->expectException(\Exception::class);
         $exceptionCollector->throwException();
-
     }
 }

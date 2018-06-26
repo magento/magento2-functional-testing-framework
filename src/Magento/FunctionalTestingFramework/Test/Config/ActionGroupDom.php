@@ -20,7 +20,7 @@ class ActionGroupDom extends Dom
      * Takes a dom element from xml and appends the filename based on location while also validating the action group
      * step key.
      *
-     * @param string $xml
+     * @param string      $xml
      * @param string|null $filename
      * @return \DOMDocument
      */

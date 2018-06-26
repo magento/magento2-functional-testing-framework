@@ -22,9 +22,9 @@ class TestManifestFactory
     /**
      * Static function which takes path and config to return the appropriate manifest output type.
      *
-     * @param String $runConfig
-     * @param array $suiteConfiguration
-     * @param String $testPath
+     * @param string $runConfig
+     * @param array  $suiteConfiguration
+     * @param string $testPath
      * @return BaseTestManifest
      */
     public static function makeManifest($runConfig, $suiteConfiguration, $testPath = TestGenerator::DEFAULT_DIR)
@@ -44,7 +44,6 @@ class TestManifestFactory
 
             default:
                 return new DefaultTestManifest($suiteConfiguration, $testDirFullPath);
-
         }
     }
 }
