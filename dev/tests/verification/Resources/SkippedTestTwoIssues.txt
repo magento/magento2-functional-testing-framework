@@ -19,8 +19,6 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 /**
  * @Title("skippedMultipleIssuesTest")
  * @Description("")
- * @skipIssueId SkippedValue
- * @skipIssueId SecondSkippedValue
  */
 class SkippedTestTwoIssuesCest
 {

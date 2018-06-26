@@ -17,21 +17,17 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("skippedTest")
- * @Description("")
  */
-class SkippedTestCest
+class MergeSkipCest
 {
 	/**
-	 * @Stories({"skipped"})
-	 * @Severity(level = SeverityLevel::MINOR)
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function SkippedTest(AcceptanceTester $I, \Codeception\Scenario $scenario)
+	public function MergeSkip(AcceptanceTester $I, \Codeception\Scenario $scenario)
 	{
 		$scenario->skip("This test is skipped");
 	}
