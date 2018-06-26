@@ -86,14 +86,14 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
     /**
      * Constructor
      *
-     * @param \Magento\FunctionalTestingFramework\Config\FileResolverInterface $fileResolver
-     * @param \Magento\FunctionalTestingFramework\Config\ConverterInterface $converter
-     * @param \Magento\FunctionalTestingFramework\Config\SchemaLocatorInterface $schemaLocator
+     * @param \Magento\FunctionalTestingFramework\Config\FileResolverInterface    $fileResolver
+     * @param \Magento\FunctionalTestingFramework\Config\ConverterInterface       $converter
+     * @param \Magento\FunctionalTestingFramework\Config\SchemaLocatorInterface   $schemaLocator
      * @param \Magento\FunctionalTestingFramework\Config\ValidationStateInterface $validationState
-     * @param string $fileName
-     * @param array $idAttributes
-     * @param string $domDocumentClass
-     * @param string $defaultScope
+     * @param string                                                              $fileName
+     * @param array                                                               $idAttributes
+     * @param string                                                              $domDocumentClass
+     * @param string                                                              $defaultScope
      */
     public function __construct(
         \Magento\FunctionalTestingFramework\Config\FileResolverInterface $fileResolver,
@@ -202,7 +202,7 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
      *
      * @param string $content
      * @param string $fileName
-     * @return bool
+     * @return boolean
      */
     protected function verifyFileEmpty($content, $fileName)
     {

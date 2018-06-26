@@ -29,6 +29,7 @@
                         <xs:attribute type="xs:string" name="method"/>
                         <xs:attribute type="xs:string" name="successRegex"/>
                         <xs:attribute type="xs:string" name="returnRegex"/>
+                        <xs:attribute type="xs:string" name="filename"/>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>

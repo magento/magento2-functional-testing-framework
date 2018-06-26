@@ -34,9 +34,9 @@ class ObjectManager extends \Magento\FunctionalTestingFramework\ObjectManager\Ob
 
     /**
      * ObjectManager constructor.
-     * @param ObjectManager\Factory|null $factory
+     * @param ObjectManager\Factory|null         $factory
      * @param ObjectManager\ConfigInterface|null $config
-     * @param array $sharedInstances
+     * @param array                              $sharedInstances
      */
     public function __construct(
         \Magento\FunctionalTestingFramework\ObjectManager\Factory $factory = null,
@@ -64,7 +64,7 @@ class ObjectManager extends \Magento\FunctionalTestingFramework\ObjectManager\Ob
      *
      * @param object $object
      * @param string $method
-     * @param array $arguments
+     * @param array  $arguments
      * @return array
      */
     public function prepareArguments($object, $method, array $arguments = [])
@@ -101,7 +101,7 @@ class ObjectManager extends \Magento\FunctionalTestingFramework\ObjectManager\Ob
     /**
      * Retrieve object manager
      *
-     * @return ObjectManager|bool
+     * @return ObjectManager|boolean
      * @throws \RuntimeException
      */
     public static function getInstance()

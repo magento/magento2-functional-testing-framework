@@ -22,8 +22,8 @@ interface CurlInterface
     /**
      * Add additional option to cURL.
      *
-     * @param int $option
-     * @param int|string|bool|array $value
+     * @param integer                      $option
+     * @param integer|string|boolean|array $value
      * @return $this
      */
     public function addOption($option, $value);
@@ -31,10 +31,10 @@ interface CurlInterface
     /**
      * Send request to the remote server.
      *
-     * @param string $url
+     * @param string       $url
      * @param array|string $body
-     * @param string $method
-     * @param array $headers
+     * @param string       $method
+     * @param array        $headers
      * @return void
      */
     public function write($url, $body = [], $method = CurlInterface::POST, $headers = []);

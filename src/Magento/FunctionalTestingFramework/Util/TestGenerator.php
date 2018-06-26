@@ -65,16 +65,16 @@ class TestGenerator
     /**
      * Debug flag.
      *
-     * @var bool
+     * @var boolean
      */
     private $debug;
 
     /**
      * TestGenerator constructor.
      *
-     * @param string $exportDir
-     * @param array $tests
-     * @param bool $debug
+     * @param string  $exportDir
+     * @param array   $tests
+     * @param boolean $debug
      */
     private function __construct($exportDir, $tests, $debug = false)
     {
@@ -94,9 +94,9 @@ class TestGenerator
     /**
      * Singleton method to retrieve Test Generator
      *
-     * @param string $dir
-     * @param array $tests
-     * @param bool $debug
+     * @param string  $dir
+     * @param array   $tests
+     * @param boolean $debug
      * @return TestGenerator
      */
     public static function getInstance($dir = null, $tests = [], $debug = false)
@@ -168,7 +168,7 @@ class TestGenerator
      * to the createCestFile function.
      *
      * @param BaseTestManifest $testManifest
-     * @param array $testsToIgnore
+     * @param array            $testsToIgnore
      * @return void
      * @throws TestReferenceException
      * @throws \Exception
@@ -230,7 +230,7 @@ class TestGenerator
      * Load ALL Test objects. Loop over and pass each to the assembleTestPhp function.
      *
      * @param BaseTestManifest $testManifest
-     * @param array $testsToIgnore
+     * @param array            $testsToIgnore
      * @return array
      */
     private function assembleAllTestPhp($testManifest, array $testsToIgnore)
@@ -310,7 +310,7 @@ class TestGenerator
     /**
      * Generates Annotations PHP for given object, using given scope to determine indentation and additional output.
      *
-     * @param array $annotationsObject
+     * @param array   $annotationsObject
      * @param boolean $isMethod
      * @return string
      */
@@ -349,7 +349,7 @@ class TestGenerator
     /**
      * Method which returns formatted method level annotation based on type and name(s).
      *
-     * @param string $annotationType
+     * @param string      $annotationType
      * @param string|null $annotationName
      * @return null|string
      */
@@ -415,7 +415,6 @@ class TestGenerator
         $annotationToAppend = null;
 
         switch ($annotationType) {
-
             case "title":
                 $annotationToAppend = sprintf(" * @Title(\"%s\")\n", $annotationName[0]);
                 break;
@@ -448,9 +447,9 @@ class TestGenerator
      * statement to handle each unique action. At the bottom of the case statement there is a generic function that can
      * construct the PHP string for nearly half of all Codeception actions.
      *
-     * @param array $actionObjects
-     * @param array|bool $hookObject
-     * @param string $actor
+     * @param array         $actionObjects
+     * @param array|boolean $hookObject
+     * @param string        $actor
      * @return string
      * @throws TestReferenceException
      * @throws \Exception
@@ -1312,8 +1311,8 @@ class TestGenerator
     /**
      * Replaces all matches into given outputArg with. Variable scope determined by delimiter given.
      *
-     * @param array $matches
-     * @param string &$outputArg
+     * @param array  $matches
+     * @param string $outputArg
      * @param string $delimiter
      * @return void
      * @throws \Exception
@@ -1370,7 +1369,7 @@ class TestGenerator
      * Replaces any occurrences of stepKeys in input, if they are found within the given actionGroup.
      * Necessary to allow for use of grab/createData actions in actionGroups.
      * @param string $input
-     * @param array $actionGroupOrigin
+     * @param array  $actionGroupOrigin
      * @return string
      */
     private function resolveStepKeyReferences($input, $actionGroupOrigin)
@@ -1398,7 +1397,6 @@ class TestGenerator
             if (strpos($output, $classVarRef) !== false) {
                 $output = str_replace($classVarRef, $classVarRef . $testInvocationKey, $output);
             }
-
         }
         return $output;
     }
@@ -1717,7 +1715,7 @@ class TestGenerator
 
     /**
      * Resolves {{_ENV.variable}} into getenv("variable") for test-runtime ENV referencing.
-     * @param array $args
+     * @param array  $args
      * @param string $regex
      * @param string $func
      * @return array
@@ -1819,7 +1817,7 @@ class TestGenerator
      * Convert input string to boolean equivalent.
      *
      * @param string $inStr
-     * @return bool|null
+     * @return boolean|null
      */
     private function toBoolean($inStr)
     {
@@ -1830,7 +1828,7 @@ class TestGenerator
      * Convert input string to number equivalent.
      *
      * @param string $inStr
-     * @return int|float|null
+     * @return integer|float|null
      */
     private function toNumber($inStr)
     {
@@ -1859,7 +1857,7 @@ class TestGenerator
      *
      * @param string $key
      * @param string $tagName
-     * @param array $attributes
+     * @param array  $attributes
      * @return void
      */
     private function validateXmlAttributesMutuallyExclusive($key, $tagName, $attributes)
@@ -1918,7 +1916,7 @@ class TestGenerator
      *
      * @param string $key
      * @param string $tagName
-     * @param array $attributes
+     * @param array  $attributes
      * @return void
      */
     private function printRuleErrorToConsole($key, $tagName, $attributes)

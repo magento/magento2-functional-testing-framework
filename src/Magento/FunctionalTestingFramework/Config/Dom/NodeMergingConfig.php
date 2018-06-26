@@ -27,7 +27,7 @@ class NodeMergingConfig
     /**
      * NodeMergingConfig constructor.
      * @param NodePathMatcher $nodePathMatcher
-     * @param array $idAttributes
+     * @param array           $idAttributes
      */
     public function __construct(NodePathMatcher $nodePathMatcher, array $idAttributes)
     {

@@ -13,9 +13,9 @@ class NodePathMatcher
     /**
      * Whether a subject XPath matches to a given path pattern
      *
-     * @param string $pathPattern Example: '/some/static/path' or '/some/regexp/path(/item)+'
-     * @param string $xpathSubject Example: '/some[@attr="value"]/static/ns:path'
-     * @return bool
+     * @param string $pathPattern  Example: '/some/static/path' or '/some/regexp/path(/item)+'.
+     * @param string $xpathSubject Example: '/some[@attr="value"]/static/ns:path'.
+     * @return boolean
      */
     public function match($pathPattern, $xpathSubject)
     {

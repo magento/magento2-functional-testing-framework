@@ -50,7 +50,7 @@ class EntityRESTApiHelper
      * @param string $apiMethod
      * @param string $requestURI
      * @param string $jsonBody
-     * @param array $headers
+     * @param array  $headers
      * @return \Psr\Http\Message\ResponseInterface
      */
     public function submitAuthAPIRequest($apiMethod, $requestURI, $jsonBody, $headers)
@@ -93,7 +93,7 @@ class EntityRESTApiHelper
      * @param string $apiMethod
      * @param string $requestURI
      * @param string $jsonBody
-     * @param array $headers
+     * @param array  $headers
      * @return \Psr\Http\Message\ResponseInterface
      */
     private function submitAPIRequest($apiMethod, $requestURI, $jsonBody, $headers)

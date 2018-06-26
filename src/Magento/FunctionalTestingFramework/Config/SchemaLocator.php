@@ -28,7 +28,7 @@ class SchemaLocator implements \Magento\FunctionalTestingFramework\Config\Schema
     /**
      * Class constructor
      *
-     * @param string $schemaPath
+     * @param string      $schemaPath
      * @param string|null $perFileSchema
      */
     public function __construct($schemaPath, $perFileSchema = null)

@@ -43,9 +43,9 @@ class SuiteObject
 
     /**
      * SuiteObject constructor.
-     * @param string $name
-     * @param TestObject[] $includeTests
-     * @param TestObject[] $excludeTests
+     * @param string           $name
+     * @param TestObject[]     $includeTests
+     * @param TestObject[]     $excludeTests
      * @param TestHookObject[] $hooks
      */
     public function __construct($name, $includeTests, $excludeTests, $hooks)
@@ -110,7 +110,7 @@ class SuiteObject
      * Convenience method for determining if a Suite will require group file generation.
      * A group file will only be generated when the user specifies a before/after statement.
      *
-     * @return bool
+     * @return boolean
      */
     public function requiresGroupFile()
     {

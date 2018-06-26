@@ -41,8 +41,8 @@ class ArrayNodeConfig
     /**
      * ArrayNodeConfig constructor.
      * @param NodePathMatcher $nodePathMatcher
-     * @param array $assocArrayAttributes
-     * @param array $numericArrays
+     * @param array           $assocArrayAttributes
+     * @param array           $numericArrays
      */
     public function __construct(
         NodePathMatcher $nodePathMatcher,
@@ -59,7 +59,7 @@ class ArrayNodeConfig
      * Whether a node is a numeric array or not
      *
      * @param string $nodeXpath
-     * @return bool
+     * @return boolean
      */
     public function isNumericArray($nodeXpath)
     {

@@ -200,7 +200,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      * Takes a filepath (and optionally a module name) and resolves to a test object.
      *
      * @param string $filename
-     * @param null $moduleName
+     * @param null   $moduleName
      * @return TestObject[]
      * @throws Exception
      */
