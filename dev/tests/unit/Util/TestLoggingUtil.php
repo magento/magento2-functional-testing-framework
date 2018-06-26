@@ -71,6 +71,7 @@ class TestLoggingUtil extends Assert
      * @param string $type
      * @param string $message
      * @param array $context
+     * @return void
      */
     public function validateMockLogStatement($type, $message, $context)
     {

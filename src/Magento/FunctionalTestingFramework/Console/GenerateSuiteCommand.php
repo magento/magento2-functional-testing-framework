@@ -1,5 +1,4 @@
 <?php
-// @codingStandardsIgnoreFile
 /**
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
@@ -35,9 +34,9 @@ class GenerateSuiteCommand extends Command
     /**
      * Executes the current command.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return int|null|void
+     * @return integer|null|void
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)

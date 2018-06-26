@@ -368,7 +368,7 @@ class ModuleResolver
     /**
      * Get the API token for admin.
      *
-     * @return string|bool
+     * @return string|boolean
      */
     protected function getAdminToken()
     {

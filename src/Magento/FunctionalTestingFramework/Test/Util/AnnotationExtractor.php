@@ -41,7 +41,7 @@ class AnnotationExtractor extends BaseObjectExtractor
      * This method trims away irrelevant tags and returns annotations used in the array passed. The annotations
      * can be found in both Tests and their child element tests.
      *
-     * @param array $testAnnotations
+     * @param array  $testAnnotations
      * @param string $filename
      * @return array
      */
@@ -73,7 +73,7 @@ class AnnotationExtractor extends BaseObjectExtractor
 
     /**
      * Adds story/title/filename combination to static map
-     * @param array $annotations
+     * @param array  $annotations
      * @param string $filename
      * @return void
      */
@@ -107,7 +107,6 @@ class AnnotationExtractor extends BaseObjectExtractor
                 $story = $storyTitleArray[0];
                 $title = $storyTitleArray[1];
                 $message .= "Story: '{$story}' Title: '{$title}' in Tests {$tests}\n\n";
-
             }
             throw new XmlException($message);
         }

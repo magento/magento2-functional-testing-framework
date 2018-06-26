@@ -15,6 +15,7 @@ use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
 use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use tests\unit\Util\TestLoggingUtil;
 use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 
@@ -338,7 +339,7 @@ class ActionObjectTest extends MagentoTestCase
      */
     public function testTooFewArgumentException()
     {
-        $this->expectException('Magento\FunctionalTestingFramework\Exceptions\TestReferenceException');
+        $this->expectException(TestReferenceException::class);
 
         $actionObject = new ActionObject('key123', 'fillField', [
             'selector' => "{{SectionObject.elementObject('arg1')}}",
@@ -356,7 +357,7 @@ class ActionObjectTest extends MagentoTestCase
      */
     public function testTooManyArgumentException()
     {
-        $this->expectException('Magento\FunctionalTestingFramework\Exceptions\TestReferenceException');
+        $this->expectException(TestReferenceException::class);
 
         $actionObject = new ActionObject('key123', 'fillField', [
             'selector' => "{{SectionObject.elementObject('arg1', 'arg2', 'arg3')}}",

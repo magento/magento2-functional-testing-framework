@@ -60,9 +60,9 @@ class MftfFilesystem extends \Magento\FunctionalTestingFramework\Config\Reader\F
     /**
      * Return newly created instance of a config merger
      *
-     * @param string $mergerClass
-     * @param string $initialContents
-     * @param string $filename
+     * @param string             $mergerClass
+     * @param string             $initialContents
+     * @param string             $filename
      * @param ExceptionCollector $exceptionCollector
      * @return \Magento\FunctionalTestingFramework\Config\Dom
      * @throws \UnexpectedValueException

@@ -58,26 +58,26 @@ class TestObject
     /**
      * String of filename of test
      *
-     * @var String
+     * @var string
      */
     private $filename;
 
     /**
      * String of parent test
      *
-     * @var String
+     * @var string
      */
     private $parentTest;
 
     /**
      * TestObject constructor.
      *
-     * @param string $name
-     * @param ActionObject[] $parsedSteps
-     * @param array $annotations
+     * @param string           $name
+     * @param ActionObject[]   $parsedSteps
+     * @param array            $annotations
      * @param TestHookObject[] $hooks
-     * @param String $filename
-     * @param String $parentTest
+     * @param string           $filename
+     * @param string           $parentTest
      */
     public function __construct($name, $parsedSteps, $annotations, $hooks, $filename = null, $parentTest = null)
     {
@@ -173,7 +173,7 @@ class TestObject
     /**
      * Returns the estimated duration of a single test (including before/after actions).
      *
-     * @return int
+     * @return integer
      */
     public function getEstimatedDuration()
     {
@@ -200,7 +200,7 @@ class TestObject
      * Function which takes a set of actions and estimates time for completion based on action type.
      *
      * @param ActionObject[] $actions
-     * @return int
+     * @return integer
      */
     private function calculateWeightedActionTimes($actions)
     {

@@ -36,9 +36,8 @@ class TestHookObject
     private $actions = [];
 
     /**
-     * Array of Hook-defined data.
+     * Array of Hook-defined data. Deprecated because no usage of property exist. Will be removed next major release.
      * @var array|null
-     * @deprecated because no usage of property exist. Will be removed next major release.
      */
     private $customData = [];
 
@@ -46,7 +45,7 @@ class TestHookObject
      * TestHookObject constructor.
      * @param string $type
      * @param string $parentName
-     * @param array $actions
+     * @param array  $actions
      */
     public function __construct($type, $parentName, $actions)
     {

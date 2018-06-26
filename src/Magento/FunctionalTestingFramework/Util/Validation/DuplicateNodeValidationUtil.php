@@ -29,7 +29,7 @@ class DuplicateNodeValidationUtil
 
     /**
      * DuplicateNodeValidationUtil constructor.
-     * @param string $uniqueKey
+     * @param string             $uniqueKey
      * @param ExceptionCollector $exceptionCollector
      */
     public function __construct($uniqueKey, $exceptionCollector)
@@ -42,7 +42,7 @@ class DuplicateNodeValidationUtil
      * Parses through parent's children to find and flag duplicate values in given uniqueKey.
      *
      * @param \DOMElement $parentNode
-     * @param string $filename
+     * @param string      $filename
      * @return void
      */
     public function validateChildUniqueness(\DOMElement $parentNode, $filename)
