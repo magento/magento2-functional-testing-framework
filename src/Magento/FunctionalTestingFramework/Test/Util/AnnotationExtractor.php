@@ -104,11 +104,16 @@ class AnnotationExtractor extends BaseObjectExtractor
      */
     private function validateMissingAnnotations($annotationObjects, $filename)
     {
-        //TODO 3.0.0 Turn this into an error
-        $missingAnnotations = array_flip(array_diff_key(array_flip(self::REQUIRED_ANNOTATIONS), $annotationObjects));
+        $missingAnnotations = [];
+
+        foreach (self::REQUIRED_ANNOTATIONS as $REQUIRED_ANNOTATION) {
+            if (!array_key_exists($REQUIRED_ANNOTATION, $annotationObjects)) {
+                $missingAnnotations[] = $REQUIRED_ANNOTATION;
+            }
+        }
 
         if (!empty($missingAnnotations)) {
-            $message = "Test {$filename} is missing required annotations:";
+            $message = "Test {$filename} is missing required annotations.";
             LoggingUtil::getInstance()->getLogger(ActionObject::class)->warning(
                 $message,
                 ["testName" => $filename, "missingAnnotations" => implode(", ", $missingAnnotations)]
