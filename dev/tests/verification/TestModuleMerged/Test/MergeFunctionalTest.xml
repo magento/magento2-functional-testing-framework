@@ -28,7 +28,7 @@
     </test>
     <test name="MergeSkip">
         <annotations>
-            <skip>
+            <skip reason="UNKNOWN" description="Short Explanation">
                 <issueId value="Issue5"/>
             </skip>
         </annotations>
