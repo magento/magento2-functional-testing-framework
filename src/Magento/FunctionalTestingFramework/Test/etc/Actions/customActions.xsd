@@ -42,6 +42,13 @@
                         </xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
+                <xs:attribute type="xs:string" name="arguments">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Arguments for Magento CLI command, will not be escaped.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
