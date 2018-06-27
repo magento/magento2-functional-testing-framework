@@ -6,7 +6,9 @@
 
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
  * Class AnnotationExtractor
@@ -73,12 +75,12 @@ class AnnotationExtractor extends BaseObjectExtractor
             }
             // TODO deprecation|deprecate MFTF 3.0.0
             if ($annotationKey == "group" && in_array("skip", $annotationValues)) {
-                print(
-                    "Test: $filename" .
-                    PHP_EOL .
-                    "Use of group skip will be deprecated in MFTF 3.0.0. Please update tests to use skip tags." .
-                    PHP_EOL
-                );
+                if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
+                    LoggingUtil::getInstance()->getLogger(AnnotationExtractor::class)->warning(
+                        "Use of group skip will be deprecated in MFTF 3.0.0. Please update tests to use skip tags.",
+                        ["test" => $filename]
+                    );
+                }
             }
 
             $annotationObjects[$annotationKey] = $annotationValues;
