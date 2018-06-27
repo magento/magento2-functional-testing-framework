@@ -66,7 +66,7 @@
         <grabMultiple selector=".functionalTestSelector" stepKey="grabMultipleKey1" />
         <grabTextFrom selector=".functionalTestSelector" stepKey="grabTextFromKey1" />
         <grabValueFrom selector=".functionalTestSelector" stepKey="grabValueFromKey1" />
-        <magentoCLI command="maintenance:enable" stepKey="magentoCli1"/>
+        <magentoCLI command="maintenance:enable" arguments="&quot;stuffHere&quot;" stepKey="magentoCli1"/>
         <makeScreenshot userInput="screenShotInput" stepKey="makeScreenshotKey1"/>
         <maximizeWindow stepKey="maximizeWindowKey1"/>
         <moveBack stepKey="moveBackKey1"/>
