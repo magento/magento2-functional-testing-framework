@@ -29,4 +29,13 @@ if (file_exists(TESTS_BP . DIRECTORY_SEPARATOR . '.env')) {
     foreach ($_ENV as $key => $var) {
         defined($key) || define($key, $var);
     }
+
+    defined('MAGENTO_CLI_COMMAND_PATH') || define(
+        'MAGENTO_CLI_COMMAND_PATH',
+        'dev/tests/acceptance/utils/command.php'
+    );
+    $env->setEnvironmentVariable('MAGENTO_CLI_COMMAND_PATH', MAGENTO_CLI_COMMAND_PATH);
+
+    defined('MAGENTO_CLI_COMMAND_PARAMETER') || define('MAGENTO_CLI_COMMAND_PARAMETER', 'command');
+    $env->setEnvironmentVariable('MAGENTO_CLI_COMMAND_PARAMETER', MAGENTO_CLI_COMMAND_PARAMETER);
 }
