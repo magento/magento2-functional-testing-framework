@@ -75,12 +75,10 @@ class AnnotationExtractor extends BaseObjectExtractor
             }
             // TODO deprecation|deprecate MFTF 3.0.0
             if ($annotationKey == "group" && in_array("skip", $annotationValues)) {
-                if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-                    LoggingUtil::getInstance()->getLogger(AnnotationExtractor::class)->warning(
-                        "Use of group skip will be deprecated in MFTF 3.0.0. Please update tests to use skip tags.",
-                        ["test" => $filename]
-                    );
-                }
+                LoggingUtil::getInstance()->getLogger(AnnotationExtractor::class)->warning(
+                    "Use of group skip will be deprecated in MFTF 3.0.0. Please update tests to use skip tags.",
+                    ["test" => $filename]
+                );
             }
 
             $annotationObjects[$annotationKey] = $annotationValues;
