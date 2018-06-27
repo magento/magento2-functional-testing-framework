@@ -62,7 +62,7 @@ class LoggingUtil
         }
 
         if (!array_key_exists($clazz, $this->loggers)) {
-            $logger = new Logger($clazz);
+            $logger = new MftfLogger($clazz);
             $logger->pushHandler(new StreamHandler($this->getLoggingPath()));
             $this->loggers[$clazz] = $logger;
         }
