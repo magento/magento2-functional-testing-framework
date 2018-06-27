@@ -29,6 +29,6 @@ class MergeSkipCest
 	 */
 	public function MergeSkip(AcceptanceTester $I, \Codeception\Scenario $scenario)
 	{
-		$scenario->skip("This test is skipped");
+		$scenario->skip("This test is skipped due to the following issues:\nIssue5");
 	}
 }
