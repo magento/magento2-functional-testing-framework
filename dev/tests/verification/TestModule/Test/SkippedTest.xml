@@ -31,4 +31,13 @@
             </skip>
         </annotations>
     </test>
+    <test name="SkippedTestNoIssues">
+        <annotations>
+            <stories value="skippedNo"/>
+            <title value="skippedNoIssuesTest"/>
+            <description value=""/>
+            <severity value="AVERAGE"/>
+            <group value="skip"/>
+        </annotations>
+    </test>
 </tests>

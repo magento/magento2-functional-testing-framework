@@ -17,13 +17,14 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("skippedTest")
+ * @Title("skippedNoIssuesTest")
  * @Description("")
+ * @group skip
  */
-class SkippedTestCest
+class SkippedTestNoIssuesCest
 {
 	/**
-	 * @Stories({"skipped"})
+	 * @Stories({"skippedNo"})
 	 * @Severity(level = SeverityLevel::MINOR)
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
@@ -31,8 +32,8 @@ class SkippedTestCest
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function SkippedTest(AcceptanceTester $I, \Codeception\Scenario $scenario)
+	public function SkippedTestNoIssues(AcceptanceTester $I, \Codeception\Scenario $scenario)
 	{
-		$scenario->skip("This test is skipped due to the following issues:\nSkippedValue");
+		$scenario->skip("This test is skipped due to the following issues:\nNo issues have been specified.");
 	}
 }
