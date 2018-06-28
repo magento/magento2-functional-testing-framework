@@ -14,11 +14,11 @@ class MftfLogger extends Logger
     /**
      * Prints a deprecation warning, as well as adding a log at the WARNING level.
      *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @param  string $message The log message.
+     * @param  array  $context The log context.
+     * @return void
      */
-    public function deprecation($message, array $context = array())
+    public function deprecation($message, array $context = [])
     {
         $message = "DEPRECATION: " . $message;
         print ($message . json_encode($context) . "\n");

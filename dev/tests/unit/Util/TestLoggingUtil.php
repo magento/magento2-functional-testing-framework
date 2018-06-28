@@ -8,6 +8,7 @@ namespace tests\unit\Util;
 
 use AspectMock\Test as AspectMock;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+use Magento\FunctionalTestingFramework\Util\Logger\MftfLogger;
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
 use PHPUnit\Framework\Assert;
@@ -54,7 +55,7 @@ class TestLoggingUtil extends Assert
     public function setMockLoggingUtil()
     {
         $this->testLogHandler = new TestHandler();
-        $testLogger = new Logger('testLogger');
+        $testLogger = new MftfLogger('testLogger');
         $testLogger->pushHandler($this->testLogHandler);
         $mockLoggingUtil = AspectMock::double(
             LoggingUtil::class,

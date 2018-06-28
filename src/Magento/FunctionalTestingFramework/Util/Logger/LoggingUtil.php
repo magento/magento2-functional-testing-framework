@@ -52,7 +52,7 @@ class LoggingUtil
      * existing instance is simply returned.
      *
      * @param string $clazz
-     * @return Logger
+     * @return MftfLogger
      * @throws \Exception
      */
     public function getLogger($clazz)
