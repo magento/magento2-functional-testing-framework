@@ -38,7 +38,8 @@ class ActionObject
         "y",
         "expectedResult",
         "actualResult",
-        "command"
+        "command",
+        "regex"
     ];
     const SELECTOR_ENABLED_ATTRIBUTES = [
         'selector',
