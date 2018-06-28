@@ -30,6 +30,7 @@ class DataReplacementTestCest
 	public function DataReplacementTest(AcceptanceTester $I)
 	{
 		$I->fillField("#selector", "StringBefore John StringAfter");
+		$I->seeCurrentUrlMatches("~\/John~i");
 		$I->fillField("#John", "input");
 		$I->dragAndDrop("#John", "Doe");
 		$I->conditionalClick("Doe", "#John", true);
