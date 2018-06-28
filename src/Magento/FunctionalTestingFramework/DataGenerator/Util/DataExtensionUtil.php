@@ -52,8 +52,9 @@ class DataExtensionUtil
                 PHP_EOL
             );
         }
-        if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-            echo("Extending Data: " . $parentEntity->getName() . " => " . $entityObject->getName() . PHP_EOL);
+        if (MftfApplicationConfig::getConfig()->verboseEnabled() &&
+            MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE) {
+            print("Extending Data: " . $parentEntity->getName() . " => " . $entityObject->getName() . PHP_EOL);
         }
 
         //get parent entity type if child does not have a type

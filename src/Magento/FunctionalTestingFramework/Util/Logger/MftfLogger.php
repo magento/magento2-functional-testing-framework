@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Util\Logger;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
@@ -21,7 +22,10 @@ class MftfLogger extends Logger
     public function deprecation($message, array $context = [])
     {
         $message = "DEPRECATION: " . $message;
-        print ($message . json_encode($context) . "\n");
+        // Suppress print during unit testing
+        if (MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE) {
+            print ($message . json_encode($context) . "\n");
+        }
         parent::warning($message, $context);
     }
 }
