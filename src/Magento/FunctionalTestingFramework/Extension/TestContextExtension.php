@@ -74,7 +74,7 @@ class TestContextExtension extends \Codeception\Extension
     /**
      * Runs cest's after block, if necessary.
      * @param Symfony\Component\EventDispatcher\Event $e
-     * @param \Codeception\TestInterface $cest
+     * @param \Codeception\TestInterface              $cest
      * @return void
      */
     private function runAfterBlock($e, $cest)
