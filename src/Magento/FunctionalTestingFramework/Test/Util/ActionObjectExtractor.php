@@ -141,7 +141,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
      * defined in the action group xml.
      *
      * @param string $actionType
-     * @param array $actionAttributeData
+     * @param array  $actionAttributeData
      * @return array
      */
     private function processActionGroupArgs($actionType, $actionAttributeData)

@@ -56,8 +56,6 @@ class MagentoWebDriver extends WebDriver
         '//div[@data-role="spinner"]'
     ];
 
-    const STEP_OBJ_BACKTRACE_POS = 2;
-
     /**
      * The module required fields, to be set in the suite .yml configuration file.
      *
@@ -594,8 +592,12 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * @param $field
-     * @param $value
+     * Function used to fill sensitive crednetials with user data, data is decrypted immediately prior to fill to avoid
+     * exposure in console or log.
+     *
+     * @param string $field
+     * @param string $value
+     * @return void
      */
     public function fillSecretField($field, $value)
     {

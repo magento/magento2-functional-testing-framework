@@ -126,7 +126,7 @@ class ActionMergeUtil
      * Returns a boolean based on whether or not the action attributes contain a reference to a secret field.
      *
      * @param array $actionAttributes
-     * @return bool
+     * @return boolean
      */
     private function actionAttributeContainsSecretRef($actionAttributes)
     {
