@@ -48,7 +48,9 @@ class MftfFilesystem extends \Magento\FunctionalTestingFramework\Config\Reader\F
             }
         }
         $exceptionCollector->throwException();
-        $this->validateSchema($configMerger, $fileList->getFilename());
+        if ($fileList->valid()) {
+            $this->validateSchema($configMerger, $fileList->getFilename());
+        }
 
         $output = [];
         if ($configMerger) {

@@ -13,12 +13,28 @@ use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 class CredentialStore
 {
+    const ENCRYPTION_ALGO = "AES-256-CBC";
+
     /**
-     * Singletone instnace
+     * Singleton instance
      *
      * @var CredentialStore
      */
     private static $INSTANCE = null;
+
+    /**
+     * Initial vector for open_ssl encryption.
+     *
+     * @var string
+     */
+    private $iv = null;
+
+    /**
+     * Key for open_ssl encryption/decryption
+     *
+     * @var string
+     */
+    private $encodedKey = null;
 
     /**
      * Key/Value paris of credential names and their corresponding values
@@ -46,7 +62,10 @@ class CredentialStore
      */
     private function __construct()
     {
-        $this->readInCredentialsFile();
+        $this->encodedKey = base64_encode(openssl_random_pseudo_bytes(16));
+        $this->iv = substr(hash('sha256', $this->encodedKey), 0, 16);
+        $creds = $this->readInCredentialsFile();
+        $this->credentials = $this->encryptCredFileContents($creds);
     }
 
     /**
@@ -77,7 +96,7 @@ class CredentialStore
     /**
      * Private function which reads in secret key/values from .credentials file and stores in memory as key/value pair.
      *
-     * @return void
+     * @return array
      * @throws TestFrameworkException
      */
     private function readInCredentialsFile()
@@ -95,7 +114,18 @@ class CredentialStore
             );
         }
 
-        $credContents = file($credsFilePath, FILE_IGNORE_NEW_LINES);
+        return file($credsFilePath, FILE_IGNORE_NEW_LINES);
+    }
+
+    /**
+     * Function which takes the contents of the credentials file and encrypts the entries.
+     *
+     * @param array $credContents
+     * @return array
+     */
+    private function encryptCredFileContents($credContents)
+    {
+        $encryptedCreds = [];
         foreach ($credContents as $credValue) {
             if (substr($credValue, 0, 1) === '#' || empty($credValue)) {
                 continue;
@@ -103,8 +133,27 @@ class CredentialStore
 
             list($key, $value) = explode("=", $credValue);
             if (!empty($value)) {
-                $this->credentials[$key] = $value;
+                $encryptedCreds[$key] = openssl_encrypt(
+                    $value,
+                    self::ENCRYPTION_ALGO,
+                    $this->encodedKey,
+                    0,
+                    $this->iv
+                );
             }
         }
+
+        return $encryptedCreds;
+    }
+
+    /**
+     * Takes a value encrypted at runtime and descrypts using the object's initial vector.
+     *
+     * @param string $value
+     * @return string
+     */
+    public function decryptSecretValue($value)
+    {
+        return openssl_decrypt($value, self::ENCRYPTION_ALGO, $this->encodedKey, 0, $this->iv);
     }
 }

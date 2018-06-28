@@ -82,6 +82,15 @@ class TestLoggingUtil extends Assert
         $this->assertEquals($context, $record['context']);
     }
 
+    public function validateMockLogStatmentRegex($type, $regex, $context)
+    {
+        $records = $this->testLogHandler->getRecords();
+        $record = $records[count($records)-1]; // we assume the latest record is what requires validation
+        $this->assertEquals(strtoupper($type), $record['level_name']);
+        $this->assertRegExp($regex, $record['message']);
+        $this->assertEquals($context, $record['context']);
+    }
+
     /**
      * Function which clears the test logger context from the LogginUtil class. Should be run after a test class has
      * executed.
