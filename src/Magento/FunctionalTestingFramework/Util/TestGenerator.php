@@ -491,6 +491,7 @@ class TestGenerator
             $arguments = null;
             $sortOrder = null;
             $storeCode = null;
+            $format = null;
 
             $assertExpected = null;
             $assertActual = null;
@@ -529,6 +530,11 @@ class TestGenerator
                 $assertExpected = $this->addUniquenessFunctionCall($customActionAttributes['expectedValue']);
             } elseif (isset($customActionAttributes['regex'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['regex']);
+            }
+
+            if (isset($customActionAttributes['date']) && isset($customActionAttributes['format'])) {
+                $input = $this->addUniquenessFunctionCall($customActionAttributes['date']);
+                $format = $this->addUniquenessFunctionCall($customActionAttributes['format']);
             }
 
             if (isset($customActionAttributes['expected'])) {
@@ -1237,6 +1243,14 @@ class TestGenerator
                     $argRef = "\t\t\$";
                     $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) . "Fields['{$fieldKey}'] = ${input};\n";
                     $testSteps .= $argRef;
+                    break;
+                case "generateDate":
+                    $testSteps .= sprintf(
+                        "\t\t\$%s = date(%s, strtotime(%s));\n",
+                        $stepKey,
+                        $format,
+                        $input
+                    );
                     break;
                 default:
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input, $parameter);
