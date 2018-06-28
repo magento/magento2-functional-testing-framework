@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
  * Class AnnotationExtractor
@@ -27,6 +28,12 @@ class AnnotationExtractor extends BaseObjectExtractor
         "MAJOR" => "NORMAL",
         "AVERAGE" => "MINOR",
         "MINOR" => "TRIVIAL"
+    ];
+    const REQUIRED_ANNOTATIONS = [
+        "stories",
+        "title",
+        "description",
+        "severity"
     ];
 
     /**
@@ -67,7 +74,11 @@ class AnnotationExtractor extends BaseObjectExtractor
             }
             $annotationObjects[$annotationKey] = $annotationValues;
         }
+
+        $this->validateMissingAnnotations($annotationObjects, $filename);
+
         $this->addStoryTitleToMap($annotationObjects, $filename);
+
         return $annotationObjects;
     }
 
@@ -83,6 +94,30 @@ class AnnotationExtractor extends BaseObjectExtractor
             $story = $annotations['stories'][0];
             $title = $annotations['title'][0];
             $this->storyToTitleMappings[$story . "/" . $title][] = $filename;
+        }
+    }
+
+    /**
+     * Validates given annotations against list of required annotations.
+     * @param array $annotationObjects
+     * @return void
+     */
+    private function validateMissingAnnotations($annotationObjects, $filename)
+    {
+        $missingAnnotations = [];
+
+        foreach (self::REQUIRED_ANNOTATIONS as $REQUIRED_ANNOTATION) {
+            if (!array_key_exists($REQUIRED_ANNOTATION, $annotationObjects)) {
+                $missingAnnotations[] = $REQUIRED_ANNOTATION;
+            }
+        }
+
+        if (!empty($missingAnnotations)) {
+            $message = "Test {$filename} is missing required annotations.";
+            LoggingUtil::getInstance()->getLogger(ActionObject::class)->warning(
+                $message,
+                ["testName" => $filename, "missingAnnotations" => implode(", ", $missingAnnotations)]
+            );
         }
     }
 
