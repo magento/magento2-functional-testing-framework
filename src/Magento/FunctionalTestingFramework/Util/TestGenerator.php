@@ -1251,7 +1251,6 @@ class TestGenerator
                     $testSteps .= $argRef;
                     break;
                 case "generateDate":
-
                     $timezone = "America/Los_Angeles";
                     if (isset($customActionAttributes['timezone'])) {
                         $timezone = $customActionAttributes['timezone'];
