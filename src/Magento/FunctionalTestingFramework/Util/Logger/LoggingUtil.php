@@ -52,7 +52,7 @@ class LoggingUtil
      * existing instance is simply returned.
      *
      * @param string $clazz
-     * @return Logger
+     * @return MftfLogger
      * @throws \Exception
      */
     public function getLogger($clazz)
@@ -62,7 +62,7 @@ class LoggingUtil
         }
 
         if (!array_key_exists($clazz, $this->loggers)) {
-            $logger = new Logger($clazz);
+            $logger = new MftfLogger($clazz);
             $logger->pushHandler(new StreamHandler($this->getLoggingPath()));
             $this->loggers[$clazz] = $logger;
         }

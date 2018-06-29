@@ -114,7 +114,7 @@ class AnnotationExtractorTest extends TestCase
         // Asserts
         TestLoggingUtil::getInstance()->validateMockLogStatement(
             'warning',
-            'Test testFileName is missing required annotations.',
+            'DEPRECATION: Test testFileName is missing required annotations.',
             [
                 'testName' => 'testFileName',
                 'missingAnnotations' => "title, description, severity"

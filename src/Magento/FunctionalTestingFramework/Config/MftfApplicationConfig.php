@@ -11,7 +11,8 @@ class MftfApplicationConfig
 {
     const GENERATION_PHASE = "generation";
     const EXECUTION_PHASE = "execution";
-    const MFTF_PHASES = [self::GENERATION_PHASE, self::EXECUTION_PHASE];
+    const UNIT_TEST_PHASE = "testing";
+    const MFTF_PHASES = [self::GENERATION_PHASE, self::EXECUTION_PHASE, self::UNIT_TEST_PHASE];
 
     /**
      * Determines whether the user has specified a force option for generation
