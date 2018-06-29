@@ -534,7 +534,13 @@ class TestGenerator
 
             if (isset($customActionAttributes['date']) && isset($customActionAttributes['format'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['date']);
+                if ($input === "") {
+                    $input = "\"Now\"";
+                }
                 $format = $this->addUniquenessFunctionCall($customActionAttributes['format']);
+                if ($format === "") {
+                    $format = "\"r\"";
+                }
             }
 
             if (isset($customActionAttributes['expected'])) {
@@ -1245,12 +1251,18 @@ class TestGenerator
                     $testSteps .= $argRef;
                     break;
                 case "generateDate":
-                    $testSteps .= sprintf(
-                        "\t\t\$%s = date(%s, strtotime(%s));\n",
-                        $stepKey,
-                        $format,
-                        $input
-                    );
+
+                    $timezone = "America/Los_Angeles";
+                    if (isset($customActionAttributes['timezone'])) {
+                        $timezone = $customActionAttributes['timezone'];
+                    }
+
+                    $dateGenerateCode = "\t\t\$date = new \DateTime();\n";
+                    $dateGenerateCode .= "\t\t\$date->setTimestamp(strtotime({$input}));\n";
+                    $dateGenerateCode .= "\t\t\$date->setTimezone(new \DateTimeZone(\"{$timezone}\"));\n";
+                    $dateGenerateCode .= "\t\t\${$stepKey} = \$date->format({$format});\n";
+
+                    $testSteps .= $dateGenerateCode;
                     break;
                 default:
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input, $parameter);

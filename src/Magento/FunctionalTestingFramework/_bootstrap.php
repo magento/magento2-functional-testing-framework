@@ -44,13 +44,7 @@ if (file_exists($envFilepath . DIRECTORY_SEPARATOR . '.env')) {
 
     defined('MAGENTO_CLI_COMMAND_PARAMETER') || define('MAGENTO_CLI_COMMAND_PARAMETER', 'command');
     $env->setEnvironmentVariable('MAGENTO_CLI_COMMAND_PARAMETER', MAGENTO_CLI_COMMAND_PARAMETER);
-
-    defined('MFTF_TIMEZONE') || define('MFTF_TIMEZONE', '	America/Los_Angeles');
-    $env->setEnvironmentVariable('MFTF_TIMEZONE', MFTF_TIMEZONE);
 }
-
-//set default timezone
-date_default_timezone_set(MFTF_TIMEZONE);
 
 // TODO REMOVE THIS CODE ONCE WE HAVE STOPPED SUPPORTING dev/tests/acceptance PATH
 // define TEST_PATH and TEST_MODULE_PATH

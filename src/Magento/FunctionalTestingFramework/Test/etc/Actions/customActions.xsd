@@ -242,6 +242,13 @@
                         </xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
+                <xs:attribute name="timezone" use="optional" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Timezone to generate date in, defaults to "America/Los_Angeles".
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
