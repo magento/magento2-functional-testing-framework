@@ -4,7 +4,7 @@
  * See COPYING.txt for license details.
  */
 
-define('PROJECT_ROOT', dirname(dirname(dirname(__DIR__))));
+defined('PROJECT_ROOT') || define('PROJECT_ROOT', dirname(dirname(dirname(__DIR__))));
 require_once realpath(PROJECT_ROOT . '/vendor/autoload.php');
 
 //Load constants from .env file

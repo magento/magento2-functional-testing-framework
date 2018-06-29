@@ -9,6 +9,8 @@ namespace Magento\FunctionalTestingFramework\Test\Objects;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
+use Magento\FunctionalTestingFramework\Test\Util\TestHookObjectExtractor;
+use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 
 /**
  * Class TestObject
@@ -183,12 +185,10 @@ class TestObject
         }
 
         $hookTime = 0;
-        if (array_key_exists('before', $this->hooks)) {
-            $hookTime += $this->calculateWeightedActionTimes($this->hooks['before']->getActions());
-        }
-
-        if (array_key_exists('after', $this->hooks)) {
-            $hookTime += $this->calculateWeightedActionTimes($this->hooks['after']->getActions());
+        foreach ([TestObjectExtractor::TEST_BEFORE_HOOK, TestObjectExtractor::TEST_AFTER_HOOK] as $hookName) {
+            if (array_key_exists($hookName, $this->hooks)) {
+                $hookTime += $this->calculateWeightedActionTimes($this->hooks[$hookName]->getActions());
+            }
         }
 
         $testTime = $this->calculateWeightedActionTimes($this->getOrderedActions());
