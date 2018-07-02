@@ -46,7 +46,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
      * This method takes an array of test actions read in from a TestHook or Test. The actions are stripped of
      * irrelevant tags and returned as an array of ActionObjects.
      *
-     * @param array $testActions
+     * @param array  $testActions
      * @param string $testName
      * @return array
      * @throws XmlException
@@ -59,6 +59,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
 
         foreach ($testActions as $actionName => $actionData) {
             $stepKey = $actionData[self::TEST_STEP_MERGE_KEY];
+            $actionType = $actionData[self::NODE_NAME];
 
             if (empty($stepKey)) {
                 throw new XmlException(sprintf(self::STEP_KEY_EMPTY_ERROR_MSG, $actionData['nodeName']));
@@ -79,10 +80,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
                 $actionAttributes['parameterArray'] = $actionData['array']['value'];
             }
 
-            if ($actionData[self::NODE_NAME] === self::ACTION_GROUP_TAG) {
-                $actionAttributes = $this->processActionGroupArgs($actionAttributes);
-            }
-
+            $actionAttributes = $this->processActionGroupArgs($actionType, $actionAttributes);
             $linkedAction = $this->processLinkedActions($actionName, $actionData);
             $actions = $this->extractFieldActions($actionData, $actions);
             $actionAttributes = $this->extractFieldReferences($actionData, $actionAttributes);
@@ -98,7 +96,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
 
             $actions[$stepKey] = new ActionObject(
                 $stepKey,
-                $actionData[self::NODE_NAME],
+                $actionType,
                 $actionAttributes,
                 $linkedAction['stepKey'],
                 $linkedAction['order']
@@ -115,7 +113,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
      * Returns an array with keys corresponding to the linked action's stepKey and order.
      *
      * @param string $actionName
-     * @param array $actionData
+     * @param array  $actionData
      * @return array
      * @throws XmlException
      */
@@ -142,11 +140,16 @@ class ActionObjectExtractor extends BaseObjectExtractor
      * Takes the action group reference and parses out arguments as an array that can be passed to override defaults
      * defined in the action group xml.
      *
-     * @param array $actionAttributeData
+     * @param string $actionType
+     * @param array  $actionAttributeData
      * @return array
      */
-    private function processActionGroupArgs($actionAttributeData)
+    private function processActionGroupArgs($actionType, $actionAttributeData)
     {
+        if ($actionType !== self::ACTION_GROUP_TAG) {
+            return $actionAttributeData;
+        }
+
         $actionAttributeArgData = [];
         foreach ($actionAttributeData as $attributeDataKey => $attributeDataValues) {
             if ($attributeDataKey == self::ACTION_GROUP_REF) {
@@ -232,7 +235,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
     /**
      * Function which validates stepKey references within mergeable actions
      *
-     * @param array $stepKeyRefs
+     * @param array  $stepKeyRefs
      * @param string $testName
      * @return void
      * @throws TestReferenceException

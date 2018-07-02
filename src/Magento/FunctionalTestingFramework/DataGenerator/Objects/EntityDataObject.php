@@ -75,13 +75,13 @@ class EntityDataObject
     /**
      * Constructor
      *
-     * @param string $name
-     * @param string $type
+     * @param string   $name
+     * @param string   $type
      * @param string[] $data
      * @param string[] $linkedEntities
      * @param string[] $uniquenessData
      * @param string[] $vars
-     * @param string $parentEntity
+     * @param string   $parentEntity
      */
     public function __construct($name, $type, $data, $linkedEntities, $uniquenessData, $vars = [], $parentEntity = null)
     {
@@ -130,8 +130,8 @@ class EntityDataObject
     /**
      * Get a piece of data by name and the desired uniqueness format.
      *
-     * @param string $name
-     * @param int $uniquenessFormat
+     * @param string  $name
+     * @param integer $uniquenessFormat
      * @return string|null
      * @throws TestFrameworkException
      */
@@ -326,8 +326,8 @@ class EntityDataObject
     /**
      * Validate if input value is a valid unique data format.
      *
-     * @param int $uniDataFormat
-     * @return bool
+     * @param integer $uniDataFormat
+     * @return boolean
      */
     private function isValidUniqueDataFormat($uniDataFormat)
     {

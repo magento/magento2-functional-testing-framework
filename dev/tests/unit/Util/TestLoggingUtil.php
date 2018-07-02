@@ -8,6 +8,7 @@ namespace tests\unit\Util;
 
 use AspectMock\Test as AspectMock;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+use Magento\FunctionalTestingFramework\Util\Logger\MftfLogger;
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
 use PHPUnit\Framework\Assert;
@@ -54,7 +55,7 @@ class TestLoggingUtil extends Assert
     public function setMockLoggingUtil()
     {
         $this->testLogHandler = new TestHandler();
-        $testLogger = new Logger('testLogger');
+        $testLogger = new MftfLogger('testLogger');
         $testLogger->pushHandler($this->testLogHandler);
         $mockLoggingUtil = AspectMock::double(
             LoggingUtil::class,
@@ -71,6 +72,7 @@ class TestLoggingUtil extends Assert
      * @param string $type
      * @param string $message
      * @param array $context
+     * @return void
      */
     public function validateMockLogStatement($type, $message, $context)
     {
@@ -78,6 +80,15 @@ class TestLoggingUtil extends Assert
         $record = $records[count($records)-1]; // we assume the latest record is what requires validation
         $this->assertEquals(strtoupper($type), $record['level_name']);
         $this->assertEquals($message, $record['message']);
+        $this->assertEquals($context, $record['context']);
+    }
+
+    public function validateMockLogStatmentRegex($type, $regex, $context)
+    {
+        $records = $this->testLogHandler->getRecords();
+        $record = $records[count($records)-1]; // we assume the latest record is what requires validation
+        $this->assertEquals(strtoupper($type), $record['level_name']);
+        $this->assertRegExp($regex, $record['message']);
         $this->assertEquals($context, $record['context']);
     }
 

@@ -1,5 +1,4 @@
 <?php
-// @codingStandardsIgnoreFile
 /**
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
@@ -29,8 +28,12 @@ class RunTestGroupCommand extends Command
     {
         $this->setName('run:group')
             ->setDescription('Execute a set of tests referenced via group annotations')
-            ->addOption('skip-generate', 'k', InputOption::VALUE_NONE, "only execute a group of tests without generating from source xml")
-            ->addArgument(
+            ->addOption(
+                'skip-generate',
+                'k',
+                InputOption::VALUE_NONE,
+                "only execute a group of tests without generating from source xml"
+            )->addArgument(
                 'groups',
                 InputArgument::IS_ARRAY | InputArgument::REQUIRED,
                 'group names to be executed via codeception'
@@ -40,9 +43,9 @@ class RunTestGroupCommand extends Command
     /**
      * Executes the current command.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return int|null|void
+     * @return integer|null|void
      * @throws \Exception
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)

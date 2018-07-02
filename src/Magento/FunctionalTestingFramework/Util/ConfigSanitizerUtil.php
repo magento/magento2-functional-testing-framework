@@ -15,7 +15,7 @@ class ConfigSanitizerUtil
 {
     /**
      * Sanitizes the given Webdriver Config's url and selenium env params, can be selective based on second argument.
-     * @param array $config
+     * @param array    $config
      * @param String[] $params
      * @return array
      */

@@ -22,7 +22,7 @@ interface ConfigInterface
      * Check whether type is shared
      *
      * @param string $type
-     * @return bool
+     * @return boolean
      */
     public function isShared($type);
 

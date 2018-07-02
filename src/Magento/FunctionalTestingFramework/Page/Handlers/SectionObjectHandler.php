@@ -108,7 +108,7 @@ class SectionObjectHandler implements ObjectHandlerInterface
     /**
      * Get a SectionObject by name
      *
-     * @param string $name The section name
+     * @param string $name The section name.
      * @return SectionObject | null
      */
     public function getObject($name)

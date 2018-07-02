@@ -15,7 +15,7 @@ interface ObjectManagerInterface
      * Create new object instance
      *
      * @param string $type
-     * @param array $arguments
+     * @param array  $arguments
      * @return object
      */
     public function create($type, array $arguments = []);

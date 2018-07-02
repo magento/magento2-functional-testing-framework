@@ -4,7 +4,7 @@
  * See COPYING.txt for license details.
  */
 
-define('PROJECT_ROOT', dirname(dirname(dirname(__DIR__))));
+defined('PROJECT_ROOT') || define('PROJECT_ROOT', dirname(dirname(dirname(__DIR__))));
 require_once realpath(PROJECT_ROOT . '/vendor/autoload.php');
 
 //Load constants from .env file
@@ -29,4 +29,13 @@ if (file_exists(TESTS_BP . DIRECTORY_SEPARATOR . '.env')) {
     foreach ($_ENV as $key => $var) {
         defined($key) || define($key, $var);
     }
+
+    defined('MAGENTO_CLI_COMMAND_PATH') || define(
+        'MAGENTO_CLI_COMMAND_PATH',
+        'dev/tests/acceptance/utils/command.php'
+    );
+    $env->setEnvironmentVariable('MAGENTO_CLI_COMMAND_PATH', MAGENTO_CLI_COMMAND_PATH);
+
+    defined('MAGENTO_CLI_COMMAND_PARAMETER') || define('MAGENTO_CLI_COMMAND_PARAMETER', 'command');
+    $env->setEnvironmentVariable('MAGENTO_CLI_COMMAND_PARAMETER', MAGENTO_CLI_COMMAND_PARAMETER);
 }

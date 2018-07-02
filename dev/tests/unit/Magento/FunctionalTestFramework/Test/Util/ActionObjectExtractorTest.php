@@ -44,13 +44,13 @@ class ActionObjectExtractorTest extends MagentoTestCase
     public function testInvalidMergeOrderReference()
     {
         $invalidArray = $this->createBasicActionObjectArray('invalidTestAction1', 'invalidTestAction1');
-        $this->expectException('\Magento\FunctionalTestingFramework\Exceptions\TestReferenceException');
+        $this->expectException(\Magento\FunctionalTestingFramework\Exceptions\TestReferenceException::class);
         try {
             $this->testActionObjectExtractor->extractActions($invalidArray, 'TestWithSelfReferencingStepKey');
         } catch (\Exception $e) {
-            TestLoggingUtil::getInstance()->validateMockLogStatement(
+            TestLoggingUtil::getInstance()->validateMockLogStatmentRegex(
                 'error',
-                'Line 108: Invalid ordering configuration in test',
+                '/Line \d*: Invalid ordering configuration in test/',
                 [
                     'test' => 'TestWithSelfReferencingStepKey',
                     'stepKey' => ['invalidTestAction1']

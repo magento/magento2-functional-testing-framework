@@ -38,7 +38,8 @@ class ActionObject
         "y",
         "expectedResult",
         "actualResult",
-        "command"
+        "command",
+        "regex"
     ];
     const SELECTOR_ENABLED_ATTRIBUTES = [
         'selector',
@@ -123,12 +124,12 @@ class ActionObject
     /**
      * ActionObject constructor.
      *
-     * @param string $stepKey
-     * @param string $type
-     * @param array $actionAttributes
+     * @param string      $stepKey
+     * @param string      $type
+     * @param array       $actionAttributes
      * @param string|null $linkedAction
-     * @param string $order
-     * @param array $actionOrigin
+     * @param string      $order
+     * @param array       $actionOrigin
      */
     public function __construct(
         $stepKey,
@@ -207,7 +208,7 @@ class ActionObject
     /**
      * This function returns the int property orderOffset, describing before or after for a merge.
      *
-     * @return int
+     * @return integer
      */
     public function getOrderOffset()
     {
@@ -218,7 +219,7 @@ class ActionObject
      * This function returns the int property timeout, this can be set as a result of the use of a section element
      * requiring a wait.
      *
-     * @return int
+     * @return integer
      */
     public function getTimeout()
     {
@@ -228,7 +229,7 @@ class ActionObject
     /**
      * Set the timeout value.
      *
-     * @param int $timeout
+     * @param integer $timeout
      * @return void
      */
     public function setTimeout($timeout)
@@ -277,15 +278,13 @@ class ActionObject
          */
         $oldAttributes = array_intersect($actionAttributeKeys, ActionObject::OLD_ASSERTION_ATTRIBUTES);
         if (!empty($oldAttributes)) {
-            // @codingStandardsIgnoreStart
             $appConfig = MftfApplicationConfig::getConfig();
             if ($appConfig->getPhase() == MftfApplicationConfig::GENERATION_PHASE && $appConfig->verboseEnabled()) {
-                LoggingUtil::getInstance()->getLogger(ActionObject::class)->warning(
+                LoggingUtil::getInstance()->getLogger(ActionObject::class)->deprecation(
                     "use of one line Assertion actions will be deprecated in MFTF 3.0.0, please use nested syntax",
                     ["action" => $this->type, "stepKey" => $this->stepKey]
                 );
             }
-            // @codingStandardsIgnoreEnd
             return;
         }
 
@@ -329,12 +328,10 @@ class ActionObject
         if (!in_array($this->type, $singleChildTypes)) {
             if (!in_array('expectedResult', $attributes)
                 || !in_array('actualResult', $attributes)) {
-                // @codingStandardsIgnoreStart
                 throw new TestReferenceException(
-                    "{$this->type} must have both an expectedResult and actualResult defined (stepKey: {$this->stepKey})",
+                    "{$this->type} must have both an expectedResult & actualResult defined (stepKey: {$this->stepKey})",
                     ["action" => $this->type, "stepKey" => $this->stepKey]
                 );
-                // @codingStandardsIgnoreEnd
             }
         }
     }
@@ -483,9 +480,10 @@ class ActionObject
      * Return a string based on a reference to a page, section, or data field (e.g. {{foo.ref}} resolves to 'data')
      *
      * @param ObjectHandlerInterface $objectHandler
-     * @param string $inputString
+     * @param string                 $inputString
      * @return string | null
-     * @throws TestReferenceException | \Exception
+     * @throws TestReferenceException
+     * @throws \Exception
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
@@ -616,9 +614,9 @@ class ActionObject
     /**
      * Resolves $replacement parameterization with given conditional.
      * @param boolean $isParameterized
-     * @param string $replacement
-     * @param string $match
-     * @param object $object
+     * @param string  $replacement
+     * @param string  $match
+     * @param object  $object
      * @return string
      * @throws \Exception
      */
@@ -641,7 +639,7 @@ class ActionObject
      * Parameter list given is also resolved, attempting to match {{data.field}} references.
      *
      * @param string $reference
-     * @param array $parameters
+     * @param array  $parameters
      * @return string
      * @throws \Exception
      */

@@ -68,8 +68,8 @@ class ActionMergeUtil
     /**
      * Method to execute merge of steps and insert wait steps.
      *
-     * @param array $parsedSteps
-     * @param bool $skipActionGroupResolution
+     * @param array   $parsedSteps
+     * @param boolean $skipActionGroupResolution
      * @return array
      * @throws TestReferenceException
      * @throws XmlException
@@ -83,7 +83,66 @@ class ActionMergeUtil
             return $this->orderedSteps;
         }
 
-        return $this->resolveActionGroups($this->orderedSteps);
+        $resolvedActions = $this->resolveActionGroups($this->orderedSteps);
+        return $this->resolveSecretFieldAccess($resolvedActions);
+    }
+
+    /**
+     * Takes an array of actions and resolves any references to secret fields. The function then validates whether the
+     * refernece is valid and replaces the function name accordingly to hide arguments at runtime.
+     *
+     * @param ActionObject[] $resolvedActions
+     * @return ActionObject[]
+     * @throws TestReferenceException
+     */
+    private function resolveSecretFieldAccess($resolvedActions)
+    {
+        $actions = [];
+        foreach ($resolvedActions as $resolvedAction) {
+            $action = $resolvedAction;
+            $hasSecretRef = $this->actionAttributeContainsSecretRef($resolvedAction->getCustomActionAttributes());
+
+            if ($resolvedAction->getType() !== 'fillField' && $hasSecretRef) {
+                throw new TestReferenceException("You cannot reference secret data outside of fill field actions");
+            }
+
+            if ($resolvedAction->getType() === 'fillField' && $hasSecretRef) {
+                $action = new ActionObject(
+                    $action->getStepKey(),
+                    'fillSecretField',
+                    $action->getCustomActionAttributes(),
+                    $action->getLinkedAction(),
+                    $action->getActionOrigin()
+                );
+            }
+
+            $actions[$action->getStepKey()] = $action;
+        }
+
+        return $actions;
+    }
+
+    /**
+     * Returns a boolean based on whether or not the action attributes contain a reference to a secret field.
+     *
+     * @param array $actionAttributes
+     * @return boolean
+     */
+    private function actionAttributeContainsSecretRef($actionAttributes)
+    {
+        foreach ($actionAttributes as $actionAttribute) {
+            if (is_array($actionAttribute)) {
+                return $this->actionAttributeContainsSecretRef($actionAttribute);
+            }
+
+            preg_match_all("/{{_CREDS\.([\w]+)}}/", $actionAttribute, $matches);
+
+            if (!empty($matches[0])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

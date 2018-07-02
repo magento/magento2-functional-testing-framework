@@ -66,7 +66,7 @@ class Flat
      * )
      *
      * @param \DOMNode $source
-     * @param string $basePath
+     * @param string   $basePath
      * @return string|array
      * @throws \UnexpectedValueException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
