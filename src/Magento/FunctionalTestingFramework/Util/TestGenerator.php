@@ -606,6 +606,11 @@ class TestGenerator
                     // Argument must be a closure function, not a string.
                     $function = trim($function, '"');
                 }
+                // turn $javaVariable => \$javaVariable but not {$mftfVariable}
+                if ($actionObject->getType() == "executeJS") {
+                    $function = preg_replace('/(?<!{)(\$[\w\d_]+)/', '\\\\$1', $function);
+                }
+
             }
 
             if (isset($customActionAttributes['html'])) {
