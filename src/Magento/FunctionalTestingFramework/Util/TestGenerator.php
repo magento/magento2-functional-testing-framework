@@ -610,7 +610,6 @@ class TestGenerator
                 if ($actionObject->getType() == "executeJS") {
                     $function = preg_replace('/(?<!{)(\$[\w\d_]+)/', '\\\\$1', $function);
                 }
-
             }
 
             if (isset($customActionAttributes['html'])) {
