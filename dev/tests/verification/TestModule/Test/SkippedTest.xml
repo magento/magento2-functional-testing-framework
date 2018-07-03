@@ -14,7 +14,7 @@
             <title value="skippedTest"/>
             <description value=""/>
             <severity value="AVERAGE"/>
-            <skip reason="CORE_ISSUE" description="Information">
+            <skip>
                 <issueId value="SkippedValue"/>
             </skip>
         </annotations>
@@ -25,7 +25,7 @@
             <title value="skippedMultipleIssuesTest"/>
             <description value=""/>
             <severity value="AVERAGE"/>
-            <skip reason="MFTF_ISSUE">
+            <skip>
                 <issueId value="SkippedValue"/>
                 <issueId value="SecondSkippedValue"/>
             </skip>

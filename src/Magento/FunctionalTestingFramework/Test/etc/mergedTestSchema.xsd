@@ -42,15 +42,6 @@
             <xs:enumeration value="CRITICAL"/>
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType name="skippedReasonEnum" final="restriction">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="CORE_ISSUE"/>
-            <xs:enumeration value="MFTF_ISSUE"/>
-            <xs:enumeration value="UNKNOWN"/>
-            <xs:enumeration value="OTHER"/>
-            <xs:enumeration value="NONE"/>
-        </xs:restriction>
-    </xs:simpleType>
     <xs:complexType name="annotationType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -69,8 +60,6 @@
         <xs:sequence maxOccurs="unbounded">
             <xs:element type="issueType" name="issueId" maxOccurs="unbounded"/>
         </xs:sequence>
-        <xs:attribute type="skippedReasonEnum" name="reason" use="required"/>
-        <xs:attribute type="xs:string" name="description"/>
     </xs:complexType>
     <xs:complexType name="issueType">
         <xs:simpleContent>
