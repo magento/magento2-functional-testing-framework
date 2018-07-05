@@ -114,7 +114,7 @@ class AnnotationExtractor extends BaseObjectExtractor
 
         if (!empty($missingAnnotations)) {
             $message = "Test {$filename} is missing required annotations.";
-            LoggingUtil::getInstance()->getLogger(ActionObject::class)->warning(
+            LoggingUtil::getInstance()->getLogger(ActionObject::class)->deprecation(
                 $message,
                 ["testName" => $filename, "missingAnnotations" => implode(", ", $missingAnnotations)]
             );

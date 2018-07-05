@@ -491,6 +491,7 @@ class TestGenerator
             $arguments = null;
             $sortOrder = null;
             $storeCode = null;
+            $format = null;
 
             $assertExpected = null;
             $assertActual = null;
@@ -529,6 +530,17 @@ class TestGenerator
                 $assertExpected = $this->addUniquenessFunctionCall($customActionAttributes['expectedValue']);
             } elseif (isset($customActionAttributes['regex'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['regex']);
+            }
+
+            if (isset($customActionAttributes['date']) && isset($customActionAttributes['format'])) {
+                $input = $this->addUniquenessFunctionCall($customActionAttributes['date']);
+                if ($input === "") {
+                    $input = "\"Now\"";
+                }
+                $format = $this->addUniquenessFunctionCall($customActionAttributes['format']);
+                if ($format === "") {
+                    $format = "\"r\"";
+                }
             }
 
             if (isset($customActionAttributes['expected'])) {
@@ -605,6 +617,10 @@ class TestGenerator
                 if (in_array($actionObject->getType(), ActionObject::FUNCTION_CLOSURE_ACTIONS)) {
                     // Argument must be a closure function, not a string.
                     $function = trim($function, '"');
+                }
+                // turn $javaVariable => \$javaVariable but not {$mftfVariable}
+                if ($actionObject->getType() == "executeJS") {
+                    $function = preg_replace('/(?<!{)(\$[\w\d_]+)/', '\\\\$1', $function);
                 }
             }
 
@@ -1237,6 +1253,19 @@ class TestGenerator
                     $argRef = "\t\t\$";
                     $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) . "Fields['{$fieldKey}'] = ${input};\n";
                     $testSteps .= $argRef;
+                    break;
+                case "generateDate":
+                    $timezone = "America/Los_Angeles";
+                    if (isset($customActionAttributes['timezone'])) {
+                        $timezone = $customActionAttributes['timezone'];
+                    }
+
+                    $dateGenerateCode = "\t\t\$date = new \DateTime();\n";
+                    $dateGenerateCode .= "\t\t\$date->setTimestamp(strtotime({$input}));\n";
+                    $dateGenerateCode .= "\t\t\$date->setTimezone(new \DateTimeZone(\"{$timezone}\"));\n";
+                    $dateGenerateCode .= "\t\t\${$stepKey} = \$date->format({$format});\n";
+
+                    $testSteps .= $dateGenerateCode;
                     break;
                 default:
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input, $parameter);

@@ -30,7 +30,7 @@ $kernel->init([
 // set mftf appplication context
 \Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::create(
     true,
-    \Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::GENERATION_PHASE,
+    \Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::UNIT_TEST_PHASE,
     true,
     false
 );
