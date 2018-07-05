@@ -61,7 +61,7 @@ class TestContextExtension extends \Codeception\Extension
         ));
         $errors = $testResultObject->errors();
         if (!empty($errors)) {
-            $stack = $errors[0]->thrownException()->getSerializableTrace();
+            $stack = $errors[0]->thrownException()->getTrace();
             $context = $this->extractContext($stack, $cest->getTestMethod());
             // Do not attempt to run _after if failure was in the _after block
             // Try to run _after but catch exceptions to prevent them from overwriting original failure.
