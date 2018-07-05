@@ -99,6 +99,10 @@ class BasicFunctionalTestCest
 		$executeJSKey1 = $I->executeJS("someJSFunction");
 		$I->fillField(".functionalTestSelector", "someInput");
 		$I->fillField(".functionalTestSelector", "0");
+		$date = new \DateTime();
+		$date->setTimestamp(strtotime("Now"));
+		$date->setTimezone(new \DateTimeZone("America/Los_Angeles"));
+		$generateDateKey = $date->format("H:i:s");
 		$grabAttributeFromKey1 = $I->grabAttributeFrom(".functionalTestSelector", "someInput");
 		$grabCookieKey1 = $I->grabCookie("grabCookieInput", ['domain' => 'www.google.com']);
 		$grabFromCurrentUrlKey1 = $I->grabFromCurrentUrl("/grabCurrentUrl");
