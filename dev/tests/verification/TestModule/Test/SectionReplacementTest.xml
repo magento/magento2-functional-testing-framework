@@ -43,10 +43,12 @@
         <click stepKey="selectorReplaceThreeParamVariable" selector="{{SampleSection.threeParamElement({$data1}, {$data2}, {$data3})}}"/>
         <click stepKey="selectorReplaceThreeParamVariableOneDupe" selector="{{SampleSection.threeOneDuplicateParamElement(simpleData.firstname, simpleData.lastname, simpleData.middlename)}}"/>
 
-
         <click stepKey="selectorReplaceThreeParamMixed1" selector="{{SampleSection.threeParamElement('stringLiteral1', $createdData.firstname$, simpleData.firstname)}}"/>
         <click stepKey="selectorReplaceThreeParamMixed2" selector="{{SampleSection.threeParamElement('stringLiteral1', $createdData.firstname$, {$data})}}"/>
         <click stepKey="selectorReplaceThreeParamMixedMSQPrefix" selector="{{SampleSection.threeParamElement('stringLiteral1', $createdData.firstname$, uniqueData.firstname)}}"/>
         <click stepKey="selectorReplaceThreeParamMixedMSQSuffix" selector="{{SampleSection.threeParamElement('stringLiteral1', $createdData.firstname$, uniqueData.lastname)}}"/>
+
+        <click stepKey="selectorReplaceTwoParamElements" selector="{{SampleSection.oneParamElement('1')}}{{SampleSection.oneParamElement('2')}}"/>
+        <click stepKey="selectorReplaceTwoParamMixedTypes" selector="{{SampleSection.oneParamElement('1')}}{{SampleSection.oneParamElement({$data})}}"/>
     </test>
 </tests>
