@@ -457,8 +457,12 @@ class MagentoWebDriver extends WebDriver
      */
     public function magentoCLI($command, $arguments = null)
     {
-        // trim /index.php if baseURL includes it, will lead to bad path otherwise
-        $apiURL = str_replace("/index.php", "", $this->config['url']) . getenv('MAGENTO_CLI_COMMAND_PATH');
+        // trim everything after first '/' in URL after http:// or https://
+        $apiURL = substr(
+            $this->config['url'],
+            0,
+            strpos($this->config['url'], "/", 8) + 1
+        );
         $executor = new CurlTransport();
         $executor->write(
             $apiURL,
