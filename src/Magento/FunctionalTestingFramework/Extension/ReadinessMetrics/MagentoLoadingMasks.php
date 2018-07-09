@@ -24,11 +24,11 @@ class MagentoLoadingMasks extends AbstractMetricCheck
      * Metric passes once all loading masks are absent or invisible
      *
      * @param string|null $value
-     * @return bool
+     * @return boolean
      */
     protected function doesMetricPass($value)
     {
-        return is_null($value);
+        return $value === null;
     }
 
     /**
@@ -46,9 +46,9 @@ class MagentoLoadingMasks extends AbstractMetricCheck
                     if ($element->isDisplayed()) {
                         return "$maskLocator : " . $element ->getID();
                     }
+                } catch (NoSuchElementException $e) {
+                } catch (StaleElementReferenceException $e) {
                 }
-                catch (NoSuchElementException $e) {}
-                catch (StaleElementReferenceException $e) {}
             }
         }
         return null;

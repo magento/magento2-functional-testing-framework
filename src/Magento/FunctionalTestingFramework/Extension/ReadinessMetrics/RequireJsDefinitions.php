@@ -21,11 +21,11 @@ class RequireJsDefinitions extends AbstractMetricCheck
      * Metric passes once there are no enabled modules waiting in the registry queue
      *
      * @param string|null $value
-     * @return bool
+     * @return boolean
      */
     protected function doesMetricPass($value)
     {
-        return is_null($value);
+        return $value === null;
     }
 
     /**

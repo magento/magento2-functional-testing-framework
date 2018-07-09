@@ -25,7 +25,7 @@ class DocumentReadyState extends AbstractMetricCheck
      * Metric passes when document.readyState == 'complete'
      *
      * @param string $value
-     * @return bool
+     * @return boolean
      */
     protected function doesMetricPass($value)
     {

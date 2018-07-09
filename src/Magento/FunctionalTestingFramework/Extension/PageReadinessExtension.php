@@ -44,7 +44,7 @@ class PageReadinessExtension extends Extension
     /**
      * Logger verbosity
      *
-     * @var bool
+     * @var boolean
      */
     private $verbose;
 
@@ -91,13 +91,13 @@ class PageReadinessExtension extends Extension
      * @param \Codeception\Event\TestEvent $e
      * @return void
      */
-    public function beforeTest(TestEvent $e) {
+    public function beforeTest(TestEvent $e)
+    {
         $this->test = $e->getTest();
 
         if (isset($this->config['resetFailureThreshold'])) {
             $failThreshold = intval($this->config['resetFailureThreshold']);
-        }
-        else {
+        } else {
             $failThreshold = 3;
         }
 
@@ -116,25 +116,22 @@ class PageReadinessExtension extends Extension
      * @return void
      * @throws \Exception
      */
-    public function beforeStep(StepEvent $e) {
+    public function beforeStep(StepEvent $e)
+    {
         $step = $e->getStep();
         if ($step->getAction() == 'saveScreenshot') {
             return;
         }
-        // $step->getArguments()['skipReadiness']
 
         try {
             $this->test->getMetadata()->setCurrent(['uri', $this->getDriver()->_getCurrentUri()]);
+        } catch (\Exception $exception) {
+            $this->logDebug('Could not retrieve current URI', ['action' => $e->getStep()->getAction()]);
         }
-        catch (\Exception $exception) {
-            // $this->debugLog('Could not retrieve current URI', ['action' => $e->getStep()->getAction()]);
-        }
-
 
         if (isset($this->config['timeout'])) {
             $timeout = intval($this->config['timeout']);
-        }
-        else {
+        } else {
             $timeout = $this->getDriver()->_getConfig()['pageload_timeout'];
         }
 
@@ -151,14 +148,14 @@ class PageReadinessExtension extends Extension
                             if (!$metric->runCheck()) {
                                 $passing = false;
                             }
+                        } catch (UnexpectedAlertOpenException $exception) {
                         }
-                        catch (UnexpectedAlertOpenException $exception) {}
                     }
                     return $passing;
                 }
             );
+        } catch (TimeoutException $exception) {
         }
-        catch (TimeoutException $exception) {}
 
         /** @var AbstractMetricCheck $metric */
         foreach ($metrics as $metric) {
@@ -172,7 +169,8 @@ class PageReadinessExtension extends Extension
      * @param StepEvent $e
      * @return void
      */
-    public function afterStep(StepEvent $e) {
+    public function afterStep(StepEvent $e)
+    {
         $step = $e->getStep();
         if ($step->getAction() == 'saveScreenshot') {
             return;
@@ -180,8 +178,7 @@ class PageReadinessExtension extends Extension
 
         try {
             $currentUri = $this->getDriver()->_getCurrentUri();
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             // $this->debugLog('Could not retrieve current URI', ['action' => $step()->getAction()]);
             return;
         }
@@ -189,7 +186,8 @@ class PageReadinessExtension extends Extension
         $previousUri = $this->test->getMetadata()->getCurrent('uri');
 
         if ($previousUri !== $currentUri) {
-            $this->logDebug('Page URI changed; resetting readiness metric failure tracking',
+            $this->logDebug(
+                'Page URI changed; resetting readiness metric failure tracking',
                 [
                     'action' => $step->getAction(),
                     'newUri' => $currentUri
@@ -207,9 +205,11 @@ class PageReadinessExtension extends Extension
      * If verbose, log the given message to logger->debug including test context information
      *
      * @param string $message
-     * @param array $context
+     * @param array  $context
+     * @return void
      */
-    private function logDebug($message, $context = []) {
+    private function logDebug($message, $context = [])
+    {
         if ($this->verbose) {
             $testMeta = $this->test->getMetadata();
             $logContext = [

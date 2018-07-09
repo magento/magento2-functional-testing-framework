@@ -55,7 +55,7 @@ abstract class AbstractMetricCheck
     protected $logger;
 
     /**
-     * @var bool
+     * @var boolean
      */
     protected $verbose;
 
@@ -63,11 +63,12 @@ abstract class AbstractMetricCheck
      * Constructor, called from the beforeTest event
      *
      * @param PageReadinessExtension $extension
-     * @param TestInterface $test
-     * @param integer $resetFailureThreshold
+     * @param TestInterface          $test
+     * @param integer                $resetFailureThreshold
      * @throws \Exception
      */
-    public function __construct($extension, $test, $resetFailureThreshold){
+    public function __construct($extension, $test, $resetFailureThreshold)
+    {
         $this->extension = $extension;
         $this->test = $test;
         $this->logger = LoggingUtil::getInstance()->getLogger(get_class($this));
@@ -78,8 +79,7 @@ abstract class AbstractMetricCheck
         $reflector = new \ReflectionMethod($this, 'clearFailureOnPage');
         if ($reflector->getDeclaringClass()->getName() === get_class($this)) {
             $this->resetFailureThreshold = $resetFailureThreshold;
-        }
-        else {
+        } else {
             $this->resetFailureThreshold = -1;
         }
 
@@ -90,9 +90,9 @@ abstract class AbstractMetricCheck
      * Does the given value pass the readiness metric
      *
      * @param mixed $value
-     * @return bool
+     * @return boolean
      */
-    protected abstract function doesMetricPass($value);
+    abstract protected function doesMetricPass($value);
 
     /**
      * Retrieve the active value for the metric to check from the page
@@ -100,7 +100,7 @@ abstract class AbstractMetricCheck
      * @return mixed
      * @throws UnexpectedAlertOpenException
      */
-    protected abstract function fetchValueFromPage();
+    abstract protected function fetchValueFromPage();
 
     /**
      * Override this method to reset the actual state of the page to make the metric pass
@@ -108,7 +108,8 @@ abstract class AbstractMetricCheck
      *
      * @return void
      */
-    protected function clearFailureOnPage() {
+    protected function clearFailureOnPage()
+    {
         return;
     }
 
@@ -117,7 +118,8 @@ abstract class AbstractMetricCheck
      *
      * @return string
      */
-    public function getName() {
+    public function getName()
+    {
         $clazz = get_class($this);
         $namespaceBreak = strrpos($clazz, '\\');
         if ($namespaceBreak !== false) {
@@ -133,10 +135,11 @@ abstract class AbstractMetricCheck
      * to catch cases where a slow request of one metric can trigger calls for other metrics that were previously
      * thought ready
      *
-     * @return bool
+     * @return boolean
      * @throws UnexpectedAlertOpenException
      */
-    public function runCheck() {
+    public function runCheck()
+    {
         if ($this->doesMetricPass($this->getCurrentValue(true))) {
             $this->setTracker($this->getCurrentValue());
             return true;
@@ -154,11 +157,11 @@ abstract class AbstractMetricCheck
      * @param Step $step
      * @return void
      */
-    public function finalize($step) {
+    public function finalize($step)
+    {
         try {
             $currentValue = $this->getCurrentValue();
-        }
-        catch (UnexpectedAlertOpenException $exception) {
+        } catch (UnexpectedAlertOpenException $exception) {
             $this->debugLog(
                 'An alert is open, bypassing javascript-based metric check',
                 ['action' => $step->getAction()]
@@ -168,13 +171,11 @@ abstract class AbstractMetricCheck
 
         if ($this->doesMetricPass($currentValue)) {
             $this->setTracker($currentValue);
-        }
-        else {
+        } else {
             // If failure happened on the same value as before, increment the fail count, otherwise set at 1
             if ($currentValue !== $this->getStoredValue()) {
                 $failCount = 1;
-            }
-            else {
+            } else {
                 $failCount = $this->getFailureCount() + 1;
             }
             $this->setTracker($currentValue, $failCount);
@@ -197,7 +198,8 @@ abstract class AbstractMetricCheck
      * @return WebDriver
      * @throws ModuleRequireException
      */
-    protected function getDriver() {
+    protected function getDriver()
+    {
         return $this->extension->getDriver();
     }
 
@@ -205,12 +207,13 @@ abstract class AbstractMetricCheck
      * Helper function to execute javascript code, see WebDriver::executeJs for more information
      *
      * @param string $script
-     * @param array $arguments
+     * @param array  $arguments
      * @return mixed
      * @throws UnexpectedAlertOpenException
      * @throws ModuleRequireException
      */
-    protected function executeJs($script, $arguments = []) {
+    protected function executeJs($script, $arguments = [])
+    {
         return $this->getDriver()->executeJS($script, $arguments);
     }
 
@@ -218,11 +221,12 @@ abstract class AbstractMetricCheck
      * Gets the current state of the given variable
      * Fetches an updated value if not known or $refresh is true
      *
-     * @param bool $refresh
+     * @param boolean $refresh
      * @return mixed
      * @throws UnexpectedAlertOpenException
      */
-    private function getCurrentValue($refresh = false) {
+    private function getCurrentValue($refresh = false)
+    {
         if ($refresh) {
             unset($this->currentValue);
         }
@@ -237,7 +241,8 @@ abstract class AbstractMetricCheck
      *
      * @return mixed
      */
-    public function getStoredValue() {
+    public function getStoredValue()
+    {
         return $this->test->getMetadata()->getCurrent($this->getName());
     }
 
@@ -245,9 +250,10 @@ abstract class AbstractMetricCheck
      * The current count of sequential identical failures
      * Used to detect potentially stuck metrics
      *
-     * @return int
+     * @return integer
      */
-    public function getFailureCount() {
+    public function getFailureCount()
+    {
         return $this->test->getMetadata()->getCurrent($this->getName() . '.failCount');
     }
 
@@ -257,7 +263,8 @@ abstract class AbstractMetricCheck
      *
      * @return void
      */
-    private function resetMetric() {
+    private function resetMetric()
+    {
         $this->clearFailureOnPage();
         $this->setTracker();
     }
@@ -265,25 +272,28 @@ abstract class AbstractMetricCheck
     /**
      * Tracks the most recent value and the number of identical failures in a row
      *
-     * @param mixed $value
-     * @param int $failCount
+     * @param mixed   $value
+     * @param integer $failCount
      * @return void
      */
-    public function setTracker($value = null, $failCount = 0) {
+    public function setTracker($value = null, $failCount = 0)
+    {
         $this->test->getMetadata()->setCurrent([
             $this->getName() => $value,
             $this->getName() . '.failCount' => $failCount
         ]);
-        unset ($this->currentValue);
+        unset($this->currentValue);
     }
 
     /**
      * Log the given message to logger->error including context information
      *
      * @param string $message
-     * @param array $context
+     * @param array  $context
+     * @return void
      */
-    protected function errorLog($message, $context = []) {
+    protected function errorLog($message, $context = [])
+    {
         $context = array_merge($this->getLogContext(), $context);
         $this->logger->error($message, $context);
     }
@@ -292,9 +302,11 @@ abstract class AbstractMetricCheck
      * Log the given message to logger->info including context information
      *
      * @param string $message
-     * @param array $context
+     * @param array  $context
+     * @return void
      */
-    protected function infoLog($message, $context = []) {
+    protected function infoLog($message, $context = [])
+    {
         $context = array_merge($this->getLogContext(), $context);
         $this->logger->info($message, $context);
     }
@@ -303,9 +315,11 @@ abstract class AbstractMetricCheck
      * If verbose, log the given message to logger->debug including context information
      *
      * @param string $message
-     * @param array $context
+     * @param array  $context
+     * @return void
      */
-    protected function debugLog($message, $context = []) {
+    protected function debugLog($message, $context = [])
+    {
         if ($this->verbose) {
             $context = array_merge($this->getLogContext(), $context);
             $this->logger->debug($message, $context);
@@ -318,7 +332,8 @@ abstract class AbstractMetricCheck
      *
      * @return array
      */
-    private function getLogContext() {
+    private function getLogContext()
+    {
         $testMeta = $this->test->getMetadata();
         return [
             'test' => $testMeta->getName(),

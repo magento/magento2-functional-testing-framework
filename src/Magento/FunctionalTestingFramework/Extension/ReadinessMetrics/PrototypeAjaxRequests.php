@@ -18,8 +18,8 @@ class PrototypeAjaxRequests extends AbstractMetricCheck
     /**
      * Metric passes once there are no remaining active requests
      *
-     * @param int $value
-     * @return bool
+     * @param integer $value
+     * @return boolean
      */
     protected function doesMetricPass($value)
     {
@@ -29,10 +29,11 @@ class PrototypeAjaxRequests extends AbstractMetricCheck
     /**
      * Grabs the number of active prototype ajax requests if available
      *
-     * @return int
+     * @return integer
      * @throws UnexpectedAlertOpenException
      */
-    protected function fetchValueFromPage() {
+    protected function fetchValueFromPage()
+    {
         return intval(
             $this->executeJS(
                 'if (!!window.Prototype) {
