@@ -45,6 +45,7 @@
                 </xs:annotation>
             </xs:attribute>
             <xs:attributeGroup ref="removeAttribute"/>
+            <xs:attribute type="xs:string" name="filename"/>
         </xs:complexType>
     </xs:element>
 

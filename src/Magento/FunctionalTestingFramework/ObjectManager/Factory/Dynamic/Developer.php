@@ -47,10 +47,10 @@ class Developer implements \Magento\FunctionalTestingFramework\ObjectManager\Fac
 
     /**
      * Developer constructor.
-     * @param \Magento\FunctionalTestingFramework\ObjectManager\ConfigInterface $config
-     * @param \Magento\FunctionalTestingFramework\ObjectManagerInterface|null $objectManager
+     * @param \Magento\FunctionalTestingFramework\ObjectManager\ConfigInterface          $config
+     * @param \Magento\FunctionalTestingFramework\ObjectManagerInterface|null            $objectManager
      * @param \Magento\FunctionalTestingFramework\ObjectManager\DefinitionInterface|null $definitions
-     * @param array $globalArguments
+     * @param array                                                                      $globalArguments
      */
     public function __construct(
         \Magento\FunctionalTestingFramework\ObjectManager\ConfigInterface $config,
@@ -79,8 +79,8 @@ class Developer implements \Magento\FunctionalTestingFramework\ObjectManager\Fac
      * Resolve constructor arguments
      *
      * @param string $requestedType
-     * @param array $parameters
-     * @param array $arguments
+     * @param array  $parameters
+     * @param array  $arguments
      * @return array
      * @throws \UnexpectedValueException
      * @throws \BadMethodCallException
@@ -139,7 +139,7 @@ class Developer implements \Magento\FunctionalTestingFramework\ObjectManager\Fac
     /**
      * Parse array argument
      *
-     * @param array &$array
+     * @param array $array
      * @return void
      */
     protected function parseArray(&$array)
@@ -167,7 +167,7 @@ class Developer implements \Magento\FunctionalTestingFramework\ObjectManager\Fac
      * Create instance with call time arguments
      *
      * @param string $requestedType
-     * @param array $arguments
+     * @param array  $arguments
      * @return object
      * @throws \Exception
      *

@@ -64,5 +64,7 @@ class SectionReplacementTestCest
 		$I->click("#stringLiteral1-" . $createdData->getCreatedDataByName('firstname') . " .{$data}");
 		$I->click("#stringLiteral1-" . $createdData->getCreatedDataByName('firstname') . " ." . msq("uniqueData") . "John");
 		$I->click("#stringLiteral1-" . $createdData->getCreatedDataByName('firstname') . " .Doe" . msq("uniqueData"));
+		$I->click("#element .1#element .2");
+		$I->click("#element .1#element .{$data}");
 	}
 }

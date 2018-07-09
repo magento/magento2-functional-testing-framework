@@ -10,6 +10,7 @@
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
     <test name="DataReplacementTest">
         <fillField stepKey="inputReplace" selector="#selector" userInput="StringBefore {{simpleData.firstname}} StringAfter"/>
+        <seeCurrentUrlMatches stepKey="seeInRegex" regex="~\/{{simpleData.firstname}}~i"/>
         <fillField stepKey="selectorReplace" selector="#{{simpleData.firstname}}" userInput="input"/>
         <dragAndDrop stepKey="selector12Replace" selector1="#{{simpleData.firstname}}" selector2="{{simpleData.lastname}}"/>
         <conditionalClick stepKey="dependentSelectorReplace" dependentSelector="#{{simpleData.firstname}}" selector="{{simpleData.lastname}}" visible="true"/>

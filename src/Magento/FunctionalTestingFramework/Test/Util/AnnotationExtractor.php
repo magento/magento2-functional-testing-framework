@@ -30,6 +30,12 @@ class AnnotationExtractor extends BaseObjectExtractor
         "AVERAGE" => "MINOR",
         "MINOR" => "TRIVIAL"
     ];
+    const REQUIRED_ANNOTATIONS = [
+        "stories",
+        "title",
+        "description",
+        "severity"
+    ];
 
     /**
      * AnnotationExtractor constructor.
@@ -43,7 +49,7 @@ class AnnotationExtractor extends BaseObjectExtractor
      * This method trims away irrelevant tags and returns annotations used in the array passed. The annotations
      * can be found in both Tests and their child element tests.
      *
-     * @param array $testAnnotations
+     * @param array  $testAnnotations
      * @param string $filename
      * @return array
      * @throws XmlException
@@ -83,13 +89,17 @@ class AnnotationExtractor extends BaseObjectExtractor
 
             $annotationObjects[$annotationKey] = $annotationValues;
         }
+
+        $this->validateMissingAnnotations($annotationObjects, $filename);
+
         $this->addStoryTitleToMap($annotationObjects, $filename);
+
         return $annotationObjects;
     }
 
     /**
      * Adds story/title/filename combination to static map
-     * @param array $annotations
+     * @param array  $annotations
      * @param string $filename
      * @return void
      */
@@ -99,6 +109,30 @@ class AnnotationExtractor extends BaseObjectExtractor
             $story = $annotations['stories'][0];
             $title = $annotations['title'][0];
             $this->storyToTitleMappings[$story . "/" . $title][] = $filename;
+        }
+    }
+
+    /**
+     * Validates given annotations against list of required annotations.
+     * @param array $annotationObjects
+     * @return void
+     */
+    private function validateMissingAnnotations($annotationObjects, $filename)
+    {
+        $missingAnnotations = [];
+
+        foreach (self::REQUIRED_ANNOTATIONS as $REQUIRED_ANNOTATION) {
+            if (!array_key_exists($REQUIRED_ANNOTATION, $annotationObjects)) {
+                $missingAnnotations[] = $REQUIRED_ANNOTATION;
+            }
+        }
+
+        if (!empty($missingAnnotations)) {
+            $message = "Test {$filename} is missing required annotations.";
+            LoggingUtil::getInstance()->getLogger(ActionObject::class)->deprecation(
+                $message,
+                ["testName" => $filename, "missingAnnotations" => implode(", ", $missingAnnotations)]
+            );
         }
     }
 
@@ -123,7 +157,6 @@ class AnnotationExtractor extends BaseObjectExtractor
                 $story = $storyTitleArray[0];
                 $title = $storyTitleArray[1];
                 $message .= "Story: '{$story}' Title: '{$title}' in Tests {$tests}\n\n";
-
             }
             throw new XmlException($message);
         }

@@ -79,10 +79,10 @@ class ArrayType implements InterpreterInterface
     /**
      * Compare sortOrder of item
      *
-     * @param string|int $firstItemKey
-     * @param string|int $secondItemKey
-     * @param array $indexedItems
-     * @return int
+     * @param string|integer $firstItemKey
+     * @param string|integer $secondItemKey
+     * @param array          $indexedItems
+     * @return integer
      */
     private function compareItems($firstItemKey, $secondItemKey, $indexedItems)
     {
@@ -110,7 +110,7 @@ class ArrayType implements InterpreterInterface
      * Determine if a sort order exists for any of the items.
      *
      * @param array $items
-     * @return bool
+     * @return boolean
      */
     private function isSortOrderDefined($items)
     {

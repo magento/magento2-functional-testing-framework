@@ -92,7 +92,7 @@ class TestDataArrayBuilder
     private $testReference = null;
 
     /**
-     * @param $name
+     * @param string $name
      * @return $this
      */
     public function withName($name)

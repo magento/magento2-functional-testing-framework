@@ -123,7 +123,7 @@ class MetadataGenUtil
      * Function which is called recursively to generate the mustache array for the template enging. Makes decisions
      * about type and format based on parameter array.
      *
-     * @param array $results
+     * @param array  $results
      * @param string $defaultDataType
      * @return array
      */

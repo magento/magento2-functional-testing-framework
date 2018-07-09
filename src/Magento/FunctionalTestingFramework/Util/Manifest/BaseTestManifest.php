@@ -38,7 +38,7 @@ abstract class BaseTestManifest
      *
      * @param string $path
      * @param string $runConfig
-     * @param array $suiteConfiguration
+     * @param array  $suiteConfiguration
      */
     public function __construct($path, $runConfig, $suiteConfiguration)
     {

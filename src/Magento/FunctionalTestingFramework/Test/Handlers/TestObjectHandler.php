@@ -5,6 +5,7 @@
  */
 namespace Magento\FunctionalTestingFramework\Test\Handlers;
 
+use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
@@ -136,13 +137,19 @@ class TestObjectHandler implements ObjectHandlerInterface
             return;
         }
 
+        $exceptionCollector = new ExceptionCollector();
         foreach ($parsedTestArray[TestObjectHandler::XML_ROOT] as $testName => $testData) {
             if (!is_array($testData)) {
                 continue;
             }
-
-            $this->tests[$testName] = $testObjectExtractor->extractTestData($testData);
+            try {
+                $this->tests[$testName] = $testObjectExtractor->extractTestData($testData);
+            } catch (XmlException $exception) {
+                $exceptionCollector->addError(self::class, $exception->getMessage());
+            }
         }
+        $exceptionCollector->throwException();
+        
         $testObjectExtractor->getAnnotationExtractor()->validateStoryTitleUniqueness();
     }
 

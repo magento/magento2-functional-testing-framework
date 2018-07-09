@@ -42,7 +42,7 @@ class ErrorLogger
     /**
      * Loops through stepEvent for browser log entries
      * @param \Facebook\WebDriver\Remote\RemoteWebDriver $webDriver
-     * @param \Codeception\Event\StepEvent $stepEvent
+     * @param \Codeception\Event\StepEvent               $stepEvent
      * @return void
      */
     public function logErrors($webDriver, $stepEvent)
@@ -58,9 +58,9 @@ class ErrorLogger
 
     /**
      * Logs errors to console/report.
-     * @param string $type
+     * @param string                       $type
      * @param \Codeception\Event\StepEvent $stepEvent
-     * @param array $entry
+     * @param array                        $entry
      * @return void
      */
     private function logError($type, $stepEvent, $entry)
