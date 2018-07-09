@@ -60,6 +60,7 @@
         <executeJS function="someJSFunction" stepKey="executeJSKey1"/>
         <fillField selector=".functionalTestSelector" userInput="someInput" stepKey="fillFieldKey1" />
         <fillField selector=".functionalTestSelector" userInput="0" stepKey="fillFieldKey2" />
+        <generateDate date="Now" format="H:i:s" stepKey="generateDateKey"/>
         <grabAttributeFrom selector=".functionalTestSelector" userInput="someInput" stepKey="grabAttributeFromKey1" />
         <grabCookie userInput="grabCookieInput" parameterArray="['domain' => 'www.google.com']" stepKey="grabCookieKey1" />
         <grabFromCurrentUrl regex="/grabCurrentUrl" stepKey="grabFromCurrentUrlKey1" />
