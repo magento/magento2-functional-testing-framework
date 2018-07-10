@@ -33,6 +33,11 @@ class RunTestGroupCommand extends Command
                 'k',
                 InputOption::VALUE_NONE,
                 "only execute a group of tests without generating from source xml"
+            )->addOption(
+                "force",
+                'f',
+                InputOption::VALUE_NONE,
+                'force generation of tests regardless of Magento Instance Configuration'
             )->addArgument(
                 'groups',
                 InputArgument::IS_ARRAY | InputArgument::REQUIRED,
@@ -53,12 +58,16 @@ class RunTestGroupCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $skipGeneration = $input->getOption('skip-generate') ?? false;
+        $force = $input->getOption('force') ?? false;
         $groups = $input->getArgument('groups');
 
         if (!$skipGeneration) {
             $testConfiguration = $this->getGroupAndSuiteConfiguration($groups);
             $command = $this->getApplication()->find('generate:tests');
             $args = ['--tests' => $testConfiguration];
+            if ($force) {
+                $args['--force'] = true;
+            }
 
             $command->run(new ArrayInput($args), $output);
         }
