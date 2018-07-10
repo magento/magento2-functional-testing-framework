@@ -62,4 +62,15 @@ class MergedGenerationTest extends MftfTestCase
     {
         $this->generateAndCompareTest('MergeMassViaInsertAfter');
     }
+
+    /**
+     * Tests generation of a test skipped in merge.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testMergeSkipGeneration()
+    {
+        $this->generateAndCompareTest('MergeSkip');
+    }
 }

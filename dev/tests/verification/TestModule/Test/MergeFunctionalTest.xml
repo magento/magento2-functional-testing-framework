@@ -55,4 +55,7 @@
         <click stepKey="clickTwo" selector="#mergeTwo"/>
         <click stepKey="clickThree" selector="#mergeThree"/>
     </test>
+    <test name="MergeSkip">
+        <comment userInput="ThisTestShouldBeSkipped" stepKey="skipComment"/>
+    </test>
 </tests>
