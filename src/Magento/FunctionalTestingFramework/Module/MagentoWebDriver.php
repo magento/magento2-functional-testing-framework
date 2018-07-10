@@ -457,12 +457,11 @@ class MagentoWebDriver extends WebDriver
      */
     public function magentoCLI($command, $arguments = null)
     {
-        // trim everything after first '/' in URL after http:// or https://
-        $apiURL = substr(
-            $this->config['url'],
-            0,
-            strpos($this->config['url'], "/", 8) + 1
-        );
+        // trim everything after first '/' in URL after (ex http://magento.instance/<index.php>)
+        preg_match("/.+\/\/[^\/]+\/?/", $this->config['url'], $trimmed);
+        $trimmedUrl = $trimmed[0];
+        $apiURL = $trimmedUrl . ltrim(getenv('MAGENTO_CLI_COMMAND_PATH'), '/');
+
         $executor = new CurlTransport();
         $executor->write(
             $apiURL,
