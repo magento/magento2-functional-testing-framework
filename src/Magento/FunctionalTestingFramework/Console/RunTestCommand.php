@@ -62,12 +62,9 @@ class RunTestCommand extends Command
                 '--tests' => json_encode([
                     'tests' => $tests,
                     'suites' => null
-                ])
+                ]),
+                '--force' => $force
             ];
-            if ($force) {
-                $args['--force'] = true;
-            }
-
             $command->run(new ArrayInput($args), $output);
         }
 

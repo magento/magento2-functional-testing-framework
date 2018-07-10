@@ -64,10 +64,10 @@ class RunTestGroupCommand extends Command
         if (!$skipGeneration) {
             $testConfiguration = $this->getGroupAndSuiteConfiguration($groups);
             $command = $this->getApplication()->find('generate:tests');
-            $args = ['--tests' => $testConfiguration];
-            if ($force) {
-                $args['--force'] = true;
-            }
+            $args = [
+                '--tests' => $testConfiguration,
+                '--force' => $force
+            ];
 
             $command->run(new ArrayInput($args), $output);
         }
