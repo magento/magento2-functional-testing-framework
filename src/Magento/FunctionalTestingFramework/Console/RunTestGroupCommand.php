@@ -57,8 +57,8 @@ class RunTestGroupCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $skipGeneration = $input->getOption('skip-generate') ?? false;
-        $force = $input->getOption('force') ?? false;
+        $skipGeneration = $input->getOption('skip-generate');
+        $force = $input->getOption('force');
         $groups = $input->getArgument('groups');
 
         if (!$skipGeneration) {

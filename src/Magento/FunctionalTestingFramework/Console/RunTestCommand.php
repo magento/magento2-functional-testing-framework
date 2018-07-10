@@ -53,8 +53,8 @@ class RunTestCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $tests = $input->getArgument('name');
-        $skipGeneration = $input->getOption('skip-generate') ?? false;
-        $force = $input->getOption('force') ?? false;
+        $skipGeneration = $input->getOption('skip-generate');
+        $force = $input->getOption('force');
 
         if (!$skipGeneration) {
             $command = $this->getApplication()->find('generate:tests');
