@@ -164,7 +164,7 @@ class AnnotationExtractor extends BaseObjectExtractor
 
     /**
      * Validates that all issueId tags contain a non-empty value
-     * @param array $issues
+     * @param array  $issues
      * @param string $filename
      * @throws XmlException
      * @return void
