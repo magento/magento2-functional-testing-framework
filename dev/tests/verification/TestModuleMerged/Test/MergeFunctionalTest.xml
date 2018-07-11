@@ -26,4 +26,11 @@
         <click stepKey="step10" selector="#step10MergedInResult"/>
         <actionGroup ref="FunctionalActionGroupWithData" stepKey="step8Merge" after="step7Merge"/>
     </test>
+    <test name="MergeSkip">
+        <annotations>
+            <skip>
+                <issueId value="Issue5"/>
+            </skip>
+        </annotations>
+    </test>
 </tests>

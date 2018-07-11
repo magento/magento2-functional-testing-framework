@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
@@ -51,6 +52,7 @@ class AnnotationExtractor extends BaseObjectExtractor
      * @param array  $testAnnotations
      * @param string $filename
      * @return array
+     * @throws XmlException
      */
     public function extractAnnotations($testAnnotations, $filename)
     {
@@ -69,9 +71,22 @@ class AnnotationExtractor extends BaseObjectExtractor
                 continue;
             }
 
+            if ($annotationKey == "skip") {
+                $annotationData = $annotationData['issueId'];
+                $this->validateSkippedIssues($annotationData, $filename);
+            }
+
             foreach ($annotationData as $annotationValue) {
                 $annotationValues[] = $annotationValue[self::ANNOTATION_VALUE];
             }
+            // TODO deprecation|deprecate MFTF 3.0.0
+            if ($annotationKey == "group" && in_array("skip", $annotationValues)) {
+                LoggingUtil::getInstance()->getLogger(AnnotationExtractor::class)->warning(
+                    "Use of group skip will be deprecated in MFTF 3.0.0. Please update tests to use skip tags.",
+                    ["test" => $filename]
+                );
+            }
+
             $annotationObjects[$annotationKey] = $annotationValues;
         }
 
@@ -144,6 +159,23 @@ class AnnotationExtractor extends BaseObjectExtractor
                 $message .= "Story: '{$story}' Title: '{$title}' in Tests {$tests}\n\n";
             }
             throw new XmlException($message);
+        }
+    }
+
+    /**
+     * Validates that all issueId tags contain a non-empty value
+     * @param array  $issues
+     * @param string $filename
+     * @throws XmlException
+     * @return void
+     */
+    public function validateSkippedIssues($issues, $filename)
+    {
+        foreach ($issues as $issueId) {
+            if (empty($issueId['value'])) {
+                $message = "issueId for skipped tests cannot be empty. Test: $filename";
+                throw new XmlException($message);
+            }
         }
     }
 

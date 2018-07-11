@@ -618,6 +618,10 @@ class TestGenerator
                     // Argument must be a closure function, not a string.
                     $function = trim($function, '"');
                 }
+                // turn $javaVariable => \$javaVariable but not {$mftfVariable}
+                if ($actionObject->getType() == "executeJS") {
+                    $function = preg_replace('/(?<!{)(\$[\w\d_]+)/', '\\\\$1', $function);
+                }
             }
 
             if (isset($customActionAttributes['html'])) {
@@ -1557,7 +1561,14 @@ class TestGenerator
         $testAnnotations = $this->generateAnnotationsPhp($test->getAnnotations(), true);
         $dependencies = 'AcceptanceTester $I';
         if ($test->isSkipped()) {
-            $steps = "\t\t" . '$scenario->skip("This test is skipped");' . "\n";
+            $skipString = "This test is skipped due to the following issues:\\n";
+            $issues = $test->getAnnotations()['skip'] ?? null;
+            if (isset($issues)) {
+                $skipString .= implode("\\n", $issues);
+            } else {
+                $skipString .= "No issues have been specified.";
+            }
+            $steps = "\t\t" . '$scenario->skip("' . $skipString . '");' . "\n";
             $dependencies .= ', \Codeception\Scenario $scenario';
         } else {
             try {
