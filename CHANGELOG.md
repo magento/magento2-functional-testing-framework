@@ -1,19 +1,40 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
-
 2.3.0
 -----
 ### Enhancements  
 * Traceability
-    * `generate:tests` now warns the user if any declared `<page>` in a has inconsistent `module` (`Backend` vs `Magento_Backend`)
-    * Overall error messages for generation have been improved. Usage of the `--debug` flag provides file-specific errors for XML-related errors.
+    * MFTF now outputs generation run-time information, warnings, and errors to an `mftf.log` file. 
+    * Overall error messages for various generation errors have been improved. Usage of the `--debug` flag provides file-specific errors for all XML-related errors.
     * Allure Reports now require a unique `story` and `title` combination, to prevent collisions in Allure Report generation.
+    * The `features` annotation now ignores user input and defaults to the module the test lives under (for clear Allure organization).
+    * The `<group value="skip"/>` annotation has been replaced with a `<skip>` annotation, allowing for nested `IssueId` elements.
+    * Tests now require the following annotations: `stories`, `title`, `description`, `severity`.
+        * This will be enforced in a future major release.
 * Modularity
+    * MFTF has been decoupled from MagentoCE:
+        * MFTF can now generate and run tests by itself via `bin/mftf` commands.
+        * It is now a top level MagentoCE dependency, and no longer relies on supporting files in MagentoCE.
+        * It can be used as an isolated dependency for Magento projects such as extensions.
+    * `generate:tests` now warns the user if any declared `<page>` has an inconsistent `module` (`Backend` vs `Magento_Backend`)
+    * The `--force` flag now completely ignores checking of the Magento Installation, allowing generation of tests without a Magento Instance to be running.
 * Customizability
-* Readability
+    * Various test materials can now be extended via an `extends="ExistingMaterial"` attribute. This allows for simple material extension of any `entity`, `actionGroup`, or `test`.
+    * `test` and `actionGroup` deltas can now be provided in bulk via a `before/after` attribute on the `test` or `actionGroup` element. Deltas provided this way do not need individual `before/after` attributes, and are inserted sequentially.
+    * Secure and sensitive test data can now be stored and used via a new `.credentials` file, with declaration and usage syntax similar to `.env` file references.
+    * A new `<generateDate>` action has been added to allow users to create and use dates according to the given `date` and `format`.
+        * See DevDocs for more information on all above `Customizability` features.
 * Maintainability
-
+    * New `bin/mftf` commands have been introduced with parity to existing `robo` commands.
+        * `robo` commands are still supported, but will be deprecated in a future major release.
+    * The `mftf upgrade:tests` command has been introduced, which runs all test upgrade scripts against the provided path.
+        * A new upgrade script was created to replace all test material schema paths to instead use a URN path.
+    * The `mftf generate:urn-catalog` command has been introduced to create a URN catalog in PHPStorm to support the above upgrade.
+    * A warning is now shown on generation if a page's url is referenced without specifying the url (`{{page}}` vs `{{page.url}}`).
+    * An error is now thrown if any test materials contain any overriding element (eg different `<element>`s in a `<section>` with the same `name`)
+        * This previously would cause the last read element to override the previous, causing a silent but potentially incorrect test addition.
+    * Test distribution algorithm for `--config parallel` has been enhanced to take average step length into account.
 
 ### Fixes
 * `_after` hook of tests now executes if a non test-related failure causes the test to error.
@@ -27,9 +48,10 @@ Magento Functional Testing Framework Changelog
 * Fixed an issue in generation where calling the same entity twice (with different parameters) would replace both calls with the first resolved value.
 * The `magentoCLI` action now correctly executes the given command if the `MAGENTO_BASE_URL` contains `index.php` after the domain (ex `https://magento.instance/index.php`)
 * The `stepKey` attribute can no longer be an empty.
+* Variable substitution has been enabled for `regex` and `command` attributes in test actions.
 
 ### GitHub Issues/Pull requests:
-
+* [#72](https://github.com/magento/magento2-functional-testing-framework/issues/72) -- declare(strict_types=1) causes static code check failure (fixed in [#154](https://github.com/magento/magento2-functional-testing-framework/pull/154))
 
 2.2.0
 -----
