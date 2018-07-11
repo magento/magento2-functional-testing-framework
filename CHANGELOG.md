@@ -1,6 +1,36 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+
+2.3.0
+-----
+### Enhancements  
+* Traceability
+    * `generate:tests` now warns the user if any declared `<page>` in a has inconsistent `module` (`Backend` vs `Magento_Backend`)
+    * Overall error messages for generation have been improved. Usage of the `--debug` flag provides file-specific errors for XML-related errors.
+    * Allure Reports now require a unique `story` and `title` combination, to prevent collisions in Allure Report generation.
+* Modularity
+* Customizability
+* Readability
+* Maintainability
+
+
+### Fixes
+* `_after` hook of tests now executes if a non test-related failure causes the test to error.
+* Fixed periods in Allure Report showing up as `•`.
+* Fixed Windows incompatibility of relative paths in various files.
+* Suites will no longer generate if they do not contain any tests.
+* Fixed an issue in generation where users could not use javascript variables in `executeJS` actions.
+* Fixed an issue in generation where entity replacement in action-groups replaced all entities with the first reference found.
+* Fixed an issue in generation where `createData` actions inside `actionGroups` could not properly reference the given `createDataKey`.
+* Fixed an issue where `suites` could not generate if they included an `actionGroup` with two arguments.
+* Fixed an issue in generation where calling the same entity twice (with different parameters) would replace both calls with the first resolved value.
+* The `magentoCLI` action now correctly executes the given command if the `MAGENTO_BASE_URL` contains `index.php` after the domain (ex `https://magento.instance/index.php`)
+* The `stepKey` attribute can no longer be an empty.
+
+### GitHub Issues/Pull requests:
+
+
 2.2.0
 -----
 ### Enhancements  
