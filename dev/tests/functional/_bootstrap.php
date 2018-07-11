@@ -16,6 +16,14 @@ if (!(bool)$debug_mode && extension_loaded('xdebug')) {
     xdebug_disable();
 }
 
+// Force generation if standalone TODO remove when we manage to pass this onto symfony process in bin/mftf commands
+\Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::create(
+    true,
+    \Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::EXECUTION_PHASE,
+    false,
+    false
+);
+
 $RELATIVE_TESTS_MODULE_PATH = '/tests/functional/tests/MFTF';
 
 defined('MAGENTO_BP') || define('MAGENTO_BP', PROJECT_ROOT);

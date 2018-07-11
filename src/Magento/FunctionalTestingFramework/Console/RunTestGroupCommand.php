@@ -8,6 +8,7 @@ declare(strict_types = 1);
 namespace Magento\FunctionalTestingFramework\Console;
 
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -60,6 +61,14 @@ class RunTestGroupCommand extends Command
         $skipGeneration = $input->getOption('skip-generate');
         $force = $input->getOption('force');
         $groups = $input->getArgument('groups');
+
+        // Create Mftf Configuration
+        MftfApplicationConfig::create(
+            $force,
+            MftfApplicationConfig::GENERATION_PHASE,
+            false,
+            false
+        );
 
         if (!$skipGeneration) {
             $testConfiguration = $this->getGroupAndSuiteConfiguration($groups);
