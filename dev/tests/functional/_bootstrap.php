@@ -7,6 +7,13 @@
 defined('PROJECT_ROOT') || define('PROJECT_ROOT', dirname(dirname(dirname(__DIR__))));
 require_once realpath(PROJECT_ROOT . '/vendor/autoload.php');
 
+//Do not continue running this bootstrap if PHPUnit is calling it
+$fullTrace = debug_backtrace();
+$rootFile = array_values(array_slice($fullTrace, -1))[0]['file'];
+if (strpos($rootFile, "phpunit") !== false) {
+    return;
+}
+
 //Load constants from .env file
 defined('FW_BP') || define('FW_BP', PROJECT_ROOT);
 
@@ -15,14 +22,6 @@ $debug_mode = $_ENV['MFTF_DEBUG'] ?? false;
 if (!(bool)$debug_mode && extension_loaded('xdebug')) {
     xdebug_disable();
 }
-
-// Force generation if standalone TODO remove when we manage to pass this onto symfony process in bin/mftf commands
-\Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::create(
-    true,
-    \Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::EXECUTION_PHASE,
-    false,
-    false
-);
 
 $RELATIVE_TESTS_MODULE_PATH = '/tests/functional/tests/MFTF';
 
