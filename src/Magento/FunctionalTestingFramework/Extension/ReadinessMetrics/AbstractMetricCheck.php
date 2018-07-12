@@ -9,7 +9,6 @@ namespace Magento\FunctionalTestingFramework\Extension\ReadinessMetrics;
 use Codeception\Exception\ModuleRequireException;
 use Codeception\Module\WebDriver;
 use Codeception\Step;
-use Codeception\TestInterface;
 use Facebook\WebDriver\Exception\UnexpectedAlertOpenException;
 use Magento\FunctionalTestingFramework\Extension\PageReadinessExtension;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
@@ -29,18 +28,26 @@ abstract class AbstractMetricCheck
     protected $extension;
 
     /**
-     * The active test object
-     *
-     * @var TestInterface
-     */
-    protected $test;
-
-    /**
      * Current state of the value the metric tracks
      *
      * @var mixed;
      */
     protected $currentValue;
+
+    /**
+     * Most recent saved state of the value the metric tracks
+     * Updated when the metric passes or is finalized
+     *
+     * @var mixed;
+     */
+    protected $storedValue;
+
+    /**
+     * Current count of sequential identical failures
+     *
+     * @var integer;
+     */
+    protected $failCount;
 
     /**
      * Number of sequential identical failures before force-resetting the metric
@@ -63,14 +70,12 @@ abstract class AbstractMetricCheck
      * Constructor, called from the beforeTest event
      *
      * @param PageReadinessExtension $extension
-     * @param TestInterface          $test
      * @param integer                $resetFailureThreshold
      * @throws \Exception
      */
-    public function __construct($extension, $test, $resetFailureThreshold)
+    public function __construct($extension, $resetFailureThreshold)
     {
         $this->extension = $extension;
-        $this->test = $test;
         $this->logger = LoggingUtil::getInstance()->getLogger(get_class($this));
         $this->verbose = MftfApplicationConfig::getConfig()->verboseEnabled();
 
@@ -83,7 +88,7 @@ abstract class AbstractMetricCheck
             $this->resetFailureThreshold = -1;
         }
 
-        $this->setTracker();
+        $this->resetTracker();
     }
 
     /**
@@ -141,7 +146,7 @@ abstract class AbstractMetricCheck
     public function runCheck()
     {
         if ($this->doesMetricPass($this->getCurrentValue(true))) {
-            $this->setTracker($this->getCurrentValue());
+            $this->setTracker($this->getCurrentValue(), 0);
             return true;
         }
 
@@ -157,35 +162,35 @@ abstract class AbstractMetricCheck
      * @param Step $step
      * @return void
      */
-    public function finalize($step)
+    public function finalizeForStep($step)
     {
         try {
             $currentValue = $this->getCurrentValue();
         } catch (UnexpectedAlertOpenException $exception) {
             $this->debugLog(
                 'An alert is open, bypassing javascript-based metric check',
-                ['action' => $step->getAction()]
+                ['step' => $step->__toString()]
             );
             return;
         }
 
         if ($this->doesMetricPass($currentValue)) {
-            $this->setTracker($currentValue);
+            $this->setTracker($currentValue, 0);
         } else {
             // If failure happened on the same value as before, increment the fail count, otherwise set at 1
-            if ($currentValue !== $this->getStoredValue()) {
+            if (!isset($this->storedValue) || $currentValue !== $this->getStoredValue()) {
                 $failCount = 1;
             } else {
                 $failCount = $this->getFailureCount() + 1;
             }
             $this->setTracker($currentValue, $failCount);
 
-            $this->errorLog('Failed readiness check', ['action' => $step->getAction()]);
+            $this->errorLog('Failed readiness check', ['step' => $step->__toString()]);
 
             if ($this->resetFailureThreshold >= 0 && $failCount >= $this->resetFailureThreshold) {
                 $this->debugLog(
                     'Too many failures, assuming metric is stuck and resetting state',
-                    ['action' => $step->getAction()]
+                    ['step' => $step->__toString()]
                 );
                 $this->resetMetric();
             }
@@ -214,7 +219,7 @@ abstract class AbstractMetricCheck
      */
     protected function executeJs($script, $arguments = [])
     {
-        return $this->getDriver()->executeJS($script, $arguments);
+        return $this->extension->getDriver()->executeJS($script, $arguments);
     }
 
     /**
@@ -243,7 +248,7 @@ abstract class AbstractMetricCheck
      */
     public function getStoredValue()
     {
-        return $this->test->getMetadata()->getCurrent($this->getName());
+        return $this->storedValue;
     }
 
     /**
@@ -254,7 +259,7 @@ abstract class AbstractMetricCheck
      */
     public function getFailureCount()
     {
-        return $this->test->getMetadata()->getCurrent($this->getName() . '.failCount');
+        return $this->failCount;
     }
 
     /**
@@ -266,7 +271,7 @@ abstract class AbstractMetricCheck
     private function resetMetric()
     {
         $this->clearFailureOnPage();
-        $this->setTracker();
+        $this->resetTracker();
     }
 
     /**
@@ -276,13 +281,23 @@ abstract class AbstractMetricCheck
      * @param integer $failCount
      * @return void
      */
-    public function setTracker($value = null, $failCount = 0)
+    public function setTracker($value, $failCount)
     {
-        $this->test->getMetadata()->setCurrent([
-            $this->getName() => $value,
-            $this->getName() . '.failCount' => $failCount
-        ]);
         unset($this->currentValue);
+        $this->storedValue = $value;
+        $this->failCount = $failCount;
+    }
+
+    /**
+     * Resets the tracked metric values on a new page or stuck failure
+     *
+     * @return void
+     */
+    public function resetTracker()
+    {
+        unset($this->currentValue);
+        unset($this->storedValue);
+        $this->failCount = 0;
     }
 
     /**
@@ -334,10 +349,9 @@ abstract class AbstractMetricCheck
      */
     private function getLogContext()
     {
-        $testMeta = $this->test->getMetadata();
         return [
-            'test' => $testMeta->getName(),
-            'uri' => $testMeta->getCurrent('uri'),
+            'test' => $this->extension->getTestName(),
+            'uri' => $this->extension->getUri(),
             $this->getName() => $this->getStoredValue(),
             $this->getName() . '.failCount' => $this->getFailureCount()
         ];

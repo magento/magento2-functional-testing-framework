@@ -10,9 +10,7 @@ namespace Magento\FunctionalTestingFramework\Extension\ReadinessMetrics;
  * Class DocumentReadyState
  */
 
-use Codeception\TestInterface;
 use Facebook\WebDriver\Exception\UnexpectedAlertOpenException;
-use Magento\FunctionalTestingFramework\Extension\PageReadinessExtension;
 
 /**
  * Class DocumentReadyState

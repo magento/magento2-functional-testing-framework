@@ -6,10 +6,8 @@
 
 namespace Magento\FunctionalTestingFramework\Extension\ReadinessMetrics;
 
-use Codeception\TestInterface;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\StaleElementReferenceException;
-use Magento\FunctionalTestingFramework\Extension\PageReadinessExtension;
 use Magento\FunctionalTestingFramework\Module\MagentoWebDriver;
 use WebDriverBy;
 
