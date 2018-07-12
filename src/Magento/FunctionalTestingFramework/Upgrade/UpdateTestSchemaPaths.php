@@ -25,19 +25,19 @@ class UpdateTestSchemaPaths implements UpgradeInterface
     public function execute(InputInterface $input)
     {
         $relativeToUrn = [
-            "/src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataOperation.xsd"
+            "dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataOperation.xsd"
                 => "urn:magento:mftf:DataGenerator/etc/dataOperation.xsd",
-            "/src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd"
+            "dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd"
                 => "urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd",
-            "/src/Magento/FunctionalTestingFramework/Page/etc/PageObject.xsd"
+            "dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/PageObject.xsd"
                 => "urn:magento:mftf:Page/etc/PageObject.xsd",
-            "/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd"
+            "dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd"
                 => "urn:magento:mftf:Page/etc/SectionObject.xsd",
-            "/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd"
+            "dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd"
                 => "urn:magento:mftf:Test/etc/actionGroupSchema.xsd",
-            "/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd"
+            "dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd"
                 => "urn:magento:mftf:Test/etc/testSchema.xsd",
-            "/src/Magento/FunctionalTestingFramework/Suite/etc/suiteSchema.xsd"
+            "dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Suite/etc/suiteSchema.xsd"
                 => "urn:magento:mftf:Suite/etc/suiteSchema.xsd"
         ];
 
