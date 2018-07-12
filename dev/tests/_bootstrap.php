@@ -52,7 +52,7 @@ foreach ($TEST_ENVS as $key => $value) {
 putenv('MODULE_WHITELIST=Magento_TestModule');
 
 // Define our own set of paths for the tests
-define('FW_BP', PROJECT_ROOT);
+defined('FW_BP') || define('FW_BP', PROJECT_ROOT);
 
 $RELATIVE_TESTS_MODULE_PATH = DIRECTORY_SEPARATOR . 'verification';
 
