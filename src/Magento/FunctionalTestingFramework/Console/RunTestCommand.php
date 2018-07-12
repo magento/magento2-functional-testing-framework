@@ -31,7 +31,13 @@ class RunTestCommand extends Command
                 'name',
                 InputArgument::REQUIRED | InputArgument::IS_ARRAY,
                 "name of tests to generate and execute"
-            )->addOption('skip-generate', 'k', InputOption::VALUE_NONE, "skip generation and execute existing test");
+            )->addOption('skip-generate', 'k', InputOption::VALUE_NONE, "skip generation and execute existing test")
+            ->addOption(
+                "force",
+                'f',
+                InputOption::VALUE_NONE,
+                'force generation of tests regardless of Magento Instance Configuration'
+            );
     }
 
     /**
@@ -47,7 +53,8 @@ class RunTestCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $tests = $input->getArgument('name');
-        $skipGeneration = $input->getOption('skip-generate') ?? false;
+        $skipGeneration = $input->getOption('skip-generate');
+        $force = $input->getOption('force');
 
         if (!$skipGeneration) {
             $command = $this->getApplication()->find('generate:tests');
@@ -55,9 +62,9 @@ class RunTestCommand extends Command
                 '--tests' => json_encode([
                     'tests' => $tests,
                     'suites' => null
-                ])
+                ]),
+                '--force' => $force
             ];
-
             $command->run(new ArrayInput($args), $output);
         }
 
