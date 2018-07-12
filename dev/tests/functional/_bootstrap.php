@@ -4,6 +4,13 @@
  * See COPYING.txt for license details.
  */
 
+//Do not continue running this bootstrap if PHPUnit is calling it
+$fullTrace = debug_backtrace();
+$rootFile = array_values(array_slice($fullTrace, -1))[0]['file'];
+if (strpos($rootFile, "phpunit") !== false) {
+    return;
+}
+
 defined('PROJECT_ROOT') || define('PROJECT_ROOT', dirname(dirname(dirname(__DIR__))));
 require_once realpath(PROJECT_ROOT . '/vendor/autoload.php');
 
