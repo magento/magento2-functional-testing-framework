@@ -24,6 +24,7 @@ class UpdateTestSchemaPaths implements UpgradeInterface
      */
     public function execute(InputInterface $input)
     {
+        // @codingStandardsIgnoreStart
         $relativeToUrn = [
             "dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataOperation.xsd"
                 => "urn:magento:mftf:DataGenerator/etc/dataOperation.xsd",
@@ -40,6 +41,7 @@ class UpdateTestSchemaPaths implements UpgradeInterface
             "dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Suite/etc/suiteSchema.xsd"
                 => "urn:magento:mftf:Suite/etc/suiteSchema.xsd"
         ];
+        // @codingStandardsIgnoreEnd
 
         $relativePatterns = [];
         $urns = [];
