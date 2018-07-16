@@ -51,6 +51,7 @@ Magento Functional Testing Framework Changelog
 * Variable substitution has been enabled for `regex` and `command` attributes in test actions.
 
 ### GitHub Issues/Pull requests:
+* [#161](https://github.com/magento/magento2-functional-testing-framework/pull/161) -- MAGETWO-46837: Implementing extension to wait for readiness metrics.
 * [#72](https://github.com/magento/magento2-functional-testing-framework/issues/72) -- declare(strict_types=1) causes static code check failure (fixed in [#154](https://github.com/magento/magento2-functional-testing-framework/pull/154))
 
 2.2.0
