@@ -9,6 +9,7 @@ namespace Magento\FunctionalTestingFramework\Util;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class ModuleResolver, resolve module path based on enabled modules of target Magento instance.
@@ -402,11 +403,19 @@ class ModuleResolver
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         $response = curl_exec($ch);
+        $responseCode = curl_getinfo($ch)['http_code'];
 
-        if (!$response) {
-            $message = "Could not retrieve API token from Magento Instance.";
+        if ($responseCode !== 200) {
+            if ($responseCode == 0) {
+                $details = "Could not find Magento Instance at given MAGENTO_BASE_URL";
+            } else {
+                $details = $responseCode . " " . Response::$statusTexts[$responseCode];
+            }
+
+            $message = "Could not retrieve API token from Magento Instance ({$details})";
             $context = [
-                "Admin Integration Token Url" => $url,
+                "tokenUrl" => $url,
+                "responseCode" => $responseCode,
                 "MAGENTO_ADMIN_USERNAME" => getenv("MAGENTO_ADMIN_USERNAME"),
                 "MAGENTO_ADMIN_PASSWORD" => getenv("MAGENTO_ADMIN_PASSWORD"),
             ];

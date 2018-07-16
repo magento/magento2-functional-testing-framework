@@ -12,7 +12,8 @@ defined('FW_BP') || define('FW_BP', realpath(__DIR__ . '/../../../'));
 $projectRootPath = substr(FW_BP, 0, strpos(FW_BP, DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR));
 
 if (empty($projectRootPath)) {
-    // Currently we do not support global execution, so leave this script before pathing is set improperly
+    // If ProjectRootPath is empty, we are not under vendor and are executing standalone.
+    require_once (realpath(FW_BP . "/dev/tests/functional/_bootstrap.php"));
     return;
 }
 
