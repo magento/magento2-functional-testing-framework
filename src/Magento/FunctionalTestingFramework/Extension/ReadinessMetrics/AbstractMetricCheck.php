@@ -248,7 +248,7 @@ abstract class AbstractMetricCheck
      */
     public function getStoredValue()
     {
-        return $this->storedValue;
+        return $this->storedValue ?? null;
     }
 
     /**
@@ -310,7 +310,7 @@ abstract class AbstractMetricCheck
     protected function errorLog($message, $context = [])
     {
         $context = array_merge($this->getLogContext(), $context);
-        $this->logger->error($message, $context);
+        //$this->logger->error($message, $context);
     }
 
     /**
@@ -323,7 +323,7 @@ abstract class AbstractMetricCheck
     protected function infoLog($message, $context = [])
     {
         $context = array_merge($this->getLogContext(), $context);
-        $this->logger->info($message, $context);
+        //$this->logger->info($message, $context);
     }
 
     /**
@@ -337,7 +337,7 @@ abstract class AbstractMetricCheck
     {
         if ($this->verbose) {
             $context = array_merge($this->getLogContext(), $context);
-            $this->logger->debug($message, $context);
+            //$this->logger->debug($message, $context);
         }
     }
 

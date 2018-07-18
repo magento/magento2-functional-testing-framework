@@ -264,7 +264,7 @@ class PageReadinessExtension extends Extension
                 $logContext[$metric->getName() . '.failCount'] = $metric->getFailureCount();
             }
             $context = array_merge($logContext, $context);
-            $this->logger->info($message, $context);
+            //$this->logger->info($message, $context);
         }
     }
 }
