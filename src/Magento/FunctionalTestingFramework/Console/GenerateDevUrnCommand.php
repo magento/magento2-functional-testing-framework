@@ -13,6 +13,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 class GenerateDevUrnCommand extends Command
 {
@@ -25,7 +27,13 @@ class GenerateDevUrnCommand extends Command
     {
         $this->setName('generate:urn-catalog')
             ->setDescription('This command generates an URN catalog to enable PHPStorm to recognize and highlight URNs.')
-            ->addArgument('path', InputArgument::REQUIRED, 'path to PHPStorm misc.xml file (typically located in [ProjectRoot]/.idea/misc.xml)');
+            ->addArgument('path', InputArgument::REQUIRED, 'path to PHPStorm misc.xml file (typically located in [ProjectRoot]/.idea/misc.xml)')
+            ->addOption(
+                "force",
+                'f',
+                InputOption::VALUE_NONE,
+                'forces creation of misc.xml file if not found in the path given.'
+            );
     }
 
     /**
@@ -40,12 +48,20 @@ class GenerateDevUrnCommand extends Command
     {
         $miscXmlFilePath = $input->getArgument('path') . DIRECTORY_SEPARATOR . "misc.xml";
         $miscXmlFile = realpath($miscXmlFilePath);
+        $force = $input->getOption('force');
 
         if ($miscXmlFile === false) {
-            $exceptionMessage = "misc.xml not found in given path '{$miscXmlFilePath}'";
-            LoggingUtil::getInstance()->getLogger(GenerateDevUrnCommand::class)
-                ->error($exceptionMessage);
-            throw new TestFrameworkException($exceptionMessage);
+            if ($force == true) {
+                // create file and refresh realpath
+                $xml = "<project version=\"4\"/>";
+                file_put_contents($miscXmlFilePath, $xml);
+                $miscXmlFile = realpath($miscXmlFilePath);
+            } else {
+                $exceptionMessage = "misc.xml not found in given path '{$miscXmlFilePath}'";
+                LoggingUtil::getInstance()->getLogger(GenerateDevUrnCommand::class)
+                    ->error($exceptionMessage);
+                throw new TestFrameworkException($exceptionMessage);
+            }
         }
         $dom = new \DOMDocument('1.0');
         $dom->preserveWhiteSpace = false;
