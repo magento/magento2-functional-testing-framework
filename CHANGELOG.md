@@ -20,7 +20,7 @@ Magento Functional Testing Framework Changelog
     * `generate:tests` now warns the user if any declared `<page>` has an inconsistent `module` (`Backend` vs `Magento_Backend`)
     * The `--force` flag now completely ignores checking of the Magento Installation, allowing generation of tests without a Magento Instance to be running.
 * Customizability
-    * Various test materials can now be extended via an `extends="ExistingMaterial"` attribute. This allows for simple material extension of any `entity`, `actionGroup`, or `test`.
+    * Various test materials can now be extended via an `extends="ExistingMaterial"` attribute. This allows for creation of simple copies of any `entity`, `actionGroup`, or `test`, with small modifications.
     * `test` and `actionGroup` deltas can now be provided in bulk via a `before/after` attribute on the `test` or `actionGroup` element. Deltas provided this way do not need individual `before/after` attributes, and are inserted sequentially.
     * Secure and sensitive test data can now be stored and used via a new `.credentials` file, with declaration and usage syntax similar to `.env` file references.
     * A new `<generateDate>` action has been added to allow users to create and use dates according to the given `date` and `format`.
