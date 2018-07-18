@@ -248,7 +248,7 @@ abstract class AbstractMetricCheck
      */
     public function getStoredValue()
     {
-        return $this->storedValue;
+        return $this->storedValue ?? null;
     }
 
     /**
@@ -306,11 +306,13 @@ abstract class AbstractMetricCheck
      * @param string $message
      * @param array  $context
      * @return void
+     * @SuppressWarnings(PHPMD)
      */
     protected function errorLog($message, $context = [])
     {
         $context = array_merge($this->getLogContext(), $context);
-        $this->logger->error($message, $context);
+        //TODO REMOVE THIS LINE, UNCOMMENT LOGGER
+        //$this->logger->error($message, $context);
     }
 
     /**
@@ -319,11 +321,13 @@ abstract class AbstractMetricCheck
      * @param string $message
      * @param array  $context
      * @return void
+     * @SuppressWarnings(PHPMD)
      */
     protected function infoLog($message, $context = [])
     {
         $context = array_merge($this->getLogContext(), $context);
-        $this->logger->info($message, $context);
+        //TODO REMOVE THIS LINE, UNCOMMENT LOGGER
+        //$this->logger->info($message, $context);
     }
 
     /**
@@ -332,12 +336,14 @@ abstract class AbstractMetricCheck
      * @param string $message
      * @param array  $context
      * @return void
+     * @SuppressWarnings(PHPMD)
      */
     protected function debugLog($message, $context = [])
     {
         if ($this->verbose) {
             $context = array_merge($this->getLogContext(), $context);
-            $this->logger->debug($message, $context);
+            //TODO REMOVE THIS LINE, UNCOMMENT LOGGER
+            //$this->logger->debug($message, $context);
         }
     }
 
