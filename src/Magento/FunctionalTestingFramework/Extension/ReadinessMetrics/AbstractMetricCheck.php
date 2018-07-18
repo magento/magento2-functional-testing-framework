@@ -306,10 +306,12 @@ abstract class AbstractMetricCheck
      * @param string $message
      * @param array  $context
      * @return void
+     * @SuppressWarnings(PHPMD)
      */
     protected function errorLog($message, $context = [])
     {
         $context = array_merge($this->getLogContext(), $context);
+        //TODO REMOVE THIS LINE, UNCOMMENT LOGGER
         //$this->logger->error($message, $context);
     }
 
@@ -319,10 +321,12 @@ abstract class AbstractMetricCheck
      * @param string $message
      * @param array  $context
      * @return void
+     * @SuppressWarnings(PHPMD)
      */
     protected function infoLog($message, $context = [])
     {
         $context = array_merge($this->getLogContext(), $context);
+        //TODO REMOVE THIS LINE, UNCOMMENT LOGGER
         //$this->logger->info($message, $context);
     }
 
@@ -332,11 +336,13 @@ abstract class AbstractMetricCheck
      * @param string $message
      * @param array  $context
      * @return void
+     * @SuppressWarnings(PHPMD)
      */
     protected function debugLog($message, $context = [])
     {
         if ($this->verbose) {
             $context = array_merge($this->getLogContext(), $context);
+            //TODO REMOVE THIS LINE, UNCOMMENT LOGGER
             //$this->logger->debug($message, $context);
         }
     }

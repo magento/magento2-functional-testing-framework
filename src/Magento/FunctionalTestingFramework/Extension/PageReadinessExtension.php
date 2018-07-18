@@ -251,6 +251,7 @@ class PageReadinessExtension extends Extension
      * @param string $message
      * @param array  $context
      * @return void
+     * @SuppressWarnings(PHPMD)
      */
     private function logDebug($message, $context = [])
     {
@@ -264,6 +265,7 @@ class PageReadinessExtension extends Extension
                 $logContext[$metric->getName() . '.failCount'] = $metric->getFailureCount();
             }
             $context = array_merge($logContext, $context);
+            //TODO REMOVE THIS LINE, UNCOMMENT LOGGER
             //$this->logger->info($message, $context);
         }
     }
