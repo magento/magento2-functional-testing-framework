@@ -38,6 +38,8 @@ class PageObjectHandler implements ObjectHandlerInterface
 
     /**
      * Private constructor
+     *
+     * @throws XmlException
      */
     private function __construct()
     {
@@ -74,6 +76,7 @@ class PageObjectHandler implements ObjectHandlerInterface
      * Singleton method to return PageObjectHandler.
      *
      * @return PageObjectHandler
+     * @throws XmlException
      */
     public static function getInstance()
     {

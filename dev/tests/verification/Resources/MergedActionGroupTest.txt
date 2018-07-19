@@ -5,6 +5,7 @@ use Magento\FunctionalTestingFramework\AcceptanceTester;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -16,7 +17,6 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("A Functional Cest")
  * @group functional
  */
 class MergedActionGroupTestCest
@@ -61,7 +61,7 @@ class MergedActionGroupTestCest
 
 	/**
 	 * @Severity(level = SeverityLevel::CRITICAL)
-	 * @Features({"Action Group Functional Cest"})
+	 * @Features({"TestModule"})
 	 * @Stories({"MQE-433"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
@@ -70,9 +70,9 @@ class MergedActionGroupTestCest
 	 */
 	public function MergedActionGroupTest(AcceptanceTester $I)
 	{
-		$I->see("#element .Jane");
 		$I->see(".merge .Jane");
-		$I->click(".merge .Dane");
+		$I->see("#element .Jane");
 		$I->amOnPage("/Jane/Dane.html");
+		$I->click(".merge .Dane");
 	}
 }

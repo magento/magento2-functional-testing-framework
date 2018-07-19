@@ -60,13 +60,14 @@
         <executeJS function="someJSFunction" stepKey="executeJSKey1"/>
         <fillField selector=".functionalTestSelector" userInput="someInput" stepKey="fillFieldKey1" />
         <fillField selector=".functionalTestSelector" userInput="0" stepKey="fillFieldKey2" />
+        <generateDate date="Now" format="H:i:s" stepKey="generateDateKey"/>
         <grabAttributeFrom selector=".functionalTestSelector" userInput="someInput" stepKey="grabAttributeFromKey1" />
         <grabCookie userInput="grabCookieInput" parameterArray="['domain' => 'www.google.com']" stepKey="grabCookieKey1" />
         <grabFromCurrentUrl regex="/grabCurrentUrl" stepKey="grabFromCurrentUrlKey1" />
         <grabMultiple selector=".functionalTestSelector" stepKey="grabMultipleKey1" />
         <grabTextFrom selector=".functionalTestSelector" stepKey="grabTextFromKey1" />
         <grabValueFrom selector=".functionalTestSelector" stepKey="grabValueFromKey1" />
-        <magentoCLI command="maintenance:enable" stepKey="magentoCli1"/>
+        <magentoCLI command="maintenance:enable" arguments="&quot;stuffHere&quot;" stepKey="magentoCli1"/>
         <makeScreenshot userInput="screenShotInput" stepKey="makeScreenshotKey1"/>
         <maximizeWindow stepKey="maximizeWindowKey1"/>
         <moveBack stepKey="moveBackKey1"/>
@@ -118,5 +119,15 @@
         <waitForElementChange selector="#selector" function="function(\WebDriverElement $el) {return $el->isDisplayed();}" stepKey="waitForElementChangeKey1"/>
         <waitForJS function="someJsFunction" time="30" stepKey="waitForJSKey1" />
         <waitForText selector=".functionalTestSelector" userInput="someInput" time="30" stepKey="waitForText1"/>
+    </test>
+    <test name="MergeMassViaInsertBefore">
+        <fillField selector="#foo" userInput="foo" stepKey="fillField1"/>
+        <fillField selector="#bar" userInput="bar" stepKey="fillField2"/>
+        <fillField selector="#baz" userInput="baz" stepKey="fillField3"/>
+    </test>
+    <test name="MergeMassViaInsertAfter">
+        <fillField selector="#foo" userInput="foo" stepKey="fillField1"/>
+        <fillField selector="#bar" userInput="bar" stepKey="fillField2"/>
+        <fillField selector="#baz" userInput="baz" stepKey="fillField3"/>
     </test>
 </tests>

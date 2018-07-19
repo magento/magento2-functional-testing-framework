@@ -11,9 +11,9 @@ use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Util\Sorter\ParallelGroupSorter;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 
-class ParallelGroupSorterTest extends TestCase
+class ParallelGroupSorterTest extends MagentoTestCase
 {
     /**
      * Test a basic sort of available tests based on size
@@ -36,9 +36,9 @@ class ParallelGroupSorterTest extends TestCase
         $expectedResult = [
             1 => ['test2'],
             2 => ['test7'],
-            3 => ['test6', 'test9'],
-            4 => ['test1', 'test4', 'test3'],
-            5 => ['test5', 'test10', 'test8']
+            3 => ['test6', 'test4', 'test8'],
+            4 => ['test1', 'test9'],
+            5 => ['test3', 'test5', 'test10']
         ];
 
         $testSorter = new ParallelGroupSorter();
@@ -59,13 +59,16 @@ class ParallelGroupSorterTest extends TestCase
     {
         // mock tests for test object handler.
         $numberOfCalls = 0;
-        $mockTest1 = AspectMock::double(TestObject::class, ['getTestActionCount' => function () use (&$numberOfCalls) {
-            $actionCount = [200, 275];
-            $result = $actionCount[$numberOfCalls];
-            $numberOfCalls++;
+        $mockTest1 = AspectMock::double(
+            TestObject::class,
+            ['getEstimatedDuration' => function () use (&$numberOfCalls) {
+                $actionCount = [300, 275];
+                $result = $actionCount[$numberOfCalls];
+                $numberOfCalls++;
 
-            return $result;
-        }])->make();
+                return $result;
+            }]
+        )->make();
 
         $mockHandler = AspectMock::double(
             TestObjectHandler::class,
@@ -92,17 +95,16 @@ class ParallelGroupSorterTest extends TestCase
 
         // perform sort
         $testSorter = new ParallelGroupSorter();
-        $actualResult = $testSorter->getTestsGroupedBySize($sampleSuiteArray, $sampleTestArray, 200);
+        $actualResult = $testSorter->getTestsGroupedBySize($sampleSuiteArray, $sampleTestArray, 500);
 
         // verify the resulting groups
-        $this->assertCount(5, $actualResult);
+        $this->assertCount(4, $actualResult);
 
         $expectedResults =  [
             1 => ['test3'],
-            2 => ['test2'],
-            3 => ['mockSuite1_0'],
-            4 => ['mockSuite1_1'],
-            5 => ['test5', 'test4', 'test1']
+            2 => ['test2','test5', 'test4'],
+            3 => ['mockSuite1_0', 'test1'],
+            4 => ['mockSuite1_1']
         ];
 
         foreach ($actualResult as $groupNum => $group) {

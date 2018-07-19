@@ -34,7 +34,7 @@ class Proxy implements \Magento\FunctionalTestingFramework\Data\Argument\Interpr
     /**
      * Instance shareability flag
      *
-     * @var bool
+     * @var boolean
      */
     protected $isShared = null;
 
@@ -42,8 +42,8 @@ class Proxy implements \Magento\FunctionalTestingFramework\Data\Argument\Interpr
      * Proxy constructor
      *
      * @param \Magento\FunctionalTestingFramework\ObjectManagerInterface $objectManager
-     * @param string $instanceName
-     * @param bool $shared
+     * @param string                                                     $instanceName
+     * @param boolean                                                    $shared
      */
     public function __construct(
         \Magento\FunctionalTestingFramework\ObjectManagerInterface $objectManager,
@@ -100,6 +100,7 @@ class Proxy implements \Magento\FunctionalTestingFramework\Data\Argument\Interpr
 
     /**
      * {@inheritdoc}
+     * @return mixed
      */
     public function evaluate(array $data)
     {

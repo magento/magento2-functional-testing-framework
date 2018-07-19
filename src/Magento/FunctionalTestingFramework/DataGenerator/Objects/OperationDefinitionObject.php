@@ -106,25 +106,25 @@ class OperationDefinitionObject
 
     /**
      * Determines if operation should remove backend_name from URL.
-     * @var bool
+     * @var boolean
      */
     private $removeBackend;
 
     /**
      * OperationDefinitionObject constructor.
-     * @param string $name
-     * @param string $operation
-     * @param string $dataType
-     * @param string $apiMethod
-     * @param string $apiUri
-     * @param string $auth
-     * @param array $headers
-     * @param array $params
-     * @param array $metaData
-     * @param string $contentType
-     * @param bool $removeBackend
-     * @param string $successRegex
-     * @param string $returnRegex
+     * @param string  $name
+     * @param string  $operation
+     * @param string  $dataType
+     * @param string  $apiMethod
+     * @param string  $apiUri
+     * @param string  $auth
+     * @param array   $headers
+     * @param array   $params
+     * @param array   $metaData
+     * @param string  $contentType
+     * @param boolean $removeBackend
+     * @param string  $successRegex
+     * @param string  $returnRegex
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -237,7 +237,7 @@ class OperationDefinitionObject
     /**
      * Getter for removeBackend
      *
-     * @return bool
+     * @return boolean
      */
     public function removeUrlBackend()
     {

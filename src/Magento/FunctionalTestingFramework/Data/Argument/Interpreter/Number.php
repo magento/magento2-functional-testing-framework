@@ -14,7 +14,7 @@ class Number implements InterpreterInterface
 {
     /**
      * {@inheritdoc}
-     * @return string|int|float
+     * @return string|integer|float
      * @throws \InvalidArgumentException
      */
     public function evaluate(array $data)

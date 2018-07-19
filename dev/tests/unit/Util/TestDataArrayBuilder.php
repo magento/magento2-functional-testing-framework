@@ -7,6 +7,7 @@
 namespace tests\unit\Util;
 
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
+use Magento\FunctionalTestingFramework\Test\Util\AnnotationExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 
 class TestDataArrayBuilder
@@ -17,6 +18,13 @@ class TestDataArrayBuilder
      * @var string
      */
     public $testName = 'testTest';
+
+    /**
+     * Mock file name
+     *
+     * @var string
+     */
+    public $filename = null;
 
     /**
      * Mock before action name
@@ -79,7 +87,12 @@ class TestDataArrayBuilder
     private $testActions = [];
 
     /**
-     * @param $name
+     * @var array
+     */
+    private $testReference = null;
+
+    /**
+     * @param string $name
      * @return $this
      */
     public function withName($name)
@@ -188,6 +201,38 @@ class TestDataArrayBuilder
     }
 
     /**
+     * Add file name passe in by arg (or default if no arg)
+     * @param string $filename
+     * @return $this
+     */
+    public function withFileName($filename = null)
+    {
+        if ($filename == null) {
+            $this->filename =
+                "/magento2-functional-testing-framework/dev/tests/verification/TestModule/Test/BasicFunctionalTest.xml";
+        } else {
+            $this->filename = $filename;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add test reference passed in by arg (or default if no arg)
+     *
+     * @param string $reference
+     * @return $this
+     */
+    public function withTestReference($reference = null)
+    {
+        if ($reference != null) {
+            $this->testReference = $reference;
+        }
+
+        return $this;
+    }
+
+    /**
      * Output the resulting test data array based on parameters set in the object
      *
      * @return array
@@ -201,7 +246,9 @@ class TestDataArrayBuilder
                 TestObjectExtractor::TEST_ANNOTATIONS => $this->annotations,
                 TestObjectExtractor::TEST_BEFORE_HOOK => $this->beforeHook,
                 TestObjectExtractor::TEST_AFTER_HOOK => $this->afterHook,
-                TestObjectExtractor::TEST_FAILED_HOOK => $this->failedHook
+                TestObjectExtractor::TEST_FAILED_HOOK => $this->failedHook,
+                "filename" => $this->filename,
+                "extends" => $this->testReference
             ],
             $this->testActions
         )];

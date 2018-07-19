@@ -5,6 +5,9 @@
  */
 namespace Magento\FunctionalTestingFramework\Config\Reader;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+
 /**
  * Filesystem configuration loader. Loads configuration from XML files, split by scopes.
  */
@@ -83,14 +86,14 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
     /**
      * Constructor
      *
-     * @param \Magento\FunctionalTestingFramework\Config\FileResolverInterface $fileResolver
-     * @param \Magento\FunctionalTestingFramework\Config\ConverterInterface $converter
-     * @param \Magento\FunctionalTestingFramework\Config\SchemaLocatorInterface $schemaLocator
+     * @param \Magento\FunctionalTestingFramework\Config\FileResolverInterface    $fileResolver
+     * @param \Magento\FunctionalTestingFramework\Config\ConverterInterface       $converter
+     * @param \Magento\FunctionalTestingFramework\Config\SchemaLocatorInterface   $schemaLocator
      * @param \Magento\FunctionalTestingFramework\Config\ValidationStateInterface $validationState
-     * @param string $fileName
-     * @param array $idAttributes
-     * @param string $domDocumentClass
-     * @param string $defaultScope
+     * @param string                                                              $fileName
+     * @param array                                                               $idAttributes
+     * @param string                                                              $domDocumentClass
+     * @param string                                                              $defaultScope
      */
     public function __construct(
         \Magento\FunctionalTestingFramework\Config\FileResolverInterface $fileResolver,
@@ -144,23 +147,24 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
         /** @var \Magento\FunctionalTestingFramework\Config\Dom $configMerger */
         $configMerger = null;
         foreach ($fileList as $key => $content) {
+            //check if file is empty and continue to next if it is
+            if (!$this->verifyFileEmpty($content, $fileList->getFilename())) {
+                continue;
+            }
             try {
                 if (!$configMerger) {
                     $configMerger = $this->createConfigMerger($this->domDocumentClass, $content);
                 } else {
                     $configMerger->merge($content);
                 }
+                if (MftfApplicationConfig::getConfig()->debugEnabled()) {
+                    $this->validateSchema($configMerger, $fileList->getFilename());
+                }
             } catch (\Magento\FunctionalTestingFramework\Config\Dom\ValidationException $e) {
                 throw new \Exception("Invalid XML in file " . $fileList->getFilename() . ":\n" . $e->getMessage());
             }
         }
-        if ($this->validationState->isValidationRequired()) {
-            $errors = [];
-            if ($configMerger && !$configMerger->validate($this->schemaFile, $errors)) {
-                $message = "Invalid Document \n";
-                throw new \Exception($message . implode("\n", $errors));
-            }
-        }
+        $this->validateSchema($configMerger);
 
         $output = [];
         if ($configMerger) {
@@ -191,5 +195,45 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
             );
         }
         return $result;
+    }
+
+    /**
+     * Checks if content is empty and logs warning, returns false if file is empty
+     *
+     * @param string $content
+     * @param string $fileName
+     * @return boolean
+     */
+    protected function verifyFileEmpty($content, $fileName)
+    {
+        if (empty($content)) {
+            if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
+                LoggingUtil::getInstance()->getLogger(Filesystem::class)->warn(
+                    "XML File is empty.",
+                    ["File" => $fileName]
+                );
+            }
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Validate read xml against expected schema
+     *
+     * @param string $configMerger
+     * @param string $filename
+     * @throws \Exception
+     * @return void
+     */
+    protected function validateSchema($configMerger, $filename = null)
+    {
+        if ($this->validationState->isValidationRequired()) {
+            $errors = [];
+            if ($configMerger && !$configMerger->validate($this->schemaFile, $errors)) {
+                $message = $filename ? $filename . PHP_EOL . "Invalid Document \n" : PHP_EOL . "Invalid Document \n";
+                throw new \Exception($message . implode("\n", $errors));
+            }
+        }
     }
 }

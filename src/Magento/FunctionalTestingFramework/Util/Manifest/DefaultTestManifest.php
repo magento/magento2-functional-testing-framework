@@ -37,7 +37,7 @@ class DefaultTestManifest extends BaseTestManifest
     /**
      * DefaultTestManifest constructor.
      *
-     * @param array $suiteConfiguration
+     * @param array  $suiteConfiguration
      * @param string $testPath
      */
     public function __construct($suiteConfiguration, $testPath)

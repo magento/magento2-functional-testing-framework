@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
 
@@ -54,6 +55,7 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
      * WebapiExecutor Constructor.
      *
      * @param string $storeCode
+     * @throws TestFrameworkException
      */
     public function __construct($storeCode = null)
     {
@@ -70,6 +72,7 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
      * Returns the authorization token needed for some requests via REST call.
      *
      * @return void
+     * @throws TestFrameworkException
      */
     protected function authorize()
     {
@@ -90,10 +93,11 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
      * Send request to the remote server.
      *
      * @param string $url
-     * @param array $data
+     * @param array  $data
      * @param string $method
-     * @param array $headers
+     * @param array  $headers
      * @return void
+     * @throws TestFrameworkException
      */
     public function write($url, $data = [], $method = CurlInterface::POST, $headers = [])
     {
@@ -111,6 +115,7 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
      * @param string $successRegex
      * @param string $returnRegex
      * @return string
+     * @throws TestFrameworkException
      */
     public function read($successRegex = null, $returnRegex = null)
     {
@@ -121,8 +126,8 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
     /**
      * Add additional option to cURL.
      *
-     * @param  int $option the CURLOPT_* constants
-     * @param  int|string|bool|array $value
+     * @param  integer                      $option CURLOPT_* constants.
+     * @param  integer|string|boolean|array $value
      * @return void
      */
     public function addOption($option, $value)

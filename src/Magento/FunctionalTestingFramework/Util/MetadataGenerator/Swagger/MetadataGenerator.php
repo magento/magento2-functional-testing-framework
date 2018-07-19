@@ -140,8 +140,8 @@ class MetadataGenerator
      * Render swagger operations.
      *
      * @param Operation $operation
-     * @param string $path
-     * @param string $method
+     * @param string    $path
+     * @param string    $method
      * @return void
      */
     private function renderOperation($operation, $path, $method)
@@ -182,7 +182,7 @@ class MetadataGenerator
     /**
      * Render swagger definitions.
      *
-     * @param string $defKey
+     * @param string                   $defKey
      * @param ObjectSchema|ArraySchema $definition
      * @return void
      */
@@ -232,9 +232,9 @@ class MetadataGenerator
      * Parse schema and return an array that will be consumed by mustache template engine.
      *
      * @param SchemaInterface $schema
-     * @param string $name
-     * @param bool $forArray
-     * @param integer $depth
+     * @param string          $name
+     * @param boolean         $forArray
+     * @param integer         $depth
      * @return array
      */
     private function parseSchema($schema, $name, $forArray, $depth)
@@ -285,7 +285,7 @@ class MetadataGenerator
      * Parse params for an operation.
      *
      * @param ArrayCollection $params
-     * @param string $path
+     * @param string          $path
      * @return void
      */
     private function parseParams($params, $path)
@@ -348,7 +348,7 @@ class MetadataGenerator
      * Set path params for an operation.
      *
      * @param AbstractTypedParameter $param
-     * @param string $path
+     * @param string                 $path
      * @return void
      */
     private function setPathParams($param, $path)
@@ -406,7 +406,7 @@ class MetadataGenerator
      * @param string $relativeDir
      * @param string $fileName
      * @param string $template
-     * @param array $data
+     * @param array  $data
      * @return void
      */
     private function generateMetaDataFile($relativeDir, $fileName, $template, $data)

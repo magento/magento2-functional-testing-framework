@@ -11,7 +11,7 @@ use Magento\FunctionalTestingFramework\Util\Iterator\File;
 
 class Root extends Module
 {
-    const ROOT_SUITE_DIR = "_suite";
+    const ROOT_SUITE_DIR = "tests/_suite";
 
     /**
      * Retrieve the list of configuration files with given name that relate to specified scope at the root level as well
@@ -25,7 +25,7 @@ class Root extends Module
     {
         // first pick up the root level test suite dir
         $paths = glob(
-            dirname(TESTS_BP) . DIRECTORY_SEPARATOR . self::ROOT_SUITE_DIR
+            TESTS_BP . DIRECTORY_SEPARATOR . self::ROOT_SUITE_DIR
             . DIRECTORY_SEPARATOR . $filename
         );
 

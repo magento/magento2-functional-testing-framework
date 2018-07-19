@@ -11,6 +11,7 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\OperationDefinitio
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\OperationElement;
 use Magento\FunctionalTestingFramework\DataGenerator\Util\OperationElementExtractor;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
 class OperationDataArrayResolver
 {
@@ -59,9 +60,9 @@ class OperationDataArrayResolver
      * structure for the request of the desired entity type.
      *
      * @param EntityDataObject $entityObject
-     * @param array $operationMetadata
-     * @param string $operation
-     * @param bool $fromArray
+     * @param array            $operationMetadata
+     * @param string           $operation
+     * @param boolean          $fromArray
      * @return array
      * @throws \Exception
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -124,7 +125,6 @@ class OperationDataArrayResolver
                         $operationElementType,
                         $elementData
                     );
-
                 } elseif ($operationElement->isRequired()) {
                     throw new \Exception(sprintf(
                         self::EXCEPTION_REQUIRED_DATA,
@@ -171,9 +171,10 @@ class OperationDataArrayResolver
      * entities.
      *
      * @param EntityDataObject $entityObject
-     * @param string $operationKey
-     * @param string $operationElementType
+     * @param string           $operationKey
+     * @param string           $operationElementType
      * @return array|string
+     * @throws TestFrameworkException
      */
     private function resolvePrimitiveReference($entityObject, $operationKey, $operationElementType)
     {
@@ -196,7 +197,6 @@ class OperationDataArrayResolver
                 }
 
                 return $elementDatas;
-
             }
 
             $entity = $this->getDependentEntitiesOfType($type)[0];
@@ -232,8 +232,9 @@ class OperationDataArrayResolver
      * the object.
      *
      * @param EntityDataObject $entityObject
-     * @param string $operationElementValue
+     * @param string           $operationElementValue
      * @return EntityDataObject|null
+     * @throws \Exception
      */
     private function resolveOperationObjectAndEntityData($entityObject, $operationElementValue)
     {
@@ -253,11 +254,12 @@ class OperationDataArrayResolver
     /**
      * Resolves DataObjects and pre-defined metadata (in other operation.xml file) referenced by the operation
      *
-     * @param string $entityName
+     * @param string           $entityName
      * @param OperationElement $operationElement
-     * @param string $operation
-     * @param bool $fromArray
+     * @param string           $operation
+     * @param boolean          $fromArray
      * @return array
+     * @throws \Exception
      */
     private function resolveNonPrimitiveElement($entityName, $operationElement, $operation, $fromArray = false)
     {
@@ -290,6 +292,7 @@ class OperationDataArrayResolver
      *
      * @param string $entityName
      * @return EntityDataObject
+     * @throws \Exception
      */
     private function resolveLinkedEntityObject($entityName)
     {
@@ -320,7 +323,7 @@ class OperationDataArrayResolver
      * Get the current sequence number for an entity.
      *
      * @param string $entityName
-     * @return int
+     * @return integer
      */
     private static function getSequence($entityName)
     {

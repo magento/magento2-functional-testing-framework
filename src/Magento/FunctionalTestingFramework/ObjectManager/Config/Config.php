@@ -73,7 +73,7 @@ class Config implements \Magento\FunctionalTestingFramework\ObjectManager\Config
 
     /**
      * Config constructor.
-     * @param RelationsInterface|null $relations
+     * @param RelationsInterface|null  $relations
      * @param DefinitionInterface|null $definitions
      */
     public function __construct(RelationsInterface $relations = null, DefinitionInterface $definitions = null)
@@ -99,7 +99,7 @@ class Config implements \Magento\FunctionalTestingFramework\ObjectManager\Config
      * Check whether type is shared
      *
      * @param string $type
-     * @return bool
+     * @return boolean
      */
     public function isShared($type)
     {

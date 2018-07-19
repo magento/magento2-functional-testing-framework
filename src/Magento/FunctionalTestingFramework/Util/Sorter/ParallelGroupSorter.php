@@ -28,24 +28,24 @@ class ParallelGroupSorter
     /**
      * Function which returns tests and suites split according to desired number of lines divded into groups.
      *
-     * @param array $suiteConfiguration
-     * @param array $testNameToSize
-     * @param integer $lines
+     * @param array   $suiteConfiguration
+     * @param array   $testNameToSize
+     * @param integer $time
      * @return array
      * @throws TestFrameworkException
      */
-    public function getTestsGroupedBySize($suiteConfiguration, $testNameToSize, $lines)
+    public function getTestsGroupedBySize($suiteConfiguration, $testNameToSize, $time)
     {
         // we must have the lines argument in order to create the test groups
-        if ($lines == 0) {
+        if ($time == 0) {
             throw new TestFrameworkException(
-                "Please provide the argument '--lines' to the robo command in order to".
+                "Please provide the argument '--time' to the robo command in order to".
                 " generate grouped tests manifests for a parallel execution"
             );
         }
 
         $testGroups = [];
-        $splitSuiteNamesToTests = $this->createGroupsWithinSuites($suiteConfiguration, $lines);
+        $splitSuiteNamesToTests = $this->createGroupsWithinSuites($suiteConfiguration, $time);
         $splitSuiteNamesToSize = $this->getSuiteToSize($splitSuiteNamesToTests);
         $entriesForGeneration = array_merge($testNameToSize, $splitSuiteNamesToSize);
         arsort($entriesForGeneration);
@@ -58,7 +58,7 @@ class ParallelGroupSorter
                 continue;
             }
 
-            $testGroup = $this->createTestGroup($lines, $testName, $testSize, $testNameToSizeForUse);
+            $testGroup = $this->createTestGroup($time, $testName, $testSize, $testNameToSizeForUse);
             $testGroups[$nodeNumber] = $testGroup;
 
             // unset the test which have been used.
@@ -88,26 +88,28 @@ class ParallelGroupSorter
      * a test to be used as a starting point, the size of a starting test, an array of tests available to be added to
      * the group.
      *
-     * @param integer $lineMaximum
-     * @param string $testName
+     * @param integer $timeMaximum
+     * @param string  $testName
      * @param integer $testSize
-     * @param array $testNameToSizeForUse
+     * @param array   $testNameToSizeForUse
      * @return array
      */
-    private function createTestGroup($lineMaximum, $testName, $testSize, $testNameToSizeForUse)
+    private function createTestGroup($timeMaximum, $testName, $testSize, $testNameToSizeForUse)
     {
         $group[$testName] = $testSize;
 
-        if ($testSize < $lineMaximum) {
-            while (array_sum($group) < $lineMaximum && !empty($testNameToSizeForUse)) {
+        if ($testSize < $timeMaximum) {
+            while (array_sum($group) < $timeMaximum && !empty($testNameToSizeForUse)) {
                 $groupSize = array_sum($group);
-                $lineGoal = $lineMaximum - $groupSize;
+                $lineGoal = $timeMaximum - $groupSize;
 
                 $testNameForUse = $this->getClosestLineCount($testNameToSizeForUse, $lineGoal);
-                $testSizeForUse = $testNameToSizeForUse[$testNameForUse];
-                unset($testNameToSizeForUse[$testNameForUse]);
+                if ($testNameToSizeForUse[$testNameForUse] < $lineGoal) {
+                    $testSizeForUse = $testNameToSizeForUse[$testNameForUse];
+                    $group[$testNameForUse] = $testSizeForUse;
+                }
 
-                $group[$testNameForUse] = $testSizeForUse;
+                unset($testNameToSizeForUse[$testNameForUse]);
             }
         }
 
@@ -118,7 +120,7 @@ class ParallelGroupSorter
      * Function which takes a group of available tests mapped to size and a desired number of lines matching with the
      * test of closest size and returning.
      *
-     * @param array $testGroup
+     * @param array   $testGroup
      * @param integer $desiredValue
      * @return string
      */
@@ -127,8 +129,12 @@ class ParallelGroupSorter
         $winner = key($testGroup);
         $closestThreshold = $desiredValue;
         foreach ($testGroup as $testName => $testValue) {
-            $testThreshold =  abs($desiredValue - $testValue);
-            if ($closestThreshold > $testThreshold) {
+            // find the difference between the desired value and test candidate for the group
+            $testThreshold =  $desiredValue - $testValue;
+
+            // if we see that the gap between the desired value is non-negative and lower than the current closest make
+            // the test the winner.
+            if ($closestThreshold > $testThreshold && $testThreshold > 0) {
                 $closestThreshold = $testThreshold;
                 $winner = $testName;
             }
@@ -141,7 +147,7 @@ class ParallelGroupSorter
      * Function which takes an array of test names mapped to suite name and a size limitation for each group of tests.
      * The function divides suites that are over the specified limit and returns the resulting suites in an array.
      *
-     * @param array $suiteConfiguration
+     * @param array   $suiteConfiguration
      * @param integer $lineLimit
      * @return array
      */
@@ -187,7 +193,7 @@ class ParallelGroupSorter
             foreach ($test as $testName) {
                 $suiteNameToTestSize[$suite][$testName] = TestObjectHandler::getInstance()
                     ->getObject($testName)
-                    ->getTestActionCount();
+                    ->getEstimatedDuration();
             }
         }
 
@@ -222,32 +228,32 @@ class ParallelGroupSorter
      * Input {suitename = 'sample', tests = ['test1' => 100,'test2' => 150, 'test3' => 300], linelimit = 275}
      * Result { ['sample_01' => ['test3' => 300], 'sample_02' => ['test2' => 150, 'test1' => 100]] }
      *
-     * @param string $suiteName
-     * @param array $tests
-     * @param integer $lineLimit
+     * @param string  $suiteName
+     * @param array   $tests
+     * @param integer $maxTime
      * @return array
      */
-    private function splitTestSuite($suiteName, $tests, $lineLimit)
+    private function splitTestSuite($suiteName, $tests, $maxTime)
     {
         arsort($tests);
-        $split_suites = [];
+        $splitSuites = [];
         $availableTests = $tests;
-        $split_count = 0;
+        $splitCount = 0;
 
         foreach ($tests as $test => $size) {
             if (!array_key_exists($test, $availableTests)) {
                 continue;
             }
 
-            $group = $this->createTestGroup($lineLimit, $test, $size, $availableTests);
-            $split_suites["{$suiteName}_${split_count}"] = $group;
-            $this->addSuiteToConfig($suiteName, "{$suiteName}_${split_count}", $group);
+            $group = $this->createTestGroup($maxTime, $test, $size, $availableTests);
+            $splitSuites["{$suiteName}_${splitCount}"] = $group;
+            $this->addSuiteToConfig($suiteName, "{$suiteName}_${splitCount}", $group);
 
             $availableTests = array_diff_key($availableTests, $group);
-            $split_count++;
+            $splitCount++;
         }
 
-        return $split_suites;
+        return $splitSuites;
     }
 
     /**
@@ -257,7 +263,7 @@ class ParallelGroupSorter
      *
      * @param string $originalSuiteName
      * @param string $newSuiteName
-     * @param array $tests
+     * @param array  $tests
      * @return void
      */
     private function addSuiteToConfig($originalSuiteName, $newSuiteName, $tests)

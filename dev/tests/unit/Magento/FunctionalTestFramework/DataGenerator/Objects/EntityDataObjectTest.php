@@ -6,7 +6,9 @@
 
 namespace Magento\FunctionalTestingFramework\DataGenerator\Objects;
 
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use tests\unit\Util\TestLoggingUtil;
 
 /**
  * The following function declarations override the global function_exists and declare msq/msqs for use
@@ -32,8 +34,17 @@ function msqs($id = null)
 /**
  * Class EntityDataObjectTest
  */
-class EntityDataObjectTest extends TestCase
+class EntityDataObjectTest extends MagentoTestCase
 {
+    /**
+     * Before test functionality
+     * @return void
+     */
+    public function setUp()
+    {
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
+    }
+
     public function testBasicGetters()
     {
         $data = ["datakey1" => "value1"];
@@ -77,12 +88,11 @@ class EntityDataObjectTest extends TestCase
         $dataObject = new EntityDataObject("name", "type", $data, null, null, $vars);
         // Perform Asserts
         $this->assertEquals("id", $dataObject->getVarReference("someOtherEntity"));
-
     }
 
     public function testGetDataByNameInvalidUniquenessFormatValue()
     {
-        $this->expectException("Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException");
+        $this->expectException(TestFrameworkException::class);
         $data = ["datakey1" => "value1", "datakey2" => "value2", "datakey3" => "value3"];
         $dataObject = new EntityDataObject("name", "type", $data, null, null, null);
         // Trigger Exception
@@ -92,7 +102,7 @@ class EntityDataObjectTest extends TestCase
     public function testUniquenessFunctionsDontExist()
     {
         $this->markTestIncomplete('Test fails, as msqMock is always declared in test runs.');
-        $this->expectException("Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException");
+        $this->expectException(TestFrameworkException::class);
         $data = ["datakey1" => "value1", "datakey2" => "value2", "datakey3" => "value3"];
         $uniquenessKeys = ["datakey1" => "suffix"];
         $dataObject = new EntityDataObject("name", "type", $data, null, $uniquenessKeys, null);
@@ -108,5 +118,14 @@ class EntityDataObjectTest extends TestCase
         // Perform Asserts
         $this->assertEquals("linkedEntity1", $dataObject->getLinkedEntitiesOfType("linkedEntityType")[0]);
         $this->assertEquals("linkedEntity2", $dataObject->getLinkedEntitiesOfType("otherEntityType")[0]);
+    }
+
+    /**
+     * After class functionality
+     * @return void
+     */
+    public static function tearDownAfterClass()
+    {
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 }

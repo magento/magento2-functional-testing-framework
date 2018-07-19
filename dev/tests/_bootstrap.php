@@ -6,21 +6,33 @@
 
 error_reporting(~E_USER_NOTICE);
 define('PROJECT_ROOT', dirname(dirname(__DIR__)));
-require_once PROJECT_ROOT . '/vendor/autoload.php';
-require_once 'util/MftfTestCase.php';
+
+$vendorAutoloadPath = realpath(PROJECT_ROOT . '/vendor/autoload.php');
+$mftfTestCasePath = realpath(PROJECT_ROOT . '/dev/tests/util/MftfTestCase.php');
+
+require_once $vendorAutoloadPath;
+require_once $mftfTestCasePath;
 
 // Set up AspectMock
 $kernel = \AspectMock\Kernel::getInstance();
 $kernel->init([
     'debug' => true,
-    'includePaths' => [PROJECT_ROOT . '/src']
+    'includePaths' => [PROJECT_ROOT . DIRECTORY_SEPARATOR . 'src'],
+    'cacheDir' => PROJECT_ROOT .
+        DIRECTORY_SEPARATOR .
+        'dev' .
+        DIRECTORY_SEPARATOR .
+        'tests' .
+        DIRECTORY_SEPARATOR .
+        '.cache'
 ]);
 
 // set mftf appplication context
 \Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::create(
     true,
-    \Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::GENERATION_PHASE,
-    true
+    \Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::UNIT_TEST_PHASE,
+    true,
+    false
 );
 
 // Load needed framework env params
@@ -60,6 +72,27 @@ foreach (sortInterfaces($functionalUtilFiles) as $functionalUtilFile) {
 $unitUtilFiles = glob(TESTS_BP . DIRECTORY_SEPARATOR . 'unit' . $utilDir);
 foreach (sortInterfaces($unitUtilFiles) as $unitUtilFile) {
     require($unitUtilFile);
+}
+
+
+// Mocks suite files location getter return to get files in verification/_suite Directory
+// This mocks the paths of the suite files but still parses the xml files
+$suiteDirectory =  TESTS_BP . DIRECTORY_SEPARATOR . "verification" . DIRECTORY_SEPARATOR . "_suite";
+
+$paths = [
+    $suiteDirectory . DIRECTORY_SEPARATOR . 'functionalSuite.xml',
+    $suiteDirectory . DIRECTORY_SEPARATOR . 'functionalSuiteHooks.xml'
+];
+
+// create and return the iterator for these file paths
+$iterator = new Magento\FunctionalTestingFramework\Util\Iterator\File($paths);
+try {
+    AspectMock\Test::double(
+        Magento\FunctionalTestingFramework\Config\FileResolver\Root::class,
+        ['get' => $iterator]
+    )->make();
+} catch (Exception $e) {
+    echo "Suite directory not mocked.";
 }
 
 function sortInterfaces($files)

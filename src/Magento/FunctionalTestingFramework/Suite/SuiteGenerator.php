@@ -7,11 +7,13 @@
 namespace Magento\FunctionalTestingFramework\Suite;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Suite\Generators\GroupClassGenerator;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Manifest\BaseTestManifest;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Symfony\Component\Yaml\Yaml;
@@ -71,13 +73,11 @@ class SuiteGenerator
      *
      * @param BaseTestManifest $testManifest
      * @return void
+     * @throws \Exception
      */
     public function generateAllSuites($testManifest)
     {
-        $suites = array_keys(SuiteObjectHandler::getInstance()->getAllObjects());
-        if ($testManifest != null) {
-            $suites = $testManifest->getSuiteConfig();
-        }
+        $suites = $testManifest->getSuiteConfig();
 
         foreach ($suites as $suiteName => $suiteContent) {
             $firstElement = array_values($suiteContent)[0];
@@ -95,42 +95,12 @@ class SuiteGenerator
     }
 
     /**
-     * Returns an array of tests contained within suites as keys pointed at the name of their corresponding suite.
-     *
-     * @return array
-     */
-    public function getTestsReferencedInSuites()
-    {
-        $testsReferencedInSuites = [];
-        $suites = SuiteObjectHandler::getInstance()->getAllObjects();
-
-        // see if we have a specific suite configuration.
-        if (!empty($this->suiteReferences)) {
-            $suites = array_intersect_key($suites, $this->suiteReferences);
-        }
-
-        foreach ($suites as $suite) {
-            /** @var SuiteObject $suite */
-            $test_keys = array_keys($suite->getTests());
-
-            // see if we need to filter which tests we'll be generating.
-            if (array_key_exists($suite->getName(), $this->suiteReferences)) {
-                $test_keys = $this->suiteReferences[$suite->getName()] ?? $test_keys;
-            }
-
-            $testToSuiteName = array_fill_keys($test_keys, [$suite->getName()]);
-            $testsReferencedInSuites = array_merge_recursive($testsReferencedInSuites, $testToSuiteName);
-        }
-
-        return $testsReferencedInSuites;
-    }
-
-    /**
      * Function which takes a suite name and generates corresponding dir, test files, group class, and updates
      * yml configuration for group run.
      *
      * @param string $suiteName
      * @return void
+     * @throws \Exception
      */
     public function generateSuite($suiteName)
     {
@@ -144,9 +114,11 @@ class SuiteGenerator
      * run so that any pre/post conditions can be duplicated.
      *
      * @param string $suiteName
-     * @param array $tests
+     * @param array  $tests
      * @param string $originalSuiteName
      * @return void
+     * @throws TestReferenceException
+     * @throws XmlException
      */
     private function generateSuiteFromTest($suiteName, $tests = [], $originalSuiteName = null)
     {
@@ -169,7 +141,10 @@ class SuiteGenerator
         $groupNamespace = $this->generateGroupFile($suiteName, $relevantTests, $originalSuiteName);
 
         $this->appendEntriesToConfig($suiteName, $fullPath, $groupNamespace);
-        print "Suite ${suiteName} generated to ${relativePath}.\n";
+        LoggingUtil::getInstance()->getLogger(SuiteGenerator::class)->info(
+            "suite generated",
+            ['suite' => $suiteName, 'relative_path' => $relativePath]
+        );
     }
 
     /**
@@ -177,26 +152,22 @@ class SuiteGenerator
      * prevent possible invalid test configurations from executing.
      *
      * @param string $suiteName
-     * @param array $testsReferenced
+     * @param array  $testsReferenced
      * @param string $originalSuiteName
      * @return void
      * @throws TestReferenceException
+     * @throws XmlException
      */
     private function validateTestsReferencedInSuite($suiteName, $testsReferenced, $originalSuiteName)
     {
         $suiteRef = $originalSuiteName ?? $suiteName;
         $possibleTestRef = SuiteObjectHandler::getInstance()->getObject($suiteRef)->getTests();
-        $invalidTestRef = null;
-        $errorMsg = "Cannot reference tests not declared as part of {$suiteRef}:\n ";
+        $errorMsg = "Cannot reference tests whcih are not declared as part of suite.";
 
-        array_walk($testsReferenced, function ($value) use (&$invalidTestRef, $possibleTestRef, &$errorMsg) {
-            if (!array_key_exists($value, $possibleTestRef)) {
-                $invalidTestRef.= "\t{$value}\n";
-            }
-        });
+        $invalidTestRef = array_diff($testsReferenced, array_keys($possibleTestRef));
 
-        if ($invalidTestRef != null) {
-            throw new TestReferenceException($errorMsg . $invalidTestRef);
+        if (!empty($invalidTestRef)) {
+            throw new TestReferenceException($errorMsg, ['suite' => $suiteRef, 'test' => $invalidTestRef]);
         }
     }
 
@@ -205,8 +176,9 @@ class SuiteGenerator
      * and generates applicable suites.
      *
      * @param string $suiteName
-     * @param array $suiteContent
+     * @param array  $suiteContent
      * @return void
+     * @throws \Exception
      */
     private function generateSplitSuiteFromTest($suiteName, $suiteContent)
     {
@@ -220,9 +192,11 @@ class SuiteGenerator
      * and generates a group file which captures suite level preconditions.
      *
      * @param string $suiteName
-     * @param array $tests
+     * @param array  $tests
      * @param string $originalSuiteName
      * @return null|string
+     * @throws XmlException
+     * @throws TestReferenceException
      */
     private function generateGroupFile($suiteName, $tests, $originalSuiteName)
     {
@@ -266,7 +240,8 @@ class SuiteGenerator
      */
     private function appendEntriesToConfig($suiteName, $suitePath, $groupNamespace)
     {
-        $relativeSuitePath = substr($suitePath, strlen(dirname(dirname(TESTS_BP))) + 1);
+        $relativeSuitePath = substr($suitePath, strlen(TESTS_BP));
+        $relativeSuitePath = ltrim($relativeSuitePath, DIRECTORY_SEPARATOR);
 
         $ymlArray = self::getYamlFileContents();
         if (!array_key_exists(self::YAML_GROUPS_TAG, $ymlArray)) {
@@ -298,13 +273,11 @@ class SuiteGenerator
                 if (preg_match('/(Group\\\\.*)/', $entry)) {
                     unset($newYmlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG][$key]);
                 }
-
             }
 
             // needed for proper yml file generation based on indices
             $newYmlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG] =
                 array_values($newYmlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG]);
-
         }
 
         if (array_key_exists(self::YAML_GROUPS_TAG, $newYmlArray)) {
@@ -321,8 +294,9 @@ class SuiteGenerator
      * generator which is then called to create all the test files for the suite.
      *
      * @param string $path
-     * @param array $tests
+     * @param array  $tests
      * @return void
+     * @throws TestReferenceException
      */
     private function generateRelevantGroupTests($path, $tests)
     {
@@ -368,6 +342,6 @@ class SuiteGenerator
      */
     private static function getYamlConfigFilePath()
     {
-        return dirname(dirname(TESTS_BP)) . DIRECTORY_SEPARATOR;
+        return TESTS_BP . DIRECTORY_SEPARATOR;
     }
 }

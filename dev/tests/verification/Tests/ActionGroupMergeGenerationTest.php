@@ -108,4 +108,26 @@ class ActionGroupMergeGenerationTest extends MftfTestCase
     {
         $this->generateAndCompareTest('ArgumentWithSameNameAsElement');
     }
+
+    /**
+     * Test an action group with a merge counterpart that's merged via insertBefore
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testMergedActionGroupViaInsertBefore()
+    {
+        $this->generateAndCompareTest('ActionGroupMergedViaInsertBefore');
+    }
+
+    /**
+     * Test an action group with a merge counterpart that's merged via insertAfter
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testMergedActionGroupViaInsertAfter()
+    {
+        $this->generateAndCompareTest('ActionGroupMergedViaInsertAfter');
+    }
 }

@@ -35,8 +35,9 @@ class TestHookObjectExtractor extends BaseObjectExtractor
      *
      * @param string $parentName
      * @param string $hookType
-     * @param array $testHook
+     * @param array  $testHook
      * @return TestHookObject
+     * @throws \Exception
      */
     public function extractHook($parentName, $hookType, $testHook)
     {

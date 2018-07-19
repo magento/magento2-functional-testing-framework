@@ -5,6 +5,7 @@ use Magento\FunctionalTestingFramework\AcceptanceTester;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -20,6 +21,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class DataReplacementTestCest
 {
 	/**
+	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
@@ -28,6 +30,7 @@ class DataReplacementTestCest
 	public function DataReplacementTest(AcceptanceTester $I)
 	{
 		$I->fillField("#selector", "StringBefore John StringAfter");
+		$I->seeCurrentUrlMatches("~\/John~i");
 		$I->fillField("#John", "input");
 		$I->dragAndDrop("#John", "Doe");
 		$I->conditionalClick("Doe", "#John", true);
@@ -50,5 +53,7 @@ class DataReplacementTestCest
 		$I->searchAndMultiSelectOption("#selector", [msq("uniqueData") . "John", "Doe" . msq("uniqueData")]);
 		$I->selectMultipleOptions("#Doe" . msq("uniqueData"), "#element", [msq("uniqueData") . "John", "Doe" . msq("uniqueData")]);
 		$I->fillField(".selector", "0");
+		$insertCommand = $I->magentoCLI("do something Doe" . msq("uniqueData") . " with uniqueness");
+		$I->comment($insertCommand);
 	}
 }

@@ -5,6 +5,7 @@ use Magento\FunctionalTestingFramework\AcceptanceTester;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -50,7 +51,7 @@ class BasicFunctionalTestCest
 
 	/**
 	 * @Severity(level = SeverityLevel::CRITICAL)
-	 * @Features({"Basic Functional Cest"})
+	 * @Features({"TestModule"})
 	 * @Stories({"MQE-305"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
@@ -98,13 +99,17 @@ class BasicFunctionalTestCest
 		$executeJSKey1 = $I->executeJS("someJSFunction");
 		$I->fillField(".functionalTestSelector", "someInput");
 		$I->fillField(".functionalTestSelector", "0");
+		$date = new \DateTime();
+		$date->setTimestamp(strtotime("Now"));
+		$date->setTimezone(new \DateTimeZone("America/Los_Angeles"));
+		$generateDateKey = $date->format("H:i:s");
 		$grabAttributeFromKey1 = $I->grabAttributeFrom(".functionalTestSelector", "someInput");
 		$grabCookieKey1 = $I->grabCookie("grabCookieInput", ['domain' => 'www.google.com']);
 		$grabFromCurrentUrlKey1 = $I->grabFromCurrentUrl("/grabCurrentUrl");
 		$grabMultipleKey1 = $I->grabMultiple(".functionalTestSelector");
 		$grabTextFromKey1 = $I->grabTextFrom(".functionalTestSelector");
 		$grabValueFromKey1 = $I->grabValueFrom(".functionalTestSelector");
-		$magentoCli1 = $I->magentoCLI("maintenance:enable");
+		$magentoCli1 = $I->magentoCLI("maintenance:enable", "\"stuffHere\"");
 		$I->comment($magentoCli1);
 		$I->makeScreenshot("screenShotInput");
 		$I->maximizeWindow();

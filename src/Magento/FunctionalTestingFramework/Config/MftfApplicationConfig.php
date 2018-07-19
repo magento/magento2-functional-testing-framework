@@ -11,12 +11,13 @@ class MftfApplicationConfig
 {
     const GENERATION_PHASE = "generation";
     const EXECUTION_PHASE = "execution";
-    const MFTF_PHASES = [self::GENERATION_PHASE, self::EXECUTION_PHASE];
+    const UNIT_TEST_PHASE = "testing";
+    const MFTF_PHASES = [self::GENERATION_PHASE, self::EXECUTION_PHASE, self::UNIT_TEST_PHASE];
 
     /**
      * Determines whether the user has specified a force option for generation
      *
-     * @var bool
+     * @var boolean
      */
     private $forceGenerate;
 
@@ -30,9 +31,16 @@ class MftfApplicationConfig
     /**
      * Determines whether the user would like to execute mftf in a verbose run.
      *
-     * @var bool
+     * @var boolean
      */
     private $verboseEnabled;
+
+    /**
+     * Determines whether the user would like to execute mftf in a verbose run.
+     *
+     * @var boolean
+     */
+    private $debugEnabled;
 
     /**
      * MftfApplicationConfig Singelton Instance
@@ -44,13 +52,18 @@ class MftfApplicationConfig
     /**
      * MftfApplicationConfig constructor.
      *
-     * @param bool $forceGenerate
-     * @param string $phase
-     * @param bool $verboseEnabled
+     * @param boolean $forceGenerate
+     * @param string  $phase
+     * @param boolean $verboseEnabled
+     * @param boolean $debugEnabled
      * @throws TestFrameworkException
      */
-    private function __construct($forceGenerate = false, $phase = self::EXECUTION_PHASE, $verboseEnabled = null)
-    {
+    private function __construct(
+        $forceGenerate = false,
+        $phase = self::EXECUTION_PHASE,
+        $verboseEnabled = null,
+        $debugEnabled = null
+    ) {
         $this->forceGenerate = $forceGenerate;
 
         if (!in_array($phase, self::MFTF_PHASES)) {
@@ -59,21 +72,24 @@ class MftfApplicationConfig
 
         $this->phase = $phase;
         $this->verboseEnabled = $verboseEnabled;
+        $this->debugEnabled = $debugEnabled;
     }
 
     /**
      * Creates an instance of the configuration instance for reference once application has started. This function
      * returns void and is only run once during the lifetime of the application.
      *
-     * @param bool $forceGenerate
-     * @param string $phase
-     * @param bool $verboseEnabled
+     * @param boolean $forceGenerate
+     * @param string  $phase
+     * @param boolean $verboseEnabled
+     * @param boolean $debugEnabled
      * @return void
      */
-    public static function create($forceGenerate, $phase, $verboseEnabled)
+    public static function create($forceGenerate, $phase, $verboseEnabled, $debugEnabled)
     {
         if (self::$MFTF_APPLICATION_CONTEXT == null) {
-            self::$MFTF_APPLICATION_CONTEXT = new MftfApplicationConfig($forceGenerate, $phase, $verboseEnabled);
+            self::$MFTF_APPLICATION_CONTEXT =
+                new MftfApplicationConfig($forceGenerate, $phase, $verboseEnabled, $debugEnabled);
         }
     }
 
@@ -97,7 +113,7 @@ class MftfApplicationConfig
     /**
      * Returns a booelan indiciating whether or not the user has indicated a forced generation.
      *
-     * @return bool
+     * @return boolean
      */
     public function forceGenerateEnabled()
     {
@@ -108,11 +124,22 @@ class MftfApplicationConfig
      * Returns a boolean indicating whether the user has indicated a verbose run, which will cause all applicable
      * text to print to the console.
      *
-     * @return bool
+     * @return boolean
      */
     public function verboseEnabled()
     {
         return $this->verboseEnabled ?? getenv('MFTF_DEBUG');
+    }
+
+    /**
+     * Returns a boolean indicating whether the user has indicated a debug run, which will lengthy validation
+     * with some extra error messaging to be run
+     *
+     * @return boolean
+     */
+    public function debugEnabled()
+    {
+        return $this->debugEnabled ?? getenv('MFTF_DEBUG');
     }
 
     /**
