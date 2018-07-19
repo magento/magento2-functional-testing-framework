@@ -75,7 +75,7 @@ class LoggingUtil
      *
      * @return string
      */
-    private function getLoggingPath()
+    public function getLoggingPath()
     {
         return TESTS_BP . DIRECTORY_SEPARATOR . "mftf.log";
     }

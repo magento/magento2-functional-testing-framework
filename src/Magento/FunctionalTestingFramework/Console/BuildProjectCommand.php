@@ -7,6 +7,7 @@ declare(strict_types = 1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Filesystem\Filesystem;
@@ -17,6 +18,12 @@ use Symfony\Component\Process\Process;
 use Magento\FunctionalTestingFramework\Util\Env\EnvProcessor;
 use Symfony\Component\Yaml\Yaml;
 
+/**
+ * Class BuildProjectCommand
+ * @package Magento\FunctionalTestingFramework\Console
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class BuildProjectCommand extends Command
 {
     const DEFAULT_YAML_INLINE_DEPTH = 10;
@@ -146,6 +153,12 @@ class BuildProjectCommand extends Command
             FW_BP . '/etc/config/.credentials.example',
             self::CREDENTIALS_FILE_PATH
         );
+
+        // Remove and Create Log File
+        $logPath = LoggingUtil::getInstance()->getLoggingPath();
+        $fileSystem->remove($logPath);
+        $fileSystem->touch($logPath);
+        $fileSystem->chmod($logPath, 0777);
 
         $output->writeln('.credentials.example successfully applied.');
     }
