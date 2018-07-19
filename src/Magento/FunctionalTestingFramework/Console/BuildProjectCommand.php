@@ -8,7 +8,6 @@ declare(strict_types = 1);
 namespace Magento\FunctionalTestingFramework\Console;
 
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
-use Magento\Invitation\Model\Logging;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Filesystem\Filesystem;
@@ -19,6 +18,12 @@ use Symfony\Component\Process\Process;
 use Magento\FunctionalTestingFramework\Util\Env\EnvProcessor;
 use Symfony\Component\Yaml\Yaml;
 
+/**
+ * Class BuildProjectCommand
+ * @package Magento\FunctionalTestingFramework\Console
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class BuildProjectCommand extends Command
 {
     const DEFAULT_YAML_INLINE_DEPTH = 10;
