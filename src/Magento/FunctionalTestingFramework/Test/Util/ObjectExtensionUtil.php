@@ -146,7 +146,8 @@ class ObjectExtensionUtil
     private function resolveExtendedHooks($testObject, $parentTestObject)
     {
         $testHooks = $testObject->getHooks();
-        $parentHooks = $parentTestObject->getHooks();
+        // Send true to getHooks to return even if test is skipped
+        $parentHooks = $parentTestObject->getHooks(true);
 
         // Get the hooks for each Test merge changes from the child hooks to the parent hooks into the child hooks
         foreach ($testHooks as $key => $hook) {
