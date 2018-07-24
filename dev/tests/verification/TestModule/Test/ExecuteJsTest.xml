@@ -11,5 +11,7 @@
     <test name="ExecuteJsEscapingTest">
         <executeJS function="return $javascriptVariable" stepKey="javaVariableEscape"/>
         <executeJS function="return {$doNotEscape}" stepKey="mftfVariableNotEscaped"/>
+        <executeJS function="return $persisted.data$" stepKey="persistedDataNotEscaped"/>
+        <executeJS function="return $$persisted.data$$" stepKey="hookPersistedDataNotEscaped"/>
     </test>
 </tests>
