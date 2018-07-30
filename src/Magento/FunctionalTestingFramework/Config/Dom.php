@@ -366,7 +366,7 @@ class Dom
         try {
             $dom->loadXML($xml);
         } catch (\Exception $exception) {
-            throw new ValidationException($filename . "\n");
+            throw new ValidationException("XML Parse Error: $filename\n");
         }
         if ($this->schemaFile) {
             $errors = self::validateDomDocument($dom, $this->schemaFile, $this->errorFormat);

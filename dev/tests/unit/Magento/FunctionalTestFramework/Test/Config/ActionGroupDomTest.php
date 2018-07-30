@@ -6,6 +6,7 @@
 namespace Tests\unit\Magento\FunctionalTestFramework\Test\Config;
 
 use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
+use Magento\FunctionalTestingFramework\Config\Dom\ValidationException;
 use Magento\FunctionalTestingFramework\Test\Config\ActionGroupDom;
 use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 
@@ -28,5 +29,21 @@ class ActionGroupDomTest extends MagentoTestCase
 
         $this->expectException(\Exception::class);
         $exceptionCollector->throwException();
+    }
+
+    /**
+     * Test Action Group invalid XML
+     */
+    public function testActionGroupDomInvalidXmlValidation()
+    {
+        $sampleXml = "<actionGroups>
+            <actionGroup name=\"actionGroupWithoutArguments\">
+                <wait>
+            </actionGroup>
+         </actionGroups>";
+
+        $exceptionCollector = new ExceptionCollector();
+        $this->expectException(ValidationException::class);
+        new ActionGroupDom($sampleXml, 'bad.xml', $exceptionCollector);
     }
 }
