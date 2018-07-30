@@ -84,7 +84,7 @@ class TestContextExtension extends \Codeception\Extension
         try {
             $actorClass = $e->getTest()->getMetadata()->getCurrent('actor');
             $I = new $actorClass($cest->getScenario());
-            if (version_compare(Codecept::VERSION,TestContextExtension::CODECEPT_AFTER_VERSION, "<=")) {
+            if (version_compare(Codecept::VERSION, TestContextExtension::CODECEPT_AFTER_VERSION, "<=")) {
                 call_user_func(\Closure::bind(
                     function () use ($cest, $I) {
                         $cest->executeHook($I, 'after');
