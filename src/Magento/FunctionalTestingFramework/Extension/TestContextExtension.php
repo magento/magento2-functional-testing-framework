@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Extension;
 
+use \Codeception\Codecept;
 use \Codeception\Events;
 use Magento\FunctionalTestingFramework\Extension\ErrorLogger;
 
@@ -16,6 +17,7 @@ use Magento\FunctionalTestingFramework\Extension\ErrorLogger;
 class TestContextExtension extends \Codeception\Extension
 {
     const TEST_PHASE_AFTER = "_after";
+    const CODECEPT_AFTER_VERSION = "2.3.9";
 
     /**
      * Codeception Events Mapping to methods
@@ -82,13 +84,15 @@ class TestContextExtension extends \Codeception\Extension
         try {
             $actorClass = $e->getTest()->getMetadata()->getCurrent('actor');
             $I = new $actorClass($cest->getScenario());
-            call_user_func(\Closure::bind(
-                function () use ($cest, $I) {
-                    $cest->executeHook($I, 'after');
-                },
-                null,
-                $cest
-            ));
+            if (version_compare(Codecept::VERSION,TestContextExtension::CODECEPT_AFTER_VERSION, "<=")) {
+                call_user_func(\Closure::bind(
+                    function () use ($cest, $I) {
+                        $cest->executeHook($I, 'after');
+                    },
+                    null,
+                    $cest
+                ));
+            }
         } catch (\Exception $e) {
             // Do not rethrow Exception
         }
