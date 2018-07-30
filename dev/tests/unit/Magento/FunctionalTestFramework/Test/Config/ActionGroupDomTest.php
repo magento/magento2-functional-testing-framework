@@ -37,13 +37,14 @@ class ActionGroupDomTest extends MagentoTestCase
     public function testActionGroupDomInvalidXmlValidation()
     {
         $sampleXml = "<actionGroups>
-            <actionGroup name=\"actionGroupWithoutArguments\">
+            <actionGroup name=\"sampleActionGroup\">
                 <wait>
             </actionGroup>
          </actionGroups>";
 
         $exceptionCollector = new ExceptionCollector();
         $this->expectException(ValidationException::class);
-        new ActionGroupDom($sampleXml, 'bad.xml', $exceptionCollector);
+        $this->expectExceptionMessage("XML Parse Error: invalid.xml\n");
+        new ActionGroupDom($sampleXml, 'invalid.xml', $exceptionCollector);
     }
 }
