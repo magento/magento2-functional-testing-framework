@@ -1,6 +1,12 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.3.1
+-----
+### Enhancements  
+* Maintainability
+    * `mftf build:project` now copies over the `command.php` file into the parent Magento installation, if detected.
+
 2.3.0
 -----
 ### Enhancements  
