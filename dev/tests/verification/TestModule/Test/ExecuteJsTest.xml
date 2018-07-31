@@ -13,5 +13,6 @@
         <executeJS function="return {$doNotEscape}" stepKey="mftfVariableNotEscaped"/>
         <executeJS function="return $persisted.data$" stepKey="persistedDataNotEscaped"/>
         <executeJS function="return $$persisted.data$$" stepKey="hookPersistedDataNotEscaped"/>
+        <executeJS function="document.querySelector('entity option[value=$$productAttribute.attribute_code$$]').setAttribute('selected', 'selected')" stepKey="addNewAttributeForRule"/>
     </test>
 </tests>
