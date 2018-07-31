@@ -164,15 +164,10 @@ class TestObject
     /**
      * Returns hooks.
      *
-     * @param boolean $isExtended
      * @return TestHookObject[]
      */
-    public function getHooks($isExtended = false)
+    public function getHooks()
     {
-        // if this test is skipped we do not want any before/after actions to generate as the tests will not run
-        if ($this->isSkipped() && !$isExtended) {
-            return [];
-        }
         return $this->hooks;
     }
 

@@ -21,6 +21,17 @@ class SkippedGenerationTest extends MftfTestCase
     }
 
     /**
+     * Tests skipped test generation does not generate hooks.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testSkippedWithHooksGeneration()
+    {
+        $this->generateAndCompareTest('SkippedTestWithHooks');
+    }
+
+    /**
      * Tests skipped test with multiple issues generation.
      *
      * @throws \Exception
