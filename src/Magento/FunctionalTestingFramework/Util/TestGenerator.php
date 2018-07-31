@@ -207,7 +207,11 @@ class TestGenerator
 
         $className = $testObject->getCodeceptionName();
         try {
-            $hookPhp = $this->generateHooksPhp($testObject->getHooks());
+            if (!$testObject->isSkipped()) {
+                $hookPhp = $this->generateHooksPhp($testObject->getHooks());
+            } else {
+                $hookPhp = null;
+            }
             $testsPhp = $this->generateTestPhp($testObject);
         } catch (TestReferenceException $e) {
             throw new TestReferenceException($e->getMessage() . "\n" . $testObject->getFilename());
