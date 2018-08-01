@@ -463,9 +463,11 @@ class TestGenerator
     {
         //TODO: Refactor Method according to PHPMD warnings, remove @SuppressWarnings accordingly.
         $testSteps = "";
+        $previousStepKeys = [];
 
         foreach ($actionObjects as $actionObject) {
             $stepKey = $actionObject->getStepKey();
+            $previousStepKeys[] = $stepKey;
             $customActionAttributes = $actionObject->getCustomActionAttributes();
             $attribute = null;
             $selector = null;
@@ -755,6 +757,8 @@ class TestGenerator
                 case "deleteData":
                     if (isset($customActionAttributes['createDataKey'])) {
                         $key = $customActionAttributes['createDataKey'];
+                        $keyIsFoundInSameBlock = array_search($key, $previousStepKeys);
+
                         //Add an informative statement to help the user debug test runs
                         $contextSetter = sprintf(
                             "\t\t$%s->amGoingTo(\"delete entity that has the createDataKey: %s\");\n",
@@ -763,7 +767,7 @@ class TestGenerator
                         );
                         $deleteEntityFunctionCall = "";
 
-                        if ($hookObject) {
+                        if ($hookObject || $keyIsFoundInSameBlock === false) {
                             $deleteEntityFunctionCall .= sprintf("\t\t\$this->%s->deleteEntity();\n", $key);
                         } else {
                             $deleteEntityFunctionCall .= sprintf("\t\t$%s->deleteEntity();\n", $key);
@@ -785,6 +789,7 @@ class TestGenerator
                 case "updateData":
                     $key = $customActionAttributes['createDataKey'];
                     $updateEntity = $customActionAttributes['entity'];
+                    $keyIsFoundInSameBlock = array_search($key, $previousStepKeys);
 
                     //Add an informative statement to help the user debug test runs
                     $testSteps .= sprintf(
@@ -815,7 +820,8 @@ class TestGenerator
                         }
                     }
 
-                    if ($hookObject) {
+                    // If hook object, or if key not found in test block, assume it's class scoped
+                    if ($hookObject || $keyIsFoundInSameBlock === false) {
                         $updateEntityFunctionCall = sprintf("\t\t\$this->%s->updateEntity(\"%s\"", $key, $updateEntity);
                     } else {
                         $updateEntityFunctionCall = sprintf("\t\t\$%s->updateEntity(\"%s\"", $key, $updateEntity);
