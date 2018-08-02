@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Extension;
 
 use \Codeception\Events;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use Magento\FunctionalTestingFramework\Extension\ErrorLogger;
 
 /**
@@ -22,10 +23,21 @@ class TestContextExtension extends \Codeception\Extension
      * @var array
      */
     public static $events = [
+        Events::TEST_START => 'testStart',
         Events::TEST_FAIL => 'testFail',
         Events::STEP_AFTER => 'afterStep',
         Events::TEST_END => 'testError'
     ];
+
+    /**
+     * Codeception event listener function, triggered on test start.
+     * @param \Codeception\Event\TestEvent $e
+     * @throws \Exception
+     */
+    public function testStart(\Codeception\Event\TestEvent $e)
+    {
+        PersistedObjectHandler::getInstance()->clearPersistedObjects();
+    }
 
     /**
      * Codeception event listener function, triggered on test failure.

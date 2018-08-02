@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Util;
 
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
@@ -286,11 +287,8 @@ class TestGenerator
     private function generateUseStatementsPhp()
     {
         $useStatementsPhp = "use Magento\FunctionalTestingFramework\AcceptanceTester;\n";
-
-        $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;\n";
-        $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;\n";
-        $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;\n";
         $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;\n";
+        $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;\n";
         $useStatementsPhp .= "use \Codeception\Util\Locator;\n";
 
         $allureStatements = [
@@ -686,92 +684,67 @@ class TestGenerator
                         $actor,
                         $stepKey
                     );
-                    //Get Entity from Static data.
-                    $testSteps .= sprintf(
-                        "\t\t$%s = DataObjectHandler::getInstance()->getObject(\"%s\");\n",
-                        $entity,
-                        $entity
-                    );
 
-                    //HookObject End-Product needs to be created in the Class scope,
-                    //otherwise create them in the Test scope.
-                    //Determine if there are required-entities and create array of required-entities for merging.
-                    $requiredEntities = [];
+                    //TODO refactor entity field override to not be individual actionObjects
                     $customEntityFields =
                         $customActionAttributes[ActionObjectExtractor::ACTION_OBJECT_PERSISTENCE_FIELDS] ?? [];
-                    $requiredEntityObjects = [];
-                    foreach ($customActionAttributes as $customAttribute) {
-                        if (is_array($customAttribute) && $customAttribute['nodeName'] == 'requiredEntity') {
-                            if ($hookObject) {
-                                $requiredEntities [] = "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
-                                    "->getName() => " . "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
-                                    "->getType()";
-                                $requiredEntityObjects [] = '$this->' . $customAttribute
-                                    [self::REQUIRED_ENTITY_REFERENCE];
-                            } else {
-                                $requiredEntities [] = "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE]
-                                    . "->getName() => " . "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
-                                    "->getType()";
-                                $requiredEntityObjects [] = '$' . $customAttribute[self::REQUIRED_ENTITY_REFERENCE];
-                            }
+
+                    $requiredEntityKeys = [];
+                    foreach ($actionObject->getCustomActionAttributes() as $actionAttribute) {
+                        if (is_array($actionAttribute) && $actionAttribute['nodeName'] == 'requiredEntity') {
+                            //append ActionGroup if provided
+                            $requiredEntityActionGroup = $actionAttribute['actionGroup'] ?? null;
+                            $requiredEntityKeys[] = $actionAttribute['createDataKey'] . $requiredEntityActionGroup;
                         }
                     }
-
+                    // Build array of requiredEntities
+                    $requiredEntityKeysArray = "";
+                    if (!empty($requiredEntityKeys)) {
+                        $requiredEntityKeysArray = '"' . implode('", "', $requiredEntityKeys) . '"';
+                    }
+                    //Determine Scope
+                    $scope = "PersistedObjectHandler::TEST_SCOPE";
                     if ($hookObject) {
-                        $createEntityFunctionCall = sprintf("\t\t\$this->%s->createEntity(", $stepKey);
-                        $dataPersistenceHandlerFunctionCall = sprintf(
-                            "\t\t\$this->%s = new DataPersistenceHandler($%s",
-                            $stepKey,
-                            $entity
-                        );
-                    } else {
-                        $createEntityFunctionCall = sprintf("\t\t\$%s->createEntity(", $stepKey);
-                        $dataPersistenceHandlerFunctionCall = sprintf(
-                            "\t\t$%s = new DataPersistenceHandler($%s",
-                            $stepKey,
-                            $entity
-                        );
+                        $scope = "PersistedObjectHandler::HOOK_SCOPE";
                     }
-
-                    if ($storeCode) {
-                        $createEntityFunctionCall .= sprintf("\"%s\");\n", $storeCode);
-                    } else {
-                        $createEntityFunctionCall .= ");\n";
+                    $createEntityFunctionCall = "\t\tPersistedObjectHandler::getInstance()->createEntity(";
+                    $createEntityFunctionCall .= "\n\t\t\t\"{$stepKey}\",";
+                    $createEntityFunctionCall .= "\n\t\t\t{$scope},";
+                    $createEntityFunctionCall .= "\n\t\t\t\"{$entity}\"";
+                    if (!empty($requiredEntityKeysArray)) {
+                        $createEntityFunctionCall .= ",\n\t\t\t[{$requiredEntityKeysArray}]";
                     }
-
-                    // Add a reference to the requiredEntityObjects to the new DataPersistenceHandler. If there are none
-                    // defined, an empty array will be passed in to the constructor.
-                    $dataPersistenceHandlerFunctionCall .= sprintf(
-                        ", [%s]",
-                        implode(', ', $requiredEntityObjects)
-                    );
-
                     if (count($customEntityFields) > 1) {
-                        $dataPersistenceHandlerFunctionCall .= ", \${$stepKey}Fields";
+                        $createEntityFunctionCall .= ",\n\t\t\t\${$stepKey}Fields";
                     }
-
-                    $dataPersistenceHandlerFunctionCall .= ");\n";
-                    $testSteps .= $dataPersistenceHandlerFunctionCall;
+                    if ($storeCode !== null) {
+                        $createEntityFunctionCall .= ",\n\t\t\t\"{$storeCode}\"";
+                    }
+                    $createEntityFunctionCall .= "\n\t\t);\n";
                     $testSteps .= $createEntityFunctionCall;
                     break;
                 case "deleteData":
                     if (isset($customActionAttributes['createDataKey'])) {
                         $key = $customActionAttributes['createDataKey'];
-                        $keyIsFoundInSameBlock = array_search($key, $previousStepKeys);
-
+                        $actionGroup = $actionObject->getCustomActionAttributes()['actionGroup'] ?? null;
                         //Add an informative statement to help the user debug test runs
                         $contextSetter = sprintf(
                             "\t\t$%s->amGoingTo(\"delete entity that has the createDataKey: %s\");\n",
                             $actor,
                             $key
                         );
-                        $deleteEntityFunctionCall = "";
 
-                        if ($hookObject || $keyIsFoundInSameBlock === false) {
-                            $deleteEntityFunctionCall .= sprintf("\t\t\$this->%s->deleteEntity();\n", $key);
-                        } else {
-                            $deleteEntityFunctionCall .= sprintf("\t\t$%s->deleteEntity();\n", $key);
+                        $key .= $actionGroup;
+                        //Determine Scope
+                        $scope = "PersistedObjectHandler::TEST_SCOPE";
+                        if ($hookObject) {
+                            $scope = "PersistedObjectHandler::HOOK_SCOPE";
                         }
+
+                        $deleteEntityFunctionCall = "\t\tPersistedObjectHandler::getInstance()->deleteEntity(";
+                        $deleteEntityFunctionCall .= "\n\t\t\t\"{$key}\",";
+                        $deleteEntityFunctionCall .= "\n\t\t\t{$scope}";
+                        $deleteEntityFunctionCall .= "\n\t\t);\n";
 
                         $testSteps .= $contextSetter;
                         $testSteps .= $deleteEntityFunctionCall;
@@ -789,7 +762,7 @@ class TestGenerator
                 case "updateData":
                     $key = $customActionAttributes['createDataKey'];
                     $updateEntity = $customActionAttributes['entity'];
-                    $keyIsFoundInSameBlock = array_search($key, $previousStepKeys);
+                    $actionGroup = $actionObject->getCustomActionAttributes()['actionGroup'] ?? null;
 
                     //Add an informative statement to help the user debug test runs
                     $testSteps .= sprintf(
@@ -798,128 +771,90 @@ class TestGenerator
                         $key
                     );
 
-                    //HookObject End-Product needs to be created in the Class scope,
-                    //otherwise create them in the Test scope.
-                    //Determine if there are required-entities and create array of required-entities for merging.
-                    $requiredEntities = [];
-                    $requiredEntityObjects = [];
-                    foreach ($customActionAttributes as $customAttribute) {
-                        if (is_array($customAttribute) && $customAttribute['nodeName'] == 'requiredEntity') {
-                            if ($hookObject) {
-                                $requiredEntities [] = "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
-                                    "->getName() => " . "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
-                                    "->getType()";
-                                $requiredEntityObjects [] = '$this->' . $customAttribute
-                                    [self::REQUIRED_ENTITY_REFERENCE];
-                            } else {
-                                $requiredEntities [] = "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE]
-                                    . "->getName() => " . "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
-                                    "->getType()";
-                                $requiredEntityObjects [] = '$' . $customAttribute[self::REQUIRED_ENTITY_REFERENCE];
-                            }
+                    $key .= $actionGroup;
+                    
+                    // Build array of requiredEntities
+                    $requiredEntityKeys = [];
+                    foreach ($actionObject->getCustomActionAttributes() as $actionAttribute) {
+                        if (is_array($actionAttribute) && $actionAttribute['nodeName'] == 'requiredEntity') {
+                            //append ActionGroup if provided
+                            $requiredEntityActionGroup = $actionAttribute['actionGroup'] ?? null;
+                            $requiredEntityKeys[] = $actionAttribute['createDataKey'] . $requiredEntityActionGroup;
                         }
                     }
-
-                    // If hook object, or if key not found in test block, assume it's class scoped
-                    if ($hookObject || $keyIsFoundInSameBlock === false) {
-                        $updateEntityFunctionCall = sprintf("\t\t\$this->%s->updateEntity(\"%s\"", $key, $updateEntity);
-                    } else {
-                        $updateEntityFunctionCall = sprintf("\t\t\$%s->updateEntity(\"%s\"", $key, $updateEntity);
+                    $requiredEntityKeysArray = "";
+                    if (!empty($requiredEntityKeys)) {
+                        $requiredEntityKeysArray = '"' . implode('", "', $requiredEntityKeys) . '"';
                     }
 
-                    if (!empty($requiredEntities)) {
-                        $updateEntityFunctionCall .= sprintf(
-                            ", [%s]",
-                            implode(', ', $requiredEntityObjects)
-                        );
+                    $scope = "PersistedObjectHandler::TEST_SCOPE";
+                    if ($hookObject) {
+                        $scope = "PersistedObjectHandler::HOOK_SCOPE";
                     }
 
-                    if ($storeCode) {
-                        $updateEntityFunctionCall .= sprintf(", \"%s\");\n", $storeCode);
-                    } else {
-                        $updateEntityFunctionCall .= ");\n";
+                    $updateEntityFunctionCall = "\t\tPersistedObjectHandler::getInstance()->updateEntity(";
+                    $updateEntityFunctionCall .= "\n\t\t\t\"{$key}\",";
+                    $updateEntityFunctionCall .= "\n\t\t\t{$scope},";
+                    $updateEntityFunctionCall .= "\n\t\t\t\"{$updateEntity}\"";
+                    if (!empty($requiredEntityKeysArray)) {
+                        $updateEntityFunctionCall .= ",\n\t\t\t[{$requiredEntityKeysArray}]";
                     }
-
+                    if ($storeCode !== null) {
+                        $updateEntityFunctionCall .= ",\n\t\t\t\"{$storeCode}\"";
+                    }
+                    $updateEntityFunctionCall .= "\n\t\t);\n";
                     $testSteps .= $updateEntityFunctionCall;
+
                     break;
                 case "getData":
                     $entity = $customActionAttributes['entity'];
+                    $index = null;
+                    if (isset($customActionAttributes['index'])) {
+                        $index = (int)$customActionAttributes['index'];
+                    }
                     //Add an informative statement to help the user debug test runs
                     $testSteps .= sprintf(
                         "\t\t$%s->amGoingTo(\"get entity that has the stepKey: %s\");\n",
                         $actor,
                         $stepKey
                     );
-                    //Get Entity from Static data.
-                    $testSteps .= sprintf(
-                        "\t\t$%s = DataObjectHandler::getInstance()->getObject(\"%s\");\n",
-                        $entity,
-                        $entity
-                    );
 
-                    //HookObject End-Product needs to be created in the Class scope,
-                    //otherwise create them in the Test scope.
-                    //Determine if there are required-entities and create array of required-entities for merging.
-                    $requiredEntities = [];
-                    $requiredEntityObjects = [];
-                    foreach ($customActionAttributes as $customAttribute) {
-                        if (is_array($customAttribute) && $customAttribute['nodeName'] = 'requiredEntity') {
-                            if ($hookObject) {
-                                $requiredEntities [] = "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
-                                    "->getName() => " . "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
-                                    "->getType()";
-                                $requiredEntityObjects [] = '$this->' . $customAttribute
-                                    [self::REQUIRED_ENTITY_REFERENCE];
-                            } else {
-                                $requiredEntities [] = "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE]
-                                    . "->getName() => " . "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
-                                    "->getType()";
-                                $requiredEntityObjects [] = '$' . $customAttribute[self::REQUIRED_ENTITY_REFERENCE];
-                            }
+                    // Build array of requiredEntities
+                    $requiredEntityKeys = [];
+                    foreach ($actionObject->getCustomActionAttributes() as $actionAttribute) {
+                        if (is_array($actionAttribute) && $actionAttribute['nodeName'] == 'requiredEntity') {
+                            $requiredEntityActionGroup = $actionAttribute['actionGroup'] ?? null;
+                            $requiredEntityKeys[] = $actionAttribute['createDataKey'] . $requiredEntityActionGroup;
                         }
                     }
+                    $requiredEntityKeysArray = "";
+                    if (!empty($requiredEntityKeys)) {
+                        $requiredEntityKeysArray = '"' . implode('", "', $requiredEntityKeys) . '"';
+                    }
 
+                    //Determine Scope
+                    $scope = "PersistedObjectHandler::TEST_SCOPE";
                     if ($hookObject) {
-                        $getEntityFunctionCall = sprintf("\t\t\$this->%s->getEntity(", $stepKey);
-                        $dataPersistenceHandlerFunctionCall = sprintf(
-                            "\t\t\$this->%s = new DataPersistenceHandler($%s",
-                            $stepKey,
-                            $entity
-                        );
-                    } else {
-                        $getEntityFunctionCall = sprintf("\t\t\$%s->getEntity(", $stepKey);
-                        $dataPersistenceHandlerFunctionCall = sprintf(
-                            "\t\t$%s = new DataPersistenceHandler($%s",
-                            $stepKey,
-                            $entity
-                        );
+                        $scope = "PersistedObjectHandler::HOOK_SCOPE";
                     }
 
-                    if (isset($customActionAttributes['index'])) {
-                        $getEntityFunctionCall .= sprintf("%s", (int)$customActionAttributes['index']);
-                    } else {
-                        $getEntityFunctionCall .= 'null';
+                    //Create Function
+                    $getEntityFunctionCall = "\t\tPersistedObjectHandler::getInstance()->getEntity(";
+                    $getEntityFunctionCall .= "\n\t\t\t\"{$stepKey}\",";
+                    $getEntityFunctionCall .= "\n\t\t\t{$scope},";
+                    $getEntityFunctionCall .= "\n\t\t\t\"{$entity}\"";
+                    if (!empty($requiredEntityKeysArray)) {
+                        $getEntityFunctionCall .= ",\n\t\t\t[{$requiredEntityKeysArray}]";
                     }
-
-                    if ($storeCode) {
-                        $getEntityFunctionCall .= sprintf(", \"%s\");\n", $storeCode);
-                    } else {
-                        $getEntityFunctionCall .= ");\n";
+                    if ($storeCode !== null) {
+                        $getEntityFunctionCall .= ",\n\t\t\t\"{$storeCode}\"";
                     }
-
-                    //If required-entities are defined, reassign dataObject to not overwrite the static definition.
-                    //Also, DataPersistenceHandler needs to be defined with customData array.
-                    if (!empty($requiredEntities)) {
-                        $dataPersistenceHandlerFunctionCall .= sprintf(
-                            ", [%s]);\n",
-                            implode(', ', $requiredEntityObjects)
-                        );
-                    } else {
-                        $dataPersistenceHandlerFunctionCall .= ");\n";
+                    if ($index !== null) {
+                        $getEntityFunctionCall .= ",\n\t\t\t{$index}";
                     }
-
-                    $testSteps .= $dataPersistenceHandlerFunctionCall;
+                    $getEntityFunctionCall .= "\n\t\t);\n";
                     $testSteps .= $getEntityFunctionCall;
+
                     break;
                 case "assertArrayIsSorted":
                     $testSteps .= $this->wrapFunctionCall(
