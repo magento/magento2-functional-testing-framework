@@ -17,22 +17,22 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
+ * @Title("skippedTestWithHooks")
+ * @Description("")
  */
-class ExecuteJsEscapingTestCest
+class SkippedTestWithHooksCest
 {
 	/**
+	 * @Stories({"skippedWithHooks"})
+	 * @Severity(level = SeverityLevel::MINOR)
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ExecuteJsEscapingTest(AcceptanceTester $I)
+	public function SkippedTestWithHooks(AcceptanceTester $I, \Codeception\Scenario $scenario)
 	{
-		$javaVariableEscape = $I->executeJS("return \$javascriptVariable");
-		$mftfVariableNotEscaped = $I->executeJS("return {$doNotEscape}");
-		$persistedDataNotEscaped = $I->executeJS("return " . $persisted->getCreatedDataByName('data'));
-		$hookPersistedDataNotEscaped = $I->executeJS("return " . $this->persisted->getCreatedDataByName('data'));
-		$addNewAttributeForRule = $I->executeJS("document.querySelector('entity option[value=" . $this->productAttribute->getCreatedDataByName('attribute_code') . "]').setAttribute('selected', 'selected')");
+		$scenario->skip("This test is skipped due to the following issues:\nSkippedValue");
 	}
 }

@@ -96,4 +96,15 @@ class ExtendedGenerationTest extends MftfTestCase
     {
         $this->generateAndCompareTest('ChildExtendedTestNoParent');
     }
+
+    /**
+     * Tests extending a skipped test generation.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testExtendingSkippedGeneration()
+    {
+        $this->generateAndCompareTest('ExtendingSkippedTest');
+    }
 }

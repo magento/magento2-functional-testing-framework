@@ -207,7 +207,11 @@ class TestGenerator
 
         $className = $testObject->getCodeceptionName();
         try {
-            $hookPhp = $this->generateHooksPhp($testObject->getHooks());
+            if (!$testObject->isSkipped()) {
+                $hookPhp = $this->generateHooksPhp($testObject->getHooks());
+            } else {
+                $hookPhp = null;
+            }
             $testsPhp = $this->generateTestPhp($testObject);
         } catch (TestReferenceException $e) {
             throw new TestReferenceException($e->getMessage() . "\n" . $testObject->getFilename());
@@ -620,7 +624,7 @@ class TestGenerator
                 }
                 // turn $javaVariable => \$javaVariable but not {$mftfVariable}
                 if ($actionObject->getType() == "executeJS") {
-                    $function = preg_replace('/(?<!{)(\$[\w\d_]+)/', '\\\\$1', $function);
+                    $function = preg_replace('/(?<!{)(\$[A-Za-z._]+)(?![A-z.]*+\$)/', '\\\\$1', $function);
                 }
             }
 
