@@ -21,7 +21,7 @@ modules:
         \Magento\FunctionalTestingFramework\Module\MagentoWebDriver:
             url: "%MAGENTO_BASE_URL%"
             backend_name: "%MAGENTO_BACKEND_NAME%"
-            browser: 'chrome'
+            browser: "%BROWSER%"
             window_size: 1280x1024
             username: "%MAGENTO_ADMIN_USERNAME%"
             password: "%MAGENTO_ADMIN_PASSWORD%"
@@ -32,5 +32,5 @@ modules:
             path: %SELENIUM_PATH%
             capabilities:
               chromeOptions:
-                args: ["--incognito", "--disable-extensions", "--enable-automation"]
+                args: ["--start-maximized", "--disable-extensions", "--enable-automation"]
 
