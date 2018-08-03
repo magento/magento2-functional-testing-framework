@@ -624,7 +624,7 @@ class TestGenerator
                 }
                 // turn $javaVariable => \$javaVariable but not {$mftfVariable}
                 if ($actionObject->getType() == "executeJS") {
-                    $function = preg_replace('/(?<!{)(\$[\w\d_]+)/', '\\\\$1', $function);
+                    $function = preg_replace('/(?<!{)(\$[A-Za-z._]+)(?![A-z.]*+\$)/', '\\\\$1', $function);
                 }
             }
 
