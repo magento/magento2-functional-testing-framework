@@ -1,6 +1,12 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.3.2
+-----
+### Fixes
+* The `executeJs` `function` no longer escapes persisted variables referenced via `$$persisted.key$$`.
+* Extending a test no longer fails to generate the parent `test`'s `before`/`after` blocks if the parent was skipped.
+
 2.3.1
 -----
 ### Enhancements  
