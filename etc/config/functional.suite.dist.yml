@@ -22,7 +22,7 @@ modules:
             url: "%MAGENTO_BASE_URL%"
             backend_name: "%MAGENTO_BACKEND_NAME%"
             browser: "%BROWSER%"
-            window_size: 1280x1024
+            window_size: maximize
             username: "%MAGENTO_ADMIN_USERNAME%"
             password: "%MAGENTO_ADMIN_PASSWORD%"
             pageload_timeout: 30
