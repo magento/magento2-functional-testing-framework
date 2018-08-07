@@ -62,6 +62,7 @@ class ActionObject
     const FUNCTION_CLOSURE_ACTIONS = ['waitForElementChange', 'performOn'];
     const MERGE_ACTION_ORDER_AFTER = 'after';
     const MERGE_ACTION_ORDER_BEFORE = 'before';
+    const SKIP_READINESS_FLAG = 'skipReadiness';
     const ACTION_ATTRIBUTE_URL = 'url';
     const ACTION_ATTRIBUTE_SELECTOR = 'selector';
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER = '/\(.+\)/';
@@ -124,12 +125,20 @@ class ActionObject
     private $actionOrigin = [];
 
     /**
+     * A boolean which represents whether the readiness check will be skipped for the test
+     *
+     * @var boolean
+     */
+    private $skipReadiness = false;
+
+    /**
      * ActionObject constructor.
      *
      * @param string      $stepKey
      * @param string      $type
      * @param array       $actionAttributes
      * @param string|null $linkedAction
+     * @param boolean     $skipReadiness
      * @param string      $order
      * @param array       $actionOrigin
      */
@@ -237,6 +246,18 @@ class ActionObject
     public function setTimeout($timeout)
     {
         $this->timeout = $timeout;
+    }
+
+    /**
+     * This function returns the bool for skipReadiness
+     *
+     * @return boolean
+     */
+    public function getSkipReadinessFlag()
+    {
+        if (array_key_exists(ActionObject::SKIP_READINESS_FLAG, $this->actionAttributes)) {
+            return $this->actionAttributes[ActionObject::SKIP_READINESS_FLAG];
+        }
     }
 
     /**
