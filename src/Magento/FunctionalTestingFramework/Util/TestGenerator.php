@@ -466,6 +466,10 @@ class TestGenerator
 
         foreach ($actionObjects as $actionObject) {
             $stepKey = $actionObject->getStepKey();
+            if ($stepKey == "assertArrayHasKey") {
+                print("here");
+            }
+
             $customActionAttributes = $actionObject->getCustomActionAttributes();
             $attribute = null;
             $selector = null;
@@ -511,6 +515,14 @@ class TestGenerator
             }
             if (isset($customActionAttributes['arguments'])) {
                 $arguments = $this->addUniquenessFunctionCall($customActionAttributes['arguments']);
+            }
+            if (isset($customActionAttributes['skipReadiness'])) {
+                if ($customActionAttributes['skipReadiness']) {
+                    $testSteps .= sprintf(
+                        "\t\t$%s->setReadinessCheck(false);\n",
+                        $actor
+                    );
+                }
             }
 
             if (isset($customActionAttributes['attribute'])) {
@@ -1273,6 +1285,14 @@ class TestGenerator
                     break;
                 default:
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input, $parameter);
+            }
+            if (isset($customActionAttributes['skipReadiness'])) {
+                if ($customActionAttributes['skipReadiness']) {
+                    $testSteps .= sprintf(
+                        "\t\t$%s->setReadinessCheck(true);\n",
+                        $actor
+                    );
+                }
             }
         }
 

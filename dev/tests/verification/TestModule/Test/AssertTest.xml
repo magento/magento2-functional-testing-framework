@@ -23,7 +23,7 @@
 
         <!-- asserts without variable replacement -->
         <comment stepKey="c1" userInput="asserts without variable replacement"/>
-        <assertArrayHasKey stepKey="assertArrayHasKey" message="pass">
+        <assertArrayHasKey stepKey="assertArrayHasKey" message="pass" skipReadiness="true">
             <expectedResult type="string">apple</expectedResult>
             <actualResult type="const">['orange' => 2, 'apple' => 1]</actualResult>
         </assertArrayHasKey>
