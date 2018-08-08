@@ -36,7 +36,8 @@ class TestContextExtension extends \Codeception\Extension
      */
     public function testStart(\Codeception\Event\TestEvent $e)
     {
-        PersistedObjectHandler::getInstance()->clearPersistedObjects();
+        PersistedObjectHandler::getInstance()->clearHookObjects();
+        PersistedObjectHandler::getInstance()->clearTestObjects();
     }
 
     /**

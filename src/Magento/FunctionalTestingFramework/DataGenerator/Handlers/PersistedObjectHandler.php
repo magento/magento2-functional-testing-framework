@@ -13,6 +13,7 @@ class PersistedObjectHandler
 {
     const HOOK_SCOPE = "hook";
     const TEST_SCOPE = "test";
+    const SUITE_SCOPE = "suite";
 
     /**
      * The singleton instance of this class
@@ -32,6 +33,13 @@ class PersistedObjectHandler
      * @var DataPersistenceHandler[] array
      */
     private $testObjects = [];
+
+
+    /**
+     * Store of all suite created objects
+     * @var DataPersistenceHandler[] array
+     */
+    private $suiteObjects = [];
 
     /**
      * Constructor
@@ -89,8 +97,10 @@ class PersistedObjectHandler
 
         if ($scope == self::TEST_SCOPE) {
             $this->testObjects[$key] = $persistedObject;
-        } else {
+        } elseif ($scope == self::HOOK_SCOPE) {
             $this->hookObjects[$key] = $persistedObject;
+        } else {
+            $this->suiteObjects[$key] = $persistedObject;
         }
     }
 
@@ -151,13 +161,29 @@ class PersistedObjectHandler
 
         if ($scope == self::TEST_SCOPE) {
             $this->testObjects[$key] = $persistedObject;
-        } else {
+        } elseif ($scope == self::HOOK_SCOPE) {
             $this->hookObjects[$key] = $persistedObject;
+        } else {
+            $this->suiteObjects[$key] = $persistedObject;
         }
     }
 
     /**
-     * Attempts to retrieve Entity from given scope, falling back to other scope if not found.
+     * Retrieves a field from an entity, according to key and scope given.
+     * @param $key
+     * @param $field
+     * @param $scope
+     * @return string
+     * @throws TestReferenceException
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException
+     */
+    public function retrieveEntityField($key, $field, $scope)
+    {
+        return $this->retrieveEntity($key, $scope)->getCreatedDataByName($field);
+    }
+
+    /**
+     * Attempts to retrieve Entity from given scope, falling back to outer scopes if not found.
      * @param $key
      * @param $scope
      * @return DataPersistenceHandler
@@ -165,29 +191,47 @@ class PersistedObjectHandler
      */
     private function retrieveEntity($key, $scope)
     {
-        if ($scope == self::TEST_SCOPE) {
-            if (array_key_exists($key, $this->testObjects)) {
-                return $this->testObjects[$key];
-            } elseif (array_key_exists($key, $this->hookObjects)) {
-                return $this->hookObjects[$key];
-            }
-        } else {
-            if (array_key_exists($key, $this->hookObjects)) {
-                return $this->hookObjects[$key];
-            } elseif (array_key_exists($key, $this->testObjects)) {
-                return $this->testObjects[$key];
+        // Assume TEST_SCOPE is default
+        $entityArrays = [$this->testObjects, $this->hookObjects, $this->suiteObjects];
+
+        if ($scope == self::HOOK_SCOPE) {
+            $entityArrays[0] = $this->hookObjects;
+            $entityArrays[1] = $this->testObjects;
+        }
+
+        foreach ($entityArrays as $entityArray) {
+            if (array_key_exists($key, $entityArray)) {
+                return $entityArray[$key];
             }
         }
+
         throw new TestReferenceException("Entity with a CreateDataKey of {$key} could not be found");
     }
 
     /**
-     * Clears store of all persisted Objects
+     * Clears store of all test persisted Objects
      * @return void
      */
-    public function clearPersistedObjects()
+    public function clearTestObjects()
+    {
+        $this->testObjects = [];
+    }
+
+    /**
+     * Clears store of all hook persisted Objects
+     * @return void
+     */
+    public function clearHookObjects()
     {
         $this->hookObjects = [];
-        $this->testObjects = [];
+    }
+
+    /**
+     * Clears store of all suite persisted Objects
+     * @return void
+     */
+    public function clearSuiteObjects()
+    {
+        $this->suiteObjects = [];
     }
 }
