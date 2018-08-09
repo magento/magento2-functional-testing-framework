@@ -122,8 +122,6 @@ class TestContextExtension extends \Codeception\Extension
         // @codingStandardsIgnoreStart
         $webDriver = $this->getModule("\Magento\FunctionalTestingFramework\Module\MagentoWebDriver")->webDriver;
         // @codingStandardsIgnoreEnd
-        if (!empty($webDriver)) {
-            ErrorLogger::getInstance()->logErrors($webDriver, $e);
-        }
+        ErrorLogger::getInstance()->logErrors($webDriver, $e);
     }
 }

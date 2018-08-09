@@ -187,11 +187,7 @@ class PageReadinessExtension extends Extension
     private function checkForNewPage($step)
     {
         try {
-            if (!empty($this->getDriver())) {
-                $currentUri = $this->getDriver()->_getCurrentUri();
-            } else {
-                throw new \Exception();
-            }
+            $currentUri = $this->getDriver()->_getCurrentUri();
 
             if ($this->uri !== $currentUri) {
                 $this->logDebug(

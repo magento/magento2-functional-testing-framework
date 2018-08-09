@@ -28,7 +28,6 @@ modules:
             url: "%MAGENTO_BASE_URL%"
             backend_name: "%MAGENTO_BACKEND_NAME%"
             browser: 'chrome'
-            restart: true
             window_size: 1280x1024
             username: "%MAGENTO_ADMIN_USERNAME%"
             password: "%MAGENTO_ADMIN_PASSWORD%"
