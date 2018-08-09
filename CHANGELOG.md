@@ -1,6 +1,11 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.3.3
+-----
+### Fixes
+* Defaults in `etc/config/functional.suite.dist.yml` changed: window-size to `1280x1024`, and removed `--ingonito` flag.
+
 2.3.2
 -----
 ### Fixes
