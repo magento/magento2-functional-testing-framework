@@ -1,6 +1,11 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.3.4
+-----
+### Fixes
+* Config option `restart: true` removed from `etc/config/functional.suite.dist.yml`.
+
 2.3.3
 -----
 ### Fixes
