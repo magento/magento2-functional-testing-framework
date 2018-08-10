@@ -8,6 +8,7 @@ namespace Magento\FunctionalTestingFramework\Extension;
 
 use \Codeception\Events;
 use Magento\FunctionalTestingFramework\Extension\ErrorLogger;
+use Magento\FunctionalTestingFramework\Module\MagentoWebDriver;
 
 /**
  * Class TestContextExtension
@@ -89,6 +90,8 @@ class TestContextExtension extends \Codeception\Extension
                 null,
                 $cest
             ));
+            // Reset Session and Cookies, workaround due to functional.suite.yml restart: true
+            $this->getModule(MagentoWebDriver::class)->_runAfter($e->getTest());
         } catch (\Exception $e) {
             // Do not rethrow Exception
         }
