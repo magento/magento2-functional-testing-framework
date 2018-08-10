@@ -47,6 +47,12 @@ class {{suiteName}} extends \Codeception\GroupObject
 
             try {
                 {{> testActions}}
+
+                // reset configuration and close session
+                $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver')->_resetConfig();
+                $webDriver->webDriver->close();
+                $webDriver->webDriver = null;
+
             } catch (\Exception $exception) {
                 $this->preconditionFailure = $exception->getMessage();
             }
@@ -86,11 +92,10 @@ class {{suiteName}} extends \Codeception\GroupObject
                         if ($error->failedTest()->getTestMethod() == $cest->getName()) {
                             // Do not attempt to run _after if failure was in the _after block
                             // Try to run _after but catch exceptions to prevent them from overwriting original failure.
-                            \PHPUnit_Framework_Assert::fail("LAST TESTS FAILED IN SUITE, SUITE_AFTER CANNOT BE RUN");
+                            print("LAST TEST IN SUITE FAILED, TEST AFTER MAY NOT BE SUCCESSFUL\n");
                         }
                     }
                 }
-
                 {{> testActions}}
             } catch (\Exception $exception) {
                 print $exception->getMessage();
