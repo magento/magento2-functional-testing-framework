@@ -1,6 +1,11 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.3.4
+-----
+### Fixes
+* MagentoWebDriver overrides `parent::_after()` function and remaps to `runAfter()`, necessary to solve compatibility issues in Codeception `2.3.x`.
+
 2.3.3
 -----
 ### Fixes
