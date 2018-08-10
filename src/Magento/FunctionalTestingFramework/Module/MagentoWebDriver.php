@@ -138,8 +138,10 @@ class MagentoWebDriver extends WebDriver
     /**
      * Override parent::_after to do nothing.
      * @return void
+     * @param TestInterface $test
+     * @SuppressWarnings(PHPMD)
      */
-    public function _after()
+    public function _after(TestInterface $test)
     {
         // DO NOT RESET SESSIONS
     }
