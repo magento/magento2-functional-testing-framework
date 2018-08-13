@@ -1426,9 +1426,10 @@ class TestGenerator
         foreach ($stepKeys as $stepKey) {
             // MQE-1011
             $stepKeyVarRef = "$" . $stepKey;
+            $stepKeyVarRefStrict = "$" . $stepKey . "$";
             $classVarRef = "\$this->$stepKey";
 
-            if (strpos($output, $stepKeyVarRef) !== false) {
+            if (strpos($output, $stepKeyVarRefStrict) !== false) {
                 $output = str_replace($stepKeyVarRef, $stepKeyVarRef . $testInvocationKey, $output);
             }
 
@@ -1723,6 +1724,7 @@ class TestGenerator
         $args = $this->resolveAllRuntimeReferences($args);
         $args = $this->resolveTestVariable($args, $action->getActionOrigin());
         $output .= implode(", ", array_filter($args, function($value) { return $value !== null; })) . ");\n";
+
         return $output;
     }
 
