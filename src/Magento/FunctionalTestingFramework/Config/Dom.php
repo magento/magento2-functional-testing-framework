@@ -364,7 +364,10 @@ class Dom
     {
         $dom = new \DOMDocument();
         try {
-            $dom->loadXML($xml);
+            $domSuccess = $dom->loadXML($xml);
+            if (!$domSuccess) {
+                throw new \Exception();
+            }
         } catch (\Exception $exception) {
             throw new ValidationException("XML Parse Error: $filename\n");
         }
