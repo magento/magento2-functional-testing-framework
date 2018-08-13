@@ -244,7 +244,6 @@ class PageReadinessExtension extends Extension
     private function shouldSkipCheck($step, $manualSkip)
     {
         if ($step instanceof Step\Comment || in_array($step->getAction(), $this->ignoredActions) || $manualSkip) {
-            print("here");
             return true;
         }
         return false;

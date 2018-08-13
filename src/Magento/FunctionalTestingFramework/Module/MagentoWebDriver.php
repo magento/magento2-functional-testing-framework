@@ -680,6 +680,5 @@ class MagentoWebDriver extends WebDriver
     public function skipReadinessCheck($check)
     {
         $this->config['skipReadiness'] = $check;
-        print("test");
     }
 }
