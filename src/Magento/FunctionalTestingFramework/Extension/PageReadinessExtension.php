@@ -119,6 +119,8 @@ class PageReadinessExtension extends Extension
         $this->testName = $e->getTest()->getMetadata()->getName();
         $this->uri = null;
 
+        $this->getDriver()->_setConfig(['skipReadiness' => false]);
+
         $metrics = [];
         foreach ($this->config['readinessMetrics'] as $metricClass) {
             $metrics[] = new $metricClass($this, $failThreshold);
@@ -137,7 +139,8 @@ class PageReadinessExtension extends Extension
     public function beforeStep(StepEvent $e)
     {
         $step = $e->getStep();
-        if ($this->shouldSkipCheck($step)) {
+        $manualSkip = $this->getDriver()->_getConfig()['skipReadiness'];
+        if ($this->shouldSkipCheck($step, $manualSkip)) {
             return;
         }
 
@@ -234,12 +237,14 @@ class PageReadinessExtension extends Extension
      * Should the given step bypass the readiness checks
      * todo: Implement step parameter to bypass specific metrics (or all) instead of basing on action type
      *
-     * @param Step $step
+     * @param  Step    $step
+     * @param  boolean $manualSkip
      * @return boolean
      */
-    private function shouldSkipCheck($step)
+    private function shouldSkipCheck($step, $manualSkip)
     {
-        if ($step instanceof Step\Comment || in_array($step->getAction(), $this->ignoredActions)) {
+        if ($step instanceof Step\Comment || in_array($step->getAction(), $this->ignoredActions) || $manualSkip) {
+            print("here");
             return true;
         }
         return false;

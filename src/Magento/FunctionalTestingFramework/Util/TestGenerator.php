@@ -466,9 +466,6 @@ class TestGenerator
 
         foreach ($actionObjects as $actionObject) {
             $stepKey = $actionObject->getStepKey();
-            if ($stepKey == "assertArrayHasKey") {
-                print("here");
-            }
 
             $customActionAttributes = $actionObject->getCustomActionAttributes();
             $attribute = null;
@@ -519,7 +516,7 @@ class TestGenerator
             if (isset($customActionAttributes['skipReadiness'])) {
                 if ($customActionAttributes['skipReadiness']) {
                     $testSteps .= sprintf(
-                        "\t\t$%s->setReadinessCheck(false);\n",
+                        "\t\t$%s->skipReadinessCheck(true);\n",
                         $actor
                     );
                 }
@@ -1289,7 +1286,7 @@ class TestGenerator
             if (isset($customActionAttributes['skipReadiness'])) {
                 if ($customActionAttributes['skipReadiness']) {
                     $testSteps .= sprintf(
-                        "\t\t$%s->setReadinessCheck(true);\n",
+                        "\t\t$%s->skipReadinessCheck(false);\n",
                         $actor
                     );
                 }

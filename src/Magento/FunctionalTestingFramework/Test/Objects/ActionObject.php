@@ -125,20 +125,12 @@ class ActionObject
     private $actionOrigin = [];
 
     /**
-     * A boolean which represents whether the readiness check will be skipped for the test
-     *
-     * @var boolean
-     */
-    private $skipReadiness = false;
-
-    /**
      * ActionObject constructor.
      *
      * @param string      $stepKey
      * @param string      $type
      * @param array       $actionAttributes
      * @param string|null $linkedAction
-     * @param boolean     $skipReadiness
      * @param string      $order
      * @param array       $actionOrigin
      */
@@ -246,18 +238,6 @@ class ActionObject
     public function setTimeout($timeout)
     {
         $this->timeout = $timeout;
-    }
-
-    /**
-     * This function returns the bool for skipReadiness
-     *
-     * @return boolean
-     */
-    public function getSkipReadinessFlag()
-    {
-        if (array_key_exists(ActionObject::SKIP_READINESS_FLAG, $this->actionAttributes)) {
-            return $this->actionAttributes[ActionObject::SKIP_READINESS_FLAG];
-        }
     }
 
     /**
