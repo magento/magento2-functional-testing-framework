@@ -19,6 +19,23 @@ class ActionGroupObject
 {
     const ACTION_GROUP_ORIGIN_NAME = "actionGroupName";
     const ACTION_GROUP_ORIGIN_TEST_REF = "testInvocationRef";
+    const ACTION_GROUP_TYPES = [
+        "executeJS",
+        "magentoCLI",
+        "generateDate",
+        "formatMoney",
+        "deleteData",
+        "getData",
+        "updateData",
+        "createData",
+        "grabAttributeFrom",
+        "grabCookie",
+        "grabFromCurrentUrl",
+        "grabMultiple",
+        "grabPageSource",
+        "grabTextFrom",
+        "grabValueFrom"
+    ];
 
     /**
      * Array of variable-enabled attributes.
@@ -371,26 +388,9 @@ class ActionGroupObject
     public function extractStepKeys()
     {
         $originalKeys = [];
-        define('NECESSARY_ACTION_GROUP_TYPES', [
-            "executeJS",
-            "magentoCLI",
-            "generateDate",
-            "formatMoney",
-            "deleteData",
-            "getData",
-            "updateData",
-            "createData",
-            "grabAttributeFrom",
-            "grabCookie",
-            "grabFromCurrentUrl",
-            "grabMultiple",
-            "grabPageSource",
-            "grabTextFrom",
-            "grabValueFrom"
-        ]);
         foreach ($this->parsedActions as $action) {
-            //limit actions returned to list that is relevant
-            foreach (NECESSARY_ACTION_GROUP_TYPES as $actionValue) {
+            //limit actions returned to list that are relevant
+            foreach (self::ACTION_GROUP_TYPES as $actionValue) {
                 if ($actionValue === $action->getType()) {
                     $originalKeys[] = $action->getStepKey();
                 }
