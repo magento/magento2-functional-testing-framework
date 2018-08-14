@@ -1429,7 +1429,7 @@ class TestGenerator
             $stepKeyVarRefStrict = "$" . $stepKey . "$";
             $classVarRef = "\$this->$stepKey";
 
-            if (strpos($output, $stepKeyVarRefStrict) !== false) {
+            if (strpos($output, $stepKeyVarRef) !== false) {
                 $output = str_replace($stepKeyVarRef, $stepKeyVarRef . $testInvocationKey, $output);
             }
 

@@ -371,8 +371,30 @@ class ActionGroupObject
     public function extractStepKeys()
     {
         $originalKeys = [];
+        define('NECESSARY_ACTION_GROUP_TYPES', [
+            "executeJS",
+            "magentoCLI",
+            "generateDate",
+            "formatMoney",
+            "deleteData",
+            "getData",
+            "updateData",
+            "createData",
+            "grabAttributeFrom",
+            "grabCookie",
+            "grabFromCurrentUrl",
+            "grabMultiple",
+            "grabPageSource",
+            "grabTextFrom",
+            "grabValueFrom"
+        ]);
         foreach ($this->parsedActions as $action) {
-            $originalKeys[] = $action->getStepKey();
+            //limit actions returned to list that is relevant
+            foreach (NECESSARY_ACTION_GROUP_TYPES as $actionValue) {
+                if ($actionValue === $action->getType()) {
+                    $originalKeys[] = $action->getStepKey();
+                }
+            }
         }
         return $originalKeys;
     }
