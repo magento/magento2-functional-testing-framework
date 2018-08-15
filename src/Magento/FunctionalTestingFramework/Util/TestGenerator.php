@@ -1723,7 +1723,6 @@ class TestGenerator
         $args = $this->resolveAllRuntimeReferences($args);
         $args = $this->resolveTestVariable($args, $action->getActionOrigin());
         $output .= implode(", ", array_filter($args, function($value) { return $value !== null; })) . ");\n";
-
         return $output;
     }
 
