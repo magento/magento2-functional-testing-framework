@@ -261,6 +261,98 @@ class ActionGroupObjectTest extends MagentoTestCase
         $actionGroupUnderTest->getSteps(null, self::ACTION_GROUP_MERGE_KEY);
     }
 
+    public function testStepKeyReplacementFilter() {
+
+//        "executeJS",
+//        "magentoCLI",
+//        "generateDate",
+//        "formatMoney",
+//        "deleteData",
+//        "getData",
+//        "updateData",
+//        "createData",
+//        "grabAttributeFrom",
+//        "grabCookie",
+//        "grabFromCurrentUrl",
+//        "grabMultiple",
+//        "grabPageSource",
+//        "grabTextFrom",
+//        "grabValueFrom"
+
+
+
+//        $expectedArray = ["stepKey", "stepKey"];
+//        $relevantStepKeys= ["stepKey"];
+
+
+        $actionGroupUnderTest = (new ActionGroupObjectBuilder())
+            ->withActionObjects(
+                [new ActionObject('executeJSStepKey' ,'executeJS', ['selector' => 'value'])]
+                [new ActionObject('magentoCLIStepKey' ,'magentoCLI', ['selector' => 'value'])]
+                [new ActionObject('generateDateStepKey' ,'generateDate', ['selector' => 'value'])]
+                [new ActionObject('formatMoneyStepKey' ,'formatMoney', ['selector' => 'value'])]
+                [new ActionObject('deleteDataStepKey' ,'deleteData', ['selector' => 'value'])]
+                [new ActionObject('getDataStepKey' ,'getData', ['selector' => 'value'])]
+                [new ActionObject('updateDataStepKey' ,'updateData', ['selector' => 'value'])]
+                [new ActionObject('createDataStepKey' ,'createData', ['selector' => 'value'])]
+                [new ActionObject('grabAttributeFromStepKey' ,'grabAttributeFrom', ['selector' => 'value'])]
+                [new ActionObject('grabCookieStepKey' ,'grabCookie', ['selector' => 'value'])]
+                [new ActionObject('grabFromCurrentUrlStepKey' ,'grabFromCurrentUrl', ['selector' => 'value'])]
+                [new ActionObject('grabMultipleStepKey' ,'grabMultiple', ['selector' => 'value'])]
+                [new ActionObject('grabPageSourceStepKey' ,'grabPageSource', ['selector' => 'value'])]
+                [new ActionObject('grabTextFromStepKey' ,'grabTextFrom', ['selector' => 'value'])]
+                [new ActionObject('grabValueFromStepKey' ,'grabValueFrom', ['selector' => 'value'])]
+            )
+            ->build();
+
+        //operate
+        $result = $actionGroupUnderTest->extractStepKeys();
+
+        //assert
+        $this->assertEquals('executeJSStepKey', $result[0]);
+        $this->assertEquals('magentoCLIStepKey', $result[1]);
+        $this->assertEquals('generateDateStepKey', $result[2]);
+        $this->assertEquals('formatMoneyStepKey', $result[3]);
+        $this->assertEquals('deleteDataStepKey', $result[4]);
+        $this->assertEquals('getDataStepKey', $result[5]);
+        $this->assertEquals('updateDataStepKey', $result[6]);
+        $this->assertEquals('createDataStepKey', $result[7]);
+        $this->assertEquals('grabAttributeFromStepKey', $result[8]);
+        $this->assertEquals('grabCookieStepKey', $result[9]);
+        $this->assertEquals('grabFromCurrentUrlStepKey', $result[10]);
+        $this->assertEquals('grabMultipleStepKey', $result[11]);
+        $this->assertEquals('grabPageSourceStepKey', $result[12]);
+        $this->assertEquals('grabTextFromStepKey', $result[13]);
+        $this->assertEquals('grabValueFromStepKey', $result[14]);
+    }
+
+//    public function testStepKeyReplacementFilterIgnore() {
+////        $expectedArray = ["stepKey", "stepKey"];
+//        $relevantStepKeys= ["stepKey"];
+//
+//        //Object
+//        $actionGroupUnderTest = (new ActionGroupObjectBuilder())
+//            ->withActionObjects(
+//                [new ActionObject('clickStepKey' ,'click', ['selector' => 'value'])]
+//                [new ActionObject('conditionalClickStepKey' ,'conditionalClick', ['selector' => 'value'])]
+//                [new ActionObject('fillFieldStepKey' ,'fillField', ['selector' => 'value'])]
+//            )
+//            ->build();
+//
+//
+//        //operate
+//        $result = $actionGroupUnderTest->extractStepKeys();
+//
+//
+//        //assert
+//        $this->assertEquals('click', $result[0]);
+//        $this->assertEquals('conditionalClick', $result[1]);
+//        $this->assertEquals
+//
+//    }
+
+
+
     /**
      * This function takes a desired return for the EntityObjectHandler mock and performs set up of the mock for the
      * duration of a single test case.

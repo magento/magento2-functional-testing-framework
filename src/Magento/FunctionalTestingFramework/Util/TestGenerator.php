@@ -1426,7 +1426,6 @@ class TestGenerator
         foreach ($stepKeys as $stepKey) {
             // MQE-1011
             $stepKeyVarRef = "$" . $stepKey;
-            $stepKeyVarRefStrict = "$" . $stepKey . "$";
             $classVarRef = "\$this->$stepKey";
 
             if (strpos($output, $stepKeyVarRef) !== false) {
