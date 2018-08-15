@@ -83,7 +83,7 @@ class PersistedObjectHandler
     ) {
         $retrievedDependentObjects = [];
         foreach ($dependentObjectKeys as $objectKey) {
-            $retrievedDependentObjects = $this->retrieveEntity($objectKey, $scope);
+            $retrievedDependentObjects[] = $this->retrieveEntity($objectKey, $scope);
         }
         
         $retrievedEntity = DataObjectHandler::getInstance()->getObject($entity);
@@ -116,7 +116,7 @@ class PersistedObjectHandler
     {
         $retrievedDependentObjects = [];
         foreach ($dependentObjectKeys as $objectKey) {
-            $retrievedDependentObjects = $this->retrieveEntity($objectKey, $scope);
+            $retrievedDependentObjects[] = $this->retrieveEntity($objectKey, $scope);
         }
         
         $originalEntity = $this->retrieveEntity($key, $scope);
@@ -149,7 +149,7 @@ class PersistedObjectHandler
     {
         $retrievedDependentObjects = [];
         foreach ($dependentObjectKeys as $objectKey) {
-            $retrievedDependentObjects = $this->retrieveEntity($objectKey, $scope);
+            $retrievedDependentObjects[] = $this->retrieveEntity($objectKey, $scope);
         }
 
         $retrievedEntity = DataObjectHandler::getInstance()->getObject($entity);

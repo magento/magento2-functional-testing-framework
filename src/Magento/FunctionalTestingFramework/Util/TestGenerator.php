@@ -717,11 +717,11 @@ class TestGenerator
                     $createEntityFunctionCall .= "\n\t\t\t\"{$stepKey}\",";
                     $createEntityFunctionCall .= "\n\t\t\t\"{$scope}\",";
                     $createEntityFunctionCall .= "\n\t\t\t\"{$entity}\"";
-                    if (!empty($requiredEntityKeysArray)) {
-                        $createEntityFunctionCall .= ",\n\t\t\t[{$requiredEntityKeysArray}]";
-                    }
+                    $createEntityFunctionCall .= ",\n\t\t\t[{$requiredEntityKeysArray}]";
                     if (count($customEntityFields) > 1) {
                         $createEntityFunctionCall .= ",\n\t\t\t\${$stepKey}Fields";
+                    } else {
+                        $createEntityFunctionCall .= ",\n\t\t\tnull";                        
                     }
                     if ($storeCode !== null) {
                         $createEntityFunctionCall .= ",\n\t\t\t\"{$storeCode}\"";
@@ -808,9 +808,7 @@ class TestGenerator
                     $updateEntityFunctionCall .= "\n\t\t\t\"{$key}\",";
                     $updateEntityFunctionCall .= "\n\t\t\t\"{$scope}\",";
                     $updateEntityFunctionCall .= "\n\t\t\t\"{$updateEntity}\"";
-                    if (!empty($requiredEntityKeysArray)) {
-                        $updateEntityFunctionCall .= ",\n\t\t\t[{$requiredEntityKeysArray}]";
-                    }
+                    $updateEntityFunctionCall .= ",\n\t\t\t[{$requiredEntityKeysArray}]";
                     if ($storeCode !== null) {
                         $updateEntityFunctionCall .= ",\n\t\t\t\"{$storeCode}\"";
                     }
@@ -858,11 +856,11 @@ class TestGenerator
                     $getEntityFunctionCall .= "\n\t\t\t\"{$stepKey}\",";
                     $getEntityFunctionCall .= "\n\t\t\t\"{$scope}\",";
                     $getEntityFunctionCall .= "\n\t\t\t\"{$entity}\"";
-                    if (!empty($requiredEntityKeysArray)) {
-                        $getEntityFunctionCall .= ",\n\t\t\t[{$requiredEntityKeysArray}]";
-                    }
+                    $getEntityFunctionCall .= ",\n\t\t\t[{$requiredEntityKeysArray}]";
                     if ($storeCode !== null) {
                         $getEntityFunctionCall .= ",\n\t\t\t\"{$storeCode}\"";
+                    } else {
+                        $getEntityFunctionCall .= ",\n\t\t\tnull";                        
                     }
                     if ($index !== null) {
                         $getEntityFunctionCall .= ",\n\t\t\t{$index}";
