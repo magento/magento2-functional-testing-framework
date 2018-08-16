@@ -245,10 +245,13 @@ class TestGenerator
 
         foreach ($testObjects as $test) {
             // Do not generate test if it is an extended test and parent does not exist
-            if ($test->isSkipped()
-                && !empty($test->getParentName())
-                && !array_key_exists($test->getParentName(), $testObjects)) {
-                continue;
+            if ($test->isSkipped() && !empty($test->getParentName())) {
+                try {
+                    TestObjectHandler::getInstance()->getObject($test->getParentName());
+                } catch (TestReferenceException $e) {
+                    print("{$test->getName()} will be skipped. Parent {$e->getMessage()} \n");
+                    continue;
+                }
             }
 
             $this->debug("<comment>Start creating test: " . $test->getCodeceptionName() . "</comment>");
