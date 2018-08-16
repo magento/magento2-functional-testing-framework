@@ -267,43 +267,21 @@ class ActionGroupObjectTest extends MagentoTestCase
      */
     public function testStepKeyReplacementFilteredIn()
     {
+        $createStepKey = "createDataStepKey";
+        $updateStepKey = "updateDataStepKey";
+
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withActionObjects([
-                new ActionObject('executeJSStepKey', 'executeJS', ['selector' => 'value']),
-                new ActionObject('magentoCLIStepKey', 'magentoCLI', ['selector' => 'value']),
-                new ActionObject('generateDateStepKey', 'generateDate', ['selector' => 'value']),
-                new ActionObject('formatMoneyStepKey', 'formatMoney', ['selector' => 'value']),
-                new ActionObject('deleteDataStepKey', 'deleteData', ['selector' => 'value']),
-                new ActionObject('getDataStepKey', 'getData', ['selector' => 'value']),
-                new ActionObject('updateDataStepKey', 'updateData', ['selector' => 'value']),
-                new ActionObject('createDataStepKey', 'createData', ['selector' => 'value']),
-                new ActionObject('grabAttributeFromStepKey', 'grabAttributeFrom', ['selector' => 'value']),
-                new ActionObject('grabCookieStepKey', 'grabCookie', ['selector' => 'value']),
-                new ActionObject('grabFromCurrentUrlStepKey', 'grabFromCurrentUrl', ['selector' => 'value']),
-                new ActionObject('grabMultipleStepKey', 'grabMultiple', ['selector' => 'value']),
-                new ActionObject('grabPageSourceStepKey', 'grabPageSource', ['selector' => 'value']),
-                new ActionObject('grabTextFromStepKey', 'grabTextFrom', ['selector' => 'value']),
-                new ActionObject('grabValueFromStepKey', 'grabValueFrom', ['selector' => 'value'])
+                new ActionObject($updateStepKey, ActionGroupObject::ACTION_GROUP_TYPES[6], ['selector' => 'value']),
+                new ActionObject($createStepKey, ActionGroupObject::ACTION_GROUP_TYPES[7], ['selector' => 'value'])
             ])
             ->build();
 
         $result = $actionGroupUnderTest->extractStepKeys();
 
-        $this->assertEquals('executeJSStepKey', $result[0]);
-        $this->assertEquals('magentoCLIStepKey', $result[1]);
-        $this->assertEquals('generateDateStepKey', $result[2]);
-        $this->assertEquals('formatMoneyStepKey', $result[3]);
-        $this->assertEquals('deleteDataStepKey', $result[4]);
-        $this->assertEquals('getDataStepKey', $result[5]);
-        $this->assertEquals('updateDataStepKey', $result[6]);
-        $this->assertEquals('createDataStepKey', $result[7]);
-        $this->assertEquals('grabAttributeFromStepKey', $result[8]);
-        $this->assertEquals('grabCookieStepKey', $result[9]);
-        $this->assertEquals('grabFromCurrentUrlStepKey', $result[10]);
-        $this->assertEquals('grabMultipleStepKey', $result[11]);
-        $this->assertEquals('grabPageSourceStepKey', $result[12]);
-        $this->assertEquals('grabTextFromStepKey', $result[13]);
-        $this->assertEquals('grabValueFromStepKey', $result[14]);
+        $this->assertContains($updateStepKey, $result);
+        $this->assertContains($createStepKey, $result);
+        $this->assertCount(2, $result);
     }
 
     /**
@@ -312,19 +290,23 @@ class ActionGroupObjectTest extends MagentoTestCase
      */
     public function testStepKeyReplacementFilteredOut()
     {
+        $clickStepKey = "clickStepKey";
+        $fillFieldStepKey = "fillFieldStepKey";
+        $clickAction = "click";
+        $fillFieldAction ="fillField";
+
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withActionObjects([
-                new ActionObject('clickStepKey', 'click', ['selector' => 'value']),
-                new ActionObject('conditionalClickStepKey', 'conditionalClick', ['selector' => 'value']),
-                new ActionObject('fillFieldStepKey', 'fillField', ['selector' => 'value'])
+                new ActionObject($clickStepKey, $clickAction, ['selector' => 'value']),
+                new ActionObject($fillFieldStepKey, $fillFieldAction, ['selector' => 'value'])
             ])
             ->build();
 
         $result = $actionGroupUnderTest->extractStepKeys();
 
-        $this->assertNotContains('clickStepKey', $result);
-        $this->assertNotContains('conditionalClickStepKey', $result);
-        $this->assertNotContains('fillFieldStepKey', $result);
+        $this->assertNotContains($clickStepKey, $result);
+        $this->assertNotContains($fillFieldStepKey, $result);
+        $this->assertCount(0, $result);
     }
 
     /**
