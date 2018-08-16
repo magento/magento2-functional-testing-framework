@@ -17,22 +17,50 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
+ * @Title("ChildExtendedTestSkippedParent")
+ * @group Child
  */
-class ExecuteJsEscapingTestCest
+class ExtendingSkippedTestCest
 {
 	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _before(AcceptanceTester $I)
+	{
+		$I->amOnPage("/beforeUrl");
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		$I->amOnPage("/afterUrl");
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _failed(AcceptanceTester $I)
+	{
+		$I->saveScreenshot();
+	}
+
+	/**
+	 * @Severity(level = SeverityLevel::CRITICAL)
 	 * @Features({"TestModule"})
+	 * @Stories({"Child"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ExecuteJsEscapingTest(AcceptanceTester $I)
+	public function ExtendingSkippedTest(AcceptanceTester $I)
 	{
-		$javaVariableEscape = $I->executeJS("return \$javascriptVariable");
-		$mftfVariableNotEscaped = $I->executeJS("return {$doNotEscape}");
-		$persistedDataNotEscaped = $I->executeJS("return " . $persisted->getCreatedDataByName('data'));
-		$hookPersistedDataNotEscaped = $I->executeJS("return " . $this->persisted->getCreatedDataByName('data'));
-		$addNewAttributeForRule = $I->executeJS("document.querySelector('entity option[value=" . $this->productAttribute->getCreatedDataByName('attribute_code') . "]').setAttribute('selected', 'selected')");
+		$I->comment("text");
+		$I->comment("child");
 	}
 }

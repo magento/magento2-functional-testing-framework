@@ -116,7 +116,6 @@
             <remove keyForRemoval="beforeAmOnPageKey"/>
         </before>
     </test>
-
     <test name="ChildExtendedTestNoParent" extends="ThisTestDoesNotExist">
         <annotations>
             <severity value="CRITICAL"/>
@@ -128,5 +127,35 @@
         <before>
             <remove keyForRemoval="beforeAmOnPageKey"/>
         </before>
+    </test>
+    <test name="SkippedParent">
+        <annotations>
+            <severity value="CRITICAL"/>
+            <title value="PARENTSKIPPED"/>
+            <group value="Parent"/>
+            <features value="Parent"/>
+            <stories value="Parent"/>
+            <skip>
+                <issueId value="NONE"/>
+            </skip>
+        </annotations>
+        <before>
+            <amOnPage url="/beforeUrl" stepKey="beforeAmOnPageKey"/>
+        </before>
+        <after>
+            <amOnPage url="/afterUrl" stepKey="afterAmOnPageKey"/>
+        </after>
+        <comment userInput="text" stepKey="keepMe"/>
+        <comment userInput="text" stepKey="replaceMe"/>
+    </test>
+    <test name="ExtendingSkippedTest" extends="SkippedParent">
+        <annotations>
+            <severity value="CRITICAL"/>
+            <title value="ChildExtendedTestSkippedParent"/>
+            <group value="Child"/>
+            <features value="Child"/>
+            <stories value="Child"/>
+        </annotations>
+        <comment userInput="child" stepKey="replaceMe"/>
     </test>
 </tests>

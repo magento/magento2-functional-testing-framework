@@ -154,6 +154,18 @@ class BuildProjectCommand extends Command
             self::CREDENTIALS_FILE_PATH
         );
 
+        // copy command.php into magento instance
+        if (MAGENTO_BP === FW_BP) {
+            $output->writeln('MFTF standalone detected, command.php copy not applied.');
+        } else {
+            $fileSystem->copy(
+                realpath(FW_BP . '/etc/config/command.php'),
+                TESTS_BP . DIRECTORY_SEPARATOR . "utils" . DIRECTORY_SEPARATOR .'command.php'
+            );
+            $output->writeln('command.php copied to ' .
+                TESTS_BP . DIRECTORY_SEPARATOR . "utils" . DIRECTORY_SEPARATOR .'command.php');
+        }
+
         // Remove and Create Log File
         $logPath = LoggingUtil::getInstance()->getLoggingPath();
         $fileSystem->remove($logPath);
