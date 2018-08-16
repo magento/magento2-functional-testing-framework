@@ -31,5 +31,8 @@ class ExecuteJsEscapingTestCest
 	{
 		$javaVariableEscape = $I->executeJS("return \$javascriptVariable");
 		$mftfVariableNotEscaped = $I->executeJS("return {$doNotEscape}");
+		$persistedDataNotEscaped = $I->executeJS("return " . $persisted->getCreatedDataByName('data'));
+		$hookPersistedDataNotEscaped = $I->executeJS("return " . $this->persisted->getCreatedDataByName('data'));
+		$addNewAttributeForRule = $I->executeJS("document.querySelector('entity option[value=" . $this->productAttribute->getCreatedDataByName('attribute_code') . "]').setAttribute('selected', 'selected')");
 	}
 }

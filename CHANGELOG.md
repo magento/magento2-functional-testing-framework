@@ -1,6 +1,22 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.3.4
+-----
+### Fixes
+* MagentoWebDriver overrides `parent::_after()` function and remaps to `runAfter()`, necessary to solve compatibility issues in Codeception `2.3.x`.
+
+2.3.3
+-----
+### Fixes
+* Defaults in `etc/config/functional.suite.dist.yml` changed: window-size to `1280x1024`, and removed `--ingonito` flag.
+
+2.3.2
+-----
+### Fixes
+* The `executeJs` `function` no longer escapes persisted variables referenced via `$$persisted.key$$`.
+* Extending a test no longer fails to generate the parent `test`'s `before`/`after` blocks if the parent was skipped.
+
 2.3.1
 -----
 ### Enhancements  
