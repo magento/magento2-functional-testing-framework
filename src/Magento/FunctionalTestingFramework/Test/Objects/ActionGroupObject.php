@@ -19,7 +19,7 @@ class ActionGroupObject
 {
     const ACTION_GROUP_ORIGIN_NAME = "actionGroupName";
     const ACTION_GROUP_ORIGIN_TEST_REF = "testInvocationRef";
-    const ACTION_GROUP_TYPES = [
+    const STEPKEY_REPLACEMENT_ENABLED_TYPES = [
         "executeJS",
         "magentoCLI",
         "generateDate",
@@ -390,7 +390,7 @@ class ActionGroupObject
         $originalKeys = [];
         foreach ($this->parsedActions as $action) {
             //limit actions returned to list that are relevant
-            foreach (self::ACTION_GROUP_TYPES as $actionValue) {
+            foreach (self::STEPKEY_REPLACEMENT_ENABLED_TYPES as $actionValue) {
                 if ($actionValue === $action->getType()) {
                     $originalKeys[] = $action->getStepKey();
                 }

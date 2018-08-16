@@ -272,8 +272,16 @@ class ActionGroupObjectTest extends MagentoTestCase
 
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withActionObjects([
-                new ActionObject($updateStepKey, ActionGroupObject::ACTION_GROUP_TYPES[6], ['selector' => 'value']),
-                new ActionObject($createStepKey, ActionGroupObject::ACTION_GROUP_TYPES[7], ['selector' => 'value'])
+                new ActionObject(
+                    $updateStepKey,
+                    ActionGroupObject::STEPKEY_REPLACEMENT_ENABLED_TYPES[6],
+                    ['selector' => 'value']
+                ),
+                new ActionObject(
+                    $createStepKey,
+                    ActionGroupObject::STEPKEY_REPLACEMENT_ENABLED_TYPES[7],
+                    ['selector' => 'value']
+                )
             ])
             ->build();
 
