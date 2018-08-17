@@ -35,5 +35,33 @@ class ActionGroupWithStepKeyReferencesCest
 		$createSimpleDataActionGroup->createEntity();
 		$grabTextDataActionGroup = $I->grabTextFrom(".class");
 		$I->fillField(".{$grabTextDataActionGroup}", $createSimpleDataActionGroup->getCreatedDataByName('field'));
+		$I->click($action0);
+		$I->fillField($action1);
+		$action3ActionGroup = $I->executeJS($action3ActionGroup);
+		$action4ActionGroup = $I->magentoCLI($action4ActionGroup, "\"stuffHere\"");
+		$I->comment($action4ActionGroup);
+		$date = new \DateTime();
+		$date->setTimestamp(strtotime("{$action5}"));
+		$date->setTimezone(new \DateTimeZone("America/Los_Angeles"));
+		$action5ActionGroup = $date->format("H:i:s");
+		$action6ActionGroup = $I->formatMoney($action6ActionGroup);
+		$I->amGoingTo("delete entity that has the createDataKey: {$action7}");
+		${$action7}->deleteEntity();
+		$I->amGoingTo("get entity that has the stepKey: action8ActionGroup");
+		${$action8} = DataObjectHandler::getInstance()->getObject("{$action8}");
+		$action8ActionGroup = new DataPersistenceHandler(${$action8});
+		$action8ActionGroup->getEntity(null);
+		$I->amGoingTo("update entity that has the createdDataKey: 1");
+		$1->updateEntity("{$action9}");
+		$I->amGoingTo("create entity that has the stepKey: action10ActionGroup");
+		${$action10} = DataObjectHandler::getInstance()->getObject("{$action10}");
+		$action10ActionGroup = new DataPersistenceHandler(${$action10}, []);
+		$action10ActionGroup->createEntity();
+		$action11ActionGroup = $I->grabAttributeFrom($action11ActionGroup, "someInput");
+		$action12ActionGroup = $I->grabCookie($action12ActionGroup, ['domain' => 'www.google.com']);
+		$action13ActionGroup = $I->grabFromCurrentUrl($action13ActionGroup);
+		$action14ActionGroup = $I->grabMultiple($action14ActionGroup);
+		$action15ActionGroup = $I->grabTextFrom($action15ActionGroup);
+		$action16ActionGroup = $I->grabValueFrom($action16ActionGroup);
 	}
 }
