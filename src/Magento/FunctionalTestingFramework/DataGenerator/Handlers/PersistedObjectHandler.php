@@ -34,7 +34,6 @@ class PersistedObjectHandler
      */
     private $testObjects = [];
 
-
     /**
      * Store of all suite created objects
      * @var DataPersistenceHandler[] array
@@ -65,11 +64,11 @@ class PersistedObjectHandler
 
     /**
      * Creates and stores the entity.
-     * @param string $key StepKey of the createData action.
+     * @param string $key                 StepKey of the createData action.
      * @param string $scope
-     * @param string $entity Name of xml entity to create.
-     * @param array $dependentObjectKeys StepKeys of other createData actions that are required.
-     * @param array $overrideFields Array of FieldName => Value of override fields.
+     * @param string $entity              Name of xml entity to create.
+     * @param array  $dependentObjectKeys StepKeys of other createData actions that are required.
+     * @param array  $overrideFields      Array of FieldName => Value of override fields.
      * @param string $storeCode
      * @return void
      */
@@ -106,10 +105,10 @@ class PersistedObjectHandler
 
     /**
      * Retrieves and updates a previously created entity.
-     * @param string $key StepKey of the createData action.
-     * @param $scope
-     * @param string $updateEntity Name of the static XML data to update the entity with.
-     * @param array $dependentObjectKeys StepKeys of other createData actions that are required.
+     * @param string $key                 StepKey of the createData action.
+     * @param string $scope
+     * @param string $updateEntity        Name of the static XML data to update the entity with.
+     * @param array  $dependentObjectKeys StepKeys of other createData actions that are required.
      * @return void
      */
     public function updateEntity($key, $scope, $updateEntity, $dependentObjectKeys = [])
@@ -125,7 +124,7 @@ class PersistedObjectHandler
 
     /**
      * Retrieves and deletes a previously created entity.
-     * @param string $key StepKey of the createData action.
+     * @param string $key   StepKey of the createData action.
      * @param string $scope
      * @return void
      */
@@ -137,11 +136,11 @@ class PersistedObjectHandler
 
     /**
      * Performs GET on given entity and stores entity for use.
-     * @param string $key StepKey of getData action.
-     * @param string $scope
-     * @param string $entity Name of XML static data to use.
-     * @param array $dependentObjectKeys StepKeys of other createData actions that are required.
-     * @param string $storeCode
+     * @param string  $key                 StepKey of getData action.
+     * @param string  $scope
+     * @param string  $entity              Name of XML static data to use.
+     * @param array   $dependentObjectKeys StepKeys of other createData actions that are required.
+     * @param string  $storeCode
      * @param integer $index
      * @return void
      */
@@ -170,26 +169,26 @@ class PersistedObjectHandler
 
     /**
      * Retrieves a field from an entity, according to key and scope given.
-     * @param $key
-     * @param $field
-     * @param $scope
+     * @param string $stepKey
+     * @param string $field
+     * @param string $scope
      * @return string
      * @throws TestReferenceException
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException
      */
-    public function retrieveEntityField($key, $field, $scope)
+    public function retrieveEntityField($stepKey, $field, $scope)
     {
-        return $this->retrieveEntity($key, $scope)->getCreatedDataByName($field);
+        return $this->retrieveEntity($stepKey, $scope)->getCreatedDataByName($field);
     }
 
     /**
      * Attempts to retrieve Entity from given scope, falling back to outer scopes if not found.
-     * @param $key
-     * @param $scope
+     * @param string $stepKey
+     * @param string $scope
      * @return DataPersistenceHandler
      * @throws TestReferenceException
      */
-    private function retrieveEntity($key, $scope)
+    private function retrieveEntity($stepKey, $scope)
     {
         // Assume TEST_SCOPE is default
         $entityArrays = [$this->testObjects, $this->hookObjects, $this->suiteObjects];
@@ -200,12 +199,12 @@ class PersistedObjectHandler
         }
 
         foreach ($entityArrays as $entityArray) {
-            if (array_key_exists($key, $entityArray)) {
-                return $entityArray[$key];
+            if (array_key_exists($stepKey, $entityArray)) {
+                return $entityArray[$stepKey];
             }
         }
 
-        throw new TestReferenceException("Entity with a CreateDataKey of {$key} could not be found");
+        throw new TestReferenceException("Entity with a CreateDataKey of {$stepKey} could not be found");
     }
 
     /**

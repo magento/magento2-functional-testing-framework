@@ -26,15 +26,15 @@ class TestContextExtension extends \Codeception\Extension
         Events::TEST_START => 'testStart',
         Events::TEST_FAIL => 'testFail',
         Events::STEP_AFTER => 'afterStep',
-        Events::TEST_END => 'testError'
+        Events::TEST_END => 'testEnd'
     ];
 
     /**
      * Codeception event listener function, triggered on test start.
-     * @param \Codeception\Event\TestEvent $e
      * @throws \Exception
+     * @return void
      */
-    public function testStart(\Codeception\Event\TestEvent $e)
+    public function testStart()
     {
         PersistedObjectHandler::getInstance()->clearHookObjects();
         PersistedObjectHandler::getInstance()->clearTestObjects();
@@ -57,11 +57,11 @@ class TestContextExtension extends \Codeception\Extension
     }
 
     /**
-     * Codeception event listener function, triggered on test error.
+     * Codeception event listener function, triggered on test ending (naturally or by error).
      * @param \Codeception\Event\TestEvent $e
      * @return void
      */
-    public function testError(\Codeception\Event\TestEvent $e)
+    public function testEnd(\Codeception\Event\TestEvent $e)
     {
         $cest = $e->getTest();
 

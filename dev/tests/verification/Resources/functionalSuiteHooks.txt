@@ -2,8 +2,7 @@
 
 namespace Group;
 
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
-use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 
 /**
  * Group class is Codeception Extension which is allowed to handle to all internal events.
@@ -22,7 +21,6 @@ class functionalSuiteHooks extends \Codeception\GroupObject
     private $currentTestRun = 0;
     private static $HOOK_EXECUTION_INIT = "\n/******** Beginning execution of functionalSuiteHooks suite %s block ********/\n";
     private static $HOOK_EXECUTION_END = "\n/******** Execution of functionalSuiteHooks suite %s block complete ********/\n";
-    private $create;
 
     public function _before(\Codeception\Event\TestEvent $e)
     {
@@ -55,9 +53,12 @@ class functionalSuiteHooks extends \Codeception\GroupObject
                 $webDriver->_initializeSession();
                 $webDriver->amOnPage("some.url");
                 $createFields['someKey'] = "dataHere";
-                $createThis = DataObjectHandler::getInstance()->getObject("createThis");
-                $this->create = new DataPersistenceHandler($createThis, [], $createFields);
-                $this->create->createEntity();
+                PersistedObjectHandler::getInstance()->createEntity(
+                    "create",
+                    "suite",
+                    "createThis",
+                     $createFields
+                );
                 $webDriver->see("John", msq("uniqueData") . "John");
                 
                 // reset configuration and close session
@@ -106,6 +107,7 @@ class functionalSuiteHooks extends \Codeception\GroupObject
                 print $exception->getMessage();
             }
 
+            PersistedObjectHandler::getInstance()->clearSuiteObjects();
             print sprintf(self::$HOOK_EXECUTION_END, "after");
         }
     }

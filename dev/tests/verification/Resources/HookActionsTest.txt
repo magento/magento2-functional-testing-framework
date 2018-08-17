@@ -2,10 +2,8 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
-use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
-use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -37,15 +35,26 @@ class HookActionsTestCest
 	public function _before(AcceptanceTester $I)
 	{
 		$I->amGoingTo("create entity that has the stepKey: sampleCreateBefore");
-		$sampleCreatedEntity = DataObjectHandler::getInstance()->getObject("sampleCreatedEntity");
-		$this->sampleCreateBefore = new DataPersistenceHandler($sampleCreatedEntity, []);
-		$this->sampleCreateBefore->createEntity();
+		PersistedObjectHandler::getInstance()->createEntity(
+			"sampleCreateBefore",
+			"hook",
+			"sampleCreatedEntity",
+			[],
+			null
+		);
 		$I->amGoingTo("delete entity that has the createDataKey: sampleCreateBefore");
-		$this->sampleCreateBefore->deleteEntity();
+		PersistedObjectHandler::getInstance()->deleteEntity(
+			"sampleCreateBefore",
+			"hook"
+		);
 		$I->amGoingTo("create entity that has the stepKey: sampleCreateForAfter");
-		$sampleCreatedEntity = DataObjectHandler::getInstance()->getObject("sampleCreatedEntity");
-		$this->sampleCreateForAfter = new DataPersistenceHandler($sampleCreatedEntity, []);
-		$this->sampleCreateForAfter->createEntity();
+		PersistedObjectHandler::getInstance()->createEntity(
+			"sampleCreateForAfter",
+			"hook",
+			"sampleCreatedEntity",
+			[],
+			null
+		);
 	}
 
 	/**
@@ -60,11 +69,18 @@ class HookActionsTestCest
 	public function _after(AcceptanceTester $I)
 	{
 		$I->amGoingTo("create entity that has the stepKey: sampleCreateAfter");
-		$sampleCreatedEntity = DataObjectHandler::getInstance()->getObject("sampleCreatedEntity");
-		$this->sampleCreateAfter = new DataPersistenceHandler($sampleCreatedEntity, []);
-		$this->sampleCreateAfter->createEntity();
+		PersistedObjectHandler::getInstance()->createEntity(
+			"sampleCreateAfter",
+			"hook",
+			"sampleCreatedEntity",
+			[],
+			null
+		);
 		$I->amGoingTo("delete entity that has the createDataKey: sampleCreateForAfter");
-		$this->sampleCreateForAfter->deleteEntity();
+		PersistedObjectHandler::getInstance()->deleteEntity(
+			"sampleCreateForAfter",
+			"hook"
+		);
 	}
 
 	/**

@@ -2,10 +2,8 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
-use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
-use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -77,7 +75,10 @@ class BasicFunctionalTestCest
 		$I->closeTab();
 		$I->conditionalClick(".functionalTestSelector", ".functionalDependentTestSelector", true);
 		$I->amGoingTo("delete entity that has the createDataKey: createKey1");
-		$this->createKey1->deleteEntity();
+		PersistedObjectHandler::getInstance()->deleteEntity(
+			"createKey1",
+			"test"
+		);
 		$I->deleteEntityByUrl("/V1/categories{$grabbedData}");
 		$I->dontSee("someInput", ".functionalTestSelector");
 		$I->dontSeeCheckboxIsChecked(".functionalTestSelector");

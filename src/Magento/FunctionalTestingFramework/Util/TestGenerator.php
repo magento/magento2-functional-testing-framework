@@ -452,9 +452,9 @@ class TestGenerator
      * statement to handle each unique action. At the bottom of the case statement there is a generic function that can
      * construct the PHP string for nearly half of all Codeception actions.
      *
-     * @param array         $actionObjects
-     * @param array|boolean $hookObject
-     * @param string        $actor
+     * @param array  $actionObjects
+     * @param string $generationScope
+     * @param string $actor
      * @return string
      * @throws TestReferenceException
      * @throws \Exception
@@ -721,7 +721,7 @@ class TestGenerator
                     if (count($customEntityFields) > 1) {
                         $createEntityFunctionCall .= ",\n\t\t\t\${$stepKey}Fields";
                     } else {
-                        $createEntityFunctionCall .= ",\n\t\t\tnull";                        
+                        $createEntityFunctionCall .= ",\n\t\t\tnull";
                     }
                     if ($storeCode !== null) {
                         $createEntityFunctionCall .= ",\n\t\t\t\"{$storeCode}\"";
@@ -748,7 +748,6 @@ class TestGenerator
                         } elseif ($generationScope == TestGenerator::SUITE_SCOPE) {
                             $scope = PersistedObjectHandler::SUITE_SCOPE;
                         }
-
 
                         $deleteEntityFunctionCall = "\t\tPersistedObjectHandler::getInstance()->deleteEntity(";
                         $deleteEntityFunctionCall .= "\n\t\t\t\"{$key}\",";
@@ -803,7 +802,6 @@ class TestGenerator
                         $scope = PersistedObjectHandler::SUITE_SCOPE;
                     }
 
-
                     $updateEntityFunctionCall = "\t\tPersistedObjectHandler::getInstance()->updateEntity(";
                     $updateEntityFunctionCall .= "\n\t\t\t\"{$key}\",";
                     $updateEntityFunctionCall .= "\n\t\t\t\"{$scope}\",";
@@ -850,7 +848,6 @@ class TestGenerator
                         $scope = PersistedObjectHandler::SUITE_SCOPE;
                     }
 
-
                     //Create Function
                     $getEntityFunctionCall = "\t\tPersistedObjectHandler::getInstance()->getEntity(";
                     $getEntityFunctionCall .= "\n\t\t\t\"{$stepKey}\",";
@@ -860,7 +857,7 @@ class TestGenerator
                     if ($storeCode !== null) {
                         $getEntityFunctionCall .= ",\n\t\t\t\"{$storeCode}\"";
                     } else {
-                        $getEntityFunctionCall .= ",\n\t\t\tnull";                        
+                        $getEntityFunctionCall .= ",\n\t\t\tnull";
                     }
                     if ($index !== null) {
                         $getEntityFunctionCall .= ",\n\t\t\t{$index}";
@@ -909,7 +906,13 @@ class TestGenerator
                 case "dontSeeCookie":
                 case "resetCookie":
                 case "seeCookie":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $generationScope, $input, $parameterArray);
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $generationScope,
+                        $input,
+                        $parameterArray
+                    );
                     break;
                 case "grabCookie":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
@@ -927,7 +930,13 @@ class TestGenerator
                 case "seeElement":
                 case "seeElementInDOM":
                 case "seeInFormFields":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $generationScope, $selector, $parameterArray);
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $generationScope,
+                        $selector,
+                        $parameterArray
+                    );
                     break;
                 case "pressKey":
                     $parameterArray = $customActionAttributes['parameterArray'] ?? null;
@@ -951,17 +960,46 @@ class TestGenerator
                         // put the array together as a string to be passed as args
                         $parameterArray = implode(",", $tmpParameterArray);
                     }
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $generationScope, $selector, $input, $parameterArray);
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $generationScope,
+                        $selector,
+                        $input,
+                        $parameterArray
+                    );
                     break;
                 case "selectOption":
                 case "unselectOption":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $generationScope, $selector, $input, $parameterArray);
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $generationScope,
+                        $selector,
+                        $input,
+                        $parameterArray
+                    );
                     break;
                 case "submitForm":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $generationScope, $selector, $parameterArray, $button);
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $generationScope,
+                        $selector,
+                        $parameterArray,
+                        $button
+                    );
                     break;
                 case "dragAndDrop":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $generationScope, $selector1, $selector2, $x, $y);
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $generationScope,
+                        $selector1,
+                        $selector2,
+                        $x,
+                        $y
+                    );
                     break;
                 case "selectMultipleOptions":
                     $testSteps .= $this->wrapFunctionCall(
@@ -988,7 +1026,14 @@ class TestGenerator
                     break;
                 case "performOn":
                 case "waitForElementChange":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $generationScope, $selector, $function, $time);
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $generationScope,
+                        $selector,
+                        $function,
+                        $time
+                    );
                     break;
                 case "waitForJS":
                     $testSteps .= $this->wrapFunctionCall(
@@ -1008,7 +1053,14 @@ class TestGenerator
                     break;
                 case "waitForPageLoad":
                 case "waitForText":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $generationScope, $input, $time, $selector);
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $generationScope,
+                        $input,
+                        $time,
+                        $selector
+                    );
                     break;
                 case "formatMoney":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
@@ -1226,7 +1278,11 @@ class TestGenerator
                     break;
                 case "field":
                     $fieldKey = $actionObject->getCustomActionAttributes()['key'];
-                    $input = $this->resolveTestVariable([$input], $actionObject->getActionOrigin(), $generationScope)[0];
+                    $input = $this->resolveTestVariable(
+                        [$input],
+                        $actionObject->getActionOrigin(),
+                        $generationScope
+                    )[0];
                     $argRef = "\t\t\$";
                     $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) . "Fields['{$fieldKey}'] = ${input};\n";
                     $testSteps .= $argRef;
@@ -1245,7 +1301,14 @@ class TestGenerator
                     $testSteps .= $dateGenerateCode;
                     break;
                 default:
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $generationScope, $selector, $input, $parameter);
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $generationScope,
+                        $selector,
+                        $input,
+                        $parameter
+                    );
             }
         }
 
@@ -1339,7 +1402,8 @@ class TestGenerator
                 );
             }
 
-            $replacement = "PersistedObjectHandler::getInstance()->retrieveEntityField('{$variable[0]}', '$variable[1]', '{$scope}')";
+            $replacement = "PersistedObjectHandler::getInstance()->retrieveEntityField";
+            $replacement .= "('{$variable[0]}', '$variable[1]', '{$scope}')";
 
             //Determine if quoteBreak check is necessary. Assume replacement is surrounded in quotes, then override
             if (strpos($outputArg, "\"") !== false) {
