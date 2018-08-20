@@ -513,14 +513,6 @@ class TestGenerator
             if (isset($customActionAttributes['arguments'])) {
                 $arguments = $this->addUniquenessFunctionCall($customActionAttributes['arguments']);
             }
-            if (isset($customActionAttributes['skipReadiness'])) {
-                if ($customActionAttributes['skipReadiness'] == "true") {
-                    $testSteps .= sprintf(
-                        "\t\t$%s->skipReadinessCheck(true);\n",
-                        $actor
-                    );
-                }
-            }
 
             if (isset($customActionAttributes['attribute'])) {
                 $attribute = $customActionAttributes['attribute'];
@@ -1280,16 +1272,11 @@ class TestGenerator
 
                     $testSteps .= $dateGenerateCode;
                     break;
+                case "skipReadinessCheck":
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $customActionAttributes['state']);
+                    break;
                 default:
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input, $parameter);
-            }
-            if (isset($customActionAttributes['skipReadiness'])) {
-                if ($customActionAttributes['skipReadiness'] == "true") {
-                    $testSteps .= sprintf(
-                        "\t\t$%s->skipReadinessCheck(false);\n",
-                        $actor
-                    );
-                }
             }
         }
 
