@@ -19,6 +19,23 @@ class ActionGroupObject
 {
     const ACTION_GROUP_ORIGIN_NAME = "actionGroupName";
     const ACTION_GROUP_ORIGIN_TEST_REF = "testInvocationRef";
+    const STEPKEY_REPLACEMENT_ENABLED_TYPES = [
+        "executeJS",
+        "magentoCLI",
+        "generateDate",
+        "formatMoney",
+        "deleteData",
+        "getData",
+        "updateData",
+        "createData",
+        "grabAttributeFrom",
+        "grabCookie",
+        "grabFromCurrentUrl",
+        "grabMultiple",
+        "grabPageSource",
+        "grabTextFrom",
+        "grabValueFrom"
+    ];
 
     /**
      * Array of variable-enabled attributes.
@@ -372,7 +389,12 @@ class ActionGroupObject
     {
         $originalKeys = [];
         foreach ($this->parsedActions as $action) {
-            $originalKeys[] = $action->getStepKey();
+            //limit actions returned to list that are relevant
+            foreach (self::STEPKEY_REPLACEMENT_ENABLED_TYPES as $actionValue) {
+                if ($actionValue === $action->getType()) {
+                    $originalKeys[] = $action->getStepKey();
+                }
+            }
         }
         return $originalKeys;
     }

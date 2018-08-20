@@ -65,7 +65,7 @@ class OperationDom extends \Magento\FunctionalTestingFramework\Config\MftfDom
      */
     public function initDom($xml, $filename = null)
     {
-        $dom = parent::initDom($xml);
+        $dom = parent::initDom($xml, $filename);
 
         if (strpos($filename, self::METADATA_FILE_NAME_ENDING)) {
             $operationNodes = $dom->getElementsByTagName('operation');
