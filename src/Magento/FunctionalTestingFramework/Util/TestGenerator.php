@@ -249,7 +249,7 @@ class TestGenerator
                 try {
                     TestObjectHandler::getInstance()->getObject($test->getParentName());
                 } catch (TestReferenceException $e) {
-                    print("{$test->getName()} will be skipped. Parent {$e->getMessage()} \n");
+                    print("{$test->getName()} will not be generated. Parent {$e->getMessage()} \n");
                     continue;
                 }
             }
