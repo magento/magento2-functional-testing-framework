@@ -5,6 +5,8 @@
  */
 namespace tests\verification\Tests;
 
+use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
+use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use tests\util\MftfTestCase;
 
 class ExtendedGenerationTest extends MftfTestCase
@@ -87,14 +89,23 @@ class ExtendedGenerationTest extends MftfTestCase
     }
 
     /**
-     * Tests generation of test that attemps to extend a test that doesn't exist
+     * Tests to ensure extended tests with no parents are not generated
      *
      * @throws \Exception
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
     public function testExtendedTestGenerationNoParent()
     {
-        $this->generateAndCompareTest('ChildExtendedTestNoParent');
+        $testObject = TestObjectHandler::getInstance()->getObject('ChildExtendedTestNoParent');
+        $test = TestGenerator::getInstance(null, [$testObject]);
+        $test->createAllTestFiles();
+
+        $cestFile = $test->getExportDir() .
+            DIRECTORY_SEPARATOR .
+            $testObject->getCodeceptionName() .
+            ".php";
+
+        $this->assertFalse(file_exists($cestFile));
     }
 
     /**
