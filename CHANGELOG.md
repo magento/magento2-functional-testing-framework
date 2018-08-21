@@ -1,6 +1,11 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.3.5
+-----
+### Fixes
+* Removed `PageReadinessExtension` from default enabled extensions due to Jenkins instability.
+
 2.3.4
 -----
 ### Fixes
