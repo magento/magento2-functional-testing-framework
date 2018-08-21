@@ -232,7 +232,7 @@ class ActionMergeUtil
     {
         foreach ($this->orderedSteps as $step) {
             if (array_key_exists("skipReadiness", $step->getCustomActionAttributes())) {
-                if ($step->getCustomActionAttributes()['skipReadiness']) {
+                if ($step->getCustomActionAttributes()['skipReadiness'] == "true") {
                     $skipReadinessOn = new ActionObject(
                         $step->getStepKey() . self::SKIP_READINESS_ON_SUFFIX,
                         self::SKIP_READINESS_ACTION_NAME,

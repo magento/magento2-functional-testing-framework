@@ -43,6 +43,7 @@ class PageReadinessExtension extends Extension
      */
     private $ignoredActions = [
         'saveScreenshot',
+        'skipReadinessCheck',
         'wait'
     ];
 
