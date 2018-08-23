@@ -9,6 +9,7 @@ namespace Magento\FunctionalTestingFramework\Extension;
 use \Codeception\Events;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use Magento\FunctionalTestingFramework\Extension\ErrorLogger;
+use Magento\FunctionalTestingFramework\Module\MagentoWebDriver;
 
 /**
  * Class TestContextExtension
@@ -17,6 +18,9 @@ use Magento\FunctionalTestingFramework\Extension\ErrorLogger;
 class TestContextExtension extends \Codeception\Extension
 {
     const TEST_PHASE_AFTER = "_after";
+    // @codingStandardsIgnoreStart
+    const MAGENTO_WEB_DRIVER_CLASS = "\Magento\FunctionalTestingFramework\Module\MagentoWebDriver";
+    // @codingStandardsIgnoreEnd
 
     /**
      * Codeception Events Mapping to methods
@@ -55,7 +59,7 @@ class TestContextExtension extends \Codeception\Extension
             $this->runAfterBlock($e, $cest);
         }
     }
-
+    
     /**
      * Codeception event listener function, triggered on test ending (naturally or by error).
      * @param \Codeception\Event\TestEvent $e
@@ -74,14 +78,21 @@ class TestContextExtension extends \Codeception\Extension
         ));
         $errors = $testResultObject->errors();
         if (!empty($errors)) {
-            $stack = $errors[0]->thrownException()->getTrace();
-            $context = $this->extractContext($stack, $cest->getTestMethod());
-            // Do not attempt to run _after if failure was in the _after block
-            // Try to run _after but catch exceptions to prevent them from overwriting original failure.
-            if ($context != TestContextExtension::TEST_PHASE_AFTER) {
-                $this->runAfterBlock($e, $cest);
+            foreach ($errors as $error) {
+                if ($error->failedTest()->getTestMethod() == $cest->getName()) {
+                    $stack = $errors[0]->thrownException()->getTrace();
+                    $context = $this->extractContext($stack, $cest->getTestMethod());
+                    // Do not attempt to run _after if failure was in the _after block
+                    // Try to run _after but catch exceptions to prevent them from overwriting original failure.
+                    if ($context != TestContextExtension::TEST_PHASE_AFTER) {
+                        $this->runAfterBlock($e, $cest);
+                    }
+                    continue;
+                }
             }
         }
+        // Reset Session and Cookies after all Test Runs, workaround due to functional.suite.yml restart: true
+        $this->getModule(self::MAGENTO_WEB_DRIVER_CLASS)->_runAfter($e->getTest());
     }
 
     /**
