@@ -522,7 +522,8 @@ class ActionObject
                 list(,$objField) = $this->stripAndSplitReference($match);
                 if ($obj->getElement($objField) == null) {
                     throw new TestReferenceException(
-                        "Could not resolve entity reference \"{$inputString}\" in action \"{$this->getStepKey()}\"",
+                        "Could not resolve entity reference \"{$inputString}\" "
+                        . "in Action with stepKey \"{$this->getStepKey()}\"",
                         ["input" => $inputString, "stepKey" => $this->getStepKey()]
                     );
                 }
@@ -542,7 +543,8 @@ class ActionObject
                     return $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $outputString);
                 } else {
                     throw new TestReferenceException(
-                        "Could not resolve entity reference \"{$inputString}\" in Action \"{$this->getStepKey()}\"",
+                        "Could not resolve entity reference \"{$inputString}\" "
+                        . "in Action with stepKey \"{$this->getStepKey()}\"",
                         ["input" => $inputString, "stepKey" => $this->getStepKey()]
                     );
                 }
