@@ -26,7 +26,7 @@ class ActionGroupDom extends Dom
      */
     public function initDom($xml, $filename = null)
     {
-        $dom = parent::initDom($xml);
+        $dom = parent::initDom($xml, $filename);
 
         if (strpos($filename, self::ACTION_GROUP_FILE_NAME_ENDING)) {
             $actionGroupNodes = $dom->getElementsByTagName('actionGroup');

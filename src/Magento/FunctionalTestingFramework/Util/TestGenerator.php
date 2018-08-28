@@ -255,6 +255,16 @@ class TestGenerator
         $cestPhpArray = [];
 
         foreach ($testObjects as $test) {
+            // Do not generate test if it is an extended test and parent does not exist
+            if ($test->isSkipped() && !empty($test->getParentName())) {
+                try {
+                    TestObjectHandler::getInstance()->getObject($test->getParentName());
+                } catch (TestReferenceException $e) {
+                    print("{$test->getName()} will not be generated. Parent {$e->getMessage()} \n");
+                    continue;
+                }
+            }
+
             $this->debug("<comment>Start creating test: " . $test->getCodeceptionName() . "</comment>");
             $php = $this->assembleTestPhp($test);
             $cestPhpArray[] = [$test->getCodeceptionName(), $php];

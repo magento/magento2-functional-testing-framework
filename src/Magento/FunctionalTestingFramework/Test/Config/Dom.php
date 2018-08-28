@@ -79,7 +79,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
      */
     public function initDom($xml, $filename = null)
     {
-        $dom = parent::initDom($xml);
+        $dom = parent::initDom($xml, $filename);
 
         if (strpos($filename, self::TEST_FILE_NAME_ENDING)) {
             $testNodes = $dom->getElementsByTagName('test');

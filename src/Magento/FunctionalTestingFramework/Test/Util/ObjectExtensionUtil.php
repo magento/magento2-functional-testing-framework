@@ -210,10 +210,10 @@ class ObjectExtensionUtil
         $annotations = $testObject->getAnnotations();
 
         // Add skip to the group array if it doesn't already exist
-        if (array_key_exists('group', $annotations) && !in_array('skip', $annotations['group'])) {
-            array_push($annotations['group'], 'skip');
-        } elseif (!array_key_exists('group', $annotations)) {
-            $annotations['group'] = ['skip'];
+        if (array_key_exists('skip', $annotations)) {
+            return $testObject;
+        } elseif (!array_key_exists('skip', $annotations)) {
+            $annotations['skip'] = ['issueId' => "ParentTestDoesNotExist"];
         }
 
         $skippedTest = new TestObject(
