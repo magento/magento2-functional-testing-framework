@@ -476,6 +476,7 @@ class TestGenerator
 
         foreach ($actionObjects as $actionObject) {
             $stepKey = $actionObject->getStepKey();
+
             $customActionAttributes = $actionObject->getCustomActionAttributes();
             $attribute = null;
             $selector = null;
@@ -1280,6 +1281,9 @@ class TestGenerator
                     $dateGenerateCode .= "\t\t\${$stepKey} = \$date->format({$format});\n";
 
                     $testSteps .= $dateGenerateCode;
+                    break;
+                case "skipReadinessCheck":
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $customActionAttributes['state']);
                     break;
                 default:
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input, $parameter);

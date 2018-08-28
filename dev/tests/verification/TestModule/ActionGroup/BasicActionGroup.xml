@@ -114,4 +114,8 @@
         </arguments>
         <see selector=".selector" userInput="{{sameStepKeyAsArg}}" stepKey="arg1" />
     </actionGroup>
+
+    <actionGroup name="actionGroupWithSkipReadinessActions">
+        <comment userInput="ActionGroupSkipReadiness" stepKey="skip" skipReadiness="true"/>
+    </actionGroup>
 </actionGroups>

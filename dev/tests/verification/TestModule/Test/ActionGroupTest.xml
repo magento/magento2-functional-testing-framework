@@ -144,6 +144,10 @@
         </before>
     </test>
 
+    <test name="ActionGroupSkipReadiness">
+        <actionGroup ref="actionGroupWithSkipReadinessActions" stepKey="skipReadinessActionGroup"/>
+    </test>
+
     <test name="ActionGroupContainsStepKeyInArgText">
         <before>
             <actionGroup ref="actionGroupContainsStepKeyInArgValue" stepKey="actionGroup">

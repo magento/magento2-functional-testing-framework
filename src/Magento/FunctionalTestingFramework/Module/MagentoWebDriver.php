@@ -690,4 +690,16 @@ class MagentoWebDriver extends WebDriver
         parent::amOnPage($page);
         $this->waitForPageLoad();
     }
+
+    /**
+     * Turn Readiness check on or off
+     *
+     * @param boolean $check
+     * @throws \Exception
+     * @return void
+     */
+    public function skipReadinessCheck($check)
+    {
+        $this->config['skipReadiness'] = $check;
+    }
 }
