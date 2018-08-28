@@ -16,7 +16,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  */
-class DataActionsTestCest
+class PersistenceActionGroupAppendingTestCest
 {
 	/**
 	  * @param AcceptanceTester $I
@@ -24,26 +24,35 @@ class DataActionsTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the stepKey: createdInBefore");
+		$I->amGoingTo("create entity that has the stepKey: createDataACTIONGROUPBEFORE");
 		PersistedObjectHandler::getInstance()->createEntity(
-			"createdInBefore",
+			"createDataACTIONGROUPBEFORE",
 			"hook",
 			"entity",
 			[],
 			null
 		);
-		$I->amGoingTo("update entity that has the createdDataKey: createdInBefore");
+		$I->amGoingTo("update entity that has the createdDataKey: createDataACTIONGROUPBEFORE");
 		PersistedObjectHandler::getInstance()->updateEntity(
-			"createdInBefore",
+			"createDataACTIONGROUPBEFORE",
 			"hook",
-			"entity",
+			"newEntity",
 			[]
 		);
-		$I->amGoingTo("delete entity that has the createDataKey: createdInBefore");
+		$I->amGoingTo("delete entity that has the createDataKey: createDataACTIONGROUPBEFORE");
 		PersistedObjectHandler::getInstance()->deleteEntity(
-			"createdInBefore",
+			"createDataACTIONGROUPBEFORE",
 			"hook"
 		);
+		$I->amGoingTo("get entity that has the stepKey: getDataACTIONGROUPBEFORE");
+		PersistedObjectHandler::getInstance()->getEntity(
+			"getDataACTIONGROUPBEFORE",
+			"hook",
+			"someEneity",
+			[],
+			null
+		);
+		$I->comment(PersistedObjectHandler::getInstance()->retrieveEntityField('createData', 'field', 'hook'));
 	}
 
 	/**
@@ -53,39 +62,36 @@ class DataActionsTestCest
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function DataActionsTest(AcceptanceTester $I)
+	public function PersistenceActionGroupAppendingTest(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the stepKey: createdInTest");
+		$I->amGoingTo("create entity that has the stepKey: createDataACTIONGROUP");
 		PersistedObjectHandler::getInstance()->createEntity(
-			"createdInTest",
+			"createDataACTIONGROUP",
 			"test",
 			"entity",
 			[],
 			null
 		);
-		$I->amGoingTo("update entity that has the createdDataKey: createdInTest");
+		$I->amGoingTo("update entity that has the createdDataKey: createDataACTIONGROUP");
 		PersistedObjectHandler::getInstance()->updateEntity(
-			"createdInTest",
+			"createDataACTIONGROUP",
 			"test",
-			"entity",
+			"newEntity",
 			[]
 		);
-		$I->amGoingTo("delete entity that has the createDataKey: createdInTest");
+		$I->amGoingTo("delete entity that has the createDataKey: createDataACTIONGROUP");
 		PersistedObjectHandler::getInstance()->deleteEntity(
-			"createdInTest",
+			"createDataACTIONGROUP",
 			"test"
 		);
-		$I->amGoingTo("update entity that has the createdDataKey: createdInBefore");
-		PersistedObjectHandler::getInstance()->updateEntity(
-			"createdInBefore",
+		$I->amGoingTo("get entity that has the stepKey: getDataACTIONGROUP");
+		PersistedObjectHandler::getInstance()->getEntity(
+			"getDataACTIONGROUP",
 			"test",
-			"entity",
-			[]
+			"someEneity",
+			[],
+			null
 		);
-		$I->amGoingTo("delete entity that has the createDataKey: createdInBefore");
-		PersistedObjectHandler::getInstance()->deleteEntity(
-			"createdInBefore",
-			"test"
-		);
+		$I->comment(PersistedObjectHandler::getInstance()->retrieveEntityField('createDataACTIONGROUP', 'field', 'test'));
 	}
 }

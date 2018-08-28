@@ -49,10 +49,10 @@
         <createData entity="simpleData" stepKey="createSimpleData"/>
         <grabTextFrom selector=".class" stepKey="grabTextData"/>
         <fillField stepKey="fill1" selector=".{$grabTextData}" userInput="$createSimpleData.field$"/>
-        <!--Invocation stepKey will not be appended in non stepKey instances-->
+        <comment userInput="Invocation stepKey will not be appended in non stepKey instances" stepKey="comment1"/>
         <click selector="{$action0}" stepKey="action0"/>
         <fillField selector="{$action1}" stepKey="action1"/>
-        <!--Invocation stepKey will be appended to every instance of $stepKey in action-->
+        <comment userInput="Invocation stepKey will be appended in non stepKey instances" stepKey="comment2"/>
         <executeJS function="{$action3}" stepKey="action3"/>
         <magentoCLI command="{$action4}" arguments="&quot;stuffHere&quot;" stepKey="action4"/>
         <generateDate date="{$action5}" format="H:i:s" stepKey="action5"/>

@@ -749,8 +749,13 @@ class TestGenerator
                     break;
                 case "deleteData":
                     if (isset($customActionAttributes['createDataKey'])) {
-                        $key = $customActionAttributes['createDataKey'];
+                        $key = $this->resolveStepKeyReferences(
+                            $customActionAttributes['createDataKey'],
+                            $actionObject->getActionOrigin(),
+                            true
+                        );
                         $actionGroup = $actionObject->getCustomActionAttributes()['actionGroup'] ?? null;
+                        $key .= $actionGroup;
                         //Add an informative statement to help the user debug test runs
                         $contextSetter = sprintf(
                             "\t\t$%s->amGoingTo(\"delete entity that has the createDataKey: %s\");\n",
@@ -758,7 +763,6 @@ class TestGenerator
                             $key
                         );
 
-                        $key .= $actionGroup;
                         //Determine Scope
                         $scope = PersistedObjectHandler::TEST_SCOPE;
                         if ($generationScope == TestGenerator::HOOK_SCOPE) {
@@ -786,9 +790,14 @@ class TestGenerator
                     }
                     break;
                 case "updateData":
-                    $key = $customActionAttributes['createDataKey'];
+                    $key = $this->resolveStepKeyReferences(
+                        $customActionAttributes['createDataKey'],
+                        $actionObject->getActionOrigin(),
+                        true
+                    );
                     $updateEntity = $customActionAttributes['entity'];
                     $actionGroup = $actionObject->getCustomActionAttributes()['actionGroup'] ?? null;
+                    $key .= $actionGroup;
 
                     //Add an informative statement to help the user debug test runs
                     $testSteps .= sprintf(
@@ -796,8 +805,6 @@ class TestGenerator
                         $actor,
                         $key
                     );
-
-                    $key .= $actionGroup;
                     
                     // Build array of requiredEntities
                     $requiredEntityKeys = [];
@@ -1429,7 +1436,7 @@ class TestGenerator
      * @param array  $actionGroupOrigin
      * @return string
      */
-    private function resolveStepKeyReferences($input, $actionGroupOrigin)
+    private function resolveStepKeyReferences($input, $actionGroupOrigin, $matchAll = false)
     {
         if ($actionGroupOrigin == null) {
             return $input;
@@ -1445,14 +1452,21 @@ class TestGenerator
         foreach ($stepKeys as $stepKey) {
             // MQE-1011
             $stepKeyVarRef = "$" . $stepKey;
-            $classVarRef = "\$this->$stepKey";
+            $persistedVarRef = "PersistedObjectHandler::getInstance()->retrieveEntityField('{$stepKey}'"
+                . ", 'field', 'test')";
+            $persistedVarRefInvoked = "PersistedObjectHandler::getInstance()->retrieveEntityField('"
+                . $stepKey . $testInvocationKey . "', 'field', 'test')";
 
             if (strpos($output, $stepKeyVarRef) !== false) {
                 $output = str_replace($stepKeyVarRef, $stepKeyVarRef . $testInvocationKey, $output);
             }
 
-            if (strpos($output, $classVarRef) !== false) {
-                $output = str_replace($classVarRef, $classVarRef . $testInvocationKey, $output);
+            if (strpos($output, $persistedVarRef) !== false) {
+                $output = str_replace($persistedVarRef, $persistedVarRefInvoked, $output);
+            }
+
+            if ($matchAll && strpos($output, $stepKey) !== false) {
+                $output = str_replace($stepKey, $stepKey . $testInvocationKey, $output);
             }
         }
         return $output;
@@ -1524,22 +1538,6 @@ class TestGenerator
         foreach ($hookObjects as $hookObject) {
             $type = $hookObject->getType();
             $dependencies = 'AcceptanceTester $I';
-
-            foreach ($hookObject->getActions() as $step) {
-                if ($hookObject->getType() == TestObjectExtractor::TEST_FAILED_HOOK) {
-                    continue;
-                }
-
-                if (($step->getType() == "createData")
-                    || ($step->getType() == "updateData")
-                    || ($step->getType() == "getData")
-                ) {
-                    $hooks .= "\t/**\n";
-                    $hooks .= sprintf("\t  * @var DataPersistenceHandler $%s;\n", $step->getStepKey());
-                    $hooks .= "\t  */\n";
-                    $hooks .= sprintf("\tprotected $%s;\n\n", $step->getStepKey());
-                }
-            }
 
             $hooks .= "\t/**\n";
             $hooks .= "\t  * @param AcceptanceTester \$I\n";

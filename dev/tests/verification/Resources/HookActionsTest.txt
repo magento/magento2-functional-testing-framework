@@ -19,16 +19,6 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class HookActionsTestCest
 {
 	/**
-	  * @var DataPersistenceHandler $sampleCreateBefore;
-	  */
-	protected $sampleCreateBefore;
-
-	/**
-	  * @var DataPersistenceHandler $sampleCreateForAfter;
-	  */
-	protected $sampleCreateForAfter;
-
-	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
@@ -56,11 +46,6 @@ class HookActionsTestCest
 			null
 		);
 	}
-
-	/**
-	  * @var DataPersistenceHandler $sampleCreateAfter;
-	  */
-	protected $sampleCreateAfter;
 
 	/**
 	  * @param AcceptanceTester $I

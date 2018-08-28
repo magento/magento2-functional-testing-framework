@@ -19,16 +19,6 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ActionGroupUsingCreateDataCest
 {
 	/**
-	  * @var DataPersistenceHandler $createCategoryKey1;
-	  */
-	protected $createCategoryKey1;
-
-	/**
-	  * @var DataPersistenceHandler $createConfigProductKey1;
-	  */
-	protected $createConfigProductKey1;
-
-	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */

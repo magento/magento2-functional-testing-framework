@@ -20,11 +20,6 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ActionGroupWithNoDefaultTestCest
 {
 	/**
-	  * @var DataPersistenceHandler $createPersonParam;
-	  */
-	protected $createPersonParam;
-
-	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */

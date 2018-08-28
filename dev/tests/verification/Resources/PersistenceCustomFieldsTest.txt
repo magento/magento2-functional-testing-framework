@@ -19,16 +19,6 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class PersistenceCustomFieldsTestCest
 {
 	/**
-	  * @var DataPersistenceHandler $createData1;
-	  */
-	protected $createData1;
-
-	/**
-	  * @var DataPersistenceHandler $createData2;
-	  */
-	protected $createData2;
-
-	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */

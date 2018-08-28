@@ -19,11 +19,6 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class AssertTestCest
 {
 	/**
-	  * @var DataPersistenceHandler $createData1;
-	  */
-	protected $createData1;
-
-	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
