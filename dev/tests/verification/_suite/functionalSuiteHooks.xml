@@ -16,6 +16,7 @@
             <createData entity="createThis" stepKey="create">
                 <field key="someKey">dataHere</field>
             </createData>
+            <click stepKey="clickWithData" userInput="$create.data$"/>
             <actionGroup ref="actionGroupWithTwoArguments" stepKey="AC">
                 <argument name="somePerson" value="simpleData"/>
                 <argument name="anotherPerson" value="uniqueData"/>

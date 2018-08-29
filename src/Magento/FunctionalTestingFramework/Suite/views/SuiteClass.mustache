@@ -2,8 +2,7 @@
 
 namespace Group;
 
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
-use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 
 /**
  * Group class is Codeception Extension which is allowed to handle to all internal events.
@@ -22,9 +21,6 @@ class {{suiteName}} extends \Codeception\GroupObject
     private $currentTestRun = 0;
     private static $HOOK_EXECUTION_INIT = "\n/******** Beginning execution of {{suiteName}} suite %s block ********/\n";
     private static $HOOK_EXECUTION_END = "\n/******** Execution of {{suiteName}} suite %s block complete ********/\n";
-    {{#var}}
-    private ${{stepKey}};
-    {{/var}}
 
     {{#before}}
     public function _before(\Codeception\Event\TestEvent $e)
@@ -101,6 +97,7 @@ class {{suiteName}} extends \Codeception\GroupObject
                 print $exception->getMessage();
             }
 
+            PersistedObjectHandler::getInstance()->clearSuiteObjects();
             print sprintf(self::$HOOK_EXECUTION_END, "after");
         }
     }

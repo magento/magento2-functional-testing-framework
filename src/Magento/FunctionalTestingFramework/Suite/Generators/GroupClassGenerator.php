@@ -179,7 +179,7 @@ class GroupClassGenerator
      */
     private function buildWebDriverActionsMustacheArray($action, $actionEntries)
     {
-        $step = TestGenerator::getInstance()->generateStepsPhp([$action], false, 'webDriver');
+        $step = TestGenerator::getInstance()->generateStepsPhp([$action], TestGenerator::SUITE_SCOPE, 'webDriver');
         $rawPhp = str_replace(["\t", "\n"], "", $step);
         $multipleCommands = explode(";", $rawPhp, -1);
         foreach ($multipleCommands as $command) {

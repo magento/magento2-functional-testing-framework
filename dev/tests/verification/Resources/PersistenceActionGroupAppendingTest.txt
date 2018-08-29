@@ -1,0 +1,97 @@
+<?php
+namespace Magento\AcceptanceTest\_default\Backend;
+
+use Magento\FunctionalTestingFramework\AcceptanceTester;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
+use \Codeception\Util\Locator;
+use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
+use Yandex\Allure\Adapter\Annotation\Title;
+use Yandex\Allure\Adapter\Annotation\Description;
+use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
+use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
+
+/**
+ */
+class PersistenceActionGroupAppendingTestCest
+{
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _before(AcceptanceTester $I)
+	{
+		$I->amGoingTo("create entity that has the stepKey: createDataACTIONGROUPBEFORE");
+		PersistedObjectHandler::getInstance()->createEntity(
+			"createDataACTIONGROUPBEFORE",
+			"hook",
+			"entity",
+			[],
+			null
+		);
+		$I->amGoingTo("update entity that has the createdDataKey: createDataACTIONGROUPBEFORE");
+		PersistedObjectHandler::getInstance()->updateEntity(
+			"createDataACTIONGROUPBEFORE",
+			"hook",
+			"newEntity",
+			[]
+		);
+		$I->amGoingTo("delete entity that has the createDataKey: createDataACTIONGROUPBEFORE");
+		PersistedObjectHandler::getInstance()->deleteEntity(
+			"createDataACTIONGROUPBEFORE",
+			"hook"
+		);
+		$I->amGoingTo("get entity that has the stepKey: getDataACTIONGROUPBEFORE");
+		PersistedObjectHandler::getInstance()->getEntity(
+			"getDataACTIONGROUPBEFORE",
+			"hook",
+			"someEneity",
+			[],
+			null
+		);
+		$I->comment(PersistedObjectHandler::getInstance()->retrieveEntityField('createData', 'field', 'hook'));
+	}
+
+	/**
+	 * @Features({"TestModule"})
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function PersistenceActionGroupAppendingTest(AcceptanceTester $I)
+	{
+		$I->amGoingTo("create entity that has the stepKey: createDataACTIONGROUP");
+		PersistedObjectHandler::getInstance()->createEntity(
+			"createDataACTIONGROUP",
+			"test",
+			"entity",
+			[],
+			null
+		);
+		$I->amGoingTo("update entity that has the createdDataKey: createDataACTIONGROUP");
+		PersistedObjectHandler::getInstance()->updateEntity(
+			"createDataACTIONGROUP",
+			"test",
+			"newEntity",
+			[]
+		);
+		$I->amGoingTo("delete entity that has the createDataKey: createDataACTIONGROUP");
+		PersistedObjectHandler::getInstance()->deleteEntity(
+			"createDataACTIONGROUP",
+			"test"
+		);
+		$I->amGoingTo("get entity that has the stepKey: getDataACTIONGROUP");
+		PersistedObjectHandler::getInstance()->getEntity(
+			"getDataACTIONGROUP",
+			"test",
+			"someEneity",
+			[],
+			null
+		);
+		$I->comment(PersistedObjectHandler::getInstance()->retrieveEntityField('createDataACTIONGROUP', 'field', 'test'));
+	}
+}
