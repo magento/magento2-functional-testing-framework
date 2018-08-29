@@ -291,6 +291,19 @@ class ActionObjectTest extends TestCase
         $actionObject->resolveReferences();
     }
 
+    /**
+     * Method should return either .env file value or constant value
+     */
+    public function testGetDefaultWaitTimeout()
+    {
+        $this->assertEquals(ActionObject::getDefaultWaitTimeout(), ActionObject::DEFAULT_WAIT_TIMEOUT);
+
+        $envFile = new \Dotenv\Dotenv(__DIR__ . '/../../../../../../../', '.env.example');
+        $envFile->load();
+
+        $this->assertEquals(ActionObject::getDefaultWaitTimeout(), getenv('WAIT_TIMEOUT'));
+    }
+
     private function mockSectionHandlerWithElement($elementObject)
     {
         $sectionObject = new SectionObject('SectionObject', ['elementObject' => $elementObject]);

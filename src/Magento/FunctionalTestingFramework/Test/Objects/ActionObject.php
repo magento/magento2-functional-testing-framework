@@ -41,6 +41,7 @@ class ActionObject
     const ACTION_ATTRIBUTE_SELECTOR = 'selector';
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER = '/\(.+\)/';
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/({{[\w]+\.[\w\[\]]+}})|({{[\w]+\.[\w]+\(.+\)}})/';
+    const DEFAULT_WAIT_TIMEOUT = 10;
 
     /**
      * The unique identifier for the action
@@ -125,6 +126,16 @@ class ActionObject
         if ($order == ActionObject::MERGE_ACTION_ORDER_AFTER) {
             $this->orderOffset = 1;
         }
+    }
+
+    /**
+     * Retrieve default timeout in seconds for 'wait*' actions
+     *
+     * @return int
+     */
+    public static function getDefaultWaitTimeout()
+    {
+        return getenv('WAIT_TIMEOUT') ?: self::DEFAULT_WAIT_TIMEOUT;
     }
 
     /**
