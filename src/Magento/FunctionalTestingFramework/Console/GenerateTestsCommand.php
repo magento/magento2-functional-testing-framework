@@ -14,13 +14,12 @@ use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Util\Manifest\ParallelTestManifest;
 use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GenerateTestsCommand extends Command
+class GenerateTestsCommand extends BaseGenerateCommand
 {
     /**
      * Configures the current command.
@@ -52,7 +51,14 @@ class GenerateTestsCommand extends Command
                 't',
                 InputOption::VALUE_REQUIRED,
                 'A parameter accepting a JSON string used to determine the test configuration'
-            )->addOption('debug', 'd', InputOption::VALUE_NONE, 'run extra validation when generating tests');
+            )->addOption(
+                'debug',
+                'd',
+                InputOption::VALUE_NONE,
+                'run extra validation when generating tests'
+            );
+
+        parent::configure();
     }
 
     /**
@@ -73,6 +79,8 @@ class GenerateTestsCommand extends Command
         $force = $input->getOption('force');
         $time = $input->getOption('time') * 60 * 1000; // convert from minutes to milliseconds
         $debug = $input->getOption('debug');
+        $remove = $input->getOption('remove');
+
         $verbose = $output->isVerbose();
 
         if ($json !== null && !json_decode($json)) {
@@ -83,6 +91,11 @@ class GenerateTestsCommand extends Command
         if ($config === 'parallel' && $time <= 0) {
             // stop execution if the user has given us an invalid argument for time argument during parallel generation
             throw new TestFrameworkException("time option cannot be less than or equal to 0");
+        }
+
+        // Remove previous GENERATED_DIR if --remove option is used
+        if ($remove) {
+            $this->removeGeneratedDirectory($output, $verbose || $debug);
         }
 
         $testConfiguration = $this->createTestConfiguration($json, $tests, $force, $debug, $verbose);
@@ -153,7 +166,6 @@ class GenerateTestsCommand extends Command
      *
      * @param string $json
      * @param array  $testConfiguration
-     * @throws TestFrameworkException
      * @return array
      */
     private function parseTestsConfigJson($json, array $testConfiguration)

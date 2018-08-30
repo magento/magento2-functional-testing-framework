@@ -10,15 +10,15 @@ namespace Magento\FunctionalTestingFramework\Console;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
-class RunTestGroupCommand extends Command
+class RunTestGroupCommand extends BaseGenerateCommand
 {
     /**
      * Configures the current command.
@@ -44,6 +44,8 @@ class RunTestGroupCommand extends Command
                 InputArgument::IS_ARRAY | InputArgument::REQUIRED,
                 'group names to be executed via codeception'
             );
+
+        parent::configure();
     }
 
     /**
@@ -61,6 +63,14 @@ class RunTestGroupCommand extends Command
         $skipGeneration = $input->getOption('skip-generate');
         $force = $input->getOption('force');
         $groups = $input->getArgument('groups');
+        $remove = $input->getOption('remove');
+
+        if ($skipGeneration and $remove) {
+            // "skip-generate" and "remove" options cannot be used at the same time
+            throw new TestFrameworkException(
+                "\"skip-generate\" and \"remove\" options can not be used at the same time."
+            );
+        }
 
         // Create Mftf Configuration
         MftfApplicationConfig::create(
@@ -75,7 +85,8 @@ class RunTestGroupCommand extends Command
             $command = $this->getApplication()->find('generate:tests');
             $args = [
                 '--tests' => $testConfiguration,
-                '--force' => $force
+                '--force' => $force,
+                '--remove' => $remove
             ];
 
             $command->run(new ArrayInput($args), $output);
