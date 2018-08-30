@@ -15,7 +15,7 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("skippedNoIssuesTest")
+ * @Title("[NO TESTCASEID] - skippedNoIssuesTest")
  * @Description("")
  * @group skip
  */

@@ -198,8 +198,8 @@ class AnnotationExtractorTest extends TestCase
 
         //Expect Exception
         $this->expectException(\Magento\FunctionalTestingFramework\Exceptions\XmlException::class);
-        $this->expectExceptionMessage("TestCaseId and Title pairs must be unique:\n\n
-        TestCaseId: 'MQE-0001' Title: 'TEST TITLE' in Tests 'firstTest', 'secondTest'");
+        $this->expectExceptionMessage("TestCaseId and Title pairs must be unique:\n\n" .
+            "TestCaseId: 'MQE-0001' Title: 'TEST TITLE' in Tests 'firstTest', 'secondTest'");
 
         //Trigger Exception
         $extractor->validateTestCaseIdTitleUniqueness();
