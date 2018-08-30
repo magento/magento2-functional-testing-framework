@@ -208,10 +208,10 @@ class AnnotationExtractor extends BaseObjectExtractor
         if (!empty($dupes)) {
             $message = "TestCaseId and Title pairs must be unique:\n\n";
             foreach ($dupes as $newTitle => $tests) {
-                $storyTitleArray = explode(" - ", $newTitle);
-                $story = $storyTitleArray[0];
-                $title = $storyTitleArray[1];
-                $message .= "TestCaseId: '{$story}' Title: '{$title}' in Tests {$tests}\n\n";
+                $testCaseTitleArray = explode(" - ", $newTitle);
+                $testCaseId = $testCaseTitleArray[0];
+                $title = $testCaseTitleArray[1];
+                $message .= "TestCaseId: '{$testCaseId}' Title: '{$title}' in Tests {$tests}\n\n";
             }
             throw new XmlException($message);
         }
