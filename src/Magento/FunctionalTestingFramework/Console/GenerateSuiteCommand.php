@@ -8,12 +8,11 @@ declare(strict_types = 1);
 namespace Magento\FunctionalTestingFramework\Console;
 
 use Magento\FunctionalTestingFramework\Suite\SuiteGenerator;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GenerateSuiteCommand extends Command
+class GenerateSuiteCommand extends BaseGenerateCommand
 {
     /**
      * Configures the current command.
@@ -29,6 +28,8 @@ class GenerateSuiteCommand extends Command
                 InputArgument::IS_ARRAY | InputArgument::REQUIRED,
                 'argument which indicates suite names for generation (separated by space)'
             );
+
+        parent::configure();
     }
 
     /**
@@ -41,6 +42,13 @@ class GenerateSuiteCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $remove = $input->getOption('remove');
+
+        // Remove previous GENERATED_DIR if --remove option is used
+        if ($remove) {
+            $this->removeGeneratedDirectory($output, $output->isVerbose());
+        }
+
         $suites = $input->getArgument('suites');
 
         foreach ($suites as $suite) {

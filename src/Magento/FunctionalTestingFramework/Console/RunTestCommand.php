@@ -7,16 +7,15 @@ declare(strict_types = 1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Debug\Debug;
 use Symfony\Component\Process\Process;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
-class RunTestCommand extends Command
+class RunTestCommand extends BaseGenerateCommand
 {
     /**
      * Configures the current command.
@@ -38,6 +37,8 @@ class RunTestCommand extends Command
                 InputOption::VALUE_NONE,
                 'force generation of tests regardless of Magento Instance Configuration'
             );
+
+        parent::configure();
     }
 
     /**
@@ -55,6 +56,14 @@ class RunTestCommand extends Command
         $tests = $input->getArgument('name');
         $skipGeneration = $input->getOption('skip-generate');
         $force = $input->getOption('force');
+        $remove = $input->getOption('remove');
+
+        if ($skipGeneration and $remove) {
+            // "skip-generate" and "remove" options cannot be used at the same time
+            throw new TestFrameworkException(
+                "\"skip-generate\" and \"remove\" options can not be used at the same time."
+            );
+        }
 
         if (!$skipGeneration) {
             $command = $this->getApplication()->find('generate:tests');
@@ -63,7 +72,8 @@ class RunTestCommand extends Command
                     'tests' => $tests,
                     'suites' => null
                 ]),
-                '--force' => $force
+                '--force' => $force,
+                '--remove' => $remove
             ];
             $command->run(new ArrayInput($args), $output);
         }
