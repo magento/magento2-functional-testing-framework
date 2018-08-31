@@ -15,7 +15,7 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("ChildExtendedTestAddHooks")
+ * @Title("[NO TESTCASEID]: ChildExtendedTestAddHooks")
  * @group Parent
  */
 class ChildExtendedTestAddHooksCest

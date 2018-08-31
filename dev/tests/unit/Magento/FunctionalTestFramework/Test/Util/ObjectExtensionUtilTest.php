@@ -43,12 +43,14 @@ class ObjectExtensionUtilTest extends TestCase
 
         $testDataArrayBuilder = new TestDataArrayBuilder();
         $mockSimpleTest = $testDataArrayBuilder
-        ->withName('simpleTest')
-        ->withTestActions($mockActions)
-        ->build();
+            ->withName('simpleTest')
+            ->withAnnotations(['title'=>[['value' => 'simpleTest']]])
+            ->withTestActions($mockActions)
+            ->build();
 
         $mockExtendedTest = $testDataArrayBuilder
             ->withName('extendedTest')
+            ->withAnnotations(['title'=>[['value' => 'extendedTest']]])
             ->withTestReference("simpleTest")
             ->build();
 
@@ -86,12 +88,14 @@ class ObjectExtensionUtilTest extends TestCase
         $testDataArrayBuilder = new TestDataArrayBuilder();
         $mockSimpleTest = $testDataArrayBuilder
             ->withName('simpleTest')
+            ->withAnnotations(['title'=>[['value' => 'simpleTest']]])
             ->withBeforeHook($mockBeforeHooks)
             ->withAfterHook($mockAfterHooks)
             ->build();
 
         $mockExtendedTest = $testDataArrayBuilder
             ->withName('extendedTest')
+            ->withAnnotations(['title'=>[['value' => 'extendedTest']]])
             ->withTestReference("simpleTest")
             ->build();
 
@@ -154,12 +158,14 @@ class ObjectExtensionUtilTest extends TestCase
 
         $mockSimpleTest = $testDataArrayBuilder
             ->withName('simpleTest')
+            ->withAnnotations(['title'=>[['value' => 'simpleTest']]])
             ->withTestActions()
             ->withTestReference("anotherTest")
             ->build();
 
         $mockExtendedTest = $testDataArrayBuilder
             ->withName('extendedTest')
+            ->withAnnotations(['title'=>[['value' => 'extendedTest']]])
             ->withTestReference("simpleTest")
             ->build();
 

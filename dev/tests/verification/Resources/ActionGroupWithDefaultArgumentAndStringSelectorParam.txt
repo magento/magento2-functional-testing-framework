@@ -15,7 +15,7 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("Action Group With Default Argument Value and Hardcoded Value in Param")
+ * @Title("[NO TESTCASEID]: Action Group With Default Argument Value and Hardcoded Value in Param")
  */
 class ActionGroupWithDefaultArgumentAndStringSelectorParamCest
 {

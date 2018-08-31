@@ -15,7 +15,7 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("ChildExtendedTestRemoveHookAction")
+ * @Title("[NO TESTCASEID]: ChildExtendedTestRemoveHookAction")
  * @group Child
  */
 class ChildExtendedTestRemoveHookActionCest

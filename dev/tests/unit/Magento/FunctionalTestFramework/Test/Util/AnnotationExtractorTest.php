@@ -122,6 +122,89 @@ class AnnotationExtractorTest extends TestCase
         );
     }
 
+    public function testTestCaseIdUniqueness()
+    {
+        // Test Data
+        $firstTestAnnotation = [
+            "nodeName" => "annotations",
+            "features" => [
+                [
+                    "nodeName" => "features",
+                    "value" => "TestFeatures"
+                ]
+            ],
+            "stories" => [
+                [
+                    "nodeName" => "stories",
+                    "value" => "TestStories"
+                ]
+            ],
+            "title" => [
+                [
+                    "nodeName" => "title",
+                    "value" => "TEST TITLE"
+                ]
+            ],
+            "severity" => [
+                [
+                    "nodeName" => "severity",
+                    "value" => "CRITICAL"
+                ]
+            ],
+            "testCaseId" => [
+                [
+                    "nodeName" => "testCaseId",
+                    "value" => "MQE-0001"
+                ]
+            ],
+        ];
+        $secondTestannotation = [
+            "nodeName" => "annotations",
+            "features" => [
+                [
+                    "nodeName" => "features",
+                    "value" => "TestFeatures"
+                ]
+            ],
+            "stories" => [
+                [
+                    "nodeName" => "stories",
+                    "value" => "TestStories"
+                ]
+            ],
+            "title" => [
+                [
+                    "nodeName" => "title",
+                    "value" => "TEST TITLE"
+                ]
+            ],
+            "severity" => [
+                [
+                    "nodeName" => "severity",
+                    "value" => "CRITICAL"
+                ]
+            ],
+            "testCaseId" => [
+                [
+                    "nodeName" => "testCaseId",
+                    "value" => "MQE-0001"
+                ]
+            ],
+        ];
+        // Perform Test
+        $extractor = new AnnotationExtractor();
+        $extractor->extractAnnotations($firstTestAnnotation, "firstTest");
+        $extractor->extractAnnotations($secondTestannotation, "secondTest");
+
+        //Expect Exception
+        $this->expectException(\Magento\FunctionalTestingFramework\Exceptions\XmlException::class);
+        $this->expectExceptionMessage("TestCaseId and Title pairs must be unique:\n\n" .
+            "TestCaseId: 'MQE-0001' Title: 'TEST TITLE' in Tests 'firstTest', 'secondTest'");
+
+        //Trigger Exception
+        $extractor->validateTestCaseIdTitleUniqueness();
+    }
+
     /**
      * After class functionality
      * @return void

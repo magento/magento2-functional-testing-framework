@@ -15,7 +15,7 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("Action Group With Simple Data Usage From Passed Argument")
+ * @Title("[NO TESTCASEID]: Action Group With Simple Data Usage From Passed Argument")
  */
 class ActionGroupWithSimpleDataUsageFromPassedArgumentCest
 {
