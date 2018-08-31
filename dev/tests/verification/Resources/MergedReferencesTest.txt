@@ -15,7 +15,7 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("[NO TESTCASEID] - MergedReferencesTest")
+ * @Title("[NO TESTCASEID]: MergedReferencesTest")
  * @group functional
  */
 class MergedReferencesTestCest

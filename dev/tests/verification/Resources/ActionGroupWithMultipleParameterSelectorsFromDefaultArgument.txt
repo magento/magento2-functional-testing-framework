@@ -15,7 +15,7 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("[NO TESTCASEID] - Action Group With Passed Argument Value and Multiple Argument Values in Param")
+ * @Title("[NO TESTCASEID]: Action Group With Passed Argument Value and Multiple Argument Values in Param")
  */
 class ActionGroupWithMultipleParameterSelectorsFromDefaultArgumentCest
 {

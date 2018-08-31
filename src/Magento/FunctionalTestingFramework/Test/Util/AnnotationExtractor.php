@@ -135,7 +135,7 @@ class AnnotationExtractor extends BaseObjectExtractor
             $testCaseId = $annotations['testCaseId'][0];
         }
 
-        $newTitle = "{$testCaseId} - " . $annotations['title'][0];
+        $newTitle = "{$testCaseId}: " . $annotations['title'][0];
 
         $annotations['title'][0] = $newTitle;
         $this->testCaseToTitleMappings[$newTitle][] = $filename;
@@ -208,7 +208,7 @@ class AnnotationExtractor extends BaseObjectExtractor
         if (!empty($dupes)) {
             $message = "TestCaseId and Title pairs must be unique:\n\n";
             foreach ($dupes as $newTitle => $tests) {
-                $testCaseTitleArray = explode(" - ", $newTitle);
+                $testCaseTitleArray = explode(": ", $newTitle);
                 $testCaseId = $testCaseTitleArray[0];
                 $title = $testCaseTitleArray[1];
                 $message .= "TestCaseId: '{$testCaseId}' Title: '{$title}' in Tests {$tests}\n\n";

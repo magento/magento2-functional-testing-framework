@@ -15,7 +15,7 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("[NO TESTCASEID] - ChildExtendedTestMerging")
+ * @Title("[NO TESTCASEID]: ChildExtendedTestMerging")
  * @group Child
  */
 class ChildExtendedTestMergingCest
