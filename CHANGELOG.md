@@ -5,7 +5,7 @@ Magento Functional Testing Framework Changelog
 -----
 ### Enhancements
 * Maintainability
-    * A `-r` or `--remove` flag has introduced allowing for a command to clear out the contents of the `_generated` folder before generation. This flag has been added to the following commands:
+    * A `-r` or `--remove` flag has been introduced to `bin/mftf` commands to clear out the contents of the `_generated` folder before generation. This flag has been added to the following commands:
         * `generate:tests`
         * `generate:suite`
         * `run:test`
