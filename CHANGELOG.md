@@ -25,6 +25,7 @@ Magento Functional Testing Framework Changelog
 * Invalid XML errors now indicate which XML file caused the error.
 * Attempting to `extend` a test that does not exist now skips the generation of the test.
 * Fixed an issue where a `suite` would generate invalid PHP if the `before` or `after` contained only `createData` actions.
+* Fixed an issue where a selector inside an `actionGroup` would incorrectly append the `actionGroup`'s `stepKey` to the selector.
 
 2.3.5
 -----
