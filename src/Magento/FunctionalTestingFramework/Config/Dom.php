@@ -6,6 +6,8 @@
 
 namespace Magento\FunctionalTestingFramework\Config;
 
+use Magento\FunctionalTestingFramework\Config\Dom\ValidationException;
+
 /**
  * Magento configuration XML DOM utility
  */
@@ -354,13 +356,21 @@ class Dom
      * Create DOM document based on $xml parameter
      *
      * @param string $xml
+     * @param string $filename
      * @return \DOMDocument
      * @throws \Magento\FunctionalTestingFramework\Config\Dom\ValidationException
      */
-    protected function initDom($xml)
+    protected function initDom($xml, $filename = null)
     {
         $dom = new \DOMDocument();
-        $dom->loadXML($xml);
+        try {
+            $domSuccess = $dom->loadXML($xml);
+            if (!$domSuccess) {
+                throw new \Exception();
+            }
+        } catch (\Exception $exception) {
+            throw new ValidationException("XML Parse Error: $filename\n");
+        }
         if ($this->schemaFile) {
             $errors = self::validateDomDocument($dom, $this->schemaFile, $this->errorFormat);
             if (count($errors)) {

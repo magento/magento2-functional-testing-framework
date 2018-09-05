@@ -2,10 +2,8 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
-use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
-use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -22,20 +20,19 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ActionGroupWithNoDefaultTestCest
 {
 	/**
-	  * @var DataPersistenceHandler $createPersonParam;
-	  */
-	protected $createPersonParam;
-
-	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
 	public function _before(AcceptanceTester $I)
 	{
 		$I->amGoingTo("create entity that has the stepKey: createPersonParam");
-		$ReplacementPerson = DataObjectHandler::getInstance()->getObject("ReplacementPerson");
-		$this->createPersonParam = new DataPersistenceHandler($ReplacementPerson, []);
-		$this->createPersonParam->createEntity();
+		PersistedObjectHandler::getInstance()->createEntity(
+			"createPersonParam",
+			"hook",
+			"ReplacementPerson",
+			[],
+			null
+		);
 		$I->fillField("#foo", "myData1");
 		$I->fillField("#bar", "myData2");
 	}

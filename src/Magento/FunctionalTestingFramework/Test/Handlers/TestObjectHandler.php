@@ -151,6 +151,7 @@ class TestObjectHandler implements ObjectHandlerInterface
         $exceptionCollector->throwException();
         
         $testObjectExtractor->getAnnotationExtractor()->validateStoryTitleUniqueness();
+        $testObjectExtractor->getAnnotationExtractor()->validateTestCaseIdTitleUniqueness();
     }
 
     /**

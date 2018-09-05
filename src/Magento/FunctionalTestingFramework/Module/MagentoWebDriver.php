@@ -19,6 +19,7 @@ use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\Util\ConfigSanitizerUtil;
 use Yandex\Allure\Adapter\Support\AttachmentSupport;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
 /**
  * MagentoWebDriver module provides common Magento web actions through Selenium WebDriver.
@@ -319,6 +320,7 @@ class MagentoWebDriver extends WebDriver
      * @param string   $selectSearchTextField
      * @param string   $selectSearchResult
      * @param string[] $options
+     * @throws \Exception
      * @return void
      */
     public function selectMultipleOptions($selectSearchTextField, $selectSearchResult, array $options)
@@ -474,14 +476,17 @@ class MagentoWebDriver extends WebDriver
      * Takes given $command and executes it against exposed MTF CLI entry point. Returns response from server.
      * @param string $command
      * @param string $arguments
+     * @throws TestFrameworkException
      * @return string
      */
     public function magentoCLI($command, $arguments = null)
     {
-        // trim everything after first '/' in URL after (ex http://magento.instance/<index.php>)
-        preg_match("/.+\/\/[^\/]+\/?/", $this->config['url'], $trimmed);
-        $trimmedUrl = $trimmed[0];
-        $apiURL = $trimmedUrl . ltrim(getenv('MAGENTO_CLI_COMMAND_PATH'), '/');
+        // Remove index.php if it's present in url
+        $baseUrl = rtrim(
+            str_replace('index.php', '', rtrim($this->config['url'], '/')),
+            '/'
+        );
+        $apiURL = $baseUrl . '/' . ltrim(getenv('MAGENTO_CLI_COMMAND_PATH'), '/');
 
         $executor = new CurlTransport();
         $executor->write(
@@ -501,6 +506,7 @@ class MagentoWebDriver extends WebDriver
     /**
      * Runs DELETE request to delete a Magento entity against the url given.
      * @param string $url
+     * @throws TestFrameworkException
      * @return string
      */
     public function deleteEntityByUrl($url)
@@ -689,5 +695,17 @@ class MagentoWebDriver extends WebDriver
     {
         parent::amOnPage($page);
         $this->waitForPageLoad();
+    }
+
+    /**
+     * Turn Readiness check on or off
+     *
+     * @param boolean $check
+     * @throws \Exception
+     * @return void
+     */
+    public function skipReadinessCheck($check)
+    {
+        $this->config['skipReadiness'] = $check;
     }
 }

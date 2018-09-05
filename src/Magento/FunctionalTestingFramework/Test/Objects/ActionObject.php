@@ -521,7 +521,11 @@ class ActionObject
             } elseif (get_class($obj) == SectionObject::class) {
                 list(,$objField) = $this->stripAndSplitReference($match);
                 if ($obj->getElement($objField) == null) {
-                    throw new TestReferenceException("Could not resolve entity reference", ["input" => $inputString]);
+                    throw new TestReferenceException(
+                        "Could not resolve entity reference \"{$inputString}\" "
+                        . "in Action with stepKey \"{$this->getStepKey()}\"",
+                        ["input" => $inputString, "stepKey" => $this->getStepKey()]
+                    );
                 }
                 $parameterized = $obj->getElement($objField)->isParameterized();
                 $replacement = $obj->getElement($objField)->getPrioritizedSelector();
@@ -538,7 +542,11 @@ class ActionObject
                 if (get_class($objectHandler) != DataObjectHandler::class) {
                     return $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $outputString);
                 } else {
-                    throw new TestReferenceException("Could not resolve entity reference", ["input" => $inputString]);
+                    throw new TestReferenceException(
+                        "Could not resolve entity reference \"{$inputString}\" "
+                        . "in Action with stepKey \"{$this->getStepKey()}\"",
+                        ["input" => $inputString, "stepKey" => $this->getStepKey()]
+                    );
                 }
             }
 

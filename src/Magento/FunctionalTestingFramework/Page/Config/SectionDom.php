@@ -67,7 +67,7 @@ class SectionDom extends \Magento\FunctionalTestingFramework\Config\MftfDom
      */
     public function initDom($xml, $filename = null)
     {
-        $dom = parent::initDom($xml);
+        $dom = parent::initDom($xml, $filename);
         $sectionNodes = $dom->getElementsByTagName('section');
         foreach ($sectionNodes as $sectionNode) {
             $sectionNode->setAttribute(self::SECTION_META_FILENAME_ATTRIBUTE, $filename);

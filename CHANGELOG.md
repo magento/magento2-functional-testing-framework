@@ -1,6 +1,32 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.3.6
+-----
+### Enhancements
+* Maintainability
+    * A `-r` or `--remove` flag has been introduced to `bin/mftf` commands to clear out the contents of the `_generated` folder before generation. This flag has been added to the following commands:
+        * `generate:tests`
+        * `generate:suite`
+        * `run:test`
+        * `run:group`
+* Customizability
+    * Persisted data handling mechanisms have been reworked.
+        * All persisted data is now referenced with the single `$` syntax (old syntax is still supported):
+            * `$persistedData.field$`
+        * Persisted data resolution now starts in its own scope and broadens if no matching `stepKey` was found in the current scope.
+        * Added support for referencing `suite` persisted data in tests.
+        * Added support for removing data created in between test scopes (`test`, `before/after`, `suite`).
+    * An attribute `skipReadiness` has been added to all test actions, allowing the individual test action to completely bypass the `ReadinessExtension` if it is enabled.
+
+### Fixes
+* To prevent Allure reporting from collating tests with identical `title`, the `testCaseId` annotation is now automatically prepended to the `title` annotation when tests are generated.
+* The `magentoCLI` command now correctly removes `index.php` if it is present in the `MAGENTO_BASE_URL`.
+* Invalid XML errors now indicate which XML file caused the error.
+* Attempting to `extend` a test that does not exist now skips the generation of the test.
+* Fixed an issue where a `suite` would generate invalid PHP if the `before` or `after` contained only `createData` actions.
+* Fixed an issue where a selector inside an `actionGroup` would incorrectly append the `actionGroup`'s `stepKey` to the selector.
+
 2.3.5
 -----
 ### Fixes

@@ -121,11 +121,12 @@ class TestObjectHandlerTest extends MagentoTestCase
         // set up mock data with Exclude Test
         $includeTest = (new TestDataArrayBuilder())
             ->withName('includeTest')
-            ->withAnnotations()
+            ->withAnnotations(['group' => [['value' => 'test']], 'title'=>[['value' => 'includeTest']]])
             ->withTestActions()
             ->build();
         $excludeTest = (new TestDataArrayBuilder())
             ->withName('excludeTest')
+            ->withAnnotations(['title'=>[['value' => 'excludeTest']]])
             ->withTestActions()
             ->build();
 

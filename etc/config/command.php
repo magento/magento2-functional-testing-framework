@@ -11,7 +11,7 @@ if (isset($_POST['command'])) {
     } else {
         $arguments = null;
     }
-    $php = PHP_BINARY ?: (PHP_BINDIR ? PHP_BINDIR . '/php' : 'php');
+    $php = PHP_BINDIR ? PHP_BINDIR . '/php' : 'php';
     $valid = validateCommand($command);
     if ($valid) {
         exec(
@@ -60,7 +60,7 @@ function escapeCommand($command)
  */
 function validateCommand($command)
 {
-    $php = PHP_BINARY ?: (PHP_BINDIR ? PHP_BINDIR . '/php' : 'php');
+    $php = PHP_BINDIR ? PHP_BINDIR . '/php' : 'php';
     exec($php . ' -f ../../../../bin/magento list', $commandList);
     // Trim list of commands after first whitespace
     $commandList = array_map("trimAfterWhitespace", $commandList);

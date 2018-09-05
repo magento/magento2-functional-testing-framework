@@ -76,7 +76,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
      */
     public function initDom($xml, $filename = null)
     {
-        $dom = parent::initDom($xml);
+        $dom = parent::initDom($xml, $filename);
 
         $pagesNode = $dom->getElementsByTagName('pages')->item(0);
         $this->validationUtil->validateChildUniqueness($pagesNode, $filename);

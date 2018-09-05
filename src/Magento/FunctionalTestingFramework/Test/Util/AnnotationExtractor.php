@@ -22,6 +22,11 @@ class AnnotationExtractor extends BaseObjectExtractor
      */
     private $storyToTitleMappings = [];
 
+    /**
+     * @var array
+     */
+    private $testCaseToTitleMappings = [];
+
     const ANNOTATION_VALUE = 'value';
     const MAGENTO_TO_ALLURE_SEVERITY_MAP = [
         "BLOCKER" => "BLOCKER",
@@ -90,8 +95,8 @@ class AnnotationExtractor extends BaseObjectExtractor
             $annotationObjects[$annotationKey] = $annotationValues;
         }
 
+        $this->addTestCaseIdToTitle($annotationObjects, $filename);
         $this->validateMissingAnnotations($annotationObjects, $filename);
-
         $this->addStoryTitleToMap($annotationObjects, $filename);
 
         return $annotationObjects;
@@ -110,6 +115,30 @@ class AnnotationExtractor extends BaseObjectExtractor
             $title = $annotations['title'][0];
             $this->storyToTitleMappings[$story . "/" . $title][] = $filename;
         }
+    }
+
+    /**
+     * Appends TestCaseId or [NO TESTCASEID] to test titles (to prevent Allure collision).
+     * @param array  $annotations
+     * @param string $filename
+     * @return void
+     */
+    private function addTestCaseIdToTitle(&$annotations, $filename)
+    {
+        if (!isset($annotations['title'])) {
+            return;
+        }
+
+        $testCaseId = "[NO TESTCASEID]";
+
+        if (isset($annotations['testCaseId'])) {
+            $testCaseId = $annotations['testCaseId'][0];
+        }
+
+        $newTitle = "{$testCaseId}: " . $annotations['title'][0];
+
+        $annotations['title'][0] = $newTitle;
+        $this->testCaseToTitleMappings[$newTitle][] = $filename;
     }
 
     /**
@@ -157,6 +186,32 @@ class AnnotationExtractor extends BaseObjectExtractor
                 $story = $storyTitleArray[0];
                 $title = $storyTitleArray[1];
                 $message .= "Story: '{$story}' Title: '{$title}' in Tests {$tests}\n\n";
+            }
+            throw new XmlException($message);
+        }
+    }
+
+    /**
+     * Validates uniqueness between Test Case ID and Titles globally
+     * @returns void
+     * @throws XmlException
+     * @return void
+     */
+    public function validateTestCaseIdTitleUniqueness()
+    {
+        $dupes = [];
+        foreach ($this->testCaseToTitleMappings as $newTitle => $files) {
+            if (count($files) > 1) {
+                $dupes[$newTitle] = "'" . implode("', '", $files) . "'";
+            }
+        }
+        if (!empty($dupes)) {
+            $message = "TestCaseId and Title pairs must be unique:\n\n";
+            foreach ($dupes as $newTitle => $tests) {
+                $testCaseTitleArray = explode(": ", $newTitle);
+                $testCaseId = $testCaseTitleArray[0];
+                $title = $testCaseTitleArray[1];
+                $message .= "TestCaseId: '{$testCaseId}' Title: '{$title}' in Tests {$tests}\n\n";
             }
             throw new XmlException($message);
         }
