@@ -1626,6 +1626,12 @@ class TestGenerator
         return implode(", ", $result);
     }
 
+    /**
+     * Process pressKey parameterArray attribute for uniqueness function call and necessary data resolutions
+     *
+     * @param string $input
+     * @return string
+     */
     private function processPressKey($input)
     {
         // validate the param array is in the correct format
@@ -1642,7 +1648,8 @@ class TestGenerator
         preg_match_all('/[\[][^\]]*?[\]]/', $input, $paramInput);
         if (!empty($paramInput)) {
             foreach ($paramInput[0] as $param) {
-                $arrayResult[static::PRESSKEY_ARRAY_ANCHOR_KEY . $count] = '[' . trim($this->addUniquenessToParamArray($param)) . ']';
+                $arrayResult[static::PRESSKEY_ARRAY_ANCHOR_KEY . $count] =
+                    '[' . trim($this->addUniquenessToParamArray($param)) . ']';
                 $input = str_replace($param, static::PRESSKEY_ARRAY_ANCHOR_KEY . $count, $input);
                 $count++;
             }
@@ -1662,7 +1669,7 @@ class TestGenerator
                 continue;
             }
 
-            // Matches numbers
+            // matches numbers
             if (preg_match('/^[\s]*(\d+?)[\s]*$/', $param)) {
                 $result[] = $param;
                 continue;
