@@ -144,8 +144,7 @@ class TestContextExtension extends \Codeception\Extension
     public function afterStep(\Codeception\Event\StepEvent $e)
     {
         // @codingStandardsIgnoreStart
-        $webDriver = $this->getModule("\Magento\FunctionalTestingFramework\Module\MagentoWebDriver")->webDriver;
+        ErrorLogger::getInstance()->logErrors($this->getModule(self::MAGENTO_WEB_DRIVER_CLASS), $e);
         // @codingStandardsIgnoreEnd
-        ErrorLogger::getInstance()->logErrors($webDriver, $e);
     }
 }

@@ -106,6 +106,13 @@ class MagentoWebDriver extends WebDriver
     private $htmlReport;
 
     /**
+     * Array to store Javascript errors
+     *
+     * @var string[]
+     */
+    private $jsErrors = [];
+
+    /**
      * Sanitizes config, then initializes using parent.
      * @return void
      */
@@ -113,6 +120,7 @@ class MagentoWebDriver extends WebDriver
     {
         $this->config = ConfigSanitizerUtil::sanitizeWebDriverConfig($this->config);
         parent::_initialize();
+        $this->cleanJsError();
     }
 
     /**
@@ -124,6 +132,7 @@ class MagentoWebDriver extends WebDriver
     {
         parent::_resetConfig();
         $this->config = ConfigSanitizerUtil::sanitizeWebDriverConfig($this->config);
+        $this->cleanJsError();
     }
 
     /**
@@ -386,22 +395,6 @@ class MagentoWebDriver extends WebDriver
                 // Formatting and looping on i as we can't interact elements returned above
                 // eg.  (//div[@data-role="spinner"])[1]
                 $this->waitForElementNotVisible("({$maskLocator})[{$i}]", 30);
-            }
-        }
-    }
-
-    /**
-     * Verify that there are no JavaScript errors in the console.
-     *
-     * @throws ModuleException
-     * @return void
-     */
-    public function dontSeeJsError()
-    {
-        $logs = $this->webDriver->manage()->getLog('browser');
-        foreach ($logs as $log) {
-            if ($log['level'] == 'SEVERE') {
-                throw new ModuleException($this, 'Errors in JavaScript: ' . json_encode($log));
             }
         }
     }
@@ -707,5 +700,54 @@ class MagentoWebDriver extends WebDriver
     public function skipReadinessCheck($check)
     {
         $this->config['skipReadiness'] = $check;
+    }
+
+    /**
+     * Clean Javascript errors in internal array
+     *
+     * @return void
+     */
+    private function cleanJsError()
+    {
+        $this->jsErrors = [];
+    }
+
+    /**
+     * Save Javascript error message to internal array
+     *
+     * @param string $errMsg
+     * @return void
+     */
+    public function setJsError($errMsg)
+    {
+        $this->jsErrors[] = $errMsg;
+    }
+
+    /**
+     * Get all Javascript errors
+     *
+     * @return string
+     */
+    private function getJsErrors()
+    {
+        $errors = '';
+
+        if (!empty($this->jsErrors)) {
+            $errors = 'Errors in JavaScript:';
+            foreach ($this->jsErrors as $jsError) {
+                $errors .= "\n" . $jsError;
+            }
+        }
+        return $errors;
+    }
+
+    /**
+     * Verify that there is no JavaScript error in browser logs
+     *
+     * @return void
+     */
+    public function dontSeeJsError()
+    {
+        $this->assertEmpty($this->jsErrors, $this->getJsErrors());
     }
 }

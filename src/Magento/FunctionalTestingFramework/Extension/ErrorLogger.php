@@ -41,17 +41,20 @@ class ErrorLogger
 
     /**
      * Loops through stepEvent for browser log entries
-     * @param \Facebook\WebDriver\Remote\RemoteWebDriver $webDriver
-     * @param \Codeception\Event\StepEvent               $stepEvent
+     *
+     * @param \Magento\FunctionalTestingFramework\Module\MagentoWebDriver $module
+     * @param \Codeception\Event\StepEvent $stepEvent
      * @return void
      */
-    public function logErrors($webDriver, $stepEvent)
+    public function logErrors($module, $stepEvent)
     {
         //Types available should be "server", "browser", "driver". Only care about browser at the moment.
-        $browserLogEntries = $webDriver->manage()->getLog("browser");
+        $browserLogEntries = $module->webDriver->manage()->getLog("browser");
         foreach ($browserLogEntries as $entry) {
             if (array_key_exists("source", $entry) && $entry["source"] === "javascript") {
                 $this->logError("javascript", $stepEvent, $entry);
+                //Set javascript error in MagentoWebDriver internal array
+                $module->setJsError("ERROR({$entry["level"]}) - " . $entry["message"]);
             }
         }
     }
