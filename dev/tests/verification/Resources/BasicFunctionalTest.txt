@@ -107,6 +107,10 @@ class BasicFunctionalTestCest
 		$date->setTimestamp(strtotime("Now"));
 		$date->setTimezone(new \DateTimeZone("America/Los_Angeles"));
 		$generateDateKey = $date->format("H:i:s");
+		$date = new \DateTime();
+		$date->setTimestamp(strtotime("Now"));
+		$date->setTimezone(new \DateTimeZone("UTC"));
+		$generateDateKey2 = $date->format("H:i:s");
 		$grabAttributeFromKey1 = $I->grabAttributeFrom(".functionalTestSelector", "someInput");
 		$grabCookieKey1 = $I->grabCookie("grabCookieInput", ['domain' => 'www.google.com']);
 		$grabFromCurrentUrlKey1 = $I->grabFromCurrentUrl("/grabCurrentUrl");
