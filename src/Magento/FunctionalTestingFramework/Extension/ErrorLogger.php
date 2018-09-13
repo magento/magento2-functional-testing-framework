@@ -43,7 +43,7 @@ class ErrorLogger
      * Loops through stepEvent for browser log entries
      *
      * @param \Magento\FunctionalTestingFramework\Module\MagentoWebDriver $module
-     * @param \Codeception\Event\StepEvent $stepEvent
+     * @param \Codeception\Event\StepEvent                                $stepEvent
      * @return void
      */
     public function logErrors($module, $stepEvent)
