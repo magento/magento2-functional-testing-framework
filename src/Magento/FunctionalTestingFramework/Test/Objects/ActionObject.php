@@ -612,7 +612,9 @@ class ActionObject
         $attributes = $this->getCustomActionAttributes();
         if (isset($attributes[self::ACTION_ATTRIBUTE_TIMEZONE])) {
             $timezone = $attributes[self::ACTION_ATTRIBUTE_TIMEZONE];
-            if (array_search($timezone, timezone_identifiers_list()) === false) {
+            try {
+                new DateTimeZone($timezone);
+            } catch (\Exception $e) {
                 throw new TestReferenceException(
                     "Timezone '{$timezone}' is not a valid timezone",
                     ["stepKey" => $this->getStepKey(), self::ACTION_ATTRIBUTE_TIMEZONE => $timezone]
