@@ -49,7 +49,9 @@ if (file_exists($envFilepath . DIRECTORY_SEPARATOR . '.env')) {
     defined('DEFAULT_TIMEZONE') || define('DEFAULT_TIMEZONE', 'America/Los_Angeles');
     $env->setEnvironmentVariable('DEFAULT_TIMEZONE', DEFAULT_TIMEZONE);
 
-    if (array_search(DEFAULT_TIMEZONE, timezone_identifiers_list()) === false) {
+    try {
+        new DateTimeZone(DEFAULT_TIMEZONE);
+    } catch (\Exception $e) {
         throw new \Exception("Invalid DEFAULT_TIMEZONE in .env: " . DEFAULT_TIMEZONE . PHP_EOL);
     }
 }
