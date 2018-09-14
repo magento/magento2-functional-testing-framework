@@ -19,6 +19,7 @@ use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
  * Class ActionObject
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ActionObject
 {
@@ -613,7 +614,7 @@ class ActionObject
         if (isset($attributes[self::ACTION_ATTRIBUTE_TIMEZONE])) {
             $timezone = $attributes[self::ACTION_ATTRIBUTE_TIMEZONE];
             try {
-                new DateTimeZone($timezone);
+                new \DateTimeZone($timezone);
             } catch (\Exception $e) {
                 throw new TestReferenceException(
                     "Timezone '{$timezone}' is not a valid timezone",
