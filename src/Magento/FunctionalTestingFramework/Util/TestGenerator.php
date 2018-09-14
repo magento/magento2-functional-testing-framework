@@ -1644,13 +1644,13 @@ class TestGenerator
         $arrayResult = [];
         $count = 0;
 
-        // matches arrays
+        // matches all arrays and replaces them with placeholder to prevent later param manipulation
         preg_match_all('/[\[][^\]]*?[\]]/', $input, $paramInput);
         if (!empty($paramInput)) {
             foreach ($paramInput[0] as $param) {
-                $arrayResult[static::PRESSKEY_ARRAY_ANCHOR_KEY . $count] =
+                $arrayResult[self::PRESSKEY_ARRAY_ANCHOR_KEY . $count] =
                     '[' . trim($this->addUniquenessToParamArray($param)) . ']';
-                $input = str_replace($param, static::PRESSKEY_ARRAY_ANCHOR_KEY . $count, $input);
+                $input = str_replace($param, self::PRESSKEY_ARRAY_ANCHOR_KEY . $count, $input);
                 $count++;
             }
         }
@@ -1681,6 +1681,7 @@ class TestGenerator
         }
 
         $result = implode(',', $result);
+        // reinsert arrays into result
         if (!empty($arrayResult)) {
             foreach ($arrayResult as $key => $value) {
                 $result = str_replace($key, $value, $result);
