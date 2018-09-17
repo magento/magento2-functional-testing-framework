@@ -6,7 +6,7 @@
  */
 
 // define framework basepath for schema pathing
-define('FW_BP', realpath(__DIR__ . '/../../../'));
+defined('FW_BP') || define('FW_BP', realpath(__DIR__ . '/../../../'));
 // get the root path of the project
 $projectRootPath = substr(FW_BP, 0, strpos(FW_BP, DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR));
 if (empty($projectRootPath)) {
