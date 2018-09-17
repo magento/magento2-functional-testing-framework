@@ -12,29 +12,29 @@ if (strpos($rootFile, "phpunit") !== false) {
 }
 
 defined('PROJECT_ROOT') || define('PROJECT_ROOT', dirname(dirname(dirname(__DIR__))));
+
 require_once realpath(PROJECT_ROOT . '/vendor/autoload.php');
 
 //Load constants from .env file
-defined('FW_BP') || define('FW_BP', PROJECT_ROOT);
-
-// add the debug flag here
-$debug_mode = $_ENV['MFTF_DEBUG'] ?? false;
-if (!(bool)$debug_mode && extension_loaded('xdebug')) {
-    xdebug_disable();
-}
-
-$RELATIVE_TESTS_MODULE_PATH = '/tests/functional/tests/MFTF';
-
-defined('MAGENTO_BP') || define('MAGENTO_BP', PROJECT_ROOT);
-defined('TESTS_BP') || define('TESTS_BP', dirname(dirname(__DIR__)));
-defined('TESTS_MODULE_PATH') || define('TESTS_MODULE_PATH', realpath(TESTS_BP . $RELATIVE_TESTS_MODULE_PATH));
-
-if (file_exists(TESTS_BP . DIRECTORY_SEPARATOR . '.env')) {
-    $env = new \Dotenv\Loader(TESTS_BP . DIRECTORY_SEPARATOR . '.env');
+$envFilePath = dirname(dirname(__DIR__));
+if (file_exists($envFilePath . DIRECTORY_SEPARATOR . '.env')) {
+    $env = new \Dotenv\Loader($envFilePath . DIRECTORY_SEPARATOR . '.env');
     $env->load();
 
     foreach ($_ENV as $key => $var) {
         defined($key) || define($key, $var);
+    }
+
+    if (array_key_exists('MAGENTO_BP', $_ENV)) {
+        // TODO REMOVE THIS CODE ONCE WE HAVE STOPPED SUPPORTING dev/tests/acceptance PATH
+        // define TEST_PATH and TEST_MODULE_PATH
+        defined('TESTS_BP') || define('TESTS_BP', realpath(MAGENTO_BP . DIRECTORY_SEPARATOR . 'dev/tests/acceptance/'));
+
+        $RELATIVE_TESTS_MODULE_PATH = '/tests/functional/Magento/FunctionalTest';
+        defined('TESTS_MODULE_PATH') || define(
+            'TESTS_MODULE_PATH',
+            realpath(TESTS_BP . $RELATIVE_TESTS_MODULE_PATH)
+        );
     }
 
     defined('MAGENTO_CLI_COMMAND_PATH') || define(
@@ -45,4 +45,18 @@ if (file_exists(TESTS_BP . DIRECTORY_SEPARATOR . '.env')) {
 
     defined('MAGENTO_CLI_COMMAND_PARAMETER') || define('MAGENTO_CLI_COMMAND_PARAMETER', 'command');
     $env->setEnvironmentVariable('MAGENTO_CLI_COMMAND_PARAMETER', MAGENTO_CLI_COMMAND_PARAMETER);
+}
+
+defined('FW_BP') || define('FW_BP', PROJECT_ROOT);
+defined('MAGENTO_BP') || define('MAGENTO_BP', PROJECT_ROOT);
+defined('TESTS_BP') || define('TESTS_BP', dirname(dirname(__DIR__)));
+
+$RELATIVE_TESTS_MODULE_PATH = '/tests/functional/tests/MFTF';
+defined('TESTS_MODULE_PATH') || define('TESTS_MODULE_PATH', realpath(TESTS_BP . $RELATIVE_TESTS_MODULE_PATH));
+
+
+// add the debug flag here
+$debug_mode = $_ENV['MFTF_DEBUG'] ?? false;
+if (!(bool)$debug_mode && extension_loaded('xdebug')) {
+    xdebug_disable();
 }
