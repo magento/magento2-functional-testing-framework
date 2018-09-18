@@ -27,5 +27,12 @@
         <unselectOption selector="#selector" parameterArray="[{{simpleParamData.uniqueNamePost}}]" stepKey="004"/>
         <unselectOption selector="#selector" parameterArray="[$simpleDataKey.name$]" stepKey="005"/>
         <unselectOption selector="#selector" parameterArray="[{{simpleParamData.name}}, $simpleDataKey.name$]" stepKey="006"/>
+
+        <pressKey selector="#selector" parameterArray="[$simpleDataKey.name$, ['ctrl', 'a'], \Facebook\WebDriver\WebDriverKeys::DELETE, $simpleDataKey.name$]" stepKey="pressKey001"/>
+        <pressKey selector="#selector" parameterArray="[['ctrl', 'a'], 10, 20, \Facebook\WebDriver\WebDriverKeys::DELETE, $simpleDataKey.name$]" stepKey="pressKey002"/>
+        <pressKey selector="#selector" parameterArray="[['ctrl', 'a'], 'new', 10, 20, \Facebook\WebDriver\WebDriverKeys::DELETE, $simpleDataKey.name$]" stepKey="pressKey003"/>
+        <pressKey selector="#selector" parameterArray="[['ctrl','a'],'new', 1, ['ctrl'], ['shift', 'ctrl', 'del'], [$simpleDataKey.name$, 'a', {{simpleParamData.name}}]]" stepKey="pressKey004"/>
+        <pressKey selector="#selector" parameterArray="[['ctrl','a'],'new', 1, ['ctrl'], ['shift', 'ctrl', 'del'], 0, [$simpleDataKey.name$, $simpleDataKey.name$]]" stepKey="pressKey005"/>
+        <pressKey selector="#selector" parameterArray="[['ctrl','a'],'new', 1, ['ctrl'], ['shift', 'ctrl', 'del'], [{{simpleParamData.uniqueNamePre}}, {{simpleParamData.uniqueNamePost}}]]" stepKey="pressKey006"/>
     </test>
 </tests>

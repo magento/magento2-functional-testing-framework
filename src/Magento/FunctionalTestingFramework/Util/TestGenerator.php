@@ -37,6 +37,7 @@ class TestGenerator
     const TEST_SCOPE = 'test';
     const HOOK_SCOPE = 'hook';
     const SUITE_SCOPE = 'suite';
+    const PRESSKEY_ARRAY_ANCHOR_KEY = '987654321098765432109876543210';
 
     /**
      * Path to the export dir.
@@ -960,24 +961,7 @@ class TestGenerator
                 case "pressKey":
                     $parameterArray = $customActionAttributes['parameterArray'] ?? null;
                     if ($parameterArray) {
-                        // validate the param array is in the correct format
-                        $this->validateParameterArray($parameterArray);
-
-                        // trim off the outer braces and add commas for the regex match
-                        $params = "," . substr($parameterArray, 1, strlen($parameterArray) - 2) . ",";
-
-                        // we are matching any nested arrays for a simultaneous press, any string literals, and any
-                        // explicit function calls from a class.
-                        preg_match_all('/(\[.*?\])|(\'.*?\')|(\\\\.*?\,)/', $params, $paramInput);
-
-                        //clean up the input by trimming any extra commas
-                        $tmpParameterArray = [];
-                        foreach ($paramInput[0] as $params) {
-                            $tmpParameterArray[] = trim($params, ",");
-                        }
-
-                        // put the array together as a string to be passed as args
-                        $parameterArray = implode(",", $tmpParameterArray);
+                        $parameterArray = $this->processPressKey($parameterArray);
                     }
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
@@ -1640,6 +1624,70 @@ class TestGenerator
         }
 
         return implode(", ", $result);
+    }
+
+    /**
+     * Process pressKey parameterArray attribute for uniqueness function call and necessary data resolutions
+     *
+     * @param string $input
+     * @return string
+     */
+    private function processPressKey($input)
+    {
+        // validate the param array is in the correct format
+        $input = trim($input);
+        $this->validateParameterArray($input);
+        // trim off the outer braces
+        $input = substr($input, 1, strlen($input) - 2);
+
+        $result = [];
+        $arrayResult = [];
+        $count = 0;
+
+        // matches all arrays and replaces them with placeholder to prevent later param manipulation
+        preg_match_all('/[\[][^\]]*?[\]]/', $input, $paramInput);
+        if (!empty($paramInput)) {
+            foreach ($paramInput[0] as $param) {
+                $arrayResult[self::PRESSKEY_ARRAY_ANCHOR_KEY . $count] =
+                    '[' . trim($this->addUniquenessToParamArray($param)) . ']';
+                $input = str_replace($param, self::PRESSKEY_ARRAY_ANCHOR_KEY . $count, $input);
+                $count++;
+            }
+        }
+
+        $paramArray = explode(",", $input);
+        foreach ($paramArray as $param) {
+            // matches strings wrapped in ', we assume these are string literals
+            if (preg_match('/^[\s]*(\'.*?\')[\s]*$/', $param)) {
+                $result[] = trim($param);
+                continue;
+            }
+
+            // matches \ for Facebook WebDriverKeys classes
+            if (substr(trim($param), 0, 1) === '\\') {
+                $result[] = trim($param);
+                continue;
+            }
+
+            // matches numbers
+            if (preg_match('/^[\s]*(\d+?)[\s]*$/', $param)) {
+                $result[] = $param;
+                continue;
+            }
+
+            $replacement = $this->addUniquenessFunctionCall(trim($param));
+
+            $result[] = $replacement;
+        }
+
+        $result = implode(',', $result);
+        // reinsert arrays into result
+        if (!empty($arrayResult)) {
+            foreach ($arrayResult as $key => $value) {
+                $result = str_replace($key, $value, $result);
+            }
+        }
+        return $result;
     }
 
     /**
