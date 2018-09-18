@@ -12,7 +12,7 @@ if (PHP_SAPI !== 'cli') {
 }
 
 $autoloadPath = realpath(__DIR__ . '/../../../autoload.php');
-$testBootstrapPath = realpath(__DIR__ . '/../dev/tests/functional/_bootstrap.php');
+$testBootstrapPath = realpath(__DIR__ . '/../dev/tests/functional/standalone_bootstrap.php');
 
 try {
     if (file_exists($autoloadPath)) {
