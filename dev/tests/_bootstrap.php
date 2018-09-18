@@ -40,7 +40,8 @@ $TEST_ENVS = [
     'MAGENTO_BASE_URL' => 'http://baseurl:8080',
     'MAGENTO_BACKEND_NAME' => 'admin',
     'MAGENTO_ADMIN_USERNAME' => 'admin',
-    'MAGENTO_ADMIN_PASSWORD' => 'admin123'
+    'MAGENTO_ADMIN_PASSWORD' => 'admin123',
+    'DEFAULT_TIMEZONE' => 'America/Los_Angeles'
 ];
 
 foreach ($TEST_ENVS as $key => $value) {

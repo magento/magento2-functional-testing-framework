@@ -19,6 +19,7 @@ use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
  * Class ActionObject
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ActionObject
 {
@@ -62,6 +63,7 @@ class ActionObject
     const FUNCTION_CLOSURE_ACTIONS = ['waitForElementChange', 'performOn'];
     const MERGE_ACTION_ORDER_AFTER = 'after';
     const MERGE_ACTION_ORDER_BEFORE = 'before';
+    const ACTION_ATTRIBUTE_TIMEZONE = 'timezone';
     const ACTION_ATTRIBUTE_URL = 'url';
     const ACTION_ATTRIBUTE_SELECTOR = 'selector';
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER = '/\(.+\)/';
@@ -256,6 +258,7 @@ class ActionObject
             $this->resolveSelectorReferenceAndTimeout();
             $this->resolveUrlReference();
             $this->resolveDataInputReferences();
+            $this->validateTimezoneAttribute();
             if ($this->getType() == "deleteData") {
                 $this->validateMutuallyExclusiveAttributes(self::DELETE_DATA_MUTUAL_EXCLUSIVE_ATTRIBUTES);
             }
@@ -596,6 +599,28 @@ class ActionObject
                 "Page of type 'external' is not compatible with action type '{$this->getType()}'",
                 ["type" => $this->getType()]
             );
+        }
+    }
+
+    /**
+     * Validates that the timezone attribute contains a valid value.
+     *
+     * @return void
+     * @throws TestReferenceException
+     */
+    private function validateTimezoneAttribute()
+    {
+        $attributes = $this->getCustomActionAttributes();
+        if (isset($attributes[self::ACTION_ATTRIBUTE_TIMEZONE])) {
+            $timezone = $attributes[self::ACTION_ATTRIBUTE_TIMEZONE];
+            try {
+                new \DateTimeZone($timezone);
+            } catch (\Exception $e) {
+                throw new TestReferenceException(
+                    "Timezone '{$timezone}' is not a valid timezone",
+                    ["stepKey" => $this->getStepKey(), self::ACTION_ATTRIBUTE_TIMEZONE => $timezone]
+                );
+            }
         }
     }
 
