@@ -218,29 +218,24 @@ class ModuleResolver
     {
         $allModulePaths = [];
 
-        // Define the Module paths from app/code
-        $appCodePath = MAGENTO_BP
-            . DIRECTORY_SEPARATOR
-            . 'app' . DIRECTORY_SEPARATOR
-            . 'code' . DIRECTORY_SEPARATOR;
+        // Define the Module paths from magento bp
+        $magentoBaseCodePath = MAGENTO_BP;
 
         // Define the Module paths from default TESTS_MODULE_PATH
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
         $modulePath = rtrim($modulePath, DIRECTORY_SEPARATOR);
 
-        // Define the Module paths from vendor modules
-        $vendorCodePath = PROJECT_ROOT
-            . DIRECTORY_SEPARATOR
-            . 'vendor' . DIRECTORY_SEPARATOR;
+        // Define the Module paths from project root
+        $projectRootCodePath = PROJECT_ROOT;
 
         $codePathsToPattern = [
             $modulePath => '',
-            $appCodePath => DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR . 'Mftf',
-            $vendorCodePath => DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR . 'Mftf'
+            $magentoBaseCodePath => 'Test' . DIRECTORY_SEPARATOR . 'Mftf',
+            $projectRootCodePath => 'Test' . DIRECTORY_SEPARATOR . 'Mftf'
         ];
 
         foreach ($codePathsToPattern as $codePath => $pattern) {
-            $allModulePaths = array_merge_recursive($allModulePaths, $this->globRelevantPaths($codePath, $pattern));
+            $allModulePaths = array_merge($allModulePaths, $this->globRelevantPaths($codePath, $pattern));
         }
 
         return $allModulePaths;
@@ -288,7 +283,15 @@ class ModuleResolver
      */
     private static function globRelevantWrapper($testPath, $pattern)
     {
-        return glob($testPath . '*' . DIRECTORY_SEPARATOR . '*' . $pattern);
+        if ($pattern == "") {
+            return glob($testPath . '*' . DIRECTORY_SEPARATOR . '*' . $pattern);
+        }
+        $subDirectory = "*" . DIRECTORY_SEPARATOR;
+        $directories = glob($testPath . $subDirectory . $pattern, GLOB_ONLYDIR);
+        foreach (glob($testPath . $subDirectory, GLOB_ONLYDIR) as $dir) {
+            $directories = array_merge($directories, self::globRelevantWrapper($dir, $pattern));
+        }
+        return $directories;
     }
 
     /**
