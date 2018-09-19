@@ -235,7 +235,7 @@ class ModuleResolver
         ];
 
         foreach ($codePathsToPattern as $codePath => $pattern) {
-            $allModulePaths = array_merge($allModulePaths, $this->globRelevantPaths($codePath, $pattern));
+            $allModulePaths = array_merge_recursive($allModulePaths, $this->globRelevantPaths($codePath, $pattern));
         }
 
         return $allModulePaths;
@@ -289,7 +289,7 @@ class ModuleResolver
         $subDirectory = "*" . DIRECTORY_SEPARATOR;
         $directories = glob($testPath . $subDirectory . $pattern, GLOB_ONLYDIR);
         foreach (glob($testPath . $subDirectory, GLOB_ONLYDIR) as $dir) {
-            $directories = array_merge($directories, self::globRelevantWrapper($dir, $pattern));
+            $directories = array_merge_recursive($directories, self::globRelevantWrapper($dir, $pattern));
         }
         return $directories;
     }
