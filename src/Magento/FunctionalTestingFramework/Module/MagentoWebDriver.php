@@ -377,7 +377,7 @@ class MagentoWebDriver extends WebDriver
      * @throws \Exception
      * @return void
      */
-    public function waitForLoadingMaskToDisappear($timeout)
+    public function waitForLoadingMaskToDisappear($timeout = null)
     {
         foreach (self::$loadingMasksLocators as $maskLocator) {
             // Get count of elements found for looping.
