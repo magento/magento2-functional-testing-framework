@@ -28,9 +28,9 @@ if (file_exists($envFilePath . DIRECTORY_SEPARATOR . '.env')) {
     if (array_key_exists('MAGENTO_BP', $_ENV)) {
         // TODO REMOVE THIS CODE ONCE WE HAVE STOPPED SUPPORTING dev/tests/acceptance PATH
         // define TEST_PATH and TEST_MODULE_PATH
-        defined('TESTS_BP') || define('TESTS_BP', realpath(MAGENTO_BP . DIRECTORY_SEPARATOR . 'dev/tests/acceptance/'));
-
-        $RELATIVE_TESTS_MODULE_PATH = '/tests/functional/Magento/FunctionalTest';
+//        defined('TESTS_BP') || define('TESTS_BP', realpath(MAGENTO_BP . DIRECTORY_SEPARATOR . 'dev/tests/acceptance/'));
+        defined('TESTS_BP') || define('TESTS_BP', dirname(dirname(__DIR__)));
+        $RELATIVE_TESTS_MODULE_PATH = '/tests/functional/tests/MFTF';
         defined('TESTS_MODULE_PATH') || define(
             'TESTS_MODULE_PATH',
             realpath(TESTS_BP . $RELATIVE_TESTS_MODULE_PATH)
