@@ -32,6 +32,10 @@ if (file_exists($envFilepath . DIRECTORY_SEPARATOR . '.env')) {
         defined($key) || define($key, $var);
     }
 
+    if (array_key_exists('MAGENTO_BP', $_ENV)) {
+        defined('TESTS_BP') || define('TESTS_BP', realpath(PROJECT_ROOT . DIRECTORY_SEPARATOR . 'dev/tests/acceptance'));
+    }
+
     defined('MAGENTO_CLI_COMMAND_PATH') || define(
         'MAGENTO_CLI_COMMAND_PATH',
         'dev/tests/acceptance/utils/command.php'
