@@ -658,7 +658,7 @@ class ActionObject
     private function resolveParameterization($isParameterized, $replacement, $match, $object)
     {
         if ($isParameterized) {
-            $parameterList = $this->stripAndReturnParameters($match);
+            $parameterList = $this->stripAndReturnParameters($match) ?: [];
             $resolvedReplacement = $this->matchParameterReferences($replacement, $parameterList);
         } else {
             $resolvedReplacement = $replacement;
