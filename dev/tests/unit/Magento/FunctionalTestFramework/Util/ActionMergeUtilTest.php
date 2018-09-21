@@ -8,19 +8,9 @@ namespace Tests\unit\Magento\FunctionalTestFramework\Test\Handlers;
 
 use AspectMock\Test as AspectMock;
 
-use Go\Aop\Aspect;
-use Magento\FunctionalTestingFramework\ObjectManager;
-use Magento\FunctionalTestingFramework\ObjectManagerFactory;
-use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
-use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
-use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
-use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
-use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
-use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
-use tests\unit\Util\TestDataArrayBuilder;
 
 class ActionMergeUtilTest extends MagentoTestCase
 {
