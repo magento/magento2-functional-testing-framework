@@ -6,8 +6,6 @@
 
 namespace Tests\unit\Magento\FunctionalTestFramework\Test\Handlers;
 
-use AspectMock\Test as AspectMock;
-
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
