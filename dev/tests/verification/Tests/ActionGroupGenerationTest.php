@@ -195,4 +195,15 @@ class ActionGroupGenerationTest extends MftfTestCase
     {
         $this->generateAndCompareTest('ActionGroupSkipReadiness');
     }
+
+    /**
+     * Test an action group with an arg containing stepKey text
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testActionGroupWithSectionAndDataArguments()
+    {
+        $this->generateAndCompareTest('ActionGroupWithSectionAndDataAsArguments');
+    }
 }
