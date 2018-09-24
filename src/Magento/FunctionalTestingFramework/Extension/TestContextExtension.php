@@ -6,32 +6,40 @@
 
 namespace Magento\FunctionalTestingFramework\Extension;
 
-use \Codeception\Events;
+use Codeception\Events;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
-use Magento\FunctionalTestingFramework\Extension\ErrorLogger;
-use Magento\FunctionalTestingFramework\Module\MagentoWebDriver;
 
 /**
  * Class TestContextExtension
  * @SuppressWarnings(PHPMD.UnusedPrivateField)
  */
-class TestContextExtension extends \Codeception\Extension
+class TestContextExtension extends BaseExtension
 {
     const TEST_PHASE_AFTER = "_after";
-    // @codingStandardsIgnoreStart
-    const MAGENTO_WEB_DRIVER_CLASS = "\Magento\FunctionalTestingFramework\Module\MagentoWebDriver";
-    // @codingStandardsIgnoreEnd
 
     /**
      * Codeception Events Mapping to methods
      * @var array
      */
-    public static $events = [
-        Events::TEST_START => 'testStart',
-        Events::TEST_FAIL => 'testFail',
-        Events::STEP_AFTER => 'afterStep',
-        Events::TEST_END => 'testEnd'
-    ];
+    public static $events;
+
+    /**
+     * Initialize local vars
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function _initialize()
+    {
+        $events = [
+            Events::TEST_START => 'testStart',
+            Events::TEST_FAIL => 'testFail',
+            Events::STEP_AFTER => 'afterStep',
+            Events::TEST_END => 'testEnd'
+        ];
+        self::$events = array_merge(parent::$events, $events);
+        parent::_initialize();
+    }
 
     /**
      * Codeception event listener function, triggered on test start.
@@ -64,6 +72,7 @@ class TestContextExtension extends \Codeception\Extension
      * Codeception event listener function, triggered on test ending (naturally or by error).
      * @param \Codeception\Event\TestEvent $e
      * @return void
+     * @throws \Exception
      */
     public function testEnd(\Codeception\Event\TestEvent $e)
     {
@@ -92,12 +101,12 @@ class TestContextExtension extends \Codeception\Extension
             }
         }
         // Reset Session and Cookies after all Test Runs, workaround due to functional.suite.yml restart: true
-        $this->getModule(self::MAGENTO_WEB_DRIVER_CLASS)->_runAfter($e->getTest());
+        $this->getDriver()->_runAfter($e->getTest());
     }
 
     /**
      * Runs cest's after block, if necessary.
-     * @param Symfony\Component\EventDispatcher\Event $e
+     * @param \Symfony\Component\EventDispatcher\Event $e
      * @param \Codeception\TestInterface              $cest
      * @return void
      */
@@ -136,15 +145,29 @@ class TestContextExtension extends \Codeception\Extension
     }
 
     /**
+     * Codeception event listener function, triggered before step.
+     * Check if it's a new page.
+     *
+     * @param \Codeception\Event\StepEvent $e
+     * @return void
+     * @throws \Exception
+     */
+    public function beforeStep(\Codeception\Event\StepEvent $e)
+    {
+        if ($this->pageChanged($e->getStep())) {
+            $this->getDriver()->cleanJsError();
+        }
+    }
+
+    /**
      * Codeception event listener function, triggered after step.
      * Calls ErrorLogger to log JS errors encountered.
      * @param \Codeception\Event\StepEvent $e
      * @return void
+     * @throws \Exception
      */
     public function afterStep(\Codeception\Event\StepEvent $e)
     {
-        // @codingStandardsIgnoreStart
-        ErrorLogger::getInstance()->logErrors($this->getModule(self::MAGENTO_WEB_DRIVER_CLASS), $e);
-        // @codingStandardsIgnoreEnd
+        ErrorLogger::getInstance()->logErrors($this->getDriver(), $e);
     }
 }

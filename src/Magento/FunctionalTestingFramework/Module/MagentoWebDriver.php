@@ -707,7 +707,7 @@ class MagentoWebDriver extends WebDriver
      *
      * @return void
      */
-    private function cleanJsError()
+    public function cleanJsError()
     {
         $this->jsErrors = [];
     }
