@@ -29,6 +29,16 @@ class ModuleResolver
     const CUSTOM_MODULE_PATHS = 'CUSTOM_MODULE_PATHS';
 
     /**
+     * List of path types present in Magento Component Registrar
+     */
+    const PATHS = ['module', 'library', 'theme', 'language', 'setup'];
+
+    /**
+     * Magento Registrar Class
+     */
+    const REGISTRAR_CLASS = "\Magento\Framework\Component\Registrar";
+
+    /**
      * Enabled modules.
      *
      * @var array|null
@@ -260,7 +270,8 @@ class ModuleResolver
         }
 
         foreach ($relevantPaths as $codePath) {
-            $mainModName = basename(str_replace($pattern, '', $codePath));
+            $allComponents = $this->getRegisteredModuleList();
+            $mainModName = array_search($codePath, $allComponents) ?: basename(str_replace($pattern, '', $codePath));
             $modulePaths[$mainModName][] = $codePath;
 
             if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
@@ -506,5 +517,34 @@ class ModuleResolver
     private function getModuleBlacklist()
     {
         return $this->moduleBlacklist;
+    }
+
+    /**
+     * Calls Magento method for determining registered modules.
+     *
+     * @return string[]
+     */
+    private function getRegisteredModuleList()
+    {
+        if (array_key_exists('MAGENTO_BP', $_ENV)) {
+            require_once(MAGENTO_BP . "/app/autoload.php");
+        }
+
+        try {
+            $allComponents = [];
+            if (!class_exists("\Magento\Framework\Component\ComponentRegistrar")) {
+                throw new TestFrameworkException("Magento Installation not found when loading registered modules.\n");
+            }
+            $components = new \Magento\Framework\Component\ComponentRegistrar();
+            foreach (self::PATHS as $componentType) {
+                $allComponents = array_merge($allComponents, $components->getPaths($componentType));
+            }
+            return $allComponents;
+        } catch (TestFrameworkException $e) {
+            LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->warning(
+                "$e"
+            );
+        }
+        return [];
     }
 }
