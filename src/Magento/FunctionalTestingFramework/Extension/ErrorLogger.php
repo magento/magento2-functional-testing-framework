@@ -48,10 +48,12 @@ class ErrorLogger
     public function logErrors($webDriver, $stepEvent)
     {
         //Types available should be "server", "browser", "driver". Only care about browser at the moment.
-        $browserLogEntries = $webDriver->manage()->getLog("browser");
-        foreach ($browserLogEntries as $entry) {
-            if (array_key_exists("source", $entry) && $entry["source"] === "javascript") {
-                $this->logError("javascript", $stepEvent, $entry);
+        if (in_array("browser", $webDriver->manage()->getAvailableLogTypes())) {
+            $browserLogEntries = $webDriver->manage()->getLog("browser");
+            foreach ($browserLogEntries as $entry) {
+                if (array_key_exists("source", $entry) && $entry["source"] === "javascript") {
+                    $this->logError("javascript", $stepEvent, $entry);
+                }
             }
         }
     }
