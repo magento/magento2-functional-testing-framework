@@ -13,7 +13,7 @@ use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 class ActionMergeUtilTest extends MagentoTestCase
 {
     /**
-     * Test Exception Handler
+     * Test Exception Handler for merging actions
      *
      * @throws \Exception
      */

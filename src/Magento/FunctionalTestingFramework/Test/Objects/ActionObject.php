@@ -744,7 +744,7 @@ class ActionObject
             );
         } elseif (count($matches) == 0) {
             throw new TestReferenceException(
-                "Parameter Resolution Failed: No parameter matches found for reference " .
+                "Parameter Resolution Failed: No parameter matches found in parameterized element with selector " .
                 $reference,
                 ["reference" => $reference]
             );

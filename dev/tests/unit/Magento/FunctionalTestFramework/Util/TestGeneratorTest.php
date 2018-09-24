@@ -16,11 +16,11 @@ use Magento\FunctionalTestingFramework\Util\TestGenerator;
 class TestGeneratorTest extends MagentoTestCase
 {
     /**
-     * Basic test to validate array => test object conversion.
+     * Basic test to check exceptions for incorrect entities.
      *
      * @throws \Exception
      */
-    public function testGetTestObject()
+    public function testEntityException()
     {
         $actionObject = new ActionObject('fakeAction', 'comment', [
             'userInput' => '{{someEntity.entity}}'
