@@ -532,7 +532,7 @@ class ModuleResolver
 
         try {
             $allComponents = [];
-            if (!class_exists("\Magento\Framework\Component\ComponentRegistrar")) {
+            if (!class_exists(self::REGISTRAR_CLASS)) {
                 throw new TestFrameworkException("Magento Installation not found when loading registered modules.\n");
             }
             $components = new \Magento\Framework\Component\ComponentRegistrar();
