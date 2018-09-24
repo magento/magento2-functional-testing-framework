@@ -31,12 +31,17 @@ class ModuleResolver
     /**
      * List of path types present in Magento Component Registrar
      */
-    const PATHS = ['module', 'library', 'theme', 'language', 'setup'];
+    const PATHS = ['module', 'library', 'theme', 'language'];
 
     /**
      * Magento Registrar Class
      */
-    const REGISTRAR_CLASS = "\Magento\Framework\Component\Registrar";
+    const REGISTRAR_CLASS = "\Magento\Framework\Component\ComponentRegistrar";
+
+    /**
+     * Magento Directory Structure Name Prefix
+     */
+    const MAGENTO_PREFIX = "Magento_";
 
     /**
      * Enabled modules.
@@ -269,9 +274,11 @@ class ModuleResolver
             $relevantPaths = $this->globRelevantWrapper($testPath, $pattern);
         }
 
+        $allComponents = $this->getRegisteredModuleList();
+
         foreach ($relevantPaths as $codePath) {
-            $allComponents = $this->getRegisteredModuleList();
             $mainModName = array_search($codePath, $allComponents) ?: basename(str_replace($pattern, '', $codePath));
+            $mainModName = str_replace(self::MAGENTO_PREFIX, "", $mainModName);
             $modulePaths[$mainModName][] = $codePath;
 
             if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
@@ -539,6 +546,9 @@ class ModuleResolver
             foreach (self::PATHS as $componentType) {
                 $allComponents = array_merge($allComponents, $components->getPaths($componentType));
             }
+            array_walk($allComponents, function (&$value) {
+                $value .= DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR . 'Mftf';
+            });
             return $allComponents;
         } catch (TestFrameworkException $e) {
             LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->warning(
