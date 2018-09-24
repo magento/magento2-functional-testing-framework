@@ -534,7 +534,13 @@ class ModuleResolver
     private function getRegisteredModuleList()
     {
         if (array_key_exists('MAGENTO_BP', $_ENV)) {
-            require_once(MAGENTO_BP . "/app/autoload.php");
+            $autoloadPath = realpath(MAGENTO_BP . "/app/autoload.php");
+            if ($autoloadPath) {
+                require_once($autoloadPath);
+            } else {
+                throw new TestFrameworkException("Magento app/autoload.php not found with given MAGENTO_BP:"
+                    . MAGENTO_BP);
+            }
         }
 
         try {
