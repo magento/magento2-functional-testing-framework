@@ -45,7 +45,7 @@ class DuplicateNodeValidationUtil
      * @param string      $filename
      * @return void
      */
-    public function validateChildUniqueness(\DOMElement $parentNode, $filename)
+    public function validateChildUniqueness(\DOMElement $parentNode, $filename, $parentKey)
     {
         $childNodes = $parentNode->childNodes;
         $type = ucfirst($parentNode->tagName);
@@ -69,7 +69,7 @@ class DuplicateNodeValidationUtil
             $duplicates = array_diff_assoc($keyValues, $withoutDuplicates);
             $keyError = "";
             foreach ($duplicates as $duplicateKey => $duplicateValue) {
-                $keyError .= "\t{$this->uniqueKey}: {$duplicateValue} is used more than once.\n";
+                $keyError .= "\t{$this->uniqueKey}: {$duplicateValue} is used more than once. (Parent: {$parentKey})\n";
             }
 
             $errorMsg = "{$type} cannot use {$this->uniqueKey}s more than once.\t\n{$keyError}\tin file: {$filename}";

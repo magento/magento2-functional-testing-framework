@@ -104,7 +104,8 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
 
                 $this->validationUtil->validateChildUniqueness(
                     $testNode,
-                    $filename
+                    $filename,
+                    $testNode->getAttribute(self::TEST_META_NAME_ATTRIBUTE)
                 );
                 $beforeNode = $testNode->getElementsByTagName('before')->item(0);
                 $afterNode = $testNode->getElementsByTagName('after')->item(0);
@@ -112,13 +113,15 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
                 if (isset($beforeNode)) {
                     $this->validationUtil->validateChildUniqueness(
                         $beforeNode,
-                        $filename
+                        $filename,
+                        $testNode->getAttribute(self::TEST_META_NAME_ATTRIBUTE) . "/before"
                     );
                 }
                 if (isset($afterNode)) {
                     $this->validationUtil->validateChildUniqueness(
                         $afterNode,
-                        $filename
+                        $filename,
+                        $testNode->getAttribute(self::TEST_META_NAME_ATTRIBUTE) . "/after"
                     );
                 }
             }
