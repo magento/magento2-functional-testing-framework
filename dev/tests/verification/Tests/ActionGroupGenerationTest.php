@@ -197,6 +197,17 @@ class ActionGroupGenerationTest extends MftfTestCase
     }
 
     /**
+     * Test an action group with an arg containing stepKey text
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testActionGroupWithSectionAndDataArguments()
+    {
+        $this->generateAndCompareTest('ActionGroupWithSectionAndDataAsArguments');
+    }
+
+    /**
      * Test an action group with an arg that resolves into section.element with a hyphen in the parameter
      *
      * @throws \Exception
