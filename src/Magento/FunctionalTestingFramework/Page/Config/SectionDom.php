@@ -20,6 +20,7 @@ use Magento\FunctionalTestingFramework\Util\Validation\DuplicateNodeValidationUt
 class SectionDom extends \Magento\FunctionalTestingFramework\Config\MftfDom
 {
     const SECTION_META_FILENAME_ATTRIBUTE = "filename";
+    const SECTION_META_NAME_ATTRIBUTE = "name";
 
     /**
      * NodeValidationUtil
@@ -71,7 +72,11 @@ class SectionDom extends \Magento\FunctionalTestingFramework\Config\MftfDom
         $sectionNodes = $dom->getElementsByTagName('section');
         foreach ($sectionNodes as $sectionNode) {
             $sectionNode->setAttribute(self::SECTION_META_FILENAME_ATTRIBUTE, $filename);
-            $this->validationUtil->validateChildUniqueness($sectionNode, $filename);
+            $this->validationUtil->validateChildUniqueness(
+                $sectionNode,
+                $filename,
+                $sectionNode->getAttribute(self::SECTION_META_NAME_ATTRIBUTE)
+            );
         }
         return $dom;
     }

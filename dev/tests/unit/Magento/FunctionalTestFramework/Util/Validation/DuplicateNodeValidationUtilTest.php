@@ -29,6 +29,7 @@ class DuplicateNodeValidationUtilTest extends MagentoTestCase
                 ';
         $uniqueIdentifier = "stepKey";
         $filename = "file";
+        $testName = "test";
 
         // Perform Test
         $dom = new \DOMDocument();
@@ -40,8 +41,7 @@ class DuplicateNodeValidationUtilTest extends MagentoTestCase
         $validator->validateChildUniqueness(
             $testNode,
             $filename,
-            $uniqueIdentifier,
-            $exceptionCollector
+            $testName
         );
         $this->expectException(\Exception::class);
         $exceptionCollector->throwException();

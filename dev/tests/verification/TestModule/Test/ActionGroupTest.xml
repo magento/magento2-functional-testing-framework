@@ -165,4 +165,10 @@
             <argument name="section" value="SampleSection"/>
         </actionGroup>
     </test>
+
+    <test name="ActionGroupWithParameterizedElementWithHyphen">
+        <actionGroup ref="SectionArgumentWithParameterizedSelector" stepKey="actionGroup">
+            <argument name="section" value="SampleSection"/>
+        </actionGroup>
+    </test>
 </tests>

@@ -85,4 +85,10 @@
         </arguments>
         <seeInCurrentUrl url="/{{persistedData.urlKey}}.html?___store={{xmlData.firstname}}" stepKey="checkUrl"/>
     </actionGroup>
+    <actionGroup name="SectionArgumentWithParameterizedSelector">
+        <arguments>
+            <argument name="section" defaultValue="SampleSection"/>
+        </arguments>
+        <executeJS function="{{section.oneParamElement('full-width')}}" stepKey="keyone"/>
+    </actionGroup>
 </actionGroups>
