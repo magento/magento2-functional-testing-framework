@@ -658,7 +658,7 @@ class ActionObject
     private function resolveParameterization($isParameterized, $replacement, $match, $object)
     {
         if ($isParameterized) {
-            $parameterList = $this->stripAndReturnParameters($match);
+            $parameterList = $this->stripAndReturnParameters($match) ?: [];
             $resolvedReplacement = $this->matchParameterReferences($replacement, $parameterList);
         } else {
             $resolvedReplacement = $replacement;
@@ -682,26 +682,7 @@ class ActionObject
     {
         preg_match_all('/{{[\w.]+}}/', $reference, $varMatches);
         $varMatches[0] = array_unique($varMatches[0]);
-        if (count($varMatches[0]) > count($parameters)) {
-            if (is_array($parameters)) {
-                $parametersGiven = implode(",", $parameters);
-            } elseif ($parameters == null) {
-                $parametersGiven = "NONE";
-            } else {
-                $parametersGiven = $parameters;
-            }
-            throw new TestReferenceException(
-                "Parameter Resolution Failed: Not enough parameters given for reference " .
-                $reference . ". Parameters Given: " . $parametersGiven,
-                ["reference" => $reference, "parametersGiven" => $parametersGiven]
-            );
-        } elseif (count($varMatches[0]) < count($parameters)) {
-            throw new TestReferenceException(
-                "Parameter Resolution Failed: Too many parameters given for reference " .
-                $reference . ". Parameters Given: " . implode(", ", $parameters),
-                ["reference" => $reference, "parametersGiven" => $parameters]
-            );
-        }
+        $this->checkParameterCount($varMatches[0], $parameters, $reference);
 
         //Attempt to Resolve {{data}} references to actual output. Trim parameter for whitespace before processing it.
         //If regex matched it means that it's either a 'StringLiteral' or $key.data$/$$key.data$$ reference.
@@ -729,5 +710,44 @@ class ActionObject
             $reference = str_replace($var, $resolvedParameters[$resolveIndex++], $reference);
         }
         return $reference;
+    }
+
+    /**
+     * Checks count of parameters versus matches
+     *
+     * @param array  $matches
+     * @param array  $parameters
+     * @param string $reference
+     * @return void
+     * @throws \Exception
+     */
+    private function checkParameterCount($matches, $parameters, $reference)
+    {
+        if (count($matches) > count($parameters)) {
+            if (is_array($parameters)) {
+                $parametersGiven = implode(",", $parameters);
+            } elseif ($parameters == null) {
+                $parametersGiven = "NONE";
+            } else {
+                $parametersGiven = $parameters;
+            }
+            throw new TestReferenceException(
+                "Parameter Resolution Failed: Not enough parameters given for reference " .
+                $reference . ". Parameters Given: " . $parametersGiven,
+                ["reference" => $reference, "parametersGiven" => $parametersGiven]
+            );
+        } elseif (count($matches) < count($parameters)) {
+            throw new TestReferenceException(
+                "Parameter Resolution Failed: Too many parameters given for reference " .
+                $reference . ". Parameters Given: " . implode(", ", $parameters),
+                ["reference" => $reference, "parametersGiven" => $parameters]
+            );
+        } elseif (count($matches) == 0) {
+            throw new TestReferenceException(
+                "Parameter Resolution Failed: No parameter matches found in parameterized element with selector " .
+                $reference,
+                ["reference" => $reference]
+            );
+        }
     }
 }

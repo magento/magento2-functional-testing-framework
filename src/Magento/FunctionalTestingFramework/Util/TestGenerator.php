@@ -1577,7 +1577,7 @@ class TestGenerator
         } else {
             try {
                 $steps = $this->generateStepsPhp($test->getOrderedActions());
-            } catch (TestReferenceException $e) {
+            } catch (\Exception $e) {
                 throw new TestReferenceException($e->getMessage() . " in Test \"" . $test->getName() . "\"");
             }
         }
