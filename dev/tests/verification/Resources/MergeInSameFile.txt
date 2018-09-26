@@ -1,0 +1,35 @@
+<?php
+namespace Magento\AcceptanceTest\_default\Backend;
+
+use Magento\FunctionalTestingFramework\AcceptanceTester;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
+use \Codeception\Util\Locator;
+use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
+use Yandex\Allure\Adapter\Annotation\Title;
+use Yandex\Allure\Adapter\Annotation\Description;
+use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
+use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
+
+/**
+ */
+class MergeInSameFileCest
+{
+	/**
+	 * @Features({"TestModuleMerged"})
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function MergeInSameFile(AcceptanceTester $I)
+	{
+		$I->checkOption("before_step1");
+		$I->click("first_step");
+		$I->seeInCurrentUrl("after_step1");
+		$I->see("second_step");
+	}
+}

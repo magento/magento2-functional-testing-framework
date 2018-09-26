@@ -69,6 +69,7 @@ class Flat implements ConverterInterface
      * @return string|array
      * @throws \UnexpectedValueException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function convertXml(\DOMNode $source, $basePath = '')
     {
@@ -110,7 +111,13 @@ class Flat implements ConverterInterface
                         $value[$nodeName][] = $nodeData;
                     } elseif (isset($nodeData[$arrayKeyAttribute])) {
                         $arrayKeyValue = $nodeData[$arrayKeyAttribute];
-                        $value[$arrayKeyValue] = $nodeData;
+                        // Merge parent node if it's already been parsed
+                        if (isset($value[$arrayKeyValue])) {
+                            $temp = $value[$arrayKeyValue];
+                            $value[$arrayKeyValue] = array_merge($temp, $nodeData);
+                        } else {
+                            $value[$arrayKeyValue] = $nodeData;
+                        }
                     } else {
                         throw new \UnexpectedValueException(
                             "Array is expected to contain value for key '{$arrayKeyAttribute}'."
