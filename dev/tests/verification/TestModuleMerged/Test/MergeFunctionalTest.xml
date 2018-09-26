@@ -33,4 +33,12 @@
             </skip>
         </annotations>
     </test>
+    <test name="MergeInSameFile">
+        <click selector="first_step" stepKey="step1"/>
+        <see userInput="second_step" stepKey="step2"/>
+    </test>
+    <test name="MergeInSameFile">
+        <checkOption selector="before_step1" stepKey="beforeStep1" before="step1"/>
+        <seeInCurrentUrl url="after_step1" stepKey="afterStep1" after="step1"/>
+    </test>
 </tests>

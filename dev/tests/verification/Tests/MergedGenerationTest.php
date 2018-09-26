@@ -73,4 +73,15 @@ class MergedGenerationTest extends MftfTestCase
     {
         $this->generateAndCompareTest('MergeSkip');
     }
+
+    /**
+     * Tests generation of a test with a base and a delta in the same file.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testMergeInSameFile()
+    {
+        $this->generateAndCompareTest('MergeInSameFile');
+    }
 }
