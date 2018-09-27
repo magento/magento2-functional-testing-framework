@@ -25,7 +25,7 @@ class ActionGroupDomTest extends MagentoTestCase
          </actionGroups>";
 
         $exceptionCollector = new ExceptionCollector();
-        $actionDom = new ActionGroupDom($sampleXml, 'dupeStepKeyActionGroup.xml', $exceptionCollector);
+        new ActionGroupDom($sampleXml, 'dupeStepKeyActionGroup.xml', $exceptionCollector);
 
         $this->expectException(\Exception::class);
         $exceptionCollector->throwException();
@@ -46,5 +46,26 @@ class ActionGroupDomTest extends MagentoTestCase
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage("XML Parse Error: invalid.xml\n");
         new ActionGroupDom($sampleXml, 'invalid.xml', $exceptionCollector);
+    }
+
+    /**
+     * Test detection of two ActionGroups with the same Name in the same file.
+     */
+    public function testActionGroupDomDuplicateActionGroupsValidation()
+    {
+        $sampleXml = '<actionGroups>
+            <actionGroup name="actionGroupName">
+                <wait time="1" stepKey="key1" />
+            </actionGroup>
+            <actionGroup name="actionGroupName">
+                <wait time="1" stepKey="key1" />
+            </actionGroup>
+        </actionGroups>';
+
+        $exceptionCollector = new ExceptionCollector();
+        new ActionGroupDom($sampleXml, 'dupeNameActionGroup.xml', $exceptionCollector);
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessageRegExp("/name: actionGroupName is used more than once./");
+        $exceptionCollector->throwException();
     }
 }

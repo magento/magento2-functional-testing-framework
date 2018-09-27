@@ -29,12 +29,19 @@ class ActionGroupDom extends Dom
     {
         $dom = parent::initDom($xml, $filename);
 
-        if (strpos($filename, self::ACTION_GROUP_FILE_NAME_ENDING)) {
+        if ($this->checkFilenameSuffix($filename, self::ACTION_GROUP_FILE_NAME_ENDING)) {
+            $actionGroupsNode = $dom->getElementsByTagName('actionGroups')[0];
             $actionGroupNodes = $dom->getElementsByTagName('actionGroup');
+
+            $this->testsValidationUtil->validateChildUniqueness(
+                $actionGroupsNode,
+                $filename,
+                null
+            );
             foreach ($actionGroupNodes as $actionGroupNode) {
                 /** @var \DOMElement $actionGroupNode */
                 $actionGroupNode->setAttribute(self::TEST_META_FILENAME_ATTRIBUTE, $filename);
-                $this->validationUtil->validateChildUniqueness(
+                $this->actionsValidationUtil->validateChildUniqueness(
                     $actionGroupNode,
                     $filename,
                     $actionGroupNode->getAttribute(self::ACTION_GROUP_META_NAME_ATTRIBUTE)

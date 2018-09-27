@@ -69,7 +69,11 @@ class DuplicateNodeValidationUtil
             $duplicates = array_diff_assoc($keyValues, $withoutDuplicates);
             $keyError = "";
             foreach ($duplicates as $duplicateKey => $duplicateValue) {
-                $keyError .= "\t{$this->uniqueKey}: {$duplicateValue} is used more than once. (Parent: {$parentKey})\n";
+                $keyError .= "\t{$this->uniqueKey}: {$duplicateValue} is used more than once.";
+                if ($parentKey !== null) {
+                    $keyError .=" (Parent: {$parentKey})";
+                }
+                $keyError .= "\n";
             }
 
             $errorMsg = "{$type} cannot use {$this->uniqueKey}s more than once.\t\n{$keyError}\tin file: {$filename}";
