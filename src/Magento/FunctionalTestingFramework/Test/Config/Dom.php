@@ -19,7 +19,7 @@ use Magento\FunctionalTestingFramework\Util\Validation\DuplicateNodeValidationUt
  */
 class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
 {
-    const TEST_FILE_NAME_ENDING = 'Test';
+    const TEST_FILE_NAME_ENDING = 'Test.xml';
     const TEST_META_FILENAME_ATTRIBUTE = 'filename';
     const TEST_META_NAME_ATTRIBUTE = 'name';
     const TEST_HOOK_NAMES = ["after", "before"];
@@ -27,10 +27,16 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
     const TEST_MERGE_POINTER_AFTER = "insertAfter";
 
     /**
-     * NodeValidationUtil
+     * NodeValidationUtil for test actions
      * @var DuplicateNodeValidationUtil
      */
-    protected $validationUtil;
+    protected $actionsValidationUtil;
+
+    /**
+     * NodeValidationUtil for test names
+     * @var DuplicateNodeValidationUtil
+     */
+    protected $testsValidationUtil;
 
     /**
      * ExceptionCollector
@@ -57,7 +63,8 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
         $schemaFile = null,
         $errorFormat = self::ERROR_FORMAT_DEFAULT
     ) {
-        $this->validationUtil = new DuplicateNodeValidationUtil('stepKey', $exceptionCollector);
+        $this->actionsValidationUtil = new DuplicateNodeValidationUtil('stepKey', $exceptionCollector);
+        $this->testsValidationUtil = new DuplicateNodeValidationUtil('name', $exceptionCollector);
         $this->exceptionCollector = $exceptionCollector;
         parent::__construct(
             $xml,
@@ -81,8 +88,14 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
     {
         $dom = parent::initDom($xml, $filename);
 
-        if (strpos($filename, self::TEST_FILE_NAME_ENDING)) {
+        if ($this->checkFilenameSuffix($filename, self::TEST_FILE_NAME_ENDING)) {
+            $testsNode = $dom->getElementsByTagName('tests')[0];
             $testNodes = $dom->getElementsByTagName('test');
+            $this->testsValidationUtil->validateChildUniqueness(
+                $testsNode,
+                $filename,
+                null
+            );
             foreach ($testNodes as $testNode) {
                 /** @var \DOMElement $testNode */
                 $testNode->setAttribute(self::TEST_META_FILENAME_ATTRIBUTE, $filename);
@@ -102,7 +115,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
                     );
                 }
 
-                $this->validationUtil->validateChildUniqueness(
+                $this->actionsValidationUtil->validateChildUniqueness(
                     $testNode,
                     $filename,
                     $testNode->getAttribute(self::TEST_META_NAME_ATTRIBUTE)
@@ -111,14 +124,14 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
                 $afterNode = $testNode->getElementsByTagName('after')->item(0);
 
                 if (isset($beforeNode)) {
-                    $this->validationUtil->validateChildUniqueness(
+                    $this->actionsValidationUtil->validateChildUniqueness(
                         $beforeNode,
                         $filename,
                         $testNode->getAttribute(self::TEST_META_NAME_ATTRIBUTE) . "/before"
                     );
                 }
                 if (isset($afterNode)) {
-                    $this->validationUtil->validateChildUniqueness(
+                    $this->actionsValidationUtil->validateChildUniqueness(
                         $afterNode,
                         $filename,
                         $testNode->getAttribute(self::TEST_META_NAME_ATTRIBUTE) . "/after"
