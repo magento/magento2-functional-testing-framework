@@ -376,16 +376,17 @@ class MagentoWebDriver extends WebDriver
 
         $this->waitForJS('return document.readyState == "complete"', $timeout);
         $this->waitForAjaxLoad($timeout);
-        $this->waitForLoadingMaskToDisappear();
+        $this->waitForLoadingMaskToDisappear($timeout);
     }
 
     /**
      * Wait for all visible loading masks to disappear. Gets all elements by mask selector, then loops over them.
      *
+     * @param integer $timeout
      * @throws \Exception
      * @return void
      */
-    public function waitForLoadingMaskToDisappear()
+    public function waitForLoadingMaskToDisappear($timeout = null)
     {
         foreach (self::$loadingMasksLocators as $maskLocator) {
             // Get count of elements found for looping.
@@ -394,7 +395,7 @@ class MagentoWebDriver extends WebDriver
             for ($i = 1; $i <= count($loadingMaskElements); $i++) {
                 // Formatting and looping on i as we can't interact elements returned above
                 // eg.  (//div[@data-role="spinner"])[1]
-                $this->waitForElementNotVisible("({$maskLocator})[{$i}]", 30);
+                $this->waitForElementNotVisible("({$maskLocator})[{$i}]", $timeout);
             }
         }
     }

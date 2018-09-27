@@ -49,12 +49,14 @@ class ErrorLogger
     public function logErrors($module, $stepEvent)
     {
         //Types available should be "server", "browser", "driver". Only care about browser at the moment.
-        $browserLogEntries = $module->webDriver->manage()->getLog("browser");
-        foreach ($browserLogEntries as $entry) {
-            if (array_key_exists("source", $entry) && $entry["source"] === "javascript") {
-                $this->logError("javascript", $stepEvent, $entry);
-                //Set javascript error in MagentoWebDriver internal array
-                $module->setJsError("ERROR({$entry["level"]}) - " . $entry["message"]);
+        if (in_array("browser", $module->$webDriver->manage()->getAvailableLogTypes())) {
+            $browserLogEntries = $module->$webDriver->manage()->getLog("browser");
+            foreach ($browserLogEntries as $entry) {
+                if (array_key_exists("source", $entry) && $entry["source"] === "javascript") {
+                    $this->logError("javascript", $stepEvent, $entry);
+                    //Set javascript error in MagentoWebDriver internal array
+                    $module->setJsError("ERROR({$entry["level"]}) - " . $entry["message"]);
+                }
             }
         }
     }

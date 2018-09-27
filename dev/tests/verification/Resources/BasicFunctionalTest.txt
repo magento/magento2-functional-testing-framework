@@ -107,6 +107,10 @@ class BasicFunctionalTestCest
 		$date->setTimestamp(strtotime("Now"));
 		$date->setTimezone(new \DateTimeZone("America/Los_Angeles"));
 		$generateDateKey = $date->format("H:i:s");
+		$date = new \DateTime();
+		$date->setTimestamp(strtotime("Now"));
+		$date->setTimezone(new \DateTimeZone("UTC"));
+		$generateDateKey2 = $date->format("H:i:s");
 		$grabAttributeFromKey1 = $I->grabAttributeFrom(".functionalTestSelector", "someInput");
 		$grabCookieKey1 = $I->grabCookie("grabCookieInput", ['domain' => 'www.google.com']);
 		$grabFromCurrentUrlKey1 = $I->grabFromCurrentUrl("/grabCurrentUrl");
@@ -124,9 +128,9 @@ class BasicFunctionalTestCest
 		$I->pauseExecution();
 		$I->performOn("#selector", function(\WebDriverElement $el) {return $el->isDisplayed();});
 		$I->pressKey("#page", "a");
-		$I->pressKey("#page", ['ctrl','a'],'new');
-		$I->pressKey("#page", ['shift','111'],'1','x');
-		$I->pressKey("#page", ['ctrl', 'a'],\Facebook\WebDriver\WebDriverKeys::DELETE);
+		$I->pressKey("#page", ['ctrl', 'a'],'new');
+		$I->pressKey("#page", ['shift', '111'],'1','x');
+		$I->pressKey("#page", ['ctrl',  'a'],\Facebook\WebDriver\WebDriverKeys::DELETE);
 		$I->reloadPage();
 		$I->resetCookie("cookieInput");
 		$I->resizeWindow(0, 0);
