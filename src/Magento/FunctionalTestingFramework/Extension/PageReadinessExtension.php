@@ -106,6 +106,8 @@ class PageReadinessExtension extends BaseExtension
      * @param StepEvent $e
      * @return void
      * @throws \Exception
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function beforeStep(StepEvent $e)
     {

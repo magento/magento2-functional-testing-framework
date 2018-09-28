@@ -40,6 +40,8 @@ class BaseExtension extends Extension
      * @param \Codeception\Event\TestEvent $e
      * @return void
      * @throws \Exception
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function beforeTest(\Codeception\Event\TestEvent $e)
     {
@@ -52,6 +54,8 @@ class BaseExtension extends Extension
      * @param \Codeception\Event\StepEvent $e
      * @return void
      * @throws \Exception
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function beforeStep(\Codeception\Event\StepEvent $e)
     {
