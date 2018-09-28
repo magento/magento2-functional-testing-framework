@@ -8,10 +8,6 @@ namespace Magento\FunctionalTestingFramework\Extension;
 
 use Codeception\Event\StepEvent;
 use Codeception\Event\TestEvent;
-use Codeception\Events;
-use Codeception\Exception\ModuleRequireException;
-use Codeception\Extension;
-use Codeception\Module\WebDriver;
 use Codeception\Step;
 use Facebook\WebDriver\Exception\UnexpectedAlertOpenException;
 use Magento\FunctionalTestingFramework\Extension\ReadinessMetrics\AbstractMetricCheck;
@@ -23,18 +19,8 @@ use Monolog\Logger;
 /**
  * Class PageReadinessExtension
  */
-class PageReadinessExtension extends Extension
+class PageReadinessExtension extends BaseExtension
 {
-    /**
-     * Codeception Events Mapping to methods
-     *
-     * @var array
-     */
-    public static $events = [
-        Events::TEST_BEFORE => 'beforeTest',
-        Events::STEP_BEFORE => 'beforeStep'
-    ];
-
     /**
      * List of action types that should bypass metric checks
      * shouldSkipCheck() also checks for the 'Comment' step type, which doesn't follow the $step->getAction() pattern
@@ -74,13 +60,6 @@ class PageReadinessExtension extends Extension
     private $testName;
 
     /**
-     * The current URI of the active page
-     *
-     * @var string
-     */
-    private $uri;
-
-    /**
      * Initialize local vars
      *
      * @return void
@@ -90,27 +69,19 @@ class PageReadinessExtension extends Extension
     {
         $this->logger = LoggingUtil::getInstance()->getLogger(get_class($this));
         $this->verbose = MftfApplicationConfig::getConfig()->verboseEnabled();
-    }
-
-    /**
-     * WebDriver instance to use to execute readiness metric checks
-     *
-     * @return WebDriver
-     * @throws ModuleRequireException
-     */
-    public function getDriver()
-    {
-        return $this->getModule($this->config['driver']);
+        parent::_initialize();
     }
 
     /**
      * Initialize the readiness metrics for the test
      *
-     * @param \Codeception\Event\TestEvent $e
+     * @param TestEvent $e
      * @return void
+     * @throws \Exception
      */
     public function beforeTest(TestEvent $e)
     {
+        parent::beforeTest($e);
         if (isset($this->config['resetFailureThreshold'])) {
             $failThreshold = intval($this->config['resetFailureThreshold']);
         } else {
@@ -118,7 +89,6 @@ class PageReadinessExtension extends Extension
         }
 
         $this->testName = $e->getTest()->getMetadata()->getName();
-        $this->uri = null;
 
         $this->getDriver()->_setConfig(['skipReadiness' => false]);
 
@@ -136,6 +106,8 @@ class PageReadinessExtension extends Extension
      * @param StepEvent $e
      * @return void
      * @throws \Exception
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function beforeStep(StepEvent $e)
     {
@@ -145,7 +117,20 @@ class PageReadinessExtension extends Extension
             return;
         }
 
-        $this->checkForNewPage($step);
+        // Check if page has changed and reset metric tracking if so
+        if ($this->pageChanged($step)) {
+            $this->logDebug(
+                'Page URI changed; resetting readiness metric failure tracking',
+                [
+                    'step' => $step->__toString(),
+                    'newUri' => $this->getUri()
+                ]
+            );
+            /** @var AbstractMetricCheck $metric */
+            foreach ($this->readinessMetrics as $metric) {
+                $metric->resetTracker();
+            }
+        }
 
         // todo: Implement step parameter to override global timeout configuration
         if (isset($this->config['timeout'])) {
@@ -180,48 +165,6 @@ class PageReadinessExtension extends Extension
         foreach ($metrics as $metric) {
             $metric->finalizeForStep($step);
         }
-    }
-
-    /**
-     * Check if the URI has changed and reset metric tracking if so
-     *
-     * @param Step $step
-     * @return void
-     */
-    private function checkForNewPage($step)
-    {
-        try {
-            $currentUri = $this->getDriver()->_getCurrentUri();
-
-            if ($this->uri !== $currentUri) {
-                $this->logDebug(
-                    'Page URI changed; resetting readiness metric failure tracking',
-                    [
-                        'step' => $step->__toString(),
-                        'newUri' => $currentUri
-                    ]
-                );
-
-                /** @var AbstractMetricCheck $metric */
-                foreach ($this->readinessMetrics as $metric) {
-                    $metric->resetTracker();
-                }
-
-                $this->uri = $currentUri;
-            }
-        } catch (\Exception $e) {
-            $this->logDebug('Could not retrieve current URI', ['step' => $step->__toString()]);
-        }
-    }
-
-    /**
-     * Gets the active page URI from the start of the most recent step
-     *
-     * @return string
-     */
-    public function getUri()
-    {
-        return $this->uri;
     }
 
     /**
@@ -263,7 +206,7 @@ class PageReadinessExtension extends Extension
         if ($this->verbose) {
             $logContext = [
                 'test' => $this->testName,
-                'uri' => $this->uri
+                'uri' => $this->getUri()
             ];
             foreach ($this->readinessMetrics as $metric) {
                 $logContext[$metric->getName()] = $metric->getStoredValue();
