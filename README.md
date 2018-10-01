@@ -1,4 +1,4 @@
-# Magento Functional Testing Framework
+# Magento Functional Testing Framework (MFTF)
 
 [![Build Status](https://travis-ci.org/magento/magento2-functional-testing-framework.svg?branch=develop)](https://travis-ci.org/magento/magento2-functional-testing-framework)
 
@@ -6,24 +6,17 @@
 
 ----
 
-## System Requirements
-[Magento Functional Testing Framework system requirements](http://devdocs.magento.com/guides/v2.2/magento-functional-testing-framework/getting-started.html#prepare-environment)
-
 ## Installation
-To install the Magento Functional Testing Framework, see [Getting Started](http://devdocs.magento.com/guides/v2.2/magento-functional-testing-framework/getting-started.html)
+
+For the installation guidelines and system requirements, read [Getting Started](https://devdocs.magento.com/mftf/2.3/getting-started.html).
 
 ## Contributing
-Contributions can take the form of new components or features, changes to existing features, tests, documentation (such as developer guides, user guides, examples, or specifications), bug fixes, optimizations, or just good suggestions.
 
-To learn about how to make a contribution, click [here][1].
+We would appreciate your contributions to new components or new features, changes to the existing features, tests, documentation, specifications, bug fixes, optimizations, or just good suggestions.
+Report about an issue or request features opening a GitHub issue.
+Learn more about contributing in our [Contribution Guidelines](https://devdocs.magento.com/mftf/2.3/contribution-guidelines.html).
 
-To open an issue, click [here][2].
-
-To suggest documentation improvements, click [here][3].
-
-[1]: <http://devdocs.magento.com/guides/v2.2/magento-functional-testing-framework/contribution-guidelines.html>
-[2]: <https://github.com/magento/magento2-functional-testing-framework/issues>
-[3]: <http://devdocs.magento.com>
+If you want to participate in the documentation work, see [DevDocs Contributing](https://github.com/magento/devdocs/blob/master/.github/CONTRIBUTING.md).
 
 ### Labels applied by the MFTF team
 
@@ -33,7 +26,7 @@ Refer to the tables with descriptions of each label below. These labels are appl
 
 Label| Description
 ---|---
-**accept**| The pull request has been accepted and will be merged into mainline code. 
+**accept**| The pull request has been accepted and will be merged into mainline code.
 **reject**| The pull request has been rejected and will not be merged into mainline code. Possible reasons can include but are not limited to: issue has already been fixed in another code contribution, or there is an issue with the code contribution.
 **needsUpdate**| The Magento Team needs additional information from the reporter to properly prioritize and process the pull request.
 
@@ -43,8 +36,8 @@ Label| Description
 ---|---
 **acknowledged**| The Magento Team has validated the issue and an internal ticket has been created.
 **needsUpdate**| The Magento Team needs additional information from the reporter to properly prioritize and process the issue or pull request.
-**cannot reproduce**| The Magento Team has not confirmed that this issue contains the minimum required information to reproduce. 
-**non-issue**| The Magento Team has not recognised any issue according to provided information.
+**cannot reproduce**| The Magento Team has not confirmed that this issue contains the minimum required information to reproduce.
+**non-issue**| The Magento Team has not recognized any issue according to provided information.
 
 ### Domains Impacted
 
@@ -63,12 +56,12 @@ Label| Description
 
 ## Reporting security issues
 
-To report security vulnerabilities in Magento software or web sites, please e-mail <a href="mailto:security@magento.com">security@magento.com</a>. Please do not report security issues using GitHub. Be sure to encrypt your e-mail with our <a href="https://info2.magento.com/rs/magentoenterprise/images/security_at_magento.asc">encryption key</a> if it includes sensitive information. Learn more about reporting security issues <a href="https://magento.com/security/reporting-magento-security-issue">here</a>.
+To report security vulnerabilities in the Magento software or web sites, please e-mail [security@magento.com](mailto:security@magento.com). Please do not report security issues using GitHub. Be sure to encrypt your e-mail with our [encryption key](https://info2.magento.com/rs/magentoenterprise/images/security_at_magento.asc) if it includes sensitive information. Learn more about reporting security issues [here](https://magento.com/security/reporting-magento-security-issue).
 
-Stay up-to-date on the latest security news and patches for Magento by signing up for <a href="https://magento.com/security/sign-up">Security Alert Notifications</a>.
+Stay up-to-date on the latest security news and patches for Magento by signing up for [Security Alert Notifications](https://magento.com/security/sign-up).
 
 ## License
 
-Each Magento source file included in this distribution is licensed under AGPL 3.0
+Each Magento source file included in this distribution is licensed under AGPL 3.0.
 
-Please see LICENSE_AGPL3.txt for the full text of the AGPL 3.0 license or contact license@magentocommerce.com for a copy.
+Please see LICENSE_AGPL3.txt for the full text of the AGPL 3.0 license or contact [license@magentocommerce.com](mailto:license@magentocommerce.com) for a copy.
