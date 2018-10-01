@@ -2,14 +2,14 @@
 
 - [Contribution requirements](#contribution-requirements)
 - [Fork a repository](#fork-a-repository)
-    - [Update the fork with the latest changes](#update-the-fork-with-the-latest-changes)
+  - [Update the fork with the latest changes](#update-the-fork-with-the-latest-changes)
 - [Create a pull request](#create-a-pull-request)
 - [Report an issue](#report-an-issue)
 - [Read labels](#read-labels)
-    - [Pull request status](#pull-request-status)
-    - [Issue resolution status](#issue-resolution-status)
-    - [Domains impacted](#domains-impacted)
-    - [Type](#type)
+  - [Pull request status](#pull-request-status)
+  - [Issue resolution status](#issue-resolution-status)
+  - [Domains impacted](#domains-impacted)
+  - [Type](#type)
 
 Use the [fork] & [pull] model to contribute to the Magento Functional Testing Framework (MFTF) code base.
 This contribution model has contributors maintaining their own copy of the forked code base (which can be easily synced with the main copy).
@@ -31,16 +31,18 @@ All contributors are required to submit a click-through form to agree to the ter
 
 1. Contributions must adhere to [Magento coding standards].
 2. Refer to the Magento development team’s [Definition of Done].
-We use these guidelines internally to ensure that we deliver well-tested, well-documented, solid code, and we encourage you to as well!
+   We use these guidelines internally to ensure that we deliver well-tested, well-documented, solid code, and we encourage you to as well!
 3. Pull requests (PRs) must be accompanied by a meaningful description of their purpose.
-Comprehensive descriptions increase the chances that a pull request is merged quickly and without additional clarification requests.
+   Comprehensive descriptions increase the chances that a pull request is merged quickly and without additional clarification requests.
 4. Commits must be accompanied by meaningful commit messages.
 5. PRs that include bug fixing must be accompanied by a step-by-step description of how to reproduce the bug.
 6. PRs that include new logic or new features must be submitted along with:
-    * Unit/integration test coverage
-    * Proposed [documentation update]. Documentation contributions can be submitted [here][devdocs].
+
+   - Unit/integration test coverage
+   - Proposed documentation update.
+     For the documentation contribution guidelines, see [DevDocs Contributing][devdocs].
 7. For large features or changes, [open an issue][issue] to discuss first.
-This may prevent duplicate or unnecessary effort, and it may gain you some additional contributors.
+   This may prevent duplicate or unnecessary effort, and it may gain you some additional contributors.
 8. To report a bug, [open an issue][issue], and follow [guidelines about bugfix issues][issue reporting].
 9. All automated tests must pass successfully (all builds on [Travis CI] must be green).
 
@@ -59,17 +61,15 @@ Learn more in the [Fork a repo][github fork] GitHub article.
 As community and Magento writers’ changes are merged to the repository, your fork becomes outdated and pull requests might result in conflicts.
 To see if your fork is outdated, open the fork page in GitHub and if at the top displays the following message:
 
-``` 
-This branch is NUMBER commits behind magento:develop.
-```
+__This branch is NUMBER commits behind magento:develop.__
 
 It means your fork must be updated.
- 
+
 There are two ways to update your fork.
 The typical way is discussed in the [Syncing a fork][github sync fork] GitHub article.
 Make sure to update from the correct branch!
 
-The othger way is to create a reverse pull request from the original repository.
+The other way is to create a reverse pull request from the original repository.
 Though this method has the downside of inserting unnecessary information into fork commit history.
 
 1. In your fork, click **New pull request**.
@@ -94,8 +94,8 @@ To create a pull request do the following:
 Learn more in the [Creating a pull request][create pr] GitHub article.
 
 After submitting your PR, you can head over to the repository’s [Pull Requests panel][existing PRs] to see your PR along with the others.
- Your PR undergoes automated testing, and if it passes, the core team considers it for inclusion in the Magento Functional Testing Framework codebase.
- If some tests fail, make the corresponding corrections in your code.
+Your PR undergoes automated testing, and if it passes, the core team considers it for inclusion in the Magento Functional Testing Framework codebase.
+If some tests fail, make the corresponding corrections in your code.
 
 ## Report an issue
 
@@ -110,8 +110,8 @@ Before creating an issue, do the following:
 To add an issue:
 
 1. [Open a new issue][open new issue]
-3. Fill in the **Title** and issue description
-4. Click **Submit new issue**
+2. Fill in the **Title** and issue description
+3. Click **Submit new issue**
 
 Learn more in the [Creating an issue][create issue] GitHub article.
 
@@ -124,7 +124,7 @@ The labels reflect the status, impact, or which team is working on it.
 
 Label| Description
 ---|---
-**accept**| The pull request has been accepted to be merged into mainline code. 
+**accept**| The pull request has been accepted to be merged into mainline code.
 **reject**| The pull request has been rejected. The most common cases are when the issue has already been fixed in another code contribution, or there is an issue with the code contribution.
 **needsUpdate**| We need more information from the PR author to properly prioritize and process the pull request.
 
@@ -134,7 +134,7 @@ Label| Description
 ---|---
 **acknowledged**| We validated the issue and created an internal ticket.
 **needsUpdate**| We need more information from the PR author to properly prioritize and process the issue.
-**cannot reproduce**| We do not have enough details from the issue description to reproduce the issue. 
+**cannot reproduce**| We do not have enough details from the issue description to reproduce the issue.
 **non-issue**| We don't think that this is an issue according to the provided information.
 
 ### Domains impacted
@@ -152,7 +152,6 @@ Label| Description
 **bugfix**| The issue or pull request is about fixing a bug.
 **enhancement**| The issue or pull request that makes the MFTF even more awesome (for example new features, optimization, refactoring, etc).
 
-
 [fork]: #fork-a-repository
 [issue]: #report-an-issue
 [labels]: #read-labels
@@ -161,8 +160,7 @@ Label| Description
 [create issue]: https://help.github.com/articles/creating-an-issue/
 [create pr]: https://help.github.com/articles/creating-a-pull-request/
 [Definition of Done]: https://devdocs.magento.com/guides/v2.2/contributor-guide/contributing_dod.html
-[devdocs]: https://github.com/magento/devdocs/
-[documentation update]: https://github.com/magento/devdocs/blob/master/.github/CONTRIBUTING.md
+[devdocs]: https://github.com/magento/devdocs/blob/master/.github/CONTRIBUTING.md
 [existing issues]: https://github.com/magento/magento2-functional-testing-framework/issues?q=is%3Aopen+is%3Aissue
 [existing PRs]: https://github.com/magento/magento2-functional-testing-framework/pulls?q=is%3Aopen+is%3Apr
 [GitHub documentation]: https://help.github.com/articles/syncing-a-fork
