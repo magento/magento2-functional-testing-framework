@@ -266,11 +266,19 @@ class ActionMergeUtil
     private function sortActions($parsedSteps)
     {
         foreach ($parsedSteps as $parsedStep) {
-            $parsedStep->resolveReferences();
-            if ($parsedStep->getLinkedAction()) {
-                $this->stepsToMerge[$parsedStep->getStepKey()] = $parsedStep;
-            } else {
-                $this->orderedSteps[$parsedStep->getStepKey()] = $parsedStep;
+            try {
+                $parsedStep->resolveReferences();
+
+                if ($parsedStep->getLinkedAction()) {
+                    $this->stepsToMerge[$parsedStep->getStepKey()] = $parsedStep;
+                } else {
+                    $this->orderedSteps[$parsedStep->getStepKey()] = $parsedStep;
+                }
+            } catch (\Exception $e) {
+                throw new TestReferenceException(
+                    $e->getMessage() .
+                    ".\nException occurred parsing action at StepKey \"" . $parsedStep->getStepKey() . "\""
+                );
             }
         }
     }

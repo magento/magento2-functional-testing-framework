@@ -214,7 +214,6 @@ abstract class AbstractMetricCheck
      * @param string $script
      * @param array  $arguments
      * @return mixed
-     * @throws UnexpectedAlertOpenException
      * @throws ModuleRequireException
      */
     protected function executeJs($script, $arguments = [])

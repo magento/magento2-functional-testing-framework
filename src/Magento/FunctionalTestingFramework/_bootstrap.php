@@ -7,22 +7,17 @@
 
 // define framework basepath for schema pathing
 defined('FW_BP') || define('FW_BP', realpath(__DIR__ . '/../../../'));
-
-// get the root path of the project (we will always be installed under vendor)
+// get the root path of the project
 $projectRootPath = substr(FW_BP, 0, strpos(FW_BP, DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR));
-
 if (empty($projectRootPath)) {
     // If ProjectRootPath is empty, we are not under vendor and are executing standalone.
-    require_once (realpath(FW_BP . "/dev/tests/functional/_bootstrap.php"));
+    require_once (realpath(FW_BP . "/dev/tests/functional/standalone_bootstrap.php"));
     return;
 }
+defined('PROJECT_ROOT') || define('PROJECT_ROOT', $projectRootPath);
+$envFilepath = realpath($projectRootPath . '/dev/tests/acceptance/');
 
-// set Magento_BP as Root_Project Path
-define('PROJECT_ROOT', $projectRootPath);
-defined('MAGENTO_BP') || define('MAGENTO_BP', realpath($projectRootPath));
 
-// load .env (if it exists)
-$envFilepath = realpath(MAGENTO_BP . '/dev/tests/acceptance/');
 if (file_exists($envFilepath . DIRECTORY_SEPARATOR . '.env')) {
     $env = new \Dotenv\Loader($envFilepath . DIRECTORY_SEPARATOR . '.env');
     $env->load();
@@ -37,6 +32,10 @@ if (file_exists($envFilepath . DIRECTORY_SEPARATOR . '.env')) {
         defined($key) || define($key, $var);
     }
 
+    if (array_key_exists('MAGENTO_BP', $_ENV)) {
+        defined('TESTS_BP') || define('TESTS_BP', realpath(PROJECT_ROOT . DIRECTORY_SEPARATOR . 'dev/tests/acceptance'));
+    }
+
     defined('MAGENTO_CLI_COMMAND_PATH') || define(
         'MAGENTO_CLI_COMMAND_PATH',
         'dev/tests/acceptance/utils/command.php'
@@ -45,8 +44,19 @@ if (file_exists($envFilepath . DIRECTORY_SEPARATOR . '.env')) {
 
     defined('MAGENTO_CLI_COMMAND_PARAMETER') || define('MAGENTO_CLI_COMMAND_PARAMETER', 'command');
     $env->setEnvironmentVariable('MAGENTO_CLI_COMMAND_PARAMETER', MAGENTO_CLI_COMMAND_PARAMETER);
+    
+    defined('DEFAULT_TIMEZONE') || define('DEFAULT_TIMEZONE', 'America/Los_Angeles');
+    $env->setEnvironmentVariable('DEFAULT_TIMEZONE', DEFAULT_TIMEZONE);
+
+    try {
+        new DateTimeZone(DEFAULT_TIMEZONE);
+    } catch (\Exception $e) {
+        throw new \Exception("Invalid DEFAULT_TIMEZONE in .env: " . DEFAULT_TIMEZONE . PHP_EOL);
+    }
 }
 
+
+defined('MAGENTO_BP') || define('MAGENTO_BP', realpath(PROJECT_ROOT));
 // TODO REMOVE THIS CODE ONCE WE HAVE STOPPED SUPPORTING dev/tests/acceptance PATH
 // define TEST_PATH and TEST_MODULE_PATH
 defined('TESTS_BP') || define('TESTS_BP', realpath(MAGENTO_BP . DIRECTORY_SEPARATOR . 'dev/tests/acceptance/'));

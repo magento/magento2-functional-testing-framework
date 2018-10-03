@@ -20,6 +20,7 @@ use Magento\FunctionalTestingFramework\Util\Validation\DuplicateNodeValidationUt
 class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
 {
     const PAGE_META_FILENAME_ATTRIBUTE = "filename";
+    const PAGE_META_NAME_ATTRIBUTE = "name";
 
     /**
      * Module Path extractor
@@ -79,7 +80,11 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
         $dom = parent::initDom($xml, $filename);
 
         $pagesNode = $dom->getElementsByTagName('pages')->item(0);
-        $this->validationUtil->validateChildUniqueness($pagesNode, $filename);
+        $this->validationUtil->validateChildUniqueness(
+            $pagesNode,
+            $filename,
+            $pagesNode->getAttribute(self::PAGE_META_NAME_ATTRIBUTE)
+        );
         $pageNodes = $dom->getElementsByTagName('page');
         $currentModule =
             $this->modulePathExtractor->extractModuleName($filename) .

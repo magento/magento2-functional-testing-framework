@@ -1,6 +1,29 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.3.7
+-----
+### Enhancements
+* Traceability
+    * Test generation errors output xml filename where they were encountered, as well as xml parent nodes where applicable.
+    * Duplicate element detection now outputs parent element where duplicate was found.
+* Maintainability
+    * Standalone MFTF can now be pointed at a Magento installation folder to generate and execute tests.
+        * See DevDocs for more information.
+    * MFTF now checks for `test` and `actionGroup` elements that have the same `name` in the same file.
+* Customizability
+    * Updated prefered syntax for `actionGroup` `argument`s that use `xml.data` (old syntax is still supported)
+        * Old: `xml.data`
+        * New: `{{xml.data}}`
+* Modularity
+    * `ModuleResolver` now utilizes each Magento module's `registration.php` to map MFTF test material directories.
+### Fixes
+* The `waitForPageLoad` action now correctly uses the given `timeout` attribute for all of its checks.
+* Firefox compatibility issues in javascript error logging were fixed.
+* Fixed an issue where arguments containing `-` would not properly resolve parameterized selectors.
+* Fixed an issue where actions using `parameterArray` would not resolve `$persisted.data$` references.
+* Fixed an issue where composer installations of Magento would fail to parse MFTF materials under a path `vendor/magento/module-<module>/`
+
 2.3.6
 -----
 ### Enhancements
