@@ -240,13 +240,14 @@ class ModuleResolver
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
         $modulePath = rtrim($modulePath, DIRECTORY_SEPARATOR);
 
-        // Define the Module paths from project root
-        $projectRootCodePath = PROJECT_ROOT;
+        $vendorCodePath = DIRECTORY_SEPARATOR . "vendor";
+        $appCodePath = DIRECTORY_SEPARATOR . "app" . DIRECTORY_SEPARATOR . "code";
 
         $codePathsToPattern = [
             $modulePath => '',
-            $magentoBaseCodePath => 'Test' . DIRECTORY_SEPARATOR . 'Mftf',
-            $projectRootCodePath => 'Test' . DIRECTORY_SEPARATOR . 'Mftf'
+            $magentoBaseCodePath . $vendorCodePath => 'Test' . DIRECTORY_SEPARATOR . 'Mftf',
+            $magentoBaseCodePath . $appCodePath => 'Test' . DIRECTORY_SEPARATOR . 'Mftf',
+
         ];
 
         foreach ($codePathsToPattern as $codePath => $pattern) {

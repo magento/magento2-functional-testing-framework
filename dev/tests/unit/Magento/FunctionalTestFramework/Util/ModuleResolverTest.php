@@ -101,17 +101,17 @@ class ModuleResolverTest extends MagentoTestCase
         // Define the Module paths from default TESTS_MODULE_PATH
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
 
-        // Define the Module paths from vendor modules
-        $projectRootCodePath = PROJECT_ROOT;
-
         $mockResolver->verifyInvoked('globRelevantPaths', [$modulePath, '']);
         $mockResolver->verifyInvoked(
             'globRelevantPaths',
-            [$magentoBaseCodePath, 'Test' . DIRECTORY_SEPARATOR .'Mftf']
+            [$magentoBaseCodePath . DIRECTORY_SEPARATOR . "vendor" , 'Test' . DIRECTORY_SEPARATOR .'Mftf']
         );
         $mockResolver->verifyInvoked(
             'globRelevantPaths',
-            [$projectRootCodePath, 'Test' . DIRECTORY_SEPARATOR .'Mftf']
+            [
+                $magentoBaseCodePath . DIRECTORY_SEPARATOR . "app" . DIRECTORY_SEPARATOR . "code",
+                'Test' . DIRECTORY_SEPARATOR .'Mftf'
+            ]
         );
     }
 
