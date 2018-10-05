@@ -88,7 +88,8 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
     {
         $dom = parent::initDom($xml, $filename);
 
-        if ($this->checkFilenameSuffix($filename, self::TEST_FILE_NAME_ENDING)) {
+        // Cannot rely on filename to ensure this file is a Test.xml
+        if ($dom->getElementsByTagName('tests')->length > 0) {
             $testsNode = $dom->getElementsByTagName('tests')[0];
             $testNodes = $dom->getElementsByTagName('test');
             $this->testsValidationUtil->validateChildUniqueness(
