@@ -1,6 +1,12 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.3.8
+-----
+### Fixes
+* `ModuleResolver` will now only scan under `MAGENTO_BP/app/code/...` and `MAGENTO_BP/vendor/...` for `/Test/Mftf` directories.
+* Fixed an issue where `Test.xml` files that did not end with `*Test.xml` would not be scanned for duplicates and other XML validation.
+
 2.3.7
 -----
 ### Enhancements
