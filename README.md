@@ -1,8 +1,6 @@
 # Magento Functional Testing Framework (MFTF)
 
-[![Build Status](https://travis-ci.org/magento/magento2-functional-testing-framework.svg?branch=develop)](https://travis-ci.org/magento/magento2-functional-testing-framework)
-
-[![Coverage Status](https://coveralls.io/repos/github/magento/magento2-functional-testing-framework/badge.svg?branch=develop)](https://coveralls.io/github/magento/magento2-functional-testing-framework)
+[![Build Status](https://travis-ci.org/magento/magento2-functional-testing-framework.svg?branch=develop)](https://travis-ci.org/magento/magento2-functional-testing-framework) [![Coverage Status](https://coveralls.io/repos/github/magento/magento2-functional-testing-framework/badge.svg?branch=develop)](https://coveralls.io/github/magento/magento2-functional-testing-framework)
 
 ----
 
