@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
+use Codeception\Extension\RunFailed;
+
 /**
  * Class CommandList has a list of commands.
  * @codingStandardsIgnoreFile
@@ -35,6 +37,7 @@ class CommandList implements CommandListInterface
              'generate:tests' => new GenerateTestsCommand(),
              'run:test' => new RunTestCommand(),
              'run:group' => new RunTestGroupCommand(),
+             'run:failed' => new RunTestFailedCommand(),
              'setup:env' => new SetupEnvCommand(),
              'upgrade:tests' => new UpgradeTestsCommand(),
         ] + $commands;
