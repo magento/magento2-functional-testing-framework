@@ -201,7 +201,6 @@ class CurlHandler
 
         if (!empty($matchedParams)) {
             foreach ($matchedParams[0] as $paramKey => $paramValue) {
-
                 $paramEntityParent = "";
                 $matchedParent = [];
                 $dataItem = $matchedParams[1][$paramKey];
@@ -213,6 +212,7 @@ class CurlHandler
                 }
 
                 foreach ($entityObjects as $entityObject) {
+                    $param = null;
 
                     if ($paramEntityParent === "" || $entityObject->getType() == $paramEntityParent) {
                         $param = $entityObject->getDataByName(
@@ -223,7 +223,6 @@ class CurlHandler
 
                     if (null !== $param) {
                         $urlOut = str_replace($paramValue, $param, $urlOut);
-                        $param = null;
                         continue;
                     }
                 }
