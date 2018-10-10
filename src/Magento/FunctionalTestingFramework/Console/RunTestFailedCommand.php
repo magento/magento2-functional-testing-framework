@@ -134,7 +134,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
                 } else {
                     $failedTestDetails['suites'] = array_merge_recursive(
                         $failedTestDetails['suites'],
-                        [$suiteName => $testName]
+                        [$suiteName => [$testName]]
                     );
                 }
             }
