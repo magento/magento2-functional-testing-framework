@@ -7,20 +7,29 @@ declare(strict_types = 1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
-use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
-use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
 class RunTestFailedCommand extends BaseGenerateCommand
 {
+    /**
+     * Default Test group to signify not in suite
+     */
     const DEFAULT_TEST_GROUP = 'default';
+
+    const TESTS_OUTPUT_DIR = TESTS_BP .
+    DIRECTORY_SEPARATOR .
+    "tests" .
+    DIRECTORY_SEPARATOR .
+    "_output" .
+    DIRECTORY_SEPARATOR;
+
+    const TESTS_FAILED_FILE = self::TESTS_OUTPUT_DIR . "failed";
+    const TESTS_RERUN_FILE = self::TESTS_OUTPUT_DIR . "rerun_tests";
 
     /**
      * Configures the current command.
@@ -30,18 +39,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
     protected function configure()
     {
         $this->setName('run:failed')
-            ->setDescription('Execute a set of tests referenced via group annotations')
-            ->addOption(
-                'skip-generate',
-                'k',
-                InputOption::VALUE_NONE,
-                "only execute a group of tests without generating from source xml"
-            )->addOption(
-                "force",
-                'f',
-                InputOption::VALUE_NONE,
-                'force generation of tests regardless of Magento Instance Configuration'
-            );
+            ->setDescription('Execute a set of tests referenced via failed file');
 
         parent::configure();
     }
@@ -55,40 +53,28 @@ class RunTestFailedCommand extends BaseGenerateCommand
      * @throws \Exception
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $skipGeneration = $input->getOption('skip-generate');
-        $force = $input->getOption('force');
-//        $groups = $input->getArgument('groups');
-        $remove = $input->getOption('remove');
-
-        if ($skipGeneration and $remove) {
-            // "skip-generate" and "remove" options cannot be used at the same time
-            throw new TestFrameworkException(
-                "\"skip-generate\" and \"remove\" options can not be used at the same time."
-            );
-        }
-
         // Create Mftf Configuration
         MftfApplicationConfig::create(
-            $force,
+            false,
             MftfApplicationConfig::GENERATION_PHASE,
             false,
             false
         );
 
-        if (!$skipGeneration) {
-            $testConfiguration = $this->getFailedTestList();
-            $command = $this->getApplication()->find('generate:tests');
-            $args = [
-                '--tests' => $testConfiguration,
-                '--force' => $force,
-                '--remove' => $remove
-            ];
+        $testConfiguration = $this->getFailedTestList();
 
-            $command->run(new ArrayInput($args), $output);
+        if ($testConfiguration === null) {
+            return null;
         }
+
+        $command = $this->getApplication()->find('generate:tests');
+        $args = ['--tests' => $testConfiguration, '--remove' => true];
+
+        $command->run(new ArrayInput($args), $output);
 
         $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional --verbose --steps';
 
@@ -106,7 +92,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
     /**
      * Returns a json string of tests that failed on the last run
      *
-     * @return string[]
+     * @return string
      */
     private function getFailedTestList()
     {
@@ -121,10 +107,10 @@ class RunTestFailedCommand extends BaseGenerateCommand
         $failedTestDetails = ['tests' => [], 'suites' => []];
 
         if (realpath($failedTestPath)) {
-
-            $testList = file($failedTestPath,FILE_IGNORE_NEW_LINES);
+            $testList = $this->readFailedTestFile($failedTestPath);
 
             foreach ($testList as $test) {
+                $this->writeFailedTestToFile($test);
                 $testInfo = explode(DIRECTORY_SEPARATOR, $test);
                 $testName = explode(":", $testInfo[count($testInfo) - 1])[1];
                 $suiteName = $testInfo[count($testInfo) - 2];
@@ -139,7 +125,44 @@ class RunTestFailedCommand extends BaseGenerateCommand
                 }
             }
         }
+        if (empty($failedTestDetails['tests']) & empty($failedTestDetails['suites'])) {
+            return null;
+        }
+        if (empty($failedTestDetails['tests'])) {
+            $failedTestDetails['tests'] = null;
+        }
+        if (empty($failedTestDetails['suites'])) {
+            $failedTestDetails['suites'] = null;
+        }
         $testConfigurationJson = json_encode($failedTestDetails);
         return $testConfigurationJson;
+    }
+
+    /**
+     * Returns an array of tests read from the failed test file in _output
+     *
+     * @param string $filePath
+     * @return array|boolean
+     */
+    private function readFailedTestFile($filePath)
+    {
+        return file($filePath, FILE_IGNORE_NEW_LINES);
+    }
+
+    /**
+     * Writes the test name to a file if it does not already exist
+     *
+     * @param string $test
+     * @return void
+     */
+    private function writeFailedTestToFile($test)
+    {
+        if (realpath(self::TESTS_RERUN_FILE)) {
+            if (strpos(file_get_contents(self::TESTS_RERUN_FILE), $test) == false) {
+                file_put_contents(self::TESTS_RERUN_FILE, $test . "\n", FILE_APPEND);
+            }
+        } else {
+            file_put_contents(self::TESTS_RERUN_FILE, $test . "\n");
+        }
     }
 }
