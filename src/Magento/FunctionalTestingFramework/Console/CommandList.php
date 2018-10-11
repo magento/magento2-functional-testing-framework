@@ -8,8 +8,6 @@ declare(strict_types=1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
-use Codeception\Extension\RunFailed;
-
 /**
  * Class CommandList has a list of commands.
  * @codingStandardsIgnoreFile
