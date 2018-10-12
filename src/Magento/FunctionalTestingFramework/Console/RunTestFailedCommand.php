@@ -30,6 +30,11 @@ class RunTestFailedCommand extends BaseGenerateCommand
 
     const TESTS_FAILED_FILE = self::TESTS_OUTPUT_DIR . "failed";
     const TESTS_RERUN_FILE = self::TESTS_OUTPUT_DIR . "rerun_tests";
+    const TESTS_MANIFEST_FILE= TESTS_MODULE_PATH .
+    DIRECTORY_SEPARATOR .
+    "_generated" .
+    DIRECTORY_SEPARATOR .
+    "testManifest.txt";
 
     /**
      * Configures the current command.
@@ -76,17 +81,23 @@ class RunTestFailedCommand extends BaseGenerateCommand
 
         $command->run(new ArrayInput($args), $output);
 
-        $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional --verbose --steps';
+        $testManifestList = $this->readTestManifestFile();
 
-        $process = new Process($codeceptionCommand);
-        $process->setWorkingDirectory(TESTS_BP);
-        $process->setIdleTimeout(600);
-        $process->setTimeout(0);
-        $process->run(
-            function ($type, $buffer) use ($output) {
-                $output->write($buffer);
-            }
-        );
+        foreach ($testManifestList as $testCommand)
+        {
+            $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
+            $codeceptionCommand .= $testCommand;
+
+            $process = new Process($codeceptionCommand);
+            $process->setWorkingDirectory(TESTS_BP);
+            $process->setIdleTimeout(600);
+            $process->setTimeout(0);
+            $process->run(
+                function ($type, $buffer) use ($output) {
+                    $output->write($buffer);
+                }
+            );
+        }
     }
 
     /**
@@ -136,6 +147,17 @@ class RunTestFailedCommand extends BaseGenerateCommand
         }
         $testConfigurationJson = json_encode($failedTestDetails);
         return $testConfigurationJson;
+    }
+
+    /**
+     * Returns an array of tests read from the failed test file in _output
+     *
+     * @param string $filePath
+     * @return array|boolean
+     */
+    private function readTestManifestFile()
+    {
+        return file(self::TESTS_MANIFEST_FILE, FILE_IGNORE_NEW_LINES);
     }
 
     /**
