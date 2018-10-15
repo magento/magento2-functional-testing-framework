@@ -101,10 +101,12 @@ class RunTestFailedCommand extends BaseGenerateCommand
                     $output->write($buffer);
                 }
             );
-            $this->failedList = array_merge(
-                $this->failedList,
-                $this->readFailedTestFile(self::TESTS_FAILED_FILE)
-            );
+            if (realpath(self::TESTS_FAILED_FILE)) {
+                $this->failedList = array_merge(
+                    $this->failedList,
+                    $this->readFailedTestFile(self::TESTS_FAILED_FILE)
+                );
+            }
         }
         foreach ($this->failedList as $test) {
             $this->writeFailedTestToFile($test, self::TESTS_FAILED_FILE);
