@@ -37,6 +37,11 @@ class RunTestFailedCommand extends BaseGenerateCommand
     "testManifest.txt";
 
     /**
+     * @var array
+     */
+    private $failedList = [];
+
+    /**
      * Configures the current command.
      *
      * @return void
@@ -83,8 +88,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
 
         $testManifestList = $this->readTestManifestFile();
 
-        foreach ($testManifestList as $testCommand)
-        {
+        foreach ($testManifestList as $testCommand) {
             $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
             $codeceptionCommand .= $testCommand;
 
@@ -97,6 +101,13 @@ class RunTestFailedCommand extends BaseGenerateCommand
                     $output->write($buffer);
                 }
             );
+            $this->failedList = array_merge(
+                $this->failedList,
+                $this->readFailedTestFile(self::TESTS_FAILED_FILE)
+            );
+        }
+        foreach ($this->failedList as $test) {
+            $this->writeFailedTestToFile($test, self::TESTS_FAILED_FILE);
         }
     }
 
@@ -107,21 +118,13 @@ class RunTestFailedCommand extends BaseGenerateCommand
      */
     private function getFailedTestList()
     {
-        $failedTestPath = TESTS_BP .
-            DIRECTORY_SEPARATOR .
-            "tests" .
-            DIRECTORY_SEPARATOR .
-            "_output" .
-            DIRECTORY_SEPARATOR .
-            "failed";
-
         $failedTestDetails = ['tests' => [], 'suites' => []];
 
-        if (realpath($failedTestPath)) {
-            $testList = $this->readFailedTestFile($failedTestPath);
+        if (realpath(self::TESTS_FAILED_FILE)) {
+            $testList = $this->readFailedTestFile(self::TESTS_FAILED_FILE);
 
             foreach ($testList as $test) {
-                $this->writeFailedTestToFile($test);
+                $this->writeFailedTestToFile($test, self::TESTS_RERUN_FILE);
                 $testInfo = explode(DIRECTORY_SEPARATOR, $test);
                 $testName = explode(":", $testInfo[count($testInfo) - 1])[1];
                 $suiteName = $testInfo[count($testInfo) - 2];
@@ -150,9 +153,8 @@ class RunTestFailedCommand extends BaseGenerateCommand
     }
 
     /**
-     * Returns an array of tests read from the failed test file in _output
+     * Returns an array of run commands read from the manifest file created post generation
      *
-     * @param string $filePath
      * @return array|boolean
      */
     private function readTestManifestFile()
@@ -177,14 +179,14 @@ class RunTestFailedCommand extends BaseGenerateCommand
      * @param string $test
      * @return void
      */
-    private function writeFailedTestToFile($test)
+    private function writeFailedTestToFile($test, $filePath)
     {
-        if (realpath(self::TESTS_RERUN_FILE)) {
-            if (strpos(file_get_contents(self::TESTS_RERUN_FILE), $test) == false) {
-                file_put_contents(self::TESTS_RERUN_FILE, $test . "\n", FILE_APPEND);
+        if (realpath($filePath)) {
+            if (strpos(file_get_contents($filePath), $test) === false) {
+                file_put_contents($filePath, "\n" . $test, FILE_APPEND);
             }
         } else {
-            file_put_contents(self::TESTS_RERUN_FILE, $test . "\n");
+            file_put_contents($filePath, $test . "\n");
         }
     }
 }
