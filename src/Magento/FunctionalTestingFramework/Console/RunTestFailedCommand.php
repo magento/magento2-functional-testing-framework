@@ -126,18 +126,20 @@ class RunTestFailedCommand extends BaseGenerateCommand
             $testList = $this->readFailedTestFile(self::TESTS_FAILED_FILE);
 
             foreach ($testList as $test) {
-                $this->writeFailedTestToFile($test, self::TESTS_RERUN_FILE);
-                $testInfo = explode(DIRECTORY_SEPARATOR, $test);
-                $testName = explode(":", $testInfo[count($testInfo) - 1])[1];
-                $suiteName = $testInfo[count($testInfo) - 2];
+                if (!empty($test)) {
+                    $this->writeFailedTestToFile($test, self::TESTS_RERUN_FILE);
+                    $testInfo = explode(DIRECTORY_SEPARATOR, $test);
+                    $testName = explode(":", $testInfo[count($testInfo) - 1])[1];
+                    $suiteName = $testInfo[count($testInfo) - 2];
 
-                if ($suiteName == self::DEFAULT_TEST_GROUP) {
-                    array_push($failedTestDetails['tests'], $testName);
-                } else {
-                    $failedTestDetails['suites'] = array_merge_recursive(
-                        $failedTestDetails['suites'],
-                        [$suiteName => [$testName]]
-                    );
+                    if ($suiteName == self::DEFAULT_TEST_GROUP) {
+                        array_push($failedTestDetails['tests'], $testName);
+                    } else {
+                        $failedTestDetails['suites'] = array_merge_recursive(
+                            $failedTestDetails['suites'],
+                            [$suiteName => [$testName]]
+                        );
+                    }
                 }
             }
         }
@@ -183,7 +185,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
      */
     private function writeFailedTestToFile($test, $filePath)
     {
-        if (realpath($filePath)) {
+        if (file_exists($filePath)) {
             if (strpos(file_get_contents($filePath), $test) === false) {
                 file_put_contents($filePath, "\n" . $test, FILE_APPEND);
             }
