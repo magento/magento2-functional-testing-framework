@@ -101,7 +101,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
                     $output->write($buffer);
                 }
             );
-            if (realpath(self::TESTS_FAILED_FILE)) {
+            if (file_exists(self::TESTS_FAILED_FILE)) {
                 $this->failedList = array_merge(
                     $this->failedList,
                     $this->readFailedTestFile(self::TESTS_FAILED_FILE)
