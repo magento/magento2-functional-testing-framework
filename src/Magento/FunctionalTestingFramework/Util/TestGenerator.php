@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Util;
 
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
@@ -33,6 +34,10 @@ class TestGenerator
     const REQUIRED_ENTITY_REFERENCE = 'createDataKey';
     const GENERATED_DIR = '_generated';
     const DEFAULT_DIR = 'default';
+    const TEST_SCOPE = 'test';
+    const HOOK_SCOPE = 'hook';
+    const SUITE_SCOPE = 'suite';
+    const PRESSKEY_ARRAY_ANCHOR_KEY = '987654321098765432109876543210';
 
     /**
      * Path to the export dir.
@@ -68,6 +73,13 @@ class TestGenerator
      * @var boolean
      */
     private $debug;
+
+    /**
+     * Current generation scope.
+     *
+     * @var string
+     */
+    private $currentGenerationScope;
 
     /**
      * TestGenerator constructor.
@@ -207,7 +219,11 @@ class TestGenerator
 
         $className = $testObject->getCodeceptionName();
         try {
-            $hookPhp = $this->generateHooksPhp($testObject->getHooks());
+            if (!$testObject->isSkipped()) {
+                $hookPhp = $this->generateHooksPhp($testObject->getHooks());
+            } else {
+                $hookPhp = null;
+            }
             $testsPhp = $this->generateTestPhp($testObject);
         } catch (TestReferenceException $e) {
             throw new TestReferenceException($e->getMessage() . "\n" . $testObject->getFilename());
@@ -240,6 +256,16 @@ class TestGenerator
         $cestPhpArray = [];
 
         foreach ($testObjects as $test) {
+            // Do not generate test if it is an extended test and parent does not exist
+            if ($test->isSkipped() && !empty($test->getParentName())) {
+                try {
+                    TestObjectHandler::getInstance()->getObject($test->getParentName());
+                } catch (TestReferenceException $e) {
+                    print("{$test->getName()} will not be generated. Parent {$e->getMessage()} \n");
+                    continue;
+                }
+            }
+
             $this->debug("<comment>Start creating test: " . $test->getCodeceptionName() . "</comment>");
             $php = $this->assembleTestPhp($test);
             $cestPhpArray[] = [$test->getCodeceptionName(), $php];
@@ -282,11 +308,8 @@ class TestGenerator
     private function generateUseStatementsPhp()
     {
         $useStatementsPhp = "use Magento\FunctionalTestingFramework\AcceptanceTester;\n";
-
-        $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;\n";
-        $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;\n";
-        $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;\n";
         $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;\n";
+        $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;\n";
         $useStatementsPhp .= "use \Codeception\Util\Locator;\n";
 
         $allureStatements = [
@@ -447,18 +470,19 @@ class TestGenerator
      * statement to handle each unique action. At the bottom of the case statement there is a generic function that can
      * construct the PHP string for nearly half of all Codeception actions.
      *
-     * @param array         $actionObjects
-     * @param array|boolean $hookObject
-     * @param string        $actor
+     * @param array  $actionObjects
+     * @param string $generationScope
+     * @param string $actor
      * @return string
      * @throws TestReferenceException
      * @throws \Exception
      * @SuppressWarnings(PHPMD)
      */
-    public function generateStepsPhp($actionObjects, $hookObject = false, $actor = "I")
+    public function generateStepsPhp($actionObjects, $generationScope = TestGenerator::TEST_SCOPE, $actor = "I")
     {
         //TODO: Refactor Method according to PHPMD warnings, remove @SuppressWarnings accordingly.
         $testSteps = "";
+        $this->currentGenerationScope = $generationScope;
 
         foreach ($actionObjects as $actionObject) {
             $stepKey = $actionObject->getStepKey();
@@ -620,7 +644,7 @@ class TestGenerator
                 }
                 // turn $javaVariable => \$javaVariable but not {$mftfVariable}
                 if ($actionObject->getType() == "executeJS") {
-                    $function = preg_replace('/(?<!{)(\$[\w\d_]+)/', '\\\\$1', $function);
+                    $function = preg_replace('/(?<!{)(\$[A-Za-z._]+)(?![A-z.]*+\$)/', '\\\\$1', $function);
                 }
             }
 
@@ -680,90 +704,76 @@ class TestGenerator
                         $actor,
                         $stepKey
                     );
-                    //Get Entity from Static data.
-                    $testSteps .= sprintf(
-                        "\t\t$%s = DataObjectHandler::getInstance()->getObject(\"%s\");\n",
-                        $entity,
-                        $entity
-                    );
 
-                    //HookObject End-Product needs to be created in the Class scope,
-                    //otherwise create them in the Test scope.
-                    //Determine if there are required-entities and create array of required-entities for merging.
-                    $requiredEntities = [];
+                    //TODO refactor entity field override to not be individual actionObjects
                     $customEntityFields =
                         $customActionAttributes[ActionObjectExtractor::ACTION_OBJECT_PERSISTENCE_FIELDS] ?? [];
-                    $requiredEntityObjects = [];
-                    foreach ($customActionAttributes as $customAttribute) {
-                        if (is_array($customAttribute) && $customAttribute['nodeName'] == 'requiredEntity') {
-                            if ($hookObject) {
-                                $requiredEntities [] = "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
-                                    "->getName() => " . "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
-                                    "->getType()";
-                                $requiredEntityObjects [] = '$this->' . $customAttribute
-                                    [self::REQUIRED_ENTITY_REFERENCE];
-                            } else {
-                                $requiredEntities [] = "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE]
-                                    . "->getName() => " . "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
-                                    "->getType()";
-                                $requiredEntityObjects [] = '$' . $customAttribute[self::REQUIRED_ENTITY_REFERENCE];
-                            }
+
+                    $requiredEntityKeys = [];
+                    foreach ($actionObject->getCustomActionAttributes() as $actionAttribute) {
+                        if (is_array($actionAttribute) && $actionAttribute['nodeName'] == 'requiredEntity') {
+                            //append ActionGroup if provided
+                            $requiredEntityActionGroup = $actionAttribute['actionGroup'] ?? null;
+                            $requiredEntityKeys[] = $actionAttribute['createDataKey'] . $requiredEntityActionGroup;
                         }
                     }
-
-                    if ($hookObject) {
-                        $createEntityFunctionCall = sprintf("\t\t\$this->%s->createEntity(", $stepKey);
-                        $dataPersistenceHandlerFunctionCall = sprintf(
-                            "\t\t\$this->%s = new DataPersistenceHandler($%s",
-                            $stepKey,
-                            $entity
-                        );
-                    } else {
-                        $createEntityFunctionCall = sprintf("\t\t\$%s->createEntity(", $stepKey);
-                        $dataPersistenceHandlerFunctionCall = sprintf(
-                            "\t\t$%s = new DataPersistenceHandler($%s",
-                            $stepKey,
-                            $entity
-                        );
+                    // Build array of requiredEntities
+                    $requiredEntityKeysArray = "";
+                    if (!empty($requiredEntityKeys)) {
+                        $requiredEntityKeysArray = '"' . implode('", "', $requiredEntityKeys) . '"';
                     }
-
-                    if ($storeCode) {
-                        $createEntityFunctionCall .= sprintf("\"%s\");\n", $storeCode);
-                    } else {
-                        $createEntityFunctionCall .= ");\n";
+                    //Determine Scope
+                    $scope = PersistedObjectHandler::TEST_SCOPE;
+                    if ($generationScope == TestGenerator::HOOK_SCOPE) {
+                        $scope = PersistedObjectHandler::HOOK_SCOPE;
+                    } elseif ($generationScope == TestGenerator::SUITE_SCOPE) {
+                        $scope = PersistedObjectHandler::SUITE_SCOPE;
                     }
-
-                    // Add a reference to the requiredEntityObjects to the new DataPersistenceHandler. If there are none
-                    // defined, an empty array will be passed in to the constructor.
-                    $dataPersistenceHandlerFunctionCall .= sprintf(
-                        ", [%s]",
-                        implode(', ', $requiredEntityObjects)
-                    );
-
+                    
+                    $createEntityFunctionCall = "\t\tPersistedObjectHandler::getInstance()->createEntity(";
+                    $createEntityFunctionCall .= "\n\t\t\t\"{$stepKey}\",";
+                    $createEntityFunctionCall .= "\n\t\t\t\"{$scope}\",";
+                    $createEntityFunctionCall .= "\n\t\t\t\"{$entity}\"";
+                    $createEntityFunctionCall .= ",\n\t\t\t[{$requiredEntityKeysArray}]";
                     if (count($customEntityFields) > 1) {
-                        $dataPersistenceHandlerFunctionCall .= ", \${$stepKey}Fields";
+                        $createEntityFunctionCall .= ",\n\t\t\t\${$stepKey}Fields";
+                    } else {
+                        $createEntityFunctionCall .= ",\n\t\t\tnull";
                     }
-
-                    $dataPersistenceHandlerFunctionCall .= ");\n";
-                    $testSteps .= $dataPersistenceHandlerFunctionCall;
+                    if ($storeCode !== null) {
+                        $createEntityFunctionCall .= ",\n\t\t\t\"{$storeCode}\"";
+                    }
+                    $createEntityFunctionCall .= "\n\t\t);\n";
                     $testSteps .= $createEntityFunctionCall;
                     break;
                 case "deleteData":
                     if (isset($customActionAttributes['createDataKey'])) {
-                        $key = $customActionAttributes['createDataKey'];
+                        $key = $this->resolveStepKeyReferences(
+                            $customActionAttributes['createDataKey'],
+                            $actionObject->getActionOrigin(),
+                            true
+                        );
+                        $actionGroup = $actionObject->getCustomActionAttributes()['actionGroup'] ?? null;
+                        $key .= $actionGroup;
                         //Add an informative statement to help the user debug test runs
                         $contextSetter = sprintf(
                             "\t\t$%s->amGoingTo(\"delete entity that has the createDataKey: %s\");\n",
                             $actor,
                             $key
                         );
-                        $deleteEntityFunctionCall = "";
 
-                        if ($hookObject) {
-                            $deleteEntityFunctionCall .= sprintf("\t\t\$this->%s->deleteEntity();\n", $key);
-                        } else {
-                            $deleteEntityFunctionCall .= sprintf("\t\t$%s->deleteEntity();\n", $key);
+                        //Determine Scope
+                        $scope = PersistedObjectHandler::TEST_SCOPE;
+                        if ($generationScope == TestGenerator::HOOK_SCOPE) {
+                            $scope = PersistedObjectHandler::HOOK_SCOPE;
+                        } elseif ($generationScope == TestGenerator::SUITE_SCOPE) {
+                            $scope = PersistedObjectHandler::SUITE_SCOPE;
                         }
+
+                        $deleteEntityFunctionCall = "\t\tPersistedObjectHandler::getInstance()->deleteEntity(";
+                        $deleteEntityFunctionCall .= "\n\t\t\t\"{$key}\",";
+                        $deleteEntityFunctionCall .= "\n\t\t\t\"{$scope}\"";
+                        $deleteEntityFunctionCall .= "\n\t\t);\n";
 
                         $testSteps .= $contextSetter;
                         $testSteps .= $deleteEntityFunctionCall;
@@ -779,8 +789,14 @@ class TestGenerator
                     }
                     break;
                 case "updateData":
-                    $key = $customActionAttributes['createDataKey'];
+                    $key = $this->resolveStepKeyReferences(
+                        $customActionAttributes['createDataKey'],
+                        $actionObject->getActionOrigin(),
+                        true
+                    );
                     $updateEntity = $customActionAttributes['entity'];
+                    $actionGroup = $actionObject->getCustomActionAttributes()['actionGroup'] ?? null;
+                    $key .= $actionGroup;
 
                     //Add an informative statement to help the user debug test runs
                     $testSteps .= sprintf(
@@ -788,128 +804,91 @@ class TestGenerator
                         $actor,
                         $key
                     );
-
-                    //HookObject End-Product needs to be created in the Class scope,
-                    //otherwise create them in the Test scope.
-                    //Determine if there are required-entities and create array of required-entities for merging.
-                    $requiredEntities = [];
-                    $requiredEntityObjects = [];
-                    foreach ($customActionAttributes as $customAttribute) {
-                        if (is_array($customAttribute) && $customAttribute['nodeName'] == 'requiredEntity') {
-                            if ($hookObject) {
-                                $requiredEntities [] = "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
-                                    "->getName() => " . "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
-                                    "->getType()";
-                                $requiredEntityObjects [] = '$this->' . $customAttribute
-                                    [self::REQUIRED_ENTITY_REFERENCE];
-                            } else {
-                                $requiredEntities [] = "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE]
-                                    . "->getName() => " . "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
-                                    "->getType()";
-                                $requiredEntityObjects [] = '$' . $customAttribute[self::REQUIRED_ENTITY_REFERENCE];
-                            }
+                    
+                    // Build array of requiredEntities
+                    $requiredEntityKeys = [];
+                    foreach ($actionObject->getCustomActionAttributes() as $actionAttribute) {
+                        if (is_array($actionAttribute) && $actionAttribute['nodeName'] == 'requiredEntity') {
+                            //append ActionGroup if provided
+                            $requiredEntityActionGroup = $actionAttribute['actionGroup'] ?? null;
+                            $requiredEntityKeys[] = $actionAttribute['createDataKey'] . $requiredEntityActionGroup;
                         }
                     }
-
-                    if ($hookObject) {
-                        $updateEntityFunctionCall = sprintf("\t\t\$this->%s->updateEntity(\"%s\"", $key, $updateEntity);
-                    } else {
-                        $updateEntityFunctionCall = sprintf("\t\t\$%s->updateEntity(\"%s\"", $key, $updateEntity);
+                    $requiredEntityKeysArray = "";
+                    if (!empty($requiredEntityKeys)) {
+                        $requiredEntityKeysArray = '"' . implode('", "', $requiredEntityKeys) . '"';
                     }
 
-                    if (!empty($requiredEntities)) {
-                        $updateEntityFunctionCall .= sprintf(
-                            ", [%s]",
-                            implode(', ', $requiredEntityObjects)
-                        );
+                    $scope = PersistedObjectHandler::TEST_SCOPE;
+                    if ($generationScope == TestGenerator::HOOK_SCOPE) {
+                        $scope = PersistedObjectHandler::HOOK_SCOPE;
+                    } elseif ($generationScope == TestGenerator::SUITE_SCOPE) {
+                        $scope = PersistedObjectHandler::SUITE_SCOPE;
                     }
 
-                    if ($storeCode) {
-                        $updateEntityFunctionCall .= sprintf(", \"%s\");\n", $storeCode);
-                    } else {
-                        $updateEntityFunctionCall .= ");\n";
+                    $updateEntityFunctionCall = "\t\tPersistedObjectHandler::getInstance()->updateEntity(";
+                    $updateEntityFunctionCall .= "\n\t\t\t\"{$key}\",";
+                    $updateEntityFunctionCall .= "\n\t\t\t\"{$scope}\",";
+                    $updateEntityFunctionCall .= "\n\t\t\t\"{$updateEntity}\"";
+                    $updateEntityFunctionCall .= ",\n\t\t\t[{$requiredEntityKeysArray}]";
+                    if ($storeCode !== null) {
+                        $updateEntityFunctionCall .= ",\n\t\t\t\"{$storeCode}\"";
                     }
-
+                    $updateEntityFunctionCall .= "\n\t\t);\n";
                     $testSteps .= $updateEntityFunctionCall;
+
                     break;
                 case "getData":
                     $entity = $customActionAttributes['entity'];
+                    $index = null;
+                    if (isset($customActionAttributes['index'])) {
+                        $index = (int)$customActionAttributes['index'];
+                    }
                     //Add an informative statement to help the user debug test runs
                     $testSteps .= sprintf(
                         "\t\t$%s->amGoingTo(\"get entity that has the stepKey: %s\");\n",
                         $actor,
                         $stepKey
                     );
-                    //Get Entity from Static data.
-                    $testSteps .= sprintf(
-                        "\t\t$%s = DataObjectHandler::getInstance()->getObject(\"%s\");\n",
-                        $entity,
-                        $entity
-                    );
 
-                    //HookObject End-Product needs to be created in the Class scope,
-                    //otherwise create them in the Test scope.
-                    //Determine if there are required-entities and create array of required-entities for merging.
-                    $requiredEntities = [];
-                    $requiredEntityObjects = [];
-                    foreach ($customActionAttributes as $customAttribute) {
-                        if (is_array($customAttribute) && $customAttribute['nodeName'] = 'requiredEntity') {
-                            if ($hookObject) {
-                                $requiredEntities [] = "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
-                                    "->getName() => " . "\$this->" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
-                                    "->getType()";
-                                $requiredEntityObjects [] = '$this->' . $customAttribute
-                                    [self::REQUIRED_ENTITY_REFERENCE];
-                            } else {
-                                $requiredEntities [] = "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE]
-                                    . "->getName() => " . "\$" . $customAttribute[self::REQUIRED_ENTITY_REFERENCE] .
-                                    "->getType()";
-                                $requiredEntityObjects [] = '$' . $customAttribute[self::REQUIRED_ENTITY_REFERENCE];
-                            }
+                    // Build array of requiredEntities
+                    $requiredEntityKeys = [];
+                    foreach ($actionObject->getCustomActionAttributes() as $actionAttribute) {
+                        if (is_array($actionAttribute) && $actionAttribute['nodeName'] == 'requiredEntity') {
+                            $requiredEntityActionGroup = $actionAttribute['actionGroup'] ?? null;
+                            $requiredEntityKeys[] = $actionAttribute['createDataKey'] . $requiredEntityActionGroup;
                         }
                     }
-
-                    if ($hookObject) {
-                        $getEntityFunctionCall = sprintf("\t\t\$this->%s->getEntity(", $stepKey);
-                        $dataPersistenceHandlerFunctionCall = sprintf(
-                            "\t\t\$this->%s = new DataPersistenceHandler($%s",
-                            $stepKey,
-                            $entity
-                        );
-                    } else {
-                        $getEntityFunctionCall = sprintf("\t\t\$%s->getEntity(", $stepKey);
-                        $dataPersistenceHandlerFunctionCall = sprintf(
-                            "\t\t$%s = new DataPersistenceHandler($%s",
-                            $stepKey,
-                            $entity
-                        );
+                    $requiredEntityKeysArray = "";
+                    if (!empty($requiredEntityKeys)) {
+                        $requiredEntityKeysArray = '"' . implode('", "', $requiredEntityKeys) . '"';
                     }
 
-                    if (isset($customActionAttributes['index'])) {
-                        $getEntityFunctionCall .= sprintf("%s", (int)$customActionAttributes['index']);
-                    } else {
-                        $getEntityFunctionCall .= 'null';
+                    //Determine Scope
+                    $scope = PersistedObjectHandler::TEST_SCOPE;
+                    if ($generationScope == TestGenerator::HOOK_SCOPE) {
+                        $scope = PersistedObjectHandler::HOOK_SCOPE;
+                    } elseif ($generationScope == TestGenerator::SUITE_SCOPE) {
+                        $scope = PersistedObjectHandler::SUITE_SCOPE;
                     }
 
-                    if ($storeCode) {
-                        $getEntityFunctionCall .= sprintf(", \"%s\");\n", $storeCode);
+                    //Create Function
+                    $getEntityFunctionCall = "\t\tPersistedObjectHandler::getInstance()->getEntity(";
+                    $getEntityFunctionCall .= "\n\t\t\t\"{$stepKey}\",";
+                    $getEntityFunctionCall .= "\n\t\t\t\"{$scope}\",";
+                    $getEntityFunctionCall .= "\n\t\t\t\"{$entity}\"";
+                    $getEntityFunctionCall .= ",\n\t\t\t[{$requiredEntityKeysArray}]";
+                    if ($storeCode !== null) {
+                        $getEntityFunctionCall .= ",\n\t\t\t\"{$storeCode}\"";
                     } else {
-                        $getEntityFunctionCall .= ");\n";
+                        $getEntityFunctionCall .= ",\n\t\t\tnull";
                     }
-
-                    //If required-entities are defined, reassign dataObject to not overwrite the static definition.
-                    //Also, DataPersistenceHandler needs to be defined with customData array.
-                    if (!empty($requiredEntities)) {
-                        $dataPersistenceHandlerFunctionCall .= sprintf(
-                            ", [%s]);\n",
-                            implode(', ', $requiredEntityObjects)
-                        );
-                    } else {
-                        $dataPersistenceHandlerFunctionCall .= ");\n";
+                    if ($index !== null) {
+                        $getEntityFunctionCall .= ",\n\t\t\t{$index}";
                     }
-
-                    $testSteps .= $dataPersistenceHandlerFunctionCall;
+                    $getEntityFunctionCall .= "\n\t\t);\n";
                     $testSteps .= $getEntityFunctionCall;
+
                     break;
                 case "assertArrayIsSorted":
                     $testSteps .= $this->wrapFunctionCall(
@@ -950,7 +929,12 @@ class TestGenerator
                 case "dontSeeCookie":
                 case "resetCookie":
                 case "seeCookie":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $input, $parameterArray);
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $input,
+                        $parameterArray
+                    );
                     break;
                 case "grabCookie":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
@@ -967,41 +951,54 @@ class TestGenerator
                 case "seeElement":
                 case "seeElementInDOM":
                 case "seeInFormFields":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $parameterArray);
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $selector,
+                        $parameterArray
+                    );
                     break;
                 case "pressKey":
                     $parameterArray = $customActionAttributes['parameterArray'] ?? null;
                     if ($parameterArray) {
-                        // validate the param array is in the correct format
-                        $this->validateParameterArray($parameterArray);
-
-                        // trim off the outer braces and add commas for the regex match
-                        $params = "," . substr($parameterArray, 1, strlen($parameterArray) - 2) . ",";
-
-                        // we are matching any nested arrays for a simultaneous press, any string literals, and any
-                        // explicit function calls from a class.
-                        preg_match_all('/(\[.*?\])|(\'.*?\')|(\\\\.*?\,)/', $params, $paramInput);
-
-                        //clean up the input by trimming any extra commas
-                        $tmpParameterArray = [];
-                        foreach ($paramInput[0] as $params) {
-                            $tmpParameterArray[] = trim($params, ",");
-                        }
-
-                        // put the array together as a string to be passed as args
-                        $parameterArray = implode(",", $tmpParameterArray);
+                        $parameterArray = $this->processPressKey($parameterArray);
                     }
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input, $parameterArray);
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $selector,
+                        $input,
+                        $parameterArray
+                    );
                     break;
                 case "selectOption":
                 case "unselectOption":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input, $parameterArray);
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $selector,
+                        $input,
+                        $parameterArray
+                    );
                     break;
                 case "submitForm":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $parameterArray, $button);
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $selector,
+                        $parameterArray,
+                        $button
+                    );
                     break;
                 case "dragAndDrop":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector1, $selector2, $x, $y);
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $selector1,
+                        $selector2,
+                        $x,
+                        $y
+                    );
                     break;
                 case "selectMultipleOptions":
                     $testSteps .= $this->wrapFunctionCall(
@@ -1026,7 +1023,13 @@ class TestGenerator
                     break;
                 case "performOn":
                 case "waitForElementChange":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $function, $time);
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $selector,
+                        $function,
+                        $time
+                    );
                     break;
                 case "waitForJS":
                     $testSteps .= $this->wrapFunctionCall(
@@ -1045,7 +1048,13 @@ class TestGenerator
                     break;
                 case "waitForPageLoad":
                 case "waitForText":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $input, $time, $selector);
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $input,
+                        $time,
+                        $selector
+                    );
                     break;
                 case "formatMoney":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
@@ -1249,13 +1258,16 @@ class TestGenerator
                     break;
                 case "field":
                     $fieldKey = $actionObject->getCustomActionAttributes()['key'];
-                    $input = $this->resolveTestVariable([$input], $actionObject->getActionOrigin())[0];
+                    $input = $this->resolveTestVariable(
+                        [$input],
+                        $actionObject->getActionOrigin()
+                    )[0];
                     $argRef = "\t\t\$";
                     $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) . "Fields['{$fieldKey}'] = ${input};\n";
                     $testSteps .= $argRef;
                     break;
                 case "generateDate":
-                    $timezone = "America/Los_Angeles";
+                    $timezone = getenv("DEFAULT_TIMEZONE");
                     if (isset($customActionAttributes['timezone'])) {
                         $timezone = $customActionAttributes['timezone'];
                     }
@@ -1267,8 +1279,17 @@ class TestGenerator
 
                     $testSteps .= $dateGenerateCode;
                     break;
+                case "skipReadinessCheck":
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $customActionAttributes['state']);
+                    break;
                 default:
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input, $parameter);
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $selector,
+                        $input,
+                        $parameter
+                    );
             }
         }
 
@@ -1307,13 +1328,9 @@ class TestGenerator
                 continue;
             }
             $outputArg = $arg;
-            // Match on any $$data.key$$ found inside arg, matches[0] will be array of $$data.key$$
-            preg_match_all("/\\$\\$[\w.\[\]]+\\$\\$/", $outputArg, $matches);
-            $this->replaceMatchesIntoArg($matches[0], $outputArg, "$$");
-
-            // Match on any $data.key$ found inside arg, matches[0] will be array of $data.key$
-            preg_match_all("/\\$[\w.\[\]]+\\$/", $outputArg, $matches);
-            $this->replaceMatchesIntoArg($matches[0], $outputArg, "$");
+            // Math on $data.key$ and $$data.key$$
+            preg_match_all('/\${1,2}[\w.\[\]]+\${1,2}/', $outputArg, $matches);
+            $this->replaceMatchesIntoArg($matches[0], $outputArg);
 
             //trim "{$variable}" into $variable
             $outputArg = $this->trimVariableIfNeeded($outputArg);
@@ -1347,16 +1364,16 @@ class TestGenerator
      *
      * @param array  $matches
      * @param string $outputArg
-     * @param string $delimiter
      * @return void
      * @throws \Exception
      */
-    private function replaceMatchesIntoArg($matches, &$outputArg, $delimiter)
+    private function replaceMatchesIntoArg($matches, &$outputArg)
     {
         // Remove Duplicate $matches from array. Duplicate matches are replaced all in one go.
         $matches = array_unique($matches);
         foreach ($matches as $match) {
             $replacement = null;
+            $delimiter = '$';
             $variable = $this->stripAndSplitReference($match, $delimiter);
             if (count($variable) != 2) {
                 throw new \Exception(
@@ -1364,11 +1381,9 @@ class TestGenerator
                 Test persisted entity references must follow {$delimiter}entityStepKey.field{$delimiter} format."
                 );
             }
-            if ($delimiter == "$") {
-                $replacement = sprintf("$%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
-            } elseif ($delimiter == "$$") {
-                $replacement = sprintf("\$this->%s->getCreatedDataByName('%s')", $variable[0], $variable[1]);
-            }
+
+            $replacement = "PersistedObjectHandler::getInstance()->retrieveEntityField";
+            $replacement .= "('{$variable[0]}', '$variable[1]', '{$this->currentGenerationScope}')";
 
             //Determine if quoteBreak check is necessary. Assume replacement is surrounded in quotes, then override
             if (strpos($outputArg, "\"") !== false) {
@@ -1406,7 +1421,7 @@ class TestGenerator
      * @param array  $actionGroupOrigin
      * @return string
      */
-    private function resolveStepKeyReferences($input, $actionGroupOrigin)
+    private function resolveStepKeyReferences($input, $actionGroupOrigin, $matchAll = false)
     {
         if ($actionGroupOrigin == null) {
             return $input;
@@ -1422,14 +1437,21 @@ class TestGenerator
         foreach ($stepKeys as $stepKey) {
             // MQE-1011
             $stepKeyVarRef = "$" . $stepKey;
-            $classVarRef = "\$this->$stepKey";
+            $persistedVarRef = "PersistedObjectHandler::getInstance()->retrieveEntityField('{$stepKey}'"
+                . ", 'field', 'test')";
+            $persistedVarRefInvoked = "PersistedObjectHandler::getInstance()->retrieveEntityField('"
+                . $stepKey . $testInvocationKey . "', 'field', 'test')";
 
             if (strpos($output, $stepKeyVarRef) !== false) {
                 $output = str_replace($stepKeyVarRef, $stepKeyVarRef . $testInvocationKey, $output);
             }
 
-            if (strpos($output, $classVarRef) !== false) {
-                $output = str_replace($classVarRef, $classVarRef . $testInvocationKey, $output);
+            if (strpos($output, $persistedVarRef) !== false) {
+                $output = str_replace($persistedVarRef, $persistedVarRefInvoked, $output);
+            }
+
+            if ($matchAll && strpos($output, $stepKey) !== false) {
+                $output = str_replace($stepKey, $stepKey . $testInvocationKey, $output);
             }
         }
         return $output;
@@ -1497,28 +1519,10 @@ class TestGenerator
     private function generateHooksPhp($hookObjects)
     {
         $hooks = "";
-        $createData = false;
 
         foreach ($hookObjects as $hookObject) {
             $type = $hookObject->getType();
             $dependencies = 'AcceptanceTester $I';
-
-            foreach ($hookObject->getActions() as $step) {
-                if ($hookObject->getType() == TestObjectExtractor::TEST_FAILED_HOOK) {
-                    continue;
-                }
-
-                if (($step->getType() == "createData")
-                    || ($step->getType() == "updateData")
-                    || ($step->getType() == "getData")
-                ) {
-                    $hooks .= "\t/**\n";
-                    $hooks .= sprintf("\t  * @var DataPersistenceHandler $%s;\n", $step->getStepKey());
-                    $hooks .= "\t  */\n";
-                    $hooks .= sprintf("\tprotected $%s;\n\n", $step->getStepKey());
-                    $createData = true;
-                }
-            }
 
             $hooks .= "\t/**\n";
             $hooks .= "\t  * @param AcceptanceTester \$I\n";
@@ -1528,7 +1532,7 @@ class TestGenerator
             try {
                 $steps = $this->generateStepsPhp(
                     $hookObject->getActions(),
-                    $createData
+                    TestGenerator::HOOK_SCOPE
                 );
             } catch (TestReferenceException $e) {
                 throw new TestReferenceException($e->getMessage() . " in Element \"" . $type . "\"");
@@ -1573,7 +1577,7 @@ class TestGenerator
         } else {
             try {
                 $steps = $this->generateStepsPhp($test->getOrderedActions());
-            } catch (TestReferenceException $e) {
+            } catch (\Exception $e) {
                 throw new TestReferenceException($e->getMessage() . " in Test \"" . $test->getName() . "\"");
             }
         }
@@ -1620,6 +1624,70 @@ class TestGenerator
         }
 
         return implode(", ", $result);
+    }
+
+    /**
+     * Process pressKey parameterArray attribute for uniqueness function call and necessary data resolutions
+     *
+     * @param string $input
+     * @return string
+     */
+    private function processPressKey($input)
+    {
+        // validate the param array is in the correct format
+        $input = trim($input);
+        $this->validateParameterArray($input);
+        // trim off the outer braces
+        $input = substr($input, 1, strlen($input) - 2);
+
+        $result = [];
+        $arrayResult = [];
+        $count = 0;
+
+        // matches all arrays and replaces them with placeholder to prevent later param manipulation
+        preg_match_all('/[\[][^\]]*?[\]]/', $input, $paramInput);
+        if (!empty($paramInput)) {
+            foreach ($paramInput[0] as $param) {
+                $arrayResult[self::PRESSKEY_ARRAY_ANCHOR_KEY . $count] =
+                    '[' . trim($this->addUniquenessToParamArray($param)) . ']';
+                $input = str_replace($param, self::PRESSKEY_ARRAY_ANCHOR_KEY . $count, $input);
+                $count++;
+            }
+        }
+
+        $paramArray = explode(",", $input);
+        foreach ($paramArray as $param) {
+            // matches strings wrapped in ', we assume these are string literals
+            if (preg_match('/^[\s]*(\'.*?\')[\s]*$/', $param)) {
+                $result[] = trim($param);
+                continue;
+            }
+
+            // matches \ for Facebook WebDriverKeys classes
+            if (substr(trim($param), 0, 1) === '\\') {
+                $result[] = trim($param);
+                continue;
+            }
+
+            // matches numbers
+            if (preg_match('/^[\s]*(\d+?)[\s]*$/', $param)) {
+                $result[] = $param;
+                continue;
+            }
+
+            $replacement = $this->addUniquenessFunctionCall(trim($param));
+
+            $result[] = $replacement;
+        }
+
+        $result = implode(',', $result);
+        // reinsert arrays into result
+        if (!empty($arrayResult)) {
+            foreach ($arrayResult as $key => $value) {
+                $result = str_replace($key, $value, $result);
+            }
+        }
+        return $result;
     }
 
     /**
@@ -1697,6 +1765,7 @@ class TestGenerator
      *
      * @param string $actor
      * @param actionObject $action
+     * @param string $scope
      * @param array ...$args
      * @return string
      * @throws \Exception
@@ -1728,6 +1797,7 @@ class TestGenerator
      * @param string $returnVariable
      * @param string $actor
      * @param string $action
+     * @param string $scope
      * @param array ...$args
      * @return string
      * @throws \Exception

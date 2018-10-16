@@ -130,5 +130,6 @@
             </xs:annotation>
         </xs:attribute>
         <xs:attributeGroup ref="commonActionAttributes"/>
+        <xs:attribute type="xs:boolean" name="skipReadiness" use="prohibited"/>
     </xs:complexType>
 </xs:schema>

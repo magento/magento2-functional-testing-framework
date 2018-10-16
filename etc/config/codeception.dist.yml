@@ -15,7 +15,6 @@ extensions:
         - Codeception\Extension\RunFailed
         - Magento\FunctionalTestingFramework\Extension\TestContextExtension
         - Magento\FunctionalTestingFramework\Allure\Adapter\MagentoAllureAdapter
-        - Magento\FunctionalTestingFramework\Extension\PageReadinessExtension
     config:
         Yandex\Allure\Adapter\AllureAdapter:
             deletePreviousResults: true
@@ -24,15 +23,7 @@ extensions:
                 - env
                 - zephyrId
                 - useCaseId
-        Magento\FunctionalTestingFramework\Extension\PageReadinessExtension:
+        Magento\FunctionalTestingFramework\Extension\TestContextExtension:
             driver: \Magento\FunctionalTestingFramework\Module\MagentoWebDriver
-            timeout: 30
-            resetFailureThreshold: 3
-            readinessMetrics:
-                - \Magento\FunctionalTestingFramework\Extension\ReadinessMetrics\DocumentReadyState
-                - \Magento\FunctionalTestingFramework\Extension\ReadinessMetrics\JQueryAjaxRequests
-                - \Magento\FunctionalTestingFramework\Extension\ReadinessMetrics\PrototypeAjaxRequests
-                - \Magento\FunctionalTestingFramework\Extension\ReadinessMetrics\RequireJsDefinitions
-                - \Magento\FunctionalTestingFramework\Extension\ReadinessMetrics\MagentoLoadingMasks
 params:
     - .env

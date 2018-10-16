@@ -18,6 +18,7 @@ class OperationDom extends \Magento\FunctionalTestingFramework\Config\MftfDom
 {
     const METADATA_FILE_NAME_ENDING = "meta";
     const METADATA_META_FILENAME_ATTRIBUTE = "filename";
+    const METADATA_META_NAME_ATTRIBUTE = "name";
 
     /**
      * NodeValidationUtil
@@ -65,7 +66,7 @@ class OperationDom extends \Magento\FunctionalTestingFramework\Config\MftfDom
      */
     public function initDom($xml, $filename = null)
     {
-        $dom = parent::initDom($xml);
+        $dom = parent::initDom($xml, $filename);
 
         if (strpos($filename, self::METADATA_FILE_NAME_ENDING)) {
             $operationNodes = $dom->getElementsByTagName('operation');
@@ -74,7 +75,8 @@ class OperationDom extends \Magento\FunctionalTestingFramework\Config\MftfDom
                 $operationNode->setAttribute(self::METADATA_META_FILENAME_ATTRIBUTE, $filename);
                 $this->validateOperationElements(
                     $operationNode,
-                    $filename
+                    $filename,
+                    $operationNode->getAttribute(self::METADATA_META_NAME_ATTRIBUTE)
                 );
             }
         }
@@ -86,13 +88,15 @@ class OperationDom extends \Magento\FunctionalTestingFramework\Config\MftfDom
      * Recurse through child elements and validate uniqueKeys
      * @param \DOMElement $parentNode
      * @param string      $filename
+     * @param string      $topParent
      * @return void
      */
-    public function validateOperationElements(\DOMElement $parentNode, $filename)
+    public function validateOperationElements(\DOMElement $parentNode, $filename, $topParent)
     {
         $this->validationUtil->validateChildUniqueness(
             $parentNode,
-            $filename
+            $filename,
+            $topParent
         );
         $childNodes = $parentNode->childNodes;
 
@@ -103,7 +107,8 @@ class OperationDom extends \Magento\FunctionalTestingFramework\Config\MftfDom
             }
             $this->validateOperationElements(
                 $currentNode,
-                $filename
+                $filename,
+                $topParent
             );
         }
     }

@@ -24,6 +24,7 @@
         </after>
         <comment stepKey="basicCommentWithNoData" userInput="{{emptyData.noData}}"/>
         <comment stepKey="basicCommentWithDefinitelyNoData" userInput="{{emptyData.definitelyNoData}}"/>
+        <comment stepKey="ReadinessCheckSkipped" userInput="skipReadiness" skipReadiness="true"/>
         <grabValueFrom stepKey="someVarDefinition"/>
         <acceptPopup stepKey="acceptPopupKey1"/>
         <amOnPage stepKey="amOnPageKey1" url="/test/url"/>
@@ -61,6 +62,7 @@
         <fillField selector=".functionalTestSelector" userInput="someInput" stepKey="fillFieldKey1" />
         <fillField selector=".functionalTestSelector" userInput="0" stepKey="fillFieldKey2" />
         <generateDate date="Now" format="H:i:s" stepKey="generateDateKey"/>
+        <generateDate date="Now" format="H:i:s" stepKey="generateDateKey2" timezone="UTC"/>
         <grabAttributeFrom selector=".functionalTestSelector" userInput="someInput" stepKey="grabAttributeFromKey1" />
         <grabCookie userInput="grabCookieInput" parameterArray="['domain' => 'www.google.com']" stepKey="grabCookieKey1" />
         <grabFromCurrentUrl regex="/grabCurrentUrl" stepKey="grabFromCurrentUrlKey1" />

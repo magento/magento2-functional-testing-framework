@@ -96,27 +96,22 @@ class ModuleResolverTest extends MagentoTestCase
         );
 
         // Define the Module paths from app/code
-        $appCodePath = MAGENTO_BP
-            . DIRECTORY_SEPARATOR
-            . 'app' . DIRECTORY_SEPARATOR
-            . 'code' . DIRECTORY_SEPARATOR;
+        $magentoBaseCodePath = MAGENTO_BP;
 
         // Define the Module paths from default TESTS_MODULE_PATH
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
 
-        // Define the Module paths from vendor modules
-        $vendorCodePath = PROJECT_ROOT
-            . DIRECTORY_SEPARATOR
-            . 'vendor' . DIRECTORY_SEPARATOR;
-
         $mockResolver->verifyInvoked('globRelevantPaths', [$modulePath, '']);
         $mockResolver->verifyInvoked(
             'globRelevantPaths',
-            [$appCodePath, DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR .'Mftf']
+            [$magentoBaseCodePath . DIRECTORY_SEPARATOR . "vendor" , 'Test' . DIRECTORY_SEPARATOR .'Mftf']
         );
         $mockResolver->verifyInvoked(
             'globRelevantPaths',
-            [$vendorCodePath, DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR .'Mftf']
+            [
+                $magentoBaseCodePath . DIRECTORY_SEPARATOR . "app" . DIRECTORY_SEPARATOR . "code",
+                'Test' . DIRECTORY_SEPARATOR .'Mftf'
+            ]
         );
     }
 
@@ -151,8 +146,6 @@ class ModuleResolverTest extends MagentoTestCase
             function ($arg1, $arg2) {
                 if ($arg2 === "") {
                     $mockValue = ["somePath" => "somePath"];
-                } elseif (strpos($arg1, "app")) {
-                    $mockValue = ["otherPath" => "otherPath"];
                 } else {
                     $mockValue = ["lastPath" => "lastPath"];
                 }
@@ -161,7 +154,7 @@ class ModuleResolverTest extends MagentoTestCase
         );
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, null, ["somePath"]);
-        $this->assertEquals(["otherPath", "lastPath"], $resolver->getModulesPath());
+        $this->assertEquals(["lastPath", "lastPath"], $resolver->getModulesPath());
         TestLoggingUtil::getInstance()->validateMockLogStatement(
             'info',
             'excluding module',

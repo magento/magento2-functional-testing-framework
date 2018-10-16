@@ -15,6 +15,7 @@ use Magento\FunctionalTestingFramework\Util\Validation\DuplicateNodeValidationUt
 class ActionGroupDom extends Dom
 {
     const ACTION_GROUP_FILE_NAME_ENDING = "ActionGroup.xml";
+    const ACTION_GROUP_META_NAME_ATTRIBUTE = "name";
 
     /**
      * Takes a dom element from xml and appends the filename based on location while also validating the action group
@@ -26,31 +27,25 @@ class ActionGroupDom extends Dom
      */
     public function initDom($xml, $filename = null)
     {
-        $dom = parent::initDom($xml);
+        $dom = parent::initDom($xml, $filename);
 
-        if (strpos($filename, self::ACTION_GROUP_FILE_NAME_ENDING)) {
+        if ($this->checkFilenameSuffix($filename, self::ACTION_GROUP_FILE_NAME_ENDING)) {
+            $actionGroupsNode = $dom->getElementsByTagName('actionGroups')[0];
             $actionGroupNodes = $dom->getElementsByTagName('actionGroup');
+
+            $this->testsValidationUtil->validateChildUniqueness(
+                $actionGroupsNode,
+                $filename,
+                null
+            );
             foreach ($actionGroupNodes as $actionGroupNode) {
                 /** @var \DOMElement $actionGroupNode */
                 $actionGroupNode->setAttribute(self::TEST_META_FILENAME_ATTRIBUTE, $filename);
-                $this->validationUtil->validateChildUniqueness(
+                $this->actionsValidationUtil->validateChildUniqueness(
                     $actionGroupNode,
-                    $filename
+                    $filename,
+                    $actionGroupNode->getAttribute(self::ACTION_GROUP_META_NAME_ATTRIBUTE)
                 );
-                $beforeNode = $actionGroupNode->getElementsByTagName('before')->item(0);
-                $afterNode = $actionGroupNode->getElementsByTagName('after')->item(0);
-                if (isset($beforeNode)) {
-                    $this->validationUtil->validateChildUniqueness(
-                        $beforeNode,
-                        $filename
-                    );
-                }
-                if (isset($afterNode)) {
-                    $this->validationUtil->validateChildUniqueness(
-                        $afterNode,
-                        $filename
-                    );
-                }
                 if ($actionGroupNode->getAttribute(self::TEST_MERGE_POINTER_AFTER) !== "") {
                     $this->appendMergePointerToActions(
                         $actionGroupNode,

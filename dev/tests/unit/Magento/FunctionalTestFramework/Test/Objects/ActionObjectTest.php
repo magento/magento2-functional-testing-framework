@@ -370,6 +370,21 @@ class ActionObjectTest extends MagentoTestCase
         $actionObject->resolveReferences();
     }
 
+    /**
+     * Action object should throw an exception if the timezone provided is not valid.
+     */
+    public function testInvalidTimezoneException()
+    {
+        $this->expectException(TestReferenceException::class);
+
+        $actionObject = new ActionObject('key123', 'generateDate', [
+            'timezone' => "INVALID_TIMEZONE"
+        ]);
+
+        // Call the method under test
+        $actionObject->resolveReferences();
+    }
+
     private function mockSectionHandlerWithElement($elementObject)
     {
         $sectionObject = new SectionObject('SectionObject', ['elementObject' => $elementObject]);

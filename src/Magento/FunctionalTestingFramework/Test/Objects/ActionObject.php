@@ -19,6 +19,7 @@ use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
  * Class ActionObject
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ActionObject
 {
@@ -62,6 +63,7 @@ class ActionObject
     const FUNCTION_CLOSURE_ACTIONS = ['waitForElementChange', 'performOn'];
     const MERGE_ACTION_ORDER_AFTER = 'after';
     const MERGE_ACTION_ORDER_BEFORE = 'before';
+    const ACTION_ATTRIBUTE_TIMEZONE = 'timezone';
     const ACTION_ATTRIBUTE_URL = 'url';
     const ACTION_ATTRIBUTE_SELECTOR = 'selector';
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER = '/\(.+\)/';
@@ -256,6 +258,7 @@ class ActionObject
             $this->resolveSelectorReferenceAndTimeout();
             $this->resolveUrlReference();
             $this->resolveDataInputReferences();
+            $this->validateTimezoneAttribute();
             if ($this->getType() == "deleteData") {
                 $this->validateMutuallyExclusiveAttributes(self::DELETE_DATA_MUTUAL_EXCLUSIVE_ATTRIBUTES);
             }
@@ -521,7 +524,11 @@ class ActionObject
             } elseif (get_class($obj) == SectionObject::class) {
                 list(,$objField) = $this->stripAndSplitReference($match);
                 if ($obj->getElement($objField) == null) {
-                    throw new TestReferenceException("Could not resolve entity reference", ["input" => $inputString]);
+                    throw new TestReferenceException(
+                        "Could not resolve entity reference \"{$inputString}\" "
+                        . "in Action with stepKey \"{$this->getStepKey()}\"",
+                        ["input" => $inputString, "stepKey" => $this->getStepKey()]
+                    );
                 }
                 $parameterized = $obj->getElement($objField)->isParameterized();
                 $replacement = $obj->getElement($objField)->getPrioritizedSelector();
@@ -538,7 +545,11 @@ class ActionObject
                 if (get_class($objectHandler) != DataObjectHandler::class) {
                     return $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $outputString);
                 } else {
-                    throw new TestReferenceException("Could not resolve entity reference", ["input" => $inputString]);
+                    throw new TestReferenceException(
+                        "Could not resolve entity reference \"{$inputString}\" "
+                        . "in Action with stepKey \"{$this->getStepKey()}\"",
+                        ["input" => $inputString, "stepKey" => $this->getStepKey()]
+                    );
                 }
             }
 
@@ -592,6 +603,28 @@ class ActionObject
     }
 
     /**
+     * Validates that the timezone attribute contains a valid value.
+     *
+     * @return void
+     * @throws TestReferenceException
+     */
+    private function validateTimezoneAttribute()
+    {
+        $attributes = $this->getCustomActionAttributes();
+        if (isset($attributes[self::ACTION_ATTRIBUTE_TIMEZONE])) {
+            $timezone = $attributes[self::ACTION_ATTRIBUTE_TIMEZONE];
+            try {
+                new \DateTimeZone($timezone);
+            } catch (\Exception $e) {
+                throw new TestReferenceException(
+                    "Timezone '{$timezone}' is not a valid timezone",
+                    ["stepKey" => $this->getStepKey(), self::ACTION_ATTRIBUTE_TIMEZONE => $timezone]
+                );
+            }
+        }
+    }
+
+    /**
      * Gets the object's dataByName with given $match, differentiating behavior between <array> and <data> nodes.
      * @param string $obj
      * @param string $match
@@ -625,7 +658,7 @@ class ActionObject
     private function resolveParameterization($isParameterized, $replacement, $match, $object)
     {
         if ($isParameterized) {
-            $parameterList = $this->stripAndReturnParameters($match);
+            $parameterList = $this->stripAndReturnParameters($match) ?: [];
             $resolvedReplacement = $this->matchParameterReferences($replacement, $parameterList);
         } else {
             $resolvedReplacement = $replacement;
@@ -649,26 +682,7 @@ class ActionObject
     {
         preg_match_all('/{{[\w.]+}}/', $reference, $varMatches);
         $varMatches[0] = array_unique($varMatches[0]);
-        if (count($varMatches[0]) > count($parameters)) {
-            if (is_array($parameters)) {
-                $parametersGiven = implode(",", $parameters);
-            } elseif ($parameters == null) {
-                $parametersGiven = "NONE";
-            } else {
-                $parametersGiven = $parameters;
-            }
-            throw new TestReferenceException(
-                "Parameter Resolution Failed: Not enough parameters given for reference " .
-                $reference . ". Parameters Given: " . $parametersGiven,
-                ["reference" => $reference, "parametersGiven" => $parametersGiven]
-            );
-        } elseif (count($varMatches[0]) < count($parameters)) {
-            throw new TestReferenceException(
-                "Parameter Resolution Failed: Too many parameters given for reference " .
-                $reference . ". Parameters Given: " . implode(", ", $parameters),
-                ["reference" => $reference, "parametersGiven" => $parameters]
-            );
-        }
+        $this->checkParameterCount($varMatches[0], $parameters, $reference);
 
         //Attempt to Resolve {{data}} references to actual output. Trim parameter for whitespace before processing it.
         //If regex matched it means that it's either a 'StringLiteral' or $key.data$/$$key.data$$ reference.
@@ -696,5 +710,44 @@ class ActionObject
             $reference = str_replace($var, $resolvedParameters[$resolveIndex++], $reference);
         }
         return $reference;
+    }
+
+    /**
+     * Checks count of parameters versus matches
+     *
+     * @param array  $matches
+     * @param array  $parameters
+     * @param string $reference
+     * @return void
+     * @throws \Exception
+     */
+    private function checkParameterCount($matches, $parameters, $reference)
+    {
+        if (count($matches) > count($parameters)) {
+            if (is_array($parameters)) {
+                $parametersGiven = implode(",", $parameters);
+            } elseif ($parameters == null) {
+                $parametersGiven = "NONE";
+            } else {
+                $parametersGiven = $parameters;
+            }
+            throw new TestReferenceException(
+                "Parameter Resolution Failed: Not enough parameters given for reference " .
+                $reference . ". Parameters Given: " . $parametersGiven,
+                ["reference" => $reference, "parametersGiven" => $parametersGiven]
+            );
+        } elseif (count($matches) < count($parameters)) {
+            throw new TestReferenceException(
+                "Parameter Resolution Failed: Too many parameters given for reference " .
+                $reference . ". Parameters Given: " . implode(", ", $parameters),
+                ["reference" => $reference, "parametersGiven" => $parameters]
+            );
+        } elseif (count($matches) == 0) {
+            throw new TestReferenceException(
+                "Parameter Resolution Failed: No parameter matches found in parameterized element with selector " .
+                $reference,
+                ["reference" => $reference]
+            );
+        }
     }
 }

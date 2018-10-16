@@ -2,10 +2,8 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
-use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
-use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -17,7 +15,7 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("A Functional Cest")
+ * @Title("[NO TESTCASEID]: A Functional Cest")
  * @group functional
  */
 class BasicFunctionalTestCest
@@ -62,6 +60,9 @@ class BasicFunctionalTestCest
 	{
 		$I->comment("");
 		$I->comment("");
+		$I->skipReadinessCheck(true);
+		$I->comment("skipReadiness");
+		$I->skipReadinessCheck(false);
 		$someVarDefinition = $I->grabValueFrom();
 		$I->acceptPopup();
 		$I->amOnPage("/test/url");
@@ -77,7 +78,10 @@ class BasicFunctionalTestCest
 		$I->closeTab();
 		$I->conditionalClick(".functionalTestSelector", ".functionalDependentTestSelector", true);
 		$I->amGoingTo("delete entity that has the createDataKey: createKey1");
-		$createKey1->deleteEntity();
+		PersistedObjectHandler::getInstance()->deleteEntity(
+			"createKey1",
+			"test"
+		);
 		$I->deleteEntityByUrl("/V1/categories{$grabbedData}");
 		$I->dontSee("someInput", ".functionalTestSelector");
 		$I->dontSeeCheckboxIsChecked(".functionalTestSelector");
@@ -103,6 +107,10 @@ class BasicFunctionalTestCest
 		$date->setTimestamp(strtotime("Now"));
 		$date->setTimezone(new \DateTimeZone("America/Los_Angeles"));
 		$generateDateKey = $date->format("H:i:s");
+		$date = new \DateTime();
+		$date->setTimestamp(strtotime("Now"));
+		$date->setTimezone(new \DateTimeZone("UTC"));
+		$generateDateKey2 = $date->format("H:i:s");
 		$grabAttributeFromKey1 = $I->grabAttributeFrom(".functionalTestSelector", "someInput");
 		$grabCookieKey1 = $I->grabCookie("grabCookieInput", ['domain' => 'www.google.com']);
 		$grabFromCurrentUrlKey1 = $I->grabFromCurrentUrl("/grabCurrentUrl");
@@ -120,9 +128,9 @@ class BasicFunctionalTestCest
 		$I->pauseExecution();
 		$I->performOn("#selector", function(\WebDriverElement $el) {return $el->isDisplayed();});
 		$I->pressKey("#page", "a");
-		$I->pressKey("#page", ['ctrl','a'],'new');
-		$I->pressKey("#page", ['shift','111'],'1','x');
-		$I->pressKey("#page", ['ctrl', 'a'],\Facebook\WebDriver\WebDriverKeys::DELETE);
+		$I->pressKey("#page", ['ctrl', 'a'],'new');
+		$I->pressKey("#page", ['shift', '111'],'1','x');
+		$I->pressKey("#page", ['ctrl',  'a'],\Facebook\WebDriver\WebDriverKeys::DELETE);
 		$I->reloadPage();
 		$I->resetCookie("cookieInput");
 		$I->resizeWindow(0, 0);

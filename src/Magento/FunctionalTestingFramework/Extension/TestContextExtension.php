@@ -6,15 +6,14 @@
 
 namespace Magento\FunctionalTestingFramework\Extension;
 
-use \Codeception\Codecept;
-use \Codeception\Events;
-use Magento\FunctionalTestingFramework\Extension\ErrorLogger;
+use Codeception\Events;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 
 /**
  * Class TestContextExtension
  * @SuppressWarnings(PHPMD.UnusedPrivateField)
  */
-class TestContextExtension extends \Codeception\Extension
+class TestContextExtension extends BaseExtension
 {
     const TEST_PHASE_AFTER = "_after";
     const CODECEPT_AFTER_VERSION = "2.3.9";
@@ -23,11 +22,36 @@ class TestContextExtension extends \Codeception\Extension
      * Codeception Events Mapping to methods
      * @var array
      */
-    public static $events = [
-        Events::TEST_FAIL => 'testFail',
-        Events::STEP_AFTER => 'afterStep',
-        Events::TEST_END => 'testError'
-    ];
+    public static $events;
+
+    /**
+     * Initialize local vars
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function _initialize()
+    {
+        $events = [
+            Events::TEST_START => 'testStart',
+            Events::TEST_FAIL => 'testFail',
+            Events::STEP_AFTER => 'afterStep',
+            Events::TEST_END => 'testEnd'
+        ];
+        self::$events = array_merge(parent::$events, $events);
+        parent::_initialize();
+    }
+
+    /**
+     * Codeception event listener function, triggered on test start.
+     * @throws \Exception
+     * @return void
+     */
+    public function testStart()
+    {
+        PersistedObjectHandler::getInstance()->clearHookObjects();
+        PersistedObjectHandler::getInstance()->clearTestObjects();
+    }
 
     /**
      * Codeception event listener function, triggered on test failure.
@@ -46,11 +70,12 @@ class TestContextExtension extends \Codeception\Extension
     }
 
     /**
-     * Codeception event listener function, triggered on test error.
+     * Codeception event listener function, triggered on test ending (naturally or by error).
      * @param \Codeception\Event\TestEvent $e
      * @return void
+     * @throws \Exception
      */
-    public function testError(\Codeception\Event\TestEvent $e)
+    public function testEnd(\Codeception\Event\TestEvent $e)
     {
         $cest = $e->getTest();
 
@@ -63,20 +88,27 @@ class TestContextExtension extends \Codeception\Extension
         ));
         $errors = $testResultObject->errors();
         if (!empty($errors)) {
-            $stack = $errors[0]->thrownException()->getTrace();
-            $context = $this->extractContext($stack, $cest->getTestMethod());
-            // Do not attempt to run _after if failure was in the _after block
-            // Try to run _after but catch exceptions to prevent them from overwriting original failure.
-            if ($context != TestContextExtension::TEST_PHASE_AFTER) {
-                $this->runAfterBlock($e, $cest);
+            foreach ($errors as $error) {
+                if ($error->failedTest()->getTestMethod() == $cest->getName()) {
+                    $stack = $errors[0]->thrownException()->getTrace();
+                    $context = $this->extractContext($stack, $cest->getTestMethod());
+                    // Do not attempt to run _after if failure was in the _after block
+                    // Try to run _after but catch exceptions to prevent them from overwriting original failure.
+                    if ($context != TestContextExtension::TEST_PHASE_AFTER) {
+                        $this->runAfterBlock($e, $cest);
+                    }
+                    continue;
+                }
             }
         }
+        // Reset Session and Cookies after all Test Runs, workaround due to functional.suite.yml restart: true
+        $this->getDriver()->_runAfter($e->getTest());
     }
 
     /**
      * Runs cest's after block, if necessary.
-     * @param Symfony\Component\EventDispatcher\Event $e
-     * @param \Codeception\TestInterface              $cest
+     * @param \Symfony\Component\EventDispatcher\Event $e
+     * @param \Codeception\TestInterface               $cest
      * @return void
      */
     private function runAfterBlock($e, $cest)
@@ -116,16 +148,29 @@ class TestContextExtension extends \Codeception\Extension
     }
 
     /**
+     * Codeception event listener function, triggered before step.
+     * Check if it's a new page.
+     *
+     * @param \Codeception\Event\StepEvent $e
+     * @return void
+     * @throws \Exception
+     */
+    public function beforeStep(\Codeception\Event\StepEvent $e)
+    {
+        if ($this->pageChanged($e->getStep())) {
+            $this->getDriver()->cleanJsError();
+        }
+    }
+
+    /**
      * Codeception event listener function, triggered after step.
      * Calls ErrorLogger to log JS errors encountered.
      * @param \Codeception\Event\StepEvent $e
      * @return void
+     * @throws \Exception
      */
     public function afterStep(\Codeception\Event\StepEvent $e)
     {
-        // @codingStandardsIgnoreStart
-        $webDriver = $this->getModule("\Magento\FunctionalTestingFramework\Module\MagentoWebDriver")->webDriver;
-        // @codingStandardsIgnoreEnd
-        ErrorLogger::getInstance()->logErrors($webDriver, $e);
+        ErrorLogger::getInstance()->logErrors($this->getDriver(), $e);
     }
 }

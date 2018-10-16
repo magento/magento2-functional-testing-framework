@@ -1,0 +1,64 @@
+<?php
+namespace Magento\AcceptanceTest\_default\Backend;
+
+use Magento\FunctionalTestingFramework\AcceptanceTester;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
+use \Codeception\Util\Locator;
+use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
+use Yandex\Allure\Adapter\Annotation\Title;
+use Yandex\Allure\Adapter\Annotation\Description;
+use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
+use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
+
+/**
+ * @Title("[NO TESTCASEID]: ChildExtendedTestSkippedParent")
+ * @group Child
+ */
+class ExtendingSkippedTestCest
+{
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _before(AcceptanceTester $I)
+	{
+		$I->amOnPage("/beforeUrl");
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		$I->amOnPage("/afterUrl");
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _failed(AcceptanceTester $I)
+	{
+		$I->saveScreenshot();
+	}
+
+	/**
+	 * @Severity(level = SeverityLevel::CRITICAL)
+	 * @Features({"TestModule"})
+	 * @Stories({"Child"})
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function ExtendingSkippedTest(AcceptanceTester $I)
+	{
+		$I->comment("text");
+		$I->comment("child");
+	}
+}

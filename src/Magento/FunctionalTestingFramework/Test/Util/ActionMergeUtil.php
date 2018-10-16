@@ -23,6 +23,11 @@ class ActionMergeUtil
     const WAIT_ATTR = 'timeout';
     const WAIT_ACTION_NAME = 'waitForPageLoad';
     const WAIT_ACTION_SUFFIX = 'WaitForPageLoad';
+    const SKIP_READINESS_ACTION_NAME = 'skipReadinessCheck';
+    const SKIP_READINESS_OFF_SUFFIX = 'SkipReadinessOff';
+    const SKIP_READINESS_ON_SUFFIX = 'SkipReadinessOn';
+    const DEFAULT_SKIP_ON_ORDER = 'before';
+    const DEFAULT_SKIP_OFF_ORDER = 'after';
     const DEFAULT_WAIT_ORDER = 'after';
 
     /**
@@ -78,6 +83,7 @@ class ActionMergeUtil
     {
         $this->mergeActions($parsedSteps);
         $this->insertWaits();
+        $this->insertReadinessSkips();
 
         if ($skipActionGroupResolution) {
             return $this->orderedSteps;
@@ -218,6 +224,39 @@ class ActionMergeUtil
     }
 
     /**
+     * Runs through the prepared orderedSteps and calls insertWait if a step requires a wait after it.
+     *
+     * @return void
+     */
+    private function insertReadinessSkips()
+    {
+        foreach ($this->orderedSteps as $step) {
+            if (array_key_exists("skipReadiness", $step->getCustomActionAttributes())) {
+                if ($step->getCustomActionAttributes()['skipReadiness'] == "true") {
+                    $skipReadinessOn = new ActionObject(
+                        $step->getStepKey() . self::SKIP_READINESS_ON_SUFFIX,
+                        self::SKIP_READINESS_ACTION_NAME,
+                        ['state' => "true"],
+                        $step->getStepKey(),
+                        self::DEFAULT_SKIP_ON_ORDER
+                    );
+
+                    $skipReadinessOff = new ActionObject(
+                        $step->getStepKey() . self::SKIP_READINESS_OFF_SUFFIX,
+                        self::SKIP_READINESS_ACTION_NAME,
+                        ['state' => "false"],
+                        $step->getStepKey(),
+                        self::DEFAULT_SKIP_OFF_ORDER
+                    );
+
+                    $this->insertStep($skipReadinessOn);
+                    $this->insertStep($skipReadinessOff);
+                }
+            }
+        }
+    }
+
+    /**
      * This method takes the steps from the parser and splits steps which need merge from steps that are ordered.
      *
      * @param array $parsedSteps
@@ -227,11 +266,19 @@ class ActionMergeUtil
     private function sortActions($parsedSteps)
     {
         foreach ($parsedSteps as $parsedStep) {
-            $parsedStep->resolveReferences();
-            if ($parsedStep->getLinkedAction()) {
-                $this->stepsToMerge[$parsedStep->getStepKey()] = $parsedStep;
-            } else {
-                $this->orderedSteps[$parsedStep->getStepKey()] = $parsedStep;
+            try {
+                $parsedStep->resolveReferences();
+
+                if ($parsedStep->getLinkedAction()) {
+                    $this->stepsToMerge[$parsedStep->getStepKey()] = $parsedStep;
+                } else {
+                    $this->orderedSteps[$parsedStep->getStepKey()] = $parsedStep;
+                }
+            } catch (\Exception $e) {
+                throw new TestReferenceException(
+                    $e->getMessage() .
+                    ".\nException occurred parsing action at StepKey \"" . $parsedStep->getStepKey() . "\""
+                );
             }
         }
     }

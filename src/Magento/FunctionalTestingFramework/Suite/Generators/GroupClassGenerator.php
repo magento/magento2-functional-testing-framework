@@ -129,9 +129,8 @@ class GroupClassGenerator
      */
     private function buildHookMustacheArray($hookObj)
     {
-        $mustacheHookArray = [];
         $actions = [];
-        $hasWebDriverActions = false;
+        $mustacheHookArray['actions'][] = ['webDriverInit' => true];
 
         foreach ($hookObj->getActions() as $action) {
             /** @var ActionObject $action */
@@ -139,10 +138,6 @@ class GroupClassGenerator
             //deleteData contains either url or createDataKey, if it contains the former it needs special formatting
             if ($action->getType() !== "createData"
                 && !array_key_exists(TestGenerator::REQUIRED_ENTITY_REFERENCE, $action->getCustomActionAttributes())) {
-                if (!$hasWebDriverActions) {
-                    $hasWebDriverActions = true;
-                }
-
                 $actions = $this->buildWebDriverActionsMustacheArray($action, $actions, $index);
                 continue;
             }
@@ -159,11 +154,8 @@ class GroupClassGenerator
             $entityArray = $this->buildPersistenceMustacheArray($action, $entityArray);
             $actions[$index] = $entityArray;
         }
-        $mustacheHookArray['actions'] = $actions;
-        if ($hasWebDriverActions) {
-            array_unshift($mustacheHookArray['actions'], ['webDriverInit' => true]);
-            $mustacheHookArray['actions'][] = ['webDriverReset' => true];
-        }
+        $mustacheHookArray['actions'] = array_merge($mustacheHookArray['actions'], $actions);
+        $mustacheHookArray['actions'][] = ['webDriverReset' => true];
 
         return $mustacheHookArray;
     }
@@ -179,7 +171,7 @@ class GroupClassGenerator
      */
     private function buildWebDriverActionsMustacheArray($action, $actionEntries)
     {
-        $step = TestGenerator::getInstance()->generateStepsPhp([$action], false, 'webDriver');
+        $step = TestGenerator::getInstance()->generateStepsPhp([$action], TestGenerator::SUITE_SCOPE, 'webDriver');
         $rawPhp = str_replace(["\t", "\n"], "", $step);
         $multipleCommands = explode(";", $rawPhp, -1);
         foreach ($multipleCommands as $command) {

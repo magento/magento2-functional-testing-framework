@@ -59,4 +59,18 @@ class MftfDom extends \Magento\FunctionalTestingFramework\Config\Dom
         $dom = $this->initDom($xml, $filename, $exceptionCollector);
         $this->mergeNode($dom->documentElement, '');
     }
+
+    /**
+     * Checks if the filename given ends with the correct suffix.
+     * @param string $filename
+     * @param string $suffix
+     * @return boolean
+     */
+    public function checkFilenameSuffix($filename, $suffix)
+    {
+        if (substr_compare($filename, $suffix, -strlen($suffix)) === 0) {
+            return true;
+        }
+        return false;
+    }
 }

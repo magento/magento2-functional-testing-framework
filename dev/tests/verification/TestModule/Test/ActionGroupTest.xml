@@ -144,6 +144,10 @@
         </before>
     </test>
 
+    <test name="ActionGroupSkipReadiness">
+        <actionGroup ref="actionGroupWithSkipReadinessActions" stepKey="skipReadinessActionGroup"/>
+    </test>
+
     <test name="ActionGroupContainsStepKeyInArgText">
         <before>
             <actionGroup ref="actionGroupContainsStepKeyInArgValue" stepKey="actionGroup">
@@ -152,6 +156,19 @@
         </before>
         <actionGroup ref="actionGroupContainsStepKeyInArgValue" stepKey="actionGroup">
             <argument name="sameStepKeyAsArg" value="arg1"/>
+        </actionGroup>
+    </test>
+
+    <test name="ActionGroupWithSectionAndDataAsArguments">
+        <actionGroup ref="actionGroupWithSectionAndData" stepKey="actionGroup">
+            <argument name="content" value="{{simpleData.firstname}}"/>
+            <argument name="section" value="SampleSection"/>
+        </actionGroup>
+    </test>
+
+    <test name="ActionGroupWithParameterizedElementWithHyphen">
+        <actionGroup ref="SectionArgumentWithParameterizedSelector" stepKey="actionGroup">
+            <argument name="section" value="SampleSection"/>
         </actionGroup>
     </test>
 </tests>
