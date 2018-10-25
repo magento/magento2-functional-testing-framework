@@ -5,10 +5,11 @@
  */
 namespace Magento\FunctionalTestingFramework\Allure\Adapter;
 
-use Magento\FunctionalTestingFramework\Data\Argument\Interpreter\NullType;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Yandex\Allure\Adapter\AllureAdapter;
 use Yandex\Allure\Adapter\Event\StepStartedEvent;
+use Yandex\Allure\Adapter\Event\StepFinishedEvent;
+use Yandex\Allure\Adapter\Event\StepFailedEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\StepEvent;
 
