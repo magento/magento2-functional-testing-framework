@@ -118,4 +118,18 @@ class MagentoAllureAdapter extends AllureAdapter
         $this->emptyStep = false;
         $this->getLifecycle()->fire(new StepStartedEvent($stepName));
     }
+
+    /**
+     * Override of parent method, fires StepFailedEvent if step has failed (for xml output)
+     * @param StepEvent $stepEvent
+     * @throws \Yandex\Allure\Adapter\AllureException
+     * @return void
+     */
+    public function stepAfter(StepEvent $stepEvent)
+    {
+        if ($stepEvent->getStep()->hasFailed()) {
+            $this->getLifecycle()->fire(new StepFailedEvent());
+        }
+        $this->getLifecycle()->fire(new StepFinishedEvent());
+    }
 }
