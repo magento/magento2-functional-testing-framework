@@ -98,7 +98,7 @@ class ParallelGroupSorterTest extends MagentoTestCase
         $actualResult = $testSorter->getTestsGroupedBySize($sampleSuiteArray, $sampleTestArray, 500);
 
         // verify the resulting groups
-        $this->assertCount(4, $actualResult);
+        $this->assertCount(5, $actualResult);
 
         $expectedResults =  [
             1 => ['mockSuite1_0'],
