@@ -1,5 +1,9 @@
 Magento Functional Testing Framework Changelog
 ================================================
+2.3.9
+-----
+### Fixes
+* Logic for parallel execution were updated to split default tests and suites from running in one group.
 
 2.3.8
 -----
