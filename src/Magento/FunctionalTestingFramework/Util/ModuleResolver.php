@@ -336,7 +336,8 @@ class ModuleResolver
         foreach ($enabledModules as $magentoModuleName) {
             if (!isset($this->knownDirectories[$magentoModuleName]) && !isset($allModulePaths[$magentoModuleName])) {
                 continue;
-            } elseif (isset($this->knownDirectories[$magentoModuleName]) && !isset($allModulePaths[$magentoModuleName])) {
+            } elseif (isset($this->knownDirectories[$magentoModuleName])
+                && !isset($allModulePaths[$magentoModuleName])) {
                 LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->warn(
                     "Known directory could not match to an existing path.",
                     ['knownDirectory' => $magentoModuleName]

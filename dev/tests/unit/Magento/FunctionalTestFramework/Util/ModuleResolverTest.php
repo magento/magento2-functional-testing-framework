@@ -57,7 +57,13 @@ class ModuleResolverTest extends MagentoTestCase
     public function testGetModulePathsAggregate()
     {
         $this->mockForceGenerate(false);
-        $this->setMockResolverClass(false, null, null, null, ["Magento_example" => "example" . DIRECTORY_SEPARATOR . "paths"]);
+        $this->setMockResolverClass(
+            false,
+            null,
+            null,
+            null,
+            ["Magento_example" => "example" . DIRECTORY_SEPARATOR . "paths"]
+        );
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, [0 => "Magento_example"]);
         $this->assertEquals(
