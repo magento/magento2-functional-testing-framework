@@ -9,12 +9,13 @@ use AspectMock\Test as AspectMock;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\OperationDefinitionObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\OperationDataArrayResolver;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 use tests\unit\Util\EntityDataObjectBuilder;
 use tests\unit\Util\OperationDefinitionBuilder;
 use tests\unit\Util\OperationElementBuilder;
+use tests\unit\Util\TestLoggingUtil;
 
-class OperationDataArrayResolverTest extends TestCase
+class OperationDataArrayResolverTest extends MagentoTestCase
 {
     const NESTED_METADATA_EXPECTED_RESULT = ["parentType" => [
         "name" => "Hopper",
@@ -34,6 +35,15 @@ class OperationDataArrayResolverTest extends TestCase
             ["city" => "Austin", "state" => "Texas", "zip" => 78701],
         ]
     ]];
+
+    /**
+     * Before test functionality
+     * @return void
+     */
+    public function setUp()
+    {
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
+    }
 
     /**
      * Test a basic metadata resolve between primitive values and a primitive data set
@@ -343,5 +353,14 @@ class OperationDataArrayResolverTest extends TestCase
 
         // Do assert on result here
         $this->assertEquals(self::NESTED_METADATA_ARRAY_RESULT, $result);
+    }
+
+    /**
+     * After class functionality
+     * @return void
+     */
+    public static function tearDownAfterClass()
+    {
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 }

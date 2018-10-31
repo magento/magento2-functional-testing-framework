@@ -8,12 +8,12 @@ namespace tests\unit\Magento\FunctionalTestFramework\Page\Objects;
 
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Page\Objects\ElementObject;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 
 /**
  * Class ElementObjectTest
  */
-class ElementObjectTest extends TestCase
+class ElementObjectTest extends MagentoTestCase
 {
     /**
      * Timeout should be null when instantiated with '-'

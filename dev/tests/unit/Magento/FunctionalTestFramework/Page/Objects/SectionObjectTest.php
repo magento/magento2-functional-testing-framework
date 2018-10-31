@@ -8,12 +8,12 @@ namespace tests\unit\Magento\FunctionalTestFramework\Page\Objects;
 
 use Magento\FunctionalTestingFramework\Page\Objects\ElementObject;
 use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 
 /**
  * Class SectionObjectTest
  */
-class SectionObjectTest extends TestCase
+class SectionObjectTest extends MagentoTestCase
 {
     /**
      * Assert that the section object has an element

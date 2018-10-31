@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="ExecuteJsEscapingTest">
+        <executeJS function="return $javascriptVariable" stepKey="javaVariableEscape"/>
+        <executeJS function="return {$doNotEscape}" stepKey="mftfVariableNotEscaped"/>
+        <executeJS function="return $persisted.data$" stepKey="persistedDataNotEscaped"/>
+        <executeJS function="return $$persisted.data$$" stepKey="hookPersistedDataNotEscaped"/>
+        <executeJS function="document.querySelector('entity option[value=$$productAttribute.attribute_code$$]').setAttribute('selected', 'selected')" stepKey="addNewAttributeForRule"/>
+    </test>
+</tests>

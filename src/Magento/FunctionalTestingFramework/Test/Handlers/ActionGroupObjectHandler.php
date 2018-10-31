@@ -11,6 +11,7 @@ use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Parsers\ActionGroupDataParser;
 use Magento\FunctionalTestingFramework\Test\Util\ActionGroupObjectExtractor;
+use Magento\FunctionalTestingFramework\Test\Util\ObjectExtensionUtil;
 
 /**
  * Class ActionGroupObjectHandler
@@ -36,6 +37,13 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
     private $actionGroups = [];
 
     /**
+     * Instance of ObjectExtensionUtil class
+     *
+     * @var ObjectExtensionUtil
+     */
+    private $extendUtil;
+
+    /**
      * Singleton getter for instance of ActionGroupObjectHandler
      *
      * @return ActionGroupObjectHandler
@@ -55,7 +63,7 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
      */
     private function __construct()
     {
-        // private constructor
+        $this->extendUtil = new ObjectExtensionUtil();
     }
 
     /**
@@ -66,8 +74,9 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
      */
     public function getObject($actionGroupName)
     {
-        if (array_key_exists($actionGroupName, $this->getAllObjects())) {
-            return $this->getAllObjects()[$actionGroupName];
+        if (array_key_exists($actionGroupName, $this->actionGroups)) {
+            $actionGroupObject = $this->actionGroups[$actionGroupName];
+            return $this->extendActionGroup($actionGroupObject);
         }
 
         return null;
@@ -80,6 +89,9 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
      */
     public function getAllObjects()
     {
+        foreach ($this->actionGroups as $actionGroupName => $actionGroup) {
+            $this->actionGroups[$actionGroupName] = $this->extendActionGroup($actionGroup);
+        }
         return $this->actionGroups;
     }
 
@@ -105,5 +117,19 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
             $this->actionGroups[$actionGroupName] =
                 $actionGroupObjectExtractor->extractActionGroup($actionGroupData);
         }
+    }
+
+    /**
+     * This method checks if the action group is extended and creates a new action group object accordingly
+     *
+     * @param ActionGroupObject $actionGroupObject
+     * @return ActionGroupObject
+     */
+    private function extendActionGroup($actionGroupObject)
+    {
+        if ($actionGroupObject->getParentName() !== null) {
+            return $this->extendUtil->extendActionGroup($actionGroupObject);
+        }
+        return $actionGroupObject;
     }
 }

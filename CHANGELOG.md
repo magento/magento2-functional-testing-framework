@@ -1,5 +1,194 @@
 Magento Functional Testing Framework Changelog
 ================================================
+2.3.9
+-----
+### Fixes
+* Logic for parallel execution were updated to split default tests and suites from running in one group.
+
+2.3.8
+-----
+### Fixes
+* `ModuleResolver` will now only scan under `MAGENTO_BP/app/code/...` and `MAGENTO_BP/vendor/...` for `/Test/Mftf` directories.
+* Fixed an issue where `Test.xml` files that did not end with `*Test.xml` would not be scanned for duplicates and other XML validation.
+
+2.3.7
+-----
+### Enhancements
+* Traceability
+    * Test generation errors output xml filename where they were encountered, as well as xml parent nodes where applicable.
+    * Duplicate element detection now outputs parent element where duplicate was found.
+* Maintainability
+    * Standalone MFTF can now be pointed at a Magento installation folder to generate and execute tests.
+        * See DevDocs for more information.
+    * MFTF now checks for `test` and `actionGroup` elements that have the same `name` in the same file.
+* Customizability
+    * Updated prefered syntax for `actionGroup` `argument`s that use `xml.data` (old syntax is still supported)
+        * Old: `xml.data`
+        * New: `{{xml.data}}`
+* Modularity
+    * `ModuleResolver` now utilizes each Magento module's `registration.php` to map MFTF test material directories.
+### Fixes
+* The `waitForPageLoad` action now correctly uses the given `timeout` attribute for all of its checks.
+* Firefox compatibility issues in javascript error logging were fixed.
+* Fixed an issue where arguments containing `-` would not properly resolve parameterized selectors.
+* Fixed an issue where actions using `parameterArray` would not resolve `$persisted.data$` references.
+* Fixed an issue where composer installations of Magento would fail to parse MFTF materials under a path `vendor/magento/module-<module>/`
+
+2.3.6
+-----
+### Enhancements
+* Maintainability
+    * A `-r` or `--remove` flag has been introduced to `bin/mftf` commands to clear out the contents of the `_generated` folder before generation. This flag has been added to the following commands:
+        * `generate:tests`
+        * `generate:suite`
+        * `run:test`
+        * `run:group`
+* Customizability
+    * Persisted data handling mechanisms have been reworked.
+        * All persisted data is now referenced with the single `$` syntax (old syntax is still supported):
+            * `$persistedData.field$`
+        * Persisted data resolution now starts in its own scope and broadens if no matching `stepKey` was found in the current scope.
+        * Added support for referencing `suite` persisted data in tests.
+        * Added support for removing data created in between test scopes (`test`, `before/after`, `suite`).
+    * An attribute `skipReadiness` has been added to all test actions, allowing the individual test action to completely bypass the `ReadinessExtension` if it is enabled.
+
+### Fixes
+* To prevent Allure reporting from collating tests with identical `title`, the `testCaseId` annotation is now automatically prepended to the `title` annotation when tests are generated.
+* The `magentoCLI` command now correctly removes `index.php` if it is present in the `MAGENTO_BASE_URL`.
+* Invalid XML errors now indicate which XML file caused the error.
+* Attempting to `extend` a test that does not exist now skips the generation of the test.
+* Fixed an issue where a `suite` would generate invalid PHP if the `before` or `after` contained only `createData` actions.
+* Fixed an issue where a selector inside an `actionGroup` would incorrectly append the `actionGroup`'s `stepKey` to the selector.
+
+2.3.5
+-----
+### Fixes
+* Removed `PageReadinessExtension` from default enabled extensions due to Jenkins instability.
+
+2.3.4
+-----
+### Fixes
+* MagentoWebDriver overrides `parent::_after()` function and remaps to `runAfter()`, necessary to solve compatibility issues in Codeception `2.3.x`.
+
+2.3.3
+-----
+### Fixes
+* Defaults in `etc/config/functional.suite.dist.yml` changed: window-size to `1280x1024`, and removed `--ingonito` flag.
+
+2.3.2
+-----
+### Fixes
+* The `executeJs` `function` no longer escapes persisted variables referenced via `$$persisted.key$$`.
+* Extending a test no longer fails to generate the parent `test`'s `before`/`after` blocks if the parent was skipped.
+
+2.3.1
+-----
+### Enhancements  
+* Maintainability
+    * `mftf build:project` now copies over the `command.php` file into the parent Magento installation, if detected.
+
+2.3.0
+-----
+### Enhancements  
+* Traceability
+    * MFTF now outputs generation run-time information, warnings, and errors to an `mftf.log` file. 
+    * Overall error messages for various generation errors have been improved. Usage of the `--debug` flag provides file-specific errors for all XML-related errors.
+    * Allure Reports now require a unique `story` and `title` combination, to prevent collisions in Allure Report generation.
+    * The `features` annotation now ignores user input and defaults to the module the test lives under (for clear Allure organization).
+    * The `<group value="skip"/>` annotation has been replaced with a `<skip>` annotation, allowing for nested `IssueId` elements.
+    * Tests now require the following annotations: `stories`, `title`, `description`, `severity`.
+        * This will be enforced in a future major release.
+* Modularity
+    * MFTF has been decoupled from MagentoCE:
+        * MFTF can now generate and run tests by itself via `bin/mftf` commands.
+        * It is now a top level MagentoCE dependency, and no longer relies on supporting files in MagentoCE.
+        * It can be used as an isolated dependency for Magento projects such as extensions.
+    * `generate:tests` now warns the user if any declared `<page>` has an inconsistent `module` (`Backend` vs `Magento_Backend`)
+    * The `--force` flag now completely ignores checking of the Magento Installation, allowing generation of tests without a Magento Instance to be running.
+* Customizability
+    * Various test materials can now be extended via an `extends="ExistingMaterial"` attribute. This allows for creation of simple copies of any `entity`, `actionGroup`, or `test`, with small modifications.
+    * `test` and `actionGroup` deltas can now be provided in bulk via a `before/after` attribute on the `test` or `actionGroup` element. Deltas provided this way do not need individual `before/after` attributes, and are inserted sequentially.
+    * Secure and sensitive test data can now be stored and used via a new `.credentials` file, with declaration and usage syntax similar to `.env` file references.
+    * A new `<generateDate>` action has been added to allow users to create and use dates according to the given `date` and `format`.
+        * See DevDocs for more information on all above `Customizability` features.
+* Maintainability
+    * New `bin/mftf` commands have been introduced with parity to existing `robo` commands.
+        * `robo` commands are still supported, but will be deprecated in a future major release.
+    * The `mftf upgrade:tests` command has been introduced, which runs all test upgrade scripts against the provided path.
+        * A new upgrade script was created to replace all test material schema paths to instead use a URN path.
+    * The `mftf generate:urn-catalog` command has been introduced to create a URN catalog in PHPStorm to support the above upgrade.
+    * A warning is now shown on generation if a page's url is referenced without specifying the url (`{{page}}` vs `{{page.url}}`).
+    * An error is now thrown if any test materials contain any overriding element (eg different `<element>`s in a `<section>` with the same `name`)
+        * This previously would cause the last read element to override the previous, causing a silent but potentially incorrect test addition.
+    * Test distribution algorithm for `--config parallel` has been enhanced to take average step length into account.
+
+### Fixes
+* `_after` hook of tests now executes if a non test-related failure causes the test to error.
+* Fixed periods in Allure Report showing up as `•`.
+* Fixed Windows incompatibility of relative paths in various files.
+* Suites will no longer generate if they do not contain any tests.
+* Fixed an issue in generation where users could not use javascript variables in `executeJS` actions.
+* Fixed an issue in generation where entity replacement in action-groups replaced all entities with the first reference found.
+* Fixed an issue in generation where `createData` actions inside `actionGroups` could not properly reference the given `createDataKey`.
+* Fixed an issue where `suites` could not generate if they included an `actionGroup` with two arguments.
+* Fixed an issue in generation where calling the same entity twice (with different parameters) would replace both calls with the first resolved value.
+* The `magentoCLI` action now correctly executes the given command if the `MAGENTO_BASE_URL` contains `index.php` after the domain (ex `https://magento.instance/index.php`)
+* The `stepKey` attribute can no longer be an empty.
+* Variable substitution has been enabled for `regex` and `command` attributes in test actions.
+
+### GitHub Issues/Pull requests:
+* [#161](https://github.com/magento/magento2-functional-testing-framework/pull/161) -- MAGETWO-46837: Implementing extension to wait for readiness metrics.
+* [#72](https://github.com/magento/magento2-functional-testing-framework/issues/72) -- declare(strict_types=1) causes static code check failure (fixed in [#154](https://github.com/magento/magento2-functional-testing-framework/pull/154))
+
+2.2.0
+-----
+### Enhancements  
+* Traceability
+    * Javascript errors are now logged and reported in test output.
+    * Test failures are no longer overwritten by failures in an `<after>` hook.
+    * Tests will no longer execute an `<after>` hook twice if a failure triggered in the `<after>` hook.
+    * Tests marked with `<group value="skip">` will now appear in generated Allure reports.
+        * Along with the above, the `robo group` command no longer omits the `skip` group (skipped tests are picked up but not fully executed).
+* Modularity
+    * MFTF no longer relies on relative pathing to determine its path to tests or Magento (favoring composer information if available).
+    * Tests and test materials are now read in from Magento modules as well as extensions in addition to `dev/tests/acceptance`.
+        * See DevDocs `Getting Started` for details on expected paths and merge order.
+* Customizability
+    * Creation of Suites is now supported
+        * `<suite>` can include tests via `name`, module, or `<group>` tags.
+        * Consolidation of preconditions can be achieved via use of `<before/after>` tags in a `<suite>`
+            * All normal test actions are supported
+            * Data returned from actions is not available for reference in subsequent tests (`createData` or `grab` actions).
+        * `robo generate:tests` generates all suites and tests, and can be given a JSON configuration to generate specific test/suites.
+        * See MFTF Devdocs "Suite" page for more details.
+    * `<deleteData>` may now be called against a `url` instead of a stepKey reference.
+    * `<dragAndDrop>` may now be given an additional `x/y` offset.
+    * `<executeJS>` now returns a variable based on what the executed script returns.
+    * Added `<element>` `type="block"`.
+    * `<page>` elements may now be blank (contain no child sections).
+* Maintainability
+    * `robo generate:tests --config parallel` now accepts a `--lines` argument, for grouping and sorting based on test length.
+    * `robo generate:tests` now checks for:
+        * Duplicate step keys within an `actionGroup`.
+        * Ambiguous or invalid `stepKey` references (in merge files).
+    * `robo generate:tests` now suppresses warnings by default. The command now accepts a `--verbose` flag to show full output including warnings.
+
+### Fixes
+* Exception message for the `<conditionalClick>` action now correctly references the `selector` given.
+* Usage of multiple parameterized elements in a `selector` now correctly resolves all element references.
+* Usage of multiple uniqueness references on the same entity now generate correctly.
+* Persisted entity references are correctly interpolated with `<page>` url of `type="admin"`.
+* Metadata that contains 2 or more params in its `url` now correctly resolve parameters.
+* Arguments can now be passed to `x` and `y` attributes in `actionGroup`.
+* Arguments can now be passed to nested `<assert*>` action elements.
+* The `<seeInField>` action can now be used to assert against empty strings.
+* Empty `<data>` elements within an `<entity>` now generate correctly.
+* Mapping of the `<magentoCLI>` to the custom command has been fixed.
+
+### GitHub Issues/Pull requests:
+* [#89](https://github.com/magento/magento2-functional-testing-framework/pull/89) -- Add ability to use array entities as arguments.
+* [#68](https://github.com/magento/magento2-functional-testing-framework/issues/68) -- Excessive double quotes are being generated in WaitForElementChange method arguments (fixed in [#103](https://github.com/magento/magento2-functional-testing-framework/pull/103))
+* [#31](https://github.com/magento/magento2-functional-testing-framework/issues/31) -- Can't run tests without a store having "default" store code (fixed in [#86](https://github.com/magento/magento2-functional-testing-framework/pull/86))
 
 2.1.2
 -----

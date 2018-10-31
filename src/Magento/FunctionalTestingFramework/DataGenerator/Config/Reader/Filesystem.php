@@ -20,15 +20,15 @@ class Filesystem extends \Magento\FunctionalTestingFramework\Config\Reader\Files
     /**
      * Constructor
      *
-     * @param \Magento\FunctionalTestingFramework\Config\FileResolverInterface $fileResolver
-     * @param \Magento\FunctionalTestingFramework\Config\ConverterInterface $converter
-     * @param \Magento\FunctionalTestingFramework\Config\SchemaLocatorInterface $schemaLocator
+     * @param \Magento\FunctionalTestingFramework\Config\FileResolverInterface    $fileResolver
+     * @param \Magento\FunctionalTestingFramework\Config\ConverterInterface       $converter
+     * @param \Magento\FunctionalTestingFramework\Config\SchemaLocatorInterface   $schemaLocator
      * @param \Magento\FunctionalTestingFramework\Config\ValidationStateInterface $validationState
-     * @param string $fileName
-     * @param array $idAttributes
-     * @param array $mergeablePaths
-     * @param string $domDocumentClass
-     * @param string $defaultScope
+     * @param string                                                              $fileName
+     * @param array                                                               $idAttributes
+     * @param array                                                               $mergeablePaths
+     * @param string                                                              $domDocumentClass
+     * @param string                                                              $defaultScope
      */
     public function __construct(
         \Magento\FunctionalTestingFramework\Config\FileResolverInterface $fileResolver,

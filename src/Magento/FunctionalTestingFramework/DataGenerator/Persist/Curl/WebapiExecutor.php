@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
 
@@ -54,12 +55,14 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
      * WebapiExecutor Constructor.
      *
      * @param string $storeCode
+     * @throws TestFrameworkException
      */
-    public function __construct($storeCode = 'default')
+    public function __construct($storeCode = null)
     {
         if (!isset(parent::$baseUrl)) {
             parent::resolveBaseUrl();
         }
+
         $this->storeCode = $storeCode;
         $this->transport = new CurlTransport();
         $this->authorize();
@@ -69,10 +72,11 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
      * Returns the authorization token needed for some requests via REST call.
      *
      * @return void
+     * @throws TestFrameworkException
      */
     protected function authorize()
     {
-        $authUrl = parent::$baseUrl . 'rest/' . $this->storeCode . self::ADMIN_AUTH_URL;
+        $authUrl = $this->getFormattedUrl(self::ADMIN_AUTH_URL);
         $authCreds = [
             'username' => getenv('MAGENTO_ADMIN_USERNAME'),
             'password' => getenv('MAGENTO_ADMIN_PASSWORD')
@@ -89,15 +93,16 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
      * Send request to the remote server.
      *
      * @param string $url
-     * @param array $data
+     * @param array  $data
      * @param string $method
-     * @param array $headers
+     * @param array  $headers
      * @return void
+     * @throws TestFrameworkException
      */
     public function write($url, $data = [], $method = CurlInterface::POST, $headers = [])
     {
         $this->transport->write(
-            parent::$baseUrl . 'rest/' . $this->storeCode . '/' . trim($url, '/'),
+            $this->getFormattedUrl($url),
             json_encode($data, JSON_PRETTY_PRINT),
             $method,
             array_unique(array_merge($headers, $this->headers))
@@ -110,6 +115,7 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
      * @param string $successRegex
      * @param string $returnRegex
      * @return string
+     * @throws TestFrameworkException
      */
     public function read($successRegex = null, $returnRegex = null)
     {
@@ -120,8 +126,8 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
     /**
      * Add additional option to cURL.
      *
-     * @param  int $option the CURLOPT_* constants
-     * @param  int|string|bool|array $value
+     * @param  integer                      $option CURLOPT_* constants.
+     * @param  integer|string|boolean|array $value
      * @return void
      */
     public function addOption($option, $value)
@@ -137,5 +143,20 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
     public function close()
     {
         $this->transport->close();
+    }
+
+    /**
+     * Builds and returns URL for request, appending storeCode if needed.
+     * @param string $resource
+     * @return string
+     */
+    public function getFormattedUrl($resource)
+    {
+        $urlResult = parent::$baseUrl . 'rest/';
+        if ($this->storeCode != null) {
+            $urlResult .= $this->storeCode . "/";
+        }
+        $urlResult.= trim($resource, "/");
+        return $urlResult;
     }
 }

@@ -24,10 +24,10 @@ class Factory extends \Magento\FunctionalTestingFramework\ObjectManager\Factory\
 
     /**
      * Factory constructor.
-     * @param ConfigInterface $config
+     * @param ConfigInterface                                                 $config
      * @param \Magento\FunctionalTestingFramework\ObjectManagerInterface|null $objectManager
-     * @param DefinitionInterface|null $definitions
-     * @param array $globalArguments
+     * @param DefinitionInterface|null                                        $definitions
+     * @param array                                                           $globalArguments
      */
     public function __construct(
         ConfigInterface $config,
@@ -77,7 +77,7 @@ class Factory extends \Magento\FunctionalTestingFramework\ObjectManager\Factory\
      *
      * @param object $object
      * @param string $method
-     * @param array $arguments
+     * @param array  $arguments
      * @return array
      */
     public function prepareArguments($object, $method, array $arguments = [])
@@ -95,8 +95,8 @@ class Factory extends \Magento\FunctionalTestingFramework\ObjectManager\Factory\
      * Resolve constructor arguments
      *
      * @param string $requestedType
-     * @param array $parameters
-     * @param array $arguments
+     * @param array  $parameters
+     * @param array  $arguments
      * @return array
      * @throws \UnexpectedValueException
      * @throws \BadMethodCallException
@@ -177,7 +177,7 @@ class Factory extends \Magento\FunctionalTestingFramework\ObjectManager\Factory\
     /**
      * Parse array argument
      *
-     * @param array &$array
+     * @param array $array
      * @return void
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
@@ -216,7 +216,7 @@ class Factory extends \Magento\FunctionalTestingFramework\ObjectManager\Factory\
      * Create instance with call time arguments
      *
      * @param string $requestedType
-     * @param array $arguments
+     * @param array  $arguments
      * @return object
      * @throws \Exception
      *

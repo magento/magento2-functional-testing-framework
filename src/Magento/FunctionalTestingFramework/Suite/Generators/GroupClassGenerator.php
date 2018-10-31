@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Suite\Generators;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
@@ -27,7 +28,6 @@ class GroupClassGenerator
     const LAST_REQUIRED_ENTITY_TAG = 'last';
     const MUSTACHE_VAR_TAG = 'var';
     const MAGENTO_CLI_COMMAND_COMMAND = 'command';
-    const DATA_PERSISTENCE_ACTIONS = ["createData", "deleteData"];
     const REPLACEMENT_ACTIONS = [
         'comment' => 'print'
     ];
@@ -39,6 +39,16 @@ class GroupClassGenerator
      * @var Mustache_Engine
      */
     private $mustacheEngine;
+
+    /**
+     * Static function to return group directory path for precondition files.
+     *
+     * @return string
+     */
+    public static function getGroupDirPath()
+    {
+        return dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . self::GROUP_DIR_NAME . DIRECTORY_SEPARATOR;
+    }
 
     /**
      * GroupClassGenerator constructor
@@ -59,15 +69,13 @@ class GroupClassGenerator
      *
      * @param SuiteObject $suiteObject
      * @return string
+     * @throws TestReferenceException
      */
     public function generateGroupClass($suiteObject)
     {
         $classContent = $this->createClassContent($suiteObject);
         $configEntry = self::GROUP_DIR_NAME . DIRECTORY_SEPARATOR . $suiteObject->getName();
-        $filePath = dirname(dirname(__DIR__)) .
-            DIRECTORY_SEPARATOR .
-            $configEntry .
-            '.php';
+        $filePath = self::getGroupDirPath() . $suiteObject->getName() . '.php';
         file_put_contents($filePath, $classContent);
 
         return  str_replace(DIRECTORY_SEPARATOR, "\\", $configEntry);
@@ -78,6 +86,7 @@ class GroupClassGenerator
      *
      * @param SuiteObject $suiteObject
      * @return string;
+     * @throws TestReferenceException
      */
     private function createClassContent($suiteObject)
     {
@@ -116,20 +125,19 @@ class GroupClassGenerator
      *
      * @param TestHookObject $hookObj
      * @return array
+     * @throws TestReferenceException
      */
     private function buildHookMustacheArray($hookObj)
     {
-        $mustacheHookArray = [];
         $actions = [];
-        $hasWebDriverActions = false;
+        $mustacheHookArray['actions'][] = ['webDriverInit' => true];
+
         foreach ($hookObj->getActions() as $action) {
             /** @var ActionObject $action */
             $index = count($actions);
-            if (!in_array($action->getType(), self::DATA_PERSISTENCE_ACTIONS)) {
-                if (!$hasWebDriverActions) {
-                    $hasWebDriverActions = true;
-                }
-
+            //deleteData contains either url or createDataKey, if it contains the former it needs special formatting
+            if ($action->getType() !== "createData"
+                && !array_key_exists(TestGenerator::REQUIRED_ENTITY_REFERENCE, $action->getCustomActionAttributes())) {
                 $actions = $this->buildWebDriverActionsMustacheArray($action, $actions, $index);
                 continue;
             }
@@ -146,11 +154,8 @@ class GroupClassGenerator
             $entityArray = $this->buildPersistenceMustacheArray($action, $entityArray);
             $actions[$index] = $entityArray;
         }
-        $mustacheHookArray['actions'] = $actions;
-        if ($hasWebDriverActions) {
-            array_unshift($mustacheHookArray['actions'], ['webDriverInit' => true]);
-            $mustacheHookArray['actions'][] = ['webDriverReset' => true];
-        }
+        $mustacheHookArray['actions'] = array_merge($mustacheHookArray['actions'], $actions);
+        $mustacheHookArray['actions'][] = ['webDriverReset' => true];
 
         return $mustacheHookArray;
     }
@@ -160,12 +165,13 @@ class GroupClassGenerator
      * appends the entry to the given array. The result is returned by the function.
      *
      * @param ActionObject $action
-     * @param array $actionEntries
+     * @param array        $actionEntries
      * @return array
+     * @throws TestReferenceException
      */
     private function buildWebDriverActionsMustacheArray($action, $actionEntries)
     {
-        $step = TestGenerator::getInstance()->generateStepsPhp([$action], false, 'webDriver');
+        $step = TestGenerator::getInstance()->generateStepsPhp([$action], TestGenerator::SUITE_SCOPE, 'webDriver');
         $rawPhp = str_replace(["\t", "\n"], "", $step);
         $multipleCommands = explode(";", $rawPhp, -1);
         foreach ($multipleCommands as $command) {
@@ -180,7 +186,7 @@ class GroupClassGenerator
      * for the generated step.
      *
      * @param string $formattedStep
-     * @param array $actionEntries
+     * @param array  $actionEntries
      * @param string $actor
      * @return array
      */
@@ -203,7 +209,7 @@ class GroupClassGenerator
      * Takes an action object of persistence type and formats an array entiry for mustache template interpretation.
      *
      * @param ActionObject $action
-     * @param array $entityArray
+     * @param array        $entityArray
      * @return array
      */
     private function buildPersistenceMustacheArray($action, $entityArray)

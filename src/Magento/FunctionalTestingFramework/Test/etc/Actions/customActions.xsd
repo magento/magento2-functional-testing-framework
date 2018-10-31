@@ -22,6 +22,7 @@
             <xs:element type="scrollToTopOfPageType" name="scrollToTopOfPage" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="clearFieldType" name="clearField" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertArrayIsSortedType" name="assertArrayIsSorted" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="generateDateType" name="generateDate" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
     </xs:group>
 
@@ -39,6 +40,13 @@
                     <xs:annotation>
                         <xs:documentation>
                             Magento CLI command to be executed. Can be given options just like normal CLI interaction.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute type="xs:string" name="arguments">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Arguments for Magento CLI command, will not be escaped.
                         </xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
@@ -211,6 +219,41 @@
         <xs:attribute name="sortOrder" type="sortEnum" use="required"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
+
+    <xs:complexType name="generateDateType">
+        <xs:annotation>
+            <xs:documentation>
+                Generates a date according to input and format.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="date" use="required" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Date input to parse, uses same functionality as php strtotime() function.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="format" use="required" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Format to save given date in, uses same functionality as php date() function.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="timezone" use="optional" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Timezone to generate date in, defaults to "America/Los_Angeles".
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
 
     <xs:complexType name="arrayType">
         <xs:simpleContent>

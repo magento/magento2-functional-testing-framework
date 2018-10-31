@@ -19,6 +19,15 @@
         <see selector="{{SampleSection.oneParamElement('test1')}}" userInput="{{someArgument.firstname}}" stepKey="seeFirstName" />
     </actionGroup>
 
+    <actionGroup name="actionGroupWithTwoArguments">
+        <arguments>
+            <argument name="somePerson"/>
+            <argument name="anotherPerson"/>
+        </arguments>
+
+        <see selector="{{anotherPerson.firstname}}" userInput="{{somePerson.firstname}}" stepKey="seeFirstName" />
+    </actionGroup>
+
     <actionGroup name="actionGroupWithSingleParameterSelectorFromArgument">
         <arguments>
             <argument name="someArgument" defaultValue="ReplacementPerson" />
@@ -47,5 +56,74 @@
             <argument name="someArgument" type="entity" defaultValue="stringLiteral"/>
         </arguments>
         <see selector="{{SampleSection.oneParamElement(someArgument)}}" userInput="{{someArgument}}" stepKey="see1" />
+    </actionGroup>
+
+    <actionGroup name="actionGroupWithNestedArgument">
+        <arguments>
+            <argument name="count" defaultValue="10" type="string"/>
+        </arguments>
+        <grabMultiple selector="selector" stepKey="grabProducts"/>
+        <assertCount stepKey="assertCount">
+            <expectedResult type="int">{{count}}</expectedResult>
+            <actualResult type="variable">grabProducts</actualResult>
+        </assertCount>
+    </actionGroup>
+
+    <actionGroup name="ActionGroupToExtend">
+        <arguments>
+            <argument name="count" type="string"/>
+        </arguments>
+        <grabMultiple selector="selector" stepKey="grabProducts"/>
+        <assertCount stepKey="assertCount">
+            <expectedResult type="int">{{count}}</expectedResult>
+            <actualResult type="variable">grabProducts</actualResult>
+        </assertCount>
+    </actionGroup>
+
+    <actionGroup name="extendTestActionGroup" extends="ActionGroupToExtend">
+        <arguments>
+            <argument name="otherCount" type="string"/>
+        </arguments>
+        <grabMultiple selector="notASelector" stepKey="grabProducts"/>
+        <comment userInput="New Input After" stepKey="afterGrabProducts" after="grabProducts"/>
+        <comment userInput="New Input Before" stepKey="beforeGrabProducts" before="grabProducts"/>
+        <assertCount stepKey="assertSecondCount">
+            <expectedResult type="int">{{otherCount}}</expectedResult>
+            <actualResult type="variable">grabProducts</actualResult>
+        </assertCount>
+    </actionGroup>
+
+    <actionGroup name="extendBasicActionGroup">
+        <comment stepKey="removeMe" userInput="This Should Be Removed"/>
+    </actionGroup>
+
+    <actionGroup name="extendRemoveTestActionGroup" extends="extendBasicActionGroup">
+        <remove keyForRemoval="removeMe"/>
+    </actionGroup>
+
+    <actionGroup name="actionGroupWithCreateData">
+        <createData entity="ApiCategory" stepKey="createCategory"/>
+        <createData entity="ApiConfigurableProduct" stepKey="createConfigProduct">
+            <requiredEntity createDataKey="createCategory"/>
+        </createData>
+    </actionGroup>
+
+    <actionGroup name="actionGroupContainsStepKeyInArgValue">
+        <arguments>
+            <argument name="sameStepKeyAsArg" type="string" defaultValue="stringLiteral"/>
+        </arguments>
+        <see selector=".selector" userInput="{{sameStepKeyAsArg}}" stepKey="arg1" />
+    </actionGroup>
+
+    <actionGroup name="actionGroupWithSkipReadinessActions">
+        <comment userInput="ActionGroupSkipReadiness" stepKey="skip" skipReadiness="true"/>
+    </actionGroup>
+
+    <actionGroup name="actionGroupWithSectionAndData">
+        <arguments>
+            <argument name="content" type="string"/>
+            <argument name="section"/>
+        </arguments>
+        <waitForElementVisible selector="{{section.oneParamElement(content)}}" stepKey="arg1"/>
     </actionGroup>
 </actionGroups>

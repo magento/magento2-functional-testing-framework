@@ -6,6 +6,8 @@
 
 namespace Magento\FunctionalTestingFramework\Config;
 
+use Magento\FunctionalTestingFramework\Config\Dom\ValidationException;
+
 /**
  * Magento configuration XML DOM utility
  */
@@ -70,7 +72,7 @@ class Dom
      * The path to ID attribute name should not include any attribute notations or modifiers -- only node names
      *
      * @param string $xml
-     * @param array $idAttributes
+     * @param array  $idAttributes
      * @param string $typeAttributeName
      * @param string $schemaFile
      * @param string $errorFormat
@@ -93,12 +95,14 @@ class Dom
     /**
      * Merge $xml into DOM document
      *
-     * @param string $xml
+     * @param string             $xml
+     * @param string             $filename
+     * @param ExceptionCollector $exceptionCollector
      * @return void
      */
-    public function merge($xml)
+    public function merge($xml, $filename = null, $exceptionCollector = null)
     {
-        $dom = $this->initDom($xml);
+        $dom = $this->initDom($xml, $filename, $exceptionCollector);
         $this->mergeNode($dom->documentElement, '');
     }
 
@@ -111,7 +115,7 @@ class Dom
      * 3. Append new node if original document doesn't have the same node
      *
      * @param \DOMElement $node
-     * @param string $parentPath path to parent node
+     * @param string      $parentPath Path to parent node.
      * @return void
      */
     protected function mergeNode(\DOMElement $node, $parentPath)
@@ -135,9 +139,9 @@ class Dom
      * Function to process matching node merges. Broken into shared logic for extending classes.
      *
      * @param \DomElement $node
-     * @param string $parentPath
+     * @param string      $parentPath
      * @param |DomElement $matchedNode
-     * @param string $path
+     * @param string      $path
      * @return void
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
@@ -181,7 +185,7 @@ class Dom
     /**
      * Replace node value.
      *
-     * @param string $parentPath
+     * @param string      $parentPath
      * @param \DOMElement $node
      * @param \DOMElement $matchedNode
      *
@@ -198,7 +202,7 @@ class Dom
      * Check if the node content is text
      *
      * @param \DOMElement $node
-     * @return bool
+     * @return boolean
      */
     protected function isTextNode($node)
     {
@@ -209,12 +213,20 @@ class Dom
      * Merges attributes of the merge node to the base node
      *
      * @param \DOMElement $baseNode
-     * @param \DOMNode $mergeNode
+     * @param \DOMNode    $mergeNode
      * @return void
      */
     protected function mergeAttributes($baseNode, $mergeNode)
     {
         foreach ($mergeNode->attributes as $attribute) {
+            // Do not overwrite filename of base node
+            if ($attribute->name === "filename") {
+                $baseNode->setAttribute(
+                    $this->getAttributeName($attribute),
+                    $baseNode->getAttribute("filename") . "," . $attribute->value
+                );
+                continue;
+            }
             $baseNode->setAttribute($this->getAttributeName($attribute), $attribute->value);
         }
     }
@@ -223,7 +235,7 @@ class Dom
      * Identify node path based on parent path and node attributes
      *
      * @param \DOMElement $node
-     * @param string $parentPath
+     * @param string      $parentPath
      * @return string
      */
     protected function getNodePathByParent(\DOMElement $node, $parentPath)
@@ -270,8 +282,8 @@ class Dom
      * Validate dom document
      *
      * @param \DOMDocument $dom
-     * @param string $schemaFileName
-     * @param string $errorFormat
+     * @param string       $schemaFileName
+     * @param string       $errorFormat
      * @return array of errors
      * @throws \Exception
      */
@@ -312,7 +324,7 @@ class Dom
      * Render error message string by replacing placeholders '%field%' with properties of \LibXMLError
      *
      * @param \LibXMLError $errorInfo
-     * @param string $format
+     * @param string       $format
      * @return string
      * @throws \InvalidArgumentException
      */
@@ -344,13 +356,21 @@ class Dom
      * Create DOM document based on $xml parameter
      *
      * @param string $xml
+     * @param string $filename
      * @return \DOMDocument
      * @throws \Magento\FunctionalTestingFramework\Config\Dom\ValidationException
      */
-    protected function initDom($xml)
+    protected function initDom($xml, $filename = null)
     {
         $dom = new \DOMDocument();
-        $dom->loadXML($xml);
+        try {
+            $domSuccess = $dom->loadXML($xml);
+            if (!$domSuccess) {
+                throw new \Exception();
+            }
+        } catch (\Exception $exception) {
+            throw new ValidationException("XML Parse Error: $filename\n");
+        }
         if ($this->schemaFile) {
             $errors = self::validateDomDocument($dom, $this->schemaFile, $this->errorFormat);
             if (count($errors)) {
@@ -363,9 +383,9 @@ class Dom
     /**
      * Validate self contents towards to specified schema
      *
-     * @param string $schemaFileName absolute path to schema file
-     * @param array &$errors
-     * @return bool
+     * @param string $schemaFileName Absolute path to schema file.
+     * @param array  $errors
+     * @return boolean
      */
     public function validate($schemaFileName, &$errors = [])
     {

@@ -38,6 +38,8 @@ class PageObjectHandler implements ObjectHandlerInterface
 
     /**
      * Private constructor
+     *
+     * @throws XmlException
      */
     private function __construct()
     {
@@ -62,7 +64,7 @@ class PageObjectHandler implements ObjectHandlerInterface
             }
 
             $module = $pageData[self::MODULE];
-            $sectionNames = array_keys($pageData[self::SECTION]);
+            $sectionNames = array_keys($pageData[self::SECTION] ?? []);
             $parameterized = $pageData[self::PARAMETERIZED] ?? false;
 
             $this->pageObjects[$pageName] =
@@ -74,6 +76,7 @@ class PageObjectHandler implements ObjectHandlerInterface
      * Singleton method to return PageObjectHandler.
      *
      * @return PageObjectHandler
+     * @throws XmlException
      */
     public static function getInstance()
     {

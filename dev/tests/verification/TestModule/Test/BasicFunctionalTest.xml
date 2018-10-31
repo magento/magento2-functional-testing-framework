@@ -24,6 +24,7 @@
         </after>
         <comment stepKey="basicCommentWithNoData" userInput="{{emptyData.noData}}"/>
         <comment stepKey="basicCommentWithDefinitelyNoData" userInput="{{emptyData.definitelyNoData}}"/>
+        <comment stepKey="ReadinessCheckSkipped" userInput="skipReadiness" skipReadiness="true"/>
         <grabValueFrom stepKey="someVarDefinition"/>
         <acceptPopup stepKey="acceptPopupKey1"/>
         <amOnPage stepKey="amOnPageKey1" url="/test/url"/>
@@ -38,6 +39,8 @@
         <clickWithRightButton selector="{{SampleSection.simpleElementOneParam('4123')}}{{SampleSection.simpleElement}}" x="{{offset.x}}" y="{{offset.y}}" stepKey="clickWithRightButtonKeyXY1" />
         <closeTab stepKey="closeTabKey1"/>
         <conditionalClick selector=".functionalTestSelector" dependentSelector=".functionalDependentTestSelector" visible="true" stepKey="conditionalClickKey1"/>
+        <deleteData stepKey="deleteKey1" createDataKey="createKey1"/>
+        <deleteData stepKey="deleteKey2" url="/V1/categories{$grabbedData}"/>
         <dontSee userInput="someInput" selector=".functionalTestSelector" stepKey="dontSeeKey1" />
         <dontSeeCheckboxIsChecked selector=".functionalTestSelector" stepKey="dontSeeCheckboxIsCheckedKey1"/>
         <dontSeeCookie userInput="someInput" stepKey="dontSeeCookieKey1"/>
@@ -54,16 +57,19 @@
         <dontSeeOptionIsSelected selector=".functionalTestSelector" userInput="someInput" stepKey="dontSeeOptionIsSelectedKey1" />
         <doubleClick selector=".functionalTestSelector" stepKey="doubleClickKey1"/>
         <dragAndDrop selector1=".functionalTestSelector" selector2=".functionalTestSelector2" stepKey="dragAndDropKey1" />
+        <dragAndDrop selector1=".functionalTestSelector" selector2=".functionalTestSelector2" stepKey="dragAndDropKey2" x="100" y="900"/>
         <executeJS function="someJSFunction" stepKey="executeJSKey1"/>
         <fillField selector=".functionalTestSelector" userInput="someInput" stepKey="fillFieldKey1" />
         <fillField selector=".functionalTestSelector" userInput="0" stepKey="fillFieldKey2" />
+        <generateDate date="Now" format="H:i:s" stepKey="generateDateKey"/>
+        <generateDate date="Now" format="H:i:s" stepKey="generateDateKey2" timezone="UTC"/>
         <grabAttributeFrom selector=".functionalTestSelector" userInput="someInput" stepKey="grabAttributeFromKey1" />
         <grabCookie userInput="grabCookieInput" parameterArray="['domain' => 'www.google.com']" stepKey="grabCookieKey1" />
         <grabFromCurrentUrl regex="/grabCurrentUrl" stepKey="grabFromCurrentUrlKey1" />
         <grabMultiple selector=".functionalTestSelector" stepKey="grabMultipleKey1" />
         <grabTextFrom selector=".functionalTestSelector" stepKey="grabTextFromKey1" />
         <grabValueFrom selector=".functionalTestSelector" stepKey="grabValueFromKey1" />
-        <magentoCLI command="maintenance:enable" stepKey="magentoCli1"/>
+        <magentoCLI command="maintenance:enable" arguments="&quot;stuffHere&quot;" stepKey="magentoCli1"/>
         <makeScreenshot userInput="screenShotInput" stepKey="makeScreenshotKey1"/>
         <maximizeWindow stepKey="maximizeWindowKey1"/>
         <moveBack stepKey="moveBackKey1"/>
@@ -71,6 +77,7 @@
         <moveMouseOver selector=".functionalTestSelector" stepKey="moveMouseOverKey1"/>
         <openNewTab stepKey="openNewTabKey1"/>
         <pauseExecution stepKey="pauseExecutionKey1"/>
+        <performOn selector="#selector" function="function(\WebDriverElement $el) {return $el->isDisplayed();}" stepKey="performOnKey1"/>
         <pressKey selector="#page" userInput="a" stepKey="pressKey1"/>
         <pressKey selector="#page" parameterArray="[['ctrl','a'],'new']" stepKey="pressKey2"/>
         <pressKey selector="#page" parameterArray="[['shift','111'],'1','x']" stepKey="pressKey3"/>
@@ -111,7 +118,18 @@
         <waitForElement time="30" selector=".functionalTestSelector" stepKey="waitForElementKey1" />
         <waitForElementNotVisible selector=".functionalTestSelector" time="30" stepKey="waitForElementNotVisibleKey1" />
         <waitForElementVisible selector=".functionalTestSelector" time="30" stepKey="waitForElementVisibleKey1" />
+        <waitForElementChange selector="#selector" function="function(\WebDriverElement $el) {return $el->isDisplayed();}" stepKey="waitForElementChangeKey1"/>
         <waitForJS function="someJsFunction" time="30" stepKey="waitForJSKey1" />
         <waitForText selector=".functionalTestSelector" userInput="someInput" time="30" stepKey="waitForText1"/>
+    </test>
+    <test name="MergeMassViaInsertBefore">
+        <fillField selector="#foo" userInput="foo" stepKey="fillField1"/>
+        <fillField selector="#bar" userInput="bar" stepKey="fillField2"/>
+        <fillField selector="#baz" userInput="baz" stepKey="fillField3"/>
+    </test>
+    <test name="MergeMassViaInsertAfter">
+        <fillField selector="#foo" userInput="foo" stepKey="fillField1"/>
+        <fillField selector="#bar" userInput="bar" stepKey="fillField2"/>
+        <fillField selector="#baz" userInput="baz" stepKey="fillField3"/>
     </test>
 </tests>
