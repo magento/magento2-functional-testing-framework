@@ -272,7 +272,8 @@ class ModuleResolver
         $allComponents = $this->getRegisteredModuleList();
 
         foreach ($relevantPaths as $codePath) {
-            // Reduce magento/app/code/Magento/AdminGws/<pattern> to magento/app/code/Magento/AdminGws and read symlink
+            // Reduce magento/app/code/Magento/AdminGws/<pattern> to magento/app/code/Magento/AdminGws to read symlink
+            // Symlinks must be resolved otherwise they will not match Magento's filepath to the module
             $potentialSymlink = str_replace(DIRECTORY_SEPARATOR . $pattern, "", $codePath);
             if (is_link($potentialSymlink)) {
                 $codePath = readlink($potentialSymlink) . DIRECTORY_SEPARATOR . $pattern;
