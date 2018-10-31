@@ -16,4 +16,12 @@ class PersistenceGenerationTest extends MftfTestCase
     {
         $this->generateAndCompareTest('PersistenceCustomFieldsTest');
     }
+
+    /**
+     * Tests complex persistence declarations in xml as they are generated to php.
+     */
+    public function testPersistenceActionGroupAppendingTest()
+    {
+        $this->generateAndCompareTest('PersistenceActionGroupAppendingTest');
+    }
 }

@@ -10,24 +10,23 @@ if ($webDriver->webDriver != null) {
 
 // initialize the webdriver session
 $webDriver->_initializeSession();
-
-// execute user specified actions
 {{/webDriverInit}}
-{{#webDriverReset}}
-// reset configuration and close session
-$this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver')->_resetConfig();
-$webDriver->webDriver->close();
-$webDriver->webDriver = null;
-{{/webDriverReset}}
 {{#action}}
 {{{action}}}
 {{/action}}
 {{#createData}}
-${{entityName}} = DataObjectHandler::getInstance()->getObject("{{entityName}}");
-$this->{{stepKey}} = new DataPersistenceHandler(${{entityName}}, [{{#requiredEntities}}$this->{{entityName}}{{^last}}, {{/last}}{{/requiredEntities}}]{{#customFields}}, ${{customFields}}{{/customFields}});
-$this->{{stepKey}}->createEntity();
+PersistedObjectHandler::getInstance()->createEntity(
+    "{{stepKey}}",
+    "suite",
+    "{{entityName}}"{{#requiredEntities}},
+    [$this->{{entityName}}{{^last}}, {{/last}}]{{/requiredEntities}}{{#customFields}},
+     ${{customFields}}{{/customFields}}
+);
 {{/createData}}
 {{#deleteData}}
-$this->{{entityName}}->deleteEntity();
+PersistedObjectHandler::getInstance()->deleteEntity(
+	"{{entityName}}",
+    "suite"
+);
 {{/deleteData}}
 {{/actions}}

@@ -9,12 +9,26 @@ namespace Magento\FunctionalTestingFramework\Test\Objects;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
+use Magento\FunctionalTestingFramework\Test\Util\TestHookObjectExtractor;
+use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 
 /**
  * Class TestObject
  */
 class TestObject
 {
+    const WAIT_TIME_ATTRIBUTE = 'time';
+
+    const TEST_ACTION_WEIGHT = [
+        'waitForPageLoad' => 1500,
+        'amOnPage' => 1000,
+        'waitForLoadingMaskToDisappear' => 500,
+        'wait' => self::WAIT_TIME_ATTRIBUTE,
+        'comment' => 5,
+        'assertCount' => 5,
+        'closeAdminNotification' => 10
+    ];
+
     /**
      * Name of the test
      *
@@ -44,19 +58,37 @@ class TestObject
     private $hooks = [];
 
     /**
+     * String of filename of test
+     *
+     * @var string
+     */
+    private $filename;
+
+    /**
+     * String of parent test
+     *
+     * @var string
+     */
+    private $parentTest;
+
+    /**
      * TestObject constructor.
      *
-     * @param string $name
-     * @param ActionObject[] $parsedSteps
-     * @param array $annotations
+     * @param string           $name
+     * @param ActionObject[]   $parsedSteps
+     * @param array            $annotations
      * @param TestHookObject[] $hooks
+     * @param string           $filename
+     * @param string           $parentTest
      */
-    public function __construct($name, $parsedSteps, $annotations, $hooks)
+    public function __construct($name, $parsedSteps, $annotations, $hooks, $filename = null, $parentTest = null)
     {
         $this->name = $name;
         $this->parsedSteps = $parsedSteps;
         $this->annotations = $annotations;
         $this->hooks = $hooks;
+        $this->filename = $filename;
+        $this->parentTest = $parentTest;
     }
 
     /**
@@ -67,6 +99,42 @@ class TestObject
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Getter for the Test Filename
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+
+    /**
+     * Getter for the Parent Test Name
+     *
+     * @return string
+     */
+    public function getParentName()
+    {
+        return $this->parentTest;
+    }
+
+    /**
+     * Getter for the skip_test boolean
+     *
+     * @return string
+     */
+    public function isSkipped()
+    {
+        // TODO deprecation|deprecate MFTF 3.0.0 remove elseif when group skip is no longer allowed
+        if (array_key_exists('skip', $this->annotations)) {
+            return true;
+        } elseif (array_key_exists('group', $this->annotations) && (in_array("skip", $this->annotations['group']))) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -96,7 +164,7 @@ class TestObject
     /**
      * Returns hooks.
      *
-     * @return array
+     * @return TestHookObject[]
      */
     public function getHooks()
     {
@@ -104,24 +172,55 @@ class TestObject
     }
 
     /**
-     * Returns the number of a test actions contained within a single test (including before/after actions).
+     * Returns the estimated duration of a single test (including before/after actions).
      *
-     * @return int
+     * @return integer
      */
-    public function getTestActionCount()
+    public function getEstimatedDuration()
     {
-        $hookActions = 0;
-        if (array_key_exists('before', $this->hooks)) {
-            $hookActions += count($this->hooks['before']->getActions());
+        // a skipped action results in a single skip being appended to the beginning of the test and no execution
+        if ($this->isSkipped()) {
+            return 1;
         }
 
-        if (array_key_exists('after', $this->hooks)) {
-            $hookActions += count($this->hooks['after']->getActions());
+        $hookTime = 0;
+        foreach ([TestObjectExtractor::TEST_BEFORE_HOOK, TestObjectExtractor::TEST_AFTER_HOOK] as $hookName) {
+            if (array_key_exists($hookName, $this->hooks)) {
+                $hookTime += $this->calculateWeightedActionTimes($this->hooks[$hookName]->getActions());
+            }
         }
 
-        $testActions = count($this->getOrderedActions());
+        $testTime = $this->calculateWeightedActionTimes($this->getOrderedActions());
 
-        return $hookActions + $testActions;
+        return $hookTime + $testTime;
+    }
+
+    /**
+     * Function which takes a set of actions and estimates time for completion based on action type.
+     *
+     * @param ActionObject[] $actions
+     * @return integer
+     */
+    private function calculateWeightedActionTimes($actions)
+    {
+        $actionTime = 0;
+        // search for any actions of special type
+        foreach ($actions as $action) {
+            /** @var ActionObject $action */
+            if (array_key_exists($action->getType(), self::TEST_ACTION_WEIGHT)) {
+                $weight = self::TEST_ACTION_WEIGHT[$action->getType()];
+                if ($weight === self::WAIT_TIME_ATTRIBUTE) {
+                    $weight = intval($action->getCustomActionAttributes()[$weight]) * 1000;
+                }
+
+                $actionTime += $weight;
+                continue;
+            }
+
+            $actionTime += 50;
+        }
+
+        return $actionTime;
     }
 
     /**
@@ -158,6 +257,16 @@ class TestObject
     {
         $mergeUtil = new ActionMergeUtil($this->getName(), "Test");
         return $mergeUtil->resolveActionSteps($this->parsedSteps);
+    }
+
+    /**
+     * This method returns currently parsed steps
+     *
+     * @return array
+     */
+    public function getUnresolvedSteps()
+    {
+        return $this->parsedSteps;
     }
 
     /**

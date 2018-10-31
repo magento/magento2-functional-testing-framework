@@ -36,9 +36,8 @@ class TestHookObject
     private $actions = [];
 
     /**
-     * Array of Hook-defined data.
+     * Array of Hook-defined data. Deprecated because no usage of property exist. Will be removed next major release.
      * @var array|null
-     * @deprecated because no usage of property exist. Will be removed next major release.
      */
     private $customData = [];
 
@@ -46,7 +45,7 @@ class TestHookObject
      * TestHookObject constructor.
      * @param string $type
      * @param string $parentName
-     * @param array $actions
+     * @param array  $actions
      */
     public function __construct($type, $parentName, $actions)
     {
@@ -66,6 +65,16 @@ class TestHookObject
     }
 
     /**
+     * Getter for hook parent name
+     *
+     * @return string
+     */
+    public function getParentName()
+    {
+        return $this->parentName;
+    }
+
+    /**
      * Returns an array of action objects to be executed within the hook.
      *
      * @return array
@@ -74,6 +83,16 @@ class TestHookObject
     {
         $mergeUtil = new ActionMergeUtil($this->parentName, $this->getType());
         return $mergeUtil->resolveActionSteps($this->actions);
+    }
+
+    /**
+     * Returns an array of unresolved actions
+     *
+     * @return array
+     */
+    public function getUnresolvedActions()
+    {
+        return $this->actions;
     }
 
     /**

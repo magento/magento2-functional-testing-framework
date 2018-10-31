@@ -31,7 +31,7 @@ class Boolean implements InterpreterInterface
 
     /**
      * {@inheritdoc}
-     * @return bool
+     * @return boolean
      * @throws \InvalidArgumentException
      */
     public function evaluate(array $data)

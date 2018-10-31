@@ -11,9 +11,9 @@ use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
 use Magento\FunctionalTestingFramework\XmlParser\SectionParser;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 
-class SectionObjectHandlerTest extends TestCase
+class SectionObjectHandlerTest extends MagentoTestCase
 {
     public function testGetSectionObject()
     {

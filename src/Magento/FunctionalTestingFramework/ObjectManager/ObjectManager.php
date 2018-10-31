@@ -13,7 +13,7 @@ class ObjectManager implements \Magento\FunctionalTestingFramework\ObjectManager
 {
     /**
      * Create instance with call time arguments.
-     * 
+     *
      * @var \Magento\FunctionalTestingFramework\ObjectManager\FactoryInterface
      */
     protected $factory;
@@ -35,8 +35,8 @@ class ObjectManager implements \Magento\FunctionalTestingFramework\ObjectManager
     /**
      * ObjectManager constructor.
      * @param FactoryInterface $factory
-     * @param ConfigInterface $config
-     * @param array $sharedInstances
+     * @param ConfigInterface  $config
+     * @param array            $sharedInstances
      */
     public function __construct(FactoryInterface $factory, ConfigInterface $config, array $sharedInstances = [])
     {
@@ -50,7 +50,7 @@ class ObjectManager implements \Magento\FunctionalTestingFramework\ObjectManager
      * Create new object instance
      *
      * @param string $type
-     * @param array $arguments
+     * @param array  $arguments
      * @return object
      */
     public function create($type, array $arguments = [])

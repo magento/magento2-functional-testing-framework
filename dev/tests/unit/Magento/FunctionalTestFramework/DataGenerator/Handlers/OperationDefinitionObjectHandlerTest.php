@@ -13,12 +13,12 @@ use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\OperationDefinitionObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Parsers\OperationDefinitionParser;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 
 /**
  * Class OperationDefinitionObjectHandlerTest
  */
-class OperationDefinitionObjectHandlerTest extends TestCase
+class OperationDefinitionObjectHandlerTest extends MagentoTestCase
 {
     public function testGetMultipleObjects()
     {
@@ -62,7 +62,7 @@ class OperationDefinitionObjectHandlerTest extends TestCase
                         OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => "integer"
                     ],
                 ]
-            ]]];
+                ]]];
         $this->setMockParserOutput($mockData);
 
         //Perform Assertions
@@ -70,7 +70,6 @@ class OperationDefinitionObjectHandlerTest extends TestCase
         $operations = $operationDefinitionManager->getAllObjects();
         $this->assertArrayHasKey($operationType1 . $dataType1, $operations);
         $this->assertArrayHasKey($operationType2 . $dataType1, $operations);
-
     }
 
     public function testObjectCreation()
