@@ -4,7 +4,6 @@
 # THIS FILE CANNOT CONTAIN BLANK LINES                            #
 ###################################################################
 bin/blacklist.txt
-dev/tests/static/Magento/Sniffs/Annotations/Helper.php
-dev/tests/static/Magento/Sniffs/Annotations/RequireAnnotatedAttributesSniff.php
-dev/tests/static/Magento/Sniffs/Annotations/RequireAnnotatedMethodsSniff.php
+dev/tests/static/Magento/Sniffs/Commenting/FunctionCommentSniff.php
+dev/tests/static/Magento/Sniffs/Commenting/VariableCommentSniff.php
 dev/tests/verification/_generated

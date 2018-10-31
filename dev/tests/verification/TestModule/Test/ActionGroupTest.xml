@@ -114,4 +114,61 @@
     <test name="ActionGroupWithStepKeyReferences">
         <actionGroup ref="FunctionActionGroupWithStepKeyReferences" stepKey="actionGroup"/>
     </test>
+
+    <test name="ActionGroupUsingNestedArgument">
+        <actionGroup ref="ActionGroupToExtend" stepKey="actionGroup">
+            <argument name="count" value="99"/>
+        </actionGroup>
+    </test>
+
+    <test name="ActionGroupToExtend">
+        <actionGroup ref="ActionGroupToExtend" stepKey="actionGroup">
+            <argument name="count" value="99"/>
+        </actionGroup>
+    </test>
+
+    <test name="ExtendedActionGroup">
+        <actionGroup ref="extendTestActionGroup" stepKey="actionGroup">
+            <argument name="count" value="99"/>
+            <argument name="otherCount" value="8000"/>
+        </actionGroup>
+    </test>
+
+    <test name="ExtendedRemoveActionGroup">
+        <actionGroup ref="extendRemoveTestActionGroup" stepKey="actionGroup"/>
+    </test>
+
+    <test name="ActionGroupUsingCreateData">
+        <before>
+            <actionGroup ref="actionGroupWithCreateData" stepKey="Key1"/>
+        </before>
+    </test>
+
+    <test name="ActionGroupSkipReadiness">
+        <actionGroup ref="actionGroupWithSkipReadinessActions" stepKey="skipReadinessActionGroup"/>
+    </test>
+
+    <test name="ActionGroupContainsStepKeyInArgText">
+        <before>
+            <actionGroup ref="actionGroupContainsStepKeyInArgValue" stepKey="actionGroup">
+                <argument name="sameStepKeyAsArg" value="arg1"/>
+            </actionGroup>
+        </before>
+        <actionGroup ref="actionGroupContainsStepKeyInArgValue" stepKey="actionGroup">
+            <argument name="sameStepKeyAsArg" value="arg1"/>
+        </actionGroup>
+    </test>
+
+    <test name="ActionGroupWithSectionAndDataAsArguments">
+        <actionGroup ref="actionGroupWithSectionAndData" stepKey="actionGroup">
+            <argument name="content" value="{{simpleData.firstname}}"/>
+            <argument name="section" value="SampleSection"/>
+        </actionGroup>
+    </test>
+
+    <test name="ActionGroupWithParameterizedElementWithHyphen">
+        <actionGroup ref="SectionArgumentWithParameterizedSelector" stepKey="actionGroup">
+            <argument name="section" value="SampleSection"/>
+        </actionGroup>
+    </test>
 </tests>

@@ -1,5 +1,4 @@
 <?php
-// @codingStandardsIgnoreFile
 /**
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
@@ -37,6 +36,13 @@ class EnvProcessor
     private $env = [];
 
     /**
+     * Boolean indicating existence of env file
+     *
+     * @var boolean
+     */
+    private $envExists;
+
+    /**
      * EnvProcessor constructor.
      * @param string $envFile
      */
@@ -44,33 +50,55 @@ class EnvProcessor
         string $envFile = ''
     ) {
         $this->envFile = $envFile;
-        $this->envExampleFile = $envFile . '.example';
+        $this->envExists = file_exists($envFile);
+        $this->envExampleFile = realpath(FW_BP . "/etc/config/.env.example");
     }
 
     /**
-     * Serves for parsing '.env.example' file into associative array.
+     * Serves for parsing '.env' file into associative array.
      *
      * @return array
      */
-    public function parseEnvFile(): array
+    private function parseEnvFile(): array
     {
-        $envLines = file(
+        $envExampleFile = file(
             $this->envExampleFile,
             FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES
         );
-        $env = [];
-        foreach ($envLines as $line) {
-            // do not use commented out lines
-            if (strpos($line, '#') !== 0) {
-                list($key, $value) = explode('=', $line);
-                $env[$key] = $value;
-            }
+
+        $envContents = [];
+        if ($this->envExists) {
+            $envFile = file(
+                $this->envFile,
+                FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES
+            );
+
+            $envContents = $this->parseEnvFileLines($envFile);
         }
-        return $env;
+
+        return array_merge($this->parseEnvFileLines($envExampleFile), $envContents);
     }
 
     /**
-     * Serves for putting array with environment variables into .env file.
+     * Iterates through env and returns array of file contents.
+     * @param array $file
+     * @return array
+     */
+    private function parseEnvFileLines(array $file): array
+    {
+        $fileArray = [];
+        foreach ($file as $line) {
+            // do not use commented out lines
+            if (strpos($line, '#') !== 0) {
+                list($key, $value) = explode('=', $line);
+                $fileArray[$key] = $value;
+            }
+        }
+        return $fileArray;
+    }
+
+    /**
+     * Serves for putting array with environment variables into .env file or appending new variables we introduce
      *
      * @param array $config
      * @return void
@@ -81,6 +109,7 @@ class EnvProcessor
         foreach ($config as $key => $value) {
             $envData .= $key . '=' . $value . PHP_EOL;
         }
+
         file_put_contents($this->envFile, $envData);
     }
 

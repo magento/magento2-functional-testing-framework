@@ -6,7 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Page\Objects;
 
-
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
 
 /**
@@ -60,12 +60,12 @@ class PageObject
 
     /**
      * PageObject constructor.
-     * @param string $name
-     * @param string $url
-     * @param string $module
-     * @param array $sections
-     * @param bool $parameterized
-     * @param string $area
+     * @param string  $name
+     * @param string  $url
+     * @param string  $module
+     * @param array   $sections
+     * @param boolean $parameterized
+     * @param string  $area
      */
     public function __construct($name, $url, $module, $sections, $parameterized, $area)
     {
@@ -143,6 +143,7 @@ class PageObject
      *
      * @param string $sectionName
      * @return SectionObject | null
+     * @throws XmlException
      */
     public function getSection($sectionName)
     {
@@ -156,9 +157,8 @@ class PageObject
     /**
      * Determines if the page's url is parameterized. Based on $parameterized property.
      *
-     * @return bool
+     * @return boolean
      */
-
     public function isParameterized()
     {
         return $this->parameterized;

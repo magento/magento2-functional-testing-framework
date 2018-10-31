@@ -15,13 +15,23 @@ use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ArgumentObject;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 use tests\unit\Util\ActionGroupObjectBuilder;
 use tests\unit\Util\EntityDataObjectBuilder;
+use tests\unit\Util\TestLoggingUtil;
 
-class ActionGroupObjectTest extends TestCase
+class ActionGroupObjectTest extends MagentoTestCase
 {
     const ACTION_GROUP_MERGE_KEY = 'TestKey';
+
+    /**
+     * Before test functionality
+     * @return void
+     */
+    public function setUp()
+    {
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
+    }
 
     /**
      * Tests a string literal in an action group
@@ -252,6 +262,62 @@ class ActionGroupObjectTest extends TestCase
     }
 
     /**
+     * Tests the stepKey replacement with "stepKey + invocationKey" process filter
+     * Specific to actions that make it past a "require stepKey replacement" filter
+     */
+    public function testStepKeyReplacementFilteredIn()
+    {
+        $createStepKey = "createDataStepKey";
+        $updateStepKey = "updateDataStepKey";
+
+        $actionGroupUnderTest = (new ActionGroupObjectBuilder())
+            ->withActionObjects([
+                new ActionObject(
+                    $updateStepKey,
+                    ActionGroupObject::STEPKEY_REPLACEMENT_ENABLED_TYPES[6],
+                    ['selector' => 'value']
+                ),
+                new ActionObject(
+                    $createStepKey,
+                    ActionGroupObject::STEPKEY_REPLACEMENT_ENABLED_TYPES[7],
+                    ['selector' => 'value']
+                )
+            ])
+            ->build();
+
+        $result = $actionGroupUnderTest->extractStepKeys();
+
+        $this->assertContains($updateStepKey, $result);
+        $this->assertContains($createStepKey, $result);
+        $this->assertCount(2, $result);
+    }
+
+    /**
+     * Tests the stepKey replacement with "stepKey + invocationKey" process filter
+     * Specific to actions that make are removed by a "require stepKey replacement" filter
+     */
+    public function testStepKeyReplacementFilteredOut()
+    {
+        $clickStepKey = "clickStepKey";
+        $fillFieldStepKey = "fillFieldStepKey";
+        $clickAction = "click";
+        $fillFieldAction ="fillField";
+
+        $actionGroupUnderTest = (new ActionGroupObjectBuilder())
+            ->withActionObjects([
+                new ActionObject($clickStepKey, $clickAction, ['selector' => 'value']),
+                new ActionObject($fillFieldStepKey, $fillFieldAction, ['selector' => 'value'])
+            ])
+            ->build();
+
+        $result = $actionGroupUnderTest->extractStepKeys();
+
+        $this->assertNotContains($clickStepKey, $result);
+        $this->assertNotContains($fillFieldStepKey, $result);
+        $this->assertCount(0, $result);
+    }
+
+    /**
      * This function takes a desired return for the EntityObjectHandler mock and performs set up of the mock for the
      * duration of a single test case.
      *
@@ -283,5 +349,14 @@ class ActionGroupObjectTest extends TestCase
         $action = $actions[$expectedMergeKey];
         $this->assertEquals($expectedMergeKey, $action->getStepKey());
         $this->assertEquals($expectedValue, $action->getCustomActionAttributes());
+    }
+
+    /**
+     * After class functionality
+     * @return void
+     */
+    public static function tearDownAfterClass()
+    {
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 }

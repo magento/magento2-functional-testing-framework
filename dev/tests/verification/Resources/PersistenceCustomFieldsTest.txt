@@ -2,9 +2,8 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
-use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
-use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -20,16 +19,6 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class PersistenceCustomFieldsTestCest
 {
 	/**
-	  * @var DataPersistenceHandler $createData1;
-	  */
-	protected $createData1;
-
-	/**
-	  * @var DataPersistenceHandler $createData2;
-	  */
-	protected $createData2;
-
-	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
@@ -38,17 +27,26 @@ class PersistenceCustomFieldsTestCest
 		$createData1Fields['firstname'] = "Mac";
 		$createData1Fields['lastname'] = "Doe";
 		$I->amGoingTo("create entity that has the stepKey: createData1");
-		$DefaultPerson = DataObjectHandler::getInstance()->getObject("DefaultPerson");
-		$this->createData1 = new DataPersistenceHandler($DefaultPerson, [], $createData1Fields);
-		$this->createData1->createEntity();
-		$createData2Fields['firstname'] = $this->createData1->getCreatedDataByName('firstname');
+		PersistedObjectHandler::getInstance()->createEntity(
+			"createData1",
+			"hook",
+			"DefaultPerson",
+			[],
+			$createData1Fields
+		);
+		$createData2Fields['firstname'] = PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'hook');
 		$I->amGoingTo("create entity that has the stepKey: createData2");
-		$uniqueData = DataObjectHandler::getInstance()->getObject("uniqueData");
-		$this->createData2 = new DataPersistenceHandler($uniqueData, [$this->createData1], $createData2Fields);
-		$this->createData2->createEntity();
+		PersistedObjectHandler::getInstance()->createEntity(
+			"createData2",
+			"hook",
+			"uniqueData",
+			["createData1"],
+			$createData2Fields
+		);
 	}
 
 	/**
+	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
@@ -59,29 +57,49 @@ class PersistenceCustomFieldsTestCest
 		$createdDataFields['favoriteIndex'] = "1";
 		$createdDataFields['middlename'] = "Kovacs";
 		$I->amGoingTo("create entity that has the stepKey: createdData");
-		$simpleData = DataObjectHandler::getInstance()->getObject("simpleData");
-		$createdData = new DataPersistenceHandler($simpleData, [], $createdDataFields);
-		$createdData->createEntity();
+		PersistedObjectHandler::getInstance()->createEntity(
+			"createdData",
+			"test",
+			"simpleData",
+			[],
+			$createdDataFields
+		);
 		$createdData3Fields['firstname'] = "Takeshi";
 		$createdData3Fields['lastname'] = "Kovacs";
 		$I->amGoingTo("create entity that has the stepKey: createdData3");
-		$UniquePerson = DataObjectHandler::getInstance()->getObject("UniquePerson");
-		$createdData3 = new DataPersistenceHandler($UniquePerson, [$createdData], $createdData3Fields);
-		$createdData3->createEntity();
+		PersistedObjectHandler::getInstance()->createEntity(
+			"createdData3",
+			"test",
+			"UniquePerson",
+			["createdData"],
+			$createdData3Fields
+		);
 		$createDataAG1CreatedAGFields['firstname'] = "string1";
 		$I->amGoingTo("create entity that has the stepKey: createDataAG1CreatedAG");
-		$simpleData = DataObjectHandler::getInstance()->getObject("simpleData");
-		$createDataAG1CreatedAG = new DataPersistenceHandler($simpleData, [], $createDataAG1CreatedAGFields);
-		$createDataAG1CreatedAG->createEntity();
+		PersistedObjectHandler::getInstance()->createEntity(
+			"createDataAG1CreatedAG",
+			"test",
+			"simpleData",
+			[],
+			$createDataAG1CreatedAGFields
+		);
 		$createDataAG2CreatedAGFields['firstname'] = "Jane";
 		$I->amGoingTo("create entity that has the stepKey: createDataAG2CreatedAG");
-		$simpleData = DataObjectHandler::getInstance()->getObject("simpleData");
-		$createDataAG2CreatedAG = new DataPersistenceHandler($simpleData, [], $createDataAG2CreatedAGFields);
-		$createDataAG2CreatedAG->createEntity();
-		$createDataAG3CreatedAGFields['firstname'] = $createdData3->getCreatedDataByName('firstname');
+		PersistedObjectHandler::getInstance()->createEntity(
+			"createDataAG2CreatedAG",
+			"test",
+			"simpleData",
+			[],
+			$createDataAG2CreatedAGFields
+		);
+		$createDataAG3CreatedAGFields['firstname'] = PersistedObjectHandler::getInstance()->retrieveEntityField('createdData3', 'firstname', 'test');
 		$I->amGoingTo("create entity that has the stepKey: createDataAG3CreatedAG");
-		$simpleData = DataObjectHandler::getInstance()->getObject("simpleData");
-		$createDataAG3CreatedAG = new DataPersistenceHandler($simpleData, [], $createDataAG3CreatedAGFields);
-		$createDataAG3CreatedAG->createEntity();
+		PersistedObjectHandler::getInstance()->createEntity(
+			"createDataAG3CreatedAG",
+			"test",
+			"simpleData",
+			[],
+			$createDataAG3CreatedAGFields
+		);
 	}
 }

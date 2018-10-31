@@ -1,0 +1,29 @@
+# Copyright © Magento, Inc. All rights reserved.
+# See COPYING.txt for license details.
+actor: Tester
+paths:
+    tests: tests
+    log: tests/_output
+    data: tests/_data
+    support: src/Magento/FunctionalTestingFramework
+    envs: etc/_envs
+settings:
+    colors: true
+    memory_limit: 1024M
+extensions:
+    enabled:
+        - Codeception\Extension\RunFailed
+        - Magento\FunctionalTestingFramework\Extension\TestContextExtension
+        - Magento\FunctionalTestingFramework\Allure\Adapter\MagentoAllureAdapter
+    config:
+        Yandex\Allure\Adapter\AllureAdapter:
+            deletePreviousResults: true
+            outputDirectory: allure-results
+            ignoredAnnotations:
+                - env
+                - zephyrId
+                - useCaseId
+        Magento\FunctionalTestingFramework\Extension\TestContextExtension:
+            driver: \Magento\FunctionalTestingFramework\Module\MagentoWebDriver
+params:
+    - .env

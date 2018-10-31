@@ -39,7 +39,7 @@ class OperationDefinitionBuilder
 
     /**
      * Determines if api URL should remove magento_backend_name.
-     * @var bool
+     * @var boolean
      */
     private $removeBackend;
 

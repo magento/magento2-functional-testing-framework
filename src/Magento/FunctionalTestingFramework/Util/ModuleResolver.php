@@ -6,6 +6,11 @@
 
 namespace Magento\FunctionalTestingFramework\Util;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+use Symfony\Component\HttpFoundation\Response;
+
 /**
  * Class ModuleResolver, resolve module path based on enabled modules of target Magento instance.
  *
@@ -22,6 +27,16 @@ class ModuleResolver
      * Environment field name for custom module paths.
      */
     const CUSTOM_MODULE_PATHS = 'CUSTOM_MODULE_PATHS';
+
+    /**
+     * List of path types present in Magento Component Registrar
+     */
+    const PATHS = ['module', 'library', 'theme', 'language'];
+
+    /**
+     * Magento Registrar Class
+     */
+    const REGISTRAR_CLASS = "\Magento\Framework\Component\ComponentRegistrar";
 
     /**
      * Enabled modules.
@@ -126,21 +141,15 @@ class ModuleResolver
      */
     public function getEnabledModules()
     {
-        $testGenerationPhase = $GLOBALS['GENERATE_TESTS'] ?? false;
-
         if (isset($this->enabledModules)) {
             return $this->enabledModules;
         }
 
-        if ($testGenerationPhase) {
+        if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
             $this->printMagentoVersionInfo();
         }
 
         $token = $this->getAdminToken();
-        if (!$token || !is_string($token)) {
-            $this->enabledModules = [];
-            return $this->enabledModules;
-        }
 
         $url = ConfigSanitizerUtil::sanitizeUrl(getenv('MAGENTO_BASE_URL')) . $this->moduleUrl;
 
@@ -156,10 +165,17 @@ class ModuleResolver
         $response = curl_exec($ch);
 
         if (!$response) {
-            $this->enabledModules = [];
-        } else {
-            $this->enabledModules = json_decode($response);
+            $message = "Could not retrieve Modules from Magento Instance.";
+            $context = [
+                "Admin Module List Url" => $url,
+                "MAGENTO_ADMIN_USERNAME" => getenv("MAGENTO_ADMIN_USERNAME"),
+                "MAGENTO_ADMIN_PASSWORD" => getenv("MAGENTO_ADMIN_PASSWORD"),
+            ];
+            throw new TestFrameworkException($message, $context);
         }
+
+        $this->enabledModules = json_decode($response);
+
         return $this->enabledModules;
     }
 
@@ -189,25 +205,14 @@ class ModuleResolver
             return $this->enabledModulePaths;
         }
 
-        $enabledModules = $this->getEnabledModules();
-        $forceGeneration = $GLOBALS['FORCE_PHP_GENERATE'] ?? false;
-
-        if (empty($enabledModules) && !$forceGeneration) {
-            trigger_error(
-                "Could not retrieve enabled modules from provided 'MAGENTO_BASE_URL'," .
-                "please make sure Magento is available at this url",
-                E_USER_ERROR
-            );
-        }
-
         $allModulePaths = $this->aggregateTestModulePaths();
 
-        if (empty($enabledModules)) {
+        if (MftfApplicationConfig::getConfig()->forceGenerateEnabled()) {
             $this->enabledModulePaths = $this->applyCustomModuleMethods($allModulePaths);
             return $this->enabledModulePaths;
         }
 
-        $enabledModules = array_merge($enabledModules, $this->getModuleWhitelist());
+        $enabledModules = array_merge($this->getEnabledModules(), $this->getModuleWhitelist());
         $enabledDirectoryPaths = $this->getEnabledDirectoryPaths($enabledModules, $allModulePaths);
 
         $this->enabledModulePaths = $this->applyCustomModuleMethods($enabledDirectoryPaths);
@@ -223,25 +228,20 @@ class ModuleResolver
     {
         $allModulePaths = [];
 
-        // TODO update these paths when we switch a composer based pathing
-        // Define the Module paths from app/code
-        $appCodePath = dirname(dirname(dirname(PROJECT_ROOT)))
-            . DIRECTORY_SEPARATOR
-            . 'app' . DIRECTORY_SEPARATOR
-            . 'code' . DIRECTORY_SEPARATOR;
+        // Define the Module paths from magento bp
+        $magentoBaseCodePath = MAGENTO_BP;
 
         // Define the Module paths from default TESTS_MODULE_PATH
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
+        $modulePath = rtrim($modulePath, DIRECTORY_SEPARATOR);
 
-        // Define the Module paths from vendor modules
-        $vendorCodePath = dirname(dirname(dirname(PROJECT_ROOT)))
-            . DIRECTORY_SEPARATOR
-            . 'vendor' . DIRECTORY_SEPARATOR;
+        $vendorCodePath = DIRECTORY_SEPARATOR . "vendor";
+        $appCodePath = DIRECTORY_SEPARATOR . "app" . DIRECTORY_SEPARATOR . "code";
 
         $codePathsToPattern = [
-            $appCodePath => '/Test/Acceptance',
             $modulePath => '',
-            $vendorCodePath => '/Test/Acceptance'
+            $magentoBaseCodePath . $vendorCodePath => 'Test' . DIRECTORY_SEPARATOR . 'Mftf',
+            $magentoBaseCodePath . $appCodePath => 'Test' . DIRECTORY_SEPARATOR . 'Mftf'
         ];
 
         foreach ($codePathsToPattern as $codePath => $pattern) {
@@ -266,15 +266,44 @@ class ModuleResolver
         $relevantPaths = [];
 
         if (file_exists($testPath)) {
-            $relevantPaths = glob($testPath . '*/*' . $pattern);
+            $relevantPaths = $this->globRelevantWrapper($testPath, $pattern);
         }
 
+        $allComponents = $this->getRegisteredModuleList();
+
         foreach ($relevantPaths as $codePath) {
-            $mainModName = basename(str_replace($pattern, '', $codePath));
+            $mainModName = array_search($codePath, $allComponents) ?: basename(str_replace($pattern, '', $codePath));
             $modulePaths[$mainModName][] = $codePath;
+
+            if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
+                LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->debug(
+                    "including module",
+                    ['module' => $mainModName, 'path' => $codePath]
+                );
+            }
         }
 
         return $modulePaths;
+    }
+
+    /**
+     * Glob wrapper for globRelevantPaths function
+     *
+     * @param string $testPath
+     * @param string $pattern
+     * @return array
+     */
+    private static function globRelevantWrapper($testPath, $pattern)
+    {
+        if ($pattern == "") {
+            return glob($testPath . '*' . DIRECTORY_SEPARATOR . '*' . $pattern);
+        }
+        $subDirectory = "*" . DIRECTORY_SEPARATOR;
+        $directories = glob($testPath . $subDirectory . $pattern, GLOB_ONLYDIR);
+        foreach (glob($testPath . $subDirectory, GLOB_ONLYDIR) as $dir) {
+            $directories = array_merge_recursive($directories, self::globRelevantWrapper($dir, $pattern));
+        }
+        return $directories;
     }
 
     /**
@@ -305,11 +334,16 @@ class ModuleResolver
     {
         $enabledDirectoryPaths = [];
         foreach ($enabledModules as $magentoModuleName) {
-            $moduleShortName = explode('_', $magentoModuleName)[1];
-            if (!isset($this->knownDirectories[$moduleShortName]) && !isset($allModulePaths[$moduleShortName])) {
+            if (!isset($this->knownDirectories[$magentoModuleName]) && !isset($allModulePaths[$magentoModuleName])) {
                 continue;
+            } elseif (isset($this->knownDirectories[$magentoModuleName])
+                && !isset($allModulePaths[$magentoModuleName])) {
+                LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->warn(
+                    "Known directory could not match to an existing path.",
+                    ['knownDirectory' => $magentoModuleName]
+                );
             } else {
-                $enabledDirectoryPaths[$moduleShortName] = $allModulePaths[$moduleShortName];
+                $enabledDirectoryPaths[$magentoModuleName] = $allModulePaths[$magentoModuleName];
             }
         }
         return $enabledDirectoryPaths;
@@ -322,12 +356,15 @@ class ModuleResolver
      */
     private function printMagentoVersionInfo()
     {
-        $forceGeneration = $GLOBALS['FORCE_PHP_GENERATE'] ?? false;
-        if ($forceGeneration) {
+        if (MftfApplicationConfig::getConfig()->forceGenerateEnabled()) {
             return;
         }
         $url = ConfigSanitizerUtil::sanitizeUrl(getenv('MAGENTO_BASE_URL')) . $this->versionUrl;
-        print "Fetching version information from {$url}";
+        LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
+            "Fetching version information.",
+            ['url' => $url]
+        );
+
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -337,20 +374,29 @@ class ModuleResolver
             $response = "No version information available.";
         }
 
-        print "\nVersion Information: {$response}\n";
+        LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
+            'version information',
+            ['version' => $response]
+        );
     }
 
     /**
      * Get the API token for admin.
      *
-     * @return string|bool
+     * @return string|boolean
      */
     protected function getAdminToken()
     {
         $login = $_ENV['MAGENTO_ADMIN_USERNAME'] ?? null;
         $password = $_ENV['MAGENTO_ADMIN_PASSWORD'] ?? null;
         if (!$login || !$password || !isset($_ENV['MAGENTO_BASE_URL'])) {
-            return false;
+            $message = "Cannot retrieve API token without credentials and base url, please fill out .env.";
+            $context = [
+                "MAGENTO_BASE_URL" => getenv("MAGENTO_BASE_URL"),
+                "MAGENTO_ADMIN_USERNAME" => getenv("MAGENTO_ADMIN_USERNAME"),
+                "MAGENTO_ADMIN_PASSWORD" => getenv("MAGENTO_ADMIN_PASSWORD"),
+            ];
+            throw new TestFrameworkException($message, $context);
         }
 
         $url = ConfigSanitizerUtil::sanitizeUrl($_ENV['MAGENTO_BASE_URL']) . $this->adminTokenUrl;
@@ -371,9 +417,25 @@ class ModuleResolver
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         $response = curl_exec($ch);
-        if (!$response) {
-            return $response;
+        $responseCode = curl_getinfo($ch)['http_code'];
+
+        if ($responseCode !== 200) {
+            if ($responseCode == 0) {
+                $details = "Could not find Magento Instance at given MAGENTO_BASE_URL";
+            } else {
+                $details = $responseCode . " " . Response::$statusTexts[$responseCode];
+            }
+
+            $message = "Could not retrieve API token from Magento Instance ({$details})";
+            $context = [
+                "tokenUrl" => $url,
+                "responseCode" => $responseCode,
+                "MAGENTO_ADMIN_USERNAME" => getenv("MAGENTO_ADMIN_USERNAME"),
+                "MAGENTO_ADMIN_PASSWORD" => getenv("MAGENTO_ADMIN_PASSWORD"),
+            ];
+            throw new TestFrameworkException($message, $context);
         }
+
         return json_decode($response);
     }
 
@@ -400,7 +462,10 @@ class ModuleResolver
         $customModulePaths = $this->getCustomModulePaths();
 
         array_map(function ($value) {
-            print "Including module path: {$value}\n";
+            LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
+                "including custom module",
+                ['module' => $value]
+            );
         }, $customModulePaths);
 
         return $this->flattenAllModulePaths(array_merge($modulePathsResult, $customModulePaths));
@@ -418,7 +483,10 @@ class ModuleResolver
         foreach ($modulePathsResult as $moduleName => $modulePath) {
             if (in_array($moduleName, $this->getModuleBlacklist())) {
                 unset($modulePathsResult[$moduleName]);
-                print "Excluding module: {$moduleName}\n";
+                LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
+                    "excluding module",
+                    ['module' => $moduleName]
+                );
             }
         }
 
@@ -449,5 +517,43 @@ class ModuleResolver
     private function getModuleBlacklist()
     {
         return $this->moduleBlacklist;
+    }
+
+    /**
+     * Calls Magento method for determining registered modules.
+     *
+     * @return string[]
+     */
+    private function getRegisteredModuleList()
+    {
+        if (array_key_exists('MAGENTO_BP', $_ENV)) {
+            $autoloadPath = realpath(MAGENTO_BP . "/app/autoload.php");
+            if ($autoloadPath) {
+                require_once($autoloadPath);
+            } else {
+                throw new TestFrameworkException("Magento app/autoload.php not found with given MAGENTO_BP:"
+                    . MAGENTO_BP);
+            }
+        }
+
+        try {
+            $allComponents = [];
+            if (!class_exists(self::REGISTRAR_CLASS)) {
+                throw new TestFrameworkException("Magento Installation not found when loading registered modules.\n");
+            }
+            $components = new \Magento\Framework\Component\ComponentRegistrar();
+            foreach (self::PATHS as $componentType) {
+                $allComponents = array_merge($allComponents, $components->getPaths($componentType));
+            }
+            array_walk($allComponents, function (&$value) {
+                $value .= DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR . 'Mftf';
+            });
+            return $allComponents;
+        } catch (TestFrameworkException $e) {
+            LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->warning(
+                "$e"
+            );
+        }
+        return [];
     }
 }

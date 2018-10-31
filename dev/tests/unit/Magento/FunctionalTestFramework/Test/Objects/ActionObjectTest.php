@@ -15,13 +15,24 @@ use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
 use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
-use PHPUnit\Framework\TestCase;
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use tests\unit\Util\TestLoggingUtil;
+use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 
 /**
  * Class ActionObjectTest
  */
-class ActionObjectTest extends TestCase
+class ActionObjectTest extends MagentoTestCase
 {
+    /**
+     * Before test functionality
+     * @return void
+     */
+    public function setUp()
+    {
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
+    }
+
     /**
      * The order offset should be 0 when the action is instantiated with 'before'
      */
@@ -191,6 +202,8 @@ class ActionObjectTest extends TestCase
 
     /**
      * {{PageObject.url}} should be replaced with someUrl.html
+     *
+     * @throws /Exception
      */
     public function testResolveUrl()
     {
@@ -209,6 +222,42 @@ class ActionObjectTest extends TestCase
         // Verify
         $expected = [
             'url' => '/replacement/url.html'
+        ];
+        $this->assertEquals($expected, $actionObject->getCustomActionAttributes());
+    }
+
+    /**
+     * {{PageObject}} should not be replaced and should elicit a warning in console
+     *
+     * @throws /Exception
+     */
+    public function testResolveUrlWithNoAttribute()
+    {
+        // Set up mocks
+        $actionObject = new ActionObject('merge123', 'amOnPage', [
+            'url' => '{{PageObject}}'
+        ]);
+        $pageObject = new PageObject('PageObject', '/replacement/url.html', 'Test', [], false, "test");
+        $pageObjectList = ["PageObject" => $pageObject];
+        $instance = AspectMock::double(
+            PageObjectHandler::class,
+            ['getObject' => $pageObject, 'getAllObjects' => $pageObjectList]
+        )->make(); // bypass the private constructor
+        AspectMock::double(PageObjectHandler::class, ['getInstance' => $instance]);
+
+        // Call the method under test
+        $actionObject->resolveReferences();
+
+        // Expect this warning to get generated
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            "warning",
+            "page url attribute not found and is required",
+            ['action' => $actionObject->getType(), 'url' => '{{PageObject}}', 'stepKey' => $actionObject->getStepKey()]
+        );
+
+        // Verify
+        $expected = [
+            'url' => '{{PageObject}}'
         ];
         $this->assertEquals($expected, $actionObject->getCustomActionAttributes());
     }
@@ -256,11 +305,41 @@ class ActionObjectTest extends TestCase
     }
 
     /**
+     * {{EntityDataObject.values}} should be replaced with ["value1","value2"]
+     */
+    public function testResolveArrayData()
+    {
+        // Set up mocks
+        $actionObject = new ActionObject('merge123', 'fillField', [
+            'selector' => '#selector',
+            'userInput' => '{{EntityDataObject.values}}'
+        ]);
+        $entityDataObject = new EntityDataObject('EntityDataObject', 'test', [
+            'values' => [
+                'value1',
+                'value2',
+                '"My" Value'
+            ]
+        ], [], '', '');
+        $this->mockDataHandlerWithData($entityDataObject);
+
+        // Call the method under test
+        $actionObject->resolveReferences();
+
+        // Verify
+        $expected = [
+            'selector' => '#selector',
+            'userInput' => '["value1","value2","\"My\" Value"]'
+        ];
+        $this->assertEquals($expected, $actionObject->getCustomActionAttributes());
+    }
+
+    /**
      * Action object should throw an exception if a reference to a parameterized selector has too few given args.
      */
     public function testTooFewArgumentException()
     {
-        $this->expectException('Magento\FunctionalTestingFramework\Exceptions\TestReferenceException');
+        $this->expectException(TestReferenceException::class);
 
         $actionObject = new ActionObject('key123', 'fillField', [
             'selector' => "{{SectionObject.elementObject('arg1')}}",
@@ -278,7 +357,7 @@ class ActionObjectTest extends TestCase
      */
     public function testTooManyArgumentException()
     {
-        $this->expectException('Magento\FunctionalTestingFramework\Exceptions\TestReferenceException');
+        $this->expectException(TestReferenceException::class);
 
         $actionObject = new ActionObject('key123', 'fillField', [
             'selector' => "{{SectionObject.elementObject('arg1', 'arg2', 'arg3')}}",
@@ -286,6 +365,21 @@ class ActionObjectTest extends TestCase
         ]);
         $elementObject = new ElementObject('elementObject', 'button', '#{{var1}}', null, '42', true);
         $this->mockSectionHandlerWithElement($elementObject);
+
+        // Call the method under test
+        $actionObject->resolveReferences();
+    }
+
+    /**
+     * Action object should throw an exception if the timezone provided is not valid.
+     */
+    public function testInvalidTimezoneException()
+    {
+        $this->expectException(TestReferenceException::class);
+
+        $actionObject = new ActionObject('key123', 'generateDate', [
+            'timezone' => "INVALID_TIMEZONE"
+        ]);
 
         // Call the method under test
         $actionObject->resolveReferences();
@@ -304,5 +398,14 @@ class ActionObjectTest extends TestCase
         $dataInstance = AspectMock::double(DataObjectHandler::class, ['getObject' => $dataObject])
             ->make();
         AspectMock::double(DataObjectHandler::class, ['getInstance' => $dataInstance]);
+    }
+
+    /**
+     * After class functionality
+     * @return void
+     */
+    public static function tearDownAfterClass()
+    {
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 }

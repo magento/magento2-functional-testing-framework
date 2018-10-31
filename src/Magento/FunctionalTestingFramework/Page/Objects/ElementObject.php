@@ -58,12 +58,12 @@ class ElementObject
 
     /**
      * ElementObject constructor.
-     * @param string $name
-     * @param string $type
-     * @param string $selector
-     * @param string $locatorFunction
-     * @param string $timeout
-     * @param bool $parameterized
+     * @param string  $name
+     * @param string  $type
+     * @param string  $selector
+     * @param string  $locatorFunction
+     * @param string  $timeout
+     * @param boolean $parameterized
      * @throws XmlException
      */
     public function __construct($name, $type, $selector, $locatorFunction, $timeout, $parameterized)
@@ -138,7 +138,7 @@ class ElementObject
     /**
      * Returns an integer representing an element's timeout
      *
-     * @return int|null
+     * @return integer|null
      */
     public function getTimeout()
     {
@@ -152,9 +152,8 @@ class ElementObject
     /**
      * Determines if the element's selector is parameterized. Based on $parameterized property.
      *
-     * @return bool
+     * @return boolean
      */
-
     public function isParameterized()
     {
         return $this->parameterized;

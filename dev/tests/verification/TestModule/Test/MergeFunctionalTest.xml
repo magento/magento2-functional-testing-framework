@@ -11,7 +11,7 @@
     <test name="BasicMergeTest">
         <annotations>
             <severity value="CRITICAL"/>
-            <title value="A Functional Cest"/>
+            <title value="BasicMergeTest"/>
             <group value="functional"/>
             <features value="Merge Functional Cest"/>
             <stories value="MQE-433"/>
@@ -31,7 +31,7 @@
     <test name="MergedReferencesTest">
         <annotations>
             <severity value="CRITICAL"/>
-            <title value="A Functional Cest"/>
+            <title value="MergedReferencesTest"/>
             <group value="functional"/>
             <features value="Merge Functional Cest"/>
             <stories value="MQE-433"/>
@@ -44,5 +44,18 @@
         </after>
         <fillField stepKey="fillField1" selector="{{SampleSection.mergeElement}}" userInput="{{DefaultPerson.mergedField}}"/>
         <fillField stepKey="fillField2" selector="{{SampleSection.newElement}}" userInput="{{DefaultPerson.newField}}" />
+    </test>
+    <test name="MergeMassViaInsertBefore" insertBefore="fillField2">
+        <click stepKey="clickOne" selector="#mergeOne"/>
+        <click stepKey="clickTwo" selector="#mergeTwo"/>
+        <click stepKey="clickThree" selector="#mergeThree"/>
+    </test>
+    <test name="MergeMassViaInsertAfter" insertAfter="fillField2">
+        <click stepKey="clickOne" selector="#mergeOne"/>
+        <click stepKey="clickTwo" selector="#mergeTwo"/>
+        <click stepKey="clickThree" selector="#mergeThree"/>
+    </test>
+    <test name="MergeSkip">
+        <comment userInput="ThisTestShouldBeSkipped" stepKey="skipComment"/>
     </test>
 </tests>

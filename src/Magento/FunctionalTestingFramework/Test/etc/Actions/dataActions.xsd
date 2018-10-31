@@ -43,6 +43,14 @@
         </xs:annotation>
     </xs:attribute>
 
+    <xs:attribute type="xs:string" name="actionGroup">
+        <xs:annotation>
+            <xs:documentation>
+                StepKey of the ActionGroup where this data was created, if it was created in one.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
     <!-- Complex Types -->
     <xs:complexType name="createDataType">
         <xs:annotation>
@@ -66,8 +74,8 @@
         </xs:choice>
         <xs:attribute ref="entity" use="required"/>
         <xs:attribute ref="createDataKey" use="required"/>
+        <xs:attribute ref="actionGroup"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
-        <xs:attribute ref="storeCode"/>
     </xs:complexType>
 
     <xs:complexType name="deleteDataType">
@@ -76,9 +84,10 @@
         </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute ref="createDataKey" use="required"/>
+                <xs:attribute ref="url"/>
+                <xs:attribute ref="createDataKey"/>
+                <xs:attribute ref="actionGroup"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
-                <xs:attribute ref="storeCode"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -109,6 +118,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute ref="createDataKey" use="required"/>
+                <xs:attribute ref="actionGroup"/>
                 <xs:attribute name="before"/>
                 <xs:attribute name="after"/>
             </xs:extension>

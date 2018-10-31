@@ -28,7 +28,7 @@ class SectionObject
     /**
      * SectionObject constructor.
      * @param string $name
-     * @param array $elements
+     * @param array  $elements
      */
     public function __construct($name, $elements)
     {
@@ -59,7 +59,7 @@ class SectionObject
     /**
      * Checks to see if this section contains any element by the name of elementName
      * @param string $elementName
-     * @return bool
+     * @return boolean
      */
     public function hasElement($elementName)
     {
