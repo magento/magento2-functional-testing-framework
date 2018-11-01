@@ -35,6 +35,7 @@ class CommandList implements CommandListInterface
              'generate:tests' => new GenerateTestsCommand(),
              'run:test' => new RunTestCommand(),
              'run:group' => new RunTestGroupCommand(),
+             'run:failed' => new RunTestFailedCommand(),
              'setup:env' => new SetupEnvCommand(),
              'upgrade:tests' => new UpgradeTestsCommand(),
         ] + $commands;

@@ -1,6 +1,20 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.3.10
+-----
+### Enhancements
+* Maintainability
+    * Added new `mftf run:failed` commands, which reruns all failed tests from last run configuration.
+    
+### Fixes
+* Fixed an issue where mftf would fail to parse test materials for extensions installed under `vendor`.
+
+2.3.9
+-----
+### Fixes
+* Logic for parallel execution were updated to split default tests and suites from running in one group.
+
 2.3.8
 -----
 ### Fixes

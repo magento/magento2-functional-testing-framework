@@ -47,12 +47,18 @@ class ParallelGroupSorter
         $testGroups = [];
         $splitSuiteNamesToTests = $this->createGroupsWithinSuites($suiteConfiguration, $time);
         $splitSuiteNamesToSize = $this->getSuiteToSize($splitSuiteNamesToTests);
-        $entriesForGeneration = array_merge($testNameToSize, $splitSuiteNamesToSize);
-        arsort($entriesForGeneration);
+        arsort($testNameToSize);
+        arsort($splitSuiteNamesToSize);
 
-        $testNameToSizeForUse = $entriesForGeneration;
+        $testNameToSizeForUse = $testNameToSize;
         $nodeNumber = 1;
-        foreach ($entriesForGeneration as $testName => $testSize) {
+
+        foreach ($splitSuiteNamesToSize as $testName => $testSize) {
+            $testGroups[$nodeNumber] = [$testName => $testSize];
+            $nodeNumber++;
+        }
+
+        foreach ($testNameToSize as $testName => $testSize) {
             if (!array_key_exists($testName, $testNameToSizeForUse)) {
                 // skip tests which have already been added to a group
                 continue;

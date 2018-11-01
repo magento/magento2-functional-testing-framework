@@ -39,11 +39,6 @@ class ModuleResolver
     const REGISTRAR_CLASS = "\Magento\Framework\Component\ComponentRegistrar";
 
     /**
-     * Magento Directory Structure Name Prefix
-     */
-    const MAGENTO_PREFIX = "Magento_";
-
-    /**
      * Enabled modules.
      *
      * @var array|null
@@ -277,8 +272,14 @@ class ModuleResolver
         $allComponents = $this->getRegisteredModuleList();
 
         foreach ($relevantPaths as $codePath) {
+            // Reduce magento/app/code/Magento/AdminGws/<pattern> to magento/app/code/Magento/AdminGws to read symlink
+            // Symlinks must be resolved otherwise they will not match Magento's filepath to the module
+            $potentialSymlink = str_replace(DIRECTORY_SEPARATOR . $pattern, "", $codePath);
+            if (is_link($potentialSymlink)) {
+                $codePath = readlink($potentialSymlink) . DIRECTORY_SEPARATOR . $pattern;
+            }
+
             $mainModName = array_search($codePath, $allComponents) ?: basename(str_replace($pattern, '', $codePath));
-            $mainModName = str_replace(self::MAGENTO_PREFIX, "", $mainModName);
             $modulePaths[$mainModName][] = $codePath;
 
             if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
@@ -340,17 +341,16 @@ class ModuleResolver
     {
         $enabledDirectoryPaths = [];
         foreach ($enabledModules as $magentoModuleName) {
-            // Magento_Backend -> Backend or DevDocs -> DevDocs (if whitelisted has no underscore)
-            $moduleShortName = explode('_', $magentoModuleName)[1] ?? $magentoModuleName;
-            if (!isset($this->knownDirectories[$moduleShortName]) && !isset($allModulePaths[$moduleShortName])) {
+            if (!isset($this->knownDirectories[$magentoModuleName]) && !isset($allModulePaths[$magentoModuleName])) {
                 continue;
-            } elseif (isset($this->knownDirectories[$moduleShortName]) && !isset($allModulePaths[$moduleShortName])) {
+            } elseif (isset($this->knownDirectories[$magentoModuleName])
+                && !isset($allModulePaths[$magentoModuleName])) {
                 LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->warn(
                     "Known directory could not match to an existing path.",
-                    ['knownDirectory' => $moduleShortName]
+                    ['knownDirectory' => $magentoModuleName]
                 );
             } else {
-                $enabledDirectoryPaths[$moduleShortName] = $allModulePaths[$moduleShortName];
+                $enabledDirectoryPaths[$magentoModuleName] = $allModulePaths[$magentoModuleName];
             }
         }
         return $enabledDirectoryPaths;
