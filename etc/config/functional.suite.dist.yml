@@ -26,6 +26,7 @@ modules:
     config:
         \Magento\FunctionalTestingFramework\Module\MagentoWebDriver:
             url: "%MAGENTO_BASE_URL%"
+            backend_url: "%MAGENTO_BACKEND_BASE_URL%"
             backend_name: "%MAGENTO_BACKEND_NAME%"
             browser: 'chrome'
             restart: true

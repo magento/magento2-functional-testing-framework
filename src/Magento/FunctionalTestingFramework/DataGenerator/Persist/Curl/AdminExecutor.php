@@ -37,17 +37,10 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
     private $response;
 
     /**
-     * Should executor remove backend_name from api url
+     * Flag describes whether the request is to Magento Base URL, removes backend_name from api url
      * @var boolean
      */
     private $removeBackend;
-
-    /**
-     * Backend url.
-     *
-     * @var string
-     */
-    private static $adminUrl;
 
     /**
      * Constructor.
@@ -58,13 +51,15 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
      */
     public function __construct($removeBackend)
     {
-        if (!isset(parent::$baseUrl)) {
-            parent::resolveBaseUrl();
-        }
-        self::$adminUrl = parent::$baseUrl . getenv('MAGENTO_BACKEND_NAME') . '/';
         $this->removeBackend = $removeBackend;
         $this->transport = new CurlTransport();
         $this->authorize();
+    }
+
+    public function getBaseUrl(): string
+    {
+        $backendHost = getenv('MAGENTO_BACKEND_BASE_URL') ?: parent::getBaseUrl();
+        return $backendHost . getenv('MAGENTO_BACKEND_NAME') . '/';
     }
 
     /**
@@ -76,11 +71,11 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
     private function authorize()
     {
         // Perform GET to backend url so form_key is set
-        $this->transport->write(self::$adminUrl, [], CurlInterface::GET);
+        $this->transport->write($this->getBaseUrl(), [], CurlInterface::GET);
         $this->read();
 
         // Authenticate admin user
-        $authUrl = self::$adminUrl . 'admin/auth/login/';
+        $authUrl = $this->getBaseUrl() . 'admin/auth/login/';
         $data = [
             'login[username]' => getenv('MAGENTO_ADMIN_USERNAME'),
             'login[password]' => getenv('MAGENTO_ADMIN_PASSWORD'),
@@ -110,19 +105,19 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
      * Send request to the remote server.
      *
      * @param string $url
-     * @param array  $data
+     * @param array $data
      * @param string $method
-     * @param array  $headers
+     * @param array $headers
      * @return void
      * @throws TestFrameworkException
      */
     public function write($url, $data = [], $method = CurlInterface::POST, $headers = [])
     {
         $url = ltrim($url, "/");
-        $apiUrl = self::$adminUrl . $url;
+        $apiUrl = $this->getBaseUrl() . $url;
 
         if ($this->removeBackend) {
-            $apiUrl = parent::$baseUrl . $url;
+            $apiUrl = parent::getBaseUrl() . $url;
         }
 
         if ($this->formKey) {
@@ -168,7 +163,7 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
     /**
      * Add additional option to cURL.
      *
-     * @param integer                      $option CURLOPT_* constants.
+     * @param integer $option CURLOPT_* constants.
      * @param integer|string|boolean|array $value
      * @return void
      */
