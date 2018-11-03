@@ -20,6 +20,10 @@ abstract class AbstractExecutor implements CurlInterface
      */
     protected static $baseUrl = null;
 
+    /**
+     * Returns base URL for Magento instance
+     * @return string
+     */
     public function getBaseUrl(): string
     {
         return getenv('MAGENTO_BASE_URL');

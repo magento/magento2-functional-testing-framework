@@ -56,6 +56,10 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
         $this->authorize();
     }
 
+    /**
+     * Returns base URL for Magento backend instance
+     * @return string
+     */
     public function getBaseUrl(): string
     {
         $backendHost = getenv('MAGENTO_BACKEND_BASE_URL') ?: parent::getBaseUrl();

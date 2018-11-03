@@ -65,7 +65,7 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
     }
 
     /**
-     * Returns WebApi base URL, fallback to Magento Base URL
+     * Returns base URL for Magento Web API instance
      * @return string
      */
     public function getBaseUrl(): string
