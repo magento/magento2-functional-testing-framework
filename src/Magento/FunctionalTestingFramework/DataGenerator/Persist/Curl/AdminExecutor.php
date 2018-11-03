@@ -109,9 +109,9 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
      * Send request to the remote server.
      *
      * @param string $url
-     * @param array $data
+     * @param array  $data
      * @param string $method
-     * @param array $headers
+     * @param array  $headers
      * @return void
      * @throws TestFrameworkException
      */
@@ -167,7 +167,7 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
     /**
      * Add additional option to cURL.
      *
-     * @param integer $option CURLOPT_* constants.
+     * @param integer                      $option CURLOPT_* constants.
      * @param integer|string|boolean|array $value
      * @return void
      */

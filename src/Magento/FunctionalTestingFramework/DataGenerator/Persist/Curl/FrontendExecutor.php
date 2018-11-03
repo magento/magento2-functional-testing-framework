@@ -85,7 +85,7 @@ class FrontendExecutor extends AbstractExecutor implements CurlInterface
         $this->transport->write($url);
         $this->read();
 
-        $url = $this->getBaseUrl()  . 'customer/account/loginPost/';
+        $url = $this->getBaseUrl() . 'customer/account/loginPost/';
         $data = [
             'login[username]' => $this->customerEmail,
             'login[password]' => $this->customerPassword,

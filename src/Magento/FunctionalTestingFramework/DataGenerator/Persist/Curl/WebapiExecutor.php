@@ -81,7 +81,7 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
         }
 
         if ($webapiPort) {
-            $baseUrl = rtrim($baseUrl,'/').':'.$webapiPort.'/';
+            $baseUrl = rtrim($baseUrl, '/') . ':' . $webapiPort . '/';
         }
 
         return $baseUrl;
@@ -175,7 +175,7 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
         if ($this->storeCode != null) {
             $urlResult .= $this->storeCode . "/";
         }
-        $urlResult.= trim($resource, "/");
+        $urlResult .= trim($resource, "/");
         return $urlResult;
     }
 }
