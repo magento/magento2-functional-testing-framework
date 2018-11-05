@@ -41,6 +41,7 @@ class LoggingUtil
 
     /**
      * Avoids instantiation of LoggingUtil by new.
+     * @return void
      */
     private function __construct()
     {
@@ -48,6 +49,7 @@ class LoggingUtil
 
     /**
      * Avoids instantiation of LoggingUtil by clone.
+     * @return void
      */
     private function __clone()
     {

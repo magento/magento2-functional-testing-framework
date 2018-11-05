@@ -34,6 +34,7 @@ class SuiteObjectHandler implements ObjectHandlerInterface
 
     /**
      * Avoids instantiation of SuiteObjectHandler by new.
+     * @return void
      */
     private function __construct()
     {
@@ -41,6 +42,7 @@ class SuiteObjectHandler implements ObjectHandlerInterface
 
     /**
      * Avoids instantiation of SuiteObjectHandler by clone.
+     * @return void
      */
     private function __clone()
     {
