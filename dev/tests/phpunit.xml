@@ -21,6 +21,7 @@
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="false">
+            <directory suffix=".php">../../src/Magento/FunctionalTestingFramework/Data</directory>
             <directory suffix=".php">../../src/Magento/FunctionalTestingFramework/DataGenerator</directory>
             <directory suffix=".php">../../src/Magento/FunctionalTestingFramework/Page</directory>
             <directory suffix=".php">../../src/Magento/FunctionalTestingFramework/Suite</directory>

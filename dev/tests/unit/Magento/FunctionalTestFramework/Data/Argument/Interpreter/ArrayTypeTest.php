@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 class ArrayTypeTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|Magento\FunctionalTestingFramework\Data\Argument\InterpreterInterface
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\FunctionalTestingFramework\Data\Argument\InterpreterInterface
      */
     private $itemInterpreterMock;
 
