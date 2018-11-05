@@ -101,9 +101,9 @@ class ArrayType implements InterpreterInterface
         if ($firstValue == $secondValue) {
             // These keys reflect initial relative position of items.
             // Allows stable sort for items with equal 'sortOrder'
-            return $firstItemKey < $secondItemKey ? -1 : 1;
+            return $firstItemKey <=> $secondItemKey;
         }
-        return $firstValue < $secondValue ? -1 : 1;
+        return $firstValue <=> $secondValue;
     }
 
     /**
