@@ -72,7 +72,7 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
      * @param string $actionGroupName
      * @return ActionGroupObject
      */
-    public function getObject($actionGroupName): ActionGroupObject
+    public function getObject($actionGroupName)
     {
         if (array_key_exists($actionGroupName, $this->actionGroups)) {
             $actionGroupObject = $this->actionGroups[$actionGroupName];
