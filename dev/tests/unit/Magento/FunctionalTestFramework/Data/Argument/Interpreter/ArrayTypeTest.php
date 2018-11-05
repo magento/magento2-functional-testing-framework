@@ -46,7 +46,7 @@ class ArrayTypeTest extends TestCase
             'item' => 'NotAnArray'
         ];
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Array items are expected');
 
         $this->arrayType->evaluate($dataStub);
