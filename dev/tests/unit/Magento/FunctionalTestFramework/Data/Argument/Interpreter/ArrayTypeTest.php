@@ -1,13 +1,18 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+namespace Tests\unit\Magento\FunctionalTestFramework\Test\Data\Argument\Interpreter;
 
 use Magento\FunctionalTestingFramework\Data\Argument\Interpreter\ArrayType;
+use Magento\FunctionalTestingFramework\Data\Argument\InterpreterInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Class TestArrayType
- * @covers \Magento\FunctionalTestingFramework\Data\Argument\Interpreter\ArrayType
  */
-class TestArrayType extends TestCase
+class ArrayTypeTest extends TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|Magento\FunctionalTestingFramework\Data\Argument\InterpreterInterface
@@ -19,9 +24,9 @@ class TestArrayType extends TestCase
      */
     private $arrayType;
 
-    public function SetUp()
+    public function setUp()
     {
-        $this->itemInterpreterMock = $this->getMockForAbstractClass(\Magento\FunctionalTestingFramework\Data\Argument\InterpreterInterface::class);
+        $this->itemInterpreterMock = $this->getMockForAbstractClass(InterpreterInterface::class);
         $this->arrayType = new ArrayType($this->itemInterpreterMock);
     }
 
