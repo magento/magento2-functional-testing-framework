@@ -33,7 +33,7 @@ class ArrayType implements InterpreterInterface
      * @return array
      * @throws \InvalidArgumentException
      */
-    public function evaluate(array $data)
+    public function evaluate(array $data): array
     {
         $items = isset($data['item']) ? $data['item'] : [];
         if (!is_array($items)) {
@@ -53,7 +53,7 @@ class ArrayType implements InterpreterInterface
      * @param array $items
      * @return array
      */
-    private function sortItems($items)
+    private function sortItems(array $items): array
     {
         $sortOrderDefined = $this->isSortOrderDefined($items);
         if ($sortOrderDefined) {
@@ -84,7 +84,7 @@ class ArrayType implements InterpreterInterface
      * @param array          $indexedItems
      * @return integer
      */
-    private function compareItems($firstItemKey, $secondItemKey, $indexedItems)
+    private function compareItems($firstItemKey, $secondItemKey, array $indexedItems): int
     {
         $firstItem = $indexedItems[$firstItemKey]['item'];
         $secondItem = $indexedItems[$secondItemKey]['item'];
@@ -112,7 +112,7 @@ class ArrayType implements InterpreterInterface
      * @param array $items
      * @return boolean
      */
-    private function isSortOrderDefined($items)
+    private function isSortOrderDefined(array $items): bool
     {
         foreach ($items as $itemData) {
             if (isset($itemData['sortOrder'])) {
