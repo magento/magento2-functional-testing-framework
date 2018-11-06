@@ -6,13 +6,13 @@
 
 ## Installation
 
-For the installation guidelines and system requirements, read [Getting Started](https://devdocs.magento.com/mftf/2.3/getting-started.html).
+For the installation guidelines and system requirements, refer to [Getting Started](https://devdocs.magento.com/mftf/2.3/getting-started.html).
 
 ## Contributing
 
 We would appreciate your contributions to new components or new features, changes to the existing features, tests, documentation, specifications, bug fixes, optimizations, or just good suggestions.
 Report about an issue or request features opening a GitHub issue.
-Learn more about contributing in our [Contribution Guidelines](https://devdocs.magento.com/mftf/2.3/contribution-guidelines.html).
+Learn more about contributing in our [Contribution Guidelines](.github/CONTRIBUTING.md).
 
 If you want to participate in the documentation work, see [DevDocs Contributing](https://github.com/magento/devdocs/blob/master/.github/CONTRIBUTING.md).
 
