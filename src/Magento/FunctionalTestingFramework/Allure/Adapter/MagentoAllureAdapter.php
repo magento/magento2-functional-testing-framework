@@ -125,7 +125,7 @@ class MagentoAllureAdapter extends AllureAdapter
      * @throws \Yandex\Allure\Adapter\AllureException
      * @return void
      */
-    public function stepAfter(StepEvent $stepEvent)
+    public function stepAfter(StepEvent $stepEvent = null)
     {
         if ($stepEvent->getStep()->hasFailed()) {
             $this->getLifecycle()->fire(new StepFailedEvent());
