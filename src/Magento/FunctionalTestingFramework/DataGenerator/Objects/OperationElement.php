@@ -64,11 +64,7 @@ class OperationElement
         $this->value = $value;
         $this->type = $type;
         $this->nestedElements = $nestedElements;
-        if ($required) {
-            $this->required = true;
-        } else {
-            $this->required = false;
-        }
+        $this->required = filter_var($required, FILTER_VALIDATE_BOOLEAN);
         $this->nestedMetadata = $nestedMetadata;
     }
 

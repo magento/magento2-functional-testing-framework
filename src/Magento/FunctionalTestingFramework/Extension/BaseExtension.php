@@ -90,6 +90,9 @@ class BaseExtension extends Extension
     protected function pageChanged()
     {
         try {
+            if ($this->getDriver() === null) {
+                return false;
+            }
             $currentUri = $this->getDriver()->_getCurrentUri();
 
             if ($this->uri !== $currentUri) {

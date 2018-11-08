@@ -57,7 +57,13 @@ class ModuleResolverTest extends MagentoTestCase
     public function testGetModulePathsAggregate()
     {
         $this->mockForceGenerate(false);
-        $this->setMockResolverClass(false, null, null, null, ["example" => "example" . DIRECTORY_SEPARATOR . "paths"]);
+        $this->setMockResolverClass(
+            false,
+            null,
+            null,
+            null,
+            ["Magento_example" => "example" . DIRECTORY_SEPARATOR . "paths"]
+        );
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, [0 => "Magento_example"]);
         $this->assertEquals(
@@ -79,7 +85,7 @@ class ModuleResolverTest extends MagentoTestCase
         $this->mockForceGenerate(false);
         $mockResolver = $this->setMockResolverClass(
             true,
-            [0 => "magento_example"],
+            [0 => "example"],
             null,
             null,
             ["example" => "example" . DIRECTORY_SEPARATOR . "paths"]
@@ -101,17 +107,17 @@ class ModuleResolverTest extends MagentoTestCase
         // Define the Module paths from default TESTS_MODULE_PATH
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
 
-        // Define the Module paths from vendor modules
-        $projectRootCodePath = PROJECT_ROOT;
-
         $mockResolver->verifyInvoked('globRelevantPaths', [$modulePath, '']);
         $mockResolver->verifyInvoked(
             'globRelevantPaths',
-            [$magentoBaseCodePath, 'Test' . DIRECTORY_SEPARATOR .'Mftf']
+            [$magentoBaseCodePath . DIRECTORY_SEPARATOR . "vendor" , 'Test' . DIRECTORY_SEPARATOR .'Mftf']
         );
         $mockResolver->verifyInvoked(
             'globRelevantPaths',
-            [$projectRootCodePath, 'Test' . DIRECTORY_SEPARATOR .'Mftf']
+            [
+                $magentoBaseCodePath . DIRECTORY_SEPARATOR . "app" . DIRECTORY_SEPARATOR . "code",
+                'Test' . DIRECTORY_SEPARATOR .'Mftf'
+            ]
         );
     }
 
