@@ -53,7 +53,7 @@ class ExceptionCollector
     private function formatErrors($errors)
     {
         $flattenedErrors = [];
-        foreach ($errors as $key => $errorMsg) {
+        foreach ($errors as $errorMsg) {
             if (is_array($errorMsg)) {
                 $flattenedErrors = array_merge($flattenedErrors, $this->formatErrors($errorMsg));
                 continue;
