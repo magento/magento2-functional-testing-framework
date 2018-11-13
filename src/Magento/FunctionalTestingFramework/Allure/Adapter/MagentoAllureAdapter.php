@@ -5,10 +5,11 @@
  */
 namespace Magento\FunctionalTestingFramework\Allure\Adapter;
 
-use Magento\FunctionalTestingFramework\Data\Argument\Interpreter\NullType;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Yandex\Allure\Adapter\AllureAdapter;
 use Yandex\Allure\Adapter\Event\StepStartedEvent;
+use Yandex\Allure\Adapter\Event\StepFinishedEvent;
+use Yandex\Allure\Adapter\Event\StepFailedEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\StepEvent;
 
@@ -116,5 +117,19 @@ class MagentoAllureAdapter extends AllureAdapter
 
         $this->emptyStep = false;
         $this->getLifecycle()->fire(new StepStartedEvent($stepName));
+    }
+
+    /**
+     * Override of parent method, fires StepFailedEvent if step has failed (for xml output)
+     * @param StepEvent $stepEvent
+     * @throws \Yandex\Allure\Adapter\AllureException
+     * @return void
+     */
+    public function stepAfter(StepEvent $stepEvent = null)
+    {
+        if ($stepEvent->getStep()->hasFailed()) {
+            $this->getLifecycle()->fire(new StepFailedEvent());
+        }
+        $this->getLifecycle()->fire(new StepFinishedEvent());
     }
 }
