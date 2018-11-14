@@ -158,4 +158,32 @@
         </annotations>
         <comment userInput="child" stepKey="replaceMe"/>
     </test>
+
+    <test name="ExtendedTestInSuiteParentTest">
+        <annotations>
+            <severity value="AVERAGE"/>
+            <title value="ExtendedTestInSuiteParentTest"/>
+            <group value="ExtendedTestInSuite"/>
+            <features value="ExtendedTestInSuite"/>
+            <stories value="ExtendedTestInSuite"/>
+        </annotations>
+        <before>
+            <amOnPage url="/beforeUrl" stepKey="beforeAmOnPageKey"/>
+        </before>
+        <after>
+            <amOnPage url="/afterUrl" stepKey="afterAmOnPageKey"/>
+        </after>
+        <comment stepKey="basicCommentWithNoData" userInput="Parent Comment"/>
+    </test>
+
+    <test name="ExtendedTestInSuiteChildTest" extends="ExtendedTestInSuiteParentTest">
+        <annotations>
+            <severity value="MINOR"/>
+            <title value="ExtendedTestInSuiteChildTest"/>
+            <group value="ExtendedTestInSuiteChildTest"/>
+            <features value="ExtendedTestInSuiteChildTest"/>
+            <stories value="ExtendedTestInSuiteChildTest"/>
+        </annotations>
+        <comment stepKey="basicCommentWithNoData" userInput="Different Input"/>
+    </test>
 </tests>
