@@ -306,15 +306,8 @@ class ModuleResolver
             return glob($testPath . '*' . DIRECTORY_SEPARATOR . '*' . $pattern);
         }
         $subDirectory = "*" . DIRECTORY_SEPARATOR;
-        $directories = glob($testPath . $subDirectory . $pattern, GLOB_ONLYDIR);
+        $directories = glob(realpath($testPath) . $subDirectory . $pattern, GLOB_ONLYDIR);
         foreach (glob($testPath . $subDirectory, GLOB_ONLYDIR) as $dir) {
-            // $dir can be a symlinked module-<name>, need to check the dir + test/mftf before looping.
-            if (is_link(rtrim($dir, '/')) == true) {
-                $symLinkWithPattern = realpath(rtrim($dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $pattern);
-                if ($symLinkWithPattern !== false) {
-                    $directories[] = $symLinkWithPattern;
-                }
-            }
             $directories = array_merge_recursive($directories, self::globRelevantWrapper($dir, $pattern));
         }
         return $directories;
