@@ -276,7 +276,7 @@ class ModuleResolver
             // Symlinks must be resolved otherwise they will not match Magento's filepath to the module
             $potentialSymlink = str_replace(DIRECTORY_SEPARATOR . $pattern, "", $codePath);
             if (is_link($potentialSymlink)) {
-                $codePath = readlink($potentialSymlink) . DIRECTORY_SEPARATOR . $pattern;
+                $codePath = realpath($potentialSymlink) . DIRECTORY_SEPARATOR . $pattern;
             }
 
             $mainModName = array_search($codePath, $allComponents) ?: basename(str_replace($pattern, '', $codePath));
@@ -306,7 +306,7 @@ class ModuleResolver
             return glob($testPath . '*' . DIRECTORY_SEPARATOR . '*' . $pattern);
         }
         $subDirectory = "*" . DIRECTORY_SEPARATOR;
-        $directories = glob(realpath($testPath) . $subDirectory . $pattern, GLOB_ONLYDIR);
+        $directories = glob($testPath . $subDirectory . $pattern, GLOB_ONLYDIR);
         foreach (glob($testPath . $subDirectory, GLOB_ONLYDIR) as $dir) {
             $directories = array_merge_recursive($directories, self::globRelevantWrapper($dir, $pattern));
         }
