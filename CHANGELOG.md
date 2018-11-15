@@ -1,6 +1,11 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.3.11
+-----
+### Fixes
+* `mftf run:failed` now correctly regenerates tests that are in suites that were parallelized (`suite` => `suite_0`, `suite_1`)
+
 2.3.10
 -----
 ### Enhancements
