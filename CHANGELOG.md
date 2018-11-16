@@ -1,6 +1,11 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.3.11
+-----
+### Fixes
+* `mftf run:failed` now correctly regenerates tests that are in suites that were parallelized (`suite` => `suite_0`, `suite_1`)
+
 2.3.10
 -----
 ### Enhancements
@@ -9,6 +14,7 @@ Magento Functional Testing Framework Changelog
     
 ### Fixes
 * Fixed an issue where mftf would fail to parse test materials for extensions installed under `vendor`.
+* Fixed a Windows compatibility issue around the use of Magento's `ComponentRegistrar` to aggregate paths.
 * Fixed an issue where an `element` with no `type` would cause PHP warnings during test runs.
 
 2.3.9

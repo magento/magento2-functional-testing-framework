@@ -554,7 +554,9 @@ class ModuleResolver
                 $allComponents = array_merge($allComponents, $components->getPaths($componentType));
             }
             array_walk($allComponents, function (&$value) {
-                $value .= DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR . 'Mftf';
+                // Magento stores component paths with unix DIRECTORY_SEPARATOR, need to stay uniform and convert
+                $value .= '/Test/Mftf';
+                $value = realpath($value);
             });
             return $allComponents;
         } catch (TestFrameworkException $e) {

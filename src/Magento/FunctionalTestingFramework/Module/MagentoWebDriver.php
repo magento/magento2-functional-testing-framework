@@ -596,23 +596,29 @@ class MagentoWebDriver extends WebDriver
      */
     public function dragAndDrop($source, $target, $xOffset = null, $yOffset = null)
     {
-        if ($xOffset !== null || $yOffset !== null) {
-            $snodes = $this->matchFirstOrFail($this->baseElement, $source);
-            $tnodes = $this->matchFirstOrFail($this->baseElement, $target);
+        if ($xOffset === null && $yOffset === null) {
+            parent::dragAndDrop($source, $target);
+        } else {
+            $sNode = $this->matchFirstOrFail($this->baseElement, $source);
+            $tNode = $this->matchFirstOrFail($this->baseElement, $target);
 
-            $targetX = intval($tnodes->getLocation()->getX() + $xOffset);
-            $targetY = intval($tnodes->getLocation()->getY() + $yOffset);
+            $sHeight = $sNode->getSize()->getHeight();
+            $sWidth = $sNode->getSize()->getWidth();
 
-            $travelX = intval($targetX - $snodes->getLocation()->getX());
-            $travelY = intval($targetY - $snodes->getLocation()->getY());
+            $travelX = intval($tNode->getLocation()->getX() - $sNode->getLocation()->getX() + $xOffset);
+            $travelY = intval($tNode->getLocation()->getY() - $sNode->getLocation()->getY() + $yOffset);
 
             $action = new WebDriverActions($this->webDriver);
-            $action->moveToElement($snodes)->perform();
-            $action->clickAndHold($snodes)->perform();
-            $action->moveByOffset($travelX, $travelY)->perform();
-            $action->release()->perform();
-        } else {
-            parent::dragAndDrop($source, $target);
+            if ($travelX >0 && $travelY >0 && $travelX < $sWidth && $travelY < $sHeight) {
+                // Perform separate action steps when dragging and dropping inside the source element boundary
+                $action->moveToElement($sNode)->perform();
+                $action->clickAndHold($sNode)->perform();
+                $action->moveByOffset($travelX, $travelY)->perform();
+                $action->release()->perform();
+            } else {
+                // Call dragAndDropBy otherwise
+                $action->dragAndDropBy($sNode, $travelX, $travelY)->perform();
+            }
         }
     }
 
