@@ -85,7 +85,7 @@ class SuiteObjectHandlerTest extends MagentoTestCase
         $property->setValue(null);
 
         // clear suite object handler value to inject parsed content
-        $property = new \ReflectionProperty(SuiteObjectHandler::class, 'SUITE_OBJECT_HANLDER_INSTANCE');
+        $property = new \ReflectionProperty(SuiteObjectHandler::class, 'instance');
         $property->setAccessible(true);
         $property->setValue(null);
 

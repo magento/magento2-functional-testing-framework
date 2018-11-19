@@ -33,7 +33,7 @@ class SuiteGenerator
      *
      * @var SuiteGenerator
      */
-    private static $SUITE_GENERATOR_INSTANCE;
+    private static $instance;
 
     /**
      * Group Class Generator initialized in constructor.
@@ -43,7 +43,8 @@ class SuiteGenerator
     private $groupClassGenerator;
 
     /**
-     * SuiteGenerator constructor.
+     * Avoids instantiation of LoggingUtil by new.
+     * @return void
      */
     private function __construct()
     {
@@ -51,20 +52,28 @@ class SuiteGenerator
     }
 
     /**
+     * Avoids instantiation of SuiteGenerator by clone.
+     * @return void
+     */
+    private function __clone()
+    {
+    }
+
+    /**
      * Singleton method which is used to retrieve the instance of the suite generator.
      *
      * @return SuiteGenerator
      */
-    public static function getInstance()
+    public static function getInstance(): SuiteGenerator
     {
-        if (!self::$SUITE_GENERATOR_INSTANCE) {
+        if (!self::$instance) {
             // clear any previous configurations before any generation occurs.
             self::clearPreviousGroupPreconditions();
             self::clearPreviousSessionConfigEntries();
-            self::$SUITE_GENERATOR_INSTANCE = new SuiteGenerator();
+            self::$instance = new SuiteGenerator();
         }
 
-        return self::$SUITE_GENERATOR_INSTANCE;
+        return self::$instance;
     }
 
     /**
