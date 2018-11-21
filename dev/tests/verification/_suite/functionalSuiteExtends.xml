@@ -9,7 +9,7 @@
 <suites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../src/Magento/FunctionalTestingFramework/Suite/etc/suiteSchema.xsd">
     <suite name="suiteExtends">
         <include>
-            <group name="ExtendedTestInSuiteChildTest"/>
+            <group name="ExtendedTestInSuite"/>
         </include>
     </suite>
 </suites>
