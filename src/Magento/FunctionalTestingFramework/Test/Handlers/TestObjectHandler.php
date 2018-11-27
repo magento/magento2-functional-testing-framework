@@ -110,7 +110,7 @@ class TestObjectHandler implements ObjectHandlerInterface
         foreach ($this->tests as $test) {
             /** @var TestObject $test */
             if (in_array($groupName, $test->getAnnotationByName('group'))) {
-                $relevantTests[$test->getName()] = $test;
+                $relevantTests[$test->getName()] = $this->extendTest($test);
                 continue;
             }
         }

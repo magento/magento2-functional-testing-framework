@@ -149,7 +149,7 @@ class SuiteGeneratorTest extends MagentoTestCase
      */
     private function setMockTestAndSuiteParserOutput($testData, $suiteData)
     {
-        $property = new \ReflectionProperty(SuiteGenerator::class, 'SUITE_GENERATOR_INSTANCE');
+        $property = new \ReflectionProperty(SuiteGenerator::class, 'instance');
         $property->setAccessible(true);
         $property->setValue(null);
 
@@ -159,7 +159,7 @@ class SuiteGeneratorTest extends MagentoTestCase
         $property->setValue(null);
 
         // clear suite object handler value to inject parsed content
-        $property = new \ReflectionProperty(SuiteObjectHandler::class, 'SUITE_OBJECT_HANLDER_INSTANCE');
+        $property = new \ReflectionProperty(SuiteObjectHandler::class, 'instance');
         $property->setAccessible(true);
         $property->setValue(null);
 
