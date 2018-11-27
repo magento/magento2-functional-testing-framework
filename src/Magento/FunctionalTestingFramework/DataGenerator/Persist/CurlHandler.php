@@ -197,6 +197,7 @@ class CurlHandler
     {
         $urlOut = $urlIn;
         $matchedParams = [];
+        // Find all the params ({}) references
         preg_match_all("/[{](.+?)[}]/", $urlIn, $matchedParams);
 
         if (!empty($matchedParams)) {
@@ -204,6 +205,8 @@ class CurlHandler
                 $paramEntityParent = "";
                 $matchedParent = [];
                 $dataItem = $matchedParams[1][$paramKey];
+                // Find all the parent property (Type.key) references, assuming there will be only one
+                // parent property reference within one param
                 preg_match_all("/(.+?)\./", $dataItem, $matchedParent);
 
                 if (!empty($matchedParent) && !empty($matchedParent[0])) {
