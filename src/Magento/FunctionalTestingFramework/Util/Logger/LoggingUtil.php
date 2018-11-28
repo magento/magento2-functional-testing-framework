@@ -19,55 +19,63 @@ class LoggingUtil
     private $loggers = [];
 
     /**
-     * Singleton LogginUtil Instance
+     * Singleton LoggingUtil Instance
      *
      * @var LoggingUtil
      */
-    private static $INSTANCE;
+    private static $instance;
 
     /**
      * Singleton accessor for instance variable
      *
      * @return LoggingUtil
      */
-    public static function getInstance()
+    public static function getInstance(): LoggingUtil
     {
-        if (self::$INSTANCE == null) {
-            self::$INSTANCE = new LoggingUtil();
+        if (self::$instance === null) {
+            self::$instance = new LoggingUtil();
         }
 
-        return self::$INSTANCE;
+        return self::$instance;
     }
 
     /**
-     * Constructor for Logging Util
+     * Avoids instantiation of LoggingUtil by new.
+     * @return void
      */
     private function __construct()
     {
-        // private constructor
+    }
+
+    /**
+     * Avoids instantiation of LoggingUtil by clone.
+     * @return void
+     */
+    private function __clone()
+    {
     }
 
     /**
      * Creates a new logger instances based on class name if it does not exist. If logger instance already exists, the
      * existing instance is simply returned.
      *
-     * @param string $clazz
+     * @param string $className
      * @return MftfLogger
      * @throws \Exception
      */
-    public function getLogger($clazz)
+    public function getLogger($className): MftfLogger
     {
-        if ($clazz == null) {
-            throw new \Exception("You must pass a class to receive a logger");
+        if ($className == null) {
+            throw new \Exception("You must pass a class name to receive a logger");
         }
 
-        if (!array_key_exists($clazz, $this->loggers)) {
-            $logger = new MftfLogger($clazz);
+        if (!array_key_exists($className, $this->loggers)) {
+            $logger = new MftfLogger($className);
             $logger->pushHandler(new StreamHandler($this->getLoggingPath()));
-            $this->loggers[$clazz] = $logger;
+            $this->loggers[$className] = $logger;
         }
 
-        return $this->loggers[$clazz];
+        return $this->loggers[$className];
     }
 
     /**
@@ -75,7 +83,7 @@ class LoggingUtil
      *
      * @return string
      */
-    public function getLoggingPath()
+    public function getLoggingPath(): string
     {
         return TESTS_BP . DIRECTORY_SEPARATOR . "mftf.log";
     }

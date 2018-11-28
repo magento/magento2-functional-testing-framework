@@ -67,7 +67,7 @@ class SectionObjectHandler implements ObjectHandlerInterface
                     if (preg_match('/[^a-zA-Z0-9_]/', $elementName)) {
                         throw new XmlException(sprintf(self::ELEMENT_NAME_ERROR_MSG, $elementName, $sectionName));
                     }
-                    $elementType = $elementData[SectionObjectHandler::TYPE];
+                    $elementType = $elementData[SectionObjectHandler::TYPE] ?? null;
                     $elementSelector = $elementData[SectionObjectHandler::SELECTOR] ?? null;
                     $elementLocatorFunc = $elementData[SectionObjectHandler::LOCATOR_FUNCTION] ?? null;
                     $elementTimeout = $elementData[SectionObjectHandler::TIMEOUT] ?? null;

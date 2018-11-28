@@ -272,6 +272,13 @@ class ModuleResolver
         $allComponents = $this->getRegisteredModuleList();
 
         foreach ($relevantPaths as $codePath) {
+            // Reduce magento/app/code/Magento/AdminGws/<pattern> to magento/app/code/Magento/AdminGws to read symlink
+            // Symlinks must be resolved otherwise they will not match Magento's filepath to the module
+            $potentialSymlink = str_replace(DIRECTORY_SEPARATOR . $pattern, "", $codePath);
+            if (is_link($potentialSymlink)) {
+                $codePath = readlink($potentialSymlink) . DIRECTORY_SEPARATOR . $pattern;
+            }
+
             $mainModName = array_search($codePath, $allComponents) ?: basename(str_replace($pattern, '', $codePath));
             $modulePaths[$mainModName][] = $codePath;
 
@@ -546,7 +553,9 @@ class ModuleResolver
                 $allComponents = array_merge($allComponents, $components->getPaths($componentType));
             }
             array_walk($allComponents, function (&$value) {
-                $value .= DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR . 'Mftf';
+                // Magento stores component paths with unix DIRECTORY_SEPARATOR, need to stay uniform and convert
+                $value .= '/Test/Mftf';
+                $value = realpath($value);
             });
             return $allComponents;
         } catch (TestFrameworkException $e) {

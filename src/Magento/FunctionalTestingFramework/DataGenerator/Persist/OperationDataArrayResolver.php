@@ -66,6 +66,8 @@ class OperationDataArrayResolver
      * @return array
      * @throws \Exception
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function resolveOperationDataArray($entityObject, $operationMetadata, $operation, $fromArray = false)
     {
@@ -134,7 +136,6 @@ class OperationDataArrayResolver
                     ));
                 }
             } else {
-
                 $operationElementProperty = null;
                 if (strpos($operationElementType, '.') !== false) {
                     $operationElementComponents = explode('.', $operationElementType);
@@ -154,7 +155,6 @@ class OperationDataArrayResolver
                     ));
                 }
                 foreach ($entityNamesOfType as $entityName) {
-
                     if ($operationElementProperty === null) {
                         $operationDataSubArray = $this->resolveNonPrimitiveElement(
                             $entityName,
