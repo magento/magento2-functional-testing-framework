@@ -68,5 +68,7 @@ class SectionReplacementTestCest
 		$I->click("#stringLiteral1-" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . " .Doe" . msq("uniqueData"));
 		$I->click("#element .1#element .2");
 		$I->click("#element .1#element .{$data}");
+		$I->click("(//div[@data-role='slide'])[1]/a[@data-element='link'][contains(@href,'')]");
+		$I->click("(//div[@data-role='slide'])[1]/a[@data-element='link'][contains(@href,' ')]");
 	}
 }
