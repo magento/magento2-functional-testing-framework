@@ -197,14 +197,16 @@ class CurlHandler
     {
         $urlOut = $urlIn;
         $matchedParams = [];
+        // Find all the params ({}) references
         preg_match_all("/[{](.+?)[}]/", $urlIn, $matchedParams);
 
         if (!empty($matchedParams)) {
             foreach ($matchedParams[0] as $paramKey => $paramValue) {
-
                 $paramEntityParent = "";
                 $matchedParent = [];
                 $dataItem = $matchedParams[1][$paramKey];
+                // Find all the parent property (Type.key) references, assuming there will be only one
+                // parent property reference within one param
                 preg_match_all("/(.+?)\./", $dataItem, $matchedParent);
 
                 if (!empty($matchedParent) && !empty($matchedParent[0])) {
@@ -213,6 +215,7 @@ class CurlHandler
                 }
 
                 foreach ($entityObjects as $entityObject) {
+                    $param = null;
 
                     if ($paramEntityParent === "" || $entityObject->getType() == $paramEntityParent) {
                         $param = $entityObject->getDataByName(
@@ -223,7 +226,6 @@ class CurlHandler
 
                     if (null !== $param) {
                         $urlOut = str_replace($paramValue, $param, $urlOut);
-                        $param = null;
                         continue;
                     }
                 }

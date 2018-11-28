@@ -23,7 +23,7 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      *
      * @var SuiteObjectHandler
      */
-    private static $SUITE_OBJECT_HANLDER_INSTANCE;
+    private static $instance;
 
     /**
      * Array of suite objects keyed by suite name.
@@ -33,11 +33,19 @@ class SuiteObjectHandler implements ObjectHandlerInterface
     private $suiteObjects;
 
     /**
-     * SuiteObjectHandler constructor.
+     * Avoids instantiation of SuiteObjectHandler by new.
+     * @return void
      */
     private function __construct()
     {
-        // empty constructor
+    }
+
+    /**
+     * Avoids instantiation of SuiteObjectHandler by clone.
+     * @return void
+     */
+    private function __clone()
+    {
     }
 
     /**
@@ -46,14 +54,14 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      * @return ObjectHandlerInterface
      * @throws XmlException
      */
-    public static function getInstance()
+    public static function getInstance(): ObjectHandlerInterface
     {
-        if (self::$SUITE_OBJECT_HANLDER_INSTANCE == null) {
-            self::$SUITE_OBJECT_HANLDER_INSTANCE = new SuiteObjectHandler();
-            self::$SUITE_OBJECT_HANLDER_INSTANCE->initSuiteData();
+        if (self::$instance == null) {
+            self::$instance = new SuiteObjectHandler();
+            self::$instance->initSuiteData();
         }
 
-        return self::$SUITE_OBJECT_HANLDER_INSTANCE;
+        return self::$instance;
     }
 
     /**
@@ -62,7 +70,7 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      * @param string $objectName
      * @return SuiteObject
      */
-    public function getObject($objectName)
+    public function getObject($objectName): SuiteObject
     {
         if (!array_key_exists($objectName, $this->suiteObjects)) {
             trigger_error("Suite ${objectName} is not defined.", E_USER_ERROR);
@@ -75,7 +83,7 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      *
      * @return array
      */
-    public function getAllObjects()
+    public function getAllObjects(): array
     {
         return $this->suiteObjects;
     }
@@ -85,7 +93,7 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      *
      * @return array
      */
-    public function getAllTestReferences()
+    public function getAllTestReferences(): array
     {
         $testsReferencedInSuites = [];
         $suites = $this->getAllObjects();
