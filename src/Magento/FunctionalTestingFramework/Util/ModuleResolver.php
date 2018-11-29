@@ -276,7 +276,7 @@ class ModuleResolver
             // Symlinks must be resolved otherwise they will not match Magento's filepath to the module
             $potentialSymlink = str_replace(DIRECTORY_SEPARATOR . $pattern, "", $codePath);
             if (is_link($potentialSymlink)) {
-                $codePath = readlink($potentialSymlink) . DIRECTORY_SEPARATOR . $pattern;
+                $codePath = realpath($potentialSymlink) . DIRECTORY_SEPARATOR . $pattern;
             }
 
             $mainModName = array_search($codePath, $allComponents) ?: basename(str_replace($pattern, '', $codePath));
@@ -554,8 +554,8 @@ class ModuleResolver
             }
             array_walk($allComponents, function (&$value) {
                 // Magento stores component paths with unix DIRECTORY_SEPARATOR, need to stay uniform and convert
-                $value .= '/Test/Mftf';
                 $value = realpath($value);
+                $value .= '/Test/Mftf';
             });
             return $allComponents;
         } catch (TestFrameworkException $e) {
