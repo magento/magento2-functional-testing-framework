@@ -486,6 +486,9 @@ class MagentoWebDriver extends WebDriver
         $executor->write(
             $apiURL,
             [
+                'baseUrl' => $baseUrl,
+                'username' => getenv('MAGENTO_ADMIN_USERNAME'),
+                'password' => getenv('MAGENTO_ADMIN_PASSWORD'),
                 getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command,
                 'arguments' => $arguments
             ],

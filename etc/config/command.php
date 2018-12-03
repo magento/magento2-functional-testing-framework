@@ -4,34 +4,84 @@
  * See COPYING.txt for license details.
  */
 
-if (isset($_POST['command'])) {
+if (isset($_POST['baseUrl']) && isset($_POST['username']) && isset($_POST['password']) && isset($_POST['command'])) {
+    $baseUrl = urldecode($_POST['baseUrl']);
+    $username = urldecode($_POST['username']);
+    $password = urldecode($_POST['password']);
     $command = urldecode($_POST['command']);
     if (array_key_exists("arguments", $_POST)) {
         $arguments = urldecode($_POST['arguments']);
     } else {
         $arguments = null;
     }
-    $php = PHP_BINDIR ? PHP_BINDIR . '/php' : 'php';
-    $valid = validateCommand($command);
-    if ($valid) {
-        exec(
-            escapeCommand($php . ' -f ../../../../bin/magento ' . $command) . " $arguments" ." 2>&1",
-            $output,
-            $exitCode
-        );
-        if ($exitCode == 0) {
-            http_response_code(202);
+
+    if (isAuthenticated($baseUrl, $username, $password)) {
+        $php = PHP_BINDIR ? PHP_BINDIR . '/php' : 'php';
+        $magentoBinary = $php . ' -f ../../../../bin/magento';
+        $valid = validateCommand($magentoBinary, $command);
+        if ($valid) {
+            exec(
+                escapeCommand($magentoBinary . ' ' . $command) . " $arguments" ." 2>&1",
+                $output,
+                $exitCode
+            );
+            if ($exitCode == 0) {
+                http_response_code(202);
+            } else {
+                http_response_code(500);
+            }
+            echo implode("\n", $output);
         } else {
-            http_response_code(500);
+            http_response_code(403);
+            echo "Given command not found valid in Magento CLI Command list.";
         }
-        echo implode("\n", $output);
     } else {
-        http_response_code(403);
-        echo "Given command not found valid in Magento CLI Command list.";
+        http_response_code(401);
+        echo("Command not unauthorized.");
     }
 } else {
     http_response_code(412);
-    echo("Command parameter is not set.");
+    echo("Required parameters are not set.");
+}
+
+/**
+ * Returns if credentials are successfully authenticated.
+ *
+ * @param string $baseUrl
+ * @param string $username
+ * @param string $password
+ * @return bool
+ */
+function isAuthenticated($baseUrl, $username, $password)
+{
+    $userData = [
+        "username" => $username,
+        "password" => $password
+    ];
+    $ch = curl_init($baseUrl . "/index.php/rest/V1/integration/admin/token");
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($userData));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($ch, CURLOPT_COOKIEFILE, '');
+    curl_setopt(
+        $ch,
+        CURLOPT_HTTPHEADER,
+        array("Content-Type: application/json", "Content-Lenght: " . strlen(json_encode($userData)))
+    );
+
+    $token = curl_exec($ch);
+
+    if (!empty($token) && curl_getinfo($ch, CURLINFO_HTTP_CODE) === 200) {
+        curl_close($ch);
+        return true;
+    } else {
+        echo "Authentication error.";
+        curl_close($ch);
+        return false;
+    }
 }
 
 /**
@@ -55,13 +105,13 @@ function escapeCommand($command)
 
 /**
  * Checks magento list of CLI commands for given $command. Does not check command parameters, just base command.
+ * @param string $magentoBinary
  * @param string $command
  * @return bool
  */
-function validateCommand($command)
+function validateCommand($magentoBinary, $command)
 {
-    $php = PHP_BINDIR ? PHP_BINDIR . '/php' : 'php';
-    exec($php . ' -f ../../../../bin/magento list', $commandList);
+    exec($magentoBinary . ' list', $commandList);
     // Trim list of commands after first whitespace
     $commandList = array_map("trimAfterWhitespace", $commandList);
     return in_array(trimAfterWhitespace($command), $commandList);
