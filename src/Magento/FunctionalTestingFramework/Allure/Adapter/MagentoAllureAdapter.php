@@ -10,6 +10,8 @@ use Yandex\Allure\Adapter\AllureAdapter;
 use Yandex\Allure\Adapter\Event\StepStartedEvent;
 use Yandex\Allure\Adapter\Event\StepFinishedEvent;
 use Yandex\Allure\Adapter\Event\StepFailedEvent;
+use Yandex\Allure\Adapter\Event\TestCaseFailedEvent;
+use Codeception\Event\FailEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\StepEvent;
 
@@ -132,4 +134,19 @@ class MagentoAllureAdapter extends AllureAdapter
         }
         $this->getLifecycle()->fire(new StepFinishedEvent());
     }
+
+    /**
+     * Override of parent method, fires a TestCaseFailedEvent if a test is marked as incomplete.
+     *
+     * @param FailEvent $failEvent
+     * @return void
+     */
+    public function testIncomplete(FailEvent $failEvent)
+    {
+        $event = new TestCaseFailedEvent();
+        $e = $failEvent->getFail();
+        $message = $e->getMessage();
+        $this->getLifecycle()->fire($event->withException($e)->withMessage($message));
+    }
+
 }
