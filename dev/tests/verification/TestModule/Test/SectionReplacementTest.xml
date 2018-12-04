@@ -50,5 +50,8 @@
 
         <click stepKey="selectorReplaceTwoParamElements" selector="{{SampleSection.oneParamElement('1')}}{{SampleSection.oneParamElement('2')}}"/>
         <click stepKey="selectorReplaceTwoParamMixedTypes" selector="{{SampleSection.oneParamElement('1')}}{{SampleSection.oneParamElement({$data})}}"/>
+
+        <click stepKey="selectorParamWithEmptyString" selector="{{SampleSection.anotherTwoParamsElement('1', '')}}"/>
+        <click stepKey="selectorParamWithASpace" selector="{{SampleSection.anotherTwoParamsElement('1', ' ')}}"/>
     </test>
 </tests>
