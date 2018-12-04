@@ -173,7 +173,6 @@ class TestContextExtension extends BaseExtension
         ErrorLogger::getInstance()->logErrors($this->getDriver(), $e);
     }
 
-
     /**
      * Saves failed tests from last codecept run command into a file in _output directory
      * Removes file if there were no failures in last run command
@@ -205,7 +204,7 @@ class TestContextExtension extends BaseExtension
 
     /**
      * Returns localized path to string, for writing failed file.
-     * @param $path
+     * @param string $path
      * @return string
      */
     protected function localizePath($path)

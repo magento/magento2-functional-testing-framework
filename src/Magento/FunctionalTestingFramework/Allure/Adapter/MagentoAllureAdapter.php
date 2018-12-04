@@ -148,5 +148,4 @@ class MagentoAllureAdapter extends AllureAdapter
         $message = $e->getMessage();
         $this->getLifecycle()->fire($event->withException($e)->withMessage($message));
     }
-
 }
