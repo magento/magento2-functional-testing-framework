@@ -184,6 +184,12 @@ class TestContextExtension extends BaseExtension
         $file = $this->getLogDir() . self::TEST_FAILED_FILE;
         $result = $e->getResult();
         $output = [];
+
+        // Remove previous file regardless if we're writing a new file
+        if (is_file($file)) {
+            unlink($file);
+        }
+
         foreach ($result->failures() as $fail) {
             $output[] = $this->localizePath(\Codeception\Test\Descriptor::getTestFullName($fail->failedTest()));
         }
@@ -194,8 +200,7 @@ class TestContextExtension extends BaseExtension
             $output[] = $this->localizePath(\Codeception\Test\Descriptor::getTestFullName($fail->failedTest()));
         }
 
-        if (empty($output) && is_file($file)) {
-            unlink($file);
+        if (empty($output)) {
             return;
         }
 
