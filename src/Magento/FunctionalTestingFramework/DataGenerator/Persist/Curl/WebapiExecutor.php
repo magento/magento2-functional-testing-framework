@@ -52,6 +52,13 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
     private $storeCode;
 
     /**
+     * Admin user auth token.
+     *
+     * @var string
+     */
+    private $authToken;
+
+    /**
      * WebapiExecutor Constructor.
      *
      * @param string $storeCode
@@ -64,12 +71,13 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
         }
 
         $this->storeCode = $storeCode;
+        $this->authToken = null;
         $this->transport = new CurlTransport();
         $this->authorize();
     }
 
     /**
-     * Returns the authorization token needed for some requests via REST call.
+     * Acquire and store the authorization token needed for REST requests.
      *
      * @return void
      * @throws TestFrameworkException
@@ -83,10 +91,8 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
         ];
 
         $this->transport->write($authUrl, json_encode($authCreds), CurlInterface::POST, $this->headers);
-        $this->headers = array_merge(
-            ['Authorization: Bearer ' . str_replace('"', "", $this->read())],
-            $this->headers
-        );
+        $this->authToken = str_replace('"', "", $this->read());
+        $this->headers = array_merge(['Authorization: Bearer ' . $this->authToken], $this->headers);
     }
 
     /**
@@ -158,5 +164,16 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
         }
         $urlResult.= trim($resource, "/");
         return $urlResult;
+    }
+
+    /**
+     * Return admin auth token.
+     *
+     * @throws TestFrameworkException
+     * @return string
+     */
+    public function getAuthToken()
+    {
+        return $this->authToken;
     }
 }
