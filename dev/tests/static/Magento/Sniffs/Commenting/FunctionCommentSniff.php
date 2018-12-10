@@ -460,7 +460,7 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
                     $phpcsFile->fixer->replaceToken(($param['tag'] + 2), $content);
 
                     // Fix up the indent of additional comment lines.
-                    foreach ($param['commentLines'] as $lineNum) {
+                    foreach ($param['commentLines'] as $lineNum => $line) {
                         if ($lineNum === 0
                             || $param['commentLines'][$lineNum]['indent'] === 0
                         ) {
