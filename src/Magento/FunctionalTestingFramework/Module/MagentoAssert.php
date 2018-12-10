@@ -19,7 +19,7 @@ class MagentoAssert extends \Codeception\Module
      * Asserts that all items in the array are sorted by given direction. Can be given int, string, double, dates.
      * Converts given date strings to epoch for comparison.
      *
-     * @param array $data
+     * @param array  $data
      * @param string $sortOrder
      * @return void
      */

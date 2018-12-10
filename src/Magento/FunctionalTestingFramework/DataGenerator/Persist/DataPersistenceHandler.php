@@ -8,6 +8,7 @@ namespace Magento\FunctionalTestingFramework\DataGenerator\Persist;
 
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
 /**
  * Class DataPersistenceHandler
@@ -45,8 +46,8 @@ class DataPersistenceHandler
      * DataPersistenceHandler constructor.
      *
      * @param EntityDataObject $entityObject
-     * @param array $dependentObjects
-     * @param array $customFields
+     * @param array            $dependentObjects
+     * @param array            $customFields
      */
     public function __construct($entityObject, $dependentObjects = [], $customFields = [])
     {
@@ -63,7 +64,7 @@ class DataPersistenceHandler
         } else {
             $this->entityObject = clone $entityObject;
         }
-        $this->storeCode = 'default';
+        $this->storeCode = null;
 
         foreach ($dependentObjects as $dependentObject) {
             $this->dependentObjects[] = $dependentObject->getCreatedObject();
@@ -75,6 +76,7 @@ class DataPersistenceHandler
      *
      * @param string $storeCode
      * @return void
+     * @throws TestFrameworkException
      */
     public function createEntity($storeCode = null)
     {
@@ -95,17 +97,13 @@ class DataPersistenceHandler
      * Function which executes a put request based on specific operation metadata.
      *
      * @param string $updateDataName
-     * @param array $updateDependentObjects
-     * @param string $storeCode
+     * @param array  $updateDependentObjects
      * @return void
+     * @throws TestFrameworkException
+     * @throws \Exception
      */
-
-    public function updateEntity($updateDataName, $updateDependentObjects = [], $storeCode = null)
+    public function updateEntity($updateDataName, $updateDependentObjects = [])
     {
-        if (!empty($storeCode)) {
-            $this->storeCode = $storeCode;
-        }
-
         foreach ($updateDependentObjects as $dependentObject) {
             $this->dependentObjects[] = $dependentObject->getCreatedObject();
         }
@@ -124,10 +122,10 @@ class DataPersistenceHandler
      * Function which executes a get request on specific operation metadata.
      *
      * @param integer|null $index
-     * @param string $storeCode
+     * @param string       $storeCode
      * @return void
+     * @throws TestFrameworkException
      */
-
     public function getEntity($index = null, $storeCode = null)
     {
         if (!empty($storeCode)) {
@@ -146,14 +144,11 @@ class DataPersistenceHandler
     /**
      * Function which executes a delete request based on specific operation metadata
      *
-     * @param string $storeCode
      * @return void
+     * @throws TestFrameworkException
      */
-    public function deleteEntity($storeCode = null)
+    public function deleteEntity()
     {
-        if (!empty($storeCode)) {
-            $this->storeCode = $storeCode;
-        }
         $curlHandler = new CurlHandler('delete', $this->createdObject, $this->storeCode);
         $curlHandler->executeRequest($this->dependentObjects);
     }
@@ -172,6 +167,7 @@ class DataPersistenceHandler
      * Returns a specific data value based on the CreatedObject's definition.
      * @param string $dataName
      * @return string
+     * @throws TestFrameworkException
      */
     public function getCreatedDataByName($dataName)
     {
@@ -183,8 +179,8 @@ class DataPersistenceHandler
      *
      * @param string|array $response
      * @param integer|null $index
-     * @param array $requestDataArray
-     * @param bool $isJson
+     * @param array        $requestDataArray
+     * @param boolean      $isJson
      * @return void
      */
     private function setCreatedObject($response, $index, $requestDataArray, $isJson)
@@ -218,7 +214,7 @@ class DataPersistenceHandler
     /**
      * Convert an multi-dimensional array to flat array.
      *
-     * @param array $arrayIn
+     * @param array  $arrayIn
      * @param string $rootKey
      * @return array
      */

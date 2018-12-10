@@ -1,0 +1,132 @@
+<?php
+
+namespace Group;
+
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
+
+/**
+ * Group class is Codeception Extension which is allowed to handle to all internal events.
+ * This class itself can be used to listen events for test execution of one particular group.
+ * It may be especially useful to create fixtures data, prepare server, etc.
+ *
+ * INSTALLATION:
+ *
+ * To use this group extension, include it to "extensions" option of global Codeception config.
+ */
+class functionalSuiteHooks extends \Codeception\GroupObject
+{
+    public static $group = 'functionalSuiteHooks';
+    private $testCount = 1;
+    private $preconditionFailure = null;
+    private $currentTestRun = 0;
+    private static $HOOK_EXECUTION_INIT = "\n/******** Beginning execution of functionalSuiteHooks suite %s block ********/\n";
+    private static $HOOK_EXECUTION_END = "\n/******** Execution of functionalSuiteHooks suite %s block complete ********/\n";
+
+    public function _before(\Codeception\Event\TestEvent $e)
+    {
+        // increment test count per execution
+        $this->currentTestRun++;
+        $this->executePreConditions();
+
+        if ($this->preconditionFailure != null) {
+            //if our preconditions fail, we need to mark all the tests as incomplete.
+            $e->getTest()->getMetadata()->setIncomplete("SUITE PRECONDITION FAILED:" . PHP_EOL . $this->preconditionFailure);
+        }
+    }
+
+
+    private function executePreConditions()
+    {
+        if ($this->currentTestRun == 1) {
+            print sprintf(self::$HOOK_EXECUTION_INIT, "before");
+
+            try {
+                $webDriver = $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver');
+                
+                // close any open sessions
+                if ($webDriver->webDriver != null) {
+                    $webDriver->webDriver->close();
+                    $webDriver->webDriver = null;
+                }
+                
+                // initialize the webdriver session
+                $webDriver->_initializeSession();
+                $webDriver->amOnPage("some.url");
+                $createFields['someKey'] = "dataHere";
+                PersistedObjectHandler::getInstance()->createEntity(
+                    "create",
+                    "suite",
+                    "createThis",
+                     $createFields
+                );
+                $webDriver->click(PersistedObjectHandler::getInstance()->retrieveEntityField('create', 'data', 'suite'));
+                $webDriver->see("John", msq("uniqueData") . "John");
+
+                // reset configuration and close session
+                $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver')->_resetConfig();
+                $webDriver->webDriver->close();
+                $webDriver->webDriver = null;
+
+            } catch (\Exception $exception) {
+                $this->preconditionFailure = $exception->getMessage();
+            }
+
+            print sprintf(self::$HOOK_EXECUTION_END, "before");
+        }
+    }
+
+    public function _after(\Codeception\Event\TestEvent $e)
+    {
+        $this->executePostConditions($e);
+    }
+
+
+    private function executePostConditions(\Codeception\Event\TestEvent $e)
+    {
+        if ($this->currentTestRun == $this->testCount) {
+            print sprintf(self::$HOOK_EXECUTION_INIT, "after");
+
+            try {
+                // Find out if Test in Suite failed, will cause potential failures in suite after
+                $cest = $e->getTest();
+
+                //Access private TestResultObject to find stack and if there are any errors (as opposed to failures)
+                $testResultObject = call_user_func(\Closure::bind(
+                    function () use ($cest) {
+                        return $cest->getTestResultObject();
+                    },
+                    $cest
+                ));
+                $errors = $testResultObject->errors();
+
+                if (!empty($errors)) {
+                    foreach ($errors as $error) {
+                        if ($error->failedTest()->getTestMethod() == $cest->getName()) {
+                            // Do not attempt to run _after if failure was in the _after block
+                            // Try to run _after but catch exceptions to prevent them from overwriting original failure.
+                            print("LAST TEST IN SUITE FAILED, TEST AFTER MAY NOT BE SUCCESSFUL\n");
+                        }
+                    }
+                }
+                $webDriver = $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver');
+                
+                // close any open sessions
+                if ($webDriver->webDriver != null) {
+                    $webDriver->webDriver->close();
+                    $webDriver->webDriver = null;
+                }
+                
+                // initialize the webdriver session
+                $webDriver->_initializeSession();
+                $webDriver->amOnPage("some.url");
+                $webDriver->deleteEntityByUrl("deleteThis");
+                $webDriver->see("John", msq("uniqueData") . "John");
+            } catch (\Exception $exception) {
+                print $exception->getMessage();
+            }
+
+            PersistedObjectHandler::getInstance()->clearSuiteObjects();
+            print sprintf(self::$HOOK_EXECUTION_END, "after");
+        }
+    }
+}

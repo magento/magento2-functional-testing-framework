@@ -43,6 +43,7 @@ class SectionObjectHandler implements ObjectHandlerInterface
      * Constructor
      *
      * @constructor
+     * @throws XmlException
      */
     private function __construct()
     {
@@ -66,7 +67,7 @@ class SectionObjectHandler implements ObjectHandlerInterface
                     if (preg_match('/[^a-zA-Z0-9_]/', $elementName)) {
                         throw new XmlException(sprintf(self::ELEMENT_NAME_ERROR_MSG, $elementName, $sectionName));
                     }
-                    $elementType = $elementData[SectionObjectHandler::TYPE];
+                    $elementType = $elementData[SectionObjectHandler::TYPE] ?? null;
                     $elementSelector = $elementData[SectionObjectHandler::SELECTOR] ?? null;
                     $elementLocatorFunc = $elementData[SectionObjectHandler::LOCATOR_FUNCTION] ?? null;
                     $elementTimeout = $elementData[SectionObjectHandler::TIMEOUT] ?? null;
@@ -93,6 +94,7 @@ class SectionObjectHandler implements ObjectHandlerInterface
      * Initialize and/or return the singleton instance of this class
      *
      * @return SectionObjectHandler
+     * @throws XmlException
      */
     public static function getInstance()
     {
@@ -106,7 +108,7 @@ class SectionObjectHandler implements ObjectHandlerInterface
     /**
      * Get a SectionObject by name
      *
-     * @param string $name The section name
+     * @param string $name The section name.
      * @return SectionObject | null
      */
     public function getObject($name)

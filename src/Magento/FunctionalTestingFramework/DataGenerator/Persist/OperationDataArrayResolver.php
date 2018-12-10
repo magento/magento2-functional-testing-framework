@@ -11,6 +11,7 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\OperationDefinitio
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\OperationElement;
 use Magento\FunctionalTestingFramework\DataGenerator\Util\OperationElementExtractor;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
 class OperationDataArrayResolver
 {
@@ -59,12 +60,14 @@ class OperationDataArrayResolver
      * structure for the request of the desired entity type.
      *
      * @param EntityDataObject $entityObject
-     * @param array $operationMetadata
-     * @param string $operation
-     * @param bool $fromArray
+     * @param array            $operationMetadata
+     * @param string           $operation
+     * @param boolean          $fromArray
      * @return array
      * @throws \Exception
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function resolveOperationDataArray($entityObject, $operationMetadata, $operation, $fromArray = false)
     {
@@ -124,7 +127,6 @@ class OperationDataArrayResolver
                         $operationElementType,
                         $elementData
                     );
-
                 } elseif ($operationElement->isRequired()) {
                     throw new \Exception(sprintf(
                         self::EXCEPTION_REQUIRED_DATA,
@@ -134,6 +136,13 @@ class OperationDataArrayResolver
                     ));
                 }
             } else {
+                $operationElementProperty = null;
+                if (strpos($operationElementType, '.') !== false) {
+                    $operationElementComponents = explode('.', $operationElementType);
+                    $operationElementType = $operationElementComponents[0];
+                    $operationElementProperty = $operationElementComponents[1];
+                }
+
                 $entityNamesOfType = $entityObject->getLinkedEntitiesOfType($operationElementType);
 
                 // If an element is required by metadata, but was not provided in the entity, throw an exception
@@ -146,12 +155,23 @@ class OperationDataArrayResolver
                     ));
                 }
                 foreach ($entityNamesOfType as $entityName) {
-                    $operationDataSubArray = $this->resolveNonPrimitiveElement(
-                        $entityName,
-                        $operationElement,
-                        $operation,
-                        $fromArray
-                    );
+                    if ($operationElementProperty === null) {
+                        $operationDataSubArray = $this->resolveNonPrimitiveElement(
+                            $entityName,
+                            $operationElement,
+                            $operation,
+                            $fromArray
+                        );
+                    } else {
+                        $linkedEntityObj = $this->resolveLinkedEntityObject($entityName);
+                        $operationDataSubArray = $linkedEntityObj->getDataByName($operationElementProperty, 0);
+
+                        if ($operationDataSubArray === null) {
+                            throw new \Exception(
+                                sprintf('Property %s not found in entity %s \n', $operationElementProperty, $entityName)
+                            );
+                        }
+                    }
 
                     if ($operationElement->getType() == OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY) {
                         $operationDataArray[$operationElement->getKey()][] = $operationDataSubArray;
@@ -171,9 +191,10 @@ class OperationDataArrayResolver
      * entities.
      *
      * @param EntityDataObject $entityObject
-     * @param string $operationKey
-     * @param string $operationElementType
+     * @param string           $operationKey
+     * @param string           $operationElementType
      * @return array|string
+     * @throws TestFrameworkException
      */
     private function resolvePrimitiveReference($entityObject, $operationKey, $operationElementType)
     {
@@ -196,7 +217,6 @@ class OperationDataArrayResolver
                 }
 
                 return $elementDatas;
-
             }
 
             $entity = $this->getDependentEntitiesOfType($type)[0];
@@ -232,8 +252,9 @@ class OperationDataArrayResolver
      * the object.
      *
      * @param EntityDataObject $entityObject
-     * @param string $operationElementValue
+     * @param string           $operationElementValue
      * @return EntityDataObject|null
+     * @throws \Exception
      */
     private function resolveOperationObjectAndEntityData($entityObject, $operationElementValue)
     {
@@ -253,11 +274,12 @@ class OperationDataArrayResolver
     /**
      * Resolves DataObjects and pre-defined metadata (in other operation.xml file) referenced by the operation
      *
-     * @param string $entityName
+     * @param string           $entityName
      * @param OperationElement $operationElement
-     * @param string $operation
-     * @param bool $fromArray
+     * @param string           $operation
+     * @param boolean          $fromArray
      * @return array
+     * @throws \Exception
      */
     private function resolveNonPrimitiveElement($entityName, $operationElement, $operation, $fromArray = false)
     {
@@ -290,6 +312,7 @@ class OperationDataArrayResolver
      *
      * @param string $entityName
      * @return EntityDataObject
+     * @throws \Exception
      */
     private function resolveLinkedEntityObject($entityName)
     {
@@ -320,7 +343,7 @@ class OperationDataArrayResolver
      * Get the current sequence number for an entity.
      *
      * @param string $entityName
-     * @return int
+     * @return integer
      */
     private static function getSequence($entityName)
     {

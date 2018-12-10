@@ -11,13 +11,30 @@ if (PHP_SAPI !== 'cli') {
     exit(1);
 }
 
+$autoloadPath = realpath(__DIR__ . '/../../../autoload.php');
+$testBootstrapPath = realpath(__DIR__ . '/../dev/tests/functional/standalone_bootstrap.php');
+
 try {
-    require_once __DIR__ . '/../bootstrap.php';
+    if (file_exists($autoloadPath)) {
+        require_once $autoloadPath;
+    } else {
+        require_once $testBootstrapPath;
+    }
+} catch (\Exception $e) {
+    echo 'Autoload error: ' . $e->getMessage();
+    exit(1);
+}
+
+
+try {
     $application = new Symfony\Component\Console\Application();
     $application->setName('Magento Functional Testing Framework CLI');
-    $application->setVersion('1.0.0');
-    $application->add(new Magento\FunctionalTestingFramework\Console\SetupEnvCommand());
-    $application->add(new Magento\FunctionalTestingFramework\Console\BuildProjectCommand());
+    $application->setVersion('2.3.11');
+    /** @var \Magento\FunctionalTestingFramework\Console\CommandListInterface $commandList */
+    $commandList = new \Magento\FunctionalTestingFramework\Console\CommandList;
+    foreach ($commandList->getCommands() as $command) {
+        $application->add($command);
+    }
     $application->run();
 } catch (\Exception $e) {
     while ($e) {

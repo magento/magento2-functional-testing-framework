@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="DataActionsTest">
+        <before>
+            <createData entity="entity" stepKey="createdInBefore"/>
+            <updateData entity="entity" createDataKey="createdInBefore" stepKey="updateInBefore"/>
+            <deleteData createDataKey="createdInBefore" stepKey="deleteInBefore"/>
+        </before>
+
+        <createData entity="entity" stepKey="createdInTest"/>
+        <updateData entity="entity" createDataKey="createdInTest" stepKey="updateInTest"/>
+        <deleteData createDataKey="createdInTest" stepKey="deleteInTest"/>
+
+        <updateData entity="entity" createDataKey="createdInBefore" stepKey="updatedDataOutOfScope"/>
+        <deleteData createDataKey="createdInBefore" stepKey="deleteDataOutOfScope"/>
+    </test>
+</tests>

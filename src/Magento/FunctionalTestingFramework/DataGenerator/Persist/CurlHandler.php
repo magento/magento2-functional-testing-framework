@@ -58,7 +58,7 @@ class CurlHandler
     /**
      * If the content type is Json.
      *
-     * @var bool
+     * @var boolean
      */
     private $isJson;
 
@@ -77,11 +77,11 @@ class CurlHandler
     /**
      * ApiSubObject constructor.
      *
-     * @param string $operation
+     * @param string           $operation
      * @param EntityDataObject $entityObject
-     * @param string $storeCode
+     * @param string           $storeCode
      */
-    public function __construct($operation, $entityObject, $storeCode = 'default')
+    public function __construct($operation, $entityObject, $storeCode = null)
     {
         $this->operation = $operation;
         $this->entityObject = $entityObject;
@@ -100,6 +100,7 @@ class CurlHandler
      * @param array $dependentEntities
      * @return array | null
      * @throws TestFrameworkException
+     * @throws \Exception
      */
     public function executeRequest($dependentEntities)
     {
@@ -178,7 +179,7 @@ class CurlHandler
     /**
      * If content type of a request is Json.
      *
-     * @return bool
+     * @return boolean
      */
     public function isContentTypeJson()
     {
@@ -189,22 +190,40 @@ class CurlHandler
      * Resolve rul reference from entity objects.
      *
      * @param string $urlIn
-     * @param array $entityObjects
+     * @param array  $entityObjects
      * @return string
      */
     private function resolveUrlReference($urlIn, $entityObjects)
     {
         $urlOut = $urlIn;
         $matchedParams = [];
+        // Find all the params ({}) references
         preg_match_all("/[{](.+?)[}]/", $urlIn, $matchedParams);
 
         if (!empty($matchedParams)) {
             foreach ($matchedParams[0] as $paramKey => $paramValue) {
+                $paramEntityParent = "";
+                $matchedParent = [];
+                $dataItem = $matchedParams[1][$paramKey];
+                // Find all the parent property (Type.key) references, assuming there will be only one
+                // parent property reference within one param
+                preg_match_all("/(.+?)\./", $dataItem, $matchedParent);
+
+                if (!empty($matchedParent) && !empty($matchedParent[0])) {
+                    $paramEntityParent = $matchedParent[1][0];
+                    $dataItem = preg_replace('/^'.$matchedParent[0][0].'/', '', $dataItem);
+                }
+
                 foreach ($entityObjects as $entityObject) {
-                    $param = $entityObject->getDataByName(
-                        $matchedParams[1][$paramKey],
-                        EntityDataObject::CEST_UNIQUE_VALUE
-                    );
+                    $param = null;
+
+                    if ($paramEntityParent === "" || $entityObject->getType() == $paramEntityParent) {
+                        $param = $entityObject->getDataByName(
+                            $dataItem,
+                            EntityDataObject::CEST_UNIQUE_VALUE
+                        );
+                    }
+
                     if (null !== $param) {
                         $urlOut = str_replace($paramValue, $param, $urlOut);
                         continue;

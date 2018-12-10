@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd">
+    <entity name="parentData" type="data">
+        <data key="name">name</data>
+        <data key="uniqueNamePre" unique="prefix">prename</data>
+        <data key="uniqueNamePost" unique="suffix">postname</data>
+    </entity>
+    <entity name="extendParentData" extends="parentData">
+        <data key="name">otherName</data>
+        <data key="nameExtend">extendName</data>
+        <data key="uniqueNamePost">item</data>
+        <data key="anotherUniqueNamePre" unique="suffix">postnameExtend</data>
+        <requiredEntity type="item">value</requiredEntity>
+    </entity>
+</entities>

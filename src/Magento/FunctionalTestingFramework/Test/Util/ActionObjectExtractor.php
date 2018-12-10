@@ -6,8 +6,12 @@
 
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
  * Class ActionObjectExtractor
@@ -23,6 +27,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
     const ACTION_GROUP_ARG_VALUE = 'value';
     const BEFORE_AFTER_ERROR_MSG = "Merge Error - Steps cannot have both before and after attributes.\tStepKey='%s'";
     const STEP_KEY_BLACKLIST_ERROR_MSG = "StepKeys cannot contain non alphanumeric characters.\tStepKey='%s'";
+    const STEP_KEY_EMPTY_ERROR_MSG = "StepKeys cannot be empty.\tAction='%s'";
     const DATA_PERSISTENCE_CUSTOM_FIELD = 'field';
     const DATA_PERSISTENCE_CUSTOM_FIELD_KEY = 'key';
     const ACTION_OBJECT_PERSISTENCE_FIELDS = 'customFields';
@@ -41,16 +46,24 @@ class ActionObjectExtractor extends BaseObjectExtractor
      * This method takes an array of test actions read in from a TestHook or Test. The actions are stripped of
      * irrelevant tags and returned as an array of ActionObjects.
      *
-     * @param array $testActions
+     * @param array  $testActions
+     * @param string $testName
      * @return array
      * @throws XmlException
+     * @throws TestReferenceException
      */
-    public function extractActions($testActions)
+    public function extractActions($testActions, $testName = null)
     {
         $actions = [];
+        $stepKeyRefs = [];
 
         foreach ($testActions as $actionName => $actionData) {
             $stepKey = $actionData[self::TEST_STEP_MERGE_KEY];
+            $actionType = $actionData[self::NODE_NAME];
+
+            if (empty($stepKey)) {
+                throw new XmlException(sprintf(self::STEP_KEY_EMPTY_ERROR_MSG, $actionData['nodeName']));
+            }
 
             if (preg_match('/[^a-zA-Z0-9_]/', $stepKey)) {
                 throw new XmlException(sprintf(self::STEP_KEY_BLACKLIST_ERROR_MSG, $actionName));
@@ -61,60 +74,82 @@ class ActionObjectExtractor extends BaseObjectExtractor
                 self::TEST_STEP_MERGE_KEY,
                 self::NODE_NAME
             );
-            $linkedAction = null;
-            $order = null;
 
             // Flatten AssertSorted "array" element to parameterArray
             if (isset($actionData["array"])) {
                 $actionAttributes['parameterArray'] = $actionData['array']['value'];
             }
 
-            if ($actionData[self::NODE_NAME] === self::ACTION_GROUP_TAG) {
-                $actionAttributes = $this->processActionGroupArgs($actionAttributes);
-            }
-
-            if (array_key_exists(self::TEST_ACTION_BEFORE, $actionData)
-                and array_key_exists(self::TEST_ACTION_AFTER, $actionData)) {
-                throw new XmlException(sprintf(self::BEFORE_AFTER_ERROR_MSG, $actionName));
-            }
-
-            if (array_key_exists(self::TEST_ACTION_BEFORE, $actionData)) {
-                $linkedAction = $actionData[self::TEST_ACTION_BEFORE];
-                $order = self::TEST_ACTION_BEFORE;
-            } elseif (array_key_exists(self::TEST_ACTION_AFTER, $actionData)) {
-                $linkedAction = $actionData[self::TEST_ACTION_AFTER];
-                $order = self::TEST_ACTION_AFTER;
-            }
-
+            $actionAttributes = $this->processActionGroupArgs($actionType, $actionAttributes);
+            $linkedAction = $this->processLinkedActions($actionName, $actionData);
             $actions = $this->extractFieldActions($actionData, $actions);
             $actionAttributes = $this->extractFieldReferences($actionData, $actionAttributes);
+
+            if ($linkedAction['stepKey'] != null) {
+                $stepKeyRefs[$linkedAction['stepKey']][] = $stepKey;
+            }
 
             // TODO this is to be implemented later. Currently the schema does not use or need return var.
             /*if (array_key_exists(ActionGroupObjectHandler::TEST_ACTION_RETURN_VARIABLE, $actionData)) {
                 $returnVariable = $actionData[ActionGroupObjectHandler::TEST_ACTION_RETURN_VARIABLE];
             }*/
 
-            $actions[] = new ActionObject(
+            $actions[$stepKey] = new ActionObject(
                 $stepKey,
-                $actionData[self::NODE_NAME],
+                $actionType,
                 $actionAttributes,
-                $linkedAction,
-                $order
+                $linkedAction['stepKey'],
+                $linkedAction['order']
             );
         }
 
+        $this->auditMergeSteps($stepKeyRefs, $testName);
+
         return $actions;
+    }
+
+    /**
+     * Function which processes any actions which have an explicit reference to an additional step for merging purposes.
+     * Returns an array with keys corresponding to the linked action's stepKey and order.
+     *
+     * @param string $actionName
+     * @param array  $actionData
+     * @return array
+     * @throws XmlException
+     */
+    private function processLinkedActions($actionName, $actionData)
+    {
+        $linkedAction =['stepKey' => null, 'order' => null];
+        if (array_key_exists(self::TEST_ACTION_BEFORE, $actionData)
+            and array_key_exists(self::TEST_ACTION_AFTER, $actionData)) {
+            throw new XmlException(sprintf(self::BEFORE_AFTER_ERROR_MSG, $actionName));
+        }
+
+        if (array_key_exists(self::TEST_ACTION_BEFORE, $actionData)) {
+            $linkedAction['stepKey'] = $actionData[self::TEST_ACTION_BEFORE];
+            $linkedAction['order'] = self::TEST_ACTION_BEFORE;
+        } elseif (array_key_exists(self::TEST_ACTION_AFTER, $actionData)) {
+            $linkedAction['stepKey'] = $actionData[self::TEST_ACTION_AFTER];
+            $linkedAction['order'] = self::TEST_ACTION_AFTER;
+        }
+
+        return $linkedAction;
     }
 
     /**
      * Takes the action group reference and parses out arguments as an array that can be passed to override defaults
      * defined in the action group xml.
      *
-     * @param array $actionAttributeData
+     * @param string $actionType
+     * @param array  $actionAttributeData
      * @return array
      */
-    private function processActionGroupArgs($actionAttributeData)
+    private function processActionGroupArgs($actionType, $actionAttributeData)
     {
+        if ($actionType !== self::ACTION_GROUP_TAG) {
+            return $actionAttributeData;
+        }
+
         $actionAttributeArgData = [];
         foreach ($actionAttributeData as $attributeDataKey => $attributeDataValues) {
             if ($attributeDataKey == self::ACTION_GROUP_REF) {
@@ -137,6 +172,8 @@ class ActionObjectExtractor extends BaseObjectExtractor
      * @param array $actionData
      * @param array $actions
      * @return array
+     * @throws XmlException
+     * @throws TestReferenceException
      */
     private function extractFieldActions($actionData, $actions)
     {
@@ -193,5 +230,44 @@ class ActionObjectExtractor extends BaseObjectExtractor
         }
 
         return $attributes;
+    }
+
+    /**
+     * Function which validates stepKey references within mergeable actions
+     *
+     * @param array  $stepKeyRefs
+     * @param string $testName
+     * @return void
+     * @throws TestReferenceException
+     */
+    private function auditMergeSteps($stepKeyRefs, $testName)
+    {
+        if (empty($stepKeyRefs)) {
+            return;
+        }
+
+        // check for step keys which are referencing themselves as before/after
+        $invalidStepRef = array_filter($stepKeyRefs, function ($value, $key) {
+            return in_array($key, $value);
+        }, ARRAY_FILTER_USE_BOTH);
+
+        if (!empty($invalidStepRef)) {
+            throw new TestReferenceException(
+                "Invalid ordering configuration in test",
+                ['test' => $testName, 'stepKey' => array_keys($invalidStepRef)]
+            );
+        }
+
+        // check for ambiguous references to step keys (multiple refs across test merges).
+        $atRiskStepRef = array_filter($stepKeyRefs, function ($value) {
+            return count($value) > 1;
+        });
+
+        foreach ($atRiskStepRef as $stepKey => $stepRefs) {
+            LoggingUtil::getInstance()->getLogger(ActionObjectExtractor::class)->warn(
+                'multiple actions referencing step key',
+                ['test' => $testName, 'stepKey' => $stepKey, 'ref' => $stepRefs]
+            );
+        }
     }
 }

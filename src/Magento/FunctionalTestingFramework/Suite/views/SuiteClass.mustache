@@ -2,8 +2,7 @@
 
 namespace Group;
 
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
-use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 
 /**
  * Group class is Codeception Extension which is allowed to handle to all internal events.
@@ -17,24 +16,42 @@ use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHand
 class {{suiteName}} extends \Codeception\GroupObject
 {
     public static $group = '{{suiteName}}';
-    private static $TEST_COUNT = {{testCount}};
-    private static $CURRENT_TEST_RUN = 0;
+    private $testCount = {{testCount}};
+    private $preconditionFailure = null;
+    private $currentTestRun = 0;
     private static $HOOK_EXECUTION_INIT = "\n/******** Beginning execution of {{suiteName}} suite %s block ********/\n";
     private static $HOOK_EXECUTION_END = "\n/******** Execution of {{suiteName}} suite %s block complete ********/\n";
-    {{#var}}
-    private ${{stepKey}};
-    {{/var}}
 
     {{#before}}
     public function _before(\Codeception\Event\TestEvent $e)
     {
         // increment test count per execution
-        self::$CURRENT_TEST_RUN++;
+        $this->currentTestRun++;
+        $this->executePreConditions();
 
-        if (self::$CURRENT_TEST_RUN == 1) {
+        if ($this->preconditionFailure != null) {
+            //if our preconditions fail, we need to mark all the tests as incomplete.
+            $e->getTest()->getMetadata()->setIncomplete("SUITE PRECONDITION FAILED:" . PHP_EOL . $this->preconditionFailure);
+        }
+    }
+
+
+    private function executePreConditions()
+    {
+        if ($this->currentTestRun == 1) {
             print sprintf(self::$HOOK_EXECUTION_INIT, "before");
 
-            {{> testActions}}
+            try {
+                {{> testActions}}
+
+                // reset configuration and close session
+                $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver')->_resetConfig();
+                $webDriver->webDriver->close();
+                $webDriver->webDriver = null;
+
+            } catch (\Exception $exception) {
+                $this->preconditionFailure = $exception->getMessage();
+            }
 
             print sprintf(self::$HOOK_EXECUTION_END, "before");
         }
@@ -44,11 +61,43 @@ class {{suiteName}} extends \Codeception\GroupObject
     {{#after}}
     public function _after(\Codeception\Event\TestEvent $e)
     {
-        if (self::$CURRENT_TEST_RUN == self::$TEST_COUNT) {
+        $this->executePostConditions($e);
+    }
+
+
+    private function executePostConditions(\Codeception\Event\TestEvent $e)
+    {
+        if ($this->currentTestRun == $this->testCount) {
             print sprintf(self::$HOOK_EXECUTION_INIT, "after");
 
-            {{> testActions}}
+            try {
+                // Find out if Test in Suite failed, will cause potential failures in suite after
+                $cest = $e->getTest();
 
+                //Access private TestResultObject to find stack and if there are any errors (as opposed to failures)
+                $testResultObject = call_user_func(\Closure::bind(
+                    function () use ($cest) {
+                        return $cest->getTestResultObject();
+                    },
+                    $cest
+                ));
+                $errors = $testResultObject->errors();
+
+                if (!empty($errors)) {
+                    foreach ($errors as $error) {
+                        if ($error->failedTest()->getTestMethod() == $cest->getName()) {
+                            // Do not attempt to run _after if failure was in the _after block
+                            // Try to run _after but catch exceptions to prevent them from overwriting original failure.
+                            print("LAST TEST IN SUITE FAILED, TEST AFTER MAY NOT BE SUCCESSFUL\n");
+                        }
+                    }
+                }
+                {{> testActions}}
+            } catch (\Exception $exception) {
+                print $exception->getMessage();
+            }
+
+            PersistedObjectHandler::getInstance()->clearSuiteObjects();
             print sprintf(self::$HOOK_EXECUTION_END, "after");
         }
     }

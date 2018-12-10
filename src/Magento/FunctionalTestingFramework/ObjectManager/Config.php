@@ -27,7 +27,7 @@ class Config extends ObjectManagerConfig
      * Check whether type is shared
      *
      * @param string $type
-     * @return bool
+     * @return boolean
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function isShared($type)

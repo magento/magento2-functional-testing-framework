@@ -23,6 +23,11 @@ class OperationElementBuilder
         'isPrimary' => 'boolean'
     ];
 
+    /**
+     * Array of nested metadata, merged to main object via addElement()
+     *
+     * @var array
+     */
     private $nestedMetadata = [];
 
     /**
@@ -144,7 +149,7 @@ class OperationElementBuilder
     /**
      * Adds a new set of fields (value => type) into an object parameter to be converted to Operation Elements.
      *
-     * @param $fieldsToAdd
+     * @param array $fieldsToAdd
      * @return OperationElementBuilder
      */
     public function addFields($fieldsToAdd)

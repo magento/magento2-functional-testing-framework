@@ -5,16 +5,13 @@
  */
 namespace Magento\FunctionalTestingFramework\Suite\Handlers;
 
-use Exception;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Suite\Parsers\SuiteDataParser;
 use Magento\FunctionalTestingFramework\Suite\Util\SuiteObjectExtractor;
-use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
-use Magento\FunctionalTestingFramework\Test\Util\TestHookObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\ObjectExtractor;
-use Magento\Ui\Test\Unit\Component\PagingTest;
 
 /**
  * Class SuiteObjectHandler
@@ -26,7 +23,7 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      *
      * @var SuiteObjectHandler
      */
-    private static $SUITE_OBJECT_HANLDER_INSTANCE;
+    private static $instance;
 
     /**
      * Array of suite objects keyed by suite name.
@@ -36,26 +33,35 @@ class SuiteObjectHandler implements ObjectHandlerInterface
     private $suiteObjects;
 
     /**
-     * SuiteObjectHandler constructor.
+     * Avoids instantiation of SuiteObjectHandler by new.
+     * @return void
      */
     private function __construct()
     {
-        // empty constructor
+    }
+
+    /**
+     * Avoids instantiation of SuiteObjectHandler by clone.
+     * @return void
+     */
+    private function __clone()
+    {
     }
 
     /**
      * Function to enforce singleton design pattern
      *
      * @return ObjectHandlerInterface
+     * @throws XmlException
      */
-    public static function getInstance()
+    public static function getInstance(): ObjectHandlerInterface
     {
-        if (self::$SUITE_OBJECT_HANLDER_INSTANCE == null) {
-            self::$SUITE_OBJECT_HANLDER_INSTANCE = new SuiteObjectHandler();
-            self::$SUITE_OBJECT_HANLDER_INSTANCE->initSuiteData();
+        if (self::$instance == null) {
+            self::$instance = new SuiteObjectHandler();
+            self::$instance->initSuiteData();
         }
 
-        return self::$SUITE_OBJECT_HANLDER_INSTANCE;
+        return self::$instance;
     }
 
     /**
@@ -64,7 +70,7 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      * @param string $objectName
      * @return SuiteObject
      */
-    public function getObject($objectName)
+    public function getObject($objectName): SuiteObject
     {
         if (!array_key_exists($objectName, $this->suiteObjects)) {
             trigger_error("Suite ${objectName} is not defined.", E_USER_ERROR);
@@ -77,9 +83,29 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      *
      * @return array
      */
-    public function getAllObjects()
+    public function getAllObjects(): array
     {
         return $this->suiteObjects;
+    }
+
+    /**
+     * Function which return all tests referenced by suites.
+     *
+     * @return array
+     */
+    public function getAllTestReferences(): array
+    {
+        $testsReferencedInSuites = [];
+        $suites = $this->getAllObjects();
+
+        foreach ($suites as $suite) {
+            /** @var SuiteObject $suite */
+            $test_keys = array_keys($suite->getTests());
+            $testToSuiteName = array_fill_keys($test_keys, [$suite->getName()]);
+            $testsReferencedInSuites = array_merge_recursive($testsReferencedInSuites, $testToSuiteName);
+        }
+
+        return $testsReferencedInSuites;
     }
 
     /**
@@ -87,6 +113,7 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      *
      * @return void
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     * @throws XmlException
      */
     private function initSuiteData()
     {

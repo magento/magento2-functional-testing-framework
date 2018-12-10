@@ -43,9 +43,9 @@ class SuiteObject
 
     /**
      * SuiteObject constructor.
-     * @param string $name
-     * @param TestObject[] $includeTests
-     * @param TestObject[] $excludeTests
+     * @param string           $name
+     * @param TestObject[]     $includeTests
+     * @param TestObject[]     $excludeTests
      * @param TestHookObject[] $hooks
      */
     public function __construct($name, $includeTests, $excludeTests, $hooks)
@@ -110,11 +110,21 @@ class SuiteObject
      * Convenience method for determining if a Suite will require group file generation.
      * A group file will only be generated when the user specifies a before/after statement.
      *
-     * @return bool
+     * @return boolean
      */
     public function requiresGroupFile()
     {
         return !empty($this->hooks);
+    }
+
+    /**
+     * Getter for the Hook Array which contains the before/after objects.
+     *
+     * @return TestHookObject[]
+     */
+    public function getHooks()
+    {
+        return $this->hooks;
     }
 
     /**
@@ -124,7 +134,7 @@ class SuiteObject
      */
     public function getBeforeHook()
     {
-        return $this->hooks['before'];
+        return $this->hooks['before'] ?? null;
     }
 
     /**
@@ -134,6 +144,6 @@ class SuiteObject
      */
     public function getAfterHook()
     {
-        return $this->hooks['after'];
+        return $this->hooks['after'] ?? null;
     }
 }

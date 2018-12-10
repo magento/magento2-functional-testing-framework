@@ -18,11 +18,16 @@ class ActionMergeUtil
 {
     const STEP_MISSING_ERROR_MSG =
         "Merge Error - Step could not be found in either TestXML or DeltaXML.
-        \t%s = '%s'\tTestStep='%s'\tLinkedStep'%s'";
+        \t%s: '%s'\tTestStep: '%s'\tLinkedStep: '%s'";
 
     const WAIT_ATTR = 'timeout';
     const WAIT_ACTION_NAME = 'waitForPageLoad';
     const WAIT_ACTION_SUFFIX = 'WaitForPageLoad';
+    const SKIP_READINESS_ACTION_NAME = 'skipReadinessCheck';
+    const SKIP_READINESS_OFF_SUFFIX = 'SkipReadinessOff';
+    const SKIP_READINESS_ON_SUFFIX = 'SkipReadinessOn';
+    const DEFAULT_SKIP_ON_ORDER = 'before';
+    const DEFAULT_SKIP_OFF_ORDER = 'after';
     const DEFAULT_WAIT_ORDER = 'after';
 
     /**
@@ -68,20 +73,82 @@ class ActionMergeUtil
     /**
      * Method to execute merge of steps and insert wait steps.
      *
-     * @param array $parsedSteps
-     * @param bool $skipActionGroupResolution
+     * @param array   $parsedSteps
+     * @param boolean $skipActionGroupResolution
      * @return array
+     * @throws TestReferenceException
+     * @throws XmlException
      */
     public function resolveActionSteps($parsedSteps, $skipActionGroupResolution = false)
     {
         $this->mergeActions($parsedSteps);
         $this->insertWaits();
+        $this->insertReadinessSkips();
 
         if ($skipActionGroupResolution) {
             return $this->orderedSteps;
         }
 
-        return $this->resolveActionGroups($this->orderedSteps);
+        $resolvedActions = $this->resolveActionGroups($this->orderedSteps);
+        return $this->resolveSecretFieldAccess($resolvedActions);
+    }
+
+    /**
+     * Takes an array of actions and resolves any references to secret fields. The function then validates whether the
+     * refernece is valid and replaces the function name accordingly to hide arguments at runtime.
+     *
+     * @param ActionObject[] $resolvedActions
+     * @return ActionObject[]
+     * @throws TestReferenceException
+     */
+    private function resolveSecretFieldAccess($resolvedActions)
+    {
+        $actions = [];
+        foreach ($resolvedActions as $resolvedAction) {
+            $action = $resolvedAction;
+            $hasSecretRef = $this->actionAttributeContainsSecretRef($resolvedAction->getCustomActionAttributes());
+
+            if ($resolvedAction->getType() !== 'fillField' && $hasSecretRef) {
+                throw new TestReferenceException("You cannot reference secret data outside of fill field actions");
+            }
+
+            if ($resolvedAction->getType() === 'fillField' && $hasSecretRef) {
+                $action = new ActionObject(
+                    $action->getStepKey(),
+                    'fillSecretField',
+                    $action->getCustomActionAttributes(),
+                    $action->getLinkedAction(),
+                    $action->getActionOrigin()
+                );
+            }
+
+            $actions[$action->getStepKey()] = $action;
+        }
+
+        return $actions;
+    }
+
+    /**
+     * Returns a boolean based on whether or not the action attributes contain a reference to a secret field.
+     *
+     * @param array $actionAttributes
+     * @return boolean
+     */
+    private function actionAttributeContainsSecretRef($actionAttributes)
+    {
+        foreach ($actionAttributes as $actionAttribute) {
+            if (is_array($actionAttribute)) {
+                return $this->actionAttributeContainsSecretRef($actionAttribute);
+            }
+
+            preg_match_all("/{{_CREDS\.([\w]+)}}/", $actionAttribute, $matches);
+
+            if (!empty($matches[0])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -119,6 +186,7 @@ class ActionMergeUtil
      *
      * @param array $parsedSteps
      * @return void
+     * @throws XmlException
      */
     private function mergeActions($parsedSteps)
     {
@@ -156,6 +224,39 @@ class ActionMergeUtil
     }
 
     /**
+     * Runs through the prepared orderedSteps and calls insertWait if a step requires a wait after it.
+     *
+     * @return void
+     */
+    private function insertReadinessSkips()
+    {
+        foreach ($this->orderedSteps as $step) {
+            if (array_key_exists("skipReadiness", $step->getCustomActionAttributes())) {
+                if ($step->getCustomActionAttributes()['skipReadiness'] == "true") {
+                    $skipReadinessOn = new ActionObject(
+                        $step->getStepKey() . self::SKIP_READINESS_ON_SUFFIX,
+                        self::SKIP_READINESS_ACTION_NAME,
+                        ['state' => "true"],
+                        $step->getStepKey(),
+                        self::DEFAULT_SKIP_ON_ORDER
+                    );
+
+                    $skipReadinessOff = new ActionObject(
+                        $step->getStepKey() . self::SKIP_READINESS_OFF_SUFFIX,
+                        self::SKIP_READINESS_ACTION_NAME,
+                        ['state' => "false"],
+                        $step->getStepKey(),
+                        self::DEFAULT_SKIP_OFF_ORDER
+                    );
+
+                    $this->insertStep($skipReadinessOn);
+                    $this->insertStep($skipReadinessOff);
+                }
+            }
+        }
+    }
+
+    /**
      * This method takes the steps from the parser and splits steps which need merge from steps that are ordered.
      *
      * @param array $parsedSteps
@@ -165,11 +266,19 @@ class ActionMergeUtil
     private function sortActions($parsedSteps)
     {
         foreach ($parsedSteps as $parsedStep) {
-            $parsedStep->resolveReferences();
-            if ($parsedStep->getLinkedAction()) {
-                $this->stepsToMerge[$parsedStep->getStepKey()] = $parsedStep;
-            } else {
-                $this->orderedSteps[$parsedStep->getStepKey()] = $parsedStep;
+            try {
+                $parsedStep->resolveReferences();
+
+                if ($parsedStep->getLinkedAction()) {
+                    $this->stepsToMerge[$parsedStep->getStepKey()] = $parsedStep;
+                } else {
+                    $this->orderedSteps[$parsedStep->getStepKey()] = $parsedStep;
+                }
+            } catch (\Exception $e) {
+                throw new TestReferenceException(
+                    $e->getMessage() .
+                    ".\nException occurred parsing action at StepKey \"" . $parsedStep->getStepKey() . "\""
+                );
             }
         }
     }

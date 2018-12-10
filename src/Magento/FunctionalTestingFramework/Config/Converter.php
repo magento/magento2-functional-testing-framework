@@ -49,10 +49,10 @@ class Converter implements \Magento\FunctionalTestingFramework\Config\ConverterI
     /**
      * Constructor for Converter object.
      *
-     * @param ArgumentParser $argumentParser
+     * @param ArgumentParser       $argumentParser
      * @param InterpreterInterface $argumentInterpreter
-     * @param string $argumentNodeName
-     * @param array $idAttributes
+     * @param string               $argumentNodeName
+     * @param array                $idAttributes
      */
     public function __construct(
         ArgumentParser $argumentParser,
@@ -130,7 +130,7 @@ class Converter implements \Magento\FunctionalTestingFramework\Config\ConverterI
      * Get key for DOM element
      *
      * @param \DOMElement $element
-     * @return bool|string
+     * @return boolean|string
      */
     protected function getElementKey(\DOMElement $element)
     {
@@ -149,8 +149,8 @@ class Converter implements \Magento\FunctionalTestingFramework\Config\ConverterI
      * Verify attribute is main key for element.
      *
      * @param \DOMElement $element
-     * @param \DOMAttr $attribute
-     * @return bool
+     * @param \DOMAttr    $attribute
+     * @return boolean
      */
     protected function isKeyAttribute(\DOMElement $element, \DOMAttr $attribute)
     {
@@ -200,7 +200,7 @@ class Converter implements \Magento\FunctionalTestingFramework\Config\ConverterI
      * Cast nodeValue to int or double.
      *
      * @param string $nodeValue
-     * @return float|int
+     * @return float|integer
      */
     protected function castNumeric($nodeValue)
     {

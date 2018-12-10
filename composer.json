@@ -2,7 +2,7 @@
     "name": "magento/magento2-functional-testing-framework",
     "description": "Magento2 Functional Testing Framework",
     "type": "library",
-    "version": "2.1.2",
+    "version": "2.3.11",
     "license": "AGPL-3.0",
     "keywords": ["magento", "automation", "functional", "testing"],
     "config": {
@@ -10,29 +10,34 @@
     },
     "require": {
         "php": "7.0.2|7.0.4|~7.0.6|~7.1.0|~7.2.0",
+        "ext-curl": "*",
         "allure-framework/allure-codeception": "~1.2.6",
         "codeception/codeception": "~2.3.4",
         "consolidation/robo": "^1.0.0",
         "epfremme/swagger-php": "^2.0",
         "flow/jsonpath": ">0.2",
         "fzaninotto/faker": "^1.6",
+        "monolog/monolog": "^1.0",
         "mustache/mustache": "~2.5",
-        "symfony/process": ">=2.7 <3.4",
+        "symfony/process": "^2.8 || ^3.1 || ^4.0",
         "vlucas/phpdotenv": "^2.4"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "1.5.3",
-        "sebastian/phpcpd": "~3.0",
+        "squizlabs/php_codesniffer": "~3.2",
+        "sebastian/phpcpd": "~3.0 || ~4.0",
         "brainmaestro/composer-git-hooks": "^2.3",
-        "codeception/aspect-mock": "^2.0",
-        "goaop/framework": "2.1.2",
+        "doctrine/cache": "<1.7.0",
+        "codeception/aspect-mock": "^3.0",
+        "goaop/framework": "2.2.0",
         "codacy/coverage": "^1.4",
         "phpmd/phpmd": "^2.6.0",
+        "phpunit/phpunit": "~6.5.0 || ~7.0.0",
         "rregeer/phpunit-coverage-check": "^0.1.4",
         "php-coveralls/php-coveralls": "^1.0",
         "symfony/stopwatch": "~3.4.6"
     },
     "autoload": {
+        "files": ["src/Magento/FunctionalTestingFramework/_bootstrap.php"],
         "psr-4": {
             "Magento\\FunctionalTestingFramework\\": "src/Magento/FunctionalTestingFramework",
             "MFTF\\": "dev/tests/functional/MFTF"

@@ -104,8 +104,8 @@ class ArgumentObject
      * Takes in boolean to determine if the replacement is being done with an inner argument (as in if it's a parameter)
      *
      * Example Type     Non Inner           Inner
-     * {{XML.DATA}}:    {{XML.DATA}}        XML.DATA
-     * $TEST.DATA$:     $TEST.DATA$         $TEST.DATA$
+     * {{XML.DATA}}     {{XML.DATA}}        XML.DATA
+     * $TEST.DATA$      $TEST.DATA$         $TEST.DATA$
      * stringLiteral    stringLiteral       'stringLiteral'
      *
      * @param boolean $isInnerArgument
@@ -114,6 +114,11 @@ class ArgumentObject
     private function resolveStringArgument($isInnerArgument)
     {
         if ($isInnerArgument) {
+            if (preg_match('/{{[\w.\[\]]+}}/', $this->value)) {
+                return ltrim(rtrim($this->value, "}"), "{");
+            } elseif (preg_match('/\${1,2}[\w.\[\]]+\${1,2}/', $this->value)) {
+                return $this->value;
+            }
             return "'" . $this->value . "'";
         } else {
             return $this->value;

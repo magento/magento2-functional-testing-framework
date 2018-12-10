@@ -37,7 +37,7 @@ class Runtime implements \Magento\FunctionalTestingFramework\ObjectManager\Relat
      * Check whether requested type is available for read
      *
      * @param string $type
-     * @return bool
+     * @return boolean
      */
     public function has($type)
     {
