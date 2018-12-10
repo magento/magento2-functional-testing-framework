@@ -18,7 +18,7 @@ class TestLoggingUtil extends Assert
     /**
      * @var TestLoggingUtil
      */
-    private static $INSTANCE;
+    private static $instance;
 
     /**
      * @var TestHandler
@@ -40,11 +40,11 @@ class TestLoggingUtil extends Assert
      */
     public static function getInstance()
     {
-        if (self::$INSTANCE == null) {
-            self::$INSTANCE = new TestLoggingUtil();
+        if (self::$instance == null) {
+            self::$instance = new TestLoggingUtil();
         }
 
-        return self::$INSTANCE;
+        return self::$instance;
     }
 
     /**
@@ -61,7 +61,7 @@ class TestLoggingUtil extends Assert
             LoggingUtil::class,
             ['getLogger' => $testLogger]
         )->make();
-        $property = new \ReflectionProperty(LoggingUtil::class, 'INSTANCE');
+        $property = new \ReflectionProperty(LoggingUtil::class, 'instance');
         $property->setAccessible(true);
         $property->setValue($mockLoggingUtil);
     }

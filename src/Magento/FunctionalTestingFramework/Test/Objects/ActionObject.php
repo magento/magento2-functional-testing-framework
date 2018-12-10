@@ -691,7 +691,7 @@ class ActionObject
         $resolvedParameters = [];
         foreach ($parameters as $parameter) {
             $parameter = trim($parameter);
-            preg_match_all("/[$'][\w\D]+[$']/", $parameter, $stringOrPersistedMatch);
+            preg_match_all("/[$'][\w\D]*[$']/", $parameter, $stringOrPersistedMatch);
             preg_match_all('/{\$[a-z][a-zA-Z\d]+}/', $parameter, $variableMatch);
             if (!empty($stringOrPersistedMatch[0])) {
                 $resolvedParameters[] = ltrim(rtrim($parameter, "'"), "'");
