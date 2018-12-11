@@ -276,7 +276,7 @@ class ModuleResolver
             // Symlinks must be resolved otherwise they will not match Magento's filepath to the module
             $potentialSymlink = str_replace(DIRECTORY_SEPARATOR . $pattern, "", $codePath);
             if (is_link($potentialSymlink)) {
-                $codePath = readlink($potentialSymlink) . DIRECTORY_SEPARATOR . $pattern;
+                $codePath = realpath($potentialSymlink) . DIRECTORY_SEPARATOR . $pattern;
             }
 
             $mainModName = array_search($codePath, $allComponents) ?: basename(str_replace($pattern, '', $codePath));
@@ -396,17 +396,18 @@ class ModuleResolver
     {
         $login = $_ENV['MAGENTO_ADMIN_USERNAME'] ?? null;
         $password = $_ENV['MAGENTO_ADMIN_PASSWORD'] ?? null;
-        if (!$login || !$password || !isset($_ENV['MAGENTO_BASE_URL'])) {
+        if (!$login || !$password || !$this->getBackendUrl()) {
             $message = "Cannot retrieve API token without credentials and base url, please fill out .env.";
             $context = [
                 "MAGENTO_BASE_URL" => getenv("MAGENTO_BASE_URL"),
+                "MAGENTO_BACKEND_BASE_URL" => getenv("MAGENTO_BACKEND_BASE_URL"),
                 "MAGENTO_ADMIN_USERNAME" => getenv("MAGENTO_ADMIN_USERNAME"),
                 "MAGENTO_ADMIN_PASSWORD" => getenv("MAGENTO_ADMIN_PASSWORD"),
             ];
             throw new TestFrameworkException($message, $context);
         }
 
-        $url = ConfigSanitizerUtil::sanitizeUrl($_ENV['MAGENTO_BASE_URL']) . $this->adminTokenUrl;
+        $url = ConfigSanitizerUtil::sanitizeUrl($this->getBackendUrl()) . $this->adminTokenUrl;
         $data = [
             'username' => $login,
             'password' => $password
@@ -428,7 +429,7 @@ class ModuleResolver
 
         if ($responseCode !== 200) {
             if ($responseCode == 0) {
-                $details = "Could not find Magento Instance at given MAGENTO_BASE_URL";
+                $details = "Could not find Magento Backend Instance at MAGENTO_BACKEND_BASE_URL or MAGENTO_BASE_URL";
             } else {
                 $details = $responseCode . " " . Response::$statusTexts[$responseCode];
             }
@@ -554,8 +555,8 @@ class ModuleResolver
             }
             array_walk($allComponents, function (&$value) {
                 // Magento stores component paths with unix DIRECTORY_SEPARATOR, need to stay uniform and convert
-                $value .= '/Test/Mftf';
                 $value = realpath($value);
+                $value .= '/Test/Mftf';
             });
             return $allComponents;
         } catch (TestFrameworkException $e) {
@@ -564,5 +565,14 @@ class ModuleResolver
             );
         }
         return [];
+    }
+
+    /**
+     * Returns custom Backend URL if set, fallback to Magento Base URL
+     * @return string|null
+     */
+    private function getBackendUrl()
+    {
+        return getenv('MAGENTO_BACKEND_BASE_URL') ?: getenv('MAGENTO_BASE_URL');
     }
 }

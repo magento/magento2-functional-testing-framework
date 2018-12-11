@@ -27,6 +27,6 @@ class ActionGroupWithSectionAndDataAsArgumentsCest
 	 */
 	public function ActionGroupWithSectionAndDataAsArguments(AcceptanceTester $I)
 	{
-		$I->waitForElementVisible("#element .John");
+		$I->waitForElementVisible("#element .John", 10);
 	}
 }
