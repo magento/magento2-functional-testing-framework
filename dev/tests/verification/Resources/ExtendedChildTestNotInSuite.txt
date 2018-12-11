@@ -1,5 +1,5 @@
 <?php
-namespace Magento\AcceptanceTest\_suiteExtends\Backend;
+namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
@@ -15,10 +15,9 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("[NO TESTCASEID]: ExtendedTestInSuiteChildTest")
- * @group ExtendedTestInSuiteChildTest
+ * @Title("[NO TESTCASEID]: ExtendedChildTestNotInSuite")
  */
-class ExtendedTestInSuiteChildTestCest
+class ExtendedChildTestNotInSuiteCest
 {
 	/**
 	  * @param AcceptanceTester $I
@@ -50,13 +49,13 @@ class ExtendedTestInSuiteChildTestCest
 	/**
 	 * @Severity(level = SeverityLevel::TRIVIAL)
 	 * @Features({"TestModule"})
-	 * @Stories({"ExtendedTestInSuiteChildTest"})
+	 * @Stories({"ExtendedChildTestNotInSuite"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ExtendedTestInSuiteChildTest(AcceptanceTester $I)
+	public function ExtendedChildTestNotInSuite(AcceptanceTester $I)
 	{
 		$I->comment("Different Input");
 	}

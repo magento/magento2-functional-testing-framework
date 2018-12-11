@@ -92,10 +92,11 @@ class TestObjectHandler implements ObjectHandlerInterface
      */
     public function getAllObjects()
     {
+        $testObjects = [];
         foreach ($this->tests as $testName => $test) {
-            $this->tests[$testName] = $this->extendTest($test);
+            $testObjects[$testName] = $this->extendTest($test);
         }
-        return $this->tests;
+        return $testObjects;
     }
 
     /**
