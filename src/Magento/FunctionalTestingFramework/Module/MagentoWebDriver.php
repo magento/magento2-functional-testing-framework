@@ -380,6 +380,21 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
+     * Wait for all React JavaScript to finish executing.
+     *
+     * @param integer $timeout
+     * @throws \Exception
+     * @return void
+     */
+    public function waitForReactPageLoad($timeout = null)
+    {
+        $timeout = $timeout ?? $this->_getConfig()['pageload_timeout'];
+
+        $this->waitForJS('return (!!Object.keys(document).filter(prop => /^_reactListenersID/.test(prop)).length) || (document.querySelector("[data-reactroot]") && Object.keys(rootEl).some(prop => /^__reactInternalInstance/.test(prop)));', $timeout);
+        $this->waitForJS("return document.readyState == 'complete';", $timeout);
+    }
+
+    /**
      * Wait for all visible loading masks to disappear. Gets all elements by mask selector, then loops over them.
      *
      * @param integer $timeout

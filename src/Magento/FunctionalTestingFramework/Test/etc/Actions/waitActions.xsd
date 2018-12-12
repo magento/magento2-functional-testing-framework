@@ -20,6 +20,7 @@
             <xs:element type="waitForJSType" name="waitForJS" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForLoadingMaskToDisappearType" name="waitForLoadingMaskToDisappear" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForPageLoadType" name="waitForPageLoad" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForReactPageLoadType" name="waitForReactPageLoad" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForTextType" name="waitForText" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
     </xs:group>
@@ -166,6 +167,20 @@
         <xs:annotation>
             <xs:documentation>
                 Waits up to given time for page to have finished loading..
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="time"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="waitForReactPageLoadType">
+        <xs:annotation>
+            <xs:documentation>
+                Waits up to given time for React page to have finished loading..
             </xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
