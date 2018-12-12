@@ -6,7 +6,7 @@
 
 require_once __DIR__ . '/../../../../app/bootstrap.php';
 
-if (isset($_POST['token']) && isset($_POST['command'])) {
+if (!empty($_POST['token']) && !empty($_POST['command'])) {
     $magentoObjectManagerFactory = \Magento\Framework\App\Bootstrap::createObjectManagerFactory(BP, $_SERVER);
     $magentoObjectManager = $magentoObjectManagerFactory->create($_SERVER);
     $tokenModel = $magentoObjectManager->get(\Magento\Integration\Model\Oauth\Token::class);
@@ -14,8 +14,8 @@ if (isset($_POST['token']) && isset($_POST['command'])) {
     $tokenPassedIn = urldecode($_POST['token']);
     $command = urldecode($_POST['command']);
 
-    if (array_key_exists("arguments", $_POST)) {
-        $arguments = escapeshellarg(urldecode($_POST['arguments']));
+    if (!empty($_POST['arguments'])) {
+        $arguments = urldecode($_POST['arguments']);
     } else {
         $arguments = null;
     }
