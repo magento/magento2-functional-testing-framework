@@ -292,8 +292,8 @@ class SuiteGenerationTest extends MftfTestCase
     {
         $groupName = 'suiteExtends';
 
-        $expectedContents = [
-            'ExtendedTestInSuiteChildTestCest.php'
+        $expectedFileNames = [
+            'ExtendedChildTestInSuiteCest'
         ];
 
         // Generate the Suite
@@ -312,15 +312,18 @@ class SuiteGenerationTest extends MftfTestCase
         $this->assertArrayHasKey($groupName, $yml['groups']);
 
         $suiteResultBaseDir = self::GENERATE_RESULT_DIR .
-            DIRECTORY_SEPARATOR .
             $groupName .
             DIRECTORY_SEPARATOR;
 
         // Validate tests have been generated
         $dirContents = array_diff(scandir($suiteResultBaseDir), ['..', '.']);
 
-        foreach ($expectedContents as $expectedFile) {
-            $this->assertTrue(in_array($expectedFile, $dirContents));
+        foreach ($expectedFileNames as $expectedFileName) {
+            $this->assertTrue(in_array($expectedFileName . ".php", $dirContents));
+            $this->assertFileEquals(
+                self::RESOURCES_PATH . DIRECTORY_SEPARATOR . $expectedFileName . ".txt",
+                $suiteResultBaseDir . $expectedFileName . ".php"
+            );
         }
     }
 

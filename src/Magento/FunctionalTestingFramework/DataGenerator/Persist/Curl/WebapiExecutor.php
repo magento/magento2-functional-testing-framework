@@ -66,14 +66,33 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
      */
     public function __construct($storeCode = null)
     {
-        if (!isset(parent::$baseUrl)) {
-            parent::resolveBaseUrl();
-        }
-
         $this->storeCode = $storeCode;
         $this->authToken = null;
         $this->transport = new CurlTransport();
         $this->authorize();
+    }
+
+    /**
+     * Returns base URL for Magento Web API instance
+     * @return string
+     */
+    public function getBaseUrl(): string
+    {
+        $baseUrl = parent::getBaseUrl();
+
+        $webapiHost = getenv('MAGENTO_RESTAPI_SERVER_HOST');
+        $webapiPort = getenv("MAGENTO_RESTAPI_SERVER_PORT");
+        $webapiProtocol = getenv("MAGENTO_RESTAPI_SERVER_PROTOCOL");
+
+        if ($webapiHost) {
+            $baseUrl = sprintf('%s://%s/', $webapiProtocol, $webapiHost);
+        }
+
+        if ($webapiPort) {
+            $baseUrl = rtrim($baseUrl, '/') . ':' . $webapiPort . '/';
+        }
+
+        return $baseUrl;
     }
 
     /**
@@ -158,11 +177,11 @@ class WebapiExecutor extends AbstractExecutor implements CurlInterface
      */
     public function getFormattedUrl($resource)
     {
-        $urlResult = parent::$baseUrl . 'rest/';
+        $urlResult = $this->getBaseUrl() . 'rest/';
         if ($this->storeCode != null) {
             $urlResult .= $this->storeCode . "/";
         }
-        $urlResult.= trim($resource, "/");
+        $urlResult .= trim($resource, "/");
         return $urlResult;
     }
 
