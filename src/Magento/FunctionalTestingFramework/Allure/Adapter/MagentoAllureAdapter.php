@@ -7,7 +7,7 @@ namespace Magento\FunctionalTestingFramework\Allure\Adapter;
 
 use Magento\FunctionalTestingFramework\Data\Argument\Interpreter\NullType;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
-use Yandex\Allure\Adapter\AllureAdapter;
+use Yandex\Allure\Codeception\AllureCodeception;
 use Yandex\Allure\Adapter\Event\StepStartedEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\StepEvent;
@@ -20,7 +20,7 @@ use Codeception\Event\StepEvent;
  * @package Magento\FunctionalTestingFramework\Allure
  */
 
-class MagentoAllureAdapter extends AllureAdapter
+class MagentoAllureAdapter extends AllureCodeception
 {
     /**
      * Array of group values passed to test runner command
