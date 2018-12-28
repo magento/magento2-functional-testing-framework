@@ -15,7 +15,9 @@ vendor/bin/phpunit --configuration dev/tests/phpunit.xml --testsuite unit --cove
 echo "==============================="
 echo "       UNIT TEST COVERAGE"
 echo "==============================="
-vendor/bin/coverage-check clover.xml $UNIT_COVERAGE_THRESHOLD
+if [[ ${TRAVIS_PHP_VERSION:0:3} != "7.3" ]]
+    then vendor/bin/coverage-check clover.xml $UNIT_COVERAGE_THRESHOLD
+fi
 
 echo "==============================="
 echo "      VERIFICATION TESTS"
