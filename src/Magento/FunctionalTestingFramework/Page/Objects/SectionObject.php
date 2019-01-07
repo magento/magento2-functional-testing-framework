@@ -26,14 +26,22 @@ class SectionObject
     private $elements = [];
 
     /**
+     * Filename of where the section came from
+     *
+     * @var string
+     */
+    private $filename;
+
+    /**
      * SectionObject constructor.
      * @param string $name
      * @param array  $elements
      */
-    public function __construct($name, $elements)
+    public function __construct($name, $elements, $filename)
     {
         $this->name = $name;
         $this->elements = $elements;
+        $this->filename = $filename;
     }
 
     /**

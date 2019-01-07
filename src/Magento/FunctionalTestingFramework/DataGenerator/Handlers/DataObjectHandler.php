@@ -32,6 +32,7 @@ class DataObjectHandler implements ObjectHandlerInterface
     const _ENTITY_KEY = 'entityKey';
     const _SEPARATOR = '->';
     const _REQUIRED_ENTITY = 'requiredEntity';
+    const _FILENAME = 'filename';
     const DATA_NAME_ERROR_MSG = "Entity names cannot contain non alphanumeric characters.\tData='%s'";
 
     /**
@@ -134,6 +135,7 @@ class DataObjectHandler implements ObjectHandlerInterface
             $uniquenessData = [];
             $vars = [];
             $parentEntity = null;
+            $filename = $rawEntity[self::_FILENAME] ?? null;
 
             if (array_key_exists(self::_DATA, $rawEntity)) {
                 $data = $this->processDataElements($rawEntity);
@@ -167,7 +169,8 @@ class DataObjectHandler implements ObjectHandlerInterface
                 $linkedEntities,
                 $uniquenessData,
                 $vars,
-                $parentEntity
+                $parentEntity,
+                $filename
             );
 
             $entityDataObjects[$entityDataObject->getName()] = $entityDataObject;
