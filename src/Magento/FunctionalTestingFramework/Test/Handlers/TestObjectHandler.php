@@ -37,6 +37,8 @@ class TestObjectHandler implements ObjectHandlerInterface
      */
     private $tests = [];
 
+    private $accessedObjects = [];
+
     /**
      * Instance of ObjectExtensionUtil class
      *
@@ -81,6 +83,7 @@ class TestObjectHandler implements ObjectHandlerInterface
             throw new TestReferenceException("Test ${testName} not defined in xml.");
         }
         $testObject = $this->tests[$testName];
+        $this->accessedObjects[] = $testObject;
 
         return $this->extendTest($testObject);
     }
@@ -167,5 +170,15 @@ class TestObjectHandler implements ObjectHandlerInterface
             return $this->extendUtil->extendTest($testObject);
         }
         return $testObject;
+    }
+
+    public function getAccessedObjects()
+    {
+        return $this->accessedObjects;
+    }
+
+    public function clearAccessedObjects()
+    {
+        $this->accessedObjects = [];
     }
 }

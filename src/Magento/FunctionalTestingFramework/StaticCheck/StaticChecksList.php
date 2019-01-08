@@ -23,7 +23,7 @@ class StaticChecksList implements StaticCheckListInterface
     /**
      * Constructor
      *
-     * @param array $scripts
+     * @param array $checks
      */
     public function __construct(array $checks = [])
     {

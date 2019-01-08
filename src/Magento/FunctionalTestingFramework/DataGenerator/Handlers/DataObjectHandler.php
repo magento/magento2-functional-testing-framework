@@ -49,6 +49,8 @@ class DataObjectHandler implements ObjectHandlerInterface
      */
     private $entityDataObjects = [];
 
+    private $accessedObjects = [];
+
     /**
      * Instance of DataExtensionUtil class
      *
@@ -93,6 +95,8 @@ class DataObjectHandler implements ObjectHandlerInterface
     public function getObject($name)
     {
         if (array_key_exists($name, $this->entityDataObjects)) {
+            $object = $this->entityDataObjects[$name];
+            $this->accessedObjects[] = $object;
             return $this->extendDataObject($this->entityDataObjects[$name]);
         }
 
@@ -279,5 +283,15 @@ class DataObjectHandler implements ObjectHandlerInterface
             return $this->extendUtil->extendEntity($dataObject);
         }
         return $dataObject;
+    }
+
+    public function getAccessedObjects()
+    {
+        return $this->accessedObjects;
+    }
+
+    public function clearAccessedObjects()
+    {
+        $this->accessedObjects = [];
     }
 }

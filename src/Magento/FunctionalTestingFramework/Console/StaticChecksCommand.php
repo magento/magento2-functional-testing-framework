@@ -12,7 +12,6 @@ use Magento\FunctionalTestingFramework\StaticCheck\StaticChecksList;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class StaticChecksCommand extends Command

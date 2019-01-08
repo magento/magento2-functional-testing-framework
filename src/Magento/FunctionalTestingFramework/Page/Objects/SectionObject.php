@@ -36,6 +36,7 @@ class SectionObject
      * SectionObject constructor.
      * @param string $name
      * @param array  $elements
+     * @param string $filename
      */
     public function __construct($name, $elements, $filename)
     {
@@ -52,6 +53,16 @@ class SectionObject
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Getter for the Section Filename
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
     }
 
     /**

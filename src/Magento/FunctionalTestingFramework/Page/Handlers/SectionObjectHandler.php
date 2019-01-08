@@ -40,6 +40,8 @@ class SectionObjectHandler implements ObjectHandlerInterface
      */
     private $sectionObjects = [];
 
+    private $accessedObjects = [];
+
     /**
      * Constructor
      *
@@ -116,7 +118,9 @@ class SectionObjectHandler implements ObjectHandlerInterface
     public function getObject($name)
     {
         if (array_key_exists($name, $this->getAllObjects())) {
-            return $this->getAllObjects()[$name];
+            $object = $this->getAllObjects()[$name];
+            $this->accessedObjects[] = $object;
+            return $object;
         }
 
         return null;
@@ -130,5 +134,15 @@ class SectionObjectHandler implements ObjectHandlerInterface
     public function getAllObjects()
     {
         return $this->sectionObjects;
+    }
+
+    public function getAccessedObjects()
+    {
+        return $this->accessedObjects;
+    }
+
+    public function clearAccessedObjects()
+    {
+        $this->accessedObjects = [];
     }
 }

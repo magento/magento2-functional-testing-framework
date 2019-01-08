@@ -20,6 +20,7 @@ class PageObjectHandler implements ObjectHandlerInterface
     const MODULE = 'module';
     const PARAMETERIZED = 'parameterized';
     const AREA = 'area';
+    const FILENAME = 'filename';
     const NAME_BLACKLIST_ERROR_MSG = "Page names cannot contain non alphanumeric characters.\tPage='%s'";
 
     /**
@@ -35,6 +36,8 @@ class PageObjectHandler implements ObjectHandlerInterface
      * @var PageObject[]
      */
     private $pageObjects = [];
+
+    private $accessedObjects = [];
 
     /**
      * Private constructor
@@ -66,9 +69,10 @@ class PageObjectHandler implements ObjectHandlerInterface
             $module = $pageData[self::MODULE];
             $sectionNames = array_keys($pageData[self::SECTION] ?? []);
             $parameterized = $pageData[self::PARAMETERIZED] ?? false;
+            $filename = $pageData[self::FILENAME] ?? null;
 
             $this->pageObjects[$pageName] =
-                new PageObject($pageName, $url, $module, $sectionNames, $parameterized, $area);
+                new PageObject($pageName, $url, $module, $sectionNames, $parameterized, $area, $filename);
         }
     }
 
@@ -96,7 +100,9 @@ class PageObjectHandler implements ObjectHandlerInterface
     public function getObject($name)
     {
         if (array_key_exists($name, $this->pageObjects)) {
-            return $this->getAllObjects()[$name];
+            $object = $this->getAllObjects()[$name];
+            $this->accessedObjects[] = $object;
+            return $object;
         }
 
         return null;
@@ -110,5 +116,15 @@ class PageObjectHandler implements ObjectHandlerInterface
     public function getAllObjects()
     {
         return $this->pageObjects;
+    }
+
+    public function getAccessedObjects()
+    {
+        return $this->accessedObjects;
+    }
+
+    public function clearAccessedObjects()
+    {
+        $this->accessedObjects = [];
     }
 }
