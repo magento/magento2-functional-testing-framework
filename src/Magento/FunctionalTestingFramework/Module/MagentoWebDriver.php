@@ -380,18 +380,45 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * Wait for all React JavaScript to finish executing.
+     * Wait for an Element to NOT be visible using JavaScript.
      *
-     * @param integer $timeout
+     * @param null $selector
+     * @param null $timeout
      * @throws \Exception
      * @return void
      */
-    public function waitForReactPageLoad($timeout = null)
+    public function waitForJsElementNotVisible($selector, $timeout = null)
     {
         $timeout = $timeout ?? $this->_getConfig()['pageload_timeout'];
 
-        $this->waitForJS('return (!!Object.keys(document).filter(prop => /^_reactListenersID/.test(prop)).length) || (document.querySelector("[data-reactroot]") && Object.keys(rootEl).some(prop => /^__reactInternalInstance/.test(prop)));', $timeout);
-        $this->waitForJS("return document.readyState == 'complete';", $timeout);
+        // Determine what type of Selector is used.
+        // Then use the correct JavaScript to locate the Element.
+        if (\Codeception\Util\Locator::isXPath($selector)) {
+            $this->waitForJS("return !document.evaluate(`$selector`, document);", $timeout);
+        } else {
+            $this->waitForJS("return !document.querySelector(`$selector`);", $timeout);
+        }
+    }
+
+    /**
+     * Wait for an Element to be visible using JavaScript.
+     *
+     * @param null $selector
+     * @param null $timeout
+     * @throws \Exception
+     * @return void
+     */
+    public function waitForJsElementVisible($selector, $timeout = null)
+    {
+        $timeout = $timeout ?? $this->_getConfig()['pageload_timeout'];
+
+        // Determine what type of Selector is used.
+        // Then use the correct JavaScript to locate the Element.
+        if (\Codeception\Util\Locator::isXPath($selector)) {
+            $this->waitForJS("return !!document && !!document.evaluate(`$selector`, document);", $timeout);
+        } else {
+            $this->waitForJS("return !!document && !!document.querySelector(`$selector`);", $timeout);
+        }
     }
 
     /**
