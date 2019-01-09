@@ -11,8 +11,8 @@ use Magento\FunctionalTestingFramework\Page\Handlers\PageObjectHandler;
 use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
-use Symfony\Component\Console\Input\InputInterface;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * Class TestDependencyCheck
@@ -55,6 +55,7 @@ class TestDependencyCheck implements StaticCheckInterface
      *
      * @param InputInterface $input
      * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function execute(InputInterface $input)
     {
@@ -65,13 +66,16 @@ class TestDependencyCheck implements StaticCheckInterface
             false
         );
 
+        $testObjects = TestObjectHandler::getInstance()->getAllObjects();
+        if (!class_exists('\Magento\Framework\Component\ComponentRegistrar')) {
+            return "TEST DEPENDENCY CHECK ABORTED: MFTF must be attached or pointing to Magento test codebase.";
+        }
         $registrar = new \Magento\Framework\Component\ComponentRegistrar();
         $this->moduleNameToPath = $registrar->getPaths(\Magento\Framework\Component\ComponentRegistrar::MODULE);
         $this->moduleNameToComposerName = $this->buildModuleNameToComposerName($this->moduleNameToPath);
         $this->flattenedDependencies = $this->buildComposerDependencyList();
 
         $testErrors = [];
-        $testObjects = TestObjectHandler::getInstance()->getAllObjects();
         foreach ($testObjects as $testObject) {
             // Find testobject's module
             $allFiles = explode(",", $testObject->getFilename());
@@ -132,7 +136,7 @@ class TestDependencyCheck implements StaticCheckInterface
                 $referenceErrors = $this->matchReferencesToMissingDependecies($allReferences, $missingDependencies);
 
                 // Build error output
-                $errorOutput = "Test \"{$testObject->getName()}\"";
+                $errorOutput = "\nTest \"{$testObject->getName()}\"";
                 $errorOutput .= " in {$basefile} contains references to following modules:\n\t\t";
                 foreach ($missingDependencies as $missingDependency) {
                     $errorOutput .= "\n\t{$missingDependency}";
@@ -141,12 +145,11 @@ class TestDependencyCheck implements StaticCheckInterface
                     }
                 }
                 $testErrors[$testObject->getName()][] = $errorOutput;
-                echo "\n\n{$errorOutput}";
             }
             $this->clearHandlerObjectCache();
         }
         //print all errors to file
-        return 'done';
+        return $this->printErrorsToFile($testErrors);
     }
 
     /**
@@ -255,6 +258,25 @@ class TestDependencyCheck implements StaticCheckInterface
         return $referenceErrors;
     }
 
+    /**
+     * Prints out given errors to file, and returns summary result string
+     * @param array $errors
+     * @return string
+     */
+    private function printErrorsToFile($errors)
+    {
+        $outputPath = getcwd() . DIRECTORY_SEPARATOR . "mftf-dependency-checks.txt";
+        $fileResource = fopen($outputPath, 'w');
+        $header = "MFTF Test Dependency Check:\n";
+        fwrite($fileResource, $header);
+        foreach ($errors as $test => $error) {
+            fwrite($fileResource, $error[0] . PHP_EOL);
+        }
+        fclose($fileResource);
+        $errorCount = count($errors);
+        $output = "Test Dependency problems found across {$errorCount} test(s). Error details output to {$outputPath}";
+        return $output;
+    }
     /**
      * Clears all handler's accessed object cache.
      * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException

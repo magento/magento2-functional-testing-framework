@@ -94,7 +94,7 @@ class SectionObjectHandler implements ObjectHandlerInterface
                 throw new XmlException($exception->getMessage() . " in Section '{$sectionName}'");
             }
 
-            $filename = $sectionData[self::FILENAME];
+            $filename = $sectionData[self::FILENAME] ?? null;
             $this->sectionObjects[$sectionName] = new SectionObject($sectionName, $elements, $filename);
         }
     }

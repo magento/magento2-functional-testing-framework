@@ -75,7 +75,7 @@ class PageObject
      * @param string  $area
      * @param string  $filename
      */
-    public function __construct($name, $url, $module, $sections, $parameterized, $area, $filename)
+    public function __construct($name, $url, $module, $sections, $parameterized, $area, $filename = null)
     {
         $this->name = $name;
         $this->url = $url;
