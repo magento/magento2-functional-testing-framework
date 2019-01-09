@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Page\Handlers;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
@@ -101,7 +102,9 @@ class PageObjectHandler implements ObjectHandlerInterface
     {
         if (array_key_exists($name, $this->pageObjects)) {
             $object = $this->getAllObjects()[$name];
-            $this->accessedObjects[] = $object;
+            if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::UNIT_TEST_PHASE) {
+                $this->accessedObjects[] = $object;
+            }
             return $object;
         }
 

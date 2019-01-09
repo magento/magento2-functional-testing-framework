@@ -5,6 +5,7 @@
  */
 namespace Magento\FunctionalTestingFramework\Test\Handlers;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
@@ -83,8 +84,9 @@ class TestObjectHandler implements ObjectHandlerInterface
             throw new TestReferenceException("Test ${testName} not defined in xml.");
         }
         $testObject = $this->tests[$testName];
-        $this->accessedObjects[] = $testObject;
-
+        if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::UNIT_TEST_PHASE) {
+            $this->accessedObjects[] = $testObject;
+        }
         return $this->extendTest($testObject);
     }
 

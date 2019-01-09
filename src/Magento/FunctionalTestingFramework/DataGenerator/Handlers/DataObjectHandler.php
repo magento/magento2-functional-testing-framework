@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\DataGenerator\Handlers;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Parsers\DataProfileSchemaParser;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
@@ -96,7 +97,9 @@ class DataObjectHandler implements ObjectHandlerInterface
     {
         if (array_key_exists($name, $this->entityDataObjects)) {
             $object = $this->entityDataObjects[$name];
-            $this->accessedObjects[] = $object;
+            if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::UNIT_TEST_PHASE) {
+                $this->accessedObjects[] = $object;
+            }
             return $this->extendDataObject($this->entityDataObjects[$name]);
         }
 

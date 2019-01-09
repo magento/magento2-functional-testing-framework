@@ -61,7 +61,7 @@ class TestDependencyCheck implements StaticCheckInterface
         // Check {{data.xml}}, {{section.element}}, {{page.url}} references
         MftfApplicationConfig::create(
             true,
-            MftfApplicationConfig::GENERATION_PHASE,
+            MftfApplicationConfig::UNIT_TEST_PHASE,
             false,
             false
         );
@@ -100,7 +100,7 @@ class TestDependencyCheck implements StaticCheckInterface
                 $this->getModuleDependenciesFromReferences($pageReferences)
                 );
 
-            // Unset Ref to current module
+            // Unset Ref to current module, will not appear in dependencies ever.
             unset($modulesReferencedInTest[$this->moduleNameToComposerName[$moduleFullName]]);
 
             // Calculate differences between module and test references
@@ -113,14 +113,27 @@ class TestDependencyCheck implements StaticCheckInterface
                         $missingDependencies[] = $module;
                     }
                 }
-                $errorOutput = "Test \"{$testObject->getName()}\" ({$basefile}) contains references to following modules:\n\t\t";
-                $errorOutput .= implode("\n\t\t", $missingDependencies);
+                // Find offending elements
+                $allReferences = array_merge($dataReferences, $sectionReferences, $pageReferences);
+                $referenceErrors = $this->matchReferencesToMissingDependecies($allReferences, $missingDependencies);
+
+                // Build error output
+                $errorOutput = "Test \"{$testObject->getName()}\" in {$basefile} contains references to following modules:\n\t\t";
+                foreach ($missingDependencies as $missingDependency)
+                {
+                    $errorOutput .= "\n\t{$missingDependency}";
+                    foreach ($referenceErrors[$missingDependency] as $entityName => $filename)
+                    {
+                        $errorOutput .= "\n\t\t {$entityName} from {$filename}";
+                    }
+                }
                 $testErrors[$testObject->getName()][] = $errorOutput;
+                echo "\n\n{$errorOutput}";
             }
+            $this->clearHandlerObjectCache();
         }
 
         echo 'done';
-        $this->clearHandlerObjectCache();
 
         //print all errors
 
@@ -191,12 +204,26 @@ class TestDependencyCheck implements StaticCheckInterface
             $modulePath = dirname(dirname(dirname(dirname($basefile))));
             $fullModuleName = array_search($modulePath, $this->moduleNameToPath);
             $composerModuleName = $this->moduleNameToComposerName[$fullModuleName];
-            if ($composerModuleName == null) {
-                echo 'BREAK';
-            }
             $filenames[$composerModuleName] = $composerModuleName;
         }
         return $filenames;
+    }
+
+    private function matchReferencesToMissingDependecies($allReferences, $missingDependencies)
+    {
+        $referenceErrors = [];
+        foreach ($allReferences as $reference)
+        {
+            $allFiles = explode(",", $reference->getFilename());
+            $basefile = $allFiles[0];
+            $modulePath = dirname(dirname(dirname(dirname($basefile))));
+            $fullModuleName = array_search($modulePath, $this->moduleNameToPath);
+            $composerModuleName = $this->moduleNameToComposerName[$fullModuleName];
+            if (array_search($composerModuleName, $missingDependencies) !== false) {
+                $referenceErrors[$composerModuleName][$reference->getName()] = $basefile;
+            }
+        }
+        return $referenceErrors;
     }
 
     private function clearHandlerObjectCache()
