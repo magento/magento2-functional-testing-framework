@@ -380,14 +380,14 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * Wait for an Element to NOT be visible using JavaScript.
+     * Wait for a PWA Element to NOT be visible using JavaScript.
      *
      * @param null $selector
      * @param null $timeout
      * @throws \Exception
      * @return void
      */
-    public function waitForJsElementNotVisible($selector, $timeout = null)
+    public function waitForPwaElementNotVisible($selector, $timeout = null)
     {
         $timeout = $timeout ?? $this->_getConfig()['pageload_timeout'];
 
@@ -401,14 +401,14 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * Wait for an Element to be visible using JavaScript.
+     * Wait for a PWA Element to be visible using JavaScript.
      *
      * @param null $selector
      * @param null $timeout
      * @throws \Exception
      * @return void
      */
-    public function waitForJsElementVisible($selector, $timeout = null)
+    public function waitForPwaElementVisible($selector, $timeout = null)
     {
         $timeout = $timeout ?? $this->_getConfig()['pageload_timeout'];
 
