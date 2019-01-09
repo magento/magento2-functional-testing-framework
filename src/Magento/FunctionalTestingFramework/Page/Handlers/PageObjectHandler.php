@@ -38,6 +38,10 @@ class PageObjectHandler implements ObjectHandlerInterface
      */
     private $pageObjects = [];
 
+    /**
+     * Cache of accessed Page Objects. Only populated during testing phases.
+     * @var PageObject[]
+     */
     private $accessedObjects = [];
 
     /**
@@ -121,11 +125,19 @@ class PageObjectHandler implements ObjectHandlerInterface
         return $this->pageObjects;
     }
 
+    /**
+     * Getter for accessed object cache.
+     * @return PageObject[]
+     */
     public function getAccessedObjects()
     {
         return $this->accessedObjects;
     }
 
+    /**
+     * Clears accessed object cache.
+     * @return void
+     */
     public function clearAccessedObjects()
     {
         $this->accessedObjects = [];

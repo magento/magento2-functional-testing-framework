@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\DataGenerator\Handlers;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Data\Argument\Interpreter\DataObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Parsers\DataProfileSchemaParser;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
@@ -50,6 +51,10 @@ class DataObjectHandler implements ObjectHandlerInterface
      */
     private $entityDataObjects = [];
 
+    /**
+     * Cache of accessed Data Objects. Only populated during testing phases.
+     * @var EntityDataObject[]
+     */
     private $accessedObjects = [];
 
     /**
@@ -288,11 +293,19 @@ class DataObjectHandler implements ObjectHandlerInterface
         return $dataObject;
     }
 
+    /**
+     * Getter for accessed object cache.
+     * @return EntityDataObject[]
+     */
     public function getAccessedObjects()
     {
         return $this->accessedObjects;
     }
 
+    /**
+     * Clears accessed object cache.
+     * @return void
+     */
     public function clearAccessedObjects()
     {
         $this->accessedObjects = [];

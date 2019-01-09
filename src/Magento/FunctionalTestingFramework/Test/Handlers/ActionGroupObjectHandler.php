@@ -5,6 +5,7 @@
  */
 namespace Magento\FunctionalTestingFramework\Test\Handlers;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
@@ -35,6 +36,12 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
      * @var array
      */
     private $actionGroups = [];
+
+    /**
+     * Cache of accessed ActionGroup Objects. Only populated during testing phases.
+     * @var ActionGroupObject[]
+     */
+    private $accessedObjects = [];
 
     /**
      * Instance of ObjectExtensionUtil class
@@ -76,6 +83,9 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
     {
         if (array_key_exists($actionGroupName, $this->actionGroups)) {
             $actionGroupObject = $this->actionGroups[$actionGroupName];
+            if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::UNIT_TEST_PHASE) {
+                $this->accessedObjects[] = $actionGroupObject;
+            }
             return $this->extendActionGroup($actionGroupObject);
         }
 
@@ -131,5 +141,23 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
             return $this->extendUtil->extendActionGroup($actionGroupObject);
         }
         return $actionGroupObject;
+    }
+
+    /**
+     * Getter for accessed object cache.
+     * @return ActionGroupObject[]
+     */
+    public function getAccessedObjects()
+    {
+        return $this->accessedObjects;
+    }
+
+    /**
+     * Clears accessed object cache.
+     * @return void
+     */
+    public function clearAccessedObjects()
+    {
+        $this->accessedObjects = [];
     }
 }

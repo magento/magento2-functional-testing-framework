@@ -38,6 +38,10 @@ class TestObjectHandler implements ObjectHandlerInterface
      */
     private $tests = [];
 
+    /**
+     * Cache of accessed Test Objects. Only populated during testing phases.
+     * @var TestObject[]
+     */
     private $accessedObjects = [];
 
     /**
@@ -174,11 +178,19 @@ class TestObjectHandler implements ObjectHandlerInterface
         return $testObject;
     }
 
+    /**
+     * Getter for accessed object cache.
+     * @return TestObject[]
+     */
     public function getAccessedObjects()
     {
         return $this->accessedObjects;
     }
 
+    /**
+     * Clears accessed object cache.
+     * @return void
+     */
     public function clearAccessedObjects()
     {
         $this->accessedObjects = [];

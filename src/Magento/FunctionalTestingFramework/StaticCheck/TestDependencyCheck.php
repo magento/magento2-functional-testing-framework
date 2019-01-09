@@ -9,6 +9,7 @@ namespace Magento\FunctionalTestingFramework\StaticCheck;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\Page\Handlers\PageObjectHandler;
 use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
+use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Symfony\Component\Console\Input\InputInterface;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
@@ -57,30 +58,28 @@ class TestDependencyCheck implements StaticCheckInterface
      */
     public function execute(InputInterface $input)
     {
-        $testErrors = [];
-        // Check {{data.xml}}, {{section.element}}, {{page.url}} references
         MftfApplicationConfig::create(
             true,
             MftfApplicationConfig::UNIT_TEST_PHASE,
             false,
             false
         );
-        $testObjects = TestObjectHandler::getInstance()->getAllObjects();
 
         $registrar = new \Magento\Framework\Component\ComponentRegistrar();
         $this->moduleNameToPath = $registrar->getPaths(\Magento\Framework\Component\ComponentRegistrar::MODULE);
         $this->moduleNameToComposerName = $this->buildModuleNameToComposerName($this->moduleNameToPath);
         $this->flattenedDependencies = $this->buildComposerDependencyList();
 
-        foreach ($testObjects as $testObject)
-        {
-            // Find Tests' Base Module Dependencies
+        $testErrors = [];
+        $testObjects = TestObjectHandler::getInstance()->getAllObjects();
+        foreach ($testObjects as $testObject) {
+            // Find testobject's module
             $allFiles = explode(",", $testObject->getFilename());
             $basefile = $allFiles[0];
             $modulePath = dirname(dirname(dirname(dirname($basefile))));
             $moduleFullName = array_search($modulePath, $this->moduleNameToPath) ?? null;
 
-            // Not a module
+            // Not a module, is either dev/tests/acceptance or loose folder with test materials
             if ($moduleFullName == null) {
                 continue;
             }
@@ -92,15 +91,24 @@ class TestDependencyCheck implements StaticCheckInterface
             $dataReferences = DataObjectHandler::getInstance()->getAccessedObjects();
             $sectionReferences = SectionObjectHandler::getInstance()->getAccessedObjects();
             $pageReferences = PageObjectHandler::getInstance()->getAccessedObjects();
+            $actionGroupReferences = ActionGroupObjectHandler::getInstance()->getAccessedObjects();
+
+            // If test extends, find reference
+            $testReferences = [];
+            if ($testObject->getParentName() !== null) {
+                $testReferences[] = TestObjectHandler::getInstance()->getObject($testObject->getParentName());
+            }
 
             // Build list dependencies from test references
             $modulesReferencedInTest = array_merge(
                 $this->getModuleDependenciesFromReferences($dataReferences),
                 $this->getModuleDependenciesFromReferences($sectionReferences),
-                $this->getModuleDependenciesFromReferences($pageReferences)
-                );
+                $this->getModuleDependenciesFromReferences($pageReferences),
+                $this->getModuleDependenciesFromReferences($actionGroupReferences),
+                $this->getModuleDependenciesFromReferences($testReferences)
+            );
 
-            // Unset Ref to current module, will not appear in dependencies ever.
+            // Unset ref to current module, will not appear in dependencies ever.
             unset($modulesReferencedInTest[$this->moduleNameToComposerName[$moduleFullName]]);
 
             // Calculate differences between module and test references
@@ -114,16 +122,21 @@ class TestDependencyCheck implements StaticCheckInterface
                     }
                 }
                 // Find offending elements
-                $allReferences = array_merge($dataReferences, $sectionReferences, $pageReferences);
+                $allReferences = array_merge(
+                    $dataReferences,
+                    $sectionReferences,
+                    $pageReferences,
+                    $actionGroupReferences,
+                    $testReferences
+                );
                 $referenceErrors = $this->matchReferencesToMissingDependecies($allReferences, $missingDependencies);
 
                 // Build error output
-                $errorOutput = "Test \"{$testObject->getName()}\" in {$basefile} contains references to following modules:\n\t\t";
-                foreach ($missingDependencies as $missingDependency)
-                {
+                $errorOutput = "Test \"{$testObject->getName()}\"";
+                $errorOutput .= " in {$basefile} contains references to following modules:\n\t\t";
+                foreach ($missingDependencies as $missingDependency) {
                     $errorOutput .= "\n\t{$missingDependency}";
-                    foreach ($referenceErrors[$missingDependency] as $entityName => $filename)
-                    {
+                    foreach ($referenceErrors[$missingDependency] as $entityName => $filename) {
                         $errorOutput .= "\n\t\t {$entityName} from {$filename}";
                     }
                 }
@@ -132,60 +145,67 @@ class TestDependencyCheck implements StaticCheckInterface
             }
             $this->clearHandlerObjectCache();
         }
-
-        echo 'done';
-
-        //print all errors
-
+        //print all errors to file
+        return 'done';
     }
 
+    /**
+     * Builds and returns array of FullModuleNae => composer name
+     * @param array $array
+     * @return array
+     */
     private function buildModuleNameToComposerName($array)
     {
         $returnList = [];
-        foreach ($array as $moduleName => $path)
-        {
+        foreach ($array as $moduleName => $path) {
             $composerData = json_decode(file_get_contents($path . DIRECTORY_SEPARATOR . "composer.json"));
             $returnList[$moduleName] = $composerData->name;
         }
         return $returnList;
     }
 
+    /**
+     * Builds and returns flattened dependency list based on composer dependencies
+     * @return array
+     */
     private function buildComposerDependencyList()
     {
         $flattenedDependencies = [];
 
-        foreach ($this->moduleNameToPath as $moduleName => $pathToModule)
-        {
+        foreach ($this->moduleNameToPath as $moduleName => $pathToModule) {
             $composerData = json_decode(file_get_contents($pathToModule . DIRECTORY_SEPARATOR . "composer.json"), true);
             $this->allDependencies[$moduleName] = $composerData['require'];
         }
-        foreach ($this->allDependencies as $moduleName => $dependencies)
-        {
+        foreach ($this->allDependencies as $moduleName => $dependencies) {
             $this->alreadyExtractedDependencies = [];
             $flattenedDependencies[$moduleName] = $this->extractSubDependencies($moduleName);
         }
         return $flattenedDependencies;
     }
 
+    /**
+     * Recursive function to fetch dependencies of given dependency, and its child dependencies
+     * @param string $subDependencyName
+     * @return array
+     */
     private function extractSubDependencies($subDependencyName)
     {
         $flattenedArray = [];
 
-        if (array_search($subDependencyName, $this->alreadyExtractedDependencies) !== false){
+        if (array_search($subDependencyName, $this->alreadyExtractedDependencies) !== false) {
             return $flattenedArray;
         }
 
-        if (isset($this->allDependencies[$subDependencyName]))
-        {
+        if (isset($this->allDependencies[$subDependencyName])) {
             $subDependencyArray = $this->allDependencies[$subDependencyName];
             $flattenedArray = array_merge($flattenedArray, $this->allDependencies[$subDependencyName]);
 
             // Keep track of dependencies that have already been used, prevents circular dependency problems
             $this->alreadyExtractedDependencies[] = $subDependencyName;
-            foreach ($subDependencyArray as $composerDependencyName => $version)
-            {
-                $subDependencyFullName = array_search($composerDependencyName, $this->moduleNameToComposerName) ?? "NOT FOUND";
-                $flattenedArray = array_merge($subDependencyArray,
+            foreach ($subDependencyArray as $composerDependencyName => $version) {
+                $subDependencyFullName = array_search($composerDependencyName, $this->moduleNameToComposerName);
+                $flattenedArray = array_merge(
+                    $subDependencyArray,
                     $this->extractSubDependencies($subDependencyFullName)
                 );
             }
@@ -193,11 +213,15 @@ class TestDependencyCheck implements StaticCheckInterface
         return $flattenedArray;
     }
 
+    /**
+     * Finds unique array ofcomposer dependencies of given testObjects
+     * @param array $array
+     * @return array
+     */
     private function getModuleDependenciesFromReferences($array)
     {
         $filenames = [];
-        foreach ($array as $item)
-        {
+        foreach ($array as $item) {
             // Should it append ALL filenames, including merges?
             $allFiles = explode(",", $item->getFilename());
             $basefile = $allFiles[0];
@@ -209,11 +233,16 @@ class TestDependencyCheck implements StaticCheckInterface
         return $filenames;
     }
 
+    /**
+     * Matches references given to list of missing dependencies, returning array of ReferenceName => filename
+     * @param array $allReferences
+     * @param array $missingDependencies
+     * @return array
+     */
     private function matchReferencesToMissingDependecies($allReferences, $missingDependencies)
     {
         $referenceErrors = [];
-        foreach ($allReferences as $reference)
-        {
+        foreach ($allReferences as $reference) {
             $allFiles = explode(",", $reference->getFilename());
             $basefile = $allFiles[0];
             $modulePath = dirname(dirname(dirname(dirname($basefile))));
@@ -226,10 +255,17 @@ class TestDependencyCheck implements StaticCheckInterface
         return $referenceErrors;
     }
 
+    /**
+     * Clears all handler's accessed object cache.
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
+     * @return void
+     */
     private function clearHandlerObjectCache()
     {
         DataObjectHandler::getInstance()->clearAccessedObjects();
         SectionObjectHandler::getInstance()->clearAccessedObjects();
         PageObjectHandler::getInstance()->clearAccessedObjects();
+        TestObjectHandler::getInstance()->clearAccessedObjects();
+        ActionGroupObjectHandler::getInstance()->clearAccessedObjects();
     }
 }

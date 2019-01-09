@@ -41,6 +41,10 @@ class SectionObjectHandler implements ObjectHandlerInterface
      */
     private $sectionObjects = [];
 
+    /**
+     * Cache of accessed Section Objects. Only populated during testing phases.
+     * @var SectionObject[]
+     */
     private $accessedObjects = [];
 
     /**
@@ -139,11 +143,19 @@ class SectionObjectHandler implements ObjectHandlerInterface
         return $this->sectionObjects;
     }
 
+    /**
+     * Getter for accessed object cache.
+     * @return SectionObject[]
+     */
     public function getAccessedObjects()
     {
         return $this->accessedObjects;
     }
 
+    /**
+     * Clears accessed object cache.
+     * @return void
+     */
     public function clearAccessedObjects()
     {
         $this->accessedObjects = [];
