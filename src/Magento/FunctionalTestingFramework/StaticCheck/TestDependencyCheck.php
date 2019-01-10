@@ -68,7 +68,7 @@ class TestDependencyCheck implements StaticCheckInterface
 
         $testObjects = TestObjectHandler::getInstance()->getAllObjects();
         if (!class_exists('\Magento\Framework\Component\ComponentRegistrar')) {
-            return "TEST DEPENDENCY CHECK ABORTED: MFTF must be attached or pointing to Magento test codebase.";
+            return "TEST DEPENDENCY CHECK ABORTED: MFTF must be attached or pointing to Magento codebase.";
         }
         $registrar = new \Magento\Framework\Component\ComponentRegistrar();
         $this->moduleNameToPath = $registrar->getPaths(\Magento\Framework\Component\ComponentRegistrar::MODULE);
@@ -265,6 +265,9 @@ class TestDependencyCheck implements StaticCheckInterface
      */
     private function printErrorsToFile($errors)
     {
+        if (empty($errors)) {
+            return "No Test Dependency errors found.";
+        }
         $outputPath = getcwd() . DIRECTORY_SEPARATOR . "mftf-dependency-checks.txt";
         $fileResource = fopen($outputPath, 'w');
         $header = "MFTF Test Dependency Check:\n";
@@ -274,7 +277,7 @@ class TestDependencyCheck implements StaticCheckInterface
         }
         fclose($fileResource);
         $errorCount = count($errors);
-        $output = "Test Dependency problems found across {$errorCount} test(s). Error details output to {$outputPath}";
+        $output = "Test Dependency errors found across {$errorCount} test(s). Error details output to {$outputPath}";
         return $output;
     }
     /**
