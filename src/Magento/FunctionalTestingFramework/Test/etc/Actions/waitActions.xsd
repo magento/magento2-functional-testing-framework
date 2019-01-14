@@ -20,6 +20,8 @@
             <xs:element type="waitForJSType" name="waitForJS" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForLoadingMaskToDisappearType" name="waitForLoadingMaskToDisappear" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForPageLoadType" name="waitForPageLoad" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForPwaElementNotVisibleType" name="waitForPwaElementNotVisible" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForPwaElementVisibleType" name="waitForPwaElementVisible" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForTextType" name="waitForText" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
     </xs:group>
@@ -165,12 +167,42 @@
     <xs:complexType name="waitForPageLoadType">
         <xs:annotation>
             <xs:documentation>
-                Waits up to given time for page to have finished loading..
+                Waits up to given time for page to have finished loading.
             </xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute ref="time"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="waitForPwaElementNotVisibleType">
+        <xs:annotation>
+            <xs:documentation>
+                Waits up to given time for a PWA Element to disappear from the screen using JavaScript.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="time"/>
+                <xs:attribute ref="selector"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="waitForPwaElementVisibleType">
+        <xs:annotation>
+            <xs:documentation>
+                Waits up to given time for a PWA Element to appear on the screen using JavaScript.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="time"/>
+                <xs:attribute ref="selector"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
