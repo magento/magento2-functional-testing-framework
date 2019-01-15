@@ -208,7 +208,7 @@ class TestDependencyCheck implements StaticCheckInterface
             foreach ($subDependencyArray as $composerDependencyName => $version) {
                 $subDependencyFullName = array_search($composerDependencyName, $this->moduleNameToComposerName);
                 $flattenedArray = array_merge(
-                    $subDependencyArray,
+                    $flattenedArray,
                     $this->extractSubDependencies($subDependencyFullName)
                 );
             }
