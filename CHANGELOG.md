@@ -1,5 +1,9 @@
 Magento Functional Testing Framework Changelog
 ================================================
+2.3.12
+-----
+### Enhancements
+* Fetched latest allure-codeception package
 
 2.3.11
 -----

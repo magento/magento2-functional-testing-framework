@@ -15,7 +15,7 @@ extensions:
         - Magento\FunctionalTestingFramework\Extension\TestContextExtension
         - Magento\FunctionalTestingFramework\Allure\Adapter\MagentoAllureAdapter
     config:
-        Yandex\Allure\Adapter\AllureAdapter:
+        Magento\FunctionalTestingFramework\Allure\Adapter\MagentoAllureAdapter:
             deletePreviousResults: true
             outputDirectory: allure-results
             ignoredAnnotations:
