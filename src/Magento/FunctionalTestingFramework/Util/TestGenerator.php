@@ -595,6 +595,7 @@ class TestGenerator
             if (isset($customActionAttributes['timeout'])) {
                 $time = $customActionAttributes['timeout'];
             }
+            $time = $time ?? ActionObject::getDefaultWaitTimeout();
 
             if (isset($customActionAttributes['parameterArray']) && $actionObject->getType() != 'pressKey') {
                 // validate the param array is in the correct format
@@ -1044,6 +1045,8 @@ class TestGenerator
                 case "waitForElement":
                 case "waitForElementVisible":
                 case "waitForElementNotVisible":
+                case "waitForPwaElementVisible":
+                case "waitForPwaElementNotVisible":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $time);
                     break;
                 case "waitForPageLoad":

@@ -3,6 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
 
 use AspectMock\Proxy\Verifier;
@@ -32,25 +33,34 @@ class ObjectExtensionUtilTest extends TestCase
     }
 
     /**
+     * After class functionality
+     * @return void
+     */
+    public static function tearDownAfterClass()
+    {
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
+    }
+
+    /**
      * Tests generating a test that extends another test
      * @throws \Exception
      */
     public function testGenerateExtendedTest()
     {
         $mockActions = [
-          "mockStep" => ["nodeName" => "mockNode", "stepKey" => "mockStep"]
+            "mockStep" => ["nodeName" => "mockNode", "stepKey" => "mockStep"]
         ];
 
         $testDataArrayBuilder = new TestDataArrayBuilder();
         $mockSimpleTest = $testDataArrayBuilder
             ->withName('simpleTest')
-            ->withAnnotations(['title'=>[['value' => 'simpleTest']]])
+            ->withAnnotations(['title' => [['value' => 'simpleTest']]])
             ->withTestActions($mockActions)
             ->build();
 
         $mockExtendedTest = $testDataArrayBuilder
             ->withName('extendedTest')
-            ->withAnnotations(['title'=>[['value' => 'extendedTest']]])
+            ->withAnnotations(['title' => [['value' => 'extendedTest']]])
             ->withTestReference("simpleTest")
             ->build();
 
@@ -88,14 +98,14 @@ class ObjectExtensionUtilTest extends TestCase
         $testDataArrayBuilder = new TestDataArrayBuilder();
         $mockSimpleTest = $testDataArrayBuilder
             ->withName('simpleTest')
-            ->withAnnotations(['title'=>[['value' => 'simpleTest']]])
+            ->withAnnotations(['title' => [['value' => 'simpleTest']]])
             ->withBeforeHook($mockBeforeHooks)
             ->withAfterHook($mockAfterHooks)
             ->build();
 
         $mockExtendedTest = $testDataArrayBuilder
             ->withName('extendedTest')
-            ->withAnnotations(['title'=>[['value' => 'extendedTest']]])
+            ->withAnnotations(['title' => [['value' => 'extendedTest']]])
             ->withTestReference("simpleTest")
             ->build();
 
@@ -117,7 +127,7 @@ class ObjectExtensionUtilTest extends TestCase
         $this->assertArrayHasKey("mockStepBefore", $testObject->getHooks()['before']->getActions());
         $this->assertArrayHasKey("mockStepAfter", $testObject->getHooks()['after']->getActions());
     }
-    
+
     /**
      * Tests generating a test that extends another test
      * @throws \Exception
@@ -158,14 +168,14 @@ class ObjectExtensionUtilTest extends TestCase
 
         $mockSimpleTest = $testDataArrayBuilder
             ->withName('simpleTest')
-            ->withAnnotations(['title'=>[['value' => 'simpleTest']]])
+            ->withAnnotations(['title' => [['value' => 'simpleTest']]])
             ->withTestActions()
             ->withTestReference("anotherTest")
             ->build();
 
         $mockExtendedTest = $testDataArrayBuilder
             ->withName('extendedTest')
-            ->withAnnotations(['title'=>[['value' => 'extendedTest']]])
+            ->withAnnotations(['title' => [['value' => 'extendedTest']]])
             ->withTestReference("simpleTest")
             ->build();
 
@@ -347,7 +357,7 @@ class ObjectExtensionUtilTest extends TestCase
         $property->setValue(null);
 
         // clear test object handler value to inject parsed content
-        $property = new \ReflectionProperty(ActionGroupObjectHandler::class, 'ACTION_GROUP_OBJECT_HANDLER');
+        $property = new \ReflectionProperty(ActionGroupObjectHandler::class, 'instance');
         $property->setAccessible(true);
         $property->setValue(null);
 
@@ -358,28 +368,21 @@ class ObjectExtensionUtilTest extends TestCase
         )->make();
         $instance = AspectMock::double(
             ObjectManager::class,
-            ['create' => function ($clazz) use (
-                $mockDataParser,
-                $mockActionGroupParser
-            ) {
-                if ($clazz == TestDataParser::class) {
-                    return $mockDataParser;
+            [
+                'create' => function ($className) use (
+                    $mockDataParser,
+                    $mockActionGroupParser
+                ) {
+                    if ($className == TestDataParser::class) {
+                        return $mockDataParser;
+                    }
+                    if ($className == ActionGroupDataParser::class) {
+                        return $mockActionGroupParser;
+                    }
                 }
-                if ($clazz == ActionGroupDataParser::class) {
-                    return $mockActionGroupParser;
-                }
-            }]
+            ]
         )->make();
         // bypass the private constructor
         AspectMock::double(ObjectManagerFactory::class, ['getObjectManager' => $instance]);
-    }
-
-    /**
-     * After class functionality
-     * @return void
-     */
-    public static function tearDownAfterClass()
-    {
-        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 }

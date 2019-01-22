@@ -15,18 +15,48 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
+ * @Title("[NO TESTCASEID]: ExtendedChildTestNotInSuite")
  */
-class ActionGroupWithSectionAndDataAsArgumentsCest
+class ExtendedChildTestNotInSuiteCest
 {
 	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _before(AcceptanceTester $I)
+	{
+		$I->amOnPage("/beforeUrl");
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		$I->amOnPage("/afterUrl");
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _failed(AcceptanceTester $I)
+	{
+		$I->saveScreenshot();
+	}
+
+	/**
+	 * @Severity(level = SeverityLevel::TRIVIAL)
 	 * @Features({"TestModule"})
+	 * @Stories({"ExtendedChildTestNotInSuite"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupWithSectionAndDataAsArguments(AcceptanceTester $I)
+	public function ExtendedChildTestNotInSuite(AcceptanceTester $I)
 	{
-		$I->waitForElementVisible("#element .John", 10);
+		$I->comment("Different Input");
 	}
 }

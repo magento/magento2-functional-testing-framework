@@ -31,7 +31,7 @@ class {{suiteName}} extends \Codeception\GroupObject
 
         if ($this->preconditionFailure != null) {
             //if our preconditions fail, we need to mark all the tests as incomplete.
-            $e->getTest()->getMetadata()->setIncomplete($this->preconditionFailure);
+            $e->getTest()->getMetadata()->setIncomplete("SUITE PRECONDITION FAILED:" . PHP_EOL . $this->preconditionFailure);
         }
     }
 

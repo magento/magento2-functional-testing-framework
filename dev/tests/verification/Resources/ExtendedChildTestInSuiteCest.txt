@@ -1,5 +1,5 @@
 <?php
-namespace Magento\AcceptanceTest\_default\Backend;
+namespace Magento\AcceptanceTest\_suiteExtends\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
@@ -15,18 +15,49 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
+ * @Title("[NO TESTCASEID]: ExtendedChildTestInSuite")
+ * @group ExtendedTestInSuite
  */
-class ActionGroupWithSectionAndDataAsArgumentsCest
+class ExtendedChildTestInSuiteCest
 {
 	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _before(AcceptanceTester $I)
+	{
+		$I->amOnPage("/beforeUrl");
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		$I->amOnPage("/afterUrl");
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _failed(AcceptanceTester $I)
+	{
+		$I->saveScreenshot();
+	}
+
+	/**
+	 * @Severity(level = SeverityLevel::TRIVIAL)
 	 * @Features({"TestModule"})
+	 * @Stories({"ExtendedChildTestInSuite"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupWithSectionAndDataAsArguments(AcceptanceTester $I)
+	public function ExtendedChildTestInSuite(AcceptanceTester $I)
 	{
-		$I->waitForElementVisible("#element .John", 10);
+		$I->comment("Different Input");
 	}
 }
