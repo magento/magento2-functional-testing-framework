@@ -286,6 +286,48 @@ class SuiteGenerationTest extends MftfTestCase
     }
 
     /**
+     * Test extends tests generation in a suite
+     */
+    public function testSuiteGenerationWithExtends()
+    {
+        $groupName = 'suiteExtends';
+
+        $expectedFileNames = [
+            'ExtendedChildTestInSuiteCest'
+        ];
+
+        // Generate the Suite
+        SuiteGenerator::getInstance()->generateSuite($groupName);
+
+        // Validate log message and add group name for later deletion
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'info',
+            "suite generated",
+            ['suite' => $groupName, 'relative_path' => "_generated" . DIRECTORY_SEPARATOR . $groupName]
+        );
+        self::$TEST_GROUPS[] = $groupName;
+
+        // Validate Yaml file updated
+        $yml = Yaml::parse(file_get_contents(self::CONFIG_YML_FILE));
+        $this->assertArrayHasKey($groupName, $yml['groups']);
+
+        $suiteResultBaseDir = self::GENERATE_RESULT_DIR .
+            $groupName .
+            DIRECTORY_SEPARATOR;
+
+        // Validate tests have been generated
+        $dirContents = array_diff(scandir($suiteResultBaseDir), ['..', '.']);
+
+        foreach ($expectedFileNames as $expectedFileName) {
+            $this->assertTrue(in_array($expectedFileName . ".php", $dirContents));
+            $this->assertFileEquals(
+                self::RESOURCES_PATH . DIRECTORY_SEPARATOR . $expectedFileName . ".txt",
+                $suiteResultBaseDir . $expectedFileName . ".php"
+            );
+        }
+    }
+
+    /**
      * revert any changes made to config.yml
      * remove _generated directory
      */

@@ -4,34 +4,51 @@
  * See COPYING.txt for license details.
  */
 
-if (isset($_POST['command'])) {
+require_once __DIR__ . '/../../../../app/bootstrap.php';
+
+if (!empty($_POST['token']) && !empty($_POST['command'])) {
+    $magentoObjectManagerFactory = \Magento\Framework\App\Bootstrap::createObjectManagerFactory(BP, $_SERVER);
+    $magentoObjectManager = $magentoObjectManagerFactory->create($_SERVER);
+    $tokenModel = $magentoObjectManager->get(\Magento\Integration\Model\Oauth\Token::class);
+
+    $tokenPassedIn = urldecode($_POST['token']);
     $command = urldecode($_POST['command']);
-    if (array_key_exists("arguments", $_POST)) {
+
+    if (!empty($_POST['arguments'])) {
         $arguments = urldecode($_POST['arguments']);
     } else {
         $arguments = null;
     }
-    $php = PHP_BINDIR ? PHP_BINDIR . '/php' : 'php';
-    $valid = validateCommand($command);
-    if ($valid) {
-        exec(
-            escapeCommand($php . ' -f ../../../../bin/magento ' . $command) . " $arguments" ." 2>&1",
-            $output,
-            $exitCode
-        );
-        if ($exitCode == 0) {
-            http_response_code(202);
+
+    // Token returned will be null if the token we passed in is invalid
+    $tokenFromMagento = $tokenModel->loadByToken($tokenPassedIn)->getToken();
+    if (!empty($tokenFromMagento) && ($tokenFromMagento == $tokenPassedIn)) {
+        $php = PHP_BINDIR ? PHP_BINDIR . '/php' : 'php';
+        $magentoBinary = $php . ' -f ../../../../bin/magento';
+        $valid = validateCommand($magentoBinary, $command);
+        if ($valid) {
+            exec(
+                escapeCommand($magentoBinary . " $command" . " $arguments") . " 2>&1",
+                $output,
+                $exitCode
+            );
+            if ($exitCode == 0) {
+                http_response_code(202);
+            } else {
+                http_response_code(500);
+            }
+            echo implode("\n", $output);
         } else {
-            http_response_code(500);
+            http_response_code(403);
+            echo "Given command not found valid in Magento CLI Command list.";
         }
-        echo implode("\n", $output);
     } else {
-        http_response_code(403);
-        echo "Given command not found valid in Magento CLI Command list.";
+        http_response_code(401);
+        echo("Command not unauthorized.");
     }
 } else {
     http_response_code(412);
-    echo("Command parameter is not set.");
+    echo("Required parameters are not set.");
 }
 
 /**
@@ -55,13 +72,13 @@ function escapeCommand($command)
 
 /**
  * Checks magento list of CLI commands for given $command. Does not check command parameters, just base command.
+ * @param string $magentoBinary
  * @param string $command
  * @return bool
  */
-function validateCommand($command)
+function validateCommand($magentoBinary, $command)
 {
-    $php = PHP_BINDIR ? PHP_BINDIR . '/php' : 'php';
-    exec($php . ' -f ../../../../bin/magento list', $commandList);
+    exec($magentoBinary . ' list', $commandList);
     // Trim list of commands after first whitespace
     $commandList = array_map("trimAfterWhitespace", $commandList);
     return in_array(trimAfterWhitespace($command), $commandList);
