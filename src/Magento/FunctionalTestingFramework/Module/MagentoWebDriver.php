@@ -602,25 +602,40 @@ class MagentoWebDriver extends WebDriver
         if ($xOffset === null && $yOffset === null) {
             parent::dragAndDrop($source, $target);
         } else {
+            // Call dragAndDropBy() first
             $sNode = $this->matchFirstOrFail($this->baseElement, $source);
             $tNode = $this->matchFirstOrFail($this->baseElement, $target);
-
-            $sHeight = $sNode->getSize()->getHeight();
-            $sWidth = $sNode->getSize()->getWidth();
-
-            $travelX = intval($tNode->getLocation()->getX() - $sNode->getLocation()->getX() + $xOffset);
-            $travelY = intval($tNode->getLocation()->getY() - $sNode->getLocation()->getY() + $yOffset);
-
+            $travelX1 = intval($tNode->getLocation()->getX()-$sNode->getLocation()->getX()+$xOffset);
+            $travelY1 = intval($tNode->getLocation()->getY()-$sNode->getLocation()->getY()+$yOffset);
             $action = new WebDriverActions($this->webDriver);
-            if ($travelX >0 && $travelY >0 && $travelX < $sWidth && $travelY < $sHeight) {
-                // Perform separate action steps when dragging and dropping inside the source element boundary
-                $action->moveToElement($sNode)->perform();
-                $action->clickAndHold($sNode)->perform();
-                $action->moveByOffset($travelX, $travelY)->perform();
-                $action->release()->perform();
-            } else {
-                // Call dragAndDropBy otherwise
-                $action->dragAndDropBy($sNode, $travelX, $travelY)->perform();
+            $action->dragAndDropBy($sNode, $travelX1, $travelY1)->perform();
+            $this->waitForPageLoad(20);
+
+            try {
+                // Try drag and drop in steps if source and target elements didn't change at all
+                $sNode2 = $this->matchFirstOrFail($this->baseElement, $source);
+                $tNode2 = $this->matchFirstOrFail($this->baseElement, $target);
+                if ($sNode2 == $sNode && $tNode2 == $tNode) {
+                    $sHeight = $sNode2->getSize()->getHeight();
+                    $sWidth = $sNode2->getSize()->getWidth();
+                    // Because we will move to the middle of source element to perform drag & drop, we need to deduct
+                    // an additional half of source element's width for X, and half of source element's height for Y
+                    // when calculating the travel distance.
+                    $travelX2 = intval(
+                        $tNode2->getLocation()->getX() - $sNode2->getLocation()->getX() - $sWidth/2 + $xOffset
+                    );
+                    $travelY2 = intval(
+                        $tNode2->getLocation()->getY() - $sNode2->getLocation()->getY() - $sHeight/2 + $yOffset
+                    );
+                    $action = new WebDriverActions($this->webDriver);
+                    // Move to the middle of source element
+                    $action->moveToElement($sNode2)->perform();
+                    $action->clickAndHold($sNode2)->perform();
+                    $action->moveByOffset($travelX2, $travelY2)->perform();
+                    $action->release()->perform();
+                }
+            } catch (\Exception $e) {
+                // dragAndDropBy() is probably succeeded
             }
         }
     }
