@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "de6d553c95a5721a7d4f6515c7aa15b5",
+    "content-hash": "e8978028c326adbd983d1a6ef7294ae0",
     "packages": [
         {
             "name": "allure-framework/allure-codeception",
@@ -4125,7 +4125,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "BackEndTea@gmail.com"
+                    "email": "backendtea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -5684,7 +5684,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "7.0.2|7.0.4|~7.0.6|~7.1.0|~7.2.0"
+        "php": "7.0.2|7.0.4|~7.0.6|~7.1.0|~7.2.0",
+        "ext-curl": "*"
     },
     "platform-dev": []
 }
