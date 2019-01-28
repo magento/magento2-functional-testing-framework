@@ -17,7 +17,6 @@ Magento Functional Testing Framework Changelog
 * Fixed an issue where a test's `<after>` would run twice with Codeception `2.4.x`
 * Fixed an issue where tests using `extends` would not correctly override parent test steps
 * Test actions can now send an empty string to parameterized selectors.
-* Refactored `dragAndDrop` test action to correctly use given `x` and `y` arguments.
 
 ### GitHub Issues/Pull requests:
 * [#297](https://github.com/magento/magento2-functional-testing-framework/pull/297) -- Allow = to be part of the secret value
