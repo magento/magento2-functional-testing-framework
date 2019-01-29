@@ -482,10 +482,12 @@ class MagentoWebDriver extends WebDriver
         );
         $apiURL = $baseUrl . '/' . ltrim(getenv('MAGENTO_CLI_COMMAND_PATH'), '/');
 
+        $restExecutor = new WebapiExecutor();
         $executor = new CurlTransport();
         $executor->write(
             $apiURL,
             [
+                'token' => $restExecutor->getAuthToken(),
                 getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command,
                 'arguments' => $arguments
             ],
@@ -493,6 +495,7 @@ class MagentoWebDriver extends WebDriver
             []
         );
         $response = $executor->read();
+        $restExecutor->close();
         $executor->close();
         return $response;
     }

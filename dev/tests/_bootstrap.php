@@ -82,7 +82,8 @@ $suiteDirectory =  TESTS_BP . DIRECTORY_SEPARATOR . "verification" . DIRECTORY_S
 
 $paths = [
     $suiteDirectory . DIRECTORY_SEPARATOR . 'functionalSuite.xml',
-    $suiteDirectory . DIRECTORY_SEPARATOR . 'functionalSuiteHooks.xml'
+    $suiteDirectory . DIRECTORY_SEPARATOR . 'functionalSuiteHooks.xml',
+    $suiteDirectory . DIRECTORY_SEPARATOR . 'functionalSuiteExtends.xml'
 ];
 
 // create and return the iterator for these file paths

@@ -12,7 +12,6 @@ settings:
     memory_limit: 1024M
 extensions:
     enabled:
-        - Codeception\Extension\RunFailed
         - Magento\FunctionalTestingFramework\Extension\TestContextExtension
         - Magento\FunctionalTestingFramework\Allure\Adapter\MagentoAllureAdapter
     config:

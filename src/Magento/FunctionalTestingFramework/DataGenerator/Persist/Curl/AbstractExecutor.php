@@ -14,32 +14,18 @@ use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
 abstract class AbstractExecutor implements CurlInterface
 {
     /**
-     * Base url.
+     * Returns Magento base URL. Used as a fallback for other services (eg. WebApi, Backend)
      *
      * @var string
      */
     protected static $baseUrl = null;
 
     /**
-     * Resolve base url.
-     *
-     * @return void
+     * Returns base URL for Magento instance
+     * @return string
      */
-    protected static function resolveBaseUrl()
+    public function getBaseUrl(): string
     {
-
-        if ((getenv('MAGENTO_RESTAPI_SERVER_HOST') !== false)
-            && (getenv('MAGENTO_RESTAPI_SERVER_HOST') !== '') ) {
-            self::$baseUrl = getenv('MAGENTO_RESTAPI_SERVER_HOST');
-        } else {
-            self::$baseUrl = getenv('MAGENTO_BASE_URL');
-        }
-
-        if ((getenv('MAGENTO_RESTAPI_SERVER_PORT') !== false)
-            && (getenv('MAGENTO_RESTAPI_SERVER_PORT') !== '')) {
-            self::$baseUrl .= ':' . getenv('MAGENTO_RESTAPI_SERVER_PORT');
-        }
-
-        self::$baseUrl = rtrim(self::$baseUrl, '/') . '/';
+        return getenv('MAGENTO_BASE_URL');
     }
 }
