@@ -56,14 +56,14 @@ class PageObjectHandler implements ObjectHandlerInterface
             if (preg_match('/[^a-zA-Z0-9_]/', $pageName)) {
                 throw new XmlException(sprintf(self::NAME_BLACKLIST_ERROR_MSG, $pageName));
             }
-            $area = $pageData[self::AREA];
-            $url = $pageData[self::URL];
+            $area = $pageData[self::AREA] ?? null;
+            $url = $pageData[self::URL] ?? null;
 
             if ($area == 'admin') {
                 $url = ltrim($url, "/");
             }
 
-            $module = $pageData[self::MODULE];
+            $module = $pageData[self::MODULE] ?? null;
             $sectionNames = array_keys($pageData[self::SECTION] ?? []);
             $parameterized = $pageData[self::PARAMETERIZED] ?? false;
 
