@@ -1,6 +1,12 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.3.14
+-----
+### Enhancements
+* Maintainability
+    * `command.php` is now configured with an `idleTimeout` of `60` seconds, which will allow tests to continue execution if a CLI command is hanging indefinitely.
+
 2.3.13
 -----
 ### Enhancements
