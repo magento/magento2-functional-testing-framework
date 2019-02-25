@@ -131,7 +131,7 @@ class CredentialStore
                 continue;
             }
 
-            list($key, $value) = explode("=", $credValue);
+            list($key, $value) = explode("=", $credValue, 2);
             if (!empty($value)) {
                 $encryptedCreds[$key] = openssl_encrypt(
                     $value,

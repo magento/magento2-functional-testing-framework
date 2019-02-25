@@ -1045,6 +1045,8 @@ class TestGenerator
                 case "waitForElement":
                 case "waitForElementVisible":
                 case "waitForElementNotVisible":
+                case "waitForPwaElementVisible":
+                case "waitForPwaElementNotVisible":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $time);
                     break;
                 case "waitForPageLoad":

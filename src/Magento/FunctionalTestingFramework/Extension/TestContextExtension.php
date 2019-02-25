@@ -16,6 +16,7 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHan
 class TestContextExtension extends BaseExtension
 {
     const TEST_PHASE_AFTER = "_after";
+    const CODECEPT_AFTER_VERSION = "2.3.9";
     const TEST_FAILED_FILE = 'failed';
 
     /**
@@ -69,7 +70,7 @@ class TestContextExtension extends BaseExtension
             $this->runAfterBlock($e, $cest);
         }
     }
-    
+
     /**
      * Codeception event listener function, triggered on test ending (naturally or by error).
      * @param \Codeception\Event\TestEvent $e
@@ -117,13 +118,15 @@ class TestContextExtension extends BaseExtension
         try {
             $actorClass = $e->getTest()->getMetadata()->getCurrent('actor');
             $I = new $actorClass($cest->getScenario());
-            call_user_func(\Closure::bind(
-                function () use ($cest, $I) {
-                    $cest->executeHook($I, 'after');
-                },
-                null,
-                $cest
-            ));
+            if (version_compare(\Codeception\Codecept::VERSION, TestContextExtension::CODECEPT_AFTER_VERSION, "<=")) {
+                call_user_func(\Closure::bind(
+                    function () use ($cest, $I) {
+                        $cest->executeHook($I, 'after');
+                    },
+                    null,
+                    $cest
+                ));
+            }
         } catch (\Exception $e) {
             // Do not rethrow Exception
         }
