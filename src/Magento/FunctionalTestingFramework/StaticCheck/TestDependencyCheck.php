@@ -26,7 +26,6 @@ class TestDependencyCheck implements StaticCheckInterface
     {
         // Check {{data.xml}}, {{section.element}}, {{page.url}} references
 
-
         // Check actionGroup references
 
     }
