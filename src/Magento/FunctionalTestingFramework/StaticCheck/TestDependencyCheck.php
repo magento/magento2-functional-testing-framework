@@ -16,6 +16,7 @@ use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Util\ModuleResolver;
+use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -29,7 +30,6 @@ class TestDependencyCheck implements StaticCheckInterface
     const EXTENDS_REGEX_PATTERN = '/extends=["\']([^\'"]*)/';
     const ACTIONGROUP_REGEX_PATTERN = '/ref=["\']([^\'"]*)/';
     const ACTIONGROUP_ARGUMENT_REGEX_PATTERN = '/<argument[^\/>]*name="([^"\']*)/';
-
 
     /**
      * Array of FullModuleName => [dependencies]
@@ -86,18 +86,7 @@ class TestDependencyCheck implements StaticCheckInterface
         $this->moduleNameToComposerName = $this->buildModuleNameToComposerName($this->moduleNameToPath);
         $this->flattenedDependencies = $this->buildComposerDependencyList();
 
-        $allModules = [];
-
-        // Trim non-magento modules from search pool.
-        foreach (ModuleResolver::getInstance()->getModulesPath() as $module){
-            $tempModule = rtrim($module, '/Test/Mftf');
-            if (array_search($tempModule, $this->moduleNameToPath)) {
-                $allModules[] = $module;
-            }
-        }
-
-        $testErrors = [];
-
+        $allModules = ModuleResolver::getInstance()->getModulesPath();
         $filePaths = [
             DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR,
             DIRECTORY_SEPARATOR . 'ActionGroup' . DIRECTORY_SEPARATOR,
@@ -108,6 +97,7 @@ class TestDependencyCheck implements StaticCheckInterface
         $actionGroupXmlFiles = $this->buildFileList($allModules, $filePaths[1]);
         $dataXmlFiles= $this->buildFileList($allModules, $filePaths[2]);
 
+        $testErrors = [];
         $testErrors += $this->findErrorsInFileSet($testXmlFiles);
         $testErrors += $this->findErrorsInFileSet($actionGroupXmlFiles);
         $testErrors += $this->findErrorsInFileSet($dataXmlFiles);
@@ -137,7 +127,9 @@ class TestDependencyCheck implements StaticCheckInterface
             $braceReferences[0] = array_unique($braceReferences[0]);
             $actionGroupReferences[1] = array_unique($actionGroupReferences[1]);
             $braceReferences[1] = array_unique($braceReferences[1]);
+            $braceReferences[2] = array_filter(array_unique($braceReferences[2]));
 
+            // Check `data` entities in {{data.field}} or {{data.field('param')}}
             foreach ($braceReferences[0] as $reference) {
                 // trim `{{data.field}}` to `data`
                 preg_match('/{{([^.]+)/', $reference, $entityName);
@@ -151,15 +143,40 @@ class TestDependencyCheck implements StaticCheckInterface
                     $allEntities[$entity->getName()] = $entity;
                 }
             }
+
+            // Drill down into params in {{ref.params('string', $data.key$, entity.reference)}}
+            foreach ($braceReferences[2] as $parameterizedReference) {
+                preg_match(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER, $parameterizedReference, $arguments);
+                $splitArguments = explode(',', ltrim(rtrim($arguments[0], ")"), "("));
+                foreach ($splitArguments as $argument) {
+                    // Do nothing for 'string' or $persisted.data$
+                    if (preg_match(ActionObject::STRING_PARAMETER_REGEX, $argument)) {
+                        continue;
+                    } elseif (preg_match(TestGenerator::PERSISTED_OBJECT_NOTATION_REGEX, $argument)) {
+                        continue;
+                    }
+                    // trim `data.field` to `data`
+                    preg_match('/([^.]+)/', $argument, $entityName);
+                    // Double check that {{data.field}} isn't an argument for an ActionGroup
+                    $entity = $this->findEntity($entityName[1]);
+                    preg_match_all(self::ACTIONGROUP_ARGUMENT_REGEX_PATTERN, $contents, $possibleArgument);
+                    if (array_search($entityName[1], $possibleArgument[1]) !== false) {
+                        continue;
+                    }
+                    if ($entity !== null) {
+                        $allEntities[$entity->getName()] = $entity;
+                    }
+                }
+            }
+            // Check actionGroup references
             foreach ($actionGroupReferences[1] as $reference) {
-                // find actionGroupObject
                 $entity = $this->findEntity($reference);
                 if ($entity !== null) {
                     $allEntities[$entity->getName()] = $entity;
                 }
             }
+            // Check extended objects
             foreach ($extendReferences[1] as $reference) {
-                // find extended object
                 $entity = $this->findEntity($reference);
                 if ($entity !== null) {
                     $allEntities[$entity->getName()] = $entity;
@@ -186,9 +203,9 @@ class TestDependencyCheck implements StaticCheckInterface
 
             if (!empty($violatingReferences)) {
                 // Build error output
-                $errorOutput = "\nFile \"{$filePath->getRealPath()}\"\n contains references to following modules:\n\t\t";
+                $errorOutput = "\nFile \"{$filePath->getRealPath()}\"\ncontains references to following modules:\n\t\t";
                 foreach ($violatingReferences as $entityName => $files) {
-                    $errorOutput .= "\n\t {$entityName} in modules: " . implode(", ", $files);
+                    $errorOutput .= "\n\t {$entityName} from modules: " . implode(", ", $files);
                 }
                 $testErrors[$filePath->getRealPath()][] = $errorOutput;
             }
@@ -282,40 +299,14 @@ class TestDependencyCheck implements StaticCheckInterface
         return $filenames;
     }
 
-    /**
-     * Matches references given to list of missing dependencies, returning array of ReferenceName => filename
-     * @param array $allReferences
-     * @param array $missingDependencies
-     * @return array
-     */
-    private function matchReferencesToMissingDependecies($allReferences, $missingDependencies)
-    {
-        $referenceErrors = [];
-        foreach ($allReferences as $reference) {
-            $allFiles = explode(",", $reference->getFilename());
-            $basefile = $allFiles[0];
-            $modulePath = dirname(dirname(dirname(dirname($basefile))));
-            $fullModuleName = array_search($modulePath, $this->moduleNameToPath);
-            $composerModuleName = $this->moduleNameToComposerName[$fullModuleName];
-            if (array_search($composerModuleName, $missingDependencies) !== false) {
-                $referenceErrors[$composerModuleName][$reference->getName()] = $basefile;
-            }
-        }
-        return $referenceErrors;
-    }
-
     private function buildFileList($modulePaths, $path)
     {
-        $filesAggregate = [];
         $finder = new Finder();
         foreach ($modulePaths as $modulePath) {
             if (!realpath($modulePath . $path)) {
                 continue;
             }
             $finder->files()->in($modulePath . $path)->name("*.xml");
-            foreach ($finder->files() as $file) {
-                $filesAggregate[] = $file->getFilename();
-            }
         }
         return $finder->files();
     }
@@ -345,10 +336,6 @@ class TestDependencyCheck implements StaticCheckInterface
         return null;
     }
 
-
-
-
-
     /**
      * Prints out given errors to file, and returns summary result string
      * @param array $errors
@@ -357,18 +344,18 @@ class TestDependencyCheck implements StaticCheckInterface
     private function printErrorsToFile($errors)
     {
         if (empty($errors)) {
-            return "No Test Dependency errors found.";
+            return "No Dependency errors found.";
         }
         $outputPath = getcwd() . DIRECTORY_SEPARATOR . "mftf-dependency-checks.txt";
         $fileResource = fopen($outputPath, 'w');
-        $header = "MFTF Test Dependency Check:\n";
+        $header = "MFTF File Dependency Check:\n";
         fwrite($fileResource, $header);
         foreach ($errors as $test => $error) {
             fwrite($fileResource, $error[0] . PHP_EOL);
         }
         fclose($fileResource);
         $errorCount = count($errors);
-        $output = "Test Dependency errors found across {$errorCount} test(s). Error details output to {$outputPath}";
+        $output = "Dependency errors found across {$errorCount} file(s). Error details output to {$outputPath}";
         return $output;
     }
 }
