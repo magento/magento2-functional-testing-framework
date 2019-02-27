@@ -28,6 +28,7 @@ class TestDependencyCheck implements StaticCheckInterface
 {
     const EXTENDS_REGEX_PATTERN = '/extends=["\']([^\'"]*)/';
     const ACTIONGROUP_REGEX_PATTERN = '/ref=["\']([^\'"]*)/';
+    const ACTIONGROUP_ARGUMENT_REGEX_PATTERN = '/<argument[^\/>]*name="([^"\']*)/';
 
 
     /**
@@ -140,7 +141,12 @@ class TestDependencyCheck implements StaticCheckInterface
             foreach ($braceReferences[0] as $reference) {
                 // trim `{{data.field}}` to `data`
                 preg_match('/{{([^.]+)/', $reference, $entityName);
+                // Double check that {{data.field}} isn't an argument for an ActionGroup
                 $entity = $this->findEntity($entityName[1]);
+                preg_match_all(self::ACTIONGROUP_ARGUMENT_REGEX_PATTERN, $contents, $possibleArgument);
+                if (array_search($entityName[1], $possibleArgument[1]) !== false) {
+                    continue;
+                }
                 if ($entity !== null) {
                     $allEntities[$entity->getName()] = $entity;
                 }
@@ -160,26 +166,29 @@ class TestDependencyCheck implements StaticCheckInterface
                 }
             }
 
-            $modulesReferencedInTest = $this->getModuleDependenciesFromReferences($allEntities);
-            unset($modulesReferencedInTest[$this->moduleNameToComposerName[$moduleFullName]]);
+            $currentModule = $this->moduleNameToComposerName[$moduleFullName];
+            $modulesReferencedInTest = $this->getModuleDependenciesFromReferences($allEntities, $currentModule);
             $moduleDependencies = $this->flattenedDependencies[$moduleFullName];
-            $diff = array_intersect_key($modulesReferencedInTest, $moduleDependencies);
-
-            if (count($diff) != count($modulesReferencedInTest)) {
-                $missingDependencies = [];
-                foreach ($modulesReferencedInTest as $module => $key) {
-                    if (!array_key_exists($module, $diff)) {
-                        $missingDependencies[] = $module;
+            // Find Violations
+            $violatingReferences = [];
+            foreach ($modulesReferencedInTest as $entityName => $files) {
+                $valid = false;
+                foreach ($files as $module) {
+                    if (array_key_exists($module, $moduleDependencies) || $module == $currentModule) {
+                        $valid = true;
+                        break;
                     }
                 }
-                $referenceErrors = $this->matchReferencesToMissingDependecies($allEntities, $missingDependencies);
+                if (!$valid) {
+                    $violatingReferences[$entityName] = $files;
+                }
+            }
+
+            if (!empty($violatingReferences)) {
                 // Build error output
                 $errorOutput = "\nFile \"{$filePath->getRealPath()}\"\n contains references to following modules:\n\t\t";
-                foreach ($missingDependencies as $missingDependency) {
-                    $errorOutput .= "\n\t{$missingDependency}";
-                    foreach ($referenceErrors[$missingDependency] as $entityName => $filename) {
-                        $errorOutput .= "\n\t\t {$entityName} from {$filename}";
-                    }
+                foreach ($violatingReferences as $entityName => $files) {
+                    $errorOutput .= "\n\t {$entityName} in modules: " . implode(", ", $files);
                 }
                 $testErrors[$filePath->getRealPath()][] = $errorOutput;
             }
@@ -263,11 +272,12 @@ class TestDependencyCheck implements StaticCheckInterface
         foreach ($array as $item) {
             // Should it append ALL filenames, including merges?
             $allFiles = explode(",", $item->getFilename());
-            $basefile = $allFiles[0];
-            $modulePath = dirname(dirname(dirname(dirname($basefile))));
-            $fullModuleName = array_search($modulePath, $this->moduleNameToPath);
-            $composerModuleName = $this->moduleNameToComposerName[$fullModuleName];
-            $filenames[$composerModuleName] = $composerModuleName;
+            foreach ($allFiles as $file) {
+                $modulePath = dirname(dirname(dirname(dirname($file))));
+                $fullModuleName = array_search($modulePath, $this->moduleNameToPath);
+                $composerModuleName = $this->moduleNameToComposerName[$fullModuleName];
+                $filenames[$item->getName()][] = $composerModuleName;
+            }
         }
         return $filenames;
     }
