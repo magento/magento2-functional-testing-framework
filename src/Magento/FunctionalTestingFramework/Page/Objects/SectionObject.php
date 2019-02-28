@@ -38,7 +38,7 @@ class SectionObject
      * @param array  $elements
      * @param string $filename
      */
-    public function __construct($name, $elements, $filename)
+    public function __construct($name, $elements, $filename = null)
     {
         $this->name = $name;
         $this->elements = $elements;

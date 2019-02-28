@@ -90,8 +90,16 @@ class EntityDataObject
      * @param string   $parentEntity
      * @param string   $filename
      */
-    public function __construct($name, $type, $data, $linkedEntities, $uniquenessData, $vars = [], $parentEntity = null, $filename)
-    {
+    public function __construct(
+        $name,
+        $type,
+        $data,
+        $linkedEntities,
+        $uniquenessData,
+        $vars = [],
+        $parentEntity = null,
+        $filename = null
+    ) {
         $this->name = $name;
         $this->type = $type;
         $this->data = $data;

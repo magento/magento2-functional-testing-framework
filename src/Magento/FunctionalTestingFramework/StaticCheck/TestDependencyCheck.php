@@ -24,6 +24,7 @@ use Symfony\Component\Finder\Finder;
 /**
  * Class TestDependencyCheck
  * @package Magento\FunctionalTestingFramework\StaticCheck
+ * @SuppressWarnings(PHPMD)
  */
 class TestDependencyCheck implements StaticCheckInterface
 {
@@ -106,6 +107,13 @@ class TestDependencyCheck implements StaticCheckInterface
         return $this->printErrorsToFile($testErrors);
     }
 
+    /**
+     * Finds all reference errors in given set of files
+     * @param Finder $files
+     * @return array
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
+     */
     private function findErrorsInFileSet($files)
     {
         $testErrors = [];
@@ -146,7 +154,11 @@ class TestDependencyCheck implements StaticCheckInterface
 
             // Drill down into params in {{ref.params('string', $data.key$, entity.reference)}}
             foreach ($braceReferences[2] as $parameterizedReference) {
-                preg_match(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER, $parameterizedReference, $arguments);
+                preg_match(
+                    ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER,
+                    $parameterizedReference,
+                    $arguments
+                );
                 $splitArguments = explode(',', ltrim(rtrim($arguments[0], ")"), "("));
                 foreach ($splitArguments as $argument) {
                     // Do nothing for 'string' or $persisted.data$
@@ -212,7 +224,6 @@ class TestDependencyCheck implements StaticCheckInterface
         }
         return $testErrors;
     }
-
 
     /**
      * Builds and returns array of FullModuleNae => composer name
@@ -299,6 +310,12 @@ class TestDependencyCheck implements StaticCheckInterface
         return $filenames;
     }
 
+    /**
+     * Builds list of all XML files in given modulePaths + path given
+     * @param string $modulePaths
+     * @param string $path
+     * @return Finder
+     */
     private function buildFileList($modulePaths, $path)
     {
         $finder = new Finder();
@@ -311,6 +328,13 @@ class TestDependencyCheck implements StaticCheckInterface
         return $finder->files();
     }
 
+    /**
+     * Attempts to find any MFTF entity by its name. Returns null if none are found.
+     * @param string $name
+     * @return mixed
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
+     */
     private function findEntity($name)
     {
         if ($name == '_ENV' || $name == '_CREDS') {

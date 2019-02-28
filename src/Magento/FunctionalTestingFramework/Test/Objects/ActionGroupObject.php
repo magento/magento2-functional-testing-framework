@@ -87,7 +87,7 @@ class ActionGroupObject
      * @param string           $parentActionGroup
      * @param string           $filename
      */
-    public function __construct($name, $arguments, $actions, $parentActionGroup, $filename)
+    public function __construct($name, $arguments, $actions, $parentActionGroup, $filename = null)
     {
         $this->varAttributes = array_merge(
             ActionObject::SELECTOR_ENABLED_ATTRIBUTES,
