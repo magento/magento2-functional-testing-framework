@@ -5,10 +5,13 @@
  */
 namespace Magento\FunctionalTestingFramework\Allure\Adapter;
 
-use Magento\FunctionalTestingFramework\Data\Argument\Interpreter\NullType;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
-use Yandex\Allure\Adapter\AllureAdapter;
+use Yandex\Allure\Codeception\AllureCodeception;
 use Yandex\Allure\Adapter\Event\StepStartedEvent;
+use Yandex\Allure\Adapter\Event\StepFinishedEvent;
+use Yandex\Allure\Adapter\Event\StepFailedEvent;
+use Yandex\Allure\Adapter\Event\TestCaseFailedEvent;
+use Codeception\Event\FailEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\StepEvent;
 
@@ -20,7 +23,7 @@ use Codeception\Event\StepEvent;
  * @package Magento\FunctionalTestingFramework\Allure
  */
 
-class MagentoAllureAdapter extends AllureAdapter
+class MagentoAllureAdapter extends AllureCodeception
 {
     /**
      * Array of group values passed to test runner command
@@ -116,5 +119,33 @@ class MagentoAllureAdapter extends AllureAdapter
 
         $this->emptyStep = false;
         $this->getLifecycle()->fire(new StepStartedEvent($stepName));
+    }
+
+    /**
+     * Override of parent method, fires StepFailedEvent if step has failed (for xml output)
+     * @param StepEvent $stepEvent
+     * @throws \Yandex\Allure\Adapter\AllureException
+     * @return void
+     */
+    public function stepAfter(StepEvent $stepEvent = null)
+    {
+        if ($stepEvent->getStep()->hasFailed()) {
+            $this->getLifecycle()->fire(new StepFailedEvent());
+        }
+        $this->getLifecycle()->fire(new StepFinishedEvent());
+    }
+
+    /**
+     * Override of parent method, fires a TestCaseFailedEvent if a test is marked as incomplete.
+     *
+     * @param FailEvent $failEvent
+     * @return void
+     */
+    public function testIncomplete(FailEvent $failEvent)
+    {
+        $event = new TestCaseFailedEvent();
+        $e = $failEvent->getFail();
+        $message = $e->getMessage();
+        $this->getLifecycle()->fire($event->withException($e)->withMessage($message));
     }
 }

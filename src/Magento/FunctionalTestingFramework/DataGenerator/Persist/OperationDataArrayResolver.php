@@ -66,6 +66,8 @@ class OperationDataArrayResolver
      * @return array
      * @throws \Exception
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function resolveOperationDataArray($entityObject, $operationMetadata, $operation, $fromArray = false)
     {
@@ -134,6 +136,13 @@ class OperationDataArrayResolver
                     ));
                 }
             } else {
+                $operationElementProperty = null;
+                if (strpos($operationElementType, '.') !== false) {
+                    $operationElementComponents = explode('.', $operationElementType);
+                    $operationElementType = $operationElementComponents[0];
+                    $operationElementProperty = $operationElementComponents[1];
+                }
+
                 $entityNamesOfType = $entityObject->getLinkedEntitiesOfType($operationElementType);
 
                 // If an element is required by metadata, but was not provided in the entity, throw an exception
@@ -146,12 +155,23 @@ class OperationDataArrayResolver
                     ));
                 }
                 foreach ($entityNamesOfType as $entityName) {
-                    $operationDataSubArray = $this->resolveNonPrimitiveElement(
-                        $entityName,
-                        $operationElement,
-                        $operation,
-                        $fromArray
-                    );
+                    if ($operationElementProperty === null) {
+                        $operationDataSubArray = $this->resolveNonPrimitiveElement(
+                            $entityName,
+                            $operationElement,
+                            $operation,
+                            $fromArray
+                        );
+                    } else {
+                        $linkedEntityObj = $this->resolveLinkedEntityObject($entityName);
+                        $operationDataSubArray = $linkedEntityObj->getDataByName($operationElementProperty, 0);
+
+                        if ($operationDataSubArray === null) {
+                            throw new \Exception(
+                                sprintf('Property %s not found in entity %s \n', $operationElementProperty, $entityName)
+                            );
+                        }
+                    }
 
                     if ($operationElement->getType() == OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY) {
                         $operationDataArray[$operationElement->getKey()][] = $operationDataSubArray;

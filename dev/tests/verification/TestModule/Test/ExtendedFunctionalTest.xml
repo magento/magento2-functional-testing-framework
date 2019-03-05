@@ -158,4 +158,44 @@
         </annotations>
         <comment userInput="child" stepKey="replaceMe"/>
     </test>
+
+    <test name="ExtendedTestRelatedToSuiteParentTest">
+        <annotations>
+            <severity value="AVERAGE"/>
+            <title value="ExtendedTestRelatedToSuiteParentTest"/>
+            <group value="ExtendedTestRelatedToSuite"/>
+            <features value="ExtendedTestRelatedToSuiteParentTest"/>
+            <stories value="ExtendedTestRelatedToSuiteParentTest"/>
+        </annotations>
+        <before>
+            <amOnPage url="/beforeUrl" stepKey="beforeAmOnPageKey"/>
+        </before>
+        <after>
+            <amOnPage url="/afterUrl" stepKey="afterAmOnPageKey"/>
+        </after>
+        <comment stepKey="basicCommentWithNoData" userInput="Parent Comment"/>
+        <amOnPage url="/url/in/parent" stepKey="amOnPageInParent"/>
+    </test>
+
+    <test name="ExtendedChildTestInSuite" extends="ExtendedTestRelatedToSuiteParentTest">
+        <annotations>
+            <severity value="MINOR"/>
+            <title value="ExtendedChildTestInSuite"/>
+            <group value="ExtendedTestInSuite"/>
+            <features value="ExtendedChildTestInSuite"/>
+            <stories value="ExtendedChildTestInSuite"/>
+        </annotations>
+        <comment stepKey="basicCommentWithNoData" userInput="Different Input"/>
+        <remove keyForRemoval="amOnPageInParent"/>
+    </test>
+    <test name="ExtendedChildTestNotInSuite" extends="ExtendedTestRelatedToSuiteParentTest">
+        <annotations>
+            <severity value="MINOR"/>
+            <title value="ExtendedChildTestNotInSuite"/>
+            <features value="ExtendedChildTestNotInSuite"/>
+            <stories value="ExtendedChildTestNotInSuite"/>
+        </annotations>
+        <comment stepKey="basicCommentWithNoData" userInput="Different Input"/>
+        <remove keyForRemoval="amOnPageInParent"/>
+    </test>
 </tests>

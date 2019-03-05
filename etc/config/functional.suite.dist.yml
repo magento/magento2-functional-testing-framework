@@ -14,18 +14,13 @@ modules:
         - \Magento\FunctionalTestingFramework\Module\MagentoWebDriver
         - \Magento\FunctionalTestingFramework\Helper\Acceptance
         - \Magento\FunctionalTestingFramework\Helper\MagentoFakerData
-        - \Magento\FunctionalTestingFramework\Module\MagentoRestDriver:
-            url: "%MAGENTO_BASE_URL%/rest/default/V1/"
-            username: "%MAGENTO_ADMIN_USERNAME%"
-            password: "%MAGENTO_ADMIN_PASSWORD%"
-            depends: PhpBrowser
-            part: Json
         - \Magento\FunctionalTestingFramework\Module\MagentoSequence
         - \Magento\FunctionalTestingFramework\Module\MagentoAssert
         - Asserts
     config:
         \Magento\FunctionalTestingFramework\Module\MagentoWebDriver:
             url: "%MAGENTO_BASE_URL%"
+            backend_url: "%MAGENTO_BACKEND_BASE_URL%"
             backend_name: "%MAGENTO_BACKEND_NAME%"
             browser: 'chrome'
             restart: true

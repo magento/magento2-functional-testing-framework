@@ -67,9 +67,6 @@ class FrontendExecutor extends AbstractExecutor implements CurlInterface
      */
     public function __construct($customerEmail, $customerPassWord)
     {
-        if (!isset(parent::$baseUrl)) {
-            parent::resolveBaseUrl();
-        }
         $this->transport = new CurlTransport();
         $this->customerEmail = $customerEmail;
         $this->customerPassword = $customerPassWord;
@@ -84,11 +81,11 @@ class FrontendExecutor extends AbstractExecutor implements CurlInterface
      */
     private function authorize()
     {
-        $url = parent::$baseUrl . 'customer/account/login/';
-        $this->transport->write($url);
+        $url = $this->getBaseUrl() . 'customer/account/login/';
+        $this->transport->write($url, [], CurlInterface::GET);
         $this->read();
 
-        $url = parent::$baseUrl  . 'customer/account/loginPost/';
+        $url = $this->getBaseUrl() . 'customer/account/loginPost/';
         $data = [
             'login[username]' => $this->customerEmail,
             'login[password]' => $this->customerPassword,
@@ -146,7 +143,7 @@ class FrontendExecutor extends AbstractExecutor implements CurlInterface
         if (isset($data['customer_password'])) {
             unset($data['customer_password']);
         }
-        $apiUrl = parent::$baseUrl . $url;
+        $apiUrl = $this->getBaseUrl() . $url;
         if ($this->formKey) {
             $data['form_key'] = $this->formKey;
         } else {

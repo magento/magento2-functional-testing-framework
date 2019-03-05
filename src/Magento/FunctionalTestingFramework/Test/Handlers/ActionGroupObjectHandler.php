@@ -27,7 +27,7 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
      *
      * @var ActionGroupObjectHandler
      */
-    private static $ACTION_GROUP_OBJECT_HANDLER;
+    private static $instance;
 
     /**
      * Array of action groups indexed by name
@@ -48,14 +48,13 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
      *
      * @return ActionGroupObjectHandler
      */
-    public static function getInstance()
+    public static function getInstance(): ActionGroupObjectHandler
     {
-        if (!self::$ACTION_GROUP_OBJECT_HANDLER) {
-            self::$ACTION_GROUP_OBJECT_HANDLER = new ActionGroupObjectHandler();
-            self::$ACTION_GROUP_OBJECT_HANDLER->initActionGroups();
+        if (!self::$instance) {
+            self::$instance = new ActionGroupObjectHandler();
         }
 
-        return self::$ACTION_GROUP_OBJECT_HANDLER;
+        return self::$instance;
     }
 
     /**
@@ -64,6 +63,7 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
     private function __construct()
     {
         $this->extendUtil = new ObjectExtensionUtil();
+        $this->initActionGroups();
     }
 
     /**
@@ -87,7 +87,7 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
      *
      * @return array
      */
-    public function getAllObjects()
+    public function getAllObjects(): array
     {
         foreach ($this->actionGroups as $actionGroupName => $actionGroup) {
             $this->actionGroups[$actionGroupName] = $this->extendActionGroup($actionGroup);
@@ -125,7 +125,7 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
      * @param ActionGroupObject $actionGroupObject
      * @return ActionGroupObject
      */
-    private function extendActionGroup($actionGroupObject)
+    private function extendActionGroup($actionGroupObject): ActionGroupObject
     {
         if ($actionGroupObject->getParentName() !== null) {
             return $this->extendUtil->extendActionGroup($actionGroupObject);

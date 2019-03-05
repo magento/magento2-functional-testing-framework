@@ -16,6 +16,8 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHan
 class TestContextExtension extends BaseExtension
 {
     const TEST_PHASE_AFTER = "_after";
+    const CODECEPT_AFTER_VERSION = "2.3.9";
+    const TEST_FAILED_FILE = 'failed';
 
     /**
      * Codeception Events Mapping to methods
@@ -35,7 +37,8 @@ class TestContextExtension extends BaseExtension
             Events::TEST_START => 'testStart',
             Events::TEST_FAIL => 'testFail',
             Events::STEP_AFTER => 'afterStep',
-            Events::TEST_END => 'testEnd'
+            Events::TEST_END => 'testEnd',
+            Events::RESULT_PRINT_AFTER => 'saveFailed'
         ];
         self::$events = array_merge(parent::$events, $events);
         parent::_initialize();
@@ -67,7 +70,7 @@ class TestContextExtension extends BaseExtension
             $this->runAfterBlock($e, $cest);
         }
     }
-    
+
     /**
      * Codeception event listener function, triggered on test ending (naturally or by error).
      * @param \Codeception\Event\TestEvent $e
@@ -115,13 +118,15 @@ class TestContextExtension extends BaseExtension
         try {
             $actorClass = $e->getTest()->getMetadata()->getCurrent('actor');
             $I = new $actorClass($cest->getScenario());
-            call_user_func(\Closure::bind(
-                function () use ($cest, $I) {
-                    $cest->executeHook($I, 'after');
-                },
-                null,
-                $cest
-            ));
+            if (version_compare(\Codeception\Codecept::VERSION, TestContextExtension::CODECEPT_AFTER_VERSION, "<=")) {
+                call_user_func(\Closure::bind(
+                    function () use ($cest, $I) {
+                        $cest->executeHook($I, 'after');
+                    },
+                    null,
+                    $cest
+                ));
+            }
         } catch (\Exception $e) {
             // Do not rethrow Exception
         }
@@ -169,5 +174,53 @@ class TestContextExtension extends BaseExtension
     public function afterStep(\Codeception\Event\StepEvent $e)
     {
         ErrorLogger::getInstance()->logErrors($this->getDriver(), $e);
+    }
+
+    /**
+     * Saves failed tests from last codecept run command into a file in _output directory
+     * Removes file if there were no failures in last run command
+     * @param \Codeception\Event\PrintResultEvent $e
+     * @return void
+     */
+    public function saveFailed(\Codeception\Event\PrintResultEvent $e)
+    {
+        $file = $this->getLogDir() . self::TEST_FAILED_FILE;
+        $result = $e->getResult();
+        $output = [];
+
+        // Remove previous file regardless if we're writing a new file
+        if (is_file($file)) {
+            unlink($file);
+        }
+
+        foreach ($result->failures() as $fail) {
+            $output[] = $this->localizePath(\Codeception\Test\Descriptor::getTestFullName($fail->failedTest()));
+        }
+        foreach ($result->errors() as $fail) {
+            $output[] = $this->localizePath(\Codeception\Test\Descriptor::getTestFullName($fail->failedTest()));
+        }
+        foreach ($result->notImplemented() as $fail) {
+            $output[] = $this->localizePath(\Codeception\Test\Descriptor::getTestFullName($fail->failedTest()));
+        }
+
+        if (empty($output)) {
+            return;
+        }
+
+        file_put_contents($file, implode("\n", $output));
+    }
+
+    /**
+     * Returns localized path to string, for writing failed file.
+     * @param string $path
+     * @return string
+     */
+    protected function localizePath($path)
+    {
+        $root = realpath($this->getRootDir()) . DIRECTORY_SEPARATOR;
+        if (substr($path, 0, strlen($root)) == $root) {
+            return substr($path, strlen($root));
+        }
+        return $path;
     }
 }

@@ -1,6 +1,63 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.3.14
+-----
+### Enhancements
+* Maintainability
+    * `command.php` is now configured with an `idleTimeout` of `60` seconds, which will allow tests to continue execution if a CLI command is hanging indefinitely.
+
+2.3.13
+-----
+### Enhancements
+* Traceability
+    * Failed test steps are now marked with a red `x` in the generated Allure report.
+    * A failed `suite` `<before>` now correctly causes subsequent tests to marked as `failed` instead of `skipped`.
+* Customizability
+    * Added `waitForPwaElementVisible` and `waitForPwaElementNotVisible` actions.
+* Modularity
+    * Added support for parsing of symlinked modules under `vendor`.
+
+### Fixes
+* Fixed a PHP Fatal error that occurred if the given `MAGENTO_BASE_URL` responded with anything but a `200`.
+* Fixed an issue where a test's `<after>` would run twice with Codeception `2.4.x`
+* Fixed an issue where tests using `extends` would not correctly override parent test steps
+* Test actions can now send an empty string to parameterized selectors.
+
+### GitHub Issues/Pull requests:
+* [#297](https://github.com/magento/magento2-functional-testing-framework/pull/297) -- Allow = to be part of the secret value
+* [#267](https://github.com/magento/magento2-functional-testing-framework/pull/267) -- Add PHPUnit missing in dependencies
+* [#266](https://github.com/magento/magento2-functional-testing-framework/pull/266) -- General refactor: ext-curl dependency + review of singletones (refactor constructs)
+* [#264](https://github.com/magento/magento2-functional-testing-framework/pull/264) -- Use custom Backend domain, refactoring to Executors responsible for calling HTTP endpoints
+* [#258](https://github.com/magento/magento2-functional-testing-framework/pull/258) -- Removed unused variables in FunctionCommentSniff.php
+* [#256](https://github.com/magento/magento2-functional-testing-framework/pull/256) -- Removed unused variables
+
+2.3.12
+-----
+### Enhancements
+* Fetched latest allure-codeception package
+
+2.3.11
+-----
+### Fixes
+* `mftf run:failed` now correctly regenerates tests that are in suites that were parallelized (`suite` => `suite_0`, `suite_1`)
+
+2.3.10
+-----
+### Enhancements
+* Maintainability
+    * Added new `mftf run:failed` commands, which reruns all failed tests from last run configuration.
+    
+### Fixes
+* Fixed an issue where mftf would fail to parse test materials for extensions installed under `vendor`.
+* Fixed a Windows compatibility issue around the use of Magento's `ComponentRegistrar` to aggregate paths.
+* Fixed an issue where an `element` with no `type` would cause PHP warnings during test runs.
+
+2.3.9
+-----
+### Fixes
+* Logic for parallel execution were updated to split default tests and suites from running in one group.
+
 2.3.8
 -----
 ### Fixes
