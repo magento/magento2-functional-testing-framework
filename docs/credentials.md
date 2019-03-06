@@ -1,6 +1,3 @@
----
----
-
 # Credentials
 
 When you test functionality that involves external services such as UPS, FedEx, PayPal, or SignifyD, use the MFTF credentials feature to hide sensitive [data][] like integration tokens and API keys.
@@ -69,7 +66,6 @@ carriers_usps_password=Lmgxvrq89uPwECeV
 
 ## Use credentials in a test
 
-<!--{% raw %}-->
 Access the data defined in the `.credentials` file using the [`fillField`][] action with the `userInput` attribute.
 Define the value as a reference to the corresponding key in the credentials file such as `{{_CREDS.my_data_key}}`:
 
@@ -89,13 +85,11 @@ The MFTF dynamically retrieves, encrypts, and decrypts the sensitive data during
 Decrypted credentials do not appear in the console, error logs, or [test reports][].
 The decrypted values are only available in the `.credentials` file.
 
-{: .bs-callout .bs-callout-info }
-The MFTF tests delivered with Magento application do not use credentials and do not cover external services, because of sensitivity of the data.
-
-<!--{% endraw %}-->
+<span class=".bs-callout .bs-callout-info">
+The MFTF tests delivered with Magento application do not use credentials and do not cover external services, because of sensitivity of the data.</span>
 
 <!-- Link definitions -->
-[`fillField`]: test/actions.html#fillfield
-[data]: data.html
-[initial setup]: getting-started.html
-[test reports]: reporting.html
+[`fillField`]: test/actions.md#fillfield
+[data]: data.md
+[initial setup]: getting-started.md
+[test reports]: reporting.md

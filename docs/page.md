@@ -1,12 +1,6 @@
----
-mftf-release: 2.2.0
-redirect_from: /guides/v2.3/magento-functional-testing-framework/2.3/page.html
----
-
 # Page structure
 
-_This topic was updated due to the {{page.mftf-release}} MFTF release._
-{: style="text-align: right"}
+<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
 The MFTF uses a modified concept of [PageObjects], which models the testing areas of your page as objects within the code.
 This reduces occurrences of duplicated code and enables you to fix things quickly, in one place, when things change.
@@ -15,23 +9,17 @@ You define the contents of a page, for reference in a [`<test>`], at both the [`
 The `pageObject` lists the URL of the `page` and the `sections` that it contains.
 You can reuse `sections` to define the elements on a page that are exercisable, while also ensuring a single source of truth to help maintain consistency.
 
-{% include note.html
-type="tip"
-content="Avoid hard-coded location selectors from tests to increase the maintainability and readability of the tests, as well as improve the test execution output and logging."
-%}
+Avoid hard-coded location selectors from tests to increase the maintainability and readability of the tests, as well as improve the test execution output and logging.
 
 Two types of pages are available:
- {%raw%}
 
 - Page with `url` declared as a constant string or [explicit page] - In a test it is called in a format like `{{NameOfPage.url}}`, where `NameOfPage` is a value of `name` in the corresponding page declaration `*.xml` file.
 - Page with `url` declared as a string with one or more variables or [parameterized page]
 - In a test it is called using a format like `{{NameOfPage.url(var1, var2, ...)}}`, where `var1, var2` etc. are parameters that will be substituted in the `url` of the corresponding `<page>` declaration.
 
-{%endraw%}
-
 The following diagram shows the XML structure of an MFTF page:
 
-{% include_relative img/page-dia.svg %}
+<img src="img/page-dia.svg" />
 
 ## Format
 
@@ -95,7 +83,6 @@ The `AdminCategoryPage` declares four [sections][section]:
 - `AdminCategorySEOSection` - located in the `Catalog/Section/AdminCategorySEOSection.xml` file
 
 The following is an example of a call in test:
-{%raw%}
 
 ```xml
 <amOnPage url="{{AdminCategoryPage.url}}" stepKey="navigateToAdminCategory"/>
@@ -171,15 +158,13 @@ Attributes|Type|Use|Description
 `name`|string|required|Unique section name identifier.
 `remove`|boolean|optional|The default value is `"false"`. Set to `"true"` to remove this element during parsing.
 
-{%endraw%}
-
 <!-- Link definitions -->
-[`<createData>`]: test/actions.html#createdata
+[`<createData>`]: test/actions.md#createdata
 [`<page>`]: #page-tag
 [`<section>`]: #section-tag
-[`<test>`]: test.html
-[actions]: test/actions.html
+[`<test>`]: test.md
+[actions]: test/actions.md
 [explicit page]: #explicit-page
 [PageObjects]: https://github.com/SeleniumHQ/selenium/wiki/PageObjects
 [parameterized page]: #parameterized-page
-[section]: section.html
+[section]: section.md

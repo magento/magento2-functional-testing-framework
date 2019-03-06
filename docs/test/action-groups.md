@@ -1,18 +1,12 @@
----
-mftf-release: 2.3.7
-redirect_from: /guides/v2.3/magento-functional-testing-framework/2.3/test/action-groups.html
----
-
 # Action groups
 
-_This topic was updated due to the {{page.mftf-release}} MFTF release._
-{: style="text-align: right"}
+<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
-In the MFTF, you can re-use a group of [actions](./actions.html){:target="_blank"}, such as logging in as an administrator or a customer, declared in an XML file when you need to perform the same sequence of actions multiple times.
+In the MFTF, you can re-use a group of [actions][], such as logging in as an administrator or a customer, declared in an XML file when you need to perform the same sequence of actions multiple times.
 
 The following diagram shows the structure of an MFTF action group:
 
-{% include_relative img/action-groups-dia.svg %}
+<img src="../img/action-groups-dia.svg" />
 
 ## Principles
 
@@ -40,12 +34,10 @@ The XML format for the `actionGroups` declaration is:
 
 ## Example
 
-{% raw %}
-
 These examples build a declaration for a group of actions that grant authorization to the Admin area, and use the declaration in a test.
 
 The _Backend/ActionGroup/LoginToAdminActionGroup.xml_ `<actionGroup>` relates to the functionality of the _Backend_ module.
-In [test](../test.html), the name and identifier of the `<actionGroup>` is used as a reference in the `ref` parameter, such as `ref="LoginToAdminActionGroup"`.
+In [test][], the name and identifier of the `<actionGroup>` is used as a reference in the `ref` parameter, such as `ref="LoginToAdminActionGroup"`.
 
 ### Create an action group declaration
 
@@ -128,7 +120,7 @@ Instead of adding this set of actions, use the _LoginToAdminActionGroup_ `<actio
 
 ## Data type usage
 
-By default, an [`argument`](#argument-tag) expects an entire `entity` when the `type` value is not defined.
+By default, an [`argument`][] expects an entire `entity` when the `type` value is not defined.
 There are cases when you use a string instead of a whole entity.
 
 For example, the following defines the replacement argument `relevantString` using a primitive data type:
@@ -163,7 +155,7 @@ The `string` argument type provides a method to pass a single piece of data to t
 </actionGroup>
 ```
 
-The `relevantString` argument value points to the data [created](../data.html#persist-data){:target="_blank"} in the `stepKey="persistedData"` test step.
+The `relevantString` argument value points to the data [created][] in the `stepKey="persistedData"` test step.
 `field1` is a data key of the required data string.
 Even with the `persistedData` data entity, the MFTF interprets the `$persistedData.field1$` value as a string.
 
@@ -203,8 +195,6 @@ Starting with an action group such as:
 </actionGroup>
 ```
 
-{: .no-copy}
-
 It can be reworked into more manageable pieces, as below. These smaller steps are easier to read, update, and reuse.
 
 ```xml
@@ -230,8 +220,6 @@ It can be reworked into more manageable pieces, as below. These smaller steps ar
     <seeElement selector="{{AdminCategorySidebarTreeSection.categoryInTree(categoryEntity.name)}}" stepKey="seeCategoryInTree"/>
 </actionGroup>
 ```
-
-{: .no-copy}
 
 ## Elements reference
 
@@ -267,4 +255,8 @@ Attribute|Type|Use|Description
 `defaultValue`|string|optional|Provides a default data value.
 `type`|Possible values: `string`, `entity` (default).|optional|Defines the argument data type; Defaults to `entity`.
 
-{% endraw %}
+<!-- Link Definitions -->
+[actions]: ./actions.md
+[test]: ../test.md
+[`argument`]: #argument-tag
+[created]: ../data.md#persist-data

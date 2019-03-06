@@ -1,20 +1,10 @@
----
-mftf-release: 2.3.11
-redirect_from: /guides/v2.3/magento-functional-testing-framework/2.3/commands/mftf.html
----
-
 # CLI commands: vendor/bin/mftf
 
-_This topic was updated due to the {{page.mftf-release}} MFTF release._
-{: style="text-align: right"}
+<span class="style="text-align: right"">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
 The Magento Functional Testing Framework (MFTF) introduces the command line interface (CLI) tool `vendor/bin/mftf` to facilitate your interaction with the framework.
 
-{%
-include note.html
-type='info'
-content='`mftf` commands replace the `robo` commands that were used in previous releases.'
-%}
+Note that `mftf` commands replace the `robo` commands that were used in previous releases.
 
 ## Command format
 
@@ -179,10 +169,7 @@ The command that encodes this complex configuration:
 vendor/bin/mftf generate:tests --tests "{\r\n\"tests\":[\r\n\"general_test1\",\r\n\"general_test2\",\r\n\"general_test3\"\r\n],\r\n\"suites\":{\r\n\"sample\":[\r\n\"suite_test1\"\r\n],\r\n\"sample2\":null\r\n}\r\n}"
 ```
 
-{% include note.html
-type='info'
-content='The strings must be escaped and surrounded in quotes.'
-%}
+Note: The strings must be escaped and surrounded in quotes.
 
 ### `generate:suite`
 
@@ -399,11 +386,11 @@ vendor/bin/mftf upgrade:tests /Users/user/magento2/app/code/Magento/Catalog/Test
 
 <!-- LINK DEFINITIONS -->
 
-[configuration]: ../configuration.html
+[configuration]: ../configuration.md
 [Reference]: #reference
 [build]: #buildproject
 [setup]: #setupenv
-[Reporting]: ../reporting.html
+[Reporting]: ../reporting.md
 
 <!-- Abbreviations -->
 

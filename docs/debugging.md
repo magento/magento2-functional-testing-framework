@@ -1,7 +1,4 @@
----
-title: Debugging MFTF Tests
-mftf-release: 2.3.13
----
+# Debugging
 
 Debugging within the Magento Functional Testing Framework is helpful in identifying test bugs by allowing you to pause execution so that you may:
 

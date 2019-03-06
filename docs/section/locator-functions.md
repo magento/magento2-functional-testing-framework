@@ -1,18 +1,10 @@
----
-mftf-release: 2.0.2
-redirect_from: /guides/v2.3/magento-functional-testing-framework/2.3/section/locator-functions.html
----
-
 # Locator functions
 
-_This topic was updated due to the {{page.mftf-release}} MFTF release._
-{: style="text-align: right"}
-
-{%raw%}
+<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
 ## Define Locator::functions in elements
 
- Codeception has a set of very useful [Locator functions](http://codeception.com/docs/reference/Locator) that may be used by elements inside a [section](../section.html).
+ Codeception has a set of very useful [Locator functions][] that may be used by elements inside a [section][].
 
 Declare an element with a `locatorFunction`:
 
@@ -26,7 +18,7 @@ When using the `locatorFunction`, omit `Locator::` for code simplicity:
 <element name="simpleLocatorShorthand" type="button" locatorFunction="contains('label', 'Name')"/>
 ```
 
-An element's `locatorFunction` can also be parameterized the same way as [parameterized selectors](./parameterized-selectors.html):
+An element's `locatorFunction` can also be parameterized the same way as [parameterized selectors][]:
 
 ```xml
 <element name="simpleLocatorTwoParam" type="button" locatorFunction="contains({{arg1}}, {{arg2}})" parameterized="true"/>
@@ -45,4 +37,7 @@ Given the above element definitions, you call the elements in a test just like a
 </test>
 ```
 
-{%endraw%}
+<!-- Link Definitions -->
+[Locator functions]: http://codeception.com/docs/reference/Locator
+[section]: ../section.md
+[parameterized selectors]: ./parameterized-selectors.md

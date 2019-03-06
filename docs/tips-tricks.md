@@ -1,10 +1,8 @@
----
-title: MFTF Tips and tricks
----
+# Tips and Tricks
+
+<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
 Sometimes, little changes can make a big difference in your project. Here are some test writing tips to keep everything running smoothly.
-
-<!-- {% raw %} -->
 
 ## Actions and action groups
 
@@ -17,8 +15,9 @@ In the bad example we see two parameters being passed into the selector with lit
 
 **Why?** The next person maintaining the test or extending it may not be able to understand what the parameters are referencing.
 
-{:style="color:green"}
+<span stype="color:green">
 Good
+</span>
 
 ```xml
 <test>
@@ -37,8 +36,9 @@ Good
 </actionGroup>
 ```
 
-{:style="color:red"}
+<span style="color:red">
 Bad
+</span>
 
 ```xml
 <test>
@@ -54,8 +54,9 @@ In the bad example, we perform some heavy UI steps first.
 
 **Why?** If something goes wrong there, then the critical `magentoCLI` commands may not get a chance to run, leaving Magento configured incorrectly for any upcoming tests.
 
-{:style="color:green"}
+<span stype="color:green">
 Good:
+</span>
 
 ```xml
 <after>
@@ -73,8 +74,9 @@ Good:
 </after>
 ```
 
-{:style="color:red"}
+<span style="color:red">
 Bad:
+</span>
 
 ```xml
 <after>
@@ -106,15 +108,17 @@ And for `seeElement` it will output something like this:
 There is a subtle distinction: The first is a failure but it is the desired result: a 'positive failure'.
 The second is a proper result of the action.
 
-{:style="color:green"}
+<span stype="color:green">
 Good:
+</span>
 
 ```xml
 <see selector="//div[@data-element='content']//p" userInput="SOME EXPECTED TEXT" stepKey="seeSlide1ContentStorefront"/>
 ```
 
-{:style="color:red"}
+<span style="color:red">
 Bad:
+</span>
 
 ```xml
 <seeElement selector="//div[@data-element='content']//p[.='SOME EXPECTED TEXT']" stepKey="seeSlide1ContentStorefront"/>
@@ -124,8 +128,9 @@ Bad:
 
 Whenever possible, specify a `defaultValue` for action group arguments.
 
-{:style="color:green"}
+<span stype="color:green">
 GOOD:
+</span>
 
 ```xml
 <actionGroup name="StorefrontAssertProductImagesOnProductPageActionGroup">
@@ -143,8 +148,9 @@ GOOD:
 </actionGroup>
 ```
 
-{:style="color:red"}
+<span style="color:red">
 BAD:
+</span>
 
 ```xml
 <actionGroup name="StorefrontAssertProductImagesOnProductPageActionGroup">
@@ -170,8 +176,9 @@ Build your tests using action groups, even if an action group contains a single 
 Extending a single action group will update all tests that use this group.
 This improves maintainability as multiple instances of a failure can be fixed with a single action group update.
 
-{:style="color:green"}
+<span stype="color:green">
 GOOD:
+</span>
 
 ```xml
 <test name="NavigateClamberWatchEntityTest">
@@ -197,8 +204,9 @@ GOOD:
 </test>
 ```
 
-{:style="color:red"}
+<span style="color:red">
 BAD:
+</span>
 
 ```xml
 <test name="NavigateClamberWatchEntityTest">
@@ -226,8 +234,9 @@ Do not use numbers to make a `stepKey` unique.
 
 **Why?** This helps with readability and clarity.
 
-{:style="color:green"}
+<span stype="color:green">
 GOOD:
+</span>
 
 ```xml
 <click selector="{{StorefrontNavigationSection.topCategory(SimpleSubCategory.name)}}" stepKey="clickSimpleSubCategoryLink" />
@@ -243,8 +252,9 @@ GOOD:
 <waitForPageLoad stepKey="waitForCustomSimpleProductPageLoad" />
 ```
 
-{:style="color:red"}
+<span style="color:red">
 BAD:
+</span>
 
 ```xml
 <click selector="{{StorefrontNavigationSection.topCategory(SimpleSubCategory.name)}}" stepKey="clickCategoryLink1" />
@@ -298,15 +308,17 @@ Example:
 </div>
 ```
 
-{:style="color:green"}
+<span stype="color:green">
 GOOD:
+</span>
 
 ```xml
 <element name="productName" type="input" selector="*[data-index='product-details'] input[name='product[name]']"/>
 ```
 
-{:style="color:red"}
+<span style="color:red">
 BAD:
+</span>
 
 ```xml
 <element name="productName" type="input" selector=".admin__field[data-index=name] input"/>
@@ -319,8 +331,9 @@ When possible, select the first parent tag and then specify the desired element 
 
 **Why?** Elements that are overly specific are less flexible and may fail if unexpected DOM changes occur. It also reduces the amount of the DOM it needs to parse.
 
- {:style="color:green"}
+ <span stype="color:green">
 GOOD:
+</span>
 
 ```html
  form[name='myform'] > input[name='firstname']
@@ -328,8 +341,9 @@ GOOD:
  //*[@id='container'][@class='dashboard-title']
  ```
 
- {:style="color:red"}
+ <span style="color:red">
 BAD:
+</span>
 
 ```html
  input[name='firstname']
@@ -344,15 +358,17 @@ BAD:
 Use descriptive variable names to increase readability.
 **Why?** It makes the code easier to follow and update.
 
- {:style="color:green"}
+ <span stype="color:green">
 GOOD:
+</span>
 
 ```xml
 <element name="storeName" type="checkbox" selector="//label[contains(text(),'{{storeName}}')]" parameterized="true"/>
 ```
 
-{:style="color:red"}
+<span style="color:red">
 BAD:
+</span>
 
 ```xml
 <element name="storeName" type="checkbox" selector="//label[contains(text(),'{{var1}}')]" parameterized="true"/>
@@ -363,20 +379,20 @@ BAD:
 When working with input type `checkbox`, do not use the `click` action; use `checkOption` or `uncheckOption` instead.
 **Why?** A click does not make it clear what the ending state will be; it will simply toggle the current state. Using the proper actions will ensure the expected state of the checkbox.
 
-{:style="color:green"}
+<span stype="color:green">
 GOOD:
+</span>
 
 ```xml
 <checkOption selector="{{ProductInWebsitesSection.website('Second Website')}}" stepKey="selectSecondWebsite"/>
 <uncheckOption selector="{{ProductInWebsitesSection.website('Second Website')}}" stepKey="unselectSecondWebsite"/>
 ```
 
-{:style="color:red"}
+<span style="color:red">
 BAD:
+</span>
 
 ```xml
 <click selector="{{ProductInWebsitesSection.website('Second Website')}}" stepKey="selectSecondWebsite"/>
 <click selector="{{ProductInWebsitesSection.website('Second Website')}}" stepKey="unselectSecondWebsite"/>
 ```
-
-<!-- {% endraw %} -->

@@ -1,14 +1,13 @@
----
-mftf-release: 2.3.8
-redirect_from: /guides/v2.3/magento-functional-testing-framework/2.3/getting-started.html
----
-
 # Getting started
 
-_This topic was updated after {{page.mftf-release}} MFTF release._
-{: style="text-align: right"}
+<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
-{% include_relative include/note-2.2-docs.md %}
+<div class="bs-callout bs-callout-info">
+<a href="https://devdocs.magento.com/mftf/2.3/introduction.html#find-version">Find out your version</a> of the MFTF.
+
+The latest Magento 2.3 release supports MFTF 2.3.13.
+The latest Magento 2.2 release supports MFTF 2.3.8.
+</div>
 
 ## Prepare environment  {#prepare-environment}
 
@@ -62,23 +61,24 @@ Configure the following settings in Magento as described below.
 
 ### WYSIWYG settings    {#wysiwyg-settings}
 
-A Selenium web driver cannot enter data to fields with {% glossarytooltip 98cf4fd5-59b6-4610-9c1f-b84c8c0abd97 %}WYSIWYG{% endglossarytooltip %}.
+A Selenium web driver cannot enter data to fields with WYSIWYG.
 
 To disable the WYSIWYG and enable the web driver to process these fields as simple text areas:
 
-1. Log in to the {% glossarytooltip 18b930cf-09cc-47c9-a5e5-905f86c43f81 %}Magento Admin{% endglossarytooltip %} as an administrator.
+1. Log in to the Magento Admin as an administrator.
 2. Navigate to **Stores \> Configuration \> General \> Content Management**.
 3. In the WYSIWYG Options section set the **Enable WYSIWYG Editor** option to **Disabled Completely**.
 4. Click **Save Config**.
 
-{: .bs-callout .bs-callout-tip }
+<span class=".bs-callout .bs-callout-tip">
 When you want to test the WYSIWYG functionality, re-enable WYSIWYG in your test suite.
+</span>
 
 ### Security settings   {#security-settings}
 
 To enable the **Admin Account Sharing** setting, to avoid unpredictable logout during a testing session, and disable the **Add Secret Key in URLs** setting, to open pages using direct URLs:
 
-1. Navigate to **Stores \> Configuration \> Advanced \> {% glossarytooltip 29ddb393-ca22-4df9-a8d4-0024d75739b1 %}Admin{% endglossarytooltip %} \> Security**.
+1. Navigate to **Stores \> Configuration \> Advanced \> Admin \> Security**.
 2. Set **Admin Account Sharing** to **Yes**.
 3. Set **Add Secret Key to URLs** to **No**.
 4. Click **Save Config**.
@@ -103,9 +103,7 @@ In the Magento project root, run:
 vendor/bin/mftf build:project
 ```
 
-{% include note.html
-type='tip'
-content='If you use PhpStorm, generate a URN catalog:
+If you use PhpStorm, generate a URN catalog:
 
 ```bash
 vendor/bin/mftf generate:urn-catalog .idea/
@@ -118,11 +116,11 @@ vendor/bin/mftf generate:urn-catalog --force .idea/
 ```
 
 See [`generate:urn-catalog`][] for more details.'
-%}
 
-{:.bs-callout .bs-callout-tip}
+<span class=".bs-callout .bs-callout-tip">
 You can simplify command entry by adding the  absolute  path to the `vendor/bin` directory path to your PATH environment variable.
 After adding the path, you can run `mftf` without having to include `vendor/bin`.
+</span>
 
 ### Step 2. Edit environmental settings   {#environment-settings}
 
@@ -288,24 +286,24 @@ allure serve dev/tests/_output/allure-results/
 
 <!-- Link definitions -->
 
-[`codecept`]: commands/codeception.html
-[`generate:urn-catalog`]: commands/mftf.html#generateurn-catalog
-[`MAGENTO_BP`]: configuration.html#magento_bp
-[`mftf`]: commands/mftf.html
+[`codecept`]: commands/codeception.md
+[`generate:urn-catalog`]: commands/mftf.md#generateurn-catalog
+[`MAGENTO_BP`]: configuration.md#magento_bp
+[`mftf`]: commands/mftf.md
 [allure docs]: https://docs.qameta.io/allure/
 [Allure Framework]: http://allure.qatools.ru/
-[basic configuration]: configuration.html#basic-configuration
+[basic configuration]: configuration.md#basic-configuration
 [build]: #build-project
 [chrome driver]: https://sites.google.com/a/chromium.org/chromedriver/downloads
 [Codeception Test execution]: https://blog.jetbrains.com/phpstorm/2017/03/codeception-support-comes-to-phpstorm-2017-1/
 [composer]: https://getcomposer.org/download/
-[Configuration]: configuration.html
+[Configuration]: configuration.md
 [contributing]: https://github.com/magento/magento2-functional-testing-framework/blob/develop/.github/CONTRIBUTING.md
 [install Allure]: https://github.com/allure-framework/allure2#download
 [java]: http://www.oracle.com/technetwork/java/javase/downloads/index.html
-[mftf tests]: introduction.html#mftf-tests
-[php]: {{ site.gdeurl23 }}install-gde/system-requirements-tech.html#php
+[mftf tests]: introduction.md#mftf-tests
+[php]: https://devdocs.magento.com/guides/2.3/install-gde/system-requirements-tech.md#php
 [PhpStorm]: https://www.jetbrains.com/phpstorm/
 [selenium server]: https://www.seleniumhq.org/download/
 [Set up a standalone MFTF]: #set-up-a-standalone-mftf
-[test suite]: suite.html
+[test suite]: suite.md

@@ -1,12 +1,6 @@
----
-mftf-release: 2.2.0
-redirect_from: /guides/v2.3/magento-functional-testing-framework/2.3/metadata.html
----
-
 # Metadata
 
-_This topic was updated due to the {{page.mftf-release}} MFTF release._
-{: style="text-align: right"}
+<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
 In this topic we talk about handling entities that you need in your tests (such as categories, products, wish lists, and similar) using the MFTF.
 Using data handling actions like [`createData`], [`deleteData`], [`updateData`], and [`getData`], you are able to create, delete, update, and read entities for your tests.
@@ -16,7 +10,7 @@ The framework enables you to send HTTP requests with these statically defined da
 - [Handling a REST API response][rest response]
 - [Sending an HTML form encoded in URL][html form]
 
-You have probably noticed that some modules in acceptance functional tests contain a directory, which is called `Metadata` .
+You have probably noticed that some modules in acceptance functional tests contain a directory, which is called `Metadata`.
 
 Example of a module with _Metadata_:
 
@@ -45,9 +39,9 @@ When a test step requires handling the specified data entity, the MFTF performs 
 - Stores a response and provides access to its data using MFTF variables syntax in XML.
 
 The following diagram demonstrates the XML structure of a metadata file:
-{% include_relative img/metadata-dia.svg %}
+<img src="img/metadata-dia.svg" />
 
-## Format   {#format}
+## Format {#format}
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -71,7 +65,7 @@ The following diagram demonstrates the XML structure of a metadata file:
     </operation>
 ```
 
-## Principles   {#principles}
+## Principles {#principles}
 
 1. A `dataType` value must match the `type` value of the corresponding entity.
 2. A file name should contain data type split with `_` and must end with `-meta`.
@@ -104,15 +98,10 @@ Example:
 The MFTF allows you to handle basic CRUD operations with an object using [Magento REST API][api reference] requests.
 To convert a request to the MFTF format, wrap the corresponding REST API request into XML tags according to the [Reference documentation][reference].
 
-{% include note.html
-type="info"
-content="GET is used for retrieving data from objects.
-
- POST is used for creating new objects.
-
- PUT is used for updating objects.
-
- DELETE is used for deleting objects." %}
+- GET is used for retrieving data from objects.
+- POST is used for creating new objects.
+- PUT is used for updating objects.
+- DELETE is used for deleting objects.
 
 This is an example of how to handle a category using REST API operations provided by the `catalogCategoryRepositoryV1` service.
 
@@ -194,13 +183,10 @@ The following is encoded in `<operation>`:
 The parameter that declares a body of the request is _catalogCategoryRepositoryV1SavePostBody_.
 Using the [Reference], we can trace how the JSON request was converted into XML representation.
 
-{% include note.html
-type="info"
-content="Comments in the example below are used to demonstrate relation between JSON request and MFTF metadata in XML.
-JSON does not support comments."%}
+Note: Comments in the example below are used to demonstrate relation between JSON request and MFTF metadata in XML.
+JSON does not support comments.
 
 Model schema for _catalogCategoryRepositoryV1SavePostBody_ with XML representation of _Catalog/Metadata/category-meta.xml_ in comments:
-{:#catalogCategoryRepositoryV1SavePostBody}
 
 ```json
 {                                           // XML representation in the MFTF metadata format (see 'Catalog/Metadata/category-meta.xml')
@@ -568,30 +554,30 @@ Example:
 
 <!-- LINK DEFINITIONS -->
 
-[actions]: test/actions.html
-[api reference]: {{ site.gdeurl23 }}rest/bk-rest.html
+[actions]: test/actions.md
+[api reference]: https://devdocs.magento.com/guides/v2.3/get-started/bk-get-started-api.html
 [application/x-www-form-urlencoded]: https://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.1
 {:target="_blank"}
 [catalogCategoryRepositoryV1 image]: img/catalogCategoryRepository-operations.png
 [catalogCategoryRepositoryV1SavePostBody]: #catalogCategoryRepositoryV1SavePostBody
 [contentType]: #contentType-tag
 [Create a new category]: #create-object-as-adminOauth
-[createData]: test/actions.html#createdata
+[createData]: test/actions.md#createdata
 [delete a category by its ID]: #delete-object-as-adminOauth
-[deleteData]: test/actions.html#deletedata
-[entity]: data.html#entity-tag
+[deleteData]: test/actions.md#deletedata
+[entity]: data.md#entity-tag
 [get information about a category by its ID]: #get-object-as-adminOauth
-[getData]: test/actions.html#getdata
+[getData]: test/actions.md#getdata
 [HTML forms]: https://www.w3.org/TR/html401/interact/forms.html
 {:target="_blank"}
-[oauth]: {{ site.gdeurl23 }}get-started/authentication/gs-authentication-oauth.html
+[oauth]: https://devdocs.magento.com/guides/v2.3/get-started/authentication/gs-authentication-oauth.html
 {:target="_blank"}
 [operation]: #operation-tag
 [reference]: #reference
 [rest request]: #handling-with-api
 [html form]: #using-html-forms
 [update category data by its ID]: #update-object-as-adminOauth
-[updateData]: test/actions.html#updatedata
+[updateData]: test/actions.md#updatedata
 [rest response]: #rest-response
 
 *[CRUD]: Create Read Update Delete

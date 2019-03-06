@@ -1,12 +1,6 @@
----
-mftf-release: 2.0.2
-redirect_from: /guides/v2.3/magento-functional-testing-framework/2.3/troubleshooting.html
----
-
 # Troubleshooting
 
-_This topic was updated due to the {{page.mftf-release}} MFTF release._
-{: style="text-align: right"}
+<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
 Having a little trouble with the MFTF? See some common errors and fixes below.
 

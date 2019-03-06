@@ -1,32 +1,27 @@
----
-mftf-release: 2.3.0
-redirect_from: /guides/v2.3/magento-functional-testing-framework/2.3/test/assertions.html
----
-
 # Assertions
 
-_This topic was updated due to the {{page.mftf-release}} MFTF release._
-{: style="text-align: right"}
+<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
-Assertions serve to pass or fail the [test](../test.html#test-tag) if a condition is not met. These assertions will look familiar to you if you've used any other testing framework, like PHPUnit.
+Assertions serve to pass or fail the [test](../test.md#test-tag) if a condition is not met. These assertions will look familiar to you if you've used any other testing framework, like PHPUnit.
 
-All assertions contain the same [common actions attributes](./actions.html#common-attributes): `stepKey`, `before`, and `after`.
+All assertions contain the same [common actions attributes](./actions.md#common-attributes): `stepKey`, `before`, and `after`.
 
 Most assertions contain a `message` attribute that specifies the text of an informational message to help you identify the cause of the failure.
 
 ## Principles
 
-The [principles for actions](../test.html#principles) are also applicable to assertions.
+The [principles for actions](../test.md#principles) are also applicable to assertions.
 
 Assertion actions have nested self-descriptive elements, `<expectedResult>` and `<actualResult>`. These elements contain a result type and a value:
+
 * `type`
-	* `const` (default)
-	* `int`
-	* `float`
-	* `bool`
-	* `string`
-	* `variable`
-	* `array`
+  * `const` (default)
+  * `int`
+  * `float`
+  * `bool`
+  * `string`
+  * `variable`
+  * `array`
 * `value`
 
 If `variable` is used, the test transforms the corresponding value to `$variable`. Use the `stepKey` of a test, that returns the value you want to use, in assertions:
@@ -95,7 +90,7 @@ It must be in typical array format like `[1,2,3,4,5]` or `[alpha, brontosaurus, 
 
 ### assertArrayHasKey
 
-See [assertArrayHasKey docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertArrayHasKey){:target='_blank'}
+See [assertArrayHasKey docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertArrayHasKey)
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -110,7 +105,7 @@ Attribute|Type|Use|Description
 
 ### assertArrayNotHasKey
 
-See [assertArrayNotHasKey docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertArrayNotHasKey){:target='_blank'}.
+See [assertArrayNotHasKey docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertArrayNotHasKey).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -125,7 +120,7 @@ Attribute|Type|Use|Description
 
 ### assertArraySubset
 
-See [assertArraySubset docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertArraySubset){:target='_blank'}.
+See [assertArraySubset docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertArraySubset).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -141,7 +136,7 @@ Attribute|Type|Use|Description
 
 ### assertContains
 
-See [assertContains docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertContains){:target='_blank'}.
+See [assertContains docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertContains).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -156,7 +151,7 @@ Attribute|Type|Use|Description
 
 ### assertCount
 
-See [assertCount docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertCount){:target='_blank'}.
+See [assertCount docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertCount).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -171,7 +166,7 @@ Attribute|Type|Use|Description
 
 ### assertEmpty
 
-See [assertEmpty docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertEmpty){:target='_blank'}.
+See [assertEmpty docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertEmpty).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -184,7 +179,7 @@ Attribute|Type|Use|Description
 
 ### assertEquals
 
-See [assertEquals docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertEquals){:target='_blank'}.
+See [assertEquals docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertEquals).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -200,7 +195,7 @@ Attribute|Type|Use|Description
 
 ### assertFalse
 
-See [assertFalse docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertFalse){:target='_blank'}.
+See [assertFalse docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertFalse).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -213,7 +208,7 @@ Attribute|Type|Use|Description
 
 ### assertFileExists
 
-See [assertFileExists docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertFileExists){:target='_blank'}.
+See [assertFileExists docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertFileExists).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -226,7 +221,7 @@ Attribute|Type|Use|Description
 
 ### assertFileNotExists
 
-See [assertFileNotExists docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertFileNotExists){:target='_blank'}.
+See [assertFileNotExists docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertFileNotExists).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -239,7 +234,7 @@ Attribute|Type|Use|Description
 
 ### assertGreaterOrEquals
 
-See [assertGreaterOrEquals docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertGreaterOrEquals){:target='_blank'}.
+See [assertGreaterOrEquals docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertGreaterOrEquals).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -254,7 +249,7 @@ Attribute|Type|Use|Description
 
 ### assertGreaterThan
 
-See [assertGreaterThan docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertGreaterThan){:target='_blank'}.
+See [assertGreaterThan docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertGreaterThan).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -269,7 +264,7 @@ Attribute|Type|Use|Description
 
 ### assertGreaterThanOrEqual
 
-See [assertGreaterThanOrEqual docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertGreaterThanOrEqual){:target='_blank'}.
+See [assertGreaterThanOrEqual docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertGreaterThanOrEqual).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -284,7 +279,7 @@ Attribute|Type|Use|Description
 
 ### assertInstanceOf
 
-See [assertInstanceOf docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertInstanceOf){:target='_blank'}.
+See [assertInstanceOf docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertInstanceOf).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -299,7 +294,7 @@ Attribute|Type|Use|Description
 
 ### assertInternalType
 
-See [assertInternalType docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertInternalType){:target='_blank'}.
+See [assertInternalType docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertInternalType).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -314,7 +309,7 @@ Attribute|Type|Use|Description
 
 ### assertIsEmpty
 
-See [assertIsEmpty docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertIsEmpty){:target='_blank'}.
+See [assertIsEmpty docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertIsEmpty).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -327,7 +322,7 @@ Attribute|Type|Use|Description
 
 ### assertLessOrEquals
 
-See [assertLessOrEquals docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertLessOrEquals){:target='_blank'}.
+See [assertLessOrEquals docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertLessOrEquals).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -342,7 +337,7 @@ Attribute|Type|Use|Description
 
 ### assertLessThan
 
-See [assertLessThan docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertLessThan){:target='_blank'}.
+See [assertLessThan docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertLessThan).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -357,7 +352,7 @@ Attribute|Type|Use|Description
 
 ### assertLessThanOrEqual
 
-See [assertLessThanOrEqual docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertLessThanOrEqual){:target='_blank'}.
+See [assertLessThanOrEqual docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertLessThanOrEqual).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -372,7 +367,7 @@ Attribute|Type|Use|Description
 
 ### assertNotContains
 
-See [assertNotContains docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotContains){:target='_blank'}.
+See [assertNotContains docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotContains).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -387,7 +382,7 @@ Attribute|Type|Use|Description
 
 ### assertNotEmpty
 
-See [assertNotEmpty docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotEmpty){:target='_blank'}.
+See [assertNotEmpty docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotEmpty).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -400,7 +395,7 @@ Attribute|Type|Use|Description
 
 ### assertNotEquals
 
-See [assertNotEquals docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotEquals){:target='_blank'}.
+See [assertNotEquals docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotEquals).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -416,7 +411,7 @@ Attribute|Type|Use|Description
 
 ### assertNotInstanceOf
 
-See [assertNotInstanceOf docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotInstanceOf){:target='_blank'}.
+See [assertNotInstanceOf docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotInstanceOf).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -431,7 +426,7 @@ Attribute|Type|Use|Description
 
 ### assertNotNull
 
-See [assertNotNull docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotNull){:target='_blank'}.
+See [assertNotNull docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotNull).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -444,7 +439,7 @@ Attribute|Type|Use|Description
 
 ### assertNotRegExp
 
-See [assertNotRegExp docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotRegExp){:target='_blank'}.
+See [assertNotRegExp docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotRegExp).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -459,7 +454,7 @@ Attribute|Type|Use|Description
 
 ### assertNotSame
 
-See [assertNotSame docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotSame){:target='_blank'}.
+See [assertNotSame docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotSame).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -474,7 +469,7 @@ Attribute|Type|Use|Description
 
 ### assertNull
 
-See [assertNull docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNull){:target='_blank'}.
+See [assertNull docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNull).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -487,7 +482,7 @@ Attribute|Type|Use|Description
 
 ### assertRegExp
 
-See [assertRegExp docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertRegExp){:target='_blank'}.
+See [assertRegExp docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertRegExp).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -502,7 +497,7 @@ Attribute|Type|Use|Description
 
 ### assertSame
 
-See [assertSame docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertSame){:target='_blank'}.
+See [assertSame docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertSame).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -517,7 +512,7 @@ Attribute|Type|Use|Description
 
 ### assertStringStartsNotWith
 
-See [assertStringStartsNotWith docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringStartsNotWith){:target='_blank'}.
+See [assertStringStartsNotWith docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringStartsNotWith).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -532,7 +527,7 @@ Attribute|Type|Use|Description
 
 ### assertStringStartsWith
 
-See [assertStringStartsWith docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringStartsWith){:target='_blank'}.
+See [assertStringStartsWith docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringStartsWith).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -547,7 +542,7 @@ Attribute|Type|Use|Description
 
 ### assertTrue
 
-See [assertTrue docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertTrue){:target='_blank'}.
+See [assertTrue docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertTrue).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -560,7 +555,7 @@ Attribute|Type|Use|Description
 
 ### expectException
 
-See [expectException docs on codeception.com](http://codeception.com/docs/modules/WebDriver#expectException){:target='_blank'}.
+See [expectException docs on codeception.com](http://codeception.com/docs/modules/WebDriver#expectException).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -574,7 +569,7 @@ Attribute|Type|Use|Description
 
 ### fail
 
-See [fail docs on codeception.com](http://codeception.com/docs/modules/WebDriver#fail){:target='_blank'}.
+See [fail docs on codeception.com](http://codeception.com/docs/modules/WebDriver#fail).
 
 Attribute|Type|Use|Description
 ---|---|---|---

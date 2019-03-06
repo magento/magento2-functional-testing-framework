@@ -1,12 +1,6 @@
----
-mftf-release: 2.3.7
-redirect_from: /guides/v2.3/magento-functional-testing-framework/2.3/test/actions.html
----
-
 # Test actions
 
-_This topic was updated due to the {{page.mftf-release}} MFTF release._
-{: style="text-align: right"}
+<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
 Actions in the MFTF allow you to automate different scenarios of Magento user's actions.
 They are mostly XML implementations of [Codeception actions](http://codeception.com/docs/modules/WebDriver#Actions).
@@ -30,7 +24,7 @@ This step can be referenced within the test using `conditionalClickStep1`.
 
 The value format should met the following principles:
 
-* Must be unique within [`<test>`](../test.html#test-tag).
+* Must be unique within [`<test>`](../test.md#test-tag).
 * Naming should be as descriptive as possible:
   * Describe the action performed.
   * Briefly describe the purpose.
@@ -75,7 +69,6 @@ Example with `after`:
 
 ## Examples
 
-{%raw%}
 The following example contains four actions:
 
 1. [Open the Sign In page for a Customer](#example-step1).
@@ -129,7 +122,6 @@ The customer's email is stored in the `email` parameter of the `customer` entity
 A required selector is stored in the `emailField` element of the `StorefrontCustomerSignInFormSection` section.
 
 This section is declared in `.../Customer/Section/StorefrontCustomerSignInFormSection.xml` file:
-{: #section-code}
 
 ```xml
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -158,8 +150,7 @@ The only difference is that different data is assigned to the attributes, which 
 ```
 
 Here, [`<click>`](#click) performs a click on a button that can be found by the selector that is stored in the `signInAccountButton` of the `StorefrontCustomerSignInFormSection`.
-See the `StorefrontCustomerSignInPage.xml` file code in [step 2](#section-code)
-{%endraw%}.
+See the `StorefrontCustomerSignInPage.xml` file code in [step 2](#section-code).
 
 ## Actions returning a variable
 
@@ -174,18 +165,18 @@ The following test actions return a variable:
 * [grabValueFrom](#grabvaluefrom)
 * [executeJS](#executejs)
 
-Learn more in [Using data returned by test actions](../data.html#use-data-returned-by-test-actions).
+Learn more in [Using data returned by test actions](../data.md#use-data-returned-by-test-actions).
 
 ## Actions handling data entities
 
-The following test actions handle data entities using [metadata](../metadata.html):
+The following test actions handle data entities using [metadata](../metadata.md):
 
 * [createData](#createdata)
 * [deleteData](#deletedata)
 * [updateData](#updatedata)
 * [getData](#getdata)
 
-Learn more in [Handling a REST API response](../metadata.html#rest-response).
+Learn more in [Handling a REST API response](../metadata.md#rest-response).
 
 ## Reference
 
@@ -196,7 +187,7 @@ If the description of an element does not include a link to Codeception analogue
 
 Accepts the current popup visible on the page.
 
-See [acceptPopup docs on codeception.com](http://codeception.com/docs/modules/WebDriver#acceptPopup){:target="_blank"}.
+See [acceptPopup docs on codeception.com](http://codeception.com/docs/modules/WebDriver#acceptPopup).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -216,7 +207,7 @@ Attribute|Type|Use|Description
 
 Opens the page by the URL relative to the one set in the `MAGENTO_BASE_URL` configuration variable.
 
-See [amOnPage docs on codeception.com](http://codeception.com/docs/modules/WebDriver#amOnPage){:target="_blank"}.
+See [amOnPage docs on codeception.com](http://codeception.com/docs/modules/WebDriver#amOnPage).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -237,7 +228,7 @@ Attribute|Type|Use|Description
 
 Takes the base URL and changes the subdomain.
 
-See [amOnSubdomain docs on codeception.com](http://codeception.com/docs/modules/WebDriver#amOnSubdomain){:target="_blank"}.
+See [amOnSubdomain docs on codeception.com](http://codeception.com/docs/modules/WebDriver#amOnSubdomain).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -262,7 +253,7 @@ Pre-condition: the current base URL is `https://www.magento.com`.
 
 Opens a page by the absolute URL.
 
-See [amOnUrl docs on codeception.com](http://codeception.com/docs/modules/WebDriver#amOnUrl){:target="_blank"}.
+See [amOnUrl docs on codeception.com](http://codeception.com/docs/modules/WebDriver#amOnUrl).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -281,7 +272,7 @@ Attribute|Type|Use|Description
 
 ### appendField
 
-See [appendField docs on codeception.com](http://codeception.com/docs/modules/WebDriver#appendField){:target="_blank"}.
+See [appendField docs on codeception.com](http://codeception.com/docs/modules/WebDriver#appendField).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -301,7 +292,7 @@ Attribute|Type|Use|Description
 
 ### attachFile
 
-See [attachFile docs on codeception.com](http://codeception.com/docs/modules/WebDriver#attachFile){:target="_blank"}.
+See [attachFile docs on codeception.com](http://codeception.com/docs/modules/WebDriver#attachFile).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -321,7 +312,7 @@ Attribute|Type|Use|Description
 
 ### cancelPopup
 
-See [cancelPopup docs on codeception.com](http://codeception.com/docs/modules/WebDriver#cancelPopup){:target="_blank"}.
+See [cancelPopup docs on codeception.com](http://codeception.com/docs/modules/WebDriver#cancelPopup).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -339,7 +330,7 @@ Attribute|Type|Use|Description
 
 ### checkOption
 
-See [checkOption docs on codeception.com](http://codeception.com/docs/modules/WebDriver#checkOption){:target="_blank"}.
+See [checkOption docs on codeception.com](http://codeception.com/docs/modules/WebDriver#checkOption).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -378,12 +369,12 @@ Attribute|Type|Use|Description
 
 ### click
 
-See [click docs on codeception.com](http://codeception.com/docs/modules/WebDriver#click){:target="_blank"}.
+See [click docs on codeception.com](http://codeception.com/docs/modules/WebDriver#click).
 
 Attribute|Type|Use|Description
 ---|---|---|---
 `selector`|string|optional| The selector identifying the corresponding HTML element.
-`selectorArray`|string|optional| Selects an element as a key value array. See [strict locator](http://codeception.com/docs/modules/WebDriver#locating-elements){:target="_blank"}.
+`selectorArray`|string|optional| Selects an element as a key value array. See [strict locator](http://codeception.com/docs/modules/WebDriver#locating-elements).
 `userInput`|string|optional| Data to be sent with the click.
 `stepKey`|string|required| A unique identifier of the action.
 `skipReadiness`|boolean|optional| A flag to skip the readiness check.
@@ -404,7 +395,7 @@ Attribute|Type|Use|Description
 
 ### clickWithLeftButton
 
-See [clickWithLeftButton docs on codeception.com](http://codeception.com/docs/modules/WebDriver#clickWithLeftButton){:target="_blank"}.
+See [clickWithLeftButton docs on codeception.com](http://codeception.com/docs/modules/WebDriver#clickWithLeftButton).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -436,7 +427,7 @@ Attribute|Type|Use|Description
 
 ### clickWithRightButton
 
-See [clickWithRightButton docs on codeception.com](http://codeception.com/docs/modules/WebDriver#clickWithRightButton){:target="_blank"}.
+See [clickWithRightButton docs on codeception.com](http://codeception.com/docs/modules/WebDriver#clickWithRightButton).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -486,7 +477,7 @@ Attribute|Type|Use|Description
 
 ### closeTab
 
-See [closeTab docs on codeception.com](http://codeception.com/docs/modules/WebDriver#closeTab){:target="_blank"}.
+See [closeTab docs on codeception.com](http://codeception.com/docs/modules/WebDriver#closeTab).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -546,7 +537,7 @@ Attribute|Type|Use|Description
 ### createData
 
 Creates an entity (for example, a category or product).
-To create an entity, the MFTF makes a `POST` request to the Magento API according to the [data](../data.html) and [metadata](../metadata.html) of the entity to be created.
+To create an entity, the MFTF makes a `POST` request to the Magento API according to the [data](../data.md) and [metadata](../metadata.md) of the entity to be created.
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -625,7 +616,7 @@ Attribute|Type|Use|Description
 
 #### Examples
 
-Delete the entity that was previously created using [`createData`](#createdata) in the scope of the [test](../test.html#test-tag).
+Delete the entity that was previously created using [`createData`](#createdata) in the scope of the [test](../test.md#test-tag).
 
 1. Create _SampleCategory_:
 
@@ -641,7 +632,7 @@ Delete the entity that was previously created using [`createData`](#createdata) 
 
 #### Example of existing data deletion
 
-Delete an entity using [REST API]({{ site.gdeurl23 }}rest/bk-rest.html) request to the corresponding route:
+Delete an entity using [REST API](https://devdocs.magento.com/redoc/2.3/) request to the corresponding route:
 
 ```xml
 <grabFromCurrentUrl regex="/^.+id\/([\d]+)/" stepKey="grabId"/>
@@ -650,7 +641,7 @@ Delete an entity using [REST API]({{ site.gdeurl23 }}rest/bk-rest.html) request 
 
 ### dontSee
 
-See [the codeception.com documentation for more information about this action](http://codeception.com/docs/modules/WebDriver#dontSee){:target="_blank"}.
+See [the codeception.com documentation for more information about this action](http://codeception.com/docs/modules/WebDriver#dontSee).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -671,7 +662,7 @@ Attribute|Type|Use|Description
 
 ### dontSeeCheckboxIsChecked
 
-See [dontSeeCheckboxIsChecked docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeCheckboxIsChecked){:target="_blank"}.
+See [dontSeeCheckboxIsChecked docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeCheckboxIsChecked).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -690,7 +681,7 @@ Attribute|Type|Use|Description
 
 ### dontSeeCookie
 
-See [dontSeeCookie docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeCookie){:target="_blank"}.
+See [dontSeeCookie docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeCookie).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -715,7 +706,7 @@ Attribute|Type|Use|Description
 
 ### dontSeeCurrentUrlEquals
 
-See [dontSeeCurrentUrlEquals docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeCurrentUrlEquals){:target="_blank"}.
+See [dontSeeCurrentUrlEquals docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeCurrentUrlEquals).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -734,7 +725,7 @@ Attribute|Type|Use|Description
 
 ### dontSeeCurrentUrlMatches
 
-See [dontSeeCurrentUrlMatches docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeCurrentUrlMatches){:target="_blank"}
+See [dontSeeCurrentUrlMatches docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeCurrentUrlMatches)
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -753,7 +744,7 @@ Attribute|Type|Use|Description
 
 ### dontSeeElement
 
-See [dontSeeElement docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeElement){:target="_blank"}.
+See [dontSeeElement docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeElement).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -773,7 +764,7 @@ Attribute|Type|Use|Description
 
 ### dontSeeElementInDOM
 
-See [dontSeeElementInDOM docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeElementInDOM){:target="_blank"}.
+See [dontSeeElementInDOM docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeElementInDOM).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -793,7 +784,7 @@ Attribute|Type|Use|Description
 
 ### dontSeeInCurrentUrl
 
-See [dontSeeInCurrentUrl docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeInCurrentUrl){:target="_blank"}.
+See [dontSeeInCurrentUrl docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeInCurrentUrl).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -812,7 +803,7 @@ Attribute|Type|Use|Description
 
 ### dontSeeInField
 
-See [dontSeeInField docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeInField){:target="_blank"}.
+See [dontSeeInField docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeInField).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -833,7 +824,7 @@ Attribute|Type|Use|Description
 
 ### dontSeeInFormFields
 
-See [dontSeeInFormFields docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeInFormFields){:target="_blank"}.
+See [dontSeeInFormFields docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeInFormFields).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -853,7 +844,7 @@ Attribute|Type|Use|Description
 
 ### dontSeeInPageSource
 
-See [dontSeeInPageSource docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeInPageSource){:target="_blank"}.
+See [dontSeeInPageSource docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeInPageSource).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -872,7 +863,7 @@ Attribute|Type|Use|Description
 
 ### dontSeeInSource
 
-See [dontSeeInSource docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeInSource){:target="_blank"}.
+See [dontSeeInSource docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeInSource).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -891,7 +882,7 @@ Attribute|Type|Use|Description
 
 ### dontSeeInTitle
 
-See [dontSeeInTitle docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeInTitle){:target="_blank"}.
+See [dontSeeInTitle docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeInTitle).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -928,7 +919,7 @@ Attribute|Type|Use|Description
 
 ### dontSeeLink
 
-See [dontSeeLink docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeLink){:target="_blank"}.
+See [dontSeeLink docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeLink).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -953,7 +944,7 @@ Attribute|Type|Use|Description
 
 ### dontSeeOptionIsSelected
 
-See [dontSeeOptionIsSelected docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeOptionIsSelected){:target="_blank"}.
+See [dontSeeOptionIsSelected docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dontSeeOptionIsSelected).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -973,7 +964,7 @@ Attribute|Type|Use|Description
 
 ### doubleClick
 
-See [doubleClick docs on codeception.com](http://codeception.com/docs/modules/WebDriver#doubleClick){:target="_blank"}.
+See [doubleClick docs on codeception.com](http://codeception.com/docs/modules/WebDriver#doubleClick).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -992,7 +983,7 @@ Attribute|Type|Use|Description
 
 ### dragAndDrop
 
-See [dragAndDrop docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dragAndDrop){:target="_blank"}.
+See [dragAndDrop docs on codeception.com](http://codeception.com/docs/modules/WebDriver#dragAndDrop).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1019,7 +1010,7 @@ Attribute|Type|Use|Description
 
 ### executeInSelenium
 
-See [executeInSelenium docs on codeception.com](http://codeception.com/docs/modules/WebDriver#executeInSelenium){:target="_blank"}.
+See [executeInSelenium docs on codeception.com](http://codeception.com/docs/modules/WebDriver#executeInSelenium).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1038,7 +1029,7 @@ Attribute|Type|Use|Description
 
 ### executeJS
 
-See [executeJS docs on codeception.com](http://codeception.com/docs/modules/WebDriver#executeJS){:target="_blank"}.
+See [executeJS docs on codeception.com](http://codeception.com/docs/modules/WebDriver#executeJS).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1060,7 +1051,7 @@ To access this value you would use `{$returnTime}` in later actions.
 
 ### fillField
 
-See [fillField docs on codeception.com](http://codeception.com/docs/modules/WebDriver#fillField){:target="_blank"}.
+See [fillField docs on codeception.com](http://codeception.com/docs/modules/WebDriver#fillField).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1135,13 +1126,13 @@ Attribute|Type|Use|Description
 </getData>
 ```
 
-The `ProductAttributeOptionGetter` entity must be defined in the corresponding [data `*.xml`](../data.html).
+The `ProductAttributeOptionGetter` entity must be defined in the corresponding [data `*.xml`](../data.md).
 
 This action can optionally contain one or more [requiredEntity](#requiredentity) child elements.
 
 ### grabAttributeFrom
 
-See [grabAttributeFrom docs on codeception.com](http://codeception.com/docs/modules/WebDriver#grabAttributeFrom){:target="_blank"}.
+See [grabAttributeFrom docs on codeception.com](http://codeception.com/docs/modules/WebDriver#grabAttributeFrom).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1162,7 +1153,7 @@ To access this value, use `{$grabAttributeFromInput}` in later actions. -->
 
 ### grabCookie
 
-See [grabCookie docs on codeception.com](http://codeception.com/docs/modules/WebDriver#grabCookie){:target="_blank"}.
+See [grabCookie docs on codeception.com](http://codeception.com/docs/modules/WebDriver#grabCookie).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1189,7 +1180,7 @@ To access this value, use `{$grabCookieExampleDomain}` in later actions. -->
 
 ### grabFromCurrentUrl
 
-See [grabFromCurrentUrl docs on codeception.com](http://codeception.com/docs/modules/WebDriver#grabFromCurrentUrl){:target="_blank"}..
+See [grabFromCurrentUrl docs on codeception.com](http://codeception.com/docs/modules/WebDriver#grabFromCurrentUrl)..
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1209,7 +1200,7 @@ To access this value, use `{$grabFromCurrentUrl}` in later actions. -->
 
 ### grabMultiple
 
-See [grabMultiple docs on codeception.com](http://codeception.com/docs/modules/WebDriver#grabMultiple){:target="_blank"}..
+See [grabMultiple docs on codeception.com](http://codeception.com/docs/modules/WebDriver#grabMultiple)..
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1236,7 +1227,7 @@ To access this value, use `{$grabAllLinks}` in later actions. -->
 
 ### grabPageSource
 
-See [grabPageSource docs on codeception.com](http://codeception.com/docs/modules/WebDriver#grabPageSource){:target="_blank"}.
+See [grabPageSource docs on codeception.com](http://codeception.com/docs/modules/WebDriver#grabPageSource).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1255,7 +1246,7 @@ To access this value, use `{$grabPageSource}` in later actions. -->
 
 ### grabTextFrom
 
-See [grabTextFrom docs on codeception.com](http://codeception.com/docs/modules/WebDriver#grabTextFrom){:target="_blank"}.
+See [grabTextFrom docs on codeception.com](http://codeception.com/docs/modules/WebDriver#grabTextFrom).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1275,7 +1266,7 @@ To access this value, use `{$grabTitle}` in later actions. -->
 
 ### grabValueFrom
 
-See [grabValueFrom docs on codeception.com](https://codeception.com/docs/modules/WebDriver#grabValueFrom){:target="_blank"}.
+See [grabValueFrom docs on codeception.com](https://codeception.com/docs/modules/WebDriver#grabValueFrom).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1296,7 +1287,7 @@ To access this value, use `{$grabInputName}` in later actions. -->
 
 ### loadSessionSnapshot
 
-See [loadSessionSnapshot docs on codeception.com](http://codeception.com/docs/modules/WebDriver#loadSessionSnapshot){:target="_blank"}.
+See [loadSessionSnapshot docs on codeception.com](http://codeception.com/docs/modules/WebDriver#loadSessionSnapshot).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1336,7 +1327,7 @@ Attribute|Type|Use|Description
 
 ### makeScreenshot
 
-See [makeScreenshot docs on codeception.com](http://codeception.com/docs/modules/WebDriver#makeScreenshot){:target="_blank"}.
+See [makeScreenshot docs on codeception.com](http://codeception.com/docs/modules/WebDriver#makeScreenshot).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1346,10 +1337,7 @@ Attribute|Type|Use|Description
 `before`|string|optional| `stepKey` of action that must be executed next.
 `after`|string|optional| `stepKey` of preceding action.
 
-{% include note.html
-      type="info"
-      content="The makeScreenshot action does not automatically add the screenshot to Allure reports."
-      %}
+Note that the makeScreenshot action does not automatically add the screenshot to Allure reports.
 
 #### Example
 
@@ -1358,12 +1346,12 @@ Attribute|Type|Use|Description
 <makeScreenshot userInput="example" stepKey="screenshotPage"/>
 ```
 
-{:.bs-callout .bs-callout-info}
-This action does not add a screenshot to the Allure [report](../reporting.html).
+<span class=".bs-callout .bs-callout-info">
+This action does not add a screenshot to the Allure [report](../reporting.md).</span>
 
 ### maximizeWindow
 
-See [maximizeWindow docs on codeception.com](http://codeception.com/docs/modules/WebDriver#maximizeWindow){:target="_blank"}.
+See [maximizeWindow docs on codeception.com](http://codeception.com/docs/modules/WebDriver#maximizeWindow).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1381,7 +1369,7 @@ Attribute|Type|Use|Description
 
 ### moveBack
 
-See [moveBack docs on codeception.com](http://codeception.com/docs/modules/WebDriver#moveBack){:target="_blank"}.
+See [moveBack docs on codeception.com](http://codeception.com/docs/modules/WebDriver#moveBack).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1399,7 +1387,7 @@ Attribute|Type|Use|Description
 
 ### moveForward
 
-See [moveForward docs on codeception.com](http://codeception.com/docs/modules/WebDriver#moveForward){:target="_blank"}..
+See [moveForward docs on codeception.com](http://codeception.com/docs/modules/WebDriver#moveForward)..
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1415,7 +1403,7 @@ Attribute|Type|Use|Description
 
 ### moveMouseOver
 
-See [moveMouseOver docs on codeception.com](http://codeception.com/docs/modules/WebDriver#moveMouseOver){:target="_blank"}.
+See [moveMouseOver docs on codeception.com](http://codeception.com/docs/modules/WebDriver#moveMouseOver).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1462,7 +1450,7 @@ Attribute|Type|Use|Description
 
 ### openNewTab
 
-See [openNewTab docs on codeception.com](http://codeception.com/docs/modules/WebDriver#openNewTab){:target="_blank"}.
+See [openNewTab docs on codeception.com](http://codeception.com/docs/modules/WebDriver#openNewTab).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1492,7 +1480,7 @@ Attribute|Type|Use|Description
 
 ### pauseExecution
 
-See [pauseExecution docs on codeception.com](http://codeception.com/docs/modules/WebDriver#pauseExecution){:target="_blank"}.
+See [pauseExecution docs on codeception.com](http://codeception.com/docs/modules/WebDriver#pauseExecution).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1510,7 +1498,7 @@ Attribute|Type|Use|Description
 
 ### performOn
 
-See [performOn docs on codeception.com](http://codeception.com/docs/modules/WebDriver#performOn){:target="_blank"}.
+See [performOn docs on codeception.com](http://codeception.com/docs/modules/WebDriver#performOn).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1523,7 +1511,7 @@ Attribute|Type|Use|Description
 
 ### pressKey
 
-See [pressKey docs on codeception.com](http://codeception.com/docs/modules/WebDriver#pressKey){:target="_blank"}.
+See [pressKey docs on codeception.com](http://codeception.com/docs/modules/WebDriver#pressKey).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1552,7 +1540,7 @@ To press more than one key at a time, wrap the keys in secondary `[]`.
 
 ### reloadPage
 
-See [reloadPage docs on codeception.com](http://codeception.com/docs/modules/WebDriver#reloadPage){:target="_blank"}.
+See [reloadPage docs on codeception.com](http://codeception.com/docs/modules/WebDriver#reloadPage).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1585,7 +1573,7 @@ Attribute|Type|Use|Description
 
 ### resetCookie
 
-See [resetCookie docs on codeception.com](http://codeception.com/docs/modules/WebDriver#resetCookie){:target="_blank"}.
+See [resetCookie docs on codeception.com](http://codeception.com/docs/modules/WebDriver#resetCookie).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1610,7 +1598,7 @@ Attribute|Type|Use|Description
 
 ### resizeWindow
 
-See [resizeWindow docs on codeception.com](http://codeception.com/docs/modules/WebDriver#resizeWindow){:target="_blank"}.
+See [resizeWindow docs on codeception.com](http://codeception.com/docs/modules/WebDriver#resizeWindow).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1630,7 +1618,7 @@ Attribute|Type|Use|Description
 
 ### saveSessionSnapshot
 
-See [saveSessionSnapshot docs on codeception.com](http://codeception.com/docs/modules/WebDriver#saveSessionSnapshot){:target="_blank"}.
+See [saveSessionSnapshot docs on codeception.com](http://codeception.com/docs/modules/WebDriver#saveSessionSnapshot).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1649,7 +1637,7 @@ Attribute|Type|Use|Description
 
 ### scrollTo
 
-See [scrollTo docs on codeception.com](http://codeception.com/docs/modules/WebDriver#scrollTo){:target="_blank"}.
+See [scrollTo docs on codeception.com](http://codeception.com/docs/modules/WebDriver#scrollTo).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1725,7 +1713,7 @@ On this test step the MFTF:
 
 ### see
 
-See [see docs on codeception.com](http://codeception.com/docs/modules/WebDriver#see){:target="_blank"}.
+See [see docs on codeception.com](http://codeception.com/docs/modules/WebDriver#see).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1746,7 +1734,7 @@ Attribute|Type|Use|Description
 
 ### seeCheckboxIsChecked
 
-See [seeCheckboxIsChecked docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeCheckboxIsChecked){:target="_blank"}.
+See [seeCheckboxIsChecked docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeCheckboxIsChecked).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1765,7 +1753,7 @@ Attribute|Type|Use|Description
 
 ### seeCookie
 
-See [seeCookie docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeCookie){:target="_blank"}.
+See [seeCookie docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeCookie).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1790,7 +1778,7 @@ Attribute|Type|Use|Description
 
 ### seeCurrentUrlEquals
 
-See [seeCurrentUrlEquals docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeCurrentUrlEquals){:target="_blank"}.
+See [seeCurrentUrlEquals docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeCurrentUrlEquals).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1809,7 +1797,7 @@ Attribute|Type|Use|Description
 
 ### seeCurrentUrlMatches
 
-See [seeCurrentUrlMatches docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeCurrentUrlMatches){:target="_blank"}.
+See [seeCurrentUrlMatches docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeCurrentUrlMatches).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1828,7 +1816,7 @@ Attribute|Type|Use|Description
 
 ### seeElement
 
-See [seeElement docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeElement){:target="_blank"}.
+See [seeElement docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeElement).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1849,7 +1837,7 @@ Attribute|Type|Use|Description
 
 ### seeElementInDOM
 
-See [seeElementInDOM docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeElementInDOM){:target="_blank"}.
+See [seeElementInDOM docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeElementInDOM).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1869,7 +1857,7 @@ Attribute|Type|Use|Description
 
 ### seeInCurrentUrl
 
-See [seeInCurrentUrl docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeInCurrentUrl){:target="_blank"}.
+See [seeInCurrentUrl docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeInCurrentUrl).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1888,7 +1876,7 @@ Attribute|Type|Use|Description
 
 ### seeInField
 
-See [seeInField docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeInField){:target="_blank"}.
+See [seeInField docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeInField).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1909,7 +1897,7 @@ Attribute|Type|Use|Description
 
 ### seeInFormFields
 
-See [seeInFormFields docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeInFormFields){:target="_blank"}.
+See [seeInFormFields docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeInFormFields).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1929,7 +1917,7 @@ Attribute|Type|Use|Description
 
 ### seeInPageSource
 
-See [seeInPageSource docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeInPageSource){:target="_blank"}.
+See [seeInPageSource docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeInPageSource).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1948,7 +1936,7 @@ Attribute|Type|Use|Description
 
 ### seeInPopup
 
-See [seeInPopup docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeInPopup){:target="_blank"}.
+See [seeInPopup docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeInPopup).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1967,7 +1955,7 @@ Attribute|Type|Use|Description
 
 ### seeInSource
 
-See [seeInSource docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeInSource){:target="_blank"}.
+See [seeInSource docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeInSource).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1986,7 +1974,7 @@ Attribute|Type|Use|Description
 
 ### seeInTitle
 
-See [seeInTitle docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeInTitle){:target="_blank"}.
+See [seeInTitle docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeInTitle).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -2005,7 +1993,7 @@ Attribute|Type|Use|Description
 
 ### seeLink
 
-See [seeLink docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeLink){:target="_blank"}.
+See [seeLink docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeLink).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -2030,7 +2018,7 @@ Attribute|Type|Use|Description
 
 ### seeNumberOfElements
 
-See [seeNumberOfElements docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeNumberOfElements){:target="_blank"}.
+See [seeNumberOfElements docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeNumberOfElements).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -2056,7 +2044,7 @@ Attribute|Type|Use|Description
 
 ### seeOptionIsSelected
 
-See [seeOptionIsSelected docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeOptionIsSelected){:target="_blank"}.
+See [seeOptionIsSelected docs on codeception.com](http://codeception.com/docs/modules/WebDriver#seeOptionIsSelected).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -2076,7 +2064,7 @@ Attribute|Type|Use|Description
 
 ### selectOption
 
-See [selectOption docs on codeception.com](http://codeception.com/docs/modules/WebDriver#selectOption){:target="_blank"}.
+See [selectOption docs on codeception.com](http://codeception.com/docs/modules/WebDriver#selectOption).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -2121,7 +2109,7 @@ It contains a child element `<array>` where you specify the options that must be
 
 ### setCookie
 
-See [setCookie docs on codeception.com](http://codeception.com/docs/modules/WebDriver#setCookie){:target="_blank"}.
+See [setCookie docs on codeception.com](http://codeception.com/docs/modules/WebDriver#setCookie).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -2142,7 +2130,7 @@ Attribute|Type|Use|Description
 
 ### submitForm
 
-See [submitForm docs on codeception.com](http://codeception.com/docs/modules/WebDriver#submitForm){:target="_blank"}.
+See [submitForm docs on codeception.com](http://codeception.com/docs/modules/WebDriver#submitForm).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -2163,7 +2151,7 @@ Attribute|Type|Use|Description
 
 ### switchToIFrame
 
-See [switchToIFrame docs on codeception.com](http://codeception.com/docs/modules/WebDriver#switchToIFrame){:target="_blank"}.
+See [switchToIFrame docs on codeception.com](http://codeception.com/docs/modules/WebDriver#switchToIFrame).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -2183,7 +2171,7 @@ Attribute|Type|Use|Description
 
 ### switchToNextTab
 
-See [switchToNextTab docs on codeception.com](http://codeception.com/docs/modules/WebDriver#switchToNextTab){:target="_blank"}.
+See [switchToNextTab docs on codeception.com](http://codeception.com/docs/modules/WebDriver#switchToNextTab).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -2207,7 +2195,7 @@ Attribute|Type|Use|Description
 
 ### switchToPreviousTab
 
-See [switchToPreviousTab docs on codeception.com](http://codeception.com/docs/modules/WebDriver#switchToPreviousTab){:target="_blank"}.
+See [switchToPreviousTab docs on codeception.com](http://codeception.com/docs/modules/WebDriver#switchToPreviousTab).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -2231,7 +2219,7 @@ Attribute|Type|Use|Description
 
 ### switchToWindow
 
-See [switchToWindow docs on codeception.com](http://codeception.com/docs/modules/WebDriver#switchToWindow){:target="_blank"}.
+See [switchToWindow docs on codeception.com](http://codeception.com/docs/modules/WebDriver#switchToWindow).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -2250,7 +2238,7 @@ Attribute|Type|Use|Description
 
 ### typeInPopup
 
-See [typeInPopup docs on codeception.com](http://codeception.com/docs/modules/WebDriver#typeInPopup){:target="_blank"}.
+See [typeInPopup docs on codeception.com](http://codeception.com/docs/modules/WebDriver#typeInPopup).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -2269,7 +2257,7 @@ Attribute|Type|Use|Description
 
 ### uncheckOption
 
-See [uncheckOption docs on codeception.com](http://codeception.com/docs/modules/WebDriver#uncheckOption){:target="_blank"}.
+See [uncheckOption docs on codeception.com](http://codeception.com/docs/modules/WebDriver#uncheckOption).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -2288,7 +2276,7 @@ Attribute|Type|Use|Description
 
 ### unselectOption
 
-See [unselectOption docs on codeception.com](http://codeception.com/docs/modules/WebDriver#unselectOption){:target="_blank"}.
+See [unselectOption docs on codeception.com](http://codeception.com/docs/modules/WebDriver#unselectOption).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -2342,7 +2330,7 @@ This action can optionally contain one or more [requiredEntity](#requiredentity)
 
 ### wait
 
-See [wait docs on codeception.com](http://codeception.com/docs/modules/WebDriver#wait){:target="_blank"}.
+See [wait docs on codeception.com](http://codeception.com/docs/modules/WebDriver#wait).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -2380,7 +2368,7 @@ Attribute|Type|Use|Description
 
 ### waitForElementChange
 
-See [waitForElementChange docs on codeception.com](http://codeception.com/docs/modules/WebDriver#waitForElementChange){:target="_blank"}.
+See [waitForElementChange docs on codeception.com](http://codeception.com/docs/modules/WebDriver#waitForElementChange).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -2401,7 +2389,7 @@ Attribute|Type|Use|Description
 
 ### waitForElement
 
-See [waitForElement docs on codeception.com](http://codeception.com/docs/modules/WebDriver#waitForElement){:target="_blank"}.
+See [waitForElement docs on codeception.com](http://codeception.com/docs/modules/WebDriver#waitForElement).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -2421,7 +2409,7 @@ Attribute|Type|Use|Description
 
 ### waitForElementNotVisible
 
-See [waitForElementNotVisible docs on codeception.com](http://codeception.com/docs/modules/WebDriver#waitForElementNotVisible){:target="_blank"}.
+See [waitForElementNotVisible docs on codeception.com](http://codeception.com/docs/modules/WebDriver#waitForElementNotVisible).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -2441,7 +2429,7 @@ Attribute|Type|Use|Description
 
 ### waitForElementVisible
 
-See [waitForElementVisible docs on codeception.com](http://codeception.com/docs/modules/WebDriver#waitForElementVisible){:target="_blank"}.
+See [waitForElementVisible docs on codeception.com](http://codeception.com/docs/modules/WebDriver#waitForElementVisible).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -2461,7 +2449,7 @@ Attribute|Type|Use|Description
 
 ### waitForJS
 
-See [waitForJS docs on codeception.com](http://codeception.com/docs/modules/WebDriver#waitForJS){:target="_blank"}.
+See [waitForJS docs on codeception.com](http://codeception.com/docs/modules/WebDriver#waitForJS).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -2483,9 +2471,9 @@ Attribute|Type|Use|Description
 
 Wait for all Magento loading overlays to disappear.
 
-{: .bs-callout .bs-callout-info }
+<span class=".bs-callout .bs-callout-info">
 The CSS class for loading masks is not used consistently throughout Magento.
-Therefore, this convenience function tries to wait for various specific selectors.
+Therefore, this convenience function tries to wait for various specific selectors.</span>
 
 ```config
 # Wait for these classes to not be visible
@@ -2529,6 +2517,7 @@ Attribute|Type|Use|Description
 <!-- Wait up to 30 seconds for the current page to fully load before continuing. -->
 <waitForPageLoad stepKey="waitForPageLoad"/>
 ```
+
 ### waitForPwaElementNotVisible
 
 Waits up to the given `time` for a PWA Element to disappear from the screen.
@@ -2548,6 +2537,7 @@ Attribute|Type|Use|Description
 <!-- Wait for the PWA element to disappear. -->
 <waitForPwaElementNotVisible time="1" stepKey="waitForPwaElementNotVisible"/>
 ```
+
 ### waitForPwaElementVisible
 
 Waits up to the given 'time' for a PWA Element to appear on the screen.
@@ -2570,7 +2560,7 @@ Attribute|Type|Use|Description
 
 ### waitForText
 
-See [waitForText docs on codeception.com](http://codeception.com/docs/modules/WebDriver#waitForText){:target="_blank"}.
+See [waitForText docs on codeception.com](http://codeception.com/docs/modules/WebDriver#waitForText).
 
 Attribute|Type|Use|Description
 ---|---|---|---

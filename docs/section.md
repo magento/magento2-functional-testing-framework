@@ -1,36 +1,27 @@
----
-mftf-release: 2.1.2
-redirect_from: /guides/v2.3/magento-functional-testing-framework/2.3/section.html
----
-
 # Section structure
 
-_This topic was updated due to the {{page.mftf-release}} MFTF release._
-{: style="text-align: right"}
+<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
-{%raw%}
-A `<section>` is a reusable part of a [`<page>`](./page.html) and is the standard file for defining UI elements on a page used in a test.
+A `<section>` is a reusable part of a [`<page>`](./page.md) and is the standard file for defining UI elements on a page used in a test.
 
 A `<section>` can define:
 
 - An explicit element that has a selector equal to the constant string. Example: `selector="#add_root_category_button"`
 - A parameterized element that contains substitutable values in the selector. Example: `selector="#element .{{var1}} .{{var2}}"`.
 
-{% endraw %}
-
 ## Substitutable values
 
 Substitutable values in the test can be of the following formats:
 
 - String literals (`stringLiteral`)
-- References to a [data entity](./data.html) (XML data from the corresponding `.../Data/*.xml`) such as `entityName.Field`.
+- References to a [data entity](./data.md) (XML data from the corresponding `.../Data/*.xml`) such as `entityName.Field`.
 - Persisted data:
-  - `$persistedCreateDataKey.field$` for data created in the scope of a [test](./test.html#test-tag) using the [`<createData>`](./test/actions.html#createdata) action with `stepKey="persistedCreateDataKey"`.
-  - `$$persistedCreateDataKey.field$$` for data created in [before](./test.html#before-tag) and [after](./test.html#after-tag) hooks. Even though `<before>`and `<after>` are nested inside a [test](./test.html#test-tag), persisted data is stored differently when it is done in a test hook. Therefore it must be accessed with a different notation.
+  - `$persistedCreateDataKey.field$` for data created in the scope of a [test](./test.md#test-tag) using the [`<createData>`](./test/actions.md#createdata) action with `stepKey="persistedCreateDataKey"`.
+  - `$$persistedCreateDataKey.field$$` for data created in [before](./test.md#before-tag) and [after](./test.md#after-tag) hooks. Even though `<before>`and `<after>` are nested inside a [test](./test.md#test-tag), persisted data is stored differently when it is done in a test hook. Therefore it must be accessed with a different notation.
 
 The following diagram shows the XML structure of an MFTF section:
 
-{%include_relative img/section-dia.svg%}
+<img src="img/section-dia.svg%" />
 
 ## Format
 
@@ -83,7 +74,6 @@ The `AdminCategorySidebarActionSection` section declares two buttons:
 - `addSubcategoryButton` - button with a `#add_subcategory_button` locator on the parent web page
 
 The following is an example of a call in test:
-{%raw%}
 
 ```xml
 <!-- Click on the button with locator "#add_subcategory_button" on the web page-->
@@ -94,7 +84,7 @@ The following is an example of a call in test:
 
 ### section {#section-tag}
 
-`<section>` contains the sequence of UI elements in a section of a [page](./page.html).
+`<section>` contains the sequence of UI elements in a section of a [page](./page.md).
 
 Attributes|Type|Use|Description
 ---|---|---|---
@@ -103,16 +93,16 @@ Attributes|Type|Use|Description
 
 ### element {#element-tag}
 
-`<element>`is a UI element used in an [action](./test/actions.html).
+`<element>`is a UI element used in an [action](./test/actions.md).
 
 Attributes|Type|Use|Description
 ---|---|---|---
 `name`|string|required|The element name; Must be alphanumeric.
 `type`|string|required|The type of the element. Possible values: `text`, `textarea`, `input`, `button`, `checkbox`, `radio`, `checkboxset`, `radioset`, `date`, `file`, `select`, `multiselect`, `wysiwyg`, `iframe`, `block`.
 `selector`|string|optional|[XPath](https://www.w3schools.com/xml/xpath_nodes.asp) or [CSS](https://www.w3schools.com/cssref/css_selectors.asp) selector of the element.
-`locatorFunction`|string|optional|[Locator function](./section/locator-functions.html) declaration to be used in lieu of a selector.
+`locatorFunction`|string|optional|[Locator function](./section/locator-functions.md) declaration to be used in lieu of a selector.
 `timeout`|string|optional|The timeout after interaction with the element (in seconds). The default is _none_.
-`parameterized`|boolean|optional|Include and set to `true` if the `selector` for this element has parameters that need to be replaced for proper use. Learn more in [Parameterized selectors](./section/parameterized-selectors.html).
+`parameterized`|boolean|optional|Include and set to `true` if the `selector` for this element has parameters that need to be replaced for proper use. Learn more in [Parameterized selectors](./section/parameterized-selectors.md).
 `remove`|boolean|optional|The default is `false`. Set to `true` to remove this element during parsing.
 
 #### `timeout` attribute {#timeout-attribute}
@@ -144,8 +134,6 @@ The test step that covers the use case:
 
 Whenever the `signIn` button is used in a test, the MFTF will add a 30 second `waitForPageLoad` action immediately after the `click`.
 
-{% endraw %}
-
 <!-- Link definitions -->
 
-[waitForPageLoad]: test/actions.html#waitforpageload
+[waitForPageLoad]: test/actions.md#waitforpageload

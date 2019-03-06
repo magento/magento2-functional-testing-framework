@@ -1,14 +1,7 @@
----
-mftf-release: 2.0.2
-redirect_from: /guides/v2.3/magento-functional-testing-framework/2.3/section/parameterized-selectors.html
----
-
 # Parameterized selectors
 
-_This topic was updated due to the {{page.mftf-release}} MFTF release._
-{: style="text-align: right"}
+<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
-{%raw%}
 Use the following examples to create and use parameterized selectors in the MFTF.
 
 ## Set up a selector in section
@@ -79,12 +72,13 @@ For the parameterized part of the selector, add `{{var1}}, {{var2}}, ..., {{varN
 </section>
 ```
 
-{: .bs-callout .bs-callout-info }
+<span class="bs-callout .bs-callout-info">
 There is no need to use sequential variables like `{{var1}}`, `{{var2}}`. Parameterized replacement reads variables and maps them to the test call of the element sequentially from left to right, meaning you can use a selector like `#element .{{categoryId}} .{{productId}}`."
+</span>
 
 ## Use a parameterized selector in a test
 
-Create a new [test](../test.html):
+Create a new [test][]:
 
 ```xml
 <test name="SampleTest">
@@ -155,6 +149,5 @@ Any data can be used in parameterized elements, as well as entered in test actio
 * `$createDataKey.id$` is a reference to persisted data created in the `SampleTest1` within the `stepKey="createDataKey"` action.
 * `{$variable}` is a reference to data returned by a test action, like `<grabValueFrom>`.
 
-{%endraw%}
-
-
+<!-- Link Definitions -->
+[test]: ../test.md

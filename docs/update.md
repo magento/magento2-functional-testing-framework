@@ -1,14 +1,13 @@
----
-mftf-release: 2.3.0
-redirect_from: /guides/v2.3/magento-functional-testing-framework/2.3/update.html
----
-
 # Update the Magento Functional Testing Framework
 
-_This topic was updated due to the {{page.mftf-release}} MFTF release._
-{: style="text-align: right"}
+<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
-{% include_relative include/note-2.2-docs.md %}
+<div class="bs-callout bs-callout-info">
+<a href="https://devdocs.magento.com/mftf/2.3/introduction.html#find-version">Find out your version</a> of the MFTF.
+
+The latest Magento 2.3 release supports MFTF 2.3.13.
+The latest Magento 2.2 release supports MFTF 2.3.8.
+</div>
 
 Magento tests and the framework are stored in different repositories.
 
@@ -78,5 +77,5 @@ To update the MFTF from the previous minor version:
 
 <!-- Link Definitions -->
 [Changelog]: https://github.com/magento/magento2-functional-testing-framework/blob/master/CHANGELOG.md
-[WYSIWYG settings]: getting-started.html#wysiwyg-settings
-[Security settings]: getting-started.html#security-settings
+[WYSIWYG settings]: getting-started.md#wysiwyg-settings
+[Security settings]: getting-started.md#security-settings

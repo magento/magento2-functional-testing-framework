@@ -1,12 +1,6 @@
----
-mftf-release: 2.3.0
-redirect_from: /guides/v2.3/magento-functional-testing-framework/2.3/extending.html
----
-
 # Extending
 
-_This topic was updated due to the {{page.mftf-release}} MFTF release._
-{: style="text-align: right"}
+<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
 There are cases when you need to create many tests that are very similar to each other.
 For example, only one or two parameters (for example, URL) might vary between tests.
@@ -366,7 +360,7 @@ __Use case__: Create an entity named `DivPanelGreen`, which is similar to the `D
 ```
 
 <!-- Link definitions -->
-[test]: ./test.html
-[data]: ./data.html
-[action group]: ./test/action-groups.html
-[actions]: ./test/actions.html
+[test]: ./test.md
+[data]: ./data.md
+[action group]: ./test/action-groups.md
+[actions]: ./test/actions.md

@@ -1,21 +1,14 @@
----
-mftf-release: 2.3.0
-redirect_from: /guides/v2.3/magento-functional-testing-framework/2.3/data.html
----
-
 # Input testing data
 
-_This topic was updated due to the {{page.mftf-release}} MFTF release._
-{: style="text-align: right"}
+<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
 The MFTF enables you to specify and use `<data>` entities defined in XML. Default `<data>` entities are provided for use and as templates for entity creation and manipulation.
 The following diagram shows the XML structure of an MFTF data object:
 
-{%include_relative img/data-dia.svg%}
+<img src="img/data-dia.svg" />
 
 ## Supply data to test by reference to a data entity
 
-{%raw%}
 Test steps requiring `<data>` input in an action, like filling a field with a string, may reference an attribute from a data entity:
 
 ```xml
@@ -64,28 +57,22 @@ Example of referencing `data` in a test:
 userInput="$createCustomer.email$"
 ```
 
-{%endraw%}
 In this example:
 
 * `createCustomer` is a step key of the corresponding test step that creates an entity.
 * `email` is a data key of the entity.
   The corresponding value will be assigned to `userInput` as a result.
 
-{%
-include note.html
-type="info"
-content='As of MFTF 2.3.6, you no longer need to differentiate between scopes (a test, a hook, or a suite) for persisted data when referencing it in tests.
+Note: As of MFTF 2.3.6, you no longer need to differentiate between scopes (a test, a hook, or a suite) for persisted data when referencing it in tests.
 
 The MFTF now stores the persisted data and attempts to retrieve it using the combination of `stepKey` and the scope of where it has been called.
 The current scope is preferred, then widening to _test > hook > suite_ or _hook > test > suite_.
 
-This emphasizes the practice for the `stepKey` of `createData` to be descriptive and unique, as a duplicated `stepKey` in both a `<test>` and `<before>` prefers the `<test>` data.'
-%}
+This emphasizes the practice for the `stepKey` of `createData` to be descriptive and unique, as a duplicated `stepKey` in both a `<test>` and `<before>` prefers the `<test>` data.
 
 ## Use data returned by test actions
 
-{%raw%}
-A test can also reference data that was returned as a result of [test actions](./test/actions.html#actions-returning-a-variable), like the action `<grabValueFrom selector="someSelector" stepKey="grabStepKey>`.
+A test can also reference data that was returned as a result of [test actions](./test/actions.md#actions-returning-a-variable), like the action `<grabValueFrom selector="someSelector" stepKey="grabStepKey>`.
 
 Further in the test, the data grabbed by the `someSelector` selector can be referenced using the `stepKey` value. In this case, it is `grabStepKey`.
 
@@ -100,7 +87,7 @@ The following example shows the usage of `grabValueFrom` in testing, where the r
 
 The data to operate against can be included as literals in a test. Hard-coded data input can be useful in assertions.
 
-See also [Actions](./test/actions.html).
+See also [Actions](./test/actions.md).
 
 ```xml
 userInput="We'll email you an order confirmation with details and tracking info."
@@ -262,5 +249,3 @@ Attributes|Type|Use|Description
 ### item {#item-tag}
 
 `<item>` is an individual piece of data to be passed in as part of the parent `<array>` type.
-
-{%endraw%}

@@ -1,12 +1,6 @@
----
-mftf-release: 2.3.7
-redirect_from: /guides/v2.3/magento-functional-testing-framework/2.3/configuration.html
----
-
 # Configuration
 
-_This topic was updated due to the {{page.mftf-release}} MFTF release._
-{: style="text-align: right"}
+<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
 The `*.env` file provides additional configuration for the Magento Functional Testing Framework (MFTF).
 To run the MFTF on your Magento testing instance, specify the basic configuration values.
@@ -26,8 +20,9 @@ Example:
 MAGENTO_BASE_URL=http://magento2.vagrant251
 ```
 
-{: .bs-callout .bs-callout-info }
+<span class=".bs-callout .bs-callout-info">
 If the `MAGENTO_BASE_URL` contains a subdirectory (like `http://magento.test/magento2ce`), specify [`MAGENTO_CLI_COMMAND_PATH`][].
+</span>
 
 ### MAGENTO_BACKEND_NAME
 
@@ -93,9 +88,10 @@ SELENIUM_PROTOCOL=http
 SELENIUM_PATH=/wd/hub
 ```
 
-{:.bs-callout .bs-callout-warning}
+<span class=".bs-callout .bs-callout-warning">
 `SELENIUM_*` values are required if you are running Selenium on an external system.
 If you change the configuration of the external Selenium server, you must update these values.
+</span>
 
 #### SELENIUM_HOST
 
@@ -260,6 +256,6 @@ BROWSER=firefox
 <!-- Link definitions -->
 
 [`MAGENTO_CLI_COMMAND_PATH`]: #magento_cli_command_path
-[generateDate]: test/actions.html#generatedate
-[mftf]: commands/mftf.html
+[generateDate]: test/actions.md#generatedate
+[mftf]: commands/mftf.md
 [timezones]: http://php.net/manual/en/timezones.php

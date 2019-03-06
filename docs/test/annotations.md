@@ -1,12 +1,6 @@
----
-mftf-release: 2.3.6
-redirect_from: /guides/v2.3/magento-functional-testing-framework/2.3/test/annotations.html
----
-
 # Annotations
 
-_This topic was updated due to the {{page.mftf-release}} MFTF release._
-{: style="text-align: right"}
+<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
 Annotations are essentially comments in the code. In PHP, they all are marked by a preceding `@` symbol.
 
@@ -24,6 +18,7 @@ If multiple annotation values are supported and required each value requires a s
 - Tests must contain all of the following annotations: stories, title, description, severity.
 
 Recommended use cases of the annotation types:
+
 - [stories] - report grouping, a set of tests that verify a story.
 - [title] - description of the test purpose.
 - [group] - general functionality grouping.
@@ -133,7 +128,7 @@ Attribute|Type|Use|Acceptable values
 Use the `<skip>` element to skip a test.
 It contains one or more child elements `<issueId>` to specify one or more issues that cause the test skipping.
 
-##### issueId
+#### issueId
 
 This element under `<skip>` is required at least once and contains references to issues that cause the test to be skipped.
 
@@ -231,7 +226,7 @@ Attribute|Type|Use
 [setup instructions in Allure]: https://github.com/allure-framework/allure1/wiki/Test-Case-ID
 [severity]: #severity
 [stories]: #stories
-[suite]: ../suite.html
-[tests]: ../test.html
+[suite]: ../suite.md
+[tests]: ../test.md
 [title]: #title
 [skip]: #skip

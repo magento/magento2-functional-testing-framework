@@ -1,6 +1,3 @@
----
----
-
 # Reporting
 
 The Magento Functional Testing Framework provides two types of reporting:
@@ -280,8 +277,9 @@ Each time you run tests, the MFTF appends an XML file with results at the `tests
 
 The official [Allure Test Report][] documentation is well-covered, so we'll list only the CLI commands that you would need for your day-to-day work.
 
-{: .bs-callout .bs-callout-info }
+<span class=".bs-callout .bs-callout-info">
 The following commands are relative to the Magento installation directory.
+</span>
 
 To generate a report to the `allure-report/` at the current directory:
 
@@ -301,10 +299,7 @@ To launch the generated report in a web browser:
 allure open dev/tests/acceptance/tests/_output/allure-report
 ```
 
-{% include note.html
-type='info'
-content='
-By default, Allure generates reports in the `allure-report/` at the current directory.
+Note: By default, Allure generates reports in the `allure-report/` at the current directory.
 For example, if you run the command without `-o` flag while you are in the `magento2/` directory, Allure will generate a report at the `magento2/allure-report/` directory.
 
 ```bash
@@ -347,13 +342,13 @@ Refer to the [Reporting section][] for more Allure CLI details.
 
 <!-- Link definitions -->
 
-[`after`]: test.html#after-tag
-[`run:group`]: commands/mftf.html#rungroup
-[`run:test`]: commands/mftf.html#runtest
+[`after`]: test.md#after-tag
+[`run:group`]: commands/mftf.md#rungroup
+[`run:test`]: commands/mftf.md#runtest
 [Allure Framework]: https://docs.qameta.io/allure/
 [Allure Test Report]: http://allure.qatools.ru/
-[codecept]: commands/codeception.html
+[codecept]: commands/codeception.md
 [codeception]: https://codeception.com/docs/reference/Commands
-[mftf]: commands/mftf.html
+[mftf]: commands/mftf.md
 [report an issue]: https://github.com/magento/magento2-functional-testing-framework/blob/master/.github/CONTRIBUTING.md#report-an-issue
 [Reporting section]: https://docs.qameta.io/allure/#_reporting

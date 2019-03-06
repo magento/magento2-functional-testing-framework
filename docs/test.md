@@ -1,12 +1,6 @@
----
-mftf-release: 2.3.0
-redirect_from: /guides/v2.3/magento-functional-testing-framework/2.3/test.html
----
-
 # Test
 
-_This topic was updated due to the {{page.mftf-release}} MFTF release._
-{: style="text-align: right"}
+<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
 Test cases in the Magento Functional Testing Framework (MFTF) are defined in XML as [`<tests>`].
 `<tests>` is a [Codeception test container][Codeception] that contains multiple individual tests with test metadata and before and after actions.
@@ -14,18 +8,13 @@ Test cases in the Magento Functional Testing Framework (MFTF) are defined in XML
 MFTF `<tests>` is considered a sequence of actions with associated parameters.
 Any failed [assertion] within a test constitutes a failed test.
 
-{%
-include note.html
-type = "info"
-content='`<before>` and `<after>` hooks are not global within `<tests>`.
+Note: `<before>` and `<after>` hooks are not global within `<tests>`.
 They only apply to the `<test>` in which they are declared.
-
-The steps in `<after>` are run in both successful **and** failed test runs.'
-%}
+The steps in `<after>` are run in both successful **and** failed test runs.
 
 The following diagram shows the structure of an MFTF test case:
 
-{% include_relative img/test-dia.svg %}
+<img src="img/test-dia.svg"/>
 
 ## Format
 
@@ -78,7 +67,6 @@ There are several XML elements that are used in `<tests>` in the MFTF.
 
 `<test>` is a set of steps, including [actions] and [assertions][assertion]. It is a sequence of test steps that define test flow within a test method.
 
-
 Attribute|Type|Use|Description
 ---|---|---|---
 `name`|string|optional|The test identifier.
@@ -102,8 +90,8 @@ Allure annotations provide metadata for reporting.
 
 `<before>` may contain these child elements:
 
- * Any [`<action>`][actions]
- * [`<actionGroup>`]
+* Any [`<action>`][actions]
+* [`<actionGroup>`]
 
 ### after {#after-tag}
 
@@ -112,8 +100,8 @@ The steps are run in both successful **and** failed test runs.
 
 `<after>` may contain:
 
- * Any [`<action>`][actions]
- * [`<actionGroup>`]
+* Any [`<action>`][actions]
+* [`<actionGroup>`]
 
 ### actionGroup {#actiongroup-tag}
 
@@ -148,12 +136,12 @@ See [Action groups][action group] for more information.
 [`<before>`]: #before-tag
 [`<test>`]: #test-tag
 [`<tests>`]: #tests-tag
-[action group]: ./test/action-groups.html
-[actions]: ./test/actions.html
+[action group]: ./test/action-groups.md
+[actions]: ./test/actions.md
 [Allure]: https://github.com/allure-framework/
-[Annotations]: ./test/annotations.html
-[assertion]: ./test/assertions.html
+[Annotations]: ./test/annotations.md
+[assertion]: ./test/assertions.md
 [Codeception]: https://codeception.com/docs/07-AdvancedUsage
-[extend]: extending.html
-[merging]: ./merging.html#insert-after
-[suites]: ./suite.html
+[extend]: extending.md
+[merging]: ./merging.md#insert-after
+[suites]: ./suite.md

@@ -1,12 +1,6 @@
----
-mftf-release: 2.3.0
-redirect_from: /guides/v2.3/magento-functional-testing-framework/2.3/best-practices.html
----
-
 # Best practices
 
-_This topic was updated due to the {{ page.mftf-release }} MFTF release._
-{: style="text-align: right"}
+<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
 Check out our best practices below to ensure you are getting the absolute most out of the Magento Functional Testing Framework.
 
@@ -111,15 +105,17 @@ Use a lower case first letter for:
 Use [parameterized selectors] for constructing a selector when test specific or runtime generated information is needed.
 Do not use them for static elements.
 
-{:style="color:red"}
+<span class="color:red">
 BAD:
+</span>
 
 ``` xml
 <element name="relatedProductSectionText" type="text" selector=".fieldset-wrapper.admin__fieldset-section[data-index='{{productType}}']" parameterized="true"/>
 ```
 
-{:style="color:green"}
+<span class="color:green">
 GOOD:
+</span>
 
 Define these three elements and reference them by name in the tests.
 

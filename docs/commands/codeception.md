@@ -1,16 +1,10 @@
----
-mftf-release: 2.3.0
-redirect_from: /guides/v2.3/magento-functional-testing-framework/2.3/commands/codeception.html
----
-
 # CLI commands: vendor/bin/codecept
 
-_This topic was updated due to the {{page.mftf-release}} MFTF release._
-{: style="text-align: right"}
+<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
-{:.bs-callout .bs-callout-warning}
+<span class="bs-callout bs-callout-warning">
 We do not recommend using Codeception commands directly as they can break the MFTF basic workflow.
-All the Codeception commands you need are wrapped using the [`mftf` tool][].
+All the Codeception commands you need are wrapped using the [`mftf` tool][].</span>
 
 To run the Codeception testing framework commands directly, change your directory to the `<Magento root>`.
 
@@ -42,8 +36,9 @@ vendor/bin/codecept run functional --group example --skip-group skip
 vendor/bin/codecept run
 ```
 
-{: .bs-callout .bs-callout-info }
+<span class="bs-callout .bs-callout-info"
 The following documentation corresponds to Codeception 2.3.8.
+</span>
 
 ```bash
 Full reference:
@@ -70,7 +65,7 @@ Options:
    --coverage-xml        Generate CodeCoverage XML report in file (default: "coverage.xml")
    --coverage-text       Generate CodeCoverage text report in file (default: "coverage.txt")
    --coverage-phpunit    Generate CodeCoverage PHPUnit report in file (default: "coverage-phpunit")
-   --no-exit             Don't finish with exit code
+   --no-exit             Do not finish with exit code
    --group (-g)          Groups of tests to be executed (multiple values allowed)
    --skip (-s)           Skip selected suites (multiple values allowed)
    --skip-group (-x)     Skip selected groups (multiple values allowed)
@@ -87,5 +82,5 @@ Options:
 
 <!-- Link definitions -->
 
-[`mftf` tool]: mftf.html
-[annotation]: ../test/annotations.html
+[`mftf` tool]: mftf.md
+[annotation]: ../test/annotations.md

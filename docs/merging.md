@@ -1,12 +1,6 @@
----
-mftf-release: 2.3.0
-redirect_from: /guides/v2.3/magento-functional-testing-framework/2.3/merging.html
----
-
 # Merging
 
-_This topic was updated due to the {{page.mftf-release}} MFTF release._
-{: style="text-align: right"}
+<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
 The MFTF allows you to merge test components defined in XML files, such as:
 
@@ -566,10 +560,10 @@ The `_defaultSample` results corresponds to:
 
 <!-- Link definitions -->
 
-[`codecept`]: ./commands/codeception.html
-[`mftf`]: ./commands/mftf.html
-[`<data>`]: ./data.html
-[elements]: ./section.html#element-tag
-[`<pages>`]: ./page.html
-[`<sections>`]: ./section.html
-[`<tests>`]: ./test.html
+[`codecept`]: ./commands/codeception.md
+[`mftf`]: ./commands/mftf.md
+[`<data>`]: ./data.md
+[elements]: ./section.md#element-tag
+[`<pages>`]: ./page.md
+[`<sections>`]: ./section.md
+[`<tests>`]: ./test.md
