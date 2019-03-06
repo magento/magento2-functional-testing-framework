@@ -14,7 +14,7 @@ The steps in `<after>` are run in both successful **and** failed test runs.
 
 The following diagram shows the structure of an MFTF test case:
 
-<img src="img/test-dia.svg"/>
+![Structure of MFTF test case](img/test-dia.svg)
 
 ## Format
 

@@ -331,7 +331,7 @@ When possible, select the first parent tag and then specify the desired element 
 
 **Why?** Elements that are overly specific are less flexible and may fail if unexpected DOM changes occur. It also reduces the amount of the DOM it needs to parse.
 
- <span stype="color:green">
+ <span style="color:green">
 GOOD:
 </span>
 
@@ -383,6 +383,8 @@ When working with input type `checkbox`, do not use the `click` action; use `che
 GOOD:
 </span>
 
+<!--{% raw %}-->
+
 ```xml
 <checkOption selector="{{ProductInWebsitesSection.website('Second Website')}}" stepKey="selectSecondWebsite"/>
 <uncheckOption selector="{{ProductInWebsitesSection.website('Second Website')}}" stepKey="unselectSecondWebsite"/>
@@ -396,3 +398,4 @@ BAD:
 <click selector="{{ProductInWebsitesSection.website('Second Website')}}" stepKey="selectSecondWebsite"/>
 <click selector="{{ProductInWebsitesSection.website('Second Website')}}" stepKey="unselectSecondWebsite"/>
 ```
+<!--{% endraw %}-->

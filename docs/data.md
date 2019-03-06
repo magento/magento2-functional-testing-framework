@@ -5,7 +5,7 @@
 The MFTF enables you to specify and use `<data>` entities defined in XML. Default `<data>` entities are provided for use and as templates for entity creation and manipulation.
 The following diagram shows the XML structure of an MFTF data object:
 
-<img src="img/data-dia.svg" />
+![MFTF Data Object](img/data-dia.svg)
 
 ## Supply data to test by reference to a data entity
 

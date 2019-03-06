@@ -1,12 +1,10 @@
 # Action groups
 
-<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
-
 In the MFTF, you can re-use a group of [actions][], such as logging in as an administrator or a customer, declared in an XML file when you need to perform the same sequence of actions multiple times.
 
 The following diagram shows the structure of an MFTF action group:
 
-<img src="../img/action-groups-dia.svg" />
+![Structure of MFTF action group](../img/action-groups-dia.svg)
 
 ## Principles
 

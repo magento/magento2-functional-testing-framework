@@ -39,7 +39,7 @@ When a test step requires handling the specified data entity, the MFTF performs 
 - Stores a response and provides access to its data using MFTF variables syntax in XML.
 
 The following diagram demonstrates the XML structure of a metadata file:
-<img src="img/metadata-dia.svg" />
+![Structure of metadata](img/metadata-dia.svg)
 
 ## Format {#format}
 

@@ -21,7 +21,7 @@ Substitutable values in the test can be of the following formats:
 
 The following diagram shows the XML structure of an MFTF section:
 
-<img src="img/section-dia.svg%" />
+![XML Structure of MFTF section](img/section-dia.svg)
 
 ## Format
 

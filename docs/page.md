@@ -19,7 +19,7 @@ Two types of pages are available:
 
 The following diagram shows the XML structure of an MFTF page:
 
-<img src="img/page-dia.svg" />
+![XML Structure of MFTF Page](img/page-dia.svg)
 
 ## Format
 
