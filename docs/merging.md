@@ -1,7 +1,5 @@
 # Merging
 
-<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
-
 The MFTF allows you to merge test components defined in XML files, such as:
 
 - [`<tests>`][]

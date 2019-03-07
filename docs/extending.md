@@ -1,7 +1,5 @@
 # Extending
 
-<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
-
 There are cases when you need to create many tests that are very similar to each other.
 For example, only one or two parameters (for example, URL) might vary between tests.
 To avoid copy-pasting and to save some time the Magento Functional Testing Framework (MFTF) enables you to extend test components such as [test], [data], and [action group].

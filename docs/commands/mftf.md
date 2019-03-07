@@ -169,7 +169,7 @@ The command that encodes this complex configuration:
 vendor/bin/mftf generate:tests --tests "{\r\n\"tests\":[\r\n\"general_test1\",\r\n\"general_test2\",\r\n\"general_test3\"\r\n],\r\n\"suites\":{\r\n\"sample\":[\r\n\"suite_test1\"\r\n],\r\n\"sample2\":null\r\n}\r\n}"
 ```
 
-Note: The strings must be escaped and surrounded in quotes.
+Note that the strings must be escaped and surrounded in quotes.
 
 ### `generate:suite`
 

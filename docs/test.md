@@ -1,16 +1,16 @@
 # Test
 
-<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
-
 Test cases in the Magento Functional Testing Framework (MFTF) are defined in XML as [`<tests>`].
 `<tests>` is a [Codeception test container][Codeception] that contains multiple individual tests with test metadata and before and after actions.
 
 MFTF `<tests>` is considered a sequence of actions with associated parameters.
 Any failed [assertion] within a test constitutes a failed test.
 
-Note: `<before>` and `<after>` hooks are not global within `<tests>`.
+<div class="bs-callout bs-callout-info">
+ `<before>` and `<after>` hooks are not global within `<tests>`.
 They only apply to the `<test>` in which they are declared.
 The steps in `<after>` are run in both successful **and** failed test runs.
+</div>
 
 The following diagram shows the structure of an MFTF test case:
 

@@ -1,6 +1,5 @@
 # Assertions
 
-<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
 Assertions serve to pass or fail the [test](../test.md#test-tag) if a condition is not met. These assertions will look familiar to you if you've used any other testing framework, like PHPUnit.
 

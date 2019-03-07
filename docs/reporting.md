@@ -299,8 +299,10 @@ To launch the generated report in a web browser:
 allure open dev/tests/acceptance/tests/_output/allure-report
 ```
 
-Note: By default, Allure generates reports in the `allure-report/` at the current directory.
+<div class="bs-callout bs-callout-info">
+By default, Allure generates reports in the `allure-report/` at the current directory.
 For example, if you run the command without `-o` flag while you are in the `magento2/` directory, Allure will generate a report at the `magento2/allure-report/` directory.
+</div>
 
 ```bash
 allure generate dev/tests/acceptance/tests/_output/allure-result

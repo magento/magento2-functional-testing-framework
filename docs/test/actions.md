@@ -1,6 +1,5 @@
 # Test actions
 
-<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
 Actions in the MFTF allow you to automate different scenarios of Magento user's actions.
 They are mostly XML implementations of [Codeception actions](http://codeception.com/docs/modules/WebDriver#Actions).

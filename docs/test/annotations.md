@@ -1,6 +1,5 @@
 # Annotations
 
-<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
 Annotations are essentially comments in the code. In PHP, they all are marked by a preceding `@` symbol.
 

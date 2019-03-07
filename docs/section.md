@@ -1,7 +1,5 @@
 # Section structure
 
-<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
-
 A `<section>` is a reusable part of a [`<page>`](./page.md) and is the standard file for defining UI elements on a page used in a test.
 
 A `<section>` can define:

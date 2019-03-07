@@ -1,6 +1,5 @@
 # CLI commands: vendor/bin/codecept
 
-<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
 <span class="bs-callout bs-callout-warning">
 We do not recommend using Codeception commands directly as they can break the MFTF basic workflow.

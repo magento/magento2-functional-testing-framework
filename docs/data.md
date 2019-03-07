@@ -63,7 +63,9 @@ In this example:
 * `email` is a data key of the entity.
   The corresponding value will be assigned to `userInput` as a result.
 
-Note: As of MFTF 2.3.6, you no longer need to differentiate between scopes (a test, a hook, or a suite) for persisted data when referencing it in tests.
+<div class="bs-callout bs-callout-info">
+As of MFTF 2.3.6, you no longer need to differentiate between scopes (a test, a hook, or a suite) for persisted data when referencing it in tests.
+</div>
 
 The MFTF now stores the persisted data and attempts to retrieve it using the combination of `stepKey` and the scope of where it has been called.
 The current scope is preferred, then widening to _test > hook > suite_ or _hook > test > suite_.

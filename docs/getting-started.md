@@ -1,7 +1,5 @@
 # Getting started
 
-<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
-
 <div class="bs-callout bs-callout-info">
 <a href="https://devdocs.magento.com/mftf/2.3/introduction.html#find-version">Find out your version</a> of the MFTF.
 

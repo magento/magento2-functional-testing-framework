@@ -1,7 +1,5 @@
 # Metadata
 
-<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
-
 In this topic we talk about handling entities that you need in your tests (such as categories, products, wish lists, and similar) using the MFTF.
 Using data handling actions like [`createData`], [`deleteData`], [`updateData`], and [`getData`], you are able to create, delete, update, and read entities for your tests.
 The framework enables you to send HTTP requests with these statically defined data entities:
@@ -183,8 +181,10 @@ The following is encoded in `<operation>`:
 The parameter that declares a body of the request is _catalogCategoryRepositoryV1SavePostBody_.
 Using the [Reference], we can trace how the JSON request was converted into XML representation.
 
-Note: Comments in the example below are used to demonstrate relation between JSON request and MFTF metadata in XML.
+<div class="bs-callout bs-callout-info">
+Comments in the example below are used to demonstrate relation between JSON request and MFTF metadata in XML.
 JSON does not support comments.
+</div>
 
 Model schema for _catalogCategoryRepositoryV1SavePostBody_ with XML representation of _Catalog/Metadata/category-meta.xml_ in comments:
 

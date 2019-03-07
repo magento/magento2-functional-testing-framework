@@ -1,7 +1,5 @@
 # Page structure
 
-<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
-
 The MFTF uses a modified concept of [PageObjects], which models the testing areas of your page as objects within the code.
 This reduces occurrences of duplicated code and enables you to fix things quickly, in one place, when things change.
 You define the contents of a page, for reference in a [`<test>`], at both the [`<page>`] and [`<section>`] level.

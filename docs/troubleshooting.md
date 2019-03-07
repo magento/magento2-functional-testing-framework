@@ -1,7 +1,5 @@
 # Troubleshooting
 
-<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
-
 Having a little trouble with the MFTF? See some common errors and fixes below.
 
 ## WebDriver issues

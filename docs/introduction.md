@@ -1,7 +1,5 @@
 # Introduction to the Magento Functional Testing Framework version 2.3
 
-<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
-
 <a href="https://devdocs.magento.com/mftf/2.3/introduction.html#find-version">Find out your version</a> of the MFTF.
 
 The latest Magento 2.3 release supports MFTF 2.3.13.

@@ -1,6 +1,5 @@
 # Parameterized selectors
 
-<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
 
 Use the following examples to create and use parameterized selectors in the MFTF.
 

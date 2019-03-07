@@ -1,4 +1,4 @@
-# Versioning 
+# Versioning
 
 This documemt describes the versioning policy for the Magento Functional Testing Framework (MFTF), including the version numbering schema.
 

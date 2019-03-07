@@ -1,7 +1,5 @@
 # Suites
 
-<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
-
 Suites are essentially groups of tests that run in the specific conditions (preconditions and postconditions).
 They enable you including, excluding, and grouping tests for a customized test run when you need it.
 You can form suites using separate tests, groups, and modules.
@@ -10,7 +8,9 @@ Each suite must be defined in the `<magento 2 root>/dev/tests/acceptance/tests/_
 The generated tests for each suite go into a separate directory under `<magento 2 root>/dev/tests/acceptance/tests/functional/Magento/FunctionalTest/_generated/`.
 By default, all generated tests are stored in the _default_ suite under `.../Magento/FunctionalTest/_generated/default/`
 
-Note: If a test is generated into at least one custom suite, it will not appear in the _default_ suite.
+<div class="bs-callout bs-callout-info">
+ If a test is generated into at least one custom suite, it will not appear in the _default_ suite.
+</div>
 
 ## Format
 
@@ -216,8 +216,10 @@ A suite hook with preconditions that executes once before the suite tests.
 
 It may contain test steps with any [actions] and [action groups].
 
-Note: Tests in the suite are not run and screenshots are not saved in case of a failure in the before hook.
+<div class="bs-callout bs-callout-info">
+Tests in the suite are not run and screenshots are not saved in case of a failure in the before hook.
 To troubleshoot the failure, run the suite locally.
+</div>
 
 ### after {#after-tag}
 
