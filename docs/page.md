@@ -13,6 +13,8 @@ Avoid hard-coded location selectors from tests to increase the maintainability a
 
 Two types of pages are available:
 
+<!-- {% raw %} -->
+
 - Page with `url` declared as a constant string or [explicit page] - In a test it is called in a format like `{{NameOfPage.url}}`, where `NameOfPage` is a value of `name` in the corresponding page declaration `*.xml` file.
 - Page with `url` declared as a string with one or more variables or [parameterized page]
 - In a test it is called using a format like `{{NameOfPage.url(var1, var2, ...)}}`, where `var1, var2` etc. are parameters that will be substituted in the `url` of the corresponding `<page>` declaration.
@@ -147,6 +149,8 @@ Attributes|Type|Use|Description
 `remove`|boolean|optional|The default value is `"false"`. Set to `"true"` to remove this element during parsing.
 
 `<page>` may contain several [`<section>`] elements.
+
+<!-- {% endraw %} -->
 
 ### section {#section-tag}
 

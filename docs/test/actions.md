@@ -69,6 +69,8 @@ Example with `after`:
 
 ## Examples
 
+<!-- {% raw %} -->
+
 The following example contains four actions:
 
 1. [Open the Sign In page for a Customer](#example-step1).
@@ -148,6 +150,8 @@ The only difference is that different data is assigned to the attributes, which 
 ```xml
 <click selector="{{StorefrontCustomerSignInFormSection.signInAccountButton}}" stepKey="clickSignInAccountButton"/>
 ```
+
+<!-- {% endraw %} -->
 
 Here, [`<click>`](#click) performs a click on a button that can be found by the selector that is stored in the `signInAccountButton` of the `StorefrontCustomerSignInFormSection`.
 See the `StorefrontCustomerSignInPage.xml` file code in [step 2](#section-code).

@@ -20,6 +20,8 @@ Unlike merging, the parent test (or action group) will still exist after the tes
 
 ### Update a test step
 
+<!-- {% raw %} -->
+
 __Use case__: Create two similar tests with different `url` (`"{{AdminCategoryPage.url}}"` and `"{{OtherCategoryPage.url}}"`) in a test step.
 
 > Test with "extends":
@@ -280,6 +282,8 @@ Add a new test `VerifyProductCount` that asserts the count of products:
     </actionGroup>
 </actionGroups>
 ```
+
+<!-- {% endraw %} -->
 
 ## Extending data
 

@@ -6,6 +6,8 @@ A `<section>` is a reusable part of a [`<page>`](./page.md) and is the standard 
 
 A `<section>` can define:
 
+<!-- {% raw %} -->
+
 - An explicit element that has a selector equal to the constant string. Example: `selector="#add_root_category_button"`
 - A parameterized element that contains substitutable values in the selector. Example: `selector="#element .{{var1}} .{{var2}}"`.
 
@@ -131,6 +133,8 @@ The test step that covers the use case:
 <click selector="{{StorefrontSigninSection.signIn}}" ../>
 ...
 ```
+
+<!-- {% endraw %} -->
 
 Whenever the `signIn` button is used in a test, the MFTF will add a 30 second `waitForPageLoad` action immediately after the `click`.
 

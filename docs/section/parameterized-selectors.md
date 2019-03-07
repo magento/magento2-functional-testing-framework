@@ -30,6 +30,8 @@ Add your selector in the `selector=""` attribute:
 </section>
 ```
 
+<!-- {% raw %} -->
+
 ### Selector with single variable
 
 For the parameterized part of the selector, add `{{var1}}` to represent the first piece of data that you want to replace:
@@ -141,6 +143,8 @@ Add the second or third parameters, that you'd like to pass to the selector, sep
     <click selector="{{SampleSection.threeParamElement(_defaultCategory.is_active,'StringLiteral',$createDataKey.id$)}}" stepKey="click1"/>
 </test>
 ```
+
+<!-- {% endraw %} -->
 
 Any data can be used in parameterized elements, as well as entered in test actions:
 

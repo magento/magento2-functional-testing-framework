@@ -64,6 +64,8 @@ carriers_usps_password=Lmgxvrq89uPwECeV
 ....
 ```
 
+<!-- {% raw %} -->
+
 ## Use credentials in a test
 
 Access the data defined in the `.credentials` file using the [`fillField`][] action with the `userInput` attribute.
@@ -77,6 +79,8 @@ For example:
 ```xml
 <fillField stepKey="FillApiToken" selector=".api-token" userInput="{{_CREDS.my_data_key}}" />
 ```
+
+<!-- {% raw %} -->
 
 ## Implementation details
 

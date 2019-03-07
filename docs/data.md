@@ -1,11 +1,11 @@
 # Input testing data
 
-<span style="text-align: right">_This topic was updated due to the 2.3.13 MFTF release._</span>
-
 The MFTF enables you to specify and use `<data>` entities defined in XML. Default `<data>` entities are provided for use and as templates for entity creation and manipulation.
 The following diagram shows the XML structure of an MFTF data object:
 
 ![MFTF Data Object](img/data-dia.svg)
+
+<!-- {% raw %} -->
 
 ## Supply data to test by reference to a data entity
 
@@ -165,6 +165,8 @@ The following is an example of a call in test:
 ```xml
 <fillField selector="{{AdminCategoryBasicFieldSection.categoryNameInput}}" userInput="{{_defaultCategory.name}}" stepKey="enterCategoryName"/>
 ```
+
+<!-- {% endraw %} -->
 
 This action inputs data from the `name` of the `_defaultCategory` entity (for example, `simpleCategory598742365`) into the field with the locator defined in the selector of the `categoryNameInput` element of the `AdminCategoryBasicFieldSection`.
 

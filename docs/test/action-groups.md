@@ -54,6 +54,8 @@ To create the `<actionGroup>` declaration:
     </actionGroups>
     ```
 
+<!-- {% raw %} -->
+
 1. Add actions to the `actionGroup` arguments:
 
     ```xml
@@ -218,6 +220,8 @@ It can be reworked into more manageable pieces, as below. These smaller steps ar
     <seeElement selector="{{AdminCategorySidebarTreeSection.categoryInTree(categoryEntity.name)}}" stepKey="seeCategoryInTree"/>
 </actionGroup>
 ```
+
+<!-- {% endraw %} -->
 
 ## Elements reference
 

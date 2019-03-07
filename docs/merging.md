@@ -45,6 +45,8 @@ Learn more about running tests with different options using [`mftf`] or [`codece
 
 Skip the `AdminLoginTest` test in the `.../Backend/Test/AdminLoginTest.xml` file while merging with the `.../Foo/Test/AdminLoginTest.xml` file:
 
+<!-- {% raw %} -->
+
 ```xml
 <tests ...>
     <test name="AdminLoginTest">
@@ -303,6 +305,8 @@ The controls change drastically in the B2B version, so it was abstracted to an a
     <click selector="{{AdminCartPriceRulesFormSection.customerGroupsDoneBtn}}" stepKey="closeMultiSelect"/>
 </actionGroup>
 ```
+
+<!-- {% raw %} -->
 
 ## Merge pages
 

@@ -20,6 +20,8 @@ When using the `locatorFunction`, omit `Locator::` for code simplicity:
 
 An element's `locatorFunction` can also be parameterized the same way as [parameterized selectors][]:
 
+<!-- {% raw %} -->
+
 ```xml
 <element name="simpleLocatorTwoParam" type="button" locatorFunction="contains({{arg1}}, {{arg2}})" parameterized="true"/>
 ```
@@ -36,6 +38,8 @@ Given the above element definitions, you call the elements in a test just like a
    <click selector="{{LocatorFunctionSection.simpleLocatorTwoParam('string1', 'string2')}}" stepKey="TwoParamLiteral"/>
 </test>
 ```
+
+<!-- {% endraw %} -->
 
 <!-- Link Definitions -->
 [Locator functions]: http://codeception.com/docs/reference/Locator

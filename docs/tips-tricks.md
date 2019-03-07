@@ -19,6 +19,8 @@ In the bad example we see two parameters being passed into the selector with lit
 Good
 </span>
 
+<!-- {% raw %} -->
+
 ```xml
 <test>
     <actionGroup ref="VerifyOptionInProductStorefront" stepKey="verifyConfigurableOption" after="AssertProductInStorefrontProductPage">
@@ -382,8 +384,6 @@ When working with input type `checkbox`, do not use the `click` action; use `che
 <span stype="color:green">
 GOOD:
 </span>
-
-<!--{% raw %}-->
 
 ```xml
 <checkOption selector="{{ProductInWebsitesSection.website('Second Website')}}" stepKey="selectSecondWebsite"/>
