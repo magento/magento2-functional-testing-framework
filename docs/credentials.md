@@ -89,8 +89,8 @@ The MFTF dynamically retrieves, encrypts, and decrypts the sensitive data during
 Decrypted credentials do not appear in the console, error logs, or [test reports][].
 The decrypted values are only available in the `.credentials` file.
 
-<span class=".bs-callout .bs-callout-info">
-The MFTF tests delivered with Magento application do not use credentials and do not cover external services, because of sensitivity of the data.</span>
+<div class=".bs-callout .bs-callout-info">
+The MFTF tests delivered with Magento application do not use credentials and do not cover external services, because of sensitivity of the data.</div>
 
 <!-- Link definitions -->
 [`fillField`]: test/actions.md#fillfield

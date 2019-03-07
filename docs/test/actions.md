@@ -1349,8 +1349,8 @@ Note that the makeScreenshot action does not automatically add the screenshot to
 <makeScreenshot userInput="example" stepKey="screenshotPage"/>
 ```
 
-<span class=".bs-callout .bs-callout-info">
-This action does not add a screenshot to the Allure [report](../reporting.md).</span>
+<div class=".bs-callout .bs-callout-info">
+This action does not add a screenshot to the Allure [report](../reporting.md).</div>
 
 ### maximizeWindow
 
@@ -2474,9 +2474,9 @@ Attribute|Type|Use|Description
 
 Wait for all Magento loading overlays to disappear.
 
-<span class=".bs-callout .bs-callout-info">
+<div class=".bs-callout .bs-callout-info">
 The CSS class for loading masks is not used consistently throughout Magento.
-Therefore, this convenience function tries to wait for various specific selectors.</span>
+Therefore, this convenience function tries to wait for various specific selectors.</div>
 
 ```config
 # Wait for these classes to not be visible

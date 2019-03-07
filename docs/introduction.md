@@ -15,10 +15,10 @@ MFTF improves:
 - **Maintainability** based on simple test creation and overall structure.
 
 Because MFTF tests are written in XML, you no longer need to learn PHP to write tests.
-<span class=".bs-callout .bs-callout-info">
+<div class=".bs-callout .bs-callout-info">
 We are actively developing functional tests.
 Refer to `<magento_root>/app/code/<vendor_name>/<module_name>/Test/Mftf/` for examples.
-</span>
+</div>
 
 ## Audience
 

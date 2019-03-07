@@ -14,10 +14,10 @@ A `<section>` can define:
 Substitutable values in the test can be of the following formats:
 
 - String literals (`stringLiteral`)
-- References to a [data entity](./data.md) (XML data from the corresponding `.../Data/*.xml`) such as `entityName.Field`.
+- References to a [data entity][] (XML data from the corresponding `.../Data/*.xml`) such as `entityName.Field`.
 - Persisted data:
-  - `$persistedCreateDataKey.field$` for data created in the scope of a [test](./test.md#test-tag) using the [`<createData>`](./test/actions.md#createdata) action with `stepKey="persistedCreateDataKey"`.
-  - `$$persistedCreateDataKey.field$$` for data created in [before](./test.md#before-tag) and [after](./test.md#after-tag) hooks. Even though `<before>`and `<after>` are nested inside a [test](./test.md#test-tag), persisted data is stored differently when it is done in a test hook. Therefore it must be accessed with a different notation.
+  - `$persistedCreateDataKey.field$` for data created in the scope of a [test][] using the [`<createData>`][] action with `stepKey="persistedCreateDataKey"`.
+  - `$$persistedCreateDataKey.field$$` for data created in [before][] and [after][] hooks. Even though `<before>`and `<after>` are nested inside a [test][], persisted data is stored differently when it is done in a test hook. Therefore it must be accessed with a different notation.
 
 The following diagram shows the XML structure of an MFTF section:
 
@@ -84,7 +84,7 @@ The following is an example of a call in test:
 
 ### section {#section-tag}
 
-`<section>` contains the sequence of UI elements in a section of a [page](./page.md).
+`<section>` contains the sequence of UI elements in a section of a [page][].
 
 Attributes|Type|Use|Description
 ---|---|---|---
@@ -93,16 +93,16 @@ Attributes|Type|Use|Description
 
 ### element {#element-tag}
 
-`<element>`is a UI element used in an [action](./test/actions.md).
+`<element>`is a UI element used in an [action][].
 
 Attributes|Type|Use|Description
 ---|---|---|---
 `name`|string|required|The element name; Must be alphanumeric.
 `type`|string|required|The type of the element. Possible values: `text`, `textarea`, `input`, `button`, `checkbox`, `radio`, `checkboxset`, `radioset`, `date`, `file`, `select`, `multiselect`, `wysiwyg`, `iframe`, `block`.
-`selector`|string|optional|[XPath](https://www.w3schools.com/xml/xpath_nodes.asp) or [CSS](https://www.w3schools.com/cssref/css_selectors.asp) selector of the element.
-`locatorFunction`|string|optional|[Locator function](./section/locator-functions.md) declaration to be used in lieu of a selector.
+`selector`|string|optional|[XPath][] or [CSS][] selector of the element.
+`locatorFunction`|string|optional|[Locator function][] declaration to be used in lieu of a selector.
 `timeout`|string|optional|The timeout after interaction with the element (in seconds). The default is _none_.
-`parameterized`|boolean|optional|Include and set to `true` if the `selector` for this element has parameters that need to be replaced for proper use. Learn more in [Parameterized selectors](./section/parameterized-selectors.md).
+`parameterized`|boolean|optional|Include and set to `true` if the `selector` for this element has parameters that need to be replaced for proper use. Learn more in [Parameterized selectors][].
 `remove`|boolean|optional|The default is `false`. Set to `true` to remove this element during parsing.
 
 #### `timeout` attribute {#timeout-attribute}
@@ -139,3 +139,14 @@ Whenever the `signIn` button is used in a test, the MFTF will add a 30 second `w
 <!-- Link definitions -->
 
 [waitForPageLoad]: test/actions.md#waitforpageload
+[data entity]: ./data.md
+[test]: ./test.md#test-tag
+[`<createData>`]: ./test/actions.md#createdata
+[before]: ./test.md#before-tag
+[after]: ./test.md#after-tag
+[page]: ./page.md
+[action]: ./test/actions.md
+[XPath]: https://www.w3schools.com/xml/xpath_nodes.asp
+[CSS]: https://www.w3schools.com/cssref/css_selectors.asp
+[Locator function]: ./section/locator-functions.md
+[Parameterized selectors]: ./section/parameterized-selectors.md

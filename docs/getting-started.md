@@ -68,9 +68,9 @@ To disable the WYSIWYG and enable the web driver to process these fields as simp
 3. In the WYSIWYG Options section set the **Enable WYSIWYG Editor** option to **Disabled Completely**.
 4. Click **Save Config**.
 
-<span class=".bs-callout .bs-callout-tip">
+<div class=".bs-callout .bs-callout-tip">
 When you want to test the WYSIWYG functionality, re-enable WYSIWYG in your test suite.
-</span>
+</div>
 
 ### Security settings   {#security-settings}
 
@@ -115,10 +115,10 @@ vendor/bin/mftf generate:urn-catalog --force .idea/
 
 See [`generate:urn-catalog`][] for more details.'
 
-<span class=".bs-callout .bs-callout-tip">
+<div class=".bs-callout .bs-callout-tip">
 You can simplify command entry by adding the  absolute  path to the `vendor/bin` directory path to your PATH environment variable.
 After adding the path, you can run `mftf` without having to include `vendor/bin`.
-</span>
+</div>
 
 ### Step 2. Edit environmental settings   {#environment-settings}
 

@@ -1,7 +1,5 @@
 # CLI commands: vendor/bin/mftf
 
-<span class="style="text-align: right"">_This topic was updated due to the 2.3.13 MFTF release._</span>
-
 The Magento Functional Testing Framework (MFTF) introduces the command line interface (CLI) tool `vendor/bin/mftf` to facilitate your interaction with the framework.
 
 Note that `mftf` commands replace the `robo` commands that were used in previous releases.

@@ -277,9 +277,9 @@ Each time you run tests, the MFTF appends an XML file with results at the `tests
 
 The official [Allure Test Report][] documentation is well-covered, so we'll list only the CLI commands that you would need for your day-to-day work.
 
-<span class=".bs-callout .bs-callout-info">
+<div class=".bs-callout .bs-callout-info">
 The following commands are relative to the Magento installation directory.
-</span>
+</div>
 
 To generate a report to the `allure-report/` at the current directory:
 
