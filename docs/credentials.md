@@ -80,7 +80,7 @@ For example:
 <fillField stepKey="FillApiToken" selector=".api-token" userInput="{{_CREDS.my_data_key}}" />
 ```
 
-<!-- {% raw %} -->
+<!-- {% endraw %} -->
 
 ## Implementation details
 
