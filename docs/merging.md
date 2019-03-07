@@ -304,8 +304,6 @@ The controls change drastically in the B2B version, so it was abstracted to an a
 </actionGroup>
 ```
 
-<!-- {% raw %} -->
-
 ## Merge pages
 
 Use [page] merging to add or remove [sections] in your module.
@@ -559,6 +557,8 @@ The `_defaultSample` results corresponds to:
    <data key="secondField">field2</data>
 </entity>
 ```
+
+<!-- {% endraw %} -->
 
 <!-- Link definitions -->
 
