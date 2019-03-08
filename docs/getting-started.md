@@ -1,8 +1,7 @@
 # Getting started
 
-<div class="bs-callout bs-callout-info">
-<a href="https://devdocs.magento.com/mftf/introduction.html#find-version">Find out your version</a> of the MFTF.
-
+<div class="bs-callout bs-callout-info" markdown="1">
+[Find your MFTF version][] of the MFTF.
 The latest Magento 2.3 release supports MFTF 2.3.13.
 The latest Magento 2.2 release supports MFTF 2.3.8.
 </div>
@@ -16,9 +15,9 @@ Make sure that you have the following software installed and configured on your 
 - [Java 1.8 or later][java]
 - [Selenium Server Standalone 3.6 or later][selenium server] and [ChromeDriver 2.33 or later][chrome driver] or other webdriver in the same directory
 
-{:.bs-callout .bs-callout-tip}
+<div class="bs-callout bs-callout-tip" markdown="1">
 [PhpStorm] supports [Codeception test execution][], which is helpful when debugging.
-
+</div>
 ## Install Magento {#install-magento}
 
 Use instructions below to install Magento.
@@ -68,7 +67,7 @@ To disable the WYSIWYG and enable the web driver to process these fields as simp
 3. In the WYSIWYG Options section set the **Enable WYSIWYG Editor** option to **Disabled Completely**.
 4. Click **Save Config**.
 
-<div class=".bs-callout .bs-callout-tip">
+<div class="bs-callout bs-callout-tip">
 When you want to test the WYSIWYG functionality, re-enable WYSIWYG in your test suite.
 </div>
 
@@ -115,7 +114,7 @@ vendor/bin/mftf generate:urn-catalog --force .idea/
 
 See [`generate:urn-catalog`][] for more details.'
 
-<div class=".bs-callout .bs-callout-tip">
+<div class="bs-callout bs-callout-tip" markdown="1">
 You can simplify command entry by adding the  absolute  path to the `vendor/bin` directory path to your PATH environment variable.
 After adding the path, you can run `mftf` without having to include `vendor/bin`.
 </div>
@@ -142,8 +141,9 @@ Specify the following parameters, which are required to launch tests:
 - `MAGENTO_ADMIN_PASSWORD` must contain the user password required for authorization in the Admin area.
   Example: `MAGENTO_ADMIN_PASSWORD=123123q`
 
-{: .bs-callout .bs-callout-info }
+<div class="bs-callout bs-callout-info" markdown="1">
 If the `MAGENTO_BASE_URL` contains a subdirectory like `http://magento.test/magento2ce`, specify `MAGENTO_CLI_COMMAND_PATH`.
+</div>
 
 Learn more about environmental settings in [Configuration][].
 
@@ -300,8 +300,9 @@ allure serve dev/tests/_output/allure-results/
 [install Allure]: https://github.com/allure-framework/allure2#download
 [java]: http://www.oracle.com/technetwork/java/javase/downloads/index.html
 [mftf tests]: introduction.md#mftf-tests
-[php]: https://devdocs.magento.com/guides/2.3/install-gde/system-requirements-tech.md#php
+[php]: https://devdocs.magento.com/guides/v2.3/install-gde/system-requirements-tech.md#php
 [PhpStorm]: https://www.jetbrains.com/phpstorm/
 [selenium server]: https://www.seleniumhq.org/download/
 [Set up a standalone MFTF]: #set-up-a-standalone-mftf
 [test suite]: suite.md
+[Find your MFTF version]: introduction.md#find-your-mftf-version

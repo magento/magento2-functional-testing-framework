@@ -1,6 +1,5 @@
 # Parameterized selectors
 
-
 Use the following examples to create and use parameterized selectors in the MFTF.
 
 ## Set up a selector in section
@@ -73,7 +72,7 @@ For the parameterized part of the selector, add `{{var1}}, {{var2}}, ..., {{varN
 </section>
 ```
 
-<div class="bs-callout .bs-callout-info">
+<div class="bs-callout bs-callout-info" markdown="1">
 There is no need to use sequential variables like `{{var1}}`, `{{var2}}`. Parameterized replacement reads variables and maps them to the test call of the element sequentially from left to right, meaning you can use a selector like `#element .{{categoryId}} .{{productId}}`."
 </div>
 

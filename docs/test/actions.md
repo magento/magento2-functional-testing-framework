@@ -1,6 +1,5 @@
 # Test actions
 
-
 Actions in the MFTF allow you to automate different scenarios of Magento user's actions.
 They are mostly XML implementations of [Codeception actions](http://codeception.com/docs/modules/WebDriver#Actions).
 Some actions drive browser elements, while others use REST APIs.
@@ -153,7 +152,6 @@ The only difference is that different data is assigned to the attributes, which 
 <!-- {% endraw %} -->
 
 Here, [`<click>`](#click) performs a click on a button that can be found by the selector that is stored in the `signInAccountButton` of the `StorefrontCustomerSignInFormSection`.
-See the `StorefrontCustomerSignInPage.xml` file code in [step 2](#section-code).
 
 ## Actions returning a variable
 
@@ -1349,7 +1347,7 @@ Note that the makeScreenshot action does not automatically add the screenshot to
 <makeScreenshot userInput="example" stepKey="screenshotPage"/>
 ```
 
-<div class=".bs-callout .bs-callout-info">
+<div class="bs-callout bs-callout-info">
 This action does not add a screenshot to the Allure [report](../reporting.md).</div>
 
 ### maximizeWindow
@@ -2474,7 +2472,7 @@ Attribute|Type|Use|Description
 
 Wait for all Magento loading overlays to disappear.
 
-<div class=".bs-callout .bs-callout-info">
+<div class="bs-callout bs-callout-info">
 The CSS class for loading masks is not used consistently throughout Magento.
 Therefore, this convenience function tries to wait for various specific selectors.</div>
 

@@ -11,8 +11,9 @@ You can create or update any component of the parent body in your new test/actio
 
 Specify needed variations for a parent object and produce a copy of the original that incorporates the specified changes (the "delta").
 
+<div class="bs-callout bs-callout-info">
 Unlike merging, the parent test (or action group) will still exist after the test generation.
- {:.bs-callout .bs-callout-info}
+</div>
 
 ## Extending tests
 

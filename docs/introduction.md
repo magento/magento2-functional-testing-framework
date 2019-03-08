@@ -1,6 +1,6 @@
-# Introduction to the Magento Functional Testing Framework version 2.3
+# Introduction to the Magento Functional Testing Framework
 
-<a href="https://devdocs.magento.com/mftf/introduction.html#find-version">Find out your version</a> of the MFTF.
+[Find your MFTF version][] of the MFTF.
 
 The latest Magento 2.3 release supports MFTF 2.3.13.
 The latest Magento 2.2 release supports MFTF 2.3.8.
@@ -15,9 +15,11 @@ MFTF improves:
 - **Maintainability** based on simple test creation and overall structure.
 
 Because MFTF tests are written in XML, you no longer need to learn PHP to write tests.
-<div class=".bs-callout .bs-callout-info">
+
+<div class="bs-callout bs-callout-info" markdown="1">
 We are actively developing functional tests.
 Refer to `<magento_root>/app/code/<vendor_name>/<module_name>/Test/Mftf/` for examples.
+Check out the [MFTF Test Migration][] repo.
 </div>
 
 ## Audience
@@ -46,7 +48,7 @@ As a Magento developer, test changes, such as extended search functionality, a n
 
 As a software engineer, perform regression testing before release to ensure that Magento works as expected with new functionality.
 
-## Find your MFTF version {#find-version}
+## Find your MFTF version
 
 There are two options to find out your MFTF version:
 
@@ -133,3 +135,5 @@ Follow the [MFTF project] and [contribute on Github].
 [contribute on Github]: https://github.com/magento/magento2-functional-testing-framework/blob/master/.github/CONTRIBUTING.md
 [Functional Testing Framework]: https://devdocs.magento.com/guides/v2.3/mtf/mtf_introduction.html
 [MFTF project]: https://github.com/magento/magento2-functional-testing-framework
+[Find your MFTF version]: #find-your-mftf-version
+[MFTF Test Migration]: https://github.com/magento/magento-functional-tests-migration

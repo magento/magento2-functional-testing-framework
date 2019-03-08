@@ -24,11 +24,14 @@ MFTF versioning policy follows [Semantic Versioning](https://semver.org/) guidel
 
 Version numbering schemes help users to understand the scope of the changes made a new release.
 
+```tree
 X.Y.Z
 | | |
 | | +-- Backward Compatible changes (Patch release - bug fixes, small additions)
 | +---- Backward Compatible changes (Minor release - small new features, bug fixes)
 +------ Backward Incompatible changes (Major release - new features and/or major changes)
+
+```
 
 For example:
 

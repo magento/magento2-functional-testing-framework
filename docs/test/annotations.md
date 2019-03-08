@@ -77,11 +77,13 @@ The `<group>` element is an implementation of a [`@group`] Codeception tag.
 Any test can be a part of multiple groups.
 The purpose of grouping is to create a set of test for a functionality or purpose, such as all cart tests or all slow tests and run them together locally.
 
-{:.bs-callout .bs-callout-warning}
-Group values cannot collide with [suite] names.
+<div class="bs-callout bs-callout-warning" markdown="1">
+Group values cannot collide with [suite][] names.
+</div>
 
-{:.bs-callout .bs-callout-tip}
+<div class="bs-callout bs-callout-tip" markdown="1">
 Add `<skip>` to the test to skip it during test run.
+</div>
 
 Attribute|Type|Use|Definition
 ---|---|---|---

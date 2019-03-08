@@ -13,7 +13,7 @@ In the bad example we see two parameters being passed into the selector with lit
 
 **Why?** The next person maintaining the test or extending it may not be able to understand what the parameters are referencing.
 
-<span stype="color:green">
+<span style="color:green">
 Good
 </span>
 
@@ -54,7 +54,7 @@ In the bad example, we perform some heavy UI steps first.
 
 **Why?** If something goes wrong there, then the critical `magentoCLI` commands may not get a chance to run, leaving Magento configured incorrectly for any upcoming tests.
 
-<span stype="color:green">
+<span style="color:green">
 Good:
 </span>
 
@@ -108,7 +108,7 @@ And for `seeElement` it will output something like this:
 There is a subtle distinction: The first is a failure but it is the desired result: a 'positive failure'.
 The second is a proper result of the action.
 
-<span stype="color:green">
+<span style="color:green">
 Good:
 </span>
 
@@ -128,7 +128,7 @@ Bad:
 
 Whenever possible, specify a `defaultValue` for action group arguments.
 
-<span stype="color:green">
+<span style="color:green">
 GOOD:
 </span>
 
@@ -176,7 +176,7 @@ Build your tests using action groups, even if an action group contains a single 
 Extending a single action group will update all tests that use this group.
 This improves maintainability as multiple instances of a failure can be fixed with a single action group update.
 
-<span stype="color:green">
+<span style="color:green">
 GOOD:
 </span>
 
@@ -234,7 +234,7 @@ Do not use numbers to make a `stepKey` unique.
 
 **Why?** This helps with readability and clarity.
 
-<span stype="color:green">
+<span style="color:green">
 GOOD:
 </span>
 
@@ -308,7 +308,7 @@ Example:
 </div>
 ```
 
-<span stype="color:green">
+<span style="color:green">
 GOOD:
 </span>
 
@@ -358,7 +358,7 @@ BAD:
 Use descriptive variable names to increase readability.
 **Why?** It makes the code easier to follow and update.
 
- <span stype="color:green">
+ <span style="color:green">
 GOOD:
 </span>
 
@@ -379,7 +379,7 @@ BAD:
 When working with input type `checkbox`, do not use the `click` action; use `checkOption` or `uncheckOption` instead.
 **Why?** A click does not make it clear what the ending state will be; it will simply toggle the current state. Using the proper actions will ensure the expected state of the checkbox.
 
-<span stype="color:green">
+<span style="color:green">
 GOOD:
 </span>
 

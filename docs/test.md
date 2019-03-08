@@ -6,7 +6,7 @@ Test cases in the Magento Functional Testing Framework (MFTF) are defined in XML
 MFTF `<tests>` is considered a sequence of actions with associated parameters.
 Any failed [assertion] within a test constitutes a failed test.
 
-<div class="bs-callout bs-callout-info">
+<div class="bs-callout bs-callout-info" markdown="1">
  `<before>` and `<after>` hooks are not global within `<tests>`.
 They only apply to the `<test>` in which they are declared.
 The steps in `<after>` are run in both successful **and** failed test runs.

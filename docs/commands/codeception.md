@@ -1,11 +1,11 @@
 # CLI commands: vendor/bin/codecept
 
-
-<div class="bs-callout bs-callout-warning">
+<div class="bs-callout bs-callout-warning" markdown="1">
 We do not recommend using Codeception commands directly as they can break the MFTF basic workflow.
-All the Codeception commands you need are wrapped using the [`mftf` tool][].</div>
+All the Codeception commands you need are wrapped using the [`mftf` tool][].
 
 To run the Codeception testing framework commands directly, change your directory to the `<Magento root>`.
+</div>
 
 ## Usage examples
 
@@ -35,7 +35,7 @@ vendor/bin/codecept run functional --group example --skip-group skip
 vendor/bin/codecept run
 ```
 
-<div class="bs-callout .bs-callout-info">
+<div class="bs-callout bs-callout-info">
 The following documentation corresponds to Codeception 2.3.8.
 </div>
 
