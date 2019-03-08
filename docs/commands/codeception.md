@@ -2,7 +2,7 @@
 
 <div class="bs-callout bs-callout-warning" markdown="1">
 We do not recommend using Codeception commands directly as they can break the MFTF basic workflow.
-All the Codeception commands you need are wrapped using the [`mftf` tool][].
+All the Codeception commands you need are wrapped using the [mftf tool][].
 
 To run the Codeception testing framework commands directly, change your directory to the `<Magento root>`.
 </div>
@@ -81,5 +81,5 @@ Options:
 
 <!-- Link definitions -->
 
-[`mftf` tool]: mftf.md
+[mftf tool]: mftf.md
 [annotation]: ../test/annotations.md

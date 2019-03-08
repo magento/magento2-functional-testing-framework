@@ -34,4 +34,4 @@ Your Debug Configuration should now be able to run your test and pause execution
 
 <!-- Link definitions -->
 [Xdebug]: https://xdebug.org/docs/install
-[PHPStorm]: https://github.com/SeleniumHQ/selenium/wiki/PageObjects
+[PHPStorm]: https://www.jetbrains.com/phpstorm/
