@@ -192,7 +192,7 @@ class ActionGroupObject
             );
         }
 
-        $resolvedActions = $this->addContextCommentsToActionList($resolvedActions);
+        $resolvedActions = $this->addContextCommentsToActionList($resolvedActions, $actionReferenceKey);
 
         return $resolvedActions;
     }
@@ -491,17 +491,18 @@ class ActionGroupObject
      * @param array $actionList
      * @return array
      */
-    private function addContextCommentsToActionList($actionList)
+    private function addContextCommentsToActionList($actionList, $actionReferenceKey)
     {
+        $actionStartComment = self::ACTION_GROUP_CONTEXT_START . $this->name . " (" . $actionReferenceKey . ")";
         $startAction = new ActionObject(
-            self::ACTION_GROUP_CONTEXT_START . $this->name,
+            $actionStartComment,
             ActionObject::ACTION_TYPE_COMMENT,
-            [ActionObject::ACTION_ATTRIBUTE_USERINPUT => self::ACTION_GROUP_CONTEXT_START . $this->name]
+            [ActionObject::ACTION_ATTRIBUTE_USERINPUT => $actionStartComment]
         );
         $endAction = new ActionObject(
-            self::ACTION_GROUP_CONTEXT_END,
+            self::ACTION_GROUP_CONTEXT_END . $this->name,
             ActionObject::ACTION_TYPE_COMMENT,
-            [ActionObject::ACTION_ATTRIBUTE_USERINPUT => self::ACTION_GROUP_CONTEXT_END]
+            [ActionObject::ACTION_ATTRIBUTE_USERINPUT => self::ACTION_GROUP_CONTEXT_END . $this->name]
         );
         return [$startAction->getStepKey() => $startAction] + $actionList + [$endAction->getStepKey() => $endAction];
     }
