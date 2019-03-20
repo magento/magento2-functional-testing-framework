@@ -12,19 +12,19 @@ To run the Codeception testing framework commands directly, change your director
 Run all the generated tests:
 
 ```bash
-vendor/bin/codecept run functional
+../../../vendor/bin/codecept run functional
 ```
 
 Run all tests without the `<group value="skip"/>` [annotation][]:
 
 ```bash
-vendor/bin/codecept run functional --skip-group skip
+../../../vendor/bin/codecept run functional --skip-group skip
 ```
 
 Run all tests with the `<group value="example"/>` [annotation][] but with no `<group value="skpip"/>`:
 
 ```bash
-vendor/bin/codecept run functional --group example --skip-group skip
+../../../vendor/bin/codecept run functional --group example --skip-group skip
 ```
 
 ## `codecept run`
@@ -32,7 +32,7 @@ vendor/bin/codecept run functional --group example --skip-group skip
 `codecept run` runs the test suites:
 
 ```bash
-vendor/bin/codecept run
+../../../vendor/bin/codecept run
 ```
 
 <div class="bs-callout bs-callout-info">
