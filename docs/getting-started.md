@@ -284,25 +284,25 @@ allure serve dev/tests/_output/allure-results/
 
 <!-- Link definitions -->
 
-[`codecept`]: commands/codeception.md
-[`generate:urn-catalog`]: commands/mftf.md#generateurn-catalog
-[`MAGENTO_BP`]: configuration.md#magento_bp
-[`mftf`]: commands/mftf.md
+[`codecept`]: commands/codeception.html
+[`generate:urn-catalog`]: commands/mftf.html#generateurn-catalog
+[`MAGENTO_BP`]: configuration.html#magento_bp
+[`mftf`]: commands/mftf.html
 [allure docs]: https://docs.qameta.io/allure/
 [Allure Framework]: http://allure.qatools.ru/
-[basic configuration]: configuration.md#basic-configuration
+[basic configuration]: configuration.html#basic-configuration
 [build]: #build-project
 [chrome driver]: https://sites.google.com/a/chromium.org/chromedriver/downloads
 [Codeception Test execution]: https://blog.jetbrains.com/phpstorm/2017/03/codeception-support-comes-to-phpstorm-2017-1/
 [composer]: https://getcomposer.org/download/
-[Configuration]: configuration.md
+[Configuration]: configuration.html
 [contributing]: https://github.com/magento/magento2-functional-testing-framework/blob/develop/.github/CONTRIBUTING.md
 [install Allure]: https://github.com/allure-framework/allure2#download
 [java]: http://www.oracle.com/technetwork/java/javase/downloads/index.html
-[mftf tests]: introduction.md#mftf-tests
+[mftf tests]: introduction.html#mftf-tests
 [php]: https://devdocs.magento.com/guides/v2.3/install-gde/system-requirements-tech.html#php
 [PhpStorm]: https://www.jetbrains.com/phpstorm/
 [selenium server]: https://www.seleniumhq.org/download/
 [Set up a standalone MFTF]: #set-up-a-standalone-mftf
-[test suite]: suite.md
-[Find your MFTF version]: introduction.md#find-your-mftf-version
+[test suite]: suite.html
+[Find your MFTF version]: introduction.html#find-your-mftf-version

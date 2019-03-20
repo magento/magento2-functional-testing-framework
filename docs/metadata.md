@@ -554,7 +554,7 @@ Example:
 
 <!-- LINK DEFINITIONS -->
 
-[actions]: test/actions.md
+[actions]: test/actions.html
 [api reference]: https://devdocs.magento.com/guides/v2.3/get-started/bk-get-started-api.html
 [application/x-www-form-urlencoded]: https://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.1
 {:target="_blank"}
@@ -562,12 +562,12 @@ Example:
 [catalogCategoryRepositoryV1SavePostBody]: #catalogCategoryRepositoryV1SavePostBody
 [contentType]: #contentType-tag
 [Create a new category]: #create-object-as-adminOauth
-[createData]: test/actions.md#createdata
+[createData]: test/actions.html#createdata
 [delete a category by its ID]: #delete-object-as-adminOauth
-[deleteData]: test/actions.md#deletedata
-[entity]: data.md#entity-tag
+[deleteData]: test/actions.html#deletedata
+[entity]: data.html#entity-tag
 [get information about a category by its ID]: #get-object-as-adminOauth
-[getData]: test/actions.md#getdata
+[getData]: test/actions.html#getdata
 [HTML forms]: https://www.w3.org/TR/html401/interact/forms.html
 {:target="_blank"}
 [oauth]: https://devdocs.magento.com/guides/v2.3/get-started/authentication/gs-authentication-oauth.html
@@ -577,7 +577,7 @@ Example:
 [rest request]: #handling-with-api
 [html form]: #using-html-forms
 [update category data by its ID]: #update-object-as-adminOauth
-[updateData]: test/actions.md#updatedata
+[updateData]: test/actions.html#updatedata
 [rest response]: #rest-response
 
 *[CRUD]: Create Read Update Delete

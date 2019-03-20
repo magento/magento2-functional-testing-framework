@@ -70,7 +70,7 @@ See the license [here][] or contact [license@magentocommerce.com][] for a copy.
 
 <!-- Link Definitions -->
 [Getting Started]: https://devdocs.magento.com/mftf/getting-started.html
-[Contribution Guidelines]: .github/CONTRIBUTING.md
+[Contribution Guidelines]: .github/CONTRIBUTING.html
 [DevDocs Contributing]: https://github.com/magento/devdocs/blob/master/.github/CONTRIBUTING.md
 [security@magento.com]: mailto:security@magento.com
 [encryption key]: https://info2.magento.com/rs/magentoenterprise/images/security_at_magento.asc

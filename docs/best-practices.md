@@ -148,19 +148,19 @@ Since the configurable product module could be disabled, this approach is more r
 
 <!-- Link definitions -->
 
-[`<after>`]: test/actions.md#before-and-after
-[`<before>`]: test/actions.md#before-and-after
-[`<comment>`]: test/actions.md#comment
-[`<createData>`]: test/actions.md#createdata
-[`<deleteData>`]: test/actions.md#deletedata
-[`<wait>`]: test/actions.md#wait
-[`<waitForElement>`]: test/actions.md#waitforelement
-[`<waitForElementVisible>`]: test/actions.md#waitforelementvisible
-[`<waitForLoadingMaskToDisappear>`]: test/actions.md#waitforloadingmasktodisappear
-[Action group]: test/action-groups.md
-[annotations]: test/annotations.md
-[entity]: data.md
-[extension]: extending.md
-[merging]: merging.md
-[parameterized selectors]: section/parameterized-selectors.md
-[sections]: section.md
+[`<after>`]: test/actions.html#before-and-after
+[`<before>`]: test/actions.html#before-and-after
+[`<comment>`]: test/actions.html#comment
+[`<createData>`]: test/actions.html#createdata
+[`<deleteData>`]: test/actions.html#deletedata
+[`<wait>`]: test/actions.html#wait
+[`<waitForElement>`]: test/actions.html#waitforelement
+[`<waitForElementVisible>`]: test/actions.html#waitforelementvisible
+[`<waitForLoadingMaskToDisappear>`]: test/actions.html#waitforloadingmasktodisappear
+[Action group]: test/action-groups.html
+[annotations]: test/annotations.html
+[entity]: data.html
+[extension]: extending.html
+[merging]: merging.html
+[parameterized selectors]: section/parameterized-selectors.html
+[sections]: section.html

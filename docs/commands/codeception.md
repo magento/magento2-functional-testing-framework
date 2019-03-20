@@ -81,5 +81,5 @@ Options:
 
 <!-- Link definitions -->
 
-[mftf tool]: mftf.md
-[annotation]: ../test/annotations.md
+[mftf tool]: mftf.html
+[annotation]: ../test/annotations.html

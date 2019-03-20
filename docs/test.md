@@ -136,12 +136,12 @@ See [Action groups][action group] for more information.
 [`<before>`]: #before-tag
 [`<test>`]: #test-tag
 [`<tests>`]: #tests-tag
-[action group]: ./test/action-groups.md
-[actions]: ./test/actions.md
+[action group]: ./test/action-groups.html
+[actions]: ./test/actions.html
 [Allure]: https://github.com/allure-framework/
-[Annotations]: ./test/annotations.md
-[assertion]: ./test/assertions.md
+[Annotations]: ./test/annotations.html
+[assertion]: ./test/assertions.html
 [Codeception]: https://codeception.com/docs/07-AdvancedUsage
-[extend]: extending.md
-[merging]: ./merging.md#insert-after
-[suites]: ./suite.md
+[extend]: extending.html
+[merging]: ./merging.html#insert-after
+[suites]: ./suite.html

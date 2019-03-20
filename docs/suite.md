@@ -282,12 +282,12 @@ Attributes|Type|Use|Description
 `remove`|boolean|optional|Removing the filter during merging.
 
 <!-- Link definitions -->
-[actions]: test/actions.md
-[action groups]: test/action-groups.md
+[actions]: test/actions.html
+[action groups]: test/action-groups.html
 [`<after>`]: #after-tag
 [`<before>`]: #before-tag
-[`generate:tests`]: commands/mftf.md#generatetests
-[test]: test.md
+[`generate:tests`]: commands/mftf.html#generatetests
+[test]: test.html
 [`<test>`]: #test-tag
 [`<group>`]: #group-tag
 [`<module>`]: #module-tag

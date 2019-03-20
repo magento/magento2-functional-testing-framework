@@ -562,10 +562,10 @@ The `_defaultSample` results corresponds to:
 
 <!-- Link definitions -->
 
-[`codecept`]: ./commands/codeception.md
-[`mftf`]: ./commands/mftf.md
-[`<data>`]: ./data.md
-[elements]: ./section.md#element-tag
-[`<pages>`]: ./page.md
-[`<sections>`]: ./section.md
-[`<tests>`]: ./test.md
+[`codecept`]: ./commands/codeception.html
+[`mftf`]: ./commands/mftf.html
+[`<data>`]: ./data.html
+[elements]: ./section.html#element-tag
+[`<pages>`]: ./page.html
+[`<sections>`]: ./section.html
+[`<tests>`]: ./test.html
