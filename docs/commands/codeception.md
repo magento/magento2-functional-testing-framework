@@ -12,19 +12,19 @@ To run the Codeception testing framework commands directly, change your director
 Run all the generated tests:
 
 ```bash
-../../../vendor/bin/codecept run functional
+../../../vendor/bin/codecept run functional -c dev/tests/acceptance/codeception.yml
 ```
 
 Run all tests without the `<group value="skip"/>` [annotation][]:
 
 ```bash
-../../../vendor/bin/codecept run functional --skip-group skip
+../../../vendor/bin/codecept run functional --skip-group skip  -c dev/tests/acceptance/codeception.yml
 ```
 
 Run all tests with the `<group value="example"/>` [annotation][] but with no `<group value="skpip"/>`:
 
 ```bash
-../../../vendor/bin/codecept run functional --group example --skip-group skip
+../../../vendor/bin/codecept run functional --group example --skip-group skip -c dev/tests/acceptance/codeception.yml
 ```
 
 ## `codecept run`
