@@ -222,6 +222,8 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
     }
 
     /**
+     * Convert headers metadata into an array of objects for further use in.
+     *
      * @param array $opDefArray
      * @return array
      */
@@ -242,6 +244,8 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
     }
 
     /**
+     * Convert params metadata into an array of objects.
+     *
      * @param array $opDefArray
      * @return array
      */

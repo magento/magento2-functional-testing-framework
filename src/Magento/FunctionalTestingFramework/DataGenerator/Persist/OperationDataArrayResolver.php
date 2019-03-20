@@ -103,9 +103,21 @@ class OperationDataArrayResolver
             $operationElementType = $operationElement->getValue();
 
             if (in_array($operationElementType, self::PRIMITIVE_TYPES)) {
-                $this->resolvePrimitiveReferenceElement($entityObject, $operationElement, $operationElementType, $operationDataArray);
+                $this->resolvePrimitiveReferenceElement(
+                    $entityObject,
+                    $operationElement,
+                    $operationElementType,
+                    $operationDataArray
+                );
             } else {
-                $this->resolveNonPrimitiveReferenceElement($entityObject, $operation, $fromArray, $operationElementType, $operationElement, $operationDataArray);
+                $this->resolveNonPrimitiveReferenceElement(
+                    $entityObject,
+                    $operation,
+                    $fromArray,
+                    $operationElementType,
+                    $operationElement,
+                    $operationDataArray
+                );
             }
         }
 
@@ -323,6 +335,8 @@ class OperationDataArrayResolver
     }
 
     /**
+     * Resolve a reference for a primitive piece of data
+     *
      * @param EntityDataObject $entityObject
      * @param $operationElement
      * @param $operationElementType
@@ -364,6 +378,8 @@ class OperationDataArrayResolver
     }
 
     /**
+     * Resolves DataObjects referenced by the operation
+     *
      * @param $entityObject
      * @param $operation
      * @param $fromArray
