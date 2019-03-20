@@ -24,6 +24,7 @@ class PersistenceActionGroupAppendingTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
+		$I->comment("Entering Action Group DataPersistenceAppendingActionGroup (ACTIONGROUPBEFORE)");
 		$I->amGoingTo("create entity that has the stepKey: createDataACTIONGROUPBEFORE");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createDataACTIONGROUPBEFORE",
@@ -53,6 +54,7 @@ class PersistenceActionGroupAppendingTestCest
 			null
 		);
 		$I->comment(PersistedObjectHandler::getInstance()->retrieveEntityField('createData', 'field', 'hook'));
+		$I->comment("Exiting Action Group DataPersistenceAppendingActionGroup (ACTIONGROUPBEFORE)");
 	}
 
 	/**
@@ -64,6 +66,7 @@ class PersistenceActionGroupAppendingTestCest
 	 */
 	public function PersistenceActionGroupAppendingTest(AcceptanceTester $I)
 	{
+		$I->comment("Entering Action Group DataPersistenceAppendingActionGroup (ACTIONGROUP)");
 		$I->amGoingTo("create entity that has the stepKey: createDataACTIONGROUP");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createDataACTIONGROUP",
@@ -93,5 +96,6 @@ class PersistenceActionGroupAppendingTestCest
 			null
 		);
 		$I->comment(PersistedObjectHandler::getInstance()->retrieveEntityField('createDataACTIONGROUP', 'field', 'test'));
+		$I->comment("Exiting Action Group DataPersistenceAppendingActionGroup (ACTIONGROUP)");
 	}
 }

@@ -33,8 +33,10 @@ class ActionGroupWithNoDefaultTestCest
 			[],
 			null
 		);
+		$I->comment("Entering Action Group FunctionalActionGroup (beforeGroup)");
 		$I->fillField("#foo", "myData1");
 		$I->fillField("#bar", "myData2");
+		$I->comment("Exiting Action Group FunctionalActionGroup (beforeGroup)");
 	}
 
 	/**
@@ -43,8 +45,10 @@ class ActionGroupWithNoDefaultTestCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
+		$I->comment("Entering Action Group FunctionalActionGroup (afterGroup)");
 		$I->fillField("#foo", "myData1");
 		$I->fillField("#bar", "myData2");
+		$I->comment("Exiting Action Group FunctionalActionGroup (afterGroup)");
 	}
 
 	/**
@@ -68,9 +72,11 @@ class ActionGroupWithNoDefaultTestCest
 	public function ActionGroupWithNoDefaultTest(AcceptanceTester $I)
 	{
 		$I->amOnPage("/someUrl");
+		$I->comment("Entering Action Group FunctionalActionGroupNoDefault (actionGroupWithDataOverride1)");
 		$I->fillField("#foo", "Jane");
 		$I->fillField("#bar", "Dane");
 		$I->see("#Jane .Dane");
+		$I->comment("Exiting Action Group FunctionalActionGroupNoDefault (actionGroupWithDataOverride1)");
 		$I->click("loginButton");
 	}
 }

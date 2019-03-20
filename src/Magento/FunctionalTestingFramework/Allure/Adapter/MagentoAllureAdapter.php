@@ -24,6 +24,7 @@ use Codeception\Event\StepEvent;
  * Extends AllureAdapter to provide further information for allure reports
  *
  * @package Magento\FunctionalTestingFramework\Allure
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 
 class MagentoAllureAdapter extends AllureCodeception
@@ -195,7 +196,7 @@ class MagentoAllureAdapter extends AllureCodeception
                     // If step didn't pass, need to end action group nesting and set overall step status
                     $actionGroupStepContainer->setStatus($step->getStatus());
                     $formattedStep->addStep($actionGroupStepContainer);
-                    $actionGroupStepContainer = null;                    
+                    $actionGroupStepContainer = null;
                 }
             } else {
                 // Add step as normal
