@@ -168,12 +168,9 @@ class MagentoAllureAdapter extends AllureCodeception
      */
     public function testEnd()
     {
+        // Pops top of stepStorage, need to add it back in after processing
         $rootStep = $this->getLifecycle()->getStepStorage()->pollLast();
-        $formattedStep = new Step();
-        $formattedStep->setName($rootStep->getName());
-        $formattedStep->setStart($rootStep->getStart());
-        $formattedStep->setStatus($rootStep->getStatus());
-
+        $formattedSteps = [];
         $actionGroupStepContainer = null;
 
         foreach ($rootStep->getSteps() as $step) {
@@ -185,7 +182,7 @@ class MagentoAllureAdapter extends AllureCodeception
             }
             // if actionGroup ended, add stack to steps
             if (stripos($step->getName(), ActionGroupObject::ACTION_GROUP_CONTEXT_END) !== false) {
-                $formattedStep->addStep($actionGroupStepContainer);
+                $formattedSteps[] = $actionGroupStepContainer;
                 $actionGroupStepContainer = null;
                 continue;
             }
@@ -195,18 +192,25 @@ class MagentoAllureAdapter extends AllureCodeception
                 if ($step->getStatus() !== self::STEP_PASSED) {
                     // If step didn't pass, need to end action group nesting and set overall step status
                     $actionGroupStepContainer->setStatus($step->getStatus());
-                    $formattedStep->addStep($actionGroupStepContainer);
+                    $formattedSteps[] = $actionGroupStepContainer;
                     $actionGroupStepContainer = null;
                 }
             } else {
                 // Add step as normal
-                $formattedStep->addStep($step);
+                $formattedSteps[] = $step;
             }
         }
 
-        // Reset storage with new formatted nested steps
-        $this->getLifecycle()->getStepStorage()->clear();
-        $this->getLifecycle()->getStepStorage()->put($formattedStep);
+        // No public function for setting the step's steps
+        call_user_func(\Closure::bind(
+            function () use ($rootStep, $formattedSteps) {
+                $rootStep->steps = $formattedSteps;
+            },
+            null,
+            $rootStep
+        ));
+
+        $this->getLifecycle()->getStepStorage()->put($rootStep);
 
         $this->getLifecycle()->fire(new TestCaseFinishedEvent());
     }
