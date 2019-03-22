@@ -6,6 +6,8 @@ In this example we add a `<click>` command to check the checkbox that our extens
 
 ## Starting action group
 
+<!-- {% raw %} -->
+
 ```xml
 <actionGroup name="FillAdminSimpleProductForm">
     <arguments>
@@ -96,3 +98,5 @@ Note that there are now two action groups below.
     <seeInField userInput="{{simpleProduct.urlKey}}" selector="{{AdminProductSEOSection.urlKeyInput}}" stepKey="assertFieldUrlKey"/>
 </actionGroup>
 ```
+
+<!-- {% endraw %} -->
