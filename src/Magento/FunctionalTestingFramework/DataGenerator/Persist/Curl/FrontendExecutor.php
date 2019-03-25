@@ -82,7 +82,7 @@ class FrontendExecutor extends AbstractExecutor implements CurlInterface
     private function authorize()
     {
         $url = $this->getBaseUrl() . 'customer/account/login/';
-        $this->transport->write($url);
+        $this->transport->write($url, [], CurlInterface::GET);
         $this->read();
 
         $url = $this->getBaseUrl() . 'customer/account/loginPost/';

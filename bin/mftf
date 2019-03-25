@@ -29,7 +29,7 @@ try {
 try {
     $application = new Symfony\Component\Console\Application();
     $application->setName('Magento Functional Testing Framework CLI');
-    $application->setVersion('2.3.11');
+    $application->setVersion('2.3.14');
     /** @var \Magento\FunctionalTestingFramework\Console\CommandListInterface $commandList */
     $commandList = new \Magento\FunctionalTestingFramework\Console\CommandList;
     foreach ($commandList->getCommands() as $command) {

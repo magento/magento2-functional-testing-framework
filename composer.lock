@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0a58509a75dc4ea99a4bef3d13ee4075",
+    "content-hash": "53f93e4e30c11102c65e0920aa737ff3",
     "packages": [
         {
             "name": "allure-framework/allure-codeception",
-            "version": "1.2.7",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/allure-framework/allure-codeception.git",
-                "reference": "48598f4b4603b50b663bfe977260113a40912131"
+                "reference": "9d31d781b3622b028f1f6210bc76ba88438bd518"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/allure-framework/allure-codeception/zipball/48598f4b4603b50b663bfe977260113a40912131",
-                "reference": "48598f4b4603b50b663bfe977260113a40912131",
+                "url": "https://api.github.com/repos/allure-framework/allure-codeception/zipball/9d31d781b3622b028f1f6210bc76ba88438bd518",
+                "reference": "9d31d781b3622b028f1f6210bc76ba88438bd518",
                 "shasum": ""
             },
             "require": {
@@ -55,7 +55,7 @@
                 "steps",
                 "testing"
             ],
-            "time": "2018-03-07T11:18:27+00:00"
+            "time": "2018-12-18T19:47:23+00:00"
         },
         {
             "name": "allure-framework/allure-php-api",
@@ -2783,6 +2783,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2018-08-09T05:50:03+00:00"
         },
         {
