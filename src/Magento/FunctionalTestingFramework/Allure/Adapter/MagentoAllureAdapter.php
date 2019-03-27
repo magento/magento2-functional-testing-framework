@@ -98,10 +98,13 @@ class MagentoAllureAdapter extends AllureCodeception
     }
 
     /**
-     * Override of parent method, only different to prevent replacing of . to •
+     * Override of parent method:
+     *     prevent replacing of . to •
+     *     strips control characters
      *
      * @param StepEvent $stepEvent
      * @return void
+     * @throws \Yandex\Allure\Adapter\AllureException
      */
     public function stepBefore(StepEvent $stepEvent)
     {
