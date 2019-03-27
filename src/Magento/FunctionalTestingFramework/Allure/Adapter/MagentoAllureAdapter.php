@@ -117,6 +117,9 @@ class MagentoAllureAdapter extends AllureCodeception
 
         $stepName = $stepAction . ' ' . $stepArgs;
 
+        // Strip control characters so that report generation does not fail
+        $stepName = preg_replace('/[[:cntrl:]]/', '', $stepName);
+
         $this->emptyStep = false;
         $this->getLifecycle()->fire(new StepStartedEvent($stepName));
     }
