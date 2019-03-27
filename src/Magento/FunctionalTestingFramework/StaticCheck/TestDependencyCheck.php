@@ -215,7 +215,8 @@ class TestDependencyCheck implements StaticCheckInterface
 
             if (!empty($violatingReferences)) {
                 // Build error output
-                $errorOutput = "\nFile \"{$filePath->getRealPath()}\"\ncontains entity references that violate dependency constraints:\n\t\t";
+                $errorOutput = "\nFile \"{$filePath->getRealPath()}\"";
+                $errorOutput .= "\ncontains entity references that violate dependency constraints:\n\t\t";
                 foreach ($violatingReferences as $entityName => $files) {
                     $errorOutput .= "\n\t {$entityName} from module(s): " . implode(", ", $files);
                 }
