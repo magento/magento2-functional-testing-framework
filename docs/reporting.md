@@ -344,13 +344,13 @@ Refer to the [Reporting section][] for more Allure CLI details.
 
 <!-- Link definitions -->
 
-[`after`]: test.html#after-tag
-[`run:group`]: commands/mftf.html#rungroup
-[`run:test`]: commands/mftf.html#runtest
+[`after`]: test.md#after-tag
+[`run:group`]: commands/mftf.md#rungroup
+[`run:test`]: commands/mftf.md#runtest
 [Allure Framework]: https://docs.qameta.io/allure/
 [Allure Test Report]: http://allure.qatools.ru/
-[codecept]: commands/codeception.html
+[codecept]: commands/codeception.md
 [codeception]: https://codeception.com/docs/reference/Commands
-[mftf]: commands/mftf.html
+[mftf]: commands/mftf.md
 [report an issue]: https://github.com/magento/magento2-functional-testing-framework/blob/master/.github/CONTRIBUTING.md#report-an-issue
 [Reporting section]: https://docs.qameta.io/allure/#_reporting

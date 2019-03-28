@@ -74,7 +74,7 @@ This emphasizes the practice for the `stepKey` of `createData` to be descriptive
 
 ## Use data returned by test actions
 
-A test can also reference data that was returned as a result of [test actions](./test/actions.html#actions-returning-a-variable), like the action `<grabValueFrom selector="someSelector" stepKey="grabStepKey>`.
+A test can also reference data that was returned as a result of [test actions](./test/actions.md#actions-returning-a-variable), like the action `<grabValueFrom selector="someSelector" stepKey="grabStepKey>`.
 
 Further in the test, the data grabbed by the `someSelector` selector can be referenced using the `stepKey` value. In this case, it is `grabStepKey`.
 
@@ -89,7 +89,7 @@ The following example shows the usage of `grabValueFrom` in testing, where the r
 
 The data to operate against can be included as literals in a test. Hard-coded data input can be useful in assertions.
 
-See also [Actions](./test/actions.html).
+See also [Actions](./test/actions.md).
 
 ```xml
 userInput="We'll email you an order confirmation with details and tracking info."

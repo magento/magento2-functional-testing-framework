@@ -2,9 +2,6 @@
 
 [Find your MFTF version][] of the MFTF.
 
-The latest Magento 2.3 release supports MFTF 2.3.13.
-The latest Magento 2.2 release supports MFTF 2.3.8.
-
 The Magento Functional Testing Framework (MFTF) aims to replace the [Functional Testing Framework] in future releases.
 MFTF improves:
 
