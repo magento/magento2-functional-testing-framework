@@ -28,6 +28,13 @@ class ActionGroupObjectBuilder
     private $actionObjects = [];
 
     /**
+     * Action Group Object Builder default entity annotations.
+     *
+     * @var array
+     */
+    private $annotations = [];
+
+    /**
      * Action Group Object Builder default entity arguments.
      *
      * @var array
@@ -108,6 +115,7 @@ class ActionGroupObjectBuilder
     {
         return new ActionGroupObject(
             $this->name,
+            $this->annotations,
             $this->arguments,
             $this->actionObjects,
             $this->extends

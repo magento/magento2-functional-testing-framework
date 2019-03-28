@@ -65,6 +65,20 @@ class ActionGroupObject
     private $arguments;
 
     /**
+     * An array used to store annotation information to values
+     *
+     * @var array
+     */
+    private $annotations;
+
+    /**
+     * An array used to store a list of filenames the action group is created by
+     *
+     * @var array
+     */
+    private $filenames = [];
+
+    /**
      * String of parent Action Group
      *
      * @var string
@@ -75,11 +89,13 @@ class ActionGroupObject
      * ActionGroupObject constructor.
      *
      * @param string           $name
+     * @param array            $annotations
      * @param ArgumentObject[] $arguments
      * @param array            $actions
      * @param string           $parentActionGroup
+     * @param string           $filename
      */
-    public function __construct($name, $arguments, $actions, $parentActionGroup)
+    public function __construct($name, $annotations, $arguments, $actions, $parentActionGroup, $filename)
     {
         $this->varAttributes = array_merge(
             ActionObject::SELECTOR_ENABLED_ATTRIBUTES,
@@ -87,9 +103,14 @@ class ActionGroupObject
         );
         $this->varAttributes[] = ActionObject::ACTION_ATTRIBUTE_URL;
         $this->name = $name;
+        $this->annotations = $annotations;
         $this->arguments = $arguments;
         $this->parsedActions = $actions;
         $this->parentActionGroup = $parentActionGroup;
+        $this->filenames = array_merge(
+            $this->filenames,
+            [$filename]
+        );
     }
 
     /**
@@ -437,6 +458,26 @@ class ActionGroupObject
     public function getArguments()
     {
         return $this->arguments;
+    }
+
+    /**
+     * Getter for the Action Group Annotations
+     *
+     * @return array
+     */
+    public function getAnnotations()
+    {
+        return $this->annotations;
+    }
+
+    /**
+     * Getter for the Action Group File Names
+     *
+     * @return array
+     */
+    public function getFileNames()
+    {
+        return $this->filenames;
     }
 
     /**
