@@ -6,15 +6,15 @@
 
 ## Installation
 
-For the installation guidelines and system requirements, refer to [Getting Started](https://devdocs.magento.com/mftf/2.3/getting-started.html).
+For the installation guidelines and system requirements, refer to [Getting Started][].
 
 ## Contributing
 
 We would appreciate your contributions to new components or new features, changes to the existing features, tests, documentation, specifications, bug fixes, optimizations, or just good suggestions.
 Report about an issue or request features opening a GitHub issue.
-Learn more about contributing in our [Contribution Guidelines](.github/CONTRIBUTING.md).
+Learn more about contributing in our [Contribution Guidelines][].
 
-If you want to participate in the documentation work, see [DevDocs Contributing](https://github.com/magento/devdocs/blob/master/.github/CONTRIBUTING.md).
+If you want to participate in the documentation work, see [DevDocs Contributing][].
 
 ### Labels applied by the MFTF team
 
@@ -55,15 +55,26 @@ These labels are applied by the MFTF development team to community contributed i
 
 ## Reporting security issues
 
-To report security vulnerabilities and other security issues in the Magento software or web sites, send an email with the report at [security@magento.com](mailto:security@magento.com).
+To report security vulnerabilities and other security issues in the Magento software or web sites, send an email with the report at [security@magento.com][].
 Do not report security issues using GitHub.
-Be sure to encrypt your e-mail with our [encryption key](https://info2.magento.com/rs/magentoenterprise/images/security_at_magento.asc) if it includes sensitive information.
-Learn more about reporting security issues [here](https://magento.com/security/reporting-magento-security-issue).
+Be sure to encrypt your e-mail with our [encryption key][] if it includes sensitive information.
+Learn more about reporting security issues [here][].
 
-Stay up-to-date on the latest security news and patches for Magento by signing up for [Security Alert Notifications](https://magento.com/security/sign-up).
+Stay up-to-date on the latest security news and patches for Magento by signing up for [Security Alert Notifications][].
 
 ## License
 
 Each Magento source file included in this distribution is licensed under AGPL 3.0.
 
-See the license [here](LICENSE_AGPL3.txt) or contact [license@magentocommerce.com](mailto:license@magentocommerce.com) for a copy.
+See the license [here][] or contact [license@magentocommerce.com][] for a copy.
+
+<!-- Link Definitions -->
+[Getting Started]: docs/getting-started.md
+[Contribution Guidelines]: .github/CONTRIBUTING.html
+[DevDocs Contributing]: https://github.com/magento/devdocs/blob/master/.github/CONTRIBUTING.md
+[security@magento.com]: mailto:security@magento.com
+[encryption key]: https://info2.magento.com/rs/magentoenterprise/images/security_at_magento.asc
+[here]: https://magento.com/security/reporting-magento-security-issue
+[Security Alert Notifications]: https://magento.com/security/sign-up
+[here]: LICENSE_AGPL3.txt
+[license@magentocommerce.com]: mailto:license@magentocommerce.com
