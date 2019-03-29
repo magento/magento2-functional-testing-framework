@@ -6,8 +6,6 @@
 
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
-use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
-use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
@@ -28,7 +26,7 @@ class ActionGroupAnnotationExtractor extends AnnotationExtractor
      * @param array  $testAnnotations
      * @param string $filename
      * @return array
-     * @throws XmlException
+     * @throws \Exception
      */
     public function extractAnnotations($testAnnotations, $filename)
     {
@@ -40,7 +38,8 @@ class ActionGroupAnnotationExtractor extends AnnotationExtractor
         foreach ($annotations as $annotationKey => $annotationData) {
             $annotationObjects[$annotationKey] = $annotationData[parent::ANNOTATION_VALUE];
         }
-        if(defined('COMMAND') and COMMAND == self::GENERATE_DOCS_COMMAND) {
+        // TODO: Remove this when all action groups have annotations
+        if ($this->isCommandDefined()) {
             $this->validateMissingAnnotations($annotationObjects, $filename);
         }
 
@@ -49,8 +48,10 @@ class ActionGroupAnnotationExtractor extends AnnotationExtractor
 
     /**
      * Validates given annotations against list of required annotations.
+     *
      * @param array $annotationObjects
      * @return void
+     * @throws \Exception
      */
     private function validateMissingAnnotations($annotationObjects, $filename)
     {
@@ -68,6 +69,20 @@ class ActionGroupAnnotationExtractor extends AnnotationExtractor
                 $message,
                 ["actionGroup" => $filename, "missingAnnotations" => implode(", ", $missingAnnotations)]
             );
+        }
+    }
+
+    /**
+     * Checks if command is defined as generate:docs
+     *
+     * @return boolean
+     */
+    private function isCommandDefined()
+    {
+        if (defined('COMMAND') and COMMAND == self::GENERATE_DOCS_COMMAND) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

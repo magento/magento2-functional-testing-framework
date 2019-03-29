@@ -11,7 +11,6 @@ use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 
-
 /**
  * Class TestGenerator
  * @SuppressWarnings(PHPMD)
@@ -64,7 +63,6 @@ class DocGenerator
     /**
      * DocGenerator constructor.
      *
-     * @param array    $actionGroups
      */
     private function __construct()
     {
@@ -74,8 +72,9 @@ class DocGenerator
     /**
      * This creates html documentation for objects passed in
      *
-     * @param ActionGroupObject[]|TestObject[]     $annotatedObjects
-     * @param string                               $outputDir
+     * @param ActionGroupObject[]|TestObject[] $annotatedObjects
+     * @param string                           $outputDir
+     * @return void
      * @throws TestFrameworkException
      */
     public function createDocumentation($annotatedObjects, $outputDir, $clean)
@@ -88,7 +87,7 @@ class DocGenerator
         $filePath = $fullPath . self::DOC_NAME;
 
         if (!file_exists($fullPath)) {
-            mkdir(dirname($fullPath), 0755, true);
+            mkdir($fullPath, 0755, true);
         }
         if (file_exists($filePath) and !$clean) {
             throw new TestFrameworkException(
@@ -103,7 +102,8 @@ class DocGenerator
             $arguments = $object->getArguments();
 
             $info = [
-                self::ANNOTATION_DESCRIPTION => $annotations[self::ANNOTATION_DESCRIPTION] ?? 'NO_DESCRIPTION_SPECIFIED',
+                self::ANNOTATION_DESCRIPTION => $annotations[self::ANNOTATION_DESCRIPTION]
+                    ?? 'NO_DESCRIPTION_SPECIFIED',
                 self::FILENAMES => $filenames,
                 self::ARGUMENTS => $arguments
                 ];
@@ -121,15 +121,13 @@ class DocGenerator
 
         $markdown = $this->transformToMarkdown($pageGroups);
 
-
-
         file_put_contents($filePath, $markdown);
     }
 
     /**
      * This creates html documentation for objects passed in
      *
-     * @param array     $annotationList
+     * @param array $annotationList
      * @return string
      */
     private function transformToMarkdown($annotationList)
@@ -141,24 +139,21 @@ class DocGenerator
             PHP_EOL;
 
         $markdown .= "##List of Pages" . PHP_EOL;
-        foreach($annotationList as $group => $objects)
-        {
+        foreach ($annotationList as $group => $objects) {
             $markdown .= "- [ $group ](#$group)" . PHP_EOL;
         }
         $markdown .= "---" . PHP_EOL;
-        foreach($annotationList as $group => $objects)
-        {
+        foreach ($annotationList as $group => $objects) {
             $markdown .= "<a name=\"$group\"></a>" . PHP_EOL;
             $markdown .= "##$group" . PHP_EOL . PHP_EOL;
-            foreach($objects as $name => $annotations)
-            {
+            foreach ($objects as $name => $annotations) {
                 $markdown .= "###$name" . PHP_EOL;
                 $markdown .= $annotations[self::ANNOTATION_DESCRIPTION] . PHP_EOL . PHP_EOL;
-                if(!empty($annotations[self::ARGUMENTS])) {
+                if (!empty($annotations[self::ARGUMENTS])) {
                     $markdown .= "Action Group Arguments:" . PHP_EOL . PHP_EOL;
                     $markdown .= "| Name | Type |" . PHP_EOL;
                     $markdown .= "| --- | --- |" . PHP_EOL;
-                    foreach($annotations[self::ARGUMENTS] as $argument) {
+                    foreach ($annotations[self::ARGUMENTS] as $argument) {
                         $argumentName = $argument->getName();
                         $argumentType = $argument->getDataType();
                         $markdown .= "| $argumentName | $argumentType |" . PHP_EOL;
@@ -166,8 +161,7 @@ class DocGenerator
                     $markdown .= PHP_EOL;
                 }
                 $markdown .= "Located in:" . PHP_EOL;
-                foreach($annotations[self::FILENAMES] as $filename)
-                {
+                foreach ($annotations[self::FILENAMES] as $filename) {
                     $relativeFilename = str_replace(MAGENTO_BP . DIRECTORY_SEPARATOR, "", $filename);
                     $markdown .= "- $relativeFilename";
                 }
@@ -180,22 +174,20 @@ class DocGenerator
     /**
      * Flattens array to one level
      *
-     * @param array     $uprightArray
+     * @param array $uprightArray
      * @return array
      */
     private function flattenArray($uprightArray)
     {
         $flatArray = [];
 
-        foreach($uprightArray as $value) {
-            if(is_array($value)) {
+        foreach ($uprightArray as $value) {
+            if (is_array($value)) {
                 array_merge($flatArray, $this->flattenArray($value));
             } else {
                 array_push($flatArray, $value);
             }
         }
-
         return $flatArray;
     }
-
 }
