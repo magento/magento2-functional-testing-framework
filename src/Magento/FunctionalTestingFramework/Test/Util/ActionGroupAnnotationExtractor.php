@@ -19,6 +19,7 @@ class ActionGroupAnnotationExtractor extends AnnotationExtractor
         "description",
         "page",
     ];
+    const GENERATE_DOCS_COMMAND = 'generate:docs';
 
     /**
      * This method trims away irrelevant tags and returns annotations used in the array passed. The annotations
@@ -39,8 +40,10 @@ class ActionGroupAnnotationExtractor extends AnnotationExtractor
         foreach ($annotations as $annotationKey => $annotationData) {
             $annotationObjects[$annotationKey] = $annotationData[parent::ANNOTATION_VALUE];
         }
+        if(defined('COMMAND') and COMMAND == self::GENERATE_DOCS_COMMAND) {
+            $this->validateMissingAnnotations($annotationObjects, $filename);
+        }
 
-        $this->validateMissingAnnotations($annotationObjects, $filename);
         return $annotationObjects;
     }
 

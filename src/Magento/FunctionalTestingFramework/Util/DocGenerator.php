@@ -6,25 +6,11 @@
 
 namespace Magento\FunctionalTestingFramework\Util;
 
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
-use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
-use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
-use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
-use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
-use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
-use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
-use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
-use Magento\FunctionalTestingFramework\Util\Manifest\BaseTestManifest;
-use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
-use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
-use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
-use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
+
 
 /**
  * Class TestGenerator
@@ -44,6 +30,8 @@ class DocGenerator
     const ANNOTATION_MODULE = "";
     const ANNOTATION_PAGE = "page";
     const ANNOTATION_DESCRIPTION = "description";
+    const FILENAMES = "filenames";
+    const ARGUMENTS = "arguments";
 
     /**
      * Single instance of class var
@@ -112,10 +100,12 @@ class DocGenerator
         foreach ($annotatedObjects as $name => $object) {
             $annotations = $object->getAnnotations();
             $filenames = $this->flattenArray($object->getFileNames());
+            $arguments = $object->getArguments();
 
             $info = [
                 self::ANNOTATION_DESCRIPTION => $annotations[self::ANNOTATION_DESCRIPTION] ?? 'NO_DESCRIPTION_SPECIFIED',
-                'filenames' => $filenames
+                self::FILENAMES => $filenames,
+                self::ARGUMENTS => $arguments
                 ];
             $pageGroups = array_merge_recursive(
                 $pageGroups,
@@ -144,21 +134,44 @@ class DocGenerator
      */
     private function transformToMarkdown($annotationList)
     {
-        $markdown = "";
+        $markdown = "#Action Group Information" . PHP_EOL;
+        $markdown .= "This documentation contains a list of all" .
+            " action groups on the pages on which they start" .
+            PHP_EOL .
+            PHP_EOL;
 
+        $markdown .= "##List of Pages" . PHP_EOL;
         foreach($annotationList as $group => $objects)
         {
-            $markdown .= "###$group" . PHP_EOL . PHP_EOL;
+            $markdown .= "- [ $group ](#$group)" . PHP_EOL;
+        }
+        $markdown .= "---" . PHP_EOL;
+        foreach($annotationList as $group => $objects)
+        {
+            $markdown .= "<a name=\"$group\"></a>" . PHP_EOL;
+            $markdown .= "##$group" . PHP_EOL . PHP_EOL;
             foreach($objects as $name => $annotations)
             {
-                $markdown .= "####$name" . PHP_EOL;
+                $markdown .= "###$name" . PHP_EOL;
                 $markdown .= $annotations[self::ANNOTATION_DESCRIPTION] . PHP_EOL . PHP_EOL;
-                $markdown .= "Located in:" . PHP_EOL;
-                foreach($annotations['filenames'] as $filename)
-                {
-                    $markdown .= "- $filename";
+                if(!empty($annotations[self::ARGUMENTS])) {
+                    $markdown .= "Action Group Arguments:" . PHP_EOL . PHP_EOL;
+                    $markdown .= "| Name | Type |" . PHP_EOL;
+                    $markdown .= "| --- | --- |" . PHP_EOL;
+                    foreach($annotations[self::ARGUMENTS] as $argument) {
+                        $argumentName = $argument->getName();
+                        $argumentType = $argument->getDataType();
+                        $markdown .= "| $argumentName | $argumentType |" . PHP_EOL;
+                    }
+                    $markdown .= PHP_EOL;
                 }
-                $markdown .= PHP_EOL . PHP_EOL;
+                $markdown .= "Located in:" . PHP_EOL;
+                foreach($annotations[self::FILENAMES] as $filename)
+                {
+                    $relativeFilename = str_replace(MAGENTO_BP . DIRECTORY_SEPARATOR, "", $filename);
+                    $markdown .= "- $relativeFilename";
+                }
+                $markdown .= PHP_EOL . "***" . PHP_EOL;
             }
         }
         return $markdown;

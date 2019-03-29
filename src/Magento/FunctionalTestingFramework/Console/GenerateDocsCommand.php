@@ -57,6 +57,7 @@ class GenerateDocsCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        defined('COMMAND') || define('COMMAND', 'generate:docs');
         $config = $input->getOption('output');
         $clean = $input->getOption('clean');
 
