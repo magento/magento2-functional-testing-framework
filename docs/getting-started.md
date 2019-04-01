@@ -183,7 +183,7 @@ cd dev/tests/acceptance
 ```
 
 ```bash
-../../../vendor/bin/codecept run functional
+vendor/bin/codecept run functional -c dev/tests/acceptance/codeception.yml
 ```
 
 See more commands in [`codecept`][].

@@ -94,7 +94,7 @@ There are several ways to generate and execute your new test in the context of a
 
 ### Enabling/disabling WYSIWYG in suite conditions
 
-<!-- {{raw}} -->
+<!-- {% raw %} -->
 
 ```xml
 <suites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Suite/etc/suiteSchema.xsd">
@@ -122,7 +122,7 @@ There are several ways to generate and execute your new test in the context of a
 </suites>
 ```
 
-<!-- {{endraw}} -->
+<!-- {% endraw %} -->
 This example declares a suite with the name `WYSIWYG`.
 The suite enables WYSIWYG *before* running tests.
 It performs the following steps:
@@ -282,12 +282,12 @@ Attributes|Type|Use|Description
 `remove`|boolean|optional|Removing the filter during merging.
 
 <!-- Link definitions -->
-[actions]: test/actions.html
-[action groups]: test/action-groups.html
+[actions]: test/actions.md
+[action groups]: test/action-groups.md
 [`<after>`]: #after-tag
 [`<before>`]: #before-tag
-[`generate:tests`]: commands/mftf.html#generatetests
-[test]: test.html
+[`generate:tests`]: commands/mftf.md#generatetests
+[test]: test.md
 [`<test>`]: #test-tag
 [`<group>`]: #group-tag
 [`<module>`]: #module-tag

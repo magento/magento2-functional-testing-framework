@@ -28,12 +28,12 @@ Consult [when to use Extends][] to use extends when deciding whether to merge or
 - [Extend Tests][]
 
 <!-- Link definitions -->
-[when to use Extends]: https://devdocs.magento.com/mftf/docs/best-practices.html#when-to-use-extends
-[Merge Action Groups]: https://devdocs.magento.com/mftf/docs/merge_points/merge-action-groups.html
-[Merge Data]: https://devdocs.magento.com/mftf/docs/merge_points/merge-data.html
-[Merge Pages]: https://devdocs.magento.com/mftf/docs/merge_points/merge-pages.html
-[Merge Sections]: https://devdocs.magento.com/mftf/docs/merge_points/merge-sections.html
-[Merge Tests]: https://devdocs.magento.com/mftf/docs/merge_points/merge-tests.html
-[Extend Action Groups]: https://devdocs.magento.com/mftf/docs/merge_points/extend-action-groups.html
-[Extend Data]: https://devdocs.magento.com/mftf/docs/merge_points/extend-data.html
-[Extend Tests]: https://devdocs.magento.com/mftf/docs/merge_points/extend-tests.html
+[when to use Extends]: ../best-practices.md#when-to-use-extends
+[Merge Action Groups]: merge-action-groups.md
+[Merge Data]: merge-data.md
+[Merge Pages]: merge-pages.md
+[Merge Sections]: merge-sections.md
+[Merge Tests]: merge-tests.md
+[Extend Action Groups]: extend-action-groups.md
+[Extend Data]: extend-data.md
+[Extend Tests]: extend-tests.md

@@ -94,7 +94,7 @@ The decrypted values are only available in the `.credentials` file.
 The MFTF tests delivered with Magento application do not use credentials and do not cover external services, because of sensitivity of the data.</div>
 
 <!-- Link definitions -->
-[`fillField`]: test/actions.html#fillfield
-[data]: data.html
-[initial setup]: getting-started.html
-[test reports]: reporting.html
+[`fillField`]: test/actions.md#fillfield
+[data]: data.md
+[initial setup]: getting-started.md
+[test reports]: reporting.md

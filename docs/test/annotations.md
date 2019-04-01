@@ -227,7 +227,7 @@ Attribute|Type|Use
 [setup instructions in Allure]: https://github.com/allure-framework/allure1/wiki/Test-Case-ID
 [severity]: #severity
 [stories]: #stories
-[suite]: ../suite.html
-[tests]: ../test.html
+[suite]: ../suite.md
+[tests]: ../test.md
 [title]: #title
 [skip]: #skip

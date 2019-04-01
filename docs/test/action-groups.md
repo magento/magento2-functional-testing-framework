@@ -258,7 +258,7 @@ Attribute|Type|Use|Description
 `type`|Possible values: `string`, `entity` (default).|optional|Defines the argument data type; Defaults to `entity`.
 
 <!-- Link Definitions -->
-[actions]: ./actions.html
-[test]: ../test.html
+[actions]: ./actions.md
+[test]: ../test.md
 [`argument`]: #argument-tag
-[created]: ../data.html#persist-data
+[created]: ../data.md#persist-data

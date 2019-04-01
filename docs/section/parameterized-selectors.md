@@ -152,4 +152,4 @@ Any data can be used in parameterized elements, as well as entered in test actio
 * `{$variable}` is a reference to data returned by a test action, like `<grabValueFrom>`.
 
 <!-- Link Definitions -->
-[test]: ../test.html
+[test]: ../test.md

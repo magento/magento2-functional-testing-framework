@@ -21,7 +21,7 @@ Use of PhantomJS is not actually supported by the MFTF.
 
 #### Solution
 
-For headless browsing, the [Headless Chrome][]{:target="_blank"} has better compatibility with the MFTF.
+For headless browsing, the [Headless Chrome][]{:target="\_blank"} has better compatibility with the MFTF.
 
 ### Chrome
 
@@ -41,7 +41,7 @@ Chrome v62 is in the process of being rolled out, and it causes an error with Ch
 
 #### Solution
 
-Use [ChromeDriver v2.33+][]{:target="_blank"} and [Selenium Server Standalone v3.6.0+][]{:target="_blank"} in order to execute tests in Google Chrome v62+.
+Use [ChromeDriver v2.33+][]{:target="\_blank"} and [Selenium Server Standalone v3.6.0+][]{:target="\_blank"} in order to execute tests in Google Chrome v62+.
 
 ### Firefox
 
