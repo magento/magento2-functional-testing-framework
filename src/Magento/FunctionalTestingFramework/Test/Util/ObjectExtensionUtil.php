@@ -131,7 +131,8 @@ class ObjectExtensionUtil
             $actionGroupObject->getName(),
             $extendedArguments,
             $newActions,
-            $actionGroupObject->getParentName()
+            $actionGroupObject->getParentName(),
+            $actionGroupObject->getFilename()
         );
         return $extendedActionGroup;
     }

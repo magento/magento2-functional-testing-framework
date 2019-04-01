@@ -20,6 +20,7 @@ class PageObjectHandler implements ObjectHandlerInterface
     const MODULE = 'module';
     const PARAMETERIZED = 'parameterized';
     const AREA = 'area';
+    const FILENAME = 'filename';
     const NAME_BLACKLIST_ERROR_MSG = "Page names cannot contain non alphanumeric characters.\tPage='%s'";
 
     /**
@@ -66,9 +67,10 @@ class PageObjectHandler implements ObjectHandlerInterface
             $module = $pageData[self::MODULE] ?? null;
             $sectionNames = array_keys($pageData[self::SECTION] ?? []);
             $parameterized = $pageData[self::PARAMETERIZED] ?? false;
+            $filename = $pageData[self::FILENAME] ?? null;
 
             $this->pageObjects[$pageName] =
-                new PageObject($pageName, $url, $module, $sectionNames, $parameterized, $area);
+                new PageObject($pageName, $url, $module, $sectionNames, $parameterized, $area, $filename);
         }
     }
 
