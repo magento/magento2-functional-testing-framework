@@ -31,8 +31,7 @@ Any changes to the Table of Contents will need to be made in the regular [devdoc
 
 ## Code samples
 
-For formatting and code coloring, wrap code samples in the following format:
-Replace the `xml` with the corresponding language (tupe) of the code sample. Use `bash` for shell commands and `terminal` for terminal output.
+For code highlighting, wrap code samples in the following format:
 
 ```xml
 <xmlSample>
@@ -40,6 +39,8 @@ Replace the `xml` with the corresponding language (tupe) of the code sample. Use
    ...
 </xmlSample>
 ```
+
+Replace the `xml` with the corresponding language (tupe) of the code sample. Use `bash` for shell commands and `terminal` for terminal output.
 
 ## Markdown tables
 
