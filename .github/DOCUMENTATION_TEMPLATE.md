@@ -29,7 +29,7 @@ Any changes to the Table of Contents will need to be made in the regular [devdoc
 - Add one space after the dash.
 - Add a blank line before and after list.
 
-## Code Samples
+## Code samples
 
 For formatting and code coloring, wrap code samples in the following format:
 Replace the `xml` with the corresponding language (tupe) of the code sample. Use `bash` for shell commands and `terminal` for terminal output.
