@@ -4,35 +4,36 @@ MFTF documentation is kept within the /docs/ folder in this repository.
 We welcome contributions to the documentation.
 This page describes the process for submitting documentation and serves as a template for a properly written content.
 
-The contribution workflow for docs is the same as submitting code.
+The contribution workflow for the Magento functional testing framework (MFTF) documentation is the same as submitting code.
 To contribute to MFTF docs:
 
-1. Make a branch from the [MFTF repo][].
+1. Make a branch from the `develop` branch in the [MFTF repo][].
 1. Make edits/additions/deletions as needed.
 1. Submit your PR to the `develop` branch.
 
-Once submitted, it will be reviewed by a member of the documentation team.
+Once submitted, a member of the documentation team will review and merge it.
 If approved it will be tested and merged.
 If it needs any work, we will inform you.
 
 Any changes to the Table of Contents will need to be made in the regular [devdocs repo][].
 
-## H2 heading - blank line before and after, capitalize first word only
+## H2 Heading - blank line before and after, capitalize first word only
 
-1. Ordered lists all all numbered 1.
+1. Number all ordered list items as `1.`
 1. The build process will number them correctly.
-1. Single spafce after the number. Blank line before and after list.
+1. Single spafce after the number.
+1. Blank line before and after list.
 
-### H3
+## Unordered lists
 
-- Unordered lists use dashes.
-- One space after the dash.
-- Blank line before and after list.
+- Use dashes in unordered lists.
+- Add one space after the dash.
+- Add a blank line before and after list.
 
 ## Code Samples
 
-For formatting and code coloring, wrap code samples in the following format.
-Replace the `xml` with the file extension of the code sample type. Use `bash` for command-line text.
+For formatting and code coloring, wrap code samples in the following format:
+Replace the `xml` with the corresponding language (tupe) of the code sample. Use `bash` for shell commands and `terminal` for terminal output.
 
 ```xml
 <xmlSample>
@@ -48,12 +49,12 @@ Replace the `xml` with the file extension of the code sample type. Use `bash` fo
 | Colume 1 text | Column 2 text|
 | Column 1 text | Column 2 text|
 
-Markdown tables work for simple tables. If you need lists or other complex features within a cell, you may have to use a HTML table.
+Markdown formatting works for simple tables. It does not support multiline content within a cell, or split/merged cells within a row or column.
 
 ## Other tips
 
 - Use spaces instead of tabs.
-- One empty line between content. No duplicate empty lines.
+- Do not duplicate blank lines.
 - Read more about how to [Contribute to Magento Devdocs][]
 
 <!-- For readability, we abstract the link URLS to the bottom of the page. The extra set of square brackets denotes it is a link, rather than plain brackets. >
