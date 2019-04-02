@@ -11,7 +11,7 @@ The contribution workflow for the Magento functional testing framework (MFTF) do
 1. Submit your PR to the `develop` branch.
 
 Once submitted, a member of the documentation team will review and merge it.
-If it needs any work, we will inform you.
+We will inform you if it needs any additional processing.
 
 Any changes to the Table of Contents will need to be made in the regular [devdocs repo][].
 
