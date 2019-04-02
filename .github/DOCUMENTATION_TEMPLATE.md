@@ -5,7 +5,6 @@ We welcome contributions to the documentation.
 This page describes the process for submitting documentation and serves as a template for a properly written content.
 
 The contribution workflow for the Magento functional testing framework (MFTF) documentation is the same as submitting code.
-To contribute to MFTF docs:
 
 1. Make a branch from the `develop` branch in the [MFTF repo][].
 1. Make edits/additions/deletions as needed.
