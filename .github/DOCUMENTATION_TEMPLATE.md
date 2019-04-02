@@ -15,9 +15,7 @@ We will inform you if it needs any additional processing.
 
 Any changes to the Table of Contents will need to be made in the regular [devdocs repo][].
 
-## H2 Heading - blank line before and after, capitalize first word only
-
-## Ordered lists
+## Ordered lists - all heading have a blank line before and after, capitalize the first word only
 
 1. Number all ordered list items as `1.`
 1. Single spafce after the number.
