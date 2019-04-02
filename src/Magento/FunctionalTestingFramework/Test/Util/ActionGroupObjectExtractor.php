@@ -76,7 +76,8 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
             $actionGroupData[self::NAME],
             $arguments,
             $actions,
-            $actionGroupReference
+            $actionGroupReference,
+            $actionGroupData[self::FILENAME]
         );
     }
 
