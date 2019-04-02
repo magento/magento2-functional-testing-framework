@@ -17,6 +17,8 @@ Any changes to the Table of Contents will need to be made in the regular [devdoc
 
 ## H2 Heading - blank line before and after, capitalize first word only
 
+## Ordered lists
+
 1. Number all ordered list items as `1.`
 1. The build process will number them correctly.
 1. Single spafce after the number.
