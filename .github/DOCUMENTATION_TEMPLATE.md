@@ -1,4 +1,4 @@
-# How to conttribute to MFTF docs
+# How to contribute to MFTF docs
 
 MFTF documentation is kept within the /docs/ folder in this repository.
 We welcome contributions to the documentation.
@@ -6,19 +6,20 @@ This page describes the process for submitting documentation and serves as a tem
 
 The contribution workflow for the Magento functional testing framework (MFTF) documentation is the same as submitting code.
 
-1. Make a branch from the `develop` branch in the [MFTF repo][].
+1. Create a branch from the `develop` branch in the [MFTF repo][].
 1. Make edits/additions/deletions as needed.
 1. Submit your PR to the `develop` branch.
 
 Once submitted, a member of the documentation team will review and merge it.
 We will inform you if it needs any additional processing.
 
-Any changes to the Table of Contents will need to be made in the regular [devdocs repo][].
+The documentation in this repository is used as the source for the [MFTF documentation][].
+Any changes to the Table of Contents will need to be made via a separate PR in the regular [devdocs repo][].
 
 ## Ordered lists - all heading have a blank line before and after, capitalize the first word only
 
 1. Number all ordered list items as `1.`
-1. Single spafce after the number.
+1. Single space after the number.
 1. Blank line before and after list.
 
 ## Unordered lists
@@ -29,7 +30,8 @@ Any changes to the Table of Contents will need to be made in the regular [devdoc
 
 ## Code samples
 
-For code highlighting, wrap code samples in the following format:
+For technical words such as a database table name, wrap with single backticks: `tablename`.
+For code block highlighting, wrap code samples in the following format:
 
 ```xml
 <xmlSample>
@@ -44,7 +46,7 @@ Replace the `xml` with the corresponding language (tupe) of the code sample. Use
 
 | Header      | Header |
 | ----------- | ----------- |
-| Colume 1 text | Column 2 text|
+| Column 1 text | Column 2 text|
 | Column 1 text | Column 2 text|
 
 Markdown formatting works for simple tables. It does not support multiline content within a cell, or split/merged cells within a row or column.
@@ -58,6 +60,7 @@ Markdown formatting works for simple tables. It does not support multiline conte
 <!-- For readability, we abstract the link URLS to the bottom of the page. The extra set of square brackets denotes it is a link, rather than plain brackets. >
 
 <!-- Link Definitions -->
-[devdocs repo]: https://github.com/magento/devdocs
+[devdocs repo]: https://github.com/magento/devdocs/blob/master/_data/toc/mftf.yml
 [MFTF repo]: https://github.com/magento/magento2-functional-testing-framework
 [Contribute to Magento Devdocs]: https://github.com/magento/devdocs/blob/master/.github/CONTRIBUTING.md
+[MFTF documentation]: https://devdocs.magento.com/mftf/docs/introduction.html
