@@ -74,7 +74,7 @@ This emphasizes the practice for the `stepKey` of `createData` to be descriptive
 
 ## Use data returned by test actions
 
-A test can also reference data that was returned as a result of [test actions](./test/actions.md#actions-returning-a-variable), like the action `<grabValueFrom selector="someSelector" stepKey="grabStepKey>`.
+A test can also reference data that was returned as a result of [test actions][], like the action `<grabValueFrom selector="someSelector" stepKey="grabStepKey>`.
 
 Further in the test, the data grabbed by the `someSelector` selector can be referenced using the `stepKey` value. In this case, it is `grabStepKey`.
 
@@ -89,7 +89,7 @@ The following example shows the usage of `grabValueFrom` in testing, where the r
 
 The data to operate against can be included as literals in a test. Hard-coded data input can be useful in assertions.
 
-See also [Actions](./test/actions.md).
+See also [Actions][].
 
 ```xml
 userInput="We'll email you an order confirmation with details and tracking info."
@@ -145,7 +145,7 @@ Example (`.../Catalog/Data/CategoryData.xml` file):
 </entities>
 ```
 
-This example declares two `<data>` entities: `_defaultCategory` and `SimpleSubCategory`. They set the data required for [category creation](http://docs.magento.com/m2/ce/user_guide/catalog/category-create.html).
+This example declares two `<data>` entities: `_defaultCategory` and `SimpleSubCategory`. They set the data required for [category creation][].
 
 All entities that have the same name will be merged during test generation. Both entities are of the `category` type.
 
@@ -187,7 +187,7 @@ Attributes|Type|Use|Description
 `name`|string|optional|Name of the `<entity>`.
 `type`|string|optional|Node containing the exact name of `<entity>` type. Used later to find specific Persistence Layer Model class. `type` in `<data>` can be whatever the user wants; There are no constraints. It is important when persisting data, depending on the `type` given, as it will try to match a metadata definition with the operation being done. Example: A `myCustomer` entity with `type="customer"`, calling `<createData entity="myCustomer"/>`, will try to find a metadata entry with the following attributes: `<operation dataType="customer" type="create">`.
 
-`<entity>` may contain one or more [`<data>`](#data-tag), [`<var>`](#var-tag), [`<required-entities>`](#requiredentity-tag), or [`<array>`](#array-tag) elements in any sequence.
+`<entity>` may contain one or more [`<data>`][], [`<var>`][], [`<required-entities>`][], or [`<array>`][] elements in any sequence.
 
 ### data {#data-tag}
 
@@ -248,8 +248,19 @@ Attributes|Type|Use|Description
 ---|---|---|---
 `key`|string|required|Key attribute of this entity in which to assign a value.
 
-`<array>` may contain [`<item>`](#item-tag) elements.
+`<array>` may contain [`<item>`][] elements.
 
 ### item {#item-tag}
 
 `<item>` is an individual piece of data to be passed in as part of the parent `<array>` type.
+
+<!-- Link Definitions -->
+[Credentials]: ./credentials.md
+[test actions]: ./test/actions.md#actions-returning-a-variable
+[Actions]: ./test/actions.md
+[category creation]: http://docs.magento.com/m2/ce/user_guide/catalog/category-create.html
+[`<data>`]: #data-tag
+[`<var>`]: #var-tag
+[`<required-entities>`]: #requiredentity-tag
+[`<array>`]: #array-tag
+[`<item>`]: #item-tag
