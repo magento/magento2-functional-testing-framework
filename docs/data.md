@@ -255,12 +255,12 @@ Attributes|Type|Use|Description
 `<item>` is an individual piece of data to be passed in as part of the parent `<array>` type.
 
 <!-- Link Definitions -->
-[Credentials]: ./credentials.md
-[test actions]: ./test/actions.md#actions-returning-a-variable
+[`<array>`]: #array-tag
+[`<data>`]: #data-tag
+[`<item>`]: #item-tag
+[`<required-entities>`]: #requiredentity-tag
+[`<var>`]: #var-tag
 [Actions]: ./test/actions.md
 [category creation]: http://docs.magento.com/m2/ce/user_guide/catalog/category-create.html
-[`<data>`]: #data-tag
-[`<var>`]: #var-tag
-[`<required-entities>`]: #requiredentity-tag
-[`<array>`]: #array-tag
-[`<item>`]: #item-tag
+[Credentials]: ./credentials.md
+[test actions]: ./test/actions.md#actions-returning-a-variable
