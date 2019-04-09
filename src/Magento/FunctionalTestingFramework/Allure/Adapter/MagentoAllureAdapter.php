@@ -104,10 +104,13 @@ class MagentoAllureAdapter extends AllureCodeception
     }
 
     /**
-     * Override of parent method, only different to prevent replacing of . to •
+     * Override of parent method:
+     *     prevent replacing of . to •
+     *     strips control characters
      *
      * @param StepEvent $stepEvent
      * @return void
+     * @throws \Yandex\Allure\Adapter\AllureException
      */
     public function stepBefore(StepEvent $stepEvent)
     {
@@ -128,6 +131,9 @@ class MagentoAllureAdapter extends AllureCodeception
         }
 
         $stepName = $stepAction . ' ' . $stepArgs;
+
+        // Strip control characters so that report generation does not fail
+        $stepName = preg_replace('/[[:cntrl:]]/', '', $stepName);
 
         $this->emptyStep = false;
         $this->getLifecycle()->fire(new StepStartedEvent($stepName));
