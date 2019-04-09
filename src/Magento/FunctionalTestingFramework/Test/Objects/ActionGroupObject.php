@@ -19,6 +19,8 @@ class ActionGroupObject
 {
     const ACTION_GROUP_ORIGIN_NAME = "actionGroupName";
     const ACTION_GROUP_ORIGIN_TEST_REF = "testInvocationRef";
+    const ACTION_GROUP_CONTEXT_START = "Entering Action Group ";
+    const ACTION_GROUP_CONTEXT_END = "Exiting Action Group ";
     const STEPKEY_REPLACEMENT_ENABLED_TYPES = [
         "executeJS",
         "magentoCLI",
@@ -198,6 +200,8 @@ class ActionGroupObject
                     self::ACTION_GROUP_ORIGIN_TEST_REF => $actionReferenceKey]
             );
         }
+
+        $resolvedActions = $this->addContextCommentsToActionList($resolvedActions, $actionReferenceKey);
 
         return $resolvedActions;
     }
@@ -499,5 +503,28 @@ class ActionGroupObject
         }
 
         return $resolvedActionAttributes;
+    }
+
+    /**
+     * Adds comment ActionObjects before and after given actionList for context setting.
+     * @param array  $actionList
+     * @param string $actionReferenceKey
+     * @return array
+     */
+    private function addContextCommentsToActionList($actionList, $actionReferenceKey)
+    {
+        $actionStartComment = self::ACTION_GROUP_CONTEXT_START . $this->name . " (" . $actionReferenceKey . ")";
+        $actionEndComment = self::ACTION_GROUP_CONTEXT_END . $this->name . " (" . $actionReferenceKey . ")";
+        $startAction = new ActionObject(
+            $actionStartComment,
+            ActionObject::ACTION_TYPE_COMMENT,
+            [ActionObject::ACTION_ATTRIBUTE_USERINPUT => $actionStartComment]
+        );
+        $endAction = new ActionObject(
+            $actionEndComment,
+            ActionObject::ACTION_TYPE_COMMENT,
+            [ActionObject::ACTION_ATTRIBUTE_USERINPUT => $actionEndComment]
+        );
+        return [$startAction->getStepKey() => $startAction] + $actionList + [$endAction->getStepKey() => $endAction];
     }
 }
