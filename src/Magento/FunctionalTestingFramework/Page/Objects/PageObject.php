@@ -59,6 +59,13 @@ class PageObject
     private $area;
 
     /**
+     * Filename of where the page came from
+     *
+     * @var string
+     */
+    private $filename;
+
+    /**
      * PageObject constructor.
      * @param string  $name
      * @param string  $url
@@ -66,8 +73,9 @@ class PageObject
      * @param array   $sections
      * @param boolean $parameterized
      * @param string  $area
+     * @param string  $filename
      */
-    public function __construct($name, $url, $module, $sections, $parameterized, $area)
+    public function __construct($name, $url, $module, $sections, $parameterized, $area, $filename = null)
     {
         $this->name = $name;
         $this->url = $url;
@@ -75,6 +83,7 @@ class PageObject
         $this->sectionNames = $sections;
         $this->parameterized = $parameterized;
         $this->area = $area;
+        $this->filename = $filename;
     }
 
     /**
@@ -85,6 +94,16 @@ class PageObject
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Getter for the Page Filename
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
     }
 
     /**

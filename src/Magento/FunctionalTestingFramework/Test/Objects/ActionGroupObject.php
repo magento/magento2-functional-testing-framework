@@ -74,14 +74,22 @@ class ActionGroupObject
     private $parentActionGroup;
 
     /**
+     * Filename where actionGroup came from
+     *
+     * @var string
+     */
+    private $filename;
+
+    /**
      * ActionGroupObject constructor.
      *
      * @param string           $name
      * @param ArgumentObject[] $arguments
      * @param array            $actions
      * @param string           $parentActionGroup
+     * @param string           $filename
      */
-    public function __construct($name, $arguments, $actions, $parentActionGroup)
+    public function __construct($name, $arguments, $actions, $parentActionGroup, $filename = null)
     {
         $this->varAttributes = array_merge(
             ActionObject::SELECTOR_ENABLED_ATTRIBUTES,
@@ -92,6 +100,7 @@ class ActionGroupObject
         $this->arguments = $arguments;
         $this->parsedActions = $actions;
         $this->parentActionGroup = $parentActionGroup;
+        $this->filename = $filename;
     }
 
     /**
@@ -411,6 +420,16 @@ class ActionGroupObject
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Getter for the Action Group Filename
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
     }
 
     /**

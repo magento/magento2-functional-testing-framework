@@ -73,6 +73,12 @@ class EntityDataObject
     private $parentEntity;
 
     /**
+     * String of filename
+     * @var string
+     */
+    private $filename;
+
+    /**
      * Constructor
      *
      * @param string   $name
@@ -82,9 +88,18 @@ class EntityDataObject
      * @param string[] $uniquenessData
      * @param string[] $vars
      * @param string   $parentEntity
+     * @param string   $filename
      */
-    public function __construct($name, $type, $data, $linkedEntities, $uniquenessData, $vars = [], $parentEntity = null)
-    {
+    public function __construct(
+        $name,
+        $type,
+        $data,
+        $linkedEntities,
+        $uniquenessData,
+        $vars = [],
+        $parentEntity = null,
+        $filename = null
+    ) {
         $this->name = $name;
         $this->type = $type;
         $this->data = $data;
@@ -95,6 +110,7 @@ class EntityDataObject
 
         $this->vars = $vars;
         $this->parentEntity = $parentEntity;
+        $this->filename = $filename;
     }
 
     /**
@@ -105,6 +121,16 @@ class EntityDataObject
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Getter for the Entity Filename
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
     }
 
     /**
