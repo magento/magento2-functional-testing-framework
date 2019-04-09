@@ -161,12 +161,12 @@ Attributes|Type|Use|Description
 `remove`|boolean|optional|The default value is `"false"`. Set to `"true"` to remove this element during parsing.
 
 <!-- Link definitions -->
-[`<createData>`]: test/actions.html#createdata
+[`<createData>`]: test/actions.md#createdata
 [`<page>`]: #page-tag
 [`<section>`]: #section-tag
-[`<test>`]: test.html
-[actions]: test/actions.html
+[`<test>`]: test.md
+[actions]: test/actions.md
 [explicit page]: #explicit-page
 [PageObjects]: https://github.com/SeleniumHQ/selenium/wiki/PageObjects
 [parameterized page]: #parameterized-page
-[section]: section.html
+[section]: section.md

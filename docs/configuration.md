@@ -160,7 +160,7 @@ Example:
 MAGENTO_RESTAPI_SERVER_PORT=5000
 ```
 
-### *_BP
+### \*_BP
 
 Settings to override base paths for the framework.
 You can use it when the MFTF is applied as a separate tool.
@@ -254,6 +254,6 @@ BROWSER=firefox
 <!-- Link definitions -->
 
 [`MAGENTO_CLI_COMMAND_PATH`]: #magento_cli_command_path
-[generateDate]: test/actions.html#generatedate
-[mftf]: commands/mftf.html
+[generateDate]: test/actions.md#generatedate
+[mftf]: commands/mftf.md
 [timezones]: http://php.net/manual/en/timezones.php

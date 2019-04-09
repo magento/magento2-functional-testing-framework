@@ -22,7 +22,7 @@ This step can be referenced within the test using `conditionalClickStep1`.
 
 The value format should met the following principles:
 
-* Must be unique within [`<test>`](../test.html#test-tag).
+* Must be unique within [`<test>`](../test.md#test-tag).
 * Naming should be as descriptive as possible:
   * Describe the action performed.
   * Briefly describe the purpose.
@@ -166,18 +166,18 @@ The following test actions return a variable:
 * [grabValueFrom](#grabvaluefrom)
 * [executeJS](#executejs)
 
-Learn more in [Using data returned by test actions](../data.html#use-data-returned-by-test-actions).
+Learn more in [Using data returned by test actions](../data.md#use-data-returned-by-test-actions).
 
 ## Actions handling data entities
 
-The following test actions handle data entities using [metadata](../metadata.html):
+The following test actions handle data entities using [metadata](../metadata.md):
 
 * [createData](#createdata)
 * [deleteData](#deletedata)
 * [updateData](#updatedata)
 * [getData](#getdata)
 
-Learn more in [Handling a REST API response](../metadata.html#rest-response).
+Learn more in [Handling a REST API response](../metadata.md#rest-response).
 
 ## Reference
 
@@ -538,7 +538,7 @@ Attribute|Type|Use|Description
 ### createData
 
 Creates an entity (for example, a category or product).
-To create an entity, the MFTF makes a `POST` request to the Magento API according to the [data](../data.html) and [metadata](../metadata.html) of the entity to be created.
+To create an entity, the MFTF makes a `POST` request to the Magento API according to the [data](../data.md) and [metadata](../metadata.md) of the entity to be created.
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -617,7 +617,7 @@ Attribute|Type|Use|Description
 
 #### Examples
 
-Delete the entity that was previously created using [`createData`](#createdata) in the scope of the [test](../test.html#test-tag).
+Delete the entity that was previously created using [`createData`](#createdata) in the scope of the [test](../test.md#test-tag).
 
 1. Create _SampleCategory_:
 
@@ -1127,7 +1127,7 @@ Attribute|Type|Use|Description
 </getData>
 ```
 
-The `ProductAttributeOptionGetter` entity must be defined in the corresponding [data `*.xml`](../data.html).
+The `ProductAttributeOptionGetter` entity must be defined in the corresponding [data `*.xml`](../data.md).
 
 This action can optionally contain one or more [requiredEntity](#requiredentity) child elements.
 
@@ -1348,7 +1348,7 @@ Note that the makeScreenshot action does not automatically add the screenshot to
 ```
 
 <div class="bs-callout bs-callout-info">
-This action does not add a screenshot to the Allure [report](../reporting.html).</div>
+This action does not add a screenshot to the Allure [report](../reporting.md).</div>
 
 ### maximizeWindow
 

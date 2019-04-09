@@ -69,7 +69,7 @@ Each Magento source file included in this distribution is licensed under AGPL 3.
 See the license [here][] or contact [license@magentocommerce.com][] for a copy.
 
 <!-- Link Definitions -->
-[Getting Started]: https://devdocs.magento.com/mftf/getting-started.html
+[Getting Started]: docs/getting-started.md
 [Contribution Guidelines]: .github/CONTRIBUTING.html
 [DevDocs Contributing]: https://github.com/magento/devdocs/blob/master/.github/CONTRIBUTING.md
 [security@magento.com]: mailto:security@magento.com

@@ -384,11 +384,11 @@ vendor/bin/mftf upgrade:tests /Users/user/magento2/app/code/Magento/Catalog/Test
 
 <!-- LINK DEFINITIONS -->
 
-[configuration]: ../configuration.html
+[configuration]: ../configuration.md
 [Reference]: #reference
 [build]: #buildproject
 [setup]: #setupenv
-[Reporting]: ../reporting.html
+[Reporting]: ../reporting.md
 
 <!-- Abbreviations -->
 
