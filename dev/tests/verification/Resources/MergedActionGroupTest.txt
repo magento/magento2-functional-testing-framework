@@ -33,8 +33,10 @@ class MergedActionGroupTestCest
 			[],
 			null
 		);
+		$I->comment("Entering Action Group FunctionalActionGroup (beforeGroup)");
 		$I->fillField("#foo", "myData1");
 		$I->fillField("#bar", "myData2");
+		$I->comment("Exiting Action Group FunctionalActionGroup (beforeGroup)");
 	}
 
 	/**
@@ -43,8 +45,10 @@ class MergedActionGroupTestCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
+		$I->comment("Entering Action Group FunctionalActionGroup (afterGroup)");
 		$I->fillField("#foo", "myData1");
 		$I->fillField("#bar", "myData2");
+		$I->comment("Exiting Action Group FunctionalActionGroup (afterGroup)");
 	}
 
 	/**
@@ -67,9 +71,11 @@ class MergedActionGroupTestCest
 	 */
 	public function MergedActionGroupTest(AcceptanceTester $I)
 	{
+		$I->comment("Entering Action Group FunctionalActionGroupForMerge (actionGroupForMerge)");
 		$I->see(".merge .Jane");
 		$I->see("#element .Jane");
 		$I->amOnPage("/Jane/Dane.html");
 		$I->click(".merge .Dane");
+		$I->comment("Exiting Action Group FunctionalActionGroupForMerge (actionGroupForMerge)");
 	}
 }

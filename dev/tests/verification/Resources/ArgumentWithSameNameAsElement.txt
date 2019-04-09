@@ -33,8 +33,10 @@ class ArgumentWithSameNameAsElementCest
 			[],
 			null
 		);
+		$I->comment("Entering Action Group FunctionalActionGroup (beforeGroup)");
 		$I->fillField("#foo", "myData1");
 		$I->fillField("#bar", "myData2");
+		$I->comment("Exiting Action Group FunctionalActionGroup (beforeGroup)");
 	}
 
 	/**
@@ -43,8 +45,10 @@ class ArgumentWithSameNameAsElementCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
+		$I->comment("Entering Action Group FunctionalActionGroup (afterGroup)");
 		$I->fillField("#foo", "myData1");
 		$I->fillField("#bar", "myData2");
+		$I->comment("Exiting Action Group FunctionalActionGroup (afterGroup)");
 	}
 
 	/**
@@ -67,7 +71,9 @@ class ArgumentWithSameNameAsElementCest
 	 */
 	public function ArgumentWithSameNameAsElement(AcceptanceTester $I)
 	{
+		$I->comment("Entering Action Group FunctionalActionGroupWithTrickyArgument (actionGroup1)");
 		$I->seeElement("#element");
 		$I->seeElement("#element .John");
+		$I->comment("Exiting Action Group FunctionalActionGroupWithTrickyArgument (actionGroup1)");
 	}
 }
