@@ -160,7 +160,7 @@ Label| Description
 [create issue]: https://help.github.com/articles/creating-an-issue/
 [create pr]: https://help.github.com/articles/creating-a-pull-request/
 [Definition of Done]: https://devdocs.magento.com/guides/v2.2/contributor-guide/contributing_dod.html
-[devdocs]: https://github.com/magento/devdocs/blob/master/.github/CONTRIBUTING.md
+[devdocs]: https://github.com/magento/devdocs/blob/master/.github/CONTRIBUTING.html
 [existing issues]: https://github.com/magento/magento2-functional-testing-framework/issues?q=is%3Aopen+is%3Aissue
 [existing PRs]: https://github.com/magento/magento2-functional-testing-framework/pulls?q=is%3Aopen+is%3Apr
 [GitHub documentation]: https://help.github.com/articles/syncing-a-fork

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e77971c8706a56d00fba57995a9b747d",
+    "content-hash": "53f93e4e30c11102c65e0920aa737ff3",
     "packages": [
         {
             "name": "allure-framework/allure-codeception",
@@ -2783,6 +2783,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2018-08-09T05:50:03+00:00"
         },
         {
@@ -4125,7 +4126,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -4508,20 +4509,20 @@
     "packages-dev": [
         {
             "name": "brainmaestro/composer-git-hooks",
-            "version": "v2.6.0",
+            "version": "v2.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/BrainMaestro/composer-git-hooks.git",
-                "reference": "1ae36cc7c1a4387f026e5f085b3ba63fdf912cb7"
+                "reference": "137dd2aec2be494918f8bdfb18f57b55ff20015e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BrainMaestro/composer-git-hooks/zipball/1ae36cc7c1a4387f026e5f085b3ba63fdf912cb7",
-                "reference": "1ae36cc7c1a4387f026e5f085b3ba63fdf912cb7",
+                "url": "https://api.github.com/repos/BrainMaestro/composer-git-hooks/zipball/137dd2aec2be494918f8bdfb18f57b55ff20015e",
+                "reference": "137dd2aec2be494918f8bdfb18f57b55ff20015e",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.6 || >=7.0 <7.3",
+                "php": "^5.6 || >=7.0",
                 "symfony/console": "^3.2 || ^4.0"
             },
             "require-dev": {
@@ -4571,7 +4572,7 @@
                 "composer",
                 "git"
             ],
-            "time": "2018-10-28T02:55:04+00:00"
+            "time": "2018-12-28T14:57:06+00:00"
         },
         {
             "name": "codacy/coverage",
@@ -5684,7 +5685,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "7.0.2|7.0.4|~7.0.6|~7.1.0|~7.2.0",
+        "php": "7.0.2||7.0.4||~7.0.6||~7.1.0||~7.2.0||~7.3.0",
         "ext-curl": "*"
     },
     "platform-dev": []

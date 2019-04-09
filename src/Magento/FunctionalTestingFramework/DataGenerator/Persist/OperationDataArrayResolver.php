@@ -65,13 +65,11 @@ class OperationDataArrayResolver
      * @param boolean          $fromArray
      * @return array
      * @throws \Exception
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function resolveOperationDataArray($entityObject, $operationMetadata, $operation, $fromArray = false)
     {
-        //TODO: Refactor to reduce Cyclomatic Complexity, remove SupressWarning accordingly.
         $operationDataArray = [];
         self::incrementSequence($entityObject->getName());
 
@@ -105,80 +103,21 @@ class OperationDataArrayResolver
             $operationElementType = $operationElement->getValue();
 
             if (in_array($operationElementType, self::PRIMITIVE_TYPES)) {
-                $elementData = $this->resolvePrimitiveReference(
+                $this->resolvePrimitiveReferenceElement(
                     $entityObject,
-                    $operationElement->getKey(),
-                    $operationElement->getType()
+                    $operationElement,
+                    $operationElementType,
+                    $operationDataArray
                 );
-
-                // If data was defined at all, attempt to put it into operation data array
-                // If data was not defined, and element is required, throw exception
-                // If no data is defined, don't input defaults per primitive into operation data array
-                if ($elementData != null) {
-                    if (array_key_exists($operationElement->getKey(), $entityObject->getUniquenessData())) {
-                        $uniqueData = $entityObject->getUniquenessDataByName($operationElement->getKey());
-                        if ($uniqueData === 'suffix') {
-                            $elementData .= (string)self::getSequence($entityObject->getName());
-                        } else {
-                            $elementData = (string)self::getSequence($entityObject->getName()) . $elementData;
-                        }
-                    }
-                    $operationDataArray[$operationElement->getKey()] = $this->castValue(
-                        $operationElementType,
-                        $elementData
-                    );
-                } elseif ($operationElement->isRequired()) {
-                    throw new \Exception(sprintf(
-                        self::EXCEPTION_REQUIRED_DATA,
-                        $operationElement->getType(),
-                        $operationElement->getKey(),
-                        $entityObject->getName()
-                    ));
-                }
             } else {
-                $operationElementProperty = null;
-                if (strpos($operationElementType, '.') !== false) {
-                    $operationElementComponents = explode('.', $operationElementType);
-                    $operationElementType = $operationElementComponents[0];
-                    $operationElementProperty = $operationElementComponents[1];
-                }
-
-                $entityNamesOfType = $entityObject->getLinkedEntitiesOfType($operationElementType);
-
-                // If an element is required by metadata, but was not provided in the entity, throw an exception
-                if ($operationElement->isRequired() && $entityNamesOfType == null) {
-                    throw new \Exception(sprintf(
-                        self::EXCEPTION_REQUIRED_DATA,
-                        $operationElement->getType(),
-                        $operationElement->getKey(),
-                        $entityObject->getName()
-                    ));
-                }
-                foreach ($entityNamesOfType as $entityName) {
-                    if ($operationElementProperty === null) {
-                        $operationDataSubArray = $this->resolveNonPrimitiveElement(
-                            $entityName,
-                            $operationElement,
-                            $operation,
-                            $fromArray
-                        );
-                    } else {
-                        $linkedEntityObj = $this->resolveLinkedEntityObject($entityName);
-                        $operationDataSubArray = $linkedEntityObj->getDataByName($operationElementProperty, 0);
-
-                        if ($operationDataSubArray === null) {
-                            throw new \Exception(
-                                sprintf('Property %s not found in entity %s \n', $operationElementProperty, $entityName)
-                            );
-                        }
-                    }
-
-                    if ($operationElement->getType() == OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY) {
-                        $operationDataArray[$operationElement->getKey()][] = $operationDataSubArray;
-                    } else {
-                        $operationDataArray[$operationElement->getKey()] = $operationDataSubArray;
-                    }
-                }
+                $this->resolveNonPrimitiveReferenceElement(
+                    $entityObject,
+                    $operation,
+                    $fromArray,
+                    $operationElementType,
+                    $operationElement,
+                    $operationDataArray
+                );
             }
         }
 
@@ -393,6 +332,107 @@ class OperationDataArrayResolver
         }
 
         return $newVal;
+    }
+
+    /**
+     * Resolve a reference for a primitive piece of data
+     *
+     * @param EntityDataObject $entityObject
+     * @param $operationElement
+     * @param $operationElementType
+     * @param array $operationDataArray
+     * @throws TestFrameworkException
+     */
+    private function resolvePrimitiveReferenceElement($entityObject, $operationElement, $operationElementType, array &$operationDataArray)
+    {
+        $elementData = $this->resolvePrimitiveReference(
+            $entityObject,
+            $operationElement->getKey(),
+            $operationElement->getType()
+        );
+
+        // If data was defined at all, attempt to put it into operation data array
+        // If data was not defined, and element is required, throw exception
+        // If no data is defined, don't input defaults per primitive into operation data array
+        if ($elementData != null) {
+            if (array_key_exists($operationElement->getKey(), $entityObject->getUniquenessData())) {
+                $uniqueData = $entityObject->getUniquenessDataByName($operationElement->getKey());
+                if ($uniqueData === 'suffix') {
+                    $elementData .= (string)self::getSequence($entityObject->getName());
+                } else {
+                    $elementData = (string)self::getSequence($entityObject->getName()) . $elementData;
+                }
+            }
+            $operationDataArray[$operationElement->getKey()] = $this->castValue(
+                $operationElementType,
+                $elementData
+            );
+        } elseif ($operationElement->isRequired()) {
+            throw new \Exception(sprintf(
+                self::EXCEPTION_REQUIRED_DATA,
+                $operationElement->getType(),
+                $operationElement->getKey(),
+                $entityObject->getName()
+            ));
+        }
+    }
+
+    /**
+     * Resolves DataObjects referenced by the operation
+     *
+     * @param $entityObject
+     * @param $operation
+     * @param $fromArray
+     * @param $operationElementType
+     * @param $operationElement
+     * @param array $operationDataArray
+     * @throws TestFrameworkException
+     */
+    private function resolveNonPrimitiveReferenceElement($entityObject, $operation, $fromArray, &$operationElementType, $operationElement, array &$operationDataArray)
+    {
+        $operationElementProperty = null;
+        if (strpos($operationElementType, '.') !== false) {
+            $operationElementComponents = explode('.', $operationElementType);
+            $operationElementType = $operationElementComponents[0];
+            $operationElementProperty = $operationElementComponents[1];
+        }
+
+        $entityNamesOfType = $entityObject->getLinkedEntitiesOfType($operationElementType);
+
+        // If an element is required by metadata, but was not provided in the entity, throw an exception
+        if ($operationElement->isRequired() && $entityNamesOfType == null) {
+            throw new \Exception(sprintf(
+                self::EXCEPTION_REQUIRED_DATA,
+                $operationElement->getType(),
+                $operationElement->getKey(),
+                $entityObject->getName()
+            ));
+        }
+        foreach ($entityNamesOfType as $entityName) {
+            if ($operationElementProperty === null) {
+                $operationDataSubArray = $this->resolveNonPrimitiveElement(
+                    $entityName,
+                    $operationElement,
+                    $operation,
+                    $fromArray
+                );
+            } else {
+                $linkedEntityObj = $this->resolveLinkedEntityObject($entityName);
+                $operationDataSubArray = $linkedEntityObj->getDataByName($operationElementProperty, 0);
+
+                if ($operationDataSubArray === null) {
+                    throw new \Exception(
+                        sprintf('Property %s not found in entity %s \n', $operationElementProperty, $entityName)
+                    );
+                }
+            }
+
+            if ($operationElement->getType() == OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY) {
+                $operationDataArray[$operationElement->getKey()][] = $operationDataSubArray;
+            } else {
+                $operationDataArray[$operationElement->getKey()] = $operationDataSubArray;
+            }
+        }
     }
     // @codingStandardsIgnoreEnd
 }

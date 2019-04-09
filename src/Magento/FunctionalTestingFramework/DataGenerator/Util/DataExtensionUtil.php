@@ -92,7 +92,8 @@ class DataExtensionUtil
             $newLinkedReferences,
             $newUniqueReferences,
             $newVarReferences,
-            $entityObject->getParentName()
+            $entityObject->getParentName(),
+            $entityObject->getFilename()
         );
         return $extendedEntity;
     }
