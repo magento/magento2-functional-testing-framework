@@ -29,6 +29,8 @@ class ActionGroupWithDefaultArgumentAndStringSelectorParamCest
 	 */
 	public function ActionGroupWithDefaultArgumentAndStringSelectorParam(AcceptanceTester $I)
 	{
+		$I->comment("Entering Action Group actionGroupWithDefaultArgumentAndStringSelectorParam (actionGroup)");
 		$I->see("John", "#element .test1");
+		$I->comment("Exiting Action Group actionGroupWithDefaultArgumentAndStringSelectorParam (actionGroup)");
 	}
 }

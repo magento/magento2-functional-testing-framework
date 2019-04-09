@@ -27,6 +27,7 @@ class ActionGroupWithStepKeyReferencesCest
 	 */
 	public function ActionGroupWithStepKeyReferences(AcceptanceTester $I)
 	{
+		$I->comment("Entering Action Group FunctionActionGroupWithStepKeyReferences (actionGroup)");
 		$I->amGoingTo("create entity that has the stepKey: createSimpleDataActionGroup");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createSimpleDataActionGroup",
@@ -83,5 +84,6 @@ class ActionGroupWithStepKeyReferencesCest
 		$action14ActionGroup = $I->grabMultiple($action14ActionGroup);
 		$action15ActionGroup = $I->grabTextFrom($action15ActionGroup);
 		$action16ActionGroup = $I->grabValueFrom($action16ActionGroup);
+		$I->comment("Exiting Action Group FunctionActionGroupWithStepKeyReferences (actionGroup)");
 	}
 }
