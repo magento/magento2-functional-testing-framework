@@ -74,6 +74,7 @@ class PersistenceCustomFieldsTestCest
 			["createdData"],
 			$createdData3Fields
 		);
+		$I->comment("Entering Action Group PersistenceActionGroup (createdAG)");
 		$createDataAG1CreatedAGFields['firstname'] = "string1";
 		$I->amGoingTo("create entity that has the stepKey: createDataAG1CreatedAG");
 		PersistedObjectHandler::getInstance()->createEntity(
@@ -101,5 +102,6 @@ class PersistenceCustomFieldsTestCest
 			[],
 			$createDataAG3CreatedAGFields
 		);
+		$I->comment("Exiting Action Group PersistenceActionGroup (createdAG)");
 	}
 }

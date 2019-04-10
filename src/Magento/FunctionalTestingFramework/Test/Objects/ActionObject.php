@@ -70,6 +70,8 @@ class ActionObject
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/({{[\w]+\.[\w\[\]]+}})|({{[\w]+\.[\w]+\((?(?!}}).)+\)}})/';
     const STRING_PARAMETER_REGEX = "/'[^']+'/";
     const DEFAULT_WAIT_TIMEOUT = 10;
+    const ACTION_ATTRIBUTE_USERINPUT = 'userInput';
+    const ACTION_TYPE_COMMENT = 'comment';
 
     /**
      * The unique identifier for the action
