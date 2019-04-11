@@ -6,11 +6,14 @@
 namespace Magento\FunctionalTestingFramework\Allure\Adapter;
 
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
+use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
+use Yandex\Allure\Adapter\Model\Step;
 use Yandex\Allure\Codeception\AllureCodeception;
 use Yandex\Allure\Adapter\Event\StepStartedEvent;
 use Yandex\Allure\Adapter\Event\StepFinishedEvent;
 use Yandex\Allure\Adapter\Event\StepFailedEvent;
 use Yandex\Allure\Adapter\Event\TestCaseFailedEvent;
+use Yandex\Allure\Adapter\Event\TestCaseFinishedEvent;
 use Codeception\Event\FailEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\StepEvent;
@@ -21,10 +24,13 @@ use Codeception\Event\StepEvent;
  * Extends AllureAdapter to provide further information for allure reports
  *
  * @package Magento\FunctionalTestingFramework\Allure
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 
 class MagentoAllureAdapter extends AllureCodeception
 {
+    const STEP_PASSED = "passed";
+
     /**
      * Array of group values passed to test runner command
      *
@@ -98,16 +104,25 @@ class MagentoAllureAdapter extends AllureCodeception
     }
 
     /**
-     * Override of parent method, only different to prevent replacing of . to •
+     * Override of parent method:
+     *     prevent replacing of . to •
+     *     strips control characters
      *
      * @param StepEvent $stepEvent
      * @return void
+     * @throws \Yandex\Allure\Adapter\AllureException
      */
     public function stepBefore(StepEvent $stepEvent)
     {
         //Hard set to 200; we don't expose this config in MFTF
         $argumentsLength = 200;
-        $stepAction = $stepEvent->getStep()->getHumanizedActionWithoutArguments();
+
+        // DO NOT alter action if actionGroup is starting, need the exact actionGroup name for good logging
+        if (strpos($stepEvent->getStep()->getAction(), ActionGroupObject::ACTION_GROUP_CONTEXT_START) !== false) {
+            $stepAction = $stepEvent->getStep()->getAction();
+        } else {
+            $stepAction = $stepEvent->getStep()->getHumanizedActionWithoutArguments();
+        }
         $stepArgs = $stepEvent->getStep()->getArgumentsAsString($argumentsLength);
 
         if (!trim($stepAction)) {
@@ -116,6 +131,9 @@ class MagentoAllureAdapter extends AllureCodeception
         }
 
         $stepName = $stepAction . ' ' . $stepArgs;
+
+        // Strip control characters so that report generation does not fail
+        $stepName = preg_replace('/[[:cntrl:]]/', '', $stepName);
 
         $this->emptyStep = false;
         $this->getLifecycle()->fire(new StepStartedEvent($stepName));
@@ -147,5 +165,59 @@ class MagentoAllureAdapter extends AllureCodeception
         $e = $failEvent->getFail();
         $message = $e->getMessage();
         $this->getLifecycle()->fire($event->withException($e)->withMessage($message));
+    }
+
+    /**
+     * Override of parent method, polls stepStorage for testcase and formats it according to actionGroup nesting.
+     *
+     * @return void
+     */
+    public function testEnd()
+    {
+        // Pops top of stepStorage, need to add it back in after processing
+        $rootStep = $this->getLifecycle()->getStepStorage()->pollLast();
+        $formattedSteps = [];
+        $actionGroupStepContainer = null;
+
+        foreach ($rootStep->getSteps() as $step) {
+            // if actionGroup flag, start nesting
+            if (strpos($step->getName(), ActionGroupObject::ACTION_GROUP_CONTEXT_START) !== false) {
+                $step->setName(str_replace(ActionGroupObject::ACTION_GROUP_CONTEXT_START, '', $step->getName()));
+                $actionGroupStepContainer = $step;
+                continue;
+            }
+            // if actionGroup ended, add stack to steps
+            if (stripos($step->getName(), ActionGroupObject::ACTION_GROUP_CONTEXT_END) !== false) {
+                $formattedSteps[] = $actionGroupStepContainer;
+                $actionGroupStepContainer = null;
+                continue;
+            }
+
+            if ($actionGroupStepContainer !== null) {
+                $actionGroupStepContainer->addStep($step);
+                if ($step->getStatus() !== self::STEP_PASSED) {
+                    // If step didn't pass, need to end action group nesting and set overall step status
+                    $actionGroupStepContainer->setStatus($step->getStatus());
+                    $formattedSteps[] = $actionGroupStepContainer;
+                    $actionGroupStepContainer = null;
+                }
+            } else {
+                // Add step as normal
+                $formattedSteps[] = $step;
+            }
+        }
+
+        // No public function for setting the step's steps
+        call_user_func(\Closure::bind(
+            function () use ($rootStep, $formattedSteps) {
+                $rootStep->steps = $formattedSteps;
+            },
+            null,
+            $rootStep
+        ));
+
+        $this->getLifecycle()->getStepStorage()->put($rootStep);
+
+        $this->getLifecycle()->fire(new TestCaseFinishedEvent());
     }
 }

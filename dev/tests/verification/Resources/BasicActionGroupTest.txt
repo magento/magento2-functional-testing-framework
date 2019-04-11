@@ -33,8 +33,10 @@ class BasicActionGroupTestCest
 			[],
 			null
 		);
+		$I->comment("Entering Action Group FunctionalActionGroup (beforeGroup)");
 		$I->fillField("#foo", "myData1");
 		$I->fillField("#bar", "myData2");
+		$I->comment("Exiting Action Group FunctionalActionGroup (beforeGroup)");
 	}
 
 	/**
@@ -49,8 +51,10 @@ class BasicActionGroupTestCest
 	public function BasicActionGroupTest(AcceptanceTester $I)
 	{
 		$I->amOnPage("/someUrl");
+		$I->comment("Entering Action Group FunctionalActionGroup (actionGroup1)");
 		$I->fillField("#foo", "myData1");
 		$I->fillField("#bar", "myData2");
+		$I->comment("Exiting Action Group FunctionalActionGroup (actionGroup1)");
 		$I->click("loginButton");
 	}
 }

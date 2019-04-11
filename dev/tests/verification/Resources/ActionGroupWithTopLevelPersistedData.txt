@@ -33,8 +33,10 @@ class ActionGroupWithTopLevelPersistedDataCest
 			[],
 			null
 		);
+		$I->comment("Entering Action Group FunctionalActionGroup (beforeGroup)");
 		$I->fillField("#foo", "myData1");
 		$I->fillField("#bar", "myData2");
+		$I->comment("Exiting Action Group FunctionalActionGroup (beforeGroup)");
 	}
 
 	/**
@@ -43,8 +45,10 @@ class ActionGroupWithTopLevelPersistedDataCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
+		$I->comment("Entering Action Group FunctionalActionGroup (afterGroup)");
 		$I->fillField("#foo", "myData1");
 		$I->fillField("#bar", "myData2");
+		$I->comment("Exiting Action Group FunctionalActionGroup (afterGroup)");
 	}
 
 	/**
@@ -67,10 +71,12 @@ class ActionGroupWithTopLevelPersistedDataCest
 	 */
 	public function ActionGroupWithTopLevelPersistedData(AcceptanceTester $I)
 	{
+		$I->comment("Entering Action Group FunctionalActionGroupWithData (actionGroupWithPersistedData1)");
 		$I->amOnPage("/" . PersistedObjectHandler::getInstance()->retrieveEntityField('createPersonParam', 'firstname', 'test') . "/" . PersistedObjectHandler::getInstance()->retrieveEntityField('createPersonParam', 'lastname', 'test') . ".html");
 		$I->fillField("#foo", PersistedObjectHandler::getInstance()->retrieveEntityField('createPersonParam', 'firstname', 'test'));
 		$I->fillField("#bar", PersistedObjectHandler::getInstance()->retrieveEntityField('createPersonParam', 'lastname', 'test'));
 		$I->searchAndMultiSelectOption("#foo", [PersistedObjectHandler::getInstance()->retrieveEntityField('createPersonParam', 'firstname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createPersonParam', 'lastname', 'test')]);
 		$I->see("#element ." . PersistedObjectHandler::getInstance()->retrieveEntityField('createPersonParam', 'firstname', 'test'));
+		$I->comment("Exiting Action Group FunctionalActionGroupWithData (actionGroupWithPersistedData1)");
 	}
 }
