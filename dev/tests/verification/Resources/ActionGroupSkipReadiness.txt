@@ -27,8 +27,10 @@ class ActionGroupSkipReadinessCest
 	 */
 	public function ActionGroupSkipReadiness(AcceptanceTester $I)
 	{
+		$I->comment("Entering Action Group actionGroupWithSkipReadinessActions (skipReadinessActionGroup)");
 		$I->skipReadinessCheck(true);
 		$I->comment("ActionGroupSkipReadiness");
 		$I->skipReadinessCheck(false);
+		$I->comment("Exiting Action Group actionGroupWithSkipReadinessActions (skipReadinessActionGroup)");
 	}
 }

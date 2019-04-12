@@ -29,6 +29,8 @@ class ActionGroupWithNoArgumentsCest
 	 */
 	public function ActionGroupWithNoArguments(AcceptanceTester $I)
 	{
+		$I->comment("Entering Action Group actionGroupWithoutArguments (actionGroup)");
 		$I->wait(1);
+		$I->comment("Exiting Action Group actionGroupWithoutArguments (actionGroup)");
 	}
 }
