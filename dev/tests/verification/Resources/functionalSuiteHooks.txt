@@ -60,7 +60,9 @@ class functionalSuiteHooks extends \Codeception\GroupObject
                      $createFields
                 );
                 $webDriver->click(PersistedObjectHandler::getInstance()->retrieveEntityField('create', 'data', 'suite'));
+                print("Entering Action Group actionGroupWithTwoArguments (AC)");
                 $webDriver->see("John", msq("uniqueData") . "John");
+                print("Exiting Action Group actionGroupWithTwoArguments (AC)");
 
                 // reset configuration and close session
                 $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver')->_resetConfig();
@@ -120,7 +122,9 @@ class functionalSuiteHooks extends \Codeception\GroupObject
                 $webDriver->_initializeSession();
                 $webDriver->amOnPage("some.url");
                 $webDriver->deleteEntityByUrl("deleteThis");
+                print("Entering Action Group actionGroupWithTwoArguments (AC)");
                 $webDriver->see("John", msq("uniqueData") . "John");
+                print("Exiting Action Group actionGroupWithTwoArguments (AC)");
             } catch (\Exception $exception) {
                 print $exception->getMessage();
             }
