@@ -16,8 +16,8 @@ class MagentoTestCase extends TestCase
 {
     public static function setUpBeforeClass()
     {
-        if (!self::fileExists(OUTPUT_DIR)) {
-            mkdir(OUTPUT_DIR, 0755, true);
+        if (!self::fileExists(DOCS_OUTPUT_DIR)) {
+            mkdir(DOCS_OUTPUT_DIR, 0755, true);
         }
         parent::setUpBeforeClass();
     }
@@ -29,9 +29,9 @@ class MagentoTestCase extends TestCase
     public static function tearDownAfterClass()
     {
         AspectMock::clean();
-        array_map('unlink', glob(OUTPUT_DIR . DIRECTORY_SEPARATOR . "*"));
-        if (file_exists(OUTPUT_DIR)) {
-            rmdir(OUTPUT_DIR);
+        array_map('unlink', glob(DOCS_OUTPUT_DIR . DIRECTORY_SEPARATOR . "*"));
+        if (file_exists(DOCS_OUTPUT_DIR)) {
+            rmdir(DOCS_OUTPUT_DIR);
         }
     }
 }

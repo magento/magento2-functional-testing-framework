@@ -37,7 +37,12 @@ class GenerateDocsCommand extends Command
                 'c',
                 InputOption::VALUE_NONE,
                 'Clean Output Directory'
-            );
+            )->addOption(
+        "force",
+        'f',
+        InputOption::VALUE_NONE,
+        'Force Document Generation For All Action Groups'
+    );
     }
 
     /**
@@ -55,9 +60,10 @@ class GenerateDocsCommand extends Command
         defined('COMMAND') || define('COMMAND', 'generate:docs');
         $config = $input->getOption('output');
         $clean = $input->getOption('clean');
+        $force = $input->getOption('force');
 
         MftfApplicationConfig::create(
-            true,
+            $force,
             MftfApplicationConfig::GENERATION_PHASE,
             false,
             false
@@ -65,7 +71,7 @@ class GenerateDocsCommand extends Command
 
         $allActionGroups = ActionGroupObjectHandler::getInstance()->getAllObjects();
 
-        DocGenerator::getInstance()->createDocumentation($allActionGroups, $config, $clean);
+        DocGenerator::createDocumentation($allActionGroups, $config, $clean);
 
         $output->writeln("Generate Docs Command Run");
     }

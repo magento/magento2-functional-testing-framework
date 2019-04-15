@@ -26,39 +26,10 @@ class DocGenerator
         DIRECTORY_SEPARATOR .
         "docs";
     const DOC_NAME = "documentation.md";
-    const ANNOTATION_MODULE = "";
     const ANNOTATION_PAGE = "page";
     const ANNOTATION_DESCRIPTION = "description";
     const FILENAMES = "filenames";
     const ARGUMENTS = "arguments";
-
-    /**
-     * Single instance of class var
-     *
-     * @var ActionGroupObjectHandler
-     */
-    private static $instance;
-
-    /**
-     * Array of action groups
-     *
-     * @var ActionGroupObjectHandler
-     */
-    private $actionGroups;
-
-    /**
-     * Singleton getter for instance of ActionGroupObjectHandler
-     *
-     * @return ActionGroupObjectHandler
-     */
-    public static function getInstance(): DocGenerator
-    {
-        if (!self::$instance) {
-            self::$instance = new DocGenerator();
-        }
-
-        return self::$instance;
-    }
 
     /**
      * DocGenerator constructor.

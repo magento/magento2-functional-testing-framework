@@ -33,8 +33,6 @@ class ActionGroupAnnotationExtractor extends AnnotationExtractor
         $annotationObjects = [];
         $annotations = $this->stripDescriptorTags($testAnnotations, parent::NODE_NAME);
 
-        // parse the Test annotations
-
         foreach ($annotations as $annotationKey => $annotationData) {
             $annotationObjects[$annotationKey] = $annotationData[parent::ANNOTATION_VALUE];
         }

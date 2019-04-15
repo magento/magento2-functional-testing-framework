@@ -32,11 +32,11 @@ class DocGeneratorTest extends MagentoTestCase
             ->build();
         DocGenerator::getInstance()->createDocumentation(
             [$actionGroupUnderTest->getName() => $actionGroupUnderTest],
-            OUTPUT_DIR,
+            DOCS_OUTPUT_DIR,
             true
         );
 
-        $docFile = OUTPUT_DIR . DIRECTORY_SEPARATOR . self::DOC_FILENAME . ".md";
+        $docFile = DOCS_OUTPUT_DIR . DIRECTORY_SEPARATOR . self::DOC_FILENAME . ".md";
 
         $this->assertTrue(file_exists($docFile));
 
@@ -63,7 +63,7 @@ class DocGeneratorTest extends MagentoTestCase
             ->build();
         DocGenerator::getInstance()->createDocumentation(
             [$actionGroupUnderTest->getName() => $actionGroupUnderTest],
-            OUTPUT_DIR,
+            DOCS_OUTPUT_DIR,
             true
         );
 
@@ -77,11 +77,11 @@ class DocGeneratorTest extends MagentoTestCase
             ->build();
         DocGenerator::getInstance()->createDocumentation(
             [$actionGroupUnderTest->getName() => $actionGroupUnderTest],
-            OUTPUT_DIR,
+            DOCS_OUTPUT_DIR,
             true
         );
 
-        $docFile = OUTPUT_DIR . DIRECTORY_SEPARATOR . self::DOC_FILENAME . ".md";
+        $docFile = DOCS_OUTPUT_DIR . DIRECTORY_SEPARATOR . self::DOC_FILENAME . ".md";
 
         $this->assertTrue(file_exists($docFile));
 
@@ -108,18 +108,18 @@ class DocGeneratorTest extends MagentoTestCase
             ->build();
         DocGenerator::getInstance()->createDocumentation(
             [$actionGroupUnderTest->getName() => $actionGroupUnderTest],
-            OUTPUT_DIR,
+            DOCS_OUTPUT_DIR,
             true
         );
 
-        $docFile = OUTPUT_DIR . DIRECTORY_SEPARATOR . self::DOC_FILENAME . ".md";
+        $docFile = DOCS_OUTPUT_DIR . DIRECTORY_SEPARATOR . self::DOC_FILENAME . ".md";
 
         $this->expectException(TestFrameworkException::class);
         $this->expectExceptionMessage("$docFile already exists, please add --clean if you want to overwrite it.");
 
         DocGenerator::getInstance()->createDocumentation(
             [$actionGroupUnderTest->getName() => $actionGroupUnderTest],
-            OUTPUT_DIR,
+            DOCS_OUTPUT_DIR,
             false
         );
     }
