@@ -16,7 +16,7 @@ We will inform you if it needs any additional processing.
 The documentation in this repository is used as the source for the [MFTF documentation][].
 Any changes to the Table of Contents will need to be made via a separate PR in the regular [devdocs repo][].
 
-## Ordered lists - all heading have a blank line before and after, capitalize the first word only
+## Ordered lists
 
 1. Number all ordered list items as `1.`
 1. Single space after the number.
