@@ -35,9 +35,8 @@ class DocGenerator
      * DocGenerator constructor.
      *
      */
-    private function __construct()
+    public function __construct()
     {
-        // private constructor for factory
     }
 
     /**

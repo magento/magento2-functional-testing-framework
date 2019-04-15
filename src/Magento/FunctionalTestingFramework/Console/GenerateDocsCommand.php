@@ -11,6 +11,7 @@ use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Util\DocGenerator;
+use PhpParser\Comment\Doc;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -38,11 +39,11 @@ class GenerateDocsCommand extends Command
                 InputOption::VALUE_NONE,
                 'Clean Output Directory'
             )->addOption(
-        "force",
-        'f',
-        InputOption::VALUE_NONE,
-        'Force Document Generation For All Action Groups'
-    );
+                "force",
+                'f',
+                InputOption::VALUE_NONE,
+                'Force Document Generation For All Action Groups'
+            );
     }
 
     /**
@@ -70,8 +71,8 @@ class GenerateDocsCommand extends Command
         );
 
         $allActionGroups = ActionGroupObjectHandler::getInstance()->getAllObjects();
-
-        DocGenerator::createDocumentation($allActionGroups, $config, $clean);
+        $docGenerator = new DocGenerator();
+        $docGenerator->createDocumentation($allActionGroups, $config, $clean);
 
         $output->writeln("Generate Docs Command Run");
     }
