@@ -19,6 +19,8 @@ class ActionGroupObject
 {
     const ACTION_GROUP_ORIGIN_NAME = "actionGroupName";
     const ACTION_GROUP_ORIGIN_TEST_REF = "testInvocationRef";
+    const ACTION_GROUP_DESCRIPTION = "description";
+    const ACTION_GROUP_PAGE = "page";
     const STEPKEY_REPLACEMENT_ENABLED_TYPES = [
         "executeJS",
         "magentoCLI",

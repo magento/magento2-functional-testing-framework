@@ -10,6 +10,8 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
+use Magento\FunctionalTestingFramework\Test\Util\ActionGroupAnnotationExtractor;
+use Magento\FunctionalTestingFramework\Test\Util\ActionGroupObjectExtractor;
 
 /**
  * Class TestGenerator
@@ -26,10 +28,8 @@ class DocGenerator
         DIRECTORY_SEPARATOR .
         "docs";
     const DOC_NAME = "documentation.md";
-    const ANNOTATION_PAGE = "page";
-    const ANNOTATION_DESCRIPTION = "description";
+    # This is the only place FILENAMES is defined as this string
     const FILENAMES = "filenames";
-    const ARGUMENTS = "arguments";
 
     /**
      * DocGenerator constructor.
@@ -72,14 +72,14 @@ class DocGenerator
             $arguments = $object->getArguments();
 
             $info = [
-                self::ANNOTATION_DESCRIPTION => $annotations[self::ANNOTATION_DESCRIPTION]
+                actionGroupObject::ACTION_GROUP_DESCRIPTION => $annotations[actionGroupObject::ACTION_GROUP_DESCRIPTION]
                     ?? 'NO_DESCRIPTION_SPECIFIED',
                 self::FILENAMES => $filenames,
-                self::ARGUMENTS => $arguments
+                ActionGroupObjectExtractor::ACTION_GROUP_ARGUMENTS => $arguments
                 ];
             $pageGroups = array_merge_recursive(
                 $pageGroups,
-                [$annotations[self::ANNOTATION_PAGE] ?? 'NO_PAGE_SPECIFIED' => [$name => $info]]
+                [$annotations[ActionGroupObject::ACTION_GROUP_PAGE] ?? 'NO_PAGE_SPECIFIED' => [$name => $info]]
             );
         }
 
@@ -118,12 +118,12 @@ class DocGenerator
             $markdown .= "##$group" . PHP_EOL . PHP_EOL;
             foreach ($objects as $name => $annotations) {
                 $markdown .= "###$name" . PHP_EOL;
-                $markdown .= $annotations[self::ANNOTATION_DESCRIPTION] . PHP_EOL . PHP_EOL;
-                if (!empty($annotations[self::ARGUMENTS])) {
+                $markdown .= $annotations[actionGroupObject::ACTION_GROUP_DESCRIPTION] . PHP_EOL . PHP_EOL;
+                if (!empty($annotations[ActionGroupObjectExtractor::ACTION_GROUP_ARGUMENTS])) {
                     $markdown .= "Action Group Arguments:" . PHP_EOL . PHP_EOL;
                     $markdown .= "| Name | Type |" . PHP_EOL;
                     $markdown .= "| --- | --- |" . PHP_EOL;
-                    foreach ($annotations[self::ARGUMENTS] as $argument) {
+                    foreach ($annotations[ActionGroupObjectExtractor::ACTION_GROUP_ARGUMENTS] as $argument) {
                         $argumentName = $argument->getName();
                         $argumentType = $argument->getDataType();
                         $markdown .= "| $argumentName | $argumentType |" . PHP_EOL;
