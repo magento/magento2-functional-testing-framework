@@ -6,7 +6,7 @@ This page describes the process for submitting documentation and serves as a tem
 
 The contribution workflow for the Magento functional testing framework (MFTF) documentation is the same as submitting code.
 
-1. Create a branch from the `develop` branch in the [MFTF repo][].
+1. Create a branch from the `develop` branch in the [MFTF repository][].
 1. Make edits/additions/deletions as needed.
 1. Submit your PR to the `develop` branch.
 
@@ -14,7 +14,7 @@ Once submitted, a member of the documentation team will review and merge it.
 We will inform you if it needs any additional processing.
 
 The documentation in this repository is used as the source for the [MFTF documentation][].
-Any changes to the Table of Contents will need to be made via a separate PR in the regular [devdocs repo][].
+Any changes to the Table of Contents will need to be made via a separate PR in the regular [Magento Developer documentation repository][].
 
 ## Ordered lists
 
@@ -60,7 +60,7 @@ Markdown formatting works for simple tables. It does not support multiline conte
 <!-- For readability, we abstract the link URLS to the bottom of the page. The extra set of square brackets denotes it is a link, rather than plain brackets. >
 
 <!-- Link Definitions -->
-[devdocs repo]: https://github.com/magento/devdocs/blob/master/_data/toc/mftf.yml
-[MFTF repo]: https://github.com/magento/magento2-functional-testing-framework
+[Magento Developer documentation repository]: https://github.com/magento/devdocs/blob/master/_data/toc/mftf.yml
+[MFTF repository]: https://github.com/magento/magento2-functional-testing-framework
 [Contribute to Magento Devdocs]: https://github.com/magento/devdocs/blob/master/.github/CONTRIBUTING.md
 [MFTF documentation]: https://devdocs.magento.com/mftf/docs/introduction.html
