@@ -75,5 +75,13 @@ class GenerateDocsCommand extends Command
         $docGenerator->createDocumentation($allActionGroups, $config, $clean);
 
         $output->writeln("Generate Docs Command Run");
+
+        if (empty($config)) {
+            $output->writeln("Output to ". DocGenerator::DEFAULT_OUTPUT_DIR);
+
+        } else {
+            $output->writeln("Output to ". $config);
+
+        }
     }
 }
