@@ -24,7 +24,7 @@ class MagentoPwaWebDriver extends MagentoWebDriver
      * @throws \Exception
      * @return void
      */
-    public function waitForPwaElementNotVisible($selector, $timeout)
+    public function waitForPwaElementNotVisible($selector, $timeout = null)
     {
         // Determine what type of Selector is used.
         // Then use the correct JavaScript to locate the Element.
