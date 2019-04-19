@@ -6,6 +6,8 @@
 
 namespace Magento\FunctionalTestingFramework\Module;
 
+use Codeception\Module\WebDriver;
+
 /**
  * Class MagentoPwaActions
  *
@@ -15,6 +17,21 @@ namespace Magento\FunctionalTestingFramework\Module;
  */
 class MagentoPwaWebDriver extends MagentoWebDriver
 {
+    /**
+     * Go to the page.
+     *
+     * Overriding the MagentoWebDriver version because it contains 'waitForPageLoad'.
+     * The AJAX check in 'waitForPageLoad' does NOT work with a PWA.
+     *
+     * @param string $page
+     * @throws \Exception
+     * @return void
+     */
+    public function amOnPage($page)
+    {
+        WebDriver::amOnPage($page);
+    }
+
     /**
      * Wait for a PWA Element to NOT be visible using JavaScript.
      * Add the WAIT_TIMEOUT variable to your .env file for this action.
