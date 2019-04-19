@@ -67,11 +67,13 @@ class BasicMergeTestCest
 		$I->fillField("#password", "step5");
 		$I->click("#step6Merged");
 		$I->click("#element .Jane .step7Merge");
+		$I->comment("Entering Action Group FunctionalActionGroupWithData (step8Merge)");
 		$I->amOnPage("/Jane/Dane.html");
 		$I->fillField("#foo", "Jane");
 		$I->fillField("#bar", "Dane");
 		$I->searchAndMultiSelectOption("#foo", ["Jane", "Dane"]);
 		$I->see("#element .Jane");
+		$I->comment("Exiting Action Group FunctionalActionGroupWithData (step8Merge)");
 		$I->click("#step10MergedInResult");
 	}
 }

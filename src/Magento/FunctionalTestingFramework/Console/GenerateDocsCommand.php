@@ -78,10 +78,8 @@ class GenerateDocsCommand extends Command
 
         if (empty($config)) {
             $output->writeln("Output to ". DocGenerator::DEFAULT_OUTPUT_DIR);
-
         } else {
             $output->writeln("Output to ". $config);
-
         }
     }
 }

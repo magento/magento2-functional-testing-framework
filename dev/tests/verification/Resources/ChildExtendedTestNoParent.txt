@@ -32,6 +32,6 @@ class ChildExtendedTestNoParentCest
 	 */
 	public function ChildExtendedTestNoParent(AcceptanceTester $I, \Codeception\Scenario $scenario)
 	{
-		$scenario->skip("This test is skipped due to the following issues:\nNo issues have been specified.");
+		$scenario->skip("This test is skipped due to the following issues:No issues have been specified.");
 	}
 }

@@ -53,7 +53,7 @@ class ActionGroupObjectBuilder
      *
      * @var string
      */
-    private $filenames = [];
+    private $filename = [];
 
     /**
      * Setter for the Action Group Object name
@@ -116,14 +116,14 @@ class ActionGroupObjectBuilder
     }
 
     /**
-     * Setter for the Action Group Object filenames
+     * Setter for the Action Group Object filename
      *
-     * @param array $filenames
+     * @param string $filename
      * @return ActionGroupObjectBuilder
      */
-    public function withFilenames($filenames)
+    public function withFilename($filename)
     {
-        $this->filenames = $filenames;
+        $this->filename = $filename;
         return $this;
     }
 
@@ -150,7 +150,7 @@ class ActionGroupObjectBuilder
             $this->arguments,
             $this->actionObjects,
             $this->extends,
-            $this->filenames
+            $this->filename
         );
     }
 }

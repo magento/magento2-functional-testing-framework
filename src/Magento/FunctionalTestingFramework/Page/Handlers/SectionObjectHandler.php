@@ -22,6 +22,7 @@ class SectionObjectHandler implements ObjectHandlerInterface
     const LOCATOR_FUNCTION = 'locatorFunction';
     const TIMEOUT = 'timeout';
     const PARAMETERIZED = 'parameterized';
+    const FILENAME = 'filename';
     const SECTION_NAME_ERROR_MSG = "Section names cannot contain non alphanumeric characters.\tSection='%s'";
     const ELEMENT_NAME_ERROR_MSG = "Element names cannot contain non alphanumeric characters.\tElement='%s'";
 
@@ -86,7 +87,8 @@ class SectionObjectHandler implements ObjectHandlerInterface
                 throw new XmlException($exception->getMessage() . " in Section '{$sectionName}'");
             }
 
-            $this->sectionObjects[$sectionName] = new SectionObject($sectionName, $elements);
+            $filename = $sectionData[self::FILENAME] ?? null;
+            $this->sectionObjects[$sectionName] = new SectionObject($sectionName, $elements, $filename);
         }
     }
 

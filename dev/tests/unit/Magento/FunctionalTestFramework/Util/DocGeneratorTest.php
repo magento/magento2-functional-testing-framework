@@ -28,7 +28,7 @@ class DocGeneratorTest extends MagentoTestCase
         ];
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withAnnotations($annotations)
-            ->withFilenames(["filename"])
+            ->withFilename("filename")
             ->build();
         $docGenerator = new DocGenerator();
         $docGenerator->createDocumentation(
@@ -60,7 +60,7 @@ class DocGeneratorTest extends MagentoTestCase
         ];
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withAnnotations($annotations)
-            ->withFilenames(["filename"])
+            ->withFilename("filename")
             ->build();
         $docGenerator = new DocGenerator();
         $docGenerator->createDocumentation(
@@ -75,7 +75,7 @@ class DocGeneratorTest extends MagentoTestCase
         ];
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withAnnotations($annotations)
-            ->withFilenames(["filename"])
+            ->withFilename("filename")
             ->build();
         $docGenerator = new DocGenerator();
         $docGenerator->createDocumentation(
@@ -107,7 +107,7 @@ class DocGeneratorTest extends MagentoTestCase
         ];
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withAnnotations($annotations)
-            ->withFilenames(["filename"])
+            ->withFilename("filename")
             ->build();
         $docGenerator = new DocGenerator();
         $docGenerator->createDocumentation(

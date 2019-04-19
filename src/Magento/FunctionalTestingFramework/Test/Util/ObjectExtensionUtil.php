@@ -133,7 +133,7 @@ class ObjectExtensionUtil
             $extendedArguments,
             $newActions,
             $actionGroupObject->getParentName(),
-            $actionGroupObject->getFileNames()
+            $actionGroupObject->getFilename()
         );
         return $extendedActionGroup;
     }

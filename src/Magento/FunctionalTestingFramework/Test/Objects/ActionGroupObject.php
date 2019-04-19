@@ -7,8 +7,6 @@
 namespace Magento\FunctionalTestingFramework\Test\Objects;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
-use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
-use Magento\FunctionalTestingFramework\Test\Util\ActionGroupObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 use Magento\FunctionalTestingFramework\Test\Util\ObjectExtension;
 
@@ -21,6 +19,8 @@ class ActionGroupObject
     const ACTION_GROUP_ORIGIN_TEST_REF = "testInvocationRef";
     const ACTION_GROUP_DESCRIPTION = "description";
     const ACTION_GROUP_PAGE = "page";
+    const ACTION_GROUP_CONTEXT_START = "Entering Action Group ";
+    const ACTION_GROUP_CONTEXT_END = "Exiting Action Group ";
     const STEPKEY_REPLACEMENT_ENABLED_TYPES = [
         "executeJS",
         "magentoCLI",
@@ -74,18 +74,18 @@ class ActionGroupObject
     private $annotations;
 
     /**
-     * An array used to store a list of filenames the action group is created by
-     *
-     * @var array
-     */
-    private $filenames = [];
-
-    /**
      * String of parent Action Group
      *
      * @var string
      */
     private $parentActionGroup;
+
+    /**
+     * Filename where actionGroup came from
+     *
+     * @var string
+     */
+    private $filename;
 
     /**
      * ActionGroupObject constructor.
@@ -97,7 +97,7 @@ class ActionGroupObject
      * @param string           $parentActionGroup
      * @param string           $filename
      */
-    public function __construct($name, $annotations, $arguments, $actions, $parentActionGroup, $filename)
+    public function __construct($name, $annotations, $arguments, $actions, $parentActionGroup, $filename = null)
     {
         $this->varAttributes = array_merge(
             ActionObject::SELECTOR_ENABLED_ATTRIBUTES,
@@ -109,10 +109,7 @@ class ActionGroupObject
         $this->arguments = $arguments;
         $this->parsedActions = $actions;
         $this->parentActionGroup = $parentActionGroup;
-        $this->filenames = array_merge(
-            $this->filenames,
-            [$filename]
-        );
+        $this->filename = $filename;
     }
 
     /**
@@ -212,6 +209,8 @@ class ActionGroupObject
                     self::ACTION_GROUP_ORIGIN_TEST_REF => $actionReferenceKey]
             );
         }
+
+        $resolvedActions = $this->addContextCommentsToActionList($resolvedActions, $actionReferenceKey);
 
         return $resolvedActions;
     }
@@ -433,6 +432,16 @@ class ActionGroupObject
     }
 
     /**
+     * Getter for the Action Group Filename
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+
+    /**
      * Getter for the Parent Action Group Name
      *
      * @return string
@@ -470,16 +479,6 @@ class ActionGroupObject
     public function getAnnotations()
     {
         return $this->annotations;
-    }
-
-    /**
-     * Getter for the Action Group File Names
-     *
-     * @return array
-     */
-    public function getFileNames()
-    {
-        return $this->filenames;
     }
 
     /**
@@ -523,5 +522,28 @@ class ActionGroupObject
         }
 
         return $resolvedActionAttributes;
+    }
+
+    /**
+     * Adds comment ActionObjects before and after given actionList for context setting.
+     * @param array  $actionList
+     * @param string $actionReferenceKey
+     * @return array
+     */
+    private function addContextCommentsToActionList($actionList, $actionReferenceKey)
+    {
+        $actionStartComment = self::ACTION_GROUP_CONTEXT_START . $this->name . " (" . $actionReferenceKey . ")";
+        $actionEndComment = self::ACTION_GROUP_CONTEXT_END . $this->name . " (" . $actionReferenceKey . ")";
+        $startAction = new ActionObject(
+            $actionStartComment,
+            ActionObject::ACTION_TYPE_COMMENT,
+            [ActionObject::ACTION_ATTRIBUTE_USERINPUT => $actionStartComment]
+        );
+        $endAction = new ActionObject(
+            $actionEndComment,
+            ActionObject::ACTION_TYPE_COMMENT,
+            [ActionObject::ACTION_ATTRIBUTE_USERINPUT => $actionEndComment]
+        );
+        return [$startAction->getStepKey() => $startAction] + $actionList + [$endAction->getStepKey() => $endAction];
     }
 }

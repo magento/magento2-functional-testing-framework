@@ -68,7 +68,7 @@ class DocGenerator
 
         foreach ($annotatedObjects as $name => $object) {
             $annotations = $object->getAnnotations();
-            $filenames = $this->flattenArray($object->getFileNames());
+            $filenames = explode(',', $object->getFilename());
             $arguments = $object->getArguments();
 
             $info = [
@@ -133,31 +133,11 @@ class DocGenerator
                 $markdown .= "Located in:" . PHP_EOL;
                 foreach ($annotations[self::FILENAMES] as $filename) {
                     $relativeFilename = str_replace(MAGENTO_BP . DIRECTORY_SEPARATOR, "", $filename);
-                    $markdown .= "- $relativeFilename";
+                    $markdown .= PHP_EOL .  "- $relativeFilename";
                 }
                 $markdown .= PHP_EOL . "***" . PHP_EOL;
             }
         }
         return $markdown;
-    }
-
-    /**
-     * Flattens array to one level
-     *
-     * @param array $uprightArray
-     * @return array
-     */
-    private function flattenArray($uprightArray)
-    {
-        $flatArray = [];
-
-        foreach ($uprightArray as $value) {
-            if (is_array($value)) {
-                array_merge($flatArray, $this->flattenArray($value));
-            } else {
-                array_push($flatArray, $value);
-            }
-        }
-        return $flatArray;
     }
 }

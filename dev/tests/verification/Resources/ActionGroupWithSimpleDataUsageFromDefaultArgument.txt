@@ -29,6 +29,8 @@ class ActionGroupWithSimpleDataUsageFromDefaultArgumentCest
 	 */
 	public function ActionGroupWithSimpleDataUsageFromDefaultArgument(AcceptanceTester $I)
 	{
+		$I->comment("Entering Action Group actionGroupWithStringUsage (actionGroup)");
 		$I->see("stringLiteral", "#element .stringLiteral");
+		$I->comment("Exiting Action Group actionGroupWithStringUsage (actionGroup)");
 	}
 }
