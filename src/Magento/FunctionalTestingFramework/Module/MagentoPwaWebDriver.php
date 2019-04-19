@@ -17,6 +17,7 @@ class MagentoPwaWebDriver extends MagentoWebDriver
 {
     /**
      * Wait for a PWA Element to NOT be visible using JavaScript.
+     * Add the WAIT_TIMEOUT variable to your .env file for this action.
      *
      * @param null $selector
      * @param null $timeout
@@ -25,8 +26,6 @@ class MagentoPwaWebDriver extends MagentoWebDriver
      */
     public function waitForPwaElementNotVisible($selector, $timeout = null)
     {
-        $timeout = $timeout ?? $this->_getConfig()['pageload_timeout'];
-
         // Determine what type of Selector is used.
         // Then use the correct JavaScript to locate the Element.
         if (\Codeception\Util\Locator::isXPath($selector)) {
@@ -38,6 +37,7 @@ class MagentoPwaWebDriver extends MagentoWebDriver
 
     /**
      * Wait for a PWA Element to be visible using JavaScript.
+     * Add the WAIT_TIMEOUT variable to your .env file for this action.
      *
      * @param null $selector
      * @param null $timeout
@@ -46,8 +46,6 @@ class MagentoPwaWebDriver extends MagentoWebDriver
      */
     public function waitForPwaElementVisible($selector, $timeout = null)
     {
-        $timeout = $timeout ?? $this->_getConfig()['pageload_timeout'];
-
         // Determine what type of Selector is used.
         // Then use the correct JavaScript to locate the Element.
         if (\Codeception\Util\Locator::isXPath($selector)) {
