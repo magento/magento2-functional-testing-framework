@@ -80,6 +80,23 @@ To enable the **Admin Account Sharing** setting, to avoid unpredictable logout d
 3. Set **Add Secret Key to URLs** to **No**.
 4. Click **Save Config**.
 
+### Nginx settings {#nginx-settings}
+
+If Nginx Web server is used on your development environment then **Use Web Server Rewrites** setting in **Stores \> Configuration \> Web \> Search Engine Optimization** must be set to **Yes**.
+
+To be able to run Magento command line commands in tests add the following location block to Nginx configuration file:   
+
+```conf
+location ~* ^/dev/tests/acceptance/utils($|/) {
+  root $MAGE_ROOT;
+  location ~ ^/dev/tests/acceptance/utils/command.php {
+      fastcgi_pass   fastcgi_backend;
+      fastcgi_index  index.php;
+      fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+      include        fastcgi_params;
+  }
+}
+```
 ## Set up an embedded MFTF {#setup-framework}
 
 This is a default setup that you would need to start using the MFTF to cover your Magento project with functional testing.
