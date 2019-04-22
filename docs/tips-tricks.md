@@ -397,7 +397,7 @@ BAD:
 ```
 
 For example:
-[This test][] refers to this [Data file][]
+[This test][] refers to this [Data file][].
 
 ### Use descriptive variable names
 
@@ -447,4 +447,4 @@ BAD:
 
 <!-- Link Definitions -->
 [This test]: https://github.com/magento/magento2/blob/2.3-develop/app/code/Magento/Captcha/Test/Mftf/Test/StorefrontCaptchaRegisterNewCustomerTest.xml#L24
-Data file]: https://github.com/magento/magento2/blob/2.3-develop/app/code/Magento/Captcha/Test/Mftf/Data/CaptchaConfigData.xml
+[Data file]: https://github.com/magento/magento2/blob/2.3-develop/app/code/Magento/Captcha/Test/Mftf/Data/CaptchaConfigData.xml
