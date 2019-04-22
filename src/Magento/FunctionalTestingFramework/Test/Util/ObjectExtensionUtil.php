@@ -129,6 +129,7 @@ class ObjectExtensionUtil
         // Create new Action Group object to return
         $extendedActionGroup = new ActionGroupObject(
             $actionGroupObject->getName(),
+            $actionGroupObject->getAnnotations(),
             $extendedArguments,
             $newActions,
             $actionGroupObject->getParentName(),
