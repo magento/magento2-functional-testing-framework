@@ -24,6 +24,7 @@ class ActionGroupUsingCreateDataCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
+		$I->comment("Entering Action Group actionGroupWithCreateData (Key1)");
 		$I->amGoingTo("create entity that has the stepKey: createCategoryKey1");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createCategoryKey1",
@@ -40,6 +41,7 @@ class ActionGroupUsingCreateDataCest
 			["createCategoryKey1"],
 			null
 		);
+		$I->comment("Exiting Action Group actionGroupWithCreateData (Key1)");
 	}
 
 	/**
