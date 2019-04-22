@@ -15,7 +15,7 @@ class ExecuteInSeleniumTest extends MftfTestCase
      * @throws \Exception
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
-    public function testExecuteJsTest()
+    public function testExecuteInSeleniumTest()
     {
         $this->generateAndCompareTest('ExecuteInSeleniumTest');
     }
