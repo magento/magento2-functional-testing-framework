@@ -1,10 +1,8 @@
 # How to contribute to MFTF docs
 
-MFTF documentation is kept within the /docs/ folder in this repository.
-We welcome contributions to the documentation.
-This page describes the process for submitting documentation and serves as a template for a properly written content.
-
-The contribution workflow for the Magento functional testing framework (MFTF) documentation is the same as submitting code.
+We welcome contributions to the MFTF documentation, which is kept within the /docs/ folder in this repository.
+This page describes the submitting process and serves as a template for a properly written content.
+The contribution workflow is the same as submitting code.
 
 1. Create a branch from the `develop` branch in the [MFTF repository][].
 1. Make edits/additions/deletions as needed.
@@ -14,7 +12,7 @@ Once submitted, a member of the documentation team will review and merge it.
 We will inform you if it needs any additional processing.
 
 The documentation in this repository is used as the source for the [MFTF documentation][].
-Any changes to the Table of Contents will need to be made via a separate PR in the regular [Magento Developer documentation repository][].
+Any changes to the table of contents will need to be made through a separate pull request in the regular [Magento Developer documentation repository][].
 
 ## Ordered lists
 
