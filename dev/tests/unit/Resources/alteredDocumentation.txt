@@ -1,0 +1,16 @@
+#Action Group Information
+This documentation contains a list of all action groups on the pages on which they start
+
+##List of Pages
+- [ alteredPage ](#alteredPage)
+---
+<a name="alteredPage"></a>
+##alteredPage
+
+###testActionGroupObject
+alteredDescription
+
+Located in:
+
+- filename
+***

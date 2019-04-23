@@ -7,8 +7,6 @@
 namespace Magento\FunctionalTestingFramework\Test\Objects;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
-use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
-use Magento\FunctionalTestingFramework\Test\Util\ActionGroupObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 use Magento\FunctionalTestingFramework\Test\Util\ObjectExtension;
 
@@ -19,6 +17,8 @@ class ActionGroupObject
 {
     const ACTION_GROUP_ORIGIN_NAME = "actionGroupName";
     const ACTION_GROUP_ORIGIN_TEST_REF = "testInvocationRef";
+    const ACTION_GROUP_DESCRIPTION = "description";
+    const ACTION_GROUP_PAGE = "page";
     const ACTION_GROUP_CONTEXT_START = "Entering Action Group ";
     const ACTION_GROUP_CONTEXT_END = "Exiting Action Group ";
     const STEPKEY_REPLACEMENT_ENABLED_TYPES = [
@@ -67,6 +67,13 @@ class ActionGroupObject
     private $arguments;
 
     /**
+     * An array used to store annotation information to values
+     *
+     * @var array
+     */
+    private $annotations;
+
+    /**
      * String of parent Action Group
      *
      * @var string
@@ -84,12 +91,13 @@ class ActionGroupObject
      * ActionGroupObject constructor.
      *
      * @param string           $name
+     * @param array            $annotations
      * @param ArgumentObject[] $arguments
      * @param array            $actions
      * @param string           $parentActionGroup
      * @param string           $filename
      */
-    public function __construct($name, $arguments, $actions, $parentActionGroup, $filename = null)
+    public function __construct($name, $annotations, $arguments, $actions, $parentActionGroup, $filename = null)
     {
         $this->varAttributes = array_merge(
             ActionObject::SELECTOR_ENABLED_ATTRIBUTES,
@@ -97,6 +105,7 @@ class ActionGroupObject
         );
         $this->varAttributes[] = ActionObject::ACTION_ATTRIBUTE_URL;
         $this->name = $name;
+        $this->annotations = $annotations;
         $this->arguments = $arguments;
         $this->parsedActions = $actions;
         $this->parentActionGroup = $parentActionGroup;
@@ -460,6 +469,16 @@ class ActionGroupObject
     public function getArguments()
     {
         return $this->arguments;
+    }
+
+    /**
+     * Getter for the Action Group Annotations
+     *
+     * @return array
+     */
+    public function getAnnotations()
+    {
+        return $this->annotations;
     }
 
     /**
