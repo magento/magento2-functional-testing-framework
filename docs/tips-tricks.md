@@ -289,7 +289,7 @@ When possible, use `contains(text(), 'someTextHere')` rather than `text()='someT
 `contains()` ignores whitespace while `text()` accounts for it.
 
 **Why?**
-If you are comparing text wihtin a selector and have an unexpected space, or a blank line above or below the string, `text()` will fail while the `contains(text())` format will catch it.
+If you are comparing text within a selector and have an unexpected space, or a blank line above or below the string, `text()` will fail while the `contains(text())` format will catch it.
 In this scenario `text()` is more exacting. Use it when you need to be very precise about what is getting compared.
 
 <span style="color:green">
