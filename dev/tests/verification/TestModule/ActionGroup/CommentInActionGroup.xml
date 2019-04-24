@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="commentActionGroup">
+        <!--xml comment in Action Group before-->
+        <comment userInput="commentInActionGroup1" stepKey="commentInActionGroup1" />
+        <wait time="1" stepKey="waitInActionGroup1"/>
+        <comment userInput="commentInActionGroup2" stepKey="commentInActionGroup2" />
+        <!--xml comment in Action Group inside-->
+        <wait time="1" stepKey="waitInActionGroup2"/>
+        <!--xml comment in Action Group after-->
+    </actionGroup>
+</actionGroups>

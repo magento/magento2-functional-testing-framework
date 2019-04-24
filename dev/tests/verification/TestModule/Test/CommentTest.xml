@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="CommentTest">
+        <annotations>
+            <severity value="CRITICAL"/>
+            <title value="CommentTest"/>
+            <group value="functional"/>
+            <features value="CommentTest"/>
+            <stories value="MQE-1234"/>
+        </annotations>
+        <before>
+            <!--< > & $abc " abc ' <click stepKey="click" userInput="{{UniquePerson.firstname}}" selector="#id">/-->
+            <createData entity="ReplacementPerson" stepKey="createDataHook"/>
+            <comment userInput="&lt;abc&gt;" stepKey="commentInHook"/>
+        </before>
+        <createData entity="DefaultPerson" stepKey="createDataTest"/>
+        <comment userInput="&lt;abc" stepKey="commentInTest1"/>
+        <comment userInput="abc&amp;" stepKey="commentInTest2"/>
+        <comment userInput="&gt;abc" stepKey="commentInTest3"/>
+        <actionGroup ref="commentActionGroup" stepKey="commentInTest4"/>
+        <!--< > & $abc " abc ' <click stepKey="click" userInput="$$createDataHook.firstname$$" selector="#id">/-->
+        <comment userInput="$$createDataHook.firstname$$" stepKey="commentInTest5"/>
+        <comment userInput="$createDataTest.firstname$" stepKey="commentInTest6"/>
+        <comment userInput="{{UniquePerson.firstname}}" stepKey="commentInTest8"/>
+        <!--< > & $abc " abc ' <click stepKey="click" userInput="$createDataTest.firstname$" selector="#id">/-->
+        <comment stepKey="commentInTest9" userInput="{{emptyData.noData}}"/>
+        <comment stepKey="commentInTest10" userInput="{{emptyData.definitelyNoData}}"/>
+        <comment stepKey="commentInTest11" userInput="skipReadiness" skipReadiness="true"/>
+    </test>
+</tests>

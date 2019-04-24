@@ -72,6 +72,7 @@ class ActionObject
     const DEFAULT_WAIT_TIMEOUT = 10;
     const ACTION_ATTRIBUTE_USERINPUT = 'userInput';
     const ACTION_TYPE_COMMENT = 'comment';
+    const ACTION_TYPE_XML_COMMENT = 'xmlComment';
 
     /**
      * The unique identifier for the action
@@ -191,7 +192,7 @@ class ActionObject
     /**
      * Getter for actionOrigin
      *
-     * @return string
+     * @return array
      */
     public function getActionOrigin()
     {
@@ -267,7 +268,7 @@ class ActionObject
      */
     public function resolveReferences()
     {
-        if (empty($this->resolvedCustomAttributes)) {
+        if (empty($this->resolvedCustomAttributes) && $this->getType() != self::ACTION_TYPE_XML_COMMENT) {
             $this->trimAssertionAttributes();
             $this->resolveSelectorReferenceAndTimeout();
             $this->resolveUrlReference();

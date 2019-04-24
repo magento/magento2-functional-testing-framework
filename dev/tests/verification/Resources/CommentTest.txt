@@ -1,0 +1,83 @@
+<?php
+namespace Magento\AcceptanceTest\_default\Backend;
+
+use Magento\FunctionalTestingFramework\AcceptanceTester;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
+use \Codeception\Util\Locator;
+use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
+use Yandex\Allure\Adapter\Annotation\Title;
+use Yandex\Allure\Adapter\Annotation\Description;
+use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
+use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
+
+/**
+ * @Title("[NO TESTCASEID]: CommentTest")
+ * @group functional
+ */
+class CommentTestCest
+{
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _before(AcceptanceTester $I)
+	{
+		$I->comment("< > & \$abc \" abc ' <click stepKey=\"click\" userInput=\"{{UniquePerson.firstname}}\" selector=\"#id\">/");
+		$I->amGoingTo("create entity that has the stepKey: createDataHook");
+		PersistedObjectHandler::getInstance()->createEntity(
+			"createDataHook",
+			"hook",
+			"ReplacementPerson",
+			[],
+			null
+		);
+		$I->comment("<abc>");
+	}
+
+	/**
+	 * @Severity(level = SeverityLevel::CRITICAL)
+	 * @Features({"TestModule"})
+	 * @Stories({"MQE-1234"})
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function CommentTest(AcceptanceTester $I)
+	{
+		$I->amGoingTo("create entity that has the stepKey: createDataTest");
+		PersistedObjectHandler::getInstance()->createEntity(
+			"createDataTest",
+			"test",
+			"DefaultPerson",
+			[],
+			null
+		);
+		$I->comment("<abc");
+		$I->comment("abc&");
+		$I->comment(">abc");
+		$I->comment("Entering Action Group commentActionGroup (commentInTest4)");
+		$I->comment("xml comment in Action Group before");
+		$I->comment("commentInActionGroup1");
+		$I->wait(1);
+		$I->comment("commentInActionGroup2");
+		$I->comment("xml comment in Action Group inside");
+		$I->wait(1);
+		$I->comment("xml comment in Action Group after");
+		$I->comment("Exiting Action Group commentActionGroup (commentInTest4)");
+		$I->comment("< > & \$abc \" abc ' <click stepKey=\"click\" userInput=\"\$\$createDataHook.firstname\$\$\" selector=\"#id\">/");
+		$I->comment(PersistedObjectHandler::getInstance()->retrieveEntityField('createDataHook', 'firstname', 'test'));
+		$I->comment(PersistedObjectHandler::getInstance()->retrieveEntityField('createDataTest', 'firstname', 'test'));
+		$I->comment("John" . msq("UniquePerson"));
+		$I->comment("< > & \$abc \" abc ' <click stepKey=\"click\" userInput=\"\$createDataTest.firstname\$\" selector=\"#id\">/");
+		$I->comment("");
+		$I->comment("");
+		$I->skipReadinessCheck(true);
+		$I->comment("skipReadiness");
+		$I->skipReadinessCheck(false);
+	}
+}

@@ -52,7 +52,9 @@ class AssertTestCest
 			null
 		);
 		$grabTextFrom1 = $I->grabTextFrom(".copyright>span");
+		$I->comment(" custom asserts ");
 		$I->assertArrayIsSorted(["1", "2", "3", "4", "5"], "asc");
+		$I->comment(" asserts without variable replacement ");
 		$I->comment("asserts without variable replacement");
 		$I->assertArrayHasKey("apple", ['orange' => 2, 'apple' => 1], "pass");
 		$I->assertArrayNotHasKey("kiwi", ['orange' => 2, 'apple' => 1], "pass");
@@ -88,6 +90,7 @@ class AssertTestCest
 		$I->assertStringStartsNotWith("a", "banana", "pass");
 		$I->assertStringStartsWith("a", "apple", "pass");
 		$I->assertTrue(true, "pass");
+		$I->comment(" asserts backward compatible ");
 		$I->comment("asserts backward compatible");
 		$I->assertArrayHasKey("apple", ['orange' => 2, 'apple' => 1], "pass");
 		$I->assertArrayNotHasKey("kiwi", ['orange' => 2, 'apple' => 1], "pass");
@@ -130,15 +133,18 @@ class AssertTestCest
 		$I->assertIsEmpty($text, "pass");
 		$I->assertNull($text, "pass");
 		$I->expectException(new MyException('exception msg'), function() {$this->doSomethingBad();});
+		$I->comment(" string type that use created data ");
 		$I->comment("string type that use created data");
 		$I->assertStringStartsWith("D", PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test') . ", " . PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test'), "fail");
 		$I->assertStringStartsNotWith("W", PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test') . ", " . PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'lastname', 'test'), "pass");
 		$I->assertEquals(PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'), "pass");
+		$I->comment(" array type that use created data ");
 		$I->comment("array type that use created data");
 		$I->assertArraySubset([PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test')], [PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test'), "1"], "pass");
 		$I->assertArraySubset([PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'lastname', 'test')], [PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'lastname', 'test'), "1"], "pass");
 		$I->assertArrayHasKey("lastname", ['lastname' => PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'), 'firstname' => PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test')], "pass");
 		$I->assertArrayHasKey("lastname", ['lastname' => PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'lastname', 'test'), 'firstname' => PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test')], "pass");
+		$I->comment(" this section can only be generated and cannot run ");
 		$I->assertInstanceOf(User::class, $text, "pass");
 		$I->assertNotInstanceOf(User::class, 21, "pass");
 		$I->assertFileExists($text, "pass");
@@ -149,6 +155,7 @@ class AssertTestCest
 		$I->fail("fail");
 		$I->fail(PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test') . " " . PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'lastname', 'test'));
 		$I->fail(PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test') . " " . PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'));
+		$I->comment(" assertElementContainsAttribute examples ");
 		$I->assertElementContainsAttribute("#username", "class", "admin__control-text");
 		$I->assertElementContainsAttribute("#username", "name", "login[username]");
 		$I->assertElementContainsAttribute("#username", "autofocus", "true");
@@ -157,6 +164,7 @@ class AssertTestCest
 		$I->assertElementContainsAttribute(".admin__menu-overlay", "border", "0");
 		$I->assertElementContainsAttribute("#username", "value", PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test'));
 		$I->assertElementContainsAttribute("#username", "value", PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test'));
+		$I->comment(" assert entity resolution ");
 		$I->assertEquals("John", "Doe", "pass");
 	}
 }

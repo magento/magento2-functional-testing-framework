@@ -18,6 +18,8 @@ class Flat implements ConverterInterface
     const REMOVE_KEY_ATTRIBUTE = 'keyForRemoval';
     const EXTENDS_ATTRIBUTE = 'extends';
     const TEST_HOOKS = ['before', 'after'];
+    const COMMENT_ACTION = 'comment';
+    const XML_COMMENT_ACTION = 'xmlComment';
 
     /**
      * Array node configuration.
@@ -118,6 +120,23 @@ class Flat implements ConverterInterface
                     }
                 } else {
                     $value[$nodeName] = $nodeData;
+                }
+            // A new "xmlComment" node is inserted when xml comment is found in non-annotation portion of tests
+            // or in non-arguments portion of action groups
+            } elseif ($node->nodeType == XML_COMMENT_NODE) {
+                if ( (strpos($basePath, '/tests/test') !== false
+                        && strpos($basePath, '/tests/test/annotations') === false)
+                    || (strpos($basePath, '/actionGroups/actionGroup') !== false
+                        && strpos($basePath, '/actionGroups/actionGroup/arguments') === false) ) {
+                    $nodePath = $basePath . '/' . self::COMMENT_ACTION;
+                    $arrayKeyAttribute = $this->arrayNodeConfig->getAssocArrayKeyAttribute($nodePath);
+                    $arrayKeyValue = self::COMMENT_ACTION . uniqid();
+                    $nodeData = [
+                        "nodeName" => self::XML_COMMENT_ACTION,
+                        "userInput" => $node->nodeValue,
+                        $arrayKeyAttribute => $arrayKeyValue,
+                    ];
+                    $value[$arrayKeyValue] = $nodeData;
                 }
             } elseif ($node->nodeType == XML_CDATA_SECTION_NODE
                 || ($node->nodeType == XML_TEXT_NODE && trim($node->nodeValue) != '')

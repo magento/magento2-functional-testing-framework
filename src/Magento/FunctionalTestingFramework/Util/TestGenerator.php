@@ -542,19 +542,23 @@ class TestGenerator
                 $sortOrder = $customActionAttributes['sortOrder'];
             }
 
-            if (isset($customActionAttributes['userInput']) && isset($customActionAttributes['url'])) {
-                $input = $this->addUniquenessFunctionCall($customActionAttributes['userInput']);
-                $url = $this->addUniquenessFunctionCall($customActionAttributes['url']);
+            if ($actionObject->getType() != ActionObject::ACTION_TYPE_XML_COMMENT) {
+                if (isset($customActionAttributes['userInput']) && isset($customActionAttributes['url'])) {
+                    $input = $this->addUniquenessFunctionCall($customActionAttributes['userInput']);
+                    $url = $this->addUniquenessFunctionCall($customActionAttributes['url']);
+                } elseif (isset($customActionAttributes['userInput'])) {
+                    $input = $this->addUniquenessFunctionCall($customActionAttributes['userInput']);
+                } elseif (isset($customActionAttributes['url'])) {
+                    $input = $this->addUniquenessFunctionCall($customActionAttributes['url']);
+                    $url = $this->addUniquenessFunctionCall($customActionAttributes['url']);
+                } elseif (isset($customActionAttributes['expectedValue'])) {
+                    //For old Assert backwards Compatibility, remove when deprecating
+                    $assertExpected = $this->addUniquenessFunctionCall($customActionAttributes['expectedValue']);
+                } elseif (isset($customActionAttributes['regex'])) {
+                    $input = $this->addUniquenessFunctionCall($customActionAttributes['regex']);
+                }
             } elseif (isset($customActionAttributes['userInput'])) {
-                $input = $this->addUniquenessFunctionCall($customActionAttributes['userInput']);
-            } elseif (isset($customActionAttributes['url'])) {
-                $input = $this->addUniquenessFunctionCall($customActionAttributes['url']);
-                $url = $this->addUniquenessFunctionCall($customActionAttributes['url']);
-            } elseif (isset($customActionAttributes['expectedValue'])) {
-                //For old Assert backwards Compatibility, remove when deprecating
-                $assertExpected = $this->addUniquenessFunctionCall($customActionAttributes['expectedValue']);
-            } elseif (isset($customActionAttributes['regex'])) {
-                $input = $this->addUniquenessFunctionCall($customActionAttributes['regex']);
+                $input = $this->escapeStringInDoubleQuotes($customActionAttributes['userInput']);
             }
 
             if (isset($customActionAttributes['date']) && isset($customActionAttributes['format'])) {
@@ -1286,6 +1290,13 @@ class TestGenerator
                 case "skipReadinessCheck":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $customActionAttributes['state']);
                     break;
+                case ActionObject::ACTION_TYPE_XML_COMMENT:
+                    $testSteps .= sprintf(
+                        "\t\t$%s->comment(%s);\n",
+                        $actor,
+                        $input
+                    );
+                    break;
                 default:
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
@@ -1768,15 +1779,13 @@ class TestGenerator
      * Wrap parameters into a function call.
      *
      * @param string $actor
-     * @param actionObject $action
-     * @param string $scope
+     * @param ActionObject $action
      * @param array ...$args
      * @return string
      * @throws \Exception
      */
     private function wrapFunctionCall($actor, $action, ...$args)
     {
-        $isFirst = true;
         $output = sprintf("\t\t$%s->%s(", $actor, $action->getType());
         for ($i = 0; $i < count($args); $i++) {
             if (null === $args[$i]) {
@@ -1800,15 +1809,13 @@ class TestGenerator
      *
      * @param string $returnVariable
      * @param string $actor
-     * @param string $action
-     * @param string $scope
+     * @param ActionObject $action
      * @param array ...$args
      * @return string
      * @throws \Exception
      */
     private function wrapFunctionCallWithReturnValue($returnVariable, $actor, $action, ...$args)
     {
-        $isFirst = true;
         $output = sprintf("\t\t$%s = $%s->%s(", $returnVariable, $actor, $action->getType());
         for ($i = 0; $i < count($args); $i++) {
             if (null === $args[$i]) {
@@ -1878,6 +1885,24 @@ class TestGenerator
         }
 
         return $argResult;
+    }
+
+    /**
+     * Escape input string within a pair of double quotes
+     *
+     * @param string $input
+     * @return string
+     */
+    private function escapeStringInDoubleQuotes($input)
+    {
+        if ($input == null) {
+            return '';
+        }
+        // Replace " with \"
+        $input = str_replace('"', '\"', $input);
+        // Replace $ with \$
+        $input = str_replace('$', '\$', $input);
+        return sprintf('"%s"', $input);
     }
 
     /**
