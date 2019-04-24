@@ -127,6 +127,12 @@ Attribute|Type|Use
 
 See [Action groups][action group] for more information.
 
+### XML Comments
+
+xml comments in `/tests/test`, but other than in `/tests/test/annotations`, will be parse and converted in place into `comment` actions.
+
+xml comments in `/actionGroups/actionGroup`, but other than in `/actionGroups/actionGroup/arguments`, will be parse and converted in place into `comment` action.
+
 <!-- Link definitions -->
 
 [`<actionGroup>`]: #actiongroup-tag
