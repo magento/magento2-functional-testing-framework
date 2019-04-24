@@ -416,6 +416,19 @@ To upgrade all test components inside the `Catalog` module:
 vendor/bin/mftf upgrade:tests /Users/user/magento2/app/code/Magento/Catalog/Test/Mftf/
 ```
 
+### `static-checks`
+
+Runs all MFTF static-checks on the test codebase that MFTF is currently attached to.
+
+Existing static-checks
+* Test Dependency: Checks that test dependencies do not violate the according Magento Module's composer dependencies 
+
+#### Usage
+
+```bash
+vendor/bin/mftf static:checks
+```
+
 <!-- LINK DEFINITIONS -->
 
 [configuration]: ../configuration.md
