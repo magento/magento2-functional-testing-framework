@@ -59,13 +59,13 @@ class RunTestFailedCommand extends BaseGenerateCommand
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return integer|null|void
+     * @return int
      * @throws \Exception
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // Create Mftf Configuration
         MftfApplicationConfig::create(
@@ -87,7 +87,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
         $command->run(new ArrayInput($args), $output);
 
         $testManifestList = $this->readTestManifestFile();
-
+        $returnCode = 0;
         foreach ($testManifestList as $testCommand) {
             $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
             $codeceptionCommand .= $testCommand;
@@ -96,11 +96,11 @@ class RunTestFailedCommand extends BaseGenerateCommand
             $process->setWorkingDirectory(TESTS_BP);
             $process->setIdleTimeout(600);
             $process->setTimeout(0);
-            $process->run(
+            $returnCode = max($returnCode, $process->run(
                 function ($type, $buffer) use ($output) {
                     $output->write($buffer);
                 }
-            );
+            ));
             if (file_exists(self::TESTS_FAILED_FILE)) {
                 $this->failedList = array_merge(
                     $this->failedList,
@@ -111,6 +111,8 @@ class RunTestFailedCommand extends BaseGenerateCommand
         foreach ($this->failedList as $test) {
             $this->writeFailedTestToFile($test, self::TESTS_FAILED_FILE);
         }
+
+        return $returnCode;
     }
 
     /**

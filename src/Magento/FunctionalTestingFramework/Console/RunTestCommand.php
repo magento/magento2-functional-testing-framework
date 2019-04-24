@@ -46,12 +46,12 @@ class RunTestCommand extends BaseGenerateCommand
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return integer|null|void
+     * @return int
      * @throws \Exception
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $tests = $input->getArgument('name');
         $skipGeneration = $input->getOption('skip-generate');
@@ -85,7 +85,8 @@ class RunTestCommand extends BaseGenerateCommand
         $process->setWorkingDirectory(TESTS_BP);
         $process->setIdleTimeout(600);
         $process->setTimeout(0);
-        $process->run(
+
+        return $process->run(
             function ($type, $buffer) use ($output) {
                 $output->write($buffer);
             }
