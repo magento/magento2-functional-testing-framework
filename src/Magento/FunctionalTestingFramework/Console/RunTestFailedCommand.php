@@ -59,7 +59,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return int
+     * @return integer
      * @throws \Exception
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
@@ -78,7 +78,8 @@ class RunTestFailedCommand extends BaseGenerateCommand
         $testConfiguration = $this->getFailedTestList();
 
         if ($testConfiguration === null) {
-            return null;
+            // no failed tests found, run is a success
+            return 0;
         }
 
         $command = $this->getApplication()->find('generate:tests');

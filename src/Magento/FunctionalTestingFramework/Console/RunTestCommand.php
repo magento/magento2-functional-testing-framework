@@ -46,7 +46,7 @@ class RunTestCommand extends BaseGenerateCommand
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return int
+     * @return integer
      * @throws \Exception
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
