@@ -124,10 +124,10 @@ class Flat implements ConverterInterface
             // A new "xmlComment" node is inserted when xml comment is found in non-annotation portion of tests
             // or in non-arguments portion of action groups
             } elseif ($node->nodeType == XML_COMMENT_NODE) {
-                if ( (strpos($basePath, '/tests/test') !== false
+                if ((strpos($basePath, '/tests/test') !== false
                         && strpos($basePath, '/tests/test/annotations') === false)
                     || (strpos($basePath, '/actionGroups/actionGroup') !== false
-                        && strpos($basePath, '/actionGroups/actionGroup/arguments') === false) ) {
+                        && strpos($basePath, '/actionGroups/actionGroup/arguments') === false)) {
                     $nodePath = $basePath . '/' . self::COMMENT_ACTION;
                     $arrayKeyAttribute = $this->arrayNodeConfig->getAssocArrayKeyAttribute($nodePath);
                     $arrayKeyValue = self::COMMENT_ACTION . uniqid();
