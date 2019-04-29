@@ -31,12 +31,13 @@ Any changes to the table of contents will need to be made through a separate pul
 For technical words such as a database table name, wrap with single backticks: `tablename`.
 For code block highlighting, wrap code samples in the following format:
 
-```xml
-<xmlSample>
-   ...
-   ...
-</xmlSample>
-```
+
+    ```xml
+    <xmlSample>
+     ...
+     ...
+    </xmlSample>
+    ```
 
 Replace the `xml` with the corresponding language (tupe) of the code sample. Use `bash` for shell commands and `terminal` for terminal output.
 
