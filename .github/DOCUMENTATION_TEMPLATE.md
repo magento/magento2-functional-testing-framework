@@ -5,7 +5,7 @@ This page describes the submitting process and serves as a template for a proper
 The contribution workflow is the same as submitting code.
 
 1. Create a branch from the `develop` branch in the [MFTF repository][].
-1. Make edits/additions/deletions as needed.
+1. Make edits/additions/deletions as needed. Read the [Basic Template][] for tips on how to write with Markdown.
 1. Submit your PR to the `develop` branch.
 
 Once submitted, a member of the documentation team will review and merge it.
@@ -14,47 +14,7 @@ We will inform you if it needs any additional processing.
 The documentation in this repository is used as the source for the [MFTF documentation][].
 Any changes to the table of contents will need to be made through a separate pull request in the regular [Magento Developer documentation repository][].
 
-## Ordered lists
-
-1. Number all ordered list items as `1.`
-1. Single space after the number.
-1. Blank line before and after list.
-
-## Unordered lists
-
-- Use dashes in unordered lists.
-- Add one space after the dash.
-- Add a blank line before and after list.
-
-## Code samples
-
-For technical words such as a database table name, wrap with single backticks: `tablename`.
-For code block highlighting, wrap code samples in the following format:
-
-
-    ```xml
-    <xmlSample>
-     ...
-     ...
-    </xmlSample>
-    ```
-
-Replace the `xml` with the corresponding language (tupe) of the code sample. Use `bash` for shell commands and `terminal` for terminal output.
-
-## Markdown tables
-
-| Header      | Header |
-| ----------- | ----------- |
-| Column 1 text | Column 2 text|
-| Column 1 text | Column 2 text|
-
-Markdown formatting works for simple tables. It does not support multiline content within a cell, or split/merged cells within a row or column.
-
-## Other tips
-
-- Use spaces instead of tabs.
-- Do not duplicate blank lines.
-- Read more about how to [Contribute to Magento Devdocs][]
+Read more about how to [Contribute to Magento Devdocs][].
 
 <!-- For readability, we abstract the link URLS to the bottom of the page. The extra set of square brackets denotes it is a link, rather than plain brackets. >
 
@@ -63,3 +23,4 @@ Markdown formatting works for simple tables. It does not support multiline conte
 [MFTF repository]: https://github.com/magento/magento2-functional-testing-framework
 [Contribute to Magento Devdocs]: https://github.com/magento/devdocs/blob/master/.github/CONTRIBUTING.md
 [MFTF documentation]: https://devdocs.magento.com/mftf/docs/introduction.html
+[Basic Template]: https://devdocs.magento.com/guides/v2.3/contributor-guide/templates/basic_template.html
