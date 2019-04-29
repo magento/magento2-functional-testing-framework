@@ -29,15 +29,35 @@ class ActionGroupWithSimpleDataUsageFromPassedArgumentCest
 	 */
 	public function ActionGroupWithSimpleDataUsageFromPassedArgument(AcceptanceTester $I)
 	{
+		$I->comment("Entering Action Group actionGroupWithStringUsage (actionGroup1)");
 		$I->see("overrideString", "#element .overrideString");
+		$I->comment("Exiting Action Group actionGroupWithStringUsage (actionGroup1)");
+		$I->comment("Entering Action Group actionGroupWithStringUsage (actionGroup11)");
 		$I->see("1", "#element .1");
+		$I->comment("Exiting Action Group actionGroupWithStringUsage (actionGroup11)");
+		$I->comment("Entering Action Group actionGroupWithStringUsage (actionGroup12)");
 		$I->see("1.5", "#element .1.5");
+		$I->comment("Exiting Action Group actionGroupWithStringUsage (actionGroup12)");
+		$I->comment("Entering Action Group actionGroupWithStringUsage (actionGroup13)");
 		$I->see("true", "#element .true");
+		$I->comment("Exiting Action Group actionGroupWithStringUsage (actionGroup13)");
+		$I->comment("Entering Action Group actionGroupWithStringUsage (actionGroup2)");
 		$I->see("simpleData.firstname", "#element .simpleData.firstname");
+		$I->comment("Exiting Action Group actionGroupWithStringUsage (actionGroup2)");
+		$I->comment("Entering Action Group actionGroupWithStringUsage (actionGroup3)");
 		$I->see(PersistedObjectHandler::getInstance()->retrieveEntityField('persisted', 'data', 'test'), "#element ." . PersistedObjectHandler::getInstance()->retrieveEntityField('persisted', 'data', 'test'));
+		$I->comment("Exiting Action Group actionGroupWithStringUsage (actionGroup3)");
+		$I->comment("Entering Action Group actionGroupWithEntityUsage (actionGroup4)");
 		$I->see("John", "#element .John");
+		$I->comment("Exiting Action Group actionGroupWithEntityUsage (actionGroup4)");
+		$I->comment("Entering Action Group actionGroupWithEntityUsage (actionGroup5)");
 		$I->see(PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname', 'test'), "#element ." . PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname', 'test'));
+		$I->comment("Exiting Action Group actionGroupWithEntityUsage (actionGroup5)");
+		$I->comment("Entering Action Group actionGroupWithEntityUsage (actionGroup6)");
 		$I->see(PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname[0]', 'test'), "#element ." . PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname[0]', 'test'));
+		$I->comment("Exiting Action Group actionGroupWithEntityUsage (actionGroup6)");
+		$I->comment("Entering Action Group actionGroupWithEntityUsage (actionGroup7)");
 		$I->see(PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname[data_index]', 'test'), "#element ." . PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname[data_index]', 'test'));
+		$I->comment("Exiting Action Group actionGroupWithEntityUsage (actionGroup7)");
 	}
 }

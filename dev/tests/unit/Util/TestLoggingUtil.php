@@ -10,7 +10,6 @@ use AspectMock\Test as AspectMock;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Logger\MftfLogger;
 use Monolog\Handler\TestHandler;
-use Monolog\Logger;
 use PHPUnit\Framework\Assert;
 
 class TestLoggingUtil extends Assert
@@ -64,6 +63,12 @@ class TestLoggingUtil extends Assert
         $property = new \ReflectionProperty(LoggingUtil::class, 'instance');
         $property->setAccessible(true);
         $property->setValue($mockLoggingUtil);
+    }
+
+    public function validateMockLogEmpty()
+    {
+        $records = $this->testLogHandler->getRecords();
+        $this->assertTrue(empty($records));
     }
 
     /**

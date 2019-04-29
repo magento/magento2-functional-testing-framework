@@ -38,6 +38,7 @@ class TestGenerator
     const HOOK_SCOPE = 'hook';
     const SUITE_SCOPE = 'suite';
     const PRESSKEY_ARRAY_ANCHOR_KEY = '987654321098765432109876543210';
+    const PERSISTED_OBJECT_NOTATION_REGEX = '/\${1,2}[\w.\[\]]+\${1,2}/';
 
     /**
      * Path to the export dir.
@@ -1332,7 +1333,7 @@ class TestGenerator
             }
             $outputArg = $arg;
             // Math on $data.key$ and $$data.key$$
-            preg_match_all('/\${1,2}[\w.\[\]]+\${1,2}/', $outputArg, $matches);
+            preg_match_all(self::PERSISTED_OBJECT_NOTATION_REGEX, $outputArg, $matches);
             $this->replaceMatchesIntoArg($matches[0], $outputArg);
 
             //trim "{$variable}" into $variable

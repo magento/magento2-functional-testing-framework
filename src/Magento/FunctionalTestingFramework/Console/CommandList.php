@@ -11,6 +11,7 @@ namespace Magento\FunctionalTestingFramework\Console;
 /**
  * Class CommandList has a list of commands.
  * @codingStandardsIgnoreFile
+ * @SuppressWarnings(PHPMD)
  */
 class CommandList implements CommandListInterface
 {
@@ -38,6 +39,8 @@ class CommandList implements CommandListInterface
              'run:failed' => new RunTestFailedCommand(),
              'setup:env' => new SetupEnvCommand(),
              'upgrade:tests' => new UpgradeTestsCommand(),
+             'generate:docs' => new GenerateDocsCommand(),
+             'static-checks' => new StaticChecksCommand()
         ] + $commands;
     }
 

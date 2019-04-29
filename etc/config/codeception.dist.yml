@@ -16,7 +16,7 @@ extensions:
         - Magento\FunctionalTestingFramework\Allure\Adapter\MagentoAllureAdapter
     config:
         Magento\FunctionalTestingFramework\Allure\Adapter\MagentoAllureAdapter:
-            deletePreviousResults: true
+            deletePreviousResults: false
             outputDirectory: allure-results
             ignoredAnnotations:
                 - env

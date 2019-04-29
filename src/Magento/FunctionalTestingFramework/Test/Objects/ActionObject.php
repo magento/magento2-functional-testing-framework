@@ -60,7 +60,7 @@ class ActionObject
     const ASSERTION_VALUE_ATTRIBUTE = "value";
     const DELETE_DATA_MUTUAL_EXCLUSIVE_ATTRIBUTES = ["url", "createDataKey"];
     const EXTERNAL_URL_AREA_INVALID_ACTIONS = ['amOnPage'];
-    const FUNCTION_CLOSURE_ACTIONS = ['waitForElementChange', 'performOn'];
+    const FUNCTION_CLOSURE_ACTIONS = ['waitForElementChange', 'performOn', 'executeInSelenium'];
     const MERGE_ACTION_ORDER_AFTER = 'after';
     const MERGE_ACTION_ORDER_BEFORE = 'before';
     const ACTION_ATTRIBUTE_TIMEZONE = 'timezone';
@@ -68,7 +68,10 @@ class ActionObject
     const ACTION_ATTRIBUTE_SELECTOR = 'selector';
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER = '/\(.+\)/';
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/({{[\w]+\.[\w\[\]]+}})|({{[\w]+\.[\w]+\((?(?!}}).)+\)}})/';
+    const STRING_PARAMETER_REGEX = "/'[^']+'/";
     const DEFAULT_WAIT_TIMEOUT = 10;
+    const ACTION_ATTRIBUTE_USERINPUT = 'userInput';
+    const ACTION_TYPE_COMMENT = 'comment';
 
     /**
      * The unique identifier for the action
@@ -464,8 +467,6 @@ class ActionObject
      */
     private function stripAndReturnParameters($reference)
     {
-        // 'string', or 'string,!@#$%^&*()_+, '
-        $literalParametersRegex = "/'[^']+'/";
         $postCleanupDelimiter = "::::";
 
         preg_match(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER, $reference, $matches);
@@ -473,8 +474,9 @@ class ActionObject
             $strippedReference = ltrim(rtrim($matches[0], ")"), "(");
 
             // Pull out all 'string' references, as they can contain 'string with , comma in it'
-            preg_match_all($literalParametersRegex, $strippedReference, $literalReferences);
-            $strippedReference = preg_replace($literalParametersRegex, '&&stringReference&&', $strippedReference);
+            // 'string', or 'string,!@#$%^&*()_+, '
+            preg_match_all(self::STRING_PARAMETER_REGEX, $strippedReference, $literalReferences);
+            $strippedReference = preg_replace(self::STRING_PARAMETER_REGEX, '&&stringReference&&', $strippedReference);
 
             // Sanitize 'string, data.field,$persisted.field$' => 'string::::data.field::::$persisted.field$'
             $strippedReference = preg_replace('/,/', ', ', $strippedReference);
