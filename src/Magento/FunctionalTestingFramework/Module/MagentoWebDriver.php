@@ -305,8 +305,8 @@ class MagentoWebDriver extends WebDriver
      * Search for and Select multiple options from a Magento Multi-Select drop down menu.
      * e.g. The drop down menu you use to assign Products to Categories.
      *
-     * @param string $select
-     * @param array $options
+     * @param string  $select
+     * @param array   $options
      * @param boolean $requireAction
      * @return void
      * @throws \Exception
@@ -334,8 +334,8 @@ class MagentoWebDriver extends WebDriver
     /**
      * Select multiple options from a drop down using a filter and text field to narrow results.
      *
-     * @param string $selectSearchTextField
-     * @param string $selectSearchResult
+     * @param string   $selectSearchTextField
+     * @param string   $selectSearchResult
      * @param string[] $options
      * @return void
      * @throws \Exception
@@ -409,7 +409,7 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * @param float $money
+     * @param float  $money
      * @param string $locale
      * @return array
      */
@@ -439,7 +439,7 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * @param integer $category
-     * @param string $locale
+     * @param string  $locale
      * @return void
      */
     public function mSetLocale(int $category, $locale)
@@ -515,8 +515,8 @@ class MagentoWebDriver extends WebDriver
     /**
      * Conditional click for an area that should be visible
      *
-     * @param string $selector
-     * @param string $dependentSelector
+     * @param string  $selector
+     * @param string  $dependentSelector
      * @param boolean $visible
      * @return void
      * @throws \Exception
@@ -590,8 +590,8 @@ class MagentoWebDriver extends WebDriver
     /**
      * Override for codeception's default dragAndDrop to include offset options.
      *
-     * @param string $source
-     * @param string $target
+     * @param string  $source
+     * @param string  $target
      * @param integer $xOffset
      * @param integer $yOffset
      * @return void
@@ -640,7 +640,7 @@ class MagentoWebDriver extends WebDriver
      * following parent execution of test failure processing.
      *
      * @param TestInterface $test
-     * @param \Exception $fail
+     * @param \Exception    $fail
      * @return void
      */
     public function _failed(TestInterface $test, $fail)
