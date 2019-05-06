@@ -1701,7 +1701,7 @@ class TestGenerator
      * Add uniqueness function call to input string based on regex pattern.
      *
      * @param string $input
-     * @param bool $wrapWithDoubleQuotes
+     * @param boolean $wrapWithDoubleQuotes
      * @return string
      */
     private function addUniquenessFunctionCall($input, $wrapWithDoubleQuotes = true)
