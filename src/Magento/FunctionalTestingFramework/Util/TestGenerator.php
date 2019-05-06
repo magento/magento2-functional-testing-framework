@@ -1700,7 +1700,7 @@ class TestGenerator
     /**
      * Add uniqueness function call to input string based on regex pattern.
      *
-     * @param string $input
+     * @param string  $input
      * @param boolean $wrapWithDoubleQuotes
      * @return string
      */
