@@ -72,6 +72,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
             false,
             MftfApplicationConfig::GENERATION_PHASE,
             false,
+            false,
             false
         );
 

@@ -55,7 +55,12 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 'debug',
                 'd',
                 InputOption::VALUE_NONE,
-                'run extra validation when generating tests'
+                'run extra validation per file when generating tests'
+            )->addOption(
+                'fastdebug',
+                'a',
+                InputOption::VALUE_NONE,
+                'run extra validation on merged files when generating tests'
             );
 
         parent::configure();
@@ -79,8 +84,8 @@ class GenerateTestsCommand extends BaseGenerateCommand
         $force = $input->getOption('force');
         $time = $input->getOption('time') * 60 * 1000; // convert from minutes to milliseconds
         $debug = $input->getOption('debug');
+        $fastDebug = $input->getOption('fastdebug');
         $remove = $input->getOption('remove');
-
         $verbose = $output->isVerbose();
 
         if ($json !== null && !json_decode($json)) {
@@ -95,10 +100,10 @@ class GenerateTestsCommand extends BaseGenerateCommand
 
         // Remove previous GENERATED_DIR if --remove option is used
         if ($remove) {
-            $this->removeGeneratedDirectory($output, $verbose || $debug);
+            $this->removeGeneratedDirectory($output, $verbose || $debug || $fastDebug);
         }
 
-        $testConfiguration = $this->createTestConfiguration($json, $tests, $force, $debug, $verbose);
+        $testConfiguration = $this->createTestConfiguration($json, $tests, $force, $debug, $fastDebug, $verbose);
 
         // create our manifest file here
         $testManifest = TestManifestFactory::makeManifest($config, $testConfiguration['suites']);
@@ -125,19 +130,21 @@ class GenerateTestsCommand extends BaseGenerateCommand
      * @param array   $tests
      * @param boolean $force
      * @param boolean $debug
+     * @param boolean $fastDebug
      * @param boolean $verbose
      * @return array
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
-    private function createTestConfiguration($json, array $tests, bool $force, bool $debug, bool $verbose)
+    private function createTestConfiguration($json, array $tests, bool $force, bool $debug, bool $fastDebug, bool $verbose)
     {
         // set our application configuration so we can references the user options in our framework
         MftfApplicationConfig::create(
             $force,
             MftfApplicationConfig::GENERATION_PHASE,
             $verbose,
-            $debug
+            $debug,
+            $fastDebug
         );
 
         $testConfiguration = [];

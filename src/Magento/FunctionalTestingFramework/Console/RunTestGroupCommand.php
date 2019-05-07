@@ -77,6 +77,7 @@ class RunTestGroupCommand extends BaseGenerateCommand
             $force,
             MftfApplicationConfig::GENERATION_PHASE,
             false,
+            false,
             false
         );
 

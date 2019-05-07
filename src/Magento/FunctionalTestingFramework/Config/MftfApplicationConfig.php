@@ -36,11 +36,18 @@ class MftfApplicationConfig
     private $verboseEnabled;
 
     /**
-     * Determines whether the user would like to execute mftf in a verbose run.
+     * Determines whether the user would like to execute mftf in a 'per file' debug mode
      *
      * @var boolean
      */
     private $debugEnabled;
+
+    /**
+     * Determines whether the user would like to execute mftf in a 'merged file' debug mode
+     *
+     * @var boolean
+     */
+    private $fastDebugEnabled;
 
     /**
      * MftfApplicationConfig Singelton Instance
@@ -53,16 +60,18 @@ class MftfApplicationConfig
      * MftfApplicationConfig constructor.
      *
      * @param boolean $forceGenerate
-     * @param string  $phase
+     * @param string $phase
      * @param boolean $verboseEnabled
      * @param boolean $debugEnabled
+     * @param null $fastDebugEnabled
      * @throws TestFrameworkException
      */
     private function __construct(
         $forceGenerate = false,
         $phase = self::EXECUTION_PHASE,
         $verboseEnabled = null,
-        $debugEnabled = null
+        $debugEnabled = null,
+        $fastDebugEnabled = null
     ) {
         $this->forceGenerate = $forceGenerate;
 
@@ -73,6 +82,7 @@ class MftfApplicationConfig
         $this->phase = $phase;
         $this->verboseEnabled = $verboseEnabled;
         $this->debugEnabled = $debugEnabled;
+        $this->fastDebugEnabled = $fastDebugEnabled;
     }
 
     /**
@@ -83,13 +93,14 @@ class MftfApplicationConfig
      * @param string  $phase
      * @param boolean $verboseEnabled
      * @param boolean $debugEnabled
+     * * @param boolean $fastDebugEnabled
      * @return void
      */
-    public static function create($forceGenerate, $phase, $verboseEnabled, $debugEnabled)
+    public static function create($forceGenerate, $phase, $verboseEnabled, $debugEnabled, $fastDebugEnabled)
     {
         if (self::$MFTF_APPLICATION_CONTEXT == null) {
             self::$MFTF_APPLICATION_CONTEXT =
-                new MftfApplicationConfig($forceGenerate, $phase, $verboseEnabled, $debugEnabled);
+                new MftfApplicationConfig($forceGenerate, $phase, $verboseEnabled, $debugEnabled, $fastDebugEnabled);
         }
     }
 
@@ -128,7 +139,7 @@ class MftfApplicationConfig
      */
     public function verboseEnabled()
     {
-        return $this->verboseEnabled ?? getenv('MFTF_DEBUG');
+        return $this->verboseEnabled ?? (strcasecmp(getenv('MFTF_DEBUG'),'true') == 0);
     }
 
     /**
@@ -139,7 +150,18 @@ class MftfApplicationConfig
      */
     public function debugEnabled()
     {
-        return $this->debugEnabled ?? getenv('MFTF_DEBUG');
+        return $this->debugEnabled ?? (strcasecmp(getenv('MFTF_DEBUG'),'true') == 0);
+    }
+
+    /**
+     * Returns a boolean indicating whether the user has indicated a fast debug run, which will lengthy validation
+     * on merged file instead of 'per file' with some extra error messaging to be run
+     *
+     * @return boolean
+     */
+    public function fastDebugEnabled()
+    {
+        return $this->fastDebugEnabled ?? (strcasecmp(getenv('MFTF_FAST_DEBUG'),'true') == 0);
     }
 
     /**

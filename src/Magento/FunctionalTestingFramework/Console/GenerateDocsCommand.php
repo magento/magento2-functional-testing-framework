@@ -67,6 +67,7 @@ class GenerateDocsCommand extends Command
             $force,
             MftfApplicationConfig::GENERATION_PHASE,
             false,
+            false,
             false
         );
 

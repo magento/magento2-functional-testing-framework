@@ -75,6 +75,7 @@ class TestDependencyCheck implements StaticCheckInterface
             true,
             MftfApplicationConfig::UNIT_TEST_PHASE,
             false,
+            false,
             false
         );
 
