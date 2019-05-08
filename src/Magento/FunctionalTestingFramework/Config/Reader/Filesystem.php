@@ -231,14 +231,13 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
         if ($this->validationState->isValidationRequired()) {
             $errors = [];
             if ($configMerger && !$configMerger->validate($this->schemaFile, $errors)) {
-                $message = $filename ? $filename . PHP_EOL . "Invalid Document \n" : PHP_EOL . "Invalid Document \n";
-                foreach ($errors as $error ){
+                foreach ($errors as $error){
                     LoggingUtil::getInstance()->getLogger(Filesystem::class)->buildFailure(
-                        "XSD schema validation error",
+                        "XSD schema error ",
                         [ "file"=> $filename ? $filename: ":mergedFile:", "error" => $error]
                     );
                 }
-                throw new \Exception($message . implode("\n", $errors));
+                throw new \Exception("Error: XSD schema issues found in file(s) " . $filename . "\n");
             }
         }
     }
