@@ -143,7 +143,7 @@ class MftfApplicationConfig
     }
 
     /**
-     * Returns a boolean indicating whether the user has indicated a debug run, which will lengthy validation
+     * Returns a boolean indicating whether the user has indicated a debug run, which will run lengthy validation
      * with some extra error messaging to be run
      *
      * @return boolean
@@ -154,7 +154,7 @@ class MftfApplicationConfig
     }
 
     /**
-     * Returns a boolean indicating whether the user has indicated a fast debug run, which will lengthy validation
+     * Returns a boolean indicating whether the user has indicated a fast debug run, which will run lengthy validation
      * on merged file instead of 'per file' with some extra error messaging to be run
      *
      * @return boolean
