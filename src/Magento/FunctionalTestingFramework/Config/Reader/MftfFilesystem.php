@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Config\Reader;
 
+use Magento\AdminNotification\Block\Inbox;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
 use Magento\FunctionalTestingFramework\Util\Iterator\File;
@@ -51,7 +52,8 @@ class MftfFilesystem extends \Magento\FunctionalTestingFramework\Config\Reader\F
         if ($fileList->valid()) {
             $this->validateSchema($configMerger, $fileList->getFilename());
         }
-        if (MftfApplicationConfig::getConfig()->fastDebugEnabled()) {
+        if (MftfApplicationConfig::getConfig()->fastDebugEnabled() &&
+            !MftfApplicationConfig::getConfig()->debugEnabled()) {
             $this->validateSchema($configMerger);
         }
 
