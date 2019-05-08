@@ -6,7 +6,6 @@
 
 namespace Magento\FunctionalTestingFramework\Config\Reader;
 
-use Magento\AdminNotification\Block\Inbox;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
 use Magento\FunctionalTestingFramework\Util\Iterator\File;
