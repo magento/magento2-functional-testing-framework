@@ -30,7 +30,6 @@ X.Y.Z
 | | +-- Backward Compatible changes (Patch release - bug fixes, small additions)
 | +---- Backward Compatible changes (Minor release - small new features, bug fixes)
 +------ Backward Incompatible changes (Major release - new features and/or major changes)
-
 ```
 
 For example:
@@ -56,3 +55,32 @@ It MAY include patch level changes. Patch version MUST be reset to 0 when minor 
 Major version **X** MUST be incremented for a release that introduces backward incompatible changes.
 A major release can also include minor and patch level changes.
 You must reset the patch and minor version to 0 when you change the major version.
+
+## MFTF version table
+
+This table lists the version of the MFTF that was released with a particular version of Magento.
+
+|||
+|---|---|
+| Magento | MFTF |
+| 2.3.1 | 2.3.13 |
+| 2.3.0 | 2.3.9 |
+| 2.2.8 | 2.3.13 |
+| 2.2.7 | 2.3.8 |
+
+## Updating MFTF
+
+The MFTF and the Magento product have differing release cycles, with the MFTF releasing more frequently. To get the latest version of the MFTF, update the version number in `composer.json` and update the package.
+
+1. Open `composer.json` at the <Magento root>.
+1. Find the MFTF listing:
+
+    ```json
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "~2.13.0",
+        "lusitanian/oauth": "~0.8.10",
+        "magento/magento2-functional-testing-framework": "2.3.13",
+    ```
+
+1. Update the version number and save.
+1. Run the `composer update` command.
