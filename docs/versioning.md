@@ -67,20 +67,3 @@ This table lists the version of the MFTF that was released with a particular ver
 | 2.3.0 | 2.3.9 |
 | 2.2.8 | 2.3.13 |
 | 2.2.7 | 2.3.8 |
-
-## Updating MFTF
-
-The MFTF and the Magento product have differing release cycles, with the MFTF releasing more frequently. To get the latest version of the MFTF, update the version number in `composer.json` and update the package.
-
-1. Open `composer.json` at the <Magento root>.
-1. Find the MFTF listing:
-
-    ```json
-    "require-dev": {
-        "friendsofphp/php-cs-fixer": "~2.13.0",
-        "lusitanian/oauth": "~0.8.10",
-        "magento/magento2-functional-testing-framework": "2.3.13",
-    ```
-
-1. Update the version number and save.
-1. Run the `composer update` command.
