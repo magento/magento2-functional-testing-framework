@@ -80,5 +80,4 @@
             </xs:documentation>
         </xs:annotation>
     </xs:attribute>
-
 </xs:schema>

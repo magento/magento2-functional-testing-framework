@@ -79,7 +79,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
         $json = $input->getOption('tests');
         $force = $input->getOption('force');
         $time = $input->getOption('time') * 60 * 1000; // convert from minutes to milliseconds
-        $debug = $input->getOption('debug')?? MftfApplicationConfig::PER_FILE_DEBUG_MODE; //set to per file debug as default
+        $debug = $input->getOption('debug')?? MftfApplicationConfig::PER_FILE_DEBUG_MODE; // set to per file if no option specified
         $remove = $input->getOption('remove');
         $verbose = $output->isVerbose();
 
