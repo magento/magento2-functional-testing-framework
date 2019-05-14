@@ -29,7 +29,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
     protected function configure()
     {
         $this->setName('generate:tests')
-            ->setDescription('This command generates all test files and suites based on xml declarations')
+            ->setDescription('This command runs validation and generates all test files and suites based on xml declarations')
             ->addArgument(
                 'name',
                 InputArgument::OPTIONAL | InputArgument::IS_ARRAY,
@@ -54,13 +54,9 @@ class GenerateTestsCommand extends BaseGenerateCommand
             )->addOption(
                 'debug',
                 'd',
-                InputOption::VALUE_NONE,
-                'run extra validation per file when generating tests'
-            )->addOption(
-                'fastdebug',
-                'a',
-                InputOption::VALUE_NONE,
-                'run extra validation on merged files when generating tests'
+                InputOption::VALUE_OPTIONAL,
+                'run per file validation while running tests. Use option \'ignore\' to skip debugging',
+                'default'
             );
 
         parent::configure();
@@ -83,8 +79,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
         $json = $input->getOption('tests');
         $force = $input->getOption('force');
         $time = $input->getOption('time') * 60 * 1000; // convert from minutes to milliseconds
-        $debug = $input->getOption('debug');
-        $fastDebug = $input->getOption('fastdebug');
+        $debug = $input->getOption('debug')?? MftfApplicationConfig::PER_FILE_DEBUG_MODE; //set to per file debug as default
         $remove = $input->getOption('remove');
         $verbose = $output->isVerbose();
 
@@ -100,10 +95,11 @@ class GenerateTestsCommand extends BaseGenerateCommand
 
         // Remove previous GENERATED_DIR if --remove option is used
         if ($remove) {
-            $this->removeGeneratedDirectory($output, $verbose || $debug || $fastDebug);
+            $this->removeGeneratedDirectory($output, $verbose ||
+                ($debug !== MftfApplicationConfig::DISABLE_DEBUG_MODE));
         }
 
-        $testConfiguration = $this->createTestConfiguration($json, $tests, $force, $debug, $fastDebug, $verbose);
+        $testConfiguration = $this->createTestConfiguration($json, $tests, $force, $debug, $verbose);
 
         // create our manifest file here
         $testManifest = TestManifestFactory::makeManifest($config, $testConfiguration['suites']);
@@ -129,22 +125,20 @@ class GenerateTestsCommand extends BaseGenerateCommand
      * @param string  $json
      * @param array   $tests
      * @param boolean $force
-     * @param boolean $debug
-     * @param boolean $fastDebug
+     * @param string $debug
      * @param boolean $verbose
      * @return array
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
-    private function createTestConfiguration($json, array $tests, bool $force, bool $debug, bool $fastDebug, bool $verbose)
+    private function createTestConfiguration($json, array $tests, bool $force, string $debug, bool $verbose)
     {
         // set our application configuration so we can references the user options in our framework
         MftfApplicationConfig::create(
             $force,
             MftfApplicationConfig::GENERATION_PHASE,
             $verbose,
-            $debug,
-            $fastDebug
+            $debug
         );
 
         $testConfiguration = [];

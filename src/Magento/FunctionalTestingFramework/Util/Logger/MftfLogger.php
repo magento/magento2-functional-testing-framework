@@ -36,9 +36,9 @@ class MftfLogger extends Logger
      * @param  array  $context The log context.
      * @return void
      */
-    public function buildFailure($message, array $context = [])
+    public function criticalFailure($message, array $context = [])
     {
-        $message = "BUILD FAILURE: " . $message;
+        $message = "CRITICAL FAILURE: " . $message;
         // Suppress print during unit testing
         if (MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE) {
             print ($message . json_encode($context) . "\n");

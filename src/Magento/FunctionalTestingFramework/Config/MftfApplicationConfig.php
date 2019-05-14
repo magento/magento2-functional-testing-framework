@@ -14,6 +14,11 @@ class MftfApplicationConfig
     const UNIT_TEST_PHASE = "testing";
     const MFTF_PHASES = [self::GENERATION_PHASE, self::EXECUTION_PHASE, self::UNIT_TEST_PHASE];
 
+    const DEFAULT_DEBUG_MODE = "default";
+    const PER_FILE_DEBUG_MODE = "perFile";
+    const DISABLE_DEBUG_MODE = "ignore";
+    const MFTF_DEBUG_MODES = [self::DEFAULT_DEBUG_MODE, self::PER_FILE_DEBUG_MODE, self::DISABLE_DEBUG_MODE];
+
     /**
      * Determines whether the user has specified a force option for generation
      *
@@ -36,18 +41,11 @@ class MftfApplicationConfig
     private $verboseEnabled;
 
     /**
-     * Determines whether the user would like to execute mftf in a 'per file' debug mode
+     * String which identifies the current debug mode of mftf execution
      *
-     * @var boolean
+     * @var string
      */
-    private $debugEnabled;
-
-    /**
-     * Determines whether the user would like to execute mftf in a 'merged file' debug mode
-     *
-     * @var boolean
-     */
-    private $fastDebugEnabled;
+    private $debug;
 
     /**
      * MftfApplicationConfig Singelton Instance
@@ -60,18 +58,16 @@ class MftfApplicationConfig
      * MftfApplicationConfig constructor.
      *
      * @param boolean $forceGenerate
-     * @param string $phase
+     * @param string  $phase
      * @param boolean $verboseEnabled
-     * @param boolean $debugEnabled
-     * @param null $fastDebugEnabled
+     * @param boolean $debug
      * @throws TestFrameworkException
      */
     private function __construct(
         $forceGenerate = false,
         $phase = self::EXECUTION_PHASE,
         $verboseEnabled = null,
-        $debugEnabled = null,
-        $fastDebugEnabled = null
+        $debug = null
     ) {
         $this->forceGenerate = $forceGenerate;
 
@@ -81,8 +77,7 @@ class MftfApplicationConfig
 
         $this->phase = $phase;
         $this->verboseEnabled = $verboseEnabled;
-        $this->debugEnabled = $debugEnabled;
-        $this->fastDebugEnabled = $fastDebugEnabled;
+        $this->debug = $debug;
     }
 
     /**
@@ -92,15 +87,14 @@ class MftfApplicationConfig
      * @param boolean $forceGenerate
      * @param string  $phase
      * @param boolean $verboseEnabled
-     * @param boolean $debugEnabled
-     * * @param boolean $fastDebugEnabled
+     * @param string $debug
      * @return void
      */
-    public static function create($forceGenerate, $phase, $verboseEnabled, $debugEnabled, $fastDebugEnabled)
+    public static function create($forceGenerate, $phase, $verboseEnabled, $debug)
     {
         if (self::$MFTF_APPLICATION_CONTEXT == null) {
             self::$MFTF_APPLICATION_CONTEXT =
-                new MftfApplicationConfig($forceGenerate, $phase, $verboseEnabled, $debugEnabled, $fastDebugEnabled);
+                new MftfApplicationConfig($forceGenerate, $phase, $verboseEnabled, $debug);
         }
     }
 
@@ -139,29 +133,17 @@ class MftfApplicationConfig
      */
     public function verboseEnabled()
     {
-        return $this->verboseEnabled ?? (strcasecmp(getenv('MFTF_DEBUG'),'true') == 0);
+        return $this->verboseEnabled ?? getenv('MFTF_DEBUG');
     }
 
     /**
-     * Returns a boolean indicating whether the user has indicated a debug run, which will run lengthy validation
-     * with some extra error messaging to be run
+     * Returns a string which indicates the debug mode of mftf execution.
      *
-     * @return boolean
+     * @return string
      */
-    public function debugEnabled()
+    public function getDebugMode()
     {
-        return $this->debugEnabled ?? (strcasecmp(getenv('MFTF_DEBUG'),'true') == 0);
-    }
-
-    /**
-     * Returns a boolean indicating whether the user has indicated a fast debug run, which will run lengthy validation
-     * on merged file instead of 'per file' with some extra error messaging to be run
-     *
-     * @return boolean
-     */
-    public function fastDebugEnabled()
-    {
-        return $this->fastDebugEnabled ?? (strcasecmp(getenv('MFTF_FAST_DEBUG'),'true') == 0);
+        return $this->debug ?? getenv('MFTF_DEBUG');
     }
 
     /**

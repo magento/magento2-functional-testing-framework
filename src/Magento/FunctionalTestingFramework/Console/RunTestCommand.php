@@ -7,6 +7,7 @@ declare(strict_types = 1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -73,7 +74,8 @@ class RunTestCommand extends BaseGenerateCommand
                     'suites' => null
                 ]),
                 '--force' => $force,
-                '--remove' => $remove
+                '--remove' => $remove,
+                '--debug' => MftfApplicationConfig::DISABLE_DEBUG_MODE
             ];
             $command->run(new ArrayInput($args), $output);
         }
