@@ -15,9 +15,9 @@ class MftfApplicationConfig
     const MFTF_PHASES = [self::GENERATION_PHASE, self::EXECUTION_PHASE, self::UNIT_TEST_PHASE];
 
     const DEFAULT_DEBUG_MODE = "default";
-    const PER_FILE_DEBUG_MODE = "perFile";
+    const DEVELOPER_MODE = "developer";
     const DISABLE_DEBUG_MODE = "ignore";
-    const MFTF_DEBUG_MODES = [self::DEFAULT_DEBUG_MODE, self::PER_FILE_DEBUG_MODE, self::DISABLE_DEBUG_MODE];
+    const MFTF_DEBUG_MODES = [self::DEFAULT_DEBUG_MODE, self::DEVELOPER_MODE, self::DISABLE_DEBUG_MODE];
 
     /**
      * Determines whether the user has specified a force option for generation
@@ -87,7 +87,7 @@ class MftfApplicationConfig
      * @param boolean $forceGenerate
      * @param string  $phase
      * @param boolean $verboseEnabled
-     * @param string $debug
+     * @param string  $debug
      * @return void
      */
     public static function create($forceGenerate, $phase, $verboseEnabled, $debug)

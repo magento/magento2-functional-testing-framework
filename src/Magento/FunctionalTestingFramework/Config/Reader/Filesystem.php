@@ -157,7 +157,7 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
                 } else {
                     $configMerger->merge($content);
                 }
-                if (MftfApplicationConfig::getConfig()->getDebugMode() == MftfApplicationConfig::PER_FILE_DEBUG_MODE) {
+                if (MftfApplicationConfig::getConfig()->getDebugMode() === MftfApplicationConfig::DEVELOPER_MODE) {
                     $this->validateSchema($configMerger, $fileList->getFilename());
                 }
             } catch (\Magento\FunctionalTestingFramework\Config\Dom\ValidationException $e) {
@@ -231,7 +231,7 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
         if ($this->validationState->isValidationRequired()) {
             $errors = [];
             if ($configMerger && !$configMerger->validate($this->schemaFile, $errors)) {
-                foreach ($errors as $error){
+                foreach ($errors as $error) {
                     $error = str_replace("\n", "", $error);
                     LoggingUtil::getInstance()->getLogger(Filesystem::class)->criticalFailure(
                         "Schema validation error. ",

@@ -41,9 +41,9 @@ class MftfFilesystem extends \Magento\FunctionalTestingFramework\Config\Reader\F
                 } else {
                     $configMerger->merge($content, $fileList->getFilename(), $exceptionCollector);
                 }
-                // run per file validation with generate:tests -d
+                 // run per file validation with generate:tests -d
                 if (!in_array($debugMode, MftfApplicationConfig::MFTF_DEBUG_MODES) ||
-                    $debugMode == MftfApplicationConfig::PER_FILE_DEBUG_MODE) {
+                    $debugMode === MftfApplicationConfig::DEVELOPER_MODE) {
                     $this->validateSchema($configMerger, $fileList->getFilename());
                 }
             } catch (\Magento\FunctionalTestingFramework\Config\Dom\ValidationException $e) {
@@ -55,9 +55,9 @@ class MftfFilesystem extends \Magento\FunctionalTestingFramework\Config\Reader\F
             $this->validateSchema($configMerger, $fileList->getFilename());
         }
 
-        // run validation on merged file with generate:tests
-        if ($debugMode == MftfApplicationConfig::DEFAULT_DEBUG_MODE) {
-            $this->validateSchema($configMerger);
+         //run validation on merged file with generate:tests
+        if ($debugMode === MftfApplicationConfig::DEFAULT_DEBUG_MODE) {
+            $this->validateSchema($configMerger, $debugMode);
         }
 
         $output = [];
