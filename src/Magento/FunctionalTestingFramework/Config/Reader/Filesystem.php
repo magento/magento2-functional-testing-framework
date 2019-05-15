@@ -232,13 +232,13 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
             $errors = [];
             if ($configMerger && !$configMerger->validate($this->schemaFile, $errors)) {
                 foreach ($errors as $error) {
-                    $error = str_replace("\n", "", $error);
+                    $error = str_replace(PHP_EOL, "", $error);
                     LoggingUtil::getInstance()->getLogger(Filesystem::class)->criticalFailure(
-                        "Schema validation error. ",
+                        "Schema validation error:",
                         ($filename ? [ "file"=> $filename, "error" => $error]: ["error" => $error])
                     );
                 }
-                throw new \Exception("Error: schema validation errors found in xml file(s) " . $filename . "\n");
+                throw new \Exception("Schema validation errors found in xml file(s).");
             }
         }
     }
