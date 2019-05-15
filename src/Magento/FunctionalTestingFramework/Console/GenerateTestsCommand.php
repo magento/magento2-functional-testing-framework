@@ -55,7 +55,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 'debug',
                 'd',
                 InputOption::VALUE_OPTIONAL,
-                'Run per file validation while running tests. Use option \'ignore\' to skip debugging -- 
+                'Run extra validation when generating tests. Use option \'ignore\' to skip debugging -- 
                  added for backward compatibility, will be removed in the next MAJOR release',
                 'default'
             );
