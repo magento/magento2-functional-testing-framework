@@ -41,7 +41,7 @@ class MftfLogger extends Logger
         $message = "FAILURE: " . $message;
         // Suppress print during unit testing
         if (MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE) {
-            print ($message . implode( "\n", $context) . "\n");
+            print ($message . implode("\n", $context) . "\n");
         }
         parent::critical($message, $context);
     }
