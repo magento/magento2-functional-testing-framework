@@ -34,7 +34,6 @@ class MftfLogger extends Logger
      *
      * @param  string $message  The log message.
      * @param  array  $context  The log context.
-     * @param  string  $filename
      * @return void
      */
     public function criticalFailure($message, array $context = [])
