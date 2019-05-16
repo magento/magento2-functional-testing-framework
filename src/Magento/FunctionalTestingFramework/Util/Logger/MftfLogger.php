@@ -32,8 +32,8 @@ class MftfLogger extends Logger
     /**
      * Prints a critical failure, as well as adds a log at the CRITICAL level.
      *
-     * @param  string $message  The log message.
-     * @param  array  $context  The log context.
+     * @param  string $message The log message.
+     * @param  array  $context The log context.
      * @return void
      */
     public function criticalFailure($message, array $context = [])
