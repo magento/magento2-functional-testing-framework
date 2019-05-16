@@ -32,14 +32,14 @@ class MftfLogger extends Logger
     /**
      * Prints a critical failure, as well as adds a log at the CRITICAL level.
      *
-     * @param  string $message The log message.
-     * @param  array  $context The log context.
+     * @param  string $message  The log message.
+     * @param  array  $context  The log context.
      * @param  string  $filename
      * @return void
      */
-    public function criticalFailure($message, array $context = [], $filename = null)
+    public function criticalFailure($message, array $context = [])
     {
-        $message = "FAILURE: " . $message . $filename;
+        $message = "FAILURE: " . $message;
         // Suppress print during unit testing
         if (MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE) {
             print ($message . implode( "\n", $context) . "\n");
