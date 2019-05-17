@@ -63,7 +63,7 @@ class MftfApplicationConfig
      * @param boolean $forceGenerate
      * @param string  $phase
      * @param boolean $verboseEnabled
-     * @param string $mode
+     * @param string  $mode
      * @throws TestFrameworkException
      */
     private function __construct(
