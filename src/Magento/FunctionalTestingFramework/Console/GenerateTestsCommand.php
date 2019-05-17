@@ -55,7 +55,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 'debug',
                 'd',
                 InputOption::VALUE_OPTIONAL,
-                'Run extra validation when generating tests. Use option \'ignore\' to skip debugging -- 
+                'Run extra validation when generating tests. Use option \'off\' to turn off debugging -- 
                  added for backward compatibility, will be removed in the next MAJOR release',
                 'default'
             );
@@ -80,7 +80,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
         $json = $input->getOption('tests');
         $force = $input->getOption('force');
         $time = $input->getOption('time') * 60 * 1000; // convert from minutes to milliseconds
-        $debug = $input->getOption('debug')?? MftfApplicationConfig::DEVELOPER_MODE;
+        $mode = $input->getOption('debug');
         $remove = $input->getOption('remove');
         $verbose = $output->isVerbose();
 
@@ -97,10 +97,10 @@ class GenerateTestsCommand extends BaseGenerateCommand
         // Remove previous GENERATED_DIR if --remove option is used
         if ($remove) {
             $this->removeGeneratedDirectory($output, $verbose ||
-                ($debug !== MftfApplicationConfig::DISABLE_DEBUG_MODE));
+                ($mode !== MftfApplicationConfig::MODE_PRODUCTION));
         }
 
-        $testConfiguration = $this->createTestConfiguration($json, $tests, $force, $debug, $verbose);
+        $testConfiguration = $this->createTestConfiguration($json, $tests, $force, $mode, $verbose);
 
         // create our manifest file here
         $testManifest = TestManifestFactory::makeManifest($config, $testConfiguration['suites']);
@@ -132,7 +132,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
-    private function createTestConfiguration($json, array $tests, bool $force, string $debug, bool $verbose)
+    private function createTestConfiguration($json, array $tests, bool $force, $debug, bool $verbose)
     {
         // set our application configuration so we can references the user options in our framework
         MftfApplicationConfig::create(

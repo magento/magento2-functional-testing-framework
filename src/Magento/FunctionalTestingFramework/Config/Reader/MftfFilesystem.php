@@ -24,7 +24,7 @@ class MftfFilesystem extends \Magento\FunctionalTestingFramework\Config\Reader\F
         $exceptionCollector = new ExceptionCollector();
         /** @var \Magento\FunctionalTestingFramework\Test\Config\Dom $configMerger */
         $configMerger = null;
-        $debugMode = MftfApplicationConfig::getConfig()->getDebugMode();
+        $mode = MftfApplicationConfig::getConfig()->getMode();
         foreach ($fileList as $key => $content) {
             //check if file is empty and continue to next if it is
             if (!parent::verifyFileEmpty($content, $fileList->getFilename())) {
@@ -42,8 +42,7 @@ class MftfFilesystem extends \Magento\FunctionalTestingFramework\Config\Reader\F
                     $configMerger->merge($content, $fileList->getFilename(), $exceptionCollector);
                 }
                  // run per file validation with generate:tests -d
-                if (!in_array($debugMode, MftfApplicationConfig::MFTF_DEBUG_MODES) ||
-                    $debugMode === MftfApplicationConfig::DEVELOPER_MODE) {
+                if ($mode == MftfApplicationConfig::MODE_DEVELOPER) {
                     $this->validateSchema($configMerger, $fileList->getFilename());
                 }
             } catch (\Magento\FunctionalTestingFramework\Config\Dom\ValidationException $e) {
@@ -53,7 +52,7 @@ class MftfFilesystem extends \Magento\FunctionalTestingFramework\Config\Reader\F
         $exceptionCollector->throwException();
 
          //run validation on merged file with generate:tests
-        if ($debugMode === MftfApplicationConfig::DEFAULT_DEBUG_MODE) {
+        if ($mode == MftfApplicationConfig::MODE_DEFAULT) {
             $this->validateSchema($configMerger);
         }
 

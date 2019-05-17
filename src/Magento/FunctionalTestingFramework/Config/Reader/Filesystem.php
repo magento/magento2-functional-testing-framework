@@ -157,7 +157,7 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
                 } else {
                     $configMerger->merge($content);
                 }
-                if (MftfApplicationConfig::getConfig()->getDebugMode() === MftfApplicationConfig::DEVELOPER_MODE) {
+                if (MftfApplicationConfig::getConfig()->getMode() === MftfApplicationConfig::MODE_DEVELOPER) {
                     $this->validateSchema($configMerger, $fileList->getFilename());
                 }
             } catch (\Magento\FunctionalTestingFramework\Config\Dom\ValidationException $e) {
@@ -235,7 +235,7 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
                     $error = str_replace(PHP_EOL, "", $error);
                     LoggingUtil::getInstance()->getLogger(Filesystem::class)->criticalFailure(
                         "Schema validation error ",
-                        ($filename ? [ "file"=> $filename, "error" => $error]: ["error" => $error])
+                        ($filename ? [ "file"=> $filename, "error" => $error]: ["schema" => $this->schemaFile, "error" => $error])
                     );
                 }
                 throw new \Exception("Schema validation errors found in xml file(s)" . $filename);

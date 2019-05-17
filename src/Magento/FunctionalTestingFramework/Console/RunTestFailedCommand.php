@@ -72,7 +72,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
             false,
             MftfApplicationConfig::GENERATION_PHASE,
             false,
-            MftfApplicationConfig::DISABLE_DEBUG_MODE
+            MftfApplicationConfig::MODE_PRODUCTION
         );
 
         $testConfiguration = $this->getFailedTestList();

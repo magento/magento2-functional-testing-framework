@@ -14,10 +14,13 @@ class MftfApplicationConfig
     const UNIT_TEST_PHASE = "testing";
     const MFTF_PHASES = [self::GENERATION_PHASE, self::EXECUTION_PHASE, self::UNIT_TEST_PHASE];
 
-    const DEFAULT_DEBUG_MODE = "default";
-    const DEVELOPER_MODE = "developer";
-    const DISABLE_DEBUG_MODE = "ignore";
-    const MFTF_DEBUG_MODES = [self::DEFAULT_DEBUG_MODE, self::DEVELOPER_MODE, self::DISABLE_DEBUG_MODE];
+    /**
+     * Mftf debug modes
+     */
+    const MODE_DEFAULT = "default";
+    const MODE_DEVELOPER = "developer";
+    const MODE_PRODUCTION = "off";
+    const MFTF_DEBUG_MODES = [self::MODE_DEFAULT, self::MODE_DEVELOPER, self::MODE_PRODUCTION];
 
     /**
      * Determines whether the user has specified a force option for generation
@@ -45,7 +48,7 @@ class MftfApplicationConfig
      *
      * @var string
      */
-    private $debug;
+    private $mode;
 
     /**
      * MftfApplicationConfig Singelton Instance
@@ -60,14 +63,14 @@ class MftfApplicationConfig
      * @param boolean $forceGenerate
      * @param string  $phase
      * @param boolean $verboseEnabled
-     * @param boolean $debug
+     * @param string $mode
      * @throws TestFrameworkException
      */
     private function __construct(
         $forceGenerate = false,
         $phase = self::EXECUTION_PHASE,
         $verboseEnabled = null,
-        $debug = null
+        $mode = self::MODE_PRODUCTION
     ) {
         $this->forceGenerate = $forceGenerate;
 
@@ -77,7 +80,15 @@ class MftfApplicationConfig
 
         $this->phase = $phase;
         $this->verboseEnabled = $verboseEnabled;
-        $this->debug = $debug;
+        switch ($mode) {
+            case self::MODE_DEVELOPER:
+            case self::MODE_DEFAULT:
+            case self::MODE_PRODUCTION:
+                $this->mode = $mode;
+                break;
+            default:
+                $this->mode = self::MODE_DEVELOPER;
+        }
     }
 
     /**
@@ -87,14 +98,14 @@ class MftfApplicationConfig
      * @param boolean $forceGenerate
      * @param string  $phase
      * @param boolean $verboseEnabled
-     * @param string  $debug
+     * @param string  $mode
      * @return void
      */
-    public static function create($forceGenerate, $phase, $verboseEnabled, $debug)
+    public static function create($forceGenerate, $phase, $verboseEnabled, $mode)
     {
         if (self::$MFTF_APPLICATION_CONTEXT == null) {
             self::$MFTF_APPLICATION_CONTEXT =
-                new MftfApplicationConfig($forceGenerate, $phase, $verboseEnabled, $debug);
+                new MftfApplicationConfig($forceGenerate, $phase, $verboseEnabled, $mode);
         }
     }
 
@@ -141,9 +152,9 @@ class MftfApplicationConfig
      *
      * @return string
      */
-    public function getDebugMode()
+    public function getMode()
     {
-        return $this->debug ?? getenv('MFTF_DEBUG');
+        return $this->mode ?? getenv('MFTF_DEBUG');
     }
 
     /**
