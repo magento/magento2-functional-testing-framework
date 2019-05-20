@@ -19,7 +19,7 @@ class SchemaValidationTest extends MftfTestCase
      */
     public function testInvalidTestSchema()
     {
-        AspectMock::double(MftfApplicationConfig::class, ['getMode' => MftfApplicationConfig::MODE_DEVELOPER]);
+        AspectMock::double(MftfApplicationConfig::class, ['getDebugLevel' => MftfApplicationConfig::LEVEL_DEVELOPER]);
         $testFile = ['testFile.xml' => "<tests><test name='testName'><annotations>a</annotations></test></tests>"];
         $expectedError = TESTS_MODULE_PATH .
             DIRECTORY_SEPARATOR .

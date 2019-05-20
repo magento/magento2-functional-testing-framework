@@ -55,7 +55,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 'debug',
                 'd',
                 InputOption::VALUE_OPTIONAL,
-                'Run extra validation when generating tests. Use option \'off\' to turn off debugging -- 
+                'Run extra validation when generating tests. Use option \'none\' to turn off debugging -- 
                  added for backward compatibility, will be removed in the next MAJOR release',
                 'default'
             );
@@ -80,7 +80,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
         $json = $input->getOption('tests');
         $force = $input->getOption('force');
         $time = $input->getOption('time') * 60 * 1000; // convert from minutes to milliseconds
-        $mode = $input->getOption('debug');
+        $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
         $remove = $input->getOption('remove');
         $verbose = $output->isVerbose();
 
@@ -97,10 +97,10 @@ class GenerateTestsCommand extends BaseGenerateCommand
         // Remove previous GENERATED_DIR if --remove option is used
         if ($remove) {
             $this->removeGeneratedDirectory($output, $verbose ||
-                ($mode !== MftfApplicationConfig::MODE_PRODUCTION));
+                ($debug !== MftfApplicationConfig::DEBUG_NONE));
         }
 
-        $testConfiguration = $this->createTestConfiguration($json, $tests, $force, $mode, $verbose);
+        $testConfiguration = $this->createTestConfiguration($json, $tests, $force, $debug, $verbose);
 
         // create our manifest file here
         $testManifest = TestManifestFactory::makeManifest($config, $testConfiguration['suites']);
