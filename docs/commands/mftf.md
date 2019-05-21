@@ -131,7 +131,7 @@ You can run `generate:tests` with any of the following debug levels. XML schema 
 
 | Debug level | Description |
 | ---| --- |
-|`default` `[generate:tests]` | Perform XML schema validation on merged files. Does not indicate the file name where trhe error is encountered. Use `developer` level for enhanced debugging. |
+|`default` `[generate:tests]` | Perform XML schema validation on merged files. Does not indicate the file name where the error is encountered. Use `developer` level for enhanced debugging. |
 |`developer` `[generate:tests --debug or generate:tests --debug developer]` |  Returns additional debug information (such as the filename where an error occurred) when test generation fails because of an invalid XML schema. Note: This option takes extra processing time. Use it after test generation has failed once. |
 |`none` `[generate:tests --debug none]`|  Skip debugging during test generation. Added for backward compatibility, it will be removed with the next MAJOR release.|
 
