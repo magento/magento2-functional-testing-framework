@@ -24,7 +24,7 @@
         </after>
         <comment stepKey="basicCommentWithNoData" userInput="{{emptyData.noData}}"/>
         <comment stepKey="basicCommentWithDefinitelyNoData" userInput="{{emptyData.definitelyNoData}}"/>
-        <comment stepKey="ReadinessCheckSkipped" userInput="skipReadiness" skipReadiness="true"/>
+        <comment stepKey="basicCommentWithData" userInput="seeComment"/>
         <grabValueFrom stepKey="someVarDefinition"/>
         <acceptPopup stepKey="acceptPopupKey1"/>
         <amOnPage stepKey="amOnPageKey1" url="/test/url"/>

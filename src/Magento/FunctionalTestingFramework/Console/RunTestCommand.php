@@ -7,6 +7,7 @@ declare(strict_types = 1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -46,12 +47,12 @@ class RunTestCommand extends BaseGenerateCommand
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return integer|null|void
+     * @return integer
      * @throws \Exception
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $tests = $input->getArgument('name');
         $skipGeneration = $input->getOption('skip-generate');
@@ -73,7 +74,8 @@ class RunTestCommand extends BaseGenerateCommand
                     'suites' => null
                 ]),
                 '--force' => $force,
-                '--remove' => $remove
+                '--remove' => $remove,
+                '--debug' => MftfApplicationConfig::LEVEL_NONE
             ];
             $command->run(new ArrayInput($args), $output);
         }
@@ -85,7 +87,8 @@ class RunTestCommand extends BaseGenerateCommand
         $process->setWorkingDirectory(TESTS_BP);
         $process->setIdleTimeout(600);
         $process->setTimeout(0);
-        $process->run(
+
+        return $process->run(
             function ($type, $buffer) use ($output) {
                 $output->write($buffer);
             }

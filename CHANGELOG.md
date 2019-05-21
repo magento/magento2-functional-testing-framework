@@ -1,6 +1,32 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.4.0
+-----
+### Enhancements
+* Maintainability
+    * Added new `mftf static-checks` command to run new static checks against the attached test codebase
+        * See DevDocs for details
+    * Added new `mftf generate:docs` command that generates documentation about attached test codebase
+        * See DevDocs for details
+* Traceability
+    * Allure reports for tests now contain collapsible sections for `actionGroup`s used in execution.
+
+### Fixes
+* Fixed an issue where `magentoCli` would treat `argument="0"` as a null value.
+* Fixed an issue where `amOnPage` and `waitForPwaElementVisible` would not utilize the `timeout` attribute correctly when MagentoPwaWebDriver is enabled.
+* Fixed an issue where invalid XML characters would cause Allure to throw an exception without a resulting report.
+* Fixed `codeception.dist.yml` configuration for keeping previous test run results.
+* PHP Notices are no longer thrown when XML is missing non-necessary attributes.
+* Removed unusable `fillSecretField` action from schema.
+
+### GitHub Issues/Pull requests:
+* [#338](https://github.com/magento/magento2-functional-testing-framework/pull/338) -- Return exit codes of process started by 'run:test', 'run:group' or 'run:failed' command
+* [#333](https://github.com/magento/magento2-functional-testing-framework/pull/333) -- Added Nginx specific settings to getting started doc
+* [#332](https://github.com/magento/magento2-functional-testing-framework/pull/332) -- executeInSelenium action does not generate proper code
+* [#318](https://github.com/magento/magento2-functional-testing-framework/pull/318) -- Reduce cyclomatic complexity in Problem Methods
+* [#287](https://github.com/magento/magento2-functional-testing-framework/pull/287) -- Update requirements to include php7.3 support
+
 2.3.14
 -----
 ### Enhancements

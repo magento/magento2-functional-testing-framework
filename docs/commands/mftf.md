@@ -68,6 +68,7 @@ This command cleans up the previously generated tests; generates and runs the te
 For more details about `failed`, refer to [Reporting][].
 
 ### Generate documentation for action groups
+
 ```bash
 vendor/bin/mftf generate:docs
 ```
@@ -115,14 +116,14 @@ vendor/bin/mftf generate:tests [option] [<test name>] [<test name>] [--remove]
 
 #### Options
 
-| Option                                        | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--config=[<default>|<singleRun>|<parallel>]` | Creates a single manifest file with a list of all tests. The default location is `tests/functional/Magento/FunctionalTest/_generated/testManifest.txt`.<br/> You can split the list into multiple groups using `--config=parallel`; the groups will be generated in `_generated/groups/` like `_generated/groups/group1.txt, group2.txt, ...`.</br> Available values: `default` (default), `singleRun`(same as `default`), and `parallel`.</br> Example: `generate:tests --config=parallel`. |
-| `--force`                                     | Forces test generation, regardless of the module merge order defined in the Magento instance. Example: `generate:tests --force`.                                                                                                                                                                                                                                                                                                                                                             |
-| `-i,--time`                                     | Set time in minutes to determine the group size when `--config=parallel` is used. The __default value__ is `10`. Example: `generate:tests --config=parallel --time=15`                                                                                                                                                                                                                                                                                                            |
-| `--tests`                                     | Defines the test configuration as a JSON string.                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `--debug`                                     | Returns additional debug information (such as the filename where an error occurred) when test generation fails because of an invalid XML schema. This parameter takes extra processing time. Use it after test generation has failed once.                                                                                                                                                                                                                                                   |
-| `-r,--remove`                                 | Removes the existing generated suites and tests cleaning up the `_generated` directory before the actual run. For example, `generate:tests SampleTest --remove` cleans up the entire `_generated` directory and generates `SampleTest` only.                                                                                                                                                                                                                                                 |
+| Option | Description|
+| ---| --- |
+| `--config=[<default> or <singleRun> or <parallel>]` | Creates a single manifest file with a list of all tests. The default location is `tests/functional/Magento/FunctionalTest/_generated/testManifest.txt`.<br/> You can split the list into multiple groups using `--config=parallel`; the groups will be generated in `_generated/groups/` like `_generated/groups/group1.txt, group2.txt, ...`.</br> Available values: `default` (default), `singleRun`(same as `default`), and `parallel`.</br> Example: `generate:tests --config=parallel`. |
+| `--force` | Forces test generation, regardless of the module merge order defined in the Magento instance. Example: `generate:tests --force`. |
+| `-i,--time` | Set time in minutes to determine the group size when `--config=parallel` is used. The __default value__ is `10`. Example: `generate:tests --config=parallel --time=15`|
+| `--tests` | Defines the test configuration as a JSON string.|
+| `--debug` | Returns additional debug information (such as the filename where an error occurred) when test generation fails because of an invalid XML schema. This parameter takes extra processing time. Use it after test generation has failed once. |
+| `-r,--remove`| Removes the existing generated suites and tests cleaning up the `_generated` directory before the actual run. For example, `generate:tests SampleTest --remove` cleans up the entire `_generated` directory and generates `SampleTest` only.|
 
 #### Examples of the JSON configuration
 
@@ -131,7 +132,7 @@ The configuration to generate a single test with no suites:
 ```json
 {  
    "tests":[
-      "general_test1"     //Generate the "general_test1" test.
+      "general_test1"  //Generate the "general_test1" test.
       ],
    "suites": null
 }
@@ -141,10 +142,10 @@ The configuration to generate a single test in the suite:
 
 ```json
 {  
-   "tests": null,         // No tests outside the suite configuration will be generated.
+   "tests": null,       // No tests outside the suite configuration will be generated.
    "suites":{  
-      "sample":[          // The suite that contains the test.
-         "suite_test1"    // The test to be generated.
+      "sample":[        // The suite that contains the test.
+         "suite_test1"  // The test to be generated.
       ]
    }
 }
@@ -159,11 +160,11 @@ Complex configuration to generate a few non-suite tests, a single test in a suit
       "general_test2",
       "general_test3"
    ],
-   "suites":{             //Go to suites.
-      "sample":[          //Go to the "sample" suite.
-         "suite_test1"    //Generate the "suite_test1" test.
+   "suites":{           //Go to suites.
+      "sample":[        //Go to the "sample" suite.
+         "suite_test1"  //Generate the "suite_test1" test.
       ],
-      "sample2":[]        //Generate all tests in the "sample2" suite.
+      "sample2":[]      //Generate all tests in the "sample2" suite.
    }
 }
 ```
@@ -190,8 +191,8 @@ vendor/bin/mftf generate:suite <suite name> [<suite name>] [--remove]
 
 #### Options
 
-| Option        | Description                                                                                                                                                                                                                                            |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Option | Description |
+| --- | --- |
 | `-r,--remove` | Removes the existing generated suites and tests cleaning up the `_generated` directory before the actual run. For example, `vendor/bin/mftf generate:suite WYSIWYG --remove` cleans up the entire `_generated` directory and generates `WYSIWYG` only. |
 
 #### Example
@@ -252,7 +253,6 @@ vendor/bin/mftf generate:docs [--clean] [--output=/path/to/alternate/dir]
 ```bash
 vendor/bin/mftf generate:docs --clean
 ```
-
 
 ### `reset`
 
@@ -388,6 +388,20 @@ vendor/bin/mftf setup:env
 ```
 
 The example parameters are taken from the `etc/config/.env.example` file.
+
+### `static:checks`
+
+Runs all MFTF static:checks on the test codebase that MFTF is currently attached to.
+
+#### Existing static checks
+
+* Test Dependency: Checks that test dependencies do not violate Magento module's composer dependencies.
+
+#### Usage
+
+```bash
+vendor/bin/mftf static:checks
+```
 
 ### `upgrade:tests`
 

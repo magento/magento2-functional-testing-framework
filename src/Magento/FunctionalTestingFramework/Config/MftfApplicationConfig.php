@@ -15,6 +15,14 @@ class MftfApplicationConfig
     const MFTF_PHASES = [self::GENERATION_PHASE, self::EXECUTION_PHASE, self::UNIT_TEST_PHASE];
 
     /**
+     * Mftf debug levels
+     */
+    const LEVEL_DEFAULT = "default";
+    const LEVEL_DEVELOPER = "developer";
+    const LEVEL_NONE = "none";
+    const MFTF_DEBUG_LEVEL = [self::LEVEL_DEFAULT, self::LEVEL_DEVELOPER, self::LEVEL_NONE];
+
+    /**
      * Determines whether the user has specified a force option for generation
      *
      * @var boolean
@@ -36,11 +44,11 @@ class MftfApplicationConfig
     private $verboseEnabled;
 
     /**
-     * Determines whether the user would like to execute mftf in a verbose run.
+     * String which identifies the current debug level of mftf execution
      *
-     * @var boolean
+     * @var string
      */
-    private $debugEnabled;
+    private $debugLevel;
 
     /**
      * MftfApplicationConfig Singelton Instance
@@ -55,14 +63,14 @@ class MftfApplicationConfig
      * @param boolean $forceGenerate
      * @param string  $phase
      * @param boolean $verboseEnabled
-     * @param boolean $debugEnabled
+     * @param string  $debugLevel
      * @throws TestFrameworkException
      */
     private function __construct(
         $forceGenerate = false,
         $phase = self::EXECUTION_PHASE,
         $verboseEnabled = null,
-        $debugEnabled = null
+        $debugLevel = self::LEVEL_NONE
     ) {
         $this->forceGenerate = $forceGenerate;
 
@@ -72,7 +80,15 @@ class MftfApplicationConfig
 
         $this->phase = $phase;
         $this->verboseEnabled = $verboseEnabled;
-        $this->debugEnabled = $debugEnabled;
+        switch ($debugLevel) {
+            case self::LEVEL_DEVELOPER:
+            case self::LEVEL_DEFAULT:
+            case self::LEVEL_NONE:
+                $this->debugLevel = $debugLevel;
+                break;
+            default:
+                $this->debugLevel = self::LEVEL_DEVELOPER;
+        }
     }
 
     /**
@@ -82,14 +98,14 @@ class MftfApplicationConfig
      * @param boolean $forceGenerate
      * @param string  $phase
      * @param boolean $verboseEnabled
-     * @param boolean $debugEnabled
+     * @param string  $debugLevel
      * @return void
      */
-    public static function create($forceGenerate, $phase, $verboseEnabled, $debugEnabled)
+    public static function create($forceGenerate, $phase, $verboseEnabled, $debugLevel)
     {
         if (self::$MFTF_APPLICATION_CONTEXT == null) {
             self::$MFTF_APPLICATION_CONTEXT =
-                new MftfApplicationConfig($forceGenerate, $phase, $verboseEnabled, $debugEnabled);
+                new MftfApplicationConfig($forceGenerate, $phase, $verboseEnabled, $debugLevel);
         }
     }
 
@@ -132,14 +148,13 @@ class MftfApplicationConfig
     }
 
     /**
-     * Returns a boolean indicating whether the user has indicated a debug run, which will lengthy validation
-     * with some extra error messaging to be run
+     * Returns a string which indicates the debug level of mftf execution.
      *
-     * @return boolean
+     * @return string
      */
-    public function debugEnabled()
+    public function getDebugLevel()
     {
-        return $this->debugEnabled ?? getenv('MFTF_DEBUG');
+        return $this->debugLevel ?? getenv('MFTF_DEBUG');
     }
 
     /**

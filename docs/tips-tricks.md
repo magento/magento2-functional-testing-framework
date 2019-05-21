@@ -283,6 +283,27 @@ Use numbers within `stepKeys` when order is important, such as with testing sort
 
 ## Selectors
 
+### Use contains() around text()
+
+When possible, use `contains(text(), 'someTextHere')` rather than `text()='someTextHere'`.
+`contains()` ignores whitespace while `text()` accounts for it.
+
+**Why?**
+If you are comparing text within a selector and have an unexpected space, or a blank line above or below the string, `text()` will fail while the `contains(text())` format will catch it.
+In this scenario `text()` is more exacting. Use it when you need to be very precise about what is getting compared.
+
+<span style="color:green">
+GOOD:
+</span>
+
+`//span[contains(text(), 'SomeTextHere')]`
+
+<span style="color:red">
+BAD:
+</span>
+
+`//span[text()='SomeTextHere']`
+
 ### Build selectors in proper order
 
 When building selectors for form elements, start with the parent context of the form element.
@@ -353,6 +374,31 @@ BAD:
 
 ## General tips
 
+### Use data references to avoid hardcoded values
+
+If you need to run a command such as  `<magentoCLI command="config:set" />`, do not hardcode paths and values to the command.
+Rather, create an appropriate `ConfigData.xml` file, which contains the required parameters for running the command.
+It will simplify the future maintanence of tests.
+
+ <span style="color:green">
+GOOD:
+</span>
+
+```xml
+<magentoCLI command="config:set {{StorefrontCustomerCaptchaLength3ConfigData.path}} {{StorefrontCustomerCaptchaLength3ConfigData.value}}" stepKey="setCaptchaLength" />
+```
+
+ <span style="color:red">
+BAD:
+</span>
+
+```xml
+<magentoCLI command="config:set customer/captcha/length 3" stepKey="setCaptchaLength" />
+```
+
+For example:
+[This test][] refers to this [Data file][].
+
 ### Use descriptive variable names
 
 Use descriptive variable names to increase readability.
@@ -398,3 +444,7 @@ BAD:
 ```
 
 <!--{% endraw %}-->
+
+<!-- Link Definitions -->
+[This test]: https://github.com/magento/magento2/blob/2.3-develop/app/code/Magento/Captcha/Test/Mftf/Test/StorefrontCaptchaRegisterNewCustomerTest.xml#L24
+[Data file]: https://github.com/magento/magento2/blob/2.3-develop/app/code/Magento/Captcha/Test/Mftf/Data/CaptchaConfigData.xml
