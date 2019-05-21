@@ -135,9 +135,6 @@ You can run generate:tests with any of the following debug levels. XML schema va
 |`developer` `[generate:tests --debug or generate:tests --debug developer]` |  Returns additional debug information (such as the filename where an error occurred) when test generation fails because of an invalid XML schema. This option takes extra processing time. Use it after test generation has failed once. |
 |`none` `[generate:tests --debug none]`|  skip debugging during test generation. Added for backward compatibility, will be removed with the next MAJOR release|
 
-
-
-
 #### Examples of the JSON configuration
 
 The configuration to generate a single test with no suites:
