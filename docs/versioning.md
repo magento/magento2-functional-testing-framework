@@ -60,7 +60,7 @@ You must reset the patch and minor version to 0 when you change the major versio
 
 This table lists the version of the MFTF that was released with a particular version of Magento.
 
-|||
+|Magento version| MFTF  version|
 |---|---|
 | Magento | MFTF |
 | 2.3.1 | 2.3.13 |
