@@ -62,7 +62,6 @@ This table lists the version of the MFTF that was released with a particular ver
 
 |Magento version| MFTF  version|
 |---|---|
-| Magento | MFTF |
 | 2.3.1 | 2.3.13 |
 | 2.3.0 | 2.3.9 |
 | 2.2.8 | 2.3.13 |
