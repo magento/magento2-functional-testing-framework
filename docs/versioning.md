@@ -56,7 +56,7 @@ Major version **X** MUST be incremented for a release that introduces backward i
 A major release can also include minor and patch level changes.
 You must reset the patch and minor version to 0 when you change the major version.
 
-## Magento2 - MFTF versions
+## Magento 2  compatibility
 
 This table lists the version of the MFTF that was released with a particular version of Magento.
 
