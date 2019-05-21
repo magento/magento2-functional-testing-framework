@@ -105,7 +105,7 @@ vendor/bin/mftf build:project --MAGENTO_BASE_URL=http://magento.local/ --MAGENTO
 
 #### Description
 
-Generate PHP code from the tests defined in XML files.
+Perform XML schema validation and generate PHP code from the tests defined in XML files.
 The path is set in the `TESTS_MODULE_PATH` [configuration] parameter.
 
 #### Usage
@@ -122,8 +122,21 @@ vendor/bin/mftf generate:tests [option] [<test name>] [<test name>] [--remove]
 | `--force` | Forces test generation, regardless of the module merge order defined in the Magento instance. Example: `generate:tests --force`. |
 | `-i,--time` | Set time in minutes to determine the group size when `--config=parallel` is used. The __default value__ is `10`. Example: `generate:tests --config=parallel --time=15`|
 | `--tests` | Defines the test configuration as a JSON string.|
-| `--debug` | Returns additional debug information (such as the filename where an error occurred) when test generation fails because of an invalid XML schema. This parameter takes extra processing time. Use it after test generation has failed once. |
+| `--debug=[<developer> or <none>]`| Set debug level to `default` when the option is not specified, to `developer` with `--debug developer` or `--debug`, to `none` with `--debug none` |   |
 | `-r,--remove`| Removes the existing generated suites and tests cleaning up the `_generated` directory before the actual run. For example, `generate:tests SampleTest --remove` cleans up the entire `_generated` directory and generates `SampleTest` only.|
+
+#### Debugging levels
+
+You can run generate:tests with any of the following debug levels. XML schema validation errors will be logged as CRITICAL failures.
+
+| Debug level | Description |
+| ---| --- |
+|`default` `[generate:tests]` ` | perform XML schema validation on merged files. Does not indicate the file name where error is encountered. Use `developer` level for enhanced debugging. |
+|`developer` `[generate:tests --debug or generate:tests --debug developer]` |  Returns additional debug information (such as the filename where an error occurred) when test generation fails because of an invalid XML schema. This option takes extra processing time. Use it after test generation has failed once. |
+|`none` `[generate:tests --debug none]`|  skip debugging during test generation. Added for backward compatibility, will be removed with the next MAJOR release|
+
+
+
 
 #### Examples of the JSON configuration
 
