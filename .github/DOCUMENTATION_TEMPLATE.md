@@ -1,6 +1,6 @@
 # How to contribute to MFTF docs
 
-We welcome contributions to the MFTF documentation, which is kept within the /docs/ folder in this repository.
+We welcome contributions to the MFTF documentation, which is kept within the `docs/` folder in this repository.
 This page describes the submitting process and serves as a template for a properly written content.
 The contribution workflow is the same as submitting code.
 
