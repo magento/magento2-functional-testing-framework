@@ -75,7 +75,7 @@ class RunTestCommand extends BaseGenerateCommand
                 ]),
                 '--force' => $force,
                 '--remove' => $remove,
-                '--debug' => MftfApplicationConfig::DEBUG_NONE
+                '--debug' => MftfApplicationConfig::LEVEL_NONE
             ];
             $command->run(new ArrayInput($args), $output);
         }

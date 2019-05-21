@@ -97,7 +97,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
         // Remove previous GENERATED_DIR if --remove option is used
         if ($remove) {
             $this->removeGeneratedDirectory($output, $verbose ||
-                ($debug !== MftfApplicationConfig::DEBUG_NONE));
+                ($debug !== MftfApplicationConfig::LEVEL_NONE));
         }
 
         $testConfiguration = $this->createTestConfiguration($json, $tests, $force, $debug, $verbose);

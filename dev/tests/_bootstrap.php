@@ -32,7 +32,7 @@ $kernel->init([
     true,
     \Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::UNIT_TEST_PHASE,
     true,
-    \Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::DEBUG_NONE
+    \Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::LEVEL_NONE
 );
 
 // Load needed framework env params

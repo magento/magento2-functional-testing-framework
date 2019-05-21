@@ -19,8 +19,8 @@ class MftfApplicationConfig
      */
     const LEVEL_DEFAULT = "default";
     const LEVEL_DEVELOPER = "developer";
-    const DEBUG_NONE = "none";
-    const MFTF_DEBUG_LEVEL = [self::LEVEL_DEFAULT, self::LEVEL_DEVELOPER, self::DEBUG_NONE];
+    const LEVEL_NONE = "none";
+    const MFTF_DEBUG_LEVEL = [self::LEVEL_DEFAULT, self::LEVEL_DEVELOPER, self::LEVEL_NONE];
 
     /**
      * Determines whether the user has specified a force option for generation
@@ -70,7 +70,7 @@ class MftfApplicationConfig
         $forceGenerate = false,
         $phase = self::EXECUTION_PHASE,
         $verboseEnabled = null,
-        $debugLevel = self::DEBUG_NONE
+        $debugLevel = self::LEVEL_NONE
     ) {
         $this->forceGenerate = $forceGenerate;
 
@@ -83,7 +83,7 @@ class MftfApplicationConfig
         switch ($debugLevel) {
             case self::LEVEL_DEVELOPER:
             case self::LEVEL_DEFAULT:
-            case self::DEBUG_NONE:
+            case self::LEVEL_NONE:
                 $this->debugLevel = $debugLevel;
                 break;
             default:

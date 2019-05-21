@@ -67,7 +67,7 @@ class GenerateDocsCommand extends Command
             $force,
             MftfApplicationConfig::GENERATION_PHASE,
             false,
-            MftfApplicationConfig::DEBUG_NONE
+            MftfApplicationConfig::LEVEL_NONE
         );
 
         $allActionGroups = ActionGroupObjectHandler::getInstance()->getAllObjects();
