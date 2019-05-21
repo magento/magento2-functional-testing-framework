@@ -6,7 +6,7 @@ The contribution workflow is the same as submitting code.
 
 1. Create a branch from the `develop` branch in the [MFTF repository][].
 1. Make edits/additions/deletions as needed. Read the [Basic Template][] for tips on how to write with Markdown.
-1. Submit your PR to the `develop` branch.
+1. Submit your pull request to the `develop` branch.
 
 Once submitted, a member of the documentation team will review and merge it.
 We will inform you if it needs any additional processing.
