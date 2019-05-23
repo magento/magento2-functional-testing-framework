@@ -267,7 +267,7 @@ class MagentoAllureAdapter extends AllureCodeception
      * Append step key to matching step
      *
      * @param integer $stepCount
-     * @param string $name
+     * @param string  $name
      *
      * @return string
      */

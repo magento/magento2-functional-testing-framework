@@ -72,7 +72,6 @@ class MagentoAllureStepKeyReader
      */
     private $afterSteps;
 
-
     /**
      * steps in test
      *
@@ -150,8 +149,8 @@ class MagentoAllureStepKeyReader
             $steps = array_slice($this->beforeSteps, 0, $passedCount);
             $steps = array_merge($steps, $this->failedSteps);
             $steps = array_merge($steps, $this->afterSteps);
-        } elseif ($passedCount < ($this->stepCount[self::BEFORE_MARK] + $this->stepCount[self::TEST_MARK])) { /* failed in test() */
-            $steps = $this->beforeSteps;
+        } elseif ($passedCount < ($this->stepCount[self::BEFORE_MARK] + $this->stepCount[self::TEST_MARK])) {
+            $steps = $this->beforeSteps; /* failed in test() */
             $steps = array_merge(
                 $steps,
                 array_slice($this->testSteps, 0, $passedCount - $this->stepCount[self::BEFORE_MARK])
