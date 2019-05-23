@@ -7,6 +7,8 @@ namespace Magento\FunctionalTestingFramework\Allure\Adapter;
 
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
+use Magento\FunctionalTestingFramework\Allure\Adapter\MagentoAllureStepKeyReader;
+use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Yandex\Allure\Adapter\Model\Step;
 use Yandex\Allure\Codeception\AllureCodeception;
 use Yandex\Allure\Adapter\Event\StepStartedEvent;
@@ -17,6 +19,7 @@ use Yandex\Allure\Adapter\Event\TestCaseFinishedEvent;
 use Codeception\Event\FailEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\StepEvent;
+use Codeception\Event\TestEvent;
 
 /**
  * Class MagentoAllureAdapter
@@ -30,6 +33,23 @@ use Codeception\Event\StepEvent;
 class MagentoAllureAdapter extends AllureCodeception
 {
     const STEP_PASSED = "passed";
+    const SAVE_SCREENSHOT = "save screenshot";
+    const ALLURE_STEPKEY_FORMAT = " ------ @stepKey=";
+
+    /**
+     * @var integer
+     */
+    private $stepCount;
+
+    /**
+     * @var array
+     */
+    private $stepKeys;
+
+    /**
+     * @var MagentoAllureStepKeyReader
+     */
+    private $stepKeyReader;
 
     /**
      * Array of group values passed to test runner command
@@ -179,7 +199,13 @@ class MagentoAllureAdapter extends AllureCodeception
         $formattedSteps = [];
         $actionGroupStepContainer = null;
 
+        // Get properly ordered step keys for this test
+        $this->stepKeys = $this->stepKeyReader->getSteps($this->getPassedStepCount($rootStep));
+
+        $stepCount = -1;
         foreach ($rootStep->getSteps() as $step) {
+            $stepCount += 1;
+            $step->setName($this->appendStepKey($stepCount, $step->getName()));
             // if actionGroup flag, start nesting
             if (strpos($step->getName(), ActionGroupObject::ACTION_GROUP_CONTEXT_START) !== false) {
                 $step->setName(str_replace(ActionGroupObject::ACTION_GROUP_CONTEXT_START, '', $step->getName()));
@@ -219,5 +245,59 @@ class MagentoAllureAdapter extends AllureCodeception
         $this->getLifecycle()->getStepStorage()->put($rootStep);
 
         $this->getLifecycle()->fire(new TestCaseFinishedEvent());
+    }
+
+    /**
+     * Aggregate to parent method to prepare collecting step keys for a test
+     *
+     * @return void
+     */
+    public function testStart(TestEvent $testEvent)
+    {
+        $this->stepKeys = [];
+        $this->stepCount = 0;
+        $this->stepKeyReader = new MagentoAllureStepKeyReader(
+            $testEvent->getTest()->getFileName(),
+            $testEvent->getTest()->getTestMethod()
+        );
+        parent::testStart($testEvent);
+    }
+
+    /**
+     * Append step key to matching step
+     *
+     * @param integer $stepCount
+     * @param string $name
+     *
+     * @return string
+     */
+    private function appendStepKey($stepCount, $name)
+    {
+        if (isset($this->stepKeys[$stepCount]['action']) && isset($this->stepKeys[$stepCount]['stepKey'])) {
+            if ($this->stepKeys[$stepCount]['action'] == "comment"
+                || strpos($name, $this->stepKeys[$stepCount]['action']) !== false) {
+                $name .= self::ALLURE_STEPKEY_FORMAT . $this->stepKeys[$stepCount]['stepKey'];
+            }
+        }
+        return $name;
+    }
+
+    /**
+     * Return number of passed steps for a test
+     *
+     * @param Step $rootStep
+     *
+     * @return integer
+     */
+    private function getPassedStepCount($rootStep)
+    {
+        $counter = 0;
+        foreach ($rootStep->getSteps() as $step) {
+            if (trim($step->getName()) == self::SAVE_SCREENSHOT) {
+                break;
+            }
+            $counter += 1;
+        }
+        return $counter;
     }
 }
