@@ -250,6 +250,8 @@ class MagentoAllureAdapter extends AllureCodeception
     /**
      * Aggregate to parent method to prepare collecting step keys for a test
      *
+     * @param TestEvent $testEvent
+     *
      * @return void
      */
     public function testStart(TestEvent $testEvent)
