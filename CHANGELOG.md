@@ -1,6 +1,16 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.4.1
+-----
+* Traceability
+    * XSD Schema validation is now enabled by default in `generate:tests`
+    * `generate:tests --debug` option has been updated to include different debug levels
+        * See DevDocs for details
+
+### Fixes
+* Fixed an issue where `skipReadiness` attribute would cause false XSD Schema validation errors.
+
 2.4.0
 -----
 ### Enhancements
