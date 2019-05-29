@@ -320,7 +320,7 @@ Generates and executes tests by name using Codeception.
 #### Usage
 
 ```bash
-vendor/bin/mftf run:test [--skip-generate|--remove] [--] <name1> [<name2>] [--debug|
+vendor/bin/mftf run:test [--skip-generate|--remove] [--] <name1> [<name2>]
 ```
 
 #### Options
