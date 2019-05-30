@@ -122,18 +122,8 @@ vendor/bin/mftf generate:tests [option] [<test name>] [<test name>] [--remove]
 | `--force` | Forces test generation, regardless of the module merge order defined in the Magento instance. Example: `generate:tests --force`. |
 | `-i,--time` | Set time in minutes to determine the group size when `--config=parallel` is used. The __default value__ is `10`. Example: `generate:tests --config=parallel --time=15`|
 | `--tests` | Defines the test configuration as a JSON string.|
-| `--debug=[<developer> or <none>]`| Set debug level to `default` when the option is not specified, to `developer` with `--debug developer` or `--debug`, to `none` with `--debug none` |   |
+| `--debug or --debug=[<none>]`| Performs schema validations on XML files. </br> <br/> DEFAULT: `generate:tests` implicitly performs schema validation on merged files. It does not indicate the file name where the error is encountered. <br/> DEVELOPER: `--debug` performs per-file validation and returns additional debug information (such as the filename where an error occurred) when test generation fails because of an invalid XML schema. This option takes extra processing time. Use it after test generation has failed once.</br> <br/> NONE: `--debug=none` skips debugging during test generation. Added for backward compatibility, it will be removed in the next MAJOR release.</br>|
 | `-r,--remove`| Removes the existing generated suites and tests cleaning up the `_generated` directory before the actual run. For example, `generate:tests SampleTest --remove` cleans up the entire `_generated` directory and generates `SampleTest` only.|
-
-#### Debugging levels
-
-You can run `generate:tests` with any of the following debug levels. XML schema validation errors will be logged as CRITICAL failures.
-
-| Debug level | Description |
-| ---| --- |
-|`default` `[generate:tests]` | Perform XML schema validation on merged files. Does not indicate the file name where the error is encountered. Use `developer` level for enhanced debugging. |
-|`developer` `[generate:tests --debug or generate:tests --debug developer]` |  Returns additional debug information (such as the filename where an error occurred) when test generation fails because of an invalid XML schema. Note: This option takes extra processing time. Use it after test generation has failed once. |
-|`none` `[generate:tests --debug none]`|  Skip debugging during test generation. Added for backward compatibility, it will be removed with the next MAJOR release.|
 
 #### Examples of the JSON configuration
 
@@ -305,6 +295,7 @@ vendor/bin/mftf run:group [--skip-generate|--remove] [--] <group1> [<group2>]
 | --------------------- | --------------------------------------------------------------------------------------------------------- |
 | `-k, --skip-generate` | Skips generating from the source XML. Instead, the command executes previously-generated groups of tests. |
 | `-r, --remove`        | Removes previously generated suites and tests before the actual generation and run.                       |
+| `--debug or --debug=[<none>]`| Performs schema validations on XML files. `run:group` implicitly performs schema validation on merged files. It does not indicate the file name where the error is encountered. `--debug` performs per-file validation and returns additional debug information (such as the filename where an error occurred). `--debug=none` skips debugging during test run. Added for backward compatibility, it will be removed in the next MAJOR release.|
 
 #### Examples
 
@@ -336,6 +327,7 @@ vendor/bin/mftf run:test [--skip-generate|--remove] [--] <name1> [<name2>]
 |-----------------------|-----------------------------------------------------------------------------------------------------------|
 | `-k, --skip-generate` | Skips generating from the source XML. Instead, the command executes previously-generated groups of tests. |
 | `-r, --remove`        | Remove previously generated suites and tests.                                                             |
+| `--debug or --debug=[<none>]`| Performs schema validations on XML files. `run:test` implicitly performs schema validation on merged files. It does not indicate the file name where the error is encountered. `--debug` performs per-file validation and returns additional debug information (such as the filename where an error occurred). `--debug=none` skips debugging during test run. Added for backward compatibility, it will be removed in the next MAJOR release.
 
 #### Examples
 
@@ -357,6 +349,11 @@ For more details about `failed`, refer to [Reporting][].
 ```bash
 vendor/bin/mftf run:failed
 ```
+#### Options
+
+| Option                | Description                                                                                               |
+|-----------------------|-----------------------------------------------------------------------------------------------------------|
+| `--debug or --debug=[<none>]`| Performs schema validations on XML files. `run:failed` implicitly performs schema validation on merged files. It does not indicate the file name where the error is encountered. `--debug` performs per-file validation and returns additional debug information (such as the filename where an error occurred). Use it after test run has failed once. `--debug=none` skips debugging during test run. Added for backward compatibility, it will be removed in the next MAJOR release.|
 
 #### Examples
 

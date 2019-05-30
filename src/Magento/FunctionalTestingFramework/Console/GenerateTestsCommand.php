@@ -57,7 +57,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 InputOption::VALUE_OPTIONAL,
                 'Run extra validation when generating tests. Use option \'none\' to turn off debugging -- 
                  added for backward compatibility, will be removed in the next MAJOR release',
-                'default'
+                MftfApplicationConfig::LEVEL_DEFAULT
             );
 
         parent::configure();
