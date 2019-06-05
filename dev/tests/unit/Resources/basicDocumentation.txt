@@ -1,10 +1,10 @@
 #Action Group Information
-This documentation contains a list of all action groups
+This documentation contains a list of all Action Groups.
 
 ###testActionGroupObject
-someDescription
+**Description**:
+- someDescription
 
-Located in:
-
+**Located in**:
 - filename
 ***

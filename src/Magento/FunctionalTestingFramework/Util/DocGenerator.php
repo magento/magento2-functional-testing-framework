@@ -128,7 +128,7 @@ class DocGenerator
                 $markdown .= "**Located In**:" . PHP_EOL;
                 foreach ($annotations[self::FILENAMES] as $filename) {
                     $relativeFilename = str_replace(MAGENTO_BP . DIRECTORY_SEPARATOR, "", $filename);
-                    $markdown .= PHP_EOL .  "- $relativeFilename";
+                    $markdown .= "- $relativeFilename";
                 }
                 $markdown .= PHP_EOL . "***" . PHP_EOL;
             }
