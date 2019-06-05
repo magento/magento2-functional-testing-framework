@@ -1,4 +1,9 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
 namespace Magento\FunctionalTestingFramework\Codeception\Subscriber;
 
 use Codeception\Event\FailEvent;
@@ -24,8 +29,19 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Console extends \Codeception\Subscriber\Console
 {
+    /**
+     * Test files cache.
+     *
+     * @var array
+     */
     private $testFiles = [];
 
+    /**
+     * Printing stepKey in before step action.
+     *
+     * @param StepEvent $e
+     * @return void
+     */
     public function beforeStep(StepEvent $e)
     {
         if (!$this->steps or !$e->getTest() instanceof ScenarioDriven) {
@@ -43,6 +59,12 @@ class Console extends \Codeception\Subscriber\Console
         $this->printStepKeys($e->getStep());
     }
 
+    /**
+     * Print output to cli with stepKey.
+     *
+     * @param Step $step
+     * @return void
+     */
     private function printStepKeys(Step $step)
     {
         if ($step instanceof Comment and $step->__toString() == '') {
@@ -71,7 +93,9 @@ class Console extends \Codeception\Subscriber\Console
     }
 
     /**
-     * @param $string
+     * Message instance.
+     *
+     * @param string $string
      * @return Message
      */
     private function message($string = '')
@@ -79,18 +103,27 @@ class Console extends \Codeception\Subscriber\Console
         return $this->messageFactory->message($string);
     }
 
+    /**
+     * Reading stepKey from file.
+     *
+     * @param string $stepLine
+     * @return string|null
+     */
     private function retrieveStepKey($stepLine)
     {
         $stepKey = null;
         list($filePath, $stepLine) = explode(":", $stepLine);
-        $prevStepLine = $stepLine - 2;
+        $stepLine = $stepLine - 1;
 
         if (!array_key_exists($filePath, $this->testFiles)) {
             $this->testFiles[$filePath] = explode(PHP_EOL, file_get_contents($filePath));
         }
-        $testFile = $this->testFiles[$filePath];
+        $testLineTrimmed = substr(
+            $this->testFiles[$filePath][$stepLine],
+            strpos($this->testFiles[$filePath][$stepLine], '//')
+        );
 
-        list($stepKey) = sscanf($testFile[$prevStepLine], TestGenerator::STEP_KEY_ANNOTATION);
+        list($stepKey) = sscanf($testLineTrimmed, TestGenerator::STEP_KEY_ANNOTATION);
 
         return $stepKey;
     }

@@ -32,7 +32,11 @@ use Codeception\Event\StepEvent;
 class MagentoAllureAdapter extends AllureCodeception
 {
     const STEP_PASSED = "passed";
-
+    /**
+     * Test files cache.
+     *
+     * @var array
+     */
     private $testFiles = [];
 
     /**
@@ -234,18 +238,27 @@ class MagentoAllureAdapter extends AllureCodeception
         $this->getLifecycle()->fire(new TestCaseFinishedEvent());
     }
 
+    /**
+     * Reading stepKey from file.
+     *
+     * @param string $stepLine
+     * @return string|null
+     */
     private function retrieveStepKey($stepLine)
     {
         $stepKey = null;
         list($filePath, $stepLine) = explode(":", $stepLine);
-        $prevStepLine = $stepLine - 2;
+        $stepLine = $stepLine - 1;
 
         if (!array_key_exists($filePath, $this->testFiles)) {
             $this->testFiles[$filePath] = explode(PHP_EOL, file_get_contents($filePath));
         }
-        $testFile = $this->testFiles[$filePath];
+        $testLineTrimmed = substr(
+            $this->testFiles[$filePath][$stepLine],
+            strpos($this->testFiles[$filePath][$stepLine], '//')
+        );
 
-        list($stepKey) = sscanf($testFile[$prevStepLine], TestGenerator::STEP_KEY_ANNOTATION);
+        list($stepKey) = sscanf($testLineTrimmed, TestGenerator::STEP_KEY_ANNOTATION);
 
         return $stepKey;
     }

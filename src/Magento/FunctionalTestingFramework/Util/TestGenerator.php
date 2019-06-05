@@ -39,7 +39,8 @@ class TestGenerator
     const SUITE_SCOPE = 'suite';
     const PRESSKEY_ARRAY_ANCHOR_KEY = '987654321098765432109876543210';
     const PERSISTED_OBJECT_NOTATION_REGEX = '/\${1,2}[\w.\[\]]+\${1,2}/';
-    const STEP_KEY_ANNOTATION = "\t\t/** @stepKey %s */";
+    const NO_STEPKEY_ACTIONS = ['comment', 'createData', 'deleteData', 'updateData', 'getData'];
+    const STEP_KEY_ANNOTATION = " // stepKey: %s";
 
     /**
      * Path to the export dir.
@@ -699,9 +700,6 @@ class TestGenerator
                 $storeCode = $customActionAttributes['storeCode'];
             }
 
-            if ($actionObject->getType() !== 'comment') {
-                $testSteps .= PHP_EOL . sprintf(self::STEP_KEY_ANNOTATION, $stepKey) . PHP_EOL;
-            }
             switch ($actionObject->getType()) {
                 case "createData":
                     $entity = $customActionAttributes['entity'];
@@ -737,7 +735,7 @@ class TestGenerator
                     } elseif ($generationScope == TestGenerator::SUITE_SCOPE) {
                         $scope = PersistedObjectHandler::SUITE_SCOPE;
                     }
-                    
+
                     $createEntityFunctionCall = "\t\tPersistedObjectHandler::getInstance()->createEntity(";
                     $createEntityFunctionCall .= "\n\t\t\t\"{$stepKey}\",";
                     $createEntityFunctionCall .= "\n\t\t\t\"{$scope}\",";
@@ -815,7 +813,7 @@ class TestGenerator
                         $key,
                         $updateEntity
                     );
-                    
+
                     // Build array of requiredEntities
                     $requiredEntityKeys = [];
                     foreach ($actionObject->getCustomActionAttributes() as $actionAttribute) {
@@ -1305,6 +1303,10 @@ class TestGenerator
                         $parameter
                     );
             }
+            if (!in_array($actionObject->getType(), self::NO_STEPKEY_ACTIONS)) {
+                $testSteps .= sprintf(self::STEP_KEY_ANNOTATION, $stepKey);
+            }
+            $testSteps .= PHP_EOL;
         }
 
         return $testSteps;
@@ -1801,7 +1803,7 @@ class TestGenerator
         }
         $args = $this->resolveAllRuntimeReferences($args);
         $args = $this->resolveTestVariable($args, $action->getActionOrigin());
-        $output .= implode(", ", array_filter($args, function($value) { return $value !== null; })) . ");\n";
+        $output .= implode(", ", array_filter($args, function($value) { return $value !== null; })) . ");";
         return $output;
     }
 
@@ -1833,7 +1835,7 @@ class TestGenerator
         }
         $args = $this->resolveAllRuntimeReferences($args);
         $args = $this->resolveTestVariable($args, $action->getActionOrigin());
-        $output .= implode(", ", array_filter($args, function($value) { return $value !== null; })) . ");\n";
+        $output .= implode(", ", array_filter($args, function($value) { return $value !== null; })) . ");";
         return $output;
     }
     // @codingStandardsIgnoreEnd

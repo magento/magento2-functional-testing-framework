@@ -27,31 +27,31 @@ class DataReplacementTestCest
 	 */
 	public function DataReplacementTest(AcceptanceTester $I)
 	{
-		$I->fillField("#selector", "StringBefore John StringAfter");
-		$I->seeCurrentUrlMatches("~\/John~i");
-		$I->fillField("#John", "input");
-		$I->dragAndDrop("#John", "Doe");
-		$I->conditionalClick("Doe", "#John", true);
-		$I->amOnUrl("John.html");
-		$I->searchAndMultiSelectOption("#selector", ["John", "Doe"]);
-		$I->fillField("#selector", "StringBefore " . msq("uniqueData") . "John StringAfter");
-		$I->fillField("#" . msq("uniqueData") . "John", "input");
-		$I->dragAndDrop("#" . msq("uniqueData") . "John", msq("uniqueData") . "John");
-		$I->conditionalClick(msq("uniqueData") . "John", "#" . msq("uniqueData") . "John", true);
-		$I->amOnUrl(msq("uniqueData") . "John.html");
-		$I->searchAndMultiSelectOption("#selector", [msq("uniqueData") . "John", "Doe"]);
-		$I->click("#" . msq("uniqueData") . "John#" . msq("uniqueData") . "John");
-		$I->click("#Doe" . msq("uniqueData") . "#Doe" . msq("uniqueData"));
-		$I->fillField("#selector", "StringBefore Doe" . msq("uniqueData") . " StringAfter");
-		$I->fillField("#Doe" . msq("uniqueData"), "input");
-		$I->dragAndDrop("#Doe" . msq("uniqueData"), "Doe" . msq("uniqueData"));
-		$I->conditionalClick("Doe" . msq("uniqueData"), "#Doe" . msq("uniqueData"), true);
-		$I->amOnUrl("Doe" . msq("uniqueData") . ".html");
-		$I->searchAndMultiSelectOption("#selector", ["John", "Doe" . msq("uniqueData")]);
-		$I->searchAndMultiSelectOption("#selector", [msq("uniqueData") . "John", "Doe" . msq("uniqueData")]);
-		$I->selectMultipleOptions("#Doe" . msq("uniqueData"), "#element", [msq("uniqueData") . "John", "Doe" . msq("uniqueData")]);
-		$I->fillField(".selector", "0");
-		$insertCommand = $I->magentoCLI("do something Doe" . msq("uniqueData") . " with uniqueness");
-		$I->comment($insertCommand);
+		$I->fillField("#selector", "StringBefore John StringAfter"); // stepKey: inputReplace
+		$I->seeCurrentUrlMatches("~\/John~i"); // stepKey: seeInRegex
+		$I->fillField("#John", "input"); // stepKey: selectorReplace
+		$I->dragAndDrop("#John", "Doe"); // stepKey: selector12Replace
+		$I->conditionalClick("Doe", "#John", true); // stepKey: dependentSelectorReplace
+		$I->amOnUrl("John.html"); // stepKey: urlReplace
+		$I->searchAndMultiSelectOption("#selector", ["John", "Doe"]); // stepKey: parameterArrayReplacement
+		$I->fillField("#selector", "StringBefore " . msq("uniqueData") . "John StringAfter"); // stepKey: inputPrefixReplaceMSQPrefix
+		$I->fillField("#" . msq("uniqueData") . "John", "input"); // stepKey: selectorReplaceMSQPrefix
+		$I->dragAndDrop("#" . msq("uniqueData") . "John", msq("uniqueData") . "John"); // stepKey: selector12ReplaceMSQPrefix
+		$I->conditionalClick(msq("uniqueData") . "John", "#" . msq("uniqueData") . "John", true); // stepKey: dependentSelectorReplaceMSQPrefix
+		$I->amOnUrl(msq("uniqueData") . "John.html"); // stepKey: urlReplaceMSQPrefix
+		$I->searchAndMultiSelectOption("#selector", [msq("uniqueData") . "John", "Doe"]); // stepKey: parameterArrayReplacementMSQPrefix
+		$I->click("#" . msq("uniqueData") . "John#" . msq("uniqueData") . "John"); // stepKey: selectorReplaceDupedMSQPrefix
+		$I->click("#Doe" . msq("uniqueData") . "#Doe" . msq("uniqueData")); // stepKey: selectorReplaceDupedMSQSuffix
+		$I->fillField("#selector", "StringBefore Doe" . msq("uniqueData") . " StringAfter"); // stepKey: inputReplaceMSQSuffix
+		$I->fillField("#Doe" . msq("uniqueData"), "input"); // stepKey: selectorReplaceMSQSuffix
+		$I->dragAndDrop("#Doe" . msq("uniqueData"), "Doe" . msq("uniqueData")); // stepKey: selector12ReplaceMSQSuffix
+		$I->conditionalClick("Doe" . msq("uniqueData"), "#Doe" . msq("uniqueData"), true); // stepKey: dependentSelectorReplaceMSQSuffix
+		$I->amOnUrl("Doe" . msq("uniqueData") . ".html"); // stepKey: urlReplaceMSQSuffix
+		$I->searchAndMultiSelectOption("#selector", ["John", "Doe" . msq("uniqueData")]); // stepKey: parameterArrayReplacementMSQSuffix
+		$I->searchAndMultiSelectOption("#selector", [msq("uniqueData") . "John", "Doe" . msq("uniqueData")]); // stepKey: parameterArrayReplacementMSQBoth
+		$I->selectMultipleOptions("#Doe" . msq("uniqueData"), "#element", [msq("uniqueData") . "John", "Doe" . msq("uniqueData")]); // stepKey: multiSelectDataReplacement
+		$I->fillField(".selector", "0"); // stepKey: insertZero
+		$insertCommand = $I->magentoCLI("do something Doe" . msq("uniqueData") . " with uniqueness");		$I->comment($insertCommand);
+ // stepKey: insertCommand
 	}
 }
