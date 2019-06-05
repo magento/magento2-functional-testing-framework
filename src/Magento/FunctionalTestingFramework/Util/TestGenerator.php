@@ -39,6 +39,7 @@ class TestGenerator
     const SUITE_SCOPE = 'suite';
     const PRESSKEY_ARRAY_ANCHOR_KEY = '987654321098765432109876543210';
     const PERSISTED_OBJECT_NOTATION_REGEX = '/\${1,2}[\w.\[\]]+\${1,2}/';
+    const STEP_KEY_ANNOTATION = "\t\t/** @stepKey %s */";
 
     /**
      * Path to the export dir.
@@ -697,14 +698,19 @@ class TestGenerator
             if (isset($customActionAttributes['storeCode'])) {
                 $storeCode = $customActionAttributes['storeCode'];
             }
+
+            if ($actionObject->getType() !== 'comment') {
+                $testSteps .= PHP_EOL . sprintf(self::STEP_KEY_ANNOTATION, $stepKey) . PHP_EOL;
+            }
             switch ($actionObject->getType()) {
                 case "createData":
                     $entity = $customActionAttributes['entity'];
                     //Add an informative statement to help the user debug test runs
                     $testSteps .= sprintf(
-                        "\t\t$%s->amGoingTo(\"create entity that has the stepKey: %s\");\n",
+                        "\t\t$%s->comment(\"[%s] create '%s' entity\");\n",
                         $actor,
-                        $stepKey
+                        $stepKey,
+                        $entity
                     );
 
                     //TODO refactor entity field override to not be individual actionObjects
@@ -759,8 +765,9 @@ class TestGenerator
                         $key .= $actionGroup;
                         //Add an informative statement to help the user debug test runs
                         $contextSetter = sprintf(
-                            "\t\t$%s->amGoingTo(\"delete entity that has the createDataKey: %s\");\n",
+                            "\t\t$%s->comment(\"[%s] delete entity '%s'\");\n",
                             $actor,
+                            $stepKey,
                             $key
                         );
 
@@ -802,9 +809,11 @@ class TestGenerator
 
                     //Add an informative statement to help the user debug test runs
                     $testSteps .= sprintf(
-                        "\t\t$%s->amGoingTo(\"update entity that has the createdDataKey: %s\");\n",
+                        "\t\t$%s->comment(\"[%s] update '%s' entity to '%s'\");\n",
                         $actor,
-                        $key
+                        $stepKey,
+                        $key,
+                        $updateEntity
                     );
                     
                     // Build array of requiredEntities
@@ -848,9 +857,10 @@ class TestGenerator
                     }
                     //Add an informative statement to help the user debug test runs
                     $testSteps .= sprintf(
-                        "\t\t$%s->amGoingTo(\"get entity that has the stepKey: %s\");\n",
+                        "\t\t$%s->comment(\"[%s] get '%s' entity\");\n",
                         $actor,
-                        $stepKey
+                        $stepKey,
+                        $entity
                     );
 
                     // Build array of requiredEntities

@@ -5,8 +5,10 @@
  */
 namespace Magento\FunctionalTestingFramework\Allure\Adapter;
 
+use Codeception\Step\Comment;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
+use \Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Yandex\Allure\Adapter\Model\Step;
 use Yandex\Allure\Codeception\AllureCodeception;
 use Yandex\Allure\Adapter\Event\StepStartedEvent;
@@ -30,6 +32,8 @@ use Codeception\Event\StepEvent;
 class MagentoAllureAdapter extends AllureCodeception
 {
     const STEP_PASSED = "passed";
+
+    private $testFiles = [];
 
     /**
      * Array of group values passed to test runner command
@@ -116,6 +120,11 @@ class MagentoAllureAdapter extends AllureCodeception
     {
         //Hard set to 200; we don't expose this config in MFTF
         $argumentsLength = 200;
+        $stepKey = null;
+
+        if (!($stepEvent->getStep() instanceof Comment)) {
+            $stepKey = $this->retrieveStepKey($stepEvent->getStep()->getLine());
+        }
 
         // DO NOT alter action if actionGroup is starting, need the exact actionGroup name for good logging
         if (strpos($stepEvent->getStep()->getAction(), ActionGroupObject::ACTION_GROUP_CONTEXT_START) !== false) {
@@ -130,7 +139,11 @@ class MagentoAllureAdapter extends AllureCodeception
             $stepArgs = $stepEvent->getStep()->getMetaStep()->getArgumentsAsString($argumentsLength);
         }
 
-        $stepName = $stepAction . ' ' . $stepArgs;
+        $stepName = '';
+        if ($stepKey !== null) {
+            $stepName .= '[' . $stepKey . '] ';
+        }
+        $stepName .= $stepAction . ' ' . $stepArgs;
 
         // Strip control characters so that report generation does not fail
         $stepName = preg_replace('/[[:cntrl:]]/', '', $stepName);
@@ -219,5 +232,21 @@ class MagentoAllureAdapter extends AllureCodeception
         $this->getLifecycle()->getStepStorage()->put($rootStep);
 
         $this->getLifecycle()->fire(new TestCaseFinishedEvent());
+    }
+
+    private function retrieveStepKey($stepLine)
+    {
+        $stepKey = null;
+        list($filePath, $stepLine) = explode(":", $stepLine);
+        $prevStepLine = $stepLine - 2;
+
+        if (!array_key_exists($filePath, $this->testFiles)) {
+            $this->testFiles[$filePath] = explode(PHP_EOL, file_get_contents($filePath));
+        }
+        $testFile = $this->testFiles[$filePath];
+
+        list($stepKey) = sscanf($testFile[$prevStepLine], TestGenerator::STEP_KEY_ANNOTATION);
+
+        return $stepKey;
     }
 }
