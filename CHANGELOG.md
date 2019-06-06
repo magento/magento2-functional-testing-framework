@@ -4,7 +4,7 @@ Magento Functional Testing Framework Changelog
 2.4.1
 -----
 * Traceability
-    * XSD Schema validation is now enabled by default in `generate:tests`, `run:test`,`run:failed`, `run:group`
+    * XSD Schema validation is now enabled by default in `generate:tests`, `run:test`, `run:failed`, `run:group`
     * `--debug` option for the above commands has been updated to include different debug levels
         * See DevDocs for details
 
