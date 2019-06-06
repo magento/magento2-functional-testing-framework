@@ -196,17 +196,31 @@ class MagentoAllureAdapter extends AllureCodeception
         $formattedSteps = [];
         $actionGroupStepContainer = null;
 
+        $actionGroupStepKey = null;
         foreach ($rootStep->getSteps() as $step) {
+            if ($actionGroupStepKey !== null) {
+                $stepKey = str_replace($actionGroupStepKey, '', $step->getName());
+                if ($stepKey !== '[]' && $stepKey !== null) {
+                    $step->setName($stepKey);
+                }
+            }
             // if actionGroup flag, start nesting
             if (strpos($step->getName(), ActionGroupObject::ACTION_GROUP_CONTEXT_START) !== false) {
                 $step->setName(str_replace(ActionGroupObject::ACTION_GROUP_CONTEXT_START, '', $step->getName()));
                 $actionGroupStepContainer = $step;
+
+                preg_match('/\[(?<actionGroupStepKey>.*)\]/', $step->getName(), $matches);
+                if (!empty($matches['actionGroupStepKey'])) {
+                    $actionGroupStepKey = ucfirst($matches['actionGroupStepKey']);
+                }
                 continue;
             }
+
             // if actionGroup ended, add stack to steps
             if (stripos($step->getName(), ActionGroupObject::ACTION_GROUP_CONTEXT_END) !== false) {
                 $formattedSteps[] = $actionGroupStepContainer;
                 $actionGroupStepContainer = null;
+                $actionGroupStepKey = null;
                 continue;
             }
 
@@ -253,12 +267,11 @@ class MagentoAllureAdapter extends AllureCodeception
         if (!array_key_exists($filePath, $this->testFiles)) {
             $this->testFiles[$filePath] = explode(PHP_EOL, file_get_contents($filePath));
         }
-        $testLineTrimmed = substr(
-            $this->testFiles[$filePath][$stepLine],
-            strpos($this->testFiles[$filePath][$stepLine], '//')
-        );
 
-        list($stepKey) = sscanf($testLineTrimmed, TestGenerator::STEP_KEY_ANNOTATION);
+        preg_match("/\/\/ stepKey: (?<stepKey>.*)/", $this->testFiles[$filePath][$stepLine], $matches);
+        if (!empty($matches['stepKey'])) {
+            $stepKey = $matches['stepKey'];
+        }
 
         return $stepKey;
     }

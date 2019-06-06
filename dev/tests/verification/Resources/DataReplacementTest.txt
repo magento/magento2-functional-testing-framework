@@ -51,7 +51,8 @@ class DataReplacementTestCest
 		$I->searchAndMultiSelectOption("#selector", [msq("uniqueData") . "John", "Doe" . msq("uniqueData")]); // stepKey: parameterArrayReplacementMSQBoth
 		$I->selectMultipleOptions("#Doe" . msq("uniqueData"), "#element", [msq("uniqueData") . "John", "Doe" . msq("uniqueData")]); // stepKey: multiSelectDataReplacement
 		$I->fillField(".selector", "0"); // stepKey: insertZero
-		$insertCommand = $I->magentoCLI("do something Doe" . msq("uniqueData") . " with uniqueness");		$I->comment($insertCommand);
- // stepKey: insertCommand
+		$insertCommand = $I->magentoCLI("do something Doe" . msq("uniqueData") . " with uniqueness"); // stepKey: insertCommand
+		$I->comment($insertCommand);
+
 	}
 }

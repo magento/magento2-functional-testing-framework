@@ -44,13 +44,14 @@ class ActionGroupWithStepKeyReferencesCest
 		$I->fillField($action1); // stepKey: action1ActionGroup
 		$I->comment("Invocation stepKey will be appended in non stepKey instances");
 		$action3ActionGroup = $I->executeJS($action3ActionGroup); // stepKey: action3ActionGroup
-		$action4ActionGroup = $I->magentoCLI($action4ActionGroup, "\"stuffHere\"");		$I->comment($action4ActionGroup);
- // stepKey: action4ActionGroup
+		$action4ActionGroup = $I->magentoCLI($action4ActionGroup, "\"stuffHere\""); // stepKey: action4ActionGroup
+		$I->comment($action4ActionGroup);
+
 		$date = new \DateTime();
 		$date->setTimestamp(strtotime("{$action5}"));
 		$date->setTimezone(new \DateTimeZone("America/Los_Angeles"));
 		$action5ActionGroup = $date->format("H:i:s");
- // stepKey: action5ActionGroup
+
 		$action6ActionGroup = $I->formatMoney($action6ActionGroup); // stepKey: action6ActionGroup
 		$I->comment("[action7ActionGroup] delete entity '{$action7ActionGroupActionGroup}'");
 		PersistedObjectHandler::getInstance()->deleteEntity(

@@ -39,7 +39,15 @@ class TestGenerator
     const SUITE_SCOPE = 'suite';
     const PRESSKEY_ARRAY_ANCHOR_KEY = '987654321098765432109876543210';
     const PERSISTED_OBJECT_NOTATION_REGEX = '/\${1,2}[\w.\[\]]+\${1,2}/';
-    const NO_STEPKEY_ACTIONS = ['comment', 'createData', 'deleteData', 'updateData', 'getData'];
+    const NO_STEPKEY_ACTIONS = [
+        'comment',
+        'createData',
+        'deleteData',
+        'updateData',
+        'getData',
+        'magentoCLI',
+        'generateDate'
+    ];
     const STEP_KEY_ANNOTATION = " // stepKey: %s";
 
     /**
@@ -1262,6 +1270,7 @@ class TestGenerator
                         $command,
                         $arguments
                     );
+                    $testSteps .= sprintf(self::STEP_KEY_ANNOTATION, $stepKey) . PHP_EOL;
                     $testSteps .= sprintf(
                         "\t\t$%s->comment(\$%s);\n",
                         $actor,

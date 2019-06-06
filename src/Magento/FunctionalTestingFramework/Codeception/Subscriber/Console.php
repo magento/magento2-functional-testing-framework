@@ -1,31 +1,13 @@
 <?php
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
-
 namespace Magento\FunctionalTestingFramework\Codeception\Subscriber;
 
-use Codeception\Event\FailEvent;
-use Codeception\Event\PrintResultEvent;
 use Codeception\Event\StepEvent;
-use Codeception\Event\SuiteEvent;
-use Codeception\Event\TestEvent;
-use Codeception\Events;
 use Codeception\Lib\Console\Message;
-use Codeception\Lib\Console\MessageFactory;
-use Codeception\Lib\Console\Output;
-use Codeception\Lib\Notification;
 use Codeception\Step;
 use Codeception\Step\Comment;
-use Codeception\Suite;
-use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
-use Codeception\Util\Debug;
-use Magento\FunctionalTestingFramework\Util\TestGenerator;
-use Symfony\Component\Console\Output\OutputInterface;
+use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Symfony\Component\Console\Formatter\OutputFormatter;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Console extends \Codeception\Subscriber\Console
 {
@@ -37,6 +19,13 @@ class Console extends \Codeception\Subscriber\Console
     private $testFiles = [];
 
     /**
+     * Action group step key.
+     *
+     * @var null|string
+     */
+    private $actionGroupStepKey = null;
+
+    /**
      * Printing stepKey in before step action.
      *
      * @param StepEvent $e
@@ -44,9 +33,10 @@ class Console extends \Codeception\Subscriber\Console
      */
     public function beforeStep(StepEvent $e)
     {
-        if (!$this->steps or !$e->getTest() instanceof ScenarioDriven) {
+        if ($this->silent or !$this->steps or !$e->getTest() instanceof ScenarioDriven) {
             return;
         }
+
         $metaStep = $e->getStep()->getMetaStep();
         if ($metaStep and $this->metaStep != $metaStep) {
             $this->message(' ' . $metaStep->getPrefix())
@@ -57,6 +47,20 @@ class Console extends \Codeception\Subscriber\Console
         $this->metaStep = $metaStep;
 
         $this->printStepKeys($e->getStep());
+    }
+
+    /**
+     * If step failed we move back from action group to test scope
+     *
+     * @param StepEvent $e
+     * @return void
+     */
+    public function afterStep(StepEvent $e)
+    {
+        parent::afterStep($e);
+        if ($e->getStep()->hasFailed()) {
+            $this->actionGroupStepKey = null;
+        }
     }
 
     /**
@@ -73,20 +77,44 @@ class Console extends \Codeception\Subscriber\Console
 
         $stepKey = $this->retrieveStepKey($step->getLine());
 
-        $msg = $this->message(' ');
-        if ($this->metaStep) {
+        $isActionGroup = (strpos($step->__toString(), ActionGroupObject::ACTION_GROUP_CONTEXT_START) !== false);
+        if ($isActionGroup) {
+            preg_match('/\[(?<actionGroupStepKey>.*)\]/', $step->__toString(), $matches);
+            if (!empty($matches['actionGroupStepKey'])) {
+                $this->actionGroupStepKey = ucfirst($matches['actionGroupStepKey']);
+            }
+        }
+
+        if (strpos($step->__toString(), ActionGroupObject::ACTION_GROUP_CONTEXT_END) !== false) {
+            $this->actionGroupStepKey = null;
+            return;
+        }
+
+        $msg = $this->message();
+        if ($this->metaStep || ($this->actionGroupStepKey !== null && !$isActionGroup)) {
             $msg->append('  ');
         }
         if ($stepKey !== null) {
             $msg->append(OutputFormatter::escape("[" . $stepKey . "] "));
+            $msg->style('bold');
         }
 
         if (!$this->metaStep) {
             $msg->style('bold');
         }
 
-        $msg->append(OutputFormatter::escape($step->toString($this->width)));
-        if ($this->metaStep) {
+        $stepString = str_replace(
+            [ActionGroupObject::ACTION_GROUP_CONTEXT_START, ActionGroupObject::ACTION_GROUP_CONTEXT_END],
+            '',
+            $step->toString(150)
+        );
+
+
+        $msg->append(OutputFormatter::escape($stepString));
+        if ($isActionGroup) {
+            $msg->style('comment');
+        }
+        if ($this->metaStep || ($this->actionGroupStepKey !== null && !$isActionGroup)) {
             $msg->style('info');
         }
         $msg->writeln();
@@ -118,12 +146,17 @@ class Console extends \Codeception\Subscriber\Console
         if (!array_key_exists($filePath, $this->testFiles)) {
             $this->testFiles[$filePath] = explode(PHP_EOL, file_get_contents($filePath));
         }
-        $testLineTrimmed = substr(
-            $this->testFiles[$filePath][$stepLine],
-            strpos($this->testFiles[$filePath][$stepLine], '//')
-        );
 
-        list($stepKey) = sscanf($testLineTrimmed, TestGenerator::STEP_KEY_ANNOTATION);
+        preg_match("/\/\/ stepKey: (?<stepKey>.*)/", $this->testFiles[$filePath][$stepLine], $matches);
+        if (!empty($matches['stepKey'])) {
+            $stepKey = $matches['stepKey'];
+        }
+
+        if ($this->actionGroupStepKey !== null) {
+            $stepKey = str_replace($this->actionGroupStepKey, '', $stepKey);
+        }
+
+        $stepKey = $stepKey === '[]' ? null : $stepKey;
 
         return $stepKey;
     }
