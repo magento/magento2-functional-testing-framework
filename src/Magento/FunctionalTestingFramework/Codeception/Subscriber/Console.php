@@ -109,7 +109,6 @@ class Console extends \Codeception\Subscriber\Console
             $step->toString(150)
         );
 
-
         $msg->append(OutputFormatter::escape($stepString));
         if ($isActionGroup) {
             $msg->style('comment');
