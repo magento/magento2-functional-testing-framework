@@ -1303,6 +1303,8 @@ class TestGenerator
                 case "skipReadinessCheck":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $customActionAttributes['state']);
                     break;
+                case "comment":
+                    $input = $input === null ? strtr($value, ['$' => '\$', '{' => '\{', '}' => '\}']) : $input;
                 default:
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
