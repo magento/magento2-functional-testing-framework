@@ -60,9 +60,7 @@ class BasicFunctionalTestCest
 	{
 		$I->comment("");
 		$I->comment("");
-		$I->skipReadinessCheck(true);
-		$I->comment("skipReadiness");
-		$I->skipReadinessCheck(false);
+		$I->comment("seeComment");
 		$someVarDefinition = $I->grabValueFrom();
 		$I->acceptPopup();
 		$I->amOnPage("/test/url");

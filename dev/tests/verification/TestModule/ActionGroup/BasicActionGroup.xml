@@ -115,10 +115,6 @@
         <see selector=".selector" userInput="{{sameStepKeyAsArg}}" stepKey="arg1" />
     </actionGroup>
 
-    <actionGroup name="actionGroupWithSkipReadinessActions">
-        <comment userInput="ActionGroupSkipReadiness" stepKey="skip" skipReadiness="true"/>
-    </actionGroup>
-
     <actionGroup name="actionGroupWithSectionAndData">
         <arguments>
             <argument name="content" type="string"/>
