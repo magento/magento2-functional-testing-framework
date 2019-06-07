@@ -10,7 +10,7 @@
         xsi:noNamespaceSchemaLocation="../../../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
     <test name="DevDocsTest">
         <annotations>
-            <!--   Hwello -->
+            <!--   Comment in Annotations for DevDocs Test are not affecting test generation  -->
             <features value="DevDocs available"/>
             <stories value="MFTF DevDocs available"/>
             <title value="Magento Functional Testing Framework Documentation is available."/>
@@ -21,7 +21,6 @@
 
         <!--   Open MFTF DevDocs Page -->
         <amOnPage stepKey="openMFTFDevDocPage" url="{{MFTFDocPage.url}}" />
-        <!--< > & $abc " abc ' <click stepKey="click" userInput="$$createDataHook.firstname$$" selector="#id">/-->
         <actionGroup ref="AdminNavigateMenuActionGroup" stepKey="asdf" />
         <see stepKey="verifyPageIntroText" selector="{{contentSection.pageIntro}}" userInput="Introduction to the Magento Functional Testing Framework" />
     </test>

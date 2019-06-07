@@ -1306,6 +1306,7 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $customActionAttributes['state']);
                     break;
                 case "comment":
+                    // Combining userInput from native XML comment and <comment /> action and fall-through 'default' case.
                     $input = $input === null ? strtr($value, ['$' => '\$', '{' => '\{', '}' => '\}']) : $input;
                 default:
                     $testSteps .= $this->wrapFunctionCall(

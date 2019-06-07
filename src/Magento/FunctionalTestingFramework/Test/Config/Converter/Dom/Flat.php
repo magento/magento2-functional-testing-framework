@@ -125,7 +125,7 @@ class Flat implements ConverterInterface
                 $value = $node->nodeValue;
                 break;
             } elseif ($node->nodeType == XML_COMMENT_NODE) {
-                $uniqid = uniqid(str_replace("#", "", $node->nodeName));
+                $uniqid = uniqid($node->nodeName);
                 $value[$uniqid] = [
                     'value' => trim($node->nodeValue),
                     'nodeName' => $node->nodeName,

@@ -58,9 +58,10 @@ class ActionObjectExtractor extends BaseObjectExtractor
         $stepKeyRefs = [];
 
         foreach ($testActions as $actionName => $actionData) {
+            //  Removing # from nodeName to match stepKey requirements
             $stepKey = strpos($actionData[self::NODE_NAME], ActionObject::COMMENT_ACTION) === false
                 ? $actionData[self::TEST_STEP_MERGE_KEY]
-                : $actionName;
+                : str_replace("#", "", $actionName);
             $actionType = $actionData[self::NODE_NAME];
 
             if (empty($stepKey)) {

@@ -9,6 +9,7 @@ namespace Magento\FunctionalTestingFramework\Test\Util;
 use Magento\FunctionalTestingFramework\Data\Argument\Interpreter\Argument;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
+use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ArgumentObject;
 
 /**
@@ -116,6 +117,10 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
             $arguments,
             self::NODE_NAME
         );
+
+        $argData = array_filter($argData, function ($key) {
+            return strpos($key, ActionObject::COMMENT_ACTION) === false;
+        }, ARRAY_FILTER_USE_KEY);
 
         foreach ($argData as $argName => $argValue) {
             $parsedArguments[] = new ArgumentObject(
