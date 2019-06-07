@@ -31,6 +31,8 @@ use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
  */
 class TestGenerator
 {
+    const ACTION_GROUP_STEP_KEY_REGEX = "/\[(?<actionGroupStepKey>.*)\]/";
+    const ACTION_STEP_KEY_REGEX = "/\/\/ stepKey: (?<stepKey>.*)/";
     const REQUIRED_ENTITY_REFERENCE = 'createDataKey';
     const GENERATED_DIR = '_generated';
     const DEFAULT_DIR = 'default';

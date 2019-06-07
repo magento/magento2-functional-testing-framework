@@ -115,6 +115,7 @@ class MagentoAllureAdapter extends AllureCodeception
      * Override of parent method:
      *     prevent replacing of . to •
      *     strips control characters
+     *     inserts stepKey into step name
      *
      * @param StepEvent $stepEvent
      * @return void
@@ -207,7 +208,7 @@ class MagentoAllureAdapter extends AllureCodeception
                 $step->setName(str_replace(ActionGroupObject::ACTION_GROUP_CONTEXT_START, '', $step->getName()));
                 $actionGroupStepContainer = $step;
 
-                preg_match('/\[(?<actionGroupStepKey>.*)\]/', $step->getName(), $matches);
+                preg_match(TestGenerator::ACTION_GROUP_STEP_KEY_REGEX, $step->getName(), $matches);
                 if (!empty($matches['actionGroupStepKey'])) {
                     $actionGroupStepKey = ucfirst($matches['actionGroupStepKey']);
                 }
@@ -266,7 +267,7 @@ class MagentoAllureAdapter extends AllureCodeception
             $this->testFiles[$filePath] = explode(PHP_EOL, file_get_contents($filePath));
         }
 
-        preg_match("/\/\/ stepKey: (?<stepKey>.*)/", $this->testFiles[$filePath][$stepLine], $matches);
+        preg_match(TestGenerator::ACTION_STEP_KEY_REGEX, $this->testFiles[$filePath][$stepLine], $matches);
         if (!empty($matches['stepKey'])) {
             $stepKey = $matches['stepKey'];
         }

@@ -12,6 +12,7 @@ use Codeception\Step;
 use Codeception\Step\Comment;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
+use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
 class Console extends \Codeception\Subscriber\Console
@@ -85,7 +86,7 @@ class Console extends \Codeception\Subscriber\Console
 
         $isActionGroup = (strpos($step->__toString(), ActionGroupObject::ACTION_GROUP_CONTEXT_START) !== false);
         if ($isActionGroup) {
-            preg_match('/\[(?<actionGroupStepKey>.*)\]/', $step->__toString(), $matches);
+            preg_match(TestGenerator::ACTION_GROUP_STEP_KEY_REGEX, $step->__toString(), $matches);
             if (!empty($matches['actionGroupStepKey'])) {
                 $this->actionGroupStepKey = ucfirst($matches['actionGroupStepKey']);
             }
@@ -152,7 +153,7 @@ class Console extends \Codeception\Subscriber\Console
             $this->testFiles[$filePath] = explode(PHP_EOL, file_get_contents($filePath));
         }
 
-        preg_match("/\/\/ stepKey: (?<stepKey>.*)/", $this->testFiles[$filePath][$stepLine], $matches);
+        preg_match(TestGenerator::ACTION_STEP_KEY_REGEX, $this->testFiles[$filePath][$stepLine], $matches);
         if (!empty($matches['stepKey'])) {
             $stepKey = $matches['stepKey'];
         }
