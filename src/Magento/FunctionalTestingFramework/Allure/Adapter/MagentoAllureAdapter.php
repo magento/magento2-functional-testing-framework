@@ -198,11 +198,9 @@ class MagentoAllureAdapter extends AllureCodeception
 
         $actionGroupStepKey = null;
         foreach ($rootStep->getSteps() as $step) {
-            if ($actionGroupStepKey !== null) {
-                $stepKey = str_replace($actionGroupStepKey, '', $step->getName());
-                if ($stepKey !== '[]' && $stepKey !== null) {
-                    $step->setName($stepKey);
-                }
+            $stepKey = str_replace($actionGroupStepKey, '', $step->getName());
+            if ($stepKey !== '[]' && $stepKey !== null) {
+                $step->setName($stepKey);
             }
             // if actionGroup flag, start nesting
             if (strpos($step->getName(), ActionGroupObject::ACTION_GROUP_CONTEXT_START) !== false) {
