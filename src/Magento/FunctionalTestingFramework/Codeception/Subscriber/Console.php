@@ -1,4 +1,9 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
 namespace Magento\FunctionalTestingFramework\Codeception\Subscriber;
 
 use Codeception\Event\StepEvent;
@@ -68,6 +73,7 @@ class Console extends \Codeception\Subscriber\Console
      *
      * @param Step $step
      * @return void
+     * @SuppressWarnings(PHPMD)
      */
     private function printStepKeys(Step $step)
     {
