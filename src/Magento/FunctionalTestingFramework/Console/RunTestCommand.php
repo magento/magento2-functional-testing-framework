@@ -37,6 +37,13 @@ class RunTestCommand extends BaseGenerateCommand
                 'f',
                 InputOption::VALUE_NONE,
                 'force generation of tests regardless of Magento Instance Configuration'
+            )->addOption(
+                'debug',
+                'd',
+                InputOption::VALUE_OPTIONAL,
+                'Run extra validation when running tests. Use option \'none\' to turn off debugging -- 
+                 added for backward compatibility, will be removed in the next MAJOR release',
+                MftfApplicationConfig::LEVEL_DEFAULT
             );
 
         parent::configure();
@@ -58,6 +65,7 @@ class RunTestCommand extends BaseGenerateCommand
         $skipGeneration = $input->getOption('skip-generate');
         $force = $input->getOption('force');
         $remove = $input->getOption('remove');
+        $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
 
         if ($skipGeneration and $remove) {
             // "skip-generate" and "remove" options cannot be used at the same time
@@ -75,7 +83,7 @@ class RunTestCommand extends BaseGenerateCommand
                 ]),
                 '--force' => $force,
                 '--remove' => $remove,
-                '--debug' => MftfApplicationConfig::LEVEL_NONE
+                '--debug' => $debug
             ];
             $command->run(new ArrayInput($args), $output);
         }

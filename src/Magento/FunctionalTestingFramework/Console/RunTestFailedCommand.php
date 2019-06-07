@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Symfony\Component\Console\Input\InputOption;
 
 class RunTestFailedCommand extends BaseGenerateCommand
 {
@@ -49,7 +50,15 @@ class RunTestFailedCommand extends BaseGenerateCommand
     protected function configure()
     {
         $this->setName('run:failed')
-            ->setDescription('Execute a set of tests referenced via failed file');
+            ->setDescription('Execute a set of tests referenced via failed file')
+            ->addOption(
+                'debug',
+                'd',
+                InputOption::VALUE_OPTIONAL,
+                'Run extra validation when running failed tests. Use option \'none\' to turn off debugging -- 
+                 added for backward compatibility, will be removed in the next MAJOR release',
+                MftfApplicationConfig::LEVEL_DEFAULT
+            );
 
         parent::configure();
     }
@@ -67,12 +76,13 @@ class RunTestFailedCommand extends BaseGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
         // Create Mftf Configuration
         MftfApplicationConfig::create(
             false,
             MftfApplicationConfig::GENERATION_PHASE,
             false,
-            MftfApplicationConfig::LEVEL_NONE
+            $debug
         );
 
         $testConfiguration = $this->getFailedTestList();
@@ -83,7 +93,11 @@ class RunTestFailedCommand extends BaseGenerateCommand
         }
 
         $command = $this->getApplication()->find('generate:tests');
-        $args = ['--tests' => $testConfiguration, '--remove' => true];
+        $args = [
+            '--tests' => $testConfiguration,
+            '--remove' => true,
+            '--debug' => $debug
+        ];
 
         $command->run(new ArrayInput($args), $output);
 
