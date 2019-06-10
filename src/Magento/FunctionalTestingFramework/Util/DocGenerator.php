@@ -111,6 +111,7 @@ class DocGenerator
         $markdown .= "---" . PHP_EOL;
         foreach ($annotationList as $group => $objects) {
             foreach ($objects as $name => $annotations) {
+                $markdown .= PHP_EOL;
                 $markdown .= "###$name" . PHP_EOL;
                 $markdown .= "**Description**:" . PHP_EOL;
                 $markdown .= "- " . $annotations[actionGroupObject::ACTION_GROUP_DESCRIPTION] . PHP_EOL . PHP_EOL;
