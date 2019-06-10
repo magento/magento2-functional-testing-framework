@@ -15,22 +15,23 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("[NO TESTCASEID]: Action Group With Default Argument Value and Hardcoded Value in Param")
+ * @Title("[NO TESTCASEID]: Action Group With comment block in arguments and action group body")
  */
-class ActionGroupWithDefaultArgumentAndStringSelectorParamCest
+class XmlCommentedActionGroupTestCest
 {
 	/**
-	 * @Severity(level = SeverityLevel::BLOCKER)
+	 * @Severity(level = SeverityLevel::CRITICAL)
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupWithDefaultArgumentAndStringSelectorParam(AcceptanceTester $I)
+	public function XmlCommentedActionGroupTest(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group [actionGroup] actionGroupWithDefaultArgumentAndStringSelectorParam");
+		$I->comment("Entering Action Group [actionGroup] XmlCommentedActionGroup");
+		$I->comment("< > & \$abc \" abc ' <click stepKey=\"click\" userInput=\"\$\$createDataHook.firstname\$\$\" selector=\"#id\">/");
 		$I->see("John", "#element .test1"); // stepKey: seeFirstNameActionGroup
-		$I->comment("Exiting Action Group [actionGroup] actionGroupWithDefaultArgumentAndStringSelectorParam");
+		$I->comment("Exiting Action Group [actionGroup] XmlCommentedActionGroup");
 	}
 }

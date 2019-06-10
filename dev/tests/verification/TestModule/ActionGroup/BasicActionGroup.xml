@@ -13,12 +13,9 @@
 
     <actionGroup name="actionGroupWithDefaultArgumentAndStringSelectorParam">
         <arguments>
-            <!--  Comments in arguments are not affecting test generation -->
-            <!--  <argument name="someArgument" defaultValue="ReplacementPerson" />  -->
             <argument name="someArgument" defaultValue="ReplacementPerson" />
         </arguments>
 
-        <!--< > & $abc " abc ' <click stepKey="click" userInput="$$createDataHook.firstname$$" selector="#id">/-->
         <see selector="{{SampleSection.oneParamElement('test1')}}" userInput="{{someArgument.firstname}}" stepKey="seeFirstName" />
     </actionGroup>
 

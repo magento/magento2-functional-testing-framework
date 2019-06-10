@@ -15,11 +15,8 @@
         <actionGroup ref="actionGroupWithoutArguments" stepKey="actionGroup"/>
     </test>
 
-    <!--< > & $abc " abc ' <click stepKey="click" userInput="$$createDataHook.firstname$$" selector="#id">/-->
     <test name="ActionGroupWithDefaultArgumentAndStringSelectorParam">
         <annotations>
-            <!--  Comments in Test annotations are not affecting test generation  -->
-            <!--  <severity value="BLOCKER"/>  -->
             <severity value="BLOCKER"/>
             <title value="Action Group With Default Argument Value and Hardcoded Value in Param"/>
         </annotations>

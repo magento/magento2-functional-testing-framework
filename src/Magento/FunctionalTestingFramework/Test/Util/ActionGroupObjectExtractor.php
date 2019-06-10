@@ -118,6 +118,7 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
             self::NODE_NAME
         );
 
+        // Filtering XML comments from action group arguments.
         $argData = array_filter($argData, function ($key) {
             return strpos($key, ActionObject::COMMENT_ACTION) === false;
         }, ARRAY_FILTER_USE_KEY);
