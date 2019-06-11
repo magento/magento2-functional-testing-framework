@@ -13,7 +13,7 @@ Make sure that you have the following software installed and configured on your 
 - [PHP version supported by the Magento instance under test][php]
 - [Composer 1.3 or later][composer]
 - [Java 1.8 or later][java]
-- [Selenium Server Standalone 3.6 or later][selenium server] and [ChromeDriver 2.33 or later][chrome driver] or other webdriver in the same directory
+- [Selenium Server Standalone 3.1 or later][selenium server] and [ChromeDriver 2.33 or later][chrome driver] or other webdriver in the same directory
 
 <div class="bs-callout bs-callout-tip" markdown="1">
 [PhpStorm] supports [Codeception test execution][], which is helpful when debugging.
@@ -63,7 +63,7 @@ A Selenium web driver cannot enter data to fields with WYSIWYG.
 To disable the WYSIWYG and enable the web driver to process these fields as simple text areas:
 
 1. Log in to the Magento Admin as an administrator.
-2. Navigate to **Stores \> Configuration \> General \> Content Management**.
+2. Navigate to **Stores** > Settings > **Configuration** > **General** > **Content Management**.
 3. In the WYSIWYG Options section set the **Enable WYSIWYG Editor** option to **Disabled Completely**.
 4. Click **Save Config**.
 
@@ -75,16 +75,16 @@ When you want to test the WYSIWYG functionality, re-enable WYSIWYG in your test 
 
 To enable the **Admin Account Sharing** setting, to avoid unpredictable logout during a testing session, and disable the **Add Secret Key in URLs** setting, to open pages using direct URLs:
 
-1. Navigate to **Stores \> Configuration \> Advanced \> Admin \> Security**.
+1. Navigate to **Stores** > Settings > **Configuration** > **Advanced** > **Admin** > **Security**.
 2. Set **Admin Account Sharing** to **Yes**.
 3. Set **Add Secret Key to URLs** to **No**.
 4. Click **Save Config**.
 
 ### Nginx settings {#nginx-settings}
 
-If Nginx Web server is used on your development environment then **Use Web Server Rewrites** setting in **Stores \> Configuration \> Web \> Search Engine Optimization** must be set to **Yes**.
+If Nginx Web server is used on your development environment then **Use Web Server Rewrites** setting in **Stores** > Settings > **Configuration** > **Web** > **Search Engine Optimization** must be set to **Yes**.
 
-To be able to run Magento command line commands in tests add the following location block to Nginx configuration file:   
+To be able to run Magento command line commands in tests add the following location block to Nginx configuration file:
 
 ```conf
 location ~* ^/dev/tests/acceptance/utils($|/) {
@@ -97,6 +97,7 @@ location ~* ^/dev/tests/acceptance/utils($|/) {
   }
 }
 ```
+
 ## Set up an embedded MFTF {#setup-framework}
 
 This is a default setup that you would need to start using the MFTF to cover your Magento project with functional testing.
@@ -129,7 +130,7 @@ If the file does not exist, add the `--force` option to create it:
 vendor/bin/mftf generate:urn-catalog --force .idea/
 ```
 
-See [`generate:urn-catalog`][] for more details.'
+See [`generate:urn-catalog`][] for more details.
 
 <div class="bs-callout bs-callout-tip" markdown="1">
 You can simplify command entry by adding the  absolute  path to the `vendor/bin` directory path to your PATH environment variable.
@@ -176,7 +177,7 @@ cp dev/tests/acceptance/.htaccess.sample dev/tests/acceptance/.htaccess
 
 To run tests, you need a running Selenium server and [`mftf`][] commands.
 
-#### Run the Selenium server    {#selenium-server}
+#### Run the Selenium server {#selenium-server}
 
 Run the Selenium server in terminal.
 For example, the following commands run the Selenium server for Google Chrome:
@@ -215,7 +216,7 @@ vendor/bin/mftf run:test AdminLoginTest --remove
 
 See more commands in [`mftf`][].
 
-### Step 5. Generate reports    {#reports}
+### Step 5. Generate reports {#reports}
 
 During testing, the MFTF generates test reports in CLI.
 You can generate visual representations of the report data using [Allure Framework][].
