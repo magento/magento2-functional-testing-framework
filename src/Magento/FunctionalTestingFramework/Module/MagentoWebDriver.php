@@ -14,6 +14,7 @@ use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Util\Uri;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\WebapiExecutor;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
@@ -620,7 +621,7 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * Function used to fill sensitive crednetials with user data, data is decrypted immediately prior to fill to avoid
+     * Function used to fill sensitive credentials with user data, data is decrypted immediately prior to fill to avoid
      * exposure in console or log.
      *
      * @param string $field
@@ -634,6 +635,23 @@ class MagentoWebDriver extends WebDriver
 
         $decryptedValue = CredentialStore::getInstance()->decryptSecretValue($value);
         $this->fillField($field, $decryptedValue);
+    }
+
+    /**
+     * @param string $key
+     * @param string $scope
+     * @param string $entity
+     * @param array $requiredEntity
+     * @param object $overrideFields
+     * @throws \Exception
+     */
+    public function createSecretData($key, $scope, $entity, $requiredEntity, $overrideFields)
+    {
+        // to protect any secrets from being printed to console the values are executed only at the webdriver level as a
+        // decrypted value
+
+        $decryptedValue = CredentialStore::getInstance()->decryptSecretValue($overrideFields);
+        PersistedObjectHandler::getInstance()->createEntity($key, $scope, $entity, $requiredEntity, $decryptedValue);
     }
 
     /**

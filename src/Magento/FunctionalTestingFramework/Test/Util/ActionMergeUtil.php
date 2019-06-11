@@ -95,7 +95,7 @@ class ActionMergeUtil
 
     /**
      * Takes an array of actions and resolves any references to secret fields. The function then validates whether the
-     * refernece is valid and replaces the function name accordingly to hide arguments at runtime.
+     * reference is valid and replaces the function name accordingly to hide arguments at runtime.
      *
      * @param ActionObject[] $resolvedActions
      * @return ActionObject[]
@@ -106,16 +106,49 @@ class ActionMergeUtil
         $actions = [];
         foreach ($resolvedActions as $resolvedAction) {
             $action = $resolvedAction;
-            $hasSecretRef = $this->actionAttributeContainsSecretRef($resolvedAction->getCustomActionAttributes());
+            $actionHasSecretRef = $this->actionAttributeContainsSecretRef($resolvedAction->getCustomActionAttributes());
+            $dataHasSecretRef = $this->dataFieldContainsSecretRef($resolvedAction->getCustomActionAttributes());
+            $approvedActions = array('fillField', 'magentoCLI', 'field', 'updateData');
+            $actionType = $resolvedAction->getType();
 
-            if ($resolvedAction->getType() !== 'fillField' && $hasSecretRef) {
-                throw new TestReferenceException("You cannot reference secret data outside of fill field actions");
+            if (!(in_array($resolvedAction->getType(), $approvedActions)) && ($actionHasSecretRef || $dataHasSecretRef)) {
+                throw new TestReferenceException("You cannot reference secret data outside of the fillField, magentoCli and createData actions");
             }
 
-            if ($resolvedAction->getType() === 'fillField' && $hasSecretRef) {
+            if ($actionType === 'fillField' && $actionHasSecretRef) {
                 $action = new ActionObject(
                     $action->getStepKey(),
                     'fillSecretField',
+                    $action->getCustomActionAttributes(),
+                    $action->getLinkedAction(),
+                    $action->getActionOrigin()
+                );
+            }
+
+            if ($actionType === 'magentoCLI' && $actionHasSecretRef) {
+                $action = new ActionObject(
+                    $action->getStepKey(),
+                    'magentoCliSecretData',
+                    $action->getCustomActionAttributes(),
+                    $action->getLinkedAction(),
+                    $action->getActionOrigin()
+                );
+            }
+
+            if ($actionType === 'createData' && $dataHasSecretRef) {
+                $action = new ActionObject(
+                    $action->getStepKey(),
+                    'createData',
+                    $action->getCustomActionAttributes(),
+                    $action->getLinkedAction(),
+                    $action->getActionOrigin()
+                );
+            }
+
+            if ($actionType === 'updateData' && $actionHasSecretRef) {
+                $action = new ActionObject(
+                    $action->getStepKey(),
+                    'updateData',
                     $action->getCustomActionAttributes(),
                     $action->getLinkedAction(),
                     $action->getActionOrigin()
@@ -142,6 +175,29 @@ class ActionMergeUtil
             }
 
             preg_match_all("/{{_CREDS\.([\w]+)}}/", $actionAttribute, $matches);
+
+            if (!empty($matches[0])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns a boolean based on whether or not the createData field contains a reference to a secret field.
+     *
+     * @param array $dataFields
+     * @return boolean
+     */
+    private function dataFieldContainsSecretRef($dataFields)
+    {
+        foreach ($dataFields as $dataField) {
+            if (is_array($dataField)) {
+                return $this->dataFieldContainsSecretRef($dataField);
+            }
+
+            preg_match_all("/{{_CREDS\.([\w]+)}}/", $dataField, $matches);
 
             if (!empty($matches[0])) {
                 return true;
@@ -320,9 +376,9 @@ class ActionMergeUtil
     private function insertStep($stepToMerge)
     {
         $position = array_search(
-            $stepToMerge->getLinkedAction(),
-            array_keys($this->orderedSteps)
-        ) + $stepToMerge->getOrderOffset();
+                $stepToMerge->getLinkedAction(),
+                array_keys($this->orderedSteps)
+            ) + $stepToMerge->getOrderOffset();
         $previous_items = array_slice($this->orderedSteps, 0, $position, true);
         $next_items = array_slice($this->orderedSteps, $position, null, true);
         $this->orderedSteps = $previous_items + [$stepToMerge->getStepKey() => $stepToMerge] + $next_items;
