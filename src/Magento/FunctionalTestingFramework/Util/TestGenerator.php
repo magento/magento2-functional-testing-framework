@@ -48,7 +48,8 @@ class TestGenerator
         'updateData',
         'getData',
         'magentoCLI',
-        'generateDate'
+        'generateDate',
+        'field'
     ];
     const STEP_KEY_ANNOTATION = " // stepKey: %s";
 

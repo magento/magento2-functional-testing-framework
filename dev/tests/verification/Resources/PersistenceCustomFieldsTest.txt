@@ -25,9 +25,9 @@ class PersistenceCustomFieldsTestCest
 	public function _before(AcceptanceTester $I)
 	{
 		$createData1Fields['firstname'] = "Mac";
- // stepKey: createData1Firstname
+
 		$createData1Fields['lastname'] = "Doe";
- // stepKey: createData1Lastname
+
 		$I->comment("[createData1] create 'DefaultPerson' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createData1",
@@ -38,7 +38,7 @@ class PersistenceCustomFieldsTestCest
 		);
 
 		$createData2Fields['firstname'] = PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'hook');
- // stepKey: createData2Firstname
+
 		$I->comment("[createData2] create 'uniqueData' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createData2",
@@ -60,9 +60,9 @@ class PersistenceCustomFieldsTestCest
 	public function PersistenceCustomFieldsTest(AcceptanceTester $I)
 	{
 		$createdDataFields['favoriteIndex'] = "1";
- // stepKey: createdDataFavoriteIndex
+
 		$createdDataFields['middlename'] = "Kovacs";
- // stepKey: createdDataMiddlename
+
 		$I->comment("[createdData] create 'simpleData' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createdData",
@@ -73,9 +73,9 @@ class PersistenceCustomFieldsTestCest
 		);
 
 		$createdData3Fields['firstname'] = "Takeshi";
- // stepKey: createdData3Firstname
+
 		$createdData3Fields['lastname'] = "Kovacs";
- // stepKey: createdData3Lastname
+
 		$I->comment("[createdData3] create 'UniquePerson' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createdData3",
@@ -87,7 +87,7 @@ class PersistenceCustomFieldsTestCest
 
 		$I->comment("Entering Action Group [createdAG] PersistenceActionGroup");
 		$createDataAG1CreatedAGFields['firstname'] = "string1";
- // stepKey: createDataAG1FirstnameCreatedAG
+
 		$I->comment("[createDataAG1CreatedAG] create 'simpleData' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createDataAG1CreatedAG",
@@ -98,7 +98,7 @@ class PersistenceCustomFieldsTestCest
 		);
 
 		$createDataAG2CreatedAGFields['firstname'] = "Jane";
- // stepKey: createDataAG2FirstnameCreatedAG
+
 		$I->comment("[createDataAG2CreatedAG] create 'simpleData' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createDataAG2CreatedAG",
@@ -109,7 +109,7 @@ class PersistenceCustomFieldsTestCest
 		);
 
 		$createDataAG3CreatedAGFields['firstname'] = PersistedObjectHandler::getInstance()->retrieveEntityField('createdData3', 'firstname', 'test');
- // stepKey: createDataAG3FirstnameCreatedAG
+
 		$I->comment("[createDataAG3CreatedAG] create 'simpleData' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createDataAG3CreatedAG",
