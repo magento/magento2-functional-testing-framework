@@ -108,7 +108,7 @@ class ActionMergeUtil
             $action = $resolvedAction;
             $actionHasSecretRef = $this->actionAttributeContainsSecretRef($resolvedAction->getCustomActionAttributes());
             $dataHasSecretRef = $this->dataFieldContainsSecretRef($resolvedAction->getCustomActionAttributes());
-            $approvedActions = array('fillField', 'magentoCLI', 'field', 'updateData');
+            $approvedActions = array('fillField', 'magentoCLI', 'field');
             $actionType = $resolvedAction->getType();
 
             if (!(in_array($resolvedAction->getType(), $approvedActions)) && ($actionHasSecretRef || $dataHasSecretRef)) {
@@ -139,16 +139,6 @@ class ActionMergeUtil
                 $action = new ActionObject(
                     $action->getStepKey(),
                     'createData',
-                    $action->getCustomActionAttributes(),
-                    $action->getLinkedAction(),
-                    $action->getActionOrigin()
-                );
-            }
-
-            if ($actionType === 'updateData' && $actionHasSecretRef) {
-                $action = new ActionObject(
-                    $action->getStepKey(),
-                    'updateData',
                     $action->getCustomActionAttributes(),
                     $action->getLinkedAction(),
                     $action->getActionOrigin()
