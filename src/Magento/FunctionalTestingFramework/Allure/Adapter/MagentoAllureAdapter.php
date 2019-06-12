@@ -132,7 +132,9 @@ class MagentoAllureAdapter extends AllureCodeception
         }
 
         // DO NOT alter action if actionGroup is starting, need the exact actionGroup name for good logging
-        if (strpos($stepEvent->getStep()->getAction(), ActionGroupObject::ACTION_GROUP_CONTEXT_START) !== false) {
+        if (strpos($stepEvent->getStep()->getAction(), ActionGroupObject::ACTION_GROUP_CONTEXT_START) !== false
+            || $stepEvent->getStep() instanceof Comment
+        ) {
             $stepAction = $stepEvent->getStep()->getAction();
         } else {
             $stepAction = $stepEvent->getStep()->getHumanizedActionWithoutArguments();
