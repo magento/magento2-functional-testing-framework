@@ -1267,7 +1267,16 @@ class TestGenerator
                         $actionObject->getActionOrigin()
                     )[0];
                     $argRef = "\t\t\$";
-                    $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) . "Fields['{$fieldKey}'] = ${input};\n";
+
+                    preg_match_all("/{{_CREDS\.([\w]+)}}/", "${input}", $matches);
+
+                    if (!empty($matches[0])) {
+                        $secretFieldValue = $matches[1][0];
+                        $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) . "Fields['{$fieldKey}'] = CredentialStore::getInstance()->decryptSecretValue(CredentialStore::getInstance()->getSecret(\"{$secretFieldValue}\"));\n";
+                    } else {
+                        $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) . "Fields['{$fieldKey}'] = ${input};\n";
+                    }
+
                     $testSteps .= $argRef;
                     break;
                 case "generateDate":

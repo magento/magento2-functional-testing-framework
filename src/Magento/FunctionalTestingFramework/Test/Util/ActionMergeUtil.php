@@ -128,17 +128,7 @@ class ActionMergeUtil
             if ($actionType === 'magentoCLI' && $actionHasSecretRef) {
                 $action = new ActionObject(
                     $action->getStepKey(),
-                    'magentoCliSecretData',
-                    $action->getCustomActionAttributes(),
-                    $action->getLinkedAction(),
-                    $action->getActionOrigin()
-                );
-            }
-
-            if ($actionType === 'createData' && $dataHasSecretRef) {
-                $action = new ActionObject(
-                    $action->getStepKey(),
-                    'createData',
+                    'magentoCLI',
                     $action->getCustomActionAttributes(),
                     $action->getLinkedAction(),
                     $action->getActionOrigin()
