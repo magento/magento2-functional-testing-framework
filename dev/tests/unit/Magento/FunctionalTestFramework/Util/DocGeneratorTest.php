@@ -23,7 +23,6 @@ class DocGeneratorTest extends MagentoTestCase
     public function testBasicCreateDocumentation()
     {
         $annotations = [
-            "page" => "somePage",
             "description" => "someDescription"
         ];
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
@@ -55,7 +54,6 @@ class DocGeneratorTest extends MagentoTestCase
     public function testCreateDocumentationWithOverwrite()
     {
         $annotations = [
-            "page" => "somePage",
             "description" => "someDescription"
         ];
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
@@ -70,7 +68,6 @@ class DocGeneratorTest extends MagentoTestCase
         );
 
         $annotations = [
-            "page" => "alteredPage",
             "description" => "alteredDescription"
         ];
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
@@ -102,7 +99,6 @@ class DocGeneratorTest extends MagentoTestCase
     public function testCreateDocumentationNotCleanException()
     {
         $annotations = [
-            "page" => "somePage",
             "description" => "someDescription"
         ];
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
