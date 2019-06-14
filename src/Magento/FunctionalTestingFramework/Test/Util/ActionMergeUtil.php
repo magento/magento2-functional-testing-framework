@@ -111,7 +111,7 @@ class ActionMergeUtil
             $approvedActions = ['fillField', 'magentoCLI', 'field'];
             $actionType = $resolvedAction->getType();
 
-            if (!(in_array($resolvedAction->getType(), $approvedActions)) &&
+            if (!(in_array($actionType, $approvedActions)) &&
                 ($actionHasSecretRef || $dataHasSecretRef)) {
                 throw new TestReferenceException("You cannot reference secret data outside " .
                                                  "of the fillField, magentoCli and createData actions");
