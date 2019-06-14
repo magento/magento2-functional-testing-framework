@@ -639,6 +639,7 @@ class MagentoWebDriver extends WebDriver
     /**
      * @param string $command
      * @throws TestFrameworkException
+     * @return void
      */
     public function magentoCliSecret($command)
     {

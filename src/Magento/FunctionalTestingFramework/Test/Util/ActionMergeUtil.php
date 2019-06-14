@@ -108,11 +108,12 @@ class ActionMergeUtil
             $action = $resolvedAction;
             $actionHasSecretRef = $this->actionAttributeContainsSecretRef($resolvedAction->getCustomActionAttributes());
             $dataHasSecretRef = $this->dataFieldContainsSecretRef($resolvedAction->getCustomActionAttributes());
-            $approvedActions = array('fillField', 'magentoCLI', 'field');
+            $approvedActions = ['fillField', 'magentoCLI', 'field'];
             $actionType = $resolvedAction->getType();
 
-            if (!(in_array($resolvedAction->getType(), $approvedActions)) && ($actionHasSecretRef || $dataHasSecretRef)) {
-                throw new TestReferenceException("You cannot reference secret data outside of the fillField, magentoCli and createData actions");
+            if (!(in_array($resolvedAction->getType(),$approvedActions)) && ($actionHasSecretRef||$dataHasSecretRef)) {
+                throw new TestReferenceException("You cannot reference secret data outside " .
+                                                 "of the fillField, magentoCli and createData actions");
             }
 
             if ($actionType === 'fillField' && $actionHasSecretRef) {
@@ -356,8 +357,8 @@ class ActionMergeUtil
     private function insertStep($stepToMerge)
     {
         $position = array_search(
-                $stepToMerge->getLinkedAction(),
-                array_keys($this->orderedSteps)
+            $stepToMerge->getLinkedAction(),
+            array_keys($this->orderedSteps)
             ) + $stepToMerge->getOrderOffset();
         $previous_items = array_slice($this->orderedSteps, 0, $position, true);
         $next_items = array_slice($this->orderedSteps, $position, null, true);
