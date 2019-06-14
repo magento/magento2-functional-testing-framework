@@ -1,6 +1,7 @@
 # Tips and Tricks
 
-Sometimes, little changes can make a big difference in your project. Here are some test writing tips to keep everything running smoothly.
+Sometimes, little changes can make a big difference in your project. 
+Here are some test writing tips to keep everything running smoothly.
 
 ## Actions and action groups
 
