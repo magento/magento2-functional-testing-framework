@@ -107,12 +107,10 @@ class ActionMergeUtil
         foreach ($resolvedActions as $resolvedAction) {
             $action = $resolvedAction;
             $actionHasSecretRef = $this->actionAttributeContainsSecretRef($resolvedAction->getCustomActionAttributes());
-            $dataHasSecretRef = $this->dataFieldContainsSecretRef($resolvedAction->getCustomActionAttributes());
             $approvedActions = ['fillField', 'magentoCLI', 'field'];
             $actionType = $resolvedAction->getType();
 
-            if (!(in_array($actionType, $approvedActions)) &&
-                ($actionHasSecretRef || $dataHasSecretRef)) {
+            if (!(in_array($actionType, $approvedActions)) && $actionHasSecretRef) {
                 throw new TestReferenceException("You cannot reference secret data outside " .
                                                  "of the fillField, magentoCli and createData actions");
             }
