@@ -290,7 +290,7 @@ class ActionMergeUtil
      *
      * @param array $parsedSteps
      * @return void
-     * @throws XmlException
+     * @throws TestReferenceException
      */
     private function sortActions($parsedSteps)
     {
