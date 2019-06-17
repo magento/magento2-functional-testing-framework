@@ -108,32 +108,25 @@ class ActionMergeUtil
             $action = $resolvedAction;
             $actionHasSecretRef = $this->actionAttributeContainsSecretRef($resolvedAction->getCustomActionAttributes());
             $approvedActions = ['fillField', 'magentoCLI', 'field'];
+            $secretMapping = ['fillField' => 'fillSecretField'];
             $actionType = $resolvedAction->getType();
 
-            if (!(in_array($actionType, $approvedActions)) && $actionHasSecretRef) {
+            if ($actionHasSecretRef && !(in_array($actionType, $approvedActions))) {
                 throw new TestReferenceException("You cannot reference secret data outside " .
-                                                 "of the fillField, magentoCli and createData actions");
+                    "of the fillField, magentoCli and createData actions");
             }
 
-            if ($actionType === 'fillField' && $actionHasSecretRef) {
-                $action = new ActionObject(
-                    $action->getStepKey(),
-                    'fillSecretField',
-                    $action->getCustomActionAttributes(),
-                    $action->getLinkedAction(),
-                    $action->getActionOrigin()
-                );
+            if (isset($secretMapping[$actionType])) {
+                $actionType = $secretMapping[$actionType];
             }
 
-            if ($actionType === 'magentoCLI' && $actionHasSecretRef) {
-                $action = new ActionObject(
-                    $action->getStepKey(),
-                    'magentoCLI',
-                    $action->getCustomActionAttributes(),
-                    $action->getLinkedAction(),
-                    $action->getActionOrigin()
-                );
-            }
+            $action = new ActionObject(
+                $action->getStepKey(),
+                $actionType,
+                $action->getCustomActionAttributes(),
+                $action->getLinkedAction(),
+                $action->getActionOrigin()
+            );
 
             $actions[$action->getStepKey()] = $action;
         }
