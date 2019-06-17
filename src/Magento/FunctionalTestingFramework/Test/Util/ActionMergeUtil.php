@@ -29,6 +29,8 @@ class ActionMergeUtil
     const DEFAULT_SKIP_ON_ORDER = 'before';
     const DEFAULT_SKIP_OFF_ORDER = 'after';
     const DEFAULT_WAIT_ORDER = 'after';
+    const APPROVED_ACTIONS = ['fillField', 'magentoCLI', 'field'];
+    const SECRET_MAPPING = ['fillField' => 'fillSecretField'];
 
     /**
      * Array holding final resulting steps
@@ -107,17 +109,15 @@ class ActionMergeUtil
         foreach ($resolvedActions as $resolvedAction) {
             $action = $resolvedAction;
             $actionHasSecretRef = $this->actionAttributeContainsSecretRef($resolvedAction->getCustomActionAttributes());
-            $approvedActions = ['fillField', 'magentoCLI', 'field'];
-            $secretMapping = ['fillField' => 'fillSecretField'];
             $actionType = $resolvedAction->getType();
 
-            if ($actionHasSecretRef && !(in_array($actionType, $approvedActions))) {
+            if ($actionHasSecretRef && !(in_array($actionType, self::APPROVED_ACTIONS))) {
                 throw new TestReferenceException("You cannot reference secret data outside " .
                     "of the fillField, magentoCli and createData actions");
             }
 
-            if (isset($secretMapping[$actionType])) {
-                $actionType = $secretMapping[$actionType];
+            if (isset(self::SECRET_MAPPING[$actionType])) {
+                $actionType = self::SECRET_MAPPING[$actionType];
             }
 
             $action = new ActionObject(
