@@ -158,29 +158,6 @@ class ActionMergeUtil
     }
 
     /**
-     * Returns a boolean based on whether or not the createData field contains a reference to a secret field.
-     *
-     * @param array $dataFields
-     * @return boolean
-     */
-    private function dataFieldContainsSecretRef($dataFields)
-    {
-        foreach ($dataFields as $dataField) {
-            if (is_array($dataField)) {
-                return $this->dataFieldContainsSecretRef($dataField);
-            }
-
-            preg_match_all("/{{_CREDS\.([\w]+)}}/", $dataField, $matches);
-
-            if (!empty($matches[0])) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Method to resolve action group references and insert relevant actions into step flow
      *
      * @param array $mergedSteps
