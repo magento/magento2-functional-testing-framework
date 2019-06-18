@@ -1,8 +1,55 @@
 # Tips and Tricks
-
-Sometimes, little changes can make a big difference in your project. Here are some test writing tips to keep everything running smoothly.
+<!-- {% raw %} -->
+Sometimes, little changes can make a big difference in your project.
+Here are some test writing tips to keep everything running smoothly.
 
 ## Actions and action groups
+
+### Use the appropriate action to verify that the 'select' element contains the expected options
+
+To ensure that your `select` form element contains only expected values:
+
+- Use the `grabMultiple` action to get all `options` from the `select` element.
+- Use the `assertContains` action to verify that the array of `options` contains expected values.
+- Use the `assertNotContains` action to verify that the array of `options` does not contain certain values.
+- If you need to verify that you have a specific list of `options` in a `select` element, use `assertEquals`.
+
+<span style="color:green">
+Good
+</span>
+
+ ```xml
+ <grabMultiple selector="{{AdminProductFormSection.customAttributeSelectOptions($$createDropdownProductAttribute.attribute[attribute_code]$$)}}" stepKey="selectOptions" />
+ <assertContains stepKey="seeFirstAdminOption">
+     <actualResult type="variable">selectOptions</actualResult>
+     <expectedResult type="string">admin_option_1</expectedResult>
+ </assertContains>
+ <assertContains stepKey="seeSecondAdminOption">
+     <actualResult type="variable">selectOptions</actualResult>
+     <expectedResult type="string">admin_option_2</expectedResult>
+ </assertContains>
+
+ <assertNotContains stepKey="dontSeeFirstStoreOption">
+     <actualResult type="variable">selectOptions</actualResult>
+     <expectedResult type="string">option1</expectedResult>
+ </assertNotContains>
+ <assertNotContains stepKey="dontSeeSecondStoreOption">
+     <actualResult type="variable">selectOptions</actualResult>
+     <expectedResult type="string">option2</expectedResult>
+ </assertNotContains>
+ ```
+
+<span style="color:red">
+Bad
+</span>
+
+ ```xml
+ <click selector="{{AdminProductFormSection.customAttributeDropdownField($$createDropdownProductAttribute.attribute[attribute_code]$$)}}" stepKey="clickOnAttributeDropdown"/>
+ <see selector="{{AdminProductFormSection.customAttributeDropdownField($$createDropdownProductAttribute.attribute[attribute_code]$$)}}" userInput="admin_option_1" stepKey="seeFirstAdminOption"/>
+ <see selector="{{AdminProductFormSection.customAttributeDropdownField($$createDropdownProductAttribute.attribute[attribute_code]$$)}}" userInput="admin_option_2" stepKey="seeSecondAdminOption"/>
+ <dontSee selector="{{AdminProductFormSection.customAttributeDropdownField($$createDropdownProductAttribute.attribute[attribute_code]$$)}}" userInput="option1" stepKey="dontSeeFirstStoreOption"/>
+ <dontSee selector="{{AdminProductFormSection.customAttributeDropdownField($$createDropdownProductAttribute.attribute[attribute_code]$$)}}" userInput="option2" stepKey="dontSeeSecondStoreOption"/>
+ ```
 
 ### Use parameterized selectors in action groups with argument references
 
