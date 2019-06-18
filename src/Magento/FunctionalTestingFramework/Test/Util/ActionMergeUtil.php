@@ -116,15 +116,20 @@ class ActionMergeUtil
                     "of the fillField, magentoCli and createData actions");
             }
 
-            if (isset(self::SECRET_MAPPING[$actionType])) {
-                $actionType = self::SECRET_MAPPING[$actionType];
+            // Do NOT remap actions that don't need it.
+            if (!isset(self::SECRET_MAPPING[$actionType])) {
+                $actions[$action->getStepKey()] = $action;
+                continue;
             }
+
+            $actionType = self::SECRET_MAPPING[$actionType];
 
             $action = new ActionObject(
                 $action->getStepKey(),
                 $actionType,
                 $action->getCustomActionAttributes(),
                 $action->getLinkedAction(),
+                $action->getOrderOffset(),
                 $action->getActionOrigin()
             );
 

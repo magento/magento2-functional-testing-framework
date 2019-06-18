@@ -168,7 +168,7 @@ class ActionMergeUtilTest extends MagentoTestCase
             'waitForPageLoad',
             ['timeout' => 42],
             'actionKey1',
-            0
+            'after'
         );
         $this->assertEquals($expected, $actual);
     }
