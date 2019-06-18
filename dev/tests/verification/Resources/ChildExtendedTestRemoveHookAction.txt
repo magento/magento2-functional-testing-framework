@@ -34,7 +34,7 @@ class ChildExtendedTestRemoveHookActionCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
-		$I->amOnPage("/afterUrl");
+		$I->amOnPage("/afterUrl"); // stepKey: afterAmOnPageKey
 	}
 
 	/**
@@ -43,7 +43,7 @@ class ChildExtendedTestRemoveHookActionCest
 	  */
 	public function _failed(AcceptanceTester $I)
 	{
-		$I->saveScreenshot();
+		$I->saveScreenshot(); // stepKey: saveScreenshot
 	}
 
 	/**

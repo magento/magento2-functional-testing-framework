@@ -1,0 +1,74 @@
+<?php
+namespace Magento\AcceptanceTest\_default\Backend;
+
+use Magento\FunctionalTestingFramework\AcceptanceTester;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
+use \Codeception\Util\Locator;
+use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
+use Yandex\Allure\Adapter\Annotation\Title;
+use Yandex\Allure\Adapter\Annotation\Description;
+use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
+use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
+
+/**
+ * @Title("[NO TESTCASEID]: Test With comment blocks in root element 'tests', in annotations and in test body.")
+ */
+class XmlCommentedTestCest
+{
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _before(AcceptanceTester $I)
+	{
+		$I->comment("< > & \$abc \" abc ' <click stepKey=\"click\" userInput=\"\$\$createDataHook.firstname\$\$\" selector=\"#id_1\">/");
+		$I->amOnPage("/beforeUrl"); // stepKey: beforeAmOnPageKey
+		$I->comment("< > & \$abc \" abc ' <click stepKey=\"click\" userInput=\"\$\$createDataHook.firstname\$\$\" selector=\"#id_2\">/");
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		$I->comment("< > & \$abc \" abc ' <click stepKey=\"click\" userInput=\"\$\$createDataHook.firstname\$\$\" selector=\"#id_1\">/");
+		$I->amOnPage("/afterUrl"); // stepKey: afterAmOnPageKey
+		$I->comment("< > & \$abc \" abc ' <click stepKey=\"click\" userInput=\"\$\$createDataHook.firstname\$\$\" selector=\"#id_2\">/");
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _failed(AcceptanceTester $I)
+	{
+		$I->saveScreenshot(); // stepKey: saveScreenshot
+	}
+
+	/**
+	 * @Severity(level = SeverityLevel::CRITICAL)
+	 * @Features({"TestModule"})
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function XmlCommentedTest(AcceptanceTester $I)
+	{
+		$I->comment("< > & \$abc \" abc ' <click stepKey=\"click\" userInput=\"\$\$createDataHook.firstname\$\$\" selector=\"#id_1\">/");
+		$someVarDefinition = $I->grabValueFrom(); // stepKey: someVarDefinition
+		$I->acceptPopup(); // stepKey: acceptPopupKey1
+		$I->comment("< > & \$abc \" abc ' <click stepKey=\"click\" userInput=\"\$\$createDataHook.firstname\$\$\" selector=\"#id_2\">/");
+		$I->amOnPage("/test/url"); // stepKey: amOnPageKey1
+		$I->appendField(".functionalTestSelector"); // stepKey: appendFieldKey1
+		$I->comment("< > & \$abc \" abc ' <click stepKey=\"click\" userInput=\"\$\$createDataHook.firstname\$\$\" selector=\"#id_3\">/");
+		$I->attachFile(".functionalTestSelector", "testFileAttachment"); // stepKey: attachFileKey1
+		$I->comment("<cancelPopup stepKey=\"cancelPopupKey1\"/>");
+		$I->checkOption(".functionalTestSelector"); // stepKey: checkOptionKey1
+	}
+}

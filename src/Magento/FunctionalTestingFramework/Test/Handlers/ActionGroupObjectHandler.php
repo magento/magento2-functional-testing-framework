@@ -107,9 +107,9 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
         $parsedActionGroups = $actionGroupParser->readActionGroupData();
 
         $actionGroupObjectExtractor = new ActionGroupObjectExtractor();
+        $neededActionGroup = $parsedActionGroups[ActionGroupObjectHandler::ACTION_GROUP_ROOT];
 
-        foreach ($parsedActionGroups[ActionGroupObjectHandler::ACTION_GROUP_ROOT] as
-                 $actionGroupName => $actionGroupData) {
+        foreach ($neededActionGroup as $actionGroupName => $actionGroupData) {
             if (!is_array($actionGroupData)) {
                 continue;
             }
