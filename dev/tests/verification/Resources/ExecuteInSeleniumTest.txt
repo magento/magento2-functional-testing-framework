@@ -27,6 +27,6 @@ class ExecuteInSeleniumTestCest
 	 */
 	public function ExecuteInSeleniumTest(AcceptanceTester $I)
 	{
-		$I->executeInSelenium(function ($webdriver) { return 'Hello, World!'});
+		$I->executeInSelenium(function ($webdriver) { return 'Hello, World!'}); // stepKey: executeInSeleniumStep
 	}
 }

@@ -15,25 +15,23 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
+ * @Title("[NO TESTCASEID]: Action Group With comment block in arguments and action group body")
  */
-class ActionGroupMergedViaInsertBeforeCest
+class XmlCommentedActionGroupTestCest
 {
 	/**
+	 * @Severity(level = SeverityLevel::CRITICAL)
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupMergedViaInsertBefore(AcceptanceTester $I)
+	public function XmlCommentedActionGroupTest(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group [keyone] FunctionalActionGroupForMassMergeBefore");
-		$I->fillField("#foo", "foo"); // stepKey: fillField1Keyone
-		$I->click("#foo2"); // stepKey: mergeBeforeBarKeyone
-		$I->click("#bar2"); // stepKey: mergeAfterFoo2Keyone
-		$I->click("#baz2"); // stepKey: mergeAfterBar2Keyone
-		$I->fillField("#bar", "bar"); // stepKey: fillField2Keyone
-		$I->fillField("#baz", "baz"); // stepKey: fillField3Keyone
-		$I->comment("Exiting Action Group [keyone] FunctionalActionGroupForMassMergeBefore");
+		$I->comment("Entering Action Group [actionGroup] XmlCommentedActionGroup");
+		$I->comment("< > & \$abc \" abc ' <click stepKey=\"click\" userInput=\"\$\$createDataHook.firstname\$\$\" selector=\"#id\">/");
+		$I->see("John", "#element .test1"); // stepKey: seeFirstNameActionGroup
+		$I->comment("Exiting Action Group [actionGroup] XmlCommentedActionGroup");
 	}
 }

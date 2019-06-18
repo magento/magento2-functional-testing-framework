@@ -27,13 +27,13 @@ class CharacterReplacementTestCest
 	 */
 	public function CharacterReplacementTest(AcceptanceTester $I)
 	{
-		$I->click("#element");
-		$I->fillField("#element", "7700 West Parmer Lane");
-		$I->click("#element .abcdefghijklmnopqrstuvwxyz1234567890");
-		$I->click("#element .`~!@#$%^&*()-_=+{}[]|\;:\".,></?()3., ");
-		$I->click("#element .words, and, commas, and, spaces");
-		$I->click("#abcdefghijklmnopqrstuvwxyz1234567890 .abcdefghijklmnopqrstuvwxyz1234567890");
-		$I->click("#`~!@#$%^&*()-_=+{}[]|\;:\".,></?() .`~!@#$%^&*()-_=+{}[]|\;:\".,></?()");
-		$I->click("#words, and, commas, and, spaces .words, and, commas, and, spaces");
+		$I->click("#element"); // stepKey: charsInSectionElement
+		$I->fillField("#element", "7700 West Parmer Lane"); // stepKey: charsInDataRef
+		$I->click("#element .abcdefghijklmnopqrstuvwxyz1234567890"); // stepKey: allChars1
+		$I->click("#element .`~!@#$%^&*()-_=+{}[]|\;:\".,></?()3., "); // stepKey: allChars2
+		$I->click("#element .words, and, commas, and, spaces"); // stepKey: allChars3
+		$I->click("#abcdefghijklmnopqrstuvwxyz1234567890 .abcdefghijklmnopqrstuvwxyz1234567890"); // stepKey: allChars4
+		$I->click("#`~!@#$%^&*()-_=+{}[]|\;:\".,></?() .`~!@#$%^&*()-_=+{}[]|\;:\".,></?()"); // stepKey: allChars5
+		$I->click("#words, and, commas, and, spaces .words, and, commas, and, spaces"); // stepKey: allChars6
 	}
 }
