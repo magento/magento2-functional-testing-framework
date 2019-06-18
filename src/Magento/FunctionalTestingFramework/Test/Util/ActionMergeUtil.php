@@ -117,7 +117,7 @@ class ActionMergeUtil
             }
 
             // Do NOT remap actions that don't need it.
-            if (isset(self::SECRET_MAPPING[$actionType])) {
+            if (isset(self::SECRET_MAPPING[$actionType]) && $actionHasSecretRef) {
                 $actionType = self::SECRET_MAPPING[$actionType];
             }
 
