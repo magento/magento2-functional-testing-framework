@@ -117,12 +117,9 @@ class ActionMergeUtil
             }
 
             // Do NOT remap actions that don't need it.
-            if (!isset(self::SECRET_MAPPING[$actionType])) {
-                $actions[$action->getStepKey()] = $action;
-                continue;
+            if (isset(self::SECRET_MAPPING[$actionType])) {
+                $actionType = self::SECRET_MAPPING[$actionType];
             }
-
-            $actionType = self::SECRET_MAPPING[$actionType];
 
             $action = new ActionObject(
                 $action->getStepKey(),
