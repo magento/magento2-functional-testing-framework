@@ -172,10 +172,11 @@ class GroupClassGenerator
     private function buildWebDriverActionsMustacheArray($action, $actionEntries)
     {
         $step = TestGenerator::getInstance()->generateStepsPhp([$action], TestGenerator::SUITE_SCOPE, 'webDriver');
-        $rawPhp = str_replace(["\t", "\n"], "", $step);
-        $multipleCommands = explode(";", $rawPhp, -1);
+        $rawPhp = str_replace(["\t"], "", $step);
+        $multipleCommands = explode(PHP_EOL, $rawPhp, -1);
+        $multipleCommands = array_filter($multipleCommands);
         foreach ($multipleCommands as $command) {
-            $actionEntries = $this->replaceReservedTesterFunctions($command . ";", $actionEntries, 'webDriver');
+            $actionEntries = $this->replaceReservedTesterFunctions($command . PHP_EOL, $actionEntries, 'webDriver');
         }
 
         return $actionEntries;
@@ -192,6 +193,7 @@ class GroupClassGenerator
      */
     private function replaceReservedTesterFunctions($formattedStep, $actionEntries, $actor)
     {
+        $formattedStep = rtrim($formattedStep);
         foreach (self::REPLACEMENT_ACTIONS as $testAction => $replacement) {
             $testActionCall = "\${$actor}->{$testAction}";
             if (substr($formattedStep, 0, strlen($testActionCall)) == $testActionCall) {
