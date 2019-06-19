@@ -1,4 +1,9 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
@@ -25,7 +30,7 @@ class SecretCredentialDataTestCest
      * @return void
      * @throws \Exception
      */
-    public function SecretCredentialDataTest(AcceptanceTester $I)
+    public function secretCredentialDataTest(AcceptanceTester $I)
     {
         $createProductWithFieldOverridesUsingHardcodedData1Fields['qty'] = "123";
 
@@ -40,9 +45,11 @@ class SecretCredentialDataTestCest
             $createProductWithFieldOverridesUsingHardcodedData1Fields
         );
 
-        $createProductWithFieldOverridesUsingSecretCredData1Fields['qty'] = CredentialStore::getInstance()->getSecret("payment_authorizenet_trans_key");
+        $createProductWithFieldOverridesUsingSecretCredData1Fields['qty'] =
+            CredentialStore::getInstance()->getSecret("payment_authorizenet_trans_key");
 
-        $createProductWithFieldOverridesUsingSecretCredData1Fields['price'] = CredentialStore::getInstance()->getSecret("carriers_dhl_account_eu");
+        $createProductWithFieldOverridesUsingSecretCredData1Fields['price'] =
+            CredentialStore::getInstance()->getSecret("carriers_dhl_account_eu");
 
         $I->comment("[createProductWithFieldOverridesUsingSecretCredData1] create '_defaultProduct' entity");
         PersistedObjectHandler::getInstance()->createEntity(
@@ -54,12 +61,15 @@ class SecretCredentialDataTestCest
         );
 
         $I->fillField("#username", "Hardcoded"); // stepKey: fillFieldUsingHardCodedData1
-        $I->fillSecretField("#username", CredentialStore::getInstance()->getSecret("carriers_dhl_id_eu")); // stepKey: fillFieldUsingSecretCredData1
-        $magentoCliUsingHardcodedData1 = $I->magentoCLI("config:set cms/wysiwyg/enabled 0"); // stepKey: magentoCliUsingHardcodedData1
+        $I->fillSecretField("#username", CredentialStore::getInstance()->getSecret("carriers_dhl_id_eu"));
+            // stepKey: fillFieldUsingSecretCredData1
+        $magentoCliUsingHardcodedData1 = $I->magentoCLI("config:set cms/wysiwyg/enabled 0");
+            // stepKey: magentoCliUsingHardcodedData1
         $I->comment($magentoCliUsingHardcodedData1);
 
-        $magentoCliUsingSecretCredData1 = $I->magentoCLI("config:set cms/wysiwyg/enabled " . CredentialStore::getInstance()->getSecret("payment_authorizenet_login")); // stepKey: magentoCliUsingSecretCredData1
+        $magentoCliUsingSecretCredData1 = $I->magentoCLI("config:set cms/wysiwyg/enabled " .
+            CredentialStore::getInstance()->getSecret("payment_authorizenet_login"));
+            // stepKey: magentoCliUsingSecretCredData1
         $I->comment($magentoCliUsingSecretCredData1);
-
     }
 }
