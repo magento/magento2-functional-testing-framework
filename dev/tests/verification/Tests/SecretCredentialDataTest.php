@@ -47,7 +47,7 @@ class SecretCredentialDataTestCest
             [],
             $createProductWithFieldOverridesUsingSecretCredData1Fields
         );
-        $I->fillSecretField("#username", "Hardcoded");
+        $I->fillField("#username", "Hardcoded");
         $I->fillSecretField("#username", CredentialStore::getInstance()->getSecret("carriers_dhl_id_eu"));
         $magentoCliUsingHardcodedData1 = $I->magentoCLI("config:set cms/wysiwyg/enabled 0");
         $I->comment($magentoCliUsingHardcodedData1);
