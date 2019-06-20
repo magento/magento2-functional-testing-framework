@@ -210,8 +210,11 @@ class ActionMergeUtilTest extends MagentoTestCase
      */
     public function testValidMagentoCliSecretFunction()
     {
-        $actionObjectOne = new ActionObject('actionKey1', 'magentoCLI',
-            ['command' => 'config:set cms/wysiwyg/enabled {{_CREDS.payment_authorizenet_login}}']);
+        $actionObjectOne = new ActionObject(
+            'actionKey1',
+            'magentoCLI',
+            ['command' => 'config:set cms/wysiwyg/enabled {{_CREDS.payment_authorizenet_login}}']
+        );
         $actionObject = [$actionObjectOne];
 
         $actionMergeUtil = new ActionMergeUtil('actionMergeUtilTest', 'TestCase');
@@ -231,8 +234,11 @@ class ActionMergeUtilTest extends MagentoTestCase
      */
     public function testValidCreateDataSecretFunction()
     {
-        $actionObjectOne = new ActionObject('actionKey1', 'field',
-            ['value' => '{{_CREDS.payment_authorizenet_login}}']);
+        $actionObjectOne = new ActionObject(
+            'actionKey1',
+            'field',
+            ['value' => '{{_CREDS.payment_authorizenet_login}}']
+        );
         $actionObject = [$actionObjectOne];
 
         $actionMergeUtil = new ActionMergeUtil('actionMergeUtilTest', 'TestCase');
@@ -257,7 +263,11 @@ class ActionMergeUtilTest extends MagentoTestCase
             'You cannot reference secret data outside of the fillField, magentoCli and createData actions'
         );
 
-        $actionObjectOne = new ActionObject('actionKey1', 'click', ['userInput' => '{{_CREDS.username}}']);
+        $actionObjectOne = new ActionObject(
+            'actionKey1',
+            'click',
+            ['userInput' => '{{_CREDS.username}}']
+        );
         $actionObject = [$actionObjectOne];
 
         $actionMergeUtil = new ActionMergeUtil('actionMergeUtilTest', 'TestCase');
