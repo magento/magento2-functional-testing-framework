@@ -210,14 +210,16 @@ class ActionMergeUtilTest extends MagentoTestCase
      */
     public function testValidMagentoCliSecretFunction()
     {
-        $actionObjectOne = new ActionObject('actionKey1', 'magentoCLI', ['command' => 'config:set cms/wysiwyg/enabled {{_CREDS.payment_authorizenet_login}}']);
+        $actionObjectOne = new ActionObject('actionKey1', 'magentoCLI',
+            ['command' => 'config:set cms/wysiwyg/enabled {{_CREDS.payment_authorizenet_login}}']);
         $actionObject = [$actionObjectOne];
 
         $actionMergeUtil = new ActionMergeUtil('actionMergeUtilTest', 'TestCase');
 
         $result = $actionMergeUtil->resolveActionSteps($actionObject);
 
-        $expectedValue = new ActionObject('actionKey1', 'magentoCLI', ['command' => 'config:set cms/wysiwyg/enabled {{_CREDS.payment_authorizenet_login}}']);
+        $expectedValue = new ActionObject('actionKey1', 'magentoCLI',
+            ['command' => 'config:set cms/wysiwyg/enabled {{_CREDS.payment_authorizenet_login}}']);
         $this->assertEquals($expectedValue, $result['actionKey1']);
     }
 
@@ -229,14 +231,16 @@ class ActionMergeUtilTest extends MagentoTestCase
      */
     public function testValidCreateDataSecretFunction()
     {
-        $actionObjectOne = new ActionObject('actionKey1', 'field', ['value' => '{{_CREDS.payment_authorizenet_login}}']);
+        $actionObjectOne = new ActionObject('actionKey1', 'field',
+            ['value' => '{{_CREDS.payment_authorizenet_login}}']);
         $actionObject = [$actionObjectOne];
 
         $actionMergeUtil = new ActionMergeUtil('actionMergeUtilTest', 'TestCase');
 
         $result = $actionMergeUtil->resolveActionSteps($actionObject);
 
-        $expectedValue = new ActionObject('actionKey1', 'field', ['value' => '{{_CREDS.payment_authorizenet_login}}']);
+        $expectedValue = new ActionObject('actionKey1', 'field',
+            ['value' => '{{_CREDS.payment_authorizenet_login}}']);
         $this->assertEquals($expectedValue, $result['actionKey1']);
     }
 
