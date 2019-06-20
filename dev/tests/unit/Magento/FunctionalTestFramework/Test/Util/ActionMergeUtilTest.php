@@ -274,7 +274,7 @@ class ActionMergeUtilTest extends MagentoTestCase
     {
         $this->expectException(TestReferenceException::class);
         $this->expectExceptionMessage(
-            'You cannot reference secret data outside of the fillField, magentoCli and createData actions'
+            'You cannot reference secret data outside of the fillField, magentoCLI and createData actions'
         );
 
         $actionObjectOne = new ActionObject(
