@@ -1266,6 +1266,7 @@ class TestGenerator
                     );
                     break;
                 case "magentoCLI":
+                case "magentoCLISecret":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
@@ -1275,7 +1276,7 @@ class TestGenerator
                     );
                     $testSteps .= sprintf(self::STEP_KEY_ANNOTATION, $stepKey) . PHP_EOL;
                     $testSteps .= sprintf(
-                        "\t\t$%s->comment(\$%s);\n",
+                        "\t\t$%s->comment(\$%s);",
                         $actor,
                         $stepKey
                     );
@@ -1290,7 +1291,7 @@ class TestGenerator
 
                     $input = $this->resolveAllRuntimeReferences([$input])[0];
                     $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) .
-                        "Fields['{$fieldKey}'] = ${input};\n";
+                        "Fields['{$fieldKey}'] = ${input};";
 
                     $testSteps .= $argRef;
                     break;

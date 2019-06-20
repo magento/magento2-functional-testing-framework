@@ -191,14 +191,22 @@ class ActionMergeUtilTest extends MagentoTestCase
      */
     public function testValidFillFieldSecretFunction()
     {
-        $actionObjectOne = new ActionObject('actionKey1', 'fillField', ['userInput' => '{{_CREDS.username}}']);
+        $actionObjectOne = new ActionObject(
+            'actionKey1',
+            'fillField',
+            ['userInput' => '{{_CREDS.username}}']
+        );
         $actionObject = [$actionObjectOne];
 
         $actionMergeUtil = new ActionMergeUtil('actionMergeUtilTest', 'TestCase');
 
         $result = $actionMergeUtil->resolveActionSteps($actionObject);
 
-        $expectedValue = new ActionObject('actionKey1', 'fillSecretField', ['userInput' => '{{_CREDS.username}}']);
+        $expectedValue = new ActionObject(
+            'actionKey1',
+            'fillSecretField',
+            ['userInput' => '{{_CREDS.username}}']
+        );
         $this->assertEquals($expectedValue, $result['actionKey1']);
     }
 
@@ -208,7 +216,7 @@ class ActionMergeUtilTest extends MagentoTestCase
      * @throws TestReferenceException
      * @throws XmlException
      */
-    public function testValidMagentoCliSecretFunction()
+    public function testValidMagentoCLISecretFunction()
     {
         $actionObjectOne = new ActionObject(
             'actionKey1',
@@ -221,8 +229,11 @@ class ActionMergeUtilTest extends MagentoTestCase
 
         $result = $actionMergeUtil->resolveActionSteps($actionObject);
 
-        $expectedValue = new ActionObject('actionKey1', 'magentoCLI',
-            ['command' => 'config:set cms/wysiwyg/enabled {{_CREDS.payment_authorizenet_login}}']);
+        $expectedValue = new ActionObject(
+            'actionKey1',
+            'magentoCLISecret',
+            ['command' => 'config:set cms/wysiwyg/enabled {{_CREDS.payment_authorizenet_login}}']
+        );
         $this->assertEquals($expectedValue, $result['actionKey1']);
     }
 
@@ -245,8 +256,11 @@ class ActionMergeUtilTest extends MagentoTestCase
 
         $result = $actionMergeUtil->resolveActionSteps($actionObject);
 
-        $expectedValue = new ActionObject('actionKey1', 'field',
-            ['value' => '{{_CREDS.payment_authorizenet_login}}']);
+        $expectedValue = new ActionObject(
+            'actionKey1',
+            'field',
+            ['value' => '{{_CREDS.payment_authorizenet_login}}']
+        );
         $this->assertEquals($expectedValue, $result['actionKey1']);
     }
 

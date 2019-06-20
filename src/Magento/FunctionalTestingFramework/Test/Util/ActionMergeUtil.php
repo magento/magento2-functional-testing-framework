@@ -30,7 +30,7 @@ class ActionMergeUtil
     const DEFAULT_SKIP_OFF_ORDER = 'after';
     const DEFAULT_WAIT_ORDER = 'after';
     const APPROVED_ACTIONS = ['fillField', 'magentoCLI', 'field'];
-    const SECRET_MAPPING = ['fillField' => 'fillSecretField'];
+    const SECRET_MAPPING = ['fillField' => 'fillSecretField', 'magentoCLI' => 'magentoCLISecret'];
 
     /**
      * Array holding final resulting steps
@@ -113,7 +113,7 @@ class ActionMergeUtil
 
             if ($actionHasSecretRef && !(in_array($actionType, self::APPROVED_ACTIONS))) {
                 throw new TestReferenceException("You cannot reference secret data outside " .
-                    "of the fillField, magentoCli and createData actions");
+                    "of the fillField, magentoCLI and createData actions");
             }
 
             // Do NOT remap actions that don't need it.

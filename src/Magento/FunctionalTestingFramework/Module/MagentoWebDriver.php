@@ -641,16 +641,16 @@ class MagentoWebDriver extends WebDriver
      * The data is decrypted immediately prior to data creation to avoid exposure in console or log.
      *
      * @param string $command
+     * @param null $arguments
      * @throws TestFrameworkException
-     * @return void
      */
-    public function magentoCliSecret($command)
+    public function magentoCLISecret($command, $arguments = null)
     {
         // to protect any secrets from being printed to console the values are executed only at the webdriver level as a
         // decrypted value
 
-        $decryptedCommand = CredentialStore::getInstance()->decryptSecretValue($command);
-        $this->magentoCLI($decryptedCommand);
+        $decryptedCommand = CredentialStore::getInstance()->decryptAllSecretsInString($command);
+        $this->magentoCLI($decryptedCommand, $arguments);
     }
 
     /**
