@@ -643,7 +643,7 @@ class MagentoWebDriver extends WebDriver
      * @param string $command
      * @param null   $arguments
      * @throws TestFrameworkException
-     * @return void
+     * @return mixed
      */
     public function magentoCLISecret($command, $arguments = null)
     {
