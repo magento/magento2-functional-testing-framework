@@ -167,7 +167,7 @@ class CredentialStore
     {
         $newString = $string;
         foreach ($this->credentials as $name => $secretValue) {
-            if (strpos($newString, $secretValue !== false)) {
+            if (strpos($newString, $secretValue) !== false) {
                 $decryptedValue = $this->decryptSecretValue($secretValue);
                 $newString = str_replace($secretValue, $decryptedValue, $newString);
             }
