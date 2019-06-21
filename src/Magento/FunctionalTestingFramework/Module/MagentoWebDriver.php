@@ -643,7 +643,7 @@ class MagentoWebDriver extends WebDriver
      * @param string $command
      * @param null   $arguments
      * @throws TestFrameworkException
-     * @return mixed
+     * @return string
      */
     public function magentoCLISecret($command, $arguments = null)
     {
@@ -651,7 +651,7 @@ class MagentoWebDriver extends WebDriver
         // decrypted value
 
         $decryptedCommand = CredentialStore::getInstance()->decryptAllSecretsInString($command);
-        $this->magentoCLI($decryptedCommand, $arguments);
+        return $this->magentoCLI($decryptedCommand, $arguments);
     }
 
     /**
