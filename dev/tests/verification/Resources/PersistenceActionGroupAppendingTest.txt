@@ -31,7 +31,7 @@ class PersistenceActionGroupAppendingTestCest
 			"hook",
 			"entity",
 			[],
-			null
+			[]
 		);
 
 		$I->comment("[updateDataACTIONGROUPBEFORE] update 'createDataACTIONGROUPBEFORE' entity to 'newEntity'");
@@ -39,6 +39,7 @@ class PersistenceActionGroupAppendingTestCest
 			"createDataACTIONGROUPBEFORE",
 			"hook",
 			"newEntity",
+			[],
 			[]
 		);
 
@@ -54,7 +55,7 @@ class PersistenceActionGroupAppendingTestCest
 			"hook",
 			"someEneity",
 			[],
-			null
+			[]
 		);
 
 		$I->comment(PersistedObjectHandler::getInstance()->retrieveEntityField('createData', 'field', 'hook'));
@@ -77,7 +78,7 @@ class PersistenceActionGroupAppendingTestCest
 			"test",
 			"entity",
 			[],
-			null
+			[]
 		);
 
 		$I->comment("[updateDataACTIONGROUP] update 'createDataACTIONGROUP' entity to 'newEntity'");
@@ -100,7 +101,7 @@ class PersistenceActionGroupAppendingTestCest
 			"test",
 			"someEneity",
 			[],
-			null
+			[]
 		);
 
 		$I->comment(PersistedObjectHandler::getInstance()->retrieveEntityField('createDataACTIONGROUP', 'field', 'test'));

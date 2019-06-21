@@ -34,7 +34,7 @@ class ActionGroupWithStepKeyReferencesCest
 			"test",
 			"simpleData",
 			[],
-			null
+			[]
 		);
 
 		$grabTextDataActionGroup = $I->grabTextFrom(".class"); // stepKey: grabTextDataActionGroup
@@ -64,7 +64,7 @@ class ActionGroupWithStepKeyReferencesCest
 			"test",
 			"{$action8}",
 			[],
-			null
+			[]
 		);
 
 		$I->comment("[action9ActionGroup] update '1' entity to '{$action9}'");
@@ -81,7 +81,7 @@ class ActionGroupWithStepKeyReferencesCest
 			"test",
 			"{$action10}",
 			[],
-			null
+			[]
 		);
 
 		$action11ActionGroup = $I->grabAttributeFrom($action11ActionGroup, "someInput"); // stepKey: action11ActionGroup

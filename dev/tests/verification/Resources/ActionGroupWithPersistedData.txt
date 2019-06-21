@@ -31,7 +31,7 @@ class ActionGroupWithPersistedDataCest
 			"hook",
 			"ReplacementPerson",
 			[],
-			null
+			[]
 		);
 
 		$I->comment("Entering Action Group [beforeGroup] FunctionalActionGroup");
@@ -78,7 +78,7 @@ class ActionGroupWithPersistedDataCest
 			"test",
 			"DefaultPerson",
 			[],
-			null
+			[]
 		);
 
 		$I->comment("Entering Action Group [actionGroupWithPersistedData1] FunctionalActionGroupWithData");
