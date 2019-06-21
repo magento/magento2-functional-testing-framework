@@ -46,7 +46,6 @@ class ActionGroupWithStepKeyReferencesCest
 		$action3ActionGroup = $I->executeJS($action3ActionGroup); // stepKey: action3ActionGroup
 		$action4ActionGroup = $I->magentoCLI($action4ActionGroup, "\"stuffHere\""); // stepKey: action4ActionGroup
 		$I->comment($action4ActionGroup);
-
 		$date = new \DateTime();
 		$date->setTimestamp(strtotime("{$action5}"));
 		$date->setTimezone(new \DateTimeZone("America/Los_Angeles"));
