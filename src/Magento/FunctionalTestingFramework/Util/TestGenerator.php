@@ -755,7 +755,7 @@ class TestGenerator
                     if (count($customEntityFields) > 1) {
                         $createEntityFunctionCall .= ",\n\t\t\t\${$stepKey}Fields";
                     } else {
-                        $createEntityFunctionCall .= ",\n\t\t\tnull";
+                        $createEntityFunctionCall .= ",\n\t\t\t[]";
                     }
                     if ($storeCode !== null) {
                         $createEntityFunctionCall .= ",\n\t\t\t\"{$storeCode}\"";
