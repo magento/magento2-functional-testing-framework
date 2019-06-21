@@ -27,8 +27,8 @@ class ActionGroupWithParameterizedElementWithHyphenCest
 	 */
 	public function ActionGroupWithParameterizedElementWithHyphen(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group SectionArgumentWithParameterizedSelector (actionGroup)");
-		$keyoneActionGroup = $I->executeJS("#element .full-width");
-		$I->comment("Exiting Action Group SectionArgumentWithParameterizedSelector (actionGroup)");
+		$I->comment("Entering Action Group [actionGroup] SectionArgumentWithParameterizedSelector");
+		$keyoneActionGroup = $I->executeJS("#element .full-width"); // stepKey: keyoneActionGroup
+		$I->comment("Exiting Action Group [actionGroup] SectionArgumentWithParameterizedSelector");
 	}
 }

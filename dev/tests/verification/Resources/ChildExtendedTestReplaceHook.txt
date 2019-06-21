@@ -26,7 +26,7 @@ class ChildExtendedTestReplaceHookCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->amOnPage("/slightlyDifferentBeforeUrl");
+		$I->amOnPage("/slightlyDifferentBeforeUrl"); // stepKey: beforeAmOnPageKey
 	}
 
 	/**
@@ -35,7 +35,7 @@ class ChildExtendedTestReplaceHookCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
-		$I->amOnPage("/afterUrl");
+		$I->amOnPage("/afterUrl"); // stepKey: afterAmOnPageKey
 	}
 
 	/**
@@ -44,7 +44,7 @@ class ChildExtendedTestReplaceHookCest
 	  */
 	public function _failed(AcceptanceTester $I)
 	{
-		$I->saveScreenshot();
+		$I->saveScreenshot(); // stepKey: saveScreenshot
 	}
 
 	/**
