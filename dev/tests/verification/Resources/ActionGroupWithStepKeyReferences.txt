@@ -64,7 +64,7 @@ class ActionGroupWithStepKeyReferencesCest
 			"test",
 			"{$action8}",
 			[],
-			[]
+			null
 		);
 
 		$I->comment("[action9ActionGroup] update '1' entity to '{$action9}'");
