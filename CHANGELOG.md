@@ -1,6 +1,15 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.4.2
+-----
+* Traceability
+    * Test action `stepKey`s are now included in both console output and Allure report.
+    * XML Comments are now automatically converted into a `<comment>` action.
+
+### Fixes
+* Moved `epfremme/swagger-php` dependency to `suggests` block due to a conflict with Magento extensions.
+
 2.4.1
 -----
 * Traceability
