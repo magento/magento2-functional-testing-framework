@@ -31,7 +31,7 @@ class ActionGroupUsingCreateDataCest
 			"hook",
 			"ApiCategory",
 			[],
-			null
+			[]
 		);
 
 		$I->comment("[createConfigProductKey1] create 'ApiConfigurableProduct' entity");
@@ -40,7 +40,7 @@ class ActionGroupUsingCreateDataCest
 			"hook",
 			"ApiConfigurableProduct",
 			["createCategoryKey1"],
-			null
+			[]
 		);
 
 		$I->comment("Exiting Action Group [Key1] actionGroupWithCreateData");

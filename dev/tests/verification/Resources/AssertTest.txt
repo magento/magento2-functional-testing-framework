@@ -30,7 +30,7 @@ class AssertTestCest
 			"hook",
 			"ReplacementPerson",
 			[],
-			null
+			[]
 		);
 
 	}
@@ -50,7 +50,7 @@ class AssertTestCest
 			"test",
 			"UniquePerson",
 			[],
-			null
+			[]
 		);
 
 		$grabTextFrom1 = $I->grabTextFrom(".copyright>span"); // stepKey: grabTextFrom1

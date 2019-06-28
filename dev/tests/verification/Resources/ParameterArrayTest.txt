@@ -33,7 +33,7 @@ class ParameterArrayTestCest
 			"test",
 			"simpleParamData",
 			[],
-			null
+			[]
 		);
 
 		$I->searchAndMultiSelectOption("#selector", ["name"]); // stepKey: xmlSimpleReplace

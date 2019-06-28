@@ -34,7 +34,7 @@ class ActionGroupWithStepKeyReferencesCest
 			"test",
 			"simpleData",
 			[],
-			null
+			[]
 		);
 
 		$grabTextDataActionGroup = $I->grabTextFrom(".class"); // stepKey: grabTextDataActionGroup
@@ -46,7 +46,6 @@ class ActionGroupWithStepKeyReferencesCest
 		$action3ActionGroup = $I->executeJS($action3ActionGroup); // stepKey: action3ActionGroup
 		$action4ActionGroup = $I->magentoCLI($action4ActionGroup, "\"stuffHere\""); // stepKey: action4ActionGroup
 		$I->comment($action4ActionGroup);
-
 		$date = new \DateTime();
 		$date->setTimestamp(strtotime("{$action5}"));
 		$date->setTimezone(new \DateTimeZone("America/Los_Angeles"));
@@ -82,7 +81,7 @@ class ActionGroupWithStepKeyReferencesCest
 			"test",
 			"{$action10}",
 			[],
-			null
+			[]
 		);
 
 		$action11ActionGroup = $I->grabAttributeFrom($action11ActionGroup, "someInput"); // stepKey: action11ActionGroup
