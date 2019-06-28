@@ -14,8 +14,7 @@ use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 class ActionGroupAnnotationExtractor extends AnnotationExtractor
 {
     const ACTION_GROUP_REQUIRED_ANNOTATIONS = [
-        "description",
-        "page",
+        "description"
     ];
     const GENERATE_DOCS_COMMAND = 'generate:docs';
 

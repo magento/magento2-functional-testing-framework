@@ -206,4 +206,15 @@ class ActionGroupGenerationTest extends MftfTestCase
     {
         $this->generateAndCompareTest('ActionGroupWithParameterizedElementWithHyphen');
     }
+
+    /**
+     * Test generation of a test referencing an action group with xml comment in arguments and action group body.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testActionGroupWithXmlComments()
+    {
+        $this->generateAndCompareTest('XmlCommentedActionGroupTest');
+    }
 }

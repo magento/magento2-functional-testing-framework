@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <!--< > & $abc " abc ' <click stepKey="click" userInput="$$createDataHook.firstname$$" selector="#id">/-->
+    <test name="XmlCommentedTest">
+        <annotations>
+            <!--  Comments in Test annotations are not affecting test generation  -->
+            <!--  <severity value="BLOCKER"/>  -->
+            <severity value="CRITICAL"/>
+            <title value="Test With comment blocks in root element 'tests', in annotations and in test body."/>
+        </annotations>
+        <before>
+            <!--< > & $abc " abc ' <click stepKey="click" userInput="$$createDataHook.firstname$$" selector="#id_1">/-->
+            <amOnPage url="/beforeUrl" stepKey="beforeAmOnPageKey"/>
+            <!--< > & $abc " abc ' <click stepKey="click" userInput="$$createDataHook.firstname$$" selector="#id_2">/-->
+        </before>
+        <after>
+            <!--< > & $abc " abc ' <click stepKey="click" userInput="$$createDataHook.firstname$$" selector="#id_1">/-->
+            <amOnPage url="/afterUrl" stepKey="afterAmOnPageKey"/>
+            <!--< > & $abc " abc ' <click stepKey="click" userInput="$$createDataHook.firstname$$" selector="#id_2">/-->
+        </after>
+
+        <!--< > & $abc " abc ' <click stepKey="click" userInput="$$createDataHook.firstname$$" selector="#id_1">/-->
+        <grabValueFrom stepKey="someVarDefinition"/>
+        <acceptPopup stepKey="acceptPopupKey1"/>
+
+        <!--< > & $abc " abc ' <click stepKey="click" userInput="$$createDataHook.firstname$$" selector="#id_2">/-->
+        <amOnPage stepKey="amOnPageKey1" url="/test/url"/>
+        <appendField selector=".functionalTestSelector" stepKey="appendFieldKey1" />
+
+        <!--< > & $abc " abc ' <click stepKey="click" userInput="$$createDataHook.firstname$$" selector="#id_3">/-->
+        <attachFile userInput="testFileAttachment" selector=".functionalTestSelector" stepKey="attachFileKey1" />
+<!--        <cancelPopup stepKey="cancelPopupKey1"/>-->
+        <checkOption selector=".functionalTestSelector" stepKey="checkOptionKey1"/>
+    </test>
+</tests>

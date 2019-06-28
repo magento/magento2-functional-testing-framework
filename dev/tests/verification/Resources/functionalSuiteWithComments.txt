@@ -13,14 +13,14 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHan
  *
  * To use this group extension, include it to "extensions" option of global Codeception config.
  */
-class functionalSuiteHooks extends \Codeception\GroupObject
+class functionalSuiteWithComments extends \Codeception\GroupObject
 {
-    public static $group = 'functionalSuiteHooks';
+    public static $group = 'functionalSuiteWithComments';
     private $testCount = 1;
     private $preconditionFailure = null;
     private $currentTestRun = 0;
-    private static $HOOK_EXECUTION_INIT = "\n/******** Beginning execution of functionalSuiteHooks suite %s block ********/\n";
-    private static $HOOK_EXECUTION_END = "\n/******** Execution of functionalSuiteHooks suite %s block complete ********/\n";
+    private static $HOOK_EXECUTION_INIT = "\n/******** Beginning execution of functionalSuiteWithComments suite %s block ********/\n";
+    private static $HOOK_EXECUTION_END = "\n/******** Execution of functionalSuiteWithComments suite %s block complete ********/\n";
 
     public function _before(\Codeception\Event\TestEvent $e)
     {
@@ -51,6 +51,7 @@ class functionalSuiteHooks extends \Codeception\GroupObject
                 
                 // initialize the webdriver session
                 $webDriver->_initializeSession();
+                print("Comment in Before");
                 $webDriver->amOnPage("some.url"); // stepKey: before
                 $createFields['someKey'] = "dataHere";
                 PersistedObjectHandler::getInstance()->createEntity(
@@ -59,6 +60,7 @@ class functionalSuiteHooks extends \Codeception\GroupObject
                     "createThis",
                      $createFields
                 );
+                print("<click stepKey=\"comment with element\" userInput=\"helloworld\"/>");
                 $webDriver->click(PersistedObjectHandler::getInstance()->retrieveEntityField('create', 'data', 'suite')); // stepKey: clickWithData
                 print("Entering Action Group [AC] actionGroupWithTwoArguments");
                 $webDriver->see("John", msq("uniqueData") . "John"); // stepKey: seeFirstNameAC
@@ -120,11 +122,7 @@ class functionalSuiteHooks extends \Codeception\GroupObject
                 
                 // initialize the webdriver session
                 $webDriver->_initializeSession();
-                $webDriver->amOnPage("some.url"); // stepKey: after
-                $webDriver->deleteEntityByUrl("deleteThis");
-                print("Entering Action Group [AC] actionGroupWithTwoArguments");
-                $webDriver->see("John", msq("uniqueData") . "John"); // stepKey: seeFirstNameAC
-                print("Exiting Action Group [AC] actionGroupWithTwoArguments");
+                print("afterBlock");
             } catch (\Exception $exception) {
                 print $exception->getMessage();
             }
