@@ -33,7 +33,7 @@ class LocatorFunctionTestCest
 			"test",
 			"ReplacementPerson",
 			[],
-			null
+			[]
 		);
 
 		$I->click(Locator::contains("'label'", "'Name'")); // stepKey: SimpleLocator

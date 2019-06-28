@@ -29,6 +29,8 @@ class ActionMergeUtil
     const DEFAULT_SKIP_ON_ORDER = 'before';
     const DEFAULT_SKIP_OFF_ORDER = 'after';
     const DEFAULT_WAIT_ORDER = 'after';
+    const APPROVED_ACTIONS = ['fillField', 'magentoCLI', 'field'];
+    const SECRET_MAPPING = ['fillField' => 'fillSecretField', 'magentoCLI' => 'magentoCLISecret'];
 
     /**
      * Array holding final resulting steps
@@ -95,7 +97,7 @@ class ActionMergeUtil
 
     /**
      * Takes an array of actions and resolves any references to secret fields. The function then validates whether the
-     * refernece is valid and replaces the function name accordingly to hide arguments at runtime.
+     * reference is valid and replaces the function name accordingly to hide arguments at runtime.
      *
      * @param ActionObject[] $resolvedActions
      * @return ActionObject[]
@@ -106,21 +108,27 @@ class ActionMergeUtil
         $actions = [];
         foreach ($resolvedActions as $resolvedAction) {
             $action = $resolvedAction;
-            $hasSecretRef = $this->actionAttributeContainsSecretRef($resolvedAction->getCustomActionAttributes());
+            $actionHasSecretRef = $this->actionAttributeContainsSecretRef($resolvedAction->getCustomActionAttributes());
+            $actionType = $resolvedAction->getType();
 
-            if ($resolvedAction->getType() !== 'fillField' && $hasSecretRef) {
-                throw new TestReferenceException("You cannot reference secret data outside of fill field actions");
+            if ($actionHasSecretRef && !(in_array($actionType, self::APPROVED_ACTIONS))) {
+                throw new TestReferenceException("You cannot reference secret data outside " .
+                    "of the fillField, magentoCLI and createData actions");
             }
 
-            if ($resolvedAction->getType() === 'fillField' && $hasSecretRef) {
-                $action = new ActionObject(
-                    $action->getStepKey(),
-                    'fillSecretField',
-                    $action->getCustomActionAttributes(),
-                    $action->getLinkedAction(),
-                    $action->getActionOrigin()
-                );
+            // Do NOT remap actions that don't need it.
+            if (isset(self::SECRET_MAPPING[$actionType]) && $actionHasSecretRef) {
+                $actionType = self::SECRET_MAPPING[$actionType];
             }
+
+            $action = new ActionObject(
+                $action->getStepKey(),
+                $actionType,
+                $action->getCustomActionAttributes(),
+                $action->getLinkedAction(),
+                $action->getOrderOffset(),
+                $action->getActionOrigin()
+            );
 
             $actions[$action->getStepKey()] = $action;
         }
@@ -261,7 +269,7 @@ class ActionMergeUtil
      *
      * @param array $parsedSteps
      * @return void
-     * @throws XmlException
+     * @throws TestReferenceException
      */
     private function sortActions($parsedSteps)
     {

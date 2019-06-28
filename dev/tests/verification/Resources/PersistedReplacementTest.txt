@@ -30,7 +30,7 @@ class PersistedReplacementTestCest
 			"hook",
 			"ReplacementPerson",
 			[],
-			null
+			[]
 		);
 
 	}
@@ -50,7 +50,7 @@ class PersistedReplacementTestCest
 			"test",
 			"simpleData",
 			[],
-			null
+			[]
 		);
 
 		$I->fillField("#selector", "StringBefore " . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . " StringAfter"); // stepKey: inputReplace

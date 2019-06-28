@@ -31,7 +31,7 @@ class ActionGroupWithTopLevelPersistedDataCest
 			"hook",
 			"ReplacementPerson",
 			[],
-			null
+			[]
 		);
 
 		$I->comment("Entering Action Group [beforeGroup] FunctionalActionGroup");

@@ -154,7 +154,7 @@ class ActionObject
         $this->linkedAction = $linkedAction;
         $this->actionOrigin = $actionOrigin;
 
-        if ($order == ActionObject::MERGE_ACTION_ORDER_AFTER) {
+        if ($order === ActionObject::MERGE_ACTION_ORDER_AFTER) {
             $this->orderOffset = 1;
         }
     }

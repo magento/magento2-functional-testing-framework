@@ -30,7 +30,7 @@ class DataActionsTestCest
 			"hook",
 			"entity",
 			[],
-			null
+			[]
 		);
 
 		$I->comment("[updateInBefore] update 'createdInBefore' entity to 'entity'");
@@ -64,7 +64,7 @@ class DataActionsTestCest
 			"test",
 			"entity",
 			[],
-			null
+			[]
 		);
 
 		$I->comment("[updateInTest] update 'createdInTest' entity to 'entity'");

@@ -53,6 +53,5 @@ class DataReplacementTestCest
 		$I->fillField(".selector", "0"); // stepKey: insertZero
 		$insertCommand = $I->magentoCLI("do something Doe" . msq("uniqueData") . " with uniqueness"); // stepKey: insertCommand
 		$I->comment($insertCommand);
-
 	}
 }

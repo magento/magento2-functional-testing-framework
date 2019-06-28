@@ -755,7 +755,7 @@ class TestGenerator
                     if (count($customEntityFields) > 1) {
                         $createEntityFunctionCall .= ",\n\t\t\t\${$stepKey}Fields";
                     } else {
-                        $createEntityFunctionCall .= ",\n\t\t\tnull";
+                        $createEntityFunctionCall .= ",\n\t\t\t[]";
                     }
                     if ($storeCode !== null) {
                         $createEntityFunctionCall .= ",\n\t\t\t\"{$storeCode}\"";
@@ -1266,6 +1266,7 @@ class TestGenerator
                     );
                     break;
                 case "magentoCLI":
+                case "magentoCLISecret":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
@@ -1275,7 +1276,7 @@ class TestGenerator
                     );
                     $testSteps .= sprintf(self::STEP_KEY_ANNOTATION, $stepKey) . PHP_EOL;
                     $testSteps .= sprintf(
-                        "\t\t$%s->comment(\$%s);\n",
+                        "\t\t$%s->comment(\$%s);",
                         $actor,
                         $stepKey
                     );
@@ -1287,7 +1288,11 @@ class TestGenerator
                         $actionObject->getActionOrigin()
                     )[0];
                     $argRef = "\t\t\$";
-                    $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) . "Fields['{$fieldKey}'] = ${input};\n";
+
+                    $input = $this->resolveAllRuntimeReferences([$input])[0];
+                    $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) .
+                        "Fields['{$fieldKey}'] = ${input};";
+
                     $testSteps .= $argRef;
                     break;
                 case "generateDate":

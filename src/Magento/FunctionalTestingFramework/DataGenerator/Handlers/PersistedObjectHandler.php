@@ -84,6 +84,10 @@ class PersistedObjectHandler
         foreach ($dependentObjectKeys as $objectKey) {
             $retrievedDependentObjects[] = $this->retrieveEntity($objectKey, $scope);
         }
+
+        foreach ($overrideFields as $index => $field) {
+            $overrideFields[$index] = CredentialStore::getInstance()->decryptAllSecretsInString($field);
+        }
         
         $retrievedEntity = DataObjectHandler::getInstance()->getObject($entity);
         $persistedObject = new DataPersistenceHandler(
