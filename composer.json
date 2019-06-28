@@ -2,7 +2,7 @@
     "name": "magento/magento2-functional-testing-framework",
     "description": "Magento2 Functional Testing Framework",
     "type": "library",
-    "version": "2.4.1",
+    "version": "2.4.2",
     "license": "AGPL-3.0",
     "keywords": ["magento", "automation", "functional", "testing"],
     "config": {
@@ -14,7 +14,6 @@
         "ext-curl": "*",
         "codeception/codeception": "~2.3.4 || ~2.4.0 ",
         "consolidation/robo": "^1.0.0",
-        "epfremme/swagger-php": "^2.0",
         "flow/jsonpath": ">0.2",
         "fzaninotto/faker": "^1.6",
         "monolog/monolog": "^1.0",
@@ -35,6 +34,9 @@
         "rregeer/phpunit-coverage-check": "^0.1.4",
         "php-coveralls/php-coveralls": "^1.0",
         "symfony/stopwatch": "~3.4.6"
+    },
+    "suggest": {
+        "epfremme/swagger-php": "^2.0"
     },
     "autoload": {
         "files": ["src/Magento/FunctionalTestingFramework/_bootstrap.php"],
