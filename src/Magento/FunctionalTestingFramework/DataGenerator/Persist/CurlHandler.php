@@ -119,6 +119,7 @@ class CurlHandler
         $contentType = $this->operationDefinition->getContentType();
         $successRegex = $this->operationDefinition->getSuccessRegex();
         $returnRegex = $this->operationDefinition->getReturnRegex();
+        $method = $this->operationDefinition->getApiMethod();
 
         $operationDataResolver = new OperationDataArrayResolver($dependentEntities);
         $this->requestData = $operationDataResolver->resolveOperationDataArray(
@@ -156,7 +157,7 @@ class CurlHandler
         $executor->write(
             $apiUrl,
             $this->requestData,
-            self::$curlMethodMapping[$this->operation],
+            $method ?? self::$curlMethodMapping[$this->operation],
             $headers
         );
 
