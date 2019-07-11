@@ -32,7 +32,9 @@ class Console extends \Codeception\Subscriber\Console
     private $actionGroupStepKey = null;
 
     /**
-     * Console constructor. Feeds the second option passed into parent constructor.
+     * Console constructor. Parent constructor requires codeception CLI options, and does not have its own configs.
+     * Constructor is only different than parent due to the way Codeception instantiates Extensions.
+     *
      * @param array $extensionOptions
      * @param array $options
      *
