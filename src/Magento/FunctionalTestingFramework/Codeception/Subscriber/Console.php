@@ -35,6 +35,8 @@ class Console extends \Codeception\Subscriber\Console
      * Console constructor. Feeds the second option passed into parent constructor.
      * @param array $extensionOptions
      * @param array $options
+     *
+     * @SuppressWarnings(PHPMD)
      */
     public function __construct($extensionOptions = [], $options = [])
     {
