@@ -32,6 +32,16 @@ class Console extends \Codeception\Subscriber\Console
     private $actionGroupStepKey = null;
 
     /**
+     * Console constructor. Feeds the second option passed into parent constructor.
+     * @param array $extensionOptions
+     * @param array $options
+     */
+    public function __construct($extensionOptions = [], $options = [])
+    {
+        parent::__construct($options);
+    }
+
+    /**
      * Printing stepKey in before step action.
      *
      * @param StepEvent $e
