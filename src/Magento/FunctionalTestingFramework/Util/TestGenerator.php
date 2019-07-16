@@ -1901,7 +1901,7 @@ class TestGenerator
     {
         $runtimeReferenceRegex = [
             "/{{_ENV\.([\w]+)}}/" => 'getenv',
-            "/{{_CREDS\.([\w]+)}}/" => 'CredentialStore::getInstance()->getSecret'
+            "/{{_CREDS\.([\w|\/]+)}}/" => 'CredentialStore::getInstance()->getSecret'
         ];
 
         $argResult = $args;

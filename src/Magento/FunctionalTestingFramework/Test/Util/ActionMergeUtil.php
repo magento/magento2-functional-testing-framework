@@ -149,7 +149,7 @@ class ActionMergeUtil
                 return $this->actionAttributeContainsSecretRef($actionAttribute);
             }
 
-            preg_match_all("/{{_CREDS\.([\w]+)}}/", $actionAttribute, $matches);
+            preg_match_all("/{{_CREDS\.([\w|\/]+)}}/", $actionAttribute, $matches);
 
             if (!empty($matches[0])) {
                 return true;
