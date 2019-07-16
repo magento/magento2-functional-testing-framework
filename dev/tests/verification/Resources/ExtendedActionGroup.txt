@@ -27,10 +27,12 @@ class ExtendedActionGroupCest
 	 */
 	public function ExtendedActionGroup(AcceptanceTester $I)
 	{
+		$I->comment("Entering Action Group [actionGroup] extendTestActionGroup");
 		$I->comment("New Input Before");
-		$grabProductsActionGroup = $I->grabMultiple("notASelector");
+		$grabProductsActionGroup = $I->grabMultiple("notASelector"); // stepKey: grabProductsActionGroup
 		$I->comment("New Input After");
-		$I->assertCount(99, $grabProductsActionGroup);
-		$I->assertCount(8000, $grabProductsActionGroup);
+		$I->assertCount(99, $grabProductsActionGroup); // stepKey: assertCountActionGroup
+		$I->assertCount(8000, $grabProductsActionGroup); // stepKey: assertSecondCountActionGroup
+		$I->comment("Exiting Action Group [actionGroup] extendTestActionGroup");
 	}
 }

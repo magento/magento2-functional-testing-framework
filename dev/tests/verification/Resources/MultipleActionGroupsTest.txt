@@ -25,16 +25,19 @@ class MultipleActionGroupsTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the stepKey: createPersonParam");
+		$I->comment("[createPersonParam] create 'ReplacementPerson' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createPersonParam",
 			"hook",
 			"ReplacementPerson",
 			[],
-			null
+			[]
 		);
-		$I->fillField("#foo", "myData1");
-		$I->fillField("#bar", "myData2");
+
+		$I->comment("Entering Action Group [beforeGroup] FunctionalActionGroup");
+		$I->fillField("#foo", "myData1"); // stepKey: fillField1BeforeGroup
+		$I->fillField("#bar", "myData2"); // stepKey: fillField2BeforeGroup
+		$I->comment("Exiting Action Group [beforeGroup] FunctionalActionGroup");
 	}
 
 	/**
@@ -43,8 +46,10 @@ class MultipleActionGroupsTestCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
-		$I->fillField("#foo", "myData1");
-		$I->fillField("#bar", "myData2");
+		$I->comment("Entering Action Group [afterGroup] FunctionalActionGroup");
+		$I->fillField("#foo", "myData1"); // stepKey: fillField1AfterGroup
+		$I->fillField("#bar", "myData2"); // stepKey: fillField2AfterGroup
+		$I->comment("Exiting Action Group [afterGroup] FunctionalActionGroup");
 	}
 
 	/**
@@ -53,7 +58,7 @@ class MultipleActionGroupsTestCest
 	  */
 	public function _failed(AcceptanceTester $I)
 	{
-		$I->saveScreenshot();
+		$I->saveScreenshot(); // stepKey: saveScreenshot
 	}
 
 	/**
@@ -67,17 +72,21 @@ class MultipleActionGroupsTestCest
 	 */
 	public function MultipleActionGroupsTest(AcceptanceTester $I)
 	{
-		$I->amOnPage("/someUrl");
-		$I->amOnPage("/Jane/Dane.html");
-		$I->fillField("#foo", "Jane");
-		$I->fillField("#bar", "Dane");
-		$I->searchAndMultiSelectOption("#foo", ["Jane", "Dane"]);
-		$I->see("#element .Jane");
-		$I->click("loginButton");
-		$I->amOnPage("/John/Doe.html");
-		$I->fillField("#foo", "John");
-		$I->fillField("#bar", "Doe");
-		$I->searchAndMultiSelectOption("#foo", ["John", "Doe"]);
-		$I->see("#element .John");
+		$I->amOnPage("/someUrl"); // stepKey: step1
+		$I->comment("Entering Action Group [actionGroup1] FunctionalActionGroupWithData");
+		$I->amOnPage("/Jane/Dane.html"); // stepKey: amOnPage1ActionGroup1
+		$I->fillField("#foo", "Jane"); // stepKey: fillField1ActionGroup1
+		$I->fillField("#bar", "Dane"); // stepKey: fillField2ActionGroup1
+		$I->searchAndMultiSelectOption("#foo", ["Jane", "Dane"]); // stepKey: multi1ActionGroup1
+		$I->see("#element .Jane"); // stepKey: see1ActionGroup1
+		$I->comment("Exiting Action Group [actionGroup1] FunctionalActionGroupWithData");
+		$I->click("loginButton"); // stepKey: step6
+		$I->comment("Entering Action Group [actionGroupWithDataOverride2] FunctionalActionGroupWithData");
+		$I->amOnPage("/John/Doe.html"); // stepKey: amOnPage1ActionGroupWithDataOverride2
+		$I->fillField("#foo", "John"); // stepKey: fillField1ActionGroupWithDataOverride2
+		$I->fillField("#bar", "Doe"); // stepKey: fillField2ActionGroupWithDataOverride2
+		$I->searchAndMultiSelectOption("#foo", ["John", "Doe"]); // stepKey: multi1ActionGroupWithDataOverride2
+		$I->see("#element .John"); // stepKey: see1ActionGroupWithDataOverride2
+		$I->comment("Exiting Action Group [actionGroupWithDataOverride2] FunctionalActionGroupWithData");
 	}
 }

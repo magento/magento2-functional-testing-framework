@@ -29,7 +29,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
     protected function configure()
     {
         $this->setName('generate:tests')
-            ->setDescription('This command generates all test files and suites based on xml declarations')
+            ->setDescription('Run validation and generate all test files and suites based on xml declarations')
             ->addArgument(
                 'name',
                 InputArgument::OPTIONAL | InputArgument::IS_ARRAY,
@@ -39,7 +39,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 "force",
                 'f',
                 InputOption::VALUE_NONE,
-                'force generation of tests regardless of Magento Instance Configuration'
+                'Force generation of tests regardless of Magento Instance Configuration'
             )->addOption(
                 'time',
                 'i',
@@ -54,8 +54,10 @@ class GenerateTestsCommand extends BaseGenerateCommand
             )->addOption(
                 'debug',
                 'd',
-                InputOption::VALUE_NONE,
-                'run extra validation when generating tests'
+                InputOption::VALUE_OPTIONAL,
+                'Run extra validation when generating tests. Use option \'none\' to turn off debugging -- 
+                 added for backward compatibility, will be removed in the next MAJOR release',
+                MftfApplicationConfig::LEVEL_DEFAULT
             );
 
         parent::configure();
@@ -78,9 +80,8 @@ class GenerateTestsCommand extends BaseGenerateCommand
         $json = $input->getOption('tests');
         $force = $input->getOption('force');
         $time = $input->getOption('time') * 60 * 1000; // convert from minutes to milliseconds
-        $debug = $input->getOption('debug');
+        $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
         $remove = $input->getOption('remove');
-
         $verbose = $output->isVerbose();
 
         if ($json !== null && !json_decode($json)) {
@@ -95,7 +96,8 @@ class GenerateTestsCommand extends BaseGenerateCommand
 
         // Remove previous GENERATED_DIR if --remove option is used
         if ($remove) {
-            $this->removeGeneratedDirectory($output, $verbose || $debug);
+            $this->removeGeneratedDirectory($output, $verbose ||
+                ($debug !== MftfApplicationConfig::LEVEL_NONE));
         }
 
         $testConfiguration = $this->createTestConfiguration($json, $tests, $force, $debug, $verbose);
@@ -124,13 +126,13 @@ class GenerateTestsCommand extends BaseGenerateCommand
      * @param string  $json
      * @param array   $tests
      * @param boolean $force
-     * @param boolean $debug
+     * @param string  $debug
      * @param boolean $verbose
      * @return array
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
-    private function createTestConfiguration($json, array $tests, bool $force, bool $debug, bool $verbose)
+    private function createTestConfiguration($json, array $tests, bool $force, $debug, bool $verbose)
     {
         // set our application configuration so we can references the user options in our framework
         MftfApplicationConfig::create(

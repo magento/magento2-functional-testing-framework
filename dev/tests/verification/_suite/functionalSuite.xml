@@ -29,4 +29,28 @@
             <test name="ExcludeTest2"/>
         </exclude>
     </suite>
+    <suite name="functionalSuiteWithComments">
+        <include>
+            <!-- Comment Block-->
+            <test name="IncludeTest"/>
+        </include>
+        <before>
+            <!-- Comment in Before-->
+            <amOnPage url="some.url" stepKey="before"/>
+            <createData entity="createThis" stepKey="create">
+                <!--Comment in Nested Element-->
+                <field key="someKey">dataHere</field>
+            </createData>
+            <!-- <click stepKey="comment with element" userInput="helloworld"/> -->
+            <click stepKey="clickWithData" userInput="$create.data$"/>
+            <actionGroup ref="actionGroupWithTwoArguments" stepKey="AC">
+                <!--Comment in AG Args-->
+                <argument name="somePerson" value="simpleData"/>
+                <argument name="anotherPerson" value="uniqueData"/>
+            </actionGroup>
+        </before>
+        <after>
+            <comment userInput="afterBlock" stepKey="afterBlock"/>
+        </after>
+    </suite>
 </suites>

@@ -25,16 +25,19 @@ class MergedActionGroupTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the stepKey: createPersonParam");
+		$I->comment("[createPersonParam] create 'ReplacementPerson' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createPersonParam",
 			"hook",
 			"ReplacementPerson",
 			[],
-			null
+			[]
 		);
-		$I->fillField("#foo", "myData1");
-		$I->fillField("#bar", "myData2");
+
+		$I->comment("Entering Action Group [beforeGroup] FunctionalActionGroup");
+		$I->fillField("#foo", "myData1"); // stepKey: fillField1BeforeGroup
+		$I->fillField("#bar", "myData2"); // stepKey: fillField2BeforeGroup
+		$I->comment("Exiting Action Group [beforeGroup] FunctionalActionGroup");
 	}
 
 	/**
@@ -43,8 +46,10 @@ class MergedActionGroupTestCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
-		$I->fillField("#foo", "myData1");
-		$I->fillField("#bar", "myData2");
+		$I->comment("Entering Action Group [afterGroup] FunctionalActionGroup");
+		$I->fillField("#foo", "myData1"); // stepKey: fillField1AfterGroup
+		$I->fillField("#bar", "myData2"); // stepKey: fillField2AfterGroup
+		$I->comment("Exiting Action Group [afterGroup] FunctionalActionGroup");
 	}
 
 	/**
@@ -53,7 +58,7 @@ class MergedActionGroupTestCest
 	  */
 	public function _failed(AcceptanceTester $I)
 	{
-		$I->saveScreenshot();
+		$I->saveScreenshot(); // stepKey: saveScreenshot
 	}
 
 	/**
@@ -67,9 +72,11 @@ class MergedActionGroupTestCest
 	 */
 	public function MergedActionGroupTest(AcceptanceTester $I)
 	{
-		$I->see(".merge .Jane");
-		$I->see("#element .Jane");
-		$I->amOnPage("/Jane/Dane.html");
-		$I->click(".merge .Dane");
+		$I->comment("Entering Action Group [actionGroupForMerge] FunctionalActionGroupForMerge");
+		$I->see(".merge .Jane"); // stepKey: myMergedSeeElementActionGroupForMerge
+		$I->see("#element .Jane"); // stepKey: see1ActionGroupForMerge
+		$I->amOnPage("/Jane/Dane.html"); // stepKey: amOnPage1ActionGroupForMerge
+		$I->click(".merge .Dane"); // stepKey: myMergedClickActionGroupForMerge
+		$I->comment("Exiting Action Group [actionGroupForMerge] FunctionalActionGroupForMerge");
 	}
 }

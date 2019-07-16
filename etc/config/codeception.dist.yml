@@ -8,15 +8,17 @@ paths:
     support: src/Magento/FunctionalTestingFramework
     envs: etc/_envs
 settings:
+    silent: true
     colors: true
     memory_limit: 1024M
 extensions:
     enabled:
+        - Magento\FunctionalTestingFramework\Codeception\Subscriber\Console
         - Magento\FunctionalTestingFramework\Extension\TestContextExtension
         - Magento\FunctionalTestingFramework\Allure\Adapter\MagentoAllureAdapter
     config:
         Magento\FunctionalTestingFramework\Allure\Adapter\MagentoAllureAdapter:
-            deletePreviousResults: true
+            deletePreviousResults: false
             outputDirectory: allure-results
             ignoredAnnotations:
                 - env

@@ -129,7 +129,13 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute type="xs:boolean" name="skipReadiness" use="prohibited">
+            <xs:annotation>
+                <xs:documentation>
+                    Flag for skipping readiness check.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attributeGroup ref="commonActionAttributes"/>
-        <xs:attribute type="xs:boolean" name="skipReadiness" use="prohibited"/>
     </xs:complexType>
 </xs:schema>

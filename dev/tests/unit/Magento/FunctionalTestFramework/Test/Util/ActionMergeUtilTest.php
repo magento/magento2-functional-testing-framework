@@ -8,6 +8,8 @@ namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
 use AspectMock\Test as AspectMock;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
@@ -100,7 +102,7 @@ class ActionMergeUtilTest extends MagentoTestCase
         $dataFieldName = 'myfield';
         $dataFieldValue = 'myValue';
         $userInputKey = "userInput";
-        $userinputValue = "{{" . "${dataObjectName}.${dataFieldName}}}";
+        $userInputValue = "{{" . "${dataObjectName}.${dataFieldName}}}";
         $actionName = "myAction";
         $actionType = "myCustomType";
 
@@ -113,10 +115,10 @@ class ActionMergeUtilTest extends MagentoTestCase
         AspectMock::double(DataObjectHandler::class, ['getInstance' => $mockDOHInstance]);
 
         // Create test object and action object
-        $actionAttributes = [$userInputKey => $userinputValue];
+        $actionAttributes = [$userInputKey => $userInputValue];
         $actions[$actionName] = new ActionObject($actionName, $actionType, $actionAttributes);
 
-        $this->assertEquals($userinputValue, $actions[$actionName]->getCustomActionAttributes()[$userInputKey]);
+        $this->assertEquals($userInputValue, $actions[$actionName]->getCustomActionAttributes()[$userInputKey]);
 
         $mergeUtil = new ActionMergeUtil("test", "TestCase");
         $resolvedActions = $mergeUtil->resolveActionSteps($actions);
@@ -127,7 +129,13 @@ class ActionMergeUtilTest extends MagentoTestCase
     /**
      * Verify that an XmlException is thrown when an action references a non-existant action.
      *
+     * @throws TestReferenceException
+     * @throws XmlException
      * @return void
+     */
+    /**
+     * @throws TestReferenceException
+     * @throws XmlException
      */
     public function testNoActionException()
     {
@@ -151,6 +159,8 @@ class ActionMergeUtilTest extends MagentoTestCase
     /**
      * Verify that a <waitForPageLoad> action is added after actions that have a wait (timeout property).
      *
+     * @throws TestReferenceException
+     * @throws XmlException
      * @return void
      */
     public function testInsertWait()
@@ -171,6 +181,111 @@ class ActionMergeUtilTest extends MagentoTestCase
             0
         );
         $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * Verify that a <fillField> action is replaced by <fillSecretField> when secret _CREDS are referenced.
+     *
+     * @throws TestReferenceException
+     * @throws XmlException
+     */
+    public function testValidFillFieldSecretFunction()
+    {
+        $actionObjectOne = new ActionObject(
+            'actionKey1',
+            'fillField',
+            ['userInput' => '{{_CREDS.username}}']
+        );
+        $actionObject = [$actionObjectOne];
+
+        $actionMergeUtil = new ActionMergeUtil('actionMergeUtilTest', 'TestCase');
+
+        $result = $actionMergeUtil->resolveActionSteps($actionObject);
+
+        $expectedValue = new ActionObject(
+            'actionKey1',
+            'fillSecretField',
+            ['userInput' => '{{_CREDS.username}}']
+        );
+        $this->assertEquals($expectedValue, $result['actionKey1']);
+    }
+
+    /**
+     * Verify that a <magentoCLI> action uses <magentoCLI> when secret _CREDS are referenced.
+     *
+     * @throws TestReferenceException
+     * @throws XmlException
+     */
+    public function testValidMagentoCLISecretFunction()
+    {
+        $actionObjectOne = new ActionObject(
+            'actionKey1',
+            'magentoCLI',
+            ['command' => 'config:set cms/wysiwyg/enabled {{_CREDS.payment_authorizenet_login}}']
+        );
+        $actionObject = [$actionObjectOne];
+
+        $actionMergeUtil = new ActionMergeUtil('actionMergeUtilTest', 'TestCase');
+
+        $result = $actionMergeUtil->resolveActionSteps($actionObject);
+
+        $expectedValue = new ActionObject(
+            'actionKey1',
+            'magentoCLISecret',
+            ['command' => 'config:set cms/wysiwyg/enabled {{_CREDS.payment_authorizenet_login}}']
+        );
+        $this->assertEquals($expectedValue, $result['actionKey1']);
+    }
+
+    /**
+     * Verify that a <field> override in a <createData> action uses <field> when secret _CREDS are referenced.
+     *
+     * @throws TestReferenceException
+     * @throws XmlException
+     */
+    public function testValidCreateDataSecretFunction()
+    {
+        $actionObjectOne = new ActionObject(
+            'actionKey1',
+            'field',
+            ['value' => '{{_CREDS.payment_authorizenet_login}}']
+        );
+        $actionObject = [$actionObjectOne];
+
+        $actionMergeUtil = new ActionMergeUtil('actionMergeUtilTest', 'TestCase');
+
+        $result = $actionMergeUtil->resolveActionSteps($actionObject);
+
+        $expectedValue = new ActionObject(
+            'actionKey1',
+            'field',
+            ['value' => '{{_CREDS.payment_authorizenet_login}}']
+        );
+        $this->assertEquals($expectedValue, $result['actionKey1']);
+    }
+
+    /**
+     * Verify that a <click> action throws an exception when secret _CREDS are referenced.
+     *
+     * @throws TestReferenceException
+     * @throws XmlException
+     */
+    public function testInvalidSecretFunctions()
+    {
+        $this->expectException(TestReferenceException::class);
+        $this->expectExceptionMessage(
+            'You cannot reference secret data outside of the fillField, magentoCLI and createData actions'
+        );
+
+        $actionObjectOne = new ActionObject(
+            'actionKey1',
+            'click',
+            ['userInput' => '{{_CREDS.username}}']
+        );
+        $actionObject = [$actionObjectOne];
+
+        $actionMergeUtil = new ActionMergeUtil('actionMergeUtilTest', 'TestCase');
+        $actionMergeUtil->resolveActionSteps($actionObject);
     }
 
     /**

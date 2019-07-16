@@ -27,11 +27,13 @@ class ActionGroupMergedViaInsertAfterCest
 	 */
 	public function ActionGroupMergedViaInsertAfter(AcceptanceTester $I)
 	{
-		$I->fillField("#foo", "foo");
-		$I->fillField("#bar", "bar");
-		$I->click("#foo2");
-		$I->click("#bar2");
-		$I->click("#baz2");
-		$I->fillField("#baz", "baz");
+		$I->comment("Entering Action Group [keyone] FunctionalActionGroupForMassMergeAfter");
+		$I->fillField("#foo", "foo"); // stepKey: fillField1Keyone
+		$I->fillField("#bar", "bar"); // stepKey: fillField2Keyone
+		$I->click("#foo2"); // stepKey: mergeAfterBarKeyone
+		$I->click("#bar2"); // stepKey: mergeAfterFoo2Keyone
+		$I->click("#baz2"); // stepKey: mergeAfterBar2Keyone
+		$I->fillField("#baz", "baz"); // stepKey: fillField3Keyone
+		$I->comment("Exiting Action Group [keyone] FunctionalActionGroupForMassMergeAfter");
 	}
 }

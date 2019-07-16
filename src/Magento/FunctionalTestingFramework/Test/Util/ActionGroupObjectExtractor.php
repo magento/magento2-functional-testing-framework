@@ -9,6 +9,7 @@ namespace Magento\FunctionalTestingFramework\Test\Util;
 use Magento\FunctionalTestingFramework\Data\Argument\Interpreter\Argument;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
+use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ArgumentObject;
 
 /**
@@ -18,6 +19,7 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
 {
     const DEFAULT_VALUE = 'defaultValue';
     const ACTION_GROUP_ARGUMENTS = 'arguments';
+    const ACTION_GROUP_ANNOTATIONS = 'annotations';
     const FILENAME = 'filename';
     const ACTION_GROUP_INSERT_BEFORE = "insertBefore";
     const ACTION_GROUP_INSERT_AFTER = "insertAfter";
@@ -31,11 +33,19 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
     private $actionObjectExtractor;
 
     /**
+     * Annotation Extractor object
+     *
+     * @var AnnotationExtractor
+     */
+    private $annotationExtractor;
+
+    /**
      * ActionGroupObjectExtractor constructor.
      */
     public function __construct()
     {
         $this->actionObjectExtractor = new ActionObjectExtractor();
+        $this->annotationExtractor = new ActionGroupAnnotationExtractor();
     }
 
     /**
@@ -55,6 +65,7 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
             self::NODE_NAME,
             self::ACTION_GROUP_ARGUMENTS,
             self::NAME,
+            self::ACTION_GROUP_ANNOTATIONS,
             self::FILENAME,
             self::ACTION_GROUP_INSERT_BEFORE,
             self::ACTION_GROUP_INSERT_AFTER,
@@ -62,6 +73,16 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
         );
 
         // TODO filename is now available to the ActionGroupObject, integrate this into debug and error statements
+
+        try {
+            $annotations = $this->annotationExtractor->extractAnnotations(
+                $actionGroupData[self::ACTION_GROUP_ANNOTATIONS] ?? [],
+                $actionGroupData[self::FILENAME]
+            );
+        } catch (\Exception $error) {
+            throw new XmlException($error->getMessage() . " in Action Group " . $actionGroupData[self::FILENAME]);
+        }
+
         try {
             $actions = $this->actionObjectExtractor->extractActions($actionData);
         } catch (\Exception $error) {
@@ -74,6 +95,7 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
 
         return new ActionGroupObject(
             $actionGroupData[self::NAME],
+            $annotations,
             $arguments,
             $actions,
             $actionGroupReference,
@@ -95,6 +117,11 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
             $arguments,
             self::NODE_NAME
         );
+
+        // Filtering XML comments from action group arguments.
+        $argData = array_filter($argData, function ($key) {
+            return strpos($key, ActionObject::COMMENT_ACTION) === false;
+        }, ARRAY_FILTER_USE_KEY);
 
         foreach ($argData as $argName => $argValue) {
             $parsedArguments[] = new ArgumentObject(

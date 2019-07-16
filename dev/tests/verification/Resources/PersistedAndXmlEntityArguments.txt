@@ -27,6 +27,8 @@ class PersistedAndXmlEntityArgumentsCest
 	 */
 	public function PersistedAndXmlEntityArguments(AcceptanceTester $I)
 	{
-		$I->seeInCurrentUrl("/" . PersistedObjectHandler::getInstance()->retrieveEntityField('persistedInTest', 'urlKey', 'test') . ".html?___store=" . msq("uniqueData") . "John");
+		$I->comment("Entering Action Group [afterGroup] FunctionalActionGroupWithXmlAndPersistedData");
+		$I->seeInCurrentUrl("/" . PersistedObjectHandler::getInstance()->retrieveEntityField('persistedInTest', 'urlKey', 'test') . ".html?___store=" . msq("uniqueData") . "John"); // stepKey: checkUrlAfterGroup
+		$I->comment("Exiting Action Group [afterGroup] FunctionalActionGroupWithXmlAndPersistedData");
 	}
 }

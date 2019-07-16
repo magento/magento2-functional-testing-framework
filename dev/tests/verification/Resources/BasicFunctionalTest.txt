@@ -26,7 +26,7 @@ class BasicFunctionalTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->amOnPage("/beforeUrl");
+		$I->amOnPage("/beforeUrl"); // stepKey: beforeAmOnPageKey
 	}
 
 	/**
@@ -35,7 +35,7 @@ class BasicFunctionalTestCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
-		$I->amOnPage("/afterUrl");
+		$I->amOnPage("/afterUrl"); // stepKey: afterAmOnPageKey
 	}
 
 	/**
@@ -44,7 +44,7 @@ class BasicFunctionalTestCest
 	  */
 	public function _failed(AcceptanceTester $I)
 	{
-		$I->saveScreenshot();
+		$I->saveScreenshot(); // stepKey: saveScreenshot
 	}
 
 	/**
@@ -60,113 +60,115 @@ class BasicFunctionalTestCest
 	{
 		$I->comment("");
 		$I->comment("");
-		$I->skipReadinessCheck(true);
-		$I->comment("skipReadiness");
-		$I->skipReadinessCheck(false);
-		$someVarDefinition = $I->grabValueFrom();
-		$I->acceptPopup();
-		$I->amOnPage("/test/url");
-		$I->appendField(".functionalTestSelector");
-		$I->attachFile(".functionalTestSelector", "testFileAttachment");
-		$I->cancelPopup();
-		$I->checkOption(".functionalTestSelector");
-		$I->click(".functionalTestSelector");
-		$I->clickWithLeftButton(".functionalTestSelector");
-		$I->clickWithRightButton(".functionalTestSelector");
-		$I->clickWithLeftButton("#element#element .200", 200, 300);
-		$I->clickWithRightButton("#element .4123#element", 200, 300);
-		$I->closeTab();
-		$I->conditionalClick(".functionalTestSelector", ".functionalDependentTestSelector", true);
-		$I->amGoingTo("delete entity that has the createDataKey: createKey1");
+		$I->comment("seeComment");
+		$someVarDefinition = $I->grabValueFrom(); // stepKey: someVarDefinition
+		$I->acceptPopup(); // stepKey: acceptPopupKey1
+		$I->amOnPage("/test/url"); // stepKey: amOnPageKey1
+		$I->appendField(".functionalTestSelector"); // stepKey: appendFieldKey1
+		$I->attachFile(".functionalTestSelector", "testFileAttachment"); // stepKey: attachFileKey1
+		$I->cancelPopup(); // stepKey: cancelPopupKey1
+		$I->checkOption(".functionalTestSelector"); // stepKey: checkOptionKey1
+		$I->click(".functionalTestSelector"); // stepKey: clickKey1
+		$I->clickWithLeftButton(".functionalTestSelector"); // stepKey: clickWithLeftButtonKey1
+		$I->clickWithRightButton(".functionalTestSelector"); // stepKey: clickWithRightButtonKey1
+		$I->clickWithLeftButton("#element#element .200", 200, 300); // stepKey: clickWithLeftButtonKeyXY1
+		$I->clickWithRightButton("#element .4123#element", 200, 300); // stepKey: clickWithRightButtonKeyXY1
+		$I->closeTab(); // stepKey: closeTabKey1
+		$I->conditionalClick(".functionalTestSelector", ".functionalDependentTestSelector", true); // stepKey: conditionalClickKey1
+		$I->comment("[deleteKey1] delete entity 'createKey1'");
 		PersistedObjectHandler::getInstance()->deleteEntity(
 			"createKey1",
 			"test"
 		);
+
 		$I->deleteEntityByUrl("/V1/categories{$grabbedData}");
-		$I->dontSee("someInput", ".functionalTestSelector");
-		$I->dontSeeCheckboxIsChecked(".functionalTestSelector");
-		$I->dontSeeCookie("someInput");
-		$I->dontSeeCurrentUrlEquals("/functionalUrl");
-		$I->dontSeeCurrentUrlMatches("/[0-9]+/");
-		$I->dontSeeElement(".functionalTestSelector");
-		$I->dontSeeElementInDOM(".functionalTestSelector");
-		$I->dontSeeInCurrentUrl("/functionalUrl");
-		$I->dontSeeInField(".functionalTestSelector");
-		$I->dontSeeInPageSource("someInput");
-		$I->dontSeeInSource("<myHtmlHere>");
-		$I->dontSeeInTitle("someInput");
-		$I->dontSeeLink("someInput", "/functionalUrl");
-		$I->dontSeeOptionIsSelected(".functionalTestSelector", "someInput");
-		$I->doubleClick(".functionalTestSelector");
-		$I->dragAndDrop(".functionalTestSelector", ".functionalTestSelector2");
-		$I->dragAndDrop(".functionalTestSelector", ".functionalTestSelector2", 100, 900);
-		$executeJSKey1 = $I->executeJS("someJSFunction");
-		$I->fillField(".functionalTestSelector", "someInput");
-		$I->fillField(".functionalTestSelector", "0");
+
+		$I->dontSee("someInput", ".functionalTestSelector"); // stepKey: dontSeeKey1
+		$I->dontSeeCheckboxIsChecked(".functionalTestSelector"); // stepKey: dontSeeCheckboxIsCheckedKey1
+		$I->dontSeeCookie("someInput"); // stepKey: dontSeeCookieKey1
+		$I->dontSeeCurrentUrlEquals("/functionalUrl"); // stepKey: dontSeeCurrentUrlEqualsKey1
+		$I->dontSeeCurrentUrlMatches("/[0-9]+/"); // stepKey: dontSeeCurrentUrlMatchesKey1
+		$I->dontSeeElement(".functionalTestSelector"); // stepKey: dontSeeElementKey1
+		$I->dontSeeElementInDOM(".functionalTestSelector"); // stepKey: dontSeeElementInDOMKey1
+		$I->dontSeeInCurrentUrl("/functionalUrl"); // stepKey: dontSeeInCurrentUrlKey1
+		$I->dontSeeInField(".functionalTestSelector"); // stepKey: dontSeeInFieldKey1
+		$I->dontSeeInPageSource("someInput"); // stepKey: dontSeeInPageSourceKey1
+		$I->dontSeeInSource("<myHtmlHere>"); // stepKey: dontSeeInSourceKey1
+		$I->dontSeeInTitle("someInput"); // stepKey: dontSeeInTitleKey1
+		$I->dontSeeLink("someInput", "/functionalUrl"); // stepKey: dontSeeLinkKey1
+		$I->dontSeeOptionIsSelected(".functionalTestSelector", "someInput"); // stepKey: dontSeeOptionIsSelectedKey1
+		$I->doubleClick(".functionalTestSelector"); // stepKey: doubleClickKey1
+		$I->dragAndDrop(".functionalTestSelector", ".functionalTestSelector2"); // stepKey: dragAndDropKey1
+		$I->dragAndDrop(".functionalTestSelector", ".functionalTestSelector2", 100, 900); // stepKey: dragAndDropKey2
+		$executeJSKey1 = $I->executeJS("someJSFunction"); // stepKey: executeJSKey1
+		$I->fillField(".functionalTestSelector", "someInput"); // stepKey: fillFieldKey1
+		$I->fillField(".functionalTestSelector", "0"); // stepKey: fillFieldKey2
 		$date = new \DateTime();
 		$date->setTimestamp(strtotime("Now"));
 		$date->setTimezone(new \DateTimeZone("America/Los_Angeles"));
 		$generateDateKey = $date->format("H:i:s");
+
 		$date = new \DateTime();
 		$date->setTimestamp(strtotime("Now"));
 		$date->setTimezone(new \DateTimeZone("UTC"));
 		$generateDateKey2 = $date->format("H:i:s");
-		$grabAttributeFromKey1 = $I->grabAttributeFrom(".functionalTestSelector", "someInput");
-		$grabCookieKey1 = $I->grabCookie("grabCookieInput", ['domain' => 'www.google.com']);
-		$grabFromCurrentUrlKey1 = $I->grabFromCurrentUrl("/grabCurrentUrl");
-		$grabMultipleKey1 = $I->grabMultiple(".functionalTestSelector");
-		$grabTextFromKey1 = $I->grabTextFrom(".functionalTestSelector");
-		$grabValueFromKey1 = $I->grabValueFrom(".functionalTestSelector");
-		$magentoCli1 = $I->magentoCLI("maintenance:enable", "\"stuffHere\"");
+
+		$grabAttributeFromKey1 = $I->grabAttributeFrom(".functionalTestSelector", "someInput"); // stepKey: grabAttributeFromKey1
+		$grabCookieKey1 = $I->grabCookie("grabCookieInput", ['domain' => 'www.google.com']); // stepKey: grabCookieKey1
+		$grabFromCurrentUrlKey1 = $I->grabFromCurrentUrl("/grabCurrentUrl"); // stepKey: grabFromCurrentUrlKey1
+		$grabMultipleKey1 = $I->grabMultiple(".functionalTestSelector"); // stepKey: grabMultipleKey1
+		$grabTextFromKey1 = $I->grabTextFrom(".functionalTestSelector"); // stepKey: grabTextFromKey1
+		$grabValueFromKey1 = $I->grabValueFrom(".functionalTestSelector"); // stepKey: grabValueFromKey1
+		$magentoCli1 = $I->magentoCLI("maintenance:enable", "\"stuffHere\""); // stepKey: magentoCli1
 		$I->comment($magentoCli1);
-		$I->makeScreenshot("screenShotInput");
-		$I->maximizeWindow();
-		$I->moveBack();
-		$I->moveForward();
-		$I->moveMouseOver(".functionalTestSelector");
-		$I->openNewTab();
-		$I->pauseExecution();
-		$I->performOn("#selector", function(\WebDriverElement $el) {return $el->isDisplayed();}, 10);
-		$I->pressKey("#page", "a");
-		$I->pressKey("#page", ['ctrl', 'a'],'new');
-		$I->pressKey("#page", ['shift', '111'],'1','x');
-		$I->pressKey("#page", ['ctrl',  'a'],\Facebook\WebDriver\WebDriverKeys::DELETE);
-		$I->reloadPage();
-		$I->resetCookie("cookieInput");
-		$I->resizeWindow(0, 0);
-		$I->scrollTo(".functionalTestSelector");
-		$I->see("someInput", ".functionalTestSelector");
-		$I->seeCheckboxIsChecked(".functionalTestSelector");
-		$I->seeCookie("someInput");
-		$I->seeCurrentUrlEquals("/functionalUrl");
-		$I->seeCurrentUrlMatches("/[0-9]+/");
-		$I->seeElement(".functionalTestSelector");
-		$I->seeElementInDOM(".functionalTestSelector");
-		$I->seeInCurrentUrl("/functionalUrl");
-		$I->seeInField(".functionalTestSelector", "someInput");
-		$I->seeInPageSource("<myHtmlHere>");
-		$I->seeInPopup("someInput");
-		$I->seeInSource("<myHtmlHere>");
-		$I->seeInTitle("someInput");
-		$I->seeLink("someInput", "/functionalUrl");
-		$I->seeNumberOfElements(".functionalTestSelector");
-		$I->seeOptionIsSelected(".functionalTestSelector", "someInput");
-		$I->selectOption(".functionalTestSelector");
-		$I->selectMultipleOptions(".filter", ".option", ['opt1',  'opt2']);
-		$I->setCookie("someInput", "someCookieValue");
-		$I->switchToIFrame("someInput");
-		$I->switchToNextTab();
-		$I->switchToPreviousTab();
-		$I->switchToWindow();
-		$I->typeInPopup("someInput");
-		$I->uncheckOption(".functionalTestSelector");
-		$I->unselectOption(".functionalTestSelector", "someInput");
-		$I->wait(30);
-		$I->waitForElement(".functionalTestSelector", 30);
-		$I->waitForElementNotVisible(".functionalTestSelector", 30);
-		$I->waitForElementVisible(".functionalTestSelector", 30);
-		$I->waitForElementChange("#selector", function(\WebDriverElement $el) {return $el->isDisplayed();}, 10);
-		$I->waitForJS("someJsFunction", 30);
-		$I->waitForText("someInput", 30, ".functionalTestSelector");
+		$I->makeScreenshot("screenShotInput"); // stepKey: makeScreenshotKey1
+		$I->maximizeWindow(); // stepKey: maximizeWindowKey1
+		$I->moveBack(); // stepKey: moveBackKey1
+		$I->moveForward(); // stepKey: moveForwardKey1
+		$I->moveMouseOver(".functionalTestSelector"); // stepKey: moveMouseOverKey1
+		$I->openNewTab(); // stepKey: openNewTabKey1
+		$I->pauseExecution(); // stepKey: pauseExecutionKey1
+		$I->performOn("#selector", function(\WebDriverElement $el) {return $el->isDisplayed();}, 10); // stepKey: performOnKey1
+		$I->pressKey("#page", "a"); // stepKey: pressKey1
+		$I->pressKey("#page", ['ctrl', 'a'],'new'); // stepKey: pressKey2
+		$I->pressKey("#page", ['shift', '111'],'1','x'); // stepKey: pressKey3
+		$I->pressKey("#page", ['ctrl',  'a'],\Facebook\WebDriver\WebDriverKeys::DELETE); // stepKey: pressKey4
+		$I->reloadPage(); // stepKey: reloadPageKey1
+		$I->resetCookie("cookieInput"); // stepKey: resetCookieKey1
+		$I->resizeWindow(0, 0); // stepKey: resizeWindowKey1
+		$I->scrollTo(".functionalTestSelector"); // stepKey: scrollToKey1
+		$I->see("someInput", ".functionalTestSelector"); // stepKey: seeKey1
+		$I->seeCheckboxIsChecked(".functionalTestSelector"); // stepKey: seeCheckboxIsCheckedKey1
+		$I->seeCookie("someInput"); // stepKey: seeCookieKey1
+		$I->seeCurrentUrlEquals("/functionalUrl"); // stepKey: seeCurrentUrlEqualsKey1
+		$I->seeCurrentUrlMatches("/[0-9]+/"); // stepKey: seeCurrentUrlMatchesKey1
+		$I->seeElement(".functionalTestSelector"); // stepKey: seeElementKey1
+		$I->seeElementInDOM(".functionalTestSelector"); // stepKey: seeElementInDOMKey1
+		$I->seeInCurrentUrl("/functionalUrl"); // stepKey: seeInCurrentUrlKey1
+		$I->seeInField(".functionalTestSelector", "someInput"); // stepKey: seeInFieldKey1
+		$I->seeInPageSource("<myHtmlHere>"); // stepKey: seeInPageSourceKey1
+		$I->seeInPopup("someInput"); // stepKey: seeInPopupKey1
+		$I->seeInSource("<myHtmlHere>"); // stepKey: seeInSourceKey1
+		$I->seeInTitle("someInput"); // stepKey: seeInTitleKey1
+		$I->seeLink("someInput", "/functionalUrl"); // stepKey: seeLinkKey1
+		$I->seeNumberOfElements(".functionalTestSelector"); // stepKey: seeNumberOfElementsKey1
+		$I->seeOptionIsSelected(".functionalTestSelector", "someInput"); // stepKey: seeOptionIsSelectedKey1
+		$I->selectOption(".functionalTestSelector"); // stepKey: selectOptionKey1
+		$I->selectMultipleOptions(".filter", ".option", ['opt1',  'opt2']); // stepKey: selectMultipleOpts1
+		$I->setCookie("someInput", "someCookieValue"); // stepKey: setCookieKey1
+		$I->switchToIFrame("someInput"); // stepKey: switchToIFrameKey1
+		$I->switchToNextTab(); // stepKey: switchToNextTabKey1
+		$I->switchToPreviousTab(); // stepKey: switchToPreviousTabKey1
+		$I->switchToWindow(); // stepKey: switchToWindowKey1
+		$I->typeInPopup("someInput"); // stepKey: typeInPopupKey1
+		$I->uncheckOption(".functionalTestSelector"); // stepKey: uncheckOptionKey1
+		$I->unselectOption(".functionalTestSelector", "someInput"); // stepKey: unselectOptionKey1
+		$I->wait(30); // stepKey: waitKey1
+		$I->waitForElement(".functionalTestSelector", 30); // stepKey: waitForElementKey1
+		$I->waitForElementNotVisible(".functionalTestSelector", 30); // stepKey: waitForElementNotVisibleKey1
+		$I->waitForElementVisible(".functionalTestSelector", 30); // stepKey: waitForElementVisibleKey1
+		$I->waitForElementChange("#selector", function(\WebDriverElement $el) {return $el->isDisplayed();}, 10); // stepKey: waitForElementChangeKey1
+		$I->waitForJS("someJsFunction", 30); // stepKey: waitForJSKey1
+		$I->waitForText("someInput", 30, ".functionalTestSelector"); // stepKey: waitForText1
 	}
 }

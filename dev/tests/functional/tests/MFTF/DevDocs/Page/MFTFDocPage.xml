@@ -8,7 +8,7 @@
 
 <pages xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../../../src/Magento/FunctionalTestingFramework/Page/etc/PageObject.xsd">
-    <page name="MFTFDocPage" url="guides/v2.2/magento-functional-testing-framework/release-2/introduction.html" area="storefront" module="MFTF_DevDocs">
+    <page name="MFTFDocPage" url="mftf/docs/introduction.html" area="storefront" module="MFTF_DevDocs">
         <section name="contentSection" />
     </page>
 </pages>

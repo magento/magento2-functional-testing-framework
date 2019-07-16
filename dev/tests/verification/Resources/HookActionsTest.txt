@@ -24,27 +24,30 @@ class HookActionsTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the stepKey: sampleCreateBefore");
+		$I->comment("[sampleCreateBefore] create 'sampleCreatedEntity' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"sampleCreateBefore",
 			"hook",
 			"sampleCreatedEntity",
 			[],
-			null
+			[]
 		);
-		$I->amGoingTo("delete entity that has the createDataKey: sampleCreateBefore");
+
+		$I->comment("[sampleDeleteBefore] delete entity 'sampleCreateBefore'");
 		PersistedObjectHandler::getInstance()->deleteEntity(
 			"sampleCreateBefore",
 			"hook"
 		);
-		$I->amGoingTo("create entity that has the stepKey: sampleCreateForAfter");
+
+		$I->comment("[sampleCreateForAfter] create 'sampleCreatedEntity' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"sampleCreateForAfter",
 			"hook",
 			"sampleCreatedEntity",
 			[],
-			null
+			[]
 		);
+
 	}
 
 	/**
@@ -53,19 +56,21 @@ class HookActionsTestCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the stepKey: sampleCreateAfter");
+		$I->comment("[sampleCreateAfter] create 'sampleCreatedEntity' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"sampleCreateAfter",
 			"hook",
 			"sampleCreatedEntity",
 			[],
-			null
+			[]
 		);
-		$I->amGoingTo("delete entity that has the createDataKey: sampleCreateForAfter");
+
+		$I->comment("[sampleDeleteAfter] delete entity 'sampleCreateForAfter'");
 		PersistedObjectHandler::getInstance()->deleteEntity(
 			"sampleCreateForAfter",
 			"hook"
 		);
+
 	}
 
 	/**
@@ -74,7 +79,7 @@ class HookActionsTestCest
 	  */
 	public function _failed(AcceptanceTester $I)
 	{
-		$I->saveScreenshot();
+		$I->saveScreenshot(); // stepKey: saveScreenshot
 	}
 
 	/**

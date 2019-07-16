@@ -51,7 +51,7 @@ class functionalSuiteHooks extends \Codeception\GroupObject
                 
                 // initialize the webdriver session
                 $webDriver->_initializeSession();
-                $webDriver->amOnPage("some.url");
+                $webDriver->amOnPage("some.url"); // stepKey: before
                 $createFields['someKey'] = "dataHere";
                 PersistedObjectHandler::getInstance()->createEntity(
                     "create",
@@ -59,8 +59,10 @@ class functionalSuiteHooks extends \Codeception\GroupObject
                     "createThis",
                      $createFields
                 );
-                $webDriver->click(PersistedObjectHandler::getInstance()->retrieveEntityField('create', 'data', 'suite'));
-                $webDriver->see("John", msq("uniqueData") . "John");
+                $webDriver->click(PersistedObjectHandler::getInstance()->retrieveEntityField('create', 'data', 'suite')); // stepKey: clickWithData
+                print("Entering Action Group [AC] actionGroupWithTwoArguments");
+                $webDriver->see("John", msq("uniqueData") . "John"); // stepKey: seeFirstNameAC
+                print("Exiting Action Group [AC] actionGroupWithTwoArguments");
 
                 // reset configuration and close session
                 $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver')->_resetConfig();
@@ -118,9 +120,11 @@ class functionalSuiteHooks extends \Codeception\GroupObject
                 
                 // initialize the webdriver session
                 $webDriver->_initializeSession();
-                $webDriver->amOnPage("some.url");
+                $webDriver->amOnPage("some.url"); // stepKey: after
                 $webDriver->deleteEntityByUrl("deleteThis");
-                $webDriver->see("John", msq("uniqueData") . "John");
+                print("Entering Action Group [AC] actionGroupWithTwoArguments");
+                $webDriver->see("John", msq("uniqueData") . "John"); // stepKey: seeFirstNameAC
+                print("Exiting Action Group [AC] actionGroupWithTwoArguments");
             } catch (\Exception $exception) {
                 print $exception->getMessage();
             }

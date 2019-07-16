@@ -156,4 +156,22 @@ class CredentialStore
     {
         return openssl_decrypt($value, self::ENCRYPTION_ALGO, $this->encodedKey, 0, $this->iv);
     }
+
+    /**
+     * Takes a string that contains encrypted data at runtime and decrypts each value.
+     *
+     * @param string $string
+     * @return mixed
+     */
+    public function decryptAllSecretsInString($string)
+    {
+        $newString = $string;
+        foreach ($this->credentials as $name => $secretValue) {
+            if (strpos($newString, $secretValue) !== false) {
+                $decryptedValue = $this->decryptSecretValue($secretValue);
+                $newString = str_replace($secretValue, $decryptedValue, $newString);
+            }
+        }
+        return $newString;
+    }
 }

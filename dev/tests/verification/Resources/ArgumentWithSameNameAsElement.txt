@@ -25,16 +25,19 @@ class ArgumentWithSameNameAsElementCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the stepKey: createPersonParam");
+		$I->comment("[createPersonParam] create 'ReplacementPerson' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createPersonParam",
 			"hook",
 			"ReplacementPerson",
 			[],
-			null
+			[]
 		);
-		$I->fillField("#foo", "myData1");
-		$I->fillField("#bar", "myData2");
+
+		$I->comment("Entering Action Group [beforeGroup] FunctionalActionGroup");
+		$I->fillField("#foo", "myData1"); // stepKey: fillField1BeforeGroup
+		$I->fillField("#bar", "myData2"); // stepKey: fillField2BeforeGroup
+		$I->comment("Exiting Action Group [beforeGroup] FunctionalActionGroup");
 	}
 
 	/**
@@ -43,8 +46,10 @@ class ArgumentWithSameNameAsElementCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
-		$I->fillField("#foo", "myData1");
-		$I->fillField("#bar", "myData2");
+		$I->comment("Entering Action Group [afterGroup] FunctionalActionGroup");
+		$I->fillField("#foo", "myData1"); // stepKey: fillField1AfterGroup
+		$I->fillField("#bar", "myData2"); // stepKey: fillField2AfterGroup
+		$I->comment("Exiting Action Group [afterGroup] FunctionalActionGroup");
 	}
 
 	/**
@@ -53,7 +58,7 @@ class ArgumentWithSameNameAsElementCest
 	  */
 	public function _failed(AcceptanceTester $I)
 	{
-		$I->saveScreenshot();
+		$I->saveScreenshot(); // stepKey: saveScreenshot
 	}
 
 	/**
@@ -67,7 +72,9 @@ class ArgumentWithSameNameAsElementCest
 	 */
 	public function ArgumentWithSameNameAsElement(AcceptanceTester $I)
 	{
-		$I->seeElement("#element");
-		$I->seeElement("#element .John");
+		$I->comment("Entering Action Group [actionGroup1] FunctionalActionGroupWithTrickyArgument");
+		$I->seeElement("#element"); // stepKey: see1ActionGroup1
+		$I->seeElement("#element .John"); // stepKey: see2ActionGroup1
+		$I->comment("Exiting Action Group [actionGroup1] FunctionalActionGroupWithTrickyArgument");
 	}
 }

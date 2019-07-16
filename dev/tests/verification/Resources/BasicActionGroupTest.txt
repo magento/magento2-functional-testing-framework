@@ -25,16 +25,19 @@ class BasicActionGroupTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the stepKey: createPersonParam");
+		$I->comment("[createPersonParam] create 'ReplacementPerson' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createPersonParam",
 			"hook",
 			"ReplacementPerson",
 			[],
-			null
+			[]
 		);
-		$I->fillField("#foo", "myData1");
-		$I->fillField("#bar", "myData2");
+
+		$I->comment("Entering Action Group [beforeGroup] FunctionalActionGroup");
+		$I->fillField("#foo", "myData1"); // stepKey: fillField1BeforeGroup
+		$I->fillField("#bar", "myData2"); // stepKey: fillField2BeforeGroup
+		$I->comment("Exiting Action Group [beforeGroup] FunctionalActionGroup");
 	}
 
 	/**
@@ -48,9 +51,11 @@ class BasicActionGroupTestCest
 	 */
 	public function BasicActionGroupTest(AcceptanceTester $I)
 	{
-		$I->amOnPage("/someUrl");
-		$I->fillField("#foo", "myData1");
-		$I->fillField("#bar", "myData2");
-		$I->click("loginButton");
+		$I->amOnPage("/someUrl"); // stepKey: step1
+		$I->comment("Entering Action Group [actionGroup1] FunctionalActionGroup");
+		$I->fillField("#foo", "myData1"); // stepKey: fillField1ActionGroup1
+		$I->fillField("#bar", "myData2"); // stepKey: fillField2ActionGroup1
+		$I->comment("Exiting Action Group [actionGroup1] FunctionalActionGroup");
+		$I->click("loginButton"); // stepKey: step6
 	}
 }
