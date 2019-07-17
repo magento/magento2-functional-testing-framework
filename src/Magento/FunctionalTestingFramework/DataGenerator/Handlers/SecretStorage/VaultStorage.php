@@ -19,13 +19,13 @@ class VaultStorage extends BaseStorage
     /**
      * Adobe Vault
      */
-    //const BASE_PATH = '/dx_magento_qe';
-    //const KV_DATA = '/data';
+    const BASE_PATH = '/dx_magento_qe';
+    const KV_DATA = '/data';
     /**
      * Local Vault
      */
-    const BASE_PATH = '/secret';
-    const KV_DATA = '/data';
+    //const BASE_PATH = '/secret';
+    //const KV_DATA = '/data';
 
     /**
      * Vault client
@@ -51,9 +51,9 @@ class VaultStorage extends BaseStorage
     public function __construct($baseUrl, $token)
     {
         parent::__construct();
-        if (is_null(self::$client)) {
+        if (null === self::$client) {
             // Creating the client using Guzzle6 Transport and passing a custom url
-            self::$client = new Client(new Guzzle6Transport(['base_url' => $baseUrl . self::BASE_PATH]));
+            self::$client = new Client(new Guzzle6Transport(['base_uri' => $baseUrl]));
         }
         $this->token = $token;
         if (!$this->authenticated()) {
@@ -70,7 +70,7 @@ class VaultStorage extends BaseStorage
     public function getEncryptedValue($key)
     {
         // Check if secret is in cached array
-        if (!is_null($value = parent::getEncryptedValue($key))) {
+        if (null !== ($value = parent::getEncryptedValue($key))) {
             return $value;
         }
 
@@ -124,7 +124,7 @@ class VaultStorage extends BaseStorage
             if ($authenticated) {
                 return true;
             }
-        } catch (\Psr\Cache\InvalidArgumentException $e) {
+        } catch (\Exception $e) {
         }
         return false;
     }

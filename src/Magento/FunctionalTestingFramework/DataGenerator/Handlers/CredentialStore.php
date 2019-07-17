@@ -79,7 +79,7 @@ class CredentialStore
     public function getSecret($key)
     {
         // Get secret data from vault storage first
-        if (!is_null($this->credVault)) {
+        if (null !== $this->credVault) {
             $value = $this->credVault->getEncryptedValue($key);
             if (!empty($value)) {
                 return $value;
@@ -87,7 +87,7 @@ class CredentialStore
         }
 
         // Get secret data from file when not found in vault
-        if (!is_null($this->credFile)) {
+        if (null !== $this->credFile) {
             $value = $this->credFile->getEncryptedValue($key);
             if (!empty($value)) {
                 return $value;
@@ -107,11 +107,11 @@ class CredentialStore
      */
     public function decryptSecretValue($value)
     {
-        if (!is_null($this->credVault)) {
+        if (null !== $this->credVault) {
             return $this->credVault->getDecryptedValue($value);
         }
 
-        if (!is_null($this->credFile)) {
+        if (null !== $this->credFile) {
             return $this->credFile->getDecryptedValue($value);
         }
     }
@@ -124,11 +124,11 @@ class CredentialStore
      */
     public function decryptAllSecretsInString($string)
     {
-        if (!is_null($this->credVault)) {
+        if (null !== $this->credVault) {
             return $this->credVault->getAllDecryptedValues($string);
         }
 
-        if (!is_null($this->credFile)) {
+        if (null !== $this->credFile) {
             return $this->credFile->getAllDecryptedValues($string);
         }
     }

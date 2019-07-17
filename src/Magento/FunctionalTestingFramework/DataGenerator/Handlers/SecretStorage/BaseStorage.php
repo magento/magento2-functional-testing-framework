@@ -31,9 +31,12 @@ abstract class BaseStorage
      */
     protected static $cachedSecretData = [];
 
+    /**
+     * BaseStorage constructor
+     */
     public function __construct()
     {
-        if (is_null(self::$encodedKey)) {
+        if (null === self::$encodedKey) {
             self::$encodedKey = base64_encode(openssl_random_pseudo_bytes(16));
             self::$iv = substr(hash('sha256', self::$encodedKey), 0, 16);
         }

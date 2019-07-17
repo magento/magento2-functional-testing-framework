@@ -41,7 +41,7 @@ class FileStorage extends BaseStorage
     public function getEncryptedValue($key)
     {
         // Check if secret is in cached array
-        if (!is_null($value = parent::getEncryptedValue($key))) {
+        if (null !== ($value = parent::getEncryptedValue($key))) {
             return $value;
         }
 
@@ -52,7 +52,6 @@ class FileStorage extends BaseStorage
                     "retrieving secret for key name {$key} from file"
                 );
             }
-
         } catch (\Exception $e) {
         }
 
