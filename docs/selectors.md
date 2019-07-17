@@ -4,7 +4,7 @@ The tips and tricks below will help you to write high quality selectors.
 
 ### Selectors SHOULD be written in CSS instead of Xpath whenever possible.
 
-### Xpath selectors SHOULD NOT use `@attribute="foo"` instead you SHOULD use `contains(@attribute, "foo")` where `@attribute` is any attribute such as `@text` or `@class` for example.
+### Xpath selectors SHOULD NOT use `@attribute="foo"`. Instead you SHOULD use `contains(@attribute, "foo")` where `@attribute` is any valid attribute such as `@text` or `@class`.
 
 ### CSS and Xpath selectors SHOULD be implemented in their most simple form.
 
