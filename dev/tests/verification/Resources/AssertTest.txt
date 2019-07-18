@@ -24,14 +24,15 @@ class AssertTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the stepKey: createData1");
+		$I->comment("[createData1] create 'ReplacementPerson' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createData1",
 			"hook",
 			"ReplacementPerson",
 			[],
-			null
+			[]
 		);
+
 	}
 
 	/**
@@ -43,120 +44,129 @@ class AssertTestCest
 	 */
 	public function AssertTest(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the stepKey: createData2");
+		$I->comment("[createData2] create 'UniquePerson' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createData2",
 			"test",
 			"UniquePerson",
 			[],
-			null
+			[]
 		);
-		$grabTextFrom1 = $I->grabTextFrom(".copyright>span");
-		$I->assertArrayIsSorted(["1", "2", "3", "4", "5"], "asc");
+
+		$grabTextFrom1 = $I->grabTextFrom(".copyright>span"); // stepKey: grabTextFrom1
+		$I->comment("custom asserts");
+		$I->assertArrayIsSorted(["1", "2", "3", "4", "5"], "asc"); // stepKey: assertSorted1
 		$I->comment("asserts without variable replacement");
-		$I->assertArrayHasKey("apple", ['orange' => 2, 'apple' => 1], "pass");
-		$I->assertArrayNotHasKey("kiwi", ['orange' => 2, 'apple' => 1], "pass");
-		$I->assertArraySubset([1, 2], [1, 2, 3, 5], "pass");
-		$I->assertContains("ab", ['item1' => 'a', 'item2' => 'ab'], "pass");
-		$I->assertCount(2, ['a', 'b'], "pass");
-		$I->assertEmpty([], "pass");
-		$I->assertEquals($text, "Copyright © 2013-2017 Magento, Inc. All rights reserved.", "pass");
-		$I->assertEquals("Copyright © 2013-2017 Magento, Inc. All rights reserved.", $text, "pass");
-		$I->assertFalse(false, "pass");
-		$I->assertFileNotExists("/out.txt", "pass");
-		$I->assertFileNotExists($text, "pass");
-		$I->assertGreaterOrEquals(2, 5, "pass");
-		$I->assertGreaterThan(2, 5, "pass");
-		$I->assertGreaterThanOrEqual(2, 5, "pass");
-		$I->assertInternalType("string", "xyz", "pass");
-		$I->assertInternalType("int", 21, "pass");
-		$I->assertInternalType("string", $text, "pass");
-		$I->assertLessOrEquals(5, 2, "pass");
-		$I->assertLessThan(5, 2, "pass");
-		$I->assertLessThanOrEqual(5, 2, "pass");
-		$I->assertNotContains("bc", ['item1' => 'a', 'item2' => 'ab'], "pass");
-		$I->assertNotContains("bc", $text, "pass");
-		$I->assertNotEmpty([1, 2], "pass");
-		$I->assertNotEmpty($text, "pass");
-		$I->assertNotEquals(2, 5, "pass", 0);
-		$I->assertNotNull("abc", "pass");
-		$I->assertNotNull($text, "pass");
-		$I->assertNotRegExp("/foo/", "bar", "pass");
-		$I->assertNotSame("log", "tag", "pass");
-		$I->assertRegExp("/foo/", "foo", "pass");
-		$I->assertSame("bar", "bar", "pass");
-		$I->assertStringStartsNotWith("a", "banana", "pass");
-		$I->assertStringStartsWith("a", "apple", "pass");
-		$I->assertTrue(true, "pass");
+		$I->comment("asserts without variable replacement");
+		$I->assertArrayHasKey("apple", ['orange' => 2, 'apple' => 1], "pass"); // stepKey: assertArrayHasKey
+		$I->assertArrayNotHasKey("kiwi", ['orange' => 2, 'apple' => 1], "pass"); // stepKey: assertArrayNotHasKey
+		$I->assertArraySubset([1, 2], [1, 2, 3, 5], "pass"); // stepKey: assertArraySubset
+		$I->assertContains("ab", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertContains
+		$I->assertCount(2, ['a', 'b'], "pass"); // stepKey: assertCount
+		$I->assertEmpty([], "pass"); // stepKey: assertEmpty
+		$I->assertEquals($text, "Copyright © 2013-2017 Magento, Inc. All rights reserved.", "pass"); // stepKey: assertEquals1
+		$I->assertEquals("Copyright © 2013-2017 Magento, Inc. All rights reserved.", $text, "pass"); // stepKey: assertEquals2
+		$I->assertFalse(false, "pass"); // stepKey: assertFalse1
+		$I->assertFileNotExists("/out.txt", "pass"); // stepKey: assertFileNotExists1
+		$I->assertFileNotExists($text, "pass"); // stepKey: assertFileNotExists2
+		$I->assertGreaterOrEquals(2, 5, "pass"); // stepKey: assertGreaterOrEquals
+		$I->assertGreaterThan(2, 5, "pass"); // stepKey: assertGreaterthan
+		$I->assertGreaterThanOrEqual(2, 5, "pass"); // stepKey: assertGreaterThanOrEqual
+		$I->assertInternalType("string", "xyz", "pass"); // stepKey: assertInternalType1
+		$I->assertInternalType("int", 21, "pass"); // stepKey: assertInternalType2
+		$I->assertInternalType("string", $text, "pass"); // stepKey: assertInternalType3
+		$I->assertLessOrEquals(5, 2, "pass"); // stepKey: assertLessOrEquals
+		$I->assertLessThan(5, 2, "pass"); // stepKey: assertLessThan
+		$I->assertLessThanOrEqual(5, 2, "pass"); // stepKey: assertLessThanOrEquals
+		$I->assertNotContains("bc", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertNotContains1
+		$I->assertNotContains("bc", $text, "pass"); // stepKey: assertNotContains2
+		$I->assertNotEmpty([1, 2], "pass"); // stepKey: assertNotEmpty1
+		$I->assertNotEmpty($text, "pass"); // stepKey: assertNotEmpty2
+		$I->assertNotEquals(2, 5, "pass", 0); // stepKey: assertNotEquals
+		$I->assertNotNull("abc", "pass"); // stepKey: assertNotNull1
+		$I->assertNotNull($text, "pass"); // stepKey: assertNotNull2
+		$I->assertNotRegExp("/foo/", "bar", "pass"); // stepKey: assertNotRegExp
+		$I->assertNotSame("log", "tag", "pass"); // stepKey: assertNotSame
+		$I->assertRegExp("/foo/", "foo", "pass"); // stepKey: assertRegExp
+		$I->assertSame("bar", "bar", "pass"); // stepKey: assertSame
+		$I->assertStringStartsNotWith("a", "banana", "pass"); // stepKey: assertStringStartsNotWith
+		$I->assertStringStartsWith("a", "apple", "pass"); // stepKey: assertStringStartsWith
+		$I->assertTrue(true, "pass"); // stepKey: assertTrue
 		$I->comment("asserts backward compatible");
-		$I->assertArrayHasKey("apple", ['orange' => 2, 'apple' => 1], "pass");
-		$I->assertArrayNotHasKey("kiwi", ['orange' => 2, 'apple' => 1], "pass");
-		$I->assertArraySubset([1, 2], [1, 2, 3, 5], "pass");
-		$I->assertContains("ab", ['item1' => 'a', 'item2' => 'ab'], "pass");
-		$I->assertCount(2, ['a', 'b'], "pass");
-		$I->assertEmpty([], "pass");
-		$I->assertEquals($text, "Copyright © 2013-2017 Magento, Inc. All rights reserved.", "pass");
-		$I->assertEquals("Copyright © 2013-2017 Magento, Inc. All rights reserved.", $text, "pass");
-		$I->assertFalse(false, "pass");
-		$I->assertFileNotExists("/out.txt", "pass");
-		$I->assertFileNotExists($text, "pass");
-		$I->assertGreaterOrEquals(2, 5, "pass");
-		$I->assertGreaterThan(2, 5, "pass");
-		$I->assertGreaterThanOrEqual(2, 5, "pass");
-		$I->assertInternalType("string", "xyz", "pass");
-		$I->assertInternalType("int", 21, "pass");
-		$I->assertInternalType("string", $text, "pass");
-		$I->assertLessOrEquals(5, 2, "pass");
-		$I->assertLessThan(5, 2, "pass");
-		$I->assertLessThanOrEqual(5, 2, "pass");
-		$I->assertNotContains("bc", ['item1' => 'a', 'item2' => 'ab'], "pass");
-		$I->assertNotContains("bc", $text, "pass");
-		$I->assertNotEmpty([1, 2], "pass");
-		$I->assertNotEmpty($text, "pass");
-		$I->assertNotEquals(2, 5, "pass", 0);
-		$I->assertNotNull("abc", "pass");
-		$I->assertNotNull($text, "pass");
-		$I->assertNotRegExp("/foo/", "bar", "pass");
-		$I->assertNotSame("log", "tag", "pass");
-		$I->assertRegExp("/foo/", "foo", "pass");
-		$I->assertSame("bar", "bar", "pass");
-		$I->assertStringStartsNotWith("a", "banana", "pass");
-		$I->assertStringStartsWith("a", "apple", "pass");
-		$I->assertTrue(true, "pass");
-		$I->assertElementContainsAttribute("#username", "class", "admin__control-text");
-		$I->assertInstanceOf(User::class, $text, "pass");
-		$I->assertNotInstanceOf(User::class, 21, "pass");
-		$I->assertFileExists($text, "pass");
-		$I->assertIsEmpty($text, "pass");
-		$I->assertNull($text, "pass");
-		$I->expectException(new MyException('exception msg'), function() {$this->doSomethingBad();});
+		$I->comment("asserts backward compatible");
+		$I->assertArrayHasKey("apple", ['orange' => 2, 'apple' => 1], "pass"); // stepKey: assertArrayHasKeyBackwardCompatible
+		$I->assertArrayNotHasKey("kiwi", ['orange' => 2, 'apple' => 1], "pass"); // stepKey: assertArrayNotHasKeyBackwardCompatible
+		$I->assertArraySubset([1, 2], [1, 2, 3, 5], "pass"); // stepKey: assertArraySubsetBackwardCompatible
+		$I->assertContains("ab", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertContainsBackwardCompatible
+		$I->assertCount(2, ['a', 'b'], "pass"); // stepKey: assertCountBackwardCompatible
+		$I->assertEmpty([], "pass"); // stepKey: assertEmptyBackwardCompatible
+		$I->assertEquals($text, "Copyright © 2013-2017 Magento, Inc. All rights reserved.", "pass"); // stepKey: assertEquals1BackwardCompatible
+		$I->assertEquals("Copyright © 2013-2017 Magento, Inc. All rights reserved.", $text, "pass"); // stepKey: assertEquals2BackwardCompatible
+		$I->assertFalse(false, "pass"); // stepKey: assertFalse1BackwardCompatible
+		$I->assertFileNotExists("/out.txt", "pass"); // stepKey: assertFileNotExists1BackwardCompatible
+		$I->assertFileNotExists($text, "pass"); // stepKey: assertFileNotExists2BackwardCompatible
+		$I->assertGreaterOrEquals(2, 5, "pass"); // stepKey: assertGreaterOrEqualsBackwardCompatible
+		$I->assertGreaterThan(2, 5, "pass"); // stepKey: assertGreaterThanBackwardCompatible
+		$I->assertGreaterThanOrEqual(2, 5, "pass"); // stepKey: assertGreaterThanOrEqualBackwardCompatible
+		$I->assertInternalType("string", "xyz", "pass"); // stepKey: assertInternalType1BackwardCompatible
+		$I->assertInternalType("int", 21, "pass"); // stepKey: assertInternalType2BackwardCompatible
+		$I->assertInternalType("string", $text, "pass"); // stepKey: assertInternalType3BackwardCompatible
+		$I->assertLessOrEquals(5, 2, "pass"); // stepKey: assertLessOrEqualBackwardCompatibles
+		$I->assertLessThan(5, 2, "pass"); // stepKey: assertLessThanBackwardCompatible
+		$I->assertLessThanOrEqual(5, 2, "pass"); // stepKey: assertLessThanOrEqualBackwardCompatible
+		$I->assertNotContains("bc", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertNotContains1BackwardCompatible
+		$I->assertNotContains("bc", $text, "pass"); // stepKey: assertNotContains2BackwardCompatible
+		$I->assertNotEmpty([1, 2], "pass"); // stepKey: assertNotEmpty1BackwardCompatible
+		$I->assertNotEmpty($text, "pass"); // stepKey: assertNotEmpty2BackwardCompatible
+		$I->assertNotEquals(2, 5, "pass", 0); // stepKey: assertNotEqualsBackwardCompatible
+		$I->assertNotNull("abc", "pass"); // stepKey: assertNotNull1BackwardCompatible
+		$I->assertNotNull($text, "pass"); // stepKey: assertNotNull2BackwardCompatible
+		$I->assertNotRegExp("/foo/", "bar", "pass"); // stepKey: assertNotRegExpBackwardCompatible
+		$I->assertNotSame("log", "tag", "pass"); // stepKey: assertNotSameBackwardCompatible
+		$I->assertRegExp("/foo/", "foo", "pass"); // stepKey: assertRegExpBackwardCompatible
+		$I->assertSame("bar", "bar", "pass"); // stepKey: assertSameBackwardCompatible
+		$I->assertStringStartsNotWith("a", "banana", "pass"); // stepKey: assertStringStartsNotWithBackwardCompatible
+		$I->assertStringStartsWith("a", "apple", "pass"); // stepKey: assertStringStartsWithBackwardCompatible
+		$I->assertTrue(true, "pass"); // stepKey: assertTrueBackwardCompatible
+		$I->assertElementContainsAttribute("#username", "class", "admin__control-text"); // stepKey: assertElementContainsAttributeBackwardCompatible
+		$I->assertInstanceOf(User::class, $text, "pass"); // stepKey: assertInstanceOfBackwardCompatible
+		$I->assertNotInstanceOf(User::class, 21, "pass"); // stepKey: assertNotInstanceOfBackwardCompatible
+		$I->assertFileExists($text, "pass"); // stepKey: assertFileExistsBackwardCompatible
+		$I->assertIsEmpty($text, "pass"); // stepKey: assertIsEmptyBackwardCompatible
+		$I->assertNull($text, "pass"); // stepKey: assertNullBackwardCompatible
+		$I->expectException(new MyException('exception msg'), function() {$this->doSomethingBad();}); // stepKey: expectExceptionBackwardCompatible
 		$I->comment("string type that use created data");
-		$I->assertStringStartsWith("D", PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test') . ", " . PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test'), "fail");
-		$I->assertStringStartsNotWith("W", PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test') . ", " . PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'lastname', 'test'), "pass");
-		$I->assertEquals(PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'), "pass");
+		$I->comment("string type that use created data");
+		$I->assertStringStartsWith("D", PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test') . ", " . PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test'), "fail"); // stepKey: assert1
+		$I->assertStringStartsNotWith("W", PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test') . ", " . PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'lastname', 'test'), "pass"); // stepKey: assert2
+		$I->assertEquals(PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'), "pass"); // stepKey: assert5
 		$I->comment("array type that use created data");
-		$I->assertArraySubset([PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test')], [PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test'), "1"], "pass");
-		$I->assertArraySubset([PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'lastname', 'test')], [PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'lastname', 'test'), "1"], "pass");
-		$I->assertArrayHasKey("lastname", ['lastname' => PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'), 'firstname' => PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test')], "pass");
-		$I->assertArrayHasKey("lastname", ['lastname' => PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'lastname', 'test'), 'firstname' => PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test')], "pass");
-		$I->assertInstanceOf(User::class, $text, "pass");
-		$I->assertNotInstanceOf(User::class, 21, "pass");
-		$I->assertFileExists($text, "pass");
-		$I->assertFileExists("AssertCest.php", "pass");
-		$I->assertIsEmpty($text, "pass");
-		$I->assertNull($text, "pass");
-		$I->expectException(new MyException('exception msg'), function() {$this->doSomethingBad();});
-		$I->fail("fail");
-		$I->fail(PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test') . " " . PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'lastname', 'test'));
-		$I->fail(PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test') . " " . PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'));
-		$I->assertElementContainsAttribute("#username", "class", "admin__control-text");
-		$I->assertElementContainsAttribute("#username", "name", "login[username]");
-		$I->assertElementContainsAttribute("#username", "autofocus", "true");
-		$I->assertElementContainsAttribute("#username", "data-validate", "{required:true}");
-		$I->assertElementContainsAttribute(".admin__menu-overlay", "style", "display: none;");
-		$I->assertElementContainsAttribute(".admin__menu-overlay", "border", "0");
-		$I->assertElementContainsAttribute("#username", "value", PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test'));
-		$I->assertElementContainsAttribute("#username", "value", PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test'));
-		$I->assertEquals("John", "Doe", "pass");
+		$I->comment("array type that use created data");
+		$I->assertArraySubset([PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test')], [PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test'), "1"], "pass"); // stepKey: assert9
+		$I->assertArraySubset([PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'lastname', 'test')], [PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'lastname', 'test'), "1"], "pass"); // stepKey: assert10
+		$I->assertArrayHasKey("lastname", ['lastname' => PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'), 'firstname' => PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test')], "pass"); // stepKey: assert3
+		$I->assertArrayHasKey("lastname", ['lastname' => PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'lastname', 'test'), 'firstname' => PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test')], "pass"); // stepKey: assert4
+		$I->comment("this section can only be generated and cannot run");
+		$I->assertInstanceOf(User::class, $text, "pass"); // stepKey: assertInstanceOf
+		$I->assertNotInstanceOf(User::class, 21, "pass"); // stepKey: assertNotInstanceOf
+		$I->assertFileExists($text, "pass"); // stepKey: assertFileExists2
+		$I->assertFileExists("AssertCest.php", "pass"); // stepKey: assertFileExists3
+		$I->assertIsEmpty($text, "pass"); // stepKey: assertIsEmpty
+		$I->assertNull($text, "pass"); // stepKey: assertNull
+		$I->expectException(new MyException('exception msg'), function() {$this->doSomethingBad();}); // stepKey: expectException
+		$I->fail("fail"); // stepKey: fail
+		$I->fail(PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test') . " " . PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'lastname', 'test')); // stepKey: assert7
+		$I->fail(PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test') . " " . PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test')); // stepKey: assert8
+		$I->comment("assertElementContainsAttribute examples");
+		$I->assertElementContainsAttribute("#username", "class", "admin__control-text"); // stepKey: assertElementContainsAttribute1
+		$I->assertElementContainsAttribute("#username", "name", "login[username]"); // stepKey: assertElementContainsAttribute2
+		$I->assertElementContainsAttribute("#username", "autofocus", "true"); // stepKey: assertElementContainsAttribute3
+		$I->assertElementContainsAttribute("#username", "data-validate", "{required:true}"); // stepKey: assertElementContainsAttribute4
+		$I->assertElementContainsAttribute(".admin__menu-overlay", "style", "display: none;"); // stepKey: assertElementContainsAttribute5
+		$I->assertElementContainsAttribute(".admin__menu-overlay", "border", "0"); // stepKey: assertElementContainsAttribute6
+		$I->assertElementContainsAttribute("#username", "value", PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test')); // stepKey: assertElementContainsAttribute7
+		$I->assertElementContainsAttribute("#username", "value", PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test')); // stepKey: assertElementContainsAttribute8
+		$I->comment("assert entity resolution");
+		$I->assertEquals("John", "Doe", "pass"); // stepKey: assertEqualsEntity
 	}
 }

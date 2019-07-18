@@ -23,6 +23,7 @@ use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
  */
 class ActionObject
 {
+    const COMMENT_ACTION = '#comment';
     const __ENV = "_ENV";
     const __CREDS = "_CREDS";
     const RUNTIME_REFERENCES = [
@@ -148,12 +149,12 @@ class ActionObject
         $actionOrigin = null
     ) {
         $this->stepKey = $stepKey;
-        $this->type = $type;
+        $this->type = $type === self::COMMENT_ACTION ? self::ACTION_TYPE_COMMENT : $type;
         $this->actionAttributes = $actionAttributes;
         $this->linkedAction = $linkedAction;
         $this->actionOrigin = $actionOrigin;
 
-        if ($order == ActionObject::MERGE_ACTION_ORDER_AFTER) {
+        if ($order === ActionObject::MERGE_ACTION_ORDER_AFTER) {
             $this->orderOffset = 1;
         }
     }
@@ -554,7 +555,7 @@ class ActionObject
             }
 
             if ($replacement === null) {
-                if (get_class($objectHandler) != DataObjectHandler::class) {
+                if (!($objectHandler instanceof DataObjectHandler)) {
                     return $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $outputString);
                 } else {
                     throw new TestReferenceException(

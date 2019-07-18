@@ -27,24 +27,25 @@ class PageReplacementTestCest
 	 */
 	public function PageReplacementTest(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the stepKey: datakey");
+		$I->comment("[datakey] create 'simpleData' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"datakey",
 			"test",
 			"simpleData",
 			[],
-			null
+			[]
 		);
-		$I->amOnPage("/page.html");
-		$I->amOnPage("/StringLiteral/page.html");
-		$I->amOnPage("/John/page.html");
-		$I->amOnPage("/" . PersistedObjectHandler::getInstance()->retrieveEntityField('datakey', 'firstname', 'test') . "/page.html");
-		$I->amOnPage("/StringLiteral1/StringLiteral2.html");
-		$I->amOnPage("/John/StringLiteral2.html");
-		$I->amOnPage("/John/" . PersistedObjectHandler::getInstance()->retrieveEntityField('datakey', 'firstname', 'test') . ".html");
-		$I->amOnPage("/" . PersistedObjectHandler::getInstance()->retrieveEntityField('datakey', 'firstname', 'test') . "/StringLiteral2.html");
-		$I->amOnPage("/" . getenv("MAGENTO_BACKEND_NAME") . "/backend");
-		$I->amOnPage("/" . getenv("MAGENTO_BACKEND_NAME") . "/StringLiteral/page.html");
-		$I->amOnUrl("http://myFullUrl.com/");
+
+		$I->amOnPage("/page.html"); // stepKey: noParamPage
+		$I->amOnPage("/StringLiteral/page.html"); // stepKey: oneParamPageString
+		$I->amOnPage("/John/page.html"); // stepKey: oneParamPageData
+		$I->amOnPage("/" . PersistedObjectHandler::getInstance()->retrieveEntityField('datakey', 'firstname', 'test') . "/page.html"); // stepKey: oneParamPagePersist
+		$I->amOnPage("/StringLiteral1/StringLiteral2.html"); // stepKey: twoParamPageString
+		$I->amOnPage("/John/StringLiteral2.html"); // stepKey: twoParamPageStringData
+		$I->amOnPage("/John/" . PersistedObjectHandler::getInstance()->retrieveEntityField('datakey', 'firstname', 'test') . ".html"); // stepKey: twoParamPageDataPersist
+		$I->amOnPage("/" . PersistedObjectHandler::getInstance()->retrieveEntityField('datakey', 'firstname', 'test') . "/StringLiteral2.html"); // stepKey: twoParamPagePersistString
+		$I->amOnPage("/" . getenv("MAGENTO_BACKEND_NAME") . "/backend"); // stepKey: onAdminPage
+		$I->amOnPage("/" . getenv("MAGENTO_BACKEND_NAME") . "/StringLiteral/page.html"); // stepKey: oneParamAdminPageString
+		$I->amOnUrl("http://myFullUrl.com/"); // stepKey: onExternalPage
 	}
 }

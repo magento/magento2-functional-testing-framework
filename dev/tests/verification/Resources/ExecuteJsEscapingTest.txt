@@ -27,10 +27,10 @@ class ExecuteJsEscapingTestCest
 	 */
 	public function ExecuteJsEscapingTest(AcceptanceTester $I)
 	{
-		$javaVariableEscape = $I->executeJS("return \$javascriptVariable");
-		$mftfVariableNotEscaped = $I->executeJS("return {$doNotEscape}");
-		$persistedDataNotEscaped = $I->executeJS("return " . PersistedObjectHandler::getInstance()->retrieveEntityField('persisted', 'data', 'test'));
-		$hookPersistedDataNotEscaped = $I->executeJS("return " . PersistedObjectHandler::getInstance()->retrieveEntityField('persisted', 'data', 'test'));
-		$addNewAttributeForRule = $I->executeJS("document.querySelector('entity option[value=" . PersistedObjectHandler::getInstance()->retrieveEntityField('productAttribute', 'attribute_code', 'test') . "]').setAttribute('selected', 'selected')");
+		$javaVariableEscape = $I->executeJS("return \$javascriptVariable"); // stepKey: javaVariableEscape
+		$mftfVariableNotEscaped = $I->executeJS("return {$doNotEscape}"); // stepKey: mftfVariableNotEscaped
+		$persistedDataNotEscaped = $I->executeJS("return " . PersistedObjectHandler::getInstance()->retrieveEntityField('persisted', 'data', 'test')); // stepKey: persistedDataNotEscaped
+		$hookPersistedDataNotEscaped = $I->executeJS("return " . PersistedObjectHandler::getInstance()->retrieveEntityField('persisted', 'data', 'test')); // stepKey: hookPersistedDataNotEscaped
+		$addNewAttributeForRule = $I->executeJS("document.querySelector('entity option[value=" . PersistedObjectHandler::getInstance()->retrieveEntityField('productAttribute', 'attribute_code', 'test') . "]').setAttribute('selected', 'selected')"); // stepKey: addNewAttributeForRule
 	}
 }

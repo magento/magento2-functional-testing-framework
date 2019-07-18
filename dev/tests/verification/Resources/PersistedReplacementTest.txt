@@ -24,14 +24,15 @@ class PersistedReplacementTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the stepKey: createData1");
+		$I->comment("[createData1] create 'ReplacementPerson' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createData1",
 			"hook",
 			"ReplacementPerson",
 			[],
-			null
+			[]
 		);
+
 	}
 
 	/**
@@ -43,23 +44,24 @@ class PersistedReplacementTestCest
 	 */
 	public function PersistedReplacementTest(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the stepKey: createdData");
+		$I->comment("[createdData] create 'simpleData' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createdData",
 			"test",
 			"simpleData",
 			[],
-			null
+			[]
 		);
-		$I->fillField("#selector", "StringBefore " . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . " StringAfter");
-		$I->fillField("#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test'), "input");
-		$I->fillField("#" . getenv("MAGENTO_BASE_URL") . "#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test'), "input");
-		$I->fillSecretField("#" . CredentialStore::getInstance()->getSecret("SECRET_PARAM") . "#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test'), "input");
-		$I->dragAndDrop("#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'lastname', 'test'));
-		$I->conditionalClick(PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'lastname', 'test'), "#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test'), true);
-		$I->amOnUrl(PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . ".html");
-		$I->searchAndMultiSelectOption("#selector", [PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'lastname', 'test')]);
-		$I->fillField("#selector", "John " . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . " stringLiteral");
-		$I->searchAndMultiSelectOption("#selector", [PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test'), "John", "stringLiteral"]);
+
+		$I->fillField("#selector", "StringBefore " . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . " StringAfter"); // stepKey: inputReplace
+		$I->fillField("#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test'), "input"); // stepKey: selectorReplace
+		$I->fillField("#" . getenv("MAGENTO_BASE_URL") . "#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test'), "input"); // stepKey: selectorReplace2
+		$I->fillSecretField("#" . CredentialStore::getInstance()->getSecret("SECRET_PARAM") . "#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test'), "input"); // stepKey: selectorReplace3
+		$I->dragAndDrop("#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'lastname', 'test')); // stepKey: selector12Replace
+		$I->conditionalClick(PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'lastname', 'test'), "#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test'), true); // stepKey: dependentSelectorReplace
+		$I->amOnUrl(PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . ".html"); // stepKey: urlReplace
+		$I->searchAndMultiSelectOption("#selector", [PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'lastname', 'test')]); // stepKey: parameterArrayReplacement
+		$I->fillField("#selector", "John " . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . " stringLiteral"); // stepKey: allTypesMixed
+		$I->searchAndMultiSelectOption("#selector", [PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test'), "John", "stringLiteral"]); // stepKey: parameterArrayMixed
 	}
 }

@@ -24,9 +24,9 @@ class ActionGroupContainsStepKeyInArgTextCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group actionGroupContainsStepKeyInArgValue (actionGroup)");
-		$I->see("arg1", ".selector");
-		$I->comment("Exiting Action Group actionGroupContainsStepKeyInArgValue (actionGroup)");
+		$I->comment("Entering Action Group [actionGroup] actionGroupContainsStepKeyInArgValue");
+		$I->see("arg1", ".selector"); // stepKey: arg1ActionGroup
+		$I->comment("Exiting Action Group [actionGroup] actionGroupContainsStepKeyInArgValue");
 	}
 
 	/**
@@ -38,8 +38,8 @@ class ActionGroupContainsStepKeyInArgTextCest
 	 */
 	public function ActionGroupContainsStepKeyInArgText(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group actionGroupContainsStepKeyInArgValue (actionGroup)");
-		$I->see("arg1", ".selector");
-		$I->comment("Exiting Action Group actionGroupContainsStepKeyInArgValue (actionGroup)");
+		$I->comment("Entering Action Group [actionGroup] actionGroupContainsStepKeyInArgValue");
+		$I->see("arg1", ".selector"); // stepKey: arg1ActionGroup
+		$I->comment("Exiting Action Group [actionGroup] actionGroupContainsStepKeyInArgValue");
 	}
 }
