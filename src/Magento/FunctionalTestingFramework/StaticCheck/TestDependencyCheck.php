@@ -63,6 +63,12 @@ class TestDependencyCheck implements StaticCheckInterface
     private $alreadyExtractedDependencies;
 
     /**
+     * Array containing all errors found after running the execute() function.
+     * @var array
+     */
+    private $errors;
+
+    /**
      * Checks test dependencies, determined by references in tests versus the dependencies listed in the Magento module
      *
      * @param InputInterface $input
@@ -98,13 +104,22 @@ class TestDependencyCheck implements StaticCheckInterface
         $actionGroupXmlFiles = $this->buildFileList($allModules, $filePaths[1]);
         $dataXmlFiles= $this->buildFileList($allModules, $filePaths[2]);
 
-        $testErrors = [];
-        $testErrors += $this->findErrorsInFileSet($testXmlFiles);
-        $testErrors += $this->findErrorsInFileSet($actionGroupXmlFiles);
-        $testErrors += $this->findErrorsInFileSet($dataXmlFiles);
+        $this->errors = [];
+        $this->errors += $this->findErrorsInFileSet($testXmlFiles);
+        $this->errors += $this->findErrorsInFileSet($actionGroupXmlFiles);
+        $this->errors += $this->findErrorsInFileSet($dataXmlFiles);
 
         //print all errors to file
-        return $this->printErrorsToFile($testErrors);
+        return $this->printErrorsToFile($this->getErrors());
+    }
+
+    /**
+     * Return array containing all errors found after running the execute() function.
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
     }
 
     /**

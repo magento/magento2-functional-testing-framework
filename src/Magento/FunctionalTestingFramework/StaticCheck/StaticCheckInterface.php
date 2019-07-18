@@ -19,4 +19,10 @@ interface StaticCheckInterface
      * @return string
      */
     public function execute(InputInterface $input);
+
+    /**
+     * Return array containing all errors found after running the execute() function.
+     * @return array
+     */
+    public function getErrors();
 }

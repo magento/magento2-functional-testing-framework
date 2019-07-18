@@ -47,10 +47,20 @@ class StaticChecksCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $staticCheckObjects = $this->staticChecksList->getStaticChecks();
+
+        $errors = [];
+
         foreach ($staticCheckObjects as $staticCheck) {
             $staticOutput = $staticCheck->execute($input);
             LoggingUtil::getInstance()->getLogger(get_class($staticCheck))->info($staticOutput);
             $output->writeln($staticOutput);
+            $errors += $staticCheck->getErrors();
+        }
+
+        if (empty($errors)) {
+            return 0;
+        } else {
+            return 1;
         }
     }
 }
