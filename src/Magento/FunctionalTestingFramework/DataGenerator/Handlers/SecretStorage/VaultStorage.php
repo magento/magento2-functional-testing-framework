@@ -9,7 +9,6 @@ namespace Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorag
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
-use Vault\AuthenticationStrategies\TokenAuthenticationStrategy;
 use Vault\Client;
 use VaultTransports\Guzzle6Transport;
 
@@ -111,7 +110,7 @@ class VaultStorage extends BaseStorage
         try {
             // Authenticating using token auth backend
             $authenticated = $this->client
-                ->setAuthenticationStrategy(new TokenAuthenticationStrategy($this->token))
+                ->setAuthenticationStrategy(new VaultTokenAuthStrategy($this->token))
                 ->authenticate();
 
             if ($authenticated) {
