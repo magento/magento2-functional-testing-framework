@@ -12,11 +12,34 @@ The general process:
 1. Update userInput from hardcoded values to data entities.
 1. Remove simple actions and replace with Action Groups.
 
-## Get the files
+## The manual test
 
-All the files referenced in this tutorial can be found in the [Pangolin MageTestFest](https://github.com/magento-pangolin/magento2/commits/MageTestFest) branch.
+Manual tests are just that: A series of manual steps to be run.
+
+```xml
+<!-- Navigate to Catalog -> Products page (or just open by link) -->
+<!-- Fill field "Name" with "Simple Product %unique_value%" -->
+<!-- Fill field "SKU" with "simple_product_%unique_value%" -->
+<!-- Fill field "Price" with "500.00" -->
+<!-- Fill field "Quantity" with "100" -->
+<!-- Fill field "Weight" with "100" -->
+<!-- Click "Save" button -->
+<!-- See success save message "You saved the product." -->
+<!-- Navigate to Catalog -> Products page (or just open by link) -->
+<!-- See created product is in grid -->
+<!-- See "Name" in grid is valid -->
+<!-- See "SKU" in grid is valid -->
+<!-- See "Price" in grid is valid -->
+<!-- See "Quantity" in grid is valid -->
+<!-- Open Storefront Product Page and verify "Name", "SKU", "Price" -->
+```
 
 ## The raw test
+
+This tests works just fine. But it will only work if everything referenced in the test stays exactly the same. This neither reusable nor extensible.
+Hardcoded selectors make it impossible to reuse sections in other actiongroups and tasks. They can also be brittle. If Magento happens to change a `class` or `id` on an element, the test will fail.
+
+Some data, like the SKU in this example, must be unique for every test run. Hardcoded values will fail here. Data Entities allow for `suffix` and `prefix` for ensuring unique data values.
 
 For our example, we have a test that creates a simple product. Note the hardcoded selectors, data values and lack of action groups. We will focus on the "product name".
 
@@ -30,7 +53,7 @@ For our example, we have a test that creates a simple product. Note the hardcode
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="CreateSimpleProductTest">
         <annotations>
             <features value="Catalog"/>
@@ -126,6 +149,7 @@ In this example `AdminProductFormSection` refers to the `<section>` in the xml f
         <waitForPageLoad stepKey="waitForNewProductPageOpened" />
 
         <!-- Fill field "Name" with "Simple Product %unique_value%" -->
+
   ---> <fillField selector="{{AdminProductFormSection.productName}}" userInput="Simple Product 12412431" stepKey="fillNameField" />
 
         <!-- Fill field "SKU" with "simple_product_%unique_value%" -->
@@ -139,7 +163,6 @@ In this example `AdminProductFormSection` refers to the `<section>` in the xml f
 
         <!-- Fill field "Weight" with "100" -->
         <fillField selector="{{AdminProductFormSection.productWeight}}" userInput="100" stepKey="fillWeightField" />
-
         ...
     </test>
 </tests>
@@ -247,6 +270,8 @@ We replace the hardcoded values with variables and the MFTF will do the variable
 
 One of the reasons that we abstract things is so that they are more flexible and reusable. In this case, we can leverage this flexibility and use an existing data file. For this scenario, we are using [this file](https://raw.githubusercontent.com/magento-pangolin/magento2/MageTestFest/app/code/Magento/Catalog/Test/Mftf/Data/ProductData.xml).
 
+Data entities are important because this is where a `suffix` or `prefix` can be defined. This ensures that data values can be unique for every test run.
+
 Notice that the `<entity>` name is `_defaultProduct` as referenced above. Within this entity is the `name` value.
 
 ```xml
@@ -270,9 +295,21 @@ Notice that the `<entity>` name is `_defaultProduct` as referenced above. Within
 
 The `unique="suffix"` attribute appends a random numeric string to the end of the actual data string. This ensures that unique values are used for each test run.
 
+XXXX for difficult data needs, see https://devdocs.magento.com/mftf/docs/data.html
+
 ## Convert actions to action groups
 
-Action groups are sets of steps that are run together. Action groups are designed to break up many individual steps into logical groups. For example: Logging into the admin panel requires ensuring the login form exists, filling in 2 form fields and clicking the Submit button. These can be bundled into a single, reusable "Admin Login" action group that can be applied to any other test. This leverages existing code and prevents duplication of effort. We recommend that all steps be within an action group.
+Action groups are sets of steps that are run together. Action groups are designed to break up multiple individual steps into logical groups. For example: Logging into the admin panel requires ensuring the login form exists, filling in 2 form fields and clicking the Submit button. These can be bundled into a single, reusable "Admin Login" action group that can be applied to any other test. This leverages existing code and prevents duplication of effort. We recommend that all steps in a test be within an action group.
+
+Using action groups can be very useful when testing extensions.
+Extending the example above, assume the first extension adds a new field to the admin login, a Captcha for example.
+The second extension we are testing needs to login AND get past the Captcha.
+
+1. The admin login is encapsulated in an action group.
+2. The Captcha extension properly extends the `admin login` capture group using the `merge` functionality.
+3. Now the second extension can call the `admin login` action group and because of the `merge`, it will automatically include the Captcha field.
+
+In this case, the action group is both reusable and extensible!
 
 We further abstract the test by putting these action groups in their own file: ['app/code/Magento/Catalog/Test/Mftf/ActionGroup/AdminProductActionGroup.xml'](https://raw.githubusercontent.com/magento-pangolin/magento2/e5671d84aa63cad772fbba757005b3d89ddb79d9/app/code/Magento/Catalog/Test/Mftf/ActionGroup/AdminProductActionGroup.xml)
 
