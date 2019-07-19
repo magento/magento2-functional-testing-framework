@@ -12,6 +12,23 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage\Vaul
 
 class CredentialStore
 {
+    const ARRAY_KEY_FOR_VAULT = 'vault';
+    const ARRAY_KEY_FOR_FILE = 'file';
+
+    /**
+     * Numeric indexed array that defines the access precedence of credential storage
+     *
+     * @var array
+     */
+    private static $credStoragePrecedence = [self::ARRAY_KEY_FOR_FILE, self::ARRAY_KEY_FOR_VAULT];
+
+    /**
+     * Credential storage array
+     *
+     * @var array
+     */
+    private $credStorage = [];
+
     /**
      * Singleton instance
      *
@@ -20,23 +37,10 @@ class CredentialStore
     private static $INSTANCE = null;
 
     /**
-     * File storage for credentials
-     *
-     * @var FileStorage
-     */
-    private $credFile = null;
-
-    /**
-     * Vault storage for credentials
-     *
-     * @var VaultStorage
-     */
-    private $credVault = null;
-
-    /**
      * Static singleton getter for CredentialStore Instance
      *
      * @return CredentialStore
+     * @throws TestFrameworkException
      */
     public static function getInstance()
     {
@@ -48,7 +52,9 @@ class CredentialStore
     }
 
     /**
-     * CredentialStore constructor.
+     * CredentialStore constructor
+     *
+     * @throws TestFrameworkException
      */
     private function __construct()
     {
@@ -57,16 +63,28 @@ class CredentialStore
         $csToken = getenv('CREDENTIAL_VAULT_TOKEN');
         if ($csBaseUrl !== false && $csToken !== false) {
             try {
-                $this->credVault = new VaultStorage(rtrim($csBaseUrl, '/'), $csToken);
+                $this->credStorage[self::ARRAY_KEY_FOR_VAULT] = new VaultStorage(
+                    rtrim($csBaseUrl, '/'),
+                    $csToken
+                );
             } catch (TestFrameworkException $e) {
             }
         }
 
         // Initialize file storage
         try {
-            $this->credFile = new FileStorage();
+            $this->credStorage[self::ARRAY_KEY_FOR_FILE]  = new FileStorage();
         } catch (TestFrameworkException $e) {
         }
+
+        foreach ($this->credStorage as $cred) {
+            if (null !== $cred) {
+                return;
+            }
+        }
+        throw new TestFrameworkException(
+            "No credential storage is properly configured. Please configure vault or .credentials file."
+        );
     }
 
     /**
@@ -78,24 +96,20 @@ class CredentialStore
      */
     public function getSecret($key)
     {
-        // Get secret data from vault storage first
-        if (null !== $this->credVault) {
-            $value = $this->credVault->getEncryptedValue($key);
-            if (!empty($value)) {
-                return $value;
-            }
-        }
-
-        // Get secret data from file when not found in vault
-        if (null !== $this->credFile) {
-            $value = $this->credFile->getEncryptedValue($key);
-            if (!empty($value)) {
-                return $value;
+        // Get secret data from storage according to defined precedence
+        // File storage is preferred over vault storage to allow local secret value overriding remote secret value
+        foreach (self::$credStoragePrecedence as $credType) {
+            if (null !== $this->credStorage[$credType]) {
+                $value = $this->credStorage[$credType]->getEncryptedValue($key);
+                if (null !== $value) {
+                    return $value;
+                }
             }
         }
 
         throw new TestFrameworkException(
-            "value for key \"$key\" not found in credential storage."
+            "{$key} not defined in vault or .credentials file, "
+            . "please provide a value in order to use this secret in a test.\"."
         );
     }
 
@@ -107,12 +121,11 @@ class CredentialStore
      */
     public function decryptSecretValue($value)
     {
-        if (null !== $this->credVault) {
-            return $this->credVault->getDecryptedValue($value);
-        }
-
-        if (null !== $this->credFile) {
-            return $this->credFile->getDecryptedValue($value);
+        // Loop through storage to decrypt value
+        foreach (self::$credStoragePrecedence as $credType) {
+            if (null !== $this->credStorage[$credType]) {
+                return $this->credStorage[$credType]->getDecryptedValue($value);
+            }
         }
     }
 
@@ -124,12 +137,11 @@ class CredentialStore
      */
     public function decryptAllSecretsInString($string)
     {
-        if (null !== $this->credVault) {
-            return $this->credVault->getAllDecryptedValues($string);
-        }
-
-        if (null !== $this->credFile) {
-            return $this->credFile->getAllDecryptedValues($string);
+        // Loop through storage to decrypt all occurrences from input string
+        foreach (self::$credStoragePrecedence as $credType) {
+            if (null !== $this->credStorage[$credType]) {
+                return $this->credStorage[$credType]->getAllDecryptedValues($string);
+            }
         }
     }
 }

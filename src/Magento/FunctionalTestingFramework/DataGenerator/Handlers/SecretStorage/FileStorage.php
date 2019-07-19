@@ -6,9 +6,9 @@
 
 namespace Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage;
 
-use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Console\BuildProjectCommand;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 class FileStorage extends BaseStorage
@@ -22,7 +22,6 @@ class FileStorage extends BaseStorage
 
     /**
      * FileStorage constructor
-     *
      * @throws TestFrameworkException
      */
     public function __construct()
@@ -40,27 +39,24 @@ class FileStorage extends BaseStorage
      */
     public function getEncryptedValue($key)
     {
+        $value = null;
         // Check if secret is in cached array
         if (null !== ($value = parent::getEncryptedValue($key))) {
             return $value;
         }
 
-        try {
-            // log here for verbose config
-            if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-                LoggingUtil::getInstance()->getLogger(FileStorage::class)->debug(
-                    "retrieving secret for key name {$key} from file"
-                );
-            }
-        } catch (\Exception $e) {
+        // log here for verbose config
+        if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
+            LoggingUtil::getInstance()->getLogger(FileStorage::class)->debug(
+                "retrieving secret for key name {$key} from file"
+            );
         }
 
         // Retrieve from file storage
-        if (!array_key_exists($key, $this->secretData) || empty($value = $this->secretData[$key])) {
-            return null;
+        if (array_key_exists($key, $this->secretData) && (null !== ($value = $this->secretData[$key]))) {
+            parent::$cachedSecretData[$key] = $value;
         }
 
-        parent::$cachedSecretData[$key] = $value;
         return $value;
     }
 
@@ -80,8 +76,7 @@ class FileStorage extends BaseStorage
 
         if (!file_exists($credsFilePath)) {
             throw new TestFrameworkException(
-                "Cannot find .credentials file, please create in "
-                . TESTS_BP . " in order to reference sensitive information"
+                "Credential file is not used: .credentials file not found in " . TESTS_BP
             );
         }
 

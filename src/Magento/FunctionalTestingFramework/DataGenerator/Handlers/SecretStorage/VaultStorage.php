@@ -20,19 +20,14 @@ class VaultStorage extends BaseStorage
      * Adobe Vault
      */
     const BASE_PATH = '/dx_magento_qe';
-    const KV_DATA = '/data';
-    /**
-     * Local Vault
-     */
-    //const BASE_PATH = '/secret';
-    //const KV_DATA = '/data';
+    const KV_DATA = 'data';
 
     /**
      * Vault client
      *
      * @var Client
      */
-    private static $client = null;
+    private $client = null;
 
     /**
      * Vault token
@@ -51,13 +46,13 @@ class VaultStorage extends BaseStorage
     public function __construct($baseUrl, $token)
     {
         parent::__construct();
-        if (null === self::$client) {
+        if (null === $this->client) {
             // Creating the client using Guzzle6 Transport and passing a custom url
-            self::$client = new Client(new Guzzle6Transport(['base_uri' => $baseUrl]));
+            $this->client = new Client(new Guzzle6Transport(['base_uri' => $baseUrl]));
         }
         $this->token = $token;
         if (!$this->authenticated()) {
-            throw new TestFrameworkException("Credential Vault: Cannot Authenticate");
+            throw new TestFrameworkException("Credential vault is not used: cannot authenticate");
         }
     }
 
@@ -74,50 +69,48 @@ class VaultStorage extends BaseStorage
             return $value;
         }
 
+        if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
+            LoggingUtil::getInstance()->getLogger(VaultStorage::class)->debug(
+                "Retrieving secret for key name {$key} from vault"
+            );
+        }
+
+        $reValue = null;
         try {
-            // Log here for verbose config
+            // Split vendor/key to construct secret path
+            list($vendor, $key) = explode('/', trim($key, '/'), 2);
+            $url = self::BASE_PATH
+                . (empty(self::KV_DATA) ? '' : '/' . self::KV_DATA)
+                . self::MFTF_PATH
+                . '/'
+                . $vendor
+                . '/'
+                . $key;
+            // Read value by key from vault
+            $value = $this->client->read($url)->getData()[self::KV_DATA][$key];
+            // Encrypt value for return
+            $reValue = openssl_encrypt($value, parent::ENCRYPTION_ALGO, parent::$encodedKey, 0, parent::$iv);
+            parent::$cachedSecretData[$key] = $reValue;
+        } catch (\Exception $e) {
             if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
                 LoggingUtil::getInstance()->getLogger(VaultStorage::class)->debug(
-                    "retrieving secret for key name {$key} from vault"
+                    "Unable to read secret for key name {$key} from vault"
                 );
             }
-        } catch (\Exception $e) {
         }
-
-        // Retrieve from vault storage
-        if (!$this->authenticated()) {
-            return null;
-        }
-
-        // Read value by key from vault
-        list($vendor, $key) = explode('/', trim($key, '/'), 2);
-        $url = self::BASE_PATH
-            . (empty(self::KV_DATA) ? '' : self::KV_DATA)
-            . self::MFTF_PATH
-            . '/'
-            . $vendor
-            . '/'
-            . $key;
-        $value = self::$client->read($url)->getData()['data'][$key];
-
-        if (empty($value)) {
-            return null;
-        }
-        $eValue = openssl_encrypt($value, parent::ENCRYPTION_ALGO, parent::$encodedKey, 0, parent::$iv);
-        parent::$cachedSecretData[$key] = $eValue;
-        return $eValue;
+        return $reValue;
     }
 
     /**
-     * Check if vault token is still valid.
+     * Check if vault token is valid
      *
      * @return boolean
      */
     private function authenticated()
     {
         try {
-            // Authenticating using token auth backend.
-            $authenticated = self::$client
+            // Authenticating using token auth backend
+            $authenticated = $this->client
                 ->setAuthenticationStrategy(new TokenAuthenticationStrategy($this->token))
                 ->authenticate();
 
