@@ -108,8 +108,8 @@ class CredentialStore
         }
 
         throw new TestFrameworkException(
-            "{$key} not defined in vault or .credentials file, "
-            . "please provide a value in order to use this secret in a test.\"."
+            "\"{$key}\" not defined in vault or .credentials file, "
+            . "please provide a value in order to use this secret in a test."
         );
     }
 
@@ -140,7 +140,7 @@ class CredentialStore
         // Loop through storage to decrypt all occurrences from input string
         foreach (self::$credStoragePrecedence as $credType) {
             if (null !== $this->credStorage[$credType]) {
-                return $this->credStorage[$credType]->getAllDecryptedValues($string);
+                return $this->credStorage[$credType]->getAllDecryptedValuesInString($string);
             }
         }
     }

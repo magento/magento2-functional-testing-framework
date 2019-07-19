@@ -73,7 +73,7 @@ abstract class BaseStorage
      * @param string $string
      * @return mixed
      */
-    public function getAllDecryptedValues($string)
+    public function getAllDecryptedValuesInString($string)
     {
         $newString = $string;
         foreach (self::$cachedSecretData as $key => $secretValue) {
