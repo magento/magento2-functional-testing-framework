@@ -129,6 +129,10 @@ class TestDependencyCheck implements StaticCheckInterface
         return $this->errors;
     }
 
+    /**
+     * Return string of a short human readable result of the check. For example: "No Dependency errors found."
+     * @return string
+     */
     public function getOutput()
     {
         return $this->output;
