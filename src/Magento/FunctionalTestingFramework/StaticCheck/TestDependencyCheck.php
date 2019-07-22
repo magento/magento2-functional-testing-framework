@@ -6,20 +6,20 @@
 
 namespace Magento\FunctionalTestingFramework\StaticCheck;
 
-use Magento\FunctionalTestingFramework\Config\Data;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Page\Handlers\PageObjectHandler;
 use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
-use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Util\ModuleResolver;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Exception;
 
 /**
  * Class TestDependencyCheck
@@ -69,10 +69,17 @@ class TestDependencyCheck implements StaticCheckInterface
     private $errors;
 
     /**
+     * String representing the output summary found after running the execute() function.
+     * @var string
+     */
+    private $output;
+
+    /**
      * Checks test dependencies, determined by references in tests versus the dependencies listed in the Magento module
      *
      * @param InputInterface $input
      * @return string
+     * @throws Exception;
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function execute(InputInterface $input)
@@ -109,8 +116,8 @@ class TestDependencyCheck implements StaticCheckInterface
         $this->errors += $this->findErrorsInFileSet($actionGroupXmlFiles);
         $this->errors += $this->findErrorsInFileSet($dataXmlFiles);
 
-        //print all errors to file
-        return $this->printErrorsToFile($this->getErrors());
+        // hold on to the output and print any errors to a file
+        $this->output = $this->printErrorsToFile();
     }
 
     /**
@@ -122,12 +129,17 @@ class TestDependencyCheck implements StaticCheckInterface
         return $this->errors;
     }
 
+    public function getOutput()
+    {
+        return $this->output;
+    }
+
     /**
      * Finds all reference errors in given set of files
      * @param Finder $files
      * @return array
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
+     * @throws TestReferenceException
+     * @throws XmlException
      */
     private function findErrorsInFileSet($files)
     {
@@ -348,8 +360,7 @@ class TestDependencyCheck implements StaticCheckInterface
      * Attempts to find any MFTF entity by its name. Returns null if none are found.
      * @param string $name
      * @return mixed
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
+     * @throws XmlException
      */
     private function findEntity($name)
     {
@@ -378,24 +389,29 @@ class TestDependencyCheck implements StaticCheckInterface
 
     /**
      * Prints out given errors to file, and returns summary result string
-     * @param array $errors
      * @return string
      */
-    private function printErrorsToFile($errors)
+    private function printErrorsToFile()
     {
+        $errors = $this->getErrors();
+
         if (empty($errors)) {
             return "No Dependency errors found.";
         }
+
         $outputPath = getcwd() . DIRECTORY_SEPARATOR . "mftf-dependency-checks.txt";
         $fileResource = fopen($outputPath, 'w');
         $header = "MFTF File Dependency Check:\n";
         fwrite($fileResource, $header);
+
         foreach ($errors as $test => $error) {
             fwrite($fileResource, $error[0] . PHP_EOL);
         }
+
         fclose($fileResource);
         $errorCount = count($errors);
         $output = "Dependency errors found across {$errorCount} file(s). Error details output to {$outputPath}";
+
         return $output;
     }
 }
