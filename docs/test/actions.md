@@ -181,9 +181,9 @@ Learn more in [Handling a REST API response](../metadata.md#rest-response).
 
 ## Actions specifying HTML values
 
-To use HTML in actions you must encode the HTML string using a tool. We recommend [CyberChef](https://gchq.github.io/CyberChef/#recipe=To_HTML_Entity(false,'Numeric%20entities')). Using CyberChef or a similar tool is easy. You just need to enter in your HTML string, copy the encoded result, and paste that value into your MFTF test.
+To use HTML in actions you must encode the HTML string. We recommend using [CyberChef](https://gchq.github.io/CyberChef/#recipe=To_HTML_Entity(false,'Numeric%20entities')). Using CyberChef or a similar tool is straightforward: enter in your HTML string, copy the encoded result, and paste that value into your MFTF test.
 
-For example, we want to ensure we don't see this HTML: `<h1 class="login-header">`
+For example, we want to ensure that this value is presented as a string and not rendered as a H1 tag: `<h1 class="login-header">`
 
 After passing `<h1 class="login-header">` through CyberChef we get `&#60;h1 class&#61;&#34;login-header&#34;&#62;` which can be used in a test like:
 
@@ -880,7 +880,7 @@ See [dontSeeInSource docs on codeception.com](http://codeception.com/docs/module
 
 Attribute|Type|Use|Description
 ---|---|---|---
-`html`|string|optional| HTML code to search for within the source code. The value must be encoded. See example.
+`html`|string|optional| HTML code to search for within the source code. The value must be entity-encoded. See example.
 `stepKey`|string|required| A unique identifier of the action.
 `skipReadiness`|boolean|optional| A flag to skip the readiness check.
 `before`|string|optional| `stepKey` of action that must be executed next.
@@ -1976,7 +1976,7 @@ See [seeInSource docs on codeception.com](http://codeception.com/docs/modules/We
 
 Attribute|Type|Use|Description
 ---|---|---|---
-`html`|string|optional| HTML code to be searched for within the page source. The value must be encoded. See example.
+`html`|string|optional| HTML code to be searched for within the page source. The value must be entity-encoded. See example.
 `stepKey`|string|required| A unique identifier of the action.
 `skipReadiness`|boolean|optional| A flag to skip the readiness check.
 `before`|string|optional| `stepKey` of action that must be executed next.
