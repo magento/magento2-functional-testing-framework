@@ -16,13 +16,6 @@ class CredentialStore
     const ARRAY_KEY_FOR_FILE = 'file';
 
     /**
-     * Numeric indexed array that defines the access precedence of credential storage
-     *
-     * @var array
-     */
-    private static $credStoragePrecedence = [self::ARRAY_KEY_FOR_FILE, self::ARRAY_KEY_FOR_VAULT];
-
-    /**
      * Credential storage array
      *
      * @var array
@@ -58,6 +51,12 @@ class CredentialStore
      */
     private function __construct()
     {
+        // Initialize file storage
+        try {
+            $this->credStorage[self::ARRAY_KEY_FOR_FILE]  = new FileStorage();
+        } catch (TestFrameworkException $e) {
+        }
+
         // Initialize vault storage
         $csBaseUrl = getenv('CREDENTIAL_VAULT_BASE_URL');
         $csToken = getenv('CREDENTIAL_VAULT_TOKEN');
@@ -71,20 +70,11 @@ class CredentialStore
             }
         }
 
-        // Initialize file storage
-        try {
-            $this->credStorage[self::ARRAY_KEY_FOR_FILE]  = new FileStorage();
-        } catch (TestFrameworkException $e) {
+        if (empty($this->credStorage)) {
+            throw new TestFrameworkException(
+                "No credential storage is properly configured. Please configure vault or .credentials file."
+            );
         }
-
-        foreach ($this->credStorage as $cred) {
-            if (null !== $cred) {
-                return;
-            }
-        }
-        throw new TestFrameworkException(
-            "No credential storage is properly configured. Please configure vault or .credentials file."
-        );
     }
 
     /**
@@ -96,14 +86,12 @@ class CredentialStore
      */
     public function getSecret($key)
     {
-        // Get secret data from storage according to defined precedence
+        // Get secret data from storage according to the order they are stored
         // File storage is preferred over vault storage to allow local secret value overriding remote secret value
-        foreach (self::$credStoragePrecedence as $credType) {
-            if (null !== $this->credStorage[$credType]) {
-                $value = $this->credStorage[$credType]->getEncryptedValue($key);
-                if (null !== $value) {
-                    return $value;
-                }
+        foreach ($this->credStorage as $storage) {
+            $value = $storage->getEncryptedValue($key);
+            if (null !== $value) {
+                return $value;
             }
         }
 
@@ -122,10 +110,8 @@ class CredentialStore
     public function decryptSecretValue($value)
     {
         // Loop through storage to decrypt value
-        foreach (self::$credStoragePrecedence as $credType) {
-            if (null !== $this->credStorage[$credType]) {
-                return $this->credStorage[$credType]->getDecryptedValue($value);
-            }
+        foreach ($this->credStorage as $storage) {
+            return $storage->getDecryptedValue($value);
         }
     }
 
@@ -138,10 +124,8 @@ class CredentialStore
     public function decryptAllSecretsInString($string)
     {
         // Loop through storage to decrypt all occurrences from input string
-        foreach (self::$credStoragePrecedence as $credType) {
-            if (null !== $this->credStorage[$credType]) {
-                return $this->credStorage[$credType]->getAllDecryptedValuesInString($string);
-            }
+        foreach ($this->credStorage as $storage) {
+            return $storage->getAllDecryptedValuesInString($string);
         }
     }
 }
