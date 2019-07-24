@@ -861,7 +861,7 @@ See [dontSeeInPageSource docs on codeception.com](http://codeception.com/docs/mo
 
 Attribute|Type|Use|Description
 ---|---|---|---
-`userInput`|string|optional| Value for the form field.
+`html`|string|optional| HTML code to be searched for within the page source. The value must be entity-encoded. See example.
 `stepKey`|string|required| A unique identifier of the action.
 `skipReadiness`|boolean|optional| A flag to skip the readiness check.
 `before`|string|optional| `stepKey` of action that must be executed next.
@@ -870,8 +870,8 @@ Attribute|Type|Use|Description
 #### Example
 
 ```xml
-<!-- Verify that the page source does not contain the string "Sample text". -->
-<dontSeeInPageSource userInput="Sample text" stepKey="dontSeeInPageSource"/>
+<!-- Verify that the page source does not contain the raw source code `<h1 class="login-header">`. -->
+<dontSeeInPageSource userInput="&#60;h1 class&#61;&#34;login-header&#34;&#62;" stepKey="dontSeeInPageSource"/>
 ```
 
 ### dontSeeInSource
@@ -880,7 +880,7 @@ See [dontSeeInSource docs on codeception.com](http://codeception.com/docs/module
 
 Attribute|Type|Use|Description
 ---|---|---|---
-`html`|string|optional| HTML code to search for within the source code. The value must be entity-encoded. See example.
+`html`|string|optional| HTML code to be searched for within the page source. The value must be entity-encoded. See example.
 `stepKey`|string|required| A unique identifier of the action.
 `skipReadiness`|boolean|optional| A flag to skip the readiness check.
 `before`|string|optional| `stepKey` of action that must be executed next.
@@ -891,7 +891,7 @@ Attribute|Type|Use|Description
 You must encode the `html` using a tool such as [CyberChef](https://gchq.github.io/CyberChef/#recipe=To_HTML_Entity(false,'Numeric%20entities')).
 
 ```xml
-<!-- Verify that the page does not contain the raw source code `<h1 class="login-header">`. -->
+<!-- Verify that the page source does not contain the raw source code `<h1 class="login-header">`. -->
 <dontSeeInSource html="&#60;h1 class&#61;&#34;login-header&#34;&#62;" stepKey="dontSeeInSource"/>
 ```
 
@@ -1936,7 +1936,7 @@ See [seeInPageSource docs on codeception.com](http://codeception.com/docs/module
 
 Attribute|Type|Use|Description
 ---|---|---|---
-`html`|string|optional| HTML code to be searched for within the document. The value must be encoded. See example.
+`html`|string|optional| HTML code to be searched for within the page source. The value must be entity-encoded. See example.
 `stepKey`|string|required| A unique identifier of the action.
 `skipReadiness`|boolean|optional| A flag to skip the readiness check.
 `before`|string|optional| `stepKey` of action that must be executed next.
@@ -1987,7 +1987,7 @@ Attribute|Type|Use|Description
 You must encode the `html` using a tool such as [CyberChef](https://gchq.github.io/CyberChef/#recipe=To_HTML_Entity(false,'Numeric%20entities')).
 
 ```xml
-<!-- Verify that the page does contains the raw source code `<h1 class="login-header">`. -->
+<!-- Verify that the page source contains the raw source code `<h1 class="login-header">`. -->
 <seeInSource html="&#60;h1 class&#61;&#34;login-header&#34;&#62;" stepKey="seeInSource"/>
 ```
 
