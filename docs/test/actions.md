@@ -861,7 +861,7 @@ See [dontSeeInPageSource docs on codeception.com](http://codeception.com/docs/mo
 
 Attribute|Type|Use|Description
 ---|---|---|---
-`html`|string|optional| HTML code to be searched for within the page source. The value must be entity-encoded. See example.
+`html`|string|required| HTML code to be searched for within the page source. The value must be entity-encoded. See example.
 `stepKey`|string|required| A unique identifier of the action.
 `skipReadiness`|boolean|optional| A flag to skip the readiness check.
 `before`|string|optional| `stepKey` of action that must be executed next.
@@ -880,7 +880,7 @@ See [dontSeeInSource docs on codeception.com](http://codeception.com/docs/module
 
 Attribute|Type|Use|Description
 ---|---|---|---
-`html`|string|optional| HTML code to be searched for within the page source. The value must be entity-encoded. See example.
+`html`|string|required| HTML code to be searched for within the page source. The value must be entity-encoded. See example.
 `stepKey`|string|required| A unique identifier of the action.
 `skipReadiness`|boolean|optional| A flag to skip the readiness check.
 `before`|string|optional| `stepKey` of action that must be executed next.
@@ -1936,7 +1936,7 @@ See [seeInPageSource docs on codeception.com](http://codeception.com/docs/module
 
 Attribute|Type|Use|Description
 ---|---|---|---
-`html`|string|optional| HTML code to be searched for within the page source. The value must be entity-encoded. See example.
+`html`|string|required| HTML code to be searched for within the page source. The value must be entity-encoded. See example.
 `stepKey`|string|required| A unique identifier of the action.
 `skipReadiness`|boolean|optional| A flag to skip the readiness check.
 `before`|string|optional| `stepKey` of action that must be executed next.
@@ -1976,7 +1976,7 @@ See [seeInSource docs on codeception.com](http://codeception.com/docs/modules/We
 
 Attribute|Type|Use|Description
 ---|---|---|---
-`html`|string|optional| HTML code to be searched for within the page source. The value must be entity-encoded. See example.
+`html`|string|required| HTML code to be searched for within the page source. The value must be entity-encoded. See example.
 `stepKey`|string|required| A unique identifier of the action.
 `skipReadiness`|boolean|optional| A flag to skip the readiness check.
 `before`|string|optional| `stepKey` of action that must be executed next.
