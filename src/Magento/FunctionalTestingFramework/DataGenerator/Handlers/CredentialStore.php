@@ -59,13 +59,9 @@ class CredentialStore
 
         // Initialize vault storage
         $csBaseUrl = getenv('CREDENTIAL_VAULT_BASE_URL');
-        $csToken = getenv('CREDENTIAL_VAULT_TOKEN');
-        if ($csBaseUrl !== false && $csToken !== false) {
+        if ($csBaseUrl !== false) {
             try {
-                $this->credStorage[self::ARRAY_KEY_FOR_VAULT] = new VaultStorage(
-                    rtrim($csBaseUrl, '/'),
-                    $csToken
-                );
+                $this->credStorage[self::ARRAY_KEY_FOR_VAULT] = new VaultStorage(rtrim($csBaseUrl, '/'));
             } catch (TestFrameworkException $e) {
             }
         }
