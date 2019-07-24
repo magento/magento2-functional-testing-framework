@@ -181,7 +181,7 @@ class VaultStorage extends BaseStorage
      * Get vault token helper script by parsing lines in vault config file
      *
      * @param array $lines
-     * @return array
+     * @return string
      */
     private function getTokenHelperScript($lines)
     {
@@ -200,14 +200,16 @@ class VaultStorage extends BaseStorage
      *
      * @param string $cmd
      * @return string
+     * @throws TestFrameworkException
      */
     private function execVaultTokenHelper($cmd)
     {
-        $output = '';
         exec($cmd, $out, $status);
-        if ($status === 0 && isset($out[0])) {
-            $output = $out[0];
+        if ($status === 0 && isset($out[0]) && !empty($out[0])) {
+            return $out[0];
         }
-        return $output;
+        throw new TestFrameworkException(
+            'Error running custom vault token helper script. Please make sure vault CLI works in your environment.'
+        );
     }
 }
