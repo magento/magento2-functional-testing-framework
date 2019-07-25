@@ -4,34 +4,33 @@
  * See COPYING.txt for license details.
  */
 
-namespace tests\unit\Magento\FunctionalTestFramework\DataGenerator\Handlers\SecretStorage;
+namespace tests\unit\Magento\FunctionalTestFramework\DataGenerator\Handlers;
 
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage\FileStorage;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 use AspectMock\Test as AspectMock;
 
-class FileStorageTest extends MagentoTestCase
+class CredentialStoreTest extends MagentoTestCase
 {
 
     /**
-     * Test basic encryption/decryption functionality in FileStorage class.
+     * Test basic encryption/decryption functionality in CredentialStore class.
      */
     public function testBasicEncryptDecrypt()
     {
-        $testKey = 'magento/myKey';
+        $testKey = 'myKey';
         $testValue = 'myValue';
 
-        AspectMock::double(FileStorage::class, [
+        AspectMock::double(CredentialStore::class, [
             'readInCredentialsFile' => ["$testKey=$testValue"]
         ]);
 
-        $fileStorage = new FileStorage();
-        $encryptedCred = $fileStorage->getEncryptedValue($testKey);
+        $encryptedCred = CredentialStore::getInstance()->getSecret($testKey);
 
         // assert the value we've gotten is in fact not identical to our test value
         $this->assertNotEquals($testValue, $encryptedCred);
 
-        $actualValue = $fileStorage->getDecryptedValue($encryptedCred);
+        $actualValue = CredentialStore::getInstance()->decryptSecretValue($encryptedCred);
 
         // assert that we are able to successfully decrypt our secret value
         $this->assertEquals($testValue, $actualValue);
