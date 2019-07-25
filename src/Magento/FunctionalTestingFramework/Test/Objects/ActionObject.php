@@ -53,7 +53,8 @@ class ActionObject
         "function",
         'filterSelector',
         'optionSelector',
-        "command"
+        "command",
+        "html"
     ];
     const OLD_ASSERTION_ATTRIBUTES = ["expected", "expectedType", "actual", "actualType"];
     const ASSERTION_ATTRIBUTES = ["expectedResult" => "expected", "actualResult" => "actual"];
