@@ -31,6 +31,7 @@ class ActionMergeUtil
     const DEFAULT_WAIT_ORDER = 'after';
     const APPROVED_ACTIONS = ['fillField', 'magentoCLI', 'field'];
     const SECRET_MAPPING = ['fillField' => 'fillSecretField', 'magentoCLI' => 'magentoCLISecret'];
+    const CREDS_REGEX = "/{{_CREDS\.([\w|\/]+)}}/";
 
     /**
      * Array holding final resulting steps
@@ -149,7 +150,7 @@ class ActionMergeUtil
                 return $this->actionAttributeContainsSecretRef($actionAttribute);
             }
 
-            preg_match_all("/{{_CREDS\.([\w]+)}}/", $actionAttribute, $matches);
+            preg_match_all(self::CREDS_REGEX, $actionAttribute, $matches);
 
             if (!empty($matches[0])) {
                 return true;

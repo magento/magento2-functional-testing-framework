@@ -6,14 +6,21 @@
 
 namespace Magento\FunctionalTestingFramework\DataGenerator\Handlers;
 
-use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
-use Magento\FunctionalTestingFramework\Console\BuildProjectCommand;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
-use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage\FileStorage;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage\VaultStorage;
 
 class CredentialStore
 {
-    const ENCRYPTION_ALGO = "AES-256-CBC";
+    const ARRAY_KEY_FOR_VAULT = 'vault';
+    const ARRAY_KEY_FOR_FILE = 'file';
+
+    /**
+     * Credential storage array
+     *
+     * @var array
+     */
+    private $credStorage = [];
 
     /**
      * Singleton instance
@@ -23,30 +30,10 @@ class CredentialStore
     private static $INSTANCE = null;
 
     /**
-     * Initial vector for open_ssl encryption.
-     *
-     * @var string
-     */
-    private $iv = null;
-
-    /**
-     * Key for open_ssl encryption/decryption
-     *
-     * @var string
-     */
-    private $encodedKey = null;
-
-    /**
-     * Key/Value paris of credential names and their corresponding values
-     *
-     * @var array
-     */
-    private $credentials = [];
-
-    /**
      * Static singleton getter for CredentialStore Instance
      *
      * @return CredentialStore
+     * @throws TestFrameworkException
      */
     public static function getInstance()
     {
@@ -58,18 +45,40 @@ class CredentialStore
     }
 
     /**
-     * CredentialStore constructor.
+     * CredentialStore constructor
+     *
+     * @throws TestFrameworkException
      */
     private function __construct()
     {
-        $this->encodedKey = base64_encode(openssl_random_pseudo_bytes(16));
-        $this->iv = substr(hash('sha256', $this->encodedKey), 0, 16);
-        $creds = $this->readInCredentialsFile();
-        $this->credentials = $this->encryptCredFileContents($creds);
+        // Initialize file storage
+        try {
+            $this->credStorage[self::ARRAY_KEY_FOR_FILE]  = new FileStorage();
+        } catch (TestFrameworkException $e) {
+        }
+
+        // Initialize vault storage
+        $csBaseUrl = getenv('CREDENTIAL_VAULT_BASE_URL');
+        $csToken = getenv('CREDENTIAL_VAULT_TOKEN');
+        if ($csBaseUrl !== false && $csToken !== false) {
+            try {
+                $this->credStorage[self::ARRAY_KEY_FOR_VAULT] = new VaultStorage(
+                    rtrim($csBaseUrl, '/'),
+                    $csToken
+                );
+            } catch (TestFrameworkException $e) {
+            }
+        }
+
+        if (empty($this->credStorage)) {
+            throw new TestFrameworkException(
+                "No credential storage is properly configured. Please configure vault or .credentials file."
+            );
+        }
     }
 
     /**
-     * Returns the value of a secret based on corresponding key
+     * Get encrypted value by key
      *
      * @param string $key
      * @return string|null
@@ -77,101 +86,46 @@ class CredentialStore
      */
     public function getSecret($key)
     {
-        if (!array_key_exists($key, $this->credentials)) {
-            throw new TestFrameworkException(
-                "{$key} not defined in .credentials, please provide a value in order to use this secret in a test."
-            );
+        // Get secret data from storage according to the order they are stored
+        // File storage is preferred over vault storage to allow local secret value overriding remote secret value
+        foreach ($this->credStorage as $storage) {
+            $value = $storage->getEncryptedValue($key);
+            if (null !== $value) {
+                return $value;
+            }
         }
 
-        // log here for verbose config
-        if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-            LoggingUtil::getInstance()->getLogger(CredentialStore::class)->debug(
-                "retrieving secret for key name {$key}"
-            );
-        }
-
-        return $this->credentials[$key] ?? null;
-    }
-
-    /**
-     * Private function which reads in secret key/values from .credentials file and stores in memory as key/value pair.
-     *
-     * @return array
-     * @throws TestFrameworkException
-     */
-    private function readInCredentialsFile()
-    {
-        $credsFilePath = str_replace(
-            '.credentials.example',
-            '.credentials',
-            BuildProjectCommand::CREDENTIALS_FILE_PATH
+        throw new TestFrameworkException(
+            "\"{$key}\" not defined in vault or .credentials file, "
+            . "please provide a value in order to use this secret in a test."
         );
-
-        if (!file_exists($credsFilePath)) {
-            throw new TestFrameworkException(
-                "Cannot find .credentials file, please create in "
-                . TESTS_BP . " in order to reference sensitive information"
-            );
-        }
-
-        return file($credsFilePath, FILE_IGNORE_NEW_LINES);
     }
 
     /**
-     * Function which takes the contents of the credentials file and encrypts the entries.
-     *
-     * @param array $credContents
-     * @return array
-     */
-    private function encryptCredFileContents($credContents)
-    {
-        $encryptedCreds = [];
-        foreach ($credContents as $credValue) {
-            if (substr($credValue, 0, 1) === '#' || empty($credValue)) {
-                continue;
-            }
-
-            list($key, $value) = explode("=", $credValue, 2);
-            if (!empty($value)) {
-                $encryptedCreds[$key] = openssl_encrypt(
-                    $value,
-                    self::ENCRYPTION_ALGO,
-                    $this->encodedKey,
-                    0,
-                    $this->iv
-                );
-            }
-        }
-
-        return $encryptedCreds;
-    }
-
-    /**
-     * Takes a value encrypted at runtime and descrypts using the object's initial vector.
+     * Return decrypted input value
      *
      * @param string $value
      * @return string
      */
     public function decryptSecretValue($value)
     {
-        return openssl_decrypt($value, self::ENCRYPTION_ALGO, $this->encodedKey, 0, $this->iv);
+        // Loop through storage to decrypt value
+        foreach ($this->credStorage as $storage) {
+            return $storage->getDecryptedValue($value);
+        }
     }
 
     /**
-     * Takes a string that contains encrypted data at runtime and decrypts each value.
+     * Return decrypted values for all occurrences from input string
      *
      * @param string $string
      * @return mixed
      */
     public function decryptAllSecretsInString($string)
     {
-        $newString = $string;
-        foreach ($this->credentials as $name => $secretValue) {
-            if (strpos($newString, $secretValue) !== false) {
-                $decryptedValue = $this->decryptSecretValue($secretValue);
-                $newString = str_replace($secretValue, $decryptedValue, $newString);
-            }
+        // Loop through storage to decrypt all occurrences from input string
+        foreach ($this->credStorage as $storage) {
+            return $storage->getAllDecryptedValuesInString($string);
         }
-        return $newString;
     }
 }

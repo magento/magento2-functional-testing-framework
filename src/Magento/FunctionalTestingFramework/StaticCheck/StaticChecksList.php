@@ -16,14 +16,14 @@ class StaticChecksList implements StaticCheckListInterface
     /**
      * Property contains all static check scripts.
      *
-     * @var \Magento\FunctionalTestingFramework\StaticCheck\StaticCheckListInterface[]
+     * @var StaticCheckInterface[]
      */
     private $checks;
 
     /**
      * Constructor
      *
-     * @param array $scripts
+     * @param array $checks
      */
     public function __construct(array $checks = [])
     {
