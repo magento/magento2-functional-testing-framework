@@ -664,7 +664,7 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['html'])) {
-                $html = $customActionAttributes['html'];
+                $html = $this->addUniquenessFunctionCall($customActionAttributes['html']);
             }
 
             if (isset($customActionAttributes['locale'])) {
@@ -1154,7 +1154,6 @@ class TestGenerator
                 case "dontSeeInField":
                 case "dontSeeInCurrentUrl":
                 case "dontSeeInTitle":
-                case "dontSeeInPageSource":
                 case "dontSeeOptionIsSelected":
                 case "fillField":
                 case "loadSessionSnapshot":
@@ -1172,9 +1171,9 @@ class TestGenerator
                     );
                     break;
                 case "seeInPageSource":
+                case "dontSeeInPageSource":
                 case "seeInSource":
                 case "dontSeeInSource":
-                    // TODO: Need to fix xml parser to allow parsing html.
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $html);
                     break;
                 case "conditionalClick":
