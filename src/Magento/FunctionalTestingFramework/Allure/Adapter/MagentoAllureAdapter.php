@@ -219,6 +219,7 @@ class MagentoAllureAdapter extends AllureCodeception
      * Override of parent method, polls stepStorage for testcase and formats it according to actionGroup nesting.
      *
      * @return void
+     * @SuppressWarnings(PHPMD)
      */
     public function testEnd()
     {
