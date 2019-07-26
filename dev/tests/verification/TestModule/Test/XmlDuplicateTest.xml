@@ -66,8 +66,8 @@
             <dontSeeInField stepKey="dntsinfld2"/>
             <dontSeeInFormFields selector="1" stepKey="dntsinffld1"/>
             <dontSeeInFormFields selector="1" stepKey="dntsinffld2"/>
-            <dontSeeInPageSource stepKey="dntsinpgs1"/>
-            <dontSeeInPageSource stepKey="dntsinpgs2"/>
+            <dontSeeInPageSource html="1" stepKey="dntsinpgs1"/>
+            <dontSeeInPageSource html="1" stepKey="dntsinpgs2"/>
             <dontSeeInSource html="1" stepKey="dntsinsource1"/>
             <dontSeeInSource html="1" stepKey="dntsinsource2"/>
             <dontSeeInTitle stepKey="dntsintitle1"/>
@@ -282,8 +282,8 @@
             <dontSeeInField stepKey="dntsinfld2"/>
             <dontSeeInFormFields selector="1" stepKey="dntsinffld1"/>
             <dontSeeInFormFields selector="1" stepKey="dntsinffld2"/>
-            <dontSeeInPageSource stepKey="dntsinpgs1"/>
-            <dontSeeInPageSource stepKey="dntsinpgs2"/>
+            <dontSeeInPageSource html="1" stepKey="dntsinpgs1"/>
+            <dontSeeInPageSource html="1" stepKey="dntsinpgs2"/>
             <dontSeeInSource html="1" stepKey="dntsinsource1"/>
             <dontSeeInSource html="1" stepKey="dntsinsource2"/>
             <dontSeeInTitle stepKey="dntsintitle1"/>
@@ -497,8 +497,8 @@
         <dontSeeInField stepKey="dntsinfld2"/>
         <dontSeeInFormFields selector="1" stepKey="dntsinffld1"/>
         <dontSeeInFormFields selector="1" stepKey="dntsinffld2"/>
-        <dontSeeInPageSource stepKey="dntsinpgs1"/>
-        <dontSeeInPageSource stepKey="dntsinpgs2"/>
+        <dontSeeInPageSource html="1" stepKey="dntsinpgs1"/>
+        <dontSeeInPageSource html="1" stepKey="dntsinpgs2"/>
         <dontSeeInSource html="1" stepKey="dntsinsource1"/>
         <dontSeeInSource html="1" stepKey="dntsinsource2"/>
         <dontSeeInTitle stepKey="dntsintitle1"/>
