@@ -23,9 +23,9 @@ if (!empty($_POST['token']) && !empty($_POST['command'])) {
         $valid = validateCommand($magentoBinary, $command);
         if ($valid) {
             // Turn string into array for symfony escaping
-            $commandParts = array_filter(explode(" ", $command));
-            $argumentParts = array_filter(explode(" ", $arguments));
-            $magentoBinaryParts = array_filter(explode(" ", $magentoBinary));
+            $commandParts = array_filter(explode(" ", $command), 'strlen');
+            $argumentParts = array_filter(explode(" ", $arguments), 'strlen');
+            $magentoBinaryParts = array_filter(explode(" ", $magentoBinary), 'strlen');
             $commandArray = array_merge($magentoBinaryParts, $commandParts);
             $process = new Symfony\Component\Process\Process($commandArray);
             $process->setIdleTimeout(60);
