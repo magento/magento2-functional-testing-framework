@@ -16,7 +16,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  */
-class ActionGroupMergedViaInsertAfterCest
+class ExecuteInSeleniumTestCest
 {
 	/**
 	 * @Features({"TestModule"})
@@ -25,15 +25,8 @@ class ActionGroupMergedViaInsertAfterCest
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupMergedViaInsertAfter(AcceptanceTester $I)
+	public function ExecuteInSeleniumTest(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group FunctionalActionGroupForMassMergeAfter (keyone)");
-		$I->fillField("#foo", "foo");
-		$I->fillField("#bar", "bar");
-		$I->click("#foo2");
-		$I->click("#bar2");
-		$I->click("#baz2");
-		$I->fillField("#baz", "baz");
-		$I->comment("Exiting Action Group FunctionalActionGroupForMassMergeAfter (keyone)");
+		$I->executeInSelenium(function ($webdriver) { return 'Hello, World!'});
 	}
 }

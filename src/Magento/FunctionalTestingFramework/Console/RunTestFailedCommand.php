@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Symfony\Component\Console\Input\InputOption;
 
 class RunTestFailedCommand extends BaseGenerateCommand
 {
@@ -49,7 +50,15 @@ class RunTestFailedCommand extends BaseGenerateCommand
     protected function configure()
     {
         $this->setName('run:failed')
-            ->setDescription('Execute a set of tests referenced via failed file');
+            ->setDescription('Execute a set of tests referenced via failed file')
+            ->addOption(
+                'debug',
+                'd',
+                InputOption::VALUE_OPTIONAL,
+                'Run extra validation when running failed tests. Use option \'none\' to turn off debugging -- 
+                 added for backward compatibility, will be removed in the next MAJOR release',
+                MftfApplicationConfig::LEVEL_DEFAULT
+            );
 
         parent::configure();
     }
@@ -59,35 +68,41 @@ class RunTestFailedCommand extends BaseGenerateCommand
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return integer|null|void
+     * @return integer
      * @throws \Exception
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
         // Create Mftf Configuration
         MftfApplicationConfig::create(
             false,
             MftfApplicationConfig::GENERATION_PHASE,
             false,
-            false
+            $debug
         );
 
         $testConfiguration = $this->getFailedTestList();
 
         if ($testConfiguration === null) {
-            return null;
+            // no failed tests found, run is a success
+            return 0;
         }
 
         $command = $this->getApplication()->find('generate:tests');
-        $args = ['--tests' => $testConfiguration, '--remove' => true];
+        $args = [
+            '--tests' => $testConfiguration,
+            '--remove' => true,
+            '--debug' => $debug
+        ];
 
         $command->run(new ArrayInput($args), $output);
 
         $testManifestList = $this->readTestManifestFile();
-
+        $returnCode = 0;
         foreach ($testManifestList as $testCommand) {
             $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
             $codeceptionCommand .= $testCommand;
@@ -96,11 +111,11 @@ class RunTestFailedCommand extends BaseGenerateCommand
             $process->setWorkingDirectory(TESTS_BP);
             $process->setIdleTimeout(600);
             $process->setTimeout(0);
-            $process->run(
+            $returnCode = max($returnCode, $process->run(
                 function ($type, $buffer) use ($output) {
                     $output->write($buffer);
                 }
-            );
+            ));
             if (file_exists(self::TESTS_FAILED_FILE)) {
                 $this->failedList = array_merge(
                     $this->failedList,
@@ -111,6 +126,8 @@ class RunTestFailedCommand extends BaseGenerateCommand
         foreach ($this->failedList as $test) {
             $this->writeFailedTestToFile($test, self::TESTS_FAILED_FILE);
         }
+
+        return $returnCode;
     }
 
     /**

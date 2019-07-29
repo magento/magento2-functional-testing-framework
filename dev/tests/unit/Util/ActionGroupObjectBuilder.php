@@ -28,6 +28,13 @@ class ActionGroupObjectBuilder
     private $actionObjects = [];
 
     /**
+     * Action Group Object Builder default entity annotations.
+     *
+     * @var array
+     */
+    private $annotations = [];
+
+    /**
      * Action Group Object Builder default entity arguments.
      *
      * @var array
@@ -42,6 +49,13 @@ class ActionGroupObjectBuilder
     private $extends = null;
 
     /**
+     * Action Group Object Builder default filenames
+     *
+     * @var string
+     */
+    private $filename = [];
+
+    /**
      * Setter for the Action Group Object name
      *
      * @param string $name
@@ -50,6 +64,18 @@ class ActionGroupObjectBuilder
     public function withName($name)
     {
         $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * Setter for the Action Group Object annotations
+     *
+     * @param array $annotations
+     * @return ActionGroupObjectBuilder
+     */
+    public function withAnnotations($annotations)
+    {
+        $this->annotations = $annotations;
         return $this;
     }
 
@@ -90,6 +116,18 @@ class ActionGroupObjectBuilder
     }
 
     /**
+     * Setter for the Action Group Object filename
+     *
+     * @param string $filename
+     * @return ActionGroupObjectBuilder
+     */
+    public function withFilename($filename)
+    {
+        $this->filename = $filename;
+        return $this;
+    }
+
+    /**
      * ActionGroupObjectBuilder constructor.
      */
     public function __construct()
@@ -108,9 +146,11 @@ class ActionGroupObjectBuilder
     {
         return new ActionGroupObject(
             $this->name,
+            $this->annotations,
             $this->arguments,
             $this->actionObjects,
-            $this->extends
+            $this->extends,
+            $this->filename
         );
     }
 }

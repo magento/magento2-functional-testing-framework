@@ -60,7 +60,7 @@ class ActionObject
     const ASSERTION_VALUE_ATTRIBUTE = "value";
     const DELETE_DATA_MUTUAL_EXCLUSIVE_ATTRIBUTES = ["url", "createDataKey"];
     const EXTERNAL_URL_AREA_INVALID_ACTIONS = ['amOnPage'];
-    const FUNCTION_CLOSURE_ACTIONS = ['waitForElementChange', 'performOn'];
+    const FUNCTION_CLOSURE_ACTIONS = ['waitForElementChange', 'performOn', 'executeInSelenium'];
     const MERGE_ACTION_ORDER_AFTER = 'after';
     const MERGE_ACTION_ORDER_BEFORE = 'before';
     const ACTION_ATTRIBUTE_TIMEZONE = 'timezone';
@@ -70,6 +70,8 @@ class ActionObject
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/({{[\w]+\.[\w\[\]]+}})|({{[\w]+\.[\w]+\((?(?!}}).)+\)}})/';
     const STRING_PARAMETER_REGEX = "/'[^']+'/";
     const DEFAULT_WAIT_TIMEOUT = 10;
+    const ACTION_ATTRIBUTE_USERINPUT = 'userInput';
+    const ACTION_TYPE_COMMENT = 'comment';
 
     /**
      * The unique identifier for the action
