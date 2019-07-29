@@ -26,7 +26,7 @@ if (!empty($_POST['token']) && !empty($_POST['command'])) {
             $commandParts = array_filter(explode(" ", $command), 'strlen');
             $argumentParts = array_filter(explode(" ", $arguments), 'strlen');
             $magentoBinaryParts = array_filter(explode(" ", $magentoBinary), 'strlen');
-            $commandArray = array_merge($magentoBinaryParts, $commandParts);
+            $commandArray = array_merge($magentoBinaryParts, $commandParts, $argumentParts);
             $process = new Symfony\Component\Process\Process($commandArray);
             $process->setIdleTimeout(60);
             $process->setTimeout(0);
