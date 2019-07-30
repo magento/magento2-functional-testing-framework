@@ -1,8 +1,8 @@
-# Versioning
+# MFTF versioning
 
 This documemt describes the versioning policy for the Magento Functional Testing Framework (MFTF), including the version numbering schema.
 
-## Backward Compatibility
+## Backward compatibility
 
 In this context, backward compatibility means that when changes are made to the MFTF, all existing tests still run normally.
 If a modification to MFTF forces tests to be changed, this is a backward incompatible change.
@@ -62,6 +62,7 @@ This table lists the version of the MFTF that was released with a particular ver
 
 |Magento version| MFTF  version|
 |---|---|
+| 2.3.2 | 2.4.2 |
 | 2.3.1 | 2.3.13 |
 | 2.3.0 | 2.3.9 |
 | 2.2.8 | 2.3.13 |
