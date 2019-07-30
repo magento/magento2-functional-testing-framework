@@ -1174,6 +1174,10 @@ class TestGenerator
                 case "dontSeeInPageSource":
                 case "seeInSource":
                 case "dontSeeInSource":
+                    //TODO: Deprecate allowed usage of userInput in dontSeeInPageSource
+                    if ($html === null && $input !== null) {
+                        $html = $input;
+                    }
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $html);
                     break;
                 case "conditionalClick":

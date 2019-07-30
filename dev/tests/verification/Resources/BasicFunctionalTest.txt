@@ -94,6 +94,10 @@ class BasicFunctionalTestCest
 		$I->dontSeeInField(".functionalTestSelector"); // stepKey: dontSeeInFieldKey1
 		$I->dontSeeInPageSource("Cosmo Kramer"); // stepKey: dontSeeInPageSourceKey1
 		$I->dontSeeInPageSource("<p>Jerry Seinfeld</p>"); // stepKey: dontSeeInPageSourceKey2
+		$I->dontSeeInPageSource("Cosmo Kramer"); // stepKey: dontSeeInPageSourceKey3
+		$I->dontSeeInPageSource("<p>Jerry Seinfeld</p>"); // stepKey: dontSeeInPageSourceKey4
+		$I->dontSeeInPageSource("foo"); // stepKey: dontSeeInPageSourceKey5
+		$I->dontSeeInPageSource("<p>foo</p>"); // stepKey: dontSeeInPageSourceKey6
 		$I->dontSeeInSource("Cosmo Kramer"); // stepKey: dontSeeInSourceKey1
 		$I->dontSeeInSource("<p>Jerry Seinfeld</p>"); // stepKey: dontSeeInSourceKey2
 		$I->dontSeeInTitle("someInput"); // stepKey: dontSeeInTitleKey1
