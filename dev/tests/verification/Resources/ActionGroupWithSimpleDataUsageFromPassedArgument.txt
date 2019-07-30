@@ -29,15 +29,35 @@ class ActionGroupWithSimpleDataUsageFromPassedArgumentCest
 	 */
 	public function ActionGroupWithSimpleDataUsageFromPassedArgument(AcceptanceTester $I)
 	{
-		$I->see("overrideString", "#element .overrideString");
-		$I->see("1", "#element .1");
-		$I->see("1.5", "#element .1.5");
-		$I->see("true", "#element .true");
-		$I->see("simpleData.firstname", "#element .simpleData.firstname");
-		$I->see(PersistedObjectHandler::getInstance()->retrieveEntityField('persisted', 'data', 'test'), "#element ." . PersistedObjectHandler::getInstance()->retrieveEntityField('persisted', 'data', 'test'));
-		$I->see("John", "#element .John");
-		$I->see(PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname', 'test'), "#element ." . PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname', 'test'));
-		$I->see(PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname[0]', 'test'), "#element ." . PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname[0]', 'test'));
-		$I->see(PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname[data_index]', 'test'), "#element ." . PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname[data_index]', 'test'));
+		$I->comment("Entering Action Group [actionGroup1] actionGroupWithStringUsage");
+		$I->see("overrideString", "#element .overrideString"); // stepKey: see1ActionGroup1
+		$I->comment("Exiting Action Group [actionGroup1] actionGroupWithStringUsage");
+		$I->comment("Entering Action Group [actionGroup11] actionGroupWithStringUsage");
+		$I->see("1", "#element .1"); // stepKey: see1ActionGroup11
+		$I->comment("Exiting Action Group [actionGroup11] actionGroupWithStringUsage");
+		$I->comment("Entering Action Group [actionGroup12] actionGroupWithStringUsage");
+		$I->see("1.5", "#element .1.5"); // stepKey: see1ActionGroup12
+		$I->comment("Exiting Action Group [actionGroup12] actionGroupWithStringUsage");
+		$I->comment("Entering Action Group [actionGroup13] actionGroupWithStringUsage");
+		$I->see("true", "#element .true"); // stepKey: see1ActionGroup13
+		$I->comment("Exiting Action Group [actionGroup13] actionGroupWithStringUsage");
+		$I->comment("Entering Action Group [actionGroup2] actionGroupWithStringUsage");
+		$I->see("simpleData.firstname", "#element .simpleData.firstname"); // stepKey: see1ActionGroup2
+		$I->comment("Exiting Action Group [actionGroup2] actionGroupWithStringUsage");
+		$I->comment("Entering Action Group [actionGroup3] actionGroupWithStringUsage");
+		$I->see(PersistedObjectHandler::getInstance()->retrieveEntityField('persisted', 'data', 'test'), "#element ." . PersistedObjectHandler::getInstance()->retrieveEntityField('persisted', 'data', 'test')); // stepKey: see1ActionGroup3
+		$I->comment("Exiting Action Group [actionGroup3] actionGroupWithStringUsage");
+		$I->comment("Entering Action Group [actionGroup4] actionGroupWithEntityUsage");
+		$I->see("John", "#element .John"); // stepKey: see1ActionGroup4
+		$I->comment("Exiting Action Group [actionGroup4] actionGroupWithEntityUsage");
+		$I->comment("Entering Action Group [actionGroup5] actionGroupWithEntityUsage");
+		$I->see(PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname', 'test'), "#element ." . PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname', 'test')); // stepKey: see1ActionGroup5
+		$I->comment("Exiting Action Group [actionGroup5] actionGroupWithEntityUsage");
+		$I->comment("Entering Action Group [actionGroup6] actionGroupWithEntityUsage");
+		$I->see(PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname[0]', 'test'), "#element ." . PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname[0]', 'test')); // stepKey: see1ActionGroup6
+		$I->comment("Exiting Action Group [actionGroup6] actionGroupWithEntityUsage");
+		$I->comment("Entering Action Group [actionGroup7] actionGroupWithEntityUsage");
+		$I->see(PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname[data_index]', 'test'), "#element ." . PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname[data_index]', 'test')); // stepKey: see1ActionGroup7
+		$I->comment("Exiting Action Group [actionGroup7] actionGroupWithEntityUsage");
 	}
 }

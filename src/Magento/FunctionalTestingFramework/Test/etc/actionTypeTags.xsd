@@ -37,7 +37,6 @@
             <xs:element type="executeInSeleniumType" name="executeInSelenium" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="executeJSType" name="executeJS" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="fillFieldType" name="fillField" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="fillFieldType" name="fillSecretField" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="loadSessionSnapshotType" name="loadSessionSnapshot" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="makeScreenshotType" name="makeScreenshot" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="maximizeWindowType" name="maximizeWindow" minOccurs="0" maxOccurs="unbounded"/>

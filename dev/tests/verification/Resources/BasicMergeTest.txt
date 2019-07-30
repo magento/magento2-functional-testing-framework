@@ -27,8 +27,8 @@ class BasicMergeTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->amOnPage("/beforeUrl");
-		$I->see("#before2");
+		$I->amOnPage("/beforeUrl"); // stepKey: before1
+		$I->see("#before2"); // stepKey: before2
 	}
 
 	/**
@@ -37,7 +37,7 @@ class BasicMergeTestCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
-		$I->amOnPage("/afterUrl1");
+		$I->amOnPage("/afterUrl1"); // stepKey: after1
 	}
 
 	/**
@@ -46,7 +46,7 @@ class BasicMergeTestCest
 	  */
 	public function _failed(AcceptanceTester $I)
 	{
-		$I->saveScreenshot();
+		$I->saveScreenshot(); // stepKey: saveScreenshot
 	}
 
 	/**
@@ -60,18 +60,20 @@ class BasicMergeTestCest
 	 */
 	public function BasicMergeTest(AcceptanceTester $I)
 	{
-		$I->amOnPage("/step1");
-		$I->click("#step2");
-		$I->fillField("#username", "step3");
-		$I->click("#step4");
-		$I->fillField("#password", "step5");
-		$I->click("#step6Merged");
-		$I->click("#element .Jane .step7Merge");
-		$I->amOnPage("/Jane/Dane.html");
-		$I->fillField("#foo", "Jane");
-		$I->fillField("#bar", "Dane");
-		$I->searchAndMultiSelectOption("#foo", ["Jane", "Dane"]);
-		$I->see("#element .Jane");
-		$I->click("#step10MergedInResult");
+		$I->amOnPage("/step1"); // stepKey: step1
+		$I->click("#step2"); // stepKey: step2
+		$I->fillField("#username", "step3"); // stepKey: step3
+		$I->click("#step4"); // stepKey: step4
+		$I->fillField("#password", "step5"); // stepKey: step5
+		$I->click("#step6Merged"); // stepKey: step6Merge
+		$I->click("#element .Jane .step7Merge"); // stepKey: step7Merge
+		$I->comment("Entering Action Group [step8Merge] FunctionalActionGroupWithData");
+		$I->amOnPage("/Jane/Dane.html"); // stepKey: amOnPage1Step8Merge
+		$I->fillField("#foo", "Jane"); // stepKey: fillField1Step8Merge
+		$I->fillField("#bar", "Dane"); // stepKey: fillField2Step8Merge
+		$I->searchAndMultiSelectOption("#foo", ["Jane", "Dane"]); // stepKey: multi1Step8Merge
+		$I->see("#element .Jane"); // stepKey: see1Step8Merge
+		$I->comment("Exiting Action Group [step8Merge] FunctionalActionGroupWithData");
+		$I->click("#step10MergedInResult"); // stepKey: step10
 	}
 }

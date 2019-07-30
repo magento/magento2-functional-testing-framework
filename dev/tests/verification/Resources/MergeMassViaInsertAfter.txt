@@ -27,11 +27,11 @@ class MergeMassViaInsertAfterCest
 	 */
 	public function MergeMassViaInsertAfter(AcceptanceTester $I)
 	{
-		$I->fillField("#foo", "foo");
-		$I->fillField("#bar", "bar");
-		$I->click("#mergeOne");
-		$I->click("#mergeTwo");
-		$I->click("#mergeThree");
-		$I->fillField("#baz", "baz");
+		$I->fillField("#foo", "foo"); // stepKey: fillField1
+		$I->fillField("#bar", "bar"); // stepKey: fillField2
+		$I->click("#mergeOne"); // stepKey: clickOne
+		$I->click("#mergeTwo"); // stepKey: clickTwo
+		$I->click("#mergeThree"); // stepKey: clickThree
+		$I->fillField("#baz", "baz"); // stepKey: fillField3
 	}
 }

@@ -29,6 +29,8 @@ class ActionGroupWithMultipleParameterSelectorsFromDefaultArgumentCest
 	 */
 	public function ActionGroupWithMultipleParameterSelectorsFromDefaultArgument(AcceptanceTester $I)
 	{
-		$I->see("Doe", "#John-Doe .test");
+		$I->comment("Entering Action Group [actionGroup] actionGroupWithMultipleParameterSelectorsFromArgument");
+		$I->see("Doe", "#John-Doe .test"); // stepKey: seeLastNameActionGroup
+		$I->comment("Exiting Action Group [actionGroup] actionGroupWithMultipleParameterSelectorsFromArgument");
 	}
 }

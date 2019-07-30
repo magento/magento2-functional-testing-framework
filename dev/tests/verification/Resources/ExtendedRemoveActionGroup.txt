@@ -27,5 +27,7 @@ class ExtendedRemoveActionGroupCest
 	 */
 	public function ExtendedRemoveActionGroup(AcceptanceTester $I)
 	{
+		$I->comment("Entering Action Group [actionGroup] extendRemoveTestActionGroup");
+		$I->comment("Exiting Action Group [actionGroup] extendRemoveTestActionGroup");
 	}
 }

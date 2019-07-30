@@ -27,6 +27,8 @@ class ActionGroupWithSectionAndDataAsArgumentsCest
 	 */
 	public function ActionGroupWithSectionAndDataAsArguments(AcceptanceTester $I)
 	{
-		$I->waitForElementVisible("#element .John", 10);
+		$I->comment("Entering Action Group [actionGroup] actionGroupWithSectionAndData");
+		$I->waitForElementVisible("#element .John", 10); // stepKey: arg1ActionGroup
+		$I->comment("Exiting Action Group [actionGroup] actionGroupWithSectionAndData");
 	}
 }

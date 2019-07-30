@@ -27,34 +27,38 @@ class ActionGroupWithStepKeyReferencesCest
 	 */
 	public function ActionGroupWithStepKeyReferences(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the stepKey: createSimpleDataActionGroup");
+		$I->comment("Entering Action Group [actionGroup] FunctionActionGroupWithStepKeyReferences");
+		$I->comment("[createSimpleDataActionGroup] create 'simpleData' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createSimpleDataActionGroup",
 			"test",
 			"simpleData",
 			[],
-			null
+			[]
 		);
-		$grabTextDataActionGroup = $I->grabTextFrom(".class");
-		$I->fillField(".{$grabTextDataActionGroup}", PersistedObjectHandler::getInstance()->retrieveEntityField('createSimpleDataActionGroup', 'field', 'test'));
+
+		$grabTextDataActionGroup = $I->grabTextFrom(".class"); // stepKey: grabTextDataActionGroup
+		$I->fillField(".{$grabTextDataActionGroup}", PersistedObjectHandler::getInstance()->retrieveEntityField('createSimpleDataActionGroup', 'field', 'test')); // stepKey: fill1ActionGroup
 		$I->comment("Invocation stepKey will not be appended in non stepKey instances");
-		$I->click($action0);
-		$I->fillField($action1);
+		$I->click($action0); // stepKey: action0ActionGroup
+		$I->fillField($action1); // stepKey: action1ActionGroup
 		$I->comment("Invocation stepKey will be appended in non stepKey instances");
-		$action3ActionGroup = $I->executeJS($action3ActionGroup);
-		$action4ActionGroup = $I->magentoCLI($action4ActionGroup, "\"stuffHere\"");
+		$action3ActionGroup = $I->executeJS($action3ActionGroup); // stepKey: action3ActionGroup
+		$action4ActionGroup = $I->magentoCLI($action4ActionGroup, "\"stuffHere\""); // stepKey: action4ActionGroup
 		$I->comment($action4ActionGroup);
 		$date = new \DateTime();
 		$date->setTimestamp(strtotime("{$action5}"));
 		$date->setTimezone(new \DateTimeZone("America/Los_Angeles"));
 		$action5ActionGroup = $date->format("H:i:s");
-		$action6ActionGroup = $I->formatMoney($action6ActionGroup);
-		$I->amGoingTo("delete entity that has the createDataKey: {$action7ActionGroupActionGroup}");
+
+		$action6ActionGroup = $I->formatMoney($action6ActionGroup); // stepKey: action6ActionGroup
+		$I->comment("[action7ActionGroup] delete entity '{$action7ActionGroupActionGroup}'");
 		PersistedObjectHandler::getInstance()->deleteEntity(
 			"{$action7ActionGroupActionGroup}",
 			"test"
 		);
-		$I->amGoingTo("get entity that has the stepKey: action8ActionGroup");
+
+		$I->comment("[action8ActionGroup] get '{$action8}' entity");
 		PersistedObjectHandler::getInstance()->getEntity(
 			"action8ActionGroup",
 			"test",
@@ -62,26 +66,30 @@ class ActionGroupWithStepKeyReferencesCest
 			[],
 			null
 		);
-		$I->amGoingTo("update entity that has the createdDataKey: 1");
+
+		$I->comment("[action9ActionGroup] update '1' entity to '{$action9}'");
 		PersistedObjectHandler::getInstance()->updateEntity(
 			"1",
 			"test",
 			"{$action9}",
 			[]
 		);
-		$I->amGoingTo("create entity that has the stepKey: action10ActionGroup");
+
+		$I->comment("[action10ActionGroup] create '{$action10}' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"action10ActionGroup",
 			"test",
 			"{$action10}",
 			[],
-			null
+			[]
 		);
-		$action11ActionGroup = $I->grabAttributeFrom($action11ActionGroup, "someInput");
-		$action12ActionGroup = $I->grabCookie($action12ActionGroup, ['domain' => 'www.google.com']);
-		$action13ActionGroup = $I->grabFromCurrentUrl($action13ActionGroup);
-		$action14ActionGroup = $I->grabMultiple($action14ActionGroup);
-		$action15ActionGroup = $I->grabTextFrom($action15ActionGroup);
-		$action16ActionGroup = $I->grabValueFrom($action16ActionGroup);
+
+		$action11ActionGroup = $I->grabAttributeFrom($action11ActionGroup, "someInput"); // stepKey: action11ActionGroup
+		$action12ActionGroup = $I->grabCookie($action12ActionGroup, ['domain' => 'www.google.com']); // stepKey: action12ActionGroup
+		$action13ActionGroup = $I->grabFromCurrentUrl($action13ActionGroup); // stepKey: action13ActionGroup
+		$action14ActionGroup = $I->grabMultiple($action14ActionGroup); // stepKey: action14ActionGroup
+		$action15ActionGroup = $I->grabTextFrom($action15ActionGroup); // stepKey: action15ActionGroup
+		$action16ActionGroup = $I->grabValueFrom($action16ActionGroup); // stepKey: action16ActionGroup
+		$I->comment("Exiting Action Group [actionGroup] FunctionActionGroupWithStepKeyReferences");
 	}
 }

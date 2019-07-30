@@ -620,7 +620,7 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * Function used to fill sensitive crednetials with user data, data is decrypted immediately prior to fill to avoid
+     * Function used to fill sensitive credentials with user data, data is decrypted immediately prior to fill to avoid
      * exposure in console or log.
      *
      * @param string $field
@@ -634,6 +634,24 @@ class MagentoWebDriver extends WebDriver
 
         $decryptedValue = CredentialStore::getInstance()->decryptSecretValue($value);
         $this->fillField($field, $decryptedValue);
+    }
+
+    /**
+     * Function used to create data that contains sensitive credentials in a <createData> <field> override.
+     * The data is decrypted immediately prior to data creation to avoid exposure in console or log.
+     *
+     * @param string $command
+     * @param null   $arguments
+     * @throws TestFrameworkException
+     * @return string
+     */
+    public function magentoCLISecret($command, $arguments = null)
+    {
+        // to protect any secrets from being printed to console the values are executed only at the webdriver level as a
+        // decrypted value
+
+        $decryptedCommand = CredentialStore::getInstance()->decryptAllSecretsInString($command);
+        return $this->magentoCLI($decryptedCommand, $arguments);
     }
 
     /**

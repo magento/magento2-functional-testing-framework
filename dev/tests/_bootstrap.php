@@ -32,7 +32,7 @@ $kernel->init([
     true,
     \Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::UNIT_TEST_PHASE,
     true,
-    false
+    \Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::LEVEL_NONE
 );
 
 // Load needed framework env params
@@ -60,6 +60,28 @@ $RELATIVE_TESTS_MODULE_PATH = DIRECTORY_SEPARATOR . 'verification';
 defined('TESTS_BP') || define('TESTS_BP', __DIR__);
 defined('TESTS_MODULE_PATH') || define('TESTS_MODULE_PATH', TESTS_BP . $RELATIVE_TESTS_MODULE_PATH);
 defined('MAGENTO_BP') || define('MAGENTO_BP', __DIR__);
+define('DOCS_OUTPUT_DIR',
+    FW_BP .
+    DIRECTORY_SEPARATOR .
+    "dev" .
+    DIRECTORY_SEPARATOR .
+    "tests" .
+    DIRECTORY_SEPARATOR .
+    "unit" .
+    DIRECTORY_SEPARATOR .
+    "_output"
+);
+define('RESOURCE_DIR',
+    FW_BP .
+    DIRECTORY_SEPARATOR .
+    "dev" .
+    DIRECTORY_SEPARATOR .
+    "tests" .
+    DIRECTORY_SEPARATOR .
+    "unit" .
+    DIRECTORY_SEPARATOR .
+    "Resources"
+);
 
 $utilDir = DIRECTORY_SEPARATOR . 'Util'. DIRECTORY_SEPARATOR . '*.php';
 

@@ -14,7 +14,7 @@ interface StaticCheckListInterface
     /**
      * Gets list of static check script instances
      *
-     * @return \Magento\FunctionalTestingFramework\StaticCheck\StaticCheckListInterface[]
+     * @return StaticCheckInterface[]
      */
     public function getStaticChecks();
 }

@@ -27,7 +27,9 @@ class ActionGroupToExtendCest
 	 */
 	public function ActionGroupToExtend(AcceptanceTester $I)
 	{
-		$grabProductsActionGroup = $I->grabMultiple("selector");
-		$I->assertCount(99, $grabProductsActionGroup);
+		$I->comment("Entering Action Group [actionGroup] ActionGroupToExtend");
+		$grabProductsActionGroup = $I->grabMultiple("selector"); // stepKey: grabProductsActionGroup
+		$I->assertCount(99, $grabProductsActionGroup); // stepKey: assertCountActionGroup
+		$I->comment("Exiting Action Group [actionGroup] ActionGroupToExtend");
 	}
 }

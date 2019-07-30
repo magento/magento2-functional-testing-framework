@@ -33,7 +33,7 @@ class ExtendParentDataTestCest
 			"test",
 			"extendParentData",
 			[],
-			null
+			[]
 		);
 		$I->searchAndMultiSelectOption("#selector", ["otherName"]);
 		$I->searchAndMultiSelectOption("#selector", ["extendName"]);

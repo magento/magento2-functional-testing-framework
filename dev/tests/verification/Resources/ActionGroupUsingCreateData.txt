@@ -24,22 +24,26 @@ class ActionGroupUsingCreateDataCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the stepKey: createCategoryKey1");
+		$I->comment("Entering Action Group [Key1] actionGroupWithCreateData");
+		$I->comment("[createCategoryKey1] create 'ApiCategory' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createCategoryKey1",
 			"hook",
 			"ApiCategory",
 			[],
-			null
+			[]
 		);
-		$I->amGoingTo("create entity that has the stepKey: createConfigProductKey1");
+
+		$I->comment("[createConfigProductKey1] create 'ApiConfigurableProduct' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createConfigProductKey1",
 			"hook",
 			"ApiConfigurableProduct",
 			["createCategoryKey1"],
-			null
+			[]
 		);
+
+		$I->comment("Exiting Action Group [Key1] actionGroupWithCreateData");
 	}
 
 	/**

@@ -7,6 +7,7 @@ declare(strict_types = 1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -36,6 +37,13 @@ class RunTestCommand extends BaseGenerateCommand
                 'f',
                 InputOption::VALUE_NONE,
                 'force generation of tests regardless of Magento Instance Configuration'
+            )->addOption(
+                'debug',
+                'd',
+                InputOption::VALUE_OPTIONAL,
+                'Run extra validation when running tests. Use option \'none\' to turn off debugging -- 
+                 added for backward compatibility, will be removed in the next MAJOR release',
+                MftfApplicationConfig::LEVEL_DEFAULT
             );
 
         parent::configure();
@@ -46,17 +54,18 @@ class RunTestCommand extends BaseGenerateCommand
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return integer|null|void
+     * @return integer
      * @throws \Exception
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $tests = $input->getArgument('name');
         $skipGeneration = $input->getOption('skip-generate');
         $force = $input->getOption('force');
         $remove = $input->getOption('remove');
+        $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
 
         if ($skipGeneration and $remove) {
             // "skip-generate" and "remove" options cannot be used at the same time
@@ -73,7 +82,8 @@ class RunTestCommand extends BaseGenerateCommand
                     'suites' => null
                 ]),
                 '--force' => $force,
-                '--remove' => $remove
+                '--remove' => $remove,
+                '--debug' => $debug
             ];
             $command->run(new ArrayInput($args), $output);
         }
@@ -85,7 +95,8 @@ class RunTestCommand extends BaseGenerateCommand
         $process->setWorkingDirectory(TESTS_BP);
         $process->setIdleTimeout(600);
         $process->setTimeout(0);
-        $process->run(
+
+        return $process->run(
             function ($type, $buffer) use ($output) {
                 $output->write($buffer);
             }

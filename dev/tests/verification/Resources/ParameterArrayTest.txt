@@ -27,35 +27,36 @@ class ParameterArrayTestCest
 	 */
 	public function ParameterArrayTest(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the stepKey: simpleDataKey");
+		$I->comment("[simpleDataKey] create 'simpleParamData' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"simpleDataKey",
 			"test",
 			"simpleParamData",
 			[],
-			null
+			[]
 		);
-		$I->searchAndMultiSelectOption("#selector", ["name"]);
-		$I->searchAndMultiSelectOption("#selector", [msq("simpleParamData") . "prename"]);
-		$I->searchAndMultiSelectOption("#selector", ["postname" . msq("simpleParamData")]);
-		$I->searchAndMultiSelectOption("#selector", [PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test')]);
-		$I->searchAndMultiSelectOption("#selector", ["name", PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test')]);
-		$I->searchAndMultiSelectOption("#selector", ['someKey' => PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test')]);
-		$I->searchAndMultiSelectOption("#selector", ['someKey' => "name"]);
-		$I->searchAndMultiSelectOption("#selector", ['someKey' => msq("simpleParamData") . "prename"]);
-		$I->searchAndMultiSelectOption("#selector", ['someKey' => "postname" . msq("simpleParamData")]);
-		$I->unselectOption("#selector", ['foo']);
-		$I->unselectOption("#selector", ['foo', 'bar']);
-		$I->unselectOption("#selector", ["name"]);
-		$I->unselectOption("#selector", [msq("simpleParamData") . "prename"]);
-		$I->unselectOption("#selector", ["postname" . msq("simpleParamData")]);
-		$I->unselectOption("#selector", [PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test')]);
-		$I->unselectOption("#selector", ["name", PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test')]);
-		$I->pressKey("#selector", PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test'), ['ctrl',  'a'],\Facebook\WebDriver\WebDriverKeys::DELETE,PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test'));
-		$I->pressKey("#selector", ['ctrl',  'a'], 10, 20,\Facebook\WebDriver\WebDriverKeys::DELETE,PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test'));
-		$I->pressKey("#selector", ['ctrl',  'a'],'new', 10, 20,\Facebook\WebDriver\WebDriverKeys::DELETE,PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test'));
-		$I->pressKey("#selector", ['ctrl', 'a'],'new', 1, ['ctrl'], ['shift',  'ctrl',  'del'], [PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test'),  'a', "name"]);
-		$I->pressKey("#selector", ['ctrl', 'a'],'new', 1, ['ctrl'], ['shift',  'ctrl',  'del'], 0, [PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test')]);
-		$I->pressKey("#selector", ['ctrl', 'a'],'new', 1, ['ctrl'], ['shift',  'ctrl',  'del'], [msq("simpleParamData") . "prename", "postname" . msq("simpleParamData")]);
+
+		$I->searchAndMultiSelectOption("#selector", ["name"]); // stepKey: xmlSimpleReplace
+		$I->searchAndMultiSelectOption("#selector", [msq("simpleParamData") . "prename"]); // stepKey: xmlPrefix
+		$I->searchAndMultiSelectOption("#selector", ["postname" . msq("simpleParamData")]); // stepKey: xmlSuffix
+		$I->searchAndMultiSelectOption("#selector", [PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test')]); // stepKey: persistSimple
+		$I->searchAndMultiSelectOption("#selector", ["name", PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test')]); // stepKey: persistXmlSimple
+		$I->searchAndMultiSelectOption("#selector", ['someKey' => PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test')]); // stepKey: literalKeyToPersist
+		$I->searchAndMultiSelectOption("#selector", ['someKey' => "name"]); // stepKey: literalKeyToStatic
+		$I->searchAndMultiSelectOption("#selector", ['someKey' => msq("simpleParamData") . "prename"]); // stepKey: literalKeyToPrefixUnique
+		$I->searchAndMultiSelectOption("#selector", ['someKey' => "postname" . msq("simpleParamData")]); // stepKey: literalKeyToSuffixUnique
+		$I->unselectOption("#selector", ['foo']); // stepKey: 000
+		$I->unselectOption("#selector", ['foo', 'bar']); // stepKey: 001
+		$I->unselectOption("#selector", ["name"]); // stepKey: 002
+		$I->unselectOption("#selector", [msq("simpleParamData") . "prename"]); // stepKey: 003
+		$I->unselectOption("#selector", ["postname" . msq("simpleParamData")]); // stepKey: 004
+		$I->unselectOption("#selector", [PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test')]); // stepKey: 005
+		$I->unselectOption("#selector", ["name", PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test')]); // stepKey: 006
+		$I->pressKey("#selector", PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test'), ['ctrl',  'a'],\Facebook\WebDriver\WebDriverKeys::DELETE,PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test')); // stepKey: pressKey001
+		$I->pressKey("#selector", ['ctrl',  'a'], 10, 20,\Facebook\WebDriver\WebDriverKeys::DELETE,PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test')); // stepKey: pressKey002
+		$I->pressKey("#selector", ['ctrl',  'a'],'new', 10, 20,\Facebook\WebDriver\WebDriverKeys::DELETE,PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test')); // stepKey: pressKey003
+		$I->pressKey("#selector", ['ctrl', 'a'],'new', 1, ['ctrl'], ['shift',  'ctrl',  'del'], [PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test'),  'a', "name"]); // stepKey: pressKey004
+		$I->pressKey("#selector", ['ctrl', 'a'],'new', 1, ['ctrl'], ['shift',  'ctrl',  'del'], 0, [PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('simpleDataKey', 'name', 'test')]); // stepKey: pressKey005
+		$I->pressKey("#selector", ['ctrl', 'a'],'new', 1, ['ctrl'], ['shift',  'ctrl',  'del'], [msq("simpleParamData") . "prename", "postname" . msq("simpleParamData")]); // stepKey: pressKey006
 	}
 }

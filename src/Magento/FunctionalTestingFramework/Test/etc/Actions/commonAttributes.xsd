@@ -31,13 +31,6 @@
             </xs:annotation>
         </xs:attribute>
 
-        <xs:attribute type="xs:boolean" name="skipReadiness">
-            <xs:annotation>
-                <xs:documentation>
-                    Flag for skipping readiness check
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
     </xs:attributeGroup>
 
     <xs:attribute type="xs:string" name="userInput" id="userInput">
