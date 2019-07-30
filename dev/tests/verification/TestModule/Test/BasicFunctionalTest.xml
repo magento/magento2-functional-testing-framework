@@ -52,6 +52,10 @@
         <dontSeeInField selector=".functionalTestSelector" stepKey="dontSeeInFieldKey1" />
         <dontSeeInPageSource html="Cosmo Kramer" stepKey="dontSeeInPageSourceKey1"/>
         <dontSeeInPageSource html="&#60;p&#62;Jerry Seinfeld&#60;&#47;p&#62;" stepKey="dontSeeInPageSourceKey2"/>
+        <dontSeeInPageSource userInput="Cosmo Kramer" stepKey="dontSeeInPageSourceKey3"/>
+        <dontSeeInPageSource userInput="&#60;p&#62;Jerry Seinfeld&#60;&#47;p&#62;" stepKey="dontSeeInPageSourceKey4"/>
+        <dontSeeInPageSource userInput="bar" html="foo" stepKey="dontSeeInPageSourceKey5"/>
+        <dontSeeInPageSource userInput="&#60;p&#62;bar&#60;&#47;p&#62;" html="&#60;p&#62;foo&#60;&#47;p&#62;" stepKey="dontSeeInPageSourceKey6"/>
         <dontSeeInSource html="Cosmo Kramer" stepKey="dontSeeInSourceKey1"/>
         <dontSeeInSource html="&#60;p&#62;Jerry Seinfeld&#60;&#47;p&#62;" stepKey="dontSeeInSourceKey2"/>
         <dontSeeInTitle userInput="someInput" stepKey="dontSeeInTitleKey1"/>
