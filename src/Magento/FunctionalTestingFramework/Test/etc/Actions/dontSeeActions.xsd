@@ -172,7 +172,8 @@
         </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute ref="html" use="required"/>
+                <xs:attribute ref="html"/>
+                <xs:attribute ref="userInput"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
