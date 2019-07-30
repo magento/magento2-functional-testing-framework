@@ -100,7 +100,7 @@ location ~* ^/dev/tests/acceptance/utils($|/) {
 
 ## Set up an embedded MFTF {#setup-framework}
 
-This is a default setup that you would need to start using the MFTF to cover your Magento project with functional testing.
+This is a default setup of the MFTF that you would need to start using to cover your Magento project with functional testing.
 It installs the framework using an existing Composer dependency such as `magento/magento2-functional-testing-framework`.
 If you want to set up the MFTF as a standalone tool, refer to [Set up a standalone MFTF][].
 
