@@ -34,7 +34,11 @@ class VaultStorage extends BaseStorage
      */
     const CONFIG_PATH_ENV_VAR = 'VAULT_CONFIG_PATH';
 
-    const TOKEN_HELPER_REGEX = "~\s*token_helper\s*=(.+)$~";
+    /**
+     * Regex to grab token helper script
+     */
+    const TOKEN_HELPER_REGEX_GROUP_NAME = 'GROUP_NAME';
+    const TOKEN_HELPER_REGEX = "~\s*token_helper\s*=(?<" . self::TOKEN_HELPER_REGEX_GROUP_NAME . ">.+)$~";
 
     /**
      * Vault client
@@ -146,35 +150,40 @@ class VaultStorage extends BaseStorage
         // Find user home directory
         $homeDir = getenv('HOME');
         if ($homeDir === false) {
-            // If HOME is not set, don't fail right away
-            $homeDir = '~/';
-        } else {
-            $homeDir = rtrim($homeDir, '/') . '/';
+            throw new TestFrameworkException(
+                "HOME environment variable is not set. It's required when using vault."
+            );
         }
+        $homeDir = realpath($homeDir) . DIRECTORY_SEPARATOR;
 
+        // Read .vault-token file if it is found in default location
         $vaultTokenFile = $homeDir . self::TOKEN_FILE;
         if (file_exists($vaultTokenFile)) {
-            // Found .vault-token file in default location, construct command
-            $cmd = 'cat ' .  $vaultTokenFile;
-        } else {
-            // Otherwise search vault config file for custom token helper script
-            $vaultConfigPath = getenv(self::CONFIG_PATH_ENV_VAR);
-            if ($vaultConfigPath === false) {
-                $vaultConfigFile = $homeDir . self::CONFIG_FILE;
-            } else {
-                $vaultConfigFile = rtrim($vaultConfigPath, '/') . '/' . self::CONFIG_FILE;
-            }
-            // Found .vault config file, read custom token helper script and construct command
-            if (file_exists($vaultConfigFile)
-                && !empty($cmd = $this->getTokenHelperScript(file($vaultConfigFile, FILE_IGNORE_NEW_LINES)))) {
-                $cmd = $cmd . ' get';
-            } else {
-                throw new TestFrameworkException(
-                    'Unable to read .vault-token file. Please authenticate to vault through vault CLI first.'
-                );
+            $token = file_get_contents($vaultTokenFile);
+            if ($token !== false) {
+                $this->token = $token;
+                return;
             }
         }
-        $this->token = $this->execVaultTokenHelper($cmd);
+
+        // Otherwise search vault config file for custom token helper script
+        $vaultConfigPath = getenv(self::CONFIG_PATH_ENV_VAR);
+        if ($vaultConfigPath === false) {
+            $vaultConfigFile = $homeDir . self::CONFIG_FILE;
+        } else {
+            $vaultConfigFile = realpath($vaultConfigPath) . DIRECTORY_SEPARATOR . self::CONFIG_FILE;
+        }
+        // Get custom token helper script file from .vault config file
+        if (file_exists($vaultConfigFile)) {
+            $cmd = $this->getTokenHelperScript(file($vaultConfigFile, FILE_IGNORE_NEW_LINES));
+            if (!empty($cmd)) {
+                $this->token = $this->execVaultTokenHelper($cmd . ' get');
+                return;
+            }
+        }
+        throw new TestFrameworkException(
+            'Unable to read .vault-token file. Please authenticate to vault through vault CLI first.'
+        );
     }
 
     /**
@@ -188,8 +197,8 @@ class VaultStorage extends BaseStorage
         $tokenHelper = '';
         foreach ($lines as $line) {
             preg_match(self::TOKEN_HELPER_REGEX, $line, $matches);
-            if (isset($matches[1])) {
-                $tokenHelper = trim(trim(trim($matches[1]), '"'));
+            if (isset($matches[self::TOKEN_HELPER_REGEX_GROUP_NAME])) {
+                $tokenHelper = trim(trim(trim($matches[self::TOKEN_HELPER_REGEX_GROUP_NAME]), '"'));
             }
         }
         return $tokenHelper;
