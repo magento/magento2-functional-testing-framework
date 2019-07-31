@@ -24,26 +24,29 @@ class DataActionsTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the stepKey: createdInBefore");
+		$I->comment("[createdInBefore] create 'entity' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createdInBefore",
 			"hook",
 			"entity",
 			[],
-			null
+			[]
 		);
-		$I->amGoingTo("update entity that has the createdDataKey: createdInBefore");
+
+		$I->comment("[updateInBefore] update 'createdInBefore' entity to 'entity'");
 		PersistedObjectHandler::getInstance()->updateEntity(
 			"createdInBefore",
 			"hook",
 			"entity",
 			[]
 		);
-		$I->amGoingTo("delete entity that has the createDataKey: createdInBefore");
+
+		$I->comment("[deleteInBefore] delete entity 'createdInBefore'");
 		PersistedObjectHandler::getInstance()->deleteEntity(
 			"createdInBefore",
 			"hook"
 		);
+
 	}
 
 	/**
@@ -55,37 +58,42 @@ class DataActionsTestCest
 	 */
 	public function DataActionsTest(AcceptanceTester $I)
 	{
-		$I->amGoingTo("create entity that has the stepKey: createdInTest");
+		$I->comment("[createdInTest] create 'entity' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createdInTest",
 			"test",
 			"entity",
 			[],
-			null
+			[]
 		);
-		$I->amGoingTo("update entity that has the createdDataKey: createdInTest");
+
+		$I->comment("[updateInTest] update 'createdInTest' entity to 'entity'");
 		PersistedObjectHandler::getInstance()->updateEntity(
 			"createdInTest",
 			"test",
 			"entity",
 			[]
 		);
-		$I->amGoingTo("delete entity that has the createDataKey: createdInTest");
+
+		$I->comment("[deleteInTest] delete entity 'createdInTest'");
 		PersistedObjectHandler::getInstance()->deleteEntity(
 			"createdInTest",
 			"test"
 		);
-		$I->amGoingTo("update entity that has the createdDataKey: createdInBefore");
+
+		$I->comment("[updatedDataOutOfScope] update 'createdInBefore' entity to 'entity'");
 		PersistedObjectHandler::getInstance()->updateEntity(
 			"createdInBefore",
 			"test",
 			"entity",
 			[]
 		);
-		$I->amGoingTo("delete entity that has the createDataKey: createdInBefore");
+
+		$I->comment("[deleteDataOutOfScope] delete entity 'createdInBefore'");
 		PersistedObjectHandler::getInstance()->deleteEntity(
 			"createdInBefore",
 			"test"
 		);
+
 	}
 }

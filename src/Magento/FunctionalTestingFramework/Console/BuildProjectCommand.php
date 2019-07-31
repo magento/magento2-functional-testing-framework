@@ -49,7 +49,7 @@ class BuildProjectCommand extends Command
                 "upgrade",
                 'u',
                 InputOption::VALUE_NONE,
-                'upgrade existing MFTF tests according to last major release requiements'
+                'upgrade existing MFTF tests according to last major release requirements'
             );
         $this->envProcessor = new EnvProcessor(TESTS_BP . DIRECTORY_SEPARATOR . '.env');
         $env = $this->envProcessor->getEnv();

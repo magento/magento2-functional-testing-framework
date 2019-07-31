@@ -27,31 +27,67 @@ class DataReplacementTestCest
 	 */
 	public function DataReplacementTest(AcceptanceTester $I)
 	{
-		$I->fillField("#selector", "StringBefore John StringAfter");
-		$I->seeCurrentUrlMatches("~\/John~i");
-		$I->fillField("#John", "input");
-		$I->dragAndDrop("#John", "Doe");
-		$I->conditionalClick("Doe", "#John", true);
-		$I->amOnUrl("John.html");
-		$I->searchAndMultiSelectOption("#selector", ["John", "Doe"]);
-		$I->fillField("#selector", "StringBefore " . msq("uniqueData") . "John StringAfter");
-		$I->fillField("#" . msq("uniqueData") . "John", "input");
-		$I->dragAndDrop("#" . msq("uniqueData") . "John", msq("uniqueData") . "John");
-		$I->conditionalClick(msq("uniqueData") . "John", "#" . msq("uniqueData") . "John", true);
-		$I->amOnUrl(msq("uniqueData") . "John.html");
-		$I->searchAndMultiSelectOption("#selector", [msq("uniqueData") . "John", "Doe"]);
-		$I->click("#" . msq("uniqueData") . "John#" . msq("uniqueData") . "John");
-		$I->click("#Doe" . msq("uniqueData") . "#Doe" . msq("uniqueData"));
-		$I->fillField("#selector", "StringBefore Doe" . msq("uniqueData") . " StringAfter");
-		$I->fillField("#Doe" . msq("uniqueData"), "input");
-		$I->dragAndDrop("#Doe" . msq("uniqueData"), "Doe" . msq("uniqueData"));
-		$I->conditionalClick("Doe" . msq("uniqueData"), "#Doe" . msq("uniqueData"), true);
-		$I->amOnUrl("Doe" . msq("uniqueData") . ".html");
-		$I->searchAndMultiSelectOption("#selector", ["John", "Doe" . msq("uniqueData")]);
-		$I->searchAndMultiSelectOption("#selector", [msq("uniqueData") . "John", "Doe" . msq("uniqueData")]);
-		$I->selectMultipleOptions("#Doe" . msq("uniqueData"), "#element", [msq("uniqueData") . "John", "Doe" . msq("uniqueData")]);
-		$I->fillField(".selector", "0");
-		$insertCommand = $I->magentoCLI("do something Doe" . msq("uniqueData") . " with uniqueness");
+		$I->fillField("#selector", "StringBefore John StringAfter"); // stepKey: inputReplace
+		$I->seeCurrentUrlMatches("~\/John~i"); // stepKey: seeInRegex
+		$I->fillField("#John", "input"); // stepKey: selectorReplace
+		$I->dragAndDrop("#John", "Doe"); // stepKey: selector12Replace
+		$I->conditionalClick("Doe", "#John", true); // stepKey: dependentSelectorReplace
+		$I->amOnUrl("John.html"); // stepKey: urlReplace
+		$I->searchAndMultiSelectOption("#selector", ["John", "Doe"]); // stepKey: parameterArrayReplacement
+		$I->fillField("#selector", "StringBefore " . msq("uniqueData") . "John StringAfter"); // stepKey: inputPrefixReplaceMSQPrefix
+		$I->fillField("#" . msq("uniqueData") . "John", "input"); // stepKey: selectorReplaceMSQPrefix
+		$I->dragAndDrop("#" . msq("uniqueData") . "John", msq("uniqueData") . "John"); // stepKey: selector12ReplaceMSQPrefix
+		$I->conditionalClick(msq("uniqueData") . "John", "#" . msq("uniqueData") . "John", true); // stepKey: dependentSelectorReplaceMSQPrefix
+		$I->amOnUrl(msq("uniqueData") . "John.html"); // stepKey: urlReplaceMSQPrefix
+		$I->searchAndMultiSelectOption("#selector", [msq("uniqueData") . "John", "Doe"]); // stepKey: parameterArrayReplacementMSQPrefix
+		$I->click("#" . msq("uniqueData") . "John#" . msq("uniqueData") . "John"); // stepKey: selectorReplaceDupedMSQPrefix
+		$I->click("#Doe" . msq("uniqueData") . "#Doe" . msq("uniqueData")); // stepKey: selectorReplaceDupedMSQSuffix
+		$I->fillField("#selector", "StringBefore Doe" . msq("uniqueData") . " StringAfter"); // stepKey: inputReplaceMSQSuffix
+		$I->fillField("#Doe" . msq("uniqueData"), "input"); // stepKey: selectorReplaceMSQSuffix
+		$I->dragAndDrop("#Doe" . msq("uniqueData"), "Doe" . msq("uniqueData")); // stepKey: selector12ReplaceMSQSuffix
+		$I->conditionalClick("Doe" . msq("uniqueData"), "#Doe" . msq("uniqueData"), true); // stepKey: dependentSelectorReplaceMSQSuffix
+		$I->amOnUrl("Doe" . msq("uniqueData") . ".html"); // stepKey: urlReplaceMSQSuffix
+		$I->searchAndMultiSelectOption("#selector", ["John", "Doe" . msq("uniqueData")]); // stepKey: parameterArrayReplacementMSQSuffix
+		$I->searchAndMultiSelectOption("#selector", [msq("uniqueData") . "John", "Doe" . msq("uniqueData")]); // stepKey: parameterArrayReplacementMSQBoth
+		$I->selectMultipleOptions("#Doe" . msq("uniqueData"), "#element", [msq("uniqueData") . "John", "Doe" . msq("uniqueData")]); // stepKey: multiSelectDataReplacement
+		$I->fillField(".selector", "0"); // stepKey: insertZero
+		$insertCommand = $I->magentoCLI("do something Doe" . msq("uniqueData") . " with uniqueness"); // stepKey: insertCommand
 		$I->comment($insertCommand);
+		$I->seeInPageSource("StringBefore John StringAfter"); // stepKey: htmlReplace1
+		$I->seeInPageSource("#John"); // stepKey: htmlReplace2
+		$I->seeInPageSource("StringBefore " . msq("uniqueData") . "John StringAfter"); // stepKey: htmlReplace3
+		$I->seeInPageSource("#" . msq("uniqueData") . "John"); // stepKey: htmlReplace4
+		$I->seeInPageSource("#" . msq("uniqueData") . "John#" . msq("uniqueData") . "John"); // stepKey: htmlReplace5
+		$I->seeInPageSource("StringBefore Doe" . msq("uniqueData") . " StringAfter"); // stepKey: htmlReplace6
+		$I->seeInPageSource("#Doe" . msq("uniqueData")); // stepKey: htmlReplace7
+		$I->seeInPageSource("#element"); // stepKey: htmlReplace8
+		$I->seeInPageSource("StringBefore #element StringAfter"); // stepKey: htmlReplace9
+		$I->dontSeeInPageSource("StringBefore John StringAfter"); // stepKey: htmlReplace10
+		$I->dontSeeInPageSource("#John"); // stepKey: htmlReplace11
+		$I->dontSeeInPageSource("StringBefore " . msq("uniqueData") . "John StringAfter"); // stepKey: htmlReplace12
+		$I->dontSeeInPageSource("#" . msq("uniqueData") . "John"); // stepKey: htmlReplace13
+		$I->dontSeeInPageSource("#" . msq("uniqueData") . "John#" . msq("uniqueData") . "John"); // stepKey: htmlReplace14
+		$I->dontSeeInPageSource("StringBefore Doe" . msq("uniqueData") . " StringAfter"); // stepKey: htmlReplace15
+		$I->dontSeeInPageSource("#Doe" . msq("uniqueData")); // stepKey: htmlReplace16
+		$I->dontSeeInPageSource("#element"); // stepKey: htmlReplace17
+		$I->dontSeeInPageSource("StringBefore #element StringAfter"); // stepKey: htmlReplace18
+		$I->seeInSource("StringBefore John StringAfter"); // stepKey: htmlReplace19
+		$I->seeInSource("#John"); // stepKey: htmlReplace20
+		$I->seeInSource("StringBefore " . msq("uniqueData") . "John StringAfter"); // stepKey: htmlReplace21
+		$I->seeInSource("#" . msq("uniqueData") . "John"); // stepKey: htmlReplace22
+		$I->seeInSource("#" . msq("uniqueData") . "John#" . msq("uniqueData") . "John"); // stepKey: htmlReplace23
+		$I->seeInSource("StringBefore Doe" . msq("uniqueData") . " StringAfter"); // stepKey: htmlReplace24
+		$I->seeInSource("#Doe" . msq("uniqueData")); // stepKey: htmlReplace25
+		$I->seeInSource("#element"); // stepKey: htmlReplace26
+		$I->seeInSource("StringBefore #element StringAfter"); // stepKey: htmlReplace27
+		$I->dontSeeInSource("StringBefore John StringAfter"); // stepKey: htmlReplace28
+		$I->dontSeeInSource("#John"); // stepKey: htmlReplace29
+		$I->dontSeeInSource("StringBefore " . msq("uniqueData") . "John StringAfter"); // stepKey: htmlReplace30
+		$I->dontSeeInSource("#" . msq("uniqueData") . "John"); // stepKey: htmlReplace31
+		$I->dontSeeInSource("#" . msq("uniqueData") . "John#" . msq("uniqueData") . "John"); // stepKey: htmlReplace32
+		$I->dontSeeInSource("StringBefore Doe" . msq("uniqueData") . " StringAfter"); // stepKey: htmlReplace33
+		$I->dontSeeInSource("#Doe" . msq("uniqueData")); // stepKey: htmlReplace34
+		$I->dontSeeInSource("#element"); // stepKey: htmlReplace35
+		$I->dontSeeInSource("StringBefore #element StringAfter"); // stepKey: htmlReplace36
 	}
 }

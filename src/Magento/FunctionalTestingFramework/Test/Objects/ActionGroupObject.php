@@ -532,8 +532,8 @@ class ActionGroupObject
      */
     private function addContextCommentsToActionList($actionList, $actionReferenceKey)
     {
-        $actionStartComment = self::ACTION_GROUP_CONTEXT_START . $this->name . " (" . $actionReferenceKey . ")";
-        $actionEndComment = self::ACTION_GROUP_CONTEXT_END . $this->name . " (" . $actionReferenceKey . ")";
+        $actionStartComment = self::ACTION_GROUP_CONTEXT_START . "[" . $actionReferenceKey . "] " . $this->name;
+        $actionEndComment = self::ACTION_GROUP_CONTEXT_END . "[" . $actionReferenceKey . "] " . $this->name;
         $startAction = new ActionObject(
             $actionStartComment,
             ActionObject::ACTION_TYPE_COMMENT,

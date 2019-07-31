@@ -18,6 +18,7 @@ class Flat implements ConverterInterface
     const REMOVE_KEY_ATTRIBUTE = 'keyForRemoval';
     const EXTENDS_ATTRIBUTE = 'extends';
     const TEST_HOOKS = ['before', 'after'];
+    const VALID_COMMENT_PARENT = ['test', 'before', 'after', 'actionGroup'];
 
     /**
      * Array node configuration.
@@ -124,6 +125,13 @@ class Flat implements ConverterInterface
             ) {
                 $value = $node->nodeValue;
                 break;
+            } elseif ($node->nodeType == XML_COMMENT_NODE &&
+                in_array($node->parentNode->nodeName, self::VALID_COMMENT_PARENT)) {
+                $uniqid = uniqid($node->nodeName);
+                $value[$uniqid] = [
+                    'value' => trim($node->nodeValue),
+                    'nodeName' => $node->nodeName,
+                ];
             }
         }
         $result = $this->getNodeAttributes($source);

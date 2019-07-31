@@ -26,7 +26,7 @@ class MergedReferencesTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->amOnPage("/beforeUrl");
+		$I->amOnPage("/beforeUrl"); // stepKey: before1
 	}
 
 	/**
@@ -35,7 +35,7 @@ class MergedReferencesTestCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
-		$I->amOnPage("/afterUrl");
+		$I->amOnPage("/afterUrl"); // stepKey: after1
 	}
 
 	/**
@@ -44,7 +44,7 @@ class MergedReferencesTestCest
 	  */
 	public function _failed(AcceptanceTester $I)
 	{
-		$I->saveScreenshot();
+		$I->saveScreenshot(); // stepKey: saveScreenshot
 	}
 
 	/**
@@ -58,7 +58,7 @@ class MergedReferencesTestCest
 	 */
 	public function MergedReferencesTest(AcceptanceTester $I)
 	{
-		$I->fillField("#merge", "merged");
-		$I->fillField("#newElement", "newField");
+		$I->fillField("#merge", "merged"); // stepKey: fillField1
+		$I->fillField("#newElement", "newField"); // stepKey: fillField2
 	}
 }
