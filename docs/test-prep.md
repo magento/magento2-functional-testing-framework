@@ -1,16 +1,16 @@
 # Preparing a test for MFTF
 
-This tutorial will guide you through the process of converting a raw functional test into a properly abstracted test file, ready for publishing.
+This tutorial demonstrates the process of converting a raw functional test into a properly abstracted test file, ready for publishing.
 
 ## The abstraction process
 
 When first writing a test for a new piece of code such as a custom extension, it is likely that values are hardcoded for the specific testing environment while in development. To make the test more generic and easier for others to update and use, we need to abstract the test.
 The general process:
 
-1. Create the raw test.
-1. Update all the selectors from hardcoded values to appropriate selectors.
-1. Update userInput from hardcoded values to data entities.
-1. Remove simple actions and replace with Action Groups.
+1. Convert the manual test to a working, hard-coded test.
+1. Convert all selectors from hardcoded values to appropriate selectors.
+1. Convert hardcoded form values and other data to data entities.
+1. Convert [actions][] into [action groups][].
 
 ## The manual test
 
@@ -36,10 +36,10 @@ Manual tests are just that: A series of manual steps to be run.
 
 ## The raw test
 
-This tests works just fine. But it will only work if everything referenced in the test stays exactly the same. This neither reusable nor extensible.
-Hardcoded selectors make it impossible to reuse sections in other actiongroups and tasks. They can also be brittle. If Magento happens to change a `class` or `id` on an element, the test will fail.
+This test works just fine. But it will only work if everything referenced in the test stays exactly the same. This neither reusable nor extensible.
+Hardcoded selectors make it impossible to reuse sections in other action groups and tasks. They can also be brittle. If Magento happens to change a `class` or `id` on an element, the test will fail.
 
-Some data, like the SKU in this example, must be unique for every test run. Hardcoded values will fail here. Data Entities allow for `suffix` and `prefix` for ensuring unique data values.
+Some data, like the SKU in this example, must be unique for every test run. Hardcoded values will fail here. [Data entities][] allow for `suffix` and `prefix` for ensuring unique data values.
 
 For our example, we have a test that creates a simple product. Note the hardcoded selectors, data values and lack of action groups. We will focus on the "product name".
 
@@ -106,7 +106,7 @@ For our example, we have a test that creates a simple product. Note the hardcode
 
 First we will extract the hardcoded CSS selector values into variables.
 For instance: `input[name='product[name]']` becomes `{{AdminProductFormSection.productName}}`.
-In this example `AdminProductFormSection` refers to the `<section>` in the xml file which contains an `<element>` node named `productName`. This element contains the value of the selector that was previously hardcoded: `input[name='product[name]']`
+In this example `AdminProductFormSection` refers to the `<section>` in the XML file which contains an `<element>` node named `productName`. This element contains the value of the selector that was previously hardcoded: `input[name='product[name]']`
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -207,7 +207,7 @@ Here we are interested in `<section name="AdminProductFormSection">`, where we a
 
 ## Data entities
 
-The hardcoded values of these form elements are abstracted to a "data entity" xml file.
+The hardcoded values of these form elements are abstracted to a "data entity" XML file.
 We replace the hardcoded values with variables and the MFTF will do the variable substitution.
 
 ```xml
@@ -296,26 +296,25 @@ Notice that the `<entity>` name is `_defaultProduct` as referenced above. Within
 ```
 
 The `unique="suffix"` attribute appends a random numeric string to the end of the actual data string. This ensures that unique values are used for each test run.
-
-XXXX for difficult data needs, see https://devdocs.magento.com/mftf/docs/data.html
+See  [Input testing data][] for more information.
 
 ## Convert actions to action groups
 
-Action groups are sets of steps that are run together. Action groups are designed to break up multiple individual steps into logical groups. For example: Logging into the admin panel requires ensuring the login form exists, filling in 2 form fields and clicking the Submit button. These can be bundled into a single, reusable "Admin Login" action group that can be applied to any other test. This leverages existing code and prevents duplication of effort. We recommend that all steps in a test be within an action group.
+Action groups are sets of steps that are run together. Action groups are designed to break up multiple individual steps into logical groups. For example: logging into the admin panel requires ensuring the login form exists, filling in two form fields and clicking the **Submit** button. These can be bundled into a single, reusable "LoginAsAdmin" action group that can be applied to any other test. This leverages existing code and prevents duplication of effort. We recommend that all steps in a test be within an action group.
 
 Using action groups can be very useful when testing extensions.
-Extending the example above, assume the first extension adds a new field to the admin login, a Captcha for example.
-The second extension we are testing needs to login AND get past the Captcha.
+Extending the example above, assume the first extension adds a new field to the admin log in, a Captcha for example.
+The second extension we are testing needs to log in AND get past the Captcha.
 
 1. The admin login is encapsulated in an action group.
-2. The Captcha extension properly extends the `admin login` capture group using the `merge` functionality.
-3. Now the second extension can call the `admin login` action group and because of the `merge`, it will automatically include the Captcha field.
+2. The Captcha extension properly extends the `LoginAsAdmin` capture group using the `merge` functionality.
+3. Now the second extension can call the `LoginAsAdmin` action group and because of the `merge`, it will automatically include the Captcha field.
 
 In this case, the action group is both reusable and extensible!
 
 We further abstract the test by putting these action groups in their own file: ['app/code/Magento/Catalog/Test/Mftf/ActionGroup/AdminProductActionGroup.xml'](https://raw.githubusercontent.com/magento-pangolin/magento2/e5671d84aa63cad772fbba757005b3d89ddb79d9/app/code/Magento/Catalog/Test/Mftf/ActionGroup/AdminProductActionGroup.xml)
 
-To create an action group, take the steps and put them within an `<actionGroup>` element. Note that the `<arguments><argument>` node defines the `_defaultProduct` data entity that is required for the action group.
+To create an action group, take the steps and put them within an `<actionGroup>` element. Note that the `<argument>` node defines the `_defaultProduct` data entity that is required for the action group.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -404,3 +403,10 @@ Now we can reference this action group within our test (and any other test).
 
 A well written test will end up being a set of action groups.
 The finished test is fully abstracted in such a way that it is short and readable and importantly, the abstracted data and action groups can be used again.
+
+<!-- Link Definitions -->
+[actions]: https://devdocs.magento.com/mftf/docs/test/actions.html
+[action groups]: https://devdocs.magento.com/mftf/docs/test/action-groups.html
+[Data entities]: https://devdocs.magento.com/mftf/docs/data.html
+[Input testing data]: https://devdocs.magento.com/mftf/docs/data.html
+
