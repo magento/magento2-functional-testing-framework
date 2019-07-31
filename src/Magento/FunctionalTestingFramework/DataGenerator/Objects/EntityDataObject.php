@@ -177,15 +177,22 @@ class EntityDataObject
 
         $name_lower = strtolower($name);
 
-        if ($this->data !== null && array_key_exists($name_lower, $this->data)) {
+        if ($this->data === null) {
+            return null;
+        }
+
+        if (array_key_exists($name_lower, $this->data)) {
             $uniquenessData = $this->getUniquenessDataByName($name_lower);
             if (null === $uniquenessData || $uniquenessFormat == self::NO_UNIQUE_PROCESS) {
                 return $this->data[$name_lower];
             }
             return $this->formatUniqueData($name_lower, $uniquenessData, $uniquenessFormat);
+        } elseif (array_key_exists($name, $this->data)) {
+            // Data returned by the API may be camelCase so we need to check for the original $name also.
+            return $this->data[$name];
+        } else {
+            return null;
         }
-
-        return null;
     }
 
     /**
