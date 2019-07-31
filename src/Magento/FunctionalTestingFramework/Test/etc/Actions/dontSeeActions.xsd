@@ -172,6 +172,11 @@
         </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
+                <!--
+                    For backwards compatibility we accept both html and userInput.
+                    If html is specified, then html is used. Otherwise userInput is used.
+                 -->
+                <xs:attribute ref="html"/>
                 <xs:attribute ref="userInput"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>

@@ -11,9 +11,9 @@ if (!empty($_POST['token']) && !empty($_POST['command'])) {
     $magentoObjectManager = $magentoObjectManagerFactory->create($_SERVER);
     $tokenModel = $magentoObjectManager->get(\Magento\Integration\Model\Oauth\Token::class);
 
-    $tokenPassedIn = urldecode($_POST['token'] ?? "");
-    $command = urldecode($_POST['command'] ?? "");
-    $arguments = urldecode($_POST['arguments'] ?? "");
+    $tokenPassedIn = urldecode($_POST['token']);
+    $command = urldecode($_POST['command']);
+    $arguments = urldecode($_POST['arguments']);
 
     // Token returned will be null if the token we passed in is invalid
     $tokenFromMagento = $tokenModel->loadByToken($tokenPassedIn)->getToken();
@@ -22,12 +22,7 @@ if (!empty($_POST['token']) && !empty($_POST['command'])) {
         $magentoBinary = $php . ' -f ../../../../bin/magento';
         $valid = validateCommand($magentoBinary, $command);
         if ($valid) {
-            // Turn string into array for symfony escaping
-            $commandParts = array_filter(explode(" ", $command));
-            $argumentParts = array_filter(explode(" ", $arguments));
-            $magentoBinaryParts = array_filter(explode(" ", $magentoBinary));
-            $commandArray = array_merge($magentoBinaryParts, $commandParts);
-            $process = new Symfony\Component\Process\Process($commandArray);
+            $process = new Symfony\Component\Process\Process($magentoBinary . " $command" . " $arguments");
             $process->setIdleTimeout(60);
             $process->setTimeout(0);
             $idleTimeout = false;

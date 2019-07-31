@@ -92,8 +92,14 @@ class BasicFunctionalTestCest
 		$I->dontSeeElementInDOM(".functionalTestSelector"); // stepKey: dontSeeElementInDOMKey1
 		$I->dontSeeInCurrentUrl("/functionalUrl"); // stepKey: dontSeeInCurrentUrlKey1
 		$I->dontSeeInField(".functionalTestSelector"); // stepKey: dontSeeInFieldKey1
-		$I->dontSeeInPageSource("someInput"); // stepKey: dontSeeInPageSourceKey1
-		$I->dontSeeInSource("<myHtmlHere>"); // stepKey: dontSeeInSourceKey1
+		$I->dontSeeInPageSource("Cosmo Kramer"); // stepKey: dontSeeInPageSourceKey1
+		$I->dontSeeInPageSource("<p>Jerry Seinfeld</p>"); // stepKey: dontSeeInPageSourceKey2
+		$I->dontSeeInPageSource("Cosmo Kramer"); // stepKey: dontSeeInPageSourceKey3
+		$I->dontSeeInPageSource("<p>Jerry Seinfeld</p>"); // stepKey: dontSeeInPageSourceKey4
+		$I->dontSeeInPageSource("foo"); // stepKey: dontSeeInPageSourceKey5
+		$I->dontSeeInPageSource("<p>foo</p>"); // stepKey: dontSeeInPageSourceKey6
+		$I->dontSeeInSource("Cosmo Kramer"); // stepKey: dontSeeInSourceKey1
+		$I->dontSeeInSource("<p>Jerry Seinfeld</p>"); // stepKey: dontSeeInSourceKey2
 		$I->dontSeeInTitle("someInput"); // stepKey: dontSeeInTitleKey1
 		$I->dontSeeLink("someInput", "/functionalUrl"); // stepKey: dontSeeLinkKey1
 		$I->dontSeeOptionIsSelected(".functionalTestSelector", "someInput"); // stepKey: dontSeeOptionIsSelectedKey1
@@ -146,9 +152,11 @@ class BasicFunctionalTestCest
 		$I->seeElementInDOM(".functionalTestSelector"); // stepKey: seeElementInDOMKey1
 		$I->seeInCurrentUrl("/functionalUrl"); // stepKey: seeInCurrentUrlKey1
 		$I->seeInField(".functionalTestSelector", "someInput"); // stepKey: seeInFieldKey1
-		$I->seeInPageSource("<myHtmlHere>"); // stepKey: seeInPageSourceKey1
+		$I->seeInPageSource("Home Page"); // stepKey: seeInPageSourceKey1
+		$I->seeInPageSource("<h1 class=\"page-title\">"); // stepKey: seeInPageSourceKey2
 		$I->seeInPopup("someInput"); // stepKey: seeInPopupKey1
-		$I->seeInSource("<myHtmlHere>"); // stepKey: seeInSourceKey1
+		$I->seeInSource("Home Page"); // stepKey: seeInSourceKey1
+		$I->seeInSource("<h1 class=\"page-title\">"); // stepKey: seeInSourceKey2
 		$I->seeInTitle("someInput"); // stepKey: seeInTitleKey1
 		$I->seeLink("someInput", "/functionalUrl"); // stepKey: seeLinkKey1
 		$I->seeNumberOfElements(".functionalTestSelector"); // stepKey: seeNumberOfElementsKey1

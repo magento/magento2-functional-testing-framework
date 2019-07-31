@@ -24,5 +24,21 @@
         <searchAndMultiSelectOption stepKey="parameterArrayReplacement" selector="#selector" parameterArray="[$createdData.firstname$, $createdData.lastname$]"/>
         <fillField stepKey="allTypesMixed" selector="#selector" userInput="{{simpleData.firstname}} $createdData.firstname$ stringLiteral"/>
         <searchAndMultiSelectOption stepKey="parameterArrayMixed" selector="#selector" parameterArray="[$createdData.firstname$, {{simpleData.firstname}}, stringLiteral]"/>
+
+        <seeInPageSource html="StringBefore $createdData.firstname$ StringAfter" stepKey="htmlReplace1"/>
+        <seeInPageSource html="StringBefore $$createData1.firstname$$ StringAfter" stepKey="htmlReplace2"/>
+        <seeInPageSource html="#{{_ENV.MAGENTO_BASE_URL}}#$createdData.firstname$" stepKey="htmlReplace3"/>
+
+        <dontSeeInPageSource html="StringBefore $createdData.firstname$ StringAfter" stepKey="htmlReplace4"/>
+        <dontSeeInPageSource html="StringBefore $$createData1.firstname$$ StringAfter" stepKey="htmlReplace5"/>
+        <dontSeeInPageSource html="#{{_ENV.MAGENTO_BASE_URL}}#$createdData.firstname$" stepKey="htmlReplace6"/>
+
+        <seeInSource html="StringBefore $createdData.firstname$ StringAfter" stepKey="htmlReplace7"/>
+        <seeInSource html="StringBefore $$createData1.firstname$$ StringAfter" stepKey="htmlReplace8"/>
+        <seeInSource html="#{{_ENV.MAGENTO_BASE_URL}}#$createdData.firstname$" stepKey="htmlReplace9"/>
+
+        <dontSeeInSource html="StringBefore $createdData.firstname$ StringAfter" stepKey="htmlReplace10"/>
+        <dontSeeInSource html="StringBefore $$createData1.firstname$$ StringAfter" stepKey="htmlReplace11"/>
+        <dontSeeInSource html="#{{_ENV.MAGENTO_BASE_URL}}#$createdData.firstname$" stepKey="htmlReplace12"/>
     </test>
 </tests>
