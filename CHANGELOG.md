@@ -1,6 +1,22 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.4.3
+-----
+* Customizability
+    * Use of `_CREDS` has been extended to `<magentoCLI>` and `<createData>` actions
+* Traceability
+    * A Test step is now generated and injected in the allure report when a test is reported as `BROKEN`. 
+
+### Fixes
+* `static-checks` command now properly returns `1` if any static check failed.
+* MFTF Console Printer class correctly utilizes `--steps` and other flags passed directly to `codecept commands`.
+* `*source` actions correctly print when using `userInput` or `html` attributes.
+* XML Comments should no longer throw an error in parsing when used outside `test/actionGroup`
+
+### GitHub Issues/Pull requests:
+* [#703](https://github.com/magento/magento2-functional-testing-framework/pull/403) -- SMALL_CHANGE: Minor change suggested
+
 2.4.2
 -----
 * Traceability
