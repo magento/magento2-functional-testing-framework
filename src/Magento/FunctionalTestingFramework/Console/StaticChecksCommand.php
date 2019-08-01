@@ -9,18 +9,19 @@ declare(strict_types = 1);
 namespace Magento\FunctionalTestingFramework\Console;
 
 use Magento\FunctionalTestingFramework\StaticCheck\StaticChecksList;
+use Magento\FunctionalTestingFramework\StaticCheck\StaticCheckListInterface;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
+use Exception;
 
 class StaticChecksCommand extends Command
 {
     /**
      * Pool of static check scripts to run
      *
-     * @var \Magento\FunctionalTestingFramework\StaticCheck\StaticCheckListInterface
+     * @var StaticCheckListInterface
      */
     private $staticChecksList;
 
@@ -41,16 +42,28 @@ class StaticChecksCommand extends Command
      *
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|null|void
-     * @throws \Exception
+     * @return int
+     * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $staticCheckObjects = $this->staticChecksList->getStaticChecks();
+
+        $errors = [];
+
         foreach ($staticCheckObjects as $staticCheck) {
-            $staticOutput = $staticCheck->execute($input);
+            $staticCheck->execute($input);
+
+            $staticOutput = $staticCheck->getOutput();
             LoggingUtil::getInstance()->getLogger(get_class($staticCheck))->info($staticOutput);
             $output->writeln($staticOutput);
+            $errors += $staticCheck->getErrors();
+        }
+
+        if (empty($errors)) {
+            return 0;
+        } else {
+            return 1;
         }
     }
 }

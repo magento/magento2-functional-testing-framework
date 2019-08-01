@@ -33,7 +33,7 @@ class PageReplacementTestCest
 			"test",
 			"simpleData",
 			[],
-			null
+			[]
 		);
 
 		$I->amOnPage("/page.html"); // stepKey: noParamPage

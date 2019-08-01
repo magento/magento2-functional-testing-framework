@@ -30,7 +30,7 @@ class HookActionsTestCest
 			"hook",
 			"sampleCreatedEntity",
 			[],
-			null
+			[]
 		);
 
 		$I->comment("[sampleDeleteBefore] delete entity 'sampleCreateBefore'");
@@ -45,7 +45,7 @@ class HookActionsTestCest
 			"hook",
 			"sampleCreatedEntity",
 			[],
-			null
+			[]
 		);
 
 	}
@@ -62,7 +62,7 @@ class HookActionsTestCest
 			"hook",
 			"sampleCreatedEntity",
 			[],
-			null
+			[]
 		);
 
 		$I->comment("[sampleDeleteAfter] delete entity 'sampleCreateForAfter'");

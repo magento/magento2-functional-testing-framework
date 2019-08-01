@@ -53,7 +53,8 @@ class ActionObject
         "function",
         'filterSelector',
         'optionSelector',
-        "command"
+        "command",
+        "html"
     ];
     const OLD_ASSERTION_ATTRIBUTES = ["expected", "expectedType", "actual", "actualType"];
     const ASSERTION_ATTRIBUTES = ["expectedResult" => "expected", "actualResult" => "actual"];
@@ -154,7 +155,7 @@ class ActionObject
         $this->linkedAction = $linkedAction;
         $this->actionOrigin = $actionOrigin;
 
-        if ($order == ActionObject::MERGE_ACTION_ORDER_AFTER) {
+        if ($order === ActionObject::MERGE_ACTION_ORDER_AFTER) {
             $this->orderOffset = 1;
         }
     }

@@ -52,7 +52,7 @@ class SectionReplacementTestCest
 			"test",
 			"simpleData",
 			[],
-			null
+			[]
 		);
 
 		$I->click("#element ." . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test')); // stepKey: selectorReplaceOneParamPersisted
