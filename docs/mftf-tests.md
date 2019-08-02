@@ -1,7 +1,3 @@
----
-layout: full-width
-title: MFTF Tests
----
 <style>
 .mftf-dl {
   margin-bottom: 2.5em;
@@ -13,10 +9,13 @@ dl dt{
   font-weight: normal;
 }
 </style>
+
+# MFTF functional test reference
+
 The Magento Functional Testing Framework runs tests on every Module within Magento. These files are stored within each Module folder in the Magento repo.
 This page lists all those tests so that developers can have a good sense of what is covered.
 
-{% assign mftf = site.data.mftf | group_by: "module" | sort: "name"  %}
+{% include mftf/mftf_data.md %}
 
 {% for item in mftf %}
 
