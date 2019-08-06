@@ -3,11 +3,9 @@
   margin-bottom: 2.5em;
 }
 dl dt{
-  font-weight:500;
+  font-weight:400;
 }
-.mftf-test-link {
-  font-weight: normal;
-}
+
 </style>
 
 # MFTF functional test reference
