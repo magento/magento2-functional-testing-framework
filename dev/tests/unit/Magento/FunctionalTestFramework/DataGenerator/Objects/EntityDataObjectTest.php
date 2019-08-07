@@ -120,6 +120,23 @@ class EntityDataObjectTest extends MagentoTestCase
         $this->assertEquals("linkedEntity2", $dataObject->getLinkedEntitiesOfType("otherEntityType")[0]);
     }
 
+    public function testGetCamelCaseKeys()
+    {
+        $data = [
+            "lowercasekey1" => "value1",
+            "camelCaseKey2" => "value2",
+            "lowercasekey3" => "value3",
+            "camelCaseKey4" => "value4"
+        ];
+
+        $dataObject = new EntityDataObject("name", "type", $data, null, null, null);
+
+        $this->assertEquals("value1", $dataObject->getDataByName("lowercasekey1", 0));
+        $this->assertEquals("value2", $dataObject->getDataByName("camelCaseKey2", 0));
+        $this->assertEquals("value3", $dataObject->getDataByName("lowercasekey3", 0));
+        $this->assertEquals("value4", $dataObject->getDataByName("camelCaseKey4", 0));
+    }
+
     /**
      * After class functionality
      * @return void
