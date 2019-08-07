@@ -14,12 +14,14 @@ use VaultTransports\Guzzle6Transport;
 
 class VaultStorage extends BaseStorage
 {
+    /**
+     * Mftf project path
+     */
     const MFTF_PATH = '/mftf';
     /**
-     * Adobe Vault
+     * Vault kv version 2 data
      */
-    const BASE_PATH = '/dx_magento_qe';
-    const KV_DATA = 'data';
+    const KV2_DATA = 'data';
 
     /**
      * Default vault token file
@@ -55,17 +57,26 @@ class VaultStorage extends BaseStorage
     private $token = null;
 
     /**
+     * Vault secret base path
+     *
+     * @var string
+     */
+    private $secretBasePath;
+
+    /**
      * CredentialVault constructor
      *
      * @param string $baseUrl
+     * @param string $secretBasePath
      * @throws TestFrameworkException
      */
-    public function __construct($baseUrl)
+    public function __construct($baseUrl, $secretBasePath)
     {
         parent::__construct();
         if (null === $this->client) {
             // Creating the client using Guzzle6 Transport and passing a custom url
             $this->client = new Client(new Guzzle6Transport(['base_uri' => $baseUrl]));
+            $this->secretBasePath = $secretBasePath;
         }
         $this->readVaultTokenFromFileSystem();
         if (!$this->authenticated()) {
@@ -96,15 +107,15 @@ class VaultStorage extends BaseStorage
         try {
             // Split vendor/key to construct secret path
             list($vendor, $key) = explode('/', trim($key, '/'), 2);
-            $url = self::BASE_PATH
-                . (empty(self::KV_DATA) ? '' : '/' . self::KV_DATA)
+            $url = $this->secretBasePath
+                . (empty(self::KV2_DATA) ? '' : '/' . self::KV2_DATA)
                 . self::MFTF_PATH
                 . '/'
                 . $vendor
                 . '/'
                 . $key;
             // Read value by key from vault
-            $value = $this->client->read($url)->getData()[self::KV_DATA][$key];
+            $value = $this->client->read($url)->getData()[self::KV2_DATA][$key];
             // Encrypt value for return
             $reValue = openssl_encrypt($value, parent::ENCRYPTION_ALGO, parent::$encodedKey, 0, parent::$iv);
             parent::$cachedSecretData[$key] = $reValue;

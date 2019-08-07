@@ -58,10 +58,14 @@ class CredentialStore
         }
 
         // Initialize vault storage
-        $csBaseUrl = getenv('CREDENTIAL_VAULT_BASE_URL');
-        if ($csBaseUrl !== false) {
+        $cvAddress = getenv('CREDENTIAL_VAULT_ADDRESS');
+        $cvSecretPath = getenv('CREDENTIAL_VAULT_SECRET_BASE_PATH');
+        if ($cvAddress !== false && $cvSecretPath !== false) {
             try {
-                $this->credStorage[self::ARRAY_KEY_FOR_VAULT] = new VaultStorage(rtrim($csBaseUrl, '/'));
+                $this->credStorage[self::ARRAY_KEY_FOR_VAULT] = new VaultStorage(
+                    rtrim($cvAddress, '/'),
+                    '/' . trim($cvSecretPath, '/')
+                );
             } catch (TestFrameworkException $e) {
             }
         }
