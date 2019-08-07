@@ -8,7 +8,7 @@ When first writing a test for a new piece of code such as a custom extension, it
 The general process:
 
 1. Convert the manual test to a working, hard-coded test.
-1. Convert all selectors from hardcoded values to appropriate selectors.
+1. Replace hardcoded selectors to a more flexible format such as [parameterized selectors][].
 1. Convert hardcoded form values and other data to data entities.
 1. Convert [actions][] into [action groups][].
 
@@ -409,4 +409,4 @@ The finished test is fully abstracted in such a way that it is short and readabl
 [action groups]: https://devdocs.magento.com/mftf/docs/test/action-groups.html
 [Data entities]: https://devdocs.magento.com/mftf/docs/data.html
 [Input testing data]: https://devdocs.magento.com/mftf/docs/data.html
-
+[parameterized selectors]: https://devdocs.magento.com/mftf/docs/section/parameterized-selectors.html
