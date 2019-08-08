@@ -18,6 +18,7 @@ class VaultStorage extends BaseStorage
      * Mftf project path
      */
     const MFTF_PATH = '/mftf';
+
     /**
      * Vault kv version 2 data
      */
@@ -27,10 +28,12 @@ class VaultStorage extends BaseStorage
      * Default vault token file
      */
     const TOKEN_FILE = '.vault-token';
+
     /**
      * Default vault config file
      */
     const CONFIG_FILE = '.vault';
+
     /**
      * Environment variable name for vault config path
      */
