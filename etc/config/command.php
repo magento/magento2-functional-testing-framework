@@ -13,7 +13,7 @@ if (!empty($_POST['token']) && !empty($_POST['command'])) {
 
     $tokenPassedIn = urldecode($_POST['token']);
     $command = str_replace([';', '&'], '', urldecode($_POST['command']));
-    $arguments = str_replace([';', '&'], '', urldecode($_POST['$arguments']));
+    $arguments = str_replace([';', '&'], '', urldecode($_POST['arguments']));
 
     // Token returned will be null if the token we passed in is invalid
     $tokenFromMagento = $tokenModel->loadByToken($tokenPassedIn)->getToken();
