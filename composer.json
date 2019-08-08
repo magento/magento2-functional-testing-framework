@@ -10,10 +10,12 @@
     },
     "require": {
         "php": "7.0.2||7.0.4||~7.0.6||~7.1.0||~7.2.0||~7.3.0",
-        "allure-framework/allure-codeception": "~1.3.0",
         "ext-curl": "*",
+        "allure-framework/allure-codeception": "~1.3.0",
         "codeception/codeception": "~2.3.4 || ~2.4.0 ",
         "consolidation/robo": "^1.0.0",
+        "csharpru/vault-php": "~3.5.3",
+        "csharpru/vault-php-guzzle6-transport": "^2.0",
         "flow/jsonpath": ">0.2",
         "fzaninotto/faker": "^1.6",
         "monolog/monolog": "^1.0",
