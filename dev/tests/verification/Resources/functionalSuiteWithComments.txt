@@ -3,6 +3,7 @@
 namespace Group;
 
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 
 /**
  * Group class is Codeception Extension which is allowed to handle to all internal events.
