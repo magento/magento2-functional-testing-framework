@@ -83,7 +83,7 @@ For our example, we have a test that creates a simple product. Note the hardcode
         <waitForPageLoad stepKey="waitForNewProductPageOpened" />
 
         <!-- Fill field "Name" with "Simple Product %unique_value%" -->
-  --->  <fillField selector="input[name='product[name]']" userInput="Simple Product 12412431" stepKey="fillNameField" />
+  -----><fillField selector="input[name='product[name]']" userInput="Simple Product 12412431" stepKey="fillNameField" />
 
         <!-- Fill field "SKU" with "simple_product_%unique_value%" -->
         <fillField selector="input[name='product[sku]']" userInput="simple-product-12412431" stepKey="fillSKUField" />
@@ -149,10 +149,7 @@ In this example `AdminProductFormSection` refers to the `<section>` in the XML f
         <waitForPageLoad stepKey="waitForNewProductPageOpened" />
 
         <!-- Fill field "Name" with "Simple Product %unique_value%" -->
-         ```diff
-       -<fillField selector="input[name='product[name]']" userInput="Simple Product 12412431" stepKey="fillNameField" />
-       +<fillField selector="{{AdminProductFormSection.productName}}" userInput="Simple Product 12412431" stepKey="fillNameField" />
-        ```
+  -----><fillField selector="{{AdminProductFormSection.productName}}" userInput="Simple Product 12412431" stepKey="fillNameField" />
         <!-- Fill field "SKU" with "simple_product_%unique_value%" -->
         <fillField selector="{{AdminProductFormSection.productSku}}" userInput="simple-product-12412431" stepKey="fillSKUField" />
 
@@ -190,7 +187,7 @@ Here we are interested in `<section name="AdminProductFormSection">`, where we a
         <element name="attributeSetFilter" type="input" selector="div[data-index='attribute_set_id'] .admin__field-control input" timeout="30"/>
         <element name="attributeSetFilterResult" type="input" selector="div[data-index='attribute_set_id'] .action-menu-item._last" timeout="30"/>
         <element name="attributeSetFilterResultByName" type="text" selector="//label/span[text() = '{{var}}']" timeout="30" parameterized="true"/>
-  --->  <element name="productName" type="input" selector="input[name='product[name]']"/>
+  -----><element name="productName" type="input" selector="input[name='product[name]']"/>
         <element name="RequiredNameIndicator" type="text" selector=" return window.getComputedStyle(document.querySelector('._required[data-index=name]&gt;.admin__field-label span'), ':after').getPropertyValue('content');"/>
         <element name="RequiredSkuIndicator" type="text" selector=" return window.getComputedStyle(document.querySelector('._required[data-index=sku]&gt;.admin__field-label span'), ':after').getPropertyValue('content');"/>
         <element name="productSku" type="input" selector="input[name='product[sku]']"/>
@@ -250,8 +247,7 @@ We replace the hardcoded values with variables and the MFTF will do the variable
         <waitForPageLoad stepKey="waitForNewProductPageOpened" />
 
         <!-- Fill field "Name" with "Simple Product %unique_value%" -->
-       -<fillField selector="{{AdminProductFormSection.productName}}" userInput="Simple Product 12412431" stepKey="fillNameField" />
-       +<fillField selector="{{AdminProductFormSection.productName}}" userInput="{{_defaultProduct.name}}" stepKey="fillNameField" />
+  ----><fillField selector="{{AdminProductFormSection.productName}}" userInput="{{_defaultProduct.name}}" stepKey="fillNameField" />
 
         <!-- Fill field "SKU" with "simple_product_%unique_value%" -->
         <fillField selector="{{AdminProductFormSection.productSku}}" userInput="{{_defaultProduct.sku}}" stepKey="fillSKUField" />
@@ -331,8 +327,7 @@ To create an action group, take the steps and put them within an `<actionGroup>`
         <arguments>
             <argument name="product" defaultValue="_defaultProduct"/>
         </arguments>
-       -<fillField selector="{{AdminProductFormSection.productName}}" userInput="{{_defaultProduct.name}}" stepKey="fillNameField" />
-       +<fillField selector="{{AdminProductFormSection.productName}}" userInput="{{product.name}}" stepKey="fillProductName"/>
+  -----><fillField selector="{{AdminProductFormSection.productName}}" userInput="{{product.name}}" stepKey="fillProductName"/>
         <fillField selector="{{AdminProductFormSection.productSku}}" userInput="{{product.sku}}" stepKey="fillProductSku"/>
         <fillField selector="{{AdminProductFormSection.productPrice}}" userInput="{{product.price}}" stepKey="fillProductPrice"/>
         <fillField selector="{{AdminProductFormSection.productQuantity}}" userInput="{{product.quantity}}" stepKey="fillProductQty"/>
@@ -383,8 +378,8 @@ Now we can reference this action group within our test (and any other test).
 
         <!-- Click "Add Product" button -->
         <actionGroup ref="goToCreateProductPage" stepKey="goToCreateProductPage" />
-       -<fillField selector="{{AdminProductFormSection.productName}}" userInput="{{product.name}}" stepKey="fillProductName"/>
-       +<actionGroup ref="fillMainProductForm" stepKey="fillProductForm">
+  -----><fillField selector="{{AdminProductFormSection.productName}}" userInput="{{product.name}}" stepKey="fillProductName"/>
+        <actionGroup ref="fillMainProductForm" stepKey="fillProductForm">
             <argument name="product" value="_defaultProduct" />
         </actionGroup>
 
