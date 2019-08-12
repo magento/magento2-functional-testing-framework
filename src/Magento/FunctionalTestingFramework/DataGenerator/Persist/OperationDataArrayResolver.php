@@ -11,6 +11,7 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\OperationDefinitio
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\OperationElement;
 use Magento\FunctionalTestingFramework\DataGenerator\Util\OperationElementExtractor;
+use Magento\FunctionalTestingFramework\DataGenerator\Util\RuntimeDataReferenceResolver;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
 class OperationDataArrayResolver
@@ -119,6 +120,17 @@ class OperationDataArrayResolver
                     $operationDataArray
                 );
             }
+        }
+
+        $dataReferenceResolver = new RuntimeDataReferenceResolver();
+        foreach ($operationDataArray as $key => $operationDataValue) {
+            if (is_array($operationDataValue)){
+                continue;
+            }
+            $operationDataArray[$key] = $dataReferenceResolver->getDataReference(
+                $operationDataValue,
+                $entityObject->getName()
+            );
         }
 
         return $operationDataArray;
