@@ -184,6 +184,9 @@ class EntityDataObject
 
         $dataReferenceResolver = new GenerationDataReferenceResolver();
         if (array_key_exists($name_lower, $this->data)) {
+            if (is_array($this->data[$name_lower])) {
+                return $this->data[$name_lower];
+            }
             $uniquenessData = $this->getUniquenessDataByName($name_lower) === null
                 ? $dataReferenceResolver->getDataUniqueness(
                     $this->data[$name_lower],
@@ -202,6 +205,9 @@ class EntityDataObject
             }
             return $this->formatUniqueData($name_lower, $uniquenessData, $uniquenessFormat);
         } elseif (array_key_exists($name, $this->data)) {
+            if (is_array($this->data[$name_lower])) {
+                return $this->data[$name];
+            }
             $this->data[$name] = $dataReferenceResolver->getDataReference(
                 $this->data[$name],
                 $this->name . '.' . $name
