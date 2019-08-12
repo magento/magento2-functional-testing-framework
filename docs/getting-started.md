@@ -257,7 +257,7 @@ cd magento2-functional-testing-framework
 composer install
 ```
 
-### Step 3. Build the project   {#build-project}
+### Step 3. Build the project
 
 ```bash
 bin/mftf build:project
@@ -309,7 +309,6 @@ allure serve dev/tests/_output/allure-results/
 [allure docs]: https://docs.qameta.io/allure/
 [Allure Framework]: http://allure.qatools.ru/
 [basic configuration]: configuration.html#basic-configuration
-[build]: #build-project
 [chrome driver]: https://sites.google.com/a/chromium.org/chromedriver/downloads
 [Codeception Test execution]: https://blog.jetbrains.com/phpstorm/2017/03/codeception-support-comes-to-phpstorm-2017-1/
 [composer]: https://getcomposer.org/download/
