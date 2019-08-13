@@ -18,6 +18,37 @@ class GenerationDataReferenceResolver implements DataReferenceResolverInterface
      * @return string|null
      * @throws TestReferenceException
      */
+    public function getDataUniqueness(string $data, string $originalDataEntity)
+    {
+        preg_match(
+            ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN,
+            $data,
+            $matches
+        );
+
+        if (empty($matches['reference'])) {
+            return null;
+        }
+
+        $strippedReference = str_replace(['{{', '}}'], '', $matches['reference']);
+        list($entity, $var) = explode('.', $strippedReference);
+        $entityObject = DataObjectHandler::getInstance()->getObject($entity);
+        if ($entityObject === null) {
+            throw new TestReferenceException(
+                "Could not resolve entity reference \"{$matches['reference']}\" "
+                . "in Data entity \"{$originalDataEntity}\""
+            );
+        }
+
+        return $entityObject->getUniquenessDataByName($var);
+    }
+
+    /**
+     * @param string $data
+     * @param string $originalDataEntity
+     * @return string|null
+     * @throws TestReferenceException
+     */
     public function getDataReference(string $data, string $originalDataEntity)
     {
         $result = null;
@@ -47,36 +78,5 @@ class GenerationDataReferenceResolver implements DataReferenceResolverInterface
         }
 
         return $result;
-    }
-
-    /**
-     * @param string $data
-     * @param string $originalDataEntity
-     * @return string|null
-     * @throws TestReferenceException
-     */
-    public function getDataUniqueness(string $data, string $originalDataEntity)
-    {
-        preg_match(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN,
-            $data,
-            $matches
-        );
-
-        if (empty($matches['reference'])) {
-            return null;
-        }
-
-        $strippedReference = str_replace(['{{', '}}'], '', $matches['reference']);
-        list($entity, $var) = explode('.', $strippedReference);
-        $entityObject = DataObjectHandler::getInstance()->getObject($entity);
-        if ($entityObject === null) {
-            throw new TestReferenceException(
-                "Could not resolve entity reference \"{$matches['reference']}\" "
-                . "in Data entity \"{$originalDataEntity}\""
-            );
-
-        }
-
-        return $entityObject->getUniquenessDataByName($var);
     }
 }

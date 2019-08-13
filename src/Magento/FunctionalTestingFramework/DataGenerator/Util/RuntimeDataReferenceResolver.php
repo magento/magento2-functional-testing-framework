@@ -63,7 +63,8 @@ class RuntimeDataReferenceResolver implements DataReferenceResolverInterface
      */
     public function getDataUniqueness(string $data, string $originalDataEntity)
     {
-        preg_match(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN,
+        preg_match(
+            ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN,
             $data,
             $matches
         );
@@ -80,7 +81,6 @@ class RuntimeDataReferenceResolver implements DataReferenceResolverInterface
                 "Could not resolve entity reference \"{$matches['reference']}\" "
                 . "in Data entity \"{$originalDataEntity}\""
             );
-
         }
 
         return $entityObject->getUniquenessDataByName($var);

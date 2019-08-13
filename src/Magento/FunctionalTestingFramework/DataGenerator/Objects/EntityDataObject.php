@@ -82,14 +82,14 @@ class EntityDataObject
     /**
      * Constructor
      *
-     * @param string $name
-     * @param string $type
+     * @param string   $name
+     * @param string   $type
      * @param string[] $data
      * @param string[] $linkedEntities
      * @param string[] $uniquenessData
      * @param string[] $vars
-     * @param string $parentEntity
-     * @param string $filename
+     * @param string   $parentEntity
+     * @param string   $filename
      */
     public function __construct(
         $name,
@@ -161,6 +161,7 @@ class EntityDataObject
      * @param integer $uniquenessFormat
      * @return string|null
      * @throws TestFrameworkException
+     * @SuppressWarnings(PHPMD)
      */
     public function getDataByName($name, $uniquenessFormat)
     {
