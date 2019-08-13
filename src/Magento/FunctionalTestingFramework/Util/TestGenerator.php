@@ -24,6 +24,7 @@ use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
+use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 
 /**
  * Class TestGenerator
@@ -1904,7 +1905,7 @@ class TestGenerator
     {
         $runtimeReferenceRegex = [
             "/{{_ENV\.([\w]+)}}/" => 'getenv',
-            "/{{_CREDS\.([\w]+)}}/" => 'CredentialStore::getInstance()->getSecret'
+            ActionMergeUtil::CREDS_REGEX => 'CredentialStore::getInstance()->getSecret'
         ];
 
         $argResult = $args;
