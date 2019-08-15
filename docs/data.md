@@ -121,6 +121,7 @@ The following conventions apply to MFTF `<data>`:
 * A `<data>` file may contain multiple data entities.
 * Camel case is used for `<data>` elements. The name represents the `<data>` type. For example, a file with customer data is `CustomerData.xml`. A file for simple product would be `SimpleProductData.xml`.
 * Camel case is used for the entity name.
+* The file name must have the suffix `Data.xml`.
 
 ## Example
 
