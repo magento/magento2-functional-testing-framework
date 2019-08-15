@@ -1,6 +1,11 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.4.4
+-----
+### Fixes
+* Fixed an issue where `_CREDS` could not be resolved when used in a suite.
+
 2.4.3
 -----
 * Customizability
