@@ -9,6 +9,7 @@ namespace Magento\FunctionalTestingFramework\Util;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -37,6 +38,52 @@ class ModuleResolver
      * Magento Registrar Class
      */
     const REGISTRAR_CLASS = "\Magento\Framework\Component\ComponentRegistrar";
+
+    /**
+     * Vendor code path
+     */
+    const VENDOR_CODE_PATH = DIRECTORY_SEPARATOR . "vendor";
+
+    /**
+     * App code path
+     */
+    const APP_CODE_PATH = DIRECTORY_SEPARATOR . "app" . DIRECTORY_SEPARATOR . "code";
+
+    /**
+     * Dev test code path
+     */
+    const DEV_TEST_CODE_PATH = DIRECTORY_SEPARATOR
+        . 'dev'
+        . DIRECTORY_SEPARATOR
+        . 'tests'
+        . DIRECTORY_SEPARATOR
+        . 'acceptance'
+        . DIRECTORY_SEPARATOR
+        . 'tests'
+        . DIRECTORY_SEPARATOR
+        . 'functional';
+
+    /**
+     * Pattern for Mftf directories
+     */
+    const MFTF_DIR_PATTERN = 'Test' . DIRECTORY_SEPARATOR . 'Mftf';
+
+    /**
+     * Regex to match an invalid dev test code path
+     */
+    const INVALID_DEV_TEST_CODE_PATH_REGEX = "~.+dev\\"
+        . DIRECTORY_SEPARATOR
+        . "tests\\"
+        . DIRECTORY_SEPARATOR
+        . "acceptance\\"
+        . DIRECTORY_SEPARATOR
+        . "tests\\"
+        . DIRECTORY_SEPARATOR
+        . "functional\\"
+        . DIRECTORY_SEPARATOR
+        . "\S+\\"
+        . DIRECTORY_SEPARATOR
+        . "FuncionalTest$~";
 
     /**
      * Enabled modules.
@@ -109,6 +156,13 @@ class ModuleResolver
     protected $moduleBlacklist = [
         'SampleTests', 'SampleTemplates'
     ];
+
+    /**
+     * Registered module list in magento instance being tested
+     *
+     * @var array
+     */
+    private $registeredModuleList = [];
 
     /**
      * Get ModuleResolver instance.
@@ -235,17 +289,67 @@ class ModuleResolver
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
         $modulePath = rtrim($modulePath, DIRECTORY_SEPARATOR);
 
-        $vendorCodePath = DIRECTORY_SEPARATOR . "vendor";
-        $appCodePath = DIRECTORY_SEPARATOR . "app" . DIRECTORY_SEPARATOR . "code";
-
+        // Add known paths
         $codePathsToPattern = [
-            $modulePath => '',
-            $magentoBaseCodePath . $vendorCodePath => 'Test' . DIRECTORY_SEPARATOR . 'Mftf',
-            $magentoBaseCodePath . $appCodePath => 'Test' . DIRECTORY_SEPARATOR . 'Mftf'
+            $magentoBaseCodePath . self::VENDOR_CODE_PATH => [
+                [
+                    'pattern' => 'Test' . DIRECTORY_SEPARATOR . 'Mftf',
+                    'level' => null
+                ],
+                [
+                    'pattern' => '*-test',
+                    'level' => 1
+                ]
+            ],
+            $magentoBaseCodePath . self::APP_CODE_PATH => [
+                [
+                    'pattern' => 'Test' . DIRECTORY_SEPARATOR . 'Mftf',
+                    'level' => null
+                ]
+            ],
+            $magentoBaseCodePath . self::DEV_TEST_CODE_PATH => [
+                [
+                    'pattern' => '*Test',
+                    'level' => 1
+                ],
+                [
+                    'pattern' => 'FunctionalTest' . DIRECTORY_SEPARATOR . '*',
+                    'level' => 1
+                ]
+            ]
         ];
 
-        foreach ($codePathsToPattern as $codePath => $pattern) {
-            $allModulePaths = array_merge_recursive($allModulePaths, $this->globRelevantPaths($codePath, $pattern));
+        // Check if module path is a known path
+        $newPath = true;
+        foreach (array_keys($codePathsToPattern) as $key) {
+            if (strpos($modulePath, $key) !== false) {
+                $newPath = false;
+            }
+        }
+
+        // Add module path if it's a new path
+        if ($newPath) {
+            $codePathsToPattern[$modulePath] = [
+                [
+                    'pattern' => 'Test' . DIRECTORY_SEPARATOR . 'Mftf',
+                    'level' => 0
+                ],
+                [
+                    'pattern' => '*Test',
+                    'level' => 0
+                ]
+            ];
+        }
+
+        // Glob pattern for relevant paths
+        foreach ($codePathsToPattern as $codePath => $patterns) {
+            foreach ($patterns as $pattern) {
+                $allModulePaths = array_merge_recursive($allModulePaths, $this->globRelevantPaths(
+                    $codePath,
+                    $pattern['pattern'],
+                    $pattern['level'])
+                );
+            }
         }
 
         return $allModulePaths;
@@ -258,35 +362,46 @@ class ModuleResolver
      *
      * @param string $testPath
      * @param string $pattern
+     * @param integer $level
      * @return array
      */
-    private function globRelevantPaths($testPath, $pattern)
+    private function globRelevantPaths($testPath, $pattern, $level)
     {
         $modulePaths = [];
         $relevantPaths = [];
 
         if (file_exists($testPath)) {
-            $relevantPaths = $this->globRelevantWrapper($testPath, $pattern);
+            $relevantPaths = $this->globRelevantWrapper($testPath, $pattern, $level);
         }
 
         $allComponents = $this->getRegisteredModuleList();
 
         foreach ($relevantPaths as $codePath) {
-            // Reduce magento/app/code/Magento/AdminGws/<pattern> to magento/app/code/Magento/AdminGws to read symlink
+            // Reduce magento/app/code/Magento/AdminGws/Test/MFTF to magento/app/code/Magento/AdminGws to read symlink
             // Symlinks must be resolved otherwise they will not match Magento's filepath to the module
-            $potentialSymlink = str_replace(DIRECTORY_SEPARATOR . $pattern, "", $codePath);
-            if (is_link($potentialSymlink)) {
-                $codePath = realpath($potentialSymlink) . DIRECTORY_SEPARATOR . $pattern;
+            if ($pattern == self::MFTF_DIR_PATTERN) {
+                $codePath = str_replace(DIRECTORY_SEPARATOR . self::MFTF_DIR_PATTERN, "", $codePath);
             }
+            if (is_link($codePath)) {
+                $codePath = realpath($codePath);
+            }
+            $mainModName = array_search($codePath, $allComponents) ?: basename($codePath);
+            preg_match(self::INVALID_DEV_TEST_CODE_PATH_REGEX, $codePath, $match);
+            if (empty($match)) {
+                if ($pattern == self::MFTF_DIR_PATTERN) {
+                    $modulePaths[$mainModName][] = $codePath . DIRECTORY_SEPARATOR . self::MFTF_DIR_PATTERN;
+                } else {
+                    $modulePaths[$mainModName][] = $codePath;
+                }
 
-            $mainModName = array_search($codePath, $allComponents) ?: basename(str_replace($pattern, '', $codePath));
-            $modulePaths[$mainModName][] = $codePath;
-
-            if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-                LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->debug(
-                    "including module",
-                    ['module' => $mainModName, 'path' => $codePath]
-                );
+                if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
+                    LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->debug(
+                        "including module",
+                        ['module' => $mainModName, 'path' => $codePath]
+                    );
+                }
+            } else {
+                echo $codePath;
             }
         }
 
@@ -295,18 +410,25 @@ class ModuleResolver
 
     /**
      * Glob wrapper for globRelevantPaths function
+     * When $level = null, it's recursion
      *
      * @param string $testPath
      * @param string $pattern
+     * @param integer $level
      * @return array
      */
-    private static function globRelevantWrapper($testPath, $pattern)
+    private static function globRelevantWrapper($testPath, $pattern, $level = null)
     {
-        if ($pattern == "") {
-            return glob($testPath . '*' . DIRECTORY_SEPARATOR . '*' . $pattern);
+        $subDirectory = DIRECTORY_SEPARATOR . "*";
+        if ($level !== null) {
+            $subDirectories = '';
+            for ($i = 0; $i < $level; $i++) {
+                $subDirectories .= $subDirectory;
+            }
+            return glob($testPath . $subDirectories . DIRECTORY_SEPARATOR . $pattern, GLOB_ONLYDIR);
         }
-        $subDirectory = "*" . DIRECTORY_SEPARATOR;
-        $directories = glob($testPath . $subDirectory . $pattern, GLOB_ONLYDIR);
+
+        $directories = glob($testPath . $subDirectory . DIRECTORY_SEPARATOR . $pattern, GLOB_ONLYDIR);
         foreach (glob($testPath . $subDirectory, GLOB_ONLYDIR) as $dir) {
             $directories = array_merge_recursive($directories, self::globRelevantWrapper($dir, $pattern));
         }
@@ -534,6 +656,10 @@ class ModuleResolver
      */
     private function getRegisteredModuleList()
     {
+        if (!empty($this->registeredModuleList)) {
+            return $this->registeredModuleList;
+        }
+
         if (array_key_exists('MAGENTO_BP', $_ENV)) {
             $autoloadPath = realpath(MAGENTO_BP . "/app/autoload.php");
             if ($autoloadPath) {
@@ -556,7 +682,6 @@ class ModuleResolver
             array_walk($allComponents, function (&$value) {
                 // Magento stores component paths with unix DIRECTORY_SEPARATOR, need to stay uniform and convert
                 $value = realpath($value);
-                $value .= '/Test/Mftf';
             });
             return $allComponents;
         } catch (TestFrameworkException $e) {
