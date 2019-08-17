@@ -71,19 +71,19 @@ class ModuleResolver
     /**
      * Regex to match an invalid dev test code path
      */
-    const INVALID_DEV_TEST_CODE_PATH_REGEX = "~.+dev\\"
-        . DIRECTORY_SEPARATOR
-        . "tests\\"
-        . DIRECTORY_SEPARATOR
-        . "acceptance\\"
-        . DIRECTORY_SEPARATOR
-        . "tests\\"
-        . DIRECTORY_SEPARATOR
-        . "functional\\"
-        . DIRECTORY_SEPARATOR
-        . "\S+\\"
-        . DIRECTORY_SEPARATOR
-        . "FuncionalTest$~";
+    const INVALID_DEV_TEST_CODE_PATH_REGEX = "~^[^:*\\?\"<>|']+"
+        . self::DEV_TEST_CODE_PATH
+        . "/[^/:*\\?\"<>|']+/FunctionalTest$~";
+
+    /**
+     * Test module name suffix
+     */
+    const TEST_MODULE_NAME_SUFFIX = 'Test';
+
+    /**
+     * Regex to match a test module name with suffix defined in TEST_MODULE_NAME_SUFFIX
+     */
+    const TEST_MODULE_NAME_REGEX = "~\S+" . self::TEST_MODULE_NAME_SUFFIX . "$~";
 
     /**
      * Enabled modules.
@@ -309,7 +309,7 @@ class ModuleResolver
             ],
             $magentoBaseCodePath . self::DEV_TEST_CODE_PATH => [
                 [
-                    'pattern' => '*Test',
+                    'pattern' => '*' . self::TEST_MODULE_NAME_SUFFIX,
                     'level' => 1
                 ],
                 [
@@ -335,7 +335,7 @@ class ModuleResolver
                     'level' => 0
                 ],
                 [
-                    'pattern' => '*Test',
+                    'pattern' => '*' . self::TEST_MODULE_NAME_SUFFIX,
                     'level' => 0
                 ]
             ];
@@ -385,7 +385,9 @@ class ModuleResolver
             if (is_link($codePath)) {
                 $codePath = realpath($codePath);
             }
+
             $mainModName = array_search($codePath, $allComponents) ?: basename($codePath);
+
             preg_match(self::INVALID_DEV_TEST_CODE_PATH_REGEX, $codePath, $match);
             if (empty($match)) {
                 if ($pattern == self::MFTF_DIR_PATTERN) {
@@ -400,8 +402,6 @@ class ModuleResolver
                         ['module' => $mainModName, 'path' => $codePath]
                     );
                 }
-            } else {
-                echo $codePath;
             }
         }
 
@@ -463,16 +463,19 @@ class ModuleResolver
     {
         $enabledDirectoryPaths = [];
         foreach ($enabledModules as $magentoModuleName) {
-            if (!isset($this->knownDirectories[$magentoModuleName]) && !isset($allModulePaths[$magentoModuleName])) {
-                continue;
-            } elseif (isset($this->knownDirectories[$magentoModuleName])
-                && !isset($allModulePaths[$magentoModuleName])) {
+            $magentoTestModuleName = $magentoModuleName . self::TEST_MODULE_NAME_SUFFIX;
+            if (isset($this->knownDirectories[$magentoModuleName]) && !isset($allModulePaths[$magentoModuleName])) {
                 LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->warn(
                     "Known directory could not match to an existing path.",
                     ['knownDirectory' => $magentoModuleName]
                 );
             } else {
-                $enabledDirectoryPaths[$magentoModuleName] = $allModulePaths[$magentoModuleName];
+                if (isset($allModulePaths[$magentoModuleName])) {
+                    $enabledDirectoryPaths[$magentoModuleName] = $allModulePaths[$magentoModuleName];
+                }
+                if (isset($allModulePaths[$magentoTestModuleName])) {
+                    $enabledDirectoryPaths[$magentoTestModuleName] = $allModulePaths[$magentoTestModuleName];
+                }
             }
         }
         return $enabledDirectoryPaths;
@@ -618,6 +621,18 @@ class ModuleResolver
                     ['module' => $moduleName]
                 );
             }
+
+            preg_match(self::TEST_MODULE_NAME_REGEX, $moduleName, $match);
+            if (!empty($match)) {
+                $relatedModuleName = substr($moduleName, 0, -strlen(self::TEST_MODULE_NAME_SUFFIX));
+                if (in_array($relatedModuleName, $this->getModuleBlacklist())) {
+                    unset($modulePathsResult[$moduleName]);
+                    LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
+                        "excluding module",
+                        ['module' => $moduleName]
+                    );
+                }
+            }
         }
 
         return $modulePathsResult;
@@ -671,19 +686,22 @@ class ModuleResolver
         }
 
         try {
-            $allComponents = [];
+            $this->registeredModuleList = [];
             if (!class_exists(self::REGISTRAR_CLASS)) {
                 throw new TestFrameworkException("Magento Installation not found when loading registered modules.\n");
             }
             $components = new \Magento\Framework\Component\ComponentRegistrar();
             foreach (self::PATHS as $componentType) {
-                $allComponents = array_merge($allComponents, $components->getPaths($componentType));
+                $this->registeredModuleList = array_merge(
+                    $this->registeredModuleList,
+                    $components->getPaths($componentType)
+                );
             }
-            array_walk($allComponents, function (&$value) {
+            array_walk($this->registeredModuleList, function (&$value) {
                 // Magento stores component paths with unix DIRECTORY_SEPARATOR, need to stay uniform and convert
                 $value = realpath($value);
             });
-            return $allComponents;
+            return $this->registeredModuleList;
         } catch (TestFrameworkException $e) {
             LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->warning(
                 "$e"
