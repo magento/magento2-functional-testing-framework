@@ -226,7 +226,7 @@ class ActionGroupObject
         // $regexPattern match on:   $matches[0] {{section.element(arg.field)}}
         // $matches[1] = section.element
         // $matches[2] = arg.field
-        $regexPattern = '/{{([^(}]+)\(*([^)}]+)*\)*}}/';
+        $regexPattern = '/{{([^(}]+)\(*([^)]+)*?\)*}}/';
 
         $newActionAttributes = [];
         foreach ($attributes as $attributeKey => $attributeValue) {

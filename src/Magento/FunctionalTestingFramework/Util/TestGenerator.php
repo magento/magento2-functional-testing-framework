@@ -1483,7 +1483,7 @@ class TestGenerator
                 . $stepKey . $testInvocationKey . "', 'field', 'test')";
 
             if (strpos($output, $stepKeyVarRef) !== false) {
-                $output = str_replace($stepKeyVarRef, $stepKeyVarRef . $testInvocationKey, $output);
+                $output = preg_replace('/\B\\' .$stepKeyVarRef. '\b/', $stepKeyVarRef . $testInvocationKey, $output);
             }
 
             if (strpos($output, $persistedVarRef) !== false) {
