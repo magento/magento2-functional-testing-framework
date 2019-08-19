@@ -344,10 +344,9 @@ class ModuleResolver
         // Glob pattern for relevant paths
         foreach ($codePathsToPattern as $codePath => $patterns) {
             foreach ($patterns as $pattern) {
-                $allModulePaths = array_merge_recursive($allModulePaths, $this->globRelevantPaths(
-                    $codePath,
-                    $pattern['pattern'],
-                    $pattern['level'])
+                $allModulePaths = array_merge_recursive(
+                    $allModulePaths,
+                    $this->globRelevantPaths($codePath, $pattern['pattern'], $pattern['level'])
                 );
             }
         }
@@ -360,8 +359,8 @@ class ModuleResolver
      * are returned as an associative array keyed by basename (the last dir excluding pattern) to an array containing
      * the matching path.
      *
-     * @param string $testPath
-     * @param string $pattern
+     * @param string  $testPath
+     * @param string  $pattern
      * @param integer $level
      * @return array
      */
@@ -412,8 +411,8 @@ class ModuleResolver
      * Glob wrapper for globRelevantPaths function
      * When $level = null, it's recursion
      *
-     * @param string $testPath
-     * @param string $pattern
+     * @param string  $testPath
+     * @param string  $pattern
      * @param integer $level
      * @return array
      */
