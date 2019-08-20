@@ -70,6 +70,10 @@ class ModuleResolverTest extends MagentoTestCase
             [
                 "example" . DIRECTORY_SEPARATOR . "paths",
                 "example" . DIRECTORY_SEPARATOR . "paths",
+                "example" . DIRECTORY_SEPARATOR . "paths",
+                "example" . DIRECTORY_SEPARATOR . "paths",
+                "example" . DIRECTORY_SEPARATOR . "paths",
+                "example" . DIRECTORY_SEPARATOR . "paths",
                 "example" . DIRECTORY_SEPARATOR . "paths"
             ],
             $resolver->getModulesPath()
@@ -94,6 +98,10 @@ class ModuleResolverTest extends MagentoTestCase
         $this->setMockResolverProperties($resolver, null, null);
         $this->assertEquals(
             [
+                "example" . DIRECTORY_SEPARATOR . "paths",
+                "example" . DIRECTORY_SEPARATOR . "paths",
+                "example" . DIRECTORY_SEPARATOR . "paths",
+                "example" . DIRECTORY_SEPARATOR . "paths",
                 "example" . DIRECTORY_SEPARATOR . "paths",
                 "example" . DIRECTORY_SEPARATOR . "paths",
                 "example" . DIRECTORY_SEPARATOR . "paths"
@@ -160,7 +168,10 @@ class ModuleResolverTest extends MagentoTestCase
         );
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, null, ["somePath"]);
-        $this->assertEquals(["lastPath", "lastPath"], $resolver->getModulesPath());
+        $this->assertEquals(
+            ["lastPath", "lastPath", "lastPath", "lastPath", "lastPath", "lastPath", "lastPath"],
+            $resolver->getModulesPath()
+        );
         TestLoggingUtil::getInstance()->validateMockLogStatement(
             'info',
             'excluding module',

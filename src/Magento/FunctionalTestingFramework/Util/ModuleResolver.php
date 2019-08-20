@@ -100,6 +100,13 @@ class ModuleResolver
     protected $enabledModulePaths = null;
 
     /**
+     * Paths for non flattened enabled modules.
+     *
+     * @var array|null
+     */
+    protected $enabledModulePathsNoFlatten = null;
+
+    /**
      * Configuration instance.
      *
      * @var \Magento\FunctionalTestingFramework\Config\DataInterface
@@ -234,29 +241,19 @@ class ModuleResolver
     }
 
     /**
-     * Return an array of module whitelist that not exist in target Magento instance.
-     *
-     * @return array
-     */
-    protected function getModuleWhitelist()
-    {
-        $moduleWhitelist = getenv(self::MODULE_WHITELIST);
-
-        if (empty($moduleWhitelist)) {
-            return [];
-        }
-        return array_map('trim', explode(',', $moduleWhitelist));
-    }
-
-    /**
      * Return the modules path based on which modules are enabled in the target Magento instance.
      *
+     * @param boolean $flat
      * @return array
      */
-    public function getModulesPath()
+    public function getModulesPath($flat = true)
     {
-        if (isset($this->enabledModulePaths)) {
+        if (isset($this->enabledModulePaths) && $flat) {
             return $this->enabledModulePaths;
+        }
+
+        if (isset($this->enabledModulePathsNoFlatten) && !$flat) {
+            return $this->enabledModulePathsNoFlatten;
         }
 
         $allModulePaths = $this->aggregateTestModulePaths();
@@ -271,6 +268,44 @@ class ModuleResolver
 
         $this->enabledModulePaths = $this->applyCustomModuleMethods($enabledDirectoryPaths);
         return $this->enabledModulePaths;
+    }
+
+    /**
+     * Sort files according module sequence.
+     *
+     * @param array $files
+     * @return array
+     */
+    public function sortFilesByModuleSequence(array $files)
+    {
+        return $this->sequenceSorter->sort($files);
+    }
+
+    /**
+     * Trim test module suffix from module name
+     *
+     * @param string $moduleName
+     * @return string
+     */
+    public function trimTestModuleSuffix($moduleName)
+    {
+        preg_match(self::TEST_MODULE_NAME_REGEX, $moduleName, $match);
+        return empty($match) ? $moduleName : substr($moduleName, 0, -strlen(self::TEST_MODULE_NAME_SUFFIX));
+    }
+
+    /**
+     * Return an array of module whitelist that not exist in target Magento instance.
+     *
+     * @return array
+     */
+    protected function getModuleWhitelist()
+    {
+        $moduleWhitelist = getenv(self::MODULE_WHITELIST);
+
+        if (empty($moduleWhitelist)) {
+            return [];
+        }
+        return array_map('trim', explode(',', $moduleWhitelist));
     }
 
     /**
@@ -351,6 +386,14 @@ class ModuleResolver
             }
         }
 
+        foreach ($allModulePaths as $moduleName => $modulePath) {
+            $relatedModuleName = $this->trimTestModuleSuffix($moduleName);
+            if (($relatedModuleName != $moduleName) && isset($allModulePaths[$relatedModuleName])) {
+                $message = "Mftf tests cannot be in both $moduleName and $relatedModuleName modules. "
+                    . "Please move all mftf tests to $relatedModuleName.";
+                throw new TestFrameworkException($message);
+            }
+        }
         return $allModulePaths;
     }
 
@@ -572,17 +615,6 @@ class ModuleResolver
     }
 
     /**
-     * Sort files according module sequence.
-     *
-     * @param array $files
-     * @return array
-     */
-    public function sortFilesByModuleSequence(array $files)
-    {
-        return $this->sequenceSorter->sort($files);
-    }
-
-    /**
      * A wrapping method for any custom logic which needs to be applied to the module list
      *
      * @param array $modulesPath
@@ -600,6 +632,9 @@ class ModuleResolver
             );
         }, $customModulePaths);
 
+        if (!isset($this->enabledModulePathsNoFlatten)) {
+            $this->enabledModulePathsNoFlatten = array_merge($modulePathsResult, $customModulePaths);
+        }
         return $this->flattenAllModulePaths(array_merge($modulePathsResult, $customModulePaths));
     }
 
@@ -613,18 +648,17 @@ class ModuleResolver
     {
         $modulePathsResult = $modulePaths;
         foreach ($modulePathsResult as $moduleName => $modulePath) {
+            // Remove module if it is in blacklist
             if (in_array($moduleName, $this->getModuleBlacklist())) {
                 unset($modulePathsResult[$moduleName]);
                 LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
                     "excluding module",
                     ['module' => $moduleName]
                 );
-            }
-
-            preg_match(self::TEST_MODULE_NAME_REGEX, $moduleName, $match);
-            if (!empty($match)) {
-                $relatedModuleName = substr($moduleName, 0, -strlen(self::TEST_MODULE_NAME_SUFFIX));
-                if (in_array($relatedModuleName, $this->getModuleBlacklist())) {
+            } else {
+                // Remove test module if its magento module is in blacklist
+                $relatedModuleName = $this->trimTestModuleSuffix($moduleName);
+                if (($relatedModuleName != $moduleName) && in_array($relatedModuleName, $this->getModuleBlacklist())) {
                     unset($modulePathsResult[$moduleName]);
                     LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
                         "excluding module",

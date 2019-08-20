@@ -53,7 +53,7 @@ class ModulePathExtractorTest extends TestCase
      */
     public function testGetMagentoModule()
     {
-        $modulePathExtractor = new ModulePathExtractor();
+        $modulePathExtractor = ModulePathExtractor::getInstance();
         $this->assertEquals(
             '[Analytics]',
             $modulePathExtractor->extractModuleName(
@@ -68,7 +68,7 @@ class ModulePathExtractorTest extends TestCase
      */
     public function testGetExtensionModule()
     {
-        $modulePathExtractor = new ModulePathExtractor();
+        $modulePathExtractor = ModulePathExtractor::getInstance();
         $this->assertEquals(
             '[Analytics]',
             $modulePathExtractor->extractModuleName(
@@ -83,7 +83,7 @@ class ModulePathExtractorTest extends TestCase
      */
     public function testMagentoModulePath()
     {
-        $modulePathExtractor = new ModulePathExtractor();
+        $modulePathExtractor = ModulePathExtractor::getInstance();
         $this->assertEquals(
             'Magento',
             $modulePathExtractor->getExtensionPath(
@@ -98,7 +98,7 @@ class ModulePathExtractorTest extends TestCase
      */
     public function testExtensionModulePath()
     {
-        $modulePathExtractor = new ModulePathExtractor();
+        $modulePathExtractor = ModulePathExtractor::getInstance();
         $this->assertEquals(
             'TestExtension',
             $modulePathExtractor->getExtensionPath(
