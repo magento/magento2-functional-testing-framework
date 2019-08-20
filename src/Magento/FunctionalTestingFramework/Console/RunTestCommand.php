@@ -8,6 +8,7 @@ declare(strict_types = 1);
 namespace Magento\FunctionalTestingFramework\Console;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -88,18 +89,32 @@ class RunTestCommand extends BaseGenerateCommand
             $command->run(new ArrayInput($args), $output);
         }
 
-        // we only generate relevant tests here so we can execute "all tests"
-        $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . " run functional --verbose --steps";
+        $returnCode = 0;
+        //execute only tests specified as arguments in run command
+        foreach ($tests as $test) {
+            $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
+            $test = TESTS_MODULE_PATH .
+                DIRECTORY_SEPARATOR .
+                TestGenerator::GENERATED_DIR .
+                DIRECTORY_SEPARATOR .
+                TestGenerator::DEFAULT_DIR .
+                DIRECTORY_SEPARATOR .
+                $test .
+                'Cest.php';
+            $codeceptionCommand .= $test;
+            $codeceptionCommand .= ' --verbose --steps';
 
-        $process = new Process($codeceptionCommand);
-        $process->setWorkingDirectory(TESTS_BP);
-        $process->setIdleTimeout(600);
-        $process->setTimeout(0);
+            $process = new Process($codeceptionCommand);
+            $process->setWorkingDirectory(TESTS_BP);
+            $process->setIdleTimeout(600);
+            $process->setTimeout(0);
 
-        return $process->run(
-            function ($type, $buffer) use ($output) {
-                $output->write($buffer);
-            }
-        );
+            $returnCode = max($returnCode, $process->run(
+                function ($type, $buffer) use ($output) {
+                    $output->write($buffer);
+                }
+            ));
+        }
+        return $returnCode;
     }
 }
