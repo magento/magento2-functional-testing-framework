@@ -312,6 +312,7 @@ class ModuleResolver
      * Retrieves all module directories which might contain pertinent test code.
      *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function aggregateTestModulePaths()
     {
