@@ -1482,6 +1482,8 @@ class TestGenerator
             $persistedVarRefInvoked = "PersistedObjectHandler::getInstance()->retrieveEntityField('"
                 . $stepKey . $testInvocationKey . "', 'field', 'test')";
 
+            // only replace when whole word matches exactly
+            // e.g. testVar => $testVar but not $testVar2
             if (strpos($output, $stepKeyVarRef) !== false) {
                 $output = preg_replace('/\B\\' .$stepKeyVarRef. '\b/', $stepKeyVarRef . $testInvocationKey, $output);
             }
