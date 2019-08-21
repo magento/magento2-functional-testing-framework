@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 
 class BaseGenerateCommand extends Command
 {

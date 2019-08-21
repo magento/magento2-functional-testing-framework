@@ -228,14 +228,14 @@ class TestGenerator
      * @throws TestReferenceException
      * @throws \Exception
      */
-    private function assembleTestPhp($testObject)
+    public function assembleTestPhp($testObject)
     {
         $usePhp = $this->generateUseStatementsPhp();
         $classAnnotationsPhp = $this->generateAnnotationsPhp($testObject->getAnnotations());
 
         $className = $testObject->getCodeceptionName();
         try {
-            if (!$testObject->isSkipped()) {
+            if (!$testObject->isSkipped() && !MftfApplicationConfig::getConfig()->allowSkipped()) {
                 $hookPhp = $this->generateHooksPhp($testObject->getHooks());
             } else {
                 $hookPhp = null;
