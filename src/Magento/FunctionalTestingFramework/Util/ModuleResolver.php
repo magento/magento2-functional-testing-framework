@@ -73,7 +73,23 @@ class ModuleResolver
      */
     const INVALID_DEV_TEST_CODE_PATH_REGEX = "~^[^:*\\?\"<>|']+"
         . self::DEV_TEST_CODE_PATH
-        . "/[^/:*\\?\"<>|']+/FunctionalTest$~";
+        . "/[^/:*\\?\"<>|']+/"
+        . self::DEPRECATED_DEV_TEST_SHORT_NAME
+        . "$~";
+
+    /**
+     * Short directory name for deprecated path
+     */
+    const DEPRECATED_DEV_TEST_SHORT_NAME = 'FunctionalTest';
+
+    /**
+     * Regex to match deprecated dev test code path
+     */
+    const DEPRECATED_DEV_TEST_CODE_PATH_REGEX = "~^[^:*\\?\"<>|']+"
+        . self::DEV_TEST_CODE_PATH
+        . "/[^/:*\\?\"<>|']+/"
+        . self::DEPRECATED_DEV_TEST_SHORT_NAME
+        . "/[^:*\\?\"<>|']+~";
 
     /**
      * Test module name suffix
@@ -199,6 +215,7 @@ class ModuleResolver
      * Return an array of enabled modules of target Magento instance.
      *
      * @return array
+     * @throws TestFrameworkException
      */
     public function getEnabledModules()
     {
@@ -312,7 +329,7 @@ class ModuleResolver
      * Retrieves all module directories which might contain pertinent test code.
      *
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @throws TestFrameworkException
      */
     private function aggregateTestModulePaths()
     {
@@ -349,7 +366,7 @@ class ModuleResolver
                     'level' => 1
                 ],
                 [
-                    'pattern' => 'FunctionalTest' . DIRECTORY_SEPARATOR . '*',
+                    'pattern' => self::DEPRECATED_DEV_TEST_SHORT_NAME . DIRECTORY_SEPARATOR . '*',
                     'level' => 1
                 ]
             ]
@@ -387,14 +404,9 @@ class ModuleResolver
             }
         }
 
-        foreach ($allModulePaths as $moduleName => $modulePath) {
-            $relatedModuleName = $this->trimTestModuleSuffix($moduleName);
-            if (($relatedModuleName != $moduleName) && isset($allModulePaths[$relatedModuleName])) {
-                $message = "Mftf tests cannot be in both $moduleName and $relatedModuleName modules. "
-                    . "Please move all mftf tests to $relatedModuleName.";
-                throw new TestFrameworkException($message);
-            }
-        }
+        // Validate module paths
+        $this->validateModulePaths($allModulePaths);
+
         return $allModulePaths;
     }
 
@@ -751,5 +763,61 @@ class ModuleResolver
     private function getBackendUrl()
     {
         return getenv('MAGENTO_BACKEND_BASE_URL') ?: getenv('MAGENTO_BASE_URL');
+    }
+
+    /**
+     * Validate module paths for violation and deprecations
+     *
+     * @param array $modulePaths
+     * @return void
+     * @throws
+     */
+    private function validateModulePaths($modulePaths)
+    {
+        $foundDeprecate = false;
+        // Check tests should be in one location per module
+        foreach ($modulePaths as $moduleName => $modulePath) {
+            // Check tests in deprecated path
+            if (!$foundDeprecate) {
+                preg_match(self::DEPRECATED_DEV_TEST_CODE_PATH_REGEX, $modulePath[0], $match);
+                if (!empty($match)) {
+                    $foundDeprecate = true;
+                }
+            }
+            $relatedModuleName = $this->trimTestModuleSuffix($moduleName);
+            if (($relatedModuleName != $moduleName) && isset($allModulePaths[$relatedModuleName])) {
+                $message = "Mftf tests cannot be in both $moduleName and $relatedModuleName modules. "
+                    . "Please move all mftf tests to $relatedModuleName.";
+                throw new TestFrameworkException($message);
+            }
+        }
+
+        if ($foundDeprecate) {
+            $deprecaedPath = ltrim(
+                self::DEV_TEST_CODE_PATH
+                . DIRECTORY_SEPARATOR
+                . '<Vendor>'
+                . DIRECTORY_SEPARATOR
+                . self::DEPRECATED_DEV_TEST_SHORT_NAME
+                . DIRECTORY_SEPARATOR,
+                '/'
+            );
+
+            $suggestedPath = ltrim(
+                self::DEV_TEST_CODE_PATH
+                . DIRECTORY_SEPARATOR
+                . '<Vendor>'
+                . DIRECTORY_SEPARATOR,
+                '/'
+            );
+
+            // Suppress print during unit testing
+            if (MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE) {
+                LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->warning(
+                    "DEPRECATION: $deprecaedPath is deprecated! Please move mftf test modules to $suggestedPath"
+                );
+                print ("\nDEPRECATION: $deprecaedPath is deprecated! Please move mftf tests to $suggestedPath\n\n");
+            }
+        }
     }
 }

@@ -55,7 +55,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
         $schemaFile = null,
         $errorFormat = self::ERROR_FORMAT_DEFAULT
     ) {
-        $this->modulePathExtractor = ModulePathExtractor::getInstance();
+        $this->modulePathExtractor = new ModulePathExtractor();
         $this->validationUtil = new DuplicateNodeValidationUtil('name', $exceptionCollector);
         parent::__construct(
             $xml,

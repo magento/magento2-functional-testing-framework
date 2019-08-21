@@ -65,7 +65,7 @@ class TestObjectExtractor extends BaseObjectExtractor
         $this->actionObjectExtractor = new ActionObjectExtractor();
         $this->annotationExtractor = new AnnotationExtractor();
         $this->testHookObjectExtractor = new TestHookObjectExtractor();
-        $this->modulePathExtractor = ModulePathExtractor::getInstance();
+        $this->modulePathExtractor = new ModulePathExtractor();
     }
 
     /**

@@ -21,29 +21,9 @@ class ModulePathExtractor
     private $testModulePaths = [];
 
     /**
-     * ModulePathExtractor instance
-     *
-     * @var ModulePathExtractor
-     */
-    private static $instance = null;
-
-    /**
-     * Get ModulePathExtractor instance
-     *
-     * @return ModulePathExtractor
-     */
-    public static function getInstance()
-    {
-        if (!self::$instance) {
-            self::$instance = new ModulePathExtractor();
-        }
-        return self::$instance;
-    }
-
-    /**
      * ModulePathExtractor constructor
      */
-    private function __construct()
+    public function __construct()
     {
         if (empty($this->testModulePaths)) {
             $this->testModulePaths = ModuleResolver::getInstance()->getModulesPath(false);

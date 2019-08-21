@@ -157,8 +157,8 @@ class ModuleResolverTest extends MagentoTestCase
             null,
             null,
             null,
-            function ($arg1, $arg2) {
-                if ($arg2 === "") {
+            function ($arg1, $arg2, $arg3) {
+                if ($arg3 === null) {
                     $mockValue = ["somePath" => "somePath"];
                 } else {
                     $mockValue = ["lastPath" => "lastPath"];
@@ -169,7 +169,7 @@ class ModuleResolverTest extends MagentoTestCase
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, null, ["somePath"]);
         $this->assertEquals(
-            ["lastPath", "lastPath", "lastPath", "lastPath", "lastPath", "lastPath", "lastPath"],
+            ["lastPath", "lastPath", "lastPath", "lastPath", "lastPath"],
             $resolver->getModulesPath()
         );
         TestLoggingUtil::getInstance()->validateMockLogStatement(
