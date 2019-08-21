@@ -206,7 +206,7 @@ class EntityDataObject
             }
             return $this->formatUniqueData($name_lower, $uniquenessData, $uniquenessFormat);
         } elseif (array_key_exists($name, $this->data)) {
-            if (is_array($this->data[$name_lower])) {
+            if (is_array($this->data[$name])) {
                 return $this->data[$name];
             }
             $this->data[$name] = $dataReferenceResolver->getDataReference(

@@ -31,15 +31,7 @@ class RunTestCommand extends BaseGenerateCommand
                 'name',
                 InputArgument::REQUIRED | InputArgument::IS_ARRAY,
                 "name of tests to generate and execute"
-            )->addOption('skip-generate', 'k', InputOption::VALUE_NONE, "skip generation and execute existing test")
-            ->addOption(
-                'debug',
-                'd',
-                InputOption::VALUE_OPTIONAL,
-                'Run extra validation when running tests. Use option \'none\' to turn off debugging -- 
-                 added for backward compatibility, will be removed in the next MAJOR release',
-                MftfApplicationConfig::LEVEL_DEFAULT
-            );
+            )->addOption('skip-generate', 'k', InputOption::VALUE_NONE, "skip generation and execute existing test");
 
         parent::configure();
     }
@@ -62,7 +54,6 @@ class RunTestCommand extends BaseGenerateCommand
         $remove = $input->getOption('remove');
         $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
         $allowSkipped = $input->getOption('allowSkipped');
-
 
         if ($skipGeneration and $remove) {
             // "skip-generate" and "remove" options cannot be used at the same time

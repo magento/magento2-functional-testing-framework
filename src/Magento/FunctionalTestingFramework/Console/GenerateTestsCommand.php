@@ -46,13 +46,6 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 't',
                 InputOption::VALUE_REQUIRED,
                 'A parameter accepting a JSON string used to determine the test configuration'
-            )->addOption(
-                'debug',
-                'd',
-                InputOption::VALUE_OPTIONAL,
-                'Run extra validation when generating tests. Use option \'none\' to turn off debugging -- 
-                 added for backward compatibility, will be removed in the next MAJOR release',
-                MftfApplicationConfig::LEVEL_DEFAULT
             );
 
         parent::configure();
@@ -129,8 +122,14 @@ class GenerateTestsCommand extends BaseGenerateCommand
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
-    private function createTestConfiguration($json, array $tests, bool $force, $debug, bool $verbose, bool $allowSkipped)
-    {
+    private function createTestConfiguration(
+        $json,
+        array $tests,
+        bool $force,
+        $debug,
+        bool $verbose,
+        bool $allowSkipped
+    ) {
         // set our application configuration so we can references the user options in our framework
         MftfApplicationConfig::create(
             $force,

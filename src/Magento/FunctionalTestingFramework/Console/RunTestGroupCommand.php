@@ -34,13 +34,6 @@ class RunTestGroupCommand extends BaseGenerateCommand
                 'k',
                 InputOption::VALUE_NONE,
                 "only execute a group of tests without generating from source xml"
-            )->addOption(
-                'debug',
-                'd',
-                InputOption::VALUE_OPTIONAL,
-                'Run extra validation when running tests. Use option \'none\' to turn off debugging -- 
-                 added for backward compatibility, will be removed in the next MAJOR release',
-                MftfApplicationConfig::LEVEL_DEFAULT
             )->addArgument(
                 'groups',
                 InputArgument::IS_ARRAY | InputArgument::REQUIRED,

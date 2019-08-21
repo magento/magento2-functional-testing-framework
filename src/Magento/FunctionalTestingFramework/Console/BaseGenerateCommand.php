@@ -38,6 +38,13 @@ class BaseGenerateCommand extends Command
             'a',
             InputOption::VALUE_NONE,
             'Allows MFTF to generate and run skipped tests.'
+        )->addOption(
+            'debug',
+            'd',
+            InputOption::VALUE_OPTIONAL,
+            'Run extra validation when running tests. Use option \'none\' to turn off debugging -- 
+             added for backward compatibility, will be removed in the next MAJOR release',
+            MftfApplicationConfig::LEVEL_DEFAULT
         );
     }
 

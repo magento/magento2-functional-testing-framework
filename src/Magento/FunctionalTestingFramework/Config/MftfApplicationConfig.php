@@ -55,7 +55,7 @@ class MftfApplicationConfig
 
     /**
      * Boolean which allows MFTF to fully generate skipped tests
-     * @var bool
+     * @var boolean
      */
     private $allowSkipped;
 
@@ -108,9 +108,9 @@ class MftfApplicationConfig
      * returns void and is only run once during the lifetime of the application.
      *
      * @param boolean $forceGenerate
-     * @param string $phase
+     * @param string  $phase
      * @param boolean $verboseEnabled
-     * @param string $debugLevel
+     * @param string  $debugLevel
      * @param boolean $allowSkipped
      * @return void
      * @throws TestFrameworkException
