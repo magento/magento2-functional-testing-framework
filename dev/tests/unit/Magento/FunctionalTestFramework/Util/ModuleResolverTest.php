@@ -86,6 +86,11 @@ class ModuleResolverTest extends MagentoTestCase
      */
     public function testGetModulePathsLocations()
     {
+        // clear test object handler value to inject parsed content
+        $property = new \ReflectionProperty(ModuleResolver::class, 'instance');
+        $property->setAccessible(true);
+        $property->setValue(null);
+
         $this->mockForceGenerate(false);
         $mockResolver = $this->setMockResolverClass(
             true,
@@ -115,18 +120,19 @@ class ModuleResolverTest extends MagentoTestCase
         // Define the Module paths from default TESTS_MODULE_PATH
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
 
-        $mockResolver->verifyInvoked('globRelevantPaths', [$modulePath, '']);
+        $mockResolver->verifyInvoked('globRelevantPaths', [$magentoBaseCodePath . '/vendor', 'Test/Mftf', null]);
+        $mockResolver->verifyInvoked('globRelevantPaths', [$magentoBaseCodePath . '/vendor',  '*-test', 1]);
+        $mockResolver->verifyInvoked('globRelevantPaths', [$magentoBaseCodePath . '/app/code', 'Test/Mftf', null]);
         $mockResolver->verifyInvoked(
             'globRelevantPaths',
-            [$magentoBaseCodePath . DIRECTORY_SEPARATOR . "vendor" , 'Test' . DIRECTORY_SEPARATOR .'Mftf']
+            [$magentoBaseCodePath . '/dev/tests/acceptance/tests/functional', '*Test', 1]
         );
         $mockResolver->verifyInvoked(
             'globRelevantPaths',
-            [
-                $magentoBaseCodePath . DIRECTORY_SEPARATOR . "app" . DIRECTORY_SEPARATOR . "code",
-                'Test' . DIRECTORY_SEPARATOR .'Mftf'
-            ]
+            [$magentoBaseCodePath . '/dev/tests/acceptance/tests/functional',  'FunctionalTest/*', 1]
         );
+        $mockResolver->verifyInvoked('globRelevantPaths', [$modulePath, 'Test/Mftf', 0]);
+        $mockResolver->verifyInvoked('globRelevantPaths', [$modulePath, '*Test', 0]);
     }
 
     /**
