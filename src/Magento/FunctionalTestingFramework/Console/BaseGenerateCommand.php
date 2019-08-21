@@ -28,6 +28,16 @@ class BaseGenerateCommand extends Command
             'r',
             InputOption::VALUE_NONE,
             'remove previous generated suites and tests'
+        )->addOption(
+            "force",
+            'f',
+            InputOption::VALUE_NONE,
+            'force generation of tests regardless of Magento Instance Configuration'
+        )->addOption(
+            "allowSkipped",
+            'a',
+            InputOption::VALUE_NONE,
+            'Allows MFTF to generate and run skipped tests.'
         );
     }
 

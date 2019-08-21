@@ -33,11 +33,6 @@ class RunTestCommand extends BaseGenerateCommand
                 "name of tests to generate and execute"
             )->addOption('skip-generate', 'k', InputOption::VALUE_NONE, "skip generation and execute existing test")
             ->addOption(
-                "force",
-                'f',
-                InputOption::VALUE_NONE,
-                'force generation of tests regardless of Magento Instance Configuration'
-            )->addOption(
                 'debug',
                 'd',
                 InputOption::VALUE_OPTIONAL,
@@ -66,6 +61,8 @@ class RunTestCommand extends BaseGenerateCommand
         $force = $input->getOption('force');
         $remove = $input->getOption('remove');
         $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
+        $allowSkipped = $input->getOption('allowSkipped');
+
 
         if ($skipGeneration and $remove) {
             // "skip-generate" and "remove" options cannot be used at the same time
@@ -83,7 +80,8 @@ class RunTestCommand extends BaseGenerateCommand
                 ]),
                 '--force' => $force,
                 '--remove' => $remove,
-                '--debug' => $debug
+                '--debug' => $debug,
+                '--allowSkipped' => $allowSkipped
             ];
             $command->run(new ArrayInput($args), $output);
         }
