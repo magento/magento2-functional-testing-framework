@@ -6,13 +6,9 @@
 
 namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
 
-use AspectMock\Test as AspectMock;
 use Magento\FunctionalTestingFramework\Util\ModulePathExtractor;
-use Magento\FunctionalTestingFramework\Util\ModuleResolver;
 use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
-use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
-use Magento\FunctionalTestingFramework\ObjectManager;
-use Magento\FunctionalTestingFramework\ObjectManagerFactory;
+use tests\unit\Util\MockModuleResolverBuilder;
 
 class ModulePathExtractorTest extends MagentoTestCase
 {
@@ -39,7 +35,9 @@ class ModulePathExtractorTest extends MagentoTestCase
     public function testGetModuleAppCode()
     {
         $mockPath = '/base/path/app/code/Magento/ModuleA/Test/Mftf/Test/SomeTest.xml';
-        $this->setUpMockModuleResolver($this->mockTestModulePaths);
+
+        $resolverMock = new MockModuleResolverBuilder();
+        $resolverMock->setup($this->mockTestModulePaths);
         $extractor = new ModulePathExtractor();
         $this->assertEquals('ModuleA', $extractor->extractModuleName($mockPath));
     }
@@ -52,7 +50,9 @@ class ModulePathExtractorTest extends MagentoTestCase
     public function testGetVendorAppCode()
     {
         $mockPath = '/base/path/app/code/VendorB/ModuleB/Test/Mftf/Test/SomeTest.xml';
-        $this->setUpMockModuleResolver($this->mockTestModulePaths);
+
+        $resolverMock = new MockModuleResolverBuilder();
+        $resolverMock->setup($this->mockTestModulePaths);
         $extractor = new ModulePathExtractor();
         $this->assertEquals('VendorB', $extractor->getExtensionPath($mockPath));
     }
@@ -65,7 +65,9 @@ class ModulePathExtractorTest extends MagentoTestCase
     public function testGetModuleDevTests()
     {
         $mockPath = '/base/path/dev/tests/acceptance/tests/functional/Magento/ModuleCTest/Test/SomeTest.xml';
-        $this->setUpMockModuleResolver($this->mockTestModulePaths);
+
+        $resolverMock = new MockModuleResolverBuilder();
+        $resolverMock->setup($this->mockTestModulePaths);
         $extractor = new ModulePathExtractor();
         $this->assertEquals('ModuleC', $extractor->extractModuleName($mockPath));
     }
@@ -78,7 +80,9 @@ class ModulePathExtractorTest extends MagentoTestCase
     public function testGetVendorDevTests()
     {
         $mockPath = '/base/path/dev/tests/acceptance/tests/functional/VendorD/ModuleDTest/Test/SomeTest.xml';
-        $this->setUpMockModuleResolver($this->mockTestModulePaths);
+
+        $resolverMock = new MockModuleResolverBuilder();
+        $resolverMock->setup($this->mockTestModulePaths);
         $extractor = new ModulePathExtractor();
         $this->assertEquals('VendorD', $extractor->getExtensionPath($mockPath));
     }
@@ -91,7 +95,9 @@ class ModulePathExtractorTest extends MagentoTestCase
     public function testGetModule()
     {
         $mockPath = '/base/path/dev/tests/acceptance/tests/functional/FunctionalTest/SomeModuleE/Test/SomeTest.xml';
-        $this->setUpMockModuleResolver($this->mockTestModulePaths);
+
+        $resolverMock = new MockModuleResolverBuilder();
+        $resolverMock->setup($this->mockTestModulePaths);
         $extractor = new ModulePathExtractor();
         $this->assertEquals('NO MODULE DETECTED', $extractor->extractModuleName($mockPath));
     }
@@ -104,7 +110,9 @@ class ModulePathExtractorTest extends MagentoTestCase
     public function testGetModuleVendorDir()
     {
         $mockPath = '/base/path/vendor/magento/module-modulef/Test/Mftf/Test/SomeTest.xml';
-        $this->setUpMockModuleResolver($this->mockTestModulePaths);
+
+        $resolverMock = new MockModuleResolverBuilder();
+        $resolverMock->setup($this->mockTestModulePaths);
         $extractor = new ModulePathExtractor();
         $this->assertEquals('ModuleF', $extractor->extractModuleName($mockPath));
     }
@@ -117,36 +125,10 @@ class ModulePathExtractorTest extends MagentoTestCase
     public function testGetVendorVendorDir()
     {
         $mockPath = '/base/path/vendor/vendorg/module-moduleg-test/Test/SomeTest.xml';
-        $this->setUpMockModuleResolver($this->mockTestModulePaths);
+
+        $resolverMock = new MockModuleResolverBuilder();
+        $resolverMock->setup($this->mockTestModulePaths);
         $extractor = new ModulePathExtractor();
         $this->assertEquals('VendorG', $extractor->getExtensionPath($mockPath));
-    }
-
-    /**
-     * Setup mock ModuleResolver
-     *
-     * @param array $testModulePaths
-     * @return void
-     * @throws \Exception
-     */
-    private function setUpMockModuleResolver($testModulePaths)
-    {
-        $mockConfig = AspectMock::double(MftfApplicationConfig::class, ['forceGenerateEnabled' => false]);
-        $instance = AspectMock::double(ObjectManager::class, ['create' => $mockConfig->make(), 'get' => null])->make();
-        AspectMock::double(ObjectManagerFactory::class, ['getObjectManager' => $instance]);
-
-        $property = new \ReflectionProperty(ModuleResolver::class, 'instance');
-        $property->setAccessible(true);
-        $property->setValue(null);
-
-        $mockResolver = AspectMock::double(ModuleResolver::class, ['getAdminToken' => false, 'globRelevantPaths' => []]);
-        $instance = AspectMock::double(ObjectManager::class, ['create' => $mockResolver->make(), 'get' => null])
-            ->make();
-        AspectMock::double(ObjectManagerFactory::class, ['getObjectManager' => $instance]);
-
-        $resolver = ModuleResolver::getInstance();
-        $property = new \ReflectionProperty(ModuleResolver::class, 'enabledModulePathsNoFlatten');
-        $property->setAccessible(true);
-        $property->setValue($resolver, $testModulePaths);
     }
 }

@@ -770,7 +770,7 @@ class ModuleResolver
      *
      * @param array $modulePaths
      * @return void
-     * @throws
+     * @throws TestFrameworkException
      */
     private function validateModulePaths($modulePaths)
     {
@@ -785,7 +785,7 @@ class ModuleResolver
                 }
             }
             $relatedModuleName = $this->trimTestModuleSuffix($moduleName);
-            if (($relatedModuleName != $moduleName) && isset($allModulePaths[$relatedModuleName])) {
+            if (($relatedModuleName != $moduleName) && isset($modulePaths[$relatedModuleName])) {
                 $message = "Mftf tests cannot be in both $moduleName and $relatedModuleName modules. "
                     . "Please move all mftf tests to $relatedModuleName.";
                 throw new TestFrameworkException($message);
