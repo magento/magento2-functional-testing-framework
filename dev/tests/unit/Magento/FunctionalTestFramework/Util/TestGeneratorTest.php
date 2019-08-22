@@ -59,7 +59,7 @@ class TestGeneratorTest extends MagentoTestCase
         $output = $testGeneratorObject->assembleTestPhp($testObject);
 
         $this->assertContains('This test is skipped', $output);
-        $this->assertNotContains( $actionInput, $output);
+        $this->assertNotContains($actionInput, $output);
     }
 
     /**
