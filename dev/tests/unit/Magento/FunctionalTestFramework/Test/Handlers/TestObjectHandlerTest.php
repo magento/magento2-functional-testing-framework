@@ -210,4 +210,14 @@ class TestObjectHandlerTest extends MagentoTestCase
             ->make(); // bypass the private constructor
         AspectMock::double(ObjectManagerFactory::class, ['getObjectManager' => $instance]);
     }
+
+    /**
+     * After method functionality
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        AspectMock::clean();
+    }
 }

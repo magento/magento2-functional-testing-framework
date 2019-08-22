@@ -21,7 +21,7 @@ class MockModuleResolverBuilder
     private $defaultPaths = ['Magento_Module' => ['/base/path/app/code/Magento/Module/Test/Mftf']];
 
     /**
-     * Setup mock ModuleResolver
+     * Mock ModuleResolver builder
      *
      * @param array $paths
      * @return void
@@ -43,7 +43,7 @@ class MockModuleResolverBuilder
 
         $mockResolver = AspectMock::double(
             ModuleResolver::class,
-            ['getAdminToken' => false, 'globRelevantPaths' => []]
+            ['getAdminToken' => false, 'globRelevantPaths' => [], 'getEnabledModules' => []]
         );
         $instance = AspectMock::double(ObjectManager::class, ['create' => $mockResolver->make(), 'get' => null])
             ->make();
