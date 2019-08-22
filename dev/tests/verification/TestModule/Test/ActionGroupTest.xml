@@ -171,4 +171,11 @@
             <argument name="section" value="SampleSection"/>
         </actionGroup>
     </test>
+
+    <test name="ActionGroupWithParameterizedElementsWithStepKeyReferences">
+        <actionGroup ref="actionGroupWithParametrizedSelectors" stepKey="actionGroup">
+            <argument name="param" value="simpleData"/>
+            <argument name="param2" value="simpleParamData"/>
+        </actionGroup>
+    </test>
 </tests>
