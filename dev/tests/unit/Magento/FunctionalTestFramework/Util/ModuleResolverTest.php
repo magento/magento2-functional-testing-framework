@@ -131,8 +131,8 @@ class ModuleResolverTest extends MagentoTestCase
             'globRelevantPaths',
             [$magentoBaseCodePath . '/dev/tests/acceptance/tests/functional',  'FunctionalTest/*', 1]
         );
-        $mockResolver->verifyInvoked('globRelevantPaths', [$modulePath, 'Test/Mftf', 0]);
-        $mockResolver->verifyInvoked('globRelevantPaths', [$modulePath, '*Test', 0]);
+        $mockResolver->verifyInvoked('globRelevantPaths', [$modulePath, 'Test/Mftf', null]);
+        $mockResolver->verifyInvoked('globRelevantPaths', [$modulePath, '*', 0]);
     }
 
     /**
@@ -175,7 +175,7 @@ class ModuleResolverTest extends MagentoTestCase
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, null, ["somePath"]);
         $this->assertEquals(
-            ["lastPath", "lastPath", "lastPath", "lastPath", "lastPath"],
+            ["lastPath", "lastPath", "lastPath", "lastPath"],
             $resolver->getModulesPath()
         );
         TestLoggingUtil::getInstance()->validateMockLogStatement(

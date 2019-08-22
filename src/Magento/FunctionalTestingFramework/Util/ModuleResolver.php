@@ -40,20 +40,19 @@ class ModuleResolver
     const REGISTRAR_CLASS = "\Magento\Framework\Component\ComponentRegistrar";
 
     /**
-     * Vendor code path
+     * const for vendor
      */
-    const VENDOR_CODE_PATH = DIRECTORY_SEPARATOR . "vendor";
+    const VENDOR = 'vendor';
 
     /**
-     * App code path
+     * const for app/code
      */
-    const APP_CODE_PATH = DIRECTORY_SEPARATOR . "app" . DIRECTORY_SEPARATOR . "code";
+    const APP_CODE = 'app' . DIRECTORY_SEPARATOR . "code";
 
     /**
-     * Dev test code path
+     * const for dev/tests/acceptance/tests/functional
      */
-    const DEV_TEST_CODE_PATH = DIRECTORY_SEPARATOR
-        . 'dev'
+    const DEV_TEST = 'dev'
         . DIRECTORY_SEPARATOR
         . 'tests'
         . DIRECTORY_SEPARATOR
@@ -62,6 +61,21 @@ class ModuleResolver
         . 'tests'
         . DIRECTORY_SEPARATOR
         . 'functional';
+
+    /**
+     * Vendor code path
+     */
+    const VENDOR_CODE_PATH = DIRECTORY_SEPARATOR . self::VENDOR;
+
+    /**
+     * App code path
+     */
+    const APP_CODE_PATH = DIRECTORY_SEPARATOR . self::APP_CODE;
+
+    /**
+     * Dev test code path
+     */
+    const DEV_TEST_CODE_PATH = DIRECTORY_SEPARATOR . self::DEV_TEST;
 
     /**
      * Pattern for Mftf directories
@@ -100,6 +114,21 @@ class ModuleResolver
      * Regex to match a test module name with suffix defined in TEST_MODULE_NAME_SUFFIX
      */
     const TEST_MODULE_NAME_REGEX = "~\S+" . self::TEST_MODULE_NAME_SUFFIX . "$~";
+
+    /**
+     * Regex to grab vendor name in vendor
+     */
+    const VENDOR_NAME_REGEX_V = "~.+\\/" . self::VENDOR . "\/(?<" . self::VENDOR . ">[^\/]+)\/.+~";
+
+    /**
+     * Regex to grab vendor name in app/code
+     */
+    const VENDOR_NAME_REGEX_A = "~.+\\/" . self::APP_CODE . "\/(?<" . self::VENDOR . ">[^\/]+)\/.+~";
+
+    /**
+     * Regex to grab vendor name dev/tests
+     */
+    const VENDOR_NAME_REGEX_D = "~.+\\/" . self::DEV_TEST . "\/(?<" . self::VENDOR . ">[^\/]+)\/.+~";
 
     /**
      * Enabled modules.
@@ -384,12 +413,12 @@ class ModuleResolver
         if ($newPath) {
             $codePathsToPattern[$modulePath] = [
                 [
-                    'pattern' => 'Test' . DIRECTORY_SEPARATOR . 'Mftf',
+                    'pattern' => '*',
                     'level' => 0
                 ],
                 [
-                    'pattern' => '*' . self::TEST_MODULE_NAME_SUFFIX,
-                    'level' => 0
+                    'pattern' => 'Test' . DIRECTORY_SEPARATOR . 'Mftf',
+                    'level' => null
                 ]
             ];
         }
@@ -432,6 +461,8 @@ class ModuleResolver
         $allComponents = $this->getRegisteredModuleList();
 
         foreach ($relevantPaths as $codePath) {
+            $possibleVendorName = $this->getPossibleVendorName($codePath);
+
             // Reduce magento/app/code/Magento/AdminGws/Test/MFTF to magento/app/code/Magento/AdminGws to read symlink
             // Symlinks must be resolved otherwise they will not match Magento's filepath to the module
             if ($pattern == self::MFTF_DIR_PATTERN) {
@@ -441,7 +472,7 @@ class ModuleResolver
                 $codePath = realpath($codePath);
             }
 
-            $mainModName = array_search($codePath, $allComponents) ?: basename($codePath);
+            $mainModName = array_search($codePath, $allComponents) ?: $possibleVendorName . '_' . basename($codePath);
 
             preg_match(self::INVALID_DEV_TEST_CODE_PATH_REGEX, $codePath, $match);
             if (empty($match)) {
@@ -819,5 +850,31 @@ class ModuleResolver
                 print ("\nDEPRECATION: $deprecaedPath is deprecated! Please move mftf tests to $suggestedPath\n\n");
             }
         }
+    }
+
+    /**
+     * Return possible vendor name from a path given
+     *
+     * @param string $path
+     * @return string
+     */
+    private function getPossibleVendorName($path)
+    {
+        $possibleVendorName = 'Unknown';
+        $regexs = [
+            self::VENDOR_NAME_REGEX_A,
+            self::VENDOR_NAME_REGEX_D,
+            self::VENDOR_NAME_REGEX_V
+        ];
+
+        foreach ($regexs as $regex) {
+            $match = [];
+            preg_match($regex, $path, $match);
+            if (isset($match[self::VENDOR])) {
+                $possibleVendorName = ucfirst($match[self::VENDOR]);
+                return $possibleVendorName;
+            }
+        }
+        return $possibleVendorName;
     }
 }
