@@ -9,6 +9,7 @@ use Codeception\Step\Comment;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use \Magento\FunctionalTestingFramework\Util\TestGenerator;
+use Yandex\Allure\Adapter\Model\Status;
 use Yandex\Allure\Adapter\Model\Step;
 use Yandex\Allure\Codeception\AllureCodeception;
 use Yandex\Allure\Adapter\Event\StepStartedEvent;
@@ -16,6 +17,7 @@ use Yandex\Allure\Adapter\Event\StepFinishedEvent;
 use Yandex\Allure\Adapter\Event\StepFailedEvent;
 use Yandex\Allure\Adapter\Event\TestCaseFailedEvent;
 use Yandex\Allure\Adapter\Event\TestCaseFinishedEvent;
+use Yandex\Allure\Adapter\Event\TestCaseBrokenEvent;
 use Codeception\Event\FailEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\StepEvent;
@@ -188,9 +190,36 @@ class MagentoAllureAdapter extends AllureCodeception
     }
 
     /**
+     * Override of parent method. Adds in steps for hard PHP Errors if they arrise.
+     *
+     * @param FailEvent $failEvent
+     * @return void
+     */
+    public function testError(FailEvent $failEvent)
+    {
+        $event = new TestCaseBrokenEvent();
+        $e = $failEvent->getFail();
+        $message = $e->getMessage();
+
+        // Create new step with an error for Allure
+        $failStep = new Step();
+        $failStep->setName("ERROR");
+        $failStep->setTitle($message);
+        $failStep->setStatus(Status::BROKEN);
+
+        // Retrieve Allure Steps and add in the new BROKEN step
+        $rootStep = $this->getLifecycle()->getStepStorage()->pollLast();
+        $rootStep->addStep($failStep);
+        $this->getLifecycle()->getStepStorage()->put($rootStep);
+
+        $this->getLifecycle()->fire($event->withException($e)->withMessage($message));
+    }
+
+    /**
      * Override of parent method, polls stepStorage for testcase and formats it according to actionGroup nesting.
      *
      * @return void
+     * @SuppressWarnings(PHPMD)
      */
     public function testEnd()
     {
@@ -207,6 +236,13 @@ class MagentoAllureAdapter extends AllureCodeception
             }
             // if actionGroup flag, start nesting
             if (strpos($step->getName(), ActionGroupObject::ACTION_GROUP_CONTEXT_START) !== false) {
+                if ($actionGroupStepContainer !== null) {
+                    //actionGroup still being nested, need to close out and finish it.
+                    $formattedSteps[] = $actionGroupStepContainer;
+                    $actionGroupStepContainer = null;
+                    $actionGroupStepKey = null;
+                }
+
                 $step->setName(str_replace(ActionGroupObject::ACTION_GROUP_CONTEXT_START, '', $step->getName()));
                 $actionGroupStepContainer = $step;
 

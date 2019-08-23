@@ -24,6 +24,7 @@ use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
+use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 
 /**
  * Class TestGenerator
@@ -664,7 +665,7 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['html'])) {
-                $html = $customActionAttributes['html'];
+                $html = $this->addUniquenessFunctionCall($customActionAttributes['html']);
             }
 
             if (isset($customActionAttributes['locale'])) {
@@ -1154,7 +1155,6 @@ class TestGenerator
                 case "dontSeeInField":
                 case "dontSeeInCurrentUrl":
                 case "dontSeeInTitle":
-                case "dontSeeInPageSource":
                 case "dontSeeOptionIsSelected":
                 case "fillField":
                 case "loadSessionSnapshot":
@@ -1172,9 +1172,13 @@ class TestGenerator
                     );
                     break;
                 case "seeInPageSource":
+                case "dontSeeInPageSource":
                 case "seeInSource":
                 case "dontSeeInSource":
-                    // TODO: Need to fix xml parser to allow parsing html.
+                    //TODO: Deprecate allowed usage of userInput in dontSeeInPageSource
+                    if ($html === null && $input !== null) {
+                        $html = $input;
+                    }
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $html);
                     break;
                 case "conditionalClick":
@@ -1478,8 +1482,10 @@ class TestGenerator
             $persistedVarRefInvoked = "PersistedObjectHandler::getInstance()->retrieveEntityField('"
                 . $stepKey . $testInvocationKey . "', 'field', 'test')";
 
+            // only replace when whole word matches exactly
+            // e.g. testVar => $testVar but not $testVar2
             if (strpos($output, $stepKeyVarRef) !== false) {
-                $output = str_replace($stepKeyVarRef, $stepKeyVarRef . $testInvocationKey, $output);
+                $output = preg_replace('/\B\\' .$stepKeyVarRef. '\b/', $stepKeyVarRef . $testInvocationKey, $output);
             }
 
             if (strpos($output, $persistedVarRef) !== false) {
@@ -1901,7 +1907,7 @@ class TestGenerator
     {
         $runtimeReferenceRegex = [
             "/{{_ENV\.([\w]+)}}/" => 'getenv',
-            "/{{_CREDS\.([\w]+)}}/" => 'CredentialStore::getInstance()->getSecret'
+            ActionMergeUtil::CREDS_REGEX => 'CredentialStore::getInstance()->getSecret'
         ];
 
         $argResult = $args;

@@ -32,6 +32,20 @@ class Console extends \Codeception\Subscriber\Console
     private $actionGroupStepKey = null;
 
     /**
+     * Console constructor. Parent constructor requires codeception CLI options, and does not have its own configs.
+     * Constructor is only different than parent due to the way Codeception instantiates Extensions.
+     *
+     * @param array $extensionOptions
+     * @param array $options
+     *
+     * @SuppressWarnings(PHPMD)
+     */
+    public function __construct($extensionOptions = [], $options = [])
+    {
+        parent::__construct($options);
+    }
+
+    /**
      * Printing stepKey in before step action.
      *
      * @param StepEvent $e

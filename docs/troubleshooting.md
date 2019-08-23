@@ -41,7 +41,7 @@ Chrome v62 is in the process of being rolled out, and it causes an error with Ch
 
 #### Solution
 
-Use [ChromeDriver v2.33+][]{:target="\_blank"} and [Selenium Server Standalone v3.6.0+][]{:target="\_blank"} in order to execute tests in Google Chrome v62+.
+Use [ChromeDriver 74.0.3729.6+][]{:target="\_blank"} and [Selenium Server Standalone v3.9+][]{:target="\_blank"} in order to execute tests in Google Chrome v62+.
 
 ### Firefox
 
@@ -57,5 +57,5 @@ None yet. Solving this problem is dependent on a GeckoDriver fix.
 
 <!-- Link Definitions -->
 [Headless Chrome]: https://developers.google.com/web/updates/2017/04/headless-chrome
-[ChromeDriver v2.33+]: https://chromedriver.storage.googleapis.com/index.html?path=2.33/
-[Selenium Server Standalone v3.6.0+]: http://www.seleniumhq.org/download/
+[ChromeDriver 74.0.3729.6+]: https://chromedriver.storage.googleapis.com/index.html?path=2.33/
+[Selenium Server Standalone v3.9+]: http://www.seleniumhq.org/download/
