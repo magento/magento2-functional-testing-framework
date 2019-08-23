@@ -33,7 +33,7 @@ class BaseGenerateCommand extends Command
             "force",
             'f',
             InputOption::VALUE_NONE,
-            'force generation of tests regardless of Magento Instance Configuration'
+            'force generation and running of tests regardless of Magento Instance Configuration'
         )->addOption(
             "allowSkipped",
             'a',
@@ -43,7 +43,7 @@ class BaseGenerateCommand extends Command
             'debug',
             'd',
             InputOption::VALUE_OPTIONAL,
-            'Run extra validation when running tests. Use option \'none\' to turn off debugging -- 
+            'Run extra validation when generating and running tests. Use option \'none\' to turn off debugging -- 
              added for backward compatibility, will be removed in the next MAJOR release',
             MftfApplicationConfig::LEVEL_DEFAULT
         );

@@ -50,15 +50,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
     protected function configure()
     {
         $this->setName('run:failed')
-            ->setDescription('Execute a set of tests referenced via failed file')
-            ->addOption(
-                'debug',
-                'd',
-                InputOption::VALUE_OPTIONAL,
-                'Run extra validation when running failed tests. Use option \'none\' to turn off debugging -- 
-                 added for backward compatibility, will be removed in the next MAJOR release',
-                MftfApplicationConfig::LEVEL_DEFAULT
-            );
+            ->setDescription('Execute a set of tests referenced via failed file');
 
         parent::configure();
     }
