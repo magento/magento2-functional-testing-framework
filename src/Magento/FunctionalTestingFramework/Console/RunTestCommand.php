@@ -90,21 +90,14 @@ class RunTestCommand extends BaseGenerateCommand
         }
 
         $returnCode = 0;
+        $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
+        $testsDirectory = TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . TestGenerator::GENERATED_DIR . DIRECTORY_SEPARATOR;
         //execute only tests specified as arguments in run command
         foreach ($tests as $test) {
-            $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
-            $test = TESTS_MODULE_PATH .
-                DIRECTORY_SEPARATOR .
-                TestGenerator::GENERATED_DIR .
-                DIRECTORY_SEPARATOR .
-                TestGenerator::DEFAULT_DIR .
-                DIRECTORY_SEPARATOR .
-                $test .
-                'Cest.php';
-            $codeceptionCommand .= $test;
-            $codeceptionCommand .= ' --verbose --steps';
-
-            $process = new Process($codeceptionCommand);
+            $testGroup = TestGenerator::DEFAULT_DIR . DIRECTORY_SEPARATOR;
+            $testName = $test . 'Cest.php';
+            $fullCommand = $codeceptionCommand . $testsDirectory . $testGroup . $testName . ' --verbose --steps';
+            $process = new Process($fullCommand);
             $process->setWorkingDirectory(TESTS_BP);
             $process->setIdleTimeout(600);
             $process->setTimeout(0);
