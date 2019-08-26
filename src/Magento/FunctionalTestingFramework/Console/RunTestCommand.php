@@ -96,6 +96,11 @@ class RunTestCommand extends BaseGenerateCommand
         foreach ($tests as $test) {
             $testGroup = TestGenerator::DEFAULT_DIR . DIRECTORY_SEPARATOR;
             $testName = $test . 'Cest.php';
+            if (!realpath($testsDirectory . $testGroup . $testName)) {
+                throw new TestFrameworkException(
+                    $testName . " is not available under " . $testsDirectory . $testGroup
+                );
+            }
             $fullCommand = $codeceptionCommand . $testsDirectory . $testGroup . $testName . ' --verbose --steps';
             $process = new Process($fullCommand);
             $process->setWorkingDirectory(TESTS_BP);
