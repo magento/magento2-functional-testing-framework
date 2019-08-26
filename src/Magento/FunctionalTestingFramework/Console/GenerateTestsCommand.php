@@ -36,11 +36,6 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 'name(s) of specific tests to generate'
             )->addOption("config", 'c', InputOption::VALUE_REQUIRED, 'default, singleRun, or parallel', 'default')
             ->addOption(
-                "force",
-                'f',
-                InputOption::VALUE_NONE,
-                'Force generation of tests regardless of Magento Instance Configuration'
-            )->addOption(
                 'time',
                 'i',
                 InputOption::VALUE_REQUIRED,
@@ -51,13 +46,6 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 't',
                 InputOption::VALUE_REQUIRED,
                 'A parameter accepting a JSON string used to determine the test configuration'
-            )->addOption(
-                'debug',
-                'd',
-                InputOption::VALUE_OPTIONAL,
-                'Run extra validation when generating tests. Use option \'none\' to turn off debugging -- 
-                 added for backward compatibility, will be removed in the next MAJOR release',
-                MftfApplicationConfig::LEVEL_DEFAULT
             );
 
         parent::configure();
@@ -83,6 +71,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
         $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
         $remove = $input->getOption('remove');
         $verbose = $output->isVerbose();
+        $allowSkipped = $input->getOption('allowSkipped');
 
         if ($json !== null && !json_decode($json)) {
             // stop execution if we have failed to properly parse any json passed in by the user
@@ -100,7 +89,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 ($debug !== MftfApplicationConfig::LEVEL_NONE));
         }
 
-        $testConfiguration = $this->createTestConfiguration($json, $tests, $force, $debug, $verbose);
+        $testConfiguration = $this->createTestConfiguration($json, $tests, $force, $debug, $verbose, $allowSkipped);
 
         // create our manifest file here
         $testManifest = TestManifestFactory::makeManifest($config, $testConfiguration['suites']);
@@ -128,18 +117,26 @@ class GenerateTestsCommand extends BaseGenerateCommand
      * @param boolean $force
      * @param string  $debug
      * @param boolean $verbose
+     * @param boolean $allowSkipped
      * @return array
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
-    private function createTestConfiguration($json, array $tests, bool $force, $debug, bool $verbose)
-    {
+    private function createTestConfiguration(
+        string $json,
+        array $tests,
+        bool $force,
+        string $debug,
+        bool $verbose,
+        bool $allowSkipped
+    ) {
         // set our application configuration so we can references the user options in our framework
         MftfApplicationConfig::create(
             $force,
             MftfApplicationConfig::GENERATION_PHASE,
             $verbose,
-            $debug
+            $debug,
+            $allowSkipped
         );
 
         $testConfiguration = [];
