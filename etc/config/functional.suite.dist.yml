@@ -28,10 +28,10 @@ modules:
             username: "%MAGENTO_ADMIN_USERNAME%"
             password: "%MAGENTO_ADMIN_PASSWORD%"
             pageload_timeout: 30
-            host: %SELENIUM_HOST%
-            port: %SELENIUM_PORT%
-            protocol: %SELENIUM_PROTOCOL%
-            path: %SELENIUM_PATH%
+            host: "%SELENIUM_HOST%"
+            port: "%SELENIUM_PORT%"
+            protocol: "%SELENIUM_PROTOCOL%"
+            path: "%SELENIUM_PATH%"
             capabilities:
               chromeOptions:
                 args: ["--window-size=1280,1024", "--disable-extensions", "--enable-automation", "--disable-gpu", "--enable-Passthrough"]

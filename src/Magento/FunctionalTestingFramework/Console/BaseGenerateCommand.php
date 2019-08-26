@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 
 class BaseGenerateCommand extends Command
 {
@@ -28,6 +29,23 @@ class BaseGenerateCommand extends Command
             'r',
             InputOption::VALUE_NONE,
             'remove previous generated suites and tests'
+        )->addOption(
+            "force",
+            'f',
+            InputOption::VALUE_NONE,
+            'force generation and running of tests regardless of Magento Instance Configuration'
+        )->addOption(
+            "allowSkipped",
+            'a',
+            InputOption::VALUE_NONE,
+            'Allows MFTF to generate and run skipped tests.'
+        )->addOption(
+            'debug',
+            'd',
+            InputOption::VALUE_OPTIONAL,
+            'Run extra validation when generating and running tests. Use option \'none\' to turn off debugging -- 
+             added for backward compatibility, will be removed in the next MAJOR release',
+            MftfApplicationConfig::LEVEL_DEFAULT
         );
     }
 
