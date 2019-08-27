@@ -159,7 +159,12 @@ class CurlTransport implements CurlInterface
     }
 
     /**
-     * @inheritdoc
+     * Read response from server.
+     *
+     * @param string      $successRegex
+     * @param string      $returnRegex
+     * @param string|null $returnIndex
+     * @return string
      * @throws TestFrameworkException
      */
     public function read($successRegex = null, $returnRegex = null, $returnIndex = null)

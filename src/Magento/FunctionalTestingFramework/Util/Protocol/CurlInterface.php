@@ -42,8 +42,8 @@ interface CurlInterface
     /**
      * Read response from server.
      *
-     * @param string $successRegex
-     * @param string $returnRegex
+     * @param string      $successRegex
+     * @param string      $returnRegex
      * @param string|null $returnIndex
      * @return string|array
      */
