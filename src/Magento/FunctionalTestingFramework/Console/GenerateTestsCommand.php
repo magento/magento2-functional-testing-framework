@@ -123,7 +123,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
      * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
     private function createTestConfiguration(
-        string $json,
+        $json,
         array $tests,
         bool $force,
         string $debug,
