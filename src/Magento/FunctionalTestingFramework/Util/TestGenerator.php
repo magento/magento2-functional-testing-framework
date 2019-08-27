@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Util;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
@@ -227,14 +228,14 @@ class TestGenerator
      * @throws TestReferenceException
      * @throws \Exception
      */
-    private function assembleTestPhp($testObject)
+    public function assembleTestPhp($testObject)
     {
         $usePhp = $this->generateUseStatementsPhp();
         $classAnnotationsPhp = $this->generateAnnotationsPhp($testObject->getAnnotations());
 
         $className = $testObject->getCodeceptionName();
         try {
-            if (!$testObject->isSkipped()) {
+            if (!$testObject->isSkipped() && !MftfApplicationConfig::getConfig()->allowSkipped()) {
                 $hookPhp = $this->generateHooksPhp($testObject->getHooks());
             } else {
                 $hookPhp = null;
@@ -1606,7 +1607,7 @@ class TestGenerator
         $testName = str_replace(' ', '', $testName);
         $testAnnotations = $this->generateAnnotationsPhp($test->getAnnotations(), true);
         $dependencies = 'AcceptanceTester $I';
-        if ($test->isSkipped()) {
+        if ($test->isSkipped() && !MftfApplicationConfig::getConfig()->allowSkipped()) {
             $skipString = "This test is skipped due to the following issues:\\n";
             $issues = $test->getAnnotations()['skip'] ?? null;
             if (isset($issues)) {

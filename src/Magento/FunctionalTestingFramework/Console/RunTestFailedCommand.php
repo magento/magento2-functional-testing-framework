@@ -50,15 +50,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
     protected function configure()
     {
         $this->setName('run:failed')
-            ->setDescription('Execute a set of tests referenced via failed file')
-            ->addOption(
-                'debug',
-                'd',
-                InputOption::VALUE_OPTIONAL,
-                'Run extra validation when running failed tests. Use option \'none\' to turn off debugging -- 
-                 added for backward compatibility, will be removed in the next MAJOR release',
-                MftfApplicationConfig::LEVEL_DEFAULT
-            );
+            ->setDescription('Execute a set of tests referenced via failed file');
 
         parent::configure();
     }
@@ -76,13 +68,17 @@ class RunTestFailedCommand extends BaseGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $force = $input->getOption('force');
         $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
+        $allowSkipped = $input->getOption('allowSkipped');
+
         // Create Mftf Configuration
         MftfApplicationConfig::create(
-            false,
+            $force,
             MftfApplicationConfig::GENERATION_PHASE,
             false,
-            $debug
+            $debug,
+            $allowSkipped
         );
 
         $testConfiguration = $this->getFailedTestList();
@@ -96,9 +92,9 @@ class RunTestFailedCommand extends BaseGenerateCommand
         $args = [
             '--tests' => $testConfiguration,
             '--remove' => true,
-            '--debug' => $debug
+            '--debug' => $debug,
+            '--allowSkipped' => $allowSkipped
         ];
-
         $command->run(new ArrayInput($args), $output);
 
         $testManifestList = $this->readTestManifestFile();
