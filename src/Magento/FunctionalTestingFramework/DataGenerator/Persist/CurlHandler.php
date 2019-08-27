@@ -107,6 +107,7 @@ class CurlHandler
         $executor = null;
         $successRegex = null;
         $returnRegex = null;
+        $returnIndex = null;
 
         if ((null !== $dependentEntities) && is_array($dependentEntities)) {
             $entities = array_merge([$this->entityObject], $dependentEntities);
@@ -119,6 +120,7 @@ class CurlHandler
         $contentType = $this->operationDefinition->getContentType();
         $successRegex = $this->operationDefinition->getSuccessRegex();
         $returnRegex = $this->operationDefinition->getReturnRegex();
+        $returnIndex = $this->operationDefinition->getReturnIndex();
         $method = $this->operationDefinition->getApiMethod();
 
         $operationDataResolver = new OperationDataArrayResolver($dependentEntities);
@@ -161,7 +163,7 @@ class CurlHandler
             $headers
         );
 
-        $response = $executor->read($successRegex, $returnRegex);
+        $response = $executor->read($successRegex, $returnRegex, $returnIndex);
         $executor->close();
 
         return $response;

@@ -136,14 +136,10 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
     }
 
     /**
-     * Read response from server.
-     *
-     * @param string $successRegex
-     * @param string $returnRegex
-     * @return string|array
+     * @inheritdoc
      * @throws TestFrameworkException
      */
-    public function read($successRegex = null, $returnRegex = null)
+    public function read($successRegex = null, $returnRegex = null, $returnIndex = null)
     {
         $this->response = $this->transport->read();
         $this->setFormKey();
@@ -158,10 +154,9 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
         if (!empty($returnRegex)) {
             preg_match($returnRegex, $this->response, $returnMatches);
             if (!empty($returnMatches)) {
-                if (count($returnMatches) > 1) {
-                    unset($returnMatches);
-                }
-                return reset($returnMatches);
+                return isset($returnIndex, $returnMatches[$returnIndex])
+                    ? $returnMatches[$returnIndex]
+                    : $returnMatches;
             }
         }
         return $this->response;
