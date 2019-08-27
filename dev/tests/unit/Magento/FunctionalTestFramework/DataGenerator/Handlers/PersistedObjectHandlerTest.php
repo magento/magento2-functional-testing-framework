@@ -11,6 +11,8 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Parsers\DataProfileSchemaParser;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\CurlHandler;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
@@ -328,6 +330,108 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         $this->assertEquals($dataValueOne, $retrievedFromTest);
         $this->assertEquals($dataValueTwo, $retrievedFromHook);
         $this->assertEquals($dataValueThree, $retrievedFromSuite);
+    }
+
+    /**
+     * @param string $name
+     * @param string $key
+     * @param string $value
+     * @param string $type
+     * @param string $scope
+     * @param string $stepKey
+     * @dataProvider entityDataProvider
+     */
+    public function testRetrieveEntityValidField($name, $key, $value, $type, $scope, $stepKey)
+    {
+        $parserOutputOne = [
+            'entity' => [
+                $name => [
+                    'type' => $type,
+                    'data' => [
+                        0 => [
+                            'key' => $key,
+                            'value' => $value
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        $jsonReponseOne = "
+            {
+               \"" . strtolower($key) . "\" : \"{$value}\"
+            }
+        ";
+
+        // Mock Classes and Create Entities
+        $handler = PersistedObjectHandler::getInstance();
+
+        $this->mockDataHandlerWithOutput($parserOutputOne);
+        $this->mockCurlHandler($jsonReponseOne);
+        $handler->createEntity($stepKey, $scope, $name);
+
+        // Call method
+        $retrieved = $handler->retrieveEntityField($stepKey, $key, $scope);
+
+        $this->assertEquals($value, $retrieved);
+    }
+
+    /**
+     * @param string $name
+     * @param string $key
+     * @param string $value
+     * @param string $type
+     * @param string $scope
+     * @param string $stepKey
+     * @dataProvider entityDataProvider
+     * @throws TestReferenceException
+     * @throws TestFrameworkException
+     */
+    public function testRetrieveEntityInValidField($name, $key, $value, $type, $scope, $stepKey)
+    {
+        $invalidDataKey = "invalidDataKey";
+
+        $parserOutputOne = [
+            'entity' => [
+                $name => [
+                    'type' => $type,
+                    'data' => [
+                        0 => [
+                            'key' => $key,
+                            'value' => $value
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        $jsonReponseOne = "
+            {
+               \"" . strtolower($key) . "\" : \"{$value}\"
+            }
+        ";
+
+        // Mock Classes and Create Entities
+        $handler = PersistedObjectHandler::getInstance();
+
+        $this->mockDataHandlerWithOutput($parserOutputOne);
+        $this->mockCurlHandler($jsonReponseOne);
+        $handler->createEntity($stepKey, $scope, $name);
+
+        $this->expectException(\Magento\FunctionalTestingFramework\Exceptions\TestReferenceException::class);
+
+        // Call method
+        $handler->retrieveEntityField($stepKey, $invalidDataKey, $scope);
+    }
+
+    /**
+     * Data provider for testRetrieveEntityField
+     */
+    public static function entityDataProvider()
+    {
+        return [
+            ['Entity1', 'testKey1', 'testValue1', 'testType', PersistedObjectHandler::HOOK_SCOPE, 'StepKey1'],
+            ['Entity2', 'testKey2', 'testValue2', 'testType', PersistedObjectHandler::SUITE_SCOPE, 'StepKey2'],
+            ['Entity3', 'testKey3', 'testValue3', 'testType', PersistedObjectHandler::TEST_SCOPE, 'StepKey3']
+        ];
     }
 
     /**

@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\DataGenerator\Handlers;
 
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 
 class PersistedObjectHandler
@@ -178,11 +179,15 @@ class PersistedObjectHandler
      * @param string $scope
      * @return string
      * @throws TestReferenceException
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException
+     * @throws TestFrameworkException
      */
     public function retrieveEntityField($stepKey, $field, $scope)
     {
-        return $this->retrieveEntity($stepKey, $scope)->getCreatedDataByName($field);
+        $fieldValue = $this->retrieveEntity($stepKey, $scope)->getCreatedDataByName($field);
+        if ($fieldValue === null) {
+            throw new TestReferenceException("Undefined field {$field} in entity object with a stepKey of {$stepKey}");
+        }
+        return $fieldValue;
     }
 
     /**
