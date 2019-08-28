@@ -81,9 +81,9 @@ class RunTestCommand extends BaseGenerateCommand
         $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
         $testsDirectory = TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . TestGenerator::GENERATED_DIR . DIRECTORY_SEPARATOR;
         //execute only tests specified as arguments in run command
-        foreach ($resolvedTests as $test){
+        foreach ($resolvedTests as $test) {
             // for tests in suite, set directory as suite name
-            if (strpos($test, ':' )) {
+            if (strpos($test, ':')) {
                 list($suite, $testName) = explode(":", $test);
             }
             // for standalone tests set directory as "default"
@@ -114,22 +114,23 @@ class RunTestCommand extends BaseGenerateCommand
 
     /** Get an array of tests with resolved suite references from $testConfiguration
      * eg: if test is referenced in a suite, it'll be stored in format "SuiteName:Testname";
-     * if not it'll be stored as is.
-     * @param $testConfiguration
+     * @param array $testConfiguration
      * @return array
      */
-    private function getResolvedTests($testConfiguration)
+    private function getResolvedTests(array $testConfiguration)
     {
         $testsArray = $testConfiguration['tests'] ?? [];
         $suitesArray = $testConfiguration['suites'] ?? [];
         $testArrayBuilder = [];
+
         foreach ($suitesArray as $suite => $tests) {
-            $testArrayBuilder = array_merge($testArrayBuilder,
-                array_map(function($test) use ($suite)
-                { return $suite . ':' . $test ; }, $tests));
+            $testArrayBuilder = array_merge(
+                $testArrayBuilder,
+                array_map(function ($test) use ($suite) {
+                    return $suite . ':' . $test;
+                }, $tests)
+            );
         }
         return array_merge($testArrayBuilder, $testsArray);
-
-
     }
 }

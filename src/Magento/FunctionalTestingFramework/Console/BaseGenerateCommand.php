@@ -91,11 +91,9 @@ class BaseGenerateCommand extends Command
         }
 
         foreach ($suiteGroup as $test => $suites) {
-
             foreach ($suites as $suite) {
                 $testConfiguration['suites'][$suite][] = $test;
             }
-
         }
         return $testConfiguration;
     }
