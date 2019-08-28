@@ -283,7 +283,7 @@ class MagentoWebDriver extends WebDriver
         $actualUrl = $this->webDriver->getCurrentURL();
         $comparison = "Expected: $regex\nActual: $actualUrl";
         Allure::lifecycle()->fire(new AddAttachmentEvent($comparison, 'Comparison'));
-        $this->assertRegExp($regex, $url);
+        $this->assertRegExp($regex, $actualUrl);
     }
 
     /**
