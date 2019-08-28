@@ -24,6 +24,7 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
     const ENTITY_OPERATION_STORE_CODE = 'storeCode';
     const ENTITY_OPERATION_SUCCESS_REGEX = 'successRegex';
     const ENTITY_OPERATION_RETURN_REGEX = 'returnRegex';
+    const ENTITY_OPERATION_RETURN_INDEX = 'returnIndex';
     const ENTITY_OPERATION_HEADER = 'header';
     const ENTITY_OPERATION_CONTENT_TYPE = 'contentType';
     const ENTITY_OPERATION_HEADER_PARAM = 'param';
@@ -144,6 +145,7 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
             $auth = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH] ?? null;
             $successRegex = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_SUCCESS_REGEX] ?? null;
             $returnRegex = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_RETURN_REGEX] ?? null;
+            $returnIndex = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_RETURN_INDEX] ?? 0;
             $contentType = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_CONTENT_TYPE][0]['value']
                 ?? null;
             $headers = $this->initializeHeaders($opDefArray);
@@ -216,7 +218,8 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
                 $contentType,
                 $removeBackend,
                 $successRegex,
-                $returnRegex
+                $returnRegex,
+                $returnIndex
             );
         }
     }
