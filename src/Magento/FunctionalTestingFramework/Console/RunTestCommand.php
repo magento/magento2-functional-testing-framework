@@ -82,11 +82,10 @@ class RunTestCommand extends BaseGenerateCommand
         $testsDirectory = TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . TestGenerator::GENERATED_DIR . DIRECTORY_SEPARATOR;
         //execute only tests specified as arguments in run command
         foreach ($resolvedTests as $test) {
-            // for tests in suite, set directory as suite name
+            //set directory as suite name for tests in suite, if not set to "default"
             if (strpos($test, ':')) {
                 list($suite, $testName) = explode(":", $test);
             }
-            // for standalone tests set directory as "default"
             else {
                 list($suite, $testName) = [TestGenerator::DEFAULT_DIR, $test];
             }
