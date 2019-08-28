@@ -85,8 +85,7 @@ class RunTestCommand extends BaseGenerateCommand
             //set directory as suite name for tests in suite, if not set to "default"
             if (strpos($test, ':')) {
                 list($suite, $testName) = explode(":", $test);
-            }
-            else {
+            } else {
                 list($suite, $testName) = [TestGenerator::DEFAULT_DIR, $test];
             }
             $testGroup = $suite . DIRECTORY_SEPARATOR;

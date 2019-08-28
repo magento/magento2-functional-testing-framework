@@ -70,7 +70,7 @@ class BaseGenerateCommand extends Command
     }
 
     /**
-     * Returns a 2D array of tests with their suites references that can be encoded into a json test configuration
+     * Returns an array of test configuration to be used as an argument for generation of tests
      * @param array $tests
      * @return false|string
      * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
