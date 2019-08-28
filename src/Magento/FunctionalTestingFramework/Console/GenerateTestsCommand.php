@@ -65,13 +65,18 @@ class GenerateTestsCommand extends BaseGenerateCommand
     {
         $tests = $input->getArgument('name');
         $config = $input->getOption('config');
-        $json = $input->getOption('tests');
+        $json = $input->getOption('tests'); // for backward compatibility
         $force = $input->getOption('force');
         $time = $input->getOption('time') * 60 * 1000; // convert from minutes to milliseconds
         $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
         $remove = $input->getOption('remove');
         $verbose = $output->isVerbose();
         $allowSkipped = $input->getOption('allowSkipped');
+
+        // if test configuration is not specified, set implicitly
+        if ($json === null && !empty($tests)) {
+            $json = json_encode($this->getTestAndSuiteConfiguration($tests));
+        }
 
         if ($json !== null && !json_decode($json)) {
             // stop execution if we have failed to properly parse any json passed in by the user
@@ -100,9 +105,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
             $testManifest->createTestGroups($time);
         }
 
-        if (empty($tests)) {
-            SuiteGenerator::getInstance()->generateAllSuites($testManifest);
-        }
+        SuiteGenerator::getInstance()->generateAllSuites($testManifest);
 
         $testManifest->generate();
 
