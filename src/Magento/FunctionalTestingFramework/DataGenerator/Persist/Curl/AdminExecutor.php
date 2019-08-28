@@ -159,9 +159,7 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
         if (!empty($returnRegex)) {
             preg_match($returnRegex, $this->response, $returnMatches);
             if (!empty($returnMatches)) {
-                return isset($returnIndex, $returnMatches[$returnIndex])
-                    ? $returnMatches[$returnIndex]
-                    : $returnMatches;
+                return $returnMatches[$returnIndex] ?? $returnMatches[0];
             }
         }
         return $this->response;
