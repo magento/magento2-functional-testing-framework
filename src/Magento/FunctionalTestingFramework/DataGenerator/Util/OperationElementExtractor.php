@@ -114,7 +114,9 @@ class OperationElementExtractor
         foreach ($operationArrayArray as $operationFieldType) {
             $operationElementValue = [];
             if (isset($operationFieldType[OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_VALUE])) {
-                foreach ($operationFieldType[OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_VALUE] as $operationFieldValue) {
+                foreach ($operationFieldType[OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_VALUE]
+                         as $operationFieldValue
+                ) {
                     $operationElementValue[] = $operationFieldValue[OperationElementExtractor::OPERATION_OBJECT_ARRAY_VALUE] ?? null;
                 }
             }

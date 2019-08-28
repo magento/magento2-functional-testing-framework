@@ -109,7 +109,7 @@ class OperationDataArrayResolver
                     $operationElementType,
                     $operationDataArray
                 );
-            } else if (is_array($operationElementType)) {
+            } elseif (is_array($operationElementType)) {
                 foreach ($operationElementType as $currentElementType) {
                     if (in_array($currentElementType, self::PRIMITIVE_TYPES)) {
                         $this->resolvePrimitiveReferenceElement(
@@ -256,7 +256,8 @@ class OperationDataArrayResolver
         $linkedEntityObj = $this->resolveLinkedEntityObject($entityName);
 
         // in array case
-        if (!is_array($operationElement->getValue()) && !empty($operationElement->getNestedOperationElement($operationElement->getValue()))
+        if (!is_array($operationElement->getValue())
+            && !empty($operationElement->getNestedOperationElement($operationElement->getValue()))
             && $operationElement->getType() == OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY
         ) {
             $operationSubArray = $this->resolveOperationDataArray(
