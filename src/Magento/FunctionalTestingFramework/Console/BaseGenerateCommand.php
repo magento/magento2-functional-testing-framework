@@ -80,20 +80,26 @@ class BaseGenerateCommand extends Command
     {
         $testConfiguration['tests'] = [];
         $testConfiguration['suites'] = [];
-        $allSuiteTests = SuiteObjectHandler::getInstance()->getAllTestReferences();
-        $suiteGroup = [];
+        $testsReferencedInSuites = SuiteObjectHandler::getInstance()->getAllTestReferences();
+        $resolvedTests = [];
 
         foreach($tests as $test) {
-            if (array_key_exists($test, $allSuiteTests)) {
-                $suiteGroup[$test] = $allSuiteTests[$test];
+            if (array_key_exists($test, $testsReferencedInSuites)) {
+                $suites = $testsReferencedInSuites[$test];
+                $resolvedTests = array_merge(
+                    $resolvedTests,
+                    array_map(function ($value) use ($test) {
+                        return  $value . ':' . $test;
+                    }, $suites)
+                );
             }
+            // configuration for tests
             else $testConfiguration['tests'][] = $test;
         }
-
-        foreach ($suiteGroup as $test => $suites) {
-            foreach ($suites as $suite) {
-                $testConfiguration['suites'][$suite][] = $test;
-            }
+        // configuration for suites
+        foreach ($resolvedTests as $test) {
+            list($suite, $test) = explode(":", $test);
+            $testConfiguration['suites'][$suite][] = $test;
         }
         return $testConfiguration;
     }
