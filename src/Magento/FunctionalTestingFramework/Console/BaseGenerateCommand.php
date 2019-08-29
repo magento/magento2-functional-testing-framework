@@ -101,6 +101,7 @@ class BaseGenerateCommand extends Command
             list($suite, $test) = explode(":", $test);
             $testConfiguration['suites'][$suite][] = $test;
         }
-        return $testConfiguration;
+        $testConfigurationJson = json_encode($testConfiguration);
+        return $testConfigurationJson;
     }
 }

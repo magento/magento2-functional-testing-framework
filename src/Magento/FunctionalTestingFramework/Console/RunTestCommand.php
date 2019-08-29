@@ -63,11 +63,12 @@ class RunTestCommand extends BaseGenerateCommand
             );
         }
 
+        $testConfiguration = $this->getTestAndSuiteConfiguration($tests);
+
         if (!$skipGeneration) {
-            $testConfiguration = $this->getTestAndSuiteConfiguration($tests);
             $command = $this->getApplication()->find('generate:tests');
             $args = [
-                '--tests' => json_encode($testConfiguration),
+                '--tests' => $testConfiguration,
                 '--force' => $force,
                 '--remove' => $remove,
                 '--debug' => $debug,
@@ -76,20 +77,21 @@ class RunTestCommand extends BaseGenerateCommand
             $command->run(new ArrayInput($args), $output);
         }
         // tests with resolved suite references
-        $resolvedTests = $this->getResolvedTests($testConfiguration);
-        $returnCode = 0;
+        $resolvedTests = $this->resolveSuiteReferences($testConfiguration);
+
         $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
         $testsDirectory = TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . TestGenerator::GENERATED_DIR . DIRECTORY_SEPARATOR;
+        $returnCode = 0;
         //execute only tests specified as arguments in run command
         foreach ($resolvedTests as $test) {
             //set directory as suite name for tests in suite, if not set to "default"
             if (strpos($test, ':')) {
-                list($suite, $testName) = explode(":", $test);
+                list($testGroup, $testName) = explode(":", $test);
             } else {
-                list($suite, $testName) = [TestGenerator::DEFAULT_DIR, $test];
+                list($testGroup, $testName) = [TestGenerator::DEFAULT_DIR, $test];
             }
-            $testGroup = $suite . DIRECTORY_SEPARATOR;
-            $testName .= 'Cest.php';
+            $testGroup = $testGroup . DIRECTORY_SEPARATOR;
+            $testName = $testName . 'Cest.php';
             if (!realpath($testsDirectory . $testGroup . $testName)) {
                 throw new TestFrameworkException(
                     $testName . " is not available under " . $testsDirectory . $testGroup
@@ -111,12 +113,13 @@ class RunTestCommand extends BaseGenerateCommand
     }
 
     /** Get an array of tests with resolved suite references from $testConfiguration
-     * eg: if test is referenced in a suite, it'll be stored in format "SuiteName:Testname";
-     * @param array $testConfiguration
+     * eg: if test is referenced in a suite, it'll be stored in format suite:test
+     * @param $testConfigurationJson
      * @return array
      */
-    private function getResolvedTests(array $testConfiguration)
+    private function resolveSuiteReferences($testConfigurationJson)
     {
+        $testConfiguration = json_decode($testConfigurationJson, true);
         $testsArray = $testConfiguration['tests'] ?? [];
         $suitesArray = $testConfiguration['suites'] ?? [];
         $testArrayBuilder = [];

@@ -73,9 +73,8 @@ class GenerateTestsCommand extends BaseGenerateCommand
         $verbose = $output->isVerbose();
         $allowSkipped = $input->getOption('allowSkipped');
 
-        // if test configuration is not specified, set implicitly
-        if ($json === null && !empty($tests)) {
-            $json = json_encode($this->getTestAndSuiteConfiguration($tests));
+        if (!empty($tests)) {
+            $json = $this->getTestAndSuiteConfiguration($tests);
         }
 
         if ($json !== null && !json_decode($json)) {
