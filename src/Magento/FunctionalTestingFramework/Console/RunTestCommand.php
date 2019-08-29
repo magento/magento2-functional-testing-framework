@@ -114,7 +114,7 @@ class RunTestCommand extends BaseGenerateCommand
 
     /** Get an array of tests with resolved suite references from $testConfiguration
      * eg: if test is referenced in a suite, it'll be stored in format suite:test
-     * @param $testConfigurationJson
+     * @param string $testConfigurationJson
      * @return array
      */
     private function resolveSuiteReferences($testConfigurationJson)
