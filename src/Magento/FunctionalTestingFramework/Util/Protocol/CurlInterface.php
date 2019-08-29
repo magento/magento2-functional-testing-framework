@@ -42,11 +42,12 @@ interface CurlInterface
     /**
      * Read response from server.
      *
-     * @param string $successRegex
-     * @param string $returnRegex
+     * @param string      $successRegex
+     * @param string      $returnRegex
+     * @param string|null $returnIndex
      * @return string|array
      */
-    public function read($successRegex = null, $returnRegex = null);
+    public function read($successRegex = null, $returnRegex = null, $returnIndex = null);
 
     /**
      * Close the connection to the server.
