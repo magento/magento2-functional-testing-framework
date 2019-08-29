@@ -58,6 +58,14 @@ vendor/bin/mftf run:test LoginAsAdminTest LoginAsCustomerTest -r
 
 This command cleans up the previously generated tests; generates and runs the `LoginAsAdminTest` and `LoginAsCustomerTest` tests.
 
+### Generate and run a testManifest.txt file
+
+```bash
+vendor/bin/mftf run:manifest path/to/your/testManifest.txt
+```
+
+This command runs all tests specified in a testManifest.txt file. When you generate tests, a testManifest.txt file is also generated for you. You can pass this file directly to the run:manifest command and it will execute all tests. Or you can create your own file of the same format to execute a subset of tests. Note: This command does not generate tests.
+
 ### Generate and run previously failed tests
 
 ```bash
@@ -336,6 +344,30 @@ Generate the `LoginCustomerTest` and `StorefrontCreateCustomerTest` tests from X
 
 ```bash
 vendor/bin/mftf run:test LoginCustomerTest StorefrontCreateCustomerTest
+```
+
+### `run:manifest`
+
+Runs a testManifest.txt file.
+
+This command runs all tests specified in a testManifest.xml file. It does not generate tests for you. You must do that as first. 
+
+#### Usage
+
+```bash
+vendor/bin/mftf run:manifest path/to/your/testManifest.txt
+```
+
+#### Example testManifest.xml file
+
+Each line should contain either: one test path or one group (-g) reference.
+
+```
+tests/functional/tests/MFTF/_generated/default/AdminLoginTestCest.php
+-g PaypalTestSuite
+tests/functional/tests/MFTF/_generated/default/SomeOtherTestCest.php
+tests/functional/tests/MFTF/_generated/default/ThirdTestCest.php
+-g SomeOtherSuite
 ```
 
 ### `run:failed`
