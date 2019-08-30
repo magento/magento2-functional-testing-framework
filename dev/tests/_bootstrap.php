@@ -17,7 +17,10 @@ require_once $mftfTestCasePath;
 $kernel = \AspectMock\Kernel::getInstance();
 $kernel->init([
     'debug' => true,
-    'includePaths' => [PROJECT_ROOT . DIRECTORY_SEPARATOR . 'src'],
+    'includePaths' => [
+        PROJECT_ROOT . DIRECTORY_SEPARATOR . 'src',
+        PROJECT_ROOT . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'allure-framework'
+    ],
     'cacheDir' => PROJECT_ROOT .
         DIRECTORY_SEPARATOR .
         'dev' .
