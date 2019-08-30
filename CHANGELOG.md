@@ -1,6 +1,11 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.4.5
+-----
+### Fixes
+* Fixed an issue where `.credentials` was required when using `<createData>` actions with field overrides.
+
 2.4.4
 -----
 ### Fixes
