@@ -23,7 +23,8 @@ class AllureHelper
     }
 
     /**
-     * Adds Attachment to the last executed step. Required due to Allure root-step behavior
+     * Adds Attachment to the last executed step.
+     * Use this when adding attachments outside of an $I->doSomething() step/context.
      * @param mixed  $data
      * @param string $caption
      * @return void
