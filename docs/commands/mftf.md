@@ -64,7 +64,7 @@ This command cleans up the previously generated tests; generates and runs the `L
 vendor/bin/mftf run:manifest path/to/your/testManifest.txt
 ```
 
-This command runs all tests specified in a testManifest.txt file. When you generate tests, a testManifest.txt file is also generated for you. You can pass this file directly to the run:manifest command and it will execute all tests. Or you can create your own file of the same format to execute a subset of tests. Note: This command does not generate tests.
+This command runs all tests specified in a `testManifest.txt` file. When you generate tests, a `testManifest.txt` file is also generated for you. You can pass this file directly to the `run:manifest` command and it will execute all listed tests. You can also create your own file in the same format to execute a subset of tests. Note: This command does not generate tests.
 
 ### Generate and run previously failed tests
 
