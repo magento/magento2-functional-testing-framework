@@ -7,6 +7,7 @@ declare(strict_types = 1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -47,11 +48,18 @@ class RunManifestCommand extends Command
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
+     * @throws TestFrameworkException
      * @return integer
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $manifestFile = file($input->getArgument("path"), FILE_IGNORE_NEW_LINES);
+        $path = $input->getArgument("path");
+
+        if (!file_exists($path)) {
+            throw new TestFrameworkException("Could not find file $path. Check the path and try again.");
+        }
+
+        $manifestFile = file($path, FILE_IGNORE_NEW_LINES);
 
         // Delete the Codeception failed file just in case it exists from any previous test runs
         $this->deleteFailedFile();
