@@ -807,6 +807,7 @@ class MagentoWebDriver extends WebDriver
      * the screenshot filename to be passed to the AllureHelper.
      *
      * @param string $name
+     * @return void
      * @throws AllureException
      */
     public function makeScreenshot($name = null)
