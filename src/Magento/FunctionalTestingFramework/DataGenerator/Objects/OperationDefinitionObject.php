@@ -105,6 +105,13 @@ class OperationDefinitionObject
     private $returnRegex;
 
     /**
+     * Index of element to be returned from "returnRegex" matches.
+     *
+     * @var string
+     */
+    private $returnIndex;
+
+    /**
      * Determines if operation should remove backend_name from URL.
      * @var boolean
      */
@@ -125,6 +132,7 @@ class OperationDefinitionObject
      * @param boolean $removeBackend
      * @param string  $successRegex
      * @param string  $returnRegex
+     * @param string  $returnIndex
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -140,7 +148,8 @@ class OperationDefinitionObject
         $contentType,
         $removeBackend,
         $successRegex = null,
-        $returnRegex = null
+        $returnRegex = null,
+        $returnIndex = null
     ) {
         $this->name = $name;
         $this->operation = $operation;
@@ -153,6 +162,7 @@ class OperationDefinitionObject
         $this->operationMetadata = $metaData;
         $this->successRegex = $successRegex;
         $this->returnRegex = $returnRegex;
+        $this->returnIndex = $returnIndex;
         $this->removeBackend = $removeBackend;
         $this->apiUrl = null;
 
@@ -282,6 +292,16 @@ class OperationDefinitionObject
     public function getReturnRegex()
     {
         return $this->returnRegex;
+    }
+
+    /**
+     * Getter for return regex matches index.
+     *
+     * @return string|null
+     */
+    public function getReturnIndex()
+    {
+        return $this->returnIndex;
     }
 
     /**
