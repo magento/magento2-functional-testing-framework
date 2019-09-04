@@ -433,7 +433,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
 
         // validate log statement
         TestLoggingUtil::getInstance()->validateMockLogStatement(
-            "warning",
+            'warning',
             $warnMsg,
             []
         );
