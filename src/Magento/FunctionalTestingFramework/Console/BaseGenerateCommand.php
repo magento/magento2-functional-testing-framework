@@ -78,8 +78,8 @@ class BaseGenerateCommand extends Command
 
     protected function getTestAndSuiteConfiguration(array $tests)
     {
-        $testConfiguration['tests'] = [];
-        $testConfiguration['suites'] = [];
+        $testConfiguration['tests'] = null;
+        $testConfiguration['suites'] = null;
         $testsReferencedInSuites = SuiteObjectHandler::getInstance()->getAllTestReferences();
         $resolvedTests = [];
 
