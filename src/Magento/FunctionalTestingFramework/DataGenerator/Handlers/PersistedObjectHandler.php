@@ -10,6 +10,7 @@ use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHand
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 
 class PersistedObjectHandler
 {
@@ -188,7 +189,9 @@ class PersistedObjectHandler
             $warnMsg .= "Please fix the invalid reference. This will result in fatal error in next major release.";
             //TODO: change this to throw an exception in next major release
             LoggingUtil::getInstance()->getLogger(PersistedObjectHandler::class)->warn($warnMsg);
-            print($warnMsg . PHP_EOL);
+            if (MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE) {
+                print("\n$warnMsg\n");
+            }
         }
         return $fieldValue;
     }
