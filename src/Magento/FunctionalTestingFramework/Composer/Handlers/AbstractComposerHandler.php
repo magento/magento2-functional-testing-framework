@@ -113,8 +113,10 @@ abstract class AbstractComposerHandler
             $parts = explode(',', $suggest);
             $data = [];
             foreach ($parts as $part) {
-                list($name, $value) = explode(':', $part, 2);
-                $data[strtolower(trim($name))] = trim($value);
+                if (strpos($part, ':') !== false) {
+                    list($name, $value) = explode(':', $part, 2);
+                    $data[strtolower(trim($name))] = trim($value);
+                }
             }
 
             if (isset($data[self::SUGGEST_TYPE])

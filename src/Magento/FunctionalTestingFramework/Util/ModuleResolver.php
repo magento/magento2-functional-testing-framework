@@ -275,13 +275,12 @@ class ModuleResolver
         $allModulePaths = $this->normalizeModuleNames($allModulePaths);
 
         if (MftfApplicationConfig::getConfig()->forceGenerateEnabled()) {
-            $allModulePaths = $this->flipAndFlattenArray($allModulePaths);
+            $allModulePaths = $this->flipAndFilterArray($allModulePaths);
             $this->enabledModulePaths = $this->applyCustomModuleMethods($allModulePaths);
             return $this->enabledModulePaths;
         }
 
         $enabledModules = array_merge($this->getEnabledModules(), $this->getModuleWhitelist());
-        //$enabledDirectoryPaths = $this->getEnabledDirectoryPaths($enabledModules, $allModulePaths);
         $enabledDirectoryPaths = $this->flipAndFilterArray($allModulePaths, $enabledModules);
 
         $this->enabledModulePaths = $this->applyCustomModuleMethods($enabledDirectoryPaths);
@@ -425,7 +424,7 @@ class ModuleResolver
             && !empty($modulePaths)
         ) {
             $deprecatedPath = self::DEPRECATED_DEV_TESTS;
-            $suggestedPath = self::DEV_TESTS . DIRECTORY_SEPARATOR . 'Vendor';
+            $suggestedPath = self::DEV_TESTS . DIRECTORY_SEPARATOR . 'Magento';
             LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->warning(
                 "DEPRECATION: $deprecatedPath is deprecated! Please move mftf test modules to $suggestedPath"
             );
@@ -598,31 +597,6 @@ class ModuleResolver
         }
 
         return $resultArray;
-    }
-
-    /**
-     * Runs through enabled modules and maps them known module paths by name.
-     * @param array $enabledModules
-     * @param array $allModulePaths
-     * @return array
-     */
-    private function getEnabledDirectoryPaths($enabledModules, $allModulePaths)
-    {
-        $enabledDirectoryPaths = [];
-        foreach ($enabledModules as $magentoModuleName) {
-            if (!isset($this->knownDirectories[$magentoModuleName]) && !isset($allModulePaths[$magentoModuleName])) {
-                continue;
-            } elseif (isset($this->knownDirectories[$magentoModuleName])
-                && !isset($allModulePaths[$magentoModuleName])) {
-                LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->warn(
-                    "Known directory could not match to an existing path.",
-                    ['knownDirectory' => $magentoModuleName]
-                );
-            } else {
-                $enabledDirectoryPaths[$magentoModuleName] = $allModulePaths[$magentoModuleName];
-            }
-        }
-        return $enabledDirectoryPaths;
     }
 
     /**
