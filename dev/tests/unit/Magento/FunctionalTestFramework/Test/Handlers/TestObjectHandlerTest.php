@@ -181,6 +181,68 @@ class TestObjectHandlerTest extends MagentoTestCase
     }
 
     /**
+     * getObject should throw exception if test extends from itself
+     *
+     * @throws \Exception
+     */
+    public function testGetTestObjectWithInvalidExtends()
+    {
+        // set up Test Data
+        $testOne = (new TestDataArrayBuilder())
+            ->withName('testOne')
+            ->withTestReference('testOne')
+            ->withAnnotations()
+            ->withFailedHook()
+            ->withAfterHook()
+            ->withBeforeHook()
+            ->withTestActions()
+            ->build();
+        $this->setMockParserOutput(['tests' => $testOne]);
+
+        $toh = TestObjectHandler::getInstance();
+
+        $this->expectException(\Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException::class);
+        $this->expectExceptionMessage("Mftf Test can not extend from itself: " . "testOne");
+
+        $toh->getObject('testOne');
+    }
+
+    /**
+     * getAllObjects should throw exception if test extends from itself
+     *
+     * @throws \Exception
+     */
+    public function testGetAllTestObjectsWithInvalidExtends()
+    {
+        // set up Test Data
+        $testOne = (new TestDataArrayBuilder())
+            ->withName('testOne')
+            ->withTestReference('testOne')
+            ->withAnnotations()
+            ->withFailedHook()
+            ->withAfterHook()
+            ->withBeforeHook()
+            ->withTestActions()
+            ->build();
+        $testTwo = (new TestDataArrayBuilder())
+            ->withName('testTwo')
+            ->withAnnotations()
+            ->withFailedHook()
+            ->withAfterHook()
+            ->withBeforeHook()
+            ->withTestActions()
+            ->build();
+
+        $this->setMockParserOutput(['tests' => array_merge($testOne, $testTwo)]);
+
+        $toh = TestObjectHandler::getInstance();
+
+        $this->expectException(\Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException::class);
+        $this->expectExceptionMessage("Mftf Test can not extend from itself: " . "testOne");
+        $toh->getAllObjects();
+    }
+
+    /**
      * Function used to set mock for parser return and force init method to run between tests.
      *
      * @param array $data

@@ -5,6 +5,7 @@
  */
 namespace Magento\FunctionalTestingFramework\DataGenerator\Persist;
 
+use Magento\FunctionalTestingFramework\Allure\AllureHelper;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\AdminExecutor;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\FrontendExecutor;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\WebapiExecutor;
@@ -165,6 +166,14 @@ class CurlHandler
 
         $response = $executor->read($successRegex, $returnRegex, $returnIndex);
         $executor->close();
+
+        AllureHelper::addAttachmentToLastStep($apiUrl, 'API Endpoint');
+        AllureHelper::addAttachmentToLastStep(json_encode($headers, JSON_PRETTY_PRINT), 'Request Headers');
+        AllureHelper::addAttachmentToLastStep(json_encode($this->requestData, JSON_PRETTY_PRINT), 'Request Body');
+        AllureHelper::addAttachmentToLastStep(
+            json_encode(json_decode($response, true), JSON_PRETTY_PRINT+JSON_UNESCAPED_UNICODE+JSON_UNESCAPED_SLASHES),
+            'Response Data'
+        );
 
         return $response;
     }
