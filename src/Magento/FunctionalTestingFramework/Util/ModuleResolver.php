@@ -39,6 +39,11 @@ class ModuleResolver
     const REGISTRAR_CLASS = "\Magento\Framework\Component\ComponentRegistrar";
 
     /**
+     * const for Test/Mftf
+     */
+    const TEST_MFTF_PATTERN = 'Test' . DIRECTORY_SEPARATOR . 'Mftf';
+
+    /**
      * const for vendor
      */
     const VENDOR = 'vendor';
@@ -267,6 +272,8 @@ class ModuleResolver
 
         $allModulePaths = $this->mergeModulePaths($allModulePaths, $composerBsedModulePaths);
 
+        $allModulePaths = $this->normalizeModuleNames($allModulePaths);
+
         if (MftfApplicationConfig::getConfig()->forceGenerateEnabled()) {
             $allModulePaths = $this->flipAndFlattenArray($allModulePaths);
             $this->enabledModulePaths = $this->applyCustomModuleMethods($allModulePaths);
@@ -275,18 +282,18 @@ class ModuleResolver
 
         $enabledModules = array_merge($this->getEnabledModules(), $this->getModuleWhitelist());
         //$enabledDirectoryPaths = $this->getEnabledDirectoryPaths($enabledModules, $allModulePaths);
-        $enabledDirectoryPaths = $this->flipAndFlattenArray($allModulePaths, $enabledModules);
+        $enabledDirectoryPaths = $this->flipAndFilterArray($allModulePaths, $enabledModules);
 
         $this->enabledModulePaths = $this->applyCustomModuleMethods($enabledDirectoryPaths);
         return $this->enabledModulePaths;
     }
 
     /**
-     * @param array $targetArray
+     * @param array $objectArray
      * @param array $filterArray
      * @return array
      */
-    private function flipAndFlattenArray($objectArray, $filterArray = null)
+    private function flipAndFilterArray($objectArray, $filterArray = null)
     {
         $flippedArray = [];
         foreach ($objectArray as $path => $modules) {
@@ -364,8 +371,8 @@ class ModuleResolver
 
         $codePathsToPattern = [
             $modulePath => '',
-            $magentoBaseCodePath . $vendorCodePath => 'Test' . DIRECTORY_SEPARATOR . 'Mftf',
-            $magentoBaseCodePath . $appCodePath => 'Test' . DIRECTORY_SEPARATOR . 'Mftf',
+            $magentoBaseCodePath . $vendorCodePath => self::TEST_MFTF_PATTERN,
+            $magentoBaseCodePath . $appCodePath => self::TEST_MFTF_PATTERN,
             $magentoBaseCodePath . self::DEPRECATED_DEV_TESTS => ''
         ];
 
@@ -394,8 +401,6 @@ class ModuleResolver
             $relevantPaths = $this->globRelevantWrapper($testPath, $pattern);
         }
 
-        $allComponents = $this->getRegisteredModuleList();
-
         foreach ($relevantPaths as $codePath) {
             // Reduce magento/app/code/Magento/AdminGws/<pattern> to magento/app/code/Magento/AdminGws to read symlink
             // Symlinks must be resolved otherwise they will not match Magento's filepath to the module
@@ -403,14 +408,8 @@ class ModuleResolver
             if (is_link($potentialSymlink)) {
                 $codePath = realpath($potentialSymlink) . DIRECTORY_SEPARATOR . $pattern;
             }
-
-            $mainModName = array_search($codePath, $allComponents);
-            if (!$mainModName) {
-                $mainModName = $this->getPossibleVendorName($codePath)
-                    . '_'
-                    . basename(str_replace($pattern, '', $codePath));
-            }
-            $modulePaths[$mainModName][] = $codePath;
+            $mainModName = basename(str_replace($pattern, '', $codePath));
+            $modulePaths[$codePath] = [$mainModName];
 
             if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
                 LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->debug(
@@ -423,7 +422,7 @@ class ModuleResolver
         // Suppress print during unit testing
         if (MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE
             && strpos($testPath, self::DEPRECATED_DEV_TESTS) !== false
-            && !empty($module)
+            && !empty($modulePaths)
         ) {
             $deprecatedPath = self::DEPRECATED_DEV_TESTS;
             $suggestedPath = self::DEV_TESTS . DIRECTORY_SEPARATOR . 'Vendor';
@@ -538,26 +537,49 @@ class ModuleResolver
     }
 
     /**
-     * Merge an associated array in 1st argument with another flattened associated array in 2nd argument
-     * and process duplicates
+     * Merge code paths
      *
-     * @param array $nameKeyedArray
-     * @param array $pathKeyedArray
+     * @param array $oneToOneArray
+     * @param array $oneToManyArray
      * @return array
      */
-    private function mergeModulePaths($nameKeyedArray, $pathKeyedArray)
+    private function mergeModulePaths($oneToOneArray, $oneToManyArray)
     {
-        $flippedArray = [];
-        foreach ($nameKeyedArray as $name => $path) {
-            $flippedArray[$path[0]] = [$name];
-        }
-        foreach ($pathKeyedArray as $path => $modules) {
+        $mergedArray = $oneToOneArray;
+        foreach ($oneToManyArray as $path => $modules) {
             // Do nothing when array_key_exists
-            if (!array_key_exists($path, $flippedArray)) {
-                $flippedArray[$path] = $modules;
+            if (!array_key_exists($path, $oneToOneArray)) {
+                $mergedArray[$path] = $modules;
             }
         }
-        return $flippedArray;
+        return $mergedArray;
+    }
+
+    /**
+     * Normalize module name if registered module list is available
+     *
+     * @param array $codePaths
+     *
+     * @return array
+     */
+    private function normalizeModuleNames($codePaths)
+    {
+        $allComponents = $this->getRegisteredModuleList();
+        if (empty($allComponents)) {
+            return $codePaths;
+        }
+
+        $normalizedCodePaths = [];
+        foreach ($codePaths as $path => $moduleNames) {
+            $mainModName = array_search($path, $allComponents);
+            if ($mainModName) {
+                $normalizedCodePaths[$path] = [$mainModName];
+            } else {
+                $normalizedCodePaths[$path] = $moduleNames;
+            }
+        }
+
+        return $normalizedCodePaths;
     }
 
     /**
@@ -800,7 +822,7 @@ class ModuleResolver
             array_walk($allComponents, function (&$value) {
                 // Magento stores component paths with unix DIRECTORY_SEPARATOR, need to stay uniform and convert
                 $value = realpath($value);
-                $value .= '/Test/Mftf';
+                $value .= DIRECTORY_SEPARATOR . self::TEST_MFTF_PATTERN;
             });
             return $allComponents;
         } catch (TestFrameworkException $e) {
@@ -828,7 +850,7 @@ class ModuleResolver
      */
     private function getPossibleVendorModuleName($path)
     {
-        $path = str_replace(DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR . 'Mftf', '', $path);
+        $path = str_replace(DIRECTORY_SEPARATOR . self::TEST_MFTF_PATTERN, '', $path);
         return $this->getPossibleVendorName($path) . '_' . basename($path);
     }
 

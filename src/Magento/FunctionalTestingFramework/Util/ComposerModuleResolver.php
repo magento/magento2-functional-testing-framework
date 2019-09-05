@@ -16,12 +16,6 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
  */
 class ComposerModuleResolver
 {
-    /**#@+
-     * Test module array keys
-     */
-    const KEY_DEPENDS_ON = 'dependsOn';
-    /**#@-*/
-
     /**
      * Code path array from composer json search
      *
@@ -68,9 +62,7 @@ class ComposerModuleResolver
         foreach ($composerInstaller->getInstalledTestPackages() as $packageName => $packageData) {
             $suggestedModuleNames = $packageData[ComposerInstaller::KEY_PACKAGE_SUGGESTED_MAGENTO_MODULES];
             $path = $packageData[ComposerInstaller::KEY_PACKAGE_INSTALLEDPATH];
-            $this->installedTestModules[$path] = [
-                self::KEY_DEPENDS_ON => $suggestedModuleNames
-            ];
+            $this->installedTestModules[$path] = $suggestedModuleNames;
         }
         return $this->installedTestModules;
     }
@@ -129,9 +121,7 @@ class ComposerModuleResolver
                     $file
                 );
                 $suggestedMagentoModuleNames = $composerInfo->getSuggestedMagentoModules();
-                $module[$modulePath] = [
-                    self::KEY_DEPENDS_ON => $suggestedMagentoModuleNames
-                ];
+                $module[$modulePath] = $suggestedMagentoModuleNames;
                 $modules = array_merge_recursive($modules, $module);
             }
         }
