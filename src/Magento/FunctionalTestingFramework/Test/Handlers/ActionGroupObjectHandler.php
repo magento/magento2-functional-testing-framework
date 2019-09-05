@@ -5,6 +5,7 @@
  */
 namespace Magento\FunctionalTestingFramework\Test\Handlers;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
@@ -124,10 +125,16 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
      *
      * @param ActionGroupObject $actionGroupObject
      * @return ActionGroupObject
+     * @throws TestFrameworkException
      */
     private function extendActionGroup($actionGroupObject): ActionGroupObject
     {
         if ($actionGroupObject->getParentName() !== null) {
+            if ($actionGroupObject->getParentName() == $actionGroupObject->getName()) {
+                throw new TestFrameworkException(
+                    "Mftf Action Group can not extend from itself: " . $actionGroupObject->getName()
+                );
+            }
             return $this->extendUtil->extendActionGroup($actionGroupObject);
         }
         return $actionGroupObject;

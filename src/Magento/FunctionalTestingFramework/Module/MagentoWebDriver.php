@@ -9,6 +9,7 @@ namespace Magento\FunctionalTestingFramework\Module;
 use Codeception\Module\WebDriver;
 use Codeception\Test\Descriptor;
 use Codeception\TestInterface;
+use Magento\FunctionalTestingFramework\Allure\AllureHelper;
 use Facebook\WebDriver\Interactions\WebDriverActions;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
@@ -198,7 +199,10 @@ class MagentoWebDriver extends WebDriver
      */
     public function dontSeeCurrentUrlEquals($url)
     {
-        $this->assertNotEquals($url, $this->webDriver->getCurrentURL());
+        $actualUrl = $this->webDriver->getCurrentURL();
+        $comparison = "Expected: $url\nActual: $actualUrl";
+        AllureHelper::addAttachmentToCurrentStep($comparison, 'Comparison');
+        $this->assertNotEquals($url, $actualUrl);
     }
 
     /**
@@ -209,7 +213,10 @@ class MagentoWebDriver extends WebDriver
      */
     public function dontSeeCurrentUrlMatches($regex)
     {
-        $this->assertNotRegExp($regex, $this->webDriver->getCurrentURL());
+        $actualUrl = $this->webDriver->getCurrentURL();
+        $comparison = "Expected: $regex\nActual: $actualUrl";
+        AllureHelper::addAttachmentToCurrentStep($comparison, 'Comparison');
+        $this->assertNotRegExp($regex, $actualUrl);
     }
 
     /**
@@ -220,7 +227,10 @@ class MagentoWebDriver extends WebDriver
      */
     public function dontSeeInCurrentUrl($needle)
     {
-        $this->assertNotContains($needle, $this->webDriver->getCurrentURL());
+        $actualUrl = $this->webDriver->getCurrentURL();
+        $comparison = "Expected: $needle\nActual: $actualUrl";
+        AllureHelper::addAttachmentToCurrentStep($comparison, 'Comparison');
+        $this->assertNotContains($needle, $actualUrl);
     }
 
     /**
@@ -254,7 +264,10 @@ class MagentoWebDriver extends WebDriver
      */
     public function seeCurrentUrlEquals($url)
     {
-        $this->assertEquals($url, $this->webDriver->getCurrentURL());
+        $actualUrl = $this->webDriver->getCurrentURL();
+        $comparison = "Expected: $url\nActual: $actualUrl";
+        AllureHelper::addAttachmentToCurrentStep($comparison, 'Comparison');
+        $this->assertEquals($url, $actualUrl);
     }
 
     /**
@@ -265,7 +278,10 @@ class MagentoWebDriver extends WebDriver
      */
     public function seeCurrentUrlMatches($regex)
     {
-        $this->assertRegExp($regex, $this->webDriver->getCurrentURL());
+        $actualUrl = $this->webDriver->getCurrentURL();
+        $comparison = "Expected: $regex\nActual: $actualUrl";
+        AllureHelper::addAttachmentToCurrentStep($comparison, 'Comparison');
+        $this->assertRegExp($regex, $actualUrl);
     }
 
     /**
@@ -276,7 +292,10 @@ class MagentoWebDriver extends WebDriver
      */
     public function seeInCurrentUrl($needle)
     {
-        $this->assertContains($needle, $this->webDriver->getCurrentURL());
+        $actualUrl = $this->webDriver->getCurrentURL();
+        $comparison = "Expected: $needle\nActual: $actualUrl";
+        AllureHelper::addAttachmentToCurrentStep($comparison, 'Comparison');
+        $this->assertContains($needle, $actualUrl);
     }
 
     /**
