@@ -301,7 +301,7 @@ class ModuleResolver
                     || (is_array($filterArray) && in_array($modules[0], $filterArray))
                     || isset($this->knownDirectories[$modules[0]])) {
                     if (strpos($modules[0], '_') === false) {
-                        $modules[0] = $this->getPossibleVendorName($path);
+                        $modules[0] = $this->getPossibleVendorName($path) . '_' . $modules[0];
                     }
                     $flippedArray[$modules[0]] = $path;
                 }

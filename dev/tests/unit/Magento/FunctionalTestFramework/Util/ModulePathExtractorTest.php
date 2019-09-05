@@ -18,13 +18,13 @@ class ModulePathExtractorTest extends MagentoTestCase
      * @var array
      */
     private $mockTestModulePaths = [
-        'Magento_ModuleA' => ['/base/path/app/code/Magento/ModuleA/Test/Mftf'],
-        'VendorB_ModuleB' => ['/base/path/app/code/VendorB/ModuleB/Test/Mftf'],
-        'Magento_ModuleC' => ['/base/path/dev/tests/acceptance/tests/functional/Magento/ModuleCTest'],
-        'VendorD_ModuleD' => ['/base/path/dev/tests/acceptance/tests/functional/VendorD/ModuleDTest'],
-        'SomeModuleE' => ['/base/path/dev/tests/acceptance/tests/functional/FunctionalTest/SomeModuleE'],
-        'Magento_ModuleF' => ['/base/path/vendor/magento/module-modulef/Test/Mftf'],
-        'VendorG_ModuleG' => ['/base/path/vendor/vendorg/module-moduleg-test'],
+        'Magento_ModuleA' => '/base/path/app/code/Magento/ModuleA/Test/Mftf',
+        'VendorB_ModuleB' => '/base/path/app/code/VendorB/ModuleB/Test/Mftf',
+        'Magento_ModuleC' => '/base/path/dev/tests/acceptance/tests/functional/Magento/ModuleCTest',
+        'VendorD_ModuleD' => '/base/path/dev/tests/acceptance/tests/functional/VendorD/ModuleDTest',
+        'SomeModuleE' => '/base/path/dev/tests/acceptance/tests/functional/FunctionalTest/SomeModuleE',
+        'Magento_ModuleF' => '/base/path/vendor/magento/module-modulef/Test/Mftf',
+        'VendorG_ModuleG' => '/base/path/vendor/vendorg/module-moduleg-test',
     ];
 
     /**

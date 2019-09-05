@@ -91,8 +91,8 @@ class ModulePathExtractor
         }
         $paths = array_slice($paths, 0, count($paths)-2);
         $shortenedPath = implode(DIRECTORY_SEPARATOR, $paths);
-        foreach ($this->testModulePaths as $key => $pathArr) {
-            if (isset($pathArr[0]) && $pathArr[0] == $shortenedPath) {
+        foreach ($this->testModulePaths as $key => $keyValue) {
+            if ( $keyValue == $shortenedPath) {
                 return $key;
             }
         }
