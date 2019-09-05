@@ -126,7 +126,7 @@ class RunTestCommand extends BaseGenerateCommand
         $testArrayBuilder = [];
 
         foreach ($suitesArray as $suite => $tests) {
-            foreach($tests as $test){
+            foreach ($tests as $test) {
                 $testArrayBuilder[] = "$suite:$test";
             }
         }
