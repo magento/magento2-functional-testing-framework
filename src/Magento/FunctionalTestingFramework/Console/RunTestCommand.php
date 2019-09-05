@@ -112,7 +112,8 @@ class RunTestCommand extends BaseGenerateCommand
         return $returnCode;
     }
 
-    /** Get an array of tests with resolved suite references from $testConfiguration
+    /**
+     * Get an array of tests with resolved suite references from $testConfiguration
      * eg: if test is referenced in a suite, it'll be stored in format suite:test
      * @param string $testConfigurationJson
      * @return array
@@ -125,12 +126,9 @@ class RunTestCommand extends BaseGenerateCommand
         $testArrayBuilder = [];
 
         foreach ($suitesArray as $suite => $tests) {
-            $testArrayBuilder = array_merge(
-                $testArrayBuilder,
-                array_map(function ($test) use ($suite) {
-                    return $suite . ':' . $test;
-                }, $tests)
-            );
+            foreach($tests as $test){
+                $testArrayBuilder[] = "$suite:$test";
+            }
         }
         return array_merge($testArrayBuilder, $testsArray);
     }
