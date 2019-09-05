@@ -298,7 +298,11 @@ class ModuleResolver
         foreach ($objectArray as $path => $modules) {
             if (count($modules) == 1) {
                 if (!is_array($filterArray)
-                    || (is_array($filterArray) && in_array($modules[0], $filterArray))) {
+                    || (is_array($filterArray) && in_array($modules[0], $filterArray))
+                    || isset($this->knownDirectories[$modules[0]])) {
+                    if (strpos($modules[0], '_') === false) {
+                        $modules[0] = $this->getPossibleVendorName($path);
+                    }
                     $flippedArray[$modules[0]] = $path;
                 }
             } else {
