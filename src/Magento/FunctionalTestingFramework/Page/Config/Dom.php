@@ -87,13 +87,13 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
         );
         $pageNodes = $dom->getElementsByTagName('page');
         $currentModule =
-            $this->modulePathExtractor->extractModuleName($filename) .
-            '_' .
-            $this->modulePathExtractor->getExtensionPath($filename);
+            $this->modulePathExtractor->getExtensionPath($filename)
+            . '_'
+            . $this->modulePathExtractor->extractModuleName($filename);
         foreach ($pageNodes as $pageNode) {
             $pageModule = $pageNode->getAttribute("module");
             $pageName = $pageNode->getAttribute("name");
-            if ($pageModule !== $currentModule) {
+            if ($pageModule != $currentModule) {
                 if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
                     print(
                         "Page Module does not match path Module. " .

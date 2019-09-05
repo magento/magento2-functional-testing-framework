@@ -70,6 +70,7 @@ class ModuleResolverTest extends MagentoTestCase
             [
                 "example" . DIRECTORY_SEPARATOR . "paths",
                 "example" . DIRECTORY_SEPARATOR . "paths",
+                "example" . DIRECTORY_SEPARATOR . "paths",
                 "example" . DIRECTORY_SEPARATOR . "paths"
             ],
             $resolver->getModulesPath()
@@ -82,6 +83,11 @@ class ModuleResolverTest extends MagentoTestCase
      */
     public function testGetModulePathsLocations()
     {
+        // clear test object handler value to inject parsed content
+        $property = new \ReflectionProperty(ModuleResolver::class, 'instance');
+        $property->setAccessible(true);
+        $property->setValue(null);
+
         $this->mockForceGenerate(false);
         $mockResolver = $this->setMockResolverClass(
             true,
@@ -96,6 +102,7 @@ class ModuleResolverTest extends MagentoTestCase
             [
                 "example" . DIRECTORY_SEPARATOR . "paths",
                 "example" . DIRECTORY_SEPARATOR . "paths",
+                "example" . DIRECTORY_SEPARATOR . "paths",
                 "example" . DIRECTORY_SEPARATOR . "paths"
             ],
             $resolver->getModulesPath()
@@ -107,6 +114,8 @@ class ModuleResolverTest extends MagentoTestCase
         // Define the Module paths from default TESTS_MODULE_PATH
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
 
+
+
         $mockResolver->verifyInvoked('globRelevantPaths', [$modulePath, '']);
         $mockResolver->verifyInvoked(
             'globRelevantPaths',
@@ -117,6 +126,20 @@ class ModuleResolverTest extends MagentoTestCase
             [
                 $magentoBaseCodePath . DIRECTORY_SEPARATOR . "app" . DIRECTORY_SEPARATOR . "code",
                 'Test' . DIRECTORY_SEPARATOR .'Mftf'
+            ]
+        );
+        $mockResolver->verifyInvoked(
+            'globRelevantPaths',
+            [
+                $magentoBaseCodePath
+                    . DIRECTORY_SEPARATOR . "dev"
+                    . DIRECTORY_SEPARATOR . "tests"
+                    . DIRECTORY_SEPARATOR . "acceptance"
+                    . DIRECTORY_SEPARATOR . "tests"
+                    . DIRECTORY_SEPARATOR . "functional"
+                    . DIRECTORY_SEPARATOR . "Magento"
+                    . DIRECTORY_SEPARATOR . "FunctionalTest"
+                , ''
             ]
         );
     }
@@ -160,7 +183,10 @@ class ModuleResolverTest extends MagentoTestCase
         );
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, null, ["somePath"]);
-        $this->assertEquals(["lastPath", "lastPath"], $resolver->getModulesPath());
+        $this->assertEquals(
+            ["lastPath", "lastPath"],
+            $resolver->getModulesPath()
+        );
         TestLoggingUtil::getInstance()->validateMockLogStatement(
             'info',
             'excluding module',

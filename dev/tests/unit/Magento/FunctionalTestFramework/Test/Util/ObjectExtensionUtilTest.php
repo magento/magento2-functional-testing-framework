@@ -20,6 +20,7 @@ use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 use tests\unit\Util\TestDataArrayBuilder;
 use tests\unit\Util\TestLoggingUtil;
+use tests\unit\Util\MockModuleResolverBuilder;
 
 class ObjectExtensionUtilTest extends TestCase
 {
@@ -30,6 +31,8 @@ class ObjectExtensionUtilTest extends TestCase
     public function setUp()
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
+        $resolverMock = new MockModuleResolverBuilder();
+        $resolverMock->setup();
     }
 
     /**

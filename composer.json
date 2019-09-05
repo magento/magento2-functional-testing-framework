@@ -13,6 +13,7 @@
         "ext-curl": "*",
         "allure-framework/allure-codeception": "~1.3.0",
         "codeception/codeception": "~2.3.4 || ~2.4.0 ",
+        "composer/composer": "^1.6",
         "consolidation/robo": "^1.0.0",
         "csharpru/vault-php": "~3.5.3",
         "csharpru/vault-php-guzzle6-transport": "^2.0",
