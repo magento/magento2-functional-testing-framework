@@ -336,7 +336,7 @@ There are two different attributes to split access to different areas:
 - `auth="adminFormKey"` is used for objects in an Admin area.
 - `auth="customerFormKey"` is used for objects in a storefront.
 
-You are able to create assurances with `successRegex`, and even optionally return values with `returnRegex`. You can also use `returnIndex` when `returnRegex` matches multiple values.
+You are able to create assurances with `successRegex`, and, optionally, return values with `returnRegex`. You can also use `returnIndex` when `returnRegex` matches multiple values.
 
 ### Create an object in Admin {#create-object-as-adminFormKey}
 
