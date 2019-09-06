@@ -25,8 +25,9 @@ class ModulePathExtractor
      */
     public function __construct()
     {
+        $verbose = true;
         if (empty($this->testModulePaths)) {
-            $this->testModulePaths = ModuleResolver::getInstance()->getModulesPath(false);
+            $this->testModulePaths = ModuleResolver::getInstance()->getModulesPath($verbose);
         }
     }
 
@@ -91,8 +92,8 @@ class ModulePathExtractor
         }
         $paths = array_slice($paths, 0, count($paths)-2);
         $shortenedPath = implode(DIRECTORY_SEPARATOR, $paths);
-        foreach ($this->testModulePaths as $key => $keyValue) {
-            if ( $keyValue == $shortenedPath) {
+        foreach ($this->testModulePaths as $key => $value) {
+            if ($value == $shortenedPath) {
                 return $key;
             }
         }

@@ -91,11 +91,11 @@ class ModuleResolver
     protected $enabledModulePaths = null;
 
     /**
-     * Paths for non flattened enabled modules.
+     * Name and path for enabled modules
      *
      * @var array|null
      */
-    protected $nonFlattenedEnabledModulePaths = null;
+    protected $enabledModuleNameAndPaths = null;
 
     /**
      * Configuration instance.
@@ -156,7 +156,7 @@ class ModuleResolver
     ];
 
     /**
-     * Registered module list in magento instance being tested
+     * Registered module list in magento system under test
      *
      * @var array
      */
@@ -249,82 +249,49 @@ class ModuleResolver
     /**
      * Return the modules path based on which modules are enabled in the target Magento instance.
      *
-     * @param boolean $flat
+     * @param boolean $verbose
      * @return array
      */
-    public function getModulesPath($flat = true)
+    public function getModulesPath($verbose = false)
     {
-        if (isset($this->enabledModulePaths) && $flat) {
+        if (isset($this->enabledModulePaths) && !$verbose) {
             return $this->enabledModulePaths;
         }
 
-        if (isset($this->nonFlattenedEnabledModulePaths) && !$flat) {
-            return $this->nonFlattenedEnabledModulePaths;
+        if (isset($this->enabledModuleNameAndPaths) && $verbose) {
+            return $this->enabledModuleNameAndPaths;
         }
 
+        // Find test modules paths by searching patterns (Test/Mftf, etc)
         $allModulePaths = $this->aggregateTestModulePaths();
 
-        $composerBsedModulePaths = $this->aggregateTestModulePathsFromComposerJson();
-        $composerBsedModulePaths = array_merge(
-            $composerBsedModulePaths,
+        // Find test modules paths by searching test composer.json files
+        $composerBasedModulePaths = $this->aggregateTestModulePathsFromComposerJson();
+
+        // Find test modules paths by querying composer installed packages
+        $composerBasedModulePaths = array_merge(
+            $composerBasedModulePaths,
             $this->aggregateTestModulePathsFromComposerInstaller()
         );
 
-        $allModulePaths = $this->mergeModulePaths($allModulePaths, $composerBsedModulePaths);
+        // Merge test module paths altogether
+        $allModulePaths = $this->mergeModulePaths($allModulePaths, $composerBasedModulePaths);
 
+        // Normalize module names if we get registered module names from Magento system
         $allModulePaths = $this->normalizeModuleNames($allModulePaths);
 
         if (MftfApplicationConfig::getConfig()->forceGenerateEnabled()) {
-            $allModulePaths = $this->flipAndFilterArray($allModulePaths);
+            $allModulePaths = $this->flipAndFilterModulePathsArray($allModulePaths);
             $this->enabledModulePaths = $this->applyCustomModuleMethods($allModulePaths);
             return $this->enabledModulePaths;
         }
 
         $enabledModules = array_merge($this->getEnabledModules(), $this->getModuleWhitelist());
-        $enabledDirectoryPaths = $this->flipAndFilterArray($allModulePaths, $enabledModules);
-
+        $enabledDirectoryPaths = $this->flipAndFilterModulePathsArray($allModulePaths, $enabledModules);
         $this->enabledModulePaths = $this->applyCustomModuleMethods($enabledDirectoryPaths);
+
         return $this->enabledModulePaths;
     }
-
-    /**
-     * @param array $objectArray
-     * @param array $filterArray
-     * @return array
-     */
-    private function flipAndFilterArray($objectArray, $filterArray = null)
-    {
-        $flippedArray = [];
-        foreach ($objectArray as $path => $modules) {
-            if (count($modules) == 1) {
-                if (!is_array($filterArray)
-                    || (is_array($filterArray) && in_array($modules[0], $filterArray))
-                    || isset($this->knownDirectories[$modules[0]])) {
-                    if (strpos($modules[0], '_') === false) {
-                        $modules[0] = $this->getPossibleVendorName($path) . '_' . $modules[0];
-                    }
-                    $flippedArray[$modules[0]] = $path;
-                }
-            } else {
-                if (!is_array($filterArray)) {
-                    $flippedArray[$this->getPossibleVendorModuleName($path)] = $path;
-                } else {
-                    $skip = false;
-                    foreach ($modules as $module) {
-                        if(!in_array($module, $filterArray)) {
-                            $skip = true;
-                            break;
-                        }
-                    }
-                    if (!$skip) {
-                        $flippedArray[$this->getPossibleVendorModuleName($path)] = $path;
-                    }
-                }
-            }
-        }
-        return $flippedArray;
-    }
-
 
     /**
      * Sort files according module sequence.
@@ -422,18 +389,21 @@ class ModuleResolver
             }
         }
 
-        // Suppress print during unit testing
-        if (MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE
-            && strpos($testPath, self::DEPRECATED_DEV_TESTS) !== false
-            && !empty($modulePaths)
-        ) {
+        if (strpos($testPath, self::DEPRECATED_DEV_TESTS) !== false && !empty($modulePaths)) {
             $deprecatedPath = self::DEPRECATED_DEV_TESTS;
             $suggestedPath = self::DEV_TESTS . DIRECTORY_SEPARATOR . 'Magento';
-            LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->warning(
-                "DEPRECATION: $deprecatedPath is deprecated! Please move mftf test modules to $suggestedPath"
-            );
-            print ("\nDEPRECATION: $deprecatedPath is deprecated! Please move mftf tests to $suggestedPath\n\n");
+            $message = "DEPRECATION: Found MFTF test modules in the deprecated path: $deprecatedPath."
+                . " Move these test modules to $suggestedPath.";
+
+            if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
+                LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->warning($message);
+            }
+            // Suppress print during unit testing
+            if (MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE) {
+                print ("\n$message\n\n");
+            }
         }
+
         return $modulePaths;
     }
 
@@ -458,16 +428,16 @@ class ModuleResolver
     }
 
     /**
-     * Retrieves all code paths by searching composer json where might contain pertinent test modules
+     * Aggregate all code paths with test module composer json files
      *
      * @return array
      */
     private function aggregateTestModulePathsFromComposerJson()
     {
-        // Define the Module paths from magento bp
+        // Define the module paths
         $magentoBaseCodePath = MAGENTO_BP;
 
-        // Define the Module paths from default TESTS_MODULE_PATH
+        // Define the module paths from default TESTS_MODULE_PATH
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
         $modulePath = rtrim($modulePath, DIRECTORY_SEPARATOR);
 
@@ -484,7 +454,7 @@ class ModuleResolver
     }
 
     /**
-     * Retrieve composer json based test module paths from give $codePath
+     * Retrieve all module code paths that have test module composer json files
      *
      * @param array $codePaths
      * @return array
@@ -505,13 +475,13 @@ class ModuleResolver
     }
     
     /**
-     * Retrieves all module directories which might contain pertinent test code.
+     * Aggregate all code paths with composer installed test modules
      *
      * @return array
      */
     private function aggregateTestModulePathsFromComposerInstaller()
     {
-        // Define the Module paths from magento bp
+        // Define the module paths
         $magentoBaseCodePath = MAGENTO_BP;
         $composerFile = $magentoBaseCodePath . DIRECTORY_SEPARATOR . 'composer.json';
 
@@ -519,7 +489,7 @@ class ModuleResolver
     }
 
     /**
-     * Retrieve composer json based test module paths from give $codePath
+     * Retrieve composer installed test module code paths
      *
      * @params string $composerFile
      * @return array
@@ -537,6 +507,49 @@ class ModuleResolver
         }
 
         return $this->composerInstalledModulePaths;
+    }
+
+    /**
+     * Flip and filter module code paths
+     * when
+     *
+     * @param array $objectArray
+     * @param array $filterArray
+     * @return array
+     */
+    private function flipAndFilterModulePathsArray($objectArray, $filterArray = null)
+    {
+        $flippedArray = [];
+        foreach ($objectArray as $path => $modules) {
+            // One path maps to one module
+            if (count($modules) == 1) {
+                if (!is_array($filterArray)
+                    || (is_array($filterArray) && in_array($modules[0], $filterArray))
+                    || isset($this->knownDirectories[$modules[0]])) {
+                    if (strpos($modules[0], '_') === false) {
+                        $modules[0] = $this->findVendorNameFromPath($path) . '_' . $modules[0];
+                    }
+                    $flippedArray[$modules[0]] = $path;
+                }
+            } else {
+                // One path maps to multiple modules
+                if (!is_array($filterArray)) {
+                    $flippedArray[$this->findVendorAndModuleNameFromPath($path)] = $path;
+                } else {
+                    $skip = false;
+                    foreach ($modules as $module) {
+                        if (!in_array($module, $filterArray)) {
+                            $skip = true;
+                            break;
+                        }
+                    }
+                    if (!$skip) {
+                        $flippedArray[$this->findVendorAndModuleNameFromPath($path)] = $path;
+                    }
+                }
+            }
+        }
+        return $flippedArray;
     }
 
     /**
@@ -712,8 +725,8 @@ class ModuleResolver
             );
         }, $customModulePaths);
 
-        if (!isset($this->nonFlattenedEnabledModulePaths)) {
-            $this->nonFlattenedEnabledModulePaths = array_merge($modulePathsResult, $customModulePaths);
+        if (!isset($this->enabledModuleNameAndPaths)) {
+            $this->enabledModuleNameAndPaths = array_merge($modulePathsResult, $customModulePaths);
         }
         return $this->flattenAllModulePaths(array_merge($modulePathsResult, $customModulePaths));
     }
@@ -821,24 +834,24 @@ class ModuleResolver
     }
 
     /**
-     * Return possible vendor name from a path given
+     * Find vendor and module name from path
      *
      * @param string $path
      * @return string
      */
-    private function getPossibleVendorModuleName($path)
+    private function findVendorAndModuleNameFromPath($path)
     {
         $path = str_replace(DIRECTORY_SEPARATOR . self::TEST_MFTF_PATTERN, '', $path);
-        return $this->getPossibleVendorName($path) . '_' . basename($path);
+        return $this->findVendorNameFromPath($path) . '_' . basename($path);
     }
 
     /**
-     * Return possible vendor name from a path given
+     * Find vendor name from path
      *
      * @param string $path
      * @return string
      */
-    private function getPossibleVendorName($path)
+    private function findVendorNameFromPath($path)
     {
         $possibleVendorName = 'UnknownVendor';
         $dirPaths = [

@@ -12,7 +12,7 @@ use Magento\FunctionalTestingFramework\Composer\Handlers\ComposerPackager;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
 /**
- * Module Resolver by parsing test modules's composer json file
+ * Composer Based Module Resolver
  */
 class ComposerModuleResolver
 {
@@ -24,7 +24,7 @@ class ComposerModuleResolver
     private $searchedTestModules = null;
 
     /**
-     * Code path array from composer installed test package
+     * Code path array from composer installed test packages
      *
      * @var array
      */
@@ -38,7 +38,7 @@ class ComposerModuleResolver
     }
 
     /**
-     * Get possible test module code paths from a root composer json
+     * Get code paths for installed test modules
      *
      * @param string $rootComposerFile
      * @return array
@@ -50,7 +50,7 @@ class ComposerModuleResolver
             return $this->installedTestModules;
         }
 
-        if (!is_file($rootComposerFile ) || substr($rootComposerFile, -13) != "composer.json") {
+        if (!is_file($rootComposerFile) || substr($rootComposerFile, -13) != 'composer.json') {
             throw new TestFrameworkException("Invalid root composer json file: {$rootComposerFile}");
         }
 
@@ -68,7 +68,7 @@ class ComposerModuleResolver
     }
 
     /**
-     * Get possible test module code paths for input directories
+     * Get code paths by searching test module composer json file from input directories
      *
      * @param array $directories
      * @return array
@@ -91,7 +91,7 @@ class ComposerModuleResolver
     }
 
     /**
-     * Get possible test module code paths for a input directory
+     * Get code paths by searching test module composer json file from input directory
      *
      * @param string $directory
      * @return array

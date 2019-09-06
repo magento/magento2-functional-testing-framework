@@ -43,14 +43,18 @@ class MockModuleResolverBuilder
 
         $mockResolver = AspectMock::double(
             ModuleResolver::class,
-            ['getAdminToken' => false, 'globRelevantPaths' => [], 'getEnabledModules' => []]
+            [
+                'getAdminToken' => false,
+                'globRelevantPaths' => [],
+                'getEnabledModules' => []
+            ]
         );
         $instance = AspectMock::double(ObjectManager::class, ['create' => $mockResolver->make(), 'get' => null])
             ->make();
         AspectMock::double(ObjectManagerFactory::class, ['getObjectManager' => $instance]);
 
         $resolver = ModuleResolver::getInstance();
-        $property = new \ReflectionProperty(ModuleResolver::class, 'nonFlattenedEnabledModulePaths');
+        $property = new \ReflectionProperty(ModuleResolver::class, 'enabledModuleNameAndPaths');
         $property->setAccessible(true);
         $property->setValue($resolver, $paths);
     }
