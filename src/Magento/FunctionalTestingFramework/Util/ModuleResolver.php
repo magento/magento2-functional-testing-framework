@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Class ModuleResolver, resolve module path based on enabled modules of target Magento instance.
  *
  * @api
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ModuleResolver
 {
@@ -516,6 +517,7 @@ class ModuleResolver
      * @param array $objectArray
      * @param array $filterArray
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function flipAndFilterModulePathsArray($objectArray, $filterArray = null)
     {
