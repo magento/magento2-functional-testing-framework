@@ -181,7 +181,7 @@ class TestObjectHandlerTest extends MagentoTestCase
             ->build();
 
         $resolverMock = new MockModuleResolverBuilder();
-        $resolverMock->setup(['Vendor_' . $moduleExpected => [$filepath]]);
+        $resolverMock->setup(['Vendor_' . $moduleExpected => $filepath]);
 
         $this->setMockParserOutput(['tests' => $mockData]);
         // Execute Test Method
@@ -209,6 +209,8 @@ class TestObjectHandlerTest extends MagentoTestCase
             ->withBeforeHook()
             ->withTestActions()
             ->build();
+        $resolverMock = new MockModuleResolverBuilder();
+        $resolverMock->setup();
         $this->setMockParserOutput(['tests' => $testOne]);
 
         $toh = TestObjectHandler::getInstance();
@@ -245,6 +247,8 @@ class TestObjectHandlerTest extends MagentoTestCase
             ->withTestActions()
             ->build();
 
+        $resolverMock = new MockModuleResolverBuilder();
+        $resolverMock->setup();
         $this->setMockParserOutput(['tests' => array_merge($testOne, $testTwo)]);
 
         $toh = TestObjectHandler::getInstance();

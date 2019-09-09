@@ -18,7 +18,7 @@ class MockModuleResolverBuilder
      *
      * @var array
      */
-    private $defaultPaths = ['Magento_Module' => ['/base/path/app/code/Magento/Module/Test/Mftf']];
+    private $defaultPaths = ['Magento_Module' => '/base/path/some/other/path/Magento/Module'];
 
     /**
      * Mock ModuleResolver builder
@@ -29,7 +29,7 @@ class MockModuleResolverBuilder
      */
     public function setup($paths = null)
     {
-        if (!empty($path)) {
+        if (empty($paths)) {
             $paths = $this->defaultPaths;
         }
 

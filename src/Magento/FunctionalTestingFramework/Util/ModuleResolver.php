@@ -718,12 +718,12 @@ class ModuleResolver
         $modulePathsResult = $this->removeBlacklistModules($modulesPath);
         $customModulePaths = $this->getCustomModulePaths();
 
-        array_map(function ($value) {
+        array_map(function ($key, $value) {
             LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
                 "including custom module",
-                ['module' => $value]
+                [$key => $value]
             );
-        }, $customModulePaths);
+        }, array_keys($customModulePaths), $customModulePaths);
 
         if (!isset($this->enabledModuleNameAndPaths)) {
             $this->enabledModuleNameAndPaths = array_merge($modulePathsResult, $customModulePaths);
@@ -761,13 +761,18 @@ class ModuleResolver
      */
     private function getCustomModulePaths()
     {
-        $customModulePaths = getenv(self::CUSTOM_MODULE_PATHS);
+        $customModulePaths = [];
+        $paths = getenv(self::CUSTOM_MODULE_PATHS);
 
-        if (!$customModulePaths) {
-            return [];
+        if (!$paths) {
+            return $customModulePaths;
         }
 
-        return array_map('trim', explode(',', $customModulePaths));
+        foreach (explode(',', $paths) as $path) {
+            $customModulePaths = [$this->findVendorAndModuleNameFromPath(trim($path)) => $path];
+        }
+
+        return $customModulePaths;
     }
 
     /**

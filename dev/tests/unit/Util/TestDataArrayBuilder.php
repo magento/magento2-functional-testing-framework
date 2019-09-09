@@ -225,7 +225,7 @@ class TestDataArrayBuilder
      */
     public function withTestReference($reference = null)
     {
-        if ($reference != null) {
+        if ($reference !== null) {
             $this->testReference = $reference;
         }
 

@@ -56,22 +56,29 @@ class ModuleResolverTest extends MagentoTestCase
      */
     public function testGetModulePathsAggregate()
     {
+
         $this->mockForceGenerate(false);
         $this->setMockResolverClass(
             false,
             null,
             null,
             null,
-            ["Magento_example" => "example" . DIRECTORY_SEPARATOR . "paths"]
+            [
+                'some' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'example' => ['example'],
+                'other' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'sample' => ['sample'],
+            ],
+            null,
+            [
+                'Magento_example' => 'some' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'example',
+                'Magento_sample' => 'other' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'sample',
+            ]
         );
         $resolver = ModuleResolver::getInstance();
-        $this->setMockResolverProperties($resolver, null, [0 => "Magento_example"]);
+        $this->setMockResolverProperties($resolver, null, [0 => 'Magento_example', 1 => 'Magento_sample']);
         $this->assertEquals(
             [
-                "example" . DIRECTORY_SEPARATOR . "paths",
-                "example" . DIRECTORY_SEPARATOR . "paths",
-                "example" . DIRECTORY_SEPARATOR . "paths",
-                "example" . DIRECTORY_SEPARATOR . "paths"
+                'some' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'example',
+                'other' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'sample'
             ],
             $resolver->getModulesPath()
         );
@@ -91,20 +98,28 @@ class ModuleResolverTest extends MagentoTestCase
         $this->mockForceGenerate(false);
         $mockResolver = $this->setMockResolverClass(
             true,
-            [0 => "example"],
+            [],
             null,
             null,
-            ["example" => "example" . DIRECTORY_SEPARATOR . "paths"]
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            null,
+            function ($arg) {
+                return $arg;
+            },
+            function ($arg) {
+                return $arg;
+            }
         );
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, null);
         $this->assertEquals(
-            [
-                "example" . DIRECTORY_SEPARATOR . "paths",
-                "example" . DIRECTORY_SEPARATOR . "paths",
-                "example" . DIRECTORY_SEPARATOR . "paths",
-                "example" . DIRECTORY_SEPARATOR . "paths"
-            ],
+            [],
             $resolver->getModulesPath()
         );
 
@@ -113,8 +128,6 @@ class ModuleResolverTest extends MagentoTestCase
 
         // Define the Module paths from default TESTS_MODULE_PATH
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
-
-
 
         $mockResolver->verifyInvoked('globRelevantPaths', [$modulePath, '']);
         $mockResolver->verifyInvoked(
@@ -150,14 +163,21 @@ class ModuleResolverTest extends MagentoTestCase
      */
     public function testGetCustomModulePath()
     {
-        $this->setMockResolverClass(false, ["Magento_TestModule"], null, null, [], ['otherPath']);
+        $this->setMockResolverClass(
+            false,
+            null,
+            null,
+            null,
+            [],
+            ['Magento_Module' => 'otherPath']
+        );
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, null, null);
         $this->assertEquals(['otherPath'], $resolver->getModulesPath());
         TestLoggingUtil::getInstance()->validateMockLogStatement(
             'info',
             'including custom module',
-            ['module' => 'otherPath']
+            ['Magento_Module' => 'otherPath']
         );
     }
 
@@ -172,25 +192,36 @@ class ModuleResolverTest extends MagentoTestCase
             null,
             null,
             null,
-            function ($arg1, $arg2) {
-                if ($arg2 === "") {
-                    $mockValue = ["somePath" => "somePath"];
-                } else {
-                    $mockValue = ["lastPath" => "lastPath"];
-                }
-                return $mockValue;
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [
+                "vendor" => "vendor",
+                "appCode" => "appCode",
+                "devTests" => "devTests",
+                "thisPath" => "thisPath"
+            ],
+            function ($arg) {
+                return $arg;
+            },
+            function ($arg) {
+                return $arg;
             }
         );
         $resolver = ModuleResolver::getInstance();
-        $this->setMockResolverProperties($resolver, null, null, ["somePath"]);
+        $this->setMockResolverProperties($resolver, null, null, ["devTests" => "devTests"]);
         $this->assertEquals(
-            ["lastPath", "lastPath"],
+            ["vendor", "appCode", "thisPath"],
             $resolver->getModulesPath()
         );
         TestLoggingUtil::getInstance()->validateMockLogStatement(
             'info',
             'excluding module',
-            ['module' => 'somePath']
+            ['module' => 'devTests']
         );
     }
 
@@ -278,6 +309,14 @@ class ModuleResolverTest extends MagentoTestCase
      * @param string[] $mockGlob
      * @param string[] $mockRelativePaths
      * @param string[] $mockCustomModules
+     * @param string[] $mockGetRegisteredModuleList
+     * @param string[] $mockAggregateTestModulePathsFromComposerJson
+     * @param string[] $mockAggregateTestModulePathsFromComposerInstaller
+     * @param string[] $mockGetComposerJsonTestModulePaths
+     * @param string[] $mockGetComposerInstalledTestModulePaths
+     * @param string[] $mockAggregateTestModulePaths
+     * @param string[] $mockNormalizeModuleNames
+     * @param string[] $mockFlipAndFilterModulePathsArray
      * @throws \Exception
      * @return Verifier ModuleResolver double
      */
@@ -287,7 +326,15 @@ class ModuleResolverTest extends MagentoTestCase
         $mockCustomMethods = null,
         $mockGlob = null,
         $mockRelativePaths = null,
-        $mockCustomModules = null
+        $mockCustomModules = null,
+        $mockGetRegisteredModuleList = null,
+        $mockAggregateTestModulePathsFromComposerJson = [],
+        $mockAggregateTestModulePathsFromComposerInstaller = [],
+        $mockGetComposerJsonTestModulePaths = [],
+        $mockGetComposerInstalledTestModulePaths = [],
+        $mockAggregateTestModulePaths = null,
+        $mockNormalizeModuleNames = null,
+        $mockFlipAndFilterModulePathsArray = null
     ) {
         $property = new \ReflectionProperty(ModuleResolver::class, 'instance');
         $property->setAccessible(true);
@@ -312,7 +359,23 @@ class ModuleResolverTest extends MagentoTestCase
         if (isset($mockCustomModules)) {
             $mockMethods['getCustomModulePaths'] = $mockCustomModules;
         }
-//        $mockMethods['printMagentoVersionInfo'] = null;
+        if (isset($mockGetRegisteredModuleList)) {
+            $mockMethods['getRegisteredModuleList'] = $mockGetRegisteredModuleList;
+        }
+        $mockMethods['aggregateTestModulePathsFromComposerJson'] = $mockAggregateTestModulePathsFromComposerJson ?? [];
+        $mockMethods['aggregateTestModulePathsFromComposerInstaller'] =
+            $mockAggregateTestModulePathsFromComposerInstaller ?? [];
+        $mockMethods['getComposerJsonTestModulePaths'] = $mockGetComposerJsonTestModulePaths ?? [];
+        $mockMethods['getComposerInstalledTestModulePaths'] = $mockGetComposerInstalledTestModulePaths ?? [];
+        if (isset($mockAggregateTestModulePaths)) {
+            $mockMethods['aggregateTestModulePaths'] = $mockAggregateTestModulePaths;
+        }
+        if (isset($mockNormalizeModuleNames)) {
+            $mockMethods['normalizeModuleNames'] = $mockNormalizeModuleNames;
+        }
+        if (isset($mockFlipAndFilterModulePathsArray)) {
+            $mockMethods['flipAndFilterModulePathsArray'] = $mockFlipAndFilterModulePathsArray;
+        }
 
         $mockResolver = AspectMock::double(
             ModuleResolver::class,
