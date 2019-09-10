@@ -20,6 +20,13 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 class RunTestCommand extends BaseGenerateCommand
 {
     /**
+     * The return code. Determined by all tests that run.
+     *
+     * @var integer
+     */
+    private $returnCode = 0;
+
+    /**
      * Configures the current command.
      *
      * @return void
@@ -76,60 +83,77 @@ class RunTestCommand extends BaseGenerateCommand
             ];
             $command->run(new ArrayInput($args), $output);
         }
-        // tests with resolved suite references
-        $resolvedTests = $this->resolveSuiteReferences($testConfiguration);
 
+        $testConfigArray = json_decode($testConfiguration, true);
+
+        // run tests not referenced in suites
+        $this->runTests($testConfigArray['tests'], $output);
+
+        // run tests in suites
+        $this->runTestsInSuite($testConfigArray['suites'], $output);
+
+        return $this->returnCode;
+
+    }
+
+    /**
+     * Run tests not referenced in suites
+     * @param array $testsConfig
+     * @param OutputInterface $output
+     * @throws TestFrameworkException
+     */
+    private function runTests($testsConfig, OutputInterface $output) {
+
+
+        $tests = $testsConfig ?? [];
         $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
-        $testsDirectory = TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . TestGenerator::GENERATED_DIR . DIRECTORY_SEPARATOR;
-        $returnCode = 0;
-        //execute only tests specified as arguments in run command
-        foreach ($resolvedTests as $test) {
-            //set directory as suite name for tests in suite, if not set to "default"
-            if (strpos($test, ':')) {
-                list($testGroup, $testName) = explode(":", $test);
-            } else {
-                list($testGroup, $testName) = [TestGenerator::DEFAULT_DIR, $test];
-            }
-            $testGroup = $testGroup . DIRECTORY_SEPARATOR;
-            $testName = $testName . 'Cest.php';
-            if (!realpath($testsDirectory . $testGroup . $testName)) {
+        $testsDirectory = TESTS_MODULE_PATH .
+            DIRECTORY_SEPARATOR .
+            TestGenerator::GENERATED_DIR .
+            DIRECTORY_SEPARATOR .
+            TestGenerator::DEFAULT_DIR .
+            DIRECTORY_SEPARATOR ;
+
+        foreach ($tests as $test) {
+            $testName = $test . 'Cest.php';
+            if (!realpath($testsDirectory . $testName)) {
                 throw new TestFrameworkException(
-                    $testName . " is not available under " . $testsDirectory . $testGroup
+                    $testName . " is not available under " . $testsDirectory
                 );
             }
-            $fullCommand = $codeceptionCommand . $testsDirectory . $testGroup . $testName . ' --verbose --steps';
+            $fullCommand = $codeceptionCommand . $testsDirectory . $testName . ' --verbose --steps';
             $process = new Process($fullCommand);
             $process->setWorkingDirectory(TESTS_BP);
             $process->setIdleTimeout(600);
             $process->setTimeout(0);
-
-            $returnCode = max($returnCode, $process->run(
-                function ($type, $buffer) use ($output) {
-                    $output->write($buffer);
-                }
-            ));
+            $subReturnCode = $process->run(function ($type, $buffer) use ($output) {
+                $output->write($buffer);
+            });
+            $this->returnCode = max($this->returnCode, $subReturnCode);
         }
-        return $returnCode;
     }
 
     /**
-     * Get an array of tests with resolved suite references from $testConfiguration
-     * eg: if test is referenced in a suite, it'll be stored in format suite:test
-     * @param string $testConfigurationJson
-     * @return array
+     * Run tests referenced in suites within suites' context.
+     * @param array $suitesConfig
+     * @param OutputInterface $output
      */
-    private function resolveSuiteReferences($testConfigurationJson)
-    {
-        $testConfiguration = json_decode($testConfigurationJson, true);
-        $testsArray = $testConfiguration['tests'] ?? [];
-        $suitesArray = $testConfiguration['suites'] ?? [];
-        $testArrayBuilder = [];
+    private function runTestsInSuite($suitesConfig, OutputInterface $output) {
 
-        foreach ($suitesArray as $suite => $tests) {
-            foreach ($tests as $test) {
-                $testArrayBuilder[] = "$suite:$test";
-            }
+        $suites = $suitesConfig ?? [];
+        $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional --verbose --steps ';
+        $testGroups = array_keys($suites);
+        //for tests in suites, run them as a group to run before and after block
+        foreach ($testGroups as $testGroup) {
+            $fullCommand = $codeceptionCommand . " -g {$testGroup}";
+            $process = new Process($fullCommand);
+            $process->setWorkingDirectory(TESTS_BP);
+            $process->setIdleTimeout(600);
+            $process->setTimeout(0);
+            $subReturnCode = $process->run(function ($type, $buffer) use ($output) {
+                $output->write($buffer);
+            });
+            $this->returnCode = max($this->returnCode, $subReturnCode);
         }
-        return array_merge($testArrayBuilder, $testsArray);
     }
 }
