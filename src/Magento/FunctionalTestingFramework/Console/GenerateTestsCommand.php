@@ -125,10 +125,6 @@ class GenerateTestsCommand extends BaseGenerateCommand
      *
      * @param string  $json
      * @param array   $tests
-     * @param boolean $force
-     * @param string  $debug
-     * @param boolean $verbose
-     * @param boolean $allowSkipped
      * @return array
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
