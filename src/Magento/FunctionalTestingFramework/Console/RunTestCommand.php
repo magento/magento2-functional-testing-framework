@@ -98,7 +98,7 @@ class RunTestCommand extends BaseGenerateCommand
     /**
      * Run tests not referenced in suites
      *
-     * @param array $tests
+     * @param array           $tests
      * @param OutputInterface $output
      * @return void
      * @throws TestFrameworkException
@@ -137,7 +137,7 @@ class RunTestCommand extends BaseGenerateCommand
     /**
      * Run tests referenced in suites within suites' context.
      *
-     * @param array $suitesConfig
+     * @param array           $suitesConfig
      * @param OutputInterface $output
      * @return void
      *
