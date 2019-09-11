@@ -32,7 +32,12 @@ class RunTestCommand extends BaseGenerateCommand
                 'name',
                 InputArgument::REQUIRED | InputArgument::IS_ARRAY,
                 "name of tests to generate and execute"
-            )->addOption('skip-generate', 'k', InputOption::VALUE_NONE, "skip generation and execute existing test");
+            )->addOption(
+                'skip-generate',
+                'k',
+                InputOption::VALUE_NONE,
+                "skip generation and execute existing test"
+            );
 
         parent::configure();
     }
@@ -55,6 +60,7 @@ class RunTestCommand extends BaseGenerateCommand
         $remove = $input->getOption('remove');
         $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
         $allowSkipped = $input->getOption('allowSkipped');
+        $verbose = $output->isVerbose();
 
         if ($skipGeneration and $remove) {
             // "skip-generate" and "remove" options cannot be used at the same time
@@ -62,6 +68,15 @@ class RunTestCommand extends BaseGenerateCommand
                 "\"skip-generate\" and \"remove\" options can not be used at the same time."
             );
         }
+
+        // Set application configuration so we can references the user options in our framework
+        MftfApplicationConfig::create(
+            $force,
+            MftfApplicationConfig::EXECUTION_PHASE,
+            $verbose,
+            $debug,
+            $allowSkipped
+        );
 
         $testConfiguration = $this->getTestAndSuiteConfiguration($tests);
 
@@ -72,7 +87,8 @@ class RunTestCommand extends BaseGenerateCommand
                 '--force' => $force,
                 '--remove' => $remove,
                 '--debug' => $debug,
-                '--allowSkipped' => $allowSkipped
+                '--allowSkipped' => $allowSkipped,
+                '-v' => $verbose
             ];
             $command->run(new ArrayInput($args), $output);
         }

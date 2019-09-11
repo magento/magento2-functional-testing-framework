@@ -73,6 +73,15 @@ class GenerateTestsCommand extends BaseGenerateCommand
         $verbose = $output->isVerbose();
         $allowSkipped = $input->getOption('allowSkipped');
 
+        // Set application configuration so we can references the user options in our framework
+        MftfApplicationConfig::create(
+            $force,
+            MftfApplicationConfig::GENERATION_PHASE,
+            $verbose,
+            $debug,
+            $allowSkipped
+        );
+
         if (!empty($tests)) {
             $json = $this->getTestAndSuiteConfiguration($tests);
         }
@@ -93,7 +102,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 ($debug !== MftfApplicationConfig::LEVEL_NONE));
         }
 
-        $testConfiguration = $this->createTestConfiguration($json, $tests, $force, $debug, $verbose, $allowSkipped);
+        $testConfiguration = $this->createTestConfiguration($json, $tests);
 
         // create our manifest file here
         $testManifest = TestManifestFactory::makeManifest($config, $testConfiguration['suites']);
@@ -126,21 +135,8 @@ class GenerateTestsCommand extends BaseGenerateCommand
      */
     private function createTestConfiguration(
         $json,
-        array $tests,
-        bool $force,
-        string $debug,
-        bool $verbose,
-        bool $allowSkipped
+        array $tests
     ) {
-        // set our application configuration so we can references the user options in our framework
-        MftfApplicationConfig::create(
-            $force,
-            MftfApplicationConfig::GENERATION_PHASE,
-            $verbose,
-            $debug,
-            $allowSkipped
-        );
-
         $testConfiguration = [];
         $testConfiguration['tests'] = $tests;
         $testConfiguration['suites'] = [];
