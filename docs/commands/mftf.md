@@ -173,7 +173,7 @@ Complex configuration to generate a few non-suite tests, a single test in a suit
 The command that encodes this complex configuration:
 
 ```bash
-vendor/bin/mftf generate:tests --tests "{"tests\":["general_test1\","general_test2\","general_test3\"],"suites\":{"sample\":["suite_test1\"],"sample2\":null}}"
+vendor/bin/mftf generate:tests --tests "{\"tests\":[\"general_test1\",\"general_test2\",\"general_test3\"],\"suites\":{\"sample\":[\"suite_test1\"],\"sample2\":null}}"
 ```
 
 Note that the strings must be escaped and surrounded in quotes.
