@@ -51,8 +51,6 @@ class RunTestCommand extends BaseGenerateCommand
      * @param OutputInterface $output
      * @return integer
      * @throws \Exception
-     *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -86,26 +84,29 @@ class RunTestCommand extends BaseGenerateCommand
 
         $testConfigArray = json_decode($testConfiguration, true);
 
-        // run tests not referenced in suites
-        $this->runTests($testConfigArray['tests'], $output);
+        if (isset($testConfigArray['tests'])) {
+            $this->runTests($testConfigArray['tests'], $output);
+        }
 
-        // run tests in suites
-        $this->runTestsInSuite($testConfigArray['suites'], $output);
+        if (isset($testConfigArray['suites'])) {
+            $this->runTestsInSuite($testConfigArray['suites'], $output);
+        }
 
         return $this->returnCode;
-
     }
 
     /**
      * Run tests not referenced in suites
-     * @param array $testsConfig
+     *
+     * @param array $tests
      * @param OutputInterface $output
+     * @return void
      * @throws TestFrameworkException
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    private function runTests($testsConfig, OutputInterface $output) {
-
-
-        $tests = $testsConfig ?? [];
+    private function runTests(array $tests, OutputInterface $output)
+    {
         $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
         $testsDirectory = TESTS_MODULE_PATH .
             DIRECTORY_SEPARATOR .
@@ -135,17 +136,19 @@ class RunTestCommand extends BaseGenerateCommand
 
     /**
      * Run tests referenced in suites within suites' context.
+     *
      * @param array $suitesConfig
      * @param OutputInterface $output
+     * @return void
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    private function runTestsInSuite($suitesConfig, OutputInterface $output) {
-
-        $suites = $suitesConfig ?? [];
+    private function runTestsInSuite(array $suitesConfig, OutputInterface $output)
+    {
         $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional --verbose --steps ';
-        $testGroups = array_keys($suites);
         //for tests in suites, run them as a group to run before and after block
-        foreach ($testGroups as $testGroup) {
-            $fullCommand = $codeceptionCommand . " -g {$testGroup}";
+        foreach (array_keys($suitesConfig) as $suite) {
+            $fullCommand = $codeceptionCommand . " -g {$suite}";
             $process = new Process($fullCommand);
             $process->setWorkingDirectory(TESTS_BP);
             $process->setIdleTimeout(600);
