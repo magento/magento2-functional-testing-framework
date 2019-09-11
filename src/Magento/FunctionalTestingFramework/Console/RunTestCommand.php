@@ -145,13 +145,13 @@ class RunTestCommand extends BaseGenerateCommand
     /**
      * Runs the codeception test command and returns exit code
      *
-     * @param String          $command
+     * @param string          $command
      * @param OutputInterface $output
-     * @return int
+     * @return integer
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    private function executeTestCommand(String $command, OutputInterface $output)
+    private function executeTestCommand(string $command, OutputInterface $output)
     {
         $process = new Process($command);
         $process->setWorkingDirectory(TESTS_BP);
