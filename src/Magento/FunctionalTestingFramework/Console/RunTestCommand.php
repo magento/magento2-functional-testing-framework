@@ -102,8 +102,6 @@ class RunTestCommand extends BaseGenerateCommand
      * @param OutputInterface $output
      * @return void
      * @throws TestFrameworkException
-     *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     private function runTests(array $tests, OutputInterface $output)
     {
@@ -123,14 +121,7 @@ class RunTestCommand extends BaseGenerateCommand
                 );
             }
             $fullCommand = $codeceptionCommand . $testsDirectory . $testName . ' --verbose --steps';
-            $process = new Process($fullCommand);
-            $process->setWorkingDirectory(TESTS_BP);
-            $process->setIdleTimeout(600);
-            $process->setTimeout(0);
-            $subReturnCode = $process->run(function ($type, $buffer) use ($output) {
-                $output->write($buffer);
-            });
-            $this->returnCode = max($this->returnCode, $subReturnCode);
+            $this->returnCode = max($this->returnCode, $this->executeTestCommand($fullCommand, $output));
         }
     }
 
@@ -140,8 +131,6 @@ class RunTestCommand extends BaseGenerateCommand
      * @param array           $suitesConfig
      * @param OutputInterface $output
      * @return void
-     *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     private function runTestsInSuite(array $suitesConfig, OutputInterface $output)
     {
@@ -149,14 +138,27 @@ class RunTestCommand extends BaseGenerateCommand
         //for tests in suites, run them as a group to run before and after block
         foreach (array_keys($suitesConfig) as $suite) {
             $fullCommand = $codeceptionCommand . " -g {$suite}";
-            $process = new Process($fullCommand);
-            $process->setWorkingDirectory(TESTS_BP);
-            $process->setIdleTimeout(600);
-            $process->setTimeout(0);
-            $subReturnCode = $process->run(function ($type, $buffer) use ($output) {
-                $output->write($buffer);
-            });
-            $this->returnCode = max($this->returnCode, $subReturnCode);
+            $this->returnCode = max($this->returnCode, $this->executeTestCommand($fullCommand, $output));
         }
+    }
+
+    /**
+     * Runs the codeception test command and returns exit code
+     *
+     * @param String          $command
+     * @param OutputInterface $output
+     * @return int
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
+    private function executeTestCommand(String $command, OutputInterface $output)
+    {
+        $process = new Process($command);
+        $process->setWorkingDirectory(TESTS_BP);
+        $process->setIdleTimeout(600);
+        $process->setTimeout(0);
+        return $process->run(function ($type, $buffer) use ($output) {
+            $output->write($buffer);
+        });
     }
 }
