@@ -71,7 +71,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
         $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
         $remove = $input->getOption('remove');
         $verbose = $output->isVerbose();
-        $allowSkipped = $input->getOption('allowSkipped');
+        $allowSkipped = $input->getOption('allow-skipped');
 
         // Set application configuration so we can references the user options in our framework
         MftfApplicationConfig::create(
