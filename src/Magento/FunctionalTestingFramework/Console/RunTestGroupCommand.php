@@ -61,6 +61,7 @@ class RunTestGroupCommand extends BaseGenerateCommand
         $remove = $input->getOption('remove');
         $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
         $allowSkipped = $input->getOption('allowSkipped');
+        $verbose = $output->isVerbose();
 
         if ($skipGeneration and $remove) {
             // "skip-generate" and "remove" options cannot be used at the same time
@@ -72,8 +73,8 @@ class RunTestGroupCommand extends BaseGenerateCommand
         // Create Mftf Configuration
         MftfApplicationConfig::create(
             $force,
-            MftfApplicationConfig::GENERATION_PHASE,
-            false,
+            MftfApplicationConfig::EXECUTION_PHASE,
+            $verbose,
             $debug,
             $allowSkipped
         );
@@ -86,7 +87,8 @@ class RunTestGroupCommand extends BaseGenerateCommand
                 '--force' => $force,
                 '--remove' => $remove,
                 '--debug' => $debug,
-                '--allowSkipped' => $allowSkipped
+                '--allowSkipped' => $allowSkipped,
+                '-v' => $verbose
             ];
 
             $command->run(new ArrayInput($args), $output);
