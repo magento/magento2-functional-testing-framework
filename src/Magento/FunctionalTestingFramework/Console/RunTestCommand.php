@@ -64,7 +64,7 @@ class RunTestCommand extends BaseGenerateCommand
         $force = $input->getOption('force');
         $remove = $input->getOption('remove');
         $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
-        $allowSkipped = $input->getOption('allowSkipped');
+        $allowSkipped = $input->getOption('allow-skipped');
         $verbose = $output->isVerbose();
 
         if ($skipGeneration and $remove) {
@@ -92,7 +92,7 @@ class RunTestCommand extends BaseGenerateCommand
                 '--force' => $force,
                 '--remove' => $remove,
                 '--debug' => $debug,
-                '--allowSkipped' => $allowSkipped,
+                '--allow-skipped' => $allowSkipped,
                 '-v' => $verbose
             ];
             $command->run(new ArrayInput($args), $output);
