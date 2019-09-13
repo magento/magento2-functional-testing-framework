@@ -115,8 +115,13 @@ class MftfApplicationConfig
      * @return void
      * @throws TestFrameworkException
      */
-    public static function create($forceGenerate, $phase, $verboseEnabled, $debugLevel, $allowSkipped)
-    {
+    public static function create(
+        $forceGenerate = false,
+        $phase = self::EXECUTION_PHASE,
+        $verboseEnabled = null,
+        $debugLevel = self::LEVEL_NONE,
+        $allowSkipped = false
+    ) {
         if (self::$MFTF_APPLICATION_CONTEXT == null) {
             self::$MFTF_APPLICATION_CONTEXT =
                 new MftfApplicationConfig($forceGenerate, $phase, $verboseEnabled, $debugLevel, $allowSkipped);
