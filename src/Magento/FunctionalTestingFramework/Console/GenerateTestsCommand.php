@@ -123,8 +123,8 @@ class GenerateTestsCommand extends BaseGenerateCommand
     /**
      * Function which builds up a configuration including test and suites for consumption of Magento generation methods.
      *
-     * @param string  $json
-     * @param array   $tests
+     * @param string $json
+     * @param array  $tests
      * @return array
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
