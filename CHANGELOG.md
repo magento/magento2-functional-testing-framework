@@ -37,6 +37,11 @@ Magento Functional Testing Framework Changelog
 ### GitHub Issues/Pull requests:
 * [#377](https://github.com/magento/magento2-functional-testing-framework/pull/377) -- Non-API operations fixes
 
+2.4.5
+-----
+### Fixes
+* Fixed an issue where `.credentials` was required when using `<createData>` actions with field overrides.
+
 2.4.4
 -----
 ### Fixes
