@@ -21,7 +21,9 @@ Magento Functional Testing Framework Changelog
         * `run:group`
         * `run:failed`
 * Customizability
-    * `<entity>` defined in data.xml can now reference other `<entity>` directly
+    * `<entity>` defined in data.xml can now reference other `<entity>` directly.
+        * See DevDocs for details
+    * Added vault as an alternative credential storage.
         * See DevDocs for details
 
 ### Fixes
