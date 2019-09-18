@@ -5,12 +5,12 @@ use the MFTF credentials feature to hide sensitive [data][] like integration tok
 
 Currently MFTF supports two types of credential storage: **.credentials file** and **HashiCorp vault**.
 
-# Configure File Storage
+#3 Configure File Storage
 
 The MFTF creates a sample file for credentials during [initial setup][]: `magento2/dev/tests/acceptance/.credentials.example`.
 The file contains an example list of keys for fields that can require credentials.
 
-### Create `.credentials`
+## Create `.credentials`
 
 To make the MFTF process the file with credentials, change directories to `magento2/dev/tests/acceptance/` and copy `.credentials.example` to `.credentials`.
 
@@ -22,7 +22,7 @@ cd dev/tests/acceptance/
 cp .credentials.example .credentials
 ```
 
-### Add `.credentials` to `.gitignore`
+## Add `.credentials` to `.gitignore`
 
 Verify that the file is excluded from tracking by `.gitignore` (unless you need this behavior):
 
@@ -36,7 +36,7 @@ The command outputs the path if the file is excluded:
 .credentials
 ```
 
-### Define sensitive data in `.credentials` file
+## Define sensitive data in `.credentials` file
 
 Open the `.credentials` file, for Magento core credentials, uncomment the fields you want to use, and add your values:
 
@@ -69,14 +69,14 @@ Otherwise you are free to use any other `key_name` you like, as they are merely 
 vendor/my_awesome_service_token=rRVSVnh3cbDsVG39oTMz4A
 ```
 
-# Configure Vault Storage
+## Configure Vault Storage
 
 Hashicorp vault secures, stores, and tightly controls access to data in modern computing. 
 It provides advanced data protection for your testing credentials. 
 
 MFTF works with both `vault enterprise` and `vault open source` that use `KV Version 2` secret engine. 
 
-### Install vault CLI
+## Install vault CLI
 
 Download and install vault CLI tool if you want to run or develop MFTF tests locally. [Download Vault][Download Vault]
 
@@ -95,7 +95,7 @@ vault login -method -path
 MFTF uses `KV Version 2` secret engine for secret storage. 
 More information for working with `KV Version 2` can be found in [Vault KV2][Vault KV2]. 
 
-#### Secrets path and key convention
+### Secrets path and key convention
 
 The path and key for secret data must follow:
 
@@ -111,7 +111,7 @@ secret/mftf/magento/carriers_usps_userid
 secret/mftf/magento/carriers_usps_password
 ```
 
-#### Write secrets to vault
+### Write secrets to vault
 
 You can use vault CLI or Api to write secret data (credentials, etc) to vault. Here is a CLI example:
 
@@ -132,14 +132,14 @@ CREDENTIAL_VAULT_ADDRESS=http://127.0.0.1:8200
 CREDENTIAL_VAULT_SECRET_BASE_PATH=secret
 ```
 
-# Configure both File Storage and Vault Storage
+## Configure both File Storage and Vault Storage
 
-It's possible and sometimes useful to setup and use both `.credentials` file and vault for secret storage at the same time. 
+It is possible and sometimes useful to setup and use both `.credentials` file and vault for secret storage at the same time. 
 In this case, MFTF tests are able to read secret data at runtime from both storage, and local `.credentials` file will take precedence.
 
 <!-- {% raw %} -->
 
-# Use credentials in a test
+## Use credentials in a test
 
 Credentials can be used in actions: [`fillField`][], [`magentoCLI`][], and [`createData`][].
 
