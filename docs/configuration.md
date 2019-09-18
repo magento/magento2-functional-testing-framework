@@ -234,8 +234,8 @@ It points to `MAGENTO_BASE_URL` + `dev/tests/acceptance/utils/command.php`
 
 Modify the default value:
 
-- for non-default Magento installation
-- when use a subdirectory in the `MAGENTO_BASE_URL`
+-  for non-default Magento installation
+-  when use a subdirectory in the `MAGENTO_BASE_URL`
 
 Example: `dev/tests/acceptance/utils/command.php`
 
@@ -251,9 +251,9 @@ Example:
 BROWSER=firefox
 ```
 
-###CREDENTIAL_VAULT_ADDRESS
+### CREDENTIAL_VAULT_ADDRESS
 
-Api address for vault server.
+The Api address for a vault server.
 
 Default: http://127.0.0.1:8200
 
@@ -264,7 +264,7 @@ Example:
 CREDENTIAL_VAULT_ADDRESS=http://127.0.0.1:8200
 ```
 
-###CREDENTIAL_VAULT_SECRET_BASE_PATH
+### CREDENTIAL_VAULT_SECRET_BASE_PATH
 
 Vault secret engine base path.
 
