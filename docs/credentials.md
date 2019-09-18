@@ -15,7 +15,7 @@ The file contains an example list of keys for fields that can require credential
 
 ### Create `.credentials`
 
-To make the MFTF process the file with credentials, in the command line, nvaigate to `magento2/dev/tests/acceptance/` and rename `.credentials.example` to `.credentials`.
+To make the MFTF process the file with credentials, in the command line, navigate to `magento2/dev/tests/acceptance/` and rename `.credentials.example` to `.credentials`.
 
 ```bash
 cd dev/tests/acceptance/
