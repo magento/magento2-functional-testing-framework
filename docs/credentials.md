@@ -6,7 +6,7 @@ use the MFTF credentials feature to hide sensitive [data][] like integration tok
 Currently the MFTF supports two types of credential storage:
 
 -  **.credentials file**
--  **HashiCorp vault**.
+-  **HashiCorp vault**
 
 ## Configure File Storage
 
