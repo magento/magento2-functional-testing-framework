@@ -2,6 +2,40 @@
 
 Having a little trouble with the MFTF? See some common errors and fixes below.
 
+## AcceptanceTester class issues
+
+If you see the following error:
+
+```terminal
+AcceptanceTester class doesn't exist in suite folder.
+Run the 'build' command to generate it
+```
+
+#### Reason
+
+Something went wrong during the `mftf build:project` command that prevented the creation of the AcceptanceTester class.
+
+#### Solution
+
+This issue is fixed in MFTF 2.5.0.
+
+In versions of MFTF lower than 2.5.0 you should:
+
+1. Open the functional.suite.yml file at:
+    ```terminal
+    <magento root directory>/dev/tests/acceptance/tests/functional.suite.yml
+    ```
+2. Add quotation marks (`"`) around these values:
+    1. `%SELENIUM_HOST%`
+    2. `%SELENIUM_PORT%`
+    3. `%SELENIUM_PROTOCOL%`
+    4. `%SELENIUM_PATH%`
+3. Run the `vendor/bin/mftf build:project` command again.
+4. You should see the AcceptanceTester class is created at:
+    ```terminal
+   <magento root directory>/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/AcceptanceTester.php
+    ```
+
 ## WebDriver issues
 
 Troubleshoot your WebDriver issues on various browsers.
