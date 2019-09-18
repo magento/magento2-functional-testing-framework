@@ -251,6 +251,32 @@ Example:
 BROWSER=firefox
 ```
 
+###CREDENTIAL_VAULT_ADDRESS
+
+Api address for vault server.
+
+Default: http://127.0.0.1:8200
+
+Example:
+
+```conf
+# Default api address for local vault dev server
+CREDENTIAL_VAULT_ADDRESS=http://127.0.0.1:8200
+```
+
+###CREDENTIAL_VAULT_SECRET_BASE_PATH
+
+Vault secret engine base path.
+
+Default: secret
+
+Example:
+
+```conf
+# Default base path for kv secret engine in local vault dev server
+CREDENTIAL_VAULT_SECRET_BASE_PATH=secret
+```
+
 <!-- Link definitions -->
 
 [`MAGENTO_CLI_COMMAND_PATH`]: #magento_cli_command_path
