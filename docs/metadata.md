@@ -25,7 +25,7 @@ This directory contains XML files with metadata required to create a valid reque
 A metadata file contains a list of operations with different types (defined in `type`).
 Each [operation] includes:
 
-- The set of adjustments for processing a request in [attributes][operation], and in some cases, a response  (see `successRegex` and `returnRegex` in [reference details][operation]).
+- The set of adjustments for processing a request in [attributes][operation], and in some cases, a response  (see `successRegex`, `returnRegex` and `returnIndex` in [reference details][operation]).
 - The type of body content encoding in [contentType].
 - The body of the request represented as a tree of objects, arrays, and fields.
 
@@ -336,7 +336,7 @@ There are two different attributes to split access to different areas:
 - `auth="adminFormKey"` is used for objects in an Admin area.
 - `auth="customerFormKey"` is used for objects in a storefront.
 
-You are able to create assurances with `successRegex`, and even return values with `returnRegex`.
+You are able to create assurances with `successRegex`, and, optionally, return values with `returnRegex`. You can also use `returnIndex` when `returnRegex` matches multiple values.
 
 ### Create an object in Admin {#create-object-as-adminFormKey}
 
@@ -418,6 +418,7 @@ Root element that points to the corresponding XML Schema.
 | `method`        | string                                                                       | optional | HTTP method of the operation. Possible values: `POST`, `DELETE`, `PUT`, `GET`.                                                               |
 | `successRegex`  | string                                                                       | optional | Determines if the operation was successful. Parses the HTML body in response and asserts if the value assigned to the `successRegex` exists. |
 | `returnRegex`   | string                                                                       | optional | Determines if the response contains the matching value to return.                                                                            |
+| `returnIndex`   | string                                                                       | optional | Specifies index at which the value will be returned when `returnRegex` matches multiple values                                                                          |
 | `removeBackend` | boolean                                                                      | optional | Removes backend name from requested URL. Applicable when `auth="adminFormKey"`.                                                              |
 | `filename`      | string                                                                       | optional |                                                                                                                                              |
 

@@ -7,8 +7,10 @@
 namespace Magento\FunctionalTestingFramework\DataGenerator\Handlers;
 
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\DataPersistenceHandler;
-use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 
 class PersistedObjectHandler
 {
@@ -183,12 +185,20 @@ class PersistedObjectHandler
      * @param string $field
      * @param string $scope
      * @return string
-     * @throws TestReferenceException
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException
      */
     public function retrieveEntityField($stepKey, $field, $scope)
     {
-        return $this->retrieveEntity($stepKey, $scope)->getCreatedDataByName($field);
+        $fieldValue = $this->retrieveEntity($stepKey, $scope)->getCreatedDataByName($field);
+        if ($fieldValue === null) {
+            $warnMsg = "Undefined field {$field} in entity object with a stepKey of {$stepKey}\n";
+            $warnMsg .= "Please fix the invalid reference. This will result in fatal error in next major release.";
+            //TODO: change this to throw an exception in next major release
+            LoggingUtil::getInstance()->getLogger(PersistedObjectHandler::class)->warn($warnMsg);
+            if (MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE) {
+                print("\n$warnMsg\n");
+            }
+        }
+        return $fieldValue;
     }
 
     /**

@@ -6,6 +6,7 @@
 namespace Magento\FunctionalTestingFramework\Test\Handlers;
 
 use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
@@ -160,10 +161,14 @@ class TestObjectHandler implements ObjectHandlerInterface
      *
      * @param TestObject $testObject
      * @return TestObject
+     * @throws TestFrameworkException
      */
     private function extendTest($testObject)
     {
         if ($testObject->getParentName() !== null) {
+            if ($testObject->getParentName() == $testObject->getName()) {
+                throw new TestFrameworkException("Mftf Test can not extend from itself: " . $testObject->getName());
+            }
             return $this->extendUtil->extendTest($testObject);
         }
         return $testObject;

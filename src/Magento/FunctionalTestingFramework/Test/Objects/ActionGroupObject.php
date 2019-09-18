@@ -88,6 +88,13 @@ class ActionGroupObject
     private $filename;
 
     /**
+     * Holds on to the result of extractStepKeys() to increase test generation performance.
+     *
+     * @var string[]
+     */
+    private $cachedStepKeys = null;
+
+    /**
      * ActionGroupObject constructor.
      *
      * @param string           $name
@@ -226,7 +233,7 @@ class ActionGroupObject
         // $regexPattern match on:   $matches[0] {{section.element(arg.field)}}
         // $matches[1] = section.element
         // $matches[2] = arg.field
-        $regexPattern = '/{{([^(}]+)\(*([^)}]+)*\)*}}/';
+        $regexPattern = '/{{([^(}]+)\(*([^)]+)*?\)*}}/';
 
         $newActionAttributes = [];
         foreach ($attributes as $attributeKey => $attributeValue) {
@@ -409,16 +416,18 @@ class ActionGroupObject
      */
     public function extractStepKeys()
     {
-        $originalKeys = [];
-        foreach ($this->parsedActions as $action) {
-            //limit actions returned to list that are relevant
-            foreach (self::STEPKEY_REPLACEMENT_ENABLED_TYPES as $actionValue) {
-                if ($actionValue === $action->getType()) {
+        if ($this->cachedStepKeys === null) {
+            $originalKeys = [];
+            foreach ($this->parsedActions as $action) {
+                //limit actions returned to list that are relevant
+                if (in_array($action->getType(), self::STEPKEY_REPLACEMENT_ENABLED_TYPES)) {
                     $originalKeys[] = $action->getStepKey();
                 }
             }
+            $this->cachedStepKeys = $originalKeys;
         }
-        return $originalKeys;
+
+        return $this->cachedStepKeys;
     }
 
     /**
