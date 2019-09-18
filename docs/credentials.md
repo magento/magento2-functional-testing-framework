@@ -98,7 +98,7 @@ vault login -method -path
 The MFTF uses the `KV Version 2` secret engine for secret storage. 
 More information for working with `KV Version 2` can be found in [Vault KV2][Vault KV2]. 
 
-### Secrets path and key convention
+#### Secrets path and key convention
 
 The path and key for secret data must follow the format:
 
@@ -114,7 +114,7 @@ secret/mftf/magento/carriers_usps_userid
 secret/mftf/magento/carriers_usps_password
 ```
 
-### Write secrets to vault
+#### Write secrets to vault
 
 You can use vault CLI or API to write secret data (credentials, etc) to vault. Here is a CLI example:
 

@@ -204,7 +204,7 @@ Example:
 FW_BP=~/magento/magento2-functional-testing-framework
 ```
 
-## TESTS_MODULE_PATH
+### TESTS_MODULE_PATH
 
 The path to where the MFTF modules mirror Magento modules.
 
@@ -239,7 +239,7 @@ Modify the default value:
 
 Example: `dev/tests/acceptance/utils/command.php`
 
-## BROWSER
+### BROWSER
 
 Override the default browser performing the tests.
 
@@ -251,7 +251,7 @@ Example:
 BROWSER=firefox
 ```
 
-## CREDENTIAL_VAULT_ADDRESS
+### CREDENTIAL_VAULT_ADDRESS
 
 The Api address for a vault server.
 
@@ -264,7 +264,7 @@ Example:
 CREDENTIAL_VAULT_ADDRESS=http://127.0.0.1:8200
 ```
 
-## CREDENTIAL_VAULT_SECRET_BASE_PATH
+### CREDENTIAL_VAULT_SECRET_BASE_PATH
 
 Vault secret engine base path.
 
