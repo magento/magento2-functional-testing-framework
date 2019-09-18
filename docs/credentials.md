@@ -149,7 +149,7 @@ Credentials can be used in actions: [`fillField`][], [`magentoCLI`][], and [`cre
 Define the value as a reference to the corresponding key in the credentials file or vault such as `{{_CREDS.my_data_key}}`:
 
 - `_CREDS` is an environment constant pointing to the `.credentials` file
-- `my_data_key` is a key in the the `.credentials` file that contains the value to be used in a test step
+- `my_data_key` is a key in the the `.credentials` file or vault that contains the value to be used in a test step
 
 For example, reference secret data in the [`fillField`][] action with the `userInput` attribute.
 
