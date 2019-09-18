@@ -107,7 +107,7 @@ class ComposerModuleResolver
         // Find all composer json files under directory
         $modules = [];
         $jsonFinder = new ComposerJsonFinder();
-        $fileList = $jsonFinder->findAllComposerJsonFiles($normalizedDir);
+        $fileList = $jsonFinder->finComposerJsonFilesAtDepth($normalizedDir, 2);
         foreach ($fileList as $file) {
             // Parse composer json for test module name and path information
             $composerInfo = new ComposerPackager(
