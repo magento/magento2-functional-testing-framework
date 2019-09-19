@@ -102,7 +102,9 @@ class BuildProjectCommand extends Command
         );
 
         if ($codeceptReturnCode !== 0) {
-            throw new TestFrameworkException("The codecept build command failed unexpectedly. Please see the above output for more details.");
+            throw new TestFrameworkException(
+                "The codecept build command failed unexpectedly. Please see the above output for more details."
+            );
         }
 
         if ($input->getOption('upgrade')) {
