@@ -11,30 +11,34 @@ AcceptanceTester class doesn't exist in suite folder.
 Run the 'build' command to generate it
 ```
 
-#### Reason
+### Reason
 
 Something went wrong during the `mftf build:project` command that prevented the creation of the AcceptanceTester class.
 
-#### Solution
+### Solution
 
-This issue is fixed in MFTF 2.5.0.
+This issue is fixed in the MFTF 2.5.0.
 
-In versions of MFTF lower than 2.5.0 you should:
+In versions of the MFTF lower than 2.5.0 you should:
 
 1. Open the functional.suite.yml file at:
-    ```terminal
-    <magento root directory>/dev/tests/acceptance/tests/functional.suite.yml
-    ```
-2. Add quotation marks (`"`) around these values:
+
+   ```terminal
+   <magento root directory>/dev/tests/acceptance/tests/functional.suite.yml
+   ```
+1. Add quotation marks (`"`) around these values:
+
     1. `%SELENIUM_HOST%`
-    2. `%SELENIUM_PORT%`
-    3. `%SELENIUM_PROTOCOL%`
-    4. `%SELENIUM_PATH%`
-3. Run the `vendor/bin/mftf build:project` command again.
-4. You should see the AcceptanceTester class is created at:
-    ```terminal
+    1. `%SELENIUM_PORT%`
+    1. `%SELENIUM_PROTOCOL%`
+    1. `%SELENIUM_PATH%`
+    
+1. Run the `vendor/bin/mftf build:project` command again.
+1. You should see the AcceptanceTester class is created at:
+
+   ```terminal
    <magento root directory>/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/AcceptanceTester.php
-    ```
+   ```
 
 ## WebDriver issues
 
@@ -51,7 +55,7 @@ No active session with ID e56f9260-b366-11e7-966b-db3e6f35d8e1
 
 #### Reason
 
-Use of PhantomJS is not actually supported by the MFTF.
+Use of PhantomJS is not supported by the MFTF.
 
 #### Solution
 
@@ -83,7 +87,7 @@ Tests that use the `moveMouseOver` action cause an error when run locally.
 
 #### Reason
 
-There's a compatibility issue with Codeception's `moveMouseOver` function and GeckoDriver with Firefox.
+There is a compatibility issue with Codeception's `moveMouseOver` function and GeckoDriver with Firefox.
 
 #### Solution
 
