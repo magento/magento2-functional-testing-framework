@@ -180,5 +180,5 @@ The MFTF tests delivered with Magento application do not use credentials and do 
 [Download Vault]: https://www.hashicorp.com/products/vault/
 [Login Vault]: https://www.vaultproject.io/docs/commands/login.html
 [Vault KV2]: https://www.vaultproject.io/docs/secrets/kv/kv-v2.html
-[`CREDENTIAL_VAULT_ADDRESS`]: configuration.md#CREDENTIAL_VAULT_ADDRESS
-[`CREDENTIAL_VAULT_SECRET_BASE_PATH`]: configuration.md#CREDENTIAL_VAULT_SECRET_BASE_PATH
+[`CREDENTIAL_VAULT_ADDRESS`]: configuration.md#credential_vault_address
+[`CREDENTIAL_VAULT_SECRET_BASE_PATH`]: configuration.md#credential_vault_secret_base_path
