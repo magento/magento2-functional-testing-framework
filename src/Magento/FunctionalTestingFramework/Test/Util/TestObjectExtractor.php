@@ -118,6 +118,21 @@ class TestObjectExtractor extends BaseObjectExtractor
         //Override features with module name if present, populates it otherwise
         $testAnnotations["features"] = [$module];
 
+        // Append test file names in description annotation
+        if (!empty($fileNames)) {
+            if (isset($testAnnotations["description"][0])) {
+                $testAnnotations["description"][0] = $this->appendFileNamesInDescriptionAnnotation(
+                    $testAnnotations["description"][0],
+                    $fileNames
+                );
+            } else {
+                $description = $this->appendFileNamesInDescriptionAnnotation('', $fileNames);
+                if (!empty($description)) {
+                    $testAnnotations["description"][0] = $description;
+                }
+            }
+        }
+
         // extract before
         if (array_key_exists(self::TEST_BEFORE_HOOK, $testData) && is_array($testData[self::TEST_BEFORE_HOOK])) {
             $testHooks[self::TEST_BEFORE_HOOK] = $this->testHookObjectExtractor->extractHook(
@@ -154,5 +169,36 @@ class TestObjectExtractor extends BaseObjectExtractor
         } catch (XmlException $exception) {
             throw new XmlException($exception->getMessage() . ' in Test ' . $filename);
         }
+    }
+
+    /**
+     * Append names of test files, including merge files, in description annotation
+     *
+     * @param string $description
+     * @param array $fileNames
+     *
+     * @return string
+     */
+    private function appendFileNamesInDescriptionAnnotation($description, $fileNames)
+    {
+        $title = '';
+        foreach ($fileNames as $fileName) {
+            $fileName = realpath($fileName);
+            if (!empty($fileName)) {
+                $relativeFileName = ltrim(
+                    str_replace(MAGENTO_BP, '', $fileName),
+                    DIRECTORY_SEPARATOR
+                );
+                if (empty($relativeFileName)) {
+                    continue;
+                }
+                if (empty($title)) {
+                    $title .= '<br><br>Test Files:<br>';
+                    $description .= $title;
+                }
+                $description .= $relativeFileName . '<br>';
+            }
+        }
+        return $description;
     }
 }
