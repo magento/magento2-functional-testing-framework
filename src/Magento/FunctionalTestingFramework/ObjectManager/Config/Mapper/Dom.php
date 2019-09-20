@@ -48,9 +48,6 @@ class Dom implements \Magento\FunctionalTestingFramework\Config\ConverterInterfa
      * @return array
      * @throws \Exception
      * @todo this method has high cyclomatic complexity in order to avoid performance issues
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function convert($config)
     {
@@ -83,33 +80,7 @@ class Dom implements \Magento\FunctionalTestingFramework\Config\ConverterInterfa
                             $typeData['type'] = $attributeType->nodeValue;
                         }
                     }
-                    $typeArguments = [];
-                    /** @var \DOMNode $typeChildNode */
-                    foreach ($node->childNodes as $typeChildNode) {
-                        if ($typeChildNode->nodeType != XML_ELEMENT_NODE) {
-                            continue;
-                        }
-                        switch ($typeChildNode->nodeName) {
-                            case 'arguments':
-                                /** @var \DOMNode $argumentNode */
-                                foreach ($typeChildNode->childNodes as $argumentNode) {
-                                    if ($argumentNode->nodeType != XML_ELEMENT_NODE) {
-                                        continue;
-                                    }
-                                    $argumentName = $argumentNode->attributes->getNamedItem('name')->nodeValue;
-                                    $argumentData = $this->argumentParser->parse($argumentNode);
-                                    $typeArguments[$argumentName] = $this->argumentInterpreter->evaluate(
-                                        $argumentData
-                                    );
-                                }
-                                break;
-                            default:
-                                throw new \Exception(
-                                    "Invalid application config. Unknown node: {$typeChildNode->nodeName}."
-                                );
-                        }
-                    }
-
+                    $typeArguments = $this->parseTypeArguments($node);
                     $typeData['arguments'] = $typeArguments;
                     $output[$typeNodeAttributes->getNamedItem('name')->nodeValue] = $typeData;
                     break;
@@ -119,5 +90,40 @@ class Dom implements \Magento\FunctionalTestingFramework\Config\ConverterInterfa
         }
 
         return $output;
+    }
+
+    /** Read typeChildNodes and set typeArguments
+     * @param $node
+     * @return mixed
+     * @throws \Exception
+     */
+    private function parseTypeArguments($node)
+    {
+        foreach ($node->childNodes as $typeChildNode) {
+            /** @var \DOMNode $typeChildNode */
+            if ($typeChildNode->nodeType != XML_ELEMENT_NODE) {
+                continue;
+            }
+            switch ($typeChildNode->nodeName) {
+                case 'arguments':
+                    /** @var \DOMNode $argumentNode */
+                    foreach ($typeChildNode->childNodes as $argumentNode) {
+                        if ($argumentNode->nodeType != XML_ELEMENT_NODE) {
+                            continue;
+                        }
+                        $argumentName = $argumentNode->attributes->getNamedItem('name')->nodeValue;
+                        $argumentData = $this->argumentParser->parse($argumentNode);
+                        $typeArguments[$argumentName] = $this->argumentInterpreter->evaluate(
+                            $argumentData
+                        );
+                    }
+                    return $typeArguments;
+
+                default:
+                    throw new \Exception(
+                        "Invalid application config. Unknown node: {$typeChildNode->nodeName}."
+                    );
+            }
+        }
     }
 }

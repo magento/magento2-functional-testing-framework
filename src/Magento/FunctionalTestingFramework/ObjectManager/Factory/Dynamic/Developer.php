@@ -171,7 +171,6 @@ class Developer implements \Magento\FunctionalTestingFramework\ObjectManager\Fac
      * @return object
      * @throws \Exception
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPCPD)
      */
     public function create($requestedType, array $arguments = [])

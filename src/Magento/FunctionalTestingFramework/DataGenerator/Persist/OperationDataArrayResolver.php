@@ -66,7 +66,6 @@ class OperationDataArrayResolver
      * @param boolean          $fromArray
      * @return array
      * @throws \Exception
-     * @SuppressWarnings(PHPMD)
      */
     public function resolveOperationDataArray($entityObject, $operationMetadata, $operation, $fromArray = false)
     {
@@ -120,7 +119,19 @@ class OperationDataArrayResolver
                 );
             }
         }
+        return $this->resolveRunTimeDataReferences($operationDataArray, $entityObject);
+    }
 
+    /**
+     * Resolve data references at run time.
+     * @param array            $operationDataArray
+     * @param EntityDataObject $entityObject
+     * @return mixed
+     * @throws TestFrameworkException
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    private function resolveRunTimeDataReferences($operationDataArray, $entityObject)
+    {
         $dataReferenceResolver = new RuntimeDataReferenceResolver();
         foreach ($operationDataArray as $key => $operationDataValue) {
             if (is_array($operationDataValue)) {
