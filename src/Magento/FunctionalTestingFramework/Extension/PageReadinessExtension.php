@@ -131,7 +131,7 @@ class PageReadinessExtension extends BaseExtension
      * Check if page has changed, if so reset metric tracking
      *
      * @param Step $step
-     * return void
+     * @return void
      */
     private function resetMetricTracker($step)
     {
@@ -152,7 +152,7 @@ class PageReadinessExtension extends BaseExtension
 
     /**
      * Wait for page readiness.
-     * @param $metrics
+     * @param array $metrics
      * @return void
      * @throws \Codeception\Exception\ModuleRequireException
      * @throws \Facebook\WebDriver\Exception\NoSuchElementException

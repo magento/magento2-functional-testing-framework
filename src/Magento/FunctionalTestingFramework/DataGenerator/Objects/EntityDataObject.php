@@ -191,7 +191,6 @@ class EntityDataObject
      * @throws TestFrameworkException
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
-
     private function resolveDataReferences($name, $uniquenessFormat)
     {
         $name_lower = strtolower($name);
