@@ -175,7 +175,7 @@ class TestObjectExtractor extends BaseObjectExtractor
      * Append names of test files, including merge files, in description annotation
      *
      * @param string $description
-     * @param array $fileNames
+     * @param array  $fileNames
      *
      * @return string
      */
@@ -183,20 +183,19 @@ class TestObjectExtractor extends BaseObjectExtractor
     {
         $title = '';
         foreach ($fileNames as $fileName) {
-            $fileName = realpath($fileName);
-            if (!empty($fileName)) {
+            if (!empty($fileName && realpath($fileName) !== false)) {
+                $fileName = realpath($fileName);
                 $relativeFileName = ltrim(
                     str_replace(MAGENTO_BP, '', $fileName),
                     DIRECTORY_SEPARATOR
                 );
-                if (empty($relativeFileName)) {
-                    continue;
+                if (!empty($relativeFileName)) {
+                    if (empty($title)) {
+                        $title .= '<br><br>Test Files:<br>';
+                        $description .= $title;
+                    }
+                    $description .= $relativeFileName . '<br>';
                 }
-                if (empty($title)) {
-                    $title .= '<br><br>Test Files:<br>';
-                    $description .= $title;
-                }
-                $description .= $relativeFileName . '<br>';
             }
         }
         return $description;
