@@ -65,7 +65,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
                 // skip non array items parsed from suite (suite objects will always be arrays)
                 continue;
             }
-            //check for collisions between suite and existing group names
+
             $this->validateSuiteName($parsedSuite);
 
             //extract include and exclude references
@@ -115,12 +115,14 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      */
     private function validateSuiteName($parsedSuite)
     {
+        //check if name used is using special char or the "default" reserved name
         NameValidationUtil::validateName($parsedSuite[self::NAME], 'Suite');
         if ($parsedSuite[self::NAME] == 'default') {
             throw new XmlException("A Suite can not have the name \"default\"");
         }
 
         $suiteName = $parsedSuite[self::NAME];
+        //check for collisions between suite and existing group names
         $testGroupConflicts = TestObjectHandler::getInstance()->getTestsByGroup($suiteName);
         if (!empty($testGroupConflicts)) {
             $testGroupConflictsFileNames = "";
