@@ -87,6 +87,7 @@ class Developer implements \Magento\FunctionalTestingFramework\ObjectManager\Fac
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
+     * Revisited to reduce cyclomatic complexity, left unrefactored for readability
      */
     protected function resolveArguments($requestedType, array $parameters, array $arguments = [])
     {

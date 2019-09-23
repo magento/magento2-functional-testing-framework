@@ -40,9 +40,11 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      * @param array $parsedSuiteData
      * @return array
      * @throws XmlException
+     * @throws \Exception
+     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @throws \Exception
+     * Revisited to reduce cyclomatic complexity, left unrefactored for readability
      */
     public function parseSuiteDataIntoObjects($parsedSuiteData)
     {
