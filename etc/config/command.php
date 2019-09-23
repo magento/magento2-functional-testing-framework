@@ -22,7 +22,8 @@ if (!empty($_POST['token']) && !empty($_POST['command'])) {
         $magentoBinary = $php . ' -f ../../../../bin/magento';
         $valid = validateCommand($magentoBinary, $command);
         if ($valid) {
-            $process = new Symfony\Component\Process\Process($magentoBinary . " $command" . " $arguments");
+            $fullCommand = escapeshellcmd($magentoBinary . " $command" . " $arguments");
+            $process = new Symfony\Component\Process\Process($fullCommand);
             $process->setIdleTimeout(60);
             $process->setTimeout(0);
             $idleTimeout = false;
