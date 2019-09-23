@@ -26,7 +26,7 @@ class Module implements FileResolverInterface
      * Module constructor.
      * @param ModuleResolver|null $moduleResolver
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @TODO ported magento code to be refactored later
+     * @TODO ported magento code - to be refactored later
      */
     public function __construct(ModuleResolver $moduleResolver = null)
     {
