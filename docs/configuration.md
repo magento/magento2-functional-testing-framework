@@ -1,7 +1,7 @@
 # Configuration
 
 The `*.env` file provides additional configuration for the Magento Functional Testing Framework (MFTF).
-To run the MFTF on your Magento testing instance, specify the basic configuration values.
+To run the MFTF on your Magento instance, specify the basic configuration values.
 Advanced users can create custom configurations based on requirements and environment.
 
 ## Basic configuration
@@ -204,7 +204,7 @@ Example:
 FW_BP=~/magento/magento2-functional-testing-framework
 ```
 
-#### TESTS_MODULE_PATH
+### TESTS_MODULE_PATH
 
 The path to where the MFTF modules mirror Magento modules.
 
@@ -234,8 +234,8 @@ It points to `MAGENTO_BASE_URL` + `dev/tests/acceptance/utils/command.php`
 
 Modify the default value:
 
-- for non-default Magento installation
-- when use a subdirectory in the `MAGENTO_BASE_URL`
+-  for non-default Magento installation
+-  when use a subdirectory in the `MAGENTO_BASE_URL`
 
 Example: `dev/tests/acceptance/utils/command.php`
 
@@ -249,6 +249,32 @@ Example:
 
 ```conf
 BROWSER=firefox
+```
+
+### CREDENTIAL_VAULT_ADDRESS
+
+The Api address for a vault server.
+
+Default: http://127.0.0.1:8200
+
+Example:
+
+```conf
+# Default api address for local vault dev server
+CREDENTIAL_VAULT_ADDRESS=http://127.0.0.1:8200
+```
+
+### CREDENTIAL_VAULT_SECRET_BASE_PATH
+
+Vault secret engine base path.
+
+Default: secret
+
+Example:
+
+```conf
+# Default base path for kv secret engine in local vault dev server
+CREDENTIAL_VAULT_SECRET_BASE_PATH=secret
 ```
 
 <!-- Link definitions -->

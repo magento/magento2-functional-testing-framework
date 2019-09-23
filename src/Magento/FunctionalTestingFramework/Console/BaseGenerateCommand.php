@@ -36,7 +36,7 @@ class BaseGenerateCommand extends Command
             InputOption::VALUE_NONE,
             'force generation and running of tests regardless of Magento Instance Configuration'
         )->addOption(
-            "allowSkipped",
+            "allow-skipped",
             'a',
             InputOption::VALUE_NONE,
             'Allows MFTF to generate and run skipped tests.'

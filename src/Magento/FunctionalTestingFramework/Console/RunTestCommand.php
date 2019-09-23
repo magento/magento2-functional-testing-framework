@@ -20,6 +20,13 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 class RunTestCommand extends BaseGenerateCommand
 {
     /**
+     * The return code. Determined by all tests that run.
+     *
+     * @var integer
+     */
+    private $returnCode = 0;
+
+    /**
      * Configures the current command.
      *
      * @return void
@@ -49,8 +56,6 @@ class RunTestCommand extends BaseGenerateCommand
      * @param OutputInterface $output
      * @return integer
      * @throws \Exception
-     *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -59,7 +64,7 @@ class RunTestCommand extends BaseGenerateCommand
         $force = $input->getOption('force');
         $remove = $input->getOption('remove');
         $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
-        $allowSkipped = $input->getOption('allowSkipped');
+        $allowSkipped = $input->getOption('allow-skipped');
         $verbose = $output->isVerbose();
 
         if ($skipGeneration and $remove) {
@@ -87,65 +92,89 @@ class RunTestCommand extends BaseGenerateCommand
                 '--force' => $force,
                 '--remove' => $remove,
                 '--debug' => $debug,
-                '--allowSkipped' => $allowSkipped,
+                '--allow-skipped' => $allowSkipped,
                 '-v' => $verbose
             ];
             $command->run(new ArrayInput($args), $output);
         }
-        // tests with resolved suite references
-        $resolvedTests = $this->resolveSuiteReferences($testConfiguration);
 
-        $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
-        $testsDirectory = TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . TestGenerator::GENERATED_DIR . DIRECTORY_SEPARATOR;
-        $returnCode = 0;
-        //execute only tests specified as arguments in run command
-        foreach ($resolvedTests as $test) {
-            //set directory as suite name for tests in suite, if not set to "default"
-            if (strpos($test, ':')) {
-                list($testGroup, $testName) = explode(":", $test);
-            } else {
-                list($testGroup, $testName) = [TestGenerator::DEFAULT_DIR, $test];
-            }
-            $testGroup = $testGroup . DIRECTORY_SEPARATOR;
-            $testName = $testName . 'Cest.php';
-            if (!realpath($testsDirectory . $testGroup . $testName)) {
-                throw new TestFrameworkException(
-                    $testName . " is not available under " . $testsDirectory . $testGroup
-                );
-            }
-            $fullCommand = $codeceptionCommand . $testsDirectory . $testGroup . $testName . ' --verbose --steps';
-            $process = new Process($fullCommand);
-            $process->setWorkingDirectory(TESTS_BP);
-            $process->setIdleTimeout(600);
-            $process->setTimeout(0);
+        $testConfigArray = json_decode($testConfiguration, true);
 
-            $returnCode = max($returnCode, $process->run(
-                function ($type, $buffer) use ($output) {
-                    $output->write($buffer);
-                }
-            ));
+        if (isset($testConfigArray['tests'])) {
+            $this->runTests($testConfigArray['tests'], $output);
         }
-        return $returnCode;
+
+        if (isset($testConfigArray['suites'])) {
+            $this->runTestsInSuite($testConfigArray['suites'], $output);
+        }
+
+        return $this->returnCode;
     }
 
     /**
-     * Get an array of tests with resolved suite references from $testConfiguration
-     * eg: if test is referenced in a suite, it'll be stored in format suite:test
-     * @param string $testConfigurationJson
-     * @return array
+     * Run tests not referenced in suites
+     *
+     * @param array           $tests
+     * @param OutputInterface $output
+     * @return void
+     * @throws TestFrameworkException
      */
-    private function resolveSuiteReferences($testConfigurationJson)
+    private function runTests(array $tests, OutputInterface $output)
     {
-        $testConfiguration = json_decode($testConfigurationJson, true);
-        $testsArray = $testConfiguration['tests'] ?? [];
-        $suitesArray = $testConfiguration['suites'] ?? [];
-        $testArrayBuilder = [];
+        $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
+        $testsDirectory = TESTS_MODULE_PATH .
+            DIRECTORY_SEPARATOR .
+            TestGenerator::GENERATED_DIR .
+            DIRECTORY_SEPARATOR .
+            TestGenerator::DEFAULT_DIR .
+            DIRECTORY_SEPARATOR ;
 
-        foreach ($suitesArray as $suite => $tests) {
-            foreach ($tests as $test) {
-                $testArrayBuilder[] = "$suite:$test";
+        foreach ($tests as $test) {
+            $testName = $test . 'Cest.php';
+            if (!realpath($testsDirectory . $testName)) {
+                throw new TestFrameworkException(
+                    $testName . " is not available under " . $testsDirectory
+                );
             }
+            $fullCommand = $codeceptionCommand . $testsDirectory . $testName . ' --verbose --steps';
+            $this->returnCode = max($this->returnCode, $this->executeTestCommand($fullCommand, $output));
         }
-        return array_merge($testArrayBuilder, $testsArray);
+    }
+
+    /**
+     * Run tests referenced in suites within suites' context.
+     *
+     * @param array           $suitesConfig
+     * @param OutputInterface $output
+     * @return void
+     */
+    private function runTestsInSuite(array $suitesConfig, OutputInterface $output)
+    {
+        $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional --verbose --steps ';
+        //for tests in suites, run them as a group to run before and after block
+        foreach (array_keys($suitesConfig) as $suite) {
+            $fullCommand = $codeceptionCommand . " -g {$suite}";
+            $this->returnCode = max($this->returnCode, $this->executeTestCommand($fullCommand, $output));
+        }
+    }
+
+    /**
+     * Runs the codeception test command and returns exit code
+     *
+     * @param string          $command
+     * @param OutputInterface $output
+     * @return integer
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
+    private function executeTestCommand(string $command, OutputInterface $output)
+    {
+        $process = new Process($command);
+        $process->setWorkingDirectory(TESTS_BP);
+        $process->setIdleTimeout(600);
+        $process->setTimeout(0);
+        return $process->run(function ($type, $buffer) use ($output) {
+            $output->write($buffer);
+        });
     }
 }
