@@ -152,6 +152,7 @@ class Config implements \Magento\FunctionalTestingFramework\ObjectManager\Config
      *
      * @param string $type
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * Revisited to reduce cyclomatic complexity, left unrefactored for readability
      */
     protected function collectConfiguration($type)
