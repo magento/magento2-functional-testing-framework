@@ -25,9 +25,9 @@ class ModulePathExtractor
      */
     public function __construct()
     {
-        $verbose = true;
+        $verbosePath = true;
         if (empty($this->testModulePaths)) {
-            $this->testModulePaths = ModuleResolver::getInstance()->getModulesPath($verbose);
+            $this->testModulePaths = ModuleResolver::getInstance()->getModulesPath($verbosePath);
         }
     }
 
@@ -83,15 +83,11 @@ class ModulePathExtractor
      */
     private function extractKeyByPath($path)
     {
-        if (empty($path)) {
+        $shortenedPath = dirname(dirname($path));
+        if ($shortenedPath === '.' || !is_dir($shortenedPath)) {
             return '';
         }
-        $paths = explode(DIRECTORY_SEPARATOR, $path);
-        if (count($paths) < 3) {
-            return '';
-        }
-        $paths = array_slice($paths, 0, count($paths)-2);
-        $shortenedPath = implode(DIRECTORY_SEPARATOR, $paths);
+
         foreach ($this->testModulePaths as $key => $value) {
             if ($value == $shortenedPath) {
                 return $key;

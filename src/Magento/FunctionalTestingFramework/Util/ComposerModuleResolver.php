@@ -5,10 +5,8 @@
  */
 namespace Magento\FunctionalTestingFramework\Util;
 
-use Magento\FunctionalTestingFramework\Composer\Handlers\ComposerInstaller;
-use Magento\FunctionalTestingFramework\Composer\Util\ComposerJsonFinder;
-use Magento\FunctionalTestingFramework\Composer\Objects\ComposerFactory;
-use Magento\FunctionalTestingFramework\Composer\Handlers\ComposerPackager;
+use Magento\FunctionalTestingFramework\Composer\ComposerInstall;
+use Magento\FunctionalTestingFramework\Composer\ComposerPackage;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
 /**
@@ -50,18 +48,16 @@ class ComposerModuleResolver
             return $this->installedTestModules;
         }
 
-        if (!is_file($rootComposerFile) || substr($rootComposerFile, -13) != 'composer.json') {
+        if (!file_exists($rootComposerFile) || basename($rootComposerFile, '.json') != 'composer') {
             throw new TestFrameworkException("Invalid root composer json file: {$rootComposerFile}");
         }
 
         $this->installedTestModules = [];
-        $composerInstaller = new ComposerInstaller(
-            new ComposerFactory($rootComposerFile)
-        );
+        $composer = new ComposerInstall($rootComposerFile);
 
-        foreach ($composerInstaller->getInstalledTestPackages() as $packageName => $packageData) {
-            $suggestedModuleNames = $packageData[ComposerInstaller::KEY_PACKAGE_SUGGESTED_MAGENTO_MODULES];
-            $path = $packageData[ComposerInstaller::KEY_PACKAGE_INSTALLEDPATH];
+        foreach ($composer->getInstalledTestPackages() as $packageName => $packageData) {
+            $suggestedModuleNames = $packageData[ComposerInstall::PACKAGE_SUGGESTED_MAGENTO_MODULES];
+            $path = $packageData[ComposerInstall::PACKAGE_INSTALLEDPATH];
             $this->installedTestModules[$path] = $suggestedModuleNames;
         }
         return $this->installedTestModules;
@@ -106,25 +102,78 @@ class ComposerModuleResolver
 
         // Find all composer json files under directory
         $modules = [];
-        $jsonFinder = new ComposerJsonFinder();
-        $fileList = $jsonFinder->finComposerJsonFilesAtDepth($normalizedDir, 2);
+        $fileList = $this->findComposerJsonFilesAtDepth($normalizedDir, 2);
         foreach ($fileList as $file) {
             // Parse composer json for test module name and path information
-            $composerInfo = new ComposerPackager(
-                new ComposerFactory($file)
-            );
+            $composerInfo = new ComposerPackage($file);
             if ($composerInfo->isMftfTestPackage()) {
-                //$moduleName = $composerInfo->getName();
                 $modulePath = str_replace(
                     DIRECTORY_SEPARATOR . 'composer.json',
                     '',
                     $file
                 );
                 $suggestedMagentoModuleNames = $composerInfo->getSuggestedMagentoModules();
-                $module[$modulePath] = $suggestedMagentoModuleNames;
-                $modules = array_merge_recursive($modules, $module);
+                if (array_key_exists($modulePath, $modules)) {
+                    $modules[$modulePath] = array_merge($modules[$modulePath], $suggestedMagentoModuleNames);
+                } else {
+                    $modules[$modulePath] = $suggestedMagentoModuleNames;
+                }
             }
         }
         return $modules;
+    }
+
+    /**
+     * Find absolute paths of all composer json files in a given directory
+     *
+     * @param string $directory
+     * @return array
+     */
+    private function findAllComposerJsonFiles($directory)
+    {
+        $directory = realpath($directory);
+        $jsonPattern = DIRECTORY_SEPARATOR . "composer.json";
+        $subDirectoryPattern = DIRECTORY_SEPARATOR . "*";
+
+        $jsonFileList = glob($directory . $jsonPattern);
+        if ($jsonFileList !== false && !empty($jsonFileList)) {
+            return $jsonFileList;
+        } else {
+            $jsonFileList = [];
+            foreach (glob($directory . $subDirectoryPattern, GLOB_ONLYDIR) as $dir) {
+                $jsonFileList = array_merge_recursive($jsonFileList, self::findAllComposerJsonFiles($dir));
+            }
+            return $jsonFileList;
+        }
+    }
+
+    /**
+     * Find absolute paths of all composer json files in a given directory at certain depths
+     *
+     * @param string  $directory
+     * @param integer $depth
+     * @return array
+     */
+    private function findComposerJsonFilesAtDepth($directory, $depth)
+    {
+        $directory = realpath($directory);
+        $jsonPattern = DIRECTORY_SEPARATOR . "composer.json";
+        $subDirectoryPattern = DIRECTORY_SEPARATOR . "*";
+
+        $jsonFileList = [];
+        if ($depth > 0) {
+            foreach (glob($directory . $subDirectoryPattern, GLOB_ONLYDIR) as $dir) {
+                $jsonFileList = array_merge_recursive(
+                    $jsonFileList,
+                    self::findComposerJsonFilesAtDepth($dir, $depth-1)
+                );
+            }
+        } elseif ($depth == 0) {
+            $jsonFileList = glob($directory . $jsonPattern);
+            if ($jsonFileList === false) {
+                $jsonFileList = [];
+            }
+        }
+        return $jsonFileList;
     }
 }

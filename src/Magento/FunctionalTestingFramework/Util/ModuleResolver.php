@@ -39,24 +39,9 @@ class ModuleResolver
      */
     const REGISTRAR_CLASS = "\Magento\Framework\Component\ComponentRegistrar";
 
-    /**
-     * const for Test/Mftf
-     */
     const TEST_MFTF_PATTERN = 'Test' . DIRECTORY_SEPARATOR . 'Mftf';
-
-    /**
-     * const for vendor
-     */
     const VENDOR = 'vendor';
-
-    /**
-     * const for app/code
-     */
     const APP_CODE = 'app' . DIRECTORY_SEPARATOR . "code";
-
-    /**
-     * const for dev/tests/acceptance/tests/functional
-     */
     const DEV_TESTS = 'dev'
     . DIRECTORY_SEPARATOR
     . 'tests'
@@ -66,10 +51,6 @@ class ModuleResolver
     . 'tests'
     . DIRECTORY_SEPARATOR
     . 'functional';
-
-    /**
-     * Deprecated dev tests code path
-     */
     const DEPRECATED_DEV_TESTS = DIRECTORY_SEPARATOR
         . self:: DEV_TESTS
         . DIRECTORY_SEPARATOR
@@ -250,16 +231,16 @@ class ModuleResolver
     /**
      * Return the modules path based on which modules are enabled in the target Magento instance.
      *
-     * @param boolean $verbose
+     * @param boolean $verbosePath
      * @return array
      */
-    public function getModulesPath($verbose = false)
+    public function getModulesPath($verbosePath = false)
     {
-        if (isset($this->enabledModulePaths) && !$verbose) {
+        if (isset($this->enabledModulePaths) && !$verbosePath) {
             return $this->enabledModulePaths;
         }
 
-        if (isset($this->enabledModuleNameAndPaths) && $verbose) {
+        if (isset($this->enabledModuleNameAndPaths) && $verbosePath) {
             return $this->enabledModuleNameAndPaths;
         }
 
@@ -391,7 +372,7 @@ class ModuleResolver
         }
 
         if (strpos($testPath, self::DEPRECATED_DEV_TESTS) !== false && !empty($modulePaths)) {
-            $deprecatedPath = self::DEPRECATED_DEV_TESTS;
+            $deprecatedPath = ltrim(self::DEPRECATED_DEV_TESTS, DIRECTORY_SEPARATOR);
             $suggestedPath = self::DEV_TESTS . DIRECTORY_SEPARATOR . 'Magento';
             $message = "DEPRECATION: Found MFTF test modules in the deprecated path: $deprecatedPath."
                 . " Move these test modules to $suggestedPath.";
@@ -512,7 +493,6 @@ class ModuleResolver
 
     /**
      * Flip and filter module code paths
-     * when
      *
      * @param array $objectArray
      * @param array $filterArray

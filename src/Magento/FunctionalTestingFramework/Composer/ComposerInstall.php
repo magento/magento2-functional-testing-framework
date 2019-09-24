@@ -3,15 +3,20 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace Magento\FunctionalTestingFramework\Composer\Handlers;
+namespace Magento\FunctionalTestingFramework\Composer;
 
 use Composer\Package\CompletePackageInterface;
 
 /**
  * Class ComposerInstaller handles information and dependencies for composer installed packages
  */
-class ComposerInstaller extends AbstractComposerHandler
+class ComposerInstall extends AbstractComposer
 {
+    /**
+     * @var \Composer\Package\Locker
+     */
+    private $locker;
+
     /**
      * Determines if package is a mftf test package
      *
@@ -64,17 +69,17 @@ class ComposerInstaller extends AbstractComposerHandler
         foreach ($this->getLocker()->getLockedRepository()->getPackages() as $package) {
             if ($package->getType() == self::TEST_MODULE_PACKAGE_TYPE) {
                 $packages[$package->getName()] = [
-                    self::KEY_PACKAGE_NAME => $package->getName(),
-                    self::KEY_PACKAGE_TYPE => $package->getType(),
-                    self::KEY_PACKAGE_VERSION => $package->getPrettyVersion(),
-                    self::KEY_PACKAGE_DESCRIPTION => $package->getDescription(),
-                    self::KEY_PACKAGE_SUGGESTS => $package->getSuggests(),
-                    self::KEY_PACKAGE_REQUIRES => $package->getRequires(),
-                    self::KEY_PACKAGE_DEVREQUIRES => $package->getDevRequires(),
-                    self::KEY_PACKAGE_SUGGESTED_MAGENTO_MODULES => $this->parseSuggestsForMagentoModuleNames(
+                    self::PACKAGE_NAME => $package->getName(),
+                    self::PACKAGE_TYPE => $package->getType(),
+                    self::PACKAGE_VERSION => $package->getPrettyVersion(),
+                    self::PACKAGE_DESCRIPTION => $package->getDescription(),
+                    self::PACKAGE_SUGGESTS => $package->getSuggests(),
+                    self::PACKAGE_REQUIRES => $package->getRequires(),
+                    self::PACKAGE_DEVREQUIRES => $package->getDevRequires(),
+                    self::PACKAGE_SUGGESTED_MAGENTO_MODULES => $this->parseSuggestsForMagentoModuleNames(
                         $package->getSuggests()
                     ),
-                    self::KEY_PACKAGE_INSTALLEDPATH => $this->getComposer()->getInstallationManager()
+                    self::PACKAGE_INSTALLEDPATH => $this->getComposer()->getInstallationManager()
                         ->getInstallPath($package)
                 ];
             }

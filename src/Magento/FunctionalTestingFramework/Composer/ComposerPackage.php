@@ -3,13 +3,18 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace Magento\FunctionalTestingFramework\Composer\Handlers;
+namespace Magento\FunctionalTestingFramework\Composer;
 
 /**
  * Class ComposerPackage contains composer json information in a MFTF test package
  */
-class ComposerPackager extends AbstractComposerHandler
+class ComposerPackage extends AbstractComposer
 {
+    /**
+     * @var \Composer\Package\CompletePackage
+     */
+    private $rootPackage;
+
     /**
      * Retrieve package name from composer json
      *
