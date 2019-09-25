@@ -17,7 +17,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 /**
  * @Title("[NO TESTCASEID]: ChildExtendedTestReplaceHook")
  * @group Child
- * @Description("<br><br>Test Files:<br>verification/TestModule/Test/ExtendedFunctionalTest.xml<br>")
+ * @Description("<br><br><b><font size=+0.9>Test files</font></b><br>verification/TestModule/Test/ExtendedFunctionalTest.xml<br>")
  */
 class ChildExtendedTestReplaceHookCest
 {

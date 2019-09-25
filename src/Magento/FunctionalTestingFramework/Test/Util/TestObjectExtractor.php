@@ -118,20 +118,16 @@ class TestObjectExtractor extends BaseObjectExtractor
         //Override features with module name if present, populates it otherwise
         $testAnnotations["features"] = [$module];
 
-        // Append test file names in description annotation
-        if (!empty($fileNames)) {
-            if (isset($testAnnotations["description"][0])) {
-                $testAnnotations["description"][0] = $this->appendFileNamesInDescriptionAnnotation(
-                    $testAnnotations["description"][0],
-                    $fileNames
-                );
-            } else {
-                $description = $this->appendFileNamesInDescriptionAnnotation('', $fileNames);
-                if (!empty($description)) {
-                    $testAnnotations["description"][0] = $description;
-                }
-            }
+        // Always try to append test file names in description annotation, i.e. displaying test files title only
+        // when $fileNames is not available
+        if (!isset($testAnnotations["description"])) {
+            $testAnnotations["description"] = [];
         }
+        $description = $testAnnotations["description"][0] ?? '';
+        $testAnnotations["description"][0] = $this->appendFileNamesInDescriptionAnnotation(
+            $description,
+            $fileNames
+        );
 
         // extract before
         if (array_key_exists(self::TEST_BEFORE_HOOK, $testData) && is_array($testData[self::TEST_BEFORE_HOOK])) {
@@ -181,23 +177,21 @@ class TestObjectExtractor extends BaseObjectExtractor
      */
     private function appendFileNamesInDescriptionAnnotation($description, $fileNames)
     {
-        $title = '';
+        $description .= '<br><br><b><font size=+0.9>Test files</font></b><br>';
+
         foreach ($fileNames as $fileName) {
-            if (!empty($fileName && realpath($fileName) !== false)) {
+            if (!empty($fileName) && realpath($fileName) !== false) {
                 $fileName = realpath($fileName);
                 $relativeFileName = ltrim(
                     str_replace(MAGENTO_BP, '', $fileName),
                     DIRECTORY_SEPARATOR
                 );
                 if (!empty($relativeFileName)) {
-                    if (empty($title)) {
-                        $title .= '<br><br>Test Files:<br>';
-                        $description .= $title;
-                    }
                     $description .= $relativeFileName . '<br>';
                 }
             }
         }
+
         return $description;
     }
 }
