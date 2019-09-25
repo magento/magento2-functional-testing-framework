@@ -84,7 +84,8 @@ class ModulePathExtractor
     private function extractKeyByPath($path)
     {
         $shortenedPath = dirname(dirname($path));
-        if ($shortenedPath === '.' || !is_dir($shortenedPath)) {
+        // Ignore this path if we cannot go to parent directory two levels up
+        if (empty($shortenedPath) || $shortenedPath === '.') {
             return '';
         }
 
