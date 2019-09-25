@@ -41,6 +41,11 @@ if (!empty($_POST['token']) && !empty($_POST['command'])) {
                 $output = "CLI command timed out, no output available.";
                 $idleTimeout = true;
             }
+
+            if (checkForFilePath($output)) {
+                $output = "CLI output suppressed, filepath detected in output.";
+            }
+
             $exitCode = $process->getExitCode();
 
             if ($exitCode == 0 || $idleTimeout) {
@@ -103,4 +108,14 @@ function validateCommand($magentoBinary, $command)
 function trimAfterWhitespace($string)
 {
     return strtok($string, ' ');
+}
+
+/**
+ * Detects file path in string.
+ * @param string $string
+ * @return boolean
+ */
+function checkForFilePath($string)
+{
+    return preg_match('/\/[\S]+\//', $string);
 }
