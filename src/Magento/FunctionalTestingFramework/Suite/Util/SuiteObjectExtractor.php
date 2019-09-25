@@ -80,7 +80,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
             $suiteHooks = $this->parseObjectHooks($parsedSuite);
 
             //throw an exception if suite is empty
-            if ($this->isSuiteEmpty($suiteHooks, $includeTests, $excludeTests)){
+            if ($this->isSuiteEmpty($suiteHooks, $includeTests, $excludeTests)) {
                 throw new XmlException(sprintf(
                     "Suites must not be empty. Suite: \"%s\"",
                     $parsedSuite[self::NAME]
@@ -133,7 +133,6 @@ class SuiteObjectExtractor extends BaseObjectExtractor
                 "Suite: \"{$suiteName}\" also exists as a group annotation in: \n{$testGroupConflictsFileNames}";
             throw new XmlException($exceptionmessage);
         }
-
     }
 
     /**
@@ -163,7 +162,6 @@ class SuiteObjectExtractor extends BaseObjectExtractor
         }
 
         if (count($suiteHooks) == 1) {
-
             throw new XmlException(sprintf(
                 "Suites that contain hooks must contain both a 'before' and an 'after' hook. Suite: \"%s\"",
                 $parsedSuite[self::NAME]
@@ -190,7 +188,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
             );
 
         if ($noHooks && empty($includeTests) && empty($excludeTests)) {
-          return true;
+            return true;
         }
         return false;
     }
