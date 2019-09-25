@@ -176,7 +176,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      * @param array $suiteHooks
      * @param array $includeTests
      * @param array $excludeTests
-     * @return bool
+     * @return boolean
      */
     private function isSuiteEmpty($suiteHooks, $includeTests, $excludeTests)
     {
