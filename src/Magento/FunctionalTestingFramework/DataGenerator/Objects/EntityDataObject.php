@@ -9,6 +9,7 @@ namespace Magento\FunctionalTestingFramework\DataGenerator\Objects;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\DataGenerator\Util\GenerationDataReferenceResolver;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
@@ -189,7 +190,7 @@ class EntityDataObject
      * @param integer $uniquenessFormat
      * @return string|null
      * @throws TestFrameworkException
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     * @throws TestReferenceException
      */
     private function resolveDataReferences($name, $uniquenessFormat)
     {

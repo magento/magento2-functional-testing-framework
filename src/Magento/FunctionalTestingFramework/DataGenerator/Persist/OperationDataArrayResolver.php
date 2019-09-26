@@ -13,6 +13,7 @@ use Magento\FunctionalTestingFramework\DataGenerator\Objects\OperationElement;
 use Magento\FunctionalTestingFramework\DataGenerator\Util\OperationElementExtractor;
 use Magento\FunctionalTestingFramework\DataGenerator\Util\RuntimeDataReferenceResolver;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 
 class OperationDataArrayResolver
 {
@@ -126,9 +127,9 @@ class OperationDataArrayResolver
      * Resolve data references at run time.
      * @param array            $operationDataArray
      * @param EntityDataObject $entityObject
-     * @return mixed
+     * @return array
      * @throws TestFrameworkException
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     * @throws TestReferenceException
      */
     private function resolveRunTimeDataReferences($operationDataArray, $entityObject)
     {

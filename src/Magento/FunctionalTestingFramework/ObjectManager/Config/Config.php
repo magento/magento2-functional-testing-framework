@@ -207,20 +207,19 @@ class Config implements \Magento\FunctionalTestingFramework\ObjectManager\Config
                     break;
 
                 default:
-                    $this->setArguments($key, $curConfig);
-                    break;
+                    $this->setConfiguration($key, $curConfig);
             }
         }
     }
 
     /**
-     * Set arguments
+     * Set configuration
      *
      * @param string $key
      * @param array  $config
      * @return void
      */
-    private function setArguments($key, $config)
+    private function setConfiguration($key, $config)
     {
         $key = ltrim($key, '\\');
         if (isset($config['type'])) {

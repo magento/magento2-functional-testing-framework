@@ -186,7 +186,7 @@ class TestDependencyCheck implements StaticCheckInterface
             $this->resolveEntityReferences($extendReferences[1]);
 
             // Find violating references and set error output
-            $violatingReferences = $this->findViolatingReferences($filePath);
+            $violatingReferences = $this->findViolatingReferences($moduleFullName);
             $testErrors = $this->setErrorOutput($violatingReferences, $filePath);
         }
         return $testErrors;

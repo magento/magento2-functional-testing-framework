@@ -80,8 +80,7 @@ class Dom implements \Magento\FunctionalTestingFramework\Config\ConverterInterfa
                             $typeData['type'] = $attributeType->nodeValue;
                         }
                     }
-                    $typeArguments = $this->parseTypeArguments($node);
-                    $typeData['arguments'] = $typeArguments;
+                    $typeData['arguments'] = $this->setTypeArguments($node);
                     $output[$typeNodeAttributes->getNamedItem('name')->nodeValue] = $typeData;
                     break;
                 default:
@@ -93,12 +92,14 @@ class Dom implements \Magento\FunctionalTestingFramework\Config\ConverterInterfa
     }
 
     /** Read typeChildNodes and set typeArguments
-     * @param $node
+     * @param DOMNode $node
      * @return mixed
      * @throws \Exception
      */
-    private function parseTypeArguments($node)
+    private function setTypeArguments($node)
     {
+        $typeArguments = [];
+
         foreach ($node->childNodes as $typeChildNode) {
             /** @var \DOMNode $typeChildNode */
             if ($typeChildNode->nodeType != XML_ELEMENT_NODE) {
@@ -117,7 +118,7 @@ class Dom implements \Magento\FunctionalTestingFramework\Config\ConverterInterfa
                             $argumentData
                         );
                     }
-                    return $typeArguments;
+                    break;
 
                 default:
                     throw new \Exception(
@@ -125,5 +126,6 @@ class Dom implements \Magento\FunctionalTestingFramework\Config\ConverterInterfa
                     );
             }
         }
+        return $typeArguments;
     }
 }
