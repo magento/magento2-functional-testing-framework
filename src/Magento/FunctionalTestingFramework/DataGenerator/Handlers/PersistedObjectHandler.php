@@ -89,7 +89,12 @@ class PersistedObjectHandler
         }
 
         foreach ($overrideFields as $index => $field) {
-            $overrideFields[$index] = CredentialStore::getInstance()->decryptAllSecretsInString($field);
+            try {
+                $overrideFields[$index] = CredentialStore::getInstance()->decryptAllSecretsInString($field);
+            } catch (TestFrameworkException $e) {
+                //do not rethrow if Credentials are not defined
+                $overrideFields[$index] = $field;
+            }
         }
         
         $retrievedEntity = DataObjectHandler::getInstance()->getObject($entity);

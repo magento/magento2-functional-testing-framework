@@ -173,6 +173,16 @@ The following is an example of a call in test:
 
 This action inputs data from the `name` of the `_defaultCategory` entity (for example, `simpleCategory598742365`) into the field with the locator defined in the selector of the `categoryNameInput` element of the `AdminCategoryBasicFieldSection`.
 
+You can also call data from the xml definition of a `data` tag directly:
+
+```xml
+<entity name="NewAdminUser" type="user">
+    <data key="username" unique="suffix">admin</data>
+    <data key="current_password">{{AnotherUser.current_password}}</data>  <!-- Data from another entity -->
+    <data key="current_password">{{_ENV.MAGENTO_ADMIN_PASSWORD}}</data>  <!-- ENV file reference -->
+</entity>
+```
+
 ## Reference
 
 ### entities {#entities-tag}
