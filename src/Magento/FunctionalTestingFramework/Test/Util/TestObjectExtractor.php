@@ -177,7 +177,7 @@ class TestObjectExtractor extends BaseObjectExtractor
      */
     private function appendFileNamesInDescriptionAnnotation($description, $fileNames)
     {
-        $description .= '<br><br><b><font size=+0.9>Test files</font></b><br>';
+        $description .= '<br><br><b><font size=+0.9>Test files</font></b><br><br>';
 
         foreach ($fileNames as $fileName) {
             if (!empty($fileName) && realpath($fileName) !== false) {
