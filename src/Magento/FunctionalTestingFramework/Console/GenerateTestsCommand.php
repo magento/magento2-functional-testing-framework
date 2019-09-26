@@ -65,13 +65,26 @@ class GenerateTestsCommand extends BaseGenerateCommand
     {
         $tests = $input->getArgument('name');
         $config = $input->getOption('config');
-        $json = $input->getOption('tests');
+        $json = $input->getOption('tests'); // for backward compatibility
         $force = $input->getOption('force');
         $time = $input->getOption('time') * 60 * 1000; // convert from minutes to milliseconds
         $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
         $remove = $input->getOption('remove');
         $verbose = $output->isVerbose();
-        $allowSkipped = $input->getOption('allowSkipped');
+        $allowSkipped = $input->getOption('allow-skipped');
+
+        // Set application configuration so we can references the user options in our framework
+        MftfApplicationConfig::create(
+            $force,
+            MftfApplicationConfig::GENERATION_PHASE,
+            $verbose,
+            $debug,
+            $allowSkipped
+        );
+
+        if (!empty($tests)) {
+            $json = $this->getTestAndSuiteConfiguration($tests);
+        }
 
         if ($json !== null && !json_decode($json)) {
             // stop execution if we have failed to properly parse any json passed in by the user
@@ -89,7 +102,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 ($debug !== MftfApplicationConfig::LEVEL_NONE));
         }
 
-        $testConfiguration = $this->createTestConfiguration($json, $tests, $force, $debug, $verbose, $allowSkipped);
+        $testConfiguration = $this->createTestConfiguration($json, $tests);
 
         // create our manifest file here
         $testManifest = TestManifestFactory::makeManifest($config, $testConfiguration['suites']);
@@ -100,9 +113,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
             $testManifest->createTestGroups($time);
         }
 
-        if (empty($tests)) {
-            SuiteGenerator::getInstance()->generateAllSuites($testManifest);
-        }
+        SuiteGenerator::getInstance()->generateAllSuites($testManifest);
 
         $testManifest->generate();
 
@@ -112,33 +123,16 @@ class GenerateTestsCommand extends BaseGenerateCommand
     /**
      * Function which builds up a configuration including test and suites for consumption of Magento generation methods.
      *
-     * @param string  $json
-     * @param array   $tests
-     * @param boolean $force
-     * @param string  $debug
-     * @param boolean $verbose
-     * @param boolean $allowSkipped
+     * @param string $json
+     * @param array  $tests
      * @return array
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
     private function createTestConfiguration(
         $json,
-        array $tests,
-        bool $force,
-        string $debug,
-        bool $verbose,
-        bool $allowSkipped
+        array $tests
     ) {
-        // set our application configuration so we can references the user options in our framework
-        MftfApplicationConfig::create(
-            $force,
-            MftfApplicationConfig::GENERATION_PHASE,
-            $verbose,
-            $debug,
-            $allowSkipped
-        );
-
         $testConfiguration = [];
         $testConfiguration['tests'] = $tests;
         $testConfiguration['suites'] = [];

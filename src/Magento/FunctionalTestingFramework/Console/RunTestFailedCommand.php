@@ -70,13 +70,14 @@ class RunTestFailedCommand extends BaseGenerateCommand
     {
         $force = $input->getOption('force');
         $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
-        $allowSkipped = $input->getOption('allowSkipped');
+        $allowSkipped = $input->getOption('allow-skipped');
+        $verbose = $output->isVerbose();
 
         // Create Mftf Configuration
         MftfApplicationConfig::create(
             $force,
-            MftfApplicationConfig::GENERATION_PHASE,
-            false,
+            MftfApplicationConfig::EXECUTION_PHASE,
+            $verbose,
             $debug,
             $allowSkipped
         );
@@ -91,9 +92,11 @@ class RunTestFailedCommand extends BaseGenerateCommand
         $command = $this->getApplication()->find('generate:tests');
         $args = [
             '--tests' => $testConfiguration,
+            '--force' => $force,
             '--remove' => true,
             '--debug' => $debug,
-            '--allowSkipped' => $allowSkipped
+            '--allow-skipped' => $allowSkipped,
+            '-v' => $verbose
         ];
         $command->run(new ArrayInput($args), $output);
 

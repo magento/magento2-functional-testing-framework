@@ -167,8 +167,6 @@ class CurlHandler
         $response = $executor->read($successRegex, $returnRegex, $returnIndex);
         $executor->close();
 
-        AllureHelper::addAttachmentToLastStep($apiUrl, 'API Endpoint');
-        AllureHelper::addAttachmentToLastStep(json_encode($headers, JSON_PRETTY_PRINT), 'Request Headers');
         AllureHelper::addAttachmentToLastStep(json_encode($this->requestData, JSON_PRETTY_PRINT), 'Request Body');
         AllureHelper::addAttachmentToLastStep(
             json_encode(json_decode($response, true), JSON_PRETTY_PRINT+JSON_UNESCAPED_UNICODE+JSON_UNESCAPED_SLASHES),
