@@ -11,9 +11,9 @@ if (!empty($_POST['token']) && !empty($_POST['command'])) {
     $magentoObjectManager = $magentoObjectManagerFactory->create($_SERVER);
     $tokenModel = $magentoObjectManager->get(\Magento\Integration\Model\Oauth\Token::class);
 
-    $tokenPassedIn = urldecode($_POST['token']);
-    $command = urldecode($_POST['command']);
-    $arguments = urldecode($_POST['arguments']);
+    $tokenPassedIn = urldecode($_POST['token'] ?? '');
+    $command = urldecode($_POST['command'] ?? '');
+    $arguments = urldecode($_POST['arguments'] ?? '');
 
     // Token returned will be null if the token we passed in is invalid
     $tokenFromMagento = $tokenModel->loadByToken($tokenPassedIn)->getToken();
@@ -22,8 +22,14 @@ if (!empty($_POST['token']) && !empty($_POST['command'])) {
         $magentoBinary = $php . ' -f ../../../../bin/magento';
         $valid = validateCommand($magentoBinary, $command);
         if ($valid) {
-            $fullCommand = escapeshellcmd($magentoBinary . " $command" . " $arguments");
-            $process = new Symfony\Component\Process\Process($fullCommand);
+            $fullCommand = $magentoBinary . " $command" . " $arguments";
+            $escapedCommand = escapeshellcmd($fullCommand);
+            if ($fullCommand !== $escapedCommand) {
+                http_response_code(403);
+                echo("Unsafe characters detected, command was not executed.");
+                return;
+            }
+            $process = new Symfony\Component\Process\Process($escapedCommand);
             $process->setIdleTimeout(60);
             $process->setTimeout(0);
             $idleTimeout = false;
