@@ -22,14 +22,8 @@ if (!empty($_POST['token']) && !empty($_POST['command'])) {
         $magentoBinary = $php . ' -f ../../../../bin/magento';
         $valid = validateCommand($magentoBinary, $command);
         if ($valid) {
-            $fullCommand = $magentoBinary . " $command" . " $arguments";
-            $escapedCommand = escapeshellcmd($fullCommand);
-            if ($fullCommand !== $escapedCommand) {
-                http_response_code(403);
-                echo("Unsafe characters detected, command was not executed.");
-                return;
-            }
-            $process = new Symfony\Component\Process\Process($escapedCommand);
+            $fullCommand = escapeshellcmd($magentoBinary . " $command" . " $arguments");
+            $process = new Symfony\Component\Process\Process($fullCommand);
             $process->setIdleTimeout(60);
             $process->setTimeout(0);
             $idleTimeout = false;
