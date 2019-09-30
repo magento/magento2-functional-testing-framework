@@ -103,6 +103,7 @@ class Factory extends \Magento\FunctionalTestingFramework\ObjectManager\Factory\
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
+     * Revisited to reduce cyclomatic complexity, left unrefactored for readability
      */
     protected function resolveArguments($requestedType, array $parameters, array $arguments = [])
     {
@@ -179,8 +180,10 @@ class Factory extends \Magento\FunctionalTestingFramework\ObjectManager\Factory\
      *
      * @param array $array
      * @return void
+     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
+     * Revisited to reduce cyclomatic complexity, left unrefactored for readability
      */
     protected function parseArray(&$array)
     {
@@ -219,8 +222,6 @@ class Factory extends \Magento\FunctionalTestingFramework\ObjectManager\Factory\
      * @param array  $arguments
      * @return object
      * @throws \Exception
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function create($requestedType, array $arguments = [])
     {

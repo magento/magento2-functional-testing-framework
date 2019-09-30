@@ -70,6 +70,7 @@ class Flat implements ConverterInterface
      * @return string|array
      * @throws \UnexpectedValueException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * Revisited to reduce cyclomatic complexity, left unrefactored for readability
      */
     public function convertXml(\DOMNode $source, $basePath = '')
     {

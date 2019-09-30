@@ -145,6 +145,7 @@ class Dom
      * @return void
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @TODO Ported magento code - to be refactored later
      */
     protected function mergeMatchingNode(\DomElement $node, $parentPath, $matchedNode, $path)
     {
