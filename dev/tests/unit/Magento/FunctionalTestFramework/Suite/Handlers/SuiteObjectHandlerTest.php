@@ -15,9 +15,16 @@ use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
 use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 use tests\unit\Util\SuiteDataArrayBuilder;
 use tests\unit\Util\TestDataArrayBuilder;
+use tests\unit\Util\MockModuleResolverBuilder;
 
 class SuiteObjectHandlerTest extends MagentoTestCase
 {
+    public function setUp()
+    {
+        $resolverMock = new MockModuleResolverBuilder();
+        $resolverMock->setup();
+    }
+
     /**
      * Tests basic parsing and accesors of suite object and suite object supporting classes
      */
