@@ -1,11 +1,11 @@
 # Using suites
 
-With the increasing number of MFTF tests, it's important to have a mechanism to organize and consolidate them for ease-of-use.
+With increasing number of MFTF tests, it's important to have a mechanism to organize and consolidate them for ease-of-use.
 
 ## What is a suite?
 
-Suite is a collection of MFTF tests that are intended to test specific behaviors of Magento. It may contain common initialization and clean up steps specific to the test cases included. Suites allow you to include, exclude and/or group tests with preconditions and post conditions.
-You can create suites with tests, test groups and modules.
+Suite is a collection of MFTF tests that are intended to test specific behaviors of Magento. It may contain common initialization and clean up steps specific to the test cases included. It allows you to include, exclude and/or group tests with preconditions and post conditions.
+You can create a suite referencing tests, test groups and modules.
 
 ### How is a suite defined?
 
@@ -93,6 +93,6 @@ If a test is referenced in a suite, it can be run in the suite's context with MF
 
 ### When to use suites?
 
-Suites are a great way to organize tests which need magento environment to be configured in a specific way as a pre-requisite. The conditions are executed once per suite which optimizes test execution time. If you wish to categorize tests based on functionality solely, use @group tags instead.
+Suites are a great way to organize tests which need magento environment to be configured in a specific way as a pre-requisite. The conditions are executed once per suite which optimizes test execution time. If you wish to categorize tests solely based on functionality, use group tags instead.
 
-
+<!-- Link definitions -->
