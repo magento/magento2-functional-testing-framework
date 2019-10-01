@@ -1,6 +1,6 @@
 # Extend data entities
 
-Extending a data entity doesn't affect the existing data entity.
+Extending a data entity does not affect the existing data entity.
 
 In this example we update the quantity to 1001 and add a new piece of data relevant to our extension. Unlike merging, this will _not_ affect any other tests that use this data entity.
 
