@@ -2,11 +2,11 @@
 
 The MFTF allows you to merge test components defined in XML files, such as:
 
-- [`<tests>`][]
-- [`<pages>`][]
-- [`<sections>`][]
-- [`<data>`][]
-- `<action groups>`
+-  [`<tests>`][]
+-  [`<pages>`][]
+-  [`<sections>`][]
+-  [`<data>`][]
+-  `<action groups>`
 
 You can create, delete, or update the component.
 It is useful for supporting rapid test creation for extensions and customizations.
@@ -18,11 +18,11 @@ Your update (XML node with changes) must have the same attribute `name` as its b
 
 For example:
 
-- All tests with `<test name="SampleTest>` will be merged into one.
-- All pages with `<page name="SamplePage>` will be merged into one.
-- All sections with `<section name="SampleAction">` will be merged into one.
-- All data entities with `<entity name="sampleData" type="sample">` will be merged into one.
-- All action groups with `<actionGroup name="selectNotLoggedInCustomerGroup">` will be merged into one.
+-  All tests with `<test name="SampleTest>` will be merged into one.
+-  All pages with `<page name="SamplePage>` will be merged into one.
+-  All sections with `<section name="SampleAction">` will be merged into one.
+-  All data entities with `<entity name="sampleData" type="sample">` will be merged into one.
+-  All action groups with `<actionGroup name="selectNotLoggedInCustomerGroup">` will be merged into one.
 
 Although a file name does not influence merging, we recommend using the same file names in merging updates.
 This makes it easier to search later on.

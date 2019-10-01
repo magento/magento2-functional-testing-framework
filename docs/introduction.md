@@ -5,11 +5,11 @@
 The Magento Functional Testing Framework (MFTF) aims to replace the [Functional Testing Framework] in future releases.
 MFTF improves:
 
-- **Traceability** for clear logging and reporting capabilities.
-- **Modularity** to run tests based on installed modules and extensions.
-- **Customizability** for existing tests.
-- **Readability** using clear and declarative XML test steps.
-- **Maintainability** based on simple test creation and overall structure.
+-  **Traceability** for clear logging and reporting capabilities.
+-  **Modularity** to run tests based on installed modules and extensions.
+-  **Customizability** for existing tests.
+-  **Readability** using clear and declarative XML test steps.
+-  **Maintainability** based on simple test creation and overall structure.
 
 Because MFTF tests are written in XML, you no longer need to learn PHP to write tests.
 
@@ -27,17 +27,17 @@ This MFTF guide is intended for Magento developers and software engineers, such 
 
 The purpose of MFTF is to:
 
-- Facilitate functional testing and minimize the effort it takes to perform regression testing.
-- Make it easier to support the extension and customization of tests via XML merging.
+-  Facilitate functional testing and minimize the effort it takes to perform regression testing.
+-  Make it easier to support the extension and customization of tests via XML merging.
 
 ## Scope
 
 MFTF will enable you to:
 
-- Test user interactions with web applications in testing.
-- Write functional tests located in `<magento_root>/app/code/<vendor_name>/<module_name>/Test/Mftf/`.
-- Cover basic functionality using out-of-the-box tests. You can test extended functionality using custom tests.
-- Automate regression testing.
+-  Test user interactions with web applications in testing.
+-  Write functional tests located in `<magento_root>/app/code/<vendor_name>/<module_name>/Test/Mftf/`.
+-  Cover basic functionality using out-of-the-box tests. You can test extended functionality using custom tests.
+-  Automate regression testing.
 
 ## Use cases
 
@@ -49,8 +49,8 @@ As a software engineer, perform regression testing before release to ensure that
 
 There are two options to find out your MFTF version:
 
-- using the MFTF CLI
-- using the Composer CLI
+-  using the MFTF CLI
+-  using the Composer CLI
 
 ### MFTF CLI
 
@@ -91,18 +91,18 @@ codeception.dist.yml            // Codeception configuration (generated while ru
 
 ## MFTF output
 
-- Generated PHP Codeception tests
-- Codeception results and console logs
-- Screenshots and HTML failure report
-- Allure formatted XML results
-- Allure report dashboard of results
+-  Generated PHP Codeception tests
+-  Codeception results and console logs
+-  Screenshots and HTML failure report
+-  Allure formatted XML results
+-  Allure report dashboard of results
 
 ## MFTF tests
 
 The MFTF supports two different locations for storing the tests and test artifacts:
 
-- `<magento_root>/app/code/<vendor_name>/<module_name>/Test/Mftf/` is the directory to create new tests.
-- `<magento_root>/vendor/<vendor_name>/<module_name>/Test/Mftf/` is the directory with the out of the box tests (fetched by the Composer).
+-  `<magento_root>/app/code/<vendor_name>/<module_name>/Test/Mftf/` is the directory to create new tests.
+-  `<magento_root>/vendor/<vendor_name>/<module_name>/Test/Mftf/` is the directory with the out of the box tests (fetched by the Composer).
 
 All tests and test data from these locations are merged in the order indicated in the above list.
 

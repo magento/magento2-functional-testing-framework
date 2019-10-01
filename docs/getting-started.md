@@ -10,10 +10,10 @@ The latest Magento 2.2 release supports MFTF 2.3.8.
 
 Make sure that you have the following software installed and configured on your development environment:
 
-- [PHP version supported by the Magento instance under test][php]
-- [Composer 1.3 or later][composer]
-- [Java 1.8 or later][java]
-- [Selenium Server Standalone 3.1 or later][selenium server] and [ChromeDriver 2.33 or later][chrome driver] or other webdriver in the same directory
+-  [PHP version supported by the Magento instance under test][php]
+-  [Composer 1.3 or later][composer]
+-  [Java 1.8 or later][java]
+-  [Selenium Server Standalone 3.1 or later][selenium server] and [ChromeDriver 2.33 or later][chrome driver] or other webdriver in the same directory
 
 <div class="bs-callout bs-callout-tip" markdown="1">
 [PhpStorm] supports [Codeception test execution][], which is helpful when debugging.
@@ -147,16 +147,16 @@ vim dev/tests/acceptance/.env
 
 Specify the following parameters, which are required to launch tests:
 
-- `MAGENTO_BASE_URL` must contain a domain name of the Magento instance that will be tested.
+-  `MAGENTO_BASE_URL` must contain a domain name of the Magento instance that will be tested.
   Example: `MAGENTO_BASE_URL=http://magento.test`
 
-- `MAGENTO_BACKEND_NAME` must contain the relative path for the Admin area.
+-  `MAGENTO_BACKEND_NAME` must contain the relative path for the Admin area.
   Example: `MAGENTO_BACKEND_NAME=admin`
 
-- `MAGENTO_ADMIN_USERNAME` must contain the username required for authorization in the Admin area.
+-  `MAGENTO_ADMIN_USERNAME` must contain the username required for authorization in the Admin area.
   Example: `MAGENTO_ADMIN_USERNAME=admin`
 
-- `MAGENTO_ADMIN_PASSWORD` must contain the user password required for authorization in the Admin area.
+-  `MAGENTO_ADMIN_PASSWORD` must contain the user password required for authorization in the Admin area.
   Example: `MAGENTO_ADMIN_PASSWORD=123123q`
 
 <div class="bs-callout bs-callout-info" markdown="1">
@@ -222,8 +222,8 @@ During testing, the MFTF generates test reports in CLI.
 You can generate visual representations of the report data using [Allure Framework][].
 To view the reports in GUI:
 
-- [Install Allure][]
-- Run the tool to serve the artifacts in `dev/tests/acceptance/tests/_output/allure-results/`:
+-  [Install Allure][]
+-  Run the tool to serve the artifacts in `dev/tests/acceptance/tests/_output/allure-results/`:
 
 ```bash
 allure serve dev/tests/acceptance/tests/_output/allure-results/
