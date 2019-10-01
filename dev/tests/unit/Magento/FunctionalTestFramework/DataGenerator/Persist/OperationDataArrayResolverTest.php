@@ -356,7 +356,8 @@ class OperationDataArrayResolverTest extends MagentoTestCase
         $this->assertEquals(self::NESTED_METADATA_ARRAY_RESULT, $result);
     }
 
-    public function testNestedMetadataArrayOfDiverseObjects() {
+    public function testNestedMetadataArrayOfDiverseObjects()
+    {
 
         $entityDataObjBuilder = new EntityDataObjectBuilder();
         $parentDataObject = $entityDataObjBuilder
@@ -364,7 +365,6 @@ class OperationDataArrayResolverTest extends MagentoTestCase
             ->withType("parentType")
             ->withLinkedEntities(['child1Object' => 'childType1','child2Object' => 'childType2'])
             ->build();
-
 
         $child1DataObject = $entityDataObjBuilder
             ->withName('child1Object')
@@ -378,18 +378,20 @@ class OperationDataArrayResolverTest extends MagentoTestCase
             ->withDataFields(['city' => 'Testcity 2','zip' => 54321,'state' => 'Teststate'])
             ->build();
 
-        $mockDOHInstance = AspectMock::double(DataObjectHandler::class,
+        $mockDOHInstance = AspectMock::double(
+            DataObjectHandler::class,
             [
                 'getObject' => function ($name) use ($child1DataObject, $child2DataObject) {
-            switch ($name) {
-                case 'child1Object':
-                    return $child1DataObject;
-                case 'child2Object':
-                    return $child2DataObject;
-            }
+                    switch ($name) {
+                        case 'child1Object':
+                            return $child1DataObject;
+                        case 'child2Object':
+                            return $child2DataObject;
+                    }
                 }
-            ])->make();
-        AspectMock::double(DataObjectHandler::class,[
+            ]
+        )->make();
+        AspectMock::double(DataObjectHandler::class, [
             'getInstance' => $mockDOHInstance
         ]);
 
@@ -416,7 +418,7 @@ class OperationDataArrayResolverTest extends MagentoTestCase
         $mockODOHInstance = AspectMock::double(
             OperationDefinitionObjectHandler::class,
             [
-                'getObject' => function($name) use ($child1OperationDefinition, $child2OperationDefinition) {
+                'getObject' => function ($name) use ($child1OperationDefinition, $child2OperationDefinition) {
                     switch ($name) {
                         case 'createchildType1':
                             return $child1OperationDefinition;
@@ -425,11 +427,13 @@ class OperationDataArrayResolverTest extends MagentoTestCase
                     }
                 }
             ]
-            )->make();
-        AspectMock::double(OperationDefinitionObjectHandler::class,
+        )->make();
+        AspectMock::double(
+            OperationDefinitionObjectHandler::class,
             [
                 'getInstance' => $mockODOHInstance
-            ]);
+            ]
+        );
 
         $arrayObElementBuilder = new OperationElementBuilder();
         $arrayElement = $arrayObElementBuilder
@@ -448,7 +452,7 @@ class OperationDataArrayResolverTest extends MagentoTestCase
             ->build();
 
         $operationResolver = new OperationDataArrayResolver();
-        $result = $operationResolver->resolveOperationDataArray($parentDataObject,[$parentElement],'create',false);
+        $result = $operationResolver->resolveOperationDataArray($parentDataObject, [$parentElement], 'create', false);
 
         $expectedResult = [
             'parentType' => [
