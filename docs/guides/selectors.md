@@ -52,7 +52,7 @@ The best and most simple selector will always be to use an element ID: `#some-id
 
 We suggest the use of CSS selectors above XPath selectors when possible.
 
-### Do and Do not
+### Writing proper selectors
 
 There are correct ways of writing selectors and incorrect ways. These suggestions will help you write better selectors.
 
@@ -90,7 +90,7 @@ The `*=` means `contains`. The selector is saying 'find an input whose name cont
 
 Similarly here, this will match all elements which contains the class `.add`. This is brittle and susceptible to breaking when new elements/styles are added to the page.
 
-#### Being too specific
+#### Avoid being too specific
 
 DO NOT make your selectors too specific either. If a selector is too specific, there is a high probability that it will break due to even minor changes to the application being tested.
 
