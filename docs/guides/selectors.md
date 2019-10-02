@@ -1,128 +1,135 @@
-# How To Write Good Selectors
+# How To write good selectors
 
-Selectors are an atomic unit of test writing. They fit into the hierarchy like this: MFTF tests make use of action groups, which are made up of actions, which interact with page objects, which contain elements, which are specified by selectors. Because they are the building blocks, we must take care when writing them.
+Selectors are the atomic unit of test writing. They fit into the hierarchy like this: MFTF tests make use of action groups > which are made up of actions > which interact with page objects > which contain elements > which are specified by selectors. Because they are fundamental building blocks, we must take care when writing them.
 
 ## What is a selector?
 
-A "selector" is like an address to an element in the Document Object Model (DOM). It locates those elements and allows MFTF to interact with them. By element we mean things such as input fields, buttons, tables, divs, etc. By interact we mean actions such as click, fill field, etc.
+A "selector" works like an address to an element in the Document Object Model (DOM). It specifies page elements and allows MFTF to interact with them.
+By 'element' we mean things such as input fields, buttons, tables, divs, etc.
+By 'interact' we mean actions such as click, fill field, etc.
 
 Selectors live inside of MFTF page objects and are meant to be highly re-usable amongst all tests. They can be written in either CSS or XPath.
 
 ## Why are good selectors important?
 
-Good selectors are important because they are the most re-used component of functional testing. They are the lowest building blocks of tests, the foundation. If they are unstable then everything else built on top of them will inherit that instability.
+Good selectors are important because they are the most re-used component of functional testing. They are the lowest building blocks of tests; the foundation. If they are unstable then everything else built on top of them will inherit that instability.
 
 ## How do I write good selectors?
 
-We could cover this subject with an infinite amount of documentation and some lessons only come from experience. But this guide will explain some DOs and DONTs to help you along the way towards mastery.
+We could cover this subject with an infinite amount of documentation and some lessons only come from experience. This guide explains some DOs and DONTs to help you along the way towards selector mastery.
 
 ### Inspecting the DOM
 
-To write a selector you need to be able to see the DOM and find the element within it. Fortunately you don't have to look at the entire DOM every time. Nor do you have to read it from top to bottom. Instead you can make use of your browsers built in developer tools or go a step further and try out some popular browser extensions.
+To write a selector you need to be able to see the DOM and find the element within it. Fortunately you do not have to look at the entire DOM every time. Nor do you have to read it from top to bottom. Instead you can make use of your browsers built-in developer tools or go a step further and try out some popular browser extensions.
 
 See these links for more information about built-in browser developer tools:
-* [Chrome Developer Tools](https://developers.google.com/web/tools/chrome-devtools/)
-* [Firefox Developer Tools](https://developer.mozilla.org/en-US/docs/Tools)
+
+*  [Chrome Developer Tools](https://developers.google.com/web/tools/chrome-devtools/)
+*  [Firefox Developer Tools](https://developer.mozilla.org/en-US/docs/Tools)
 
 See these links for common browser addons that may offer advantages over browser developer tools:
-* [Live editor for CSS, Less & Sass - Magic CSS](https://chrome.google.com/webstore/detail/live-editor-for-css-less/ifhikkcafabcgolfjegfcgloomalapol?hl=en)
-* [XPath Helper](https://chrome.google.com/webstore/detail/xpath-helper/hgimnogjllphhhkhlmebbmlgjoejdpjl?hl=en)
+
+*  [Live editor for CSS, Less & Sass - Magic CSS](https://chrome.google.com/webstore/detail/live-editor-for-css-less/ifhikkcafabcgolfjegfcgloomalapol?hl=en)
+*  [XPath Helper](https://chrome.google.com/webstore/detail/xpath-helper/hgimnogjllphhhkhlmebbmlgjoejdpjl?hl=en)
 
 ### CSS vs XPath
 
-There are many similarities and many differences between CSS and XPath. It is too much to cover in this guide alone. You should search out additional material on your own. In general:
+There are similarities and differences between CSS and XPath. Both are powerful and complex in ways that are outside of the scope of this document.
+In general:
 
-* CSS is more stable, easier to read, and easier to maintain (typically).
-* XPath provides several powerful tools and it has been around the longest so it’s well documented.
-* XPath can be less stable and potentially unsupported by certain actions in Selenium.
+*  CSS is more stable, easier to read, and easier to maintain (typically).
+*  XPath provides several powerful tools and it has been around the longest so it is well documented.
+*  XPath can be less stable and potentially unsupported by certain actions in Selenium.
 
 ### Priority
 
-The best and most simple selector will always be `#some-id-here`. If only we were so lucky to have this every time. When writing selectors, you should prioritize looking for these starting points to build your selector from.
+The best and most simple selector will always be to use an element ID: `#some-id-here`. If only we were so lucky to have this every time. When writing selectors, you should prioritize looking for these starting points to build your selector from.
 
-1. ID, Name, Class, or anything else that is unique to the element
+1. ID, name, class, or anything else that is unique to the element
 2. Complex CSS selectors
 3. XPath selectors
-4. If none of the above work for you, then the last resort is to ask a developer to add a unique ID or Class to the element you're trying to select.
+4. If none of the above work for you, then the last resort is to ask a developer to add a unique ID or class to the element you are trying to select.
 
-Important: Notice we prefer the use of CSS selectors above XPath selectors when possible.
+We suggest the use of CSS selectors above XPath selectors when possible.
 
-### Do's and Don'ts
+### Do and Do not
 
-Let's start with the Don'ts because they're more important.
+There are correct ways of writing selectors and incorrect ways. These suggestions will help you write better selectors.
 
-#### Don't #1
+#### Incorrect - copy selector/xpath
 
 DO NOT right click on an element in your browser developer tools and select "Copy selector" or "Copy XPath" and simply use that as your selector. These auto-generated selectors are prime examples of what not to do.
 
 These are bad:
 
-```
+```css
 #html-body > section > div > div > div > div
 ```
 
-```
+```xpath
 //*[@id='html-body']/section/div/div/div/div
 ```
 
-They both include unnecessary hierarchical details. As written, we're looking for a `div` inside of a `div` inside of a `div` inside of... you get the picture. But if an application developer adds another `div` parent tomorrow, even for stylistic reasons, then this selector will break. Furthermore, when reading it, it's not even clear what was the intended target in the first place.
+Both include unnecessary hierarchical details. As written, we are looking for a `div` inside of a `div` inside of a `div` inside of... you get the picture. If an application developer adds another `div` parent tomorrow, for whatever reason, this selector will break. Furthermore, when reading it, it is not clear what the intended target is. It may also grab other elements that were not intended.
 
-#### Don't #2
+#### Do not be too general
 
-DO NOT make your selectors too generic. If a selector is too generic, there is a high probability that it will match multiple elements on the page. Maybe not today. But probably tomorrow when the application under test changes.
+DO NOT make your selectors too generic. If a selector is too generic, there is a high probability that it will match multiple elements on the page. Maybe not today, but perhaps tomorrow when the application being tested changes.
 
 These are bad:
 
-```
+```html
 input[name*='firstname']
 ```
 
-The `*=` means `contains`. So the selector is saying find an input whose name contains the string "firstname". But if a future change adds a new element to the page whose name also contains "firstname", then this selector will now match two elements and that's bad.
+The `*=` means `contains`. The selector is saying 'find an input whose name contains the string "firstname"'. But if a future change adds a new element to the page whose name also contains "firstname", then this selector will match two elements and that is bad.
 
-```
+```css
 .add
 ```
 
-Similarly here, this will match any element which contains the class `.add`. This is brittle and susceptible to breaking when new elements/styles are added to the page.
+Similarly here, this will match all elements which contains the class `.add`. This is brittle and susceptible to breaking when new elements/styles are added to the page.
 
-#### Don't #3
+#### Being too specific
 
-DO NOT make your selectors too specific either. If a selector is too specific, there is a high probability that it will break due to even minor changes to the application under test.
+DO NOT make your selectors too specific either. If a selector is too specific, there is a high probability that it will break due to even minor changes to the application being tested.
 
 These are bad:
 
-```
+```css
 #container .dashboard-advanced-reports .dashboard-advanced-reports-description .dashboard-advanced-reports-title
 ```
 
 This selector is too brittle. It would break very easily if an application developer does something as simple as adding a parent container for style reasons.
 
-```
+```xpath
 //*[@id='container']/*[@class='dashboard-advanced-reports']/*[@class='dashboard-advanced-reports-description']/*[@class='dashboard-advanced-reports-title']
 ```
 
 This is the same selector as above, but represented in XPath instead of CSS. It is brittle for the same reasons.
 
-#### Do #1
+#### Use isolation
 
 You should think in terms of "isolation" when writing new selectors.
 
-For example, let's say you have a login form that contains a username field, a password field, and a Sign In button. First isolate the parent element. Perhaps it's `#login-form`. Then target the child element under that parent element: `.sign-in-button` The result is `#login-form .sign-in-button`.
+For example, say you have a login form that contains a username field, a password field, and a 'Sign In' button. First isolate the parent element. Perhaps it's `#login-form`. Then target the child element under that parent element: `.sign-in-button` The result is `#login-form .sign-in-button`.
 
-Thinking like this will reduce the amount of DOM that you need to worry about.
+Using isolation techniques reduces the amount of DOM that needs to be processed. This makes the selector both accurate and efficient.
 
-#### Do #2
+#### Use advanced notation
 
-If you need to interact with the parent element but it's too generic, and the internal contents are unique then you need to:
+If you need to interact with the parent element but it is too generic, and the internal contents are unique then you need to:
 
-1. Target the unique internal contents first
-2. Then jump to the parent element using `::parent`
+1. Target the unique internal contents first.
+1. Then jump to the parent element using `::parent`.
 
-For example let's imagine you want to find a table row that contains the string "Jerry Seinfeld". You can use the following XPath selector:
+Imagine you want to find a table row that contains the string "Jerry Seinfeld". You can use the following XPath selector:
 
-```
+```xpath
 //div[contains(text(), 'Jerry Seinfeld')]/parent::td/parent::tr
 ```
+
+Note in this instance that CSS does not have an equivalent to `::parent`, so XPath is a better choice.
 
 ### CSS Examples
 
@@ -148,7 +155,7 @@ Whitespace|Descendant Combinator|Allows you to combine 2 or more selectors.|`#id
 `+`|Adjacent Sibling Combinator|Allows you to select an element THAT FOLLOWS DIRECTLY AFTER another specified element.|`#idname + .classname`
 `~`|General Sibling Combinator|Allows you to select an element THAT FOLLOWS (directly or indirectly) another specified element.|`#idname ~ .classname`
 
-Examples of CSS attribute operators and their purpose
+Examples of CSS attribute operators and their purpose:
 
 Symbol|Purpose|Example
 ---|---|---
@@ -157,7 +164,7 @@ Symbol|Purpose|Example
 `~=`|Returns all elements that CONTAINS the given words delimited by spaces in the value.|`[attribute~='value']`
 `$=`|Returns all elements that ENDS WITH the substring in the value.|`[attribute$='value']`
 `^=`|Returns all elements that BEGIN EXACTLY WITH the substring in the value.|`[attribute^='value']`
-`!=`|Returns all elements that either DOESN’T HAVE the given attribute or the value of the attribute is NOT EQUAL to the value.|`[attribute!='value']`
+`!=`|Returns all elements that either DOES NOT HAVE the given attribute or the value of the attribute is NOT EQUAL to the value.|`[attribute!='value']`
 
 ### XPath Examples
 
@@ -165,21 +172,21 @@ Symbol|Purpose|Example
 
 The absolute XPath selector is a single forward slash `/`. It is used to provide a direct path to the element from the root element.
 
-WARNING: The `/` selector is brittle and should only be used sparingly.
+WARNING: The `/` selector is brittle and should be used sparingly.
 
-Here's an example of what NOT to do, but this demonstrates how the selector works:
+Here is an example of what NOT to do, but this demonstrates how the selector works:
 
-```
+```xpath
 /html/body/div[2]/div/div[2]/div[1]/div[2]/form/div/input
 ```
 
-In the BAD example above we are specifying a very precise path to an input element in the DOM.
+In the BAD example above, we are specifying a very precise path to an input element in the DOM, starting from the very top of the document.
 
 Similarly, the relative XPath selector is a double forward slash `//`. It is used to start searching for an element anywhere in the DOM.
 
 Example:
 
-```
+```xpath
 //div[@class=’form-group’]//input[@id='user-message']
 ```
 
@@ -191,7 +198,7 @@ Example #1:
 
 Given this HTML:
 
-```
+```html
 <tr>
     <td>
         <div>Unique Value</div>
@@ -201,7 +208,7 @@ Given this HTML:
 
 We can locate the `<tr>` element with this selector:
 
-```
+```xpath
 //*[text()='Unique Value']/../..
 ```
 
@@ -209,7 +216,7 @@ Example #2:
 
 Given this HTML:
 
-```
+```html
 <tr>
     <td>
         <a href=“#”>Edit</a>
@@ -222,13 +229,13 @@ Given this HTML:
 
 We can locate the `<a>` element with this selector:
 
-```
+```xpath
 //div[text()='Unique Value']/../..//a
 ```
 
 #### Attribute Selectors
 
-Attribute selectors allow you to select an element that match a specific attribute value.
+Attribute selectors allow you to select elements that match a specific attribute value.
 
 Examples:
 
@@ -243,7 +250,7 @@ src|`<img src='/img.png'/>`|`//*[@src='/img.png']`
 
 #### `contains()` Selector
 
-The `contains()` selector allows you to select an element that contains an attribute value search string.
+The `contains()` selector allows you to select an element that contains an attribute value string.
 
 Examples:
 
