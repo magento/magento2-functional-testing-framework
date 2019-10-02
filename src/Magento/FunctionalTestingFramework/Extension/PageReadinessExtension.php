@@ -106,8 +106,6 @@ class PageReadinessExtension extends BaseExtension
      * @param StepEvent $e
      * @return void
      * @throws \Exception
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function beforeStep(StepEvent $e)
     {
@@ -117,7 +115,26 @@ class PageReadinessExtension extends BaseExtension
             return;
         }
 
-        // Check if page has changed and reset metric tracking if so
+        $this->resetMetricTracker($step);
+
+        $metrics = $this->readinessMetrics;
+
+        $this->waitForReadiness($metrics);
+
+      /** @var AbstractMetricCheck $metric */
+        foreach ($metrics as $metric) {
+            $metric->finalizeForStep($step);
+        }
+    }
+
+    /**
+     * Check if page has changed, if so reset metric tracking
+     *
+     * @param Step $step
+     * @return void
+     */
+    private function resetMetricTracker($step)
+    {
         if ($this->pageChanged($step)) {
             $this->logDebug(
                 'Page URI changed; resetting readiness metric failure tracking',
@@ -131,15 +148,23 @@ class PageReadinessExtension extends BaseExtension
                 $metric->resetTracker();
             }
         }
+    }
 
+    /**
+     * Wait for page readiness.
+     * @param array $metrics
+     * @return void
+     * @throws \Codeception\Exception\ModuleRequireException
+     * @throws \Facebook\WebDriver\Exception\NoSuchElementException
+     */
+    private function waitForReadiness($metrics)
+    {
         // todo: Implement step parameter to override global timeout configuration
         if (isset($this->config['timeout'])) {
             $timeout = intval($this->config['timeout']);
         } else {
             $timeout = $this->getDriver()->_getConfig()['pageload_timeout'];
         }
-
-        $metrics = $this->readinessMetrics;
 
         try {
             $this->getDriver()->webDriver->wait($timeout)->until(
@@ -159,11 +184,6 @@ class PageReadinessExtension extends BaseExtension
                 }
             );
         } catch (TimeoutException $exception) {
-        }
-
-        /** @var AbstractMetricCheck $metric */
-        foreach ($metrics as $metric) {
-            $metric->finalizeForStep($step);
         }
     }
 

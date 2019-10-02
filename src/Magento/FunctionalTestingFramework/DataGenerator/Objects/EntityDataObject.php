@@ -9,6 +9,7 @@ namespace Magento\FunctionalTestingFramework\DataGenerator\Objects;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\DataGenerator\Util\GenerationDataReferenceResolver;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
@@ -161,7 +162,6 @@ class EntityDataObject
      * @param integer $uniquenessFormat
      * @return string|null
      * @throws TestFrameworkException
-     * @SuppressWarnings(PHPMD)
      */
     public function getDataByName($name, $uniquenessFormat)
     {
@@ -177,12 +177,24 @@ class EntityDataObject
             throw new TestFrameworkException($exceptionMessage);
         }
 
-        $name_lower = strtolower($name);
-
         if ($this->data === null) {
             return null;
         }
+        return $this->resolveDataReferences($name, $uniquenessFormat);
+    }
 
+    /**
+     * Resolves data references in entities while generating static test files.
+     *
+     * @param string  $name
+     * @param integer $uniquenessFormat
+     * @return string|null
+     * @throws TestFrameworkException
+     * @throws TestReferenceException
+     */
+    private function resolveDataReferences($name, $uniquenessFormat)
+    {
+        $name_lower = strtolower($name);
         $dataReferenceResolver = new GenerationDataReferenceResolver();
         if (array_key_exists($name_lower, $this->data)) {
             if (is_array($this->data[$name_lower])) {
