@@ -511,12 +511,16 @@ class ModuleResolver
                     if (strpos($modules[0], '_') === false) {
                         $modules[0] = $this->findVendorNameFromPath($path) . '_' . $modules[0];
                     }
-                    $flippedArray[$modules[0]] = $path;
+                    $flippedArray = $this->setArrayValueWithLogging($flippedArray, $modules[0], $path);
                 }
             } else {
                 // One path maps to multiple modules
                 if (!is_array($filterArray)) {
-                    $flippedArray[$this->findVendorAndModuleNameFromPath($path)] = $path;
+                    $flippedArray = $this->setArrayValueWithLogging(
+                        $flippedArray,
+                        $this->findVendorAndModuleNameFromPath($path),
+                        $path
+                    );
                 } else {
                     $skip = false;
                     foreach ($modules as $module) {
@@ -526,12 +530,38 @@ class ModuleResolver
                         }
                     }
                     if (!$skip) {
-                        $flippedArray[$this->findVendorAndModuleNameFromPath($path)] = $path;
+                        // The one path to many module names use case is designed to be strictly used when it's
+                        // impossible to write tests in dedicated modules. Due to performance consideration and there
+                        // is no real usage of this currently, we will use the first module name for the path.
+                        // TODO: consider saving all module names if this information is needed in the future.
+                        $flippedArray = $this->setArrayValueWithLogging($flippedArray, $modules[0], $path);
                     }
                 }
             }
         }
         return $flippedArray;
+    }
+
+    /**
+     * Set array value at index only if array value at index is not yet set, skip otherwise and log warning message
+     *
+     * @param array  $inArray
+     * @param string $index
+     * @param string $value
+     *
+     * @return array
+     */
+    private function setArrayValueWithLogging($inArray, $index, $value)
+    {
+        $outArray = $inArray;
+        if (!isset($inArray[$index])) {
+            $outArray[$index] = $value;
+        } else {
+            $warnMsg = 'Path: ' . $value . ' is ignored by ModuleResolver. ' . PHP_EOL . 'Path: ';
+            $warnMsg .= $inArray[$index] . ' is set for Module: ' . $index . PHP_EOL;
+            LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->warn($warnMsg);
+        }
+        return $outArray;
     }
 
     /**

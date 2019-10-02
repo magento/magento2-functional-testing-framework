@@ -135,16 +135,16 @@ class ComposerModuleResolver
         $jsonPattern = DIRECTORY_SEPARATOR . "composer.json";
         $subDirectoryPattern = DIRECTORY_SEPARATOR . "*";
 
-        $jsonFileList = glob($directory . $jsonPattern);
-        if ($jsonFileList !== false && !empty($jsonFileList)) {
-            return $jsonFileList;
-        } else {
-            $jsonFileList = [];
-            foreach (glob($directory . $subDirectoryPattern, GLOB_ONLYDIR) as $dir) {
-                $jsonFileList = array_merge_recursive($jsonFileList, self::findAllComposerJsonFiles($dir));
-            }
-            return $jsonFileList;
+        $jsonFileList = [];
+        foreach (glob($directory . $subDirectoryPattern, GLOB_ONLYDIR) as $dir) {
+            $jsonFileList = array_merge_recursive($jsonFileList, self::findAllComposerJsonFiles($dir));
         }
+
+        $curJsonFiles = glob($directory . $jsonPattern);
+        if ($curJsonFiles !== false && !empty($curJsonFiles)) {
+            $jsonFileList = array_merge_recursive($jsonFileList, $curJsonFiles);
+        }
+        return $jsonFileList;
     }
 
     /**
