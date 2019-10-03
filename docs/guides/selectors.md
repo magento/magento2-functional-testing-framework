@@ -43,7 +43,9 @@ In general:
 
 ### Priority
 
-The best and most simple selector will always be to use an element ID: `#some-id-here`. If only we were so lucky to have this every time. When writing selectors, you should prioritize looking for these starting points to build your selector from.
+The best and most simple selector will always be to use an element ID: `#some-id-here`. If only we were so lucky to have this every time.
+
+When writing selectors, you should prioritize finding in this order:
 
 1. ID, name, class, or anything else that is unique to the element
 2. Complex CSS selectors
