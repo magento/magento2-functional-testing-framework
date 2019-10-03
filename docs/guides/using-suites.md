@@ -2,14 +2,14 @@
 
 With increasing number of MFTF tests, it's important to have a mechanism to organize and consolidate them for ease-of-use.
 
-## What is a suite?
+### What is a suite?
 
 Suite is a collection of MFTF tests that are intended to test specific behaviors of Magento. It may contain common initialization and clean up steps specific to the test cases included. It allows you to include, exclude and/or group tests with preconditions and post conditions.
 You can create a suite referencing tests, test groups and modules.
 
 ### How is a suite defined?
 
-Suite must be defined under `<magento 2 root>/dev/tests/acceptance/tests/_suite` as an xml file. The generated tests for each suite are grouped into their own directory under `<magento 2 root>/dev/tests/acceptance/tests/functional/Magento/FunctionalTest/_generated/`
+A suite should be created under `<magento 2 root>/dev/tests/acceptance/tests/_suite` if it has cross-module references. If a suite references only a specific module, it should be created under `<module>/Test/Mftf/Suite`. The generated tests for each suite are grouped into their own directory under `<magento 2 root>/dev/tests/acceptance/tests/functional/Magento/FunctionalTest/_generated/`.
 
 ### What is the format of a suite?
 
@@ -23,7 +23,7 @@ A suite comprises of the below blocks:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 
-<suites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Suite/etc/suiteSchema.xsd">
+<suites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Suite/etc/suiteSchema.xsd">
     <suite name="">
         <before>
         </before>
@@ -46,7 +46,7 @@ A suite comprises of the below blocks:
 ### Example
 
 ```xml
-<suites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Suite/etc/suiteSchema.xsd">
+<suites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Suite/etc/suiteSchema.xsd">
     <suite name="WYSIWYGDisabledSuite">
         <before>
             <magentoCLI stepKey="disableWYSIWYG" command="config:set cms/wysiwyg/enabled disabled" />
