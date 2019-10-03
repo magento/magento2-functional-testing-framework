@@ -110,6 +110,30 @@ This selector is too brittle. It would break very easily if an application devel
 
 This is the same selector as above, but represented in XPath instead of CSS. It is brittle for the same reasons.
 
+#### XPath selectors should not use @attribute="foo"
+
+This XPath is fragile. It would fail if the attribute was `attribute="foo bar"`. Instead you should use `contains(@attribute, "foo")` where @attribute is any valid attribute such as @text or @class.
+
+#### CSS and XPath selectors should avoid making use of hardcoded indices
+
+Hardcoded values are by definition not flexible. A hardcoded index may change if new code is introduced. Instead, parameterize the selector.
+
+GOOD: .foo:nth-of-type({{index}})
+
+BAD: .foo:nth-of-type(1)
+
+GOOD: button[contains(@id, "foo")][{{index}}]
+
+BAD: button[contains(@id, "foo")][1]
+
+GOOD: #actions__{{index}}__aggregator
+
+BAD: #actions__1__aggregator
+
+#### CSS and XPath selectors MUST NOT reference the @data-bind attribute
+
+The @data-bind attribute is used by KnockoutJS, a framework Magento uses to create dynamic Javascript pages. Since this @data-bind attribute is tied to a specific framework, it should not be used for selectors. If Magento decides to use a different framework then these @data-bind selectors would break.
+
 #### Use isolation
 
 You should think in terms of "isolation" when writing new selectors.
