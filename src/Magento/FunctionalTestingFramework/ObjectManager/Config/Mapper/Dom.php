@@ -48,9 +48,6 @@ class Dom implements \Magento\FunctionalTestingFramework\Config\ConverterInterfa
      * @return array
      * @throws \Exception
      * @todo this method has high cyclomatic complexity in order to avoid performance issues
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function convert($config)
     {
@@ -83,34 +80,7 @@ class Dom implements \Magento\FunctionalTestingFramework\Config\ConverterInterfa
                             $typeData['type'] = $attributeType->nodeValue;
                         }
                     }
-                    $typeArguments = [];
-                    /** @var \DOMNode $typeChildNode */
-                    foreach ($node->childNodes as $typeChildNode) {
-                        if ($typeChildNode->nodeType != XML_ELEMENT_NODE) {
-                            continue;
-                        }
-                        switch ($typeChildNode->nodeName) {
-                            case 'arguments':
-                                /** @var \DOMNode $argumentNode */
-                                foreach ($typeChildNode->childNodes as $argumentNode) {
-                                    if ($argumentNode->nodeType != XML_ELEMENT_NODE) {
-                                        continue;
-                                    }
-                                    $argumentName = $argumentNode->attributes->getNamedItem('name')->nodeValue;
-                                    $argumentData = $this->argumentParser->parse($argumentNode);
-                                    $typeArguments[$argumentName] = $this->argumentInterpreter->evaluate(
-                                        $argumentData
-                                    );
-                                }
-                                break;
-                            default:
-                                throw new \Exception(
-                                    "Invalid application config. Unknown node: {$typeChildNode->nodeName}."
-                                );
-                        }
-                    }
-
-                    $typeData['arguments'] = $typeArguments;
+                    $typeData['arguments'] = $this->setTypeArguments($node);
                     $output[$typeNodeAttributes->getNamedItem('name')->nodeValue] = $typeData;
                     break;
                 default:
@@ -119,5 +89,43 @@ class Dom implements \Magento\FunctionalTestingFramework\Config\ConverterInterfa
         }
 
         return $output;
+    }
+
+    /** Read typeChildNodes and set typeArguments
+     * @param DOMNode $node
+     * @return mixed
+     * @throws \Exception
+     */
+    private function setTypeArguments($node)
+    {
+        $typeArguments = [];
+
+        foreach ($node->childNodes as $typeChildNode) {
+            /** @var \DOMNode $typeChildNode */
+            if ($typeChildNode->nodeType != XML_ELEMENT_NODE) {
+                continue;
+            }
+            switch ($typeChildNode->nodeName) {
+                case 'arguments':
+                    /** @var \DOMNode $argumentNode */
+                    foreach ($typeChildNode->childNodes as $argumentNode) {
+                        if ($argumentNode->nodeType != XML_ELEMENT_NODE) {
+                            continue;
+                        }
+                        $argumentName = $argumentNode->attributes->getNamedItem('name')->nodeValue;
+                        $argumentData = $this->argumentParser->parse($argumentNode);
+                        $typeArguments[$argumentName] = $this->argumentInterpreter->evaluate(
+                            $argumentData
+                        );
+                    }
+                    break;
+
+                default:
+                    throw new \Exception(
+                        "Invalid application config. Unknown node: {$typeChildNode->nodeName}."
+                    );
+            }
+        }
+        return $typeArguments;
     }
 }

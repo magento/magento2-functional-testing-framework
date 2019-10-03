@@ -27,11 +27,18 @@ class SuiteObjectExtractor extends BaseObjectExtractor
     const GROUP_TAG_NAME = 'group';
 
     /**
+     * TestHookObjectExtractor initialized in constructor.
+     *
+     * @var TestHookObjectExtractor
+     */
+    private $testHookObjectExtractor;
+
+    /**
      * SuiteObjectExtractor constructor
      */
     public function __construct()
     {
-        // empty constructor
+        $this->testHookObjectExtractor = new TestHookObjectExtractor();
     }
 
     /**
@@ -40,14 +47,13 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      * @param array $parsedSuiteData
      * @return array
      * @throws XmlException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      * @throws \Exception
+     *
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function parseSuiteDataIntoObjects($parsedSuiteData)
     {
         $suiteObjects = [];
-        $testHookObjectExtractor = new TestHookObjectExtractor();
 
         // make sure there are suites defined before trying to parse as objects.
         if (!array_key_exists(self::SUITE_ROOT_TAG, $parsedSuiteData)) {
@@ -60,70 +66,26 @@ class SuiteObjectExtractor extends BaseObjectExtractor
                 continue;
             }
 
-            // validate the name used isn't using special char or the "default" reserved name
-            NameValidationUtil::validateName($parsedSuite[self::NAME], 'Suite');
-            if ($parsedSuite[self::NAME] == 'default') {
-                throw new XmlException("A Suite can not have the name \"default\"");
-            }
-
-            $suiteHooks = [];
-
-            //Check for collisions between suite name and existing group name
-            $suiteName = $parsedSuite[self::NAME];
-            $testGroupConflicts = TestObjectHandler::getInstance()->getTestsByGroup($suiteName);
-            if (!empty($testGroupConflicts)) {
-                $testGroupConflictsFileNames = "";
-                foreach ($testGroupConflicts as $test) {
-                    $testGroupConflictsFileNames .= $test->getFilename() . "\n";
-                }
-                $exceptionmessage = "\"Suite names and Group names can not have the same value. \t\n" .
-                    "Suite: \"{$suiteName}\" also exists as a group annotation in: \n{$testGroupConflictsFileNames}";
-                throw new XmlException($exceptionmessage);
-            }
+            $this->validateSuiteName($parsedSuite);
 
             //extract include and exclude references
             $groupTestsToInclude = $parsedSuite[self::INCLUDE_TAG_NAME] ?? [];
             $groupTestsToExclude = $parsedSuite[self::EXCLUDE_TAG_NAME] ?? [];
 
-            // resolve references as test objects
+            //resolve references as test objects
             $includeTests = $this->extractTestObjectsFromSuiteRef($groupTestsToInclude);
             $excludeTests = $this->extractTestObjectsFromSuiteRef($groupTestsToExclude);
 
             // parse any object hooks
-            if (array_key_exists(TestObjectExtractor::TEST_BEFORE_HOOK, $parsedSuite)) {
-                $suiteHooks[TestObjectExtractor::TEST_BEFORE_HOOK] = $testHookObjectExtractor->extractHook(
-                    $parsedSuite[self::NAME],
-                    TestObjectExtractor::TEST_BEFORE_HOOK,
-                    $parsedSuite[TestObjectExtractor::TEST_BEFORE_HOOK]
-                );
-            }
-            if (array_key_exists(TestObjectExtractor::TEST_AFTER_HOOK, $parsedSuite)) {
-                $suiteHooks[TestObjectExtractor::TEST_AFTER_HOOK] = $testHookObjectExtractor->extractHook(
-                    $parsedSuite[self::NAME],
-                    TestObjectExtractor::TEST_AFTER_HOOK,
-                    $parsedSuite[TestObjectExtractor::TEST_AFTER_HOOK]
-                );
-            }
+            $suiteHooks = $this->parseObjectHooks($parsedSuite);
 
-            if (count($suiteHooks) == 1) {
-                throw new XmlException(sprintf(
-                    "Suites that contain hooks must contain both a 'before' and an 'after' hook. Suite: \"%s\"",
-                    $parsedSuite[self::NAME]
-                ));
-            }
-            // check if suite hooks are empty/not included and there are no included tests/groups/modules
-            $noHooks = count($suiteHooks) == 0 ||
-                (
-                    empty($suiteHooks['before']->getActions()) &&
-                    empty($suiteHooks['after']->getActions())
-                );
-            // if suite body is empty throw error
-            if ($noHooks && empty($includeTests) && empty($excludeTests)) {
+            //throw an exception if suite is empty
+            if ($this->isSuiteEmpty($suiteHooks, $includeTests, $excludeTests)) {
                 throw new XmlException(sprintf(
                     "Suites must not be empty. Suite: \"%s\"",
                     $parsedSuite[self::NAME]
                 ));
-            }
+            };
 
             // add all test if include tests is completely empty
             if (empty($includeTests)) {
@@ -140,6 +102,95 @@ class SuiteObjectExtractor extends BaseObjectExtractor
         }
 
         return $suiteObjects;
+    }
+
+    /**
+     * Throws exception for suite names meeting the below conditions:
+     * 1. the name used is using special char or the "default" reserved name
+     * 2. collisions between suite name and existing group name
+     *
+     * @param array $parsedSuite
+     * @return void
+     * @throws XmlException
+     */
+    private function validateSuiteName($parsedSuite)
+    {
+        //check if name used is using special char or the "default" reserved name
+        NameValidationUtil::validateName($parsedSuite[self::NAME], 'Suite');
+        if ($parsedSuite[self::NAME] == 'default') {
+            throw new XmlException("A Suite can not have the name \"default\"");
+        }
+
+        $suiteName = $parsedSuite[self::NAME];
+        //check for collisions between suite and existing group names
+        $testGroupConflicts = TestObjectHandler::getInstance()->getTestsByGroup($suiteName);
+        if (!empty($testGroupConflicts)) {
+            $testGroupConflictsFileNames = "";
+            foreach ($testGroupConflicts as $test) {
+                $testGroupConflictsFileNames .= $test->getFilename() . "\n";
+            }
+            $exceptionmessage = "\"Suite names and Group names can not have the same value. \t\n" .
+                "Suite: \"{$suiteName}\" also exists as a group annotation in: \n{$testGroupConflictsFileNames}";
+            throw new XmlException($exceptionmessage);
+        }
+    }
+
+    /**
+     * Parse object hooks
+     *
+     * @param array $parsedSuite
+     * @return array
+     * @throws XmlException
+     */
+    private function parseObjectHooks($parsedSuite)
+    {
+        $suiteHooks = [];
+
+        if (array_key_exists(TestObjectExtractor::TEST_BEFORE_HOOK, $parsedSuite)) {
+            $suiteHooks[TestObjectExtractor::TEST_BEFORE_HOOK] = $this->testHookObjectExtractor->extractHook(
+                $parsedSuite[self::NAME],
+                TestObjectExtractor::TEST_BEFORE_HOOK,
+                $parsedSuite[TestObjectExtractor::TEST_BEFORE_HOOK]
+            );
+        }
+        if (array_key_exists(TestObjectExtractor::TEST_AFTER_HOOK, $parsedSuite)) {
+            $suiteHooks[TestObjectExtractor::TEST_AFTER_HOOK] = $this->testHookObjectExtractor->extractHook(
+                $parsedSuite[self::NAME],
+                TestObjectExtractor::TEST_AFTER_HOOK,
+                $parsedSuite[TestObjectExtractor::TEST_AFTER_HOOK]
+            );
+        }
+
+        if (count($suiteHooks) == 1) {
+            throw new XmlException(sprintf(
+                "Suites that contain hooks must contain both a 'before' and an 'after' hook. Suite: \"%s\"",
+                $parsedSuite[self::NAME]
+            ));
+        }
+        return $suiteHooks;
+    }
+
+    /**
+     * Check if suite hooks are empty/not included and there are no included tests/groups/modules
+     *
+     * @param array $suiteHooks
+     * @param array $includeTests
+     * @param array $excludeTests
+     * @return boolean
+     */
+    private function isSuiteEmpty($suiteHooks, $includeTests, $excludeTests)
+    {
+
+        $noHooks = count($suiteHooks) == 0 ||
+            (
+                empty($suiteHooks['before']->getActions()) &&
+                empty($suiteHooks['after']->getActions())
+            );
+
+        if ($noHooks && empty($includeTests) && empty($excludeTests)) {
+            return true;
+        }
+        return false;
     }
 
     /**

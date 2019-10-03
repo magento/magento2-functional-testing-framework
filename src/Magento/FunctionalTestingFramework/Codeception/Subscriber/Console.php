@@ -38,7 +38,7 @@ class Console extends \Codeception\Subscriber\Console
      * @param array $extensionOptions
      * @param array $options
      *
-     * @SuppressWarnings(PHPMD)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct($extensionOptions = [], $options = [])
     {

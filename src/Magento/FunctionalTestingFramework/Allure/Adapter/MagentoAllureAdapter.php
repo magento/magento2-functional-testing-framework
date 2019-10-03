@@ -219,7 +219,6 @@ class MagentoAllureAdapter extends AllureCodeception
      * Override of parent method, polls stepStorage for testcase and formats it according to actionGroup nesting.
      *
      * @return void
-     * @SuppressWarnings(PHPMD)
      */
     public function testEnd()
     {
@@ -245,11 +244,7 @@ class MagentoAllureAdapter extends AllureCodeception
 
                 $step->setName(str_replace(ActionGroupObject::ACTION_GROUP_CONTEXT_START, '', $step->getName()));
                 $actionGroupStepContainer = $step;
-
-                preg_match(TestGenerator::ACTION_GROUP_STEP_KEY_REGEX, $step->getName(), $matches);
-                if (!empty($matches['actionGroupStepKey'])) {
-                    $actionGroupStepKey = ucfirst($matches['actionGroupStepKey']);
-                }
+                $actionGroupStepKey = $this->retrieveActionGroupStepKey($step);
                 continue;
             }
 
@@ -287,6 +282,25 @@ class MagentoAllureAdapter extends AllureCodeception
         $this->getLifecycle()->getStepStorage()->put($rootStep);
 
         $this->getLifecycle()->fire(new TestCaseFinishedEvent());
+    }
+
+    /**
+     * Reads action group stepKey from step.
+     *
+     * @param Step $step
+     * @return string|null
+     */
+    private function retrieveActionGroupStepKey($step)
+    {
+        $actionGroupStepKey = null;
+
+        preg_match(TestGenerator::ACTION_GROUP_STEP_KEY_REGEX, $step->getName(), $matches);
+
+        if (!empty($matches['actionGroupStepKey'])) {
+            $actionGroupStepKey = ucfirst($matches['actionGroupStepKey']);
+        }
+
+        return $actionGroupStepKey;
     }
 
     /**
