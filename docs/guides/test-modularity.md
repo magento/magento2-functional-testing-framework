@@ -56,9 +56,9 @@ This is the next step up in difficulty from the above method, as it involves sea
 
 Take the `Add Attribute` button for example. The button has an `id="addAttribute"` and since we know Magento uses XML to declare much of its layout/CSS properties we can start by searching only `*.xml` files.
 
-Searching through the codebase for `"addAttribute"` in `xml` files in my instance lead to four different files:
+Searching through the codebase for `"addAttribute"` in `xml` files leads to four different files:
 
-```
+```terminal
 app/code/Magento/Customer/Test/Mftf/Section/AdminCustomerActivitiesConfigureSection.xml
 app/code/Magento/GiftRegistry/Test/Mftf/Section/AdminGiftRegistrySection.xml
 app/code/Magento/Catalog/Test/Mftf/ActionGroup/AdminProductAttributeActionGroup.xml
@@ -71,7 +71,7 @@ The first three are clearly MFTF test materials, which leaves us with the final 
 <button name="addAttribute" class="Magento\Catalog\Block\Adminhtml\Product\Edit\Button\AddAttribute"/>
 ```
 
-This means we can safely assume `Add Attribute` button belongs to Catalog based on the above class namespace and filepath.
+This means we can safely assume `Add Attribute` button belongs to `Catalog` based on the above class namespace and filepath.
 
 This kind of deduction is more involved, but it much more likely to give you the true source of the element.
 
