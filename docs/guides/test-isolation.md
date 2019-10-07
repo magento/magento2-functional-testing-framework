@@ -11,6 +11,21 @@ An MFTF test is considered fully isolated if
 1. It does not leave data behind.
 2. It does not leave Magento configured in a different state than when the test started.
 3. It does not affect a following test's outcome.
+4. It does not rely on an irregular configuration to start its preconditions.
+
+### Deleting versus Restoring
+
+In the above list, points 1 and 2 refer to leaving things behind during test execution. This means you will be either deleting or restoring entities in Magento after your test's execution.
+
+Some examples of entities to be deleted include:
+1. Products
+2. Categories
+3. Rules (Price, Related Products)
+
+The list of entities to restore is much simpler:
+1. Application Configuration
+
+The distinction above is because MFTF tests expect the environment to be in a completely clean state, outside of a test or suite's preconditions. Data must be cleaned up and any application configuration must go back to the default.
 
 ## Why is isolation important?
 
