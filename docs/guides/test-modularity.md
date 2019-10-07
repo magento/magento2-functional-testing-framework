@@ -16,6 +16,14 @@ This refers to test materials being correctly owned by the right Magento module,
  
 Since MFTF queries the Magento instance for enabled modules, MFTF test materials are included or excluded from the merging process dynamically, making proper ownership and dependencies a must.
 
+Consider the following scenario:
+
+* TestA in ModuleA is using materials form ModuleB
+* In Magento, I now disable ModuleB
+* TestA will try to use ModuleB materials, which are no longer being read by MFTF since the Magento instance has it disable
+
+Since TestA's dependencies are out of sync with ModuleA, the tests are no longer properly modular.
+
 ## Why is test modularity important?
 
 This concept is important simply because without proper modularity, tests or test materials may be incorrectly merged in (or left out), leading to the the test itself being out of sync with the Magento instance.
@@ -46,19 +54,30 @@ This approach will work on getting the quickest ownership, but it is fairly obvi
 
 This is the next step up in difficulty from the above method, as it involves searching through the Magento codebase.
 
-Take the `Add Attribute` button for example. The button has an `id="addAttribute"`, and searching through the codebase for `"addAttribute"` will lead you to `Catalog/view/adminhtml/ui_component/product_form.xml`:
+Take the `Add Attribute` button for example. The button has an `id="addAttribute"` and since we know Magento uses XML to declare much of its layout/CSS properties we can start by searching only `*.xml` files.
+
+Searching through the codebase for `"addAttribute"` in `xml` files in my instance lead to four different files:
+
+```
+app/code/Magento/Customer/Test/Mftf/Section/AdminCustomerActivitiesConfigureSection.xml
+app/code/Magento/GiftRegistry/Test/Mftf/Section/AdminGiftRegistrySection.xml
+app/code/Magento/Catalog/Test/Mftf/ActionGroup/AdminProductAttributeActionGroup.xml
+app/code/Magento/Catalog/view/adminhtml/ui_component/product_form.xml
+```
+
+The first three are clearly MFTF test materials, which leaves us with the final file, and the line below
 
 ```xml
 <button name="addAttribute" class="Magento\Catalog\Block\Adminhtml\Product\Edit\Button\AddAttribute"/>
 ```
 
-This means that `Add Attribute` button belongs to Catalog based on the above class namespace and filepath.
+This means we can safely assume `Add Attribute` button belongs to Catalog based on the above class namespace and filepath.
 
 This kind of deduction is more involved, but it much more likely to give you the true source of the element.
 
 ### Use bin/mftf static-checks
 
-The second aspect of modular test materials involves test material references to other test materials, and making sure the dependencies are not out of sync with the parent module.
+For tests to be fully modular, an MFTF test must have the same dependencies as its parent module. This is quite difficult to do by hand, and requires checking of every `{{test.material}}` call and any other references to MFTF test materials in a test.
 
 The `static-checks` command includes a test material ownership check that should help suss out these kind of dependency issues.
 
