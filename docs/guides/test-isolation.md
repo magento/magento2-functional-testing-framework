@@ -20,8 +20,8 @@ In the above list, points 1 and 2 refer to leaving things behind during test exe
 Some examples of entities to be deleted include:
 
 1. Products
-1. Categories
-1. Rules (Price, Related Products)
+2. Categories
+3. Rules (Price, Related Products)
 
 The list of entities to restore is much simpler:
 
