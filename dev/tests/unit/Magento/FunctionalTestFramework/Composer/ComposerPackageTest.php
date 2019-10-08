@@ -17,16 +17,14 @@ class ComposerPackageTest extends MagentoTestCase
      *
      * @var ComposerPackage
      */
-    private static $composer;
+    private $composer;
 
-    public static function setUpBeforeClass()
+    public function setUp()
     {
-        parent::setUpBeforeClass();
-
         $composerJson = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Composer' . DIRECTORY_SEPARATOR . '_files'
             . DIRECTORY_SEPARATOR . 'dir1' . DIRECTORY_SEPARATOR . 'dir2' . DIRECTORY_SEPARATOR . 'composer.json';
 
-        self::$composer = new ComposerPackage($composerJson);
+        $this->composer = new ComposerPackage($composerJson);
     }
 
     /**
@@ -35,7 +33,7 @@ class ComposerPackageTest extends MagentoTestCase
     public function testGetName()
     {
         $expected = 'magento/module2-functional-test';
-        $this->assertEquals($expected, self::$composer->getName());
+        $this->assertEquals($expected, $this->composer->getName());
     }
 
     /**
@@ -44,7 +42,7 @@ class ComposerPackageTest extends MagentoTestCase
     public function testGetType()
     {
         $expected = 'magento2-functional-test-module';
-        $this->assertEquals($expected, self::$composer->getType());
+        $this->assertEquals($expected, $this->composer->getType());
     }
 
     /**
@@ -53,7 +51,7 @@ class ComposerPackageTest extends MagentoTestCase
     public function testGetVersion()
     {
         $expected = '1.0.0';
-        $this->assertEquals($expected, self::$composer->getVersion());
+        $this->assertEquals($expected, $this->composer->getVersion());
     }
 
     /**
@@ -62,7 +60,7 @@ class ComposerPackageTest extends MagentoTestCase
     public function testGetDescription()
     {
         $expected = 'MFTF tests for magento';
-        $this->assertEquals($expected, self::$composer->getDescription());
+        $this->assertEquals($expected, $this->composer->getDescription());
     }
 
     /**
@@ -71,7 +69,7 @@ class ComposerPackageTest extends MagentoTestCase
     public function testGetRequires()
     {
         $expected = 'magento/magento2-functional-testing-framework';
-        $output = self::$composer->getRequires();
+        $output = $this->composer->getRequires();
         $this->assertCount(1, $output);
         $this->assertArrayHasKey($expected, $output);
     }
@@ -82,7 +80,7 @@ class ComposerPackageTest extends MagentoTestCase
     public function testGetDevRequires()
     {
         $expected = ['phpunit/phpunit'];
-        $this->assertEquals($expected, array_keys(self::$composer->getDevRequires()));
+        $this->assertEquals($expected, array_keys($this->composer->getDevRequires()));
     }
 
     /**
@@ -99,7 +97,7 @@ class ComposerPackageTest extends MagentoTestCase
             'magento/module-three',
             'magento/module-four'
         ];
-        $this->assertEquals($expected, array_keys(self::$composer->getSuggests()));
+        $this->assertEquals($expected, array_keys($this->composer->getSuggests()));
     }
 
     /**
@@ -112,7 +110,7 @@ class ComposerPackageTest extends MagentoTestCase
             'Magento_ModuleY',
             'Magento_ModuleZ'
         ];
-        $this->assertEquals($expected, self::$composer->getSuggestedMagentoModules());
+        $this->assertEquals($expected, $this->composer->getSuggestedMagentoModules());
     }
 
     /**
@@ -120,7 +118,7 @@ class ComposerPackageTest extends MagentoTestCase
      */
     public function testIsMftfTestPackage()
     {
-        $this->assertTrue(self::$composer->isMftfTestPackage());
+        $this->assertTrue($this->composer->isMftfTestPackage());
     }
 
     /**
@@ -145,7 +143,7 @@ class ComposerPackageTest extends MagentoTestCase
         ];
         $this->assertEquals(
             $expected,
-            array_keys(self::$composer->getRequiresForPackage('magento/magento2-functional-testing-framework', '2.5.0'))
+            array_keys($this->composer->getRequiresForPackage('magento/magento2-functional-testing-framework', '2.5.0'))
         );
     }
 
@@ -155,7 +153,7 @@ class ComposerPackageTest extends MagentoTestCase
     public function testIsPackageRequiredInComposerJson()
     {
         $this->assertTrue(
-            self::$composer->isPackageRequiredInComposerJson('magento/magento2-functional-testing-framework')
+            $this->composer->isPackageRequiredInComposerJson('magento/magento2-functional-testing-framework')
         );
     }
 
@@ -166,7 +164,7 @@ class ComposerPackageTest extends MagentoTestCase
     {
         $this->assertInstanceOf(
             RootPackage::class,
-            self::$composer->getRootPackage()
+            $this->composer->getRootPackage()
         );
     }
 }

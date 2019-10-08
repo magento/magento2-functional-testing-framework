@@ -16,16 +16,14 @@ class ComposerInstallTest extends MagentoTestCase
      *
      * @var ComposerInstall
      */
-    private static $composer;
+    private $composer;
 
-    public static function setUpBeforeClass()
+    public function setUp()
     {
-        parent::setUpBeforeClass();
-
         $composerJson = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Composer' . DIRECTORY_SEPARATOR . '_files'
             . DIRECTORY_SEPARATOR . 'dir1' . DIRECTORY_SEPARATOR . 'dir2' . DIRECTORY_SEPARATOR . 'composer.json';
 
-        self::$composer = new ComposerInstall($composerJson);
+        $this->composer = new ComposerInstall($composerJson);
     }
 
     /**
@@ -33,7 +31,7 @@ class ComposerInstallTest extends MagentoTestCase
      */
     public function testIsMftfTestPackage()
     {
-        $this->assertTrue(self::$composer->isMftfTestPackage('magento/module2-functional-test'));
+        $this->assertTrue($this->composer->isMftfTestPackage('magento/module2-functional-test'));
     }
 
     /**
@@ -41,7 +39,7 @@ class ComposerInstallTest extends MagentoTestCase
      */
     public function testIsMagentoPackage()
     {
-        $this->assertTrue(self::$composer->isMagentoPackage('magento/module-authorization'));
+        $this->assertTrue($this->composer->isMagentoPackage('magento/module-authorization'));
     }
 
     /**
@@ -49,9 +47,7 @@ class ComposerInstallTest extends MagentoTestCase
      */
     public function testIsInstalledPackageOfType()
     {
-        $this->assertTrue(
-            self::$composer->isInstalledPackageOfType('composer/composer', 'library')
-        );
+        $this->assertTrue($this->composer->isInstalledPackageOfType('composer/composer', 'library'));
     }
 
     /**
@@ -59,7 +55,7 @@ class ComposerInstallTest extends MagentoTestCase
      */
     public function testGetInstalledTestPackages()
     {
-        $output = self::$composer->getInstalledTestPackages();
+        $output = $this->composer->getInstalledTestPackages();
         $this->assertCount(1, $output);
         $this->assertArrayHasKey('magento/module2-functional-test', $output);
     }
