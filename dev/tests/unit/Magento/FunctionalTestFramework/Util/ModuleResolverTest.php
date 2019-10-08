@@ -345,9 +345,92 @@ class ModuleResolverTest extends MagentoTestCase
      *
      * @throws \Exception
      */
-    public function testMergeFlipAndFilterModulePaths()
+    public function testMergeFlipAndFilterModulePathsNoForceGenerate()
     {
         $this->mockForceGenerate(false);
+        $this->setMockResolverClass(
+            false,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            [
+                'composer' . DIRECTORY_SEPARATOR . 'json' . DIRECTORY_SEPARATOR . 'pathA' =>
+                    [
+                        'Magento_ModuleA'
+                    ],
+                'composer' . DIRECTORY_SEPARATOR . 'json' . DIRECTORY_SEPARATOR . 'pathB' =>
+                    [
+                        'Magento_ModuleB'
+                    ],
+            ],
+            [
+                'composer' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'pathD' =>
+                    [
+                        'Magento_ModuleD'
+                    ],
+                'composer' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'pathE' =>
+                    [
+                        'Magento_ModuleE'
+                    ],
+                'composer' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'pathC' =>
+                    [
+                        'Magento_ModuleC',
+                        'Magento_ModuleB',
+                    ],
+            ],
+            [
+                'some' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'example' => ['Magento_Example'],
+                'other' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'sample' => ['Magento_Sample'],
+                'some' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'path1' => ['Magento_Path1'],
+                'other' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'path2' => ['Magento_Path2'],
+                'some' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'path3' => ['Magento_Path3'],
+                'other' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'path4' => ['Magento_Path4'],
+            ]
+        );
+
+        $resolver = ModuleResolver::getInstance();
+        $this->setMockResolverProperties(
+            $resolver,
+            null,
+            [
+                0 => 'Magento_Path1',
+                1 => 'Magento_Path2',
+                2 => 'Magento_Path4',
+                3 => 'Magento_Example',
+                4 => 'Magento_ModuleB',
+                5 => 'Magento_ModuleD',
+                6 => 'Magento_Otherexample',
+                7 => 'Magento_ModuleC',
+            ]
+        );
+        $this->assertEquals(
+            [
+                'some' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'path1',
+                'other' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'path2',
+                'other' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'path4',
+                'some' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'example',
+                'composer' . DIRECTORY_SEPARATOR . 'json' . DIRECTORY_SEPARATOR . 'pathB',
+                'composer' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'pathD',
+                'composer' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'pathC',
+
+            ],
+            $resolver->getModulesPath()
+        );
+    }
+
+    /**
+     * Validate mergeModulePaths() and flipAndFilterModulePathsArray()
+     *
+     * @throws \Exception
+     */
+    public function testMergeFlipAndFilterModulePathsForceGenerate()
+    {
+        $this->mockForceGenerate(true);
         $this->setMockResolverClass(
             false,
             null,
@@ -381,8 +464,8 @@ class ModuleResolverTest extends MagentoTestCase
                     ],
             ],
             [
-                'some' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'example' => ['Magento_example'],
-                'other' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'sample' => ['Magento_sample'],
+                'some' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'example' => ['Magento_Example'],
+                'other' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'sample' => ['Magento_Sample'],
             ]
         );
 
@@ -394,16 +477,18 @@ class ModuleResolverTest extends MagentoTestCase
                 0 => 'Magento_ModuleB',
                 1 => 'Magento_ModuleC',
                 2 => 'Magento_ModuleD',
-                3 => 'Magento_example',
-                4 => 'Magento_otherexample'
+                3 => 'Magento_Example',
+                4 => 'Magento_Otherexample'
             ]
         );
         $this->assertEquals(
             [
                 'some' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'example',
+                'composer' . DIRECTORY_SEPARATOR . 'json' . DIRECTORY_SEPARATOR . 'pathA',
                 'composer' . DIRECTORY_SEPARATOR . 'json' . DIRECTORY_SEPARATOR . 'pathB',
                 'composer' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'pathA',
-                'composer' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'pathB'
+                'composer' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'pathB',
+                'other' . DIRECTORY_SEPARATOR . 'path' . DIRECTORY_SEPARATOR . 'sample'
             ],
             $resolver->getModulesPath()
         );
@@ -508,6 +593,8 @@ class ModuleResolverTest extends MagentoTestCase
 
     /**
      * Validate blacklisted modules are removed
+     * Module paths are sorted according to module name in alphabetically ascending order
+     *
      * @throws \Exception
      */
     public function testGetModulePathsBlacklist()
@@ -525,10 +612,10 @@ class ModuleResolverTest extends MagentoTestCase
             [],
             [],
             [
-                'vendor' => ['vendor'],
-                'appCode' => ['appCode'],
-                'devTests' => ['devTests'],
-                'thisPath' => ['thisPath']
+                'thisPath/some/path4' => ['Some_Module4'],
+                'devTests/Magento/path3' => ['Magento_Module3'],
+                'appCode/Magento/path2' => ['Magento_Module2'],
+                'vendor/amazon/path1' => ['Amazon_Module1'],
             ],
             function ($arg) {
                 return $arg;
@@ -538,15 +625,15 @@ class ModuleResolverTest extends MagentoTestCase
             }
         );
         $resolver = ModuleResolver::getInstance();
-        $this->setMockResolverProperties($resolver, null, null, ['devTests']);
+        $this->setMockResolverProperties($resolver, null, null, ['Magento_Module3']);
         $this->assertEquals(
-            ['vendor', 'appCode', 'thisPath'],
+            ['vendor/amazon/path1', 'appCode/Magento/path2', 'thisPath/some/path4'],
             $resolver->getModulesPath()
         );
         TestLoggingUtil::getInstance()->validateMockLogStatement(
             'info',
             'excluding module',
-            ['module' => 'devTests']
+            ['module' => 'Magento_Module3']
         );
     }
 
@@ -654,6 +741,7 @@ class ModuleResolverTest extends MagentoTestCase
      * @param string[] $mockAggregateTestModulePaths
      * @param string[] $mockNormalizeModuleNames
      * @param string[] $mockFlipAndFilterModulePathsArray
+     * @param string[] $mockFlipAndSortModulePathsArray
      * @throws \Exception
      * @return Verifier ModuleResolver double
      */
@@ -671,7 +759,8 @@ class ModuleResolverTest extends MagentoTestCase
         $mockGetComposerInstalledTestModulePaths = null,
         $mockAggregateTestModulePaths = null,
         $mockNormalizeModuleNames = null,
-        $mockFlipAndFilterModulePathsArray = null
+        $mockFlipAndFilterModulePathsArray = null,
+        $mockFlipAndSortModulePathsArray = null
     ) {
         $property = new \ReflectionProperty(ModuleResolver::class, 'instance');
         $property->setAccessible(true);
@@ -721,7 +810,9 @@ class ModuleResolverTest extends MagentoTestCase
         if (isset($mockFlipAndFilterModulePathsArray)) {
             $mockMethods['flipAndFilterModulePathsArray'] = $mockFlipAndFilterModulePathsArray;
         }
-
+        if (isset($mockFlipAndSortModulePathsArray)) {
+            $mockMethods['flipAndSortModulePathsArray'] = $mockFlipAndSortModulePathsArray;
+        }
         $mockResolver = AspectMock::double(
             ModuleResolver::class,
             $mockMethods
