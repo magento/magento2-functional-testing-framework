@@ -424,11 +424,11 @@ class ModuleResolverTest extends MagentoTestCase
     }
 
     /**
-     * Validate mergeModulePaths() and flipAndFilterModulePathsArray()
+     * Validate mergeModulePaths() and flipAndSortModulePathsArray()
      *
      * @throws \Exception
      */
-    public function testMergeFlipAndFilterModulePathsForceGenerate()
+    public function testMergeFlipAndSortModulePathsForceGenerate()
     {
         $this->mockForceGenerate(true);
         $this->setMockResolverClass(
