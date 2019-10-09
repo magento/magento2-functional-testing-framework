@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @api
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class ModuleResolver
 {
@@ -263,7 +264,7 @@ class ModuleResolver
         $allModulePaths = $this->normalizeModuleNames($allModulePaths);
 
         if (MftfApplicationConfig::getConfig()->forceGenerateEnabled()) {
-            $allModulePaths = $this->flipAndFilterModulePathsArray($allModulePaths);
+            $allModulePaths = $this->flipAndSortModulePathsArray($allModulePaths, true);
             $this->enabledModulePaths = $this->applyCustomModuleMethods($allModulePaths);
             return $this->enabledModulePaths;
         }
@@ -497,41 +498,108 @@ class ModuleResolver
      * @param array $objectArray
      * @param array $filterArray
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function flipAndFilterModulePathsArray($objectArray, $filterArray = null)
+    private function flipAndFilterModulePathsArray($objectArray, $filterArray)
     {
-        $flippedArray = [];
+        $oneToOneArray = [];
+        $oneToManyArray = [];
+        // Filter array by enabled modules
         foreach ($objectArray as $path => $modules) {
-            // One path maps to one module
-            if (count($modules) == 1) {
-                if (!is_array($filterArray)
-                    || (is_array($filterArray) && in_array($modules[0], $filterArray))
-                    || isset($this->knownDirectories[$modules[0]])) {
-                    if (strpos($modules[0], '_') === false) {
-                        $modules[0] = $this->findVendorNameFromPath($path) . '_' . $modules[0];
-                    }
-                    $flippedArray[$modules[0]] = $path;
-                }
-            } else {
-                // One path maps to multiple modules
-                if (!is_array($filterArray)) {
-                    $flippedArray[$this->findVendorAndModuleNameFromPath($path)] = $path;
+            if (!array_diff($modules, $filterArray)
+                || (count($modules) == 1 && isset($this->knownDirectories[$modules[0]]))) {
+                if (count($modules) == 1) {
+                    $oneToOneArray[$path] = $modules[0];
                 } else {
-                    $skip = false;
-                    foreach ($modules as $module) {
-                        if (!in_array($module, $filterArray)) {
-                            $skip = true;
-                            break;
-                        }
-                    }
-                    if (!$skip) {
-                        $flippedArray[$this->findVendorAndModuleNameFromPath($path)] = $path;
-                    }
+                    $oneToManyArray[$path] = $modules;
                 }
             }
         }
+
+        $flippedArray = [];
+        // Set flipped array for "one path => one module" case first to maintain module sequencing
+        foreach ($filterArray as $moduleName) {
+            $path = array_search($moduleName, $oneToOneArray);
+            if ($path !== false) {
+                if (strpos($moduleName, '_') === false) {
+                    $moduleName = $this->findVendorNameFromPath($path) . '_' . $moduleName;
+                }
+                $flippedArray = $this->setArrayValueWithLogging($flippedArray, $moduleName, $path);
+                unset($oneToOneArray[$path]);
+            }
+        }
+
+        // Set flipped array for everything else
+        return $this->flipAndSortModulePathsArray(
+            array_merge($oneToOneArray, $oneToManyArray),
+            false,
+            $flippedArray
+        );
+    }
+
+    /**
+     * Flip module code paths and optionally sort in alphabetical order
+     *
+     * @param array   $objectArray
+     * @param boolean $sort
+     * @param array   $inFlippedArray
+     * @return array
+     */
+    private function flipAndSortModulePathsArray($objectArray, $sort, $inFlippedArray = [])
+    {
+        $flippedArray = $inFlippedArray;
+
+        // Set flipped array from object array
+        foreach ($objectArray as $path => $modules) {
+            if (is_array($modules) && count($modules) > 1) {
+                // The "one path => many module names" case is designed to be strictly used when it's
+                // impossible to write tests in dedicated modules. Due to performance consideration and there
+                // is no real usage of this currently, we will use the first module name for the path.
+                // TODO: consider saving all module names if this information is needed in the future.
+                $module = $modules[0];
+            } elseif (is_array($modules)) {
+                if (strpos($modules[0], '_') === false) {
+                    $module = $this->findVendorNameFromPath($path) . '_' . $modules[0];
+                } else {
+                    $module = $modules[0];
+                }
+            } else {
+                if (strpos($modules, '_') === false) {
+                    $module = $this->findVendorNameFromPath($path) . '_' . $modules;
+                } else {
+                    $module = $modules;
+                }
+            }
+            $flippedArray = $this->setArrayValueWithLogging($flippedArray, $module, $path);
+        }
+
+        // Sort array in alphabetical order
+        if ($sort) {
+            ksort($flippedArray);
+        }
+
         return $flippedArray;
+    }
+
+    /**
+     * Set array value at index only if array value at index is not yet set, skip otherwise and log warning message
+     *
+     * @param array  $inArray
+     * @param string $index
+     * @param string $value
+     *
+     * @return array
+     */
+    private function setArrayValueWithLogging($inArray, $index, $value)
+    {
+        $outArray = $inArray;
+        if (!isset($inArray[$index])) {
+            $outArray[$index] = $value;
+        } else {
+            $warnMsg = 'Path: ' . $value . ' is ignored by ModuleResolver. ' . PHP_EOL . 'Path: ';
+            $warnMsg .= $inArray[$index] . ' is set for Module: ' . $index . PHP_EOL;
+            LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->warn($warnMsg);
+        }
+        return $outArray;
     }
 
     /**
