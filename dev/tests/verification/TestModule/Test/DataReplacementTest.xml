@@ -39,5 +39,45 @@
 
         <fillField stepKey="insertZero" selector=".selector" userInput="{{simpleData.favoriteIndex}}"/>
         <magentoCLI stepKey="insertCommand" command="do something {{uniqueData.lastname}} with uniqueness"/>
+
+        <seeInPageSource html="StringBefore {{simpleData.firstname}} StringAfter" stepKey="htmlReplace1"/>
+        <seeInPageSource html="#{{simpleData.firstname}}" stepKey="htmlReplace2"/>
+        <seeInPageSource html="StringBefore {{uniqueData.firstname}} StringAfter" stepKey="htmlReplace3"/>
+        <seeInPageSource html="#{{uniqueData.firstname}}" stepKey="htmlReplace4"/>
+        <seeInPageSource html="#{{uniqueData.firstname}}#{{uniqueData.firstname}}" stepKey="htmlReplace5"/>
+        <seeInPageSource html="StringBefore {{uniqueData.lastname}} StringAfter" stepKey="htmlReplace6"/>
+        <seeInPageSource html="#{{uniqueData.lastname}}" stepKey="htmlReplace7"/>
+        <seeInPageSource html="{{SampleSection.simpleElement}}" stepKey="htmlReplace8"/>
+        <seeInPageSource html="StringBefore {{SampleSection.simpleElement}} StringAfter" stepKey="htmlReplace9"/>
+
+        <dontSeeInPageSource html="StringBefore {{simpleData.firstname}} StringAfter" stepKey="htmlReplace10"/>
+        <dontSeeInPageSource html="#{{simpleData.firstname}}" stepKey="htmlReplace11"/>
+        <dontSeeInPageSource html="StringBefore {{uniqueData.firstname}} StringAfter" stepKey="htmlReplace12"/>
+        <dontSeeInPageSource html="#{{uniqueData.firstname}}" stepKey="htmlReplace13"/>
+        <dontSeeInPageSource html="#{{uniqueData.firstname}}#{{uniqueData.firstname}}" stepKey="htmlReplace14"/>
+        <dontSeeInPageSource html="StringBefore {{uniqueData.lastname}} StringAfter" stepKey="htmlReplace15"/>
+        <dontSeeInPageSource html="#{{uniqueData.lastname}}" stepKey="htmlReplace16"/>
+        <dontSeeInPageSource html="{{SampleSection.simpleElement}}" stepKey="htmlReplace17"/>
+        <dontSeeInPageSource html="StringBefore {{SampleSection.simpleElement}} StringAfter" stepKey="htmlReplace18"/>
+
+        <seeInSource html="StringBefore {{simpleData.firstname}} StringAfter" stepKey="htmlReplace19"/>
+        <seeInSource html="#{{simpleData.firstname}}" stepKey="htmlReplace20"/>
+        <seeInSource html="StringBefore {{uniqueData.firstname}} StringAfter" stepKey="htmlReplace21"/>
+        <seeInSource html="#{{uniqueData.firstname}}" stepKey="htmlReplace22"/>
+        <seeInSource html="#{{uniqueData.firstname}}#{{uniqueData.firstname}}" stepKey="htmlReplace23"/>
+        <seeInSource html="StringBefore {{uniqueData.lastname}} StringAfter" stepKey="htmlReplace24"/>
+        <seeInSource html="#{{uniqueData.lastname}}" stepKey="htmlReplace25"/>
+        <seeInSource html="{{SampleSection.simpleElement}}" stepKey="htmlReplace26"/>
+        <seeInSource html="StringBefore {{SampleSection.simpleElement}} StringAfter" stepKey="htmlReplace27"/>
+
+        <dontSeeInSource html="StringBefore {{simpleData.firstname}} StringAfter" stepKey="htmlReplace28"/>
+        <dontSeeInSource html="#{{simpleData.firstname}}" stepKey="htmlReplace29"/>
+        <dontSeeInSource html="StringBefore {{uniqueData.firstname}} StringAfter" stepKey="htmlReplace30"/>
+        <dontSeeInSource html="#{{uniqueData.firstname}}" stepKey="htmlReplace31"/>
+        <dontSeeInSource html="#{{uniqueData.firstname}}#{{uniqueData.firstname}}" stepKey="htmlReplace32"/>
+        <dontSeeInSource html="StringBefore {{uniqueData.lastname}} StringAfter" stepKey="htmlReplace33"/>
+        <dontSeeInSource html="#{{uniqueData.lastname}}" stepKey="htmlReplace34"/>
+        <dontSeeInSource html="{{SampleSection.simpleElement}}" stepKey="htmlReplace35"/>
+        <dontSeeInSource html="StringBefore {{SampleSection.simpleElement}} StringAfter" stepKey="htmlReplace36"/>
     </test>
 </tests>

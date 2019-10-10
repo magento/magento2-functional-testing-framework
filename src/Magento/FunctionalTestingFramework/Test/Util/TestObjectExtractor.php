@@ -118,6 +118,17 @@ class TestObjectExtractor extends BaseObjectExtractor
         //Override features with module name if present, populates it otherwise
         $testAnnotations["features"] = [$module];
 
+        // Always try to append test file names in description annotation, i.e. displaying test files title only
+        // when $fileNames is not available
+        if (!isset($testAnnotations["description"])) {
+            $testAnnotations["description"] = [];
+        }
+        $description = $testAnnotations["description"][0] ?? '';
+        $testAnnotations["description"][0] = $this->appendFileNamesInDescriptionAnnotation(
+            $description,
+            $fileNames
+        );
+
         // extract before
         if (array_key_exists(self::TEST_BEFORE_HOOK, $testData) && is_array($testData[self::TEST_BEFORE_HOOK])) {
             $testHooks[self::TEST_BEFORE_HOOK] = $this->testHookObjectExtractor->extractHook(
@@ -154,5 +165,33 @@ class TestObjectExtractor extends BaseObjectExtractor
         } catch (XmlException $exception) {
             throw new XmlException($exception->getMessage() . ' in Test ' . $filename);
         }
+    }
+
+    /**
+     * Append names of test files, including merge files, in description annotation
+     *
+     * @param string $description
+     * @param array  $fileNames
+     *
+     * @return string
+     */
+    private function appendFileNamesInDescriptionAnnotation($description, $fileNames)
+    {
+        $description .= '<br><br><b><font size=+0.9>Test files</font></b><br><br>';
+
+        foreach ($fileNames as $fileName) {
+            if (!empty($fileName) && realpath($fileName) !== false) {
+                $fileName = realpath($fileName);
+                $relativeFileName = ltrim(
+                    str_replace(MAGENTO_BP, '', $fileName),
+                    DIRECTORY_SEPARATOR
+                );
+                if (!empty($relativeFileName)) {
+                    $description .= $relativeFileName . '<br>';
+                }
+            }
+        }
+
+        return $description;
     }
 }

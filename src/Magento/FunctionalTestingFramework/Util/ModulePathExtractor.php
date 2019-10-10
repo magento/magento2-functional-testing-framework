@@ -11,41 +11,89 @@ namespace Magento\FunctionalTestingFramework\Util;
  */
 class ModulePathExtractor
 {
-    const MAGENTO = 'Magento';
+    const SPLIT_DELIMITER = '_';
+
+    /**
+     * Test module paths
+     *
+     * @var array
+     */
+    private $testModulePaths = [];
+
+    /**
+     * ModulePathExtractor constructor
+     */
+    public function __construct()
+    {
+        $verbosePath = true;
+        if (empty($this->testModulePaths)) {
+            $this->testModulePaths = ModuleResolver::getInstance()->getModulesPath($verbosePath);
+        }
+    }
 
     /**
      * Extracts module name from the path given
+     *
      * @param string $path
      * @return string
      */
     public function extractModuleName($path)
     {
-        if (empty($path)) {
+        $key = $this->extractKeyByPath($path);
+        if (empty($key)) {
             return "NO MODULE DETECTED";
         }
-        $paths = explode(DIRECTORY_SEPARATOR, $path);
-        if (count($paths) < 3) {
-            return "NO MODULE DETECTED";
-        } elseif ($paths[count($paths)-3] == "Mftf") {
-            // app/code/Magento/[Analytics]/Test/Mftf/Test/SomeText.xml
-            return $paths[count($paths)-5];
-        }
-        // dev/tests/acceptance/tests/functional/Magento/FunctionalTest/[Analytics]/Test/SomeText.xml
-        return $paths[count($paths)-3];
+        $parts = $this->splitKeyForParts($key);
+        return isset($parts[1]) ? $parts[1] : "NO MODULE DETECTED";
     }
 
     /**
-     * Extracts the extension form the path, Magento for dev/tests/acceptance, [name] before module otherwise
+     * Extracts vendor name for module from the path given
+     *
      * @param string $path
      * @return string
      */
     public function getExtensionPath($path)
     {
-        $paths = explode(DIRECTORY_SEPARATOR, $path);
-        if ($paths[count($paths)-3] == "Mftf") {
-            // app/code/[Magento]/Analytics/Test/Mftf/Test/SomeText.xml
-            return $paths[count($paths)-6];
+        $key = $this->extractKeyByPath($path);
+        if (empty($key)) {
+            return "NO VENDOR DETECTED";
         }
-        return self::MAGENTO;
+        $parts = $this->splitKeyForParts($key);
+        return isset($parts[0]) ? $parts[0] : "NO VENDOR DETECTED";
+    }
+
+    /**
+     * Split key by SPLIT_DELIMITER and return parts array
+     *
+     * @param string $key
+     * @return array
+     */
+    private function splitKeyForParts($key)
+    {
+        $parts = explode(self::SPLIT_DELIMITER, $key);
+        return count($parts) == 2 ? $parts : [];
+    }
+
+    /**
+     * Extract module name key by path
+     *
+     * @param string $path
+     * @return string
+     */
+    private function extractKeyByPath($path)
+    {
+        $shortenedPath = dirname(dirname($path));
+        // Ignore this path if we cannot go to parent directory two levels up
+        if (empty($shortenedPath) || $shortenedPath === '.') {
+            return '';
+        }
+
+        foreach ($this->testModulePaths as $key => $value) {
+            if ($value == $shortenedPath) {
+                return $key;
+            }
+        }
+        return '';
     }
 }

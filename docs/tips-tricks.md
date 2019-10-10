@@ -345,33 +345,6 @@ BAD:
 <element name="productName" type="input" selector=".admin__field[data-index=name] input"/>
 ```
 
-### Build selectors with appropriate specificity
-
-Selectors that are too general might sweep up unexpected elements.
-When possible, select the first parent tag and then specify the desired element within that selection.
-
-**Why?** Elements that are overly specific are less flexible and may fail if unexpected DOM changes occur. It also reduces the amount of the DOM it needs to parse.
-
- <span style="color:green">
-GOOD:
-</span>
-
-```html
- form[name='myform'] > input[name='firstname']
-
- //*[@id='container'][@class='dashboard-title']
- ```
-
- <span style="color:red">
-BAD:
-</span>
-
-```html
- input[name='firstname']
-
- //*[@id='container']/*[@class='dashboard-advanced-reports']/*[@class='dashboard-advanced- reports-description']/*[@class='dashboard-title']
- ```
-
 ## General tips
 
 ### Use data references to avoid hardcoded values

@@ -9,6 +9,9 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
 class MftfApplicationConfig
 {
+    /**
+     * MFTF Execution Phases
+     */
     const GENERATION_PHASE = "generation";
     const EXECUTION_PHASE = "execution";
     const UNIT_TEST_PHASE = "testing";
@@ -51,6 +54,12 @@ class MftfApplicationConfig
     private $debugLevel;
 
     /**
+     * Boolean which allows MFTF to fully generate skipped tests
+     * @var boolean
+     */
+    private $allowSkipped;
+
+    /**
      * MftfApplicationConfig Singelton Instance
      *
      * @var MftfApplicationConfig
@@ -64,13 +73,15 @@ class MftfApplicationConfig
      * @param string  $phase
      * @param boolean $verboseEnabled
      * @param string  $debugLevel
+     * @param boolean $allowSkipped
      * @throws TestFrameworkException
      */
     private function __construct(
         $forceGenerate = false,
         $phase = self::EXECUTION_PHASE,
         $verboseEnabled = null,
-        $debugLevel = self::LEVEL_NONE
+        $debugLevel = self::LEVEL_NONE,
+        $allowSkipped = false
     ) {
         $this->forceGenerate = $forceGenerate;
 
@@ -89,6 +100,7 @@ class MftfApplicationConfig
             default:
                 $this->debugLevel = self::LEVEL_DEVELOPER;
         }
+        $this->allowSkipped = $allowSkipped;
     }
 
     /**
@@ -99,13 +111,20 @@ class MftfApplicationConfig
      * @param string  $phase
      * @param boolean $verboseEnabled
      * @param string  $debugLevel
+     * @param boolean $allowSkipped
      * @return void
+     * @throws TestFrameworkException
      */
-    public static function create($forceGenerate, $phase, $verboseEnabled, $debugLevel)
-    {
+    public static function create(
+        $forceGenerate = false,
+        $phase = self::EXECUTION_PHASE,
+        $verboseEnabled = null,
+        $debugLevel = self::LEVEL_NONE,
+        $allowSkipped = false
+    ) {
         if (self::$MFTF_APPLICATION_CONTEXT == null) {
             self::$MFTF_APPLICATION_CONTEXT =
-                new MftfApplicationConfig($forceGenerate, $phase, $verboseEnabled, $debugLevel);
+                new MftfApplicationConfig($forceGenerate, $phase, $verboseEnabled, $debugLevel, $allowSkipped);
         }
     }
 
@@ -113,6 +132,7 @@ class MftfApplicationConfig
      * This function returns an instance of the MftfApplicationConfig which is created once the application starts.
      *
      * @return MftfApplicationConfig
+     * @throws TestFrameworkException
      */
     public static function getConfig()
     {
@@ -155,6 +175,16 @@ class MftfApplicationConfig
     public function getDebugLevel()
     {
         return $this->debugLevel ?? getenv('MFTF_DEBUG');
+    }
+
+    /**
+     * Returns a boolean indicating whether mftf is generating skipped tests.
+     *
+     * @return boolean
+     */
+    public function allowSkipped()
+    {
+        return $this->allowSkipped ?? getenv('ALLOW_SKIPPED');
     }
 
     /**

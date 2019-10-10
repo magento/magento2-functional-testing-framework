@@ -1,0 +1,11 @@
+{
+  "name": "magento/module-32-functional-test",
+  "type": "magento2-functional-test-module",
+  "require": {
+    "magento/magento2-functional-testing-framework": "*"
+  },
+  "suggest": {
+    "magento/module-module-b": "type: magento2-module, name: Magento_ModuleB, version: ~100.0.0",
+    "magento/module-module-c": "type: magento2-module, name: Magento_ModuleC, version: ~100.0.0"
+  }
+}

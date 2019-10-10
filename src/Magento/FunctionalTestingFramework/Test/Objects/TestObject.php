@@ -72,6 +72,13 @@ class TestObject
     private $parentTest;
 
     /**
+     * Holds on to the result of getOrderedActions() to increase test generation performance.
+     *
+     * @var ActionObject[]
+     */
+    private $cachedOrderedActions = null;
+
+    /**
      * TestObject constructor.
      *
      * @param string           $name
@@ -255,8 +262,12 @@ class TestObject
      */
     public function getOrderedActions()
     {
-        $mergeUtil = new ActionMergeUtil($this->getName(), "Test");
-        return $mergeUtil->resolveActionSteps($this->parsedSteps);
+        if ($this->cachedOrderedActions === null) {
+            $mergeUtil = new ActionMergeUtil($this->getName(), "Test");
+            $this->cachedOrderedActions = $mergeUtil->resolveActionSteps($this->parsedSteps);
+        }
+
+        return $this->cachedOrderedActions;
     }
 
     /**

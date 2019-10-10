@@ -7,6 +7,7 @@ declare(strict_types = 1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Suite\SuiteGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -42,7 +43,20 @@ class GenerateSuiteCommand extends BaseGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $force = $input->getOption('force');
+        $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
         $remove = $input->getOption('remove');
+        $verbose = $output->isVerbose();
+        $allowSkipped = $input->getOption('allow-skipped');
+
+        // Set application configuration so we can references the user options in our framework
+        MftfApplicationConfig::create(
+            $force,
+            MftfApplicationConfig::GENERATION_PHASE,
+            $verbose,
+            $debug,
+            $allowSkipped
+        );
 
         // Remove previous GENERATED_DIR if --remove option is used
         if ($remove) {

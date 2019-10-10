@@ -15,6 +15,7 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
+ * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupTest.xml<br>")
  */
 class ExtendedRemoveActionGroupCest
 {
@@ -27,7 +28,7 @@ class ExtendedRemoveActionGroupCest
 	 */
 	public function ExtendedRemoveActionGroup(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group extendRemoveTestActionGroup (actionGroup)");
-		$I->comment("Exiting Action Group extendRemoveTestActionGroup (actionGroup)");
+		$I->comment("Entering Action Group [actionGroup] extendRemoveTestActionGroup");
+		$I->comment("Exiting Action Group [actionGroup] extendRemoveTestActionGroup");
 	}
 }

@@ -17,6 +17,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 /**
  * @Title("[NO TESTCASEID]: ChildExtendedTestRemoveHookAction")
  * @group Child
+ * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ExtendedFunctionalTest.xml<br>")
  */
 class ChildExtendedTestRemoveHookActionCest
 {
@@ -34,7 +35,7 @@ class ChildExtendedTestRemoveHookActionCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
-		$I->amOnPage("/afterUrl");
+		$I->amOnPage("/afterUrl"); // stepKey: afterAmOnPageKey
 	}
 
 	/**
@@ -43,7 +44,7 @@ class ChildExtendedTestRemoveHookActionCest
 	  */
 	public function _failed(AcceptanceTester $I)
 	{
-		$I->saveScreenshot();
+		$I->saveScreenshot(); // stepKey: saveScreenshot
 	}
 
 	/**

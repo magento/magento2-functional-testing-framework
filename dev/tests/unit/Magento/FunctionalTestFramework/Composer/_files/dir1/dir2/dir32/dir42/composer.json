@@ -1,0 +1,10 @@
+{
+  "name": "magento/module-3242-functional-test",
+  "type": "magento2-functional-test-module",
+  "require": {
+    "magento/magento2-functional-testing-framework": "*"
+  },
+  "suggest": {
+    "magento/module-module-h": "type: magento2-module, name: Magento_ModuleH, version: ~100.0.0"
+  }
+}

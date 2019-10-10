@@ -16,6 +16,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  * @Title("[NO TESTCASEID]: ExtendedChildTestNotInSuite")
+ * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ExtendedFunctionalTest.xml<br>")
  */
 class ExtendedChildTestNotInSuiteCest
 {
@@ -25,7 +26,7 @@ class ExtendedChildTestNotInSuiteCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->amOnPage("/beforeUrl");
+		$I->amOnPage("/beforeUrl"); // stepKey: beforeAmOnPageKey
 	}
 
 	/**
@@ -34,7 +35,7 @@ class ExtendedChildTestNotInSuiteCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
-		$I->amOnPage("/afterUrl");
+		$I->amOnPage("/afterUrl"); // stepKey: afterAmOnPageKey
 	}
 
 	/**
@@ -43,7 +44,7 @@ class ExtendedChildTestNotInSuiteCest
 	  */
 	public function _failed(AcceptanceTester $I)
 	{
-		$I->saveScreenshot();
+		$I->saveScreenshot(); // stepKey: saveScreenshot
 	}
 
 	/**

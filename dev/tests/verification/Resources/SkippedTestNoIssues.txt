@@ -16,7 +16,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  * @Title("[NO TESTCASEID]: skippedNoIssuesTest")
- * @Description("")
+ * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/SkippedTest.xml<br>")
  * @group skip
  */
 class SkippedTestNoIssuesCest

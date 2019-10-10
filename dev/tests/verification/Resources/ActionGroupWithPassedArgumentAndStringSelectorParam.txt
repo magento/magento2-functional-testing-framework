@@ -16,6 +16,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  * @Title("[NO TESTCASEID]: Action Group With Passed Argument Value and Hardcoded Value in Param")
+ * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupTest.xml<br>")
  */
 class ActionGroupWithPassedArgumentAndStringSelectorParamCest
 {
@@ -29,8 +30,8 @@ class ActionGroupWithPassedArgumentAndStringSelectorParamCest
 	 */
 	public function ActionGroupWithPassedArgumentAndStringSelectorParam(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group actionGroupWithDefaultArgumentAndStringSelectorParam (actionGroup)");
-		$I->see("John" . msq("UniquePerson"), "#element .test1");
-		$I->comment("Exiting Action Group actionGroupWithDefaultArgumentAndStringSelectorParam (actionGroup)");
+		$I->comment("Entering Action Group [actionGroup] actionGroupWithDefaultArgumentAndStringSelectorParam");
+		$I->see("John" . msq("UniquePerson"), "#element .test1"); // stepKey: seeFirstNameActionGroup
+		$I->comment("Exiting Action Group [actionGroup] actionGroupWithDefaultArgumentAndStringSelectorParam");
 	}
 }

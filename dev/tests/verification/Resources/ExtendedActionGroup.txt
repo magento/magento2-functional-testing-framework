@@ -15,6 +15,7 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
+ * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupTest.xml<br>")
  */
 class ExtendedActionGroupCest
 {
@@ -27,12 +28,12 @@ class ExtendedActionGroupCest
 	 */
 	public function ExtendedActionGroup(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group extendTestActionGroup (actionGroup)");
+		$I->comment("Entering Action Group [actionGroup] extendTestActionGroup");
 		$I->comment("New Input Before");
-		$grabProductsActionGroup = $I->grabMultiple("notASelector");
+		$grabProductsActionGroup = $I->grabMultiple("notASelector"); // stepKey: grabProductsActionGroup
 		$I->comment("New Input After");
-		$I->assertCount(99, $grabProductsActionGroup);
-		$I->assertCount(8000, $grabProductsActionGroup);
-		$I->comment("Exiting Action Group extendTestActionGroup (actionGroup)");
+		$I->assertCount(99, $grabProductsActionGroup); // stepKey: assertCountActionGroup
+		$I->assertCount(8000, $grabProductsActionGroup); // stepKey: assertSecondCountActionGroup
+		$I->comment("Exiting Action Group [actionGroup] extendTestActionGroup");
 	}
 }

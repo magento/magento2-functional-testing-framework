@@ -20,10 +20,10 @@ use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 use tests\unit\Util\SuiteDataArrayBuilder;
 use tests\unit\Util\TestDataArrayBuilder;
 use tests\unit\Util\TestLoggingUtil;
+use tests\unit\Util\MockModuleResolverBuilder;
 
 class SuiteGeneratorTest extends MagentoTestCase
 {
-
     /**
      * Setup entry append and clear for Suite Generator
      */
@@ -42,6 +42,8 @@ class SuiteGeneratorTest extends MagentoTestCase
     public function setUp()
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
+        $resolverMock = new MockModuleResolverBuilder();
+        $resolverMock->setup();
     }
 
     /**

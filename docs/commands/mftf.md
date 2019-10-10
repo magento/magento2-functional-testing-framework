@@ -58,6 +58,14 @@ vendor/bin/mftf run:test LoginAsAdminTest LoginAsCustomerTest -r
 
 This command cleans up the previously generated tests; generates and runs the `LoginAsAdminTest` and `LoginAsCustomerTest` tests.
 
+### Generate and run a testManifest.txt file
+
+```bash
+vendor/bin/mftf run:manifest path/to/your/testManifest.txt
+```
+
+This command runs all tests specified in a `testManifest.txt` file. When you generate tests, a `testManifest.txt` file is also generated for you. You can pass this file directly to the `run:manifest` command and it will execute all listed tests. You can also create your own file in the same format to execute a subset of tests. Note: This command does not generate tests.
+
 ### Generate and run previously failed tests
 
 ```bash
@@ -122,7 +130,8 @@ vendor/bin/mftf generate:tests [option] [<test name>] [<test name>] [--remove]
 | `--force` | Forces test generation, regardless of the module merge order defined in the Magento instance. Example: `generate:tests --force`. |
 | `-i,--time` | Set time in minutes to determine the group size when `--config=parallel` is used. The __default value__ is `10`. Example: `generate:tests --config=parallel --time=15`|
 | `--tests` | Defines the test configuration as a JSON string.|
-| `--debug or --debug=[<none>]`| Performs schema validations on XML files. </br> <br/> DEFAULT: `generate:tests` implicitly performs schema validation on merged files. It does not indicate the file name where the error is encountered. <br/> DEVELOPER: `--debug` performs per-file validation and returns additional debug information (such as the filename where an error occurred) when test generation fails because of an invalid XML schema. This option takes extra processing time. Use it after test generation has failed once.</br> <br/> NONE: `--debug=none` skips debugging during test generation. Added for backward compatibility, it will be removed in the next MAJOR release.</br>|
+| `--allow-skipped` | Allows MFTF to generate and run tests marked with `<skip>.`|
+| `--debug or --debug=[<none>]`| Performs schema validations on XML files. <br/> DEFAULT: `generate:tests` implicitly performs schema validation on merged files. It does not indicate the file name where the error is encountered. <br/> DEVELOPER: `--debug` performs per-file validation and returns additional debug information (such as the filename where an error occurred) when test generation fails because of an invalid XML schema. This option takes extra processing time. Use it after test generation has failed once.</br><br/> NONE: `--debug=none` skips debugging during test generation. Added for backward compatibility, it will be removed in the next MAJOR release.</br>|
 | `-r,--remove`| Removes the existing generated suites and tests cleaning up the `_generated` directory before the actual run. For example, `generate:tests SampleTest --remove` cleans up the entire `_generated` directory and generates `SampleTest` only.|
 
 #### Examples of the JSON configuration
@@ -172,7 +181,7 @@ Complex configuration to generate a few non-suite tests, a single test in a suit
 The command that encodes this complex configuration:
 
 ```bash
-vendor/bin/mftf generate:tests --tests "{\r\n\"tests\":[\r\n\"general_test1\",\r\n\"general_test2\",\r\n\"general_test3\"\r\n],\r\n\"suites\":{\r\n\"sample\":[\r\n\"suite_test1\"\r\n],\r\n\"sample2\":null\r\n}\r\n}"
+vendor/bin/mftf generate:tests --tests '{"tests":["general_test1","general_test2","general_test3"],"suites":{"sample":["suite_test1"],"sample2":null}}'
 ```
 
 Note that the strings must be escaped and surrounded in quotes.
@@ -335,6 +344,30 @@ Generate the `LoginCustomerTest` and `StorefrontCreateCustomerTest` tests from X
 
 ```bash
 vendor/bin/mftf run:test LoginCustomerTest StorefrontCreateCustomerTest
+```
+
+### `run:manifest`
+
+Runs a testManifest.txt file.
+
+This command runs all tests specified in a testManifest.xml file. It does not generate tests for you. You must do that as first. 
+
+#### Usage
+
+```bash
+vendor/bin/mftf run:manifest path/to/your/testManifest.txt
+```
+
+#### Example testManifest.xml file
+
+Each line should contain either: one test path or one group (-g) reference.
+
+```
+tests/functional/tests/MFTF/_generated/default/AdminLoginTestCest.php
+-g PaypalTestSuite
+tests/functional/tests/MFTF/_generated/default/SomeOtherTestCest.php
+tests/functional/tests/MFTF/_generated/default/ThirdTestCest.php
+-g SomeOtherSuite
 ```
 
 ### `run:failed`
