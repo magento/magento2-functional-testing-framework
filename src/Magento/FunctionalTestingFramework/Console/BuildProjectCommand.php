@@ -7,6 +7,7 @@ declare(strict_types = 1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -94,13 +95,17 @@ class BuildProjectCommand extends Command
         $process->setWorkingDirectory(TESTS_BP);
         $process->setIdleTimeout(600);
         $process->setTimeout(0);
-        $process->run(
+        $codeceptReturnCode = $process->run(
             function ($type, $buffer) use ($output) {
-                if ($output->isVerbose()) {
-                    $output->write($buffer);
-                }
+                $output->write($buffer);
             }
         );
+
+        if ($codeceptReturnCode !== 0) {
+            throw new TestFrameworkException(
+                "The codecept build command failed unexpectedly. Please see the above output for more details."
+            );
+        }
 
         if ($input->getOption('upgrade')) {
             $upgradeCommand = new UpgradeTestsCommand();
@@ -133,9 +138,7 @@ class BuildProjectCommand extends Command
             $output->writeln("codeception.yml configuration successfully applied.");
         }
 
-        if ($output->isVerbose()) {
-            $output->writeln("codeception.yml applied to " . TESTS_BP . DIRECTORY_SEPARATOR . 'codeception.yml');
-        }
+        $output->writeln("codeception.yml applied to " . TESTS_BP . DIRECTORY_SEPARATOR . 'codeception.yml');
 
         // copy the functional suite yml, will only copy if there are differences between the template the destination
         $fileSystem->copy(
@@ -144,10 +147,8 @@ class BuildProjectCommand extends Command
         );
         $output->writeln('functional.suite.yml configuration successfully applied.');
 
-        if ($output->isVerbose()) {
-            $output->writeln("functional.suite.yml applied to " .
-                TESTS_BP . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'functional.suite.yml');
-        }
+        $output->writeln("functional.suite.yml applied to " .
+            TESTS_BP . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'functional.suite.yml');
 
         $fileSystem->copy(
             FW_BP . '/etc/config/.credentials.example',
