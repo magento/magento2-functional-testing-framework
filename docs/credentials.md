@@ -148,8 +148,8 @@ Credentials can be used in actions: [`fillField`][], [`magentoCLI`][], and [`cre
 
 Define the value as a reference to the corresponding key in the credentials file or vault such as `{{_CREDS.my_data_key}}`:
 
-- `_CREDS` is an environment constant pointing to the `.credentials` file
-- `my_data_key` is a key in the the `.credentials` file or vault that contains the value to be used in a test step
+-  `_CREDS` is an environment constant pointing to the `.credentials` file
+-  `my_data_key` is a key in the the `.credentials` file or vault that contains the value to be used in a test step
 
 For example, reference secret data in the [`fillField`][] action with the `userInput` attribute.
 
@@ -180,5 +180,5 @@ The MFTF tests delivered with Magento application do not use credentials and do 
 [Download Vault]: https://www.hashicorp.com/products/vault/
 [Login Vault]: https://www.vaultproject.io/docs/commands/login.html
 [Vault KV2]: https://www.vaultproject.io/docs/secrets/kv/kv-v2.html
-[`CREDENTIAL_VAULT_ADDRESS`]: configuration.md#CREDENTIAL_VAULT_ADDRESS
-[`CREDENTIAL_VAULT_SECRET_BASE_PATH`]: configuration.md#CREDENTIAL_VAULT_SECRET_BASE_PATH
+[`CREDENTIAL_VAULT_ADDRESS`]: configuration.md#credential_vault_address
+[`CREDENTIAL_VAULT_SECRET_BASE_PATH`]: configuration.md#credential_vault_secret_base_path
