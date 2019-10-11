@@ -67,6 +67,9 @@ To disable the WYSIWYG and enable the web driver to process these fields as simp
 3. In the WYSIWYG Options section set the **Enable WYSIWYG Editor** option to **Disabled Completely**.
 4. Click **Save Config**.
 
+or via command line
+1. `bin/magento config:set cms/wysiwyg/enabled disabled`
+
 <div class="bs-callout bs-callout-tip">
 When you want to test the WYSIWYG functionality, re-enable WYSIWYG in your test suite.
 </div>
@@ -79,6 +82,10 @@ To enable the **Admin Account Sharing** setting, to avoid unpredictable logout d
 2. Set **Admin Account Sharing** to **Yes**.
 3. Set **Add Secret Key to URLs** to **No**.
 4. Click **Save Config**.
+
+or via command line
+1. `bin/magento config:set admin/security/admin_account_sharing 1`
+2. `bin/magento config:set admin/security/use_form_key 0`
 
 ### Nginx settings {#nginx-settings}
 
