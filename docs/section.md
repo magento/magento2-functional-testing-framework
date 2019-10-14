@@ -6,18 +6,18 @@ A `<section>` can define:
 
 <!-- {% raw %} -->
 
-- An explicit element that has a selector equal to the constant string. Example: `selector="#add_root_category_button"`
-- A parameterized element that contains substitutable values in the selector. Example: `selector="#element .{{var1}} .{{var2}}"`.
+-  An explicit element that has a selector equal to the constant string. Example: `selector="#add_root_category_button"`
+-  A parameterized element that contains substitutable values in the selector. Example: `selector="#element .{{var1}} .{{var2}}"`.
 
 ## Substitutable values
 
 Substitutable values in the test can be of the following formats:
 
-- String literals (`stringLiteral`)
-- References to a [data entity][] (XML data from the corresponding `.../Data/*.xml`) such as `entityName.Field`.
-- Persisted data:
-  - `$persistedCreateDataKey.field$` for data created in the scope of a [test][] using the [`<createData>`][] action with `stepKey="persistedCreateDataKey"`.
-  - `$$persistedCreateDataKey.field$$` for data created in [before][] and [after][] hooks. Even though `<before>`and `<after>` are nested inside a [test][], persisted data is stored differently when it is done in a test hook. Therefore it must be accessed with a different notation.
+-  String literals (`stringLiteral`)
+-  References to a [data entity][] (XML data from the corresponding `.../Data/*.xml`) such as `entityName.Field`.
+-  Persisted data:
+  -  `$persistedCreateDataKey.field$` for data created in the scope of a [test][] using the [`<createData>`][] action with `stepKey="persistedCreateDataKey"`.
+  -  `$$persistedCreateDataKey.field$$` for data created in [before][] and [after][] hooks. Even though `<before>`and `<after>` are nested inside a [test][], persisted data is stored differently when it is done in a test hook. Therefore it must be accessed with a different notation.
 
 The following diagram shows the XML structure of an MFTF section:
 
@@ -44,10 +44,10 @@ The format of a `<section>` is:
 
 The following conventions apply to MFTF sections:
 
-- `<section>` name must be alphanumeric.
-- `*Section.xml` is stored in the _Section_ directory of a module.
-- The name format is `{Admin|Storefront}{SectionDescription}Section.xml`.
-- Camel case is used for `<section>` elements.
+-  `<section>` name must be alphanumeric.
+-  `*Section.xml` is stored in the _Section_ directory of a module.
+-  The name format is `{Admin|Storefront}{SectionDescription}Section.xml`.
+-  Camel case is used for `<section>` elements.
   They describe the function of the element rather than attempting to describe the selector used.
 
 ## Example
@@ -70,8 +70,8 @@ This example uses a `AdminCategorySidebarActionSection` section. All sections wi
 
 The `AdminCategorySidebarActionSection` section declares two buttons:
 
-- `addRootCategoryButton` - button with a `#add_root_category_button` locator on the parent web page
-- `addSubcategoryButton` - button with a `#add_subcategory_button` locator on the parent web page
+-  `addRootCategoryButton` - button with a `#add_root_category_button` locator on the parent web page
+-  `addSubcategoryButton` - button with a `#add_subcategory_button` locator on the parent web page
 
 The following is an example of a call in test:
 

@@ -1,6 +1,15 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.5.1
+-----
+
+### Fixes
+* Fixed missing `use` statement in the generate:suite command
+
+### GitHub Issues
+* [#471](https://github.com/magento/magento2-functional-testing-framework/issues/471) -- PHP Fatal error: MftfApplicationConfig not found in GenerateSuiteCommand
+
 2.5.0
 -----
 * Traceability

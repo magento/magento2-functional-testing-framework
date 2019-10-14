@@ -44,11 +44,11 @@ The format of `<tests>` is:
 
 The following conventions apply to MFTF tests:
 
-* All names within the framework are in the CamelCase format.
-* `<test>` name must be alphanumeric.
-* Each action and action group has its own identifier `<stepKey>` for reference purposes.
-* A test may have any number of [assertions][assertion] at any point within the `<test>`.
-* If `<test>` is included in `<suite>`, it **cannot be generated in isolation** to the rest of the contents of the suite (see [suites] for details).
+*  All names within the framework are in the CamelCase format.
+*  `<test>` name must be alphanumeric.
+*  Each action and action group has its own identifier `<stepKey>` for reference purposes.
+*  A test may have any number of [assertions][assertion] at any point within the `<test>`.
+*  If `<test>` is included in `<suite>`, it **cannot be generated in isolation** to the rest of the contents of the suite (see [suites] for details).
 
 Multiple `<test>` tags per XML file can make it hard to find and organize tags.
 To simplify, we generate one `test.php` file per `<test>` tag provided, though we support both single and multiple `<test>` tags per XML file.
@@ -90,8 +90,8 @@ Allure annotations provide metadata for reporting.
 
 `<before>` may contain these child elements:
 
-* Any [`<action>`][actions]
-* [`<actionGroup>`]
+*  Any [`<action>`][actions]
+*  [`<actionGroup>`]
 
 ### after {#after-tag}
 
@@ -100,8 +100,8 @@ The steps are run in both successful **and** failed test runs.
 
 `<after>` may contain:
 
-* Any [`<action>`][actions]
-* [`<actionGroup>`]
+*  Any [`<action>`][actions]
+*  [`<actionGroup>`]
 
 ### actionGroup {#actiongroup-tag}
 

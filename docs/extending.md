@@ -5,9 +5,9 @@ For example, only one or two parameters (for example, URL) might vary between te
 To avoid copy-pasting and to save some time the Magento Functional Testing Framework (MFTF) enables you to extend test components such as [test], [data], and [action group].
 You can create or update any component of the parent body in your new test/action group/entity.
 
-* A test starting with `<test name="SampleTest" extends="ParentTest">` creates a test `SampleTest` that takes body of existing test `ParentTest` and adds to it the body of `SampleTest`.
-* An action group starting with `<actionGroup name="SampleActionGroup" extends="ParentActionGroup">` creates an action group based on the `ParentActionGroup`, but with the changes specified in `SampleActionGroup`.
-* An entity starting with `<entity name="SampleEntity" extends="ParentEntity">` creates an entity `SampleEntity` that is equivalent to merging the `SampleEntity` with the `ParentEntity`.
+*  A test starting with `<test name="SampleTest" extends="ParentTest">` creates a test `SampleTest` that takes body of existing test `ParentTest` and adds to it the body of `SampleTest`.
+*  An action group starting with `<actionGroup name="SampleActionGroup" extends="ParentActionGroup">` creates an action group based on the `ParentActionGroup`, but with the changes specified in `SampleActionGroup`.
+*  An entity starting with `<entity name="SampleEntity" extends="ParentEntity">` creates an entity `SampleEntity` that is equivalent to merging the `SampleEntity` with the `ParentEntity`.
 
 Specify needed variations for a parent object and produce a copy of the original that incorporates the specified changes (the "delta").
 
@@ -71,8 +71,8 @@ __Use case__: Create two similar tests with different `url` (`"{{AdminCategoryPa
 
 __Use case__: Create two similar tests where the second test contains two additional steps:
 
-* `checkOption` before `click` (`stepKey="clickLogin"`)
-* `seeInCurrentUrl` after `click` in the `LogInAsAdminTest` test (in the `.../Backend/Test/LogInAsAdminTest.xml` file)
+*  `checkOption` before `click` (`stepKey="clickLogin"`)
+*  `seeInCurrentUrl` after `click` in the `LogInAsAdminTest` test (in the `.../Backend/Test/LogInAsAdminTest.xml` file)
 
 > Tests with "extends":
 
@@ -119,8 +119,8 @@ __Use case__: Create two similar tests where the second test contains two additi
 
 __Use case__: Create two similar tests where the second one contains two additional actions in the `before` hook:
 
-* `checkOption` before `click` (`stepKey="clickLogin"`)
-* `seeInCurrentUrl` after `click` in the `LogInAsAdminTest` test (in the `.../Backend/Test/LogInAsAdminTest.xml` file)
+*  `checkOption` before `click` (`stepKey="clickLogin"`)
+*  `seeInCurrentUrl` after `click` in the `LogInAsAdminTest` test (in the `.../Backend/Test/LogInAsAdminTest.xml` file)
 
 > Tests with "extends":
 

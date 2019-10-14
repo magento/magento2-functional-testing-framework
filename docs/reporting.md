@@ -2,16 +2,16 @@
 
 The Magento Functional Testing Framework provides two types of reporting:
 
-- Inline reporting that you can view in the terminal as you run [`mftf`][mftf] or [`codecept`][codecept] CLI commands.
-- HTML reports that you can view using the [Allure Framework][] after a test run completes.
+-  Inline reporting that you can view in the terminal as you run [`mftf`][mftf] or [`codecept`][codecept] CLI commands.
+-  HTML reports that you can view using the [Allure Framework][] after a test run completes.
 
 When you run a test, MFTF copies all reporting artifacts to the `dev/tests/acceptance/tests/_output` subdirectory in the Magento root directory.
 The directory contains:
 
-- `allure-results/` that is a directory generated and served by the Allure Framework.
-- `failed` that is a text file containing relative paths to failed tests after the last test run.
+-  `allure-results/` that is a directory generated and served by the Allure Framework.
+-  `failed` that is a text file containing relative paths to failed tests after the last test run.
   The paths are relative to `dev/tests/acceptance/`.
-- `.html` and `.png` files that are screenshots of fails in HTML and PNG formats.
+-  `.html` and `.png` files that are screenshots of fails in HTML and PNG formats.
   To cleanup the `_output/` directory, remove them manually.
 
 The `mftf` tool logs output continuously to the `dev/tests/acceptance/mftf.log` file.
@@ -22,11 +22,11 @@ MFTF reports about its progress during test run when you run the `mftf` CLI tool
 
 The report can contain three main parts:
 
-- Pre-run checks:
-  - Environment check, such as PHP warnings, etc.
-  - XML test validation like deprecation warnings such as missing required components in XML tests.
-- Codeception report which is the progress report for each test.
-- Total results of the test run such as number of tests, assertions, and failures.
+-  Pre-run checks:
+  -  Environment check, such as PHP warnings, etc.
+  -  XML test validation like deprecation warnings such as missing required components in XML tests.
+-  Codeception report which is the progress report for each test.
+-  Total results of the test run such as number of tests, assertions, and failures.
 
 To manage the level of verbosity, use `-v` or `--verbose` flag in the `mftf` commands.
 To enable verbosity using the `codecept` commands, refer to the Codeception [Console Commands][codeception].
@@ -152,18 +152,18 @@ When a test step fails, MFTF always saves a screenshot of the web page with the 
 
 A screenshot of the fail goes at the `acceptance/tests/_output` directory in both PNG and HTML formats:
 
-- `Magento.AcceptanceTest._default.Backend.AdminMenuNavigationWithSecretKeysTestCest.AdminMenuNavigationWithSecretKeysTest.fail.html`
-- `Magento.AcceptanceTest._default.Backend.AdminMenuNavigationWithSecretKeysTestCest.AdminMenuNavigationWithSecretKeysTest.fail.png`
+-  `Magento.AcceptanceTest._default.Backend.AdminMenuNavigationWithSecretKeysTestCest.AdminMenuNavigationWithSecretKeysTest.fail.html`
+-  `Magento.AcceptanceTest._default.Backend.AdminMenuNavigationWithSecretKeysTestCest.AdminMenuNavigationWithSecretKeysTest.fail.png`
 
 The file name encodes:
 
-- `Magento` namespace
-- with the `AcceptanceTest` test type
-- generated as a part of the `_default` suite
-- defined at the `Magento_Backend` module
-- implemented in the `AdminMenuNavigationWithSecretKeysTestCest` PHP class
-- with the `AdminMenuNavigationWithSecretKeysTest` test name
-- and execution status `fail`
+-  `Magento` namespace
+-  with the `AcceptanceTest` test type
+-  generated as a part of the `_default` suite
+-  defined at the `Magento_Backend` module
+-  implemented in the `AdminMenuNavigationWithSecretKeysTestCest` PHP class
+-  with the `AdminMenuNavigationWithSecretKeysTest` test name
+-  and execution status `fail`
 
 Actions after `FAIL` are run as a part of the [`after`][] hook of the test.
 
@@ -235,14 +235,14 @@ full_page
 18. $I->saveScreenshot() at tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:63
 ```
 
-- `1) AdminMenuNavigationWithSecretKeysTestCest: Admin menu navigation with secret keys test` - the failed Codeception test is *AdminMenuNavigationWithSecretKeysTestCest*. It references to the PHP class that implemented the failed test.
+-  `1) AdminMenuNavigationWithSecretKeysTestCest: Admin menu navigation with secret keys test` - the failed Codeception test is *AdminMenuNavigationWithSecretKeysTestCest*. It references to the PHP class that implemented the failed test.
 
-- `Test  tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:AdminMenuNavigationWithSecretKeysTest` - the test is implemented in the *AdminMenuNavigationWithSecretKeysTest* test method of the *tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php* file under `<magento root>/dev/tests/acceptance/`.
+-  `Test  tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:AdminMenuNavigationWithSecretKeysTest` - the test is implemented in the *AdminMenuNavigationWithSecretKeysTest* test method of the *tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php* file under `<magento root>/dev/tests/acceptance/`.
   It matches the corresponding test defined in XML that is *AdminMenuNavigationWithSecretKeysTest* defined in `<test name="AdminMenuNavigationWithSecretKeysTest">...</test>`
 
-- `Step  See "#something"` - the failing test step is the *see* action with the *#something* selector. It would correspond the `<see selector="#something" ... />` test step in the XML defined tests.
+-  `Step  See "#something"` - the failing test step is the *see* action with the *#something* selector. It would correspond the `<see selector="#something" ... />` test step in the XML defined tests.
 
-- `Fail  Failed asserting that  on page /admin/admin/system_config/index/key/678b7ba922c.../` - the fail occurred on the web page `<MAGENTO_BASE_URL>/admin/admin/system_config/index/key/678b7ba922c.../`.
+-  `Fail  Failed asserting that  on page /admin/admin/system_config/index/key/678b7ba922c.../` - the fail occurred on the web page `<MAGENTO_BASE_URL>/admin/admin/system_config/index/key/678b7ba922c.../`.
 
 ```terminal
 --> ...
