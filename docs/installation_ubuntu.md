@@ -288,6 +288,13 @@ vendor/bin/mftf run:test AdminLoginTest -k
 
 See more commands in [`mftf`][].
 
+To visually see what the browser is doing you will want to run the debug variant of standalone images and run vncviewer during test execution.
+You may need to edit `/etc/hosts` file in the container and add an entry for `magento server` like the following line:
+
+```bash
+192.168.65.2    magento.test
+```
+
 ### Step 5. Generate reports {#reports}
 
 During testing, the MFTF generates test reports in `dev/tests/acceptance/tests/_output/allure-results/`.
