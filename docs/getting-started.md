@@ -80,7 +80,10 @@ To enable the **Admin Account Sharing** setting, to avoid unpredictable logout d
 3. Set **Add Secret Key to URLs** to **No**.
 4. Click **Save Config**.
 
-### Nginx settings {#nginx-settings}
+### Webserver configuration {#web-server-configuration}
+The MFTF doesn't support executing CLI commands if your web server points to `<MAGE_ROOT_DIR>/pub` directory as recommended in the [Installation Guide][Installation Guide docroot]. For the MFTF to execute the CLI commands, the web server must point to the Magento root directory.
+
+#### Nginx settings {#nginx-settings}
 
 If Nginx Web server is used on your development environment then **Use Web Server Rewrites** setting in **Stores** > Settings > **Configuration** > **Web** > **Search Engine Optimization** must be set to **Yes**.
 
@@ -323,3 +326,4 @@ allure serve dev/tests/_output/allure-results/
 [Set up a standalone MFTF]: #set-up-a-standalone-mftf
 [test suite]: suite.html
 [Find your MFTF version]: introduction.html#find-your-mftf-version
+[Installation Guide docroot]: https://devdocs.magento.com/guides/v2.3/install-gde/tutorials/change-docroot-to-pub.html
