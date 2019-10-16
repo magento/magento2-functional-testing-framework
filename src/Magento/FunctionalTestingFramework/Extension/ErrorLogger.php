@@ -12,6 +12,9 @@ namespace Magento\FunctionalTestingFramework\Extension;
  */
 class ErrorLogger
 {
+    const LOG_TYPE_BROWSER = "browser";
+    const ERROR_TYPE_JAVASCRIPT = "javascript";
+
     /**
      * Error Logger Instance
      * @var ErrorLogger
@@ -49,16 +52,33 @@ class ErrorLogger
     public function logErrors($module, $stepEvent)
     {
         //Types available should be "server", "browser", "driver". Only care about browser at the moment.
-        if (in_array("browser", $module->webDriver->manage()->getAvailableLogTypes())) {
-            $browserLogEntries = $module->webDriver->manage()->getLog("browser");
-            foreach ($browserLogEntries as $entry) {
-                if (array_key_exists("source", $entry) && $entry["source"] === "javascript") {
-                    $this->logError("javascript", $stepEvent, $entry);
-                    //Set javascript error in MagentoWebDriver internal array
-                    $module->setJsError("ERROR({$entry["level"]}) - " . $entry["message"]);
-                }
+        if (in_array(self::LOG_TYPE_BROWSER, $module->webDriver->manage()->getAvailableLogTypes())) {
+            $browserLogEntries = $module->webDriver->manage()->getLog(self::LOG_TYPE_BROWSER);
+            $jsErrors = $this->getLogsOfType($browserLogEntries, self::ERROR_TYPE_JAVASCRIPT);
+            foreach ($jsErrors as $entry) {
+                $this->logError(self::ERROR_TYPE_JAVASCRIPT, $stepEvent, $entry);
+                //Set javascript error in MagentoWebDriver internal array
+                $module->setJsError("ERROR({$entry["level"]}) - " . $entry["message"]);
             }
         }
+    }
+
+    /**
+     * Loops through given logs and returns entries of the given type.
+     *
+     * @param array $log
+     * @param string $type
+     * @return array
+     */
+    public function getLogsOfType($log, $type)
+    {
+        $errors = [];
+        foreach ($log as $entry) {
+            if (array_key_exists("source", $entry) && $entry["source"] === $type) {
+                $errors[] = $entry;
+            }
+        }
+        return $errors;
     }
 
     /**

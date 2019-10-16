@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Extension;
 
 use Codeception\Events;
+use Magento\FunctionalTestingFramework\Allure\AllureHelper;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 
 /**
@@ -173,6 +174,13 @@ class TestContextExtension extends BaseExtension
      */
     public function afterStep(\Codeception\Event\StepEvent $e)
     {
+        if (getenv('ENABLE_JS_LOG')) {
+            $browserLogEntries = $this->getDriver()->webDriver->manage()->getLog("browser");
+            $jsErrors = ErrorLogger::getInstance()->getLogsOfType($browserLogEntries, ErrorLogger::ERROR_TYPE_JAVASCRIPT);
+            if (!empty($jsErrors)) {
+                AllureHelper::addAttachmentToCurrentStep($jsErrors);
+            }
+        }
         ErrorLogger::getInstance()->logErrors($this->getDriver(), $e);
     }
 
