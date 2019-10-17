@@ -39,7 +39,7 @@ class BrowserLogUtil
     /**
      * Loops through given log and returns entries of the given type.
      *
-     * @param array $log
+     * @param array  $log
      * @param string $type
      * @return array
      */
@@ -57,7 +57,7 @@ class BrowserLogUtil
     /**
      * Loops through given log and filters entries of the given type.
      *
-     * @param array $log
+     * @param array  $log
      * @param string $type
      * @return array
      */
