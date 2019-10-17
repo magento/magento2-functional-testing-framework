@@ -1,7 +1,7 @@
 # Suites
 
 Suites are essentially groups of tests that run in specific conditions (preconditions and postconditions).
-They enable including, excluding, and grouping tests for a customized test run when you need it.
+They enable including, excluding, and grouping tests for a customized test run.
 You can form suites using separate tests, groups, and modules.
 
 Each suite must be defined in the `<magento 2 root>/dev/tests/acceptance/tests/_suite/suite.xml` file.
@@ -18,7 +18,6 @@ The format of a suite:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-
 <suites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Suite/etc/suiteSchema.xsd">
     <suite name="">
         <before>
@@ -42,12 +41,14 @@ The format of a suite:
 ## Principles
 
 -  A suite name:
+
     -  must not match any existing group value.
   For example, the suite `<suite name="ExampleTest">` will fail during test run if any test contains in annotations `<group value="ExampleTest">`.
     -  must not be `default` or `skip`. Tests that are not in any suite are generated under the `default` suite.
-  The suite name `skip` is synonymous to including a test in the `<group value="skip"/>`, which will be deprecated in MFTF 3.0.0.
+       The suite name `skip` is synonymous to including a test in the `<group value="skip"/>`, which will be deprecated in MFTF 3.0.0.
     -  can contain letters, numbers, and underscores.
     -  should be upper camel case.
+    
 -  A suite must contain at least one `<include>`, or one `<exclude>`, or both.
 -  Using `<before>` in a suite, you must add the corresponding `<after>` to restore the initial state of your testing instance.
 
