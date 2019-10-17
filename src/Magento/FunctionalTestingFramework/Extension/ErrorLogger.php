@@ -64,7 +64,7 @@ class ErrorLogger
     }
 
     /**
-     * Loops through given logs and returns entries of the given type.
+     * Loops through given log and returns entries of the given type.
      *
      * @param array $log
      * @param string $type
@@ -75,6 +75,24 @@ class ErrorLogger
         $errors = [];
         foreach ($log as $entry) {
             if (array_key_exists("source", $entry) && $entry["source"] === $type) {
+                $errors[] = $entry;
+            }
+        }
+        return $errors;
+    }
+
+    /**
+     * Loops through given log and filters entries of the given type.
+     *
+     * @param array $log
+     * @param string $type
+     * @return array
+     */
+    public function filterLogsOfType($log, $type)
+    {
+        $errors = [];
+        foreach ($log as $entry) {
+            if (array_key_exists("source", $entry) && $entry["source"] !== $type) {
                 $errors[] = $entry;
             }
         }

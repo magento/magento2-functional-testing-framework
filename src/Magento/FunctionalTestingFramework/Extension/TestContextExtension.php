@@ -174,11 +174,14 @@ class TestContextExtension extends BaseExtension
      */
     public function afterStep(\Codeception\Event\StepEvent $e)
     {
-        if (getenv('ENABLE_JS_LOG')) {
-            $browserLogEntries = $this->getDriver()->webDriver->manage()->getLog("browser");
-            $jsErrors = ErrorLogger::getInstance()->getLogsOfType($browserLogEntries, ErrorLogger::ERROR_TYPE_JAVASCRIPT);
-            if (!empty($jsErrors)) {
-                AllureHelper::addAttachmentToCurrentStep($jsErrors);
+        if (getenv('ENABLE_BROWSER_LOG')) {
+            $browserLog = $this->getDriver()->webDriver->manage()->getLog("browser");
+            foreach (explode(',', getenv('BROWSER_LOG_BLACKLIST')) as $source) {
+                $browserLog = ErrorLogger::getInstance()->filterLogsOfType($browserLog, $source);
+            }
+
+            if (!empty($browserLog)) {
+                AllureHelper::addAttachmentToCurrentStep(json_encode($browserLog, JSON_PRETTY_PRINT), "Browser Log");
             }
         }
         ErrorLogger::getInstance()->logErrors($this->getDriver(), $e);
