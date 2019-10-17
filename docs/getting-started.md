@@ -18,6 +18,7 @@ Make sure that you have the following software installed and configured on your 
 <div class="bs-callout bs-callout-tip" markdown="1">
 [PhpStorm] supports [Codeception test execution][], which is helpful when debugging.
 </div>
+
 ## Install Magento {#install-magento}
 
 Use instructions below to install Magento.
@@ -67,11 +68,17 @@ To disable the WYSIWYG and enable the web driver to process these fields as simp
 3. In the WYSIWYG Options section set the **Enable WYSIWYG Editor** option to **Disabled Completely**.
 4. Click **Save Config**.
 
+or via command line:
+
+```bash
+bin/magento config:set cms/wysiwyg/enabled disabled
+```
+
 <div class="bs-callout bs-callout-tip">
 When you want to test the WYSIWYG functionality, re-enable WYSIWYG in your test suite.
 </div>
 
-### Security settings   {#security-settings}
+### Security settings {#security-settings}
 
 To enable the **Admin Account Sharing** setting, to avoid unpredictable logout during a testing session, and disable the **Add Secret Key in URLs** setting, to open pages using direct URLs:
 
@@ -79,6 +86,16 @@ To enable the **Admin Account Sharing** setting, to avoid unpredictable logout d
 2. Set **Admin Account Sharing** to **Yes**.
 3. Set **Add Secret Key to URLs** to **No**.
 4. Click **Save Config**.
+
+or via command line:
+
+```bash
+bin/magento config:set admin/security/admin_account_sharing 1
+```
+
+```bash
+bin/magento config:set admin/security/use_form_key 0
+```
 
 ### Nginx settings {#nginx-settings}
 
