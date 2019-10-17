@@ -429,9 +429,9 @@ vendor/bin/mftf setup:env
 
 The example parameters are taken from the `etc/config/.env.example` file.
 
-### `static:checks`
+### `static-checks`
 
-Runs all MFTF static:checks on the test codebase that MFTF is currently attached to.
+Runs all MFTF static-checks on the test codebase that MFTF is currently attached to.
 
 #### Existing static checks
 
@@ -440,7 +440,7 @@ Runs all MFTF static:checks on the test codebase that MFTF is currently attached
 #### Usage
 
 ```bash
-vendor/bin/mftf static:checks
+vendor/bin/mftf static-checks
 ```
 
 ### `upgrade:tests`
