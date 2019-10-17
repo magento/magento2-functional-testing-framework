@@ -7,40 +7,13 @@
 namespace Magento\FunctionalTestingFramework\Extension;
 
 /**
- * Class ErrorLogger
+ * Class BrowserLogUtil
  * @package Magento\FunctionalTestingFramework\Extension
  */
-class ErrorLogger
+class BrowserLogUtil
 {
     const LOG_TYPE_BROWSER = "browser";
     const ERROR_TYPE_JAVASCRIPT = "javascript";
-
-    /**
-     * Error Logger Instance
-     * @var ErrorLogger
-     */
-    private static $errorLogger;
-
-    /**
-     * Singleton method to return ErrorLogger.
-     * @return ErrorLogger
-     */
-    public static function getInstance()
-    {
-        if (!self::$errorLogger) {
-            self::$errorLogger = new ErrorLogger();
-        }
-
-        return self::$errorLogger;
-    }
-
-    /**
-     * ErrorLogger constructor.
-     */
-    private function __construct()
-    {
-        // private constructor
-    }
 
     /**
      * Loops through stepEvent for browser log entries
@@ -49,14 +22,14 @@ class ErrorLogger
      * @param \Codeception\Event\StepEvent                                $stepEvent
      * @return void
      */
-    public function logErrors($module, $stepEvent)
+    public static function logErrors($module, $stepEvent)
     {
         //Types available should be "server", "browser", "driver". Only care about browser at the moment.
         if (in_array(self::LOG_TYPE_BROWSER, $module->webDriver->manage()->getAvailableLogTypes())) {
             $browserLogEntries = $module->webDriver->manage()->getLog(self::LOG_TYPE_BROWSER);
-            $jsErrors = $this->getLogsOfType($browserLogEntries, self::ERROR_TYPE_JAVASCRIPT);
+            $jsErrors = self::getLogsOfType($browserLogEntries, self::ERROR_TYPE_JAVASCRIPT);
             foreach ($jsErrors as $entry) {
-                $this->logError(self::ERROR_TYPE_JAVASCRIPT, $stepEvent, $entry);
+                self::logError(self::ERROR_TYPE_JAVASCRIPT, $stepEvent, $entry);
                 //Set javascript error in MagentoWebDriver internal array
                 $module->setJsError("ERROR({$entry["level"]}) - " . $entry["message"]);
             }
@@ -70,7 +43,7 @@ class ErrorLogger
      * @param string $type
      * @return array
      */
-    public function getLogsOfType($log, $type)
+    public static function getLogsOfType($log, $type)
     {
         $errors = [];
         foreach ($log as $entry) {
@@ -88,7 +61,7 @@ class ErrorLogger
      * @param string $type
      * @return array
      */
-    public function filterLogsOfType($log, $type)
+    public static function filterLogsOfType($log, $type)
     {
         $errors = [];
         foreach ($log as $entry) {
@@ -106,7 +79,7 @@ class ErrorLogger
      * @param array                        $entry
      * @return void
      */
-    private function logError($type, $stepEvent, $entry)
+    private static function logError($type, $stepEvent, $entry)
     {
         //TODO Add to overall log
         $stepEvent->getTest()->getScenario()->comment("{$type} ERROR({$entry["level"]}) - " . $entry["message"]);

@@ -177,14 +177,14 @@ class TestContextExtension extends BaseExtension
         if (getenv('ENABLE_BROWSER_LOG')) {
             $browserLog = $this->getDriver()->webDriver->manage()->getLog("browser");
             foreach (explode(',', getenv('BROWSER_LOG_BLACKLIST')) as $source) {
-                $browserLog = ErrorLogger::getInstance()->filterLogsOfType($browserLog, $source);
+                $browserLog = BrowserLogUtil::filterLogsOfType($browserLog, $source);
             }
 
             if (!empty($browserLog)) {
                 AllureHelper::addAttachmentToCurrentStep(json_encode($browserLog, JSON_PRETTY_PRINT), "Browser Log");
             }
         }
-        ErrorLogger::getInstance()->logErrors($this->getDriver(), $e);
+        BrowserLogUtil::logErrors($this->getDriver(), $e);
     }
 
     /**
