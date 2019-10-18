@@ -372,6 +372,7 @@ class ModuleResolver
             }
         }
 
+        /* TODO uncomment this to show deprecation warning when we ready to fully deliver test packaging feature
         if (strpos($testPath, self::DEPRECATED_DEV_TESTS) !== false && !empty($modulePaths)) {
             $deprecatedPath = ltrim(self::DEPRECATED_DEV_TESTS, DIRECTORY_SEPARATOR);
             $suggestedPath = self::DEV_TESTS . DIRECTORY_SEPARATOR . 'Magento';
@@ -386,7 +387,7 @@ class ModuleResolver
                 print ("\n$message\n\n");
             }
         }
-
+        */
         return $modulePaths;
     }
 
