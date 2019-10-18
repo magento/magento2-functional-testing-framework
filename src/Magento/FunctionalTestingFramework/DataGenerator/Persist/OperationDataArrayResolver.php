@@ -67,6 +67,10 @@ class OperationDataArrayResolver
      * @param boolean          $fromArray
      * @return array
      * @throws \Exception
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * I suppressed this warning because I was in a hurry to deliver a community PR. That PR modified this function and
+     * introduced a new conditional, bumping the complexity to 11.
      */
     public function resolveOperationDataArray($entityObject, $operationMetadata, $operation, $fromArray = false)
     {
