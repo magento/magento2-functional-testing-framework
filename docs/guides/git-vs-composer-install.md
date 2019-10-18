@@ -1,13 +1,13 @@
 #Git vs Composer Installation of Magento with MFTF
 
 
-###How to download Magento + MFTF from GitHub?
+###GitHub Installation
 
 If you are planning on contributing a PR to the Magento 2 codebase, you can download Magento 2 from GitHub. Contribution to the codebase is done using the 'fork and pull' model where contributors maintain their own fork of the repo. This repo is then used to submit a pull request to the base repo.
 
 Install guide: [GitHub Installation](https://devdocs.magento.com/mftf/docs/getting-started.html)
 
-###How to download Magento + MFTF via Composer?
+###Composer based Installation
 
 Composer install downloads released packages of Magento 2 from the composer repo [https://repo.magento.com](https://repo.magento.com).
 
@@ -16,7 +16,7 @@ All Magento modules and their MFTF tests are put under `<vendor>` directory for 
 Install guide: [Composer based Installation](https://devdocs.magento.com/guides/v2.3/install-gde/composer.html)
 
 
-###Managing MFTF test artifacts - Composer vs GitHub
+###Managing modules - Composer vs GitHub
 
 ####Via GitHub:
 
@@ -57,7 +57,7 @@ The file structure under both paths is the same as below:
 
 ###How ModuleResolver reads modules
 
-In either of the installations, all tests and test data are read and merged by MFTF's ModuleResolver in the order indicated the below:
+In either of the installations, all tests and test data are read and merged by MFTF's ModuleResolver in the order indicated below:
 
 1. `<magento_root>/app/code/<vendor_name>/<module_name>/Test/Mftf/`
 2. `<magento_root>/vendor/<vendor_name>/<module_name>/Test/Mftf/`
