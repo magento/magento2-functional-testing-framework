@@ -5,7 +5,8 @@
 
 If you are planning on contributing a PR to the Magento 2 codebase, you can download Magento 2 from GitHub. Contribution to the codebase is done using the 'fork and pull' model where contributors maintain their own fork of the repo. This repo is then used to submit a pull request to the base repo.
 
-Install guide: [GitHub Installation](https://devdocs.magento.com/mftf/docs/getting-started.html)
+Install guide: [GitHub Installation](https://devdocs.magento.com/guides/v2.3/install-gde/prereq/dev_install.html)
+
 
 ###Composer based Installation
 
@@ -14,6 +15,13 @@ Composer install downloads released packages of Magento 2 from the composer repo
 All Magento modules and their MFTF tests are put under `<vendor>` directory for convenience of 3rd party developers. With this setup, you can keep your custom modules separate from the core. You can also develop modules in a separate VCS repository and add them to your `composer.json` which will allow them to be installed into the `vendor` directory.
 
 Install guide: [Composer based Installation](https://devdocs.magento.com/guides/v2.3/install-gde/composer.html)
+
+
+### MFTF Installation
+
+After installing your Magento project in either of the above ways, the composer dependency `magento/magento2-functional-testing-framework` allows you to download and install MFTF. MFTF will be embedded in your Magento 2 installation and will cover your project with functional tests.  
+
+If you want to contribute a PR into MFTF codebase, you will need to install MFTF in the [Standalone] mode.
 
 
 ###Managing modules - Composer vs GitHub
@@ -55,12 +63,14 @@ The file structure under both paths is the same as below:
     └── ...
 ```
 
+
 ###How ModuleResolver reads modules
 
 In either of the installations, all tests and test data are read and merged by MFTF's ModuleResolver in the order indicated below:
 
 1. `<magento_root>/app/code/<vendor_name>/<module_name>/Test/Mftf/`
 2. `<magento_root>/vendor/<vendor_name>/<module_name>/Test/Mftf/`
+
 
 ###Conclusion
 
@@ -69,4 +79,6 @@ There are no differences from MFTF's perspective between having the test artifac
 If you are a contributing developer with an understanding of Git and Composer commands, you can choose the GitHub installation method instead.
 
 
+<!-- Link definitions -->
 
+[Standalone]: ../getting-started.html#set-up-a-standalone-mftf
