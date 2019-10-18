@@ -1,6 +1,6 @@
 # Extend tests
 
-Data objects can be merged to cover the needs of your extension.
+Tests can be extended to cover the needs of your extension.
 
 In this example, we add an action group to a new copy of the original test for our extension.
 
