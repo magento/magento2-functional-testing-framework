@@ -20,6 +20,7 @@ use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 use tests\unit\Util\TestDataArrayBuilder;
 use tests\unit\Util\TestLoggingUtil;
+use tests\unit\Util\MockModuleResolverBuilder;
 
 class ObjectExtensionUtilTest extends TestCase
 {
@@ -30,6 +31,8 @@ class ObjectExtensionUtilTest extends TestCase
     public function setUp()
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
+        $resolverMock = new MockModuleResolverBuilder();
+        $resolverMock->setup();
     }
 
     /**
@@ -263,7 +266,7 @@ class ObjectExtensionUtilTest extends TestCase
     {
         $mockExtendedActionGroup = [
             "nodeName" => "actionGroup",
-            "name" => "mockSimpleActionGroup",
+            "name" => "mockExtendedActionGroup",
             "filename" => "someFile",
             "extends" => "mockSimpleActionGroup",
             "commentHere" => [
@@ -281,7 +284,7 @@ class ObjectExtensionUtilTest extends TestCase
         $this->setMockTestOutput(null, $mockActionGroupData);
 
         $this->expectExceptionMessage(
-            "Parent Action Group mockSimpleActionGroup not defined for Test " . $mockExtendedActionGroup['extends']
+            "Parent Action Group mockSimpleActionGroup not defined for Test " . $mockExtendedActionGroup['name']
         );
 
         // parse and generate test object with mocked data
@@ -309,7 +312,7 @@ class ObjectExtensionUtilTest extends TestCase
 
         $mockExtendedActionGroup = [
             "nodeName" => "actionGroup",
-            "name" => "mockSimpleActionGroup",
+            "name" => "mockExtendedActionGroup",
             "filename" => "someFile",
             "extends" => "mockSimpleActionGroup",
         ];
@@ -336,7 +339,7 @@ class ObjectExtensionUtilTest extends TestCase
                 'error',
                 "Cannot extend an action group that already extends another action group. " .
                 $mockSimpleActionGroup['name'],
-                ['parent' => $mockSimpleActionGroup['name'], 'actionGroup' => $mockSimpleActionGroup['name']]
+                ['parent' => $mockSimpleActionGroup['name'], 'actionGroup' => $mockExtendedActionGroup['name']]
             );
 
             throw $e;

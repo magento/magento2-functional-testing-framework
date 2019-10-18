@@ -4,9 +4,9 @@ In this topic we talk about handling entities that you need in your tests (such 
 Using data handling actions like [`createData`], [`deleteData`], [`updateData`], and [`getData`], you are able to create, delete, update, and read entities for your tests.
 The framework enables you to send HTTP requests with these statically defined data entities:
 
-- [Sending a REST API request][rest request]
-- [Handling a REST API response][rest response]
-- [Sending an HTML form encoded in URL][html form]
+-  [Sending a REST API request][rest request]
+-  [Handling a REST API response][rest response]
+-  [Sending an HTML form encoded in URL][html form]
 
 You have probably noticed that some modules in acceptance functional tests contain a directory, which is called `Metadata`.
 
@@ -25,16 +25,16 @@ This directory contains XML files with metadata required to create a valid reque
 A metadata file contains a list of operations with different types (defined in `type`).
 Each [operation] includes:
 
-- The set of adjustments for processing a request in [attributes][operation], and in some cases, a response  (see `successRegex` and `returnRegex` in [reference details][operation]).
-- The type of body content encoding in [contentType].
-- The body of the request represented as a tree of objects, arrays, and fields.
+-  The set of adjustments for processing a request in [attributes][operation], and in some cases, a response  (see `successRegex`, `returnRegex` and `returnIndex` in [reference details][operation]).
+-  The type of body content encoding in [contentType].
+-  The body of the request represented as a tree of objects, arrays, and fields.
 
 When a test step requires handling the specified data entity, the MFTF performs the following steps:
 
-- Reads input data (`<data/>`) and the type (the `type` attribute) of the specified [entity].
-- Searches the metadata operation for the `dataType` that matches the entity's `type`. For example, `<entity type="product">` matches `<operation dataType="product"`.
-- Forms a request of the operation and the input data of the entity according to matching metadata.
-- Stores a response and provides access to its data using MFTF variables syntax in XML.
+-  Reads input data (`<data/>`) and the type (the `type` attribute) of the specified [entity].
+-  Searches the metadata operation for the `dataType` that matches the entity's `type`. For example, `<entity type="product">` matches `<operation dataType="product"`.
+-  Forms a request of the operation and the input data of the entity according to matching metadata.
+-  Stores a response and provides access to its data using MFTF variables syntax in XML.
 
 The following diagram demonstrates the XML structure of a metadata file:
 ![Structure of metadata](img/metadata-dia.svg)
@@ -96,10 +96,10 @@ Example:
 The MFTF allows you to handle basic CRUD operations with an object using [Magento REST API][api reference] requests.
 To convert a request to the MFTF format, wrap the corresponding REST API request into XML tags according to the [Reference documentation][reference].
 
-- GET is used for retrieving data from objects.
-- POST is used for creating new objects.
-- PUT is used for updating objects.
-- DELETE is used for deleting objects.
+-  GET is used for retrieving data from objects.
+-  POST is used for creating new objects.
+-  PUT is used for updating objects.
+-  DELETE is used for deleting objects.
 
 This is an example of how to handle a category using REST API operations provided by the `catalogCategoryRepositoryV1` service.
 
@@ -107,10 +107,10 @@ This is an example of how to handle a category using REST API operations provide
 
 The above screenshot from the [Magento REST API Reference][api reference] demonstrates a list of available operations to:
 
-- Delete a category by its identifier (`method="DELETE"`)
-- Get information about a category by its ID (`method="GET"`)
-- [Create a new category] (`method="POST"`)
-- Update category data by its ID (`method="PUT"`)
+-  Delete a category by its identifier (`method="DELETE"`)
+-  Get information about a category by its ID (`method="GET"`)
+-  [Create a new category] (`method="POST"`)
+-  Update category data by its ID (`method="PUT"`)
 
 We assume that our `.env` file sets `MAGENTO_BASE_URL=https://example.com/` and `MAGENTO_BACKEND_NAME=admin`.
 
@@ -169,12 +169,12 @@ _Catalog/Metadata/category-meta.xml_:
 
 The following is encoded in `<operation>`:
 
-- `name="CreateCategory"` defines a descriptive name of the operation, which is used for merging if needed.
-- `dataType="category"` defines a relation with data entities with input data for a Category (`<entity type="category">`).
-- `auth="adminOauth"` defines OAuth authorization, which is required for the Admin area.
-- `url="/V1/categories"` defines a routing URL to the corresponding service class.
+-  `name="CreateCategory"` defines a descriptive name of the operation, which is used for merging if needed.
+-  `dataType="category"` defines a relation with data entities with input data for a Category (`<entity type="category">`).
+-  `auth="adminOauth"` defines OAuth authorization, which is required for the Admin area.
+-  `url="/V1/categories"` defines a routing URL to the corresponding service class.
   (The request will be sent to `https://example.com/rest/V1/categories` if `MAGENTO_BASE_URL=https://example.com/` and `MAGENTO_BACKEND_NAME=admin` are set in the _acceptance/.env_ configuration file.)
-- `method="POST"` defines a POST method of the HTTP request.
+-  `method="POST"` defines a POST method of the HTTP request.
 
 `<contentType>application/json</contentType>` defines a content type of the REST API request, which is set as `application/json` here.
 
@@ -333,10 +333,10 @@ The following example of response in JSON demonstrates how to reference data on 
 For cases when REST API is not applicable, you may use [HTML forms] (when all object parameters are encoded in a URL as `key=name` attributes).
 There are two different attributes to split access to different areas:
 
-- `auth="adminFormKey"` is used for objects in an Admin area.
-- `auth="customerFormKey"` is used for objects in a storefront.
+-  `auth="adminFormKey"` is used for objects in an Admin area.
+-  `auth="customerFormKey"` is used for objects in a storefront.
 
-You are able to create assurances with `successRegex`, and even return values with `returnRegex`.
+You are able to create assurances with `successRegex`, and, optionally, return values with `returnRegex`. You can also use `returnIndex` when `returnRegex` matches multiple values.
 
 ### Create an object in Admin {#create-object-as-adminFormKey}
 
@@ -366,13 +366,13 @@ If the returned HTML code contains the `messages-message-success` string, it is 
 
 The operation enables you to assign the following form fields:
 
-- `group/group_id`
-- `group/name`
-- `group/code`
-- `group/root_category_id`
-- `group/website_id`
-- `store_action`
-- `store_type`
+-  `group/group_id`
+-  `group/name`
+-  `group/code`
+-  `group/root_category_id`
+-  `group/website_id`
+-  `store_action`
+-  `store_type`
 
 ### Create an object in storefront {#create-object-as-customerFormKey}
 
@@ -396,9 +396,9 @@ If the returned HTML code contains a string that matches the regular expression 
 
 The operation assigns three form fields:
 
-- `product`
-- `customer_email`
-- `customer_password`
+-  `product`
+-  `customer_email`
+-  `customer_password`
 
 ## Reference
 
@@ -418,27 +418,28 @@ Root element that points to the corresponding XML Schema.
 | `method`        | string                                                                       | optional | HTTP method of the operation. Possible values: `POST`, `DELETE`, `PUT`, `GET`.                                                               |
 | `successRegex`  | string                                                                       | optional | Determines if the operation was successful. Parses the HTML body in response and asserts if the value assigned to the `successRegex` exists. |
 | `returnRegex`   | string                                                                       | optional | Determines if the response contains the matching value to return.                                                                            |
+| `returnIndex`   | string                                                                       | optional | Specifies index at which the value will be returned when `returnRegex` matches multiple values                                                                          |
 | `removeBackend` | boolean                                                                      | optional | Removes backend name from requested URL. Applicable when `auth="adminFormKey"`.                                                              |
 | `filename`      | string                                                                       | optional |                                                                                                                                              |
 
-- \*`url` - full URL is a concatenation of _ENV.baseUrl_ + `/rest/` + _url_.
+-  \*`url` - full URL is a concatenation of _ENV.baseUrl_ + `/rest/` + _url_.
   To reuse data of a required entity or returned response use a field key wrapped in curly braces such as `{sku}`.
   When the data to reuse is of a different type, declare also the type of data such as `{product.sku}`.
   Example: `"/V1/products/{product.sku}/media/{id}"`.
 
-- \*\*`auth` - available values:
+-  \*\*`auth` - available values:
 
-  - `adminOath` is used for REST API persistence in the Admin area with [OAuth-based authentication][oauth].
-  - `adminFormKey` is used for HTML form persistence in the Admin area.
-  - `customerFormKey` is used for HTML form persistence in the Customer area.
-  - `anonymous` is used for REST API persistence without authorization.
+  -  `adminOath` is used for REST API persistence in the Admin area with [OAuth-based authentication][oauth].
+  -  `adminFormKey` is used for HTML form persistence in the Admin area.
+  -  `customerFormKey` is used for HTML form persistence in the Customer area.
+  -  `anonymous` is used for REST API persistence without authorization.
 
 ### contentType {#contentType-tag}
 
 Sets one of the following operation types:
 
-- `application/json` is used for REST API operations.
-- `application/x-www-form-urlencoded` is used for HTML form operations.
+-  `application/json` is used for REST API operations.
+-  `application/x-www-form-urlencoded` is used for HTML form operations.
 
 ### object {#object-tag}
 
@@ -496,7 +497,7 @@ Data entity with the corresponding assignment:
 </array>
 ```
 
-- Resulted JSON request:
+-  Resulted JSON request:
 
 ```json
 "tax_rate_ids":

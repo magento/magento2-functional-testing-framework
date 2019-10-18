@@ -16,6 +16,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  * @Title("[NO TESTCASEID]: Action Group With No Argument")
+ * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupTest.xml<br>")
  */
 class ActionGroupWithNoArgumentsCest
 {
@@ -29,8 +30,8 @@ class ActionGroupWithNoArgumentsCest
 	 */
 	public function ActionGroupWithNoArguments(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group actionGroupWithoutArguments (actionGroup)");
-		$I->wait(1);
-		$I->comment("Exiting Action Group actionGroupWithoutArguments (actionGroup)");
+		$I->comment("Entering Action Group [actionGroup] actionGroupWithoutArguments");
+		$I->wait(1); // stepKey: waitForNothingActionGroup
+		$I->comment("Exiting Action Group [actionGroup] actionGroupWithoutArguments");
 	}
 }

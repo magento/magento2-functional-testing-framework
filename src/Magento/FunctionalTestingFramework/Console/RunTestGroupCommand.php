@@ -34,11 +34,6 @@ class RunTestGroupCommand extends BaseGenerateCommand
                 'k',
                 InputOption::VALUE_NONE,
                 "only execute a group of tests without generating from source xml"
-            )->addOption(
-                "force",
-                'f',
-                InputOption::VALUE_NONE,
-                'force generation of tests regardless of Magento Instance Configuration'
             )->addArgument(
                 'groups',
                 InputArgument::IS_ARRAY | InputArgument::REQUIRED,
@@ -64,6 +59,9 @@ class RunTestGroupCommand extends BaseGenerateCommand
         $force = $input->getOption('force');
         $groups = $input->getArgument('groups');
         $remove = $input->getOption('remove');
+        $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
+        $allowSkipped = $input->getOption('allow-skipped');
+        $verbose = $output->isVerbose();
 
         if ($skipGeneration and $remove) {
             // "skip-generate" and "remove" options cannot be used at the same time
@@ -75,9 +73,10 @@ class RunTestGroupCommand extends BaseGenerateCommand
         // Create Mftf Configuration
         MftfApplicationConfig::create(
             $force,
-            MftfApplicationConfig::GENERATION_PHASE,
-            false,
-            false
+            MftfApplicationConfig::EXECUTION_PHASE,
+            $verbose,
+            $debug,
+            $allowSkipped
         );
 
         if (!$skipGeneration) {
@@ -86,7 +85,10 @@ class RunTestGroupCommand extends BaseGenerateCommand
             $args = [
                 '--tests' => $testConfiguration,
                 '--force' => $force,
-                '--remove' => $remove
+                '--remove' => $remove,
+                '--debug' => $debug,
+                '--allow-skipped' => $allowSkipped,
+                '-v' => $verbose
             ];
 
             $command->run(new ArrayInput($args), $output);

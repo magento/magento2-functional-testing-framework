@@ -15,7 +15,6 @@ use Magento\FunctionalTestingFramework\Test\Util\ActionGroupObjectExtractor;
 
 /**
  * Class TestGenerator
- * @SuppressWarnings(PHPMD)
  */
 class DocGenerator
 {
@@ -76,7 +75,8 @@ class DocGenerator
                     ?? 'NO_DESCRIPTION_SPECIFIED',
                 self::FILENAMES => $filenames,
                 ActionGroupObjectExtractor::ACTION_GROUP_ARGUMENTS => $arguments
-                ];
+            ];
+
             $pageGroups = array_merge_recursive(
                 $pageGroups,
                 [$annotations[ActionGroupObject::ACTION_GROUP_PAGE] ?? 'NO_PAGE_SPECIFIED' => [$name => $info]]
@@ -103,26 +103,20 @@ class DocGenerator
     private function transformToMarkdown($annotationList)
     {
         $markdown = "#Action Group Information" . PHP_EOL;
-        $markdown .= "This documentation contains a list of all" .
-            " action groups on the pages on which they start" .
+        $markdown .= "This documentation contains a list of all Action Groups." .
             PHP_EOL .
             PHP_EOL;
 
-        $markdown .= "##List of Pages" . PHP_EOL;
-        foreach ($annotationList as $group => $objects) {
-            $markdown .= "- [ $group ](#$group)" . PHP_EOL;
-        }
         $markdown .= "---" . PHP_EOL;
         foreach ($annotationList as $group => $objects) {
-            $markdown .= "<a name=\"$group\"></a>" . PHP_EOL;
-            $markdown .= "##$group" . PHP_EOL . PHP_EOL;
             foreach ($objects as $name => $annotations) {
                 $markdown .= "###$name" . PHP_EOL;
-                $markdown .= $annotations[actionGroupObject::ACTION_GROUP_DESCRIPTION] . PHP_EOL . PHP_EOL;
+                $markdown .= "**Description**:" . PHP_EOL;
+                $markdown .= "- " . $annotations[actionGroupObject::ACTION_GROUP_DESCRIPTION] . PHP_EOL . PHP_EOL;
                 if (!empty($annotations[ActionGroupObjectExtractor::ACTION_GROUP_ARGUMENTS])) {
-                    $markdown .= "Action Group Arguments:" . PHP_EOL . PHP_EOL;
+                    $markdown .= "**Action Group Arguments**:" . PHP_EOL . PHP_EOL;
                     $markdown .= "| Name | Type |" . PHP_EOL;
-                    $markdown .= "| --- | --- |" . PHP_EOL;
+                    $markdown .= "| ---- | ---- |" . PHP_EOL;
                     foreach ($annotations[ActionGroupObjectExtractor::ACTION_GROUP_ARGUMENTS] as $argument) {
                         $argumentName = $argument->getName();
                         $argumentType = $argument->getDataType();
@@ -130,7 +124,7 @@ class DocGenerator
                     }
                     $markdown .= PHP_EOL;
                 }
-                $markdown .= "Located in:" . PHP_EOL;
+                $markdown .= "**Located In**:" . PHP_EOL;
                 foreach ($annotations[self::FILENAMES] as $filename) {
                     $relativeFilename = str_replace(MAGENTO_BP . DIRECTORY_SEPARATOR, "", $filename);
                     $markdown .= PHP_EOL .  "- $relativeFilename";

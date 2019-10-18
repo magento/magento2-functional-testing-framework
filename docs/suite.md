@@ -41,25 +41,25 @@ The format of a suite:
 
 ## Principles
 
-- A suite name:
-  - must not match any existing group value.
+-  A suite name:
+  -  must not match any existing group value.
   For example, the suite `<suite name="ExampleTest">` will fail during test run if any test contains in annotations `<group value="ExampleTest">`.
-  - must not be `default` or `skip`. Tests that are not in any suite are generated under the `default` suite.
+  -  must not be `default` or `skip`. Tests that are not in any suite are generated under the `default` suite.
   The suite name `skip` is synonymous to including a test in the `<group value="skip"/>`, which will be deprecated in MFTF 3.0.0.
-  - can contain letters, numbers, and underscores.
-  - should be upper camel case.
-- A suite must contain at least one `<include>`, or one `<exclude>`, or both.
-- Using `<before>` in a suite, you must add the corresponding `<after>` to restore the initial state of your testing instance.
+  -  can contain letters, numbers, and underscores.
+  -  should be upper camel case.
+-  A suite must contain at least one `<include>`, or one `<exclude>`, or both.
+-  Using `<before>` in a suite, you must add the corresponding `<after>` to restore the initial state of your testing instance.
 
 ## Conditions
 
 Using suites enables test writers to consolidate conditions that are shared between tests.
 The code lives in one place and executes once per suite.
 
-- Set up preconditions and postconditions using [actions] in [`<before>`] and [`<after>`] correspondingly, just similar to use in a [test].
-- Clean up after suites just like after tests.
+-  Set up preconditions and postconditions using [actions] in [`<before>`] and [`<after>`] correspondingly, just similar to use in a [test].
+-  Clean up after suites just like after tests.
   The MFTF enforces the presence of both `<before>` and `<after>` if either is present.
-- Do not reference in the subsequent tests to data that was persisted in the preconditions.
+-  Do not reference in the subsequent tests to data that was persisted in the preconditions.
   Referencing to `$stepKey.field$` of these actions is not valid.
 
 ## Test writing
@@ -70,25 +70,25 @@ You cannot isolate this test from preconditions of the suite; it cannot be used 
 
 There are several ways to generate and execute your new test in the context of a suite:
 
-- Edit the appropriate `suite.xml` to include your test only and run:
+-  Edit the appropriate `suite.xml` to include your test only and run:
 
   ```bash
   vendor/bin/mftf run:group <suiteName>
   ```
 
-- Temporarily add a group to your test like `<group value="foo">` and run:
+-  Temporarily add a group to your test like `<group value="foo">` and run:
 
   ```bash
   vendor/bin/mftf run:group foo
   ```
 
-- To limit generation to your suite/test combination, run in conjunction with the above:
+-  To limit generation to your suite/test combination, run in conjunction with the above:
 
   ```bash
   vendor/bin/mftf generate:suite <suite>
   ```
 
-- To generate any combination of suites and tests, use [`generate:tests`] with the `--tests` flag.
+-  To generate any combination of suites and tests, use [`generate:tests`] with the `--tests` flag.
 
 ## Examples
 
@@ -189,9 +189,9 @@ The suite includes a specific test `SomeCacheRelatedTest` and every `<test>` tha
 
 This example declares a suite with the name `PaypalConfiguration`:
 
-- `<before>` block persists a Paypal Configuration enabling all tests in this suite to run under the newly reconfigured Magento instance.
-- `<after>` block deletes the persisted configuration, returning Magento to its initial state.
-- The suite includes all tests from the `Catalog` module, except the `PaypalIncompatibleTest` test.
+-  `<before>` block persists a Paypal Configuration enabling all tests in this suite to run under the newly reconfigured Magento instance.
+-  `<after>` block deletes the persisted configuration, returning Magento to its initial state.
+-  The suite includes all tests from the `Catalog` module, except the `PaypalIncompatibleTest` test.
 
 ## Elements reference
 
@@ -233,9 +233,9 @@ A set of filters that you can use to specify which tests to include in the test 
 
 It may contain filters by:
 
-- test which names a specific `<test>`.
-- group which refers to a declared `group` annotation.
-- module which refers to `test` files under a specific Magento Module.
+-  test which names a specific `<test>`.
+-  group which refers to a declared `group` annotation.
+-  module which refers to `test` files under a specific Magento Module.
 
 The element can contain [`<test>`], [`<group>`], and [`<module>`].
 
@@ -253,9 +253,9 @@ There two types of behavior:
 
 It may contain filters by:
 
-- test which names a specific `<test>`.
-- group which refers to a declared `group` annotation.
-- module which refers to `test` files under a specific Magento Module.
+-  test which names a specific `<test>`.
+-  group which refers to a declared `group` annotation.
+-  module which refers to `test` files under a specific Magento Module.
 
 The element may contain [`<test>`], [`<group>`], and [`<module>`].
 

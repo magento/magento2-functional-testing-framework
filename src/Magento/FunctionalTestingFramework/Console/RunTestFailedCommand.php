@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Symfony\Component\Console\Input\InputOption;
 
 class RunTestFailedCommand extends BaseGenerateCommand
 {
@@ -67,12 +68,18 @@ class RunTestFailedCommand extends BaseGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $force = $input->getOption('force');
+        $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
+        $allowSkipped = $input->getOption('allow-skipped');
+        $verbose = $output->isVerbose();
+
         // Create Mftf Configuration
         MftfApplicationConfig::create(
-            false,
-            MftfApplicationConfig::GENERATION_PHASE,
-            false,
-            false
+            $force,
+            MftfApplicationConfig::EXECUTION_PHASE,
+            $verbose,
+            $debug,
+            $allowSkipped
         );
 
         $testConfiguration = $this->getFailedTestList();
@@ -83,8 +90,14 @@ class RunTestFailedCommand extends BaseGenerateCommand
         }
 
         $command = $this->getApplication()->find('generate:tests');
-        $args = ['--tests' => $testConfiguration, '--remove' => true];
-
+        $args = [
+            '--tests' => $testConfiguration,
+            '--force' => $force,
+            '--remove' => true,
+            '--debug' => $debug,
+            '--allow-skipped' => $allowSkipped,
+            '-v' => $verbose
+        ];
         $command->run(new ArrayInput($args), $output);
 
         $testManifestList = $this->readTestManifestFile();

@@ -77,4 +77,3 @@ To update the MFTF from the previous minor version:
 [Changelog]: https://github.com/magento/magento2-functional-testing-framework/blob/master/CHANGELOG.md
 [WYSIWYG settings]: getting-started.md#wysiwyg-settings
 [Security settings]: getting-started.md#security-settings
-[Find your version]: introduction.md#find-your-mftf-version

@@ -84,19 +84,19 @@ Use the _Foo.camelCase_ naming convention, which is similar to _Classes_ and _cl
 
 Use an upper case first letter for:
 
-- File names. Example: _StorefrontCreateCustomerTest.xml_
-- Test name attributes. Example: `<test name="TestAllTheThingsTest">`.
-- Data entity names. Example: `<entity name="OutOfStockProduct">`.
-- Page name. Example: `<page name="AdminLoginPage">`.
-- Section name. Example: `<section name="AdminCategorySidebarActionSection">`.
-- Action group name. Example: `<actionGroup name="LoginToAdminActionGroup">`.
+-  File names. Example: _StorefrontCreateCustomerTest.xml_
+-  Test name attributes. Example: `<test name="TestAllTheThingsTest">`.
+-  Data entity names. Example: `<entity name="OutOfStockProduct">`.
+-  Page name. Example: `<page name="AdminLoginPage">`.
+-  Section name. Example: `<section name="AdminCategorySidebarActionSection">`.
+-  Action group name. Example: `<actionGroup name="LoginToAdminActionGroup">`.
 
 #### Lower case
 
 Use a lower case first letter for:
 
-- Data keys. Example: `<data key="firstName">`.
-- Element names. Examples: `<element name="confirmDeleteButton"/>`.
+-  Data keys. Example: `<data key="firstName">`.
+-  Element names. Examples: `<element name="confirmDeleteButton"/>`.
 
 ## Page object
 
@@ -134,9 +134,9 @@ Define these three elements and reference them by name in the tests.
 1. Keep your tests short and granular for target testing, easier reviews, and easier merge conflict resolution.
  It also helps you to identify the cause of test failure.
 1. Use comments to keep tests readable and maintainable:
-   - Keep the inline `<!-- XML comments -->` and [`<comment>`] tags up to date.
+   -  Keep the inline `<!-- XML comments -->` and [`<comment>`] tags up to date.
      It helps to inform the reader of what you are testing and to yield a more descriptive Allure report.
-   - Explain in comments unclear or tricky test steps.
+   -  Explain in comments unclear or tricky test steps.
 1. Refer to [sections] instead of writing selectors.
 
 ## Test step merging order

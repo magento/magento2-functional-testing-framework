@@ -34,10 +34,6 @@ class ActionGroupAnnotationExtractorTest extends TestCase
             "description" => [
                 "nodeName" => "description",
                 "value" => "someDescription"
-            ],
-            "page" => [
-                "nodeName" => "page",
-                "value" => "somePage"
             ]
         ];
         // Perform Test
@@ -45,8 +41,6 @@ class ActionGroupAnnotationExtractorTest extends TestCase
         $returnedAnnotations = $extractor->extractAnnotations($actionGroupAnnotations, "fileName");
 
         // Asserts
-
-        $this->assertEquals("somePage", $returnedAnnotations['page']);
         $this->assertEquals("someDescription", $returnedAnnotations['description']);
     }
 
@@ -57,7 +51,7 @@ class ActionGroupAnnotationExtractorTest extends TestCase
      */
     public function testActionGroupMissingAnnotations()
     {
-        // Action Group Data, missing page and description
+        // Action Group Data, missing description
         $testAnnotations = [];
         // Perform Test
         $extractor = new ActionGroupAnnotationExtractor();
@@ -70,7 +64,7 @@ class ActionGroupAnnotationExtractorTest extends TestCase
             'DEPRECATION: Action Group File fileName is missing required annotations.',
             [
                 'actionGroup' => 'fileName',
-                'missingAnnotations' => "description, page"
+                'missingAnnotations' => "description"
             ]
         );
     }
@@ -83,7 +77,7 @@ class ActionGroupAnnotationExtractorTest extends TestCase
      */
     public function testActionGroupMissingAnnotationsNoWarning()
     {
-        // Action Group Data, missing page and description
+        // Action Group Data, missing description
         $testAnnotations = [];
         // Perform Test
         $extractor = new ActionGroupAnnotationExtractor();

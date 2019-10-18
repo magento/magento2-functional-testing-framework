@@ -88,6 +88,13 @@ class ActionGroupObject
     private $filename;
 
     /**
+     * Holds on to the result of extractStepKeys() to increase test generation performance.
+     *
+     * @var string[]
+     */
+    private $cachedStepKeys = null;
+
+    /**
      * ActionGroupObject constructor.
      *
      * @param string           $name
@@ -226,7 +233,7 @@ class ActionGroupObject
         // $regexPattern match on:   $matches[0] {{section.element(arg.field)}}
         // $matches[1] = section.element
         // $matches[2] = arg.field
-        $regexPattern = '/{{([^(}]+)\(*([^)}]+)*\)*}}/';
+        $regexPattern = '/{{([^(}]+)\(*([^)]+)*?\)*}}/';
 
         $newActionAttributes = [];
         foreach ($attributes as $attributeKey => $attributeValue) {
@@ -409,16 +416,18 @@ class ActionGroupObject
      */
     public function extractStepKeys()
     {
-        $originalKeys = [];
-        foreach ($this->parsedActions as $action) {
-            //limit actions returned to list that are relevant
-            foreach (self::STEPKEY_REPLACEMENT_ENABLED_TYPES as $actionValue) {
-                if ($actionValue === $action->getType()) {
+        if ($this->cachedStepKeys === null) {
+            $originalKeys = [];
+            foreach ($this->parsedActions as $action) {
+                //limit actions returned to list that are relevant
+                if (in_array($action->getType(), self::STEPKEY_REPLACEMENT_ENABLED_TYPES)) {
                     $originalKeys[] = $action->getStepKey();
                 }
             }
+            $this->cachedStepKeys = $originalKeys;
         }
-        return $originalKeys;
+
+        return $this->cachedStepKeys;
     }
 
     /**
@@ -532,8 +541,8 @@ class ActionGroupObject
      */
     private function addContextCommentsToActionList($actionList, $actionReferenceKey)
     {
-        $actionStartComment = self::ACTION_GROUP_CONTEXT_START . $this->name . " (" . $actionReferenceKey . ")";
-        $actionEndComment = self::ACTION_GROUP_CONTEXT_END . $this->name . " (" . $actionReferenceKey . ")";
+        $actionStartComment = self::ACTION_GROUP_CONTEXT_START . "[" . $actionReferenceKey . "] " . $this->name;
+        $actionEndComment = self::ACTION_GROUP_CONTEXT_END . "[" . $actionReferenceKey . "] " . $this->name;
         $startAction = new ActionObject(
             $actionStartComment,
             ActionObject::ACTION_TYPE_COMMENT,

@@ -1,0 +1,21 @@
+{
+  "name": "magento/module2-functional-test",
+  "type": "magento2-functional-test-module",
+  "description": "MFTF tests for magento",
+  "version": "1.0.0",
+  "require": {
+    "magento/magento2-functional-testing-framework": "^2.5.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~6.5.0 || ~7.0.0"
+  },
+  "suggest": {
+    "magento/module-one": "name: Magento_ModuleY, version: ~100.0.0",
+    "magento/module-module-x": " type: magento2-module ,name: Magento_ModuleX, version: ~100.0.0",
+    "magento/module-two": "*",
+    "magento/module-module-y": "type: magento2-module, name:Magento_ModuleY,version:~100.0.0",
+    "magento/module-module-z": "  type:magento2-module,   name:  Magento_ModuleZ , version: ~100.0.0",
+    "magento/module-three": "type: magento2-module, ~100.0.0",
+    "magento/module-four": "some suggestions"
+  }
+}

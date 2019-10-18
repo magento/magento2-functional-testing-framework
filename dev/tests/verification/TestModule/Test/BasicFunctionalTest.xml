@@ -24,7 +24,7 @@
         </after>
         <comment stepKey="basicCommentWithNoData" userInput="{{emptyData.noData}}"/>
         <comment stepKey="basicCommentWithDefinitelyNoData" userInput="{{emptyData.definitelyNoData}}"/>
-        <comment stepKey="ReadinessCheckSkipped" userInput="skipReadiness" skipReadiness="true"/>
+        <comment stepKey="basicCommentWithData" userInput="seeComment"/>
         <grabValueFrom stepKey="someVarDefinition"/>
         <acceptPopup stepKey="acceptPopupKey1"/>
         <amOnPage stepKey="amOnPageKey1" url="/test/url"/>
@@ -50,8 +50,14 @@
         <dontSeeElementInDOM selector=".functionalTestSelector" stepKey="dontSeeElementInDOMKey1"/>
         <dontSeeInCurrentUrl url="/functionalUrl" stepKey="dontSeeInCurrentUrlKey1"/>
         <dontSeeInField selector=".functionalTestSelector" stepKey="dontSeeInFieldKey1" />
-        <dontSeeInPageSource userInput="someInput" stepKey="dontSeeInPageSourceKey1"/>
-        <dontSeeInSource html="&quot;&lt;myHtmlHere&gt;&quot;" stepKey="dontSeeInSourceKey1"/>
+        <dontSeeInPageSource html="Cosmo Kramer" stepKey="dontSeeInPageSourceKey1"/>
+        <dontSeeInPageSource html="&#60;p&#62;Jerry Seinfeld&#60;&#47;p&#62;" stepKey="dontSeeInPageSourceKey2"/>
+        <dontSeeInPageSource userInput="Cosmo Kramer" stepKey="dontSeeInPageSourceKey3"/>
+        <dontSeeInPageSource userInput="&#60;p&#62;Jerry Seinfeld&#60;&#47;p&#62;" stepKey="dontSeeInPageSourceKey4"/>
+        <dontSeeInPageSource userInput="bar" html="foo" stepKey="dontSeeInPageSourceKey5"/>
+        <dontSeeInPageSource userInput="&#60;p&#62;bar&#60;&#47;p&#62;" html="&#60;p&#62;foo&#60;&#47;p&#62;" stepKey="dontSeeInPageSourceKey6"/>
+        <dontSeeInSource html="Cosmo Kramer" stepKey="dontSeeInSourceKey1"/>
+        <dontSeeInSource html="&#60;p&#62;Jerry Seinfeld&#60;&#47;p&#62;" stepKey="dontSeeInSourceKey2"/>
         <dontSeeInTitle userInput="someInput" stepKey="dontSeeInTitleKey1"/>
         <dontSeeLink userInput="someInput" url="/functionalUrl" stepKey="dontSeeLinkKey1" />
         <dontSeeOptionIsSelected selector=".functionalTestSelector" userInput="someInput" stepKey="dontSeeOptionIsSelectedKey1" />
@@ -95,9 +101,11 @@
         <seeElementInDOM selector=".functionalTestSelector" stepKey="seeElementInDOMKey1"/>
         <seeInCurrentUrl url="/functionalUrl" stepKey="seeInCurrentUrlKey1"/>
         <seeInField selector=".functionalTestSelector" userInput="someInput" stepKey="seeInFieldKey1" />
-        <seeInPageSource html="&quot;&lt;myHtmlHere&gt;&quot;" stepKey="seeInPageSourceKey1"/>
+        <seeInPageSource html="Home Page" stepKey="seeInPageSourceKey1"/>
+        <seeInPageSource html="&#60;h1 class&#61;&#34;page-title&#34;&#62;" stepKey="seeInPageSourceKey2"/>
         <seeInPopup userInput="someInput" stepKey="seeInPopupKey1"/>
-        <seeInSource html="&quot;&lt;myHtmlHere&gt;&quot;" stepKey="seeInSourceKey1"/>
+        <seeInSource html="Home Page" stepKey="seeInSourceKey1"/>
+        <seeInSource html="&#60;h1 class&#61;&#34;page-title&#34;&#62;" stepKey="seeInSourceKey2"/>
         <seeInTitle userInput="someInput" stepKey="seeInTitleKey1"/>
         <seeLink userInput="someInput" url="/functionalUrl" stepKey="seeLinkKey1" />
         <seeNumberOfElements selector=".functionalTestSelector" stepKey="seeNumberOfElementsKey1"/>

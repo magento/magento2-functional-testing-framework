@@ -17,8 +17,8 @@ userInput="{{SimpleSubCategory.name}}"
 
 In this example:
 
-* `SimpleSubCategory` is an entity name.
-* `name` is a `<data>` key of the entity. The corresponding value will be assigned to `userInput` as a result.
+*  `SimpleSubCategory` is an entity name.
+*  `name` is a `<data>` key of the entity. The corresponding value will be assigned to `userInput` as a result.
 
 ### Environmental data
 
@@ -28,8 +28,8 @@ userInput="{{_ENV.MAGENTO_ADMIN_USERNAME}}"
 
 In this example:
 
-* `_ENV` is a reference to the `dev/tests/acceptance/.env` file, where basic environment variables are set.
-* `MAGENTO_ADMIN_USERNAME` is a name of an environment variable.
+*  `_ENV` is a reference to the `dev/tests/acceptance/.env` file, where basic environment variables are set.
+*  `MAGENTO_ADMIN_USERNAME` is a name of an environment variable.
    The corresponding value will be assigned to `userInput` as a result.
 
 ### Sensitive data
@@ -40,10 +40,10 @@ userInput="{{_CREDS.my_secret_token}}"
 
 In this example:
 
-* `_CREDS` is a constant to reference to the `dev/tests/acceptance/.credentials` file, where sensitive data and secrets are stored for use in a test.
-* `MY_SECRET_TOKEN` is the name of a key in the credentials variable.
+*  `_CREDS` is a constant to reference to the `dev/tests/acceptance/.credentials` file, where sensitive data and secrets are stored for use in a test.
+*  `MY_SECRET_TOKEN` is the name of a key in the credentials variable.
   The corresponding value of the credential will be assigned to `userInput` as a result.
-* The decrypted values are only available in the `.credentials` file in which they are stored.
+*  The decrypted values are only available in the `.credentials` file in which they are stored.
 
 Learn more in [Credentials][].
 
@@ -59,8 +59,8 @@ userInput="$createCustomer.email$"
 
 In this example:
 
-* `createCustomer` is a step key of the corresponding test step that creates an entity.
-* `email` is a data key of the entity.
+*  `createCustomer` is a step key of the corresponding test step that creates an entity.
+*  `email` is a data key of the entity.
   The corresponding value will be assigned to `userInput` as a result.
 
 <div class="bs-callout bs-callout-info">
@@ -118,9 +118,10 @@ The format of `<data>` is:
 
 The following conventions apply to MFTF `<data>`:
 
-* A `<data>` file may contain multiple data entities.
-* Camel case is used for `<data>` elements. The name represents the `<data>` type. For example, a file with customer data is `CustomerData.xml`. A file for simple product would be `SimpleProductData.xml`.
-* Camel case is used for the entity name.
+*  A `<data>` file may contain multiple data entities.
+*  Camel case is used for `<data>` elements. The name represents the `<data>` type. For example, a file with customer data is `CustomerData.xml`. A file for simple product would be `SimpleProductData.xml`.
+*  Camel case is used for the entity name.
+*  The file name must have the suffix `Data.xml`.
 
 ## Example
 
@@ -151,16 +152,16 @@ All entities that have the same name will be merged during test generation. Both
 
 `_defaultCategory` sets three data fields:
 
-* `name` defines the category name as `simpleCategory` with a unique suffix. Example: `simpleCategory598742365`.
-* `name_lwr` defines the category name in lowercase format with a unique suffix. Example: `simplecategory697543215`.
-* `is_active` sets the enable category to `true`.
+*  `name` defines the category name as `simpleCategory` with a unique suffix. Example: `simpleCategory598742365`.
+*  `name_lwr` defines the category name in lowercase format with a unique suffix. Example: `simplecategory697543215`.
+*  `is_active` sets the enable category to `true`.
 
 `SimpleSubCategory` sets four data fields:
 
-* `name` that defines the category name with a unique suffix. Example: `SimpleSubCategory458712365`.
-* `name_lwr` that defines the category name in lowercase format with a unique suffix. Example: `simplesubcategory753698741`.
-* `is_active` sets the enable category to `true`.
-* `include_in_menu` that sets the include in the menu to `true`.
+*  `name` that defines the category name with a unique suffix. Example: `SimpleSubCategory458712365`.
+*  `name_lwr` that defines the category name in lowercase format with a unique suffix. Example: `simplesubcategory753698741`.
+*  `is_active` sets the enable category to `true`.
+*  `include_in_menu` that sets the include in the menu to `true`.
 
 The following is an example of a call in test:
 
@@ -171,6 +172,16 @@ The following is an example of a call in test:
 <!-- {% endraw %} -->
 
 This action inputs data from the `name` of the `_defaultCategory` entity (for example, `simpleCategory598742365`) into the field with the locator defined in the selector of the `categoryNameInput` element of the `AdminCategoryBasicFieldSection`.
+
+You can also call data from the xml definition of a `data` tag directly:
+
+```xml
+<entity name="NewAdminUser" type="user">
+    <data key="username" unique="suffix">admin</data>
+    <data key="current_password">{{AnotherUser.current_password}}</data>  <!-- Data from another entity -->
+    <data key="current_password">{{_ENV.MAGENTO_ADMIN_PASSWORD}}</data>  <!-- ENV file reference -->
+</entity>
+```
 
 ## Reference
 

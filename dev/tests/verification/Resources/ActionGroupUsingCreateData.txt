@@ -15,6 +15,7 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
+ * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupTest.xml<br>")
  */
 class ActionGroupUsingCreateDataCest
 {
@@ -24,24 +25,26 @@ class ActionGroupUsingCreateDataCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group actionGroupWithCreateData (Key1)");
-		$I->amGoingTo("create entity that has the stepKey: createCategoryKey1");
+		$I->comment("Entering Action Group [Key1] actionGroupWithCreateData");
+		$I->comment("[createCategoryKey1] create 'ApiCategory' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createCategoryKey1",
 			"hook",
 			"ApiCategory",
 			[],
-			null
+			[]
 		);
-		$I->amGoingTo("create entity that has the stepKey: createConfigProductKey1");
+
+		$I->comment("[createConfigProductKey1] create 'ApiConfigurableProduct' entity");
 		PersistedObjectHandler::getInstance()->createEntity(
 			"createConfigProductKey1",
 			"hook",
 			"ApiConfigurableProduct",
 			["createCategoryKey1"],
-			null
+			[]
 		);
-		$I->comment("Exiting Action Group actionGroupWithCreateData (Key1)");
+
+		$I->comment("Exiting Action Group [Key1] actionGroupWithCreateData");
 	}
 
 	/**

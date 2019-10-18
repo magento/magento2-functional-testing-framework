@@ -9,6 +9,6 @@
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
     <test name="ExecuteInSeleniumTest">
-        <executeInSelenium function="function ($webdriver) { return 'Hello, World!'}" stepKey="executeInSeleniumStep"/>
+        <executeInSelenium function="function ($webdriver) { return &quot;Hello, World!&quot;}" stepKey="executeInSeleniumStep"/>
     </test>
 </tests>

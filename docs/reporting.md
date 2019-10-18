@@ -2,31 +2,31 @@
 
 The Magento Functional Testing Framework provides two types of reporting:
 
-- Inline reporting that you can view in the terminal as you run [`mftf`][mftf] or [`codecept`][codecept] CLI commands.
-- HTML reports that you can view using the [Allure Framework][] after a test run completes.
+-  Inline reporting that you can view in the terminal as you run [`mftf`][mftf] or [`codecept`][codecept] CLI commands.
+-  HTML reports that you can view using the [Allure Framework][] after a test run completes.
 
 When you run a test, MFTF copies all reporting artifacts to the `dev/tests/acceptance/tests/_output` subdirectory in the Magento root directory.
 The directory contains:
 
-- `allure-results/` that is a directory generated and served by the Allure Framework.
-- `failed` that is a text file containing relative paths to failed tests after the last test run.
+-  `allure-results/` that is a directory generated and served by the Allure Framework.
+-  `failed` that is a text file containing relative paths to failed tests after the last test run.
   The paths are relative to `dev/tests/acceptance/`.
-- `.html` and `.png` files that are screenshots of fails in HTML and PNG formats.
+-  `.html` and `.png` files that are screenshots of fails in HTML and PNG formats.
   To cleanup the `_output/` directory, remove them manually.
 
 The `mftf` tool logs output continuously to the `dev/tests/acceptance/mftf.log` file.
 
 ## Command line
 
-The MFTF reports about its progress during test run when you run the `mftf` CLI tool with [`run:test`][] or [`run:group`][] commands.
+MFTF reports about its progress during test run when you run the `mftf` CLI tool with [`run:test`][] or [`run:group`][] commands.
 
 The report can contain three main parts:
 
-- Pre-run checks:
-  - Environment check, such as PHP warnings, etc.
-  - XML test validation like deprecation warnings such as missing required components in XML tests.
-- Codeception report which is the progress report for each test.
-- Total results of the test run such as number of tests, assertions, and failures.
+-  Pre-run checks:
+  -  Environment check, such as PHP warnings, etc.
+  -  XML test validation like deprecation warnings such as missing required components in XML tests.
+-  Codeception report which is the progress report for each test.
+-  Total results of the test run such as number of tests, assertions, and failures.
 
 To manage the level of verbosity, use `-v` or `--verbose` flag in the `mftf` commands.
 To enable verbosity using the `codecept` commands, refer to the Codeception [Console Commands][codeception].
@@ -35,14 +35,7 @@ The following sections demonstrate an example interpretation of a complete log s
 
 ### Pre-run check report
 
-First, the MFTF reports about issues with environment.
-In our case, there is an issue with PHP library loading.
-
-```terminal
-PHP Warning:  PHP Startup: Unable to load dynamic library '/usr/local/lib/php/pecl/20160303/php_intl.dll' - dlopen(/usr/local/lib/php/pecl/20160303/php_intl.dll, 9): image not found in Unknown on line 0
-```
-
-Next, the MFTF returns `DEPRECATION` reports alerting you that required test components are missing in XML test definitions.
+First, MFTF returns `DEPRECATION` warnings alerting you that required test components are missing in XML test definitions.
 
 ```terminal
 DEPRECATION: Test AdminFilteringCategoryProductsUsingScopeSelectorTest is missing required annotations.{"testName":"AdminFilteringCategoryProductsUsingScopeSelectorTest","missingAnnotations":"stories"}
@@ -51,7 +44,7 @@ DEPRECATION: Test AdminRemoveProductWeeeAttributeOptionTest is missing required 
 Generate Tests Command Run
 ```
 
-`Generate Tests Command Run` indicates the moment when the MFTF has run the tests generation command actually.
+`Generate Tests Command Run` indicates that test generation is finished and tests are able to be executed.
 
 ### Test execution report
 
@@ -72,7 +65,7 @@ Magento\FunctionalTestingFramework.functional Tests (2) ------------------------
 Modules: \Magento\FunctionalTestingFramework\Module\MagentoWebDriver, \Magento\FunctionalTestingFramework\Helper\Acceptance, \Magento\FunctionalTestingFramework\Helper\MagentoFakerData, \Magento\FunctionalTestingFramework\Module\MagentoRestDriver, PhpBrowser, \Magento\FunctionalTestingFramework\Module\MagentoSequence, \Magento\FunctionalTes
 ```
 
-After the test generation command (mentioned in the previous section), the MFTF delegates control to the `vendor/codeception` tool, which is the `Codeception PHP Testing Framework` of version `2.3.9` that uses `PHPUnit` of version `6.5.13`.
+After the test generation command (mentioned in the previous section), MFTF delegates control to the `vendor/codeception` tool, which is the `Codeception PHP Testing Framework` of version `2.3.9` that uses `PHPUnit` of version `6.5.13`.
 
 The tool runs `2 Tests` using the configuration defined in the `functional` suite under the `Magento\FunctionalTestingFramework` namespace.
 The corresponding configuration file is `acceptance/tests/functional.suite.yml`.
@@ -154,29 +147,29 @@ I save screenshot
 FAIL
 ```
 
-When a test step fails, the MFTF always saves a screenshot of the web page with the failing state immediately after the failure occurs.
+When a test step fails, MFTF always saves a screenshot of the web page with the failing state immediately after the failure occurs.
 `I save screenshot` follows the failing test step `I see "#something"` in our case.
 
 A screenshot of the fail goes at the `acceptance/tests/_output` directory in both PNG and HTML formats:
 
-- `Magento.AcceptanceTest._default.Backend.AdminMenuNavigationWithSecretKeysTestCest.AdminMenuNavigationWithSecretKeysTest.fail.html`
-- `Magento.AcceptanceTest._default.Backend.AdminMenuNavigationWithSecretKeysTestCest.AdminMenuNavigationWithSecretKeysTest.fail.png`
+-  `Magento.AcceptanceTest._default.Backend.AdminMenuNavigationWithSecretKeysTestCest.AdminMenuNavigationWithSecretKeysTest.fail.html`
+-  `Magento.AcceptanceTest._default.Backend.AdminMenuNavigationWithSecretKeysTestCest.AdminMenuNavigationWithSecretKeysTest.fail.png`
 
 The file name encodes:
 
-- `Magento` namespace
-- with the `AcceptanceTest` test type
-- generated as a part of the `_default` suite
-- defined at the `Magento_Backend` module
-- implemented in the `AdminMenuNavigationWithSecretKeysTestCest` PHP class
-- with the `AdminMenuNavigationWithSecretKeysTest` test name
-- and execution status `fail`
+-  `Magento` namespace
+-  with the `AcceptanceTest` test type
+-  generated as a part of the `_default` suite
+-  defined at the `Magento_Backend` module
+-  implemented in the `AdminMenuNavigationWithSecretKeysTestCest` PHP class
+-  with the `AdminMenuNavigationWithSecretKeysTest` test name
+-  and execution status `fail`
 
 Actions after `FAIL` are run as a part of the [`after`][] hook of the test.
 
 ### Test result report
 
-After the MFTF completed test execution, it generates a general report about test results along with detailed information about each fail.
+After MFTF completed test execution, it generates a general report about test results along with detailed information about each fail.
 
 ```terminal
 --------------------------------------------------------------------------------
@@ -192,7 +185,7 @@ First you see warnings and deprecations.
 The `DEPRECATION` here is thrown by an MFTF dependency (Symfony) that is out of the scope for test writers and should be considered by MFTF contributors.
 If you encounter this type of reporting, [report an issue][].
 
-Then, the MFTF reports that the test run took 52.43 seconds using 16 MB of system RAM.
+Then, MFTF reports that the test run took 52.43 seconds using 16 MB of system RAM.
 And, finally, that there was `1 failure`.
 
 Next, the report provides details about the test failure.
@@ -242,14 +235,14 @@ full_page
 18. $I->saveScreenshot() at tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:63
 ```
 
-- `1) AdminMenuNavigationWithSecretKeysTestCest: Admin menu navigation with secret keys test` - the failed Codeception test is *AdminMenuNavigationWithSecretKeysTestCest*. It references to the PHP class that implemented the failed test.
+-  `1) AdminMenuNavigationWithSecretKeysTestCest: Admin menu navigation with secret keys test` - the failed Codeception test is *AdminMenuNavigationWithSecretKeysTestCest*. It references to the PHP class that implemented the failed test.
 
-- `Test  tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:AdminMenuNavigationWithSecretKeysTest` - the test is implemented in the *AdminMenuNavigationWithSecretKeysTest* test method of the *tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php* file under `<magento root>/dev/tests/acceptance/`.
+-  `Test  tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:AdminMenuNavigationWithSecretKeysTest` - the test is implemented in the *AdminMenuNavigationWithSecretKeysTest* test method of the *tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php* file under `<magento root>/dev/tests/acceptance/`.
   It matches the corresponding test defined in XML that is *AdminMenuNavigationWithSecretKeysTest* defined in `<test name="AdminMenuNavigationWithSecretKeysTest">...</test>`
 
-- `Step  See "#something"` - the failing test step is the *see* action with the *#something* selector. It would correspond the `<see selector="#something" ... />` test step in the XML defined tests.
+-  `Step  See "#something"` - the failing test step is the *see* action with the *#something* selector. It would correspond the `<see selector="#something" ... />` test step in the XML defined tests.
 
-- `Fail  Failed asserting that  on page /admin/admin/system_config/index/key/678b7ba922c.../` - the fail occurred on the web page `<MAGENTO_BASE_URL>/admin/admin/system_config/index/key/678b7ba922c.../`.
+-  `Fail  Failed asserting that  on page /admin/admin/system_config/index/key/678b7ba922c.../` - the fail occurred on the web page `<MAGENTO_BASE_URL>/admin/admin/system_config/index/key/678b7ba922c.../`.
 
 ```terminal
 --> ...
@@ -268,18 +261,24 @@ FAILURES!
 Tests: 2, Assertions: 3, Failures: 1.
 ```
 
-The MFTF encountered failures due to the last test run, that included *2* tests with *3* assertions.
+MFTF encountered failures due to the last test run, that included *2* tests with *3* assertions.
 *1* assertion fails.
 
 ## Allure
 
-Each time you run tests, the MFTF appends an XML file with results at the `tests/_output/allure-results/` directory.
+Each time you run tests, MFTF appends an XML file with results at the `tests/_output/allure-results/` directory.
 
 The official [Allure Test Report][] documentation is well-covered, so we'll list only the CLI commands that you would need for your day-to-day work.
 
 <div class="bs-callout bs-callout-info">
 The following commands are relative to the Magento installation directory.
 </div>
+
+To generate the HTML Allure report in a temporary folder and open the report in your default web browser:
+
+```bash
+allure serve dev/tests/acceptance/tests/_output/allure-results/
+```
 
 To generate a report to the `allure-report/` at the current directory:
 
@@ -332,12 +331,6 @@ To clean up existing reports before generation (for example after getting new re
 
 ```bash
 allure generate dev/tests/acceptance/tests/_output/allure-result --clean
-```
-
-To generate the HTML Allure report in a temporary folder and open the report in your default web browser:
-
-```bash
-allure serve dev/tests/acceptance/tests/_output/allure-results/
 ```
 
 Refer to the [Reporting section][] for more Allure CLI details.

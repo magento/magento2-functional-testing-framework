@@ -16,6 +16,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  * @Title("[NO TESTCASEID]: Action Group With Passed Argument Value and Argument Value in Param")
+ * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupTest.xml<br>")
  */
 class ActionGroupWithSingleParameterSelectorFromPassedArgumentCest
 {
@@ -29,8 +30,8 @@ class ActionGroupWithSingleParameterSelectorFromPassedArgumentCest
 	 */
 	public function ActionGroupWithSingleParameterSelectorFromPassedArgument(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group actionGroupWithSingleParameterSelectorFromArgument (actionGroup)");
-		$I->see("Doe", "#element .John" . msq("UniquePerson"));
-		$I->comment("Exiting Action Group actionGroupWithSingleParameterSelectorFromArgument (actionGroup)");
+		$I->comment("Entering Action Group [actionGroup] actionGroupWithSingleParameterSelectorFromArgument");
+		$I->see("Doe", "#element .John" . msq("UniquePerson")); // stepKey: seeLastNameActionGroup
+		$I->comment("Exiting Action Group [actionGroup] actionGroupWithSingleParameterSelectorFromArgument");
 	}
 }

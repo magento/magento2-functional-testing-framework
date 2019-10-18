@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Util;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
@@ -24,6 +25,7 @@ use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
+use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 
 /**
  * Class TestGenerator
@@ -31,6 +33,8 @@ use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
  */
 class TestGenerator
 {
+    const ACTION_GROUP_STEP_KEY_REGEX = "/\[(?<actionGroupStepKey>.*)\]/";
+    const ACTION_STEP_KEY_REGEX = "/\/\/ stepKey: (?<stepKey>.*)/";
     const REQUIRED_ENTITY_REFERENCE = 'createDataKey';
     const GENERATED_DIR = '_generated';
     const DEFAULT_DIR = 'default';
@@ -39,6 +43,17 @@ class TestGenerator
     const SUITE_SCOPE = 'suite';
     const PRESSKEY_ARRAY_ANCHOR_KEY = '987654321098765432109876543210';
     const PERSISTED_OBJECT_NOTATION_REGEX = '/\${1,2}[\w.\[\]]+\${1,2}/';
+    const NO_STEPKEY_ACTIONS = [
+        'comment',
+        'createData',
+        'deleteData',
+        'updateData',
+        'getData',
+        'magentoCLI',
+        'generateDate',
+        'field'
+    ];
+    const STEP_KEY_ANNOTATION = " // stepKey: %s";
 
     /**
      * Path to the export dir.
@@ -213,14 +228,14 @@ class TestGenerator
      * @throws TestReferenceException
      * @throws \Exception
      */
-    private function assembleTestPhp($testObject)
+    public function assembleTestPhp($testObject)
     {
         $usePhp = $this->generateUseStatementsPhp();
         $classAnnotationsPhp = $this->generateAnnotationsPhp($testObject->getAnnotations());
 
         $className = $testObject->getCodeceptionName();
         try {
-            if (!$testObject->isSkipped()) {
+            if (!$testObject->isSkipped() && !MftfApplicationConfig::getConfig()->allowSkipped()) {
                 $hookPhp = $this->generateHooksPhp($testObject->getHooks());
             } else {
                 $hookPhp = null;
@@ -639,7 +654,10 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['function'])) {
-                $function = $this->addUniquenessFunctionCall($customActionAttributes['function']);
+                $function = $this->addUniquenessFunctionCall(
+                    $customActionAttributes['function'],
+                    $actionObject->getType() !== "executeInSelenium"
+                );
                 if (in_array($actionObject->getType(), ActionObject::FUNCTION_CLOSURE_ACTIONS)) {
                     // Argument must be a closure function, not a string.
                     $function = trim($function, '"');
@@ -651,7 +669,7 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['html'])) {
-                $html = $customActionAttributes['html'];
+                $html = $this->addUniquenessFunctionCall($customActionAttributes['html']);
             }
 
             if (isset($customActionAttributes['locale'])) {
@@ -697,14 +715,16 @@ class TestGenerator
             if (isset($customActionAttributes['storeCode'])) {
                 $storeCode = $customActionAttributes['storeCode'];
             }
+
             switch ($actionObject->getType()) {
                 case "createData":
                     $entity = $customActionAttributes['entity'];
                     //Add an informative statement to help the user debug test runs
                     $testSteps .= sprintf(
-                        "\t\t$%s->amGoingTo(\"create entity that has the stepKey: %s\");\n",
+                        "\t\t$%s->comment(\"[%s] create '%s' entity\");\n",
                         $actor,
-                        $stepKey
+                        $stepKey,
+                        $entity
                     );
 
                     //TODO refactor entity field override to not be individual actionObjects
@@ -731,7 +751,7 @@ class TestGenerator
                     } elseif ($generationScope == TestGenerator::SUITE_SCOPE) {
                         $scope = PersistedObjectHandler::SUITE_SCOPE;
                     }
-                    
+
                     $createEntityFunctionCall = "\t\tPersistedObjectHandler::getInstance()->createEntity(";
                     $createEntityFunctionCall .= "\n\t\t\t\"{$stepKey}\",";
                     $createEntityFunctionCall .= "\n\t\t\t\"{$scope}\",";
@@ -740,7 +760,7 @@ class TestGenerator
                     if (count($customEntityFields) > 1) {
                         $createEntityFunctionCall .= ",\n\t\t\t\${$stepKey}Fields";
                     } else {
-                        $createEntityFunctionCall .= ",\n\t\t\tnull";
+                        $createEntityFunctionCall .= ",\n\t\t\t[]";
                     }
                     if ($storeCode !== null) {
                         $createEntityFunctionCall .= ",\n\t\t\t\"{$storeCode}\"";
@@ -759,8 +779,9 @@ class TestGenerator
                         $key .= $actionGroup;
                         //Add an informative statement to help the user debug test runs
                         $contextSetter = sprintf(
-                            "\t\t$%s->amGoingTo(\"delete entity that has the createDataKey: %s\");\n",
+                            "\t\t$%s->comment(\"[%s] delete entity '%s'\");\n",
                             $actor,
+                            $stepKey,
                             $key
                         );
 
@@ -802,11 +823,13 @@ class TestGenerator
 
                     //Add an informative statement to help the user debug test runs
                     $testSteps .= sprintf(
-                        "\t\t$%s->amGoingTo(\"update entity that has the createdDataKey: %s\");\n",
+                        "\t\t$%s->comment(\"[%s] update '%s' entity to '%s'\");\n",
                         $actor,
-                        $key
+                        $stepKey,
+                        $key,
+                        $updateEntity
                     );
-                    
+
                     // Build array of requiredEntities
                     $requiredEntityKeys = [];
                     foreach ($actionObject->getCustomActionAttributes() as $actionAttribute) {
@@ -848,9 +871,10 @@ class TestGenerator
                     }
                     //Add an informative statement to help the user debug test runs
                     $testSteps .= sprintf(
-                        "\t\t$%s->amGoingTo(\"get entity that has the stepKey: %s\");\n",
+                        "\t\t$%s->comment(\"[%s] get '%s' entity\");\n",
                         $actor,
-                        $stepKey
+                        $stepKey,
+                        $entity
                     );
 
                     // Build array of requiredEntities
@@ -1135,7 +1159,6 @@ class TestGenerator
                 case "dontSeeInField":
                 case "dontSeeInCurrentUrl":
                 case "dontSeeInTitle":
-                case "dontSeeInPageSource":
                 case "dontSeeOptionIsSelected":
                 case "fillField":
                 case "loadSessionSnapshot":
@@ -1153,9 +1176,13 @@ class TestGenerator
                     );
                     break;
                 case "seeInPageSource":
+                case "dontSeeInPageSource":
                 case "seeInSource":
                 case "dontSeeInSource":
-                    // TODO: Need to fix xml parser to allow parsing html.
+                    //TODO: Deprecate allowed usage of userInput in dontSeeInPageSource
+                    if ($html === null && $input !== null) {
+                        $html = $input;
+                    }
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $html);
                     break;
                 case "conditionalClick":
@@ -1247,6 +1274,7 @@ class TestGenerator
                     );
                     break;
                 case "magentoCLI":
+                case "magentoCLISecret":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
@@ -1254,8 +1282,9 @@ class TestGenerator
                         $command,
                         $arguments
                     );
+                    $testSteps .= sprintf(self::STEP_KEY_ANNOTATION, $stepKey) . PHP_EOL;
                     $testSteps .= sprintf(
-                        "\t\t$%s->comment(\$%s);\n",
+                        "\t\t$%s->comment(\$%s);",
                         $actor,
                         $stepKey
                     );
@@ -1267,7 +1296,11 @@ class TestGenerator
                         $actionObject->getActionOrigin()
                     )[0];
                     $argRef = "\t\t\$";
-                    $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) . "Fields['{$fieldKey}'] = ${input};\n";
+
+                    $input = $this->resolveAllRuntimeReferences([$input])[0];
+                    $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) .
+                        "Fields['{$fieldKey}'] = ${input};";
+
                     $testSteps .= $argRef;
                     break;
                 case "generateDate":
@@ -1286,6 +1319,9 @@ class TestGenerator
                 case "skipReadinessCheck":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $customActionAttributes['state']);
                     break;
+                case "comment":
+                    $input = $input === null ? strtr($value, ['$' => '\$', '{' => '\{', '}' => '\}']) : $input;
+                    // Combining userInput from native XML comment and <comment/> action to fall-through 'default' case
                 default:
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
@@ -1295,6 +1331,10 @@ class TestGenerator
                         $parameter
                     );
             }
+            if (!in_array($actionObject->getType(), self::NO_STEPKEY_ACTIONS)) {
+                $testSteps .= sprintf(self::STEP_KEY_ANNOTATION, $stepKey);
+            }
+            $testSteps .= PHP_EOL;
         }
 
         return $testSteps;
@@ -1446,8 +1486,10 @@ class TestGenerator
             $persistedVarRefInvoked = "PersistedObjectHandler::getInstance()->retrieveEntityField('"
                 . $stepKey . $testInvocationKey . "', 'field', 'test')";
 
+            // only replace when whole word matches exactly
+            // e.g. testVar => $testVar but not $testVar2
             if (strpos($output, $stepKeyVarRef) !== false) {
-                $output = str_replace($stepKeyVarRef, $stepKeyVarRef . $testInvocationKey, $output);
+                $output = preg_replace('/\B\\' .$stepKeyVarRef. '\b/', $stepKeyVarRef . $testInvocationKey, $output);
             }
 
             if (strpos($output, $persistedVarRef) !== false) {
@@ -1568,7 +1610,7 @@ class TestGenerator
         $testName = str_replace(' ', '', $testName);
         $testAnnotations = $this->generateAnnotationsPhp($test->getAnnotations(), true);
         $dependencies = 'AcceptanceTester $I';
-        if ($test->isSkipped()) {
+        if ($test->isSkipped() && !MftfApplicationConfig::getConfig()->allowSkipped()) {
             $skipString = "This test is skipped due to the following issues:\\n";
             $issues = $test->getAnnotations()['skip'] ?? null;
             if (isset($issues)) {
@@ -1697,12 +1739,17 @@ class TestGenerator
     /**
      * Add uniqueness function call to input string based on regex pattern.
      *
-     * @param string $input
+     * @param string  $input
+     * @param boolean $wrapWithDoubleQuotes
      * @return string
      */
-    private function addUniquenessFunctionCall($input)
+    private function addUniquenessFunctionCall($input, $wrapWithDoubleQuotes = true)
     {
-        $output = $this->wrapWithDoubleQuotes($input);
+        if ($wrapWithDoubleQuotes) {
+            $output = $this->wrapWithDoubleQuotes($input);
+        } else {
+            $output = $input;
+        }
 
         //Match on msq(\"entityName\")
         preg_match_all('/' . EntityDataObject::CEST_UNIQUE_FUNCTION . '\(\\\\"[\w]+\\\\"\)/', $output, $matches);
@@ -1791,7 +1838,7 @@ class TestGenerator
         }
         $args = $this->resolveAllRuntimeReferences($args);
         $args = $this->resolveTestVariable($args, $action->getActionOrigin());
-        $output .= implode(", ", array_filter($args, function($value) { return $value !== null; })) . ");\n";
+        $output .= implode(", ", array_filter($args, function($value) { return $value !== null; })) . ");";
         return $output;
     }
 
@@ -1823,7 +1870,7 @@ class TestGenerator
         }
         $args = $this->resolveAllRuntimeReferences($args);
         $args = $this->resolveTestVariable($args, $action->getActionOrigin());
-        $output .= implode(", ", array_filter($args, function($value) { return $value !== null; })) . ");\n";
+        $output .= implode(", ", array_filter($args, function($value) { return $value !== null; })) . ");";
         return $output;
     }
     // @codingStandardsIgnoreEnd
@@ -1869,7 +1916,7 @@ class TestGenerator
     {
         $runtimeReferenceRegex = [
             "/{{_ENV\.([\w]+)}}/" => 'getenv',
-            "/{{_CREDS\.([\w]+)}}/" => 'CredentialStore::getInstance()->getSecret'
+            ActionMergeUtil::CREDS_REGEX => 'CredentialStore::getInstance()->getSecret'
         ];
 
         $argResult = $args;

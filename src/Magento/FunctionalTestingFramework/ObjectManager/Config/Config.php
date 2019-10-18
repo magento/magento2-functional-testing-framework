@@ -153,6 +153,7 @@ class Config implements \Magento\FunctionalTestingFramework\ObjectManager\Config
      * @param string $type
      * @return array
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * Revisited to reduce cyclomatic complexity, left unrefactored for readability
      */
     protected function collectConfiguration($type)
     {
@@ -194,7 +195,6 @@ class Config implements \Magento\FunctionalTestingFramework\ObjectManager\Config
      *
      * @param array $configuration
      * @return void
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function mergeConfiguration(array $configuration)
     {
@@ -207,28 +207,39 @@ class Config implements \Magento\FunctionalTestingFramework\ObjectManager\Config
                     break;
 
                 default:
-                    $key = ltrim($key, '\\');
-                    if (isset($curConfig['type'])) {
-                        $this->virtualTypes[$key] = ltrim($curConfig['type'], '\\');
-                    }
-                    if (isset($curConfig['arguments'])) {
-                        if (!empty($this->mergedArguments)) {
-                            $this->mergedArguments = [];
-                        }
-                        if (isset($this->arguments[$key])) {
-                            $this->arguments[$key] = array_replace($this->arguments[$key], $curConfig['arguments']);
-                        } else {
-                            $this->arguments[$key] = $curConfig['arguments'];
-                        }
-                    }
-                    if (isset($curConfig['shared'])) {
-                        if (!$curConfig['shared']) {
-                            $this->nonShared[$key] = 1;
-                        } else {
-                            unset($this->nonShared[$key]);
-                        }
-                    }
-                    break;
+                    $this->setConfiguration($key, $curConfig);
+            }
+        }
+    }
+
+    /**
+     * Set configuration
+     *
+     * @param string $key
+     * @param array  $config
+     * @return void
+     */
+    private function setConfiguration($key, $config)
+    {
+        $key = ltrim($key, '\\');
+        if (isset($config['type'])) {
+            $this->virtualTypes[$key] = ltrim($config['type'], '\\');
+        }
+        if (isset($config['arguments'])) {
+            if (!empty($this->mergedArguments)) {
+                $this->mergedArguments = [];
+            }
+            if (isset($this->arguments[$key])) {
+                $this->arguments[$key] = array_replace($this->arguments[$key], $config['arguments']);
+            } else {
+                $this->arguments[$key] = $config['arguments'];
+            }
+        }
+        if (isset($config['shared'])) {
+            if (!$config['shared']) {
+                $this->nonShared[$key] = 1;
+            } else {
+                unset($this->nonShared[$key]);
             }
         }
     }

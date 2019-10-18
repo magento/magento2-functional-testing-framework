@@ -70,6 +70,7 @@ class Flat
      * @return string|array
      * @throws \UnexpectedValueException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * Revisited to reduce cyclomatic complexity, left unrefactored for readability
      */
     public function convert(\DOMNode $source, $basePath = '')
     {

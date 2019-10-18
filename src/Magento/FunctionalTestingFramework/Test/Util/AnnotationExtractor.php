@@ -8,6 +8,7 @@ namespace Magento\FunctionalTestingFramework\Test\Util;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
+use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
@@ -67,6 +68,9 @@ class AnnotationExtractor extends BaseObjectExtractor
         // parse the Test annotations
 
         foreach ($annotations as $annotationKey => $annotationData) {
+            if (strpos($annotationKey, ActionObject::ACTION_TYPE_COMMENT) !== false) {
+                continue;
+            }
             $annotationValues = [];
             // Only transform severity annotation
             if ($annotationKey == "severity") {

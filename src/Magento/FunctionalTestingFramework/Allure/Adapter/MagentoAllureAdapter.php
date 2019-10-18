@@ -5,8 +5,11 @@
  */
 namespace Magento\FunctionalTestingFramework\Allure\Adapter;
 
+use Codeception\Step\Comment;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
+use \Magento\FunctionalTestingFramework\Util\TestGenerator;
+use Yandex\Allure\Adapter\Model\Status;
 use Yandex\Allure\Adapter\Model\Step;
 use Yandex\Allure\Codeception\AllureCodeception;
 use Yandex\Allure\Adapter\Event\StepStartedEvent;
@@ -14,6 +17,7 @@ use Yandex\Allure\Adapter\Event\StepFinishedEvent;
 use Yandex\Allure\Adapter\Event\StepFailedEvent;
 use Yandex\Allure\Adapter\Event\TestCaseFailedEvent;
 use Yandex\Allure\Adapter\Event\TestCaseFinishedEvent;
+use Yandex\Allure\Adapter\Event\TestCaseBrokenEvent;
 use Codeception\Event\FailEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\StepEvent;
@@ -30,6 +34,12 @@ use Codeception\Event\StepEvent;
 class MagentoAllureAdapter extends AllureCodeception
 {
     const STEP_PASSED = "passed";
+    /**
+     * Test files cache.
+     *
+     * @var array
+     */
+    private $testFiles = [];
 
     /**
      * Array of group values passed to test runner command
@@ -107,6 +117,7 @@ class MagentoAllureAdapter extends AllureCodeception
      * Override of parent method:
      *     prevent replacing of . to •
      *     strips control characters
+     *     inserts stepKey into step name
      *
      * @param StepEvent $stepEvent
      * @return void
@@ -116,9 +127,16 @@ class MagentoAllureAdapter extends AllureCodeception
     {
         //Hard set to 200; we don't expose this config in MFTF
         $argumentsLength = 200;
+        $stepKey = null;
+
+        if (!($stepEvent->getStep() instanceof Comment)) {
+            $stepKey = $this->retrieveStepKey($stepEvent->getStep()->getLine());
+        }
 
         // DO NOT alter action if actionGroup is starting, need the exact actionGroup name for good logging
-        if (strpos($stepEvent->getStep()->getAction(), ActionGroupObject::ACTION_GROUP_CONTEXT_START) !== false) {
+        if (strpos($stepEvent->getStep()->getAction(), ActionGroupObject::ACTION_GROUP_CONTEXT_START) !== false
+            || $stepEvent->getStep() instanceof Comment
+        ) {
             $stepAction = $stepEvent->getStep()->getAction();
         } else {
             $stepAction = $stepEvent->getStep()->getHumanizedActionWithoutArguments();
@@ -130,7 +148,11 @@ class MagentoAllureAdapter extends AllureCodeception
             $stepArgs = $stepEvent->getStep()->getMetaStep()->getArgumentsAsString($argumentsLength);
         }
 
-        $stepName = $stepAction . ' ' . $stepArgs;
+        $stepName = '';
+        if ($stepKey !== null) {
+            $stepName .= '[' . $stepKey . '] ';
+        }
+        $stepName .= $stepAction . ' ' . $stepArgs;
 
         // Strip control characters so that report generation does not fail
         $stepName = preg_replace('/[[:cntrl:]]/', '', $stepName);
@@ -168,6 +190,32 @@ class MagentoAllureAdapter extends AllureCodeception
     }
 
     /**
+     * Override of parent method. Adds in steps for hard PHP Errors if they arrise.
+     *
+     * @param FailEvent $failEvent
+     * @return void
+     */
+    public function testError(FailEvent $failEvent)
+    {
+        $event = new TestCaseBrokenEvent();
+        $e = $failEvent->getFail();
+        $message = $e->getMessage();
+
+        // Create new step with an error for Allure
+        $failStep = new Step();
+        $failStep->setName("ERROR");
+        $failStep->setTitle($message);
+        $failStep->setStatus(Status::BROKEN);
+
+        // Retrieve Allure Steps and add in the new BROKEN step
+        $rootStep = $this->getLifecycle()->getStepStorage()->pollLast();
+        $rootStep->addStep($failStep);
+        $this->getLifecycle()->getStepStorage()->put($rootStep);
+
+        $this->getLifecycle()->fire($event->withException($e)->withMessage($message));
+    }
+
+    /**
      * Override of parent method, polls stepStorage for testcase and formats it according to actionGroup nesting.
      *
      * @return void
@@ -179,17 +227,32 @@ class MagentoAllureAdapter extends AllureCodeception
         $formattedSteps = [];
         $actionGroupStepContainer = null;
 
+        $actionGroupStepKey = null;
         foreach ($rootStep->getSteps() as $step) {
+            $stepKey = str_replace($actionGroupStepKey, '', $step->getName());
+            if ($stepKey !== '[]' && $stepKey !== null) {
+                $step->setName($stepKey);
+            }
             // if actionGroup flag, start nesting
             if (strpos($step->getName(), ActionGroupObject::ACTION_GROUP_CONTEXT_START) !== false) {
+                if ($actionGroupStepContainer !== null) {
+                    //actionGroup still being nested, need to close out and finish it.
+                    $formattedSteps[] = $actionGroupStepContainer;
+                    $actionGroupStepContainer = null;
+                    $actionGroupStepKey = null;
+                }
+
                 $step->setName(str_replace(ActionGroupObject::ACTION_GROUP_CONTEXT_START, '', $step->getName()));
                 $actionGroupStepContainer = $step;
+                $actionGroupStepKey = $this->retrieveActionGroupStepKey($step);
                 continue;
             }
+
             // if actionGroup ended, add stack to steps
             if (stripos($step->getName(), ActionGroupObject::ACTION_GROUP_CONTEXT_END) !== false) {
                 $formattedSteps[] = $actionGroupStepContainer;
                 $actionGroupStepContainer = null;
+                $actionGroupStepKey = null;
                 continue;
             }
 
@@ -219,5 +282,48 @@ class MagentoAllureAdapter extends AllureCodeception
         $this->getLifecycle()->getStepStorage()->put($rootStep);
 
         $this->getLifecycle()->fire(new TestCaseFinishedEvent());
+    }
+
+    /**
+     * Reads action group stepKey from step.
+     *
+     * @param Step $step
+     * @return string|null
+     */
+    private function retrieveActionGroupStepKey($step)
+    {
+        $actionGroupStepKey = null;
+
+        preg_match(TestGenerator::ACTION_GROUP_STEP_KEY_REGEX, $step->getName(), $matches);
+
+        if (!empty($matches['actionGroupStepKey'])) {
+            $actionGroupStepKey = ucfirst($matches['actionGroupStepKey']);
+        }
+
+        return $actionGroupStepKey;
+    }
+
+    /**
+     * Reading stepKey from file.
+     *
+     * @param string $stepLine
+     * @return string|null
+     */
+    private function retrieveStepKey($stepLine)
+    {
+        $stepKey = null;
+        list($filePath, $stepLine) = explode(":", $stepLine);
+        $stepLine = $stepLine - 1;
+
+        if (!array_key_exists($filePath, $this->testFiles)) {
+            $this->testFiles[$filePath] = explode(PHP_EOL, file_get_contents($filePath));
+        }
+
+        preg_match(TestGenerator::ACTION_STEP_KEY_REGEX, $this->testFiles[$filePath][$stepLine], $matches);
+        if (!empty($matches['stepKey'])) {
+            $stepKey = $matches['stepKey'];
+        }
+
+        return $stepKey;
     }
 }
