@@ -39,7 +39,7 @@ vendor/bin/mftf generate:tests
 ### Generate tests by test name
 
 ```bash
-vendor/bin/mftf generate:tests LoginAsAdminTest LoginAsCustomerTest
+vendor/bin/mftf generate:tests AdminLoginTest StorefrontPersistedCustomerLoginTest
 ```
 
 ### Generate and run the tests for a specified group
@@ -53,7 +53,7 @@ This command cleans up the previously generated tests; generates and runs tests 
 ### Generate and run particular tests
 
 ```bash
-vendor/bin/mftf run:test LoginAsAdminTest LoginAsCustomerTest -r
+vendor/bin/mftf run:test AdminLoginTest StorefrontPersistedCustomerLoginTest -r
 ```
 
 This command cleans up the previously generated tests; generates and runs the `LoginAsAdminTest` and `LoginAsCustomerTest` tests.
