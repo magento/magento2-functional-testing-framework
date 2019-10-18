@@ -119,7 +119,7 @@ class RunTestGroupCommand extends BaseGenerateCommand
      * @return string
      * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
-    private function getGroupAndSuiteConfiguration(array $groups)
+    private function OLDgetGroupAndSuiteConfiguration(array $groups)
     {
         $testConfiguration['tests'] = [];
         $testConfiguration['suites'] = null;
@@ -138,5 +138,113 @@ class RunTestGroupCommand extends BaseGenerateCommand
 
         $testConfigurationJson = json_encode($testConfiguration);
         return $testConfigurationJson;
+    }
+
+    /** first attempt at an implementation, needs tested */
+    private function first_attempt_getGroupAndSuiteConfiguration(array $groups)
+    {
+        $testConfiguration['tests'] = [];
+        $testConfiguration['suites'] = null;
+        $availableSuites = SuiteObjectHandler::getInstance()->getAllObjects();
+
+        // iterate through all group names passed into the command
+        foreach ($groups as $group) {
+            if (array_key_exists($group, $availableSuites)) {
+                // group is actually a suite, so add it to the suites array
+                $testConfiguration['suites'][$group] = [];
+            } else {
+                // group is a group, so find and add all tests from that group to the tests array
+                $testConfiguration['tests'] = array_merge(
+                    $testConfiguration['tests'],
+                    array_keys(TestObjectHandler::getInstance()->getTestsByGroup($group))
+                );
+            }
+        }
+
+        // find all tests that are in suites and build pairs
+        $testsInSuites = SuiteObjectHandler::getInstance()->getAllTestReferences();
+        $suiteToTestPair = [];
+        foreach ($testConfiguration['tests'] as $test) {
+            if (array_key_exists($test, $testsInSuites)) {
+                $suites = $testsInSuites[$test];
+                foreach ($suites as $suite) {
+                    $suiteToTestPair[] = "$suite:$test";
+                }
+            }
+        }
+
+        // add tests to suites array
+        $diff = [];
+        foreach ($suiteToTestPair as $pair) {
+            list($suite, $test) = explode(":", $pair);
+            $testConfiguration['suites'][$suite][] = $test;
+            $diff[] = $test;
+        }
+
+        // remove tests in suites from the tests array
+        $testConfiguration['tests'] = array_diff($testConfiguration['tests'], $diff);
+
+        // encode and return the result
+        $testConfigurationJson = json_encode($testConfiguration);
+        return $testConfigurationJson;
+    }
+
+    /** second attempt at a cleaner implementation, needs work */
+    private function getGroupAndSuiteConfiguration(array $groupOrSuiteNames)
+    {
+        $result['tests'] = [];
+        $result['suites'] = null;
+
+        $groups = [];
+        $suites = [];
+
+        $allSuites = SuiteObjectHandler::getInstance()->getAllObjects();
+        $testsInSuites = SuiteObjectHandler::getInstance()->getAllTestReferences();
+
+        foreach ($groupOrSuiteNames as $groupOrSuiteName) {
+            if (array_key_exists($groupOrSuiteName, $allSuites)) {
+                $suites[] = $groupOrSuiteName;
+            } else {
+                $groups[] = $groupOrSuiteName;
+            }
+        }
+
+        foreach ($suites as $suite) {
+            $result['suites'][$suite] = [];
+        }
+
+        foreach ($groups as $group) {
+            $testsInGroup = TestObjectHandler::getInstance()->getTestsByGroup($group);
+
+            $testsInGroupAndNotInAnySuite = array_diff(
+                array_keys($testsInGroup),
+                array_keys($testsInSuites)
+            );
+
+            $testsInGroupAndInAnySuite = array_diff(
+                array_keys($testsInGroup),
+                $testsInGroupAndNotInAnySuite
+            );
+
+            foreach ($testsInGroupAndInAnySuite as $testInGroupAndInAnySuite) {
+                $cat = $testsInSuites[$testInGroupAndInAnySuite][0];
+                $dog[$cat][] = $testInGroupAndInAnySuite;
+
+                /*
+                 * todo -- I left off here. Code works so far.
+                 * I need to take this $dog array and put into the $result['suites'] array
+                 * and then test it thoroughly
+                 */
+
+            }
+
+            $result['tests'] = array_merge(
+                $result['tests'],
+                $testsInGroupAndNotInAnySuite
+            );
+        }
+
+        $json = json_encode($result);
+        return $json;
     }
 }
