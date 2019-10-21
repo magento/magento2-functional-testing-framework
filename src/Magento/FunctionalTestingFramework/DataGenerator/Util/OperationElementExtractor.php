@@ -112,9 +112,18 @@ class OperationElementExtractor
     private function extractOperationArray(&$operationArrayData, $operationArrayArray)
     {
         foreach ($operationArrayArray as $operationFieldType) {
-            $operationElementValue =
-                $operationFieldType[OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_VALUE][0]
-                [OperationElementExtractor::OPERATION_OBJECT_ARRAY_VALUE] ?? null;
+            $operationElementValue = [];
+            if (isset($operationFieldType[OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_VALUE])) {
+                foreach ($operationFieldType[OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_VALUE] as
+                    $operationFieldValue) {
+                    $operationElementValue[] =
+                        $operationFieldValue[OperationElementExtractor::OPERATION_OBJECT_ARRAY_VALUE] ?? null;
+                }
+            }
+
+            if (count($operationElementValue) === 1) {
+                $operationElementValue = array_pop($operationElementValue);
+            }
 
             $nestedOperationElements = [];
             if (array_key_exists(OperationElementExtractor::OPERATION_OBJECT_OBJ_NAME, $operationFieldType)) {
