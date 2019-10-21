@@ -2,8 +2,8 @@
 
 <div class="bs-callout bs-callout-info" markdown="1">
 [Find your MFTF version][] of the MFTF.
-The latest Magento 2.3 release supports MFTF 2.3.13.
-The latest Magento 2.2 release supports MFTF 2.3.8.
+The latest Magento 2.3.x release supports MFTF 2.4.5.
+The latest Magento 2.2.x release supports MFTF 2.4.5.
 </div>
 
 ## Prepare environment  {#prepare-environment}
@@ -18,6 +18,7 @@ Make sure that you have the following software installed and configured on your 
 <div class="bs-callout bs-callout-tip" markdown="1">
 [PhpStorm] supports [Codeception test execution][], which is helpful when debugging.
 </div>
+
 ## Install Magento {#install-magento}
 
 Use instructions below to install Magento.
@@ -81,7 +82,8 @@ To enable the **Admin Account Sharing** setting, to avoid unpredictable logout d
 4. Click **Save Config**.
 
 ### Webserver configuration {#web-server-configuration}
-The MFTF doesn't support executing CLI commands if your web server points to `<MAGE_ROOT_DIR>/pub` directory as recommended in the [Installation Guide][Installation Guide docroot]. For the MFTF to execute the CLI commands, the web server must point to the Magento root directory.
+
+The MFTF does not support executing CLI commands if your web server points to `<MAGE_ROOT_DIR>/pub` directory as recommended in the [Installation Guide][Installation Guide docroot]. For the MFTF to execute the CLI commands, the web server must point to the Magento root directory.
 
 #### Nginx settings {#nginx-settings}
 
