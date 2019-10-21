@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "beb8473a3c21b83da864289149fc03b4",
+    "content-hash": "06a363880f237913287952e19a7a8fd3",
     "packages": [
         {
             "name": "allure-framework/allure-codeception",
@@ -250,7 +250,7 @@
                 {
                     "name": "Tobias Nyholm",
                     "email": "tobias.nyholm@gmail.com",
-                    "homepage": "https://github.com/nyholm"
+                    "homepage": "https://github.com/Nyholm"
                 }
             ],
             "description": "Library of all the php-cache adapters",
