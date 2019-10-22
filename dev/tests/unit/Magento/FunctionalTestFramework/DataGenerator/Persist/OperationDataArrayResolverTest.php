@@ -9,6 +9,7 @@ use AspectMock\Test as AspectMock;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\OperationDefinitionObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\OperationDataArrayResolver;
+use Magento\FunctionalTestingFramework\Util\Iterator\AbstractIterator;
 use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 use tests\unit\Util\EntityDataObjectBuilder;
 use tests\unit\Util\OperationDefinitionBuilder;
@@ -353,6 +354,127 @@ class OperationDataArrayResolverTest extends MagentoTestCase
 
         // Do assert on result here
         $this->assertEquals(self::NESTED_METADATA_ARRAY_RESULT, $result);
+    }
+
+    public function testNestedMetadataArrayOfDiverseObjects()
+    {
+
+        $entityDataObjBuilder = new EntityDataObjectBuilder();
+        $parentDataObject = $entityDataObjBuilder
+            ->withName("parentObject")
+            ->withType("parentType")
+            ->withLinkedEntities(['child1Object' => 'childType1','child2Object' => 'childType2'])
+            ->build();
+
+        $child1DataObject = $entityDataObjBuilder
+            ->withName('child1Object')
+            ->withType('childType1')
+            ->withDataFields(['city' => 'Testcity','zip' => 12345])
+            ->build();
+
+        $child2DataObject = $entityDataObjBuilder
+            ->withName('child2Object')
+            ->withType('childType2')
+            ->withDataFields(['city' => 'Testcity 2','zip' => 54321,'state' => 'Teststate'])
+            ->build();
+
+        $mockDOHInstance = AspectMock::double(
+            DataObjectHandler::class,
+            [
+                'getObject' => function ($name) use ($child1DataObject, $child2DataObject) {
+                    switch ($name) {
+                        case 'child1Object':
+                            return $child1DataObject;
+                        case 'child2Object':
+                            return $child2DataObject;
+                    }
+                }
+            ]
+        )->make();
+        AspectMock::double(DataObjectHandler::class, [
+            'getInstance' => $mockDOHInstance
+        ]);
+
+        $operationDefinitionBuilder = new OperationDefinitionBuilder();
+        $child1OperationDefinition = $operationDefinitionBuilder
+            ->withName('createchildType1')
+            ->withOperation('create')
+            ->withType('childType1')
+            ->withMetadata([
+                'city' => 'string',
+                'zip' => 'integer'
+            ])->build();
+
+        $child2OperationDefinition = $operationDefinitionBuilder
+            ->withName('createchildType2')
+            ->withOperation('create')
+            ->withType('childType2')
+            ->withMetadata([
+                'city' => 'string',
+                'zip' => 'integer',
+                'state' => 'string'
+            ])->build();
+
+        $mockODOHInstance = AspectMock::double(
+            OperationDefinitionObjectHandler::class,
+            [
+                'getObject' => function ($name) use ($child1OperationDefinition, $child2OperationDefinition) {
+                    switch ($name) {
+                        case 'createchildType1':
+                            return $child1OperationDefinition;
+                        case 'createchildType2':
+                            return $child2OperationDefinition;
+                    }
+                }
+            ]
+        )->make();
+        AspectMock::double(
+            OperationDefinitionObjectHandler::class,
+            [
+                'getInstance' => $mockODOHInstance
+            ]
+        );
+
+        $arrayObElementBuilder = new OperationElementBuilder();
+        $arrayElement = $arrayObElementBuilder
+            ->withKey('address')
+            ->withType(['childType1','childType2'])
+            ->withFields([])
+            ->withElementType(OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY)
+            //->withNestedElements(['childType1' => $child1Element, 'childType2' => $child2Element])
+            ->build();
+
+        $parentOpElementBuilder = new OperationElementBuilder();
+        $parentElement = $parentOpElementBuilder
+            ->withKey('parentType')
+            ->withType('parentType')
+            ->addElements(['address' => $arrayElement])
+            ->build();
+
+        $operationResolver = new OperationDataArrayResolver();
+        $result = $operationResolver->resolveOperationDataArray($parentDataObject, [$parentElement], 'create', false);
+
+        $expectedResult = [
+            'parentType' => [
+                'address' => [
+                    [
+                        'city' => 'Testcity',
+                        'zip' => '12345'
+                    ],
+                    [
+                        'city' => 'Testcity 2',
+                        'zip' => '54321',
+                        'state' => 'Teststate'
+                    ]
+                ],
+                'name' => 'Hopper',
+                'gpa' => '3.5678',
+                'phone' => '5555555',
+                'isPrimary' => '1'
+            ]
+        ];
+
+        $this->assertEquals($expectedResult, $result);
     }
 
     /**
