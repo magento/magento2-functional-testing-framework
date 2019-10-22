@@ -39,7 +39,7 @@ If you are developing your own module or adding MFTF tests to the module, you sh
 If you want to distribute the module and its tests, you can initialize a git repo and create a [composer package](https://devdocs.magento.com/guides/v2.3/extension-dev-guide/package/package_module.html). In this way others will be able to download and install your module and access your tests as a composer package, in their `<vendor>` folder.
 
 
-### MFTF test artifacts location
+### MFTF test materials location
 
 - For GitHub installation, MFTF test materials are located at `<magento_root>/app/code/<vendor_name>/<module_name>/Test/Mftf/`. This is the directory to create new tests or maintain existing ones.
 
@@ -74,7 +74,7 @@ In either of the installations, all tests and test data are read and merged by M
 
 ### Conclusion
 
-There are no differences from MFTF's perspective between having the test materials in `app/code` or in `/vendor` as it reads artifacts from both paths. It works the same. Composer based install may benefit teams when there's a need to match file systems in dev and production.
+There are no differences from MFTF's perspective between having the test materials in `app/code` or in `/vendor`. It works the same. Composer based install may benefit teams when there's a need to match file systems in dev and production.
 
 If you are a contributing developer with an understanding of Git and Composer commands, you can choose the GitHub installation method instead.
 
