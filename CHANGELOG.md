@@ -1,5 +1,24 @@
 Magento Functional Testing Framework Changelog
 ================================================
+2.5.2
+-----
+
+* Traceability
+    * Added test's filepath to Allure reports for ease of debugging.
+    
+* Modularity
+    * Refactored problem methods to reduce cyclomatic complexity.
+       
+* Maintainability
+    * Added support to read MFTF test entities from path of MFTF test packages.
+    
+### Fixes
+* Added escaping for `magentoCLI` commands.
+* Fixed issue with builds due to absence of AcceptanceTester class.
+* Removed path deprecation warning from ModuleResolver.
+
+### GitHub Issues/Pull requests:
+* [#348](https://github.com/magento/magento2-functional-testing-framework/pull/348) -- executeInSelenium command fixed to prevent escaping double quotes.
 
 2.5.1
 -----
