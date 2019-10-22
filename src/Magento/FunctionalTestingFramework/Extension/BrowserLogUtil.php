@@ -16,23 +16,20 @@ class BrowserLogUtil
     const ERROR_TYPE_JAVASCRIPT = "javascript";
 
     /**
-     * Loops through stepEvent for browser log entries
+     * Loops throw errors in log and logs them to allure. Uses Module to set the error itself
      *
-     * @param \Magento\FunctionalTestingFramework\Module\MagentoWebDriver $module
-     * @param \Codeception\Event\StepEvent                                $stepEvent
+     * @param array                         $log
+     * @param \Codeception\Module\WebDriver $module
+     * @param \Codeception\Event\StepEvent  $stepEvent
      * @return void
      */
-    public static function logErrors($module, $stepEvent)
+    public static function logErrors($log, $module, $stepEvent)
     {
-        //Types available should be "server", "browser", "driver". Only care about browser at the moment.
-        if (in_array(self::LOG_TYPE_BROWSER, $module->webDriver->manage()->getAvailableLogTypes())) {
-            $browserLogEntries = $module->webDriver->manage()->getLog(self::LOG_TYPE_BROWSER);
-            $jsErrors = self::getLogsOfType($browserLogEntries, self::ERROR_TYPE_JAVASCRIPT);
-            foreach ($jsErrors as $entry) {
-                self::logError(self::ERROR_TYPE_JAVASCRIPT, $stepEvent, $entry);
-                //Set javascript error in MagentoWebDriver internal array
-                $module->setJsError("ERROR({$entry["level"]}) - " . $entry["message"]);
-            }
+        $jsErrors = self::getLogsOfType($log, self::ERROR_TYPE_JAVASCRIPT);
+        foreach ($jsErrors as $entry) {
+            self::logError(self::ERROR_TYPE_JAVASCRIPT, $stepEvent, $entry);
+            //Set javascript error in MagentoWebDriver internal array
+            $module->setJsError("ERROR({$entry["level"]}) - " . $entry["message"]);
         }
     }
 

@@ -174,17 +174,16 @@ class TestContextExtension extends BaseExtension
      */
     public function afterStep(\Codeception\Event\StepEvent $e)
     {
+        $browserLog = $this->getDriver()->webDriver->manage()->getLog("browser");
         if (getenv('ENABLE_BROWSER_LOG')) {
-            $browserLog = $this->getDriver()->webDriver->manage()->getLog("browser");
             foreach (explode(',', getenv('BROWSER_LOG_BLACKLIST')) as $source) {
                 $browserLog = BrowserLogUtil::filterLogsOfType($browserLog, $source);
             }
-
             if (!empty($browserLog)) {
                 AllureHelper::addAttachmentToCurrentStep(json_encode($browserLog, JSON_PRETTY_PRINT), "Browser Log");
             }
         }
-        BrowserLogUtil::logErrors($this->getDriver(), $e);
+        BrowserLogUtil::logErrors($browserLog, $this->getDriver(), $e);
     }
 
     /**
