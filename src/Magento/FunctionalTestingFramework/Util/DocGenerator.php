@@ -15,7 +15,6 @@ use Magento\FunctionalTestingFramework\Test\Util\ActionGroupObjectExtractor;
 
 /**
  * Class TestGenerator
- * @SuppressWarnings(PHPMD)
  */
 class DocGenerator
 {
