@@ -16,10 +16,11 @@ use Codeception\Exception\ModuleException;
 use Codeception\Util\Uri;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\WebapiExecutor;
-use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\Util\ConfigSanitizerUtil;
 use Yandex\Allure\Adapter\AllureException;
+use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
+use Symfony\Component\Process\Process;
 use Yandex\Allure\Adapter\Support\AttachmentSupport;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
@@ -49,6 +50,7 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * List of known magento loading masks by selector
+     *
      * @var array
      */
     public static $loadingMasksLocators = [
@@ -56,7 +58,7 @@ class MagentoWebDriver extends WebDriver
         '//div[contains(@class, "admin_data-grid-loading-mask")]',
         '//div[contains(@class, "admin__data-grid-loading-mask")]',
         '//div[contains(@class, "admin__form-loading-mask")]',
-        '//div[@data-role="spinner"]'
+        '//div[@data-role="spinner"]',
     ];
 
     /**
@@ -69,7 +71,7 @@ class MagentoWebDriver extends WebDriver
         'backend_name',
         'username',
         'password',
-        'browser'
+        'browser',
     ];
 
     /**
@@ -116,6 +118,7 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Sanitizes config, then initializes using parent.
+     *
      * @return void
      */
     public function _initialize()
@@ -139,6 +142,7 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Remap parent::_after, called in TestContextExtension
+     *
      * @param TestInterface $test
      * @return void
      */
@@ -149,9 +153,10 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Override parent::_after to do nothing.
-     * @return void
+     *
      * @param TestInterface $test
      * @SuppressWarnings(PHPMD)
+     * @return void
      */
     public function _after(TestInterface $test)
     {
@@ -161,9 +166,9 @@ class MagentoWebDriver extends WebDriver
     /**
      * Returns URL of a host.
      *
-     * @api
      * @return mixed
      * @throws ModuleConfigException
+     * @api
      */
     public function _getUrl()
     {
@@ -173,6 +178,7 @@ class MagentoWebDriver extends WebDriver
                 "Module connection failure. The URL for client can't bre retrieved"
             );
         }
+
         return $this->config['url'];
     }
 
@@ -180,8 +186,8 @@ class MagentoWebDriver extends WebDriver
      * Uri of currently opened page.
      *
      * @return string
-     * @api
      * @throws ModuleException
+     * @api
      */
     public function _getCurrentUri()
     {
@@ -189,6 +195,7 @@ class MagentoWebDriver extends WebDriver
         if ($url == 'about:blank') {
             throw new ModuleException($this, 'Current url is blank, no page was opened');
         }
+
         return Uri::retrieveUri($url);
     }
 
@@ -257,6 +264,7 @@ class MagentoWebDriver extends WebDriver
         if (!isset($matches[1])) {
             $this->fail("Nothing to grab. A regex parameter with a capture group is required. Ex: '/(foo)(bar)/'");
         }
+
         return $matches[1];
     }
 
@@ -326,13 +334,13 @@ class MagentoWebDriver extends WebDriver
      * @param string  $select
      * @param array   $options
      * @param boolean $requireAction
-     * @throws \Exception
      * @return void
+     * @throws \Exception
      */
     public function searchAndMultiSelectOption($select, array $options, $requireAction = false)
     {
-        $selectDropdown     = $select . ' .action-select.admin__action-multiselect';
-        $selectSearchText   = $select
+        $selectDropdown = $select . ' .action-select.admin__action-multiselect';
+        $selectSearchText = $select
             . ' .admin__action-multiselect-search-wrap>input[data-role="advanced-select-text"]';
         $selectSearchResult = $select . ' .admin__action-multiselect-label>span';
 
@@ -355,8 +363,8 @@ class MagentoWebDriver extends WebDriver
      * @param string   $selectSearchTextField
      * @param string   $selectSearchResult
      * @param string[] $options
-     * @throws \Exception
      * @return void
+     * @throws \Exception
      */
     public function selectMultipleOptions($selectSearchTextField, $selectSearchResult, array $options)
     {
@@ -393,8 +401,8 @@ class MagentoWebDriver extends WebDriver
      * Wait for all JavaScript to finish executing.
      *
      * @param integer $timeout
-     * @throws \Exception
      * @return void
+     * @throws \Exception
      */
     public function waitForPageLoad($timeout = null)
     {
@@ -409,8 +417,8 @@ class MagentoWebDriver extends WebDriver
      * Wait for all visible loading masks to disappear. Gets all elements by mask selector, then loops over them.
      *
      * @param integer $timeout
-     * @throws \Exception
      * @return void
+     * @throws \Exception
      */
     public function waitForLoadingMaskToDisappear($timeout = null)
     {
@@ -438,6 +446,7 @@ class MagentoWebDriver extends WebDriver
         $this->mResetLocale();
         $prefix = substr($money, 0, 1);
         $number = substr($money, 1);
+
         return ['prefix' => $prefix, 'number' => $number];
     }
 
@@ -450,6 +459,7 @@ class MagentoWebDriver extends WebDriver
     public function parseFloat($floatString)
     {
         $floatString = str_replace(',', '', $floatString);
+
         return floatval($floatString);
     }
 
@@ -471,6 +481,7 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Reset Locale setting.
+     *
      * @return void
      */
     public function mResetLocale()
@@ -485,6 +496,7 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Scroll to the Top of the Page.
+     *
      * @return void
      */
     public function scrollToTopOfPage()
@@ -493,44 +505,28 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * Takes given $command and executes it against exposed MTF CLI entry point. Returns response from server.
+     * Takes given $command and executes it against bin/magento or custom exposed entrypoint. Returns command output.
+     *
      * @param string $command
      * @param string $arguments
-     * @throws TestFrameworkException
      * @return string
+     * @throws TestFrameworkException
      */
     public function magentoCLI($command, $arguments = null)
     {
-        // Remove index.php if it's present in url
-        $baseUrl = rtrim(
-            str_replace('index.php', '', rtrim($this->config['url'], '/')),
-            '/'
-        );
-        $apiURL = $baseUrl . '/' . ltrim(getenv('MAGENTO_CLI_COMMAND_PATH'), '/');
-
-        $restExecutor = new WebapiExecutor();
-        $executor = new CurlTransport();
-        $executor->write(
-            $apiURL,
-            [
-                'token' => $restExecutor->getAuthToken(),
-                getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command,
-                'arguments' => $arguments
-            ],
-            CurlInterface::POST,
-            []
-        );
-        $response = $executor->read();
-        $restExecutor->close();
-        $executor->close();
-        return $response;
+        try {
+            return $this->shellExecMagentoCLI($command, $arguments);
+        } catch (\Exception $exception) {
+            return $this->curlExecMagentoCLI($command, $arguments);
+        }
     }
 
     /**
      * Runs DELETE request to delete a Magento entity against the url given.
+     *
      * @param string $url
-     * @throws TestFrameworkException
      * @return string
+     * @throws TestFrameworkException
      */
     public function deleteEntityByUrl($url)
     {
@@ -538,6 +534,7 @@ class MagentoWebDriver extends WebDriver
         $executor->write($url, [], CurlInterface::DELETE, []);
         $response = $executor->read();
         $executor->close();
+
         return $response;
     }
 
@@ -547,8 +544,8 @@ class MagentoWebDriver extends WebDriver
      * @param string  $selector
      * @param string  $dependentSelector
      * @param boolean $visible
-     * @throws \Exception
      * @return void
+     * @throws \Exception
      */
     public function conditionalClick($selector, $dependentSelector, $visible)
     {
@@ -603,6 +600,7 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Sets current test to the given test, and resets test failure artifacts to null
+     *
      * @param TestInterface $test
      * @return void
      */
@@ -617,6 +615,7 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Override for codeception's default dragAndDrop to include offset options.
+     *
      * @param string  $source
      * @param string  $target
      * @param integer $xOffset
@@ -711,6 +710,7 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Function which saves a screenshot of the current stat of the browser
+     *
      * @return void
      */
     public function saveScreenshot()
@@ -730,8 +730,8 @@ class MagentoWebDriver extends WebDriver
      * Go to a page and wait for ajax requests to finish
      *
      * @param string $page
-     * @throws \Exception
      * @return void
+     * @throws \Exception
      */
     public function amOnPage($page)
     {
@@ -743,8 +743,8 @@ class MagentoWebDriver extends WebDriver
      * Turn Readiness check on or off
      *
      * @param boolean $check
-     * @throws \Exception
      * @return void
+     * @throws \Exception
      */
     public function skipReadinessCheck($check)
     {
@@ -787,6 +787,7 @@ class MagentoWebDriver extends WebDriver
                 $errors .= "\n" . $jsError;
             }
         }
+
         return $errors;
     }
 
@@ -823,5 +824,66 @@ class MagentoWebDriver extends WebDriver
         $this->_saveScreenshot($screenName);
         $this->debug("Screenshot saved to $screenName");
         AllureHelper::addAttachmentToCurrentStep($screenName, 'Screenshot');
+    }
+
+    /**
+     * Takes given $command and executes it against bin/magento executable. Returns stdout output from the command.
+     *
+     * @param string $command
+     * @param string $arguments
+     *
+     * @throws \RuntimeException
+     * @return string
+     */
+    private function shellExecMagentoCLI($command, $arguments): string
+    {
+        $php = PHP_BINDIR ? PHP_BINDIR . DIRECTORY_SEPARATOR. 'php' : 'php';
+        $binMagento = realpath(MAGENTO_BP . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'magento');
+        $command = $php . ' -f ' . $binMagento . ' ' . $command . ' ' . $arguments;
+        $process = new Process(escapeshellcmd($command), MAGENTO_BP);
+        $process->setIdleTimeout(60);
+        $process->setTimeout(0);
+        $exitCode = $process->run();
+        if ($exitCode !== 0) {
+            throw new \RuntimeException($process->getErrorOutput());
+        }
+
+        return $process->getOutput();
+    }
+
+    /**
+     * Takes given $command and executes it against exposed MTF CLI entry point. Returns response from server.
+     *
+     * @param string $command
+     * @param string $arguments
+     * @return string
+     * @throws TestFrameworkException
+     */
+    private function curlExecMagentoCLI($command, $arguments): string
+    {
+        // Remove index.php if it's present in url
+        $baseUrl = rtrim(
+            str_replace('index.php', '', rtrim($this->config['url'], '/')),
+            '/'
+        );
+        $apiURL = $baseUrl . '/' . ltrim(getenv('MAGENTO_CLI_COMMAND_PATH'), '/');
+
+        $restExecutor = new WebapiExecutor();
+        $executor = new CurlTransport();
+        $executor->write(
+            $apiURL,
+            [
+                'token' => $restExecutor->getAuthToken(),
+                getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command,
+                'arguments' => $arguments,
+            ],
+            CurlInterface::POST,
+            []
+        );
+        $response = $executor->read();
+        $restExecutor->close();
+        $executor->close();
+
+        return $response;
     }
 }
