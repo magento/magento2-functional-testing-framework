@@ -11,7 +11,6 @@ Magento Functional Testing Framework Changelog
     * Refactored problem methods to reduce cyclomatic complexity.
     
 ### Fixes
-* Added escaping for `magentoCLI` commands.
 * Fixed issue with builds due to absence of AcceptanceTester class.
 
 ### GitHub Issues/Pull requests:
