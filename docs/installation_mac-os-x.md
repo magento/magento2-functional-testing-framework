@@ -1,25 +1,31 @@
 # Step by Step MFTF Installation Guide for Mac OS X
 
-## Prerequisite  {#prerequisite}
+## Prerequisite {#prerequisite}
 
 - A user account with `sudo` privileges
 - Command line / terminal access
-- [Brew][brew]
+- [Brew][brew] or similar package manager tool is installed
+- A Magento 2 web server is [installed][magento_install] and [configured][magento_config] for MFTF testing locally or remotely.  admin url, admin credentials and store front url are available and accessible.
 
-## Prepare environment  {#prepare-environment}
+## Prepare environment {#prepare-environment}
 
 MFTF requires the following softwares installed and configured on your development environment:
 
 - [PHP version supported by the Magento instance under test][php]
-- [Composer 1.3 or later][composer]
+- [Composer 1.3 or later][composer_download]
 - [Docker Engine - Community for Mac][docker]
 - [Docker Selenium image version compatible with MFTF 3.8.1 or later][docker selenium]
-- [VNC Viewer (optional for visually see the browser)][vnc viewer]
 - [Allure CLI (optional for visual test report)][allure docs]
+- VNC Viewer (optional for visually see the browser)
+  Built in Screen Sharing App for Mac OS X 10.4 or later, or any other VNC Viewers of your choice, for example, [Vnc Viewer][[vnc viewer]].
 
 ### Update local repository
 
-Start by updating the local repository lists before installation:
+Start by checking and updating the local repository lists before installation:
+
+```bash
+brew doctor
+```
 
 ```bash
 brew update && brew upgrade
@@ -55,21 +61,16 @@ If you have only one `php.ini` file, make the changes in that file. If you have 
 
 ### Install Composer
 
-MFTF requires Composer 1.3 or later.
-
 #### Download the composer installer
+
+MFTF requires Composer 1.3 or later. Please go to [Composer download page][composer_download] for instructions. For example, the following commands download Composer v1.9.0 and verify the installer SHA-384, which you should cross-check [from][composer-SHA-384].
 
 ```bash
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-```
-
-#### Verify composer installer
-
-```bash
 php -r "if (hash_file('sha384', 'composer-setup.php') === 'a5c698ffe4b8e849a443b120cd5ba38043260d5c4023dbf93e1558871f1f07f58274fc6f4c93bcfd858c6bd0775cd8d1') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
 ```
 
-#### Install composer globally
+#### [Install composer globally][composer_install]
 
 To install to /usr/local/bin. enter:
 
@@ -79,57 +80,8 @@ php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
 ### Install Docker
 
-If you want have Docker previously installed, download docker for Mac OS X from [stable channel][docker].
+Download and install docker for Mac OS X from [stable channel][docker] if you don't have Docker previously installed.
 
-## Install Magento {#install-magento}
-
-Follow Magento Installation Guide to install Magento either by [Git][magento_install_git] clone or by [Composer][magento_install_composer].
-
-## Prepare Magento  {#prepare-magento}
-
-Configure the following settings in Magento as described below.
-
-### WYSIWYG settings    {#wysiwyg-settings}
-
-A Selenium web driver cannot enter data to fields with WYSIWYG.
-
-To disable the WYSIWYG and enable the web driver to process these fields as simple text areas:
-
-1. Log in to the Magento Admin as an administrator.
-2. Navigate to **Stores** > Settings > **Configuration** > **General** > **Content Management**.
-3. In the WYSIWYG Options section set the **Enable WYSIWYG Editor** option to **Disabled Completely**.
-4. Click **Save Config**.
-
-<div class="bs-callout bs-callout-tip">
-When you want to test the WYSIWYG functionality, re-enable WYSIWYG in your test suite.
-</div>
-
-### Security settings   {#security-settings}
-
-To enable the **Admin Account Sharing** setting, to avoid unpredictable logout during a testing session, and disable the **Add Secret Key in URLs** setting, to open pages using direct URLs:
-
-1. Navigate to **Stores** > Settings > **Configuration** > **Advanced** > **Admin** > **Security**.
-2. Set **Admin Account Sharing** to **Yes**.
-3. Set **Add Secret Key to URLs** to **No**.
-4. Click **Save Config**.
-
-### Nginx settings {#nginx-settings}
-
-If Nginx Web server is used on your development environment then **Use Web Server Rewrites** setting in **Stores** > Settings > **Configuration** > **Web** > **Search Engine Optimization** must be set to **Yes**.
-
-To be able to run Magento command line commands in tests add the following location block to Nginx configuration file:
-
-```conf
-location ~* ^/dev/tests/acceptance/utils($|/) {
-  root $MAGE_ROOT;
-  location ~ ^/dev/tests/acceptance/utils/command.php {
-      fastcgi_pass   fastcgi_backend;
-      fastcgi_index  index.php;
-      fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
-      include        fastcgi_params;
-  }
-}
-```
 
 ## Set up an embedded MFTF {#setup-framework}
 
@@ -164,7 +116,7 @@ You can simplify command entry by adding the  absolute  path to the `vendor/bin`
 After adding the path, you can run `mftf` without having to include `vendor/bin`.
 </div>
 
-### Step 2. Edit environmental settings   {#environment-settings}
+### Step 2. Edit environmental settings {#environment-settings}
 
 In the `dev/tests/acceptance/` directory, edit the `.env` file to match your system.
 
@@ -192,15 +144,7 @@ If the `MAGENTO_BASE_URL` contains a subdirectory like `http://magento.test/mage
 
 Learn more about environmental settings in [Configuration][].
 
-### Step 3. Enable the Magento CLI commands
-
-In the `dev/tests/acceptance` directory, run the following command to enable the MFTF to send Magento CLI commands to your Magento instance.
-
- ```bash
-cp dev/tests/acceptance/.htaccess.sample dev/tests/acceptance/.htaccess
-```
-
-### Step 4. Generate and run tests   {#run-tests}
+### Step 3. Generate and run tests {#run-tests}
 
 To run [MFTF][mftf] tests, you will need to setup [Java][java] runtime and [Selenium server][selenium server]. You also need Chrome or Firefox browser unless running in headless mode.
 Alternatively, you can use [Docker Selenium][] to simplify the setup.
@@ -243,7 +187,7 @@ You may need to edit `/etc/hosts` file in the container and add an entry for `ma
 192.168.65.2    magento.test
 ```
 
-### Step 5. Generate reports {#reports}
+### Step 4. Generate reports {#reports}
 
 During testing, the MFTF generates test reports in `dev/tests/acceptance/tests/_output/allure-results/`.
 You can generate visual representations of the report data using [Allure Framework][].
@@ -273,8 +217,8 @@ These guidelines demonstrate how to set up and run Magento acceptance functional
 
 ### Prerequisites
 
-This installation requires a local instance of the Magento application.
-The MFTF uses the [tests from Magento modules][mftf tests] as well as the `app/autoload.php` file.
+This installation requires a *local* copy of the same version of Magento code as the Magento server to be tested.
+This is because MFTF uses the [tests from Magento modules][mftf tests] as well as the `app/autoload.php` file.
 
 ### Step 1. Clone the MFTF repository
 
@@ -306,12 +250,7 @@ bin/mftf build:project
 
 In the `dev/.env` file, define the [basic configuration][] and [`MAGENTO_BP`][] parameters.
 
-### Step 5. Enable the Magento CLI commands {#add-cli-commands}
-
-Copy the `etc/config/command.php` file into your Magento installation at `<magento root directory>/dev/tests/acceptance/utils/`.
-Create the `utils/` directory, if you didn't find it.
-
-### Step 6. Remove the MFTF package dependency in Magento
+### Step 5. Remove the MFTF package dependency in Magento
 
 The MFTF uses the Magento `app/autoload.php` file to read Magento modules.
 The MFTF dependency in Magento supersedes the standalone registered namespaces unless it is removed at a Composer level.
@@ -320,7 +259,7 @@ The MFTF dependency in Magento supersedes the standalone registered namespaces u
 composer remove magento/magento2-functional-testing-framework --dev -d <path to the Magento root directory>
 ```
 
-### Step 7. Run a simple test
+### Step 6. Run a simple test
 
 Generate and run a single test that will check your logging to the Magento Admin functionality:
 
@@ -330,7 +269,7 @@ bin/mftf run:test AdminLoginTest
 
 You can find the generated test at `dev/tests/functional/tests/MFTF/_generated/default/`.
 
-### Step 8. Generate Allure reports
+### Step 7. Generate Allure reports
 
 The standalone MFTF generates Allure reports at `dev/tests/_output/allure-results/`.
 Run the Allure server pointing to this directory:
@@ -347,7 +286,9 @@ allure serve dev/tests/_output/allure-results/
 [allure docs]: https://docs.qameta.io/allure/
 [Allure Framework]: http://allure.qatools.ru/
 [basic configuration]: configuration.html#basic-configuration
-[composer]: https://getcomposer.org/download/
+[composer_download]: https://getcomposer.org/download/
+[composer_install]: https://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos
+[composer_SHA-384]: https://composer.github.io/pubkeys.html
 [Configuration]: configuration.html
 [contributing]: https://github.com/magento/magento2-functional-testing-framework/blob/develop/.github/CONTRIBUTING.md
 [java]: http://www.oracle.com/technetwork/java/javase/downloads/index.html
@@ -359,7 +300,7 @@ allure serve dev/tests/_output/allure-results/
 [Find your MFTF version]: introduction.html#find-your-mftf-version
 [docker selenium]: https://github.com/SeleniumHQ/docker-selenium
 [docker]: https://download.docker.com/mac/static/stable/x86_64/
-[magento_install_composer]: https://devdocs.magento.com/guides/v2.3/install-gde/composer.html
-[magento_install_git]: https://devdocs.magento.com/guides/v2.3/install-gde/prereq/dev_install.html
+[magento_install]: https://devdocs.magento.com/guides/v2.3/install-gde/bk-install-guide.html
+[magento_config]: magento_configuration.html
 [vnc viewer]: https://www.realvnc.com/en/connect/download/vnc/macos/
 [brew]: https://brew.sh/
