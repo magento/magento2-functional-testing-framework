@@ -8,6 +8,7 @@ declare(strict_types = 1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
+use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -102,5 +103,71 @@ class BaseGenerateCommand extends Command
         }
         $testConfigurationJson = json_encode($testConfiguration);
         return $testConfigurationJson;
+    }
+
+    /** second attempt at a cleaner implementation, needs work */
+    protected function getGroupAndSuiteConfiguration(array $groupOrSuiteNames)
+    {
+        $result['tests'] = [];
+        $result['suites'] = [];
+
+        $groups = [];
+        $suites = [];
+
+        $allSuites = SuiteObjectHandler::getInstance()->getAllObjects();
+        $testsInSuites = SuiteObjectHandler::getInstance()->getAllTestReferences();
+
+        foreach ($groupOrSuiteNames as $groupOrSuiteName) {
+            if (array_key_exists($groupOrSuiteName, $allSuites)) {
+                $suites[] = $groupOrSuiteName;
+            } else {
+                $groups[] = $groupOrSuiteName;
+            }
+        }
+
+        foreach ($suites as $suite) {
+            $result['suites'][$suite] = [];
+        }
+
+        foreach ($groups as $group) {
+            $testsInGroup = TestObjectHandler::getInstance()->getTestsByGroup($group);
+
+            $testsInGroupAndNotInAnySuite = array_diff(
+                array_keys($testsInGroup),
+                array_keys($testsInSuites)
+            );
+
+            $testsInGroupAndInAnySuite = array_diff(
+                array_keys($testsInGroup),
+                $testsInGroupAndNotInAnySuite
+            );
+
+            foreach ($testsInGroupAndInAnySuite as $testInGroupAndInAnySuite) {
+                $cat = $testsInSuites[$testInGroupAndInAnySuite][0];
+                $dog[$cat][] = $testInGroupAndInAnySuite;
+
+                /*
+                 * todo -- I left off here. Code works so far.
+                 * I need to take this $dog array and put into the $result['suites'] array
+                 * and then test it thoroughly
+                 */
+
+            }
+
+            $result['tests'] = array_merge(
+                $result['tests'],
+                $testsInGroupAndNotInAnySuite
+            );
+        }
+
+        if (empty($result['tests'])) {
+            $result['tests'] = null;
+        }
+        if (empty($result['suites'])) {
+            $result['suites'] = null;
+        }
+
+        $json = json_encode($result);
+        return $json;
     }
 }

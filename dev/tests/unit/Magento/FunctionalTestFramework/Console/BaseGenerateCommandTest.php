@@ -22,7 +22,7 @@ class BaseGenerateCommandTest extends TestCase
     /**
      * One test in one suite
      */
-    public function testSimpleTestConfig()
+    public function testOneTestOneSuiteConfig()
     {
         $testOne = new TestObject('Test1', [], [], []);
         $suiteOne = new SuiteObject('Suite1', ['Test1' => $testOne], [], []);
@@ -32,8 +32,58 @@ class BaseGenerateCommandTest extends TestCase
 
         $this->mockHandlers($testArray, $suiteArray);
 
-        $actual = json_decode($this->callConfig(['Test1']), true);
+        $actual = json_decode($this->callTestConfig(['Test1']), true);
         $expected = ['tests' => null, 'suites' => ['Suite1' => ['Test1']]];
+        $this->assertEquals($expected, $actual);
+    }
+
+
+    /**
+     * One test in one suite
+     */
+    public function testOneTestTwoSuitesConfig()
+    {
+        $testOne = new TestObject('Test1', [], [], []);
+        $suiteOne = new SuiteObject('Suite1', ['Test1' => $testOne], [], []);
+        $suiteTwo = new SuiteObject('Suite2', ['Test1' => $testOne], [], []);
+
+        $testArray = ['Test1' => $testOne];
+        $suiteArray = ['Suite1' => $suiteOne, 'Suite2' => $suiteTwo];
+
+        $this->mockHandlers($testArray, $suiteArray);
+
+        $actual = json_decode($this->callTestConfig(['Test1']), true);
+        $expected = ['tests' => null, 'suites' => ['Suite1' => ['Test1'], 'Suite2' => ['Test1']]];
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testOneTestOneGroup()
+    {
+        $testOne = new TestObject('Test1', [], ['group' => ['Group1']], []);
+
+        $testArray = ['Test1' => $testOne];
+        $suiteArray = [];
+
+        $this->mockHandlers($testArray, $suiteArray);
+
+        $actual = json_decode($this->callGroupConfig(['Group1']), true);
+        $expected = ['tests' => ['Test1'], 'suites' => null];
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testThreeTestsTwoGroup()
+    {
+        $testOne = new TestObject('Test1', [], ['group' => ['Group1']], []);
+        $testTwo = new TestObject('Test2', [], ['group' => ['Group1']], []);
+        $testThree = new TestObject('Test3', [], ['group' => ['Group2']], []);
+
+        $testArray = ['Test1' => $testOne, 'Test2' => $testTwo, 'Test3' => $testThree];
+        $suiteArray = [];
+
+        $this->mockHandlers($testArray, $suiteArray);
+
+        $actual = json_decode($this->callGroupConfig(['Group1', 'Group2']), true);
+        $expected = ['tests' => ['Test1', 'Test2', 'Test3'], 'suites' => null];
         $this->assertEquals($expected, $actual);
     }
 
@@ -63,12 +113,26 @@ class BaseGenerateCommandTest extends TestCase
      * @param array $testArray
      * @return string
      */
-    public function callConfig($testArray)
+    public function callTestConfig($testArray)
     {
         $command = new BaseGenerateCommand();
         $class = new \ReflectionClass($command);
         $method = $class->getMethod('getTestAndSuiteConfiguration');
         $method->setAccessible(true);
         return $method->invokeArgs($command, [$testArray]);
+    }
+
+    /**
+     * Changes visibility and runs getGroupAndSuiteConfiguration
+     * @param array $groupArray
+     * @return string
+     */
+    public function callGroupConfig($groupArray)
+    {
+        $command = new BaseGenerateCommand();
+        $class = new \ReflectionClass($command);
+        $method = $class->getMethod('getGroupAndSuiteConfiguration');
+        $method->setAccessible(true);
+        return $method->invokeArgs($command, [$groupArray]);
     }
 }
