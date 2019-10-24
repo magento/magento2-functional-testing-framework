@@ -18,7 +18,7 @@ Install guide: [Composer based Installation][]
 
 ## MFTF Installation
 
-After installing your Magento project in either of the above ways, the composer dependency `magento/magento2-functional-testing-framework` downloads and installs MFTF. MFTF is embedded in your Magento 2 installation and will cover your project with functional tests.  
+After installing your Magento project in either of the above ways, the composer dependency `magento/magento2-functional-testing-framework` downloads and installs MFTF. MFTF is embedded in your Magento 2 installation and will cover your project with functional tests.
 
 If you want to contribute a pull request into MFTF codebase, you will need to install MFTF in the [Standalone][] mode.
 
