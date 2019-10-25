@@ -68,11 +68,17 @@ To disable the WYSIWYG and enable the web driver to process these fields as simp
 3. In the WYSIWYG Options section set the **Enable WYSIWYG Editor** option to **Disabled Completely**.
 4. Click **Save Config**.
 
+or via command line:
+
+```bash
+bin/magento config:set cms/wysiwyg/enabled disabled
+```
+
 <div class="bs-callout bs-callout-tip">
 When you want to test the WYSIWYG functionality, re-enable WYSIWYG in your test suite.
 </div>
 
-### Security settings   {#security-settings}
+### Security settings {#security-settings}
 
 To enable the **Admin Account Sharing** setting, to avoid unpredictable logout during a testing session, and disable the **Add Secret Key in URLs** setting, to open pages using direct URLs:
 
@@ -81,11 +87,21 @@ To enable the **Admin Account Sharing** setting, to avoid unpredictable logout d
 3. Set **Add Secret Key to URLs** to **No**.
 4. Click **Save Config**.
 
+or via command line:
+
+```bash
+bin/magento config:set admin/security/admin_account_sharing 1
+```
+
+```bash
+bin/magento config:set admin/security/use_form_key 0
+```
+
 ### Webserver configuration {#web-server-configuration}
 
 The MFTF does not support executing CLI commands if your web server points to `<MAGE_ROOT_DIR>/pub` directory as recommended in the [Installation Guide][Installation Guide docroot]. For the MFTF to execute the CLI commands, the web server must point to the Magento root directory.
 
-#### Nginx settings {#nginx-settings}
+### Nginx settings {#nginx-settings}
 
 If Nginx Web server is used on your development environment then **Use Web Server Rewrites** setting in **Stores** > Settings > **Configuration** > **Web** > **Search Engine Optimization** must be set to **Yes**.
 

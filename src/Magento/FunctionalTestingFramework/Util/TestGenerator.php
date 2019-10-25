@@ -654,7 +654,10 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['function'])) {
-                $function = $this->addUniquenessFunctionCall($customActionAttributes['function']);
+                $function = $this->addUniquenessFunctionCall(
+                    $customActionAttributes['function'],
+                    $actionObject->getType() !== "executeInSelenium"
+                );
                 if (in_array($actionObject->getType(), ActionObject::FUNCTION_CLOSURE_ACTIONS)) {
                     // Argument must be a closure function, not a string.
                     $function = trim($function, '"');
@@ -1736,12 +1739,17 @@ class TestGenerator
     /**
      * Add uniqueness function call to input string based on regex pattern.
      *
-     * @param string $input
+     * @param string  $input
+     * @param boolean $wrapWithDoubleQuotes
      * @return string
      */
-    private function addUniquenessFunctionCall($input)
+    private function addUniquenessFunctionCall($input, $wrapWithDoubleQuotes = true)
     {
-        $output = $this->wrapWithDoubleQuotes($input);
+        if ($wrapWithDoubleQuotes) {
+            $output = $this->wrapWithDoubleQuotes($input);
+        } else {
+            $output = $input;
+        }
 
         //Match on msq(\"entityName\")
         preg_match_all('/' . EntityDataObject::CEST_UNIQUE_FUNCTION . '\(\\\\"[\w]+\\\\"\)/', $output, $matches);
