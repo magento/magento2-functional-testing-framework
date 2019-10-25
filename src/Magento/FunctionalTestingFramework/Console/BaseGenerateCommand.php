@@ -76,7 +76,6 @@ class BaseGenerateCommand extends Command
      * @return false|string
      * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
-
     protected function getTestAndSuiteConfiguration(array $tests)
     {
         $testConfiguration['tests'] = null;
@@ -105,7 +104,12 @@ class BaseGenerateCommand extends Command
         return $testConfigurationJson;
     }
 
-    /** second attempt at a cleaner implementation, needs work */
+    /**
+     * Returns an array of test configuration to be used as an argument for generation of tests
+     * This function uses group or suite names for generation
+     * @return false|string
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
+     */
     protected function getGroupAndSuiteConfiguration(array $groupOrSuiteNames)
     {
         $result['tests'] = [];
@@ -143,15 +147,8 @@ class BaseGenerateCommand extends Command
             );
 
             foreach ($testsInGroupAndInAnySuite as $testInGroupAndInAnySuite) {
-                $cat = $testsInSuites[$testInGroupAndInAnySuite][0];
-                $dog[$cat][] = $testInGroupAndInAnySuite;
-
-                /*
-                 * todo -- I left off here. Code works so far.
-                 * I need to take this $dog array and put into the $result['suites'] array
-                 * and then test it thoroughly
-                 */
-
+                $suiteName = $testsInSuites[$testInGroupAndInAnySuite][0];
+                $result['suites'][$suiteName][] = $testInGroupAndInAnySuite;
             }
 
             $result['tests'] = array_merge(

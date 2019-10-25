@@ -12,6 +12,7 @@ use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
+
 class BaseGenerateCommandTest extends TestCase
 {
     public function tearDown()
@@ -19,9 +20,6 @@ class BaseGenerateCommandTest extends TestCase
         AspectMock::clean();
     }
 
-    /**
-     * One test in one suite
-     */
     public function testOneTestOneSuiteConfig()
     {
         $testOne = new TestObject('Test1', [], [], []);
@@ -37,10 +35,6 @@ class BaseGenerateCommandTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-
-    /**
-     * One test in one suite
-     */
     public function testOneTestTwoSuitesConfig()
     {
         $testOne = new TestObject('Test1', [], [], []);
@@ -87,6 +81,54 @@ class BaseGenerateCommandTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testOneTestOneSuiteOneGroupConfig()
+    {
+        $testOne = new TestObject('Test1', [], ['group' => ['Group1']], []);
+        $suiteOne = new SuiteObject('Suite1', ['Test1' => $testOne], [], []);
+
+        $testArray = ['Test1' => $testOne];
+        $suiteArray = ['Suite1' => $suiteOne];
+
+        $this->mockHandlers($testArray, $suiteArray);
+
+        $actual = json_decode($this->callGroupConfig(['Group1']), true);
+        $expected = ['tests' => null, 'suites' => ['Suite1' => ['Test1']]];
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testTwoTestOneSuiteTwoGroupConfig()
+    {
+        $testOne = new TestObject('Test1', [], ['group' => ['Group1']], []);
+        $testTwo = new TestObject('Test2', [], ['group' => ['Group2']], []);
+        $suiteOne = new SuiteObject('Suite1', ['Test1' => $testOne, 'Test2' => $testTwo], [], []);
+
+        $testArray = ['Test1' => $testOne, 'Test2' => $testTwo];
+        $suiteArray = ['Suite1' => $suiteOne];
+
+        $this->mockHandlers($testArray, $suiteArray);
+
+        $actual = json_decode($this->callGroupConfig(['Group1', 'Group2']), true);
+        $expected = ['tests' => null, 'suites' => ['Suite1' => ['Test1', 'Test2']]];
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testTwoTestTwoSuiteOneGroupConfig()
+    {
+        $testOne = new TestObject('Test1', [], ['group' => ['Group1']], []);
+        $testTwo = new TestObject('Test2', [], ['group' => ['Group1']], []);
+        $suiteOne = new SuiteObject('Suite1', ['Test1' => $testOne], [], []);
+        $suiteTwo = new SuiteObject('Suite2', ['Test2' => $testTwo], [], []);
+
+        $testArray = ['Test1' => $testOne, 'Test2' => $testTwo];
+        $suiteArray = ['Suite1' => $suiteOne, 'Suite2' => $suiteTwo];
+
+        $this->mockHandlers($testArray, $suiteArray);
+
+        $actual = json_decode($this->callGroupConfig(['Group1']), true);
+        $expected = ['tests' => null, 'suites' => ['Suite1' => ['Test1'], 'Suite2' => ['Test2']]];
+        $this->assertEquals($expected, $actual);
+    }
+
     /**
      * Mock handlers to skip parsing
      * @param array $testArray
@@ -95,7 +137,7 @@ class BaseGenerateCommandTest extends TestCase
      */
     public function mockHandlers($testArray, $suiteArray)
     {
-        AspectMock::double(TestObjectHandler::class,['initTestData' => ''])->make();
+        AspectMock::double(TestObjectHandler::class, ['initTestData' => ''])->make();
         $handler = TestObjectHandler::getInstance();
         $property = new \ReflectionProperty(TestObjectHandler::class, 'tests');
         $property->setAccessible(true);
