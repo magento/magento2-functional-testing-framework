@@ -148,6 +148,10 @@ class BaseGenerateCommand extends Command
 
             foreach ($testsInGroupAndInAnySuite as $testInGroupAndInAnySuite) {
                 $suiteName = $testsInSuites[$testInGroupAndInAnySuite][0];
+                if (isset($result['suites'][$suiteName])) {
+                    // Suite is already being called to run in its entirety, do not filter list
+                    continue;
+                }
                 $result['suites'][$suiteName][] = $testInGroupAndInAnySuite;
             }
 

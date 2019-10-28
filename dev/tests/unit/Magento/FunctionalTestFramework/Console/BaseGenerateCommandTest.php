@@ -130,6 +130,28 @@ class BaseGenerateCommandTest extends TestCase
     }
 
     /**
+     * Test specific usecase of a test that is in a group with the group being called along with the suite
+     * i.e. run:group Group1 Suite1
+     * @throws \Exception
+     */
+    public function testThreeTestOneSuiteOneGroupMix()
+    {
+        $testOne = new TestObject('Test1', [], [], []);
+        $testTwo = new TestObject('Test2', [], [], []);
+        $testThree = new TestObject('Test3', [], ['group' => ['Group1']], []);
+        $suiteOne = new SuiteObject('Suite1', ['Test1' => $testOne, 'Test2' => $testTwo, 'Test3' => $testThree], [], []);
+
+        $testArray = ['Test1' => $testOne, 'Test2' => $testTwo, 'Test3' => $testThree];
+        $suiteArray = ['Suite1' => $suiteOne];
+
+        $this->mockHandlers($testArray, $suiteArray);
+
+        $actual = json_decode($this->callGroupConfig(['Group1', 'Suite1']), true);
+        $expected = ['tests' => null, 'suites' => ['Suite1' => []]];
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
      * Mock handlers to skip parsing
      * @param array $testArray
      * @param array $suiteArray
