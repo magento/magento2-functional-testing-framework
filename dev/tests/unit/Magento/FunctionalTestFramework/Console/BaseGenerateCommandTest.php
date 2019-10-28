@@ -139,7 +139,12 @@ class BaseGenerateCommandTest extends TestCase
         $testOne = new TestObject('Test1', [], [], []);
         $testTwo = new TestObject('Test2', [], [], []);
         $testThree = new TestObject('Test3', [], ['group' => ['Group1']], []);
-        $suiteOne = new SuiteObject('Suite1', ['Test1' => $testOne, 'Test2' => $testTwo, 'Test3' => $testThree], [], []);
+        $suiteOne = new SuiteObject(
+            'Suite1',
+            ['Test1' => $testOne, 'Test2' => $testTwo, 'Test3' => $testThree],
+            [],
+            []
+        );
 
         $testArray = ['Test1' => $testOne, 'Test2' => $testTwo, 'Test3' => $testThree];
         $suiteArray = ['Suite1' => $suiteOne];
