@@ -2,18 +2,19 @@
 
 ## Prerequisite {#prerequisite}
 
-- A user account with `sudo` privileges
-- Command line / terminal access
-- [Brew][brew] or similar package manager tool is installed
-- A Magento 2 web server is [installed][magento_install] and [configured][magento_config] for MFTF testing locally or remotely.  admin url, admin credentials and store front url are available and accessible.
-
-## Prepare environment {#prepare-environment}
-
-MFTF requires the following softwares installed and configured on your development environment:
-
 - [PHP version supported by the Magento instance under test][php]
 - [Composer 1.3 or later][composer_download]
 - [Docker Engine - Community for Mac][docker]
+- A user account with `sudo` privileges
+- Command line / terminal access
+- [Brew][brew] or similar package manager tool is installed
+- A Magento 2 web server is [installed][magento_install] and [configured][magento_config] for MFTF testing locally or remotely.
+- Admin url, admin credentials and store front url are available and accessible.
+
+## Prepare environment {#prepare-environment}
+
+MFTF requires the following software to be installed and configured on your development environment:
+
 - [Docker Selenium image version compatible with MFTF 3.8.1 or later][docker selenium]
 - [Allure CLI (optional for visual test report)][allure docs]
 - VNC Viewer (optional for visually see the browser)
@@ -31,22 +32,15 @@ brew doctor
 brew update && brew upgrade
 ```
 
-### Install and configure PHP
+### Configure PHP for MFTF testing
 
-#### Install PHP
-
-PHP has different versions and releases you can use. Pick the version supported by the Magento application under test.  
-We use php 7.2 as an example in this section.
+Use the `which` command to find out where PHP is running:
 
 ```bash
-brew install php@7.2
+which php
 ```
 
-Make sure to add `/usr/local/bin` and `/usr/local/sbin` in $PATH environment variable.
-
-#### Configure PHP for MFTF testing
-
-Make the following configuration in `php.ini`:
+Set the following configuration values in your `php.ini`:
 
 ```bash
 vim /usr/local/etc/php/7.2/php.ini
@@ -54,39 +48,14 @@ vim /usr/local/etc/php/7.2/php.ini
 
 - Set the system time zone for PHP
 - Set the PHP memory limit to -1  
-(Our recommendations is 4G. -1 is unlimited.)
+  (Our recommendations is 4G. -1 is unlimited.)
 
 If you have only one `php.ini` file, make the changes in that file. If you have two php.ini files, make the changes in all files. Failure to do so might cause unpredictable performance.
 
-
-### Install Composer
-
-#### Download the composer installer
-
-MFTF requires Composer 1.3 or later. Please go to [Composer download page][composer_download] for instructions. For example, the following commands download Composer v1.9.0 and verify the installer SHA-384, which you should cross-check [from][composer-SHA-384].
-
-```bash
-php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-php -r "if (hash_file('sha384', 'composer-setup.php') === 'a5c698ffe4b8e849a443b120cd5ba38043260d5c4023dbf93e1558871f1f07f58274fc6f4c93bcfd858c6bd0775cd8d1') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-```
-
-#### [Install composer globally][composer_install]
-
-To install to /usr/local/bin. enter:
-
-```bash
-php composer-setup.php --install-dir=/usr/local/bin --filename=composer
-```
-
-### Install Docker
-
-Download and install docker for Mac OS X from [stable channel][docker] if you don't have Docker previously installed.
-
-
 ## Set up an embedded MFTF {#setup-framework}
 
-This is the default setup of the MFTF that you would need to cover your Magento project with functional tests.
-It installs the framework using an existing Composer dependency such as `magento/magento2-functional-testing-framework`.
+This is the default setup of the MFTF that you need to cover your Magento project with functional tests.
+It installs the MFTF framework using an existing Composer dependency such as `magento/magento2-functional-testing-framework`.
 If you want to set up the MFTF as a standalone tool, refer to [Set up a standalone MFTF][].
 
 ### Step 1. Build the project {#build-project}
@@ -112,7 +81,7 @@ vendor/bin/mftf generate:urn-catalog --force .idea/
 See [`generate:urn-catalog`][] for more details.
 
 <div class="bs-callout bs-callout-tip" markdown="1">
-You can simplify command entry by adding the  absolute  path to the `vendor/bin` directory path to your PATH environment variable.
+You can simplify command entry by adding the absolute path to the `vendor/bin` directory path to your PATH environment variable.
 After adding the path, you can run `mftf` without having to include `vendor/bin`.
 </div>
 
@@ -128,13 +97,10 @@ Specify the following parameters, which are required to launch tests:
 
 - `MAGENTO_BASE_URL` must contain a domain name of the Magento instance that will be tested.
   Example: `MAGENTO_BASE_URL=http://magento.test`
-
 - `MAGENTO_BACKEND_NAME` must contain the relative path for the Admin area.
   Example: `MAGENTO_BACKEND_NAME=admin`
-
 - `MAGENTO_ADMIN_USERNAME` must contain the username required for authorization in the Admin area.
   Example: `MAGENTO_ADMIN_USERNAME=admin`
-
 - `MAGENTO_ADMIN_PASSWORD` must contain the user password required for authorization in the Admin area.
   Example: `MAGENTO_ADMIN_PASSWORD=123123q`
 
@@ -146,20 +112,19 @@ Learn more about environmental settings in [Configuration][].
 
 ### Step 3. Generate and run tests {#run-tests}
 
-To run [MFTF][mftf] tests, you will need to setup [Java][java] runtime and [Selenium server][selenium server]. You also need Chrome or Firefox browser unless running in headless mode.
+To run [MFTF][mftf] tests, you will need to setup [Java][java] runtime and [Selenium server][selenium server]. You also need either Chrome or Firefox browsers unless running in headless mode.
 Alternatively, you can use [Docker Selenium][] to simplify the setup.
 
-#### Running Docker container with selenium/standalone images
+#### Run a Docker container with selenium/standalone images
 
-Here is an example running docker selenium for an image with Chrome or Firefox.
-Please either mount -v /dev/shm:/dev/shm or use the flag --shm-size=2g to use the host's shared memory.
+To run Docker Selenium for an image with Chrome or Firefox, mount `-v /dev/shm:/dev/shm` or use the flag `--shm-size=2g` to use the host's shared memory.
 
 ```bash
 docker run -d -p 4444:4444 -p 5900:5900 --shm-size 2g selenium/standalone-firefox-debug:3.8.1-francium
 ```
 
 ```bash
-﻿sudo docker run -d -p 4444:4444 -p 5900:5900 -v /dev/shm:/dev/shm selenium/standalone-chrome-debug:3.8.1-francium
+  sudo docker run -d -p 4444:4444 -p 5900:5900 -v /dev/shm:/dev/shm selenium/standalone-chrome-debug:3.8.1-francium
 ```
 
 #### Generate all tests {#generate-all-tests}
@@ -180,7 +145,7 @@ vendor/bin/mftf run:test AdminLoginTest -k
 
 See more commands in [`mftf`][].
 
-To visually see what the browser is doing you will want to run the debug variant of standalone images and run vncviewer during test execution.
+To visually see what the browser is doing, run the debug variant of the standalone images and run `vncviewer` during test execution.
 You may need to edit `/etc/hosts` file in the container and add an entry for `magento server` like the following line:
 
 ```bash
@@ -213,7 +178,7 @@ Learn more about Allure in the [official documentation][allure docs].
 
 The MFTF is a root level Magento dependency, but it is also available for use as a standalone application.
 You may want to use a standalone application when you develop for or contribute to MFTF, which facilitates debugging and tracking changes.
-These guidelines demonstrate how to set up and run Magento acceptance functional tests using standalone MFTF.
+These guidelines demonstrate how to set up and run Magento acceptance functional tests using a standalone MFTF.
 
 ### Prerequisites
 
@@ -224,7 +189,6 @@ This is because MFTF uses the [tests from Magento modules][mftf tests] as well a
 
 If you develop or contribute to the MFTF, it makes sense to clone your fork of the MFTF repository.
 For contribution guidelines, refer to the [Contribution Guidelines for the Magento Functional Testing Framework][contributing].
-
 
 ```bash
 git clone https://github.com/magento/magento2-functional-testing-framework.git
@@ -267,7 +231,7 @@ Generate and run a single test that will check your logging to the Magento Admin
 bin/mftf run:test AdminLoginTest
 ```
 
-You can find the generated test at `dev/tests/functional/tests/MFTF/_generated/default/`.
+Find the generated test at `dev/tests/functional/tests/MFTF/_generated/default/`.
 
 ### Step 7. Generate Allure reports
 
