@@ -1,12 +1,11 @@
 # Step by Step MFTF Installation Guide for Ubuntu
 
-## Prerequisite  {#prerequisite}
+## Prerequisites  {#prerequisite}
 
 - A user account with `sudo` privileges
 - Command line / terminal access
-- A Magento 2 web server is [installed][magento_install] and [configured][magento_config] for MFTF testing locally or remotely.  admin url, admin credentials and store front url are available and accessible.
-
-## Prepare environment  {#prepare-environment}
+- A Magento 2 web server is [installed][magento_install] and [configured][magento_config] for MFTF testing locally or remotely.
+- Admin url, admin credentials and store front url are available and accessible.
 
 MFTF requires the following softwares installed and configured on your development environment:
 
@@ -17,7 +16,7 @@ MFTF requires the following softwares installed and configured on your developme
 - [Allure CLI (optional for visual test report)][allure]
 - [VNC Viewer (optional for visually see the browser)][vnc viewer]
 
-### Update local repository
+## Update local repository
 
 Start by updating the local repository lists before installation:
 
@@ -25,34 +24,15 @@ Start by updating the local repository lists before installation:
 sudo apt-get update && sudo apt-get upgrade
 ```
 
-### Install and configure PHP
+## Install additional PHP packages required by MFTF
 
-#### Add the PHP repository
-
-This step is only needed if your system has no PHP previously installed.
-
-```bash
-sudo apt-get install software-properties-common
-sudo add-apt-repository ppa:ondrej/php
-sudo apt-get update
-```
-
-#### Install PHP
-
-PHP has different versions and releases you can use. Pick the version supported by the Magento application under test.  
-We use php 7.2 as an example in this section.
-
-```bash
-sudo apt-get install php7.2
-```
-
-#### Install additional PHP packages required by MFTF
+Ensure the following packages are installed.
 
 ```bash
 sudo apt-get install php7.2-mbstring php7.2-curl php7.2-bcmath php7.2-zip php7.2-dom php7.2-gd php7.2-intl php7.2-soap php7.2-mysql
 ```
 
-#### Configure PHP for MFTF testing
+## Configure PHP for MFTF testing
 
 Make the following configuration in `php.ini`:
 
@@ -62,73 +42,32 @@ sudo vim /etc/php/7.2/cli/php.ini
 
 - Set the system time zone for PHP
 - Set the PHP memory limit to -1  
-(Our recommendations is 4G. -1 is unlimited.)
+  (Our recommendations is 4G. -1 is unlimited.)
 
 If you have only one `php.ini` file, make the changes in that file. If you have two php.ini files, make the changes in all files. Failure to do so might cause unpredictable performance.
-
-
-### Install Composer
-
-MFTF requires Composer 1.3 or later. Please go to [Composer download page][composer_download] for instructions.
-
-#### Download the composer installer
+Use the `which` command to see what version of PHP is running:
 
 ```bash
-php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+which php
 ```
 
-#### Install composer required packages
+
+## Install composer required packages
 
 ```bash
 sudo apt-get install curl php-cli php-mbstring git unzip
 ```
 
-#### [Install composer globally][composer_install]
+## Add Docker `stable` repository
 
-To install to /usr/local/bin. enter:
-
-```bash
-sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
-```
-
-### Install Docker
-
-`Install Docker` step is only needed if your system has no Docker previously installed or you want to reinstall the latest version.
-
-#### Uninstall old versions
-
-```bash
-sudo apt-get remove docker docker-engine docker.io containerd runc
-```
-
-#### Download dependencies
-
-```bash
-sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-```
-
-#### Add Docker's official GPG key
-
-```bash
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-```
-
-#### Verify key
-
-Verify that you now have the key with the fingerprint 9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88, by searching for the last 8 characters of the fingerprint.
-
-```bash
-sudo apt-key fingerprint 0EBFCD88
-```
-
-#### Add Docker `stable` repository
+If using Docker, add the `stable` repository:
 
 ```bash
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" 
 sudo apt-get update
 ```
 
-#### Install latest version of Docker Engine - Community and containerd
+## Install latest version of Docker Engine - Community and containerd
 
 ```bash
 sudo apt-get install docker-ce docker-ce-cli containerd.io
@@ -163,7 +102,7 @@ vendor/bin/mftf generate:urn-catalog --force .idea/
 See [`generate:urn-catalog`][] for more details.
 
 <div class="bs-callout bs-callout-tip" markdown="1">
-You can simplify command entry by adding the  absolute  path to the `vendor/bin` directory path to your PATH environment variable.
+You can simplify command entry by adding the absolute path to the `vendor/bin` directory path to your PATH environment variable.
 After adding the path, you can run `mftf` without having to include `vendor/bin`.
 </div>
 
@@ -179,13 +118,10 @@ Specify the following parameters, which are required to launch tests:
 
 - `MAGENTO_BASE_URL` must contain a domain name of the Magento instance that will be tested.
   Example: `MAGENTO_BASE_URL=http://magento.test`
-
 - `MAGENTO_BACKEND_NAME` must contain the relative path for the Admin area.
   Example: `MAGENTO_BACKEND_NAME=admin`
-
 - `MAGENTO_ADMIN_USERNAME` must contain the username required for authorization in the Admin area.
   Example: `MAGENTO_ADMIN_USERNAME=admin`
-
 - `MAGENTO_ADMIN_PASSWORD` must contain the user password required for authorization in the Admin area.
   Example: `MAGENTO_ADMIN_PASSWORD=123123q`
 
@@ -203,7 +139,7 @@ Alternatively, you can use [Docker Selenium][] to simplify the setup.
 #### Running Docker container with selenium/standalone images
 
 Here is an example running docker selenium for an image with Chrome or Firefox.
-Please either mount -v /dev/shm:/dev/shm or use the flag --shm-size=2g to use the host's shared memory.
+Please either mount `-v /dev/shm:/dev/shm` or use the flag `--shm-size=2g` to use the host's shared memory.
 
 ```bash
  sudo docker run -d -p 4444:4444 -p 5900:5900 --shm-size 2g selenium/standalone-firefox-debug:3.8.1-francium
@@ -234,7 +170,7 @@ See more commands in [`mftf`][].
 To visually see what the browser is doing you will want to run the debug variant of standalone images and run vncviewer during test execution.
 You may need to edit `/etc/hosts` file in the container and add an entry for `magento server` like the following line:
 
-```bash
+```config
 192.168.65.2    magento.test
 ```
 
@@ -244,15 +180,6 @@ During testing, the MFTF generates test reports in `dev/tests/acceptance/tests/_
 You can generate visual representations of the report data using [Allure Framework][].
 
 To view the reports in GUI:
-
-- Install Allure
-
-```bash
-curl -o allure-2.7.0.tgz -Ls https://dl.bintray.com/qameta/generic/io/qameta/allure/allure/2.7.0/allure-2.7.0.tgz   
-sudo tar -zxvf allure-2.7.0.tgz -C /opt/   
-sudo ln -s /opt/allure-2.7.0/bin/allure /usr/bin/allure  
-allure --version 
-```
 
 - Run the tool to serve the artifacts in `dev/tests/acceptance/tests/_output/allure-results/`:
 
@@ -277,7 +204,6 @@ The MFTF uses the [tests from Magento modules][mftf tests] as well as the `app/a
 
 If you develop or contribute to the MFTF, it makes sense to clone your fork of the MFTF repository.
 For contribution guidelines, refer to the [Contribution Guidelines for the Magento Functional Testing Framework][contributing].
-
 
 ```bash
 git clone https://github.com/magento/magento2-functional-testing-framework.git
