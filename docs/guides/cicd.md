@@ -27,7 +27,7 @@ or
 composer create-project --repository=https://repo.magento.com/ magento/project-community-edition magento2ce
 ```
 
-For more information on installing magento see [Install Magento using Composer].
+For more information on installing magento see [Install Magento using Composer][].
 
 After installing the Magento instance, you need to set a couple of configurations to the magento instance:
 
@@ -42,7 +42,7 @@ These help set the `default` state of the Magento instance. If you wish to chang
 
 ## Install allure
 
-This will be required to generate the report after your test runs. See [Allure] for details.
+This will be required to generate the report after your test runs. See [Allure][] for details.
 
 ## Generate tests
 
