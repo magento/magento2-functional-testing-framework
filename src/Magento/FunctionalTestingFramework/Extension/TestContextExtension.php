@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Extension;
 
 use Codeception\Events;
+use Magento\FunctionalTestingFramework\Allure\AllureHelper;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 
 /**
@@ -173,7 +174,16 @@ class TestContextExtension extends BaseExtension
      */
     public function afterStep(\Codeception\Event\StepEvent $e)
     {
-        ErrorLogger::getInstance()->logErrors($this->getDriver(), $e);
+        $browserLog = $this->getDriver()->webDriver->manage()->getLog("browser");
+        if (getenv('ENABLE_BROWSER_LOG')) {
+            foreach (explode(',', getenv('BROWSER_LOG_BLACKLIST')) as $source) {
+                $browserLog = BrowserLogUtil::filterLogsOfType($browserLog, $source);
+            }
+            if (!empty($browserLog)) {
+                AllureHelper::addAttachmentToCurrentStep(json_encode($browserLog, JSON_PRETTY_PRINT), "Browser Log");
+            }
+        }
+        BrowserLogUtil::logErrors($browserLog, $this->getDriver(), $e);
     }
 
     /**
