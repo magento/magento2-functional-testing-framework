@@ -34,6 +34,11 @@ class AllureHelper
         $rootStep = Allure::lifecycle()->getStepStorage()->getLast();
         $trueLastStep = array_last($rootStep->getSteps());
 
+        if ($trueLastStep == null) {
+            // Nothing to attach to; do not fire off allure event
+            return;
+        }
+
         $attachmentEvent = new AddAttachmentEvent($data, $caption);
         $attachmentEvent->process($trueLastStep);
     }
