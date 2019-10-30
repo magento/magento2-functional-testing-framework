@@ -15,11 +15,13 @@ if (empty($projectRootPath)) {
     return;
 }
 defined('PROJECT_ROOT') || define('PROJECT_ROOT', $projectRootPath);
-$envFilepath = realpath($projectRootPath . '/dev/tests/acceptance/');
 
+$envFilePath = realpath($projectRootPath . '/dev/tests/acceptance/');
+defined('ENV_FILE_PATH') || define('ENV_FILE_PATH', $envFilePath);
 
-if (file_exists($envFilepath . DIRECTORY_SEPARATOR . '.env')) {
-    $env = new \Dotenv\Loader($envFilepath . DIRECTORY_SEPARATOR . '.env');
+//Load constants from .env file
+if (file_exists(ENV_FILE_PATH . '.env')) {
+    $env = new \Dotenv\Loader(ENV_FILE_PATH . '.env');
     $env->load();
 
     if (array_key_exists('TESTS_MODULE_PATH', $_ENV) xor array_key_exists('TESTS_BP', $_ENV)) {

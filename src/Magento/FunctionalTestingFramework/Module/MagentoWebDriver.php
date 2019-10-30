@@ -23,6 +23,9 @@ use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
 use Symfony\Component\Process\Process;
 use Yandex\Allure\Adapter\Support\AttachmentSupport;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\Exception\WebDriverCurlException;
 
 /**
  * MagentoWebDriver module provides common Magento web actions through Selenium WebDriver.
@@ -126,6 +129,11 @@ class MagentoWebDriver extends WebDriver
         $this->config = ConfigSanitizerUtil::sanitizeWebDriverConfig($this->config);
         parent::_initialize();
         $this->cleanJsError();
+
+        // Check Selenium Server readiness if it's in diagnostic phase
+        if (MftfApplicationConfig::getConfig()->getPhase() === MftfApplicationConfig::DIAGNOSTIC_PHASE) {
+            $this->checkSeleniumServerReadiness();
+        }
     }
 
     /**
@@ -824,6 +832,31 @@ class MagentoWebDriver extends WebDriver
         $this->_saveScreenshot($screenName);
         $this->debug("Screenshot saved to $screenName");
         AllureHelper::addAttachmentToCurrentStep($screenName, 'Screenshot');
+    }
+
+    /**
+     * Check connectivity to running selenium server
+     *
+     * @return void
+     * @throws TestFrameworkException
+     */
+    public function checkSeleniumServerReadiness()
+    {
+        try {
+            RemoteWebDriver::create(
+                $this->wdHost,
+                $this->capabilities,
+                $this->connectionTimeoutInMs,
+                $this->requestTimeoutInMs,
+                $this->httpProxy,
+                $this->httpProxyPort
+            );
+        } catch (WebDriverCurlException $e) {
+            throw new TestFrameworkException(
+                "Can't connect to Webdriver at {$this->wdHost}.\n"
+                . "Please make sure that Selenium Server is running."
+            );
+        }
     }
 
     /**

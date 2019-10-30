@@ -15,7 +15,8 @@ class MftfApplicationConfig
     const GENERATION_PHASE = "generation";
     const EXECUTION_PHASE = "execution";
     const UNIT_TEST_PHASE = "testing";
-    const MFTF_PHASES = [self::GENERATION_PHASE, self::EXECUTION_PHASE, self::UNIT_TEST_PHASE];
+    const DIAGNOSTIC_PHASE = "diagnostic";
+    const MFTF_PHASES = [self::GENERATION_PHASE, self::EXECUTION_PHASE, self::UNIT_TEST_PHASE, self::DIAGNOSTIC_PHASE];
 
     /**
      * Mftf debug levels
