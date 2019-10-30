@@ -49,8 +49,9 @@ class TroubleShootCommand extends Command
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return void
+     * @return integer
      * @throws TestFrameworkException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -82,9 +83,9 @@ class TroubleShootCommand extends Command
         $cmdStatus = $cmdStatus && !$status ? false : $cmdStatus;
 
         if ($cmdStatus) {
-            exit(0);
+            return 0;
         } else {
-            exit(1);
+            return 1;
         }
     }
 
