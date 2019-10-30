@@ -843,7 +843,7 @@ class MagentoWebDriver extends WebDriver
     public function checkSeleniumServerReadiness()
     {
         try {
-            RemoteWebDriver::create(
+            $driver = RemoteWebDriver::create(
                 $this->wdHost,
                 $this->capabilities,
                 $this->connectionTimeoutInMs,
@@ -851,6 +851,7 @@ class MagentoWebDriver extends WebDriver
                 $this->httpProxy,
                 $this->httpProxyPort
             );
+            $driver->close();
         } catch (WebDriverCurlException $e) {
             throw new TestFrameworkException(
                 "Can't connect to Webdriver at {$this->wdHost}.\n"
