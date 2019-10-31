@@ -1,5 +1,11 @@
 Magento Functional Testing Framework Changelog
 ================================================
+2.5.3
+-----
+
+### Fixes
+* Fixed an issue where `createData` actions would cause an exception when used in `<suite>` hooks.
+
 2.5.2
 -----
 
