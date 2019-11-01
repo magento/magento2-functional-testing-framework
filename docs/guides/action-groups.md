@@ -1,6 +1,6 @@
 # Action Group Best Practices
 
-We should strive to write tests using only action groups. Fortunately we have built up a large set of action groups to get  started. We can make use of them and extend them for our own specific needs. In some cases, we may never even need to write action groups of our own. We may be able to simply chain together calls to existing action groups to implement our new test case.
+We strive to write tests using only action groups. Fortunately, we have built up a large set of action groups to get started. We can make use of them and extend them for our own specific needs. In some cases, we may never even need to write action groups of our own. We may be able to simply chain together calls to existing action groups to implement our new test case.
 
 ## Why use Action Groups?
 
@@ -23,15 +23,15 @@ Action groups simplify maintainability by reducing duplication. Because they are
 </actionGroup>
 ``` 
 
-As you may be able to guess, logging in to the admin panel is one of the most used action groups. It is used around 1,500 times at the time of this writing.
+Logging in to the admin panel is one of the most used action groups. It is used around 1,500 times at the time of this writing.
 
-Imagine if this wasn't an action group and instead we were to copy and paste these 5 actions so many times. In that scenario, if we need to make a small change it would require a lot of work. But with the action group, we can make the change in one place.
+Imagine if this was not an action group and instead we were to copy and paste these 5 actions every time. In that scenario, if a small change was needed, it would require a lot of work. But with the action group, we can make the change in one place.
 
-## How can I extend Action Groups?
+## How to extend action groups
 
-Let's continue using `LoginAsAdmin` as our example. I have trimmed away metadata to clearly reveal that this action group performs 5 actions:
+Again using `LoginAsAdmin` as our example, we trim away metadata to clearly reveal that this action group performs 5 actions:
 
-```
+```xml
 <actionGroup name="LoginAsAdmin">
     ...
     <amOnPage url="{{AdminLoginPage.url}}" .../>
@@ -42,21 +42,21 @@ Let's continue using `LoginAsAdmin` as our example. I have trimmed away metadata
 </actionGroup>
 ```
 
-This works against the standard Magento admin panel login page. But let's imagine we're working on a Magento extension that adds a CAPTCHA field to the login page. If we create and activate this extension and then we try to run all existing tests, we can expect almost everything to fail because now we are unable to log in because we did not completely fill out all of the login form. The CAPTCHA field was left unfilled.
+This works against the standard Magento admin panel login page. Bu imagine we are working on a Magento extension that adds a CAPTCHA field to the login page. If we create and activate this extension and then run all existing tests, we can expect almost everything to fail because the CAPTCHA field is left unfilled.
 
-We can overcome this by making use of MFTF's extensibility. All we need to do is to provide a "merge" that modifies the existing `LoginAsAdmin` action group. Our simple merge file will look like this:
+We can overcome this by making use of MFTF's extensibility. All we need to do is to provide a "merge" that modifies the existing `LoginAsAdmin` action group. Our merge file will look like:
 
-```
+```xml
 <actionGroup name="LoginAsAdmin">
     <fillField selector="{{CaptchaSection.captchaInput}}" before="signIn" .../>
 </actionGroup>
 ```
 
-Because the name of this merge is also `LoginAsAdmin`, the two get merged together and an additional step happens everytime this action group is made use of.
+Because the name of this merge is also `LoginAsAdmin`, the two get merged together and an additional step happens everytime this action group is used.
 
-To continue this demonstration, let's imagine someone else is working on a Two Factor Authentication extension and they also provide a merge for the `LoginAsAdmin` action group. Their merge looks similar to what we've already seen. The only difference is that this time we fill a different field:
+To continue this example, imagine someone else is working on a 'Two-Factor Authentication' extension and they also provide a merge for the `LoginAsAdmin` action group. Their merge looks similar to what we have already seen. The only difference is that this time we fill a different field:
 
-```
+```xml
 <actionGroup name="LoginAsAdmin">
     <fillField selector="{{TwoFactorSection.twoFactorInput}}" before="signIn" .../>
 </actionGroup>
@@ -64,7 +64,7 @@ To continue this demonstration, let's imagine someone else is working on a Two F
 
 Bringing it all together, our resulting `LoginAsAdmin` action group becomes this:
 
-```
+```xml
 <actionGroup name="LoginAsAdmin">
     ...
     <amOnPage url="{{AdminLoginPage.url}}" .../>
@@ -77,6 +77,6 @@ Bringing it all together, our resulting `LoginAsAdmin` action group becomes this
 </actionGroup>
 ```
 
-Note that no file actually contains these exact contents above, but instead all three files come together to form this action group.
+No one file contains this exact content as above, but instead all three files come together to form this action group.
 
-One final thing to be aware of is that this extensibility can be applied in many ways. Obviously we need to use it if we want to affect existing Magento entities like tests, action groups, and data. But something not so obvious is that this can be used within the walls of your own entities in order to make them more maintainable too.
+This extensibility can be applied in many ways. We can use it to affect existing Magento entities such as tests, action groups, and data. Not so obvious is that this tehcnique can be used within your own entities to make them more maintainable as well.
