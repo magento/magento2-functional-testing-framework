@@ -129,11 +129,6 @@ class MagentoWebDriver extends WebDriver
         $this->config = ConfigSanitizerUtil::sanitizeWebDriverConfig($this->config);
         parent::_initialize();
         $this->cleanJsError();
-
-        // Check Selenium Server readiness if it's in diagnostic phase
-        if (MftfApplicationConfig::getConfig()->getPhase() === MftfApplicationConfig::DIAGNOSTIC_PHASE) {
-            $this->checkSeleniumServerReadiness();
-        }
     }
 
     /**
@@ -832,32 +827,6 @@ class MagentoWebDriver extends WebDriver
         $this->_saveScreenshot($screenName);
         $this->debug("Screenshot saved to $screenName");
         AllureHelper::addAttachmentToCurrentStep($screenName, 'Screenshot');
-    }
-
-    /**
-     * Check connectivity to running selenium server
-     *
-     * @return void
-     * @throws TestFrameworkException
-     */
-    public function checkSeleniumServerReadiness()
-    {
-        try {
-            $driver = RemoteWebDriver::create(
-                $this->wdHost,
-                $this->capabilities,
-                $this->connectionTimeoutInMs,
-                $this->requestTimeoutInMs,
-                $this->httpProxy,
-                $this->httpProxyPort
-            );
-            $driver->close();
-        } catch (WebDriverCurlException $e) {
-            throw new TestFrameworkException(
-                "Can't connect to Webdriver at {$this->wdHost}.\n"
-                . "Please make sure that Selenium Server is running."
-            );
-        }
     }
 
     /**

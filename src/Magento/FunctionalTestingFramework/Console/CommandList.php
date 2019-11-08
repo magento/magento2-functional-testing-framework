@@ -30,6 +30,7 @@ class CommandList implements CommandListInterface
     {
         $this->commands = [
             'build:project' => new BuildProjectCommand(),
+            'doctor' => new DoctorCommand(),
             'generate:docs' => new GenerateDocsCommand(),
             'generate:suite' => new GenerateSuiteCommand(),
             'generate:tests' => new GenerateTestsCommand(),
@@ -41,7 +42,6 @@ class CommandList implements CommandListInterface
             'run:test' => new RunTestCommand(),
             'setup:env' => new SetupEnvCommand(),
             'static-checks' => new StaticChecksCommand(),
-            'troubleshoot' => new TroubleShootCommand(),
             'upgrade:tests' => new UpgradeTestsCommand(),
         ] + $commands;
     }
