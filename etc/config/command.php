@@ -31,7 +31,10 @@ if (!empty($_POST['token']) && !empty($_POST['command'])) {
                 $process->run();
                 $output = $process->getOutput();
                 if (!$process->isSuccessful()) {
-                    $output = $process->getErrorOutput();
+                    $failureOutput = $process->getErrorOutput();
+                    if (!empty($failureOutput)) {
+                        $output = $failureOutput;
+                    }
                 }
                 if (empty($output)) {
                     $output = "CLI did not return output.";
