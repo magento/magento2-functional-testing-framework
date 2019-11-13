@@ -151,18 +151,11 @@ Define the value as a reference to the corresponding key in the credentials file
 -  `_CREDS` is an environment constant pointing to the `.credentials` file
 -  `my_data_key` is a key in the the `.credentials` file or vault that contains the value to be used in a test step
    - for File Storage, ensure your key contains the vendor prefix, i.e. `vendor/my_data_key`
-   - for Vault Storage, ensure your key contains your secret basepath + `/mftf/` + your vendor prefix + `/` and finally your key, i.e. `secret/mftf/vendor/my_data_key`
 
 For example, to reference secret data in the [`fillField`][] action, use the `userInput` attribute using a typical File Storage:
 
 ```xml
 <fillField stepKey="FillApiToken" selector=".api-token" userInput="{{_CREDS.vendor/my_data_key}}" />
-```
-
-To do the same using Vault Storage:
-
-```xml
-<fillField stepKey="FillApiToken" selector=".api-token" userInput="{{_CREDS.secret/mftf/vendor/my_data_key}}" />
 ```
 
 <!-- {% endraw %} -->
