@@ -161,16 +161,15 @@ class TestContextExtension extends BaseExtension
      */
     public function logPreviousException(\Exception $exception)
     {
-        $change = function(){
-            if ($this instanceof \PHPUnit\Framework\ExceptionWrapper ) {
+        $change = function () {
+            if ($this instanceof \PHPUnit\Framework\ExceptionWrapper) {
                 return $this->previous;
-            }
-            else {
+            } else {
                 return $this->getPrevious();
             }
         };
         $firstException = $change->call($exception);
-        $bind = function() use ($firstException){
+        $bind = function () use ($firstException) {
             $exception = $firstException;
         };
         $bind->call($exception);
