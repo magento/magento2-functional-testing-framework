@@ -64,6 +64,8 @@ class TestContextExtension extends BaseExtension
     public function testFail(\Codeception\Event\FailEvent $e)
     {
         $cest = $e->getTest();
+        //log suppressed exception in case of _after hook failure
+        $this->logPreviousException($e->getFail());
         $context = $this->extractContext($e->getFail()->getTrace(), $cest->getTestMethod());
         // Do not attempt to run _after if failure was in the _after block
         // Try to run _after but catch exceptions to prevent them from overwriting original failure.
@@ -93,7 +95,9 @@ class TestContextExtension extends BaseExtension
         if (!empty($errors)) {
             foreach ($errors as $error) {
                 if ($error->failedTest()->getTestMethod() == $cest->getName()) {
-                    $stack = $errors[0]->thrownException()->getTrace();
+                    //log suppressed exception in case of _after hook failure
+                    $this->logPreviousException($error->thrownException());
+                    $stack = $error->thrownException()->getTrace();
                     $context = $this->extractContext($stack, $cest->getTestMethod());
                     // Do not attempt to run _after if failure was in the _after block
                     // Try to run _after but catch exceptions to prevent them from overwriting original failure.
@@ -148,6 +152,31 @@ class TestContextExtension extends BaseExtension
             }
         }
         return null;
+    }
+
+    /**
+     * Attach suppressed exception thrown before _after hook to the current step.
+     * @param  \Exception $exception
+     * @return mixed
+     */
+    public function logPreviousException(\Exception $exception)
+    {
+        $change = function(){
+            if ($this instanceof \PHPUnit\Framework\ExceptionWrapper ) {
+                return $this->previous;
+            }
+            else {
+                return $this->getPrevious();
+            }
+        };
+        $firstException = $change->call($exception);
+        $bind = function() use ($firstException){
+            $exception = $firstException;
+        };
+        $bind->call($exception);
+        if ($firstException !== null) {
+            AllureHelper::addAttachmentToCurrentStep($firstException, 'Exception');
+        }
     }
 
     /**
