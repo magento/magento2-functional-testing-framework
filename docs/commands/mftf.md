@@ -109,6 +109,20 @@ You can include options to set configuration parameter values for your environme
 vendor/bin/mftf build:project --MAGENTO_BASE_URL=http://magento.local/ --MAGENTO_BACKEND_NAME=admin214365
 ```
 
+### `doctor`
+
+#### Description
+
+Diagnose MFTF configuration and setup
+
+#### Usage
+
+```bash
+vendor/bin/mftf doctor
+```
+
+#### Options
+
 ### `generate:tests`
 
 #### Description

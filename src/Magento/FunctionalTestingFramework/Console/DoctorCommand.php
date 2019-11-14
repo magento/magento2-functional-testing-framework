@@ -67,6 +67,7 @@ class DoctorCommand extends Command
 
         // Config application
         $verbose = $output->isVerbose();
+        $this->input = $input;
         $this->output = $output;
         MftfApplicationConfig::create(
             false,
@@ -81,11 +82,31 @@ class DoctorCommand extends Command
         $cmdStatus = $cmdStatus && !$status ? false : $cmdStatus;
 
         // Check connection to Selenium
-        $status = $this->checkConnectionToSeleniumServer();
+        $status = $this->checkContextOnStep(
+            MagentoWebDriverDoctor::EXCEPTION_CONTEXT_SELENIUM,
+            'Connecting to Selenium Server'
+        );
+        $cmdStatus = $cmdStatus && !$status ? false : $cmdStatus;
+
+        // Check opening Magento Admin in web browser
+        $status = $this->checkContextOnStep(
+            MagentoWebDriverDoctor::EXCEPTION_CONTEXT_ADMIN,
+            'Loading Admin page'
+        );
+        $cmdStatus = $cmdStatus && !$status ? false : $cmdStatus;
+
+        // Check opening Magento Storefront in web browser
+        $status = $this->checkContextOnStep(
+            MagentoWebDriverDoctor::EXCEPTION_CONTEXT_STOREFRONT,
+            'Loading Storefront page'
+        );
         $cmdStatus = $cmdStatus && !$status ? false : $cmdStatus;
 
         // Check access to Magento CLI
-        $status = $this->checkAccessToMagentoCLI();
+        $status = $this->checkContextOnStep(
+            MagentoWebDriverDoctor::EXCEPTION_CONTEXT_CLI,
+            'Running Magento CLI'
+        );
         $cmdStatus = $cmdStatus && !$status ? false : $cmdStatus;
 
         if ($cmdStatus) {
@@ -96,7 +117,7 @@ class DoctorCommand extends Command
     }
 
     /**
-     * Check authentication to Magento Admin
+     * Check admin account authentication
      *
      * @return boolean
      */
@@ -104,7 +125,7 @@ class DoctorCommand extends Command
     {
         $result = false;
         try {
-            $this->output->writeln("\nChecking authentication to Magento Admin ...");
+            $this->output->writeln("\nAuthenticating admin account by API ...");
             ModuleResolver::getInstance()->getAdminToken();
             $this->output->writeln('Successful');
             $result = true;
@@ -115,38 +136,20 @@ class DoctorCommand extends Command
     }
 
     /**
-     * Check Connection to Selenium Server
+     * Check exception context after runMagentoWebDriverDoctor
      *
+     * @param string $exceptionType
+     * @param string $message
      * @return boolean
+     * @throws TestFrameworkException
      */
-    private function checkConnectionToSeleniumServer()
+    private function checkContextOnStep($exceptionType, $message)
     {
-        // Check connection to Selenium through Codeception
-        $this->output->writeln("\nChecking connection to Selenium Server ...");
+        $this->output->writeln("\n$message ...");
         $this->runMagentoWebDriverDoctor();
 
-        if (isset($this->context[MagentoWebDriverDoctor::EXCEPTION_TYPE_SELENIUM])) {
-            $this->output->write($this->context[MagentoWebDriverDoctor::EXCEPTION_TYPE_SELENIUM] . "\n");
-            return false;
-        } else {
-            $this->output->writeln('Successful');
-            return true;
-        }
-    }
-
-    /**
-     * Check access to Magento CLI setup
-     *
-     * @return boolean
-     */
-    private function checkAccessToMagentoCLI()
-    {
-        // Check Magento CLI setup
-        $this->output->writeln("\nChecking access to Magento CLI ...");
-        $this->runMagentoWebDriverDoctor();
-
-        if (isset($this->context[MagentoWebDriverDoctor::EXCEPTION_TYPE_MAGENTO_CLI])) {
-            $this->output->write($this->context[MagentoWebDriverDoctor::EXCEPTION_TYPE_MAGENTO_CLI] . "\n");
+        if (isset($this->context[$exceptionType])) {
+            $this->output->write($this->context[$exceptionType] . "\n");
             return false;
         } else {
             $this->output->writeln('Successful');
@@ -158,6 +161,7 @@ class DoctorCommand extends Command
      * Run diagnose through MagentoWebDriverDoctor
      *
      * @return void
+     * @throws TestFrameworkException
      */
     private function runMagentoWebDriverDoctor()
     {
