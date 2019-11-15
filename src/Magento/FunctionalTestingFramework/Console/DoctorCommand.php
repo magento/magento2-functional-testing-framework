@@ -24,6 +24,10 @@ class DoctorCommand extends Command
     const CODECEPTION_AUTOLOAD_FILE = PROJECT_ROOT . '/vendor/codeception/codeception/autoload.php';
     const MFTF_CODECEPTION_CONFIG_FILE = ENV_FILE_PATH . 'codeception.yml';
     const SUITE = 'functional';
+    const COLOR_LIGHT_GREEN = "\e[1;32m";
+    const COLOR_LIGHT_RED = "\e[1;31m";
+    const COLOR_LIGHT_DEFAULT = "\e[1;39m";
+    const COLOR_RESTORE = "\e[0m";
 
     /**
      * Command Output
@@ -60,6 +64,7 @@ class DoctorCommand extends Command
      * @return integer
      * @throws TestFrameworkException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -109,11 +114,7 @@ class DoctorCommand extends Command
         );
         $cmdStatus = $cmdStatus && !$status ? false : $cmdStatus;
 
-        if ($cmdStatus) {
-            return 0;
-        } else {
-            return 1;
-        }
+        return $cmdStatus ? 0 : 1;
     }
 
     /**
@@ -125,12 +126,14 @@ class DoctorCommand extends Command
     {
         $result = false;
         try {
-            $this->output->writeln("\nAuthenticating admin account by API ...");
+            $this->output->writeln(
+                "\n" . self::COLOR_LIGHT_DEFAULT . "Authenticating admin account by API ..." . self::COLOR_RESTORE
+            );
             ModuleResolver::getInstance()->getAdminToken();
-            $this->output->writeln('Successful');
+            $this->output->writeln(self::COLOR_LIGHT_GREEN . 'Successful' . self::COLOR_RESTORE);
             $result = true;
         } catch (TestFrameworkException $e) {
-            $this->output->writeln($e->getMessage());
+            $this->output->writeln(self::COLOR_LIGHT_RED . $e->getMessage() . self::COLOR_RESTORE);
         }
         return $result;
     }
@@ -145,14 +148,14 @@ class DoctorCommand extends Command
      */
     private function checkContextOnStep($exceptionType, $message)
     {
-        $this->output->writeln("\n$message ...");
+        $this->output->writeln("\n" . self::COLOR_LIGHT_DEFAULT. $message . self::COLOR_RESTORE);
         $this->runMagentoWebDriverDoctor();
 
         if (isset($this->context[$exceptionType])) {
-            $this->output->write($this->context[$exceptionType] . "\n");
+            $this->output->writeln(self::COLOR_LIGHT_RED . $this->context[$exceptionType] . self::COLOR_RESTORE);
             return false;
         } else {
-            $this->output->writeln('Successful');
+            $this->output->writeln(self::COLOR_LIGHT_GREEN . 'Successful' . self::COLOR_RESTORE);
             return true;
         }
     }
