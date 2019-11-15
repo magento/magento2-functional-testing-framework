@@ -13,6 +13,7 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHan
 /**
  * Class TestContextExtension
  * @SuppressWarnings(PHPMD.UnusedPrivateField)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TestContextExtension extends BaseExtension
 {
