@@ -18,7 +18,6 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHan
 class TestContextExtension extends BaseExtension
 {
     const TEST_PHASE_AFTER = "_after";
-    const CODECEPT_AFTER_VERSION = "2.3.9";
     const TEST_FAILED_FILE = 'failed';
 
     /**
@@ -64,15 +63,8 @@ class TestContextExtension extends BaseExtension
      */
     public function testFail(\Codeception\Event\FailEvent $e)
     {
-        $cest = $e->getTest();
         //log suppressed exception in case of _after hook failure
         $this->logPreviousException($e->getFail());
-        $context = $this->extractContext($e->getFail()->getTrace(), $cest->getTestMethod());
-        // Do not attempt to run _after if failure was in the _after block
-        // Try to run _after but catch exceptions to prevent them from overwriting original failure.
-        if ($context != TestContextExtension::TEST_PHASE_AFTER) {
-            $this->runAfterBlock($e, $cest);
-        }
     }
 
     /**
@@ -98,44 +90,12 @@ class TestContextExtension extends BaseExtension
                 if ($error->failedTest()->getTestMethod() == $cest->getName()) {
                     //log suppressed exception in case of _after hook failure
                     $this->logPreviousException($error->thrownException());
-                    $stack = $error->thrownException()->getTrace();
-                    $context = $this->extractContext($stack, $cest->getTestMethod());
-                    // Do not attempt to run _after if failure was in the _after block
-                    // Try to run _after but catch exceptions to prevent them from overwriting original failure.
-                    if ($context != TestContextExtension::TEST_PHASE_AFTER) {
-                        $this->runAfterBlock($e, $cest);
-                    }
                     continue;
                 }
             }
         }
         // Reset Session and Cookies after all Test Runs, workaround due to functional.suite.yml restart: true
         $this->getDriver()->_runAfter($e->getTest());
-    }
-
-    /**
-     * Runs cest's after block, if necessary.
-     * @param \Symfony\Component\EventDispatcher\Event $e
-     * @param \Codeception\TestInterface               $cest
-     * @return void
-     */
-    private function runAfterBlock($e, $cest)
-    {
-        try {
-            $actorClass = $e->getTest()->getMetadata()->getCurrent('actor');
-            $I = new $actorClass($cest->getScenario());
-            if (version_compare(\Codeception\Codecept::VERSION, TestContextExtension::CODECEPT_AFTER_VERSION, "<=")) {
-                call_user_func(\Closure::bind(
-                    function () use ($cest, $I) {
-                        $cest->executeHook($I, 'after');
-                    },
-                    null,
-                    $cest
-                ));
-            }
-        } catch (\Exception $e) {
-            // Do not rethrow Exception
-        }
     }
 
     /**
@@ -170,10 +130,6 @@ class TestContextExtension extends BaseExtension
             }
         };
         $firstException = $change->call($exception);
-        $bind = function () use ($firstException) {
-            $exception = $firstException;
-        };
-        $bind->call($exception);
         if ($firstException !== null) {
             AllureHelper::addAttachmentToCurrentStep($firstException, 'Exception');
         }
