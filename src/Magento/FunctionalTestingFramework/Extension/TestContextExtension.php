@@ -36,7 +36,6 @@ class TestContextExtension extends BaseExtension
     {
         $events = [
             Events::TEST_START => 'testStart',
-            Events::TEST_FAIL => 'testFail',
             Events::STEP_AFTER => 'afterStep',
             Events::TEST_END => 'testEnd',
             Events::RESULT_PRINT_AFTER => 'saveFailed'
@@ -57,18 +56,7 @@ class TestContextExtension extends BaseExtension
     }
 
     /**
-     * Codeception event listener function, triggered on test failure.
-     * @param \Codeception\Event\FailEvent $e
-     * @return void
-     */
-    public function testFail(\Codeception\Event\FailEvent $e)
-    {
-        //log suppressed exception in case of _after hook failure
-        $this->logPreviousException($e->getFail());
-    }
-
-    /**
-     * Codeception event listener function, triggered on test ending (naturally or by error).
+     * Codeception event listener function, triggered on test ending naturally or by errors/failures.
      * @param \Codeception\Event\TestEvent $e
      * @return void
      * @throws \Exception
@@ -77,20 +65,28 @@ class TestContextExtension extends BaseExtension
     {
         $cest = $e->getTest();
 
-        //Access private TestResultObject to find stack and if there are any errors (as opposed to failures)
+        //Access private TestResultObject to find stack and if there are any errors/failures
         $testResultObject = call_user_func(\Closure::bind(
             function () use ($cest) {
                 return $cest->getTestResultObject();
             },
             $cest
         ));
-        $errors = $testResultObject->errors();
-        if (!empty($errors)) {
-            foreach ($errors as $error) {
-                if ($error->failedTest()->getTestMethod() == $cest->getName()) {
-                    //log suppressed exception in case of _after hook failure
-                    $this->logPreviousException($error->thrownException());
-                    continue;
+
+        // check for errors in all test hooks and attach in allure
+        if (!empty($testResultObject->errors())) {
+            foreach ($testResultObject->errors() as $error) {
+                if($error->failedTest()->getTestMethod() == $cest->getTestMethod()) {
+                    $this->attachExceptionToAllure($error->thrownException(), $cest->getTestMethod());
+                }
+            }
+        }
+
+        // check for failures in all test hooks and attach in allure
+        if (!empty($testResultObject->failures())) {
+            foreach ($testResultObject->failures() as $failure) {
+                if($failure->failedTest()->getTestMethod() == $cest->getTestMethod()) {
+                    $this->attachExceptionToAllure($failure->thrownException(), $cest->getTestMethod());
                 }
             }
         }
@@ -116,12 +112,27 @@ class TestContextExtension extends BaseExtension
     }
 
     /**
-     * Attach suppressed exception thrown before _after hook to the current step.
+     * Attach stack trace of exceptions thrown in each test hook to allure.
      * @param  \Exception $exception
+     * @param  String     $testMethod
      * @return mixed
      */
-    public function logPreviousException(\Exception $exception)
+    public function attachExceptionToAllure($exception, $testMethod)
     {
+        $exceptionType = null;
+        $trace = null;
+
+        if (is_subclass_of($exception, \PHPUnit\Framework\Exception::class)) {
+            $trace = $exception->getSerializableTrace();
+        } else {
+            $trace = $exception->getTrace();
+        }
+
+        $context = $this->extractContext($trace, $testMethod);
+
+        AllureHelper::addAttachmentToCurrentStep($exception, $context . 'Exception');
+
+        //pop suppressed exceptions and attach to allure
         $change = function () {
             if ($this instanceof \PHPUnit\Framework\ExceptionWrapper) {
                 return $this->previous;
@@ -129,9 +140,10 @@ class TestContextExtension extends BaseExtension
                 return $this->getPrevious();
             }
         };
-        $firstException = $change->call($exception);
-        if ($firstException !== null) {
-            AllureHelper::addAttachmentToCurrentStep($firstException, 'Exception');
+        $previousException = $change->call($exception);
+
+        if ($previousException !== null) {
+            $this->attachExceptionToAllure($previousException, $testMethod);
         }
     }
 
