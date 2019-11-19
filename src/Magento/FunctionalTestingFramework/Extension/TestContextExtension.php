@@ -76,7 +76,7 @@ class TestContextExtension extends BaseExtension
         // check for errors in all test hooks and attach in allure
         if (!empty($testResultObject->errors())) {
             foreach ($testResultObject->errors() as $error) {
-                if($error->failedTest()->getTestMethod() == $cest->getTestMethod()) {
+                if ($error->failedTest()->getTestMethod() == $cest->getTestMethod()) {
                     $this->attachExceptionToAllure($error->thrownException(), $cest->getTestMethod());
                 }
             }
@@ -85,7 +85,7 @@ class TestContextExtension extends BaseExtension
         // check for failures in all test hooks and attach in allure
         if (!empty($testResultObject->failures())) {
             foreach ($testResultObject->failures() as $failure) {
-                if($failure->failedTest()->getTestMethod() == $cest->getTestMethod()) {
+                if ($failure->failedTest()->getTestMethod() == $cest->getTestMethod()) {
                     $this->attachExceptionToAllure($failure->thrownException(), $cest->getTestMethod());
                 }
             }
@@ -114,7 +114,7 @@ class TestContextExtension extends BaseExtension
     /**
      * Attach stack trace of exceptions thrown in each test hook to allure.
      * @param  \Exception $exception
-     * @param  String     $testMethod
+     * @param  string     $testMethod
      * @return mixed
      */
     public function attachExceptionToAllure($exception, $testMethod)
