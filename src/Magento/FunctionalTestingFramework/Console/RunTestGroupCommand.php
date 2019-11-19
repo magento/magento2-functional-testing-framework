@@ -111,32 +111,4 @@ class RunTestGroupCommand extends BaseGenerateCommand
             }
         );
     }
-
-    /**
-     * Returns a json string to be used as an argument for generation of a group or suite
-     *
-     * @param array $groups
-     * @return string
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
-     */
-    private function getGroupAndSuiteConfiguration(array $groups)
-    {
-        $testConfiguration['tests'] = [];
-        $testConfiguration['suites'] = null;
-        $availableSuites = SuiteObjectHandler::getInstance()->getAllObjects();
-
-        foreach ($groups as $group) {
-            if (array_key_exists($group, $availableSuites)) {
-                $testConfiguration['suites'][$group] = [];
-            }
-
-            $testConfiguration['tests'] = array_merge(
-                $testConfiguration['tests'],
-                array_keys(TestObjectHandler::getInstance()->getTestsByGroup($group))
-            );
-        }
-
-        $testConfigurationJson = json_encode($testConfiguration);
-        return $testConfigurationJson;
-    }
 }
