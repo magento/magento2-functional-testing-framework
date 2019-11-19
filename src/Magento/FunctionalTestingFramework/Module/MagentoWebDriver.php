@@ -23,6 +23,9 @@ use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
 use Symfony\Component\Process\Process;
 use Yandex\Allure\Adapter\Support\AttachmentSupport;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\Exception\WebDriverCurlException;
 
 /**
  * MagentoWebDriver module provides common Magento web actions through Selenium WebDriver.

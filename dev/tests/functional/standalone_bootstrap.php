@@ -15,10 +15,12 @@ defined('PROJECT_ROOT') || define('PROJECT_ROOT', dirname(dirname(dirname(__DIR_
 
 require_once realpath(PROJECT_ROOT . '/vendor/autoload.php');
 
+$envFilePath = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR;
+defined('ENV_FILE_PATH') || define('ENV_FILE_PATH', $envFilePath);
+
 //Load constants from .env file
-$envFilePath = dirname(dirname(__DIR__));
-if (file_exists($envFilePath . DIRECTORY_SEPARATOR . '.env')) {
-    $env = new \Dotenv\Loader($envFilePath . DIRECTORY_SEPARATOR . '.env');
+if (file_exists(ENV_FILE_PATH . '.env')) {
+    $env = new \Dotenv\Loader(ENV_FILE_PATH . '.env');
     $env->load();
 
     foreach ($_ENV as $key => $var) {
