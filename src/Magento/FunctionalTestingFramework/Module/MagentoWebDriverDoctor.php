@@ -137,7 +137,7 @@ class MagentoWebDriverDoctor extends MagentoWebDriver
 
         throw new TestFrameworkException(
             "Failed to load page at url: $url\n"
-            . "Please check network connection for the browser running Selenium."
+            . "Please check Selenium Browser session have access to Magento instance."
         );
     }
 
