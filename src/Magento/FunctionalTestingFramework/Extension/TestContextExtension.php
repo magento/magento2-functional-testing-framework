@@ -119,9 +119,6 @@ class TestContextExtension extends BaseExtension
      */
     public function attachExceptionToAllure($exception, $testMethod)
     {
-        $exceptionType = null;
-        $trace = null;
-
         if (is_subclass_of($exception, \PHPUnit\Framework\Exception::class)) {
             $trace = $exception->getSerializableTrace();
         } else {
@@ -140,6 +137,7 @@ class TestContextExtension extends BaseExtension
                 return $this->getPrevious();
             }
         };
+
         $previousException = $change->call($exception);
 
         if ($previousException !== null) {
