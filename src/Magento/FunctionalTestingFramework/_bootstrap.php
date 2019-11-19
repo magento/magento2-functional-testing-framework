@@ -16,7 +16,7 @@ if (empty($projectRootPath)) {
 }
 defined('PROJECT_ROOT') || define('PROJECT_ROOT', $projectRootPath);
 
-$envFilePath = realpath($projectRootPath . '/dev/tests/acceptance/');
+$envFilePath = realpath($projectRootPath . '/dev/tests/acceptance/') . DIRECTORY_SEPARATOR;
 defined('ENV_FILE_PATH') || define('ENV_FILE_PATH', $envFilePath);
 
 //Load constants from .env file

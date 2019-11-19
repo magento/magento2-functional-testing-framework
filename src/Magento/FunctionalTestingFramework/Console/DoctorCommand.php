@@ -18,23 +18,20 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Magento\FunctionalTestingFramework\Util\ModuleResolver;
 use Magento\FunctionalTestingFramework\Module\MagentoWebDriver;
 use Magento\FunctionalTestingFramework\Module\MagentoWebDriverDoctor;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DoctorCommand extends Command
 {
     const CODECEPTION_AUTOLOAD_FILE = PROJECT_ROOT . '/vendor/codeception/codeception/autoload.php';
     const MFTF_CODECEPTION_CONFIG_FILE = ENV_FILE_PATH . 'codeception.yml';
     const SUITE = 'functional';
-    const COLOR_LIGHT_GREEN = "\e[1;32m";
-    const COLOR_LIGHT_RED = "\e[1;31m";
-    const COLOR_LIGHT_DEFAULT = "\e[1;39m";
-    const COLOR_RESTORE = "\e[0m";
 
     /**
-     * Command Output
+     * Console output style
      *
-     * @var OutputInterface
+     * @var SymfonyStyle
      */
-    private $output;
+    private $ioStyle;
 
     /**
      * Exception Context
@@ -63,17 +60,17 @@ class DoctorCommand extends Command
      * @param OutputInterface $output
      * @return integer
      * @throws TestFrameworkException
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        // For output style
+        $this->ioStyle = new SymfonyStyle($input, $output);
+
         $cmdStatus = true;
 
         // Config application
         $verbose = $output->isVerbose();
-        $this->input = $input;
-        $this->output = $output;
         MftfApplicationConfig::create(
             false,
             MftfApplicationConfig::GENERATION_PHASE,
@@ -126,14 +123,15 @@ class DoctorCommand extends Command
     {
         $result = false;
         try {
-            $this->output->writeln(
-                "\n" . self::COLOR_LIGHT_DEFAULT . "Authenticating admin account by API ..." . self::COLOR_RESTORE
-            );
+            $this->ioStyle->text("Requesting API token for admin user through cURL ...");
             ModuleResolver::getInstance()->getAdminToken();
-            $this->output->writeln(self::COLOR_LIGHT_GREEN . 'Successful' . self::COLOR_RESTORE);
+            $this->ioStyle->success('Successful');
             $result = true;
         } catch (TestFrameworkException $e) {
-            $this->output->writeln(self::COLOR_LIGHT_RED . $e->getMessage() . self::COLOR_RESTORE);
+            $this->ioStyle->error(
+                $e->getMessage()
+                . "\nPlease verify MAGENTO_ADMIN_USERNAME and MAGENTO_ADMIN_PASSWORD in .env."
+            );
         }
         return $result;
     }
@@ -148,14 +146,14 @@ class DoctorCommand extends Command
      */
     private function checkContextOnStep($exceptionType, $message)
     {
-        $this->output->writeln("\n" . self::COLOR_LIGHT_DEFAULT. $message . self::COLOR_RESTORE);
+        $this->ioStyle->text($message . ' ...');
         $this->runMagentoWebDriverDoctor();
 
         if (isset($this->context[$exceptionType])) {
-            $this->output->writeln(self::COLOR_LIGHT_RED . $this->context[$exceptionType] . self::COLOR_RESTORE);
+            $this->ioStyle->error($this->context[$exceptionType]);
             return false;
         } else {
-            $this->output->writeln(self::COLOR_LIGHT_GREEN . 'Successful' . self::COLOR_RESTORE);
+            $this->ioStyle->success('Successful');
             return true;
         }
     }

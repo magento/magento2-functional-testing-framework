@@ -94,12 +94,16 @@ class MagentoWebDriverDoctor extends MagentoWebDriver
                 $this->httpProxy,
                 $this->httpProxyPort
             );
+            if (null !== $this->remoteWebDriver) {
+                return;
+            }
         } catch (\Exception $e) {
-            throw new TestFrameworkException(
-                "Failed to connect Selenium WebDriver at: {$this->wdHost}.\n"
-                . "Please make sure that Selenium Server is running."
-            );
         }
+
+        throw new TestFrameworkException(
+            "Failed to connect Selenium WebDriver at: {$this->wdHost}.\n"
+            . "Please make sure that Selenium Server is running."
+        );
     }
 
     /**
@@ -112,19 +116,21 @@ class MagentoWebDriverDoctor extends MagentoWebDriver
     private function loadPageAtUrl($url)
     {
         try {
-            // Open the web page at url first
-            $this->remoteWebDriver->get($url);
+            if (null !== $this->remoteWebDriver) {
+                // Open the web page at url first
+                $this->remoteWebDriver->get($url);
 
-            // Execute Javascript to retrieve HTTP response code
-            $script = ''
-                . 'var xhr = new XMLHttpRequest();'
-                . "xhr.open('GET', '" . $url . "', false);"
-                . 'xhr.send(null); '
-                . 'return xhr.status';
-            $status = $this->remoteWebDriver->executeScript($script);
+                // Execute Javascript to retrieve HTTP response code
+                $script = ''
+                    . 'var xhr = new XMLHttpRequest();'
+                    . "xhr.open('GET', '" . $url . "', false);"
+                    . 'xhr.send(null); '
+                    . 'return xhr.status';
+                $status = $this->remoteWebDriver->executeScript($script);
 
-            if ($status === 200) {
-                return;
+                if ($status === 200) {
+                    return;
+                }
             }
         } catch (\Exception $e) {
         }

@@ -113,7 +113,11 @@ vendor/bin/mftf build:project --MAGENTO_BASE_URL=http://magento.local/ --MAGENTO
 
 #### Description
 
-Diagnose MFTF configuration and setup
+Diagnose MFTF configuration and setup. Currently this command will check the following:
+- Verify admin credentials are valid. Allowing MFTF authenticates and runs API requests to Magento through cURL
+- Verify that Selenium is up and running and available for MFTF
+- Verify that new session of browser can open Magento admin and store front urls
+- Verify that MFTF can run MagentoCLI commands
 
 #### Usage
 
