@@ -18,7 +18,13 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHan
 class TestContextExtension extends BaseExtension
 {
     const TEST_PHASE_AFTER = "_after";
+    const TEST_PHASE_BEFORE = "_before";
+
     const TEST_FAILED_FILE = 'failed';
+    const TEST_HOOKS = [
+        self::TEST_PHASE_AFTER => 'AfterHook',
+        self::TEST_PHASE_BEFORE => 'BeforeHook'
+    ];
 
     /**
      * Codeception Events Mapping to methods
@@ -126,6 +132,12 @@ class TestContextExtension extends BaseExtension
         }
 
         $context = $this->extractContext($trace, $testMethod);
+
+        if (isset(self::TEST_HOOKS[$context])) {
+            $context = self::TEST_HOOKS[$context];
+        } else {
+            $context = 'TestMethod';
+        }
 
         AllureHelper::addAttachmentToCurrentStep($exception, $context . 'Exception');
 
