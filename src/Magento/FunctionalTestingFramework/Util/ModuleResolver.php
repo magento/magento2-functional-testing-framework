@@ -9,6 +9,7 @@ namespace Magento\FunctionalTestingFramework\Util;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -201,7 +202,7 @@ class ModuleResolver
 
         $token = $this->getAdminToken();
 
-        $url = ConfigSanitizerUtil::sanitizeUrl(getenv('MAGENTO_BASE_URL')) . $this->moduleUrl;
+        $url = UrlFormatter::format(getenv('MAGENTO_BASE_URL')) . $this->moduleUrl;
 
         $headers = [
             'Authorization: Bearer ' . $token,
@@ -677,7 +678,7 @@ class ModuleResolver
         if (MftfApplicationConfig::getConfig()->forceGenerateEnabled()) {
             return;
         }
-        $url = ConfigSanitizerUtil::sanitizeUrl(getenv('MAGENTO_BASE_URL')) . $this->versionUrl;
+        $url = UrlFormatter::format(getenv('MAGENTO_BASE_URL')) . $this->versionUrl;
         LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
             "Fetching version information.",
             ['url' => $url]
@@ -718,7 +719,7 @@ class ModuleResolver
             throw new TestFrameworkException($message, $context);
         }
 
-        $url = ConfigSanitizerUtil::sanitizeUrl($this->getBackendUrl()) . $this->adminTokenUrl;
+        $url = UrlFormatter::format($this->getBackendUrl()) . $this->adminTokenUrl;
         $data = [
             'username' => $login,
             'password' => $password
