@@ -25,6 +25,7 @@ class AllureHelperTest extends TestCase
     public function tearDown()
     {
         Allure::setDefaultLifecycle();
+        AspectMock::clean();
     }
 
     /**
@@ -85,6 +86,10 @@ class AllureHelperTest extends TestCase
         $this->assertEmpty($thirdStep->getAttachments());
     }
 
+    /**
+     * AddAttachment actions should have files with different attachment names
+     * @throws \Yandex\Allure\Adapter\AllureException
+     */
     public function testAddAttachementUniqueName()
     {
         $this->mockCopyFile();
