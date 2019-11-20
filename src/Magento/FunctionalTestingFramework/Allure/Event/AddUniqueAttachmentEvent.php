@@ -59,7 +59,7 @@ class AddUniqueAttachmentEvent extends AddAttachmentEvent
      * Copies file from one path to another. Wrapper for mocking in unit test.
      * @param string $filePath
      * @param string $outputPath
-     * @return bool
+     * @return boolean
      */
     private function copyFile($filePath, $outputPath)
     {
