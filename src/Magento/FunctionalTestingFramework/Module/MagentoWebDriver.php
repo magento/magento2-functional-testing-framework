@@ -510,14 +510,16 @@ class MagentoWebDriver extends WebDriver
     /**
      * Takes given $command and executes it against bin/magento or custom exposed entrypoint. Returns command output.
      *
-     * @param string $command
-     * @param string $arguments
+     * @param string  $command
+     * @param string  $arguments
+     * @param integer $timeout
      * @return string
+     *
      * @throws TestFrameworkException
      */
-    public function magentoCLI($command, $arguments = null)
+    public function magentoCLI($command, $arguments = null, $timeout = null)
     {
-        return $this->curlExecMagentoCLI($command, $arguments);
+        return $this->curlExecMagentoCLI($command,  $arguments, $timeout);
         //TODO: calling bin/magento from pipeline is timing out, needs investigation (ref: MQE-1774)
 //        try {
 //            return $this->shellExecMagentoCLI($command, $arguments);
@@ -673,16 +675,17 @@ class MagentoWebDriver extends WebDriver
      *
      * @param string $command
      * @param null   $arguments
+     * @param int    $timeout
      * @throws TestFrameworkException
      * @return string
      */
-    public function magentoCLISecret($command, $arguments = null)
+    public function magentoCLISecret($command, $timeout, $arguments = null)
     {
         // to protect any secrets from being printed to console the values are executed only at the webdriver level as a
         // decrypted value
 
         $decryptedCommand = CredentialStore::getInstance()->decryptAllSecretsInString($command);
-        return $this->magentoCLI($decryptedCommand, $arguments);
+        return $this->magentoCLI($decryptedCommand, $timeout, $arguments);
     }
 
     /**
@@ -860,12 +863,13 @@ class MagentoWebDriver extends WebDriver
     /**
      * Takes given $command and executes it against exposed MTF CLI entry point. Returns response from server.
      *
-     * @param string $command
-     * @param string $arguments
-     * @return string
+     * @param string  $command
+     * @param string  $arguments
+     * @param integer $timeout
+     *
      * @throws TestFrameworkException
      */
-    private function curlExecMagentoCLI($command, $arguments): string
+    private function curlExecMagentoCLI($command,  $arguments, $timeout): string
     {
         // Remove index.php if it's present in url
         $baseUrl = rtrim(
@@ -882,6 +886,7 @@ class MagentoWebDriver extends WebDriver
                 'token' => $restExecutor->getAuthToken(),
                 getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command,
                 'arguments' => $arguments,
+                'timeout'   => $timeout,
             ],
             CurlInterface::POST,
             []

@@ -50,6 +50,13 @@
                         </xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
+                <xs:attribute type="xs:string" name="timeout">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Idle timeout in seconds, defaulted to 60s when not specified.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
