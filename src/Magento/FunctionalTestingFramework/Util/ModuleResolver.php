@@ -704,7 +704,7 @@ class ModuleResolver
      *
      * @return string|boolean
      */
-    protected function getAdminToken()
+    public function getAdminToken()
     {
         $login = $_ENV['MAGENTO_ADMIN_USERNAME'] ?? null;
         $password = $_ENV['MAGENTO_ADMIN_PASSWORD'] ?? null;
