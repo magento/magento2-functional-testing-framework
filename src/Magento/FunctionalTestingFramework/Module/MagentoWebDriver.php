@@ -518,11 +518,13 @@ class MagentoWebDriver extends WebDriver
      */
     public function magentoCLI($command, $arguments = null)
     {
-        try {
-            return $this->shellExecMagentoCLI($command, $arguments);
-        } catch (\Exception $exception) {
-            return $this->curlExecMagentoCLI($command, $arguments);
-        }
+        return $this->curlExecMagentoCLI($command, $arguments);
+        //TODO: calling bin/magento from pipeline is timing out, needs investigation (ref: MQE-1774)
+//        try {
+//            return $this->shellExecMagentoCLI($command, $arguments);
+//        } catch (\Exception $exception) {
+//            return $this->curlExecMagentoCLI($command, $arguments);
+//        }
     }
 
     /**
@@ -838,6 +840,7 @@ class MagentoWebDriver extends WebDriver
      *
      * @throws \RuntimeException
      * @return string
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function shellExecMagentoCLI($command, $arguments): string
     {
