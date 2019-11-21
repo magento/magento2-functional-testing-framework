@@ -839,6 +839,7 @@ class MagentoWebDriver extends WebDriver
      *
      * @throws \RuntimeException
      * @return string
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function shellExecMagentoCLI($command, $arguments): string
     {
