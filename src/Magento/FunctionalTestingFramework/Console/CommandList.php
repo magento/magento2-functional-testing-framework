@@ -29,19 +29,20 @@ class CommandList implements CommandListInterface
     public function __construct(array $commands = [])
     {
         $this->commands = [
-             'build:project' => new BuildProjectCommand(),
-             'reset' => new CleanProjectCommand(),
-             'generate:urn-catalog' => new GenerateDevUrnCommand(),
-             'generate:suite' => new GenerateSuiteCommand(),
-             'generate:tests' => new GenerateTestsCommand(),
-             'run:test' => new RunTestCommand(),
-             'run:group' => new RunTestGroupCommand(),
-             'run:failed' => new RunTestFailedCommand(),
-             'run:manifest' => new RunManifestCommand(),
-             'setup:env' => new SetupEnvCommand(),
-             'upgrade:tests' => new UpgradeTestsCommand(),
-             'generate:docs' => new GenerateDocsCommand(),
-             'static-checks' => new StaticChecksCommand()
+            'build:project' => new BuildProjectCommand(),
+            'doctor' => new DoctorCommand(),
+            'generate:docs' => new GenerateDocsCommand(),
+            'generate:suite' => new GenerateSuiteCommand(),
+            'generate:tests' => new GenerateTestsCommand(),
+            'generate:urn-catalog' => new GenerateDevUrnCommand(),
+            'reset' => new CleanProjectCommand(),
+            'run:failed' => new RunTestFailedCommand(),
+            'run:group' => new RunTestGroupCommand(),
+            'run:manifest' => new RunManifestCommand(),
+            'run:test' => new RunTestCommand(),
+            'setup:env' => new SetupEnvCommand(),
+            'static-checks' => new StaticChecksCommand(),
+            'upgrade:tests' => new UpgradeTestsCommand(),
         ] + $commands;
     }
 
