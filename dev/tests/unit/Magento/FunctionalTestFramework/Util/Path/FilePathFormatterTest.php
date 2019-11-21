@@ -19,6 +19,7 @@ class FilePathFormatterTest extends MagentoTestCase
      * @param boolean $withTrailingSeparator
      * @param mixed string|boolean $expectedPath
      * @return void
+     * @throws TestFrameworkException
      */
     public function testFormat($path, $withTrailingSeparator, $expectedPath)
     {
@@ -38,6 +39,7 @@ class FilePathFormatterTest extends MagentoTestCase
      * @param string $path
      * @param boolean $withTrailingSeparator
      * @return void
+     * @throws TestFrameworkException
      */
     public function testFormatWithException($path, $withTrailingSeparator)
     {

@@ -8,7 +8,7 @@ namespace Magento\FunctionalTestingFramework\Util\Path;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
-class UrlFormatter implements FileUrlFormatterInterface
+class UrlFormatter implements FormatterInterface
 {
     /**
      * Return formatted url path from input string, or false on error
@@ -21,18 +21,22 @@ class UrlFormatter implements FileUrlFormatterInterface
     public static function format($url, $withTrailingSeparator = true)
     {
         $sanitizedUrl = rtrim($url, '/');
+
+        // Remove all characters except letters, digits and $-_.+!*'(),{}|\\^~[]`<>#%";/?:@&=
         $sanitizedUrl = filter_var($sanitizedUrl, FILTER_SANITIZE_URL);
 
         if (false === $sanitizedUrl) {
             throw new TestFrameworkException("Invalid url: $url\n");
         }
 
+        // Validate URL according to http://www.faqs.org/rfcs/rfc2396
         $validUrl = filter_var($sanitizedUrl, FILTER_VALIDATE_URL);
 
         if (false !== $validUrl) {
             return $withTrailingSeparator ? $validUrl . '/' : $validUrl;
         }
 
+        // Validation might be failed due to missing URL scheme or host, attempt to build them and re-validate
         $validUrl = filter_var(self::buildUrl($sanitizedUrl), FILTER_VALIDATE_URL);
 
         if (false !== $validUrl) {

@@ -6,10 +6,10 @@
 
 namespace Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage;
 
-use Magento\FunctionalTestingFramework\Console\BuildProjectCommand;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 
 class FileStorage extends BaseStorage
 {
@@ -71,7 +71,7 @@ class FileStorage extends BaseStorage
         $credsFilePath = str_replace(
             '.credentials.example',
             '.credentials',
-            BuildProjectCommand::CREDENTIALS_FILE_PATH
+            FilePathFormatter::format(TESTS_BP) . '.credentials.example'
         );
 
         if (!file_exists($credsFilePath)) {

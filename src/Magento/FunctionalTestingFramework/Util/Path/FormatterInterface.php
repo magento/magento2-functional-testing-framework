@@ -8,7 +8,7 @@ namespace Magento\FunctionalTestingFramework\Util\Path;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
-interface FileUrlFormatterInterface
+interface FormatterInterface
 {
     /**
      * Return formatted path (file path, url, etc) from input string, or false on error
@@ -18,5 +18,5 @@ interface FileUrlFormatterInterface
      * @return string
      * @throws TestFrameworkException
      */
-    public static function format($input, $withTrailingSeparator = false);
+    public static function format($input, $withTrailingSeparator = true);
 }

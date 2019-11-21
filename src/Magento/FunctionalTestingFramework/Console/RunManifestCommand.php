@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
+use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 
 class RunManifestCommand extends Command
 {
@@ -30,6 +31,13 @@ class RunManifestCommand extends Command
      * @var string[]
      */
     private $failedTests = [];
+
+    /**
+     * Path for a failed test
+     *
+     * @var string
+     */
+    private $testsFailedFile;
 
     /**
      * Configure the run:manifest command.
@@ -53,6 +61,14 @@ class RunManifestCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $testsOutputDir = FilePathFormatter::format(TESTS_BP) .
+            "tests" .
+            DIRECTORY_SEPARATOR .
+            "_output" .
+            DIRECTORY_SEPARATOR;
+
+        $this->testsFailedFile = $testsOutputDir . "failed";
+
         $path = $input->getArgument("path");
 
         if (!file_exists($path)) {
@@ -117,8 +133,8 @@ class RunManifestCommand extends Command
      */
     private function aggregateFailed()
     {
-        if (file_exists(RunTestFailedCommand::TESTS_FAILED_FILE)) {
-            $currentFile = file(RunTestFailedCommand::TESTS_FAILED_FILE, FILE_IGNORE_NEW_LINES);
+        if (file_exists($this->testsFailedFile)) {
+            $currentFile = file($this->testsFailedFile, FILE_IGNORE_NEW_LINES);
             $this->failedTests = array_merge(
                 $this->failedTests,
                 $currentFile
@@ -133,8 +149,8 @@ class RunManifestCommand extends Command
      */
     private function deleteFailedFile()
     {
-        if (file_exists(RunTestFailedCommand::TESTS_FAILED_FILE)) {
-            unlink(RunTestFailedCommand::TESTS_FAILED_FILE);
+        if (file_exists($this->testsFailedFile)) {
+            unlink($this->testsFailedFile);
         }
     }
 
@@ -146,7 +162,7 @@ class RunManifestCommand extends Command
     private function writeFailedFile()
     {
         foreach ($this->failedTests as $test) {
-            file_put_contents(RunTestFailedCommand::TESTS_FAILED_FILE, $test . "\n", FILE_APPEND);
+            file_put_contents($this->testsFailedFile, $test . "\n", FILE_APPEND);
         }
     }
 }

@@ -19,6 +19,7 @@ class UrlFormatterTest extends MagentoTestCase
      * @param boolean $withTrailingSeparator
      * @param mixed string|boolean $expectedPath
      * @return void
+     * @throws TestFrameworkException
      */
     public function testFormat($path, $withTrailingSeparator, $expectedPath)
     {
@@ -32,6 +33,7 @@ class UrlFormatterTest extends MagentoTestCase
      * @param string $path
      * @param boolean $withTrailingSeparator
      * @return void
+     * @throws TestFrameworkException
      */
     public function testFormatWithException($path, $withTrailingSeparator)
     {
@@ -53,6 +55,9 @@ class UrlFormatterTest extends MagentoTestCase
         $url4 = $url3 . '/';
         $url5 = 'www.google.com';
         $url6 = 'http://www.google.com/';
+        $url7 = 'http://127.0.0.1:8200';
+        $url8 = 'wwøw.goåoøgle.coøm';
+        $url9 = 'http://www.google.com';
         return [
             [$url1, null, $url1],
             [$url1, false, $url1],
@@ -67,6 +72,8 @@ class UrlFormatterTest extends MagentoTestCase
             [$url4, false, $url3],
             [$url4, true, $url4],
             [$url5, true, $url6],
+            [$url7, false, $url7],
+            [$url8, false, $url9],
         ];
     }
 
