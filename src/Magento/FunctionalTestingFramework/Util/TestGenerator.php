@@ -532,7 +532,6 @@ class TestGenerator
             $sortOrder = null;
             $storeCode = null;
             $format = null;
-            $commandTimeout = null;
 
             $assertExpected = null;
             $assertActual = null;
