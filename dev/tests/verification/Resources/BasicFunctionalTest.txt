@@ -126,7 +126,7 @@ class BasicFunctionalTestCest
 		$grabMultipleKey1 = $I->grabMultiple(".functionalTestSelector"); // stepKey: grabMultipleKey1
 		$grabTextFromKey1 = $I->grabTextFrom(".functionalTestSelector"); // stepKey: grabTextFromKey1
 		$grabValueFromKey1 = $I->grabValueFrom(".functionalTestSelector"); // stepKey: grabValueFromKey1
-		$magentoCli1 = $I->magentoCLI("maintenance:enable", "\"stuffHere\""); // stepKey: magentoCli1
+		$magentoCli1 = $I->magentoCLI("maintenance:enable", "\"stuffHere\"", 60); // stepKey: magentoCli1
 		$I->comment($magentoCli1);
 		$I->makeScreenshot("screenShotInput"); // stepKey: makeScreenshotKey1
 		$I->maximizeWindow(); // stepKey: maximizeWindowKey1

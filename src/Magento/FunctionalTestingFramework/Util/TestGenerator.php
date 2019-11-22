@@ -42,7 +42,6 @@ class TestGenerator
     const HOOK_SCOPE = 'hook';
     const SUITE_SCOPE = 'suite';
     const PRESSKEY_ARRAY_ANCHOR_KEY = '987654321098765432109876543210';
-    const COMMAND_WAIT_TIMEOUT = 60;
     const PERSISTED_OBJECT_NOTATION_REGEX = '/\${1,2}[\w.\[\]]+\${1,2}/';
     const NO_STEPKEY_ACTIONS = [
         'comment',
@@ -611,11 +610,14 @@ class TestGenerator
                 $time = $customActionAttributes['time'];
             }
             if (isset($customActionAttributes['timeout'])) {
-                $commandTimeout = $customActionAttributes['timeout'];
+                $time = $customActionAttributes['timeout'];
             }
-            $time = $time ?? ActionObject::getDefaultWaitTimeout();
 
-            $commandTimeout = $commandTimeout ?? self::COMMAND_WAIT_TIMEOUT;
+            if (in_array($actionObject->getType(), ActionObject::COMMAND_ACTION_ATTRIBUTES)) {
+                $time = $time ?? ActionObject::DEFAULT_COMMAND_WAIT_TIMEOUT;
+            } else {
+                $time = $time ?? ActionObject::getDefaultWaitTimeout();
+            }
 
             if (isset($customActionAttributes['parameterArray']) && $actionObject->getType() != 'pressKey') {
                 // validate the param array is in the correct format
@@ -1285,7 +1287,7 @@ class TestGenerator
                         $actionObject,
                         $command,
                         $arguments,
-                        $commandTimeout
+                        $time
                     );
                     $testSteps .= sprintf(self::STEP_KEY_ANNOTATION, $stepKey) . PHP_EOL;
                     $testSteps .= sprintf(

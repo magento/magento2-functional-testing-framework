@@ -519,7 +519,7 @@ class MagentoWebDriver extends WebDriver
      */
     public function magentoCLI($command, $arguments = null, $timeout = null)
     {
-        return $this->curlExecMagentoCLI($command,  $arguments, $timeout);
+        return $this->curlExecMagentoCLI($command, $arguments, $timeout);
         //TODO: calling bin/magento from pipeline is timing out, needs investigation (ref: MQE-1774)
 //        try {
 //            return $this->shellExecMagentoCLI($command, $arguments);
@@ -673,19 +673,19 @@ class MagentoWebDriver extends WebDriver
      * Function used to create data that contains sensitive credentials in a <createData> <field> override.
      * The data is decrypted immediately prior to data creation to avoid exposure in console or log.
      *
-     * @param string $command
-     * @param null   $arguments
-     * @param int    $timeout
+     * @param string  $command
+     * @param null    $arguments
+     * @param null    $timeout
      * @throws TestFrameworkException
      * @return string
      */
-    public function magentoCLISecret($command, $timeout, $arguments = null)
+    public function magentoCLISecret($command, $arguments = null, $timeout = null)
     {
         // to protect any secrets from being printed to console the values are executed only at the webdriver level as a
         // decrypted value
 
         $decryptedCommand = CredentialStore::getInstance()->decryptAllSecretsInString($command);
-        return $this->magentoCLI($decryptedCommand, $timeout, $arguments);
+        return $this->magentoCLI($decryptedCommand, $arguments, $timeout);
     }
 
     /**
@@ -837,20 +837,21 @@ class MagentoWebDriver extends WebDriver
     /**
      * Takes given $command and executes it against bin/magento executable. Returns stdout output from the command.
      *
-     * @param string $command
-     * @param string $arguments
+     * @param string  $command
+     * @param string  $arguments
+     * @param integer $timeout
      *
      * @throws \RuntimeException
      * @return string
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
-    private function shellExecMagentoCLI($command, $arguments): string
+    private function shellExecMagentoCLI($command, $arguments, $timeout): string
     {
         $php = PHP_BINDIR ? PHP_BINDIR . DIRECTORY_SEPARATOR. 'php' : 'php';
         $binMagento = realpath(MAGENTO_BP . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'magento');
         $command = $php . ' -f ' . $binMagento . ' ' . $command . ' ' . $arguments;
         $process = new Process(escapeshellcmd($command), MAGENTO_BP);
-        $process->setIdleTimeout(60);
+        $process->setIdleTimeout($timeout);
         $process->setTimeout(0);
         $exitCode = $process->run();
         if ($exitCode !== 0) {
@@ -867,9 +868,10 @@ class MagentoWebDriver extends WebDriver
      * @param string  $arguments
      * @param integer $timeout
      *
+     * @return string
      * @throws TestFrameworkException
      */
-    private function curlExecMagentoCLI($command,  $arguments, $timeout): string
+    private function curlExecMagentoCLI($command, $arguments, $timeout): string
     {
         // Remove index.php if it's present in url
         $baseUrl = rtrim(
