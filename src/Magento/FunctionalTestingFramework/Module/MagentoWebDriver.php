@@ -673,9 +673,9 @@ class MagentoWebDriver extends WebDriver
      * Function used to create data that contains sensitive credentials in a <createData> <field> override.
      * The data is decrypted immediately prior to data creation to avoid exposure in console or log.
      *
-     * @param string  $command
-     * @param null    $arguments
-     * @param null    $timeout
+     * @param string $command
+     * @param null   $arguments
+     * @param null   $timeout
      * @throws TestFrameworkException
      * @return string
      */
