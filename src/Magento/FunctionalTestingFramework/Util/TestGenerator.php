@@ -1285,8 +1285,8 @@ class TestGenerator
                         $actor,
                         $actionObject,
                         $command,
-                        $arguments,
-                        $time
+                        $time,
+                        $arguments
                     );
                     $testSteps .= sprintf(self::STEP_KEY_ANNOTATION, $stepKey) . PHP_EOL;
                     $testSteps .= sprintf(
