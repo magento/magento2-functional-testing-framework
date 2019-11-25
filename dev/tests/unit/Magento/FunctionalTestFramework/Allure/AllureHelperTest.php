@@ -6,6 +6,7 @@
 namespace Tests\unit\Magento\FunctionalTestingFramework\Allure;
 
 use Magento\FunctionalTestingFramework\Allure\AllureHelper;
+use Magento\FunctionalTestingFramework\Allure\Event\AddUniqueAttachmentEvent;
 use Yandex\Allure\Adapter\Allure;
 use Yandex\Allure\Adapter\Event\AddAttachmentEvent;
 use Yandex\Allure\Adapter\Event\StepFinishedEvent;
@@ -24,6 +25,7 @@ class AllureHelperTest extends TestCase
     public function tearDown()
     {
         Allure::setDefaultLifecycle();
+        AspectMock::clean();
     }
 
     /**
@@ -85,13 +87,48 @@ class AllureHelperTest extends TestCase
     }
 
     /**
-     * Mock file system manipulation function
+     * AddAttachment actions should have files with different attachment names
+     * @throws \Yandex\Allure\Adapter\AllureException
+     */
+    public function testAddAttachementUniqueName()
+    {
+        $this->mockCopyFile();
+        $expectedData = "string";
+        $expectedCaption = "caption";
+
+        //Prepare Allure lifecycle
+        Allure::lifecycle()->fire(new StepStartedEvent('firstStep'));
+
+        //Call function twice
+        AllureHelper::addAttachmentToCurrentStep($expectedData, $expectedCaption);
+        AllureHelper::addAttachmentToCurrentStep($expectedData, $expectedCaption);
+
+        // Assert file names for both attachments are not the same.
+        $step = Allure::lifecycle()->getStepStorage()->pollLast();
+        $attachmentOne = $step->getAttachments()[0]->getSource();
+        $attachmentTwo = $step->getAttachments()[1]->getSource();
+        $this->assertNotEquals($attachmentOne, $attachmentTwo);
+    }
+
+    /**
+     * Mock entire attachment writing mechanisms
      * @throws \Exception
      */
     public function mockAttachmentWriteEvent()
     {
-        AspectMock::double(AddAttachmentEvent::class, [
+        AspectMock::double(AddUniqueAttachmentEvent::class, [
             "getAttachmentFileName" => self::MOCK_FILENAME
+        ]);
+    }
+
+    /**
+     * Mock only file writing mechanism
+     * @throws \Exception
+     */
+    public function mockCopyFile()
+    {
+        AspectMock::double(AddUniqueAttachmentEvent::class, [
+            "copyFile" => true
         ]);
     }
 }

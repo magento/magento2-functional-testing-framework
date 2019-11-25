@@ -5,6 +5,7 @@
  */
 namespace Magento\FunctionalTestingFramework\Allure;
 
+use Magento\FunctionalTestingFramework\Allure\Event\AddUniqueAttachmentEvent;
 use Yandex\Allure\Adapter\Allure;
 use Yandex\Allure\Adapter\Event\AddAttachmentEvent;
 
@@ -19,7 +20,7 @@ class AllureHelper
      */
     public static function addAttachmentToCurrentStep($data, $caption)
     {
-        Allure::lifecycle()->fire(new AddAttachmentEvent($data, $caption));
+        Allure::lifecycle()->fire(new AddUniqueAttachmentEvent($data, $caption));
     }
 
     /**
@@ -34,7 +35,7 @@ class AllureHelper
         $rootStep = Allure::lifecycle()->getStepStorage()->getLast();
         $trueLastStep = array_last($rootStep->getSteps());
 
-        $attachmentEvent = new AddAttachmentEvent($data, $caption);
+        $attachmentEvent = new AddUniqueAttachmentEvent($data, $caption);
         $attachmentEvent->process($trueLastStep);
     }
 }
