@@ -111,5 +111,36 @@ class PersistenceCustomFieldsTestCest
 		);
 
 		$I->comment("Exiting Action Group [createdAG] PersistenceActionGroup");
+		$I->comment("Entering Action Group [AGKEY] DataPersistenceSelfReferenceActionGroup");
+		$I->comment("[createData1AGKEY] create 'entity1' entity");
+		PersistedObjectHandler::getInstance()->createEntity(
+			"createData1AGKEY",
+			"test",
+			"entity1",
+			[],
+			[]
+		);
+
+		$I->comment("[createData2AGKEY] create 'entity2' entity");
+		PersistedObjectHandler::getInstance()->createEntity(
+			"createData2AGKEY",
+			"test",
+			"entity2",
+			[],
+			[]
+		);
+
+		$createData3AGKEYFields['key1'] = PersistedObjectHandler::getInstance()->retrieveEntityField('createData1AGKEY', 'field', 'test');
+		$createData3AGKEYFields['key2'] = PersistedObjectHandler::getInstance()->retrieveEntityField('createData2AGKEY', 'field', 'test');
+		$I->comment("[createData3AGKEY] create 'entity3' entity");
+		PersistedObjectHandler::getInstance()->createEntity(
+			"createData3AGKEY",
+			"test",
+			"entity3",
+			[],
+			$createData3AGKEYFields
+		);
+
+		$I->comment("Exiting Action Group [AGKEY] DataPersistenceSelfReferenceActionGroup");
 	}
 }
