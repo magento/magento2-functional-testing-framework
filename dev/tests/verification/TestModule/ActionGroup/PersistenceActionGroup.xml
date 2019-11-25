@@ -30,4 +30,12 @@
         <getData entity="someEneity" stepKey="getData"/>
         <comment userInput="$createData.field$" stepKey="comment"/>
     </actionGroup>
+    <actionGroup name="DataPersistenceSelfReferenceActionGroup">
+        <createData entity="entity1" stepKey="createData1"/>
+        <createData entity="entity2" stepKey="createData2"/>
+        <createData entity="entity3" stepKey="createData3">
+            <field key="key1">$createData1.field$</field>
+            <field key="key2">$createData2.field$</field>
+        </createData>
+    </actionGroup>
 </actionGroups>

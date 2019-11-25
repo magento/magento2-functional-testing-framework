@@ -1293,6 +1293,7 @@ class TestGenerator
                     break;
                 case "field":
                     $fieldKey = $actionObject->getCustomActionAttributes()['key'];
+                    $input = $this->resolveStepKeyReferences($input, $actionObject->getActionOrigin());
                     $input = $this->resolveTestVariable(
                         [$input],
                         $actionObject->getActionOrigin()
