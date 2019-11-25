@@ -33,5 +33,6 @@
             <argument name="arg2" value="DefaultPerson.firstname"/>
             <argument name="arg3" value="$createdData3.firstname$"/>
         </actionGroup>
+        <actionGroup ref="DataPersistenceSelfReferenceActionGroup" stepKey="AGKEY"/>
     </test>
 </tests>
