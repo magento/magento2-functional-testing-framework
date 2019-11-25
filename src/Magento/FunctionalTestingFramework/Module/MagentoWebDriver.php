@@ -838,14 +838,14 @@ class MagentoWebDriver extends WebDriver
      * Takes given $command and executes it against bin/magento executable. Returns stdout output from the command.
      *
      * @param string  $command
-     * @param string  $arguments
      * @param integer $timeout
+     * @param string  $arguments
      *
      * @throws \RuntimeException
      * @return string
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
-    private function shellExecMagentoCLI($command, $arguments, $timeout = 60): string
+    private function shellExecMagentoCLI($command, $timeout, $arguments): string
     {
         $php = PHP_BINDIR ? PHP_BINDIR . DIRECTORY_SEPARATOR. 'php' : 'php';
         $binMagento = realpath(MAGENTO_BP . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'magento');
