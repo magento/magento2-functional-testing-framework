@@ -6,8 +6,10 @@
 
 namespace Magento\FunctionalTestingFramework\Config\FileResolver;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\Iterator\File;
 use Magento\FunctionalTestingFramework\Config\FileResolverInterface;
+use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 
 /**
  * Provides the list of global configuration files.
@@ -54,6 +56,7 @@ class Primary implements FileResolverInterface
      * @param string $filename
      * @param string $scope
      * @return array
+     * @throws TestFrameworkException
      */
     private function getPathPatterns($filename, $scope)
     {
@@ -69,8 +72,9 @@ class Primary implements FileResolverInterface
                 $defaultPath . DIRECTORY_SEPARATOR . $scope . DIRECTORY_SEPARATOR . $filename,
                 $defaultPath . DIRECTORY_SEPARATOR . $scope . DIRECTORY_SEPARATOR . '*' . DIRECTORY_SEPARATOR
                 . $filename,
-                FW_BP . DIRECTORY_SEPARATOR . $scope . DIRECTORY_SEPARATOR . $filename,
-                FW_BP . DIRECTORY_SEPARATOR . $scope . DIRECTORY_SEPARATOR . '*' . DIRECTORY_SEPARATOR . $filename
+                FilePathFormatter::format(FW_BP) . $scope . DIRECTORY_SEPARATOR . $filename,
+                FilePathFormatter::format(FW_BP)  . $scope . DIRECTORY_SEPARATOR . '*' . DIRECTORY_SEPARATOR
+                . $filename
             ];
         }
         return str_replace(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $patterns);
