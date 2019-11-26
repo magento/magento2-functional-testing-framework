@@ -6,6 +6,8 @@
 
 namespace Magento\FunctionalTestingFramework\Util\Logger;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
@@ -82,9 +84,10 @@ class LoggingUtil
      * Function which returns a static path to the the log file.
      *
      * @return string
+     * @throws TestFrameworkException
      */
     public function getLoggingPath(): string
     {
-        return TESTS_BP . DIRECTORY_SEPARATOR . "mftf.log";
+        return FilePathFormatter::format(TESTS_BP) . "mftf.log";
     }
 }

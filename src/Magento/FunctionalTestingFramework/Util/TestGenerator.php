@@ -10,6 +10,7 @@ use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
@@ -26,6 +27,7 @@ use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
+use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 
 /**
  * Class TestGenerator
@@ -103,14 +105,14 @@ class TestGenerator
      * @param string  $exportDir
      * @param array   $tests
      * @param boolean $debug
+     * @throws TestFrameworkException
      */
     private function __construct($exportDir, $tests, $debug = false)
     {
         // private constructor for factory
         $this->exportDirName = $exportDir ?? self::DEFAULT_DIR;
         $exportDir = $exportDir ?? self::DEFAULT_DIR;
-        $this->exportDirectory = TESTS_MODULE_PATH
-            . DIRECTORY_SEPARATOR
+        $this->exportDirectory = FilePathFormatter::format(TESTS_MODULE_PATH)
             . self::GENERATED_DIR
             . DIRECTORY_SEPARATOR
             . $exportDir;
@@ -1291,6 +1293,7 @@ class TestGenerator
                     break;
                 case "field":
                     $fieldKey = $actionObject->getCustomActionAttributes()['key'];
+                    $input = $this->resolveStepKeyReferences($input, $actionObject->getActionOrigin());
                     $input = $this->resolveTestVariable(
                         [$input],
                         $actionObject->getActionOrigin()

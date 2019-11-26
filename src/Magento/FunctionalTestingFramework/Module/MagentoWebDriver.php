@@ -16,6 +16,7 @@ use Codeception\Exception\ModuleException;
 use Codeception\Util\Uri;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\WebapiExecutor;
+use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\Util\ConfigSanitizerUtil;
 use Yandex\Allure\Adapter\AllureException;
@@ -872,7 +873,11 @@ class MagentoWebDriver extends WebDriver
             str_replace('index.php', '', rtrim($this->config['url'], '/')),
             '/'
         );
-        $apiURL = $baseUrl . '/' . ltrim(getenv('MAGENTO_CLI_COMMAND_PATH'), '/');
+
+        $apiURL = UrlFormatter::format(
+            $baseUrl . '/' . ltrim(getenv('MAGENTO_CLI_COMMAND_PATH'), '/'),
+            false
+        );
 
         $restExecutor = new WebapiExecutor();
         $executor = new CurlTransport();

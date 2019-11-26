@@ -64,7 +64,7 @@ if (file_exists(ENV_FILE_PATH . '.env')) {
 defined('MAGENTO_BP') || define('MAGENTO_BP', realpath(PROJECT_ROOT));
 // TODO REMOVE THIS CODE ONCE WE HAVE STOPPED SUPPORTING dev/tests/acceptance PATH
 // define TEST_PATH and TEST_MODULE_PATH
-defined('TESTS_BP') || define('TESTS_BP', realpath(MAGENTO_BP . DIRECTORY_SEPARATOR . 'dev/tests/acceptance/'));
+defined('TESTS_BP') || define('TESTS_BP', realpath(MAGENTO_BP . DIRECTORY_SEPARATOR . 'dev/tests/acceptance'));
 
 $RELATIVE_TESTS_MODULE_PATH = '/tests/functional/Magento/FunctionalTest';
 defined('TESTS_MODULE_PATH') || define(

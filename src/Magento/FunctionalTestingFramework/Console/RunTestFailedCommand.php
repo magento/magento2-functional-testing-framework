@@ -8,6 +8,7 @@ declare(strict_types = 1);
 namespace Magento\FunctionalTestingFramework\Console;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,20 +23,20 @@ class RunTestFailedCommand extends BaseGenerateCommand
      */
     const DEFAULT_TEST_GROUP = 'default';
 
-    const TESTS_OUTPUT_DIR = TESTS_BP .
-    DIRECTORY_SEPARATOR .
-    "tests" .
-    DIRECTORY_SEPARATOR .
-    "_output" .
-    DIRECTORY_SEPARATOR;
+    /**
+     * @var string
+     */
+    private $testsFailedFile;
 
-    const TESTS_FAILED_FILE = self::TESTS_OUTPUT_DIR . "failed";
-    const TESTS_RERUN_FILE = self::TESTS_OUTPUT_DIR . "rerun_tests";
-    const TESTS_MANIFEST_FILE= TESTS_MODULE_PATH .
-    DIRECTORY_SEPARATOR .
-    "_generated" .
-    DIRECTORY_SEPARATOR .
-    "testManifest.txt";
+    /**
+     * @var string
+     */
+    private $testsReRunFile;
+
+    /**
+     * @var string
+     */
+    private $testsManifestFile;
 
     /**
      * @var array
@@ -68,6 +69,19 @@ class RunTestFailedCommand extends BaseGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $testsOutputDir = FilePathFormatter::format(TESTS_BP) .
+            "tests" .
+            DIRECTORY_SEPARATOR .
+            "_output" .
+            DIRECTORY_SEPARATOR;
+
+        $this->testsFailedFile = $testsOutputDir . "failed";
+        $this->testsReRunFile = $testsOutputDir . "rerun_tests";
+        $this->testsManifestFile= FilePathFormatter::format(TESTS_MODULE_PATH) .
+            "_generated" .
+            DIRECTORY_SEPARATOR .
+            "testManifest.txt";
+
         $force = $input->getOption('force');
         $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
         $allowSkipped = $input->getOption('allow-skipped');
@@ -115,15 +129,15 @@ class RunTestFailedCommand extends BaseGenerateCommand
                     $output->write($buffer);
                 }
             ));
-            if (file_exists(self::TESTS_FAILED_FILE)) {
+            if (file_exists($this->testsFailedFile)) {
                 $this->failedList = array_merge(
                     $this->failedList,
-                    $this->readFailedTestFile(self::TESTS_FAILED_FILE)
+                    $this->readFailedTestFile($this->testsFailedFile)
                 );
             }
         }
         foreach ($this->failedList as $test) {
-            $this->writeFailedTestToFile($test, self::TESTS_FAILED_FILE);
+            $this->writeFailedTestToFile($test, $this->testsFailedFile);
         }
 
         return $returnCode;
@@ -138,12 +152,12 @@ class RunTestFailedCommand extends BaseGenerateCommand
     {
         $failedTestDetails = ['tests' => [], 'suites' => []];
 
-        if (realpath(self::TESTS_FAILED_FILE)) {
-            $testList = $this->readFailedTestFile(self::TESTS_FAILED_FILE);
+        if (realpath($this->testsFailedFile)) {
+            $testList = $this->readFailedTestFile($this->testsFailedFile);
 
             foreach ($testList as $test) {
                 if (!empty($test)) {
-                    $this->writeFailedTestToFile($test, self::TESTS_RERUN_FILE);
+                    $this->writeFailedTestToFile($test, $this->testsReRunFile);
                     $testInfo = explode(DIRECTORY_SEPARATOR, $test);
                     $testName = explode(":", $testInfo[count($testInfo) - 1])[1];
                     $suiteName = $testInfo[count($testInfo) - 2];
@@ -184,7 +198,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
      */
     private function readTestManifestFile()
     {
-        return file(self::TESTS_MANIFEST_FILE, FILE_IGNORE_NEW_LINES);
+        return file($this->testsManifestFile, FILE_IGNORE_NEW_LINES);
     }
 
     /**
@@ -202,6 +216,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
      * Writes the test name to a file if it does not already exist
      *
      * @param string $test
+     * @param string $filePath
      * @return void
      */
     private function writeFailedTestToFile($test, $filePath)
