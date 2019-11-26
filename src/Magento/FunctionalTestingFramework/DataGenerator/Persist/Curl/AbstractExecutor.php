@@ -6,6 +6,8 @@
 
 namespace Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
 
 /**
@@ -23,9 +25,10 @@ abstract class AbstractExecutor implements CurlInterface
     /**
      * Returns base URL for Magento instance
      * @return string
+     * @throws TestFrameworkException
      */
     public function getBaseUrl(): string
     {
-        return getenv('MAGENTO_BASE_URL');
+        return UrlFormatter::format(getenv('MAGENTO_BASE_URL'));
     }
 }

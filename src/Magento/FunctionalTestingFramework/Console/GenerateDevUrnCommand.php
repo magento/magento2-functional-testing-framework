@@ -9,6 +9,7 @@ declare(strict_types = 1);
 namespace Magento\FunctionalTestingFramework\Console;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -109,24 +110,32 @@ class GenerateDevUrnCommand extends Command
     /**
      * Generates urn => location array for all MFTF schema.
      * @return array
+     * @throws TestFrameworkException
      */
     private function generateResourcesArray()
     {
         $resourcesArray = [
             'urn:magento:mftf:DataGenerator/etc/dataOperation.xsd' =>
-                realpath(FW_BP . '/src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataOperation.xsd'),
+                realpath(FilePathFormatter::format(FW_BP)
+                    . 'src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataOperation.xsd'),
             'urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd' =>
-                realpath(FW_BP . '/src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd'),
+                realpath(FilePathFormatter::format(FW_BP)
+                    . 'src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd'),
             'urn:magento:mftf:Page/etc/PageObject.xsd' =>
-                realpath(FW_BP . '/src/Magento/FunctionalTestingFramework/Page/etc/PageObject.xsd'),
+                realpath(FilePathFormatter::format(FW_BP)
+                    . 'src/Magento/FunctionalTestingFramework/Page/etc/PageObject.xsd'),
             'urn:magento:mftf:Page/etc/SectionObject.xsd' =>
-                realpath(FW_BP . '/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd'),
+                realpath(FilePathFormatter::format(FW_BP)
+                    . 'src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd'),
             'urn:magento:mftf:Test/etc/actionGroupSchema.xsd' =>
-                realpath(FW_BP . '/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd'),
+                realpath(FilePathFormatter::format(FW_BP)
+                    . 'src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd'),
             'urn:magento:mftf:Test/etc/testSchema.xsd' =>
-                realpath(FW_BP . '/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd'),
+                realpath(FilePathFormatter::format(FW_BP)
+                    . 'src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd'),
             'urn:magento:mftf:Suite/etc/suiteSchema.xsd' =>
-                realpath(FW_BP . '/src/Magento/FunctionalTestingFramework/Suite/etc/suiteSchema.xsd')
+                realpath(FilePathFormatter::format(FW_BP)
+                    . 'src/Magento/FunctionalTestingFramework/Suite/etc/suiteSchema.xsd')
         ];
         return $resourcesArray;
     }

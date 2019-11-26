@@ -8,7 +8,9 @@ declare(strict_types = 1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
+use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -57,10 +59,11 @@ class BaseGenerateCommand extends Command
      * @param OutputInterface $output
      * @param bool $verbose
      * @return void
+     * @throws TestFrameworkException
      */
     protected function removeGeneratedDirectory(OutputInterface $output, bool $verbose)
     {
-        $generatedDirectory = TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . TestGenerator::GENERATED_DIR;
+        $generatedDirectory = FilePathFormatter::format(TESTS_MODULE_PATH) . TestGenerator::GENERATED_DIR;
 
         if (file_exists($generatedDirectory)) {
             DirSetupUtil::rmdirRecursive($generatedDirectory);
