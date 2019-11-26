@@ -27,7 +27,7 @@ modules:
             window_size: 1280x1024
             username: "%MAGENTO_ADMIN_USERNAME%"
             password: "%MAGENTO_ADMIN_PASSWORD%"
-            pageload_timeout: 30
+            pageload_timeout: "%WAIT_TIMEOUT%"
             host: "%SELENIUM_HOST%"
             port: "%SELENIUM_PORT%"
             protocol: "%SELENIUM_PROTOCOL%"

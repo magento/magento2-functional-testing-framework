@@ -50,6 +50,9 @@ if (file_exists(ENV_FILE_PATH . '.env')) {
     defined('DEFAULT_TIMEZONE') || define('DEFAULT_TIMEZONE', 'America/Los_Angeles');
     $env->setEnvironmentVariable('DEFAULT_TIMEZONE', DEFAULT_TIMEZONE);
 
+    defined('WAIT_TIMEOUT') || define('WAIT_TIMEOUT', 30);
+    $env->setEnvironmentVariable('WAIT_TIMEOUT', 30);
+
     try {
         new DateTimeZone(DEFAULT_TIMEZONE);
     } catch (\Exception $e) {
