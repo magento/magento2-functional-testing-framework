@@ -58,6 +58,13 @@ class TestGenerator
     const STEP_KEY_ANNOTATION = " // stepKey: %s";
 
     /**
+     * Actor name for AcceptanceTest
+     *
+     * @var string
+     */
+    private $actor = 'I';
+
+    /**
      * Path to the export dir.
      *
      * @var string
@@ -97,7 +104,7 @@ class TestGenerator
      *
      * @var string
      */
-    private $currentGenerationScope;
+    private $currentGenerationScope = TestGenerator::TEST_SCOPE;
 
     /**
      * TestGenerator constructor.
@@ -326,8 +333,6 @@ class TestGenerator
     private function generateUseStatementsPhp()
     {
         $useStatementsPhp = "use Magento\FunctionalTestingFramework\AcceptanceTester;\n";
-        $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;\n";
-        $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;\n";
         $useStatementsPhp .= "use \Codeception\Util\Locator;\n";
 
         $allureStatements = [
@@ -499,7 +504,8 @@ class TestGenerator
     public function generateStepsPhp($actionObjects, $generationScope = TestGenerator::TEST_SCOPE, $actor = "I")
     {
         //TODO: Refactor Method according to PHPMD warnings, remove @SuppressWarnings accordingly.
-        $testSteps = "";
+        $testSteps = '';
+        $this->actor = $actor;
         $this->currentGenerationScope = $generationScope;
 
         foreach ($actionObjects as $actionObject) {
@@ -754,7 +760,7 @@ class TestGenerator
                         $scope = PersistedObjectHandler::SUITE_SCOPE;
                     }
 
-                    $createEntityFunctionCall = "\t\tPersistedObjectHandler::getInstance()->createEntity(";
+                    $createEntityFunctionCall = "\t\t\${$actor}->createEntity(";
                     $createEntityFunctionCall .= "\n\t\t\t\"{$stepKey}\",";
                     $createEntityFunctionCall .= "\n\t\t\t\"{$scope}\",";
                     $createEntityFunctionCall .= "\n\t\t\t\"{$entity}\"";
@@ -795,7 +801,7 @@ class TestGenerator
                             $scope = PersistedObjectHandler::SUITE_SCOPE;
                         }
 
-                        $deleteEntityFunctionCall = "\t\tPersistedObjectHandler::getInstance()->deleteEntity(";
+                        $deleteEntityFunctionCall = "\t\t\${$actor}->deleteEntity(";
                         $deleteEntityFunctionCall .= "\n\t\t\t\"{$key}\",";
                         $deleteEntityFunctionCall .= "\n\t\t\t\"{$scope}\"";
                         $deleteEntityFunctionCall .= "\n\t\t);\n";
@@ -853,7 +859,7 @@ class TestGenerator
                         $scope = PersistedObjectHandler::SUITE_SCOPE;
                     }
 
-                    $updateEntityFunctionCall = "\t\tPersistedObjectHandler::getInstance()->updateEntity(";
+                    $updateEntityFunctionCall = "\t\t\${$actor}->updateEntity(";
                     $updateEntityFunctionCall .= "\n\t\t\t\"{$key}\",";
                     $updateEntityFunctionCall .= "\n\t\t\t\"{$scope}\",";
                     $updateEntityFunctionCall .= "\n\t\t\t\"{$updateEntity}\"";
@@ -901,7 +907,7 @@ class TestGenerator
                     }
 
                     //Create Function
-                    $getEntityFunctionCall = "\t\tPersistedObjectHandler::getInstance()->getEntity(";
+                    $getEntityFunctionCall = "\t\t\${$actor}->getEntity(";
                     $getEntityFunctionCall .= "\n\t\t\t\"{$stepKey}\",";
                     $getEntityFunctionCall .= "\n\t\t\t\"{$scope}\",";
                     $getEntityFunctionCall .= "\n\t\t\t\"{$entity}\"";
@@ -1429,7 +1435,11 @@ class TestGenerator
                 );
             }
 
-            $replacement = "PersistedObjectHandler::getInstance()->retrieveEntityField";
+            $actor = "\$" . $this->actor;
+            if ($this->currentGenerationScope === TestGenerator::SUITE_SCOPE) {
+                $actor = 'PersistedObjectHandler::getInstance()';
+            }
+            $replacement = "{$actor}->retrieveEntityField";
             $replacement .= "('{$variable[0]}', '$variable[1]', '{$this->currentGenerationScope}')";
 
             //Determine if quoteBreak check is necessary. Assume replacement is surrounded in quotes, then override
@@ -1484,9 +1494,14 @@ class TestGenerator
         foreach ($stepKeys as $stepKey) {
             // MQE-1011
             $stepKeyVarRef = "$" . $stepKey;
-            $persistedVarRef = "PersistedObjectHandler::getInstance()->retrieveEntityField('{$stepKey}'"
+
+            $actor = "\$" . $this->actor;
+            if ($this->currentGenerationScope === TestGenerator::SUITE_SCOPE) {
+                $actor = 'PersistedObjectHandler::getInstance()';
+            }
+            $persistedVarRef = "{$actor}->retrieveEntityField('{$stepKey}'"
                 . ", 'field', 'test')";
-            $persistedVarRefInvoked = "PersistedObjectHandler::getInstance()->retrieveEntityField('"
+            $persistedVarRefInvoked = "{$actor}->retrieveEntityField('"
                 . $stepKey . $testInvocationKey . "', 'field', 'test')";
 
             // only replace when whole word matches exactly
@@ -1876,6 +1891,7 @@ class TestGenerator
         $output .= implode(", ", array_filter($args, function($value) { return $value !== null; })) . ");";
         return $output;
     }
+
     // @codingStandardsIgnoreEnd
 
     /**
@@ -1919,7 +1935,7 @@ class TestGenerator
     {
         $runtimeReferenceRegex = [
             "/{{_ENV\.([\w]+)}}/" => 'getenv',
-            ActionMergeUtil::CREDS_REGEX => 'CredentialStore::getInstance()->getSecret'
+            ActionMergeUtil::CREDS_REGEX => "\${$this->actor}->getSecret"
         ];
 
         $argResult = $args;

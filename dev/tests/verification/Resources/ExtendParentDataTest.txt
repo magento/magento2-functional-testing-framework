@@ -2,8 +2,6 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -29,7 +27,7 @@ class ExtendParentDataTestCest
 	public function ExtendParentDataTest(AcceptanceTester $I)
 	{
 		$I->comment("[simpleDataKey] create 'extendParentData' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
+		$I->createEntity(
 			"simpleDataKey",
 			"test",
 			"extendParentData",

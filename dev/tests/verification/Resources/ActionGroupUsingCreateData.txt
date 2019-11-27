@@ -2,8 +2,6 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -27,7 +25,7 @@ class ActionGroupUsingCreateDataCest
 	{
 		$I->comment("Entering Action Group [Key1] actionGroupWithCreateData");
 		$I->comment("[createCategoryKey1] create 'ApiCategory' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
+		$I->createEntity(
 			"createCategoryKey1",
 			"hook",
 			"ApiCategory",
@@ -36,7 +34,7 @@ class ActionGroupUsingCreateDataCest
 		);
 
 		$I->comment("[createConfigProductKey1] create 'ApiConfigurableProduct' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
+		$I->createEntity(
 			"createConfigProductKey1",
 			"hook",
 			"ApiConfigurableProduct",

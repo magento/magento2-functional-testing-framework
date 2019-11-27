@@ -2,8 +2,6 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -27,7 +25,7 @@ class PersistenceActionGroupAppendingTestCest
 	{
 		$I->comment("Entering Action Group [ACTIONGROUPBEFORE] DataPersistenceAppendingActionGroup");
 		$I->comment("[createDataACTIONGROUPBEFORE] create 'entity' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
+		$I->createEntity(
 			"createDataACTIONGROUPBEFORE",
 			"hook",
 			"entity",
@@ -36,7 +34,7 @@ class PersistenceActionGroupAppendingTestCest
 		);
 
 		$I->comment("[updateDataACTIONGROUPBEFORE] update 'createDataACTIONGROUPBEFORE' entity to 'newEntity'");
-		PersistedObjectHandler::getInstance()->updateEntity(
+		$I->updateEntity(
 			"createDataACTIONGROUPBEFORE",
 			"hook",
 			"newEntity",
@@ -44,13 +42,13 @@ class PersistenceActionGroupAppendingTestCest
 		);
 
 		$I->comment("[deleteDataACTIONGROUPBEFORE] delete entity 'createDataACTIONGROUPBEFORE'");
-		PersistedObjectHandler::getInstance()->deleteEntity(
+		$I->deleteEntity(
 			"createDataACTIONGROUPBEFORE",
 			"hook"
 		);
 
 		$I->comment("[getDataACTIONGROUPBEFORE] get 'someEneity' entity");
-		PersistedObjectHandler::getInstance()->getEntity(
+		$I->getEntity(
 			"getDataACTIONGROUPBEFORE",
 			"hook",
 			"someEneity",
@@ -58,7 +56,7 @@ class PersistenceActionGroupAppendingTestCest
 			null
 		);
 
-		$I->comment(PersistedObjectHandler::getInstance()->retrieveEntityField('createData', 'field', 'hook'));
+		$I->comment($I->retrieveEntityField('createData', 'field', 'hook'));
 		$I->comment("Exiting Action Group [ACTIONGROUPBEFORE] DataPersistenceAppendingActionGroup");
 	}
 
@@ -73,7 +71,7 @@ class PersistenceActionGroupAppendingTestCest
 	{
 		$I->comment("Entering Action Group [ACTIONGROUP] DataPersistenceAppendingActionGroup");
 		$I->comment("[createDataACTIONGROUP] create 'entity' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
+		$I->createEntity(
 			"createDataACTIONGROUP",
 			"test",
 			"entity",
@@ -82,7 +80,7 @@ class PersistenceActionGroupAppendingTestCest
 		);
 
 		$I->comment("[updateDataACTIONGROUP] update 'createDataACTIONGROUP' entity to 'newEntity'");
-		PersistedObjectHandler::getInstance()->updateEntity(
+		$I->updateEntity(
 			"createDataACTIONGROUP",
 			"test",
 			"newEntity",
@@ -90,13 +88,13 @@ class PersistenceActionGroupAppendingTestCest
 		);
 
 		$I->comment("[deleteDataACTIONGROUP] delete entity 'createDataACTIONGROUP'");
-		PersistedObjectHandler::getInstance()->deleteEntity(
+		$I->deleteEntity(
 			"createDataACTIONGROUP",
 			"test"
 		);
 
 		$I->comment("[getDataACTIONGROUP] get 'someEneity' entity");
-		PersistedObjectHandler::getInstance()->getEntity(
+		$I->getEntity(
 			"getDataACTIONGROUP",
 			"test",
 			"someEneity",
@@ -104,7 +102,7 @@ class PersistenceActionGroupAppendingTestCest
 			null
 		);
 
-		$I->comment(PersistedObjectHandler::getInstance()->retrieveEntityField('createDataACTIONGROUP', 'field', 'test'));
+		$I->comment($I->retrieveEntityField('createDataACTIONGROUP', 'field', 'test'));
 		$I->comment("Exiting Action Group [ACTIONGROUP] DataPersistenceAppendingActionGroup");
 	}
 }

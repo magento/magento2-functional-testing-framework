@@ -55,7 +55,6 @@ class PersistedObjectHandler
      * Return the singleton instance of this class. Initialize it if needed.
      *
      * @return PersistedObjectHandler
-     * @throws \Exception
      */
     public static function getInstance()
     {

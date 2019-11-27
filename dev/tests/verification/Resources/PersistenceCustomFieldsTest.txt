@@ -2,8 +2,6 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -28,7 +26,7 @@ class PersistenceCustomFieldsTestCest
 		$createData1Fields['firstname'] = "Mac";
 		$createData1Fields['lastname'] = "Doe";
 		$I->comment("[createData1] create 'DefaultPerson' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
+		$I->createEntity(
 			"createData1",
 			"hook",
 			"DefaultPerson",
@@ -36,9 +34,9 @@ class PersistenceCustomFieldsTestCest
 			$createData1Fields
 		);
 
-		$createData2Fields['firstname'] = PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'hook');
+		$createData2Fields['firstname'] = $I->retrieveEntityField('createData1', 'firstname', 'hook');
 		$I->comment("[createData2] create 'uniqueData' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
+		$I->createEntity(
 			"createData2",
 			"hook",
 			"uniqueData",
@@ -60,7 +58,7 @@ class PersistenceCustomFieldsTestCest
 		$createdDataFields['favoriteIndex'] = "1";
 		$createdDataFields['middlename'] = "Kovacs";
 		$I->comment("[createdData] create 'simpleData' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
+		$I->createEntity(
 			"createdData",
 			"test",
 			"simpleData",
@@ -71,7 +69,7 @@ class PersistenceCustomFieldsTestCest
 		$createdData3Fields['firstname'] = "Takeshi";
 		$createdData3Fields['lastname'] = "Kovacs";
 		$I->comment("[createdData3] create 'UniquePerson' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
+		$I->createEntity(
 			"createdData3",
 			"test",
 			"UniquePerson",
@@ -82,7 +80,7 @@ class PersistenceCustomFieldsTestCest
 		$I->comment("Entering Action Group [createdAG] PersistenceActionGroup");
 		$createDataAG1CreatedAGFields['firstname'] = "string1";
 		$I->comment("[createDataAG1CreatedAG] create 'simpleData' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
+		$I->createEntity(
 			"createDataAG1CreatedAG",
 			"test",
 			"simpleData",
@@ -92,7 +90,7 @@ class PersistenceCustomFieldsTestCest
 
 		$createDataAG2CreatedAGFields['firstname'] = "Jane";
 		$I->comment("[createDataAG2CreatedAG] create 'simpleData' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
+		$I->createEntity(
 			"createDataAG2CreatedAG",
 			"test",
 			"simpleData",
@@ -100,9 +98,9 @@ class PersistenceCustomFieldsTestCest
 			$createDataAG2CreatedAGFields
 		);
 
-		$createDataAG3CreatedAGFields['firstname'] = PersistedObjectHandler::getInstance()->retrieveEntityField('createdData3', 'firstname', 'test');
+		$createDataAG3CreatedAGFields['firstname'] = $I->retrieveEntityField('createdData3', 'firstname', 'test');
 		$I->comment("[createDataAG3CreatedAG] create 'simpleData' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
+		$I->createEntity(
 			"createDataAG3CreatedAG",
 			"test",
 			"simpleData",
@@ -113,7 +111,7 @@ class PersistenceCustomFieldsTestCest
 		$I->comment("Exiting Action Group [createdAG] PersistenceActionGroup");
 		$I->comment("Entering Action Group [AGKEY] DataPersistenceSelfReferenceActionGroup");
 		$I->comment("[createData1AGKEY] create 'entity1' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
+		$I->createEntity(
 			"createData1AGKEY",
 			"test",
 			"entity1",
@@ -122,7 +120,7 @@ class PersistenceCustomFieldsTestCest
 		);
 
 		$I->comment("[createData2AGKEY] create 'entity2' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
+		$I->createEntity(
 			"createData2AGKEY",
 			"test",
 			"entity2",
@@ -130,10 +128,10 @@ class PersistenceCustomFieldsTestCest
 			[]
 		);
 
-		$createData3AGKEYFields['key1'] = PersistedObjectHandler::getInstance()->retrieveEntityField('createData1AGKEY', 'field', 'test');
-		$createData3AGKEYFields['key2'] = PersistedObjectHandler::getInstance()->retrieveEntityField('createData2AGKEY', 'field', 'test');
+		$createData3AGKEYFields['key1'] = $I->retrieveEntityField('createData1AGKEY', 'field', 'test');
+		$createData3AGKEYFields['key2'] = $I->retrieveEntityField('createData2AGKEY', 'field', 'test');
 		$I->comment("[createData3AGKEY] create 'entity3' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
+		$I->createEntity(
 			"createData3AGKEY",
 			"test",
 			"entity3",

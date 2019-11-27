@@ -192,7 +192,7 @@ class ActionObject
     /**
      * Getter for actionOrigin
      *
-     * @return string
+     * @return array
      */
     public function getActionOrigin()
     {

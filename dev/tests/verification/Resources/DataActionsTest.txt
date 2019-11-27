@@ -2,8 +2,6 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -26,7 +24,7 @@ class DataActionsTestCest
 	public function _before(AcceptanceTester $I)
 	{
 		$I->comment("[createdInBefore] create 'entity' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
+		$I->createEntity(
 			"createdInBefore",
 			"hook",
 			"entity",
@@ -35,7 +33,7 @@ class DataActionsTestCest
 		);
 
 		$I->comment("[updateInBefore] update 'createdInBefore' entity to 'entity'");
-		PersistedObjectHandler::getInstance()->updateEntity(
+		$I->updateEntity(
 			"createdInBefore",
 			"hook",
 			"entity",
@@ -43,7 +41,7 @@ class DataActionsTestCest
 		);
 
 		$I->comment("[deleteInBefore] delete entity 'createdInBefore'");
-		PersistedObjectHandler::getInstance()->deleteEntity(
+		$I->deleteEntity(
 			"createdInBefore",
 			"hook"
 		);
@@ -60,7 +58,7 @@ class DataActionsTestCest
 	public function DataActionsTest(AcceptanceTester $I)
 	{
 		$I->comment("[createdInTest] create 'entity' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
+		$I->createEntity(
 			"createdInTest",
 			"test",
 			"entity",
@@ -69,7 +67,7 @@ class DataActionsTestCest
 		);
 
 		$I->comment("[updateInTest] update 'createdInTest' entity to 'entity'");
-		PersistedObjectHandler::getInstance()->updateEntity(
+		$I->updateEntity(
 			"createdInTest",
 			"test",
 			"entity",
@@ -77,13 +75,13 @@ class DataActionsTestCest
 		);
 
 		$I->comment("[deleteInTest] delete entity 'createdInTest'");
-		PersistedObjectHandler::getInstance()->deleteEntity(
+		$I->deleteEntity(
 			"createdInTest",
 			"test"
 		);
 
 		$I->comment("[updatedDataOutOfScope] update 'createdInBefore' entity to 'entity'");
-		PersistedObjectHandler::getInstance()->updateEntity(
+		$I->updateEntity(
 			"createdInBefore",
 			"test",
 			"entity",
@@ -91,7 +89,7 @@ class DataActionsTestCest
 		);
 
 		$I->comment("[deleteDataOutOfScope] delete entity 'createdInBefore'");
-		PersistedObjectHandler::getInstance()->deleteEntity(
+		$I->deleteEntity(
 			"createdInBefore",
 			"test"
 		);
