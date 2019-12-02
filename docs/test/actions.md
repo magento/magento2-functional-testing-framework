@@ -1262,6 +1262,7 @@ Attribute|Type|Use|Description
 ---|---|---|---
 `command`|string |optional| CLI command to be executed in Magento environment.
 `arguments`|string |optional| Unescaped arguments to be passed in with the CLI command.
+`timeout`|string|optional| Number of seconds CLI command can run without outputting anything.
 `stepKey`|string|required| A unique identifier of the action.
 `before`|string|optional| `stepKey` of action that must be executed next.
 `after`|string|optional| `stepKey` of preceding action.

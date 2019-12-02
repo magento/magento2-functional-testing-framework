@@ -14,6 +14,7 @@ if (!empty($_POST['token']) && !empty($_POST['command'])) {
     $tokenPassedIn = urldecode($_POST['token'] ?? '');
     $command = urldecode($_POST['command'] ?? '');
     $arguments = urldecode($_POST['arguments'] ?? '');
+    $timeout = floatval(urldecode($_POST['timeout'] ?? 60));
 
     // Token returned will be null if the token we passed in is invalid
     $tokenFromMagento = $tokenModel->loadByToken($tokenPassedIn)->getToken();
@@ -24,7 +25,7 @@ if (!empty($_POST['token']) && !empty($_POST['command'])) {
         if ($valid) {
             $fullCommand = escapeshellcmd($magentoBinary . " $command" . " $arguments");
             $process = new Symfony\Component\Process\Process($fullCommand);
-            $process->setIdleTimeout(60);
+            $process->setIdleTimeout($timeout);
             $process->setTimeout(0);
             $idleTimeout = false;
             try {

@@ -124,8 +124,14 @@ class BasicFunctionalTestCest
 		$grabMultipleKey1 = $I->grabMultiple(".functionalTestSelector"); // stepKey: grabMultipleKey1
 		$grabTextFromKey1 = $I->grabTextFrom(".functionalTestSelector"); // stepKey: grabTextFromKey1
 		$grabValueFromKey1 = $I->grabValueFrom(".functionalTestSelector"); // stepKey: grabValueFromKey1
-		$magentoCli1 = $I->magentoCLI("maintenance:enable", "\"stuffHere\""); // stepKey: magentoCli1
+		$magentoCli1 = $I->magentoCLI("maintenance:enable", 60, "\"stuffHere\""); // stepKey: magentoCli1
 		$I->comment($magentoCli1);
+		$magentoCli2 = $I->magentoCLI("maintenance:enable", 120, "\"stuffHere\""); // stepKey: magentoCli2
+		$I->comment($magentoCli2);
+		$magentoCli3 = $I->magentoCLISecret("config:set somePath " . CredentialStore::getInstance()->getSecret("someKey"), 60); // stepKey: magentoCli3
+		$I->comment($magentoCli3); // stepKey: magentoCli3
+		$magentoCli4 = $I->magentoCLISecret("config:set somePath " . CredentialStore::getInstance()->getSecret("someKey"), 120); // stepKey: magentoCli4
+		$I->comment($magentoCli4); // stepKey: magentoCli4
 		$I->makeScreenshot("screenShotInput"); // stepKey: makeScreenshotKey1
 		$I->maximizeWindow(); // stepKey: maximizeWindowKey1
 		$I->moveBack(); // stepKey: moveBackKey1

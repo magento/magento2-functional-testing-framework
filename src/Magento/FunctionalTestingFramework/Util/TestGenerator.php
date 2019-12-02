@@ -619,7 +619,12 @@ class TestGenerator
             if (isset($customActionAttributes['timeout'])) {
                 $time = $customActionAttributes['timeout'];
             }
-            $time = $time ?? ActionObject::getDefaultWaitTimeout();
+
+            if (in_array($actionObject->getType(), ActionObject::COMMAND_ACTION_ATTRIBUTES)) {
+                $time = $time ?? ActionObject::DEFAULT_COMMAND_WAIT_TIMEOUT;
+            } else {
+                $time = $time ?? ActionObject::getDefaultWaitTimeout();
+            }
 
             if (isset($customActionAttributes['parameterArray']) && $actionObject->getType() != 'pressKey') {
                 // validate the param array is in the correct format
@@ -1288,6 +1293,7 @@ class TestGenerator
                         $actor,
                         $actionObject,
                         $command,
+                        $time,
                         $arguments
                     );
                     $testSteps .= sprintf(self::STEP_KEY_ANNOTATION, $stepKey) . PHP_EOL;
