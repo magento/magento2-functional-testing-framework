@@ -6,8 +6,8 @@ You can form suites using separate tests, groups, and modules.
 
 Each suite must be defined in the `<VendorName>/<ModuleName>/Test/Mftf/Suite` directory.
 
-The tests for each suite will be generated in a separate directory under `<magento 2 root>/dev/tests/acceptance/tests/functional/Magento/FunctionalTest/_generated/`.
-All tests that aren't in a suite will be generated in the _default_ suite at `.../Magento/FunctionalTest/_generated/default/`
+The tests for each suite are generated in a separate directory under `<magento 2 root>/dev/tests/acceptance/tests/functional/Magento/FunctionalTest/_generated/`.
+All tests that are not within a suite are generated in the _default_ suite at `.../Magento/FunctionalTest/_generated/default/`.
 
 <div class="bs-callout bs-callout-info">
  If a test is generated into at least one custom suite, it will not appear in the _default_ suite.
