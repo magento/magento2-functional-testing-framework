@@ -21,14 +21,8 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 class MagentoActionProxies extends CodeceptionModule
 {
     /**
-     * PersistedObjectHandler instance
-     *
-     * @var PersistedObjectHandler
-     */
-    private static $persistHandler = null;
-
-    /**
      * Create an entity
+     * TODO: un-comment this function after MQE-1904
      *
      * @param string $key                 StepKey of the createData action.
      * @param string $scope
@@ -38,6 +32,7 @@ class MagentoActionProxies extends CodeceptionModule
      * @param string $storeCode
      * @return void
      */
+    /*
     public function createEntity(
         $key,
         $scope,
@@ -46,11 +41,7 @@ class MagentoActionProxies extends CodeceptionModule
         $overrideFields = [],
         $storeCode = ''
     ) {
-        if (!self::$persistHandler) {
-            self::$persistHandler = PersistedObjectHandler::getInstance();
-        }
-
-        self::$persistHandler->createEntity(
+        PersistedObjectHandler::getInstance()->createEntity(
             $key,
             $scope,
             $entity,
@@ -59,9 +50,10 @@ class MagentoActionProxies extends CodeceptionModule
             $storeCode
         );
     }
-
+    */
     /**
      * Retrieves and updates a previously created entity
+     * TODO: un-comment this function after MQE-1904
      *
      * @param string $key                 StepKey of the createData action.
      * @param string $scope
@@ -69,22 +61,20 @@ class MagentoActionProxies extends CodeceptionModule
      * @param array  $dependentObjectKeys StepKeys of other createData actions that are required.
      * @return void
      */
+    /*
     public function updateEntity($key, $scope, $updateEntity, $dependentObjectKeys = [])
     {
-        if (!self::$persistHandler) {
-            self::$persistHandler = PersistedObjectHandler::getInstance();
-        }
-
-        self::$persistHandler->updateEntity(
+        PersistedObjectHandler::getInstance()->updateEntity(
             $key,
             $scope,
             $updateEntity,
             $dependentObjectKeys
         );
     }
-
+    */
     /**
      * Performs GET on given entity and stores entity for use
+     * TODO: un-comment this function after MQE-1904
      *
      * @param string  $key                 StepKey of getData action.
      * @param string  $scope
@@ -94,13 +84,10 @@ class MagentoActionProxies extends CodeceptionModule
      * @param integer $index
      * @return void
      */
+    /*
     public function getEntity($key, $scope, $entity, $dependentObjectKeys = [], $storeCode = '', $index = null)
     {
-        if (!self::$persistHandler) {
-            self::$persistHandler = PersistedObjectHandler::getInstance();
-        }
-
-        self::$persistHandler->getEntity(
+        PersistedObjectHandler::getInstance()->getEntity(
             $key,
             $scope,
             $entity,
@@ -109,49 +96,48 @@ class MagentoActionProxies extends CodeceptionModule
             $index
         );
     }
-
+    */
     /**
      * Retrieves and deletes a previously created entity
+     * TODO: un-comment this function after MQE-1904
      *
      * @param string $key   StepKey of the createData action.
      * @param string $scope
      * @return void
      */
+    /*
     public function deleteEntity($key, $scope)
     {
-        if (!self::$persistHandler) {
-            self::$persistHandler = PersistedObjectHandler::getInstance();
-        }
-
-        self::$persistHandler->deleteEntity($key, $scope);
+        PersistedObjectHandler::getInstance()->deleteEntity($key, $scope);
     }
-
+    */
     /**
      * Retrieves a field from an entity, according to key and scope given
+     * TODO: un-comment this function after MQE-1904
      *
      * @param string $stepKey
      * @param string $field
      * @param string $scope
      * @return string
      */
+    /*
     public function retrieveEntityField($stepKey, $field, $scope)
     {
-        if (!self::$persistHandler) {
-            self::$persistHandler = PersistedObjectHandler::getInstance();
-        }
-
-        return self::$persistHandler->retrieveEntityField($stepKey, $field, $scope);
+        return PersistedObjectHandler::getInstance()->retrieveEntityField($stepKey, $field, $scope);
     }
-
+    */
     /**
      * Get encrypted value by key
+     * TODO: un-comment this function after MQE-1904
      *
      * @param string $key
      * @return string|null
      * @throws TestFrameworkException
      */
+    /*
     public function getSecret($key)
     {
         return CredentialStore::getInstance()->getSecret($key);
     }
+    */
 }

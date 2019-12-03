@@ -27,6 +27,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Exception\WebDriverCurlException;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 
 /**
  * MagentoWebDriver module provides common Magento web actions through Selenium WebDriver.
@@ -47,6 +48,7 @@ use Facebook\WebDriver\Exception\WebDriverCurlException;
  * ```
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  */
 class MagentoWebDriver extends WebDriver
 {
@@ -903,5 +905,119 @@ class MagentoWebDriver extends WebDriver
         $executor->close();
 
         return $response;
+    }
+
+    /**
+     * Create an entity
+     * TODO: remove this function after MQE-1904
+     *
+     * @param string $key                 StepKey of the createData action.
+     * @param string $scope
+     * @param string $entity              Name of xml entity to create.
+     * @param array  $dependentObjectKeys StepKeys of other createData actions that are required.
+     * @param array  $overrideFields      Array of FieldName => Value of override fields.
+     * @param string $storeCode
+     * @return void
+     */
+    public function createEntity(
+        $key,
+        $scope,
+        $entity,
+        $dependentObjectKeys = [],
+        $overrideFields = [],
+        $storeCode = ''
+    ) {
+        PersistedObjectHandler::getInstance()->createEntity(
+            $key,
+            $scope,
+            $entity,
+            $dependentObjectKeys,
+            $overrideFields,
+            $storeCode
+        );
+    }
+
+    /**
+     * Retrieves and updates a previously created entity
+     * TODO: remove this function after MQE-1904
+     *
+     * @param string $key                 StepKey of the createData action.
+     * @param string $scope
+     * @param string $updateEntity        Name of the static XML data to update the entity with.
+     * @param array  $dependentObjectKeys StepKeys of other createData actions that are required.
+     * @return void
+     */
+    public function updateEntity($key, $scope, $updateEntity, $dependentObjectKeys = [])
+    {
+        PersistedObjectHandler::getInstance()->updateEntity(
+            $key,
+            $scope,
+            $updateEntity,
+            $dependentObjectKeys
+        );
+    }
+
+    /**
+     * Performs GET on given entity and stores entity for use
+     * TODO: remove this function after MQE-1904
+     *
+     * @param string  $key                 StepKey of getData action.
+     * @param string  $scope
+     * @param string  $entity              Name of XML static data to use.
+     * @param array   $dependentObjectKeys StepKeys of other createData actions that are required.
+     * @param string  $storeCode
+     * @param integer $index
+     * @return void
+     */
+    public function getEntity($key, $scope, $entity, $dependentObjectKeys = [], $storeCode = '', $index = null)
+    {
+        PersistedObjectHandler::getInstance()->getEntity(
+            $key,
+            $scope,
+            $entity,
+            $dependentObjectKeys,
+            $storeCode,
+            $index
+        );
+    }
+
+    /**
+     * Retrieves and deletes a previously created entity
+     * TODO: remove this function after MQE-1904
+     *
+     * @param string $key   StepKey of the createData action.
+     * @param string $scope
+     * @return void
+     */
+    public function deleteEntity($key, $scope)
+    {
+        PersistedObjectHandler::getInstance()->deleteEntity($key, $scope);
+    }
+
+    /**
+     * Retrieves a field from an entity, according to key and scope given
+     * TODO: remove this function after MQE-1904
+     *
+     * @param string $stepKey
+     * @param string $field
+     * @param string $scope
+     * @return string
+     */
+    public function retrieveEntityField($stepKey, $field, $scope)
+    {
+        return PersistedObjectHandler::getInstance()->retrieveEntityField($stepKey, $field, $scope);
+    }
+
+    /**
+     * Get encrypted value by key
+     * TODO: remove this function after MQE-1904
+     *
+     * @param string $key
+     * @return string|null
+     * @throws TestFrameworkException
+     */
+    public function getSecret($key)
+    {
+        return CredentialStore::getInstance()->getSecret($key);
     }
 }
