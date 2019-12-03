@@ -525,8 +525,9 @@ class MagentoWebDriver extends WebDriver
     {
         $magentoBinary = realpath(MAGENTO_BP . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'magento');
         $valid = $this->validateCommand($magentoBinary, $command);
-        // execute from shell when running tests from web root.
-        if ($valid) {
+        // execute from shell when running tests from web root -- excluding cron
+        //TODO: investigate why cron:run hangs with shell execution on pipeline
+        if ($valid && ($command !== self::COMMAND_CRON_RUN)) {
             return $this->shellExecMagentoCLI($magentoBinary, $command, $timeout, $arguments);
         } else {
             return $this->curlExecMagentoCLI($command, $timeout, $arguments);
@@ -859,13 +860,11 @@ class MagentoWebDriver extends WebDriver
         $process->setTimeout(0);
         try {
             $process->run();
-            if (strpos($command, self::COMMAND_CRON_RUN) === false) {
-                $output = $process->getOutput();
-                if (!$process->isSuccessful()) {
-                    $failureOutput = $process->getErrorOutput();
-                    if (!empty($failureOutput)) {
-                        $output = $failureOutput;
-                    }
+            $output = $process->getOutput();
+            if (!$process->isSuccessful()) {
+                $failureOutput = $process->getErrorOutput();
+                if (!empty($failureOutput)) {
+                    $output = $failureOutput;
                 }
             }
             if (empty($output)) {
