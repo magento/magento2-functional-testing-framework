@@ -849,7 +849,6 @@ class MagentoWebDriver extends WebDriver
      *
      * @throws \RuntimeException
      * @return string
-     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function shellExecMagentoCLI($magentoBinary, $command, $timeout, $arguments): string
     {
@@ -870,10 +869,8 @@ class MagentoWebDriver extends WebDriver
             if (empty($output)) {
                 $output = "CLI did not return output.";
             }
-
         } catch (ProcessTimedOutException $exception) {
             $output = "CLI command timed out, no output available.";
-
         }
 
         if ($this->checkForFilePath($output)) {
@@ -933,21 +930,25 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Checks magento list of CLI commands for given $command. Does not check command parameters, just base command.
+     *
      * @param string $magentoBinary
      * @param string $command
-     * @return bool
+     *
+     * @return boolean
      */
     private function validateCommand($magentoBinary, $command)
     {
         exec($magentoBinary . ' list', $commandList);
         // Trim list of commands after first whitespace
-        $commandList = array_map(array($this, 'trimAfterWhitespace'), $commandList);
+        $commandList = array_map([$this, 'trimAfterWhitespace'], $commandList);
         return in_array($this->trimAfterWhitespace($command), $commandList);
     }
 
     /**
      * Returns given string trimmed of everything after the first found whitespace.
+     *
      * @param string $string
+     *
      * @return string
      */
     private function trimAfterWhitespace($string)
@@ -957,13 +958,13 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Detects file path in string.
+     *
      * @param string $string
+     *
      * @return boolean
      */
     private function checkForFilePath($string)
     {
         return preg_match('/\/[\S]+\//', $string);
     }
-
 }
-
