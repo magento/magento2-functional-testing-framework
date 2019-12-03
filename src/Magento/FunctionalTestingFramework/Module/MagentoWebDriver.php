@@ -22,6 +22,7 @@ use Magento\FunctionalTestingFramework\Util\ConfigSanitizerUtil;
 use Yandex\Allure\Adapter\AllureException;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Yandex\Allure\Adapter\Support\AttachmentSupport;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
@@ -51,6 +52,8 @@ use Facebook\WebDriver\Exception\WebDriverCurlException;
 class MagentoWebDriver extends WebDriver
 {
     use AttachmentSupport;
+
+    const COMMAND_CRON_RUN = 'cron:run';
 
     /**
      * List of known magento loading masks by selector
@@ -520,13 +523,14 @@ class MagentoWebDriver extends WebDriver
      */
     public function magentoCLI($command, $timeout = null, $arguments = null)
     {
-        return $this->curlExecMagentoCLI($command, $timeout, $arguments);
-        //TODO: calling bin/magento from pipeline is timing out, needs investigation (ref: MQE-1774)
-//        try {
-//            return $this->shellExecMagentoCLI($command, $arguments);
-//        } catch (\Exception $exception) {
-//            return $this->curlExecMagentoCLI($command, $arguments);
-//        }
+        $magentoBinary = realpath(MAGENTO_BP . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'magento');
+        $valid = $this->validateCommand($magentoBinary, $command);
+        // execute from shell when running tests from web root -- excludes cron jobs.
+        if ($valid && strpos($command, self::COMMAND_CRON_RUN) === false) {
+            return $this->shellExecMagentoCLI($magentoBinary, $command, $timeout, $arguments);
+        } else {
+            return $this->curlExecMagentoCLI($command, $timeout, $arguments);
+        }
     }
 
     /**
@@ -838,6 +842,7 @@ class MagentoWebDriver extends WebDriver
     /**
      * Takes given $command and executes it against bin/magento executable. Returns stdout output from the command.
      *
+     * @param string  $magentoBinary
      * @param string  $command
      * @param integer $timeout
      * @param string  $arguments
@@ -846,20 +851,41 @@ class MagentoWebDriver extends WebDriver
      * @return string
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
-    private function shellExecMagentoCLI($command, $timeout, $arguments): string
+    private function shellExecMagentoCLI($magentoBinary, $command, $timeout, $arguments): string
     {
         $php = PHP_BINDIR ? PHP_BINDIR . DIRECTORY_SEPARATOR. 'php' : 'php';
-        $binMagento = realpath(MAGENTO_BP . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'magento');
-        $command = $php . ' -f ' . $binMagento . ' ' . $command . ' ' . $arguments;
-        $process = new Process(escapeshellcmd($command), MAGENTO_BP);
+        $fullCommand = $php . ' -f ' . $magentoBinary . ' ' . $command . ' ' . $arguments;
+        $process = new Process(escapeshellcmd($fullCommand), MAGENTO_BP);
         $process->setIdleTimeout($timeout);
         $process->setTimeout(0);
-        $exitCode = $process->run();
+        try {
+            $process->run();
+            $output = $process->getOutput();
+            if (!$process->isSuccessful()) {
+                $failureOutput = $process->getErrorOutput();
+                if (!empty($failureOutput)) {
+                    $output = $failureOutput;
+                }
+            }
+            if (empty($output)) {
+                $output = "CLI did not return output.";
+            }
+
+        } catch (ProcessTimedOutException $exception) {
+            $output = "CLI command timed out, no output available.";
+
+        }
+
+        if ($this->checkForFilePath($output)) {
+            $output = "CLI output suppressed, filepath detected in output.";
+        }
+
+        $exitCode = $process->getExitCode();
+
         if ($exitCode !== 0) {
             throw new \RuntimeException($process->getErrorOutput());
         }
-
-        return $process->getOutput();
+        return $output;
     }
 
     /**
@@ -904,4 +930,40 @@ class MagentoWebDriver extends WebDriver
 
         return $response;
     }
+
+    /**
+     * Checks magento list of CLI commands for given $command. Does not check command parameters, just base command.
+     * @param string $magentoBinary
+     * @param string $command
+     * @return bool
+     */
+    private function validateCommand($magentoBinary, $command)
+    {
+        exec($magentoBinary . ' list', $commandList);
+        // Trim list of commands after first whitespace
+        $commandList = array_map(array($this, 'trimAfterWhitespace'), $commandList);
+        return in_array($this->trimAfterWhitespace($command), $commandList);
+    }
+
+    /**
+     * Returns given string trimmed of everything after the first found whitespace.
+     * @param string $string
+     * @return string
+     */
+    private function trimAfterWhitespace($string)
+    {
+        return strtok($string, ' ');
+    }
+
+    /**
+     * Detects file path in string.
+     * @param string $string
+     * @return boolean
+     */
+    private function checkForFilePath($string)
+    {
+        return preg_match('/\/[\S]+\//', $string);
+    }
+
 }
+
