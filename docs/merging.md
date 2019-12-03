@@ -6,7 +6,7 @@ The MFTF allows you to merge test components defined in XML files, such as:
 -  [`<pages>`][]
 -  [`<sections>`][]
 -  [`<data>`][]
--  `<action groups>`
+-  [`<action groups>`][]
 
 You can create, delete, or update the component.
 It is useful for supporting rapid test creation for extensions and customizations.
@@ -569,3 +569,4 @@ The `_defaultSample` results corresponds to:
 [`<pages>`]: ./page.md
 [`<sections>`]: ./section.md
 [`<tests>`]: ./test.md
+[`<action groups>`]: ./test/action-groups.md

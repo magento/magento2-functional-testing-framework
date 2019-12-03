@@ -4,9 +4,10 @@ Suites are essentially groups of tests that run in the specific conditions (prec
 They enable you including, excluding, and grouping tests for a customized test run when you need it.
 You can form suites using separate tests, groups, and modules.
 
-Each suite must be defined in the `<magento 2 root>/dev/tests/acceptance/tests/_suite/suite.xml` file.
-The generated tests for each suite go into a separate directory under `<magento 2 root>/dev/tests/acceptance/tests/functional/Magento/FunctionalTest/_generated/`.
-By default, all generated tests are stored in the _default_ suite under `.../Magento/FunctionalTest/_generated/default/`
+Each suite must be defined in the `<VendorName>/<ModuleName>/Test/Mftf/Suite` directory.
+
+The tests for each suite are generated in a separate directory under `<magento 2 root>/dev/tests/acceptance/tests/functional/Magento/FunctionalTest/_generated/`.
+All tests that are not within a suite are generated in the _default_ suite at `.../Magento/FunctionalTest/_generated/default/`.
 
 <div class="bs-callout bs-callout-info">
  If a test is generated into at least one custom suite, it will not appear in the _default_ suite.
@@ -59,8 +60,6 @@ The code lives in one place and executes once per suite.
 -  Set up preconditions and postconditions using [actions] in [`<before>`] and [`<after>`] correspondingly, just similar to use in a [test].
 -  Clean up after suites just like after tests.
   The MFTF enforces the presence of both `<before>` and `<after>` if either is present.
--  Do not reference in the subsequent tests to data that was persisted in the preconditions.
-  Referencing to `$stepKey.field$` of these actions is not valid.
 
 ## Test writing
 
