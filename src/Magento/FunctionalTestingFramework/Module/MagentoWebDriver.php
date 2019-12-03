@@ -969,4 +969,3 @@ class MagentoWebDriver extends WebDriver
         return preg_match('/\/[\S]+\//', $string);
     }
 }
-
