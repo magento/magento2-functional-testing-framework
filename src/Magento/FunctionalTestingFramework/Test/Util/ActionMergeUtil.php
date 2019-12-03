@@ -218,31 +218,26 @@ class ActionMergeUtil
     private function insertWaits()
     {
         # This list is sorted alphabetically. Please maintain that order when modifying.
-        $blacklist = [
+        # They array_flip() is a trick to speed up checking for items in the blacklist.
+        $blacklist = array_flip([
             "assertArrayHasKey", "assertArrayIsSorted", "assertArrayNotHasKey", "assertArraySubset", "assertContains",
             "assertCount", "assertElementContainsAttribute", "assertEmpty", "assertEquals", "assertFalse",
             "assertFileExists", "assertFileNotExists", "assertGreaterOrEquals", "assertGreaterThan",
             "assertGreaterThanOrEqual", "assertInstanceOf", "assertInternalType", "assertIsEmpty", "assertLessOrEquals",
             "assertLessThan", "assertLessThanOrEqual", "assertNotContains", "assertNotEmpty", "assertNotEquals",
             "assertNotInstanceOf", "assertNotNull", "assertNotRegExp", "assertNotSame", "assertNull", "assertRegExp",
-            "assertSame", "assertStringStartsNotWith", "assertStringStartsWith", "assertTrue", "createData",
-            "deleteData", "dontSee", "dontSeeCheckboxIsChecked", "dontSeeCookie", "dontSeeCurrentUrlEquals",
-            "dontSeeCurrentUrlMatches", "dontSeeElement", "dontSeeElementInDOM", "dontSeeInCurrentUrl",
-            "dontSeeInField", "dontSeeInFormFields", "dontSeeInPageSource", "dontSeeInSource", "dontSeeInTitle",
-            "dontSeeJsError", "dontSeeLink", "dontSeeOptionIsSelected", "expectException", "formatMoney",
-            "generateDate", "getData", "grabAttributeFrom", "grabCookie", "grabFromCurrentUrl", "grabMultiple",
-            "grabPageSource", "grabTextFrom", "grabValueFrom", "magentoCLI", "parseFloat", "see",
-            "seeCheckboxIsChecked", "seeCookie", "seeCurrentUrlEquals", "seeCurrentUrlMatches", "seeElement",
-            "seeElementInDOM", "seeInCurrentUrl", "seeInField", "seeInFormFields", "seeInPageSource", "seeInPopup",
-            "seeInSource", "seeInTitle", "seeLink", "seeNumberOfElements", "seeOptionIsSelected", "switchToIFrame",
-            "switchToNextTab", "switchToPreviousTab", "switchToWindow", "updateData", "wait", "waitForAjaxLoad",
-            "waitForElement", "waitForElementChange", "waitForElementNotVisible", "waitForElementVisible", "waitForJS",
-            "waitForLoadingMaskToDisappear", "waitForPageLoad", "waitForPwaElementNotVisible",
-            "waitForPwaElementVisible", "waitForText"
-        ];
+            "assertSame", "assertStringStartsNotWith", "assertStringStartsWith", "assertTrue", "dontSee",
+            "dontSeeCheckboxIsChecked", "dontSeeCookie", "dontSeeCurrentUrlEquals", "dontSeeCurrentUrlMatches",
+            "dontSeeElement", "dontSeeElementInDOM", "dontSeeInCurrentUrl", "dontSeeInField", "dontSeeInFormFields",
+            "dontSeeInPageSource", "dontSeeInSource", "dontSeeInTitle", "dontSeeJsError", "dontSeeLink",
+            "dontSeeOptionIsSelected", "see", "seeCheckboxIsChecked", "seeCookie", "seeCurrentUrlEquals",
+            "seeCurrentUrlMatches", "seeElement", "seeElementInDOM", "seeInCurrentUrl", "seeInField", "seeInFormFields",
+            "seeInPageSource", "seeInPopup", "seeInSource", "seeInTitle", "seeLink", "seeNumberOfElements",
+            "seeOptionIsSelected"
+        ]);
 
         foreach ($this->orderedSteps as $step) {
-            if ($step->getTimeout() && !in_array($step->getType(), $blacklist)) {
+            if ($step->getTimeout() && !isset($blacklist[$step->getType()])) {
                 $waitStepAttributes = [self::WAIT_ATTR => $step->getTimeout()];
                 $waitStep = new ActionObject(
                     $step->getStepKey() . self::WAIT_ACTION_SUFFIX,
