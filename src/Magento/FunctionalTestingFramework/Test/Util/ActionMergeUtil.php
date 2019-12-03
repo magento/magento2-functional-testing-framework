@@ -34,6 +34,13 @@ class ActionMergeUtil
     const CREDS_REGEX = "/{{_CREDS\.([\w|\/]+)}}/";
 
     /**
+     * Array of actions that will not have waitForPageLoad inserted after them.
+     *
+     * @var array
+     */
+    public $waitsBlacklist;
+
+    /**
      * Array holding final resulting steps
      *
      * @var array
@@ -71,6 +78,25 @@ class ActionMergeUtil
     {
         $this->name = $contextName;
         $this->type = $contextType;
+
+        # This list is sorted alphabetically. Please maintain that order when modifying.
+        # They array_flip() is a trick to speed up checking for items in the blacklist.
+        $this->waitsBlacklist = array_flip([
+            "assertArrayHasKey", "assertArrayIsSorted", "assertArrayNotHasKey", "assertArraySubset", "assertContains",
+            "assertCount", "assertElementContainsAttribute", "assertEmpty", "assertEquals", "assertFalse",
+            "assertFileExists", "assertFileNotExists", "assertGreaterOrEquals", "assertGreaterThan",
+            "assertGreaterThanOrEqual", "assertInstanceOf", "assertInternalType", "assertIsEmpty", "assertLessOrEquals",
+            "assertLessThan", "assertLessThanOrEqual", "assertNotContains", "assertNotEmpty", "assertNotEquals",
+            "assertNotInstanceOf", "assertNotNull", "assertNotRegExp", "assertNotSame", "assertNull", "assertRegExp",
+            "assertSame", "assertStringStartsNotWith", "assertStringStartsWith", "assertTrue", "dontSee",
+            "dontSeeCheckboxIsChecked", "dontSeeCookie", "dontSeeCurrentUrlEquals", "dontSeeCurrentUrlMatches",
+            "dontSeeElement", "dontSeeElementInDOM", "dontSeeInCurrentUrl", "dontSeeInField", "dontSeeInFormFields",
+            "dontSeeInPageSource", "dontSeeInSource", "dontSeeInTitle", "dontSeeJsError", "dontSeeLink",
+            "dontSeeOptionIsSelected", "see", "seeCheckboxIsChecked", "seeCookie", "seeCurrentUrlEquals",
+            "seeCurrentUrlMatches", "seeElement", "seeElementInDOM", "seeInCurrentUrl", "seeInField", "seeInFormFields",
+            "seeInPageSource", "seeInPopup", "seeInSource", "seeInTitle", "seeLink", "seeNumberOfElements",
+            "seeOptionIsSelected"
+        ]);
     }
 
     /**
@@ -217,27 +243,8 @@ class ActionMergeUtil
      */
     private function insertWaits()
     {
-        # This list is sorted alphabetically. Please maintain that order when modifying.
-        # They array_flip() is a trick to speed up checking for items in the blacklist.
-        $blacklist = array_flip([
-            "assertArrayHasKey", "assertArrayIsSorted", "assertArrayNotHasKey", "assertArraySubset", "assertContains",
-            "assertCount", "assertElementContainsAttribute", "assertEmpty", "assertEquals", "assertFalse",
-            "assertFileExists", "assertFileNotExists", "assertGreaterOrEquals", "assertGreaterThan",
-            "assertGreaterThanOrEqual", "assertInstanceOf", "assertInternalType", "assertIsEmpty", "assertLessOrEquals",
-            "assertLessThan", "assertLessThanOrEqual", "assertNotContains", "assertNotEmpty", "assertNotEquals",
-            "assertNotInstanceOf", "assertNotNull", "assertNotRegExp", "assertNotSame", "assertNull", "assertRegExp",
-            "assertSame", "assertStringStartsNotWith", "assertStringStartsWith", "assertTrue", "dontSee",
-            "dontSeeCheckboxIsChecked", "dontSeeCookie", "dontSeeCurrentUrlEquals", "dontSeeCurrentUrlMatches",
-            "dontSeeElement", "dontSeeElementInDOM", "dontSeeInCurrentUrl", "dontSeeInField", "dontSeeInFormFields",
-            "dontSeeInPageSource", "dontSeeInSource", "dontSeeInTitle", "dontSeeJsError", "dontSeeLink",
-            "dontSeeOptionIsSelected", "see", "seeCheckboxIsChecked", "seeCookie", "seeCurrentUrlEquals",
-            "seeCurrentUrlMatches", "seeElement", "seeElementInDOM", "seeInCurrentUrl", "seeInField", "seeInFormFields",
-            "seeInPageSource", "seeInPopup", "seeInSource", "seeInTitle", "seeLink", "seeNumberOfElements",
-            "seeOptionIsSelected"
-        ]);
-
         foreach ($this->orderedSteps as $step) {
-            if ($step->getTimeout() && !isset($blacklist[$step->getType()])) {
+            if ($step->getTimeout() && !isset($this->waitsBlacklist[$step->getType()])) {
                 $waitStepAttributes = [self::WAIT_ATTR => $step->getTimeout()];
                 $waitStep = new ActionObject(
                     $step->getStepKey() . self::WAIT_ACTION_SUFFIX,

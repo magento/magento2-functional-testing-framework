@@ -184,6 +184,34 @@ class ActionMergeUtilTest extends MagentoTestCase
     }
 
     /**
+     * Verify that waitForPageLoad() actions are NOT inserted after blacklisted actions such as see and assert
+     *
+     * @return void
+     */
+    public function testInsertWaitBlacklist()
+    {
+        $actionMergeUtil = new ActionMergeUtil("actionMergeUtilTest", "TestCase");
+
+        // set up input list of all blacklisted actions
+        $actionObjects = [];
+        foreach ($actionMergeUtil->waitsBlacklist as $blacklistedType => $value) {
+            $actionObjects[] = new ActionObject("step" . $value, $blacklistedType, []);
+        }
+
+        // call the function that inserts waits
+        $allActions = $actionMergeUtil->resolveActionSteps($actionObjects);
+
+        // assert that we don't see any waitForPageLoads inserted
+        foreach ($allActions as $action) {
+            $this->assertNotEquals(
+                "waitForPageLoad",
+                $action->getType(),
+                "A waitForPageLoad action was inserted where we did not expect it."
+            );
+        }
+    }
+
+    /**
      * Verify that a <fillField> action is replaced by <fillSecretField> when secret _CREDS are referenced.
      *
      * @throws TestReferenceException
@@ -286,6 +314,26 @@ class ActionMergeUtilTest extends MagentoTestCase
 
         $actionMergeUtil = new ActionMergeUtil('actionMergeUtilTest', 'TestCase');
         $actionMergeUtil->resolveActionSteps($actionObject);
+    }
+
+    /**
+     * Test Exception Handler for merging actions
+     *
+     * @throws \Exception
+     */
+    public function testMergeActionsException()
+    {
+        $testActionMergeUtil = new ActionMergeUtil(null, null);
+
+        $actionObject = new ActionObject('fakeAction', 'comment', [
+            'userInput' => '{{someEntity.entity}}'
+        ]);
+
+        $this->expectExceptionMessage("Could not resolve entity reference \"{{someEntity.entity}}\" " .
+            "in Action with stepKey \"fakeAction\".\n" .
+            "Exception occurred parsing action at StepKey \"fakeAction\"");
+
+        $testActionMergeUtil->resolveActionSteps(["merge123" => $actionObject]);
     }
 
     /**
