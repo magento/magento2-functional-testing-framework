@@ -525,8 +525,8 @@ class MagentoWebDriver extends WebDriver
     {
         $magentoBinary = realpath(MAGENTO_BP . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'magento');
         $valid = $this->validateCommand($magentoBinary, $command);
-        // execute from shell when running tests from web root -- excludes cron jobs.
-        if ($valid && strpos($command, self::COMMAND_CRON_RUN) === false) {
+        // execute from shell when running tests from web root.
+        if ($valid) {
             return $this->shellExecMagentoCLI($magentoBinary, $command, $timeout, $arguments);
         } else {
             return $this->curlExecMagentoCLI($command, $timeout, $arguments);
@@ -854,16 +854,18 @@ class MagentoWebDriver extends WebDriver
     {
         $php = PHP_BINDIR ? PHP_BINDIR . DIRECTORY_SEPARATOR. 'php' : 'php';
         $fullCommand = $php . ' -f ' . $magentoBinary . ' ' . $command . ' ' . $arguments;
-        $process = new Process(escapeshellcmd($fullCommand), MAGENTO_BP);
+        $process = Process::fromShellCommandline(escapeshellcmd($fullCommand), MAGENTO_BP);
         $process->setIdleTimeout($timeout);
         $process->setTimeout(0);
         try {
             $process->run();
-            $output = $process->getOutput();
-            if (!$process->isSuccessful()) {
-                $failureOutput = $process->getErrorOutput();
-                if (!empty($failureOutput)) {
-                    $output = $failureOutput;
+            if (strpos($command, self::COMMAND_CRON_RUN) === false) {
+                $output = $process->getOutput();
+                if (!$process->isSuccessful()) {
+                    $failureOutput = $process->getErrorOutput();
+                    if (!empty($failureOutput)) {
+                        $output = $failureOutput;
+                    }
                 }
             }
             if (empty($output)) {
@@ -968,3 +970,4 @@ class MagentoWebDriver extends WebDriver
         return preg_match('/\/[\S]+\//', $string);
     }
 }
+
