@@ -527,7 +527,7 @@ class MagentoWebDriver extends WebDriver
         $valid = $this->validateCommand($magentoBinary, $command);
         // execute from shell when running tests from web root -- excluding cron
         //TODO: investigate why cron:run hangs with shell execution on pipeline
-        if ($valid && ($command !== self::COMMAND_CRON_RUN)) {
+        if ($valid && strpos($command, self::COMMAND_CRON_RUN) === false) {
             return $this->shellExecMagentoCLI($magentoBinary, $command, $timeout, $arguments);
         } else {
             return $this->curlExecMagentoCLI($command, $timeout, $arguments);
