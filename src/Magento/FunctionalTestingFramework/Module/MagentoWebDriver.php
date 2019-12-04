@@ -909,7 +909,7 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Create an entity
-     * TODO: remove this function after MQE-1904
+     * TODO: move this function to MagentoActionProxies after MQE-1904
      *
      * @param string $key                 StepKey of the createData action.
      * @param string $scope
@@ -939,7 +939,7 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Retrieves and updates a previously created entity
-     * TODO: remove this function after MQE-1904
+     * TODO: move this function to MagentoActionProxies after MQE-1904
      *
      * @param string $key                 StepKey of the createData action.
      * @param string $scope
@@ -959,7 +959,7 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Performs GET on given entity and stores entity for use
-     * TODO: remove this function after MQE-1904
+     * TODO: move this function to MagentoActionProxies after MQE-1904
      *
      * @param string  $key                 StepKey of getData action.
      * @param string  $scope
@@ -983,7 +983,7 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Retrieves and deletes a previously created entity
-     * TODO: remove this function after MQE-1904
+     * TODO: move this function to MagentoActionProxies after MQE-1904
      *
      * @param string $key   StepKey of the createData action.
      * @param string $scope
@@ -996,7 +996,7 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Retrieves a field from an entity, according to key and scope given
-     * TODO: remove this function after MQE-1904
+     * TODO: move this function to MagentoActionProxies after MQE-1904
      *
      * @param string $stepKey
      * @param string $field
@@ -1010,7 +1010,7 @@ class MagentoWebDriver extends WebDriver
 
     /**
      * Get encrypted value by key
-     * TODO: remove this function after MQE-1904
+     * TODO: move this function to MagentoActionProxies after MQE-1904
      *
      * @param string $key
      * @return string|null
