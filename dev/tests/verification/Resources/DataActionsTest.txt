@@ -23,29 +23,9 @@ class DataActionsTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->comment("[createdInBefore] create 'entity' entity");
-		$I->createEntity(
-			"createdInBefore",
-			"hook",
-			"entity",
-			[],
-			[]
-		);
-
-		$I->comment("[updateInBefore] update 'createdInBefore' entity to 'entity'");
-		$I->updateEntity(
-			"createdInBefore",
-			"hook",
-			"entity",
-			[]
-		);
-
-		$I->comment("[deleteInBefore] delete entity 'createdInBefore'");
-		$I->deleteEntity(
-			"createdInBefore",
-			"hook"
-		);
-
+		$I->createEntity("createdInBefore", "hook", "entity", [], []); // stepKey: createdInBefore
+		$I->updateEntity("createdInBefore", "hook", "entity",[]); // stepKey: updateInBefore
+		$I->deleteEntity("createdInBefore", "hook"); // stepKey: deleteInBefore
 	}
 
 	/**
@@ -57,42 +37,10 @@ class DataActionsTestCest
 	 */
 	public function DataActionsTest(AcceptanceTester $I)
 	{
-		$I->comment("[createdInTest] create 'entity' entity");
-		$I->createEntity(
-			"createdInTest",
-			"test",
-			"entity",
-			[],
-			[]
-		);
-
-		$I->comment("[updateInTest] update 'createdInTest' entity to 'entity'");
-		$I->updateEntity(
-			"createdInTest",
-			"test",
-			"entity",
-			[]
-		);
-
-		$I->comment("[deleteInTest] delete entity 'createdInTest'");
-		$I->deleteEntity(
-			"createdInTest",
-			"test"
-		);
-
-		$I->comment("[updatedDataOutOfScope] update 'createdInBefore' entity to 'entity'");
-		$I->updateEntity(
-			"createdInBefore",
-			"test",
-			"entity",
-			[]
-		);
-
-		$I->comment("[deleteDataOutOfScope] delete entity 'createdInBefore'");
-		$I->deleteEntity(
-			"createdInBefore",
-			"test"
-		);
-
+		$I->createEntity("createdInTest", "test", "entity", [], []); // stepKey: createdInTest
+		$I->updateEntity("createdInTest", "test", "entity",[]); // stepKey: updateInTest
+		$I->deleteEntity("createdInTest", "test"); // stepKey: deleteInTest
+		$I->updateEntity("createdInBefore", "test", "entity",[]); // stepKey: updatedDataOutOfScope
+		$I->deleteEntity("createdInBefore", "test"); // stepKey: deleteDataOutOfScope
 	}
 }

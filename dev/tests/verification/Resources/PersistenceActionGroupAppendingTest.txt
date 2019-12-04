@@ -24,38 +24,10 @@ class PersistenceActionGroupAppendingTestCest
 	public function _before(AcceptanceTester $I)
 	{
 		$I->comment("Entering Action Group [ACTIONGROUPBEFORE] DataPersistenceAppendingActionGroup");
-		$I->comment("[createDataACTIONGROUPBEFORE] create 'entity' entity");
-		$I->createEntity(
-			"createDataACTIONGROUPBEFORE",
-			"hook",
-			"entity",
-			[],
-			[]
-		);
-
-		$I->comment("[updateDataACTIONGROUPBEFORE] update 'createDataACTIONGROUPBEFORE' entity to 'newEntity'");
-		$I->updateEntity(
-			"createDataACTIONGROUPBEFORE",
-			"hook",
-			"newEntity",
-			[]
-		);
-
-		$I->comment("[deleteDataACTIONGROUPBEFORE] delete entity 'createDataACTIONGROUPBEFORE'");
-		$I->deleteEntity(
-			"createDataACTIONGROUPBEFORE",
-			"hook"
-		);
-
-		$I->comment("[getDataACTIONGROUPBEFORE] get 'someEneity' entity");
-		$I->getEntity(
-			"getDataACTIONGROUPBEFORE",
-			"hook",
-			"someEneity",
-			[],
-			null
-		);
-
+		$I->createEntity("createDataACTIONGROUPBEFORE", "hook", "entity", [], []); // stepKey: createDataACTIONGROUPBEFORE
+		$I->updateEntity("createDataACTIONGROUPBEFORE", "hook", "newEntity",[]); // stepKey: updateDataACTIONGROUPBEFORE
+		$I->deleteEntity("createDataACTIONGROUPBEFORE", "hook"); // stepKey: deleteDataACTIONGROUPBEFORE
+		$I->getEntity("getDataACTIONGROUPBEFORE", "hook", "someEneity", [], null); // stepKey: getDataACTIONGROUPBEFORE
 		$I->comment($I->retrieveEntityField('createData', 'field', 'hook'));
 		$I->comment("Exiting Action Group [ACTIONGROUPBEFORE] DataPersistenceAppendingActionGroup");
 	}
@@ -70,38 +42,10 @@ class PersistenceActionGroupAppendingTestCest
 	public function PersistenceActionGroupAppendingTest(AcceptanceTester $I)
 	{
 		$I->comment("Entering Action Group [ACTIONGROUP] DataPersistenceAppendingActionGroup");
-		$I->comment("[createDataACTIONGROUP] create 'entity' entity");
-		$I->createEntity(
-			"createDataACTIONGROUP",
-			"test",
-			"entity",
-			[],
-			[]
-		);
-
-		$I->comment("[updateDataACTIONGROUP] update 'createDataACTIONGROUP' entity to 'newEntity'");
-		$I->updateEntity(
-			"createDataACTIONGROUP",
-			"test",
-			"newEntity",
-			[]
-		);
-
-		$I->comment("[deleteDataACTIONGROUP] delete entity 'createDataACTIONGROUP'");
-		$I->deleteEntity(
-			"createDataACTIONGROUP",
-			"test"
-		);
-
-		$I->comment("[getDataACTIONGROUP] get 'someEneity' entity");
-		$I->getEntity(
-			"getDataACTIONGROUP",
-			"test",
-			"someEneity",
-			[],
-			null
-		);
-
+		$I->createEntity("createDataACTIONGROUP", "test", "entity", [], []); // stepKey: createDataACTIONGROUP
+		$I->updateEntity("createDataACTIONGROUP", "test", "newEntity",[]); // stepKey: updateDataACTIONGROUP
+		$I->deleteEntity("createDataACTIONGROUP", "test"); // stepKey: deleteDataACTIONGROUP
+		$I->getEntity("getDataACTIONGROUP", "test", "someEneity", [], null); // stepKey: getDataACTIONGROUP
 		$I->comment($I->retrieveEntityField('createDataACTIONGROUP', 'field', 'test'));
 		$I->comment("Exiting Action Group [ACTIONGROUP] DataPersistenceAppendingActionGroup");
 	}

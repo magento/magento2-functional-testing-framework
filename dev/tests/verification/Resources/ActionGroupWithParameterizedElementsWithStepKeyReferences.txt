@@ -29,15 +29,7 @@ class ActionGroupWithParameterizedElementsWithStepKeyReferencesCest
 		$I->comment("Entering Action Group [actionGroup] actionGroupWithParametrizedSelectors");
 		$testVariableActionGroup = $I->executeJS("return 1"); // stepKey: testVariableActionGroup
 		$testVariable2ActionGroup = $I->executeJS("return 'test'"); // stepKey: testVariable2ActionGroup
-		$I->comment("[createSimpleDataActionGroup] create 'simpleData' entity");
-		$I->createEntity(
-			"createSimpleDataActionGroup",
-			"test",
-			"simpleData",
-			[],
-			[]
-		);
-
+		$I->createEntity("createSimpleDataActionGroup", "test", "simpleData", [], []); // stepKey: createSimpleDataActionGroup
 		$I->click("#{$testVariable2ActionGroup} .John"); // stepKey: click1ActionGroup
 		$I->click("#Doe-" . msq("simpleParamData") . "prename .{$testVariableActionGroup}"); // stepKey: click2ActionGroup
 		$I->seeElement("//div[@name='Tiberius'][@class={$testVariableActionGroup}][@data-element='{$testVariable2ActionGroup}'][" . $I->retrieveEntityField('createSimpleData', 'name', 'test') . "]"); // stepKey: see1ActionGroup

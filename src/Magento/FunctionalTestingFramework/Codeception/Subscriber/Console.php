@@ -12,6 +12,7 @@ use Codeception\Step;
 use Codeception\Step\Comment;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
+use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
@@ -32,6 +33,20 @@ class Console extends \Codeception\Subscriber\Console
     private $actionGroupStepKey = null;
 
     /**
+     * Boolean value to indicate if steps are invisible steps
+     *
+     * @var boolean
+     */
+    private $atInvisibleSteps = false;
+
+    /**
+     * Boolean array to store status of previous invisible steps
+     *
+     * @var array
+     */
+    private $invisibleStepStatus = [];
+
+    /**
      * Console constructor. Parent constructor requires codeception CLI options, and does not have its own configs.
      * Constructor is only different than parent due to the way Codeception instantiates Extensions.
      *
@@ -50,11 +65,26 @@ class Console extends \Codeception\Subscriber\Console
      *
      * @param StepEvent $e
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function beforeStep(StepEvent $e)
     {
         if ($this->silent or !$this->steps or !$e->getTest() instanceof ScenarioDriven) {
             return;
+        }
+
+        $stepAction = $e->getStep()->getAction();
+
+        // Set atInvisibleSteps flag and return if step is in INVISIBLE_STEP_ACTIONS
+        if (in_array($stepAction, ActionObject::INVISIBLE_STEP_ACTIONS)) {
+            $this->atInvisibleSteps = true;
+            return;
+        }
+
+        // Set back atInvisibleSteps flag
+        if ($this->atInvisibleSteps && !in_array($stepAction, ActionObject::INVISIBLE_STEP_ACTIONS)) {
+            $this->atInvisibleSteps = false;
         }
 
         $metaStep = $e->getStep()->getMetaStep();
@@ -77,9 +107,27 @@ class Console extends \Codeception\Subscriber\Console
      */
     public function afterStep(StepEvent $e)
     {
-        parent::afterStep($e);
-        if ($e->getStep()->hasFailed()) {
-            $this->actionGroupStepKey = null;
+        // Store invisible step status if step is in INVISIBLE_STEP_ACTIONS
+        if ($this->atInvisibleSteps && $e->getStep()->hasFailed()) {
+            $this->invisibleStepStatus[] = false;
+            return;
+        } elseif ($this->atInvisibleSteps) {
+            $this->invisibleStepStatus[] = true;
+            return;
+        } else {
+            // Check previous invisible steps status
+            $invisibleStepsPassed = true;
+            foreach ($this->invisibleStepStatus as $pass) {
+                if (!$pass) {
+                    $invisibleStepsPassed = false;
+                    break;
+                }
+            }
+            $this->invisibleStepStatus = [];
+            parent::afterStep($e);
+            if ($e->getStep()->hasFailed() || !$invisibleStepsPassed) {
+                $this->actionGroupStepKey = null;
+            }
         }
     }
 

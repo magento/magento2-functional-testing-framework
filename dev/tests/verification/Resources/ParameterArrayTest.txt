@@ -26,15 +26,7 @@ class ParameterArrayTestCest
 	 */
 	public function ParameterArrayTest(AcceptanceTester $I)
 	{
-		$I->comment("[simpleDataKey] create 'simpleParamData' entity");
-		$I->createEntity(
-			"simpleDataKey",
-			"test",
-			"simpleParamData",
-			[],
-			[]
-		);
-
+		$I->createEntity("simpleDataKey", "test", "simpleParamData", [], []); // stepKey: simpleDataKey
 		$I->searchAndMultiSelectOption("#selector", ["name"]); // stepKey: xmlSimpleReplace
 		$I->searchAndMultiSelectOption("#selector", [msq("simpleParamData") . "prename"]); // stepKey: xmlPrefix
 		$I->searchAndMultiSelectOption("#selector", ["postname" . msq("simpleParamData")]); // stepKey: xmlSuffix

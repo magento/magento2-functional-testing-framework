@@ -24,15 +24,7 @@ class ActionGroupWithPersistedDataCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->comment("[createPersonParam] create 'ReplacementPerson' entity");
-		$I->createEntity(
-			"createPersonParam",
-			"hook",
-			"ReplacementPerson",
-			[],
-			[]
-		);
-
+		$I->createEntity("createPersonParam", "hook", "ReplacementPerson", [], []); // stepKey: createPersonParam
 		$I->comment("Entering Action Group [beforeGroup] FunctionalActionGroup");
 		$I->fillField("#foo", "myData1"); // stepKey: fillField1BeforeGroup
 		$I->fillField("#bar", "myData2"); // stepKey: fillField2BeforeGroup
@@ -71,15 +63,7 @@ class ActionGroupWithPersistedDataCest
 	 */
 	public function ActionGroupWithPersistedData(AcceptanceTester $I)
 	{
-		$I->comment("[createPerson] create 'DefaultPerson' entity");
-		$I->createEntity(
-			"createPerson",
-			"test",
-			"DefaultPerson",
-			[],
-			[]
-		);
-
+		$I->createEntity("createPerson", "test", "DefaultPerson", [], []); // stepKey: createPerson
 		$I->comment("Entering Action Group [actionGroupWithPersistedData1] FunctionalActionGroupWithData");
 		$I->amOnPage("/" . $I->retrieveEntityField('createPerson', 'firstname', 'test') . "/" . $I->retrieveEntityField('createPerson', 'lastname', 'test') . ".html"); // stepKey: amOnPage1ActionGroupWithPersistedData1
 		$I->fillField("#foo", $I->retrieveEntityField('createPerson', 'firstname', 'test')); // stepKey: fillField1ActionGroupWithPersistedData1

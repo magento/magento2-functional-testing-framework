@@ -23,15 +23,7 @@ class PersistedReplacementTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->comment("[createData1] create 'ReplacementPerson' entity");
-		$I->createEntity(
-			"createData1",
-			"hook",
-			"ReplacementPerson",
-			[],
-			[]
-		);
-
+		$I->createEntity("createData1", "hook", "ReplacementPerson", [], []); // stepKey: createData1
 	}
 
 	/**
@@ -43,15 +35,7 @@ class PersistedReplacementTestCest
 	 */
 	public function PersistedReplacementTest(AcceptanceTester $I)
 	{
-		$I->comment("[createdData] create 'simpleData' entity");
-		$I->createEntity(
-			"createdData",
-			"test",
-			"simpleData",
-			[],
-			[]
-		);
-
+		$I->createEntity("createdData", "test", "simpleData", [], []); // stepKey: createdData
 		$I->fillField("#selector", "StringBefore " . $I->retrieveEntityField('createdData', 'firstname', 'test') . " StringAfter"); // stepKey: inputReplace
 		$I->fillField("#" . $I->retrieveEntityField('createdData', 'firstname', 'test'), "input"); // stepKey: selectorReplace
 		$I->fillField("#" . getenv("MAGENTO_BASE_URL") . "#" . $I->retrieveEntityField('createdData', 'firstname', 'test'), "input"); // stepKey: selectorReplace2

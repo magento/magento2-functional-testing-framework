@@ -24,15 +24,7 @@ class BasicActionGroupTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->comment("[createPersonParam] create 'ReplacementPerson' entity");
-		$I->createEntity(
-			"createPersonParam",
-			"hook",
-			"ReplacementPerson",
-			[],
-			[]
-		);
-
+		$I->createEntity("createPersonParam", "hook", "ReplacementPerson", [], []); // stepKey: createPersonParam
 		$I->comment("Entering Action Group [beforeGroup] FunctionalActionGroup");
 		$I->fillField("#foo", "myData1"); // stepKey: fillField1BeforeGroup
 		$I->fillField("#bar", "myData2"); // stepKey: fillField2BeforeGroup

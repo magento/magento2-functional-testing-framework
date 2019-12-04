@@ -24,24 +24,8 @@ class ActionGroupUsingCreateDataCest
 	public function _before(AcceptanceTester $I)
 	{
 		$I->comment("Entering Action Group [Key1] actionGroupWithCreateData");
-		$I->comment("[createCategoryKey1] create 'ApiCategory' entity");
-		$I->createEntity(
-			"createCategoryKey1",
-			"hook",
-			"ApiCategory",
-			[],
-			[]
-		);
-
-		$I->comment("[createConfigProductKey1] create 'ApiConfigurableProduct' entity");
-		$I->createEntity(
-			"createConfigProductKey1",
-			"hook",
-			"ApiConfigurableProduct",
-			["createCategoryKey1"],
-			[]
-		);
-
+		$I->createEntity("createCategoryKey1", "hook", "ApiCategory", [], []); // stepKey: createCategoryKey1
+		$I->createEntity("createConfigProductKey1", "hook", "ApiConfigurableProduct", ["createCategoryKey1"], []); // stepKey: createConfigProductKey1
 		$I->comment("Exiting Action Group [Key1] actionGroupWithCreateData");
 	}
 

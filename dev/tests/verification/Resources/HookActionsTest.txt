@@ -23,30 +23,9 @@ class HookActionsTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->comment("[sampleCreateBefore] create 'sampleCreatedEntity' entity");
-		$I->createEntity(
-			"sampleCreateBefore",
-			"hook",
-			"sampleCreatedEntity",
-			[],
-			[]
-		);
-
-		$I->comment("[sampleDeleteBefore] delete entity 'sampleCreateBefore'");
-		$I->deleteEntity(
-			"sampleCreateBefore",
-			"hook"
-		);
-
-		$I->comment("[sampleCreateForAfter] create 'sampleCreatedEntity' entity");
-		$I->createEntity(
-			"sampleCreateForAfter",
-			"hook",
-			"sampleCreatedEntity",
-			[],
-			[]
-		);
-
+		$I->createEntity("sampleCreateBefore", "hook", "sampleCreatedEntity", [], []); // stepKey: sampleCreateBefore
+		$I->deleteEntity("sampleCreateBefore", "hook"); // stepKey: sampleDeleteBefore
+		$I->createEntity("sampleCreateForAfter", "hook", "sampleCreatedEntity", [], []); // stepKey: sampleCreateForAfter
 	}
 
 	/**
@@ -55,21 +34,8 @@ class HookActionsTestCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
-		$I->comment("[sampleCreateAfter] create 'sampleCreatedEntity' entity");
-		$I->createEntity(
-			"sampleCreateAfter",
-			"hook",
-			"sampleCreatedEntity",
-			[],
-			[]
-		);
-
-		$I->comment("[sampleDeleteAfter] delete entity 'sampleCreateForAfter'");
-		$I->deleteEntity(
-			"sampleCreateForAfter",
-			"hook"
-		);
-
+		$I->createEntity("sampleCreateAfter", "hook", "sampleCreatedEntity", [], []); // stepKey: sampleCreateAfter
+		$I->deleteEntity("sampleCreateForAfter", "hook"); // stepKey: sampleDeleteAfter
 	}
 
 	/**

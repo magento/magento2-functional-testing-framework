@@ -26,15 +26,7 @@ class LocatorFunctionTestCest
 	 */
 	public function LocatorFunctionTest(AcceptanceTester $I)
 	{
-		$I->comment("[data] create 'ReplacementPerson' entity");
-		$I->createEntity(
-			"data",
-			"test",
-			"ReplacementPerson",
-			[],
-			[]
-		);
-
+		$I->createEntity("data", "test", "ReplacementPerson", [], []); // stepKey: data
 		$I->click(Locator::contains("'label'", "'Name'")); // stepKey: SimpleLocator
 		$I->click(Locator::contains("'label'", "'Name'")); // stepKey: SimpleLocatorNonShorthand
 		$I->click(Locator::find("'img'", ['title' => 'diagram'])); // stepKey: ArrayLocator

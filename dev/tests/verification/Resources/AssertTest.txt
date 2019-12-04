@@ -23,15 +23,7 @@ class AssertTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->comment("[createData1] create 'ReplacementPerson' entity");
-		$I->createEntity(
-			"createData1",
-			"hook",
-			"ReplacementPerson",
-			[],
-			[]
-		);
-
+		$I->createEntity("createData1", "hook", "ReplacementPerson", [], []); // stepKey: createData1
 	}
 
 	/**
@@ -43,15 +35,7 @@ class AssertTestCest
 	 */
 	public function AssertTest(AcceptanceTester $I)
 	{
-		$I->comment("[createData2] create 'UniquePerson' entity");
-		$I->createEntity(
-			"createData2",
-			"test",
-			"UniquePerson",
-			[],
-			[]
-		);
-
+		$I->createEntity("createData2", "test", "UniquePerson", [], []); // stepKey: createData2
 		$grabTextFrom1 = $I->grabTextFrom(".copyright>span"); // stepKey: grabTextFrom1
 		$I->comment("custom asserts");
 		$I->assertArrayIsSorted(["1", "2", "3", "4", "5"], "asc"); // stepKey: assertSorted1

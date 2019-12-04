@@ -75,6 +75,7 @@ class ActionObject
     const DEFAULT_COMMAND_WAIT_TIMEOUT = 60;
     const ACTION_ATTRIBUTE_USERINPUT = 'userInput';
     const ACTION_TYPE_COMMENT = 'comment';
+    const INVISIBLE_STEP_ACTIONS = ['retrieveEntityField', 'getSecret'];
 
     /**
      * The unique identifier for the action

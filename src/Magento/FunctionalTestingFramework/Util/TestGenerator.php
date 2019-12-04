@@ -47,10 +47,8 @@ class TestGenerator
     const PERSISTED_OBJECT_NOTATION_REGEX = '/\${1,2}[\w.\[\]]+\${1,2}/';
     const NO_STEPKEY_ACTIONS = [
         'comment',
-        'createData',
-        'deleteData',
-        'updateData',
-        'getData',
+        'retrieveEntityField',
+        'getSecret',
         'magentoCLI',
         'generateDate',
         'field'
@@ -732,13 +730,6 @@ class TestGenerator
             switch ($actionObject->getType()) {
                 case "createData":
                     $entity = $customActionAttributes['entity'];
-                    //Add an informative statement to help the user debug test runs
-                    $testSteps .= sprintf(
-                        "\t\t$%s->comment(\"[%s] create '%s' entity\");\n",
-                        $actor,
-                        $stepKey,
-                        $entity
-                    );
 
                     //TODO refactor entity field override to not be individual actionObjects
                     $customEntityFields =
@@ -766,19 +757,19 @@ class TestGenerator
                     }
 
                     $createEntityFunctionCall = "\t\t\${$actor}->createEntity(";
-                    $createEntityFunctionCall .= "\n\t\t\t\"{$stepKey}\",";
-                    $createEntityFunctionCall .= "\n\t\t\t\"{$scope}\",";
-                    $createEntityFunctionCall .= "\n\t\t\t\"{$entity}\"";
-                    $createEntityFunctionCall .= ",\n\t\t\t[{$requiredEntityKeysArray}]";
+                    $createEntityFunctionCall .= "\"{$stepKey}\",";
+                    $createEntityFunctionCall .= " \"{$scope}\",";
+                    $createEntityFunctionCall .= " \"{$entity}\",";
+                    $createEntityFunctionCall .= " [{$requiredEntityKeysArray}],";
                     if (count($customEntityFields) > 1) {
-                        $createEntityFunctionCall .= ",\n\t\t\t\${$stepKey}Fields";
+                        $createEntityFunctionCall .= " \${$stepKey}Fields";
                     } else {
-                        $createEntityFunctionCall .= ",\n\t\t\t[]";
+                        $createEntityFunctionCall .= " []";
                     }
                     if ($storeCode !== null) {
-                        $createEntityFunctionCall .= ",\n\t\t\t\"{$storeCode}\"";
+                        $createEntityFunctionCall .= ", \"{$storeCode}\"";
                     }
-                    $createEntityFunctionCall .= "\n\t\t);\n";
+                    $createEntityFunctionCall .= ");";
                     $testSteps .= $createEntityFunctionCall;
                     break;
                 case "deleteData":
@@ -790,13 +781,6 @@ class TestGenerator
                         );
                         $actionGroup = $actionObject->getCustomActionAttributes()['actionGroup'] ?? null;
                         $key .= $actionGroup;
-                        //Add an informative statement to help the user debug test runs
-                        $contextSetter = sprintf(
-                            "\t\t$%s->comment(\"[%s] delete entity '%s'\");\n",
-                            $actor,
-                            $stepKey,
-                            $key
-                        );
 
                         //Determine Scope
                         $scope = PersistedObjectHandler::TEST_SCOPE;
@@ -807,17 +791,16 @@ class TestGenerator
                         }
 
                         $deleteEntityFunctionCall = "\t\t\${$actor}->deleteEntity(";
-                        $deleteEntityFunctionCall .= "\n\t\t\t\"{$key}\",";
-                        $deleteEntityFunctionCall .= "\n\t\t\t\"{$scope}\"";
-                        $deleteEntityFunctionCall .= "\n\t\t);\n";
+                        $deleteEntityFunctionCall .= "\"{$key}\",";
+                        $deleteEntityFunctionCall .= " \"{$scope}\"";
+                        $deleteEntityFunctionCall .= ");";
 
-                        $testSteps .= $contextSetter;
                         $testSteps .= $deleteEntityFunctionCall;
                     } else {
                         $url = $this->resolveAllRuntimeReferences([$url])[0];
                         $url = $this->resolveTestVariable([$url], null)[0];
                         $output = sprintf(
-                            "\t\t$%s->deleteEntityByUrl(%s);\n",
+                            "\t\t$%s->deleteEntityByUrl(%s);",
                             $actor,
                             $url
                         );
@@ -833,15 +816,6 @@ class TestGenerator
                     $updateEntity = $customActionAttributes['entity'];
                     $actionGroup = $actionObject->getCustomActionAttributes()['actionGroup'] ?? null;
                     $key .= $actionGroup;
-
-                    //Add an informative statement to help the user debug test runs
-                    $testSteps .= sprintf(
-                        "\t\t$%s->comment(\"[%s] update '%s' entity to '%s'\");\n",
-                        $actor,
-                        $stepKey,
-                        $key,
-                        $updateEntity
-                    );
 
                     // Build array of requiredEntities
                     $requiredEntityKeys = [];
@@ -865,14 +839,14 @@ class TestGenerator
                     }
 
                     $updateEntityFunctionCall = "\t\t\${$actor}->updateEntity(";
-                    $updateEntityFunctionCall .= "\n\t\t\t\"{$key}\",";
-                    $updateEntityFunctionCall .= "\n\t\t\t\"{$scope}\",";
-                    $updateEntityFunctionCall .= "\n\t\t\t\"{$updateEntity}\"";
-                    $updateEntityFunctionCall .= ",\n\t\t\t[{$requiredEntityKeysArray}]";
+                    $updateEntityFunctionCall .= "\"{$key}\",";
+                    $updateEntityFunctionCall .= " \"{$scope}\",";
+                    $updateEntityFunctionCall .= " \"{$updateEntity}\",";
+                    $updateEntityFunctionCall .= "[{$requiredEntityKeysArray}]";
                     if ($storeCode !== null) {
-                        $updateEntityFunctionCall .= ",\n\t\t\t\"{$storeCode}\"";
+                        $updateEntityFunctionCall .= ", \"{$storeCode}\"";
                     }
-                    $updateEntityFunctionCall .= "\n\t\t);\n";
+                    $updateEntityFunctionCall .= ");";
                     $testSteps .= $updateEntityFunctionCall;
 
                     break;
@@ -882,13 +856,6 @@ class TestGenerator
                     if (isset($customActionAttributes['index'])) {
                         $index = (int)$customActionAttributes['index'];
                     }
-                    //Add an informative statement to help the user debug test runs
-                    $testSteps .= sprintf(
-                        "\t\t$%s->comment(\"[%s] get '%s' entity\");\n",
-                        $actor,
-                        $stepKey,
-                        $entity
-                    );
 
                     // Build array of requiredEntities
                     $requiredEntityKeys = [];
@@ -913,19 +880,19 @@ class TestGenerator
 
                     //Create Function
                     $getEntityFunctionCall = "\t\t\${$actor}->getEntity(";
-                    $getEntityFunctionCall .= "\n\t\t\t\"{$stepKey}\",";
-                    $getEntityFunctionCall .= "\n\t\t\t\"{$scope}\",";
-                    $getEntityFunctionCall .= "\n\t\t\t\"{$entity}\"";
-                    $getEntityFunctionCall .= ",\n\t\t\t[{$requiredEntityKeysArray}]";
+                    $getEntityFunctionCall .= "\"{$stepKey}\",";
+                    $getEntityFunctionCall .= " \"{$scope}\",";
+                    $getEntityFunctionCall .= " \"{$entity}\",";
+                    $getEntityFunctionCall .= " [{$requiredEntityKeysArray}],";
                     if ($storeCode !== null) {
-                        $getEntityFunctionCall .= ",\n\t\t\t\"{$storeCode}\"";
+                        $getEntityFunctionCall .= " \"{$storeCode}\"";
                     } else {
-                        $getEntityFunctionCall .= ",\n\t\t\tnull";
+                        $getEntityFunctionCall .= " null";
                     }
                     if ($index !== null) {
-                        $getEntityFunctionCall .= ",\n\t\t\t{$index}";
+                        $getEntityFunctionCall .= ", {$index}";
                     }
-                    $getEntityFunctionCall .= "\n\t\t);\n";
+                    $getEntityFunctionCall .= ");";
                     $testSteps .= $getEntityFunctionCall;
 
                     break;

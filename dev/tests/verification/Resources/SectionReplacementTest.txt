@@ -45,15 +45,7 @@ class SectionReplacementTestCest
 		$I->click("#Doe" . msq("uniqueData") . " .stringLiteral2"); // stepKey: selectorReplaceTwoParamDataRefMSQSuffix
 		$I->click("#Doe" . msq("uniqueData") . "-stringLiteral2 .stringLiteral3"); // stepKey: selectorReplaceThreeParamDataRefMSQSuffix
 		$I->click("#Doe" . msq("uniqueData") . "-stringLiteral2 .Doe" . msq("uniqueData") . " [stringLiteral3]"); // stepKey: selectorReplaceThreeParamOneDupeDataRefMSQSuffix
-		$I->comment("[createdData] create 'simpleData' entity");
-		$I->createEntity(
-			"createdData",
-			"test",
-			"simpleData",
-			[],
-			[]
-		);
-
+		$I->createEntity("createdData", "test", "simpleData", [], []); // stepKey: createdData
 		$I->click("#element ." . $I->retrieveEntityField('createdData', 'firstname', 'test')); // stepKey: selectorReplaceOneParamPersisted
 		$I->click("#" . $I->retrieveEntityField('createdData', 'firstname', 'test') . " .stringLiteral2"); // stepKey: selectorReplaceTwoParamPersisted
 		$I->click("#" . $I->retrieveEntityField('createdData', 'firstname', 'test') . "-stringLiteral2 .stringLiteral3"); // stepKey: selectorReplaceThreeParamPersisted

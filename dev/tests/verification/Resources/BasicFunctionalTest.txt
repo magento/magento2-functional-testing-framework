@@ -74,14 +74,8 @@ class BasicFunctionalTestCest
 		$I->clickWithRightButton("#element .4123#element", 200, 300); // stepKey: clickWithRightButtonKeyXY1
 		$I->closeTab(); // stepKey: closeTabKey1
 		$I->conditionalClick(".functionalTestSelector", ".functionalDependentTestSelector", true); // stepKey: conditionalClickKey1
-		$I->comment("[deleteKey1] delete entity 'createKey1'");
-		$I->deleteEntity(
-			"createKey1",
-			"test"
-		);
-
-		$I->deleteEntityByUrl("/V1/categories{$grabbedData}");
-
+		$I->deleteEntity("createKey1", "test"); // stepKey: deleteKey1
+		$I->deleteEntityByUrl("/V1/categories{$grabbedData}"); // stepKey: deleteKey2
 		$I->dontSee("someInput", ".functionalTestSelector"); // stepKey: dontSeeKey1
 		$I->dontSeeCheckboxIsChecked(".functionalTestSelector"); // stepKey: dontSeeCheckboxIsCheckedKey1
 		$I->dontSeeCookie("someInput"); // stepKey: dontSeeCookieKey1

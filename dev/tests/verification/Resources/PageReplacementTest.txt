@@ -26,15 +26,7 @@ class PageReplacementTestCest
 	 */
 	public function PageReplacementTest(AcceptanceTester $I)
 	{
-		$I->comment("[datakey] create 'simpleData' entity");
-		$I->createEntity(
-			"datakey",
-			"test",
-			"simpleData",
-			[],
-			[]
-		);
-
+		$I->createEntity("datakey", "test", "simpleData", [], []); // stepKey: datakey
 		$I->amOnPage("/page.html"); // stepKey: noParamPage
 		$I->amOnPage("/StringLiteral/page.html"); // stepKey: oneParamPageString
 		$I->amOnPage("/John/page.html"); // stepKey: oneParamPageData
