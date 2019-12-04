@@ -21,8 +21,6 @@ use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\Util\ConfigSanitizerUtil;
 use Yandex\Allure\Adapter\AllureException;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Yandex\Allure\Adapter\Support\AttachmentSupport;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
