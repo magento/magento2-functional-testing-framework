@@ -523,15 +523,35 @@ class MagentoWebDriver extends WebDriver
      */
     public function magentoCLI($command, $timeout = null, $arguments = null)
     {
-        $magentoBinary = realpath(MAGENTO_BP . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'magento');
-        $valid = $this->validateCommand($magentoBinary, $command);
-        // execute from shell when running tests from web root -- excluding cron
-        //TODO: investigate why cron:run hangs with shell execution on pipeline
-        if ($valid && strpos($command, self::COMMAND_CRON_RUN) === false) {
-            return $this->shellExecMagentoCLI($magentoBinary, $command, $timeout, $arguments);
-        } else {
-            return $this->curlExecMagentoCLI($command, $timeout, $arguments);
-        }
+        // Remove index.php if it's present in url
+        $baseUrl = rtrim(
+            str_replace('index.php', '', rtrim($this->config['url'], '/')),
+            '/'
+        );
+
+        $apiURL = UrlFormatter::format(
+            $baseUrl . '/' . ltrim(getenv('MAGENTO_CLI_COMMAND_PATH'), '/'),
+            false
+        );
+
+        $restExecutor = new WebapiExecutor();
+        $executor = new CurlTransport();
+        $executor->write(
+            $apiURL,
+            [
+                'token' => $restExecutor->getAuthToken(),
+                getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command,
+                'arguments' => $arguments,
+                'timeout'   => $timeout,
+            ],
+            CurlInterface::POST,
+            []
+        );
+        $response = $executor->read();
+        $restExecutor->close();
+        $executor->close();
+
+        return $response;
     }
 
     /**
@@ -838,134 +858,5 @@ class MagentoWebDriver extends WebDriver
         $this->_saveScreenshot($screenName);
         $this->debug("Screenshot saved to $screenName");
         AllureHelper::addAttachmentToCurrentStep($screenName, 'Screenshot');
-    }
-
-    /**
-     * Takes given $command and executes it against bin/magento executable. Returns stdout output from the command.
-     *
-     * @param string  $magentoBinary
-     * @param string  $command
-     * @param integer $timeout
-     * @param string  $arguments
-     *
-     * @throws \RuntimeException
-     * @return string
-     */
-    private function shellExecMagentoCLI($magentoBinary, $command, $timeout, $arguments): string
-    {
-        $php = PHP_BINDIR ? PHP_BINDIR . DIRECTORY_SEPARATOR. 'php' : 'php';
-        $fullCommand = $php . ' -f ' . $magentoBinary . ' ' . $command . ' ' . $arguments;
-        $process = Process::fromShellCommandline(escapeshellcmd($fullCommand), MAGENTO_BP);
-        $process->setIdleTimeout($timeout);
-        $process->setTimeout(0);
-        try {
-            $process->run();
-            $output = $process->getOutput();
-            if (!$process->isSuccessful()) {
-                $failureOutput = $process->getErrorOutput();
-                if (!empty($failureOutput)) {
-                    $output = $failureOutput;
-                }
-            }
-            if (empty($output)) {
-                $output = "CLI did not return output.";
-            }
-        } catch (ProcessTimedOutException $exception) {
-            $output = "CLI command timed out, no output available.";
-        }
-
-        if ($this->checkForFilePath($output)) {
-            $output = "CLI output suppressed, filepath detected in output.";
-        }
-
-        $exitCode = $process->getExitCode();
-
-        if ($exitCode !== 0) {
-            throw new \RuntimeException($process->getErrorOutput());
-        }
-        return $output;
-    }
-
-    /**
-     * Takes given $command and executes it against exposed MTF CLI entry point. Returns response from server.
-     *
-     * @param string  $command
-     * @param integer $timeout
-     * @param string  $arguments
-     *
-     * @return string
-     * @throws TestFrameworkException
-     */
-    private function curlExecMagentoCLI($command, $timeout, $arguments): string
-    {
-        // Remove index.php if it's present in url
-        $baseUrl = rtrim(
-            str_replace('index.php', '', rtrim($this->config['url'], '/')),
-            '/'
-        );
-
-        $apiURL = UrlFormatter::format(
-            $baseUrl . '/' . ltrim(getenv('MAGENTO_CLI_COMMAND_PATH'), '/'),
-            false
-        );
-
-        $restExecutor = new WebapiExecutor();
-        $executor = new CurlTransport();
-        $executor->write(
-            $apiURL,
-            [
-                'token' => $restExecutor->getAuthToken(),
-                getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command,
-                'arguments' => $arguments,
-                'timeout'   => $timeout,
-            ],
-            CurlInterface::POST,
-            []
-        );
-        $response = $executor->read();
-        $restExecutor->close();
-        $executor->close();
-
-        return $response;
-    }
-
-    /**
-     * Checks magento list of CLI commands for given $command. Does not check command parameters, just base command.
-     *
-     * @param string $magentoBinary
-     * @param string $command
-     *
-     * @return boolean
-     */
-    private function validateCommand($magentoBinary, $command)
-    {
-        exec($magentoBinary . ' list', $commandList);
-        // Trim list of commands after first whitespace
-        $commandList = array_map([$this, 'trimAfterWhitespace'], $commandList);
-        return in_array($this->trimAfterWhitespace($command), $commandList);
-    }
-
-    /**
-     * Returns given string trimmed of everything after the first found whitespace.
-     *
-     * @param string $string
-     *
-     * @return string
-     */
-    private function trimAfterWhitespace($string)
-    {
-        return strtok($string, ' ');
-    }
-
-    /**
-     * Detects file path in string.
-     *
-     * @param string $string
-     *
-     * @return boolean
-     */
-    private function checkForFilePath($string)
-    {
-        return preg_match('/\/[\S]+\//', $string);
     }
 }
