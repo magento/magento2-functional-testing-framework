@@ -53,8 +53,6 @@ class MagentoWebDriver extends WebDriver
 {
     use AttachmentSupport;
 
-    const COMMAND_CRON_RUN = 'cron:run';
-
     /**
      * List of known magento loading masks by selector
      *
