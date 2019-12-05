@@ -21,7 +21,6 @@ use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\Util\ConfigSanitizerUtil;
 use Yandex\Allure\Adapter\AllureException;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
-use Symfony\Component\Process\Process;
 use Yandex\Allure\Adapter\Support\AttachmentSupport;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
@@ -520,13 +519,35 @@ class MagentoWebDriver extends WebDriver
      */
     public function magentoCLI($command, $timeout = null, $arguments = null)
     {
-        return $this->curlExecMagentoCLI($command, $timeout, $arguments);
-        //TODO: calling bin/magento from pipeline is timing out, needs investigation (ref: MQE-1774)
-//        try {
-//            return $this->shellExecMagentoCLI($command, $arguments);
-//        } catch (\Exception $exception) {
-//            return $this->curlExecMagentoCLI($command, $arguments);
-//        }
+        // Remove index.php if it's present in url
+        $baseUrl = rtrim(
+            str_replace('index.php', '', rtrim($this->config['url'], '/')),
+            '/'
+        );
+
+        $apiURL = UrlFormatter::format(
+            $baseUrl . '/' . ltrim(getenv('MAGENTO_CLI_COMMAND_PATH'), '/'),
+            false
+        );
+
+        $restExecutor = new WebapiExecutor();
+        $executor = new CurlTransport();
+        $executor->write(
+            $apiURL,
+            [
+                'token' => $restExecutor->getAuthToken(),
+                getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command,
+                'arguments' => $arguments,
+                'timeout'   => $timeout,
+            ],
+            CurlInterface::POST,
+            []
+        );
+        $response = $executor->read();
+        $restExecutor->close();
+        $executor->close();
+
+        return $response;
     }
 
     /**
@@ -833,75 +854,5 @@ class MagentoWebDriver extends WebDriver
         $this->_saveScreenshot($screenName);
         $this->debug("Screenshot saved to $screenName");
         AllureHelper::addAttachmentToCurrentStep($screenName, 'Screenshot');
-    }
-
-    /**
-     * Takes given $command and executes it against bin/magento executable. Returns stdout output from the command.
-     *
-     * @param string  $command
-     * @param integer $timeout
-     * @param string  $arguments
-     *
-     * @throws \RuntimeException
-     * @return string
-     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
-     */
-    private function shellExecMagentoCLI($command, $timeout, $arguments): string
-    {
-        $php = PHP_BINDIR ? PHP_BINDIR . DIRECTORY_SEPARATOR. 'php' : 'php';
-        $binMagento = realpath(MAGENTO_BP . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'magento');
-        $command = $php . ' -f ' . $binMagento . ' ' . $command . ' ' . $arguments;
-        $process = new Process(escapeshellcmd($command), MAGENTO_BP);
-        $process->setIdleTimeout($timeout);
-        $process->setTimeout(0);
-        $exitCode = $process->run();
-        if ($exitCode !== 0) {
-            throw new \RuntimeException($process->getErrorOutput());
-        }
-
-        return $process->getOutput();
-    }
-
-    /**
-     * Takes given $command and executes it against exposed MTF CLI entry point. Returns response from server.
-     *
-     * @param string  $command
-     * @param integer $timeout
-     * @param string  $arguments
-     *
-     * @return string
-     * @throws TestFrameworkException
-     */
-    private function curlExecMagentoCLI($command, $timeout, $arguments): string
-    {
-        // Remove index.php if it's present in url
-        $baseUrl = rtrim(
-            str_replace('index.php', '', rtrim($this->config['url'], '/')),
-            '/'
-        );
-
-        $apiURL = UrlFormatter::format(
-            $baseUrl . '/' . ltrim(getenv('MAGENTO_CLI_COMMAND_PATH'), '/'),
-            false
-        );
-
-        $restExecutor = new WebapiExecutor();
-        $executor = new CurlTransport();
-        $executor->write(
-            $apiURL,
-            [
-                'token' => $restExecutor->getAuthToken(),
-                getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command,
-                'arguments' => $arguments,
-                'timeout'   => $timeout,
-            ],
-            CurlInterface::POST,
-            []
-        );
-        $response = $executor->read();
-        $restExecutor->close();
-        $executor->close();
-
-        return $response;
     }
 }
