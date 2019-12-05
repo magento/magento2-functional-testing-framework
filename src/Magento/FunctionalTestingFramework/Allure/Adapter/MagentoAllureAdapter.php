@@ -50,13 +50,6 @@ class MagentoAllureAdapter extends AllureCodeception
     private $atInvisibleSteps = false;
 
     /**
-     * Boolean array to store status of previous invisible steps
-     *
-     * @var array
-     */
-    private $invisibleStepStatus = [];
-
-    /**
      * Array of group values passed to test runner command
      *
      * @return string
@@ -137,9 +130,6 @@ class MagentoAllureAdapter extends AllureCodeception
      * @param StepEvent $stepEvent
      * @return void
      * @throws \Yandex\Allure\Adapter\AllureException
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function stepBefore(StepEvent $stepEvent)
     {
@@ -198,27 +188,18 @@ class MagentoAllureAdapter extends AllureCodeception
      */
     public function stepAfter(StepEvent $stepEvent = null)
     {
-        // Store invisible step status if step is in INVISIBLE_STEP_ACTIONS
-        if ($this->atInvisibleSteps && $stepEvent->getStep()->hasFailed()) {
-            $this->invisibleStepStatus[] = false;
-            return;
-        } elseif ($this->atInvisibleSteps) {
-            $this->invisibleStepStatus[] = true;
-            return;
-        } else {
-            // Check previous invisible steps status
-            $invisibleStepsPassed = true;
-            foreach ($this->invisibleStepStatus as $pass) {
-                if (!$pass) {
-                    $invisibleStepsPassed = false;
-                    break;
-                }
+        // Simply return if step is INVISIBLE_STEP_ACTIONS
+        if ($this->atInvisibleSteps) {
+            if ($stepEvent->getStep()->hasFailed()) {
+                $this->atInvisibleSteps = false;
             }
-            $this->invisibleStepStatus = [];
-            if ($stepEvent->getStep()->hasFailed() || !$invisibleStepsPassed) {
-                $this->getLifecycle()->fire(new StepFailedEvent());
-            }
+            return;
         }
+
+        if ($stepEvent->getStep()->hasFailed()) {
+            $this->getLifecycle()->fire(new StepFailedEvent());
+        }
+
         $this->getLifecycle()->fire(new StepFinishedEvent());
     }
 

@@ -40,13 +40,6 @@ class Console extends \Codeception\Subscriber\Console
     private $atInvisibleSteps = false;
 
     /**
-     * Boolean array to store status of previous invisible steps
-     *
-     * @var array
-     */
-    private $invisibleStepStatus = [];
-
-    /**
      * Console constructor. Parent constructor requires codeception CLI options, and does not have its own configs.
      * Constructor is only different than parent due to the way Codeception instantiates Extensions.
      *
@@ -65,8 +58,6 @@ class Console extends \Codeception\Subscriber\Console
      *
      * @param StepEvent $e
      * @return void
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function beforeStep(StepEvent $e)
     {
@@ -107,27 +98,14 @@ class Console extends \Codeception\Subscriber\Console
      */
     public function afterStep(StepEvent $e)
     {
-        // Store invisible step status if step is in INVISIBLE_STEP_ACTIONS
-        if ($this->atInvisibleSteps && $e->getStep()->hasFailed()) {
-            $this->invisibleStepStatus[] = false;
-            return;
-        } elseif ($this->atInvisibleSteps) {
-            $this->invisibleStepStatus[] = true;
-            return;
-        } else {
-            // Check previous invisible steps status
-            $invisibleStepsPassed = true;
-            foreach ($this->invisibleStepStatus as $pass) {
-                if (!$pass) {
-                    $invisibleStepsPassed = false;
-                    break;
-                }
-            }
-            $this->invisibleStepStatus = [];
+        // Do usual after step if step is not INVISIBLE_STEP_ACTIONS
+        if (!$this->atInvisibleSteps) {
             parent::afterStep($e);
-            if ($e->getStep()->hasFailed() || !$invisibleStepsPassed) {
-                $this->actionGroupStepKey = null;
-            }
+        }
+
+        if ($e->getStep()->hasFailed()) {
+            $this->actionGroupStepKey = null;
+            $this->atInvisibleSteps = false;
         }
     }
 
