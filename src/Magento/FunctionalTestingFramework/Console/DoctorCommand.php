@@ -8,6 +8,7 @@ declare(strict_types = 1);
 namespace Magento\FunctionalTestingFramework\Console;
 
 use Codeception\Configuration;
+use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Codeception\SuiteManager;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
@@ -128,9 +129,17 @@ class DoctorCommand extends Command
             $this->ioStyle->success('Successful');
             $result = true;
         } catch (TestFrameworkException $e) {
+            if (getenv('MAGENTO_BACKEND_BASE_URL')) {
+                $urlVar = 'MAGENTO_BACKEND_BASE_URL';
+            } else {
+                $urlVar = 'MAGENTO_BASE_URL';
+            }
             $this->ioStyle->error(
-                $e->getMessage()
-                . "\nPlease verify MAGENTO_ADMIN_USERNAME and MAGENTO_ADMIN_PASSWORD in .env."
+                $e->getMessage() . "\n"
+                . "Please verify the following configuration settings in .env:\n"
+                . $urlVar . ' = ' . getenv($urlVar) . "\n"
+                . "MAGENTO_ADMIN_USERNAME = " . $e->getContext()['MAGENTO_ADMIN_USERNAME'] . "\n"
+                . "MAGENTO_ADMIN_PASSWORD = " . $e->getContext()['MAGENTO_ADMIN_PASSWORD']
             );
         }
         return $result;
