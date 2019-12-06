@@ -135,11 +135,8 @@ class DoctorCommand extends Command
                 $urlVar = 'MAGENTO_BASE_URL';
             }
             $this->ioStyle->error(
-                $e->getMessage() . "\n"
-                . "Please verify the following configuration settings in .env:\n"
-                . $urlVar . ' = ' . getenv($urlVar) . "\n"
-                . "MAGENTO_ADMIN_USERNAME = " . $e->getContext()['MAGENTO_ADMIN_USERNAME'] . "\n"
-                . "MAGENTO_ADMIN_PASSWORD = " . $e->getContext()['MAGENTO_ADMIN_PASSWORD']
+                $e->getMessage() . "\nPlease verify if " . $urlVar . ", "
+                . "MAGENTO_ADMIN_USERNAME and MAGENTO_ADMIN_PASSWORD in .env are valid."
             );
         }
         return $result;
