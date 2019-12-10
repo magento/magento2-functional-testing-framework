@@ -2,8 +2,6 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -25,15 +23,7 @@ class PersistedReplacementTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->comment("[createData1] create 'ReplacementPerson' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
-			"createData1",
-			"hook",
-			"ReplacementPerson",
-			[],
-			[]
-		);
-
+		$I->createEntity("createData1", "hook", "ReplacementPerson", [], []); // stepKey: createData1
 	}
 
 	/**
@@ -45,36 +35,28 @@ class PersistedReplacementTestCest
 	 */
 	public function PersistedReplacementTest(AcceptanceTester $I)
 	{
-		$I->comment("[createdData] create 'simpleData' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
-			"createdData",
-			"test",
-			"simpleData",
-			[],
-			[]
-		);
-
-		$I->fillField("#selector", "StringBefore " . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . " StringAfter"); // stepKey: inputReplace
-		$I->fillField("#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test'), "input"); // stepKey: selectorReplace
-		$I->fillField("#" . getenv("MAGENTO_BASE_URL") . "#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test'), "input"); // stepKey: selectorReplace2
-		$I->fillSecretField("#" . CredentialStore::getInstance()->getSecret("SECRET_PARAM") . "#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test'), "input"); // stepKey: selectorReplace3
-		$I->dragAndDrop("#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'lastname', 'test')); // stepKey: selector12Replace
-		$I->conditionalClick(PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'lastname', 'test'), "#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test'), true); // stepKey: dependentSelectorReplace
-		$I->amOnUrl(PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . ".html"); // stepKey: urlReplace
-		$I->searchAndMultiSelectOption("#selector", [PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'lastname', 'test')]); // stepKey: parameterArrayReplacement
-		$I->fillField("#selector", "John " . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . " stringLiteral"); // stepKey: allTypesMixed
-		$I->searchAndMultiSelectOption("#selector", [PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test'), "John", "stringLiteral"]); // stepKey: parameterArrayMixed
-		$I->seeInPageSource("StringBefore " . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . " StringAfter"); // stepKey: htmlReplace1
-		$I->seeInPageSource("StringBefore " . PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test') . " StringAfter"); // stepKey: htmlReplace2
-		$I->seeInPageSource("#" . getenv("MAGENTO_BASE_URL") . "#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test')); // stepKey: htmlReplace3
-		$I->dontSeeInPageSource("StringBefore " . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . " StringAfter"); // stepKey: htmlReplace4
-		$I->dontSeeInPageSource("StringBefore " . PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test') . " StringAfter"); // stepKey: htmlReplace5
-		$I->dontSeeInPageSource("#" . getenv("MAGENTO_BASE_URL") . "#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test')); // stepKey: htmlReplace6
-		$I->seeInSource("StringBefore " . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . " StringAfter"); // stepKey: htmlReplace7
-		$I->seeInSource("StringBefore " . PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test') . " StringAfter"); // stepKey: htmlReplace8
-		$I->seeInSource("#" . getenv("MAGENTO_BASE_URL") . "#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test')); // stepKey: htmlReplace9
-		$I->dontSeeInSource("StringBefore " . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . " StringAfter"); // stepKey: htmlReplace10
-		$I->dontSeeInSource("StringBefore " . PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test') . " StringAfter"); // stepKey: htmlReplace11
-		$I->dontSeeInSource("#" . getenv("MAGENTO_BASE_URL") . "#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test')); // stepKey: htmlReplace12
+		$I->createEntity("createdData", "test", "simpleData", [], []); // stepKey: createdData
+		$I->fillField("#selector", "StringBefore " . $I->retrieveEntityField('createdData', 'firstname', 'test') . " StringAfter"); // stepKey: inputReplace
+		$I->fillField("#" . $I->retrieveEntityField('createdData', 'firstname', 'test'), "input"); // stepKey: selectorReplace
+		$I->fillField("#" . getenv("MAGENTO_BASE_URL") . "#" . $I->retrieveEntityField('createdData', 'firstname', 'test'), "input"); // stepKey: selectorReplace2
+		$I->fillSecretField("#" . $I->getSecret("SECRET_PARAM") . "#" . $I->retrieveEntityField('createdData', 'firstname', 'test'), "input"); // stepKey: selectorReplace3
+		$I->dragAndDrop("#" . $I->retrieveEntityField('createdData', 'firstname', 'test'), $I->retrieveEntityField('createdData', 'lastname', 'test')); // stepKey: selector12Replace
+		$I->conditionalClick($I->retrieveEntityField('createdData', 'lastname', 'test'), "#" . $I->retrieveEntityField('createdData', 'firstname', 'test'), true); // stepKey: dependentSelectorReplace
+		$I->amOnUrl($I->retrieveEntityField('createdData', 'firstname', 'test') . ".html"); // stepKey: urlReplace
+		$I->searchAndMultiSelectOption("#selector", [$I->retrieveEntityField('createdData', 'firstname', 'test'), $I->retrieveEntityField('createdData', 'lastname', 'test')]); // stepKey: parameterArrayReplacement
+		$I->fillField("#selector", "John " . $I->retrieveEntityField('createdData', 'firstname', 'test') . " stringLiteral"); // stepKey: allTypesMixed
+		$I->searchAndMultiSelectOption("#selector", [$I->retrieveEntityField('createdData', 'firstname', 'test'), "John", "stringLiteral"]); // stepKey: parameterArrayMixed
+		$I->seeInPageSource("StringBefore " . $I->retrieveEntityField('createdData', 'firstname', 'test') . " StringAfter"); // stepKey: htmlReplace1
+		$I->seeInPageSource("StringBefore " . $I->retrieveEntityField('createData1', 'firstname', 'test') . " StringAfter"); // stepKey: htmlReplace2
+		$I->seeInPageSource("#" . getenv("MAGENTO_BASE_URL") . "#" . $I->retrieveEntityField('createdData', 'firstname', 'test')); // stepKey: htmlReplace3
+		$I->dontSeeInPageSource("StringBefore " . $I->retrieveEntityField('createdData', 'firstname', 'test') . " StringAfter"); // stepKey: htmlReplace4
+		$I->dontSeeInPageSource("StringBefore " . $I->retrieveEntityField('createData1', 'firstname', 'test') . " StringAfter"); // stepKey: htmlReplace5
+		$I->dontSeeInPageSource("#" . getenv("MAGENTO_BASE_URL") . "#" . $I->retrieveEntityField('createdData', 'firstname', 'test')); // stepKey: htmlReplace6
+		$I->seeInSource("StringBefore " . $I->retrieveEntityField('createdData', 'firstname', 'test') . " StringAfter"); // stepKey: htmlReplace7
+		$I->seeInSource("StringBefore " . $I->retrieveEntityField('createData1', 'firstname', 'test') . " StringAfter"); // stepKey: htmlReplace8
+		$I->seeInSource("#" . getenv("MAGENTO_BASE_URL") . "#" . $I->retrieveEntityField('createdData', 'firstname', 'test')); // stepKey: htmlReplace9
+		$I->dontSeeInSource("StringBefore " . $I->retrieveEntityField('createdData', 'firstname', 'test') . " StringAfter"); // stepKey: htmlReplace10
+		$I->dontSeeInSource("StringBefore " . $I->retrieveEntityField('createData1', 'firstname', 'test') . " StringAfter"); // stepKey: htmlReplace11
+		$I->dontSeeInSource("#" . getenv("MAGENTO_BASE_URL") . "#" . $I->retrieveEntityField('createdData', 'firstname', 'test')); // stepKey: htmlReplace12
 	}
 }

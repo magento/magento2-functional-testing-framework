@@ -12,6 +12,7 @@ use Codeception\Step;
 use Codeception\Step\Comment;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
+use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
@@ -30,6 +31,13 @@ class Console extends \Codeception\Subscriber\Console
      * @var null|string
      */
     private $actionGroupStepKey = null;
+
+    /**
+     * Boolean value to indicate if steps are invisible steps
+     *
+     * @var boolean
+     */
+    private $atInvisibleSteps = false;
 
     /**
      * Console constructor. Parent constructor requires codeception CLI options, and does not have its own configs.
@@ -57,6 +65,19 @@ class Console extends \Codeception\Subscriber\Console
             return;
         }
 
+        $stepAction = $e->getStep()->getAction();
+
+        // Set atInvisibleSteps flag and return if step is in INVISIBLE_STEP_ACTIONS
+        if (in_array($stepAction, ActionObject::INVISIBLE_STEP_ACTIONS)) {
+            $this->atInvisibleSteps = true;
+            return;
+        }
+
+        // Set back atInvisibleSteps flag
+        if ($this->atInvisibleSteps && !in_array($stepAction, ActionObject::INVISIBLE_STEP_ACTIONS)) {
+            $this->atInvisibleSteps = false;
+        }
+
         $metaStep = $e->getStep()->getMetaStep();
         if ($metaStep and $this->metaStep != $metaStep) {
             $this->message(' ' . $metaStep->getPrefix())
@@ -77,9 +98,14 @@ class Console extends \Codeception\Subscriber\Console
      */
     public function afterStep(StepEvent $e)
     {
-        parent::afterStep($e);
+        // Do usual after step if step is not INVISIBLE_STEP_ACTIONS
+        if (!$this->atInvisibleSteps) {
+            parent::afterStep($e);
+        }
+
         if ($e->getStep()->hasFailed()) {
             $this->actionGroupStepKey = null;
+            $this->atInvisibleSteps = false;
         }
     }
 

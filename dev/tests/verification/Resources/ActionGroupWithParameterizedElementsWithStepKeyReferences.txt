@@ -2,8 +2,6 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -31,18 +29,10 @@ class ActionGroupWithParameterizedElementsWithStepKeyReferencesCest
 		$I->comment("Entering Action Group [actionGroup] actionGroupWithParametrizedSelectors");
 		$testVariableActionGroup = $I->executeJS("return 1"); // stepKey: testVariableActionGroup
 		$testVariable2ActionGroup = $I->executeJS("return 'test'"); // stepKey: testVariable2ActionGroup
-		$I->comment("[createSimpleDataActionGroup] create 'simpleData' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
-			"createSimpleDataActionGroup",
-			"test",
-			"simpleData",
-			[],
-			[]
-		);
-
+		$I->createEntity("createSimpleDataActionGroup", "test", "simpleData", [], []); // stepKey: createSimpleDataActionGroup
 		$I->click("#{$testVariable2ActionGroup} .John"); // stepKey: click1ActionGroup
 		$I->click("#Doe-" . msq("simpleParamData") . "prename .{$testVariableActionGroup}"); // stepKey: click2ActionGroup
-		$I->seeElement("//div[@name='Tiberius'][@class={$testVariableActionGroup}][@data-element='{$testVariable2ActionGroup}'][" . PersistedObjectHandler::getInstance()->retrieveEntityField('createSimpleData', 'name', 'test') . "]"); // stepKey: see1ActionGroup
+		$I->seeElement("//div[@name='Tiberius'][@class={$testVariableActionGroup}][@data-element='{$testVariable2ActionGroup}'][" . $I->retrieveEntityField('createSimpleData', 'name', 'test') . "]"); // stepKey: see1ActionGroup
 		$I->comment("Exiting Action Group [actionGroup] actionGroupWithParametrizedSelectors");
 	}
 }

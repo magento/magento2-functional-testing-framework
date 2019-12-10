@@ -122,7 +122,7 @@ class functionalSuiteHooks extends \Codeception\GroupObject
                 // initialize the webdriver session
                 $webDriver->_initializeSession();
                 $webDriver->amOnPage("some.url"); // stepKey: after
-                $webDriver->deleteEntityByUrl("deleteThis");
+                $webDriver->deleteEntityByUrl("deleteThis"); // stepKey: delete
                 print("Entering Action Group [AC] actionGroupWithTwoArguments");
                 $webDriver->see("John", msq("uniqueData") . "John"); // stepKey: seeFirstNameAC
                 print("Exiting Action Group [AC] actionGroupWithTwoArguments");

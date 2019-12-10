@@ -47,15 +47,20 @@ class TestGenerator
     const PERSISTED_OBJECT_NOTATION_REGEX = '/\${1,2}[\w.\[\]]+\${1,2}/';
     const NO_STEPKEY_ACTIONS = [
         'comment',
-        'createData',
-        'deleteData',
-        'updateData',
-        'getData',
+        'retrieveEntityField',
+        'getSecret',
         'magentoCLI',
         'generateDate',
         'field'
     ];
     const STEP_KEY_ANNOTATION = " // stepKey: %s";
+
+    /**
+     * Actor name for AcceptanceTest
+     *
+     * @var string
+     */
+    private $actor = 'I';
 
     /**
      * Path to the export dir.
@@ -97,7 +102,7 @@ class TestGenerator
      *
      * @var string
      */
-    private $currentGenerationScope;
+    private $currentGenerationScope = TestGenerator::TEST_SCOPE;
 
     /**
      * TestGenerator constructor.
@@ -326,8 +331,6 @@ class TestGenerator
     private function generateUseStatementsPhp()
     {
         $useStatementsPhp = "use Magento\FunctionalTestingFramework\AcceptanceTester;\n";
-        $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;\n";
-        $useStatementsPhp .= "use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;\n";
         $useStatementsPhp .= "use \Codeception\Util\Locator;\n";
 
         $allureStatements = [
@@ -499,7 +502,8 @@ class TestGenerator
     public function generateStepsPhp($actionObjects, $generationScope = TestGenerator::TEST_SCOPE, $actor = "I")
     {
         //TODO: Refactor Method according to PHPMD warnings, remove @SuppressWarnings accordingly.
-        $testSteps = "";
+        $testSteps = '';
+        $this->actor = $actor;
         $this->currentGenerationScope = $generationScope;
 
         foreach ($actionObjects as $actionObject) {
@@ -726,13 +730,6 @@ class TestGenerator
             switch ($actionObject->getType()) {
                 case "createData":
                     $entity = $customActionAttributes['entity'];
-                    //Add an informative statement to help the user debug test runs
-                    $testSteps .= sprintf(
-                        "\t\t$%s->comment(\"[%s] create '%s' entity\");\n",
-                        $actor,
-                        $stepKey,
-                        $entity
-                    );
 
                     //TODO refactor entity field override to not be individual actionObjects
                     $customEntityFields =
@@ -759,20 +756,20 @@ class TestGenerator
                         $scope = PersistedObjectHandler::SUITE_SCOPE;
                     }
 
-                    $createEntityFunctionCall = "\t\tPersistedObjectHandler::getInstance()->createEntity(";
-                    $createEntityFunctionCall .= "\n\t\t\t\"{$stepKey}\",";
-                    $createEntityFunctionCall .= "\n\t\t\t\"{$scope}\",";
-                    $createEntityFunctionCall .= "\n\t\t\t\"{$entity}\"";
-                    $createEntityFunctionCall .= ",\n\t\t\t[{$requiredEntityKeysArray}]";
+                    $createEntityFunctionCall = "\t\t\${$actor}->createEntity(";
+                    $createEntityFunctionCall .= "\"{$stepKey}\",";
+                    $createEntityFunctionCall .= " \"{$scope}\",";
+                    $createEntityFunctionCall .= " \"{$entity}\",";
+                    $createEntityFunctionCall .= " [{$requiredEntityKeysArray}],";
                     if (count($customEntityFields) > 1) {
-                        $createEntityFunctionCall .= ",\n\t\t\t\${$stepKey}Fields";
+                        $createEntityFunctionCall .= " \${$stepKey}Fields";
                     } else {
-                        $createEntityFunctionCall .= ",\n\t\t\t[]";
+                        $createEntityFunctionCall .= " []";
                     }
                     if ($storeCode !== null) {
-                        $createEntityFunctionCall .= ",\n\t\t\t\"{$storeCode}\"";
+                        $createEntityFunctionCall .= ", \"{$storeCode}\"";
                     }
-                    $createEntityFunctionCall .= "\n\t\t);\n";
+                    $createEntityFunctionCall .= ");";
                     $testSteps .= $createEntityFunctionCall;
                     break;
                 case "deleteData":
@@ -784,13 +781,6 @@ class TestGenerator
                         );
                         $actionGroup = $actionObject->getCustomActionAttributes()['actionGroup'] ?? null;
                         $key .= $actionGroup;
-                        //Add an informative statement to help the user debug test runs
-                        $contextSetter = sprintf(
-                            "\t\t$%s->comment(\"[%s] delete entity '%s'\");\n",
-                            $actor,
-                            $stepKey,
-                            $key
-                        );
 
                         //Determine Scope
                         $scope = PersistedObjectHandler::TEST_SCOPE;
@@ -800,18 +790,17 @@ class TestGenerator
                             $scope = PersistedObjectHandler::SUITE_SCOPE;
                         }
 
-                        $deleteEntityFunctionCall = "\t\tPersistedObjectHandler::getInstance()->deleteEntity(";
-                        $deleteEntityFunctionCall .= "\n\t\t\t\"{$key}\",";
-                        $deleteEntityFunctionCall .= "\n\t\t\t\"{$scope}\"";
-                        $deleteEntityFunctionCall .= "\n\t\t);\n";
+                        $deleteEntityFunctionCall = "\t\t\${$actor}->deleteEntity(";
+                        $deleteEntityFunctionCall .= "\"{$key}\",";
+                        $deleteEntityFunctionCall .= " \"{$scope}\"";
+                        $deleteEntityFunctionCall .= ");";
 
-                        $testSteps .= $contextSetter;
                         $testSteps .= $deleteEntityFunctionCall;
                     } else {
                         $url = $this->resolveAllRuntimeReferences([$url])[0];
                         $url = $this->resolveTestVariable([$url], null)[0];
                         $output = sprintf(
-                            "\t\t$%s->deleteEntityByUrl(%s);\n",
+                            "\t\t$%s->deleteEntityByUrl(%s);",
                             $actor,
                             $url
                         );
@@ -827,15 +816,6 @@ class TestGenerator
                     $updateEntity = $customActionAttributes['entity'];
                     $actionGroup = $actionObject->getCustomActionAttributes()['actionGroup'] ?? null;
                     $key .= $actionGroup;
-
-                    //Add an informative statement to help the user debug test runs
-                    $testSteps .= sprintf(
-                        "\t\t$%s->comment(\"[%s] update '%s' entity to '%s'\");\n",
-                        $actor,
-                        $stepKey,
-                        $key,
-                        $updateEntity
-                    );
 
                     // Build array of requiredEntities
                     $requiredEntityKeys = [];
@@ -858,15 +838,15 @@ class TestGenerator
                         $scope = PersistedObjectHandler::SUITE_SCOPE;
                     }
 
-                    $updateEntityFunctionCall = "\t\tPersistedObjectHandler::getInstance()->updateEntity(";
-                    $updateEntityFunctionCall .= "\n\t\t\t\"{$key}\",";
-                    $updateEntityFunctionCall .= "\n\t\t\t\"{$scope}\",";
-                    $updateEntityFunctionCall .= "\n\t\t\t\"{$updateEntity}\"";
-                    $updateEntityFunctionCall .= ",\n\t\t\t[{$requiredEntityKeysArray}]";
+                    $updateEntityFunctionCall = "\t\t\${$actor}->updateEntity(";
+                    $updateEntityFunctionCall .= "\"{$key}\",";
+                    $updateEntityFunctionCall .= " \"{$scope}\",";
+                    $updateEntityFunctionCall .= " \"{$updateEntity}\",";
+                    $updateEntityFunctionCall .= "[{$requiredEntityKeysArray}]";
                     if ($storeCode !== null) {
-                        $updateEntityFunctionCall .= ",\n\t\t\t\"{$storeCode}\"";
+                        $updateEntityFunctionCall .= ", \"{$storeCode}\"";
                     }
-                    $updateEntityFunctionCall .= "\n\t\t);\n";
+                    $updateEntityFunctionCall .= ");";
                     $testSteps .= $updateEntityFunctionCall;
 
                     break;
@@ -876,13 +856,6 @@ class TestGenerator
                     if (isset($customActionAttributes['index'])) {
                         $index = (int)$customActionAttributes['index'];
                     }
-                    //Add an informative statement to help the user debug test runs
-                    $testSteps .= sprintf(
-                        "\t\t$%s->comment(\"[%s] get '%s' entity\");\n",
-                        $actor,
-                        $stepKey,
-                        $entity
-                    );
 
                     // Build array of requiredEntities
                     $requiredEntityKeys = [];
@@ -906,20 +879,20 @@ class TestGenerator
                     }
 
                     //Create Function
-                    $getEntityFunctionCall = "\t\tPersistedObjectHandler::getInstance()->getEntity(";
-                    $getEntityFunctionCall .= "\n\t\t\t\"{$stepKey}\",";
-                    $getEntityFunctionCall .= "\n\t\t\t\"{$scope}\",";
-                    $getEntityFunctionCall .= "\n\t\t\t\"{$entity}\"";
-                    $getEntityFunctionCall .= ",\n\t\t\t[{$requiredEntityKeysArray}]";
+                    $getEntityFunctionCall = "\t\t\${$actor}->getEntity(";
+                    $getEntityFunctionCall .= "\"{$stepKey}\",";
+                    $getEntityFunctionCall .= " \"{$scope}\",";
+                    $getEntityFunctionCall .= " \"{$entity}\",";
+                    $getEntityFunctionCall .= " [{$requiredEntityKeysArray}],";
                     if ($storeCode !== null) {
-                        $getEntityFunctionCall .= ",\n\t\t\t\"{$storeCode}\"";
+                        $getEntityFunctionCall .= " \"{$storeCode}\"";
                     } else {
-                        $getEntityFunctionCall .= ",\n\t\t\tnull";
+                        $getEntityFunctionCall .= " null";
                     }
                     if ($index !== null) {
-                        $getEntityFunctionCall .= ",\n\t\t\t{$index}";
+                        $getEntityFunctionCall .= ", {$index}";
                     }
-                    $getEntityFunctionCall .= "\n\t\t);\n";
+                    $getEntityFunctionCall .= ");";
                     $testSteps .= $getEntityFunctionCall;
 
                     break;
@@ -1435,7 +1408,11 @@ class TestGenerator
                 );
             }
 
-            $replacement = "PersistedObjectHandler::getInstance()->retrieveEntityField";
+            $actor = "\$" . $this->actor;
+            if ($this->currentGenerationScope === TestGenerator::SUITE_SCOPE) {
+                $actor = 'PersistedObjectHandler::getInstance()';
+            }
+            $replacement = "{$actor}->retrieveEntityField";
             $replacement .= "('{$variable[0]}', '$variable[1]', '{$this->currentGenerationScope}')";
 
             //Determine if quoteBreak check is necessary. Assume replacement is surrounded in quotes, then override
@@ -1490,9 +1467,14 @@ class TestGenerator
         foreach ($stepKeys as $stepKey) {
             // MQE-1011
             $stepKeyVarRef = "$" . $stepKey;
-            $persistedVarRef = "PersistedObjectHandler::getInstance()->retrieveEntityField('{$stepKey}'"
+
+            $actor = "\$" . $this->actor;
+            if ($this->currentGenerationScope === TestGenerator::SUITE_SCOPE) {
+                $actor = 'PersistedObjectHandler::getInstance()';
+            }
+            $persistedVarRef = "{$actor}->retrieveEntityField('{$stepKey}'"
                 . ", 'field', 'test')";
-            $persistedVarRefInvoked = "PersistedObjectHandler::getInstance()->retrieveEntityField('"
+            $persistedVarRefInvoked = "{$actor}->retrieveEntityField('"
                 . $stepKey . $testInvocationKey . "', 'field', 'test')";
 
             // only replace when whole word matches exactly
@@ -1882,6 +1864,7 @@ class TestGenerator
         $output .= implode(", ", array_filter($args, function($value) { return $value !== null; })) . ");";
         return $output;
     }
+
     // @codingStandardsIgnoreEnd
 
     /**
@@ -1925,7 +1908,7 @@ class TestGenerator
     {
         $runtimeReferenceRegex = [
             "/{{_ENV\.([\w]+)}}/" => 'getenv',
-            ActionMergeUtil::CREDS_REGEX => 'CredentialStore::getInstance()->getSecret'
+            ActionMergeUtil::CREDS_REGEX => "\${$this->actor}->getSecret"
         ];
 
         $argResult = $args;

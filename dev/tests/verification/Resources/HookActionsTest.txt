@@ -2,8 +2,6 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -25,30 +23,9 @@ class HookActionsTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->comment("[sampleCreateBefore] create 'sampleCreatedEntity' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
-			"sampleCreateBefore",
-			"hook",
-			"sampleCreatedEntity",
-			[],
-			[]
-		);
-
-		$I->comment("[sampleDeleteBefore] delete entity 'sampleCreateBefore'");
-		PersistedObjectHandler::getInstance()->deleteEntity(
-			"sampleCreateBefore",
-			"hook"
-		);
-
-		$I->comment("[sampleCreateForAfter] create 'sampleCreatedEntity' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
-			"sampleCreateForAfter",
-			"hook",
-			"sampleCreatedEntity",
-			[],
-			[]
-		);
-
+		$I->createEntity("sampleCreateBefore", "hook", "sampleCreatedEntity", [], []); // stepKey: sampleCreateBefore
+		$I->deleteEntity("sampleCreateBefore", "hook"); // stepKey: sampleDeleteBefore
+		$I->createEntity("sampleCreateForAfter", "hook", "sampleCreatedEntity", [], []); // stepKey: sampleCreateForAfter
 	}
 
 	/**
@@ -57,21 +34,8 @@ class HookActionsTestCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
-		$I->comment("[sampleCreateAfter] create 'sampleCreatedEntity' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
-			"sampleCreateAfter",
-			"hook",
-			"sampleCreatedEntity",
-			[],
-			[]
-		);
-
-		$I->comment("[sampleDeleteAfter] delete entity 'sampleCreateForAfter'");
-		PersistedObjectHandler::getInstance()->deleteEntity(
-			"sampleCreateForAfter",
-			"hook"
-		);
-
+		$I->createEntity("sampleCreateAfter", "hook", "sampleCreatedEntity", [], []); // stepKey: sampleCreateAfter
+		$I->deleteEntity("sampleCreateForAfter", "hook"); // stepKey: sampleDeleteAfter
 	}
 
 	/**

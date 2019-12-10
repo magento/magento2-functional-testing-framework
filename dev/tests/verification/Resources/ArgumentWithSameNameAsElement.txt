@@ -2,8 +2,6 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -26,15 +24,7 @@ class ArgumentWithSameNameAsElementCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->comment("[createPersonParam] create 'ReplacementPerson' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
-			"createPersonParam",
-			"hook",
-			"ReplacementPerson",
-			[],
-			[]
-		);
-
+		$I->createEntity("createPersonParam", "hook", "ReplacementPerson", [], []); // stepKey: createPersonParam
 		$I->comment("Entering Action Group [beforeGroup] FunctionalActionGroup");
 		$I->fillField("#foo", "myData1"); // stepKey: fillField1BeforeGroup
 		$I->fillField("#bar", "myData2"); // stepKey: fillField2BeforeGroup

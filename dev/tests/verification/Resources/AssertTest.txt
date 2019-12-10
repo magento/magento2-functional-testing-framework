@@ -2,8 +2,6 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -25,15 +23,7 @@ class AssertTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->comment("[createData1] create 'ReplacementPerson' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
-			"createData1",
-			"hook",
-			"ReplacementPerson",
-			[],
-			[]
-		);
-
+		$I->createEntity("createData1", "hook", "ReplacementPerson", [], []); // stepKey: createData1
 	}
 
 	/**
@@ -45,15 +35,7 @@ class AssertTestCest
 	 */
 	public function AssertTest(AcceptanceTester $I)
 	{
-		$I->comment("[createData2] create 'UniquePerson' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
-			"createData2",
-			"test",
-			"UniquePerson",
-			[],
-			[]
-		);
-
+		$I->createEntity("createData2", "test", "UniquePerson", [], []); // stepKey: createData2
 		$grabTextFrom1 = $I->grabTextFrom(".copyright>span"); // stepKey: grabTextFrom1
 		$I->comment("custom asserts");
 		$I->assertArrayIsSorted(["1", "2", "3", "4", "5"], "asc"); // stepKey: assertSorted1
@@ -138,15 +120,15 @@ class AssertTestCest
 		$I->expectException(new MyException('exception msg'), function() {$this->doSomethingBad();}); // stepKey: expectExceptionBackwardCompatible
 		$I->comment("string type that use created data");
 		$I->comment("string type that use created data");
-		$I->assertStringStartsWith("D", PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test') . ", " . PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test'), "fail"); // stepKey: assert1
-		$I->assertStringStartsNotWith("W", PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test') . ", " . PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'lastname', 'test'), "pass"); // stepKey: assert2
-		$I->assertEquals(PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'), "pass"); // stepKey: assert5
+		$I->assertStringStartsWith("D", $I->retrieveEntityField('createData1', 'lastname', 'test') . ", " . $I->retrieveEntityField('createData1', 'firstname', 'test'), "fail"); // stepKey: assert1
+		$I->assertStringStartsNotWith("W", $I->retrieveEntityField('createData2', 'firstname', 'test') . ", " . $I->retrieveEntityField('createData2', 'lastname', 'test'), "pass"); // stepKey: assert2
+		$I->assertEquals($I->retrieveEntityField('createData1', 'lastname', 'test'), $I->retrieveEntityField('createData1', 'lastname', 'test'), "pass"); // stepKey: assert5
 		$I->comment("array type that use created data");
 		$I->comment("array type that use created data");
-		$I->assertArraySubset([PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test')], [PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test'), "1"], "pass"); // stepKey: assert9
-		$I->assertArraySubset([PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'lastname', 'test')], [PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'lastname', 'test'), "1"], "pass"); // stepKey: assert10
-		$I->assertArrayHasKey("lastname", ['lastname' => PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test'), 'firstname' => PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test')], "pass"); // stepKey: assert3
-		$I->assertArrayHasKey("lastname", ['lastname' => PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'lastname', 'test'), 'firstname' => PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test')], "pass"); // stepKey: assert4
+		$I->assertArraySubset([$I->retrieveEntityField('createData1', 'lastname', 'test'), $I->retrieveEntityField('createData1', 'firstname', 'test')], [$I->retrieveEntityField('createData1', 'lastname', 'test'), $I->retrieveEntityField('createData1', 'firstname', 'test'), "1"], "pass"); // stepKey: assert9
+		$I->assertArraySubset([$I->retrieveEntityField('createData2', 'firstname', 'test'), $I->retrieveEntityField('createData2', 'lastname', 'test')], [$I->retrieveEntityField('createData2', 'firstname', 'test'), $I->retrieveEntityField('createData2', 'lastname', 'test'), "1"], "pass"); // stepKey: assert10
+		$I->assertArrayHasKey("lastname", ['lastname' => $I->retrieveEntityField('createData1', 'lastname', 'test'), 'firstname' => $I->retrieveEntityField('createData1', 'firstname', 'test')], "pass"); // stepKey: assert3
+		$I->assertArrayHasKey("lastname", ['lastname' => $I->retrieveEntityField('createData2', 'lastname', 'test'), 'firstname' => $I->retrieveEntityField('createData2', 'firstname', 'test')], "pass"); // stepKey: assert4
 		$I->comment("this section can only be generated and cannot run");
 		$I->assertInstanceOf(User::class, $text, "pass"); // stepKey: assertInstanceOf
 		$I->assertNotInstanceOf(User::class, 21, "pass"); // stepKey: assertNotInstanceOf
@@ -156,8 +138,8 @@ class AssertTestCest
 		$I->assertNull($text, "pass"); // stepKey: assertNull
 		$I->expectException(new MyException('exception msg'), function() {$this->doSomethingBad();}); // stepKey: expectException
 		$I->fail("fail"); // stepKey: fail
-		$I->fail(PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test') . " " . PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'lastname', 'test')); // stepKey: assert7
-		$I->fail(PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test') . " " . PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'lastname', 'test')); // stepKey: assert8
+		$I->fail($I->retrieveEntityField('createData2', 'firstname', 'test') . " " . $I->retrieveEntityField('createData2', 'lastname', 'test')); // stepKey: assert7
+		$I->fail($I->retrieveEntityField('createData1', 'firstname', 'test') . " " . $I->retrieveEntityField('createData1', 'lastname', 'test')); // stepKey: assert8
 		$I->comment("assertElementContainsAttribute examples");
 		$I->assertElementContainsAttribute("#username", "class", "admin__control-text"); // stepKey: assertElementContainsAttribute1
 		$I->assertElementContainsAttribute("#username", "name", "login[username]"); // stepKey: assertElementContainsAttribute2
@@ -165,8 +147,8 @@ class AssertTestCest
 		$I->assertElementContainsAttribute("#username", "data-validate", "{required:true}"); // stepKey: assertElementContainsAttribute4
 		$I->assertElementContainsAttribute(".admin__menu-overlay", "style", "display: none;"); // stepKey: assertElementContainsAttribute5
 		$I->assertElementContainsAttribute(".admin__menu-overlay", "border", "0"); // stepKey: assertElementContainsAttribute6
-		$I->assertElementContainsAttribute("#username", "value", PersistedObjectHandler::getInstance()->retrieveEntityField('createData2', 'firstname', 'test')); // stepKey: assertElementContainsAttribute7
-		$I->assertElementContainsAttribute("#username", "value", PersistedObjectHandler::getInstance()->retrieveEntityField('createData1', 'firstname', 'test')); // stepKey: assertElementContainsAttribute8
+		$I->assertElementContainsAttribute("#username", "value", $I->retrieveEntityField('createData2', 'firstname', 'test')); // stepKey: assertElementContainsAttribute7
+		$I->assertElementContainsAttribute("#username", "value", $I->retrieveEntityField('createData1', 'firstname', 'test')); // stepKey: assertElementContainsAttribute8
 		$I->comment("assert entity resolution");
 		$I->assertEquals("John", "Doe", "pass"); // stepKey: assertEqualsEntity
 	}
