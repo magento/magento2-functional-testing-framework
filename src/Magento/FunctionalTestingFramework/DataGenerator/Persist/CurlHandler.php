@@ -123,6 +123,8 @@ class CurlHandler
         $returnRegex = $this->operationDefinition->getReturnRegex();
         $returnIndex = $this->operationDefinition->getReturnIndex();
         $method = $this->operationDefinition->getApiMethod();
+        AllureHelper::addAttachmentToLastStep($apiUrl, 'API Endpoint');
+        AllureHelper::addAttachmentToLastStep(json_encode($headers, JSON_PRETTY_PRINT), 'Request Headers');
 
         $operationDataResolver = new OperationDataArrayResolver($dependentEntities);
         $this->requestData = $operationDataResolver->resolveOperationDataArray(

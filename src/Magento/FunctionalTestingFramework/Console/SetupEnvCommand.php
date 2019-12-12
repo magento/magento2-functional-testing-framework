@@ -7,6 +7,8 @@ declare(strict_types = 1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Exception\InvalidOptionException;
@@ -27,12 +29,13 @@ class SetupEnvCommand extends Command
      * Configures the current command.
      *
      * @return void
+     * @throws TestFrameworkException
      */
     protected function configure()
     {
         $this->setName('setup:env')
             ->setDescription("Generate .env file.");
-        $this->envProcessor = new EnvProcessor(TESTS_BP . DIRECTORY_SEPARATOR . '.env');
+        $this->envProcessor = new EnvProcessor(FilePathFormatter::format(TESTS_BP) . '.env');
         $env = $this->envProcessor->getEnv();
         foreach ($env as $key => $value) {
             $this->addOption($key, null, InputOption::VALUE_REQUIRED, '', $value);

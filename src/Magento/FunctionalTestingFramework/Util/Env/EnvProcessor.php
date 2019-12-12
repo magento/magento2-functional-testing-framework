@@ -7,6 +7,9 @@ declare(strict_types = 1);
 
 namespace Magento\FunctionalTestingFramework\Util\Env;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
+
 /**
  * Helper class EnvProcessor for reading and writing .env files.
  *
@@ -45,13 +48,14 @@ class EnvProcessor
     /**
      * EnvProcessor constructor.
      * @param string $envFile
+     * @throws TestFrameworkException
      */
     public function __construct(
         string $envFile = ''
     ) {
         $this->envFile = $envFile;
         $this->envExists = file_exists($envFile);
-        $this->envExampleFile = realpath(FW_BP . "/etc/config/.env.example");
+        $this->envExampleFile = realpath(FilePathFormatter::format(FW_BP) . "etc/config/.env.example");
     }
 
     /**

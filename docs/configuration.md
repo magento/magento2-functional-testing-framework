@@ -277,6 +277,32 @@ Example:
 CREDENTIAL_VAULT_SECRET_BASE_PATH=secret
 ```
 
+### ENABLE_BROWSER_LOG
+
+Enables addition of browser logs to Allure steps
+
+```conf
+ENABLE_BROWSER_LOG=true
+```
+
+### BROWSER_LOG_BLACKLIST
+
+Blacklists types of browser log entries from appearing in Allure steps.
+
+Denoted in browser log entry as `"SOURCE": "type"`.
+
+```conf
+BROWSER_LOG_BLACKLIST=other,console-api
+```
+
+### WAIT_TIMEOUT
+
+Global MFTF configuration for the default amount of time (in seconds) that a test will wait while loading a page.
+
+```conf
+WAIT_TIMEOUT=30
+```
+
 <!-- Link definitions -->
 
 [`MAGENTO_CLI_COMMAND_PATH`]: #magento_cli_command_path

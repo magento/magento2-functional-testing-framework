@@ -9,6 +9,7 @@ namespace Magento\FunctionalTestingFramework\DataGenerator\Handlers;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage\FileStorage;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage\VaultStorage;
+use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
 
 class CredentialStore
 {
@@ -63,7 +64,7 @@ class CredentialStore
         if ($cvAddress !== false && $cvSecretPath !== false) {
             try {
                 $this->credStorage[self::ARRAY_KEY_FOR_VAULT] = new VaultStorage(
-                    rtrim($cvAddress, '/'),
+                    UrlFormatter::format($cvAddress, false),
                     '/' . trim($cvSecretPath, '/')
                 );
             } catch (TestFrameworkException $e) {

@@ -45,7 +45,8 @@ $TEST_ENVS = [
     'MAGENTO_BACKEND_NAME' => 'admin',
     'MAGENTO_ADMIN_USERNAME' => 'admin',
     'MAGENTO_ADMIN_PASSWORD' => 'admin123',
-    'DEFAULT_TIMEZONE' => 'America/Los_Angeles'
+    'DEFAULT_TIMEZONE' => 'America/Los_Angeles',
+    'WAIT_TIMEOUT' => '10'
 ];
 
 foreach ($TEST_ENVS as $key => $value) {

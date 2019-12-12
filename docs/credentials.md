@@ -1,6 +1,6 @@
 # Credentials
 
-When you test functionality that involves external services such as UPS, FedEx, PayPal, or SignifyD, 
+When you test functionality that involves external services such as UPS, FedEx, PayPal, or SignifyD,
 use the MFTF credentials feature to hide sensitive [data][] like integration tokens and API keys.
 
 Currently the MFTF supports two types of credential storage:
@@ -53,9 +53,9 @@ magento/carriers_usps_password=Lmgxvrq89uPwECeV
 #magento/carriers_dhl_id_us=dhl_test_user
 #magento/carriers_dhl_password_us=Mlgxv3dsagVeG
 ....
-```  
+```
 
-Or add new key & value pairs for your own credentials. The keys use the following format:
+Or add new key/value pairs for your own credentials. The keys use the following format:
 
 ```conf
 <vendor>/<key_name>=<key_value>
@@ -64,7 +64,7 @@ Or add new key & value pairs for your own credentials. The keys use the followin
 <div class="bs-callout bs-callout-info" markdown="1">
 The `/` symbol is not supported in a `key_name` other than the one after your vendor or extension name.
 </div>
- 
+
 Otherwise you are free to use any other `key_name` you like, as they are merely the keys to reference from your tests.
 
 ```conf
@@ -74,10 +74,10 @@ vendor/my_awesome_service_token=rRVSVnh3cbDsVG39oTMz4A
 
 ## Configure Vault Storage
 
-Hashicorp vault secures, stores, and tightly controls access to data in modern computing. 
-It provides advanced data protection for your testing credentials. 
+Hashicorp vault secures, stores, and tightly controls access to data in modern computing.
+It provides advanced data protection for your testing credentials.
 
-The MFTF works with both `vault enterprise` and `vault open source` that use `KV Version 2` secret engine. 
+The MFTF works with both `vault enterprise` and `vault open source` that use `KV Version 2` secret engine.
 
 ### Install vault CLI
 
@@ -95,8 +95,8 @@ vault login -method -path
 
 ### Store secrets in vault
 
-The MFTF uses the `KV Version 2` secret engine for secret storage. 
-More information for working with `KV Version 2` can be found in [Vault KV2][Vault KV2]. 
+The MFTF uses the `KV Version 2` secret engine for secret storage.
+More information for working with `KV Version 2` can be found in [Vault KV2][Vault KV2].
 
 #### Secrets path and key convention
 
@@ -125,9 +125,9 @@ vault kv put secret/mftf/magento/carriers_usps_password carriers_usps_password=L
 
 ### Setup MFTF to use vault
 
-Add vault configuration environment variables [`CREDENTIAL_VAULT_ADDRESS`][] and [`CREDENTIAL_VAULT_SECRET_BASE_PATH`][] 
+Add vault configuration environment variables [`CREDENTIAL_VAULT_ADDRESS`][] and [`CREDENTIAL_VAULT_SECRET_BASE_PATH`][]
 from `etc/config/.env.example` in `.env`.
-Set values according to your vault server configuration.  
+Set values according to your vault server configuration.
 
 ```conf
 # Default vault dev server
@@ -137,7 +137,7 @@ CREDENTIAL_VAULT_SECRET_BASE_PATH=secret
 
 ## Configure both File Storage and Vault Storage
 
-It is possible and sometimes useful to setup and use both `.credentials` file and vault for secret storage at the same time. 
+It is possible and sometimes useful to setup and use both `.credentials` file and vault for secret storage at the same time.
 In this case, the MFTF tests are able to read secret data at runtime from both storage options, but the local `.credentials` file will take precedence.
 
 <!-- {% raw %} -->
@@ -150,11 +150,12 @@ Define the value as a reference to the corresponding key in the credentials file
 
 -  `_CREDS` is an environment constant pointing to the `.credentials` file
 -  `my_data_key` is a key in the the `.credentials` file or vault that contains the value to be used in a test step
+   - for File Storage, ensure your key contains the vendor prefix, i.e. `vendor/my_data_key`
 
-For example, reference secret data in the [`fillField`][] action with the `userInput` attribute.
+For example, to reference secret data in the [`fillField`][] action, use the `userInput` attribute using a typical File Storage:
 
 ```xml
-<fillField stepKey="FillApiToken" selector=".api-token" userInput="{{_CREDS.my_data_key}}" />
+<fillField stepKey="FillApiToken" selector=".api-token" userInput="{{_CREDS.vendor/my_data_key}}" />
 ```
 
 <!-- {% endraw %} -->

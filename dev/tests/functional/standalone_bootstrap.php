@@ -15,10 +15,12 @@ defined('PROJECT_ROOT') || define('PROJECT_ROOT', dirname(dirname(dirname(__DIR_
 
 require_once realpath(PROJECT_ROOT . '/vendor/autoload.php');
 
+$envFilePath = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR;
+defined('ENV_FILE_PATH') || define('ENV_FILE_PATH', $envFilePath);
+
 //Load constants from .env file
-$envFilePath = dirname(dirname(__DIR__));
-if (file_exists($envFilePath . DIRECTORY_SEPARATOR . '.env')) {
-    $env = new \Dotenv\Loader($envFilePath . DIRECTORY_SEPARATOR . '.env');
+if (file_exists(ENV_FILE_PATH . '.env')) {
+    $env = new \Dotenv\Loader(ENV_FILE_PATH . '.env');
     $env->load();
 
     foreach ($_ENV as $key => $var) {
@@ -47,7 +49,10 @@ if (file_exists($envFilePath . DIRECTORY_SEPARATOR . '.env')) {
 
     defined('DEFAULT_TIMEZONE') || define('DEFAULT_TIMEZONE', 'America/Los_Angeles');
     $env->setEnvironmentVariable('DEFAULT_TIMEZONE', DEFAULT_TIMEZONE);
-    
+
+    defined('WAIT_TIMEOUT') || define('WAIT_TIMEOUT', 30);
+    $env->setEnvironmentVariable('WAIT_TIMEOUT', 30);
+
     try {
         new DateTimeZone(DEFAULT_TIMEZONE);
     } catch (\Exception $e) {

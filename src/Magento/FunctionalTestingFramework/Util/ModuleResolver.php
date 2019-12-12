@@ -9,6 +9,8 @@ namespace Magento\FunctionalTestingFramework\Util;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
+use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -201,7 +203,7 @@ class ModuleResolver
 
         $token = $this->getAdminToken();
 
-        $url = ConfigSanitizerUtil::sanitizeUrl(getenv('MAGENTO_BASE_URL')) . $this->moduleUrl;
+        $url = UrlFormatter::format(getenv('MAGENTO_BASE_URL')) . $this->moduleUrl;
 
         $headers = [
             'Authorization: Bearer ' . $token,
@@ -313,11 +315,11 @@ class ModuleResolver
         $allModulePaths = [];
 
         // Define the Module paths from magento bp
-        $magentoBaseCodePath = MAGENTO_BP;
+        $magentoBaseCodePath = FilePathFormatter::format(MAGENTO_BP, false);
 
         // Define the Module paths from default TESTS_MODULE_PATH
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
-        $modulePath = rtrim($modulePath, DIRECTORY_SEPARATOR);
+        $modulePath = FilePathFormatter::format($modulePath, false);
 
         $vendorCodePath = DIRECTORY_SEPARATOR . self::VENDOR;
         $appCodePath = DIRECTORY_SEPARATOR . self::APP_CODE;
@@ -415,15 +417,16 @@ class ModuleResolver
      * Aggregate all code paths with test module composer json files
      *
      * @return array
+     * @throws TestFrameworkException
      */
     private function aggregateTestModulePathsFromComposerJson()
     {
         // Define the module paths
-        $magentoBaseCodePath = MAGENTO_BP;
+        $magentoBaseCodePath = FilePathFormatter::format(MAGENTO_BP, false);
 
         // Define the module paths from default TESTS_MODULE_PATH
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
-        $modulePath = rtrim($modulePath, DIRECTORY_SEPARATOR);
+        $modulePath = FilePathFormatter::format($modulePath, false);
 
         $searchCodePaths = [
             $magentoBaseCodePath . DIRECTORY_SEPARATOR . self::DEV_TESTS,
@@ -677,7 +680,7 @@ class ModuleResolver
         if (MftfApplicationConfig::getConfig()->forceGenerateEnabled()) {
             return;
         }
-        $url = ConfigSanitizerUtil::sanitizeUrl(getenv('MAGENTO_BASE_URL')) . $this->versionUrl;
+        $url = UrlFormatter::format(getenv('MAGENTO_BASE_URL')) . $this->versionUrl;
         LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
             "Fetching version information.",
             ['url' => $url]
@@ -703,7 +706,7 @@ class ModuleResolver
      *
      * @return string|boolean
      */
-    protected function getAdminToken()
+    public function getAdminToken()
     {
         $login = $_ENV['MAGENTO_ADMIN_USERNAME'] ?? null;
         $password = $_ENV['MAGENTO_ADMIN_PASSWORD'] ?? null;
@@ -718,7 +721,7 @@ class ModuleResolver
             throw new TestFrameworkException($message, $context);
         }
 
-        $url = ConfigSanitizerUtil::sanitizeUrl($this->getBackendUrl()) . $this->adminTokenUrl;
+        $url = $this->getBackendUrl() . $this->adminTokenUrl;
         $data = [
             'username' => $login,
             'password' => $password
@@ -886,7 +889,15 @@ class ModuleResolver
      */
     private function getBackendUrl()
     {
-        return getenv('MAGENTO_BACKEND_BASE_URL') ?: getenv('MAGENTO_BASE_URL');
+        try {
+            if (getenv('MAGENTO_BACKEND_BASE_URL')) {
+                return UrlFormatter::format(getenv('MAGENTO_BACKEND_BASE_URL'));
+            } else {
+                return UrlFormatter::format(getenv('MAGENTO_BASE_URL'));
+            }
+        } catch (TestFrameworkException $e) {
+            return null;
+        }
     }
 
     /**

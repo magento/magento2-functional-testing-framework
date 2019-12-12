@@ -14,6 +14,13 @@ use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 class TestFrameworkException extends \Exception
 {
     /**
+     * Exception context
+     *
+     * @var array
+     */
+    protected $context;
+
+    /**
      * TestFrameworkException constructor.
      * @param string $message
      * @param array  $context
@@ -27,6 +34,17 @@ class TestFrameworkException extends \Exception
             $context
         );
 
+        $this->context = $context;
         parent::__construct($message);
+    }
+
+    /**
+     * Return exception context
+     *
+     * @return array
+     */
+    public function getContext()
+    {
+        return $this->context;
     }
 }

@@ -8,6 +8,9 @@ declare(strict_types = 1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
+use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -56,10 +59,11 @@ class BaseGenerateCommand extends Command
      * @param OutputInterface $output
      * @param bool $verbose
      * @return void
+     * @throws TestFrameworkException
      */
     protected function removeGeneratedDirectory(OutputInterface $output, bool $verbose)
     {
-        $generatedDirectory = TESTS_MODULE_PATH . DIRECTORY_SEPARATOR . TestGenerator::GENERATED_DIR;
+        $generatedDirectory = FilePathFormatter::format(TESTS_MODULE_PATH) . TestGenerator::GENERATED_DIR;
 
         if (file_exists($generatedDirectory)) {
             DirSetupUtil::rmdirRecursive($generatedDirectory);
@@ -75,7 +79,6 @@ class BaseGenerateCommand extends Command
      * @return false|string
      * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
-
     protected function getTestAndSuiteConfiguration(array $tests)
     {
         $testConfiguration['tests'] = null;
@@ -102,5 +105,73 @@ class BaseGenerateCommand extends Command
         }
         $testConfigurationJson = json_encode($testConfiguration);
         return $testConfigurationJson;
+    }
+
+    /**
+     * Returns an array of test configuration to be used as an argument for generation of tests
+     * This function uses group or suite names for generation
+     * @return false|string
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
+     */
+    protected function getGroupAndSuiteConfiguration(array $groupOrSuiteNames)
+    {
+        $result['tests'] = [];
+        $result['suites'] = [];
+
+        $groups = [];
+        $suites = [];
+
+        $allSuites = SuiteObjectHandler::getInstance()->getAllObjects();
+        $testsInSuites = SuiteObjectHandler::getInstance()->getAllTestReferences();
+
+        foreach ($groupOrSuiteNames as $groupOrSuiteName) {
+            if (array_key_exists($groupOrSuiteName, $allSuites)) {
+                $suites[] = $groupOrSuiteName;
+            } else {
+                $groups[] = $groupOrSuiteName;
+            }
+        }
+
+        foreach ($suites as $suite) {
+            $result['suites'][$suite] = [];
+        }
+
+        foreach ($groups as $group) {
+            $testsInGroup = TestObjectHandler::getInstance()->getTestsByGroup($group);
+
+            $testsInGroupAndNotInAnySuite = array_diff(
+                array_keys($testsInGroup),
+                array_keys($testsInSuites)
+            );
+
+            $testsInGroupAndInAnySuite = array_diff(
+                array_keys($testsInGroup),
+                $testsInGroupAndNotInAnySuite
+            );
+
+            foreach ($testsInGroupAndInAnySuite as $testInGroupAndInAnySuite) {
+                $suiteName = $testsInSuites[$testInGroupAndInAnySuite][0];
+                if (array_search($suiteName, $suites) !== false) {
+                    // Suite is already being called to run in its entirety, do not filter list
+                    continue;
+                }
+                $result['suites'][$suiteName][] = $testInGroupAndInAnySuite;
+            }
+
+            $result['tests'] = array_merge(
+                $result['tests'],
+                $testsInGroupAndNotInAnySuite
+            );
+        }
+
+        if (empty($result['tests'])) {
+            $result['tests'] = null;
+        }
+        if (empty($result['suites'])) {
+            $result['suites'] = null;
+        }
+
+        $json = json_encode($result);
+        return $json;
     }
 }

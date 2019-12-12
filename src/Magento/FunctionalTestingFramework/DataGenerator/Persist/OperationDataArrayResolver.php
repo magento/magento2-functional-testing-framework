@@ -67,6 +67,10 @@ class OperationDataArrayResolver
      * @param boolean          $fromArray
      * @return array
      * @throws \Exception
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * I suppressed this warning because I was in a hurry to deliver a community PR. That PR modified this function and
+     * introduced a new conditional, bumping the complexity to 11.
      */
     public function resolveOperationDataArray($entityObject, $operationMetadata, $operation, $fromArray = false)
     {
@@ -109,6 +113,26 @@ class OperationDataArrayResolver
                     $operationElementType,
                     $operationDataArray
                 );
+            } elseif (is_array($operationElementType)) {
+                foreach ($operationElementType as $currentElementType) {
+                    if (in_array($currentElementType, self::PRIMITIVE_TYPES)) {
+                        $this->resolvePrimitiveReferenceElement(
+                            $entityObject,
+                            $operationElement,
+                            $currentElementType,
+                            $operationDataArray
+                        );
+                    } else {
+                        $this->resolveNonPrimitiveReferenceElement(
+                            $entityObject,
+                            $operation,
+                            $fromArray,
+                            $currentElementType,
+                            $operationElement,
+                            $operationDataArray
+                        );
+                    }
+                }
             } else {
                 $this->resolveNonPrimitiveReferenceElement(
                     $entityObject,
@@ -248,7 +272,8 @@ class OperationDataArrayResolver
         $linkedEntityObj = $this->resolveLinkedEntityObject($entityName);
 
         // in array case
-        if (!empty($operationElement->getNestedOperationElement($operationElement->getValue()))
+        if (!is_array($operationElement->getValue())
+            && !empty($operationElement->getNestedOperationElement($operationElement->getValue()))
             && $operationElement->getType() == OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY
         ) {
             $operationSubArray = $this->resolveOperationDataArray(

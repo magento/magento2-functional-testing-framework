@@ -7,7 +7,9 @@
 namespace Magento\FunctionalTestingFramework\Config\FileResolver;
 
 use Magento\FunctionalTestingFramework\Config\FileResolverInterface;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\Iterator\File;
+use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 
 class Root extends Module
 {
@@ -20,12 +22,13 @@ class Root extends Module
      * @param string $filename
      * @param string $scope
      * @return array|\Iterator,\Countable
+     * @throws TestFrameworkException
      */
     public function get($filename, $scope)
     {
         // first pick up the root level test suite dir
         $paths = glob(
-            TESTS_BP . DIRECTORY_SEPARATOR . self::ROOT_SUITE_DIR
+            FilePathFormatter::format(TESTS_BP) . self::ROOT_SUITE_DIR
             . DIRECTORY_SEPARATOR . $filename
         );
 
