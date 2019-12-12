@@ -2,7 +2,7 @@ Magento Functional Testing Framework Changelog
 ================================================
 2.5.4
 -----
-
+[Demo Video](https://www.youtube.com/watch?v=tguvkw1HWKg)
 * Traceability
     * Introduced new `mftf doctor` command
         * Command verifies and troubleshoots some configuration steps required for running tests
