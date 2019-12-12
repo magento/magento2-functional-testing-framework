@@ -18,6 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 use Magento\FunctionalTestingFramework\Util\Env\EnvProcessor;
 use Symfony\Component\Yaml\Yaml;
+use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 
 /**
  * Class BuildProjectCommand
@@ -28,7 +29,6 @@ use Symfony\Component\Yaml\Yaml;
 class BuildProjectCommand extends Command
 {
     const DEFAULT_YAML_INLINE_DEPTH = 10;
-    const CREDENTIALS_FILE_PATH = TESTS_BP . DIRECTORY_SEPARATOR . '.credentials.example';
 
     /**
      * Env processor manages .env files.
@@ -41,6 +41,7 @@ class BuildProjectCommand extends Command
      * Configures the current command.
      *
      * @return void
+     * @throws TestFrameworkException
      */
     protected function configure()
     {
@@ -52,7 +53,7 @@ class BuildProjectCommand extends Command
                 InputOption::VALUE_NONE,
                 'upgrade existing MFTF tests according to last major release requirements'
             );
-        $this->envProcessor = new EnvProcessor(TESTS_BP . DIRECTORY_SEPARATOR . '.env');
+        $this->envProcessor = new EnvProcessor(FilePathFormatter::format(TESTS_BP) . '.env');
         $env = $this->envProcessor->getEnv();
         foreach ($env as $key => $value) {
             $this->addOption($key, null, InputOption::VALUE_REQUIRED, '', $value);
@@ -65,8 +66,7 @@ class BuildProjectCommand extends Command
      * @param InputInterface  $input
      * @param OutputInterface $output
      * @return void
-     * @throws \Symfony\Component\Console\Exception\LogicException
-     *
+     * @throws \Exception
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -109,7 +109,7 @@ class BuildProjectCommand extends Command
 
         if ($input->getOption('upgrade')) {
             $upgradeCommand = new UpgradeTestsCommand();
-            $upgradeOptions = new ArrayInput(['path' => TESTS_MODULE_PATH]);
+            $upgradeOptions = new ArrayInput(['path' => FilePathFormatter::format(TESTS_MODULE_PATH)]);
             $upgradeCommand->run($upgradeOptions, $output);
         }
     }
@@ -119,6 +119,7 @@ class BuildProjectCommand extends Command
      *
      * @param OutputInterface $output
      * @return void
+     * @throws TestFrameworkException
      */
     private function generateConfigFiles(OutputInterface $output)
     {
@@ -126,45 +127,48 @@ class BuildProjectCommand extends Command
         //Find travel path from codeception.yml to FW_BP
         $relativePath = $fileSystem->makePathRelative(FW_BP, TESTS_BP);
 
-        if (!$fileSystem->exists(TESTS_BP . DIRECTORY_SEPARATOR . 'codeception.yml')) {
+        if (!$fileSystem->exists(FilePathFormatter::format(TESTS_BP) . 'codeception.yml')) {
             // read in the codeception.yml file
-            $configDistYml = Yaml::parse(file_get_contents(realpath(FW_BP . "/etc/config/codeception.dist.yml")));
+            $configDistYml = Yaml::parse(file_get_contents(
+                realpath(FilePathFormatter::format(FW_BP) . "etc/config/codeception.dist.yml")
+            ));
             $configDistYml['paths']['support'] = $relativePath . 'src/Magento/FunctionalTestingFramework';
             $configDistYml['paths']['envs'] = $relativePath . 'etc/_envs';
             $configYmlText = Yaml::dump($configDistYml, self::DEFAULT_YAML_INLINE_DEPTH);
 
             // dump output to new codeception.yml file
-            file_put_contents(TESTS_BP . DIRECTORY_SEPARATOR . 'codeception.yml', $configYmlText);
+            file_put_contents(FilePathFormatter::format(TESTS_BP) . 'codeception.yml', $configYmlText);
             $output->writeln("codeception.yml configuration successfully applied.");
         }
 
-        $output->writeln("codeception.yml applied to " . TESTS_BP . DIRECTORY_SEPARATOR . 'codeception.yml');
+        $output->writeln("codeception.yml applied to " . FilePathFormatter::format(TESTS_BP) . 'codeception.yml');
 
         // copy the functional suite yml, will only copy if there are differences between the template the destination
         $fileSystem->copy(
-            realpath(FW_BP . '/etc/config/functional.suite.dist.yml'),
-            TESTS_BP . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'functional.suite.yml'
+            realpath(FilePathFormatter::format(FW_BP) . 'etc/config/functional.suite.dist.yml'),
+            FilePathFormatter::format(TESTS_BP) . 'tests' . DIRECTORY_SEPARATOR . 'functional.suite.yml'
         );
         $output->writeln('functional.suite.yml configuration successfully applied.');
 
         $output->writeln("functional.suite.yml applied to " .
-            TESTS_BP . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'functional.suite.yml');
+            FilePathFormatter::format(TESTS_BP) . 'tests' . DIRECTORY_SEPARATOR . 'functional.suite.yml');
 
         $fileSystem->copy(
-            FW_BP . '/etc/config/.credentials.example',
-            self::CREDENTIALS_FILE_PATH
+            FilePathFormatter::format(FW_BP) . 'etc/config/.credentials.example',
+            FilePathFormatter::format(TESTS_BP) . '.credentials.example'
         );
 
         // copy command.php into magento instance
-        if (MAGENTO_BP === FW_BP) {
+        if (FilePathFormatter::format(MAGENTO_BP, false)
+            === FilePathFormatter::format(FW_BP, false)) {
             $output->writeln('MFTF standalone detected, command.php copy not applied.');
         } else {
             $fileSystem->copy(
-                realpath(FW_BP . '/etc/config/command.php'),
-                TESTS_BP . DIRECTORY_SEPARATOR . "utils" . DIRECTORY_SEPARATOR .'command.php'
+                realpath(FilePathFormatter::format(FW_BP) . 'etc/config/command.php'),
+                FilePathFormatter::format(TESTS_BP) . "utils" . DIRECTORY_SEPARATOR .'command.php'
             );
             $output->writeln('command.php copied to ' .
-                TESTS_BP . DIRECTORY_SEPARATOR . "utils" . DIRECTORY_SEPARATOR .'command.php');
+                FilePathFormatter::format(TESTS_BP) . "utils" . DIRECTORY_SEPARATOR .'command.php');
         }
 
         // Remove and Create Log File

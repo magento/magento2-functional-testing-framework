@@ -6,11 +6,13 @@
 
 namespace tests\verification\Tests;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Suite\SuiteGenerator;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 use Magento\FunctionalTestingFramework\Util\Manifest\DefaultTestManifest;
 use Magento\FunctionalTestingFramework\Util\Manifest\ParallelTestManifest;
 use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
+use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use PHPUnit\Util\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 use tests\unit\Util\TestLoggingUtil;
@@ -413,11 +415,11 @@ class SuiteGenerationTest extends MftfTestCase
      * Getter for manifest file path
      *
      * @return string
+     * @throws TestFrameworkException
      */
     private static function getManifestFilePath()
     {
-        return TESTS_BP .
-            DIRECTORY_SEPARATOR .
+        return FilePathFormatter::format(TESTS_BP) .
             "verification" .
             DIRECTORY_SEPARATOR .
             "_generated" .

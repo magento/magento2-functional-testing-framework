@@ -15,11 +15,13 @@ if (empty($projectRootPath)) {
     return;
 }
 defined('PROJECT_ROOT') || define('PROJECT_ROOT', $projectRootPath);
-$envFilepath = realpath($projectRootPath . '/dev/tests/acceptance/');
 
+$envFilePath = realpath($projectRootPath . '/dev/tests/acceptance/') . DIRECTORY_SEPARATOR;
+defined('ENV_FILE_PATH') || define('ENV_FILE_PATH', $envFilePath);
 
-if (file_exists($envFilepath . DIRECTORY_SEPARATOR . '.env')) {
-    $env = new \Dotenv\Loader($envFilepath . DIRECTORY_SEPARATOR . '.env');
+//Load constants from .env file
+if (file_exists(ENV_FILE_PATH . '.env')) {
+    $env = new \Dotenv\Loader(ENV_FILE_PATH . '.env');
     $env->load();
 
     if (array_key_exists('TESTS_MODULE_PATH', $_ENV) xor array_key_exists('TESTS_BP', $_ENV)) {
@@ -48,6 +50,9 @@ if (file_exists($envFilepath . DIRECTORY_SEPARATOR . '.env')) {
     defined('DEFAULT_TIMEZONE') || define('DEFAULT_TIMEZONE', 'America/Los_Angeles');
     $env->setEnvironmentVariable('DEFAULT_TIMEZONE', DEFAULT_TIMEZONE);
 
+    defined('WAIT_TIMEOUT') || define('WAIT_TIMEOUT', 30);
+    $env->setEnvironmentVariable('WAIT_TIMEOUT', 30);
+
     try {
         new DateTimeZone(DEFAULT_TIMEZONE);
     } catch (\Exception $e) {
@@ -59,7 +64,7 @@ if (file_exists($envFilepath . DIRECTORY_SEPARATOR . '.env')) {
 defined('MAGENTO_BP') || define('MAGENTO_BP', realpath(PROJECT_ROOT));
 // TODO REMOVE THIS CODE ONCE WE HAVE STOPPED SUPPORTING dev/tests/acceptance PATH
 // define TEST_PATH and TEST_MODULE_PATH
-defined('TESTS_BP') || define('TESTS_BP', realpath(MAGENTO_BP . DIRECTORY_SEPARATOR . 'dev/tests/acceptance/'));
+defined('TESTS_BP') || define('TESTS_BP', realpath(MAGENTO_BP . DIRECTORY_SEPARATOR . 'dev/tests/acceptance'));
 
 $RELATIVE_TESTS_MODULE_PATH = '/tests/functional/Magento/FunctionalTest';
 defined('TESTS_MODULE_PATH') || define(

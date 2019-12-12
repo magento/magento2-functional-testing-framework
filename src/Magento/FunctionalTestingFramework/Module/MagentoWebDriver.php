@@ -16,13 +16,16 @@ use Codeception\Exception\ModuleException;
 use Codeception\Util\Uri;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\WebapiExecutor;
+use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\Util\ConfigSanitizerUtil;
 use Yandex\Allure\Adapter\AllureException;
 use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
-use Symfony\Component\Process\Process;
 use Yandex\Allure\Adapter\Support\AttachmentSupport;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\Exception\WebDriverCurlException;
 
 /**
  * MagentoWebDriver module provides common Magento web actions through Selenium WebDriver.
@@ -507,18 +510,44 @@ class MagentoWebDriver extends WebDriver
     /**
      * Takes given $command and executes it against bin/magento or custom exposed entrypoint. Returns command output.
      *
-     * @param string $command
-     * @param string $arguments
+     * @param string  $command
+     * @param integer $timeout
+     * @param string  $arguments
      * @return string
+     *
      * @throws TestFrameworkException
      */
-    public function magentoCLI($command, $arguments = null)
+    public function magentoCLI($command, $timeout = null, $arguments = null)
     {
-        try {
-            return $this->shellExecMagentoCLI($command, $arguments);
-        } catch (\Exception $exception) {
-            return $this->curlExecMagentoCLI($command, $arguments);
-        }
+        // Remove index.php if it's present in url
+        $baseUrl = rtrim(
+            str_replace('index.php', '', rtrim($this->config['url'], '/')),
+            '/'
+        );
+
+        $apiURL = UrlFormatter::format(
+            $baseUrl . '/' . ltrim(getenv('MAGENTO_CLI_COMMAND_PATH'), '/'),
+            false
+        );
+
+        $restExecutor = new WebapiExecutor();
+        $executor = new CurlTransport();
+        $executor->write(
+            $apiURL,
+            [
+                'token' => $restExecutor->getAuthToken(),
+                getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command,
+                'arguments' => $arguments,
+                'timeout'   => $timeout,
+            ],
+            CurlInterface::POST,
+            []
+        );
+        $response = $executor->read();
+        $restExecutor->close();
+        $executor->close();
+
+        return $response;
     }
 
     /**
@@ -667,17 +696,18 @@ class MagentoWebDriver extends WebDriver
      * The data is decrypted immediately prior to data creation to avoid exposure in console or log.
      *
      * @param string $command
+     * @param null   $timeout
      * @param null   $arguments
      * @throws TestFrameworkException
      * @return string
      */
-    public function magentoCLISecret($command, $arguments = null)
+    public function magentoCLISecret($command, $timeout = null, $arguments = null)
     {
         // to protect any secrets from being printed to console the values are executed only at the webdriver level as a
         // decrypted value
 
         $decryptedCommand = CredentialStore::getInstance()->decryptAllSecretsInString($command);
-        return $this->magentoCLI($decryptedCommand, $arguments);
+        return $this->magentoCLI($decryptedCommand, $timeout, $arguments);
     }
 
     /**
@@ -824,66 +854,5 @@ class MagentoWebDriver extends WebDriver
         $this->_saveScreenshot($screenName);
         $this->debug("Screenshot saved to $screenName");
         AllureHelper::addAttachmentToCurrentStep($screenName, 'Screenshot');
-    }
-
-    /**
-     * Takes given $command and executes it against bin/magento executable. Returns stdout output from the command.
-     *
-     * @param string $command
-     * @param string $arguments
-     *
-     * @throws \RuntimeException
-     * @return string
-     */
-    private function shellExecMagentoCLI($command, $arguments): string
-    {
-        $php = PHP_BINDIR ? PHP_BINDIR . DIRECTORY_SEPARATOR. 'php' : 'php';
-        $binMagento = realpath(MAGENTO_BP . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'magento');
-        $command = $php . ' -f ' . $binMagento . ' ' . $command . ' ' . $arguments;
-        $process = new Process(escapeshellcmd($command), MAGENTO_BP);
-        $process->setIdleTimeout(60);
-        $process->setTimeout(0);
-        $exitCode = $process->run();
-        if ($exitCode !== 0) {
-            throw new \RuntimeException($process->getErrorOutput());
-        }
-
-        return $process->getOutput();
-    }
-
-    /**
-     * Takes given $command and executes it against exposed MTF CLI entry point. Returns response from server.
-     *
-     * @param string $command
-     * @param string $arguments
-     * @return string
-     * @throws TestFrameworkException
-     */
-    private function curlExecMagentoCLI($command, $arguments): string
-    {
-        // Remove index.php if it's present in url
-        $baseUrl = rtrim(
-            str_replace('index.php', '', rtrim($this->config['url'], '/')),
-            '/'
-        );
-        $apiURL = $baseUrl . '/' . ltrim(getenv('MAGENTO_CLI_COMMAND_PATH'), '/');
-
-        $restExecutor = new WebapiExecutor();
-        $executor = new CurlTransport();
-        $executor->write(
-            $apiURL,
-            [
-                'token' => $restExecutor->getAuthToken(),
-                getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command,
-                'arguments' => $arguments,
-            ],
-            CurlInterface::POST,
-            []
-        );
-        $response = $executor->read();
-        $restExecutor->close();
-        $executor->close();
-
-        return $response;
     }
 }

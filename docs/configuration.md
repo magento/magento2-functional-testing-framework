@@ -295,6 +295,14 @@ Denoted in browser log entry as `"SOURCE": "type"`.
 BROWSER_LOG_BLACKLIST=other,console-api
 ```
 
+### WAIT_TIMEOUT
+
+Global MFTF configuration for the default amount of time (in seconds) that a test will wait while loading a page.
+
+```conf
+WAIT_TIMEOUT=30
+```
+
 <!-- Link definitions -->
 
 [`MAGENTO_CLI_COMMAND_PATH`]: #magento_cli_command_path

@@ -1,5 +1,30 @@
 Magento Functional Testing Framework Changelog
 ================================================
+2.5.4
+-----
+[Demo Video](https://www.youtube.com/watch?v=tguvkw1HWKg)
+* Traceability
+    * Introduced new `mftf doctor` command
+        * Command verifies and troubleshoots some configuration steps required for running tests
+        * Please see DevDocs for more details
+    * `<*Data>` actions now contain `API Endpoint` and `Request Header` artifacts.
+    * Introduced new `.env` configurations `ENABLE_BROWSER_LOG` and `BROWSER_LOG_BLACKLIST`
+        * Configuration enables allure artifacts for browser log entries if they are present after the step.
+        * Blacklist filters out logs from specific sources.
+* Customizability
+    * Introduced `timeout=""` to `magentoCLI` actions.
+
+### GitHub Issues/Pull requests:
+* [#317](https://github.com/magento/magento2-functional-testing-framework/pull/317) -- RetrieveEntityField generation does not consider ActionGroup as part of namespace
+* [#433](https://github.com/magento/magento2-functional-testing-framework/pull/433) -- Add possibility to include multiple non primitive types in an array
+
+### Fixes
+* A test now contains attachments for every exception encountered in the test (fix for a test `<after>` exception overriding all test exceptions).
+* Fixed hard requirement for `MAGENTO_BASE_URL` to contain a leading `/`.
+* `magentoCLI` actions for `config:sensitive:set` no longer obscure CLI output.
+* `WAIT_TIMEOUT` in the `.env` now correctly sets `pageload_timeout` configuration.
+* Fixed an issue where `run:group` could not consolidate a `group` that had tests in and out of `<suite>`s.
+
 2.5.3
 -----
 
