@@ -208,13 +208,15 @@ Here is an example of what NOT to do, but this demonstrates how the selector wor
 
 In the BAD example above, we are specifying a very precise path to an input element in the DOM, starting from the very top of the document.
 
-Similarly, the relative XPath selector is a double forward slash `//`. It is used to start searching for an element anywhere in the DOM.
+Similarly, the relative XPath selector is a double forward slash `//`. It is used to start searching for an element anywhere in the DOM starting from the element preceedingly defined. If no element is defined before, the entire DOM is searched.
 
 Example:
 
 ```xpath
 //div[@class=’form-group’]//input[@id='user-message']
 ```
+
+In the GOOD example above, all <div class='form-group'/> elements in the DOM are matched first, and then all <input id='user-message'/> with <div class='form-group'/> as one of its parents is matched. Doesn't matter if the parent is anywhere up in the parent hierarchy.
 
 #### Parent Selectors
 
