@@ -84,7 +84,13 @@ class TestGeneratorTest extends MagentoTestCase
 
         $annotations = ['skip' => ['issue']];
         $beforeHook = new TestHookObject("before", "sampleTest", ['beforeAction' => $beforeActionObject]);
-        $testObject = new TestObject("sampleTest", ["fakeAction" => $actionObject], $annotations, ["before" => $beforeHook], "filename");
+        $testObject = new TestObject(
+            "sampleTest",
+            ["fakeAction" => $actionObject],
+            $annotations,
+            ["before" => $beforeHook],
+            "filename"
+        );
 
         $testGeneratorObject = TestGenerator::getInstance("", ["sampleTest" => $testObject]);
         $output = $testGeneratorObject->assembleTestPhp($testObject);
