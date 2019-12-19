@@ -2,8 +2,6 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -46,19 +44,19 @@ class ActionGroupWithSimpleDataUsageFromPassedArgumentCest
 		$I->see("simpleData.firstname", "#element .simpleData.firstname"); // stepKey: see1ActionGroup2
 		$I->comment("Exiting Action Group [actionGroup2] actionGroupWithStringUsage");
 		$I->comment("Entering Action Group [actionGroup3] actionGroupWithStringUsage");
-		$I->see(PersistedObjectHandler::getInstance()->retrieveEntityField('persisted', 'data', 'test'), "#element ." . PersistedObjectHandler::getInstance()->retrieveEntityField('persisted', 'data', 'test')); // stepKey: see1ActionGroup3
+		$I->see($I->retrieveEntityField('persisted', 'data', 'test'), "#element ." . $I->retrieveEntityField('persisted', 'data', 'test')); // stepKey: see1ActionGroup3
 		$I->comment("Exiting Action Group [actionGroup3] actionGroupWithStringUsage");
 		$I->comment("Entering Action Group [actionGroup4] actionGroupWithEntityUsage");
 		$I->see("John", "#element .John"); // stepKey: see1ActionGroup4
 		$I->comment("Exiting Action Group [actionGroup4] actionGroupWithEntityUsage");
 		$I->comment("Entering Action Group [actionGroup5] actionGroupWithEntityUsage");
-		$I->see(PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname', 'test'), "#element ." . PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname', 'test')); // stepKey: see1ActionGroup5
+		$I->see($I->retrieveEntityField('simpleData', 'firstname', 'test'), "#element ." . $I->retrieveEntityField('simpleData', 'firstname', 'test')); // stepKey: see1ActionGroup5
 		$I->comment("Exiting Action Group [actionGroup5] actionGroupWithEntityUsage");
 		$I->comment("Entering Action Group [actionGroup6] actionGroupWithEntityUsage");
-		$I->see(PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname[0]', 'test'), "#element ." . PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname[0]', 'test')); // stepKey: see1ActionGroup6
+		$I->see($I->retrieveEntityField('simpleData', 'firstname[0]', 'test'), "#element ." . $I->retrieveEntityField('simpleData', 'firstname[0]', 'test')); // stepKey: see1ActionGroup6
 		$I->comment("Exiting Action Group [actionGroup6] actionGroupWithEntityUsage");
 		$I->comment("Entering Action Group [actionGroup7] actionGroupWithEntityUsage");
-		$I->see(PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname[data_index]', 'test'), "#element ." . PersistedObjectHandler::getInstance()->retrieveEntityField('simpleData', 'firstname[data_index]', 'test')); // stepKey: see1ActionGroup7
+		$I->see($I->retrieveEntityField('simpleData', 'firstname[data_index]', 'test'), "#element ." . $I->retrieveEntityField('simpleData', 'firstname[data_index]', 'test')); // stepKey: see1ActionGroup7
 		$I->comment("Exiting Action Group [actionGroup7] actionGroupWithEntityUsage");
 	}
 }

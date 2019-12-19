@@ -2,8 +2,6 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -29,7 +27,7 @@ class PersistedAndXmlEntityArgumentsCest
 	public function PersistedAndXmlEntityArguments(AcceptanceTester $I)
 	{
 		$I->comment("Entering Action Group [afterGroup] FunctionalActionGroupWithXmlAndPersistedData");
-		$I->seeInCurrentUrl("/" . PersistedObjectHandler::getInstance()->retrieveEntityField('persistedInTest', 'urlKey', 'test') . ".html?___store=" . msq("uniqueData") . "John"); // stepKey: checkUrlAfterGroup
+		$I->seeInCurrentUrl("/" . $I->retrieveEntityField('persistedInTest', 'urlKey', 'test') . ".html?___store=" . msq("uniqueData") . "John"); // stepKey: checkUrlAfterGroup
 		$I->comment("Exiting Action Group [afterGroup] FunctionalActionGroupWithXmlAndPersistedData");
 	}
 }

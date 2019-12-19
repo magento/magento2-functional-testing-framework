@@ -2,8 +2,6 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -47,27 +45,19 @@ class SectionReplacementTestCest
 		$I->click("#Doe" . msq("uniqueData") . " .stringLiteral2"); // stepKey: selectorReplaceTwoParamDataRefMSQSuffix
 		$I->click("#Doe" . msq("uniqueData") . "-stringLiteral2 .stringLiteral3"); // stepKey: selectorReplaceThreeParamDataRefMSQSuffix
 		$I->click("#Doe" . msq("uniqueData") . "-stringLiteral2 .Doe" . msq("uniqueData") . " [stringLiteral3]"); // stepKey: selectorReplaceThreeParamOneDupeDataRefMSQSuffix
-		$I->comment("[createdData] create 'simpleData' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
-			"createdData",
-			"test",
-			"simpleData",
-			[],
-			[]
-		);
-
-		$I->click("#element ." . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test')); // stepKey: selectorReplaceOneParamPersisted
-		$I->click("#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . " .stringLiteral2"); // stepKey: selectorReplaceTwoParamPersisted
-		$I->click("#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . "-stringLiteral2 .stringLiteral3"); // stepKey: selectorReplaceThreeParamPersisted
-		$I->click("#" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . "-stringLiteral2 ." . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . " [stringLiteral3]"); // stepKey: selectorReplaceThreeParamOneDupePersisted
+		$I->createEntity("createdData", "test", "simpleData", [], []); // stepKey: createdData
+		$I->click("#element ." . $I->retrieveEntityField('createdData', 'firstname', 'test')); // stepKey: selectorReplaceOneParamPersisted
+		$I->click("#" . $I->retrieveEntityField('createdData', 'firstname', 'test') . " .stringLiteral2"); // stepKey: selectorReplaceTwoParamPersisted
+		$I->click("#" . $I->retrieveEntityField('createdData', 'firstname', 'test') . "-stringLiteral2 .stringLiteral3"); // stepKey: selectorReplaceThreeParamPersisted
+		$I->click("#" . $I->retrieveEntityField('createdData', 'firstname', 'test') . "-stringLiteral2 ." . $I->retrieveEntityField('createdData', 'firstname', 'test') . " [stringLiteral3]"); // stepKey: selectorReplaceThreeParamOneDupePersisted
 		$I->click("#element .{$data}"); // stepKey: selectorReplaceOneParamVariable
 		$I->click("#{$data1} .{$data2}"); // stepKey: selectorReplaceTwoParamVariable
 		$I->click("#{$data1}-{$data2} .{$data3}"); // stepKey: selectorReplaceThreeParamVariable
 		$I->click("#John-Doe .John [Tiberius]"); // stepKey: selectorReplaceThreeParamVariableOneDupe
-		$I->click("#stringLiteral1-" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . " .John"); // stepKey: selectorReplaceThreeParamMixed1
-		$I->click("#stringLiteral1-" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . " .{$data}"); // stepKey: selectorReplaceThreeParamMixed2
-		$I->click("#stringLiteral1-" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . " ." . msq("uniqueData") . "John"); // stepKey: selectorReplaceThreeParamMixedMSQPrefix
-		$I->click("#stringLiteral1-" . PersistedObjectHandler::getInstance()->retrieveEntityField('createdData', 'firstname', 'test') . " .Doe" . msq("uniqueData")); // stepKey: selectorReplaceThreeParamMixedMSQSuffix
+		$I->click("#stringLiteral1-" . $I->retrieveEntityField('createdData', 'firstname', 'test') . " .John"); // stepKey: selectorReplaceThreeParamMixed1
+		$I->click("#stringLiteral1-" . $I->retrieveEntityField('createdData', 'firstname', 'test') . " .{$data}"); // stepKey: selectorReplaceThreeParamMixed2
+		$I->click("#stringLiteral1-" . $I->retrieveEntityField('createdData', 'firstname', 'test') . " ." . msq("uniqueData") . "John"); // stepKey: selectorReplaceThreeParamMixedMSQPrefix
+		$I->click("#stringLiteral1-" . $I->retrieveEntityField('createdData', 'firstname', 'test') . " .Doe" . msq("uniqueData")); // stepKey: selectorReplaceThreeParamMixedMSQSuffix
 		$I->click("#element .1#element .2"); // stepKey: selectorReplaceTwoParamElements
 		$I->click("#element .1#element .{$data}"); // stepKey: selectorReplaceTwoParamMixedTypes
 		$I->click("(//div[@data-role='slide'])[1]/a[@data-element='link'][contains(@href,'')]"); // stepKey: selectorParamWithEmptyString

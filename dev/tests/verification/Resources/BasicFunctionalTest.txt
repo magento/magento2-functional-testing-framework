@@ -2,8 +2,6 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -76,14 +74,8 @@ class BasicFunctionalTestCest
 		$I->clickWithRightButton("#element .4123#element", 200, 300); // stepKey: clickWithRightButtonKeyXY1
 		$I->closeTab(); // stepKey: closeTabKey1
 		$I->conditionalClick(".functionalTestSelector", ".functionalDependentTestSelector", true); // stepKey: conditionalClickKey1
-		$I->comment("[deleteKey1] delete entity 'createKey1'");
-		PersistedObjectHandler::getInstance()->deleteEntity(
-			"createKey1",
-			"test"
-		);
-
-		$I->deleteEntityByUrl("/V1/categories{$grabbedData}");
-
+		$I->deleteEntity("createKey1", "test"); // stepKey: deleteKey1
+		$I->deleteEntityByUrl("/V1/categories{$grabbedData}"); // stepKey: deleteKey2
 		$I->dontSee("someInput", ".functionalTestSelector"); // stepKey: dontSeeKey1
 		$I->dontSeeCheckboxIsChecked(".functionalTestSelector"); // stepKey: dontSeeCheckboxIsCheckedKey1
 		$I->dontSeeCookie("someInput"); // stepKey: dontSeeCookieKey1
@@ -130,9 +122,9 @@ class BasicFunctionalTestCest
 		$I->comment($magentoCli1);
 		$magentoCli2 = $I->magentoCLI("maintenance:enable", 120, "\"stuffHere\""); // stepKey: magentoCli2
 		$I->comment($magentoCli2);
-		$magentoCli3 = $I->magentoCLISecret("config:set somePath " . CredentialStore::getInstance()->getSecret("someKey"), 60); // stepKey: magentoCli3
+		$magentoCli3 = $I->magentoCLISecret("config:set somePath " . $I->getSecret("someKey"), 60); // stepKey: magentoCli3
 		$I->comment($magentoCli3); // stepKey: magentoCli3
-		$magentoCli4 = $I->magentoCLISecret("config:set somePath " . CredentialStore::getInstance()->getSecret("someKey"), 120); // stepKey: magentoCli4
+		$magentoCli4 = $I->magentoCLISecret("config:set somePath " . $I->getSecret("someKey"), 120); // stepKey: magentoCli4
 		$I->comment($magentoCli4); // stepKey: magentoCli4
 		$I->makeScreenshot("screenShotInput"); // stepKey: makeScreenshotKey1
 		$I->maximizeWindow(); // stepKey: maximizeWindowKey1

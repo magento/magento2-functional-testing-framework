@@ -123,8 +123,8 @@ class CurlHandler
         $returnRegex = $this->operationDefinition->getReturnRegex();
         $returnIndex = $this->operationDefinition->getReturnIndex();
         $method = $this->operationDefinition->getApiMethod();
-        AllureHelper::addAttachmentToLastStep($apiUrl, 'API Endpoint');
-        AllureHelper::addAttachmentToLastStep(json_encode($headers, JSON_PRETTY_PRINT), 'Request Headers');
+        AllureHelper::addAttachmentToCurrentStep($apiUrl, 'API Endpoint');
+        AllureHelper::addAttachmentToCurrentStep(json_encode($headers, JSON_PRETTY_PRINT), 'Request Headers');
 
         $operationDataResolver = new OperationDataArrayResolver($dependentEntities);
         $this->requestData = $operationDataResolver->resolveOperationDataArray(
@@ -169,8 +169,8 @@ class CurlHandler
         $response = $executor->read($successRegex, $returnRegex, $returnIndex);
         $executor->close();
 
-        AllureHelper::addAttachmentToLastStep(json_encode($this->requestData, JSON_PRETTY_PRINT), 'Request Body');
-        AllureHelper::addAttachmentToLastStep(
+        AllureHelper::addAttachmentToCurrentStep(json_encode($this->requestData, JSON_PRETTY_PRINT), 'Request Body');
+        AllureHelper::addAttachmentToCurrentStep(
             json_encode(json_decode($response, true), JSON_PRETTY_PRINT+JSON_UNESCAPED_UNICODE+JSON_UNESCAPED_SLASHES),
             'Response Data'
         );
