@@ -1,7 +1,7 @@
 # Suites
 
-Suites are essentially groups of tests that run in the specific conditions (preconditions and postconditions).
-They enable you including, excluding, and grouping tests for a customized test run when you need it.
+Suites are essentially groups of tests that run in specific conditions (preconditions and postconditions).
+They enable including, excluding, and grouping tests for a customized test run.
 You can form suites using separate tests, groups, and modules.
 
 Each suite must be defined in the `<VendorName>/<ModuleName>/Test/Mftf/Suite` directory.
@@ -19,7 +19,6 @@ The format of a suite:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-
 <suites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Suite/etc/suiteSchema.xsd">
     <suite name="">
         <before>
@@ -43,12 +42,14 @@ The format of a suite:
 ## Principles
 
 -  A suite name:
-  -  must not match any existing group value.
+
+    -  must not match any existing group value.
   For example, the suite `<suite name="ExampleTest">` will fail during test run if any test contains in annotations `<group value="ExampleTest">`.
-  -  must not be `default` or `skip`. Tests that are not in any suite are generated under the `default` suite.
-  The suite name `skip` is synonymous to including a test in the `<group value="skip"/>`, which will be deprecated in MFTF 3.0.0.
-  -  can contain letters, numbers, and underscores.
-  -  should be upper camel case.
+    -  must not be `default` or `skip`. Tests that are not in any suite are generated under the `default` suite.
+       The suite name `skip` is synonymous to including a test in the `<group value="skip"/>`, which will be deprecated in MFTF 3.0.0.
+    -  can contain letters, numbers, and underscores.
+    -  should be upper camel case.
+    
 -  A suite must contain at least one `<include>`, or one `<exclude>`, or both.
 -  Using `<before>` in a suite, you must add the corresponding `<after>` to restore the initial state of your testing instance.
 
@@ -133,7 +134,7 @@ It performs the following steps:
 *After* the testing, the suite returns the Magento instance to the initial state disabling WYSIWYG:
 
 1. Log back in.
-2. Disable **WYSIWYG** so that
+2. Disable **WYSIWYG** in the Magento instance.
 
 This suite includes all tests that contain the `<group value="WYSIWYG"/>` annotation.
 
@@ -242,11 +243,11 @@ The element can contain [`<test>`], [`<group>`], and [`<module>`].
 
 A set of filters that you can use to specify which tests to exclude in the test suite.
 
-There two types of behavior:
+There are two types of behavior:
 
 1. Applying filters to the included tests when the suite contains [`<include>`] filters.
    The MFTF will exclude tests from the previously included set and generate the remaining tests in the suite.
-2. Applying filter to all tests when the suite does not contain [`<include>`] filters.
+2. Applying filters to all tests when the suite does not contain [`<include>`] filters.
    The MFTF will generate all existing tests except the excluded.
    In this case, the custom suite will contain all generated tests except excluded, and the _default_ suite will contain the excluded tests only.
 

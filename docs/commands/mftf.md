@@ -39,7 +39,7 @@ vendor/bin/mftf generate:tests
 ### Generate tests by test name
 
 ```bash
-vendor/bin/mftf generate:tests LoginAsAdminTest LoginAsCustomerTest
+vendor/bin/mftf generate:tests AdminLoginTest StorefrontPersistedCustomerLoginTest
 ```
 
 ### Generate and run the tests for a specified group
@@ -53,7 +53,7 @@ This command cleans up the previously generated tests; generates and runs tests 
 ### Generate and run particular tests
 
 ```bash
-vendor/bin/mftf run:test LoginAsAdminTest LoginAsCustomerTest -r
+vendor/bin/mftf run:test AdminLoginTest StorefrontPersistedCustomerLoginTest -r
 ```
 
 This command cleans up the previously generated tests; generates and runs the `LoginAsAdminTest` and `LoginAsCustomerTest` tests.
@@ -144,12 +144,12 @@ vendor/bin/mftf generate:tests [option] [<test name>] [<test name>] [--remove]
 
 | Option | Description|
 | ---| --- |
-| `--config=[<default> or <singleRun> or <parallel>]` | Creates a single manifest file with a list of all tests. The default location is `tests/functional/Magento/FunctionalTest/_generated/testManifest.txt`.<br/> You can split the list into multiple groups using `--config=parallel`; the groups will be generated in `_generated/groups/` like `_generated/groups/group1.txt, group2.txt, ...`.</br> Available values: `default` (default), `singleRun`(same as `default`), and `parallel`.</br> Example: `generate:tests --config=parallel`. |
+| `--config=[<default> or <singleRun> or <parallel>]` | Creates a single manifest file with a list of all tests. The default location is `tests/functional/Magento/FunctionalTest/_generated/testManifest.txt`.<br/> You can split the list into multiple groups using `--config=parallel`; the groups will be generated in `_generated/groups/` like `_generated/groups/group1.txt, group2.txt, ...`.<br/> Available values: `default` (default), `singleRun`(same as `default`), and `parallel`.<br/> Example: `generate:tests --config=parallel`. |
 | `--force` | Forces test generation, regardless of the module merge order defined in the Magento instance. Example: `generate:tests --force`. |
 | `-i,--time` | Set time in minutes to determine the group size when `--config=parallel` is used. The __default value__ is `10`. Example: `generate:tests --config=parallel --time=15`|
 | `--tests` | Defines the test configuration as a JSON string.|
 | `--allow-skipped` | Allows MFTF to generate and run tests marked with `<skip>.`|
-| `--debug or --debug=[<none>]`| Performs schema validations on XML files. <br/> DEFAULT: `generate:tests` implicitly performs schema validation on merged files. It does not indicate the file name where the error is encountered. <br/> DEVELOPER: `--debug` performs per-file validation and returns additional debug information (such as the filename where an error occurred) when test generation fails because of an invalid XML schema. This option takes extra processing time. Use it after test generation has failed once.</br><br/> NONE: `--debug=none` skips debugging during test generation. Added for backward compatibility, it will be removed in the next MAJOR release.</br>|
+| `--debug or --debug=[<none>]`| Performs schema validations on XML files. <br/> DEFAULT: `generate:tests` implicitly performs schema validation on merged files. It does not indicate the file name where the error is encountered. <br/> DEVELOPER: `--debug` performs per-file validation and returns additional debug information (such as the filename where an error occurred) when test generation fails because of an invalid XML schema. This option takes extra processing time. Use it after test generation has failed once.<br/>NONE: `--debug=none` skips debugging during test generation. Added for backward compatibility, it will be removed in the next MAJOR release.<br/>|
 | `-r,--remove`| Removes the existing generated suites and tests cleaning up the `_generated` directory before the actual run. For example, `generate:tests SampleTest --remove` cleans up the entire `_generated` directory and generates `SampleTest` only.|
 
 #### Examples of the JSON configuration
@@ -447,9 +447,9 @@ vendor/bin/mftf setup:env
 
 The example parameters are taken from the `etc/config/.env.example` file.
 
-### `static:checks`
+### `static-checks`
 
-Runs all MFTF static:checks on the test codebase that MFTF is currently attached to.
+Runs all MFTF static-checks on the test codebase that MFTF is currently attached to.
 
 #### Existing static checks
 
@@ -458,7 +458,7 @@ Runs all MFTF static:checks on the test codebase that MFTF is currently attached
 #### Usage
 
 ```bash
-vendor/bin/mftf static:checks
+vendor/bin/mftf static-checks
 ```
 
 ### `upgrade:tests`
