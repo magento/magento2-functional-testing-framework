@@ -182,7 +182,7 @@ class TestContextExtension extends BaseExtension
     public function afterStep(\Codeception\Event\StepEvent $e)
     {
         $browserLog = $this->getDriver()->webDriver->manage()->getLog("browser");
-        if (getenv('ENABLE_BROWSER_LOG')) {
+        if (getenv('ENABLE_BROWSER_LOG') === 'true') {
             foreach (explode(',', getenv('BROWSER_LOG_BLACKLIST')) as $source) {
                 $browserLog = BrowserLogUtil::filterLogsOfType($browserLog, $source);
             }

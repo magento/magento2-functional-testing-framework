@@ -15,7 +15,7 @@ use Facebook\WebDriver\Remote\RemoteWebDriver;
  */
 class MagentoWebDriverDoctor extends MagentoWebDriver
 {
-    const MAGENTO_CLI_COMMAND = 'list';
+    const MAGENTO_CLI_COMMAND = 'info:currency:list';
     const EXCEPTION_CONTEXT_SELENIUM = 'selenium';
     const EXCEPTION_CONTEXT_ADMIN = 'admin';
     const EXCEPTION_CONTEXT_STOREFRONT = 'store';
@@ -150,18 +150,19 @@ class MagentoWebDriverDoctor extends MagentoWebDriver
     private function runMagentoCLI()
     {
         try {
-            $regex = '~^.*(?<name>Magento CLI).*[\r\n]+(?<usage>Usage:).*~';
+            $regex = '~^.*[\r\n]+.*(?<name>Currency).*(?<code>Code).*~';
             $output = parent::magentoCLI(self::MAGENTO_CLI_COMMAND);
             preg_match($regex, $output, $matches);
 
-            if (isset($matches['name']) && isset($matches['usage'])) {
+            if (isset($matches['name']) && isset($matches['code'])) {
                 return;
             }
         } catch (\Exception $e) {
-            throw new TestFrameworkException(
-                "Failed to run Magento CLI command\n"
-                . "Please reference Magento DevDoc to setup command.php and .htaccess files."
-            );
         }
+
+        throw new TestFrameworkException(
+            "Failed to run Magento CLI command\n"
+            . "Please reference Magento DevDoc to setup command.php and .htaccess files."
+        );
     }
 }

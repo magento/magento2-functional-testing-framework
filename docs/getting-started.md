@@ -2,8 +2,8 @@
 
 <div class="bs-callout bs-callout-info" markdown="1">
 [Find your MFTF version][] of the MFTF.
-The latest Magento 2.3 release supports MFTF 2.3.13.
-The latest Magento 2.2 release supports MFTF 2.3.8.
+The latest Magento 2.3.x release supports MFTF 2.4.5.
+The latest Magento 2.2.x release supports MFTF 2.4.5.
 </div>
 
 ## Prepare environment  {#prepare-environment}
@@ -96,6 +96,10 @@ bin/magento config:set admin/security/admin_account_sharing 1
 ```bash
 bin/magento config:set admin/security/use_form_key 0
 ```
+
+### Webserver configuration {#web-server-configuration}
+
+The MFTF does not support executing CLI commands if your web server points to `<MAGE_ROOT_DIR>/pub` directory as recommended in the [Installation Guide][Installation Guide docroot]. For the MFTF to execute the CLI commands, the web server must point to the Magento root directory.
 
 ### Nginx settings {#nginx-settings}
 
@@ -340,3 +344,4 @@ allure serve dev/tests/_output/allure-results/
 [Set up a standalone MFTF]: #set-up-a-standalone-mftf
 [test suite]: suite.html
 [Find your MFTF version]: introduction.html#find-your-mftf-version
+[Installation Guide docroot]: https://devdocs.magento.com/guides/v2.3/install-gde/tutorials/change-docroot-to-pub.html

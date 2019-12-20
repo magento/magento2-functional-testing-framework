@@ -66,7 +66,7 @@ class TestDependencyCheck implements StaticCheckInterface
      * Array containing all errors found after running the execute() function.
      * @var array
      */
-    private $errors;
+    private $errors = [];
 
     /**
      * String representing the output summary found after running the execute() function.
