@@ -216,7 +216,7 @@ Example:
 //div[@class=’form-group’]//input[@id='user-message']
 ```
 
-In the GOOD example above, all <div class='form-group'/> elements in the DOM are matched first, and then all <input id='user-message'/> with <div class='form-group'/> as one of its parents is matched. Doesn't matter if the parent is anywhere up in the parent hierarchy.
+In the `GOOD` example above, all `<div class='form-group'/>` elements in the DOM are matched first, and then all `<input id='user-message'/>` with `<div class='form-group'/>` as one of its parents is matched. The parent does not have to immediately precede it since it uses another double forward slash `//`.
 
 #### Parent Selectors
 
