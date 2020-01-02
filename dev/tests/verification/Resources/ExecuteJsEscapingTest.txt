@@ -2,8 +2,6 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -30,8 +28,8 @@ class ExecuteJsEscapingTestCest
 	{
 		$javaVariableEscape = $I->executeJS("return \$javascriptVariable"); // stepKey: javaVariableEscape
 		$mftfVariableNotEscaped = $I->executeJS("return {$doNotEscape}"); // stepKey: mftfVariableNotEscaped
-		$persistedDataNotEscaped = $I->executeJS("return " . PersistedObjectHandler::getInstance()->retrieveEntityField('persisted', 'data', 'test')); // stepKey: persistedDataNotEscaped
-		$hookPersistedDataNotEscaped = $I->executeJS("return " . PersistedObjectHandler::getInstance()->retrieveEntityField('persisted', 'data', 'test')); // stepKey: hookPersistedDataNotEscaped
-		$addNewAttributeForRule = $I->executeJS("document.querySelector('entity option[value=" . PersistedObjectHandler::getInstance()->retrieveEntityField('productAttribute', 'attribute_code', 'test') . "]').setAttribute('selected', 'selected')"); // stepKey: addNewAttributeForRule
+		$persistedDataNotEscaped = $I->executeJS("return " . $I->retrieveEntityField('persisted', 'data', 'test')); // stepKey: persistedDataNotEscaped
+		$hookPersistedDataNotEscaped = $I->executeJS("return " . $I->retrieveEntityField('persisted', 'data', 'test')); // stepKey: hookPersistedDataNotEscaped
+		$addNewAttributeForRule = $I->executeJS("document.querySelector('entity option[value=" . $I->retrieveEntityField('productAttribute', 'attribute_code', 'test') . "]').setAttribute('selected', 'selected')"); // stepKey: addNewAttributeForRule
 	}
 }

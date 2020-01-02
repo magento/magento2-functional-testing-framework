@@ -2,8 +2,6 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -26,15 +24,7 @@ class ActionGroupWithTopLevelPersistedDataCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->comment("[createPersonParam] create 'ReplacementPerson' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
-			"createPersonParam",
-			"hook",
-			"ReplacementPerson",
-			[],
-			[]
-		);
-
+		$I->createEntity("createPersonParam", "hook", "ReplacementPerson", [], []); // stepKey: createPersonParam
 		$I->comment("Entering Action Group [beforeGroup] FunctionalActionGroup");
 		$I->fillField("#foo", "myData1"); // stepKey: fillField1BeforeGroup
 		$I->fillField("#bar", "myData2"); // stepKey: fillField2BeforeGroup
@@ -74,11 +64,11 @@ class ActionGroupWithTopLevelPersistedDataCest
 	public function ActionGroupWithTopLevelPersistedData(AcceptanceTester $I)
 	{
 		$I->comment("Entering Action Group [actionGroupWithPersistedData1] FunctionalActionGroupWithData");
-		$I->amOnPage("/" . PersistedObjectHandler::getInstance()->retrieveEntityField('createPersonParam', 'firstname', 'test') . "/" . PersistedObjectHandler::getInstance()->retrieveEntityField('createPersonParam', 'lastname', 'test') . ".html"); // stepKey: amOnPage1ActionGroupWithPersistedData1
-		$I->fillField("#foo", PersistedObjectHandler::getInstance()->retrieveEntityField('createPersonParam', 'firstname', 'test')); // stepKey: fillField1ActionGroupWithPersistedData1
-		$I->fillField("#bar", PersistedObjectHandler::getInstance()->retrieveEntityField('createPersonParam', 'lastname', 'test')); // stepKey: fillField2ActionGroupWithPersistedData1
-		$I->searchAndMultiSelectOption("#foo", [PersistedObjectHandler::getInstance()->retrieveEntityField('createPersonParam', 'firstname', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('createPersonParam', 'lastname', 'test')]); // stepKey: multi1ActionGroupWithPersistedData1
-		$I->see("#element ." . PersistedObjectHandler::getInstance()->retrieveEntityField('createPersonParam', 'firstname', 'test')); // stepKey: see1ActionGroupWithPersistedData1
+		$I->amOnPage("/" . $I->retrieveEntityField('createPersonParam', 'firstname', 'test') . "/" . $I->retrieveEntityField('createPersonParam', 'lastname', 'test') . ".html"); // stepKey: amOnPage1ActionGroupWithPersistedData1
+		$I->fillField("#foo", $I->retrieveEntityField('createPersonParam', 'firstname', 'test')); // stepKey: fillField1ActionGroupWithPersistedData1
+		$I->fillField("#bar", $I->retrieveEntityField('createPersonParam', 'lastname', 'test')); // stepKey: fillField2ActionGroupWithPersistedData1
+		$I->searchAndMultiSelectOption("#foo", [$I->retrieveEntityField('createPersonParam', 'firstname', 'test'), $I->retrieveEntityField('createPersonParam', 'lastname', 'test')]); // stepKey: multi1ActionGroupWithPersistedData1
+		$I->see("#element ." . $I->retrieveEntityField('createPersonParam', 'firstname', 'test')); // stepKey: see1ActionGroupWithPersistedData1
 		$I->comment("Exiting Action Group [actionGroupWithPersistedData1] FunctionalActionGroupWithData");
 	}
 }

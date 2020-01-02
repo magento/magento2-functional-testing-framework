@@ -2,8 +2,6 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -28,23 +26,15 @@ class PageReplacementTestCest
 	 */
 	public function PageReplacementTest(AcceptanceTester $I)
 	{
-		$I->comment("[datakey] create 'simpleData' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
-			"datakey",
-			"test",
-			"simpleData",
-			[],
-			[]
-		);
-
+		$I->createEntity("datakey", "test", "simpleData", [], []); // stepKey: datakey
 		$I->amOnPage("/page.html"); // stepKey: noParamPage
 		$I->amOnPage("/StringLiteral/page.html"); // stepKey: oneParamPageString
 		$I->amOnPage("/John/page.html"); // stepKey: oneParamPageData
-		$I->amOnPage("/" . PersistedObjectHandler::getInstance()->retrieveEntityField('datakey', 'firstname', 'test') . "/page.html"); // stepKey: oneParamPagePersist
+		$I->amOnPage("/" . $I->retrieveEntityField('datakey', 'firstname', 'test') . "/page.html"); // stepKey: oneParamPagePersist
 		$I->amOnPage("/StringLiteral1/StringLiteral2.html"); // stepKey: twoParamPageString
 		$I->amOnPage("/John/StringLiteral2.html"); // stepKey: twoParamPageStringData
-		$I->amOnPage("/John/" . PersistedObjectHandler::getInstance()->retrieveEntityField('datakey', 'firstname', 'test') . ".html"); // stepKey: twoParamPageDataPersist
-		$I->amOnPage("/" . PersistedObjectHandler::getInstance()->retrieveEntityField('datakey', 'firstname', 'test') . "/StringLiteral2.html"); // stepKey: twoParamPagePersistString
+		$I->amOnPage("/John/" . $I->retrieveEntityField('datakey', 'firstname', 'test') . ".html"); // stepKey: twoParamPageDataPersist
+		$I->amOnPage("/" . $I->retrieveEntityField('datakey', 'firstname', 'test') . "/StringLiteral2.html"); // stepKey: twoParamPagePersistString
 		$I->amOnPage("/" . getenv("MAGENTO_BACKEND_NAME") . "/backend"); // stepKey: onAdminPage
 		$I->amOnPage("/" . getenv("MAGENTO_BACKEND_NAME") . "/StringLiteral/page.html"); // stepKey: oneParamAdminPageString
 		$I->amOnUrl("http://myFullUrl.com/"); // stepKey: onExternalPage

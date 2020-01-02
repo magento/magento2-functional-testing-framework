@@ -2,8 +2,6 @@
 namespace Magento\AcceptanceTest\_default\Backend;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use \Codeception\Util\Locator;
 use Yandex\Allure\Adapter\Annotation\Features;
 use Yandex\Allure\Adapter\Annotation\Stories;
@@ -28,26 +26,18 @@ class LocatorFunctionTestCest
 	 */
 	public function LocatorFunctionTest(AcceptanceTester $I)
 	{
-		$I->comment("[data] create 'ReplacementPerson' entity");
-		PersistedObjectHandler::getInstance()->createEntity(
-			"data",
-			"test",
-			"ReplacementPerson",
-			[],
-			[]
-		);
-
+		$I->createEntity("data", "test", "ReplacementPerson", [], []); // stepKey: data
 		$I->click(Locator::contains("'label'", "'Name'")); // stepKey: SimpleLocator
 		$I->click(Locator::contains("'label'", "'Name'")); // stepKey: SimpleLocatorNonShorthand
 		$I->click(Locator::find("'img'", ['title' => 'diagram'])); // stepKey: ArrayLocator
 		$I->click(Locator::contains("string", "'Name'")); // stepKey: OneParamLiteral
 		$I->click(Locator::contains("John", "'Name'")); // stepKey: OneParamData
-		$I->click(Locator::contains(PersistedObjectHandler::getInstance()->retrieveEntityField('data', 'key', 'test'), "'Name'")); // stepKey: OneParamPersisted
+		$I->click(Locator::contains($I->retrieveEntityField('data', 'key', 'test'), "'Name'")); // stepKey: OneParamPersisted
 		$I->click(Locator::contains("string1", "string2")); // stepKey: TwoParamLiteral
 		$I->click(Locator::contains("John", "Doe")); // stepKey: TwoParamData
-		$I->click(Locator::contains(PersistedObjectHandler::getInstance()->retrieveEntityField('data', 'key1', 'test'), PersistedObjectHandler::getInstance()->retrieveEntityField('data', 'key2', 'test'))); // stepKey: TwoParamPersisted
+		$I->click(Locator::contains($I->retrieveEntityField('data', 'key1', 'test'), $I->retrieveEntityField('data', 'key2', 'test'))); // stepKey: TwoParamPersisted
 		$I->click(Locator::contains("string1", "John")); // stepKey: TwoParamMix1
-		$I->click(Locator::contains("string1", PersistedObjectHandler::getInstance()->retrieveEntityField('data', 'key1', 'test'))); // stepKey: TwoParamMix2
-		$I->click(Locator::contains("John", PersistedObjectHandler::getInstance()->retrieveEntityField('data', 'key1', 'test'))); // stepKey: TwoParamMix3
+		$I->click(Locator::contains("string1", $I->retrieveEntityField('data', 'key1', 'test'))); // stepKey: TwoParamMix2
+		$I->click(Locator::contains("John", $I->retrieveEntityField('data', 'key1', 'test'))); // stepKey: TwoParamMix3
 	}
 }
