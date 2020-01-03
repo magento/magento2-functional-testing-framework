@@ -731,13 +731,6 @@ class TestGenerator
                 case "createData":
                     $entity = $customActionAttributes['entity'];
 
-                    if(DataObjectHandler::getInstance()->getObject($entity) === null) {
-                        throw new TestReferenceException(
-                            "Entity \"" . $entity . "\" does not exist." .
-                            "\nException occurred parsing action at StepKey \"" . $stepKey . "\""
-                        );
-                    }
-
                     //TODO refactor entity field override to not be individual actionObjects
                     $customEntityFields =
                         $customActionAttributes[ActionObjectExtractor::ACTION_OBJECT_PERSISTENCE_FIELDS] ?? [];

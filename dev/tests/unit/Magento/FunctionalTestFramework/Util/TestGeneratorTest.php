@@ -43,30 +43,6 @@ class TestGeneratorTest extends MagentoTestCase
     }
 
     /**
-     * Test to check exceptions for createData on referencing non-existent entity
-     *
-     * @throws TestReferenceException
-     */
-
-    public function testCreateDataException()
-    {
-        $actionObject = new ActionObject('fakeAction', 'createData', [
-            'entity' => 'invalidEntity'
-        ]);
-
-        $testObject = new TestObject("sampleTest", ["merge123" => $actionObject], [], [], "filename");
-
-        $testGeneratorObject = TestGenerator::getInstance("", ["sampleTest" => $testObject]);
-
-        AspectMock::double(TestGenerator::class, ['loadAllTestObjects' => ["sampleTest" => $testObject]]);
-
-        $this->expectExceptionMessage("Entity \"invalidEntity\" does not exist." .
-            "\nException occurred parsing action at StepKey \"fakeAction\" in Test \"sampleTest\"");
-
-        $testGeneratorObject->createAllTestFiles(null, []);
-    }
-
-    /**
      * Tests that skipped tests do not have a fully generated body
      *
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
