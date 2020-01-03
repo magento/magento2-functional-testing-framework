@@ -242,7 +242,7 @@ class TestGenerator
 
         $className = $testObject->getCodeceptionName();
         try {
-            if (!$testObject->isSkipped() && !MftfApplicationConfig::getConfig()->allowSkipped()) {
+            if (!$testObject->isSkipped() || MftfApplicationConfig::getConfig()->allowSkipped()) {
                 $hookPhp = $this->generateHooksPhp($testObject->getHooks());
             } else {
                 $hookPhp = null;
@@ -1601,7 +1601,13 @@ class TestGenerator
         $testName = str_replace(' ', '', $testName);
         $testAnnotations = $this->generateAnnotationsPhp($test->getAnnotations(), true);
         $dependencies = 'AcceptanceTester $I';
-        if ($test->isSkipped() && !MftfApplicationConfig::getConfig()->allowSkipped()) {
+        if (!$test->isSkipped() || MftfApplicationConfig::getConfig()->allowSkipped()) {
+            try {
+                $steps = $this->generateStepsPhp($test->getOrderedActions());
+            } catch (\Exception $e) {
+                throw new TestReferenceException($e->getMessage() . " in Test \"" . $test->getName() . "\"");
+            }
+        } else {
             $skipString = "This test is skipped due to the following issues:\\n";
             $issues = $test->getAnnotations()['skip'] ?? null;
             if (isset($issues)) {
@@ -1611,12 +1617,6 @@ class TestGenerator
             }
             $steps = "\t\t" . '$scenario->skip("' . $skipString . '");' . "\n";
             $dependencies .= ', \Codeception\Scenario $scenario';
-        } else {
-            try {
-                $steps = $this->generateStepsPhp($test->getOrderedActions());
-            } catch (\Exception $e) {
-                throw new TestReferenceException($e->getMessage() . " in Test \"" . $test->getName() . "\"");
-            }
         }
 
         $testPhp .= $testAnnotations;
