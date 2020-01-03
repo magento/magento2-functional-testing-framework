@@ -14,7 +14,6 @@ use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
-use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 
 class TestGeneratorTest extends MagentoTestCase
 {
@@ -47,7 +46,6 @@ class TestGeneratorTest extends MagentoTestCase
      *
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
-
     public function testSkippedNoGeneration()
     {
         $actionInput = 'fakeInput';
