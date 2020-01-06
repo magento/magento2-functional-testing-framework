@@ -32,10 +32,9 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
 
-    public function testCreateInvalidEntity()
+    public function testCreateEntityWithNonExistingName()
     {
         // Test Data and Variables
-
         $entityName = "InvalidEntity";
         $entityStepKey = "StepKey";
         $scope = PersistedObjectHandler::TEST_SCOPE;
