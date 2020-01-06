@@ -32,6 +32,31 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
 
+    public function testCreateInvalidEntity()
+    {
+        // Test Data and Variables
+
+        $entityName = "InvalidEntity";
+        $entityStepKey = "StepKey";
+        $scope = PersistedObjectHandler::TEST_SCOPE;
+
+        $exceptionMessage = "Entity \"" . $entityName . "\" does not exist." .
+            "\nException occurred parsing action at StepKey \"" . $entityStepKey . "\"";
+
+        $this->expectException(TestReferenceException::class);
+
+        $this->expectExceptionMessage($exceptionMessage);
+
+        $handler = PersistedObjectHandler::getInstance();
+
+        // Call method
+        $handler->createEntity(
+            $entityStepKey,
+            $scope,
+            $entityName
+        );
+    }
+
     public function testCreateSimpleEntity()
     {
         // Test Data and Variables
