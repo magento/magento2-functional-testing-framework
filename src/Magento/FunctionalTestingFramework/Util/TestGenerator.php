@@ -50,10 +50,12 @@ class TestGenerator
         'retrieveEntityField',
         'getSecret',
         'magentoCLI',
+        'magentoCron',
         'generateDate',
         'field'
     ];
     const STEP_KEY_ANNOTATION = " // stepKey: %s";
+    const CRON_INTERVAL = 60;
 
     /**
      * Actor name for AcceptanceTest
@@ -534,6 +536,7 @@ class TestGenerator
             $dependentSelector = null;
             $visible = null;
             $command = null;
+            $cronGroups = '';
             $arguments = null;
             $sortOrder = null;
             $storeCode = null;
@@ -550,6 +553,9 @@ class TestGenerator
 
             if (isset($customActionAttributes['command'])) {
                 $command = $this->addUniquenessFunctionCall($customActionAttributes['command']);
+            }
+            if (isset($customActionAttributes['groups'])) {
+                $cronGroups = $this->addUniquenessFunctionCall($customActionAttributes['groups']);
             }
             if (isset($customActionAttributes['arguments'])) {
                 $arguments = $this->addUniquenessFunctionCall($customActionAttributes['arguments']);
@@ -1270,6 +1276,22 @@ class TestGenerator
                         $stepKey
                     );
                     break;
+                case 'magentoCron':
+                    $testSteps .= $this->wrapFunctionCallWithReturnValue(
+                        $stepKey,
+                        $actor,
+                        $actionObject,
+                        $cronGroups,
+                        self::CRON_INTERVAL + $time,
+                        $arguments
+                    );
+                    $testSteps .= sprintf(self::STEP_KEY_ANNOTATION, $stepKey) . PHP_EOL;
+                    $testSteps .= sprintf(
+                        "\t\t$%s->comment(\$%s);",
+                        $actor,
+                        $stepKey
+                    );
+                    break;
                 case "field":
                     $fieldKey = $actionObject->getCustomActionAttributes()['key'];
                     $input = $this->resolveStepKeyReferences($input, $actionObject->getActionOrigin());
@@ -1403,7 +1425,7 @@ class TestGenerator
             $variable = $this->stripAndSplitReference($match, $delimiter);
             if (count($variable) != 2) {
                 throw new \Exception(
-                    "Invalid Persisted Entity Reference: {$match}. 
+                    "Invalid Persisted Entity Reference: {$match}.
                 Test persisted entity references must follow {$delimiter}entityStepKey.field{$delimiter} format."
                 );
             }
