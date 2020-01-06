@@ -565,9 +565,10 @@ class MagentoWebDriver extends WebDriver
     /**
      * Executes Magento Cron keeping the interval (> 60 seconds between each run)
      *
-     * @param string|null $cronGroups
-     * @param int|null $timeout
-     * @param string|null $arguments
+     * @param string|null  $cronGroups
+     * @param integer|null $timeout
+     * @param string|null  $arguments
+     * @return string
      */
     public function magentoCron($cronGroups = null, $timeout = null, $arguments = null)
     {
@@ -596,7 +597,7 @@ class MagentoWebDriver extends WebDriver
      * Returns last Cron execution time for specific cron or all crons
      *
      * @param array $cronGroups
-     * @return int
+     * @return integer
      */
     private function getLastCronExecution(array $cronGroups = [])
     {
@@ -606,7 +607,7 @@ class MagentoWebDriver extends WebDriver
 
         $cronGroups = array_merge($cronGroups, ['*']);
 
-        return array_reduce($cronGroups, function($lastExecution, $group) {
+        return array_reduce($cronGroups, function ($lastExecution, $group) {
             if (isset($this->cronExecution[$group]) && $this->cronExecution[$group] > $lastExecution) {
                 $lastExecution = $this->cronExecution[$group];
             }
@@ -618,9 +619,9 @@ class MagentoWebDriver extends WebDriver
     /**
      * Returns time to wait for next run
      *
-     * @param array $cronGroups
-     * @param int $cronInterval
-     * @return int
+     * @param array   $cronGroups
+     * @param integer $cronInterval
+     * @return integer
      */
     private function getCronWait(array $cronGroups = [], int $cronInterval = self::MAGENTO_CRON_INTERVAL)
     {
@@ -1053,9 +1054,9 @@ class MagentoWebDriver extends WebDriver
     /**
      * Waits proper amount of time to perform Cron execution
      *
-     * @param $cronGroups
-     * @param $timeout
-     * @param $arguments
+     * @param string  $cronGroups
+     * @param integer $timeout
+     * @param string  $arguments
      * @return string
      * @throws TestFrameworkException
      */
