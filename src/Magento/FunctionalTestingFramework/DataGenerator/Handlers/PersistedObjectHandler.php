@@ -101,7 +101,7 @@ class PersistedObjectHandler
         if ($retrievedEntity === null) {
             throw new TestReferenceException(
                 "Entity \"" . $entity . "\" does not exist." .
-                "\nException occurred parsing action at StepKey \"" . $key . "\""
+                "\nException occurred executing action at StepKey \"" . $key . "\""
             );
         }
 

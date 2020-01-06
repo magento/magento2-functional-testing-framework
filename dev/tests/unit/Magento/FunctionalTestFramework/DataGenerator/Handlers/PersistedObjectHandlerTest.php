@@ -40,7 +40,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         $scope = PersistedObjectHandler::TEST_SCOPE;
 
         $exceptionMessage = "Entity \"" . $entityName . "\" does not exist." .
-            "\nException occurred parsing action at StepKey \"" . $entityStepKey . "\"";
+            "\nException occurred executing action at StepKey \"" . $entityStepKey . "\"";
 
         $this->expectException(TestReferenceException::class);
 
