@@ -1781,10 +1781,9 @@ class TestGenerator
     /**
      * Wrap parameters into a function call.
      *
-     * @param string $actor
+     * @param string       $actor
      * @param actionObject $action
-     * @param string $scope
-     * @param array ...$args
+     * @param array        ...$args
      * @return string
      * @throws \Exception
      */
@@ -1816,7 +1815,7 @@ class TestGenerator
      * @param string $actor
      * @param string $action
      * @param string $scope
-     * @param array ...$args
+     * @param array  ...$args
      * @return string
      * @throws \Exception
      */
