@@ -1778,8 +1778,6 @@ class TestGenerator
         return sprintf("$%s", ltrim($this->stripQuotes($input), '$'));
     }
 
-    // @codingStandardsIgnoreStart
-
     /**
      * Wrap parameters into a function call.
      *
@@ -1843,9 +1841,9 @@ class TestGenerator
         return $output;
     }
 
-    // @codingStandardsIgnoreEnd
-
     /**
+     * Closure returned is used as a callable for array_filter to remove null values from array
+     *
      * @return callable
      */
     private function filterNullCallback()
@@ -1857,6 +1855,7 @@ class TestGenerator
 
     /**
      * Resolves {{_ENV.variable}} into getenv("variable") for test-runtime ENV referencing.
+     *
      * @param array  $args
      * @param string $regex
      * @param string $func
@@ -1926,6 +1925,8 @@ class TestGenerator
     }
 
     /**
+     * Verifies whether we have correctly wrapped array syntax
+     *
      * @param string $paramArray
      * @return boolean
      */
@@ -1972,6 +1973,8 @@ class TestGenerator
     }
 
     /**
+     * Determines correct scope based on parameter
+     *
      * @param string $generationScope
      * @return string
      */
@@ -2103,6 +2106,8 @@ class TestGenerator
     }
 
     /**
+     * Wraps parameters array with opening and closing symbol.
+     *
      * @param string $value
      * @return string
      */
@@ -2112,6 +2117,8 @@ class TestGenerator
     }
 
     /**
+     * Determines whether string provided contains decimal point characteristic for current locale
+     *
      * @param string $outStr
      * @return boolean
      */
