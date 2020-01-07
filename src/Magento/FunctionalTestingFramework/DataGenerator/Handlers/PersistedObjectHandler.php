@@ -97,6 +97,14 @@ class PersistedObjectHandler
         }
         
         $retrievedEntity = DataObjectHandler::getInstance()->getObject($entity);
+
+        if ($retrievedEntity === null) {
+            throw new TestReferenceException(
+                "Entity \"" . $entity . "\" does not exist." .
+                "\nException occurred executing action at StepKey \"" . $key . "\""
+            );
+        }
+
         $persistedObject = new DataPersistenceHandler(
             $retrievedEntity,
             $retrievedDependentObjects,
