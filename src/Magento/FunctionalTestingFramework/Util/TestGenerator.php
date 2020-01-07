@@ -1814,7 +1814,6 @@ class TestGenerator
      * @param string $returnVariable
      * @param string $actor
      * @param string $action
-     * @param string $scope
      * @param array  ...$args
      * @return string
      * @throws \Exception
