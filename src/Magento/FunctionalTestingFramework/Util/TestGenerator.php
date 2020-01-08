@@ -40,9 +40,11 @@ class TestGenerator
     const REQUIRED_ENTITY_REFERENCE = 'createDataKey';
     const GENERATED_DIR = '_generated';
     const DEFAULT_DIR = 'default';
+
     const TEST_SCOPE = 'test';
     const HOOK_SCOPE = 'hook';
     const SUITE_SCOPE = 'suite';
+
     const PRESSKEY_ARRAY_ANCHOR_KEY = '987654321098765432109876543210';
     const PERSISTED_OBJECT_NOTATION_REGEX = '/\${1,2}[\w.\[\]]+\${1,2}/';
     const NO_STEPKEY_ACTIONS = [
@@ -54,8 +56,12 @@ class TestGenerator
         'generateDate',
         'field'
     ];
+    const RULE_ERROR = 'On step with stepKey "%s", only one of the attributes: "%s" can be use for action "%s"';
+
     const STEP_KEY_ANNOTATION = " // stepKey: %s";
     const CRON_INTERVAL = 60;
+    const ARRAY_WRAP_OPEN = '[';
+    const ARRAY_WRAP_CLOSE = ']';
 
     /**
      * Actor name for AcceptanceTest
@@ -107,7 +113,7 @@ class TestGenerator
     private $currentGenerationScope = TestGenerator::TEST_SCOPE;
 
     /**
-     * TestGenerator constructor.
+     * Private constructor for Factory
      *
      * @param string  $exportDir
      * @param array   $tests
@@ -116,13 +122,11 @@ class TestGenerator
      */
     private function __construct($exportDir, $tests, $debug = false)
     {
-        // private constructor for factory
         $this->exportDirName = $exportDir ?? self::DEFAULT_DIR;
-        $exportDir = $exportDir ?? self::DEFAULT_DIR;
         $this->exportDirectory = FilePathFormatter::format(TESTS_MODULE_PATH)
             . self::GENERATED_DIR
             . DIRECTORY_SEPARATOR
-            . $exportDir;
+            . $this->exportDirName;
         $this->tests = $tests;
         $this->consoleOutput = new \Symfony\Component\Console\Output\ConsoleOutput();
         $this->debug = $debug;
@@ -187,13 +191,13 @@ class TestGenerator
      * @return void
      * @throws \Exception
      */
-    private function createCestFile($testPhp, $filename)
+    private function createCestFile(string $testPhp, string $filename)
     {
         $exportFilePath = $this->exportDirectory . DIRECTORY_SEPARATOR . $filename . ".php";
         $file = fopen($exportFilePath, 'w');
 
         if (!$file) {
-            throw new \Exception("Could not open the file.");
+            throw new \Exception(sprintf('Could not open test file: "%s"', $exportFilePath));
         }
 
         fwrite($file, $testPhp);
@@ -634,9 +638,9 @@ class TestGenerator
                 // validate the param array is in the correct format
                 $this->validateParameterArray($customActionAttributes['parameterArray']);
 
-                $parameterArray = "[";
-                $parameterArray .= $this->addUniquenessToParamArray($customActionAttributes['parameterArray']);
-                $parameterArray .= "]";
+                $parameterArray = $this->wrapParameterArray(
+                    $this->addUniquenessToParamArray($customActionAttributes['parameterArray'])
+                );
             }
 
             if (isset($customActionAttributes['requiredAction'])) {
@@ -754,13 +758,8 @@ class TestGenerator
                     if (!empty($requiredEntityKeys)) {
                         $requiredEntityKeysArray = '"' . implode('", "', $requiredEntityKeys) . '"';
                     }
-                    //Determine Scope
-                    $scope = PersistedObjectHandler::TEST_SCOPE;
-                    if ($generationScope == TestGenerator::HOOK_SCOPE) {
-                        $scope = PersistedObjectHandler::HOOK_SCOPE;
-                    } elseif ($generationScope == TestGenerator::SUITE_SCOPE) {
-                        $scope = PersistedObjectHandler::SUITE_SCOPE;
-                    }
+
+                    $scope = $this->getObjectScope($generationScope);
 
                     $createEntityFunctionCall = "\t\t\${$actor}->createEntity(";
                     $createEntityFunctionCall .= "\"{$stepKey}\",";
@@ -788,13 +787,7 @@ class TestGenerator
                         $actionGroup = $actionObject->getCustomActionAttributes()['actionGroup'] ?? null;
                         $key .= $actionGroup;
 
-                        //Determine Scope
-                        $scope = PersistedObjectHandler::TEST_SCOPE;
-                        if ($generationScope == TestGenerator::HOOK_SCOPE) {
-                            $scope = PersistedObjectHandler::HOOK_SCOPE;
-                        } elseif ($generationScope == TestGenerator::SUITE_SCOPE) {
-                            $scope = PersistedObjectHandler::SUITE_SCOPE;
-                        }
+                        $scope = $this->getObjectScope($generationScope);
 
                         $deleteEntityFunctionCall = "\t\t\${$actor}->deleteEntity(";
                         $deleteEntityFunctionCall .= "\"{$key}\",";
@@ -837,12 +830,7 @@ class TestGenerator
                         $requiredEntityKeysArray = '"' . implode('", "', $requiredEntityKeys) . '"';
                     }
 
-                    $scope = PersistedObjectHandler::TEST_SCOPE;
-                    if ($generationScope == TestGenerator::HOOK_SCOPE) {
-                        $scope = PersistedObjectHandler::HOOK_SCOPE;
-                    } elseif ($generationScope == TestGenerator::SUITE_SCOPE) {
-                        $scope = PersistedObjectHandler::SUITE_SCOPE;
-                    }
+                    $scope = $this->getObjectScope($generationScope);
 
                     $updateEntityFunctionCall = "\t\t\${$actor}->updateEntity(";
                     $updateEntityFunctionCall .= "\"{$key}\",";
@@ -876,13 +864,7 @@ class TestGenerator
                         $requiredEntityKeysArray = '"' . implode('", "', $requiredEntityKeys) . '"';
                     }
 
-                    //Determine Scope
-                    $scope = PersistedObjectHandler::TEST_SCOPE;
-                    if ($generationScope == TestGenerator::HOOK_SCOPE) {
-                        $scope = PersistedObjectHandler::HOOK_SCOPE;
-                    } elseif ($generationScope == TestGenerator::SUITE_SCOPE) {
-                        $scope = PersistedObjectHandler::SUITE_SCOPE;
-                    }
+                    $scope = $this->getObjectScope($generationScope);
 
                     //Create Function
                     $getEntityFunctionCall = "\t\t\${$actor}->getEntity(";
@@ -1325,7 +1307,7 @@ class TestGenerator
                     break;
                 case "comment":
                     $input = $input === null ? strtr($value, ['$' => '\$', '{' => '\{', '}' => '\}']) : $input;
-                    // Combining userInput from native XML comment and <comment/> action to fall-through 'default' case
+                // Combining userInput from native XML comment and <comment/> action to fall-through 'default' case
                 default:
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
@@ -1402,9 +1384,9 @@ class TestGenerator
         preg_match('/"{\$[a-z][a-zA-Z\d]+}"/', $input, $match);
         if (isset($match[0])) {
             return trim($input, '{}"');
-        } else {
-            return $input;
         }
+
+        return $input;
     }
 
     /**
@@ -1502,7 +1484,7 @@ class TestGenerator
             // only replace when whole word matches exactly
             // e.g. testVar => $testVar but not $testVar2
             if (strpos($output, $stepKeyVarRef) !== false) {
-                $output = preg_replace('/\B\\' .$stepKeyVarRef. '\b/', $stepKeyVarRef . $testInvocationKey, $output);
+                $output = preg_replace('/\B\\' . $stepKeyVarRef . '\b/', $stepKeyVarRef . $testInvocationKey, $output);
             }
 
             if (strpos($output, $persistedVarRef) !== false) {
@@ -1537,8 +1519,8 @@ class TestGenerator
         foreach ($allArguments as $argument) {
             $argument = trim($argument);
 
-            if ($argument[0] == "[") {
-                $replacement = "[" . $this->addUniquenessToParamArray($argument) . "]";
+            if ($argument[0] == self::ARRAY_WRAP_OPEN) {
+                $replacement = $this->wrapParameterArray($this->addUniquenessToParamArray($argument));
             } elseif (is_numeric($argument)) {
                 $replacement = $argument;
             } else {
@@ -1707,8 +1689,9 @@ class TestGenerator
         preg_match_all('/[\[][^\]]*?[\]]/', $input, $paramInput);
         if (!empty($paramInput)) {
             foreach ($paramInput[0] as $param) {
-                $arrayResult[self::PRESSKEY_ARRAY_ANCHOR_KEY . $count] =
-                    '[' . trim($this->addUniquenessToParamArray($param)) . ']';
+                $arrayResult[self::PRESSKEY_ARRAY_ANCHOR_KEY . $count] = $this->wrapParameterArray(
+                    trim($this->addUniquenessToParamArray($param))
+                );
                 $input = str_replace($param, self::PRESSKEY_ARRAY_ANCHOR_KEY . $count, $input);
                 $count++;
             }
@@ -1802,13 +1785,8 @@ class TestGenerator
         if (empty($input)) {
             return '';
         }
-        if (substr($input, 0, 1) === '"') {
-            $input = substr($input, 1);
-        }
-        if (substr($input, -1, 1) === '"') {
-            $input = substr($input, 0, -1);
-        }
-        return $input;
+
+        return trim($input, '"');
     }
 
     /**
@@ -1822,15 +1800,12 @@ class TestGenerator
         return sprintf("$%s", ltrim($this->stripQuotes($input), '$'));
     }
 
-    // @codingStandardsIgnoreStart
-
     /**
      * Wrap parameters into a function call.
      *
-     * @param string $actor
+     * @param string       $actor
      * @param actionObject $action
-     * @param string $scope
-     * @param array ...$args
+     * @param array        ...$args
      * @return string
      * @throws \Exception
      */
@@ -1843,7 +1818,7 @@ class TestGenerator
                 continue;
             }
             if ($args[$i] === "") {
-                $args[$i] = '"' . $args[$i] . '"';
+                $args[$i] = '""';
             }
         }
         if (!is_array($args)) {
@@ -1851,7 +1826,7 @@ class TestGenerator
         }
         $args = $this->resolveAllRuntimeReferences($args);
         $args = $this->resolveTestVariable($args, $action->getActionOrigin());
-        $output .= implode(", ", array_filter($args, function($value) { return $value !== null; })) . ");";
+        $output .= implode(", ", array_filter($args, $this->filterNullCallback())) . ");";
         return $output;
     }
 
@@ -1861,8 +1836,7 @@ class TestGenerator
      * @param string $returnVariable
      * @param string $actor
      * @param string $action
-     * @param string $scope
-     * @param array ...$args
+     * @param array  ...$args
      * @return string
      * @throws \Exception
      */
@@ -1875,7 +1849,7 @@ class TestGenerator
                 continue;
             }
             if ($args[$i] === "") {
-                $args[$i] = '"' . $args[$i] . '"';
+                $args[$i] = '""';
             }
         }
         if (!is_array($args)) {
@@ -1883,14 +1857,25 @@ class TestGenerator
         }
         $args = $this->resolveAllRuntimeReferences($args);
         $args = $this->resolveTestVariable($args, $action->getActionOrigin());
-        $output .= implode(", ", array_filter($args, function($value) { return $value !== null; })) . ");";
+        $output .= implode(", ", array_filter($args, $this->filterNullCallback())) . ");";
         return $output;
     }
 
-    // @codingStandardsIgnoreEnd
+    /**
+     * Closure returned is used as a callable for array_filter to remove null values from array
+     *
+     * @return callable
+     */
+    private function filterNullCallback()
+    {
+        return function ($value) {
+            return $value !== null;
+        };
+    }
 
     /**
      * Resolves {{_ENV.variable}} into getenv("variable") for test-runtime ENV referencing.
+     *
      * @param array  $args
      * @param string $regex
      * @param string $func
@@ -1950,43 +1935,79 @@ class TestGenerator
      */
     private function validateParameterArray($paramArray)
     {
-        if (substr($paramArray, 0, 1) != "[" || substr($paramArray, strlen($paramArray) - 1, 1) != "]") {
-            throw new TestReferenceException("parameterArray must begin with `[` and end with `]");
+        if (!$this->isWrappedArray($paramArray)) {
+            throw new TestReferenceException(sprintf(
+                "parameterArray must begin with `%s` and end with `%s`",
+                self::ARRAY_WRAP_OPEN,
+                self::ARRAY_WRAP_CLOSE
+            ));
         }
+    }
+
+    /**
+     * Verifies whether we have correctly wrapped array syntax
+     *
+     * @param string $paramArray
+     * @return boolean
+     */
+    private function isWrappedArray(string $paramArray)
+    {
+        return 0 === strpos($paramArray, self::ARRAY_WRAP_OPEN)
+            && substr($paramArray, -1) === self::ARRAY_WRAP_CLOSE;
     }
 
     /**
      * Resolve value based on type.
      *
-     * @param string $value
-     * @param string $type
-     * @return string
+     * @param string|null $value
+     * @param string|null $type
+     * @return string|null
      * @throws TestReferenceException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function resolveValueByType($value, $type)
+    private function resolveValueByType($value = null, $type = null)
     {
-        //TODO: Refactor to deal with PHPMD.CyclomaticComplexity, and remove @SuppressWarnings
         if (null === $value) {
             return null;
         }
+
         if (null === $type) {
             $type = 'const';
         }
-        if ($type == "string") {
-            return $this->addUniquenessFunctionCall($value);
-        } elseif ($type == "bool") {
-            return $this->toBoolean($value) ? "true" : "false";
-        } elseif ($type == "int" || $type == "float") {
-            return $this->toNumber($value);
-        } elseif ($type == "array") {
-            $this->validateParameterArray($value);
-            return "[" . $this->addUniquenessToParamArray($value) . "]";
-        } elseif ($type == "variable") {
-            return $this->addDollarSign($value);
-        } else {
-            return $value;
+
+        switch ($type) {
+            case 'string':
+                return $this->addUniquenessFunctionCall($value);
+            case 'bool':
+                return $this->toBoolean($value) ? "true" : "false";
+            case 'int':
+            case 'float':
+                return $this->toNumber($value);
+            case 'array':
+                $this->validateParameterArray($value);
+                return $this->wrapParameterArray($this->addUniquenessToParamArray($value));
+            case 'variable':
+                return $this->addDollarSign($value);
         }
+
+        return $value;
+    }
+
+    /**
+     * Determines correct scope based on parameter
+     *
+     * @param string $generationScope
+     * @return string
+     */
+    private function getObjectScope(string $generationScope): string
+    {
+        switch ($generationScope) {
+            case TestGenerator::SUITE_SCOPE:
+                return PersistedObjectHandler::SUITE_SCOPE;
+            case TestGenerator::HOOK_SCOPE:
+                return PersistedObjectHandler::HOOK_SCOPE;
+        }
+
+        return PersistedObjectHandler::TEST_SCOPE;
     }
 
     /**
@@ -2009,11 +2030,11 @@ class TestGenerator
     private function toNumber($inStr)
     {
         $outStr = $this->stripQuotes($inStr);
-        if (strpos($outStr, localeconv()['decimal_point']) === false) {
-            return intval($outStr);
-        } else {
+        if ($this->hasDecimalPoint($outStr)) {
             return floatval($outStr);
         }
+
+        return intval($outStr);
     }
 
     /**
@@ -2100,9 +2121,29 @@ class TestGenerator
         if (empty($tagName) || empty($attributes)) {
             return;
         }
-        $message = 'On step with stepKey "' . $key . '", only one of the attributes: "';
-        $message .= implode('", "', $attributes);
-        $message .= '" can be use for action "' . $tagName . "\".\n";
-        print $message;
+
+        printf(self::RULE_ERROR, $key, implode('", "', $attributes), $tagName);
+    }
+
+    /**
+     * Wraps parameters array with opening and closing symbol.
+     *
+     * @param string $value
+     * @return string
+     */
+    private function wrapParameterArray(string $value): string
+    {
+        return sprintf('%s%s%s', self::ARRAY_WRAP_OPEN, $value, self::ARRAY_WRAP_CLOSE);
+    }
+
+    /**
+     * Determines whether string provided contains decimal point characteristic for current locale
+     *
+     * @param string $outStr
+     * @return boolean
+     */
+    private function hasDecimalPoint(string $outStr)
+    {
+        return strpos($outStr, localeconv()['decimal_point']) === false;
     }
 }
