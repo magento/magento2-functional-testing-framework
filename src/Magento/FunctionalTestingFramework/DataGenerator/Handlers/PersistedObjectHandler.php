@@ -80,7 +80,7 @@ class PersistedObjectHandler
         $entity,
         $dependentObjectKeys = [],
         $overrideFields = [],
-        $storeCode = ""
+        $storeCode = "all"
     ) {
         $retrievedDependentObjects = [];
         foreach ($dependentObjectKeys as $objectKey) {
