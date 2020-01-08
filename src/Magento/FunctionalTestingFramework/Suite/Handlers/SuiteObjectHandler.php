@@ -5,6 +5,7 @@
  */
 namespace Magento\FunctionalTestingFramework\Suite\Handlers;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
@@ -73,7 +74,7 @@ class SuiteObjectHandler implements ObjectHandlerInterface
     public function getObject($objectName): SuiteObject
     {
         if (!array_key_exists($objectName, $this->suiteObjects)) {
-            trigger_error("Suite ${objectName} is not defined.", E_USER_ERROR);
+            throw new TestReferenceException("Suite ${objectName} is not defined in xml.");
         }
         return $this->suiteObjects[$objectName];
     }

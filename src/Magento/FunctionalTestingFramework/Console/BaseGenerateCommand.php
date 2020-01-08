@@ -87,6 +87,10 @@ class BaseGenerateCommand extends Command
         $suiteToTestPair = [];
 
         foreach($tests as $test) {
+            if (strpos($test, ':') !== null) {
+                $suiteToTestPair[] = $test;
+                continue;
+            }
             if (array_key_exists($test, $testsReferencedInSuites)) {
                 $suites = $testsReferencedInSuites[$test];
                 foreach ($suites as $suite) {
