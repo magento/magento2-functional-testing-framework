@@ -87,7 +87,7 @@ class BaseGenerateCommand extends Command
         $suiteToTestPair = [];
 
         foreach($tests as $test) {
-            if (strpos($test, ':') !== null) {
+            if (strpos($test, ':') !== false) {
                 $suiteToTestPair[] = $test;
                 continue;
             }
