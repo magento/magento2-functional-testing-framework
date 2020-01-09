@@ -42,6 +42,12 @@ vendor/bin/mftf generate:tests
 vendor/bin/mftf generate:tests AdminLoginTest StorefrontPersistedCustomerLoginTest
 ```
 
+### Generate test by test and suite name
+
+```bash
+vendor/bin/mftf generate:tests LoginSuite:AdminLoginTest
+```
+
 ### Generate and run the tests for a specified group
 
 ```bash
@@ -57,6 +63,14 @@ vendor/bin/mftf run:test AdminLoginTest StorefrontPersistedCustomerLoginTest -r
 ```
 
 This command cleans up the previously generated tests; generates and runs the `LoginAsAdminTest` and `LoginAsCustomerTest` tests.
+
+### Generate and run particular test in a specific suite's context
+
+```bash
+vendor/bin/mftf run:test LoginSuite:AdminLoginTest -r
+```
+
+This command cleans up previously generated tests; generates and run `AdminLoginTest` within the context of the `LoginSuite`.
 
 ### Generate and run a testManifest.txt file
 
