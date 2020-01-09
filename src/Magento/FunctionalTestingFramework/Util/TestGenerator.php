@@ -52,12 +52,14 @@ class TestGenerator
         'retrieveEntityField',
         'getSecret',
         'magentoCLI',
+        'magentoCron',
         'generateDate',
         'field'
     ];
     const RULE_ERROR = 'On step with stepKey "%s", only one of the attributes: "%s" can be use for action "%s"';
 
     const STEP_KEY_ANNOTATION = " // stepKey: %s";
+    const CRON_INTERVAL = 60;
     const ARRAY_WRAP_OPEN = '[';
     const ARRAY_WRAP_CLOSE = ']';
 
@@ -538,6 +540,7 @@ class TestGenerator
             $dependentSelector = null;
             $visible = null;
             $command = null;
+            $cronGroups = '';
             $arguments = null;
             $sortOrder = null;
             $storeCode = null;
@@ -554,6 +557,9 @@ class TestGenerator
 
             if (isset($customActionAttributes['command'])) {
                 $command = $this->addUniquenessFunctionCall($customActionAttributes['command']);
+            }
+            if (isset($customActionAttributes['groups'])) {
+                $cronGroups = $this->addUniquenessFunctionCall($customActionAttributes['groups']);
             }
             if (isset($customActionAttributes['arguments'])) {
                 $arguments = $this->addUniquenessFunctionCall($customActionAttributes['arguments']);
@@ -1243,6 +1249,22 @@ class TestGenerator
                         $actionObject,
                         $command,
                         $time,
+                        $arguments
+                    );
+                    $testSteps .= sprintf(self::STEP_KEY_ANNOTATION, $stepKey) . PHP_EOL;
+                    $testSteps .= sprintf(
+                        "\t\t$%s->comment(\$%s);",
+                        $actor,
+                        $stepKey
+                    );
+                    break;
+                case 'magentoCron':
+                    $testSteps .= $this->wrapFunctionCallWithReturnValue(
+                        $stepKey,
+                        $actor,
+                        $actionObject,
+                        $cronGroups,
+                        self::CRON_INTERVAL + $time,
                         $arguments
                     );
                     $testSteps .= sprintf(self::STEP_KEY_ANNOTATION, $stepKey) . PHP_EOL;
