@@ -3,10 +3,11 @@
 When you test functionality that involves external services such as UPS, FedEx, PayPal, or SignifyD,
 use the MFTF credentials feature to hide sensitive [data][] like integration tokens and API keys.
 
-Currently the MFTF supports two types of credential storage:
+Currently the MFTF supports three types of credential storage:
 
 -  **.credentials file**
--  **HashiCorp vault**
+-  **HashiCorp Vault**
+-  **Aws Secret Manager**
 
 ## Configure File Storage
 
@@ -135,11 +136,64 @@ CREDENTIAL_VAULT_ADDRESS=http://127.0.0.1:8200
 CREDENTIAL_VAULT_SECRET_BASE_PATH=secret
 ```
 
-## Configure both File Storage and Vault Storage
+## Configure Aws Secret Manager
 
-It is possible and sometimes useful to setup and use both `.credentials` file and vault for secret storage at the same time.
-In this case, the MFTF tests are able to read secret data at runtime from both storage options, but the local `.credentials` file will take precedence.
+Aws Secrets Manager offers secret management that supports:
+- Secret rotation with built-in integration for Amazon RDS, Amazon Redshift, and Amazon DocumentDB
+- Fine-grained policies and permissions
+- Audit secret rotation centrally for resources in the AWS Cloud, third-party services, and on-premises
 
+### Prerequisites
+- AWS account
+- AWS Secret Manger is created and configured
+- IAM User or Role is created
+
+### Store secrets in Aws Secret Manager
+
+#### Secrets format
+`Secret Name`, `Secret Key`, `Secret Value` are three key pieces of information to construct an Aws Secret. 
+`Secret Key` and `Secret Value` can be any content you want to secure, `Secret Name` must follow the format:
+
+```conf
+mftf/<VENDOR>/<SECRET_KEY>
+```
+
+```conf
+# Secret name for carriers_usps_userid
+mftf/magento/carriers_usps_userid
+
+# Secret key for carriers_usps_userid
+carriers_usps_userid
+
+# Secret name for carriers_usps_password
+mftf/magento/carriers_usps_password
+
+# Secret key for carriers_usps_password
+carriers_usps_password
+```
+
+### Setup MFTF to use Aws Secret Manager
+
+To use Aws Secret Manager, the Aws region to connect to is required. You can set it through environment variable [`CREDENTIAL_AWS_SECRET_MANAGER_REGION`][] in `.env`.
+
+MFTF uses the recommended [Default Credential Provider Chain][credential chain] to establish connection to Aws Secret Manager service. 
+You can setup credentials according to [Default Credential Provider Chain][credential chain] and there is no MFTF specific setup required. 
+Optionally, however, you can explicitly set Aws profile through environment variable [`CREDENTIAL_AWS_SECRET_MANAGER_PROFILE`][] in `.env`.
+
+```conf
+# Sample Aws Secret Manager configuration
+CREDENTIAL_AWS_SECRET_MANAGER_REGION=us-east-1
+CREDENTIAL_AWS_SECRET_MANAGER_PROFILE=default
+```
+
+## Configure multiple credential storage
+
+It is possible and sometimes useful to setup and use multiple credential storage at the same time.
+In this case, the MFTF tests are able to read secret data at runtime from all storage options, in this case MFTF use the following precedence:
+
+```
+.credentials File > HashiCorp Vault > Aws Secret Manager
+```
 <!-- {% raw %} -->
 
 ## Use credentials in a test
@@ -183,3 +237,6 @@ The MFTF tests delivered with Magento application do not use credentials and do 
 [Vault KV2]: https://www.vaultproject.io/docs/secrets/kv/kv-v2.html
 [`CREDENTIAL_VAULT_ADDRESS`]: configuration.md#credential_vault_address
 [`CREDENTIAL_VAULT_SECRET_BASE_PATH`]: configuration.md#credential_vault_secret_base_path
+[credential chain]: https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials.html
+[`CREDENTIAL_AWS_SECRET_MANAGER_PROFILE`]: configuration.md#credential_aws_secret_manager_profile
+[`CREDENTIAL_AWS_SECRET_MANAGER_REGION`]: configuration.md#credential_aws_secret_manager_region

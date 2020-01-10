@@ -67,7 +67,7 @@ class VaultStorage extends BaseStorage
     private $secretBasePath;
 
     /**
-     * CredentialVault constructor
+     * VaultStorage constructor
      *
      * @param string $baseUrl
      * @param string $secretBasePath

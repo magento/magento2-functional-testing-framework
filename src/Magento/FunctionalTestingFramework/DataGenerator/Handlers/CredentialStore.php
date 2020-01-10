@@ -9,12 +9,18 @@ namespace Magento\FunctionalTestingFramework\DataGenerator\Handlers;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage\FileStorage;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage\VaultStorage;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage\AwsSecretManagerStorage;
 use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
 
 class CredentialStore
 {
     const ARRAY_KEY_FOR_VAULT = 'vault';
     const ARRAY_KEY_FOR_FILE = 'file';
+    const ARRAY_KEY_FOR_AWS_SECRET_MANAGER = 'aws';
+
+    const CREDENTIAL_STORAGE_INFO = 'MFTF uses Credential Storage in the following precedence: '
+        . '.credentials file, HashiCorp Vault and AWS Secret Manager. '
+        . 'You need to configure at least one to use _CREDS in tests.';
 
     /**
      * Credential storage array
@@ -71,9 +77,25 @@ class CredentialStore
             }
         }
 
+        // Initialize AWS secret manager storage
+        $awsRegion = getenv('CREDENTIAL_AWS_SECRET_MANAGER_REGION');
+        $awsProfile = getenv('CREDENTIAL_AWS_SECRET_MANAGER_PROFILE');
+        if ($awsRegion !== false) {
+            if ($awsProfile === false) {
+                $awsProfile = null;
+            }
+            try {
+                $this->credStorage[self::ARRAY_KEY_FOR_AWS_SECRET_MANAGER] = new AwsSecretManagerStorage(
+                    $awsRegion,
+                    $awsProfile
+                );
+            } catch (TestFrameworkException $e) {
+            }
+        }
+
         if (empty($this->credStorage)) {
             throw new TestFrameworkException(
-                "No credential storage is properly configured. Please configure vault or .credentials file."
+                'Invalid Credential Storage. ' . self::CREDENTIAL_STORAGE_INFO
             );
         }
     }
@@ -97,8 +119,7 @@ class CredentialStore
         }
 
         throw new TestFrameworkException(
-            "\"{$key}\" not defined in vault or .credentials file, "
-            . "please provide a value in order to use this secret in a test."
+            "{$key} not found. " . self::CREDENTIAL_STORAGE_INFO . ' And make sure key/value exists.'
         );
     }
 
