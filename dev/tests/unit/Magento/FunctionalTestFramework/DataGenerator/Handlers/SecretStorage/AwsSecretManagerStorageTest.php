@@ -39,7 +39,7 @@ class AwsSecretManagerStorageTest extends MagentoTestCase
 
         $mockClient->expects($this->once())
             ->method('__call')
-            ->willReturnCallback(function($name, $args) use ($result) {
+            ->willReturnCallback(function ($name, $args) use ($result) {
                 return $result;
             });
 

@@ -132,6 +132,7 @@ class AwsSecretManagerStorage extends BaseStorage
      *
      * @param string $region
      * @param string $profile
+     * @return void
      * @throws TestFrameworkException
      * @throws InvalidArgumentException
      */
