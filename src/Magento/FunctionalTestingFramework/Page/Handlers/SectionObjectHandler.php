@@ -72,7 +72,9 @@ class SectionObjectHandler implements ObjectHandlerInterface
                     $elementSelector = $elementData[SectionObjectHandler::SELECTOR] ?? null;
                     $elementLocatorFunc = $elementData[SectionObjectHandler::LOCATOR_FUNCTION] ?? null;
                     $elementTimeout = $elementData[SectionObjectHandler::TIMEOUT] ?? null;
-                    $elementParameterized = $this->getBoolean($elementData[SectionObjectHandler::PARAMETERIZED] ?? null);
+                    $elementParameterized = $this->getBoolean(
+                        $elementData[SectionObjectHandler::PARAMETERIZED] ?? null
+                    );
 
                     $elements[$elementName] = new ElementObject(
                         $elementName,
@@ -136,7 +138,7 @@ class SectionObjectHandler implements ObjectHandlerInterface
      * Returns boolean value of expression
      *
      * @param string|null $rawValue
-     * @return bool
+     * @return boolean
      */
     private function getBoolean($rawValue): bool
     {

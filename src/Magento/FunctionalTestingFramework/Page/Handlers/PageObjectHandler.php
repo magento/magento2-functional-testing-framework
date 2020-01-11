@@ -114,12 +114,11 @@ class PageObjectHandler implements ObjectHandlerInterface
         return $this->pageObjects;
     }
 
-
     /**
      * Returns boolean value of expression
      *
      * @param string|null $rawValue
-     * @return bool
+     * @return boolean
      */
     private function getBoolean($rawValue): bool
     {
