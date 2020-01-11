@@ -437,7 +437,7 @@ class ActionObject
         preg_match_all($mustachePattern, $replacement, $matches);
 
         return array_filter($matches[1], function ($match) {
-            return false === strpos($match, '_ENV.');
+            return !empty($match) && false === strpos($match, '_ENV.');
         });
     }
 
