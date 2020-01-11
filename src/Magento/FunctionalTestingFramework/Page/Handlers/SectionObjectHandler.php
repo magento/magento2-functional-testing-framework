@@ -136,10 +136,9 @@ class SectionObjectHandler implements ObjectHandlerInterface
      * Returns boolean value of expression
      *
      * @param string|null $rawValue
-     * @param boolean     $defaultValue
      * @return bool
      */
-    private function getBoolean($rawValue, $defaultValue = false): bool
+    private function getBoolean($rawValue): bool
     {
         return $rawValue === 'true';
     }
