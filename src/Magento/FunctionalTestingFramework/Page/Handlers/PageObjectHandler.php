@@ -66,7 +66,7 @@ class PageObjectHandler implements ObjectHandlerInterface
 
             $module = $pageData[self::MODULE] ?? null;
             $sectionNames = array_keys($pageData[self::SECTION] ?? []);
-            $parameterized = $pageData[self::PARAMETERIZED] ?? false;
+            $parameterized = $this->getBoolean($pageData[self::PARAMETERIZED] ?? null);
             $filename = $pageData[self::FILENAME] ?? null;
 
             $this->pageObjects[$pageName] =
@@ -112,5 +112,18 @@ class PageObjectHandler implements ObjectHandlerInterface
     public function getAllObjects()
     {
         return $this->pageObjects;
+    }
+
+
+    /**
+     * Returns boolean value of expression
+     *
+     * @param string|null $rawValue
+     * @param boolean     $defaultValue
+     * @return bool
+     */
+    private function getBoolean($rawValue, $defaultValue = false): bool
+    {
+        return $rawValue === 'true';
     }
 }
