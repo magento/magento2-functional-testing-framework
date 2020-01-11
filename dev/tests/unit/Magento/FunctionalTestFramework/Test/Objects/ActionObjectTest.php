@@ -24,6 +24,8 @@ use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
  */
 class ActionObjectTest extends MagentoTestCase
 {
+    const STUB_PAGE_URL_WITH_NO_ATTRIBUTE = '{{PageObject}}/some/path';
+
     /**
      * Before test functionality
      * @return void
@@ -233,10 +235,11 @@ class ActionObjectTest extends MagentoTestCase
      */
     public function testResolveUrlWithNoAttribute()
     {
-        // Set up mocks
+        // Given
         $actionObject = new ActionObject('merge123', 'amOnPage', [
-            'url' => '{{PageObject}}'
+            'url' => self::STUB_PAGE_URL_WITH_NO_ATTRIBUTE
         ]);
+
         $pageObject = new PageObject('PageObject', '/replacement/url.html', 'Test', [], false, "test");
         $pageObjectList = ["PageObject" => $pageObject];
         $instance = AspectMock::double(
@@ -245,12 +248,15 @@ class ActionObjectTest extends MagentoTestCase
         )->make(); // bypass the private constructor
         AspectMock::double(PageObjectHandler::class, ['getInstance' => $instance]);
 
-        // Call the method under test
-        $actionObject->resolveReferences();
-
+        // Expect
         $this->expectExceptionMessage('Can not resolve replacements: "{{PageObject}}"');
+        $expected = [
+            'url' => self::STUB_PAGE_URL_WITH_NO_ATTRIBUTE
+        ];
 
-        $actionObject->getCustomActionAttributes();
+        // When
+        $actionObject->resolveReferences();
+        $this->assertEquals($expected, $actionObject->getCustomActionAttributes());
     }
 
     /**
