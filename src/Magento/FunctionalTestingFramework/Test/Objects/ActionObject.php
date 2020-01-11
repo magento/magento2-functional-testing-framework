@@ -428,7 +428,7 @@ class ActionObject
     /**
      * Returns array of missing references
      *
-     * @param $replacement
+     * @param string $replacement
      * @return array
      */
     private function getMissingReferences($replacement): array
@@ -436,7 +436,9 @@ class ActionObject
         $mustachePattern = '/({{[\w]+}})|({{[\w]+\.[\w\[\]]+}})|({{[\w]+\.[\w]+\((?(?!}}).)+\)}})/';
         preg_match_all($mustachePattern, $replacement, $matches);
 
-        return array_filter($matches[1], function($match) { return false === strpos($match, '_ENV.'); });
+        return array_filter($matches[1], function ($match) {
+            return false === strpos($match, '_ENV.');
+        });
     }
 
     /**

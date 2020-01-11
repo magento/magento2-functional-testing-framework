@@ -227,7 +227,7 @@ class ActionObjectTest extends MagentoTestCase
     }
 
     /**
-     * {{PageObject}} should not be replaced and should elicit a warning in console
+     * {{PageObject}} should not be replaced and should throw an exception!
      *
      * @throws /Exception
      */
@@ -248,18 +248,9 @@ class ActionObjectTest extends MagentoTestCase
         // Call the method under test
         $actionObject->resolveReferences();
 
-        // Expect this warning to get generated
-        TestLoggingUtil::getInstance()->validateMockLogStatement(
-            "warning",
-            "page url attribute not found and is required",
-            ['action' => $actionObject->getType(), 'url' => '{{PageObject}}', 'stepKey' => $actionObject->getStepKey()]
-        );
+        $this->expectExceptionMessage('Can not resolve replacements: "{{PageObject}}"');
 
-        // Verify
-        $expected = [
-            'url' => '{{PageObject}}'
-        ];
-        $this->assertEquals($expected, $actionObject->getCustomActionAttributes());
+        $actionObject->getCustomActionAttributes();
     }
 
     /**
