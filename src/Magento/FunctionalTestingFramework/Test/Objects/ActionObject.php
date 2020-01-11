@@ -404,6 +404,14 @@ class ActionObject
         $url = $this->actionAttributes[ActionObject::ACTION_ATTRIBUTE_URL];
 
         $replacement = $this->findAndReplaceReferences(PageObjectHandler::getInstance(), $url);
+
+        $missingReferences = $this->getMissingReferences($replacement);
+        if (!empty($missingReferences)) {
+            throw new TestReferenceException(
+                sprintf('Can not resolve replacements: "%s"', implode('", "', $missingReferences))
+            );
+        }
+
         if ($replacement) {
             $this->resolvedCustomAttributes[ActionObject::ACTION_ATTRIBUTE_URL] = $replacement;
             $allPages = PageObjectHandler::getInstance()->getAllObjects();
@@ -415,6 +423,20 @@ class ActionObject
                 );
             }
         }
+    }
+
+    /**
+     * Returns array of missing references
+     *
+     * @param $replacement
+     * @return array
+     */
+    private function getMissingReferences($replacement): array
+    {
+        $mustachePattern = '/({{[\w]+}})|({{[\w]+\.[\w\[\]]+}})|({{[\w]+\.[\w]+\((?(?!}}).)+\)}})/';
+        preg_match_all($mustachePattern, $replacement, $matches);
+
+        return array_filter($matches[1], function($match) { return false === strpos($match, '_ENV.'); });
     }
 
     /**
