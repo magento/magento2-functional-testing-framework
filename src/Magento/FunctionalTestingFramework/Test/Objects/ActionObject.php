@@ -76,6 +76,9 @@ class ActionObject
     const ACTION_ATTRIBUTE_USERINPUT = 'userInput';
     const ACTION_TYPE_COMMENT = 'comment';
     const INVISIBLE_STEP_ACTIONS = ['retrieveEntityField', 'getSecret'];
+    const REGEX_SINGLE_GROUP = '[\w]+';
+    const REGEX_WITH_INDEX = '[\w]+\.[\w\[\]]+';
+    const REGEX_WITH_PARAM = '[\w]+\.[\w]+\((?(?!}}).)+\)';
 
     /**
      * The unique identifier for the action
@@ -433,8 +436,13 @@ class ActionObject
      */
     private function getMissingReferences($replacement): array
     {
-        $mustachePattern = '/({{[\w]+}})|({{[\w]+\.[\w\[\]]+}})|({{[\w]+\.[\w]+\((?(?!}}).)+\)}})/';
-        preg_match_all($mustachePattern, $replacement, $matches);
+        $matchPatterns = [
+            self::REGEX_SINGLE_GROUP,
+            self::REGEX_WITH_INDEX,
+            self::REGEX_WITH_PARAM
+        ];
+
+        preg_match_all($this->getMustachePattern($matchPatterns), $replacement, $matches);
 
         return array_filter($matches[1], function ($match) {
             return !empty($match) && false === strpos($match, '_ENV.');
@@ -534,10 +542,12 @@ class ActionObject
      */
     private function findAndReplaceReferences($objectHandler, $inputString)
     {
-        //look for parameter area, if so use different regex
-        $regex = ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN;
+        $matchPatterns = [
+            self::REGEX_WITH_INDEX,
+            self::REGEX_WITH_PARAM
+        ];
 
-        preg_match_all($regex, $inputString, $matches);
+        preg_match_all($this->getMustachePattern($matchPatterns), $inputString, $matches);
 
         $outputString = $inputString;
 
@@ -720,7 +730,11 @@ class ActionObject
      */
     private function matchParameterReferences($reference, $parameters)
     {
-        preg_match_all('/{{[\w.]+}}/', $reference, $varMatches);
+        $matchPatterns = [
+            self::REGEX_SINGLE_GROUP
+        ];
+
+        preg_match_all($this->getMustachePattern($matchPatterns), $reference, $varMatches);
         $varMatches[0] = array_unique($varMatches[0]);
         $this->checkParameterCount($varMatches[0], $parameters, $reference);
 
@@ -789,5 +803,16 @@ class ActionObject
                 ["reference" => $reference]
             );
         }
+    }
+
+    /**
+     * Returns Mustache regex pattern
+     *
+     * @param array|null $patterns
+     * @return string
+     */
+    private function getMustachePattern(array $patterns = []): string
+    {
+        return '/({{' .implode('}})|({{', $patterns).'}})/';
     }
 }
