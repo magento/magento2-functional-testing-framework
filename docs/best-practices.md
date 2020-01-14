@@ -58,6 +58,8 @@ The following pattern is used when merging with `extends`:
 
 Name files according to the following patterns to make searching in future more easy:
 
+<!-- {% raw %} -->
+
 #### Test file name
 
 Format: {_Admin_ or _Storefront_}{Functionality}_Test.xml_, where Functionality briefly describes the testing functionality.
@@ -80,6 +82,8 @@ Example: _AdminNavbarSection.xml_.
 
 Format: {Type}_Data.xml_, where Type represents the entity type.
 
+<!-- {% endraw %} -->
+
 Example: _ProductData.xml_.
 
 ### Object names
@@ -91,18 +95,18 @@ Use the _Foo.camelCase_ naming convention, which is similar to _Classes_ and _cl
 Use an upper case first letter for:
 
 -  File names. Example: _StorefrontCreateCustomerTest.xml_
--  Test name attributes. Example: `<test name="TestAllTheThingsTest">`.
--  Data entity names. Example: `<entity name="OutOfStockProduct">`.
--  Page name. Example: `<page name="AdminLoginPage">`.
--  Section name. Example: `<section name="AdminCategorySidebarActionSection">`.
--  Action group name. Example: `<actionGroup name="LoginToAdminActionGroup">`.
+-  Test name attributes. Example: `<test name="TestAllTheThingsTest">`
+-  Data entity names. Example: `<entity name="OutOfStockProduct">`
+-  Page name. Example: `<page name="AdminLoginPage">`
+-  Section name. Example: `<section name="AdminCategorySidebarActionSection">`
+-  Action group name. Example: `<actionGroup name="LoginToAdminActionGroup">`
 
 #### Lower case
 
 Use a lower case first letter for:
 
--  Data keys. Example: `<data key="firstName">`.
--  Element names. Examples: `<element name="confirmDeleteButton"/>`.
+-  Data keys. Example: `<data key="firstName">`
+-  Element names. Examples: `<element name="confirmDeleteButton"/>`
 -  Step keys. For example: `<click selector="..." stepKey="clickLogin"/>`
 
 ## Page object
