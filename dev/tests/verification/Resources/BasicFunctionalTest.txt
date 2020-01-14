@@ -126,6 +126,12 @@ class BasicFunctionalTestCest
 		$I->comment($magentoCli3); // stepKey: magentoCli3
 		$magentoCli4 = $I->magentoCLISecret("config:set somePath " . $I->getSecret("someKey"), 120); // stepKey: magentoCli4
 		$I->comment($magentoCli4); // stepKey: magentoCli4
+		$cronAllGroups = $I->magentoCron("", 70); // stepKey: cronAllGroups
+		$I->comment($cronAllGroups);
+		$cronSingleGroup = $I->magentoCron("index", 70); // stepKey: cronSingleGroup
+		$I->comment($cronSingleGroup);
+		$cronMultipleGroups = $I->magentoCron("a b c", 70); // stepKey: cronMultipleGroups
+		$I->comment($cronMultipleGroups);
 		$I->makeScreenshot("screenShotInput"); // stepKey: makeScreenshotKey1
 		$I->maximizeWindow(); // stepKey: maximizeWindowKey1
 		$I->moveBack(); // stepKey: moveBackKey1
