@@ -6,6 +6,7 @@
 namespace Tests\unit\Magento\FunctionalTestFramework\Suite;
 
 use AspectMock\Test as AspectMock;
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Suite\SuiteGenerator;
@@ -17,6 +18,7 @@ use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
 use Magento\FunctionalTestingFramework\Util\Manifest\DefaultTestManifest;
 use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
 use tests\unit\Util\SuiteDataArrayBuilder;
 use tests\unit\Util\TestDataArrayBuilder;
 use tests\unit\Util\TestLoggingUtil;
@@ -141,6 +143,73 @@ class SuiteGeneratorTest extends MagentoTestCase
         // parse and generate suite object with mocked data
         $mockSuiteGenerator = SuiteGenerator::getInstance();
         $mockSuiteGenerator->generateSuite("basicTestSuite");
+    }
+
+    public function testInvalidSuiteTestPair()
+    {
+        // Mock Suite1 => Test1 and Suite2 => Test2
+        $suiteDataArrayBuilder = new SuiteDataArrayBuilder();
+        $mockData = $suiteDataArrayBuilder
+            ->withName('Suite1')
+            ->includeGroups(['group1'])
+            ->build();
+        $suiteDataArrayBuilder = new SuiteDataArrayBuilder();
+        $mockData2 = $suiteDataArrayBuilder
+            ->withName('Suite2')
+            ->includeGroups(['group2'])
+            ->build();
+        $mockSuiteData = array_merge_recursive($mockData, $mockData2);
+
+        $testDataArrayBuilder = new TestDataArrayBuilder();
+        $mockSimpleTest = $testDataArrayBuilder
+            ->withName('Test1')
+            ->withAnnotations(['group' => [['value' => 'group1']]])
+            ->withTestActions()
+            ->build();
+        $testDataArrayBuilder = new TestDataArrayBuilder();
+        $mockSimpleTest2 = $testDataArrayBuilder
+            ->withName('Test2')
+            ->withAnnotations(['group' => [['value' => 'group2']]])
+            ->withTestActions()
+            ->build();
+        $mockTestData = ['tests' => array_merge($mockSimpleTest, $mockSimpleTest2)];
+        $this->setMockTestAndSuiteParserOutput($mockTestData, $mockSuiteData);
+
+        // Make invalid manifest
+        $suiteConfig = ['Suite2' => ['Test1']];
+        $manifest = TestManifestFactory::makeManifest('default', $suiteConfig);
+
+        // Set up Expected Exception
+        $this->expectException(TestReferenceException::class);
+        $this->expectExceptionMessageRegExp('(Suite: "Suite2" Tests: "Test1")');
+
+        // parse and generate suite object with mocked data and manifest
+        $mockSuiteGenerator = SuiteGenerator::getInstance();
+        $mockSuiteGenerator->generateAllSuites($manifest);
+    }
+
+    public function testNonExistentSuiteTestPair()
+    {
+        $testDataArrayBuilder = new TestDataArrayBuilder();
+        $mockSimpleTest = $testDataArrayBuilder
+            ->withName('Test1')
+            ->withAnnotations(['group' => [['value' => 'group1']]])
+            ->withTestActions()
+            ->build();
+        $mockTestData = ['tests' => array_merge($mockSimpleTest)];
+        $this->setMockTestAndSuiteParserOutput($mockTestData, []);
+
+        // Make invalid manifest
+        $suiteConfig = ['Suite3' => ['Test1']];
+        $manifest = TestManifestFactory::makeManifest('default', $suiteConfig);
+
+        // Set up Expected Exception
+        $this->expectException(TestReferenceException::class);
+        $this->expectExceptionMessageRegExp('#Suite3 is not defined#');
+
+        // parse and generate suite object with mocked data and manifest
+        $mockSuiteGenerator = SuiteGenerator::getInstance();
+        $mockSuiteGenerator->generateAllSuites($manifest);
     }
 
     /**
