@@ -7,15 +7,15 @@
 namespace tests\unit\Magento\FunctionalTestFramework\DataGenerator\Handlers\SecretStorage;
 
 use Aws\SecretsManager\SecretsManagerClient;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage\AwsSecretManagerStorage;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage\AwsSecretsManagerStorage;
 use Aws\Result;
 use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 use ReflectionClass;
 
-class AwsSecretManagerStorageTest extends MagentoTestCase
+class AwsSecretsManagerStorageTest extends MagentoTestCase
 {
     /**
-     * Test encryption/decryption functionality in AwsSecretManagerStorage class.
+     * Test encryption/decryption functionality in AwsSecretsManagerStorage class.
      */
     public function testEncryptAndDecrypt()
     {
@@ -44,7 +44,7 @@ class AwsSecretManagerStorageTest extends MagentoTestCase
             });
 
         /** @var SecretsManagerClient */
-        $credentialStorage = new AwsSecretManagerStorage($testRegion, $testProfile);
+        $credentialStorage = new AwsSecretsManagerStorage($testRegion, $testProfile);
         $reflection = new ReflectionClass($credentialStorage);
         $reflection_property = $reflection->getProperty('client');
         $reflection_property->setAccessible(true);

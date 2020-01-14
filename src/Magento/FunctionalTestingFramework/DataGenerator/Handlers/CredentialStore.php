@@ -9,17 +9,17 @@ namespace Magento\FunctionalTestingFramework\DataGenerator\Handlers;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage\FileStorage;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage\VaultStorage;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage\AwsSecretManagerStorage;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage\AwsSecretsManagerStorage;
 use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
 
 class CredentialStore
 {
     const ARRAY_KEY_FOR_VAULT = 'vault';
     const ARRAY_KEY_FOR_FILE = 'file';
-    const ARRAY_KEY_FOR_AWS_SECRET_MANAGER = 'aws';
+    const ARRAY_KEY_FOR_AWS_SECRETS_MANAGER = 'aws';
 
     const CREDENTIAL_STORAGE_INFO = 'MFTF uses Credential Storage in the following precedence: '
-        . '.credentials file, HashiCorp Vault and AWS Secret Manager. '
+        . '.credentials file, HashiCorp Vault and AWS Secrets Manager. '
         . 'You need to configure at least one to use _CREDS in tests.';
 
     /**
@@ -77,15 +77,15 @@ class CredentialStore
             }
         }
 
-        // Initialize AWS secret manager storage
-        $awsRegion = getenv('CREDENTIAL_AWS_SECRET_MANAGER_REGION');
-        $awsProfile = getenv('CREDENTIAL_AWS_SECRET_MANAGER_PROFILE');
+        // Initialize AWS Secrets Manager storage
+        $awsRegion = getenv('CREDENTIAL_AWS_SECRETS_MANAGER_REGION');
+        $awsProfile = getenv('CREDENTIAL_AWS_SECRETS_MANAGER_PROFILE');
         if ($awsRegion !== false) {
             if ($awsProfile === false) {
                 $awsProfile = null;
             }
             try {
-                $this->credStorage[self::ARRAY_KEY_FOR_AWS_SECRET_MANAGER] = new AwsSecretManagerStorage(
+                $this->credStorage[self::ARRAY_KEY_FOR_AWS_SECRETS_MANAGER] = new AwsSecretsManagerStorage(
                     $awsRegion,
                     $awsProfile
                 );
@@ -109,8 +109,8 @@ class CredentialStore
      */
     public function getSecret($key)
     {
-        // Get secret data from storage according to the order they are stored
-        // File storage is preferred over vault storage to allow local secret value overriding remote secret value
+        // Get secret data from storage according to the order they are stored which follows this precedence:
+        // FileStorage > VaultStorage > AwsSecretsManagerStorage
         foreach ($this->credStorage as $storage) {
             $value = $storage->getEncryptedValue($key);
             if (null !== $value) {

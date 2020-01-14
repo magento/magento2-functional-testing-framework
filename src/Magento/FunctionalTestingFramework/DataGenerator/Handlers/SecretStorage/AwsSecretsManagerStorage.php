@@ -15,7 +15,7 @@ use Aws\Result;
 use InvalidArgumentException;
 use Exception;
 
-class AwsSecretManagerStorage extends BaseStorage
+class AwsSecretsManagerStorage extends BaseStorage
 {
     /**
      * Mftf project path
@@ -23,7 +23,7 @@ class AwsSecretManagerStorage extends BaseStorage
     const MFTF_PATH = 'mftf';
 
     /**
-     * AWS Secret Manager version
+     * AWS Secrets Manager version
      *
      * Last tested version '2017-10-17'
      */
@@ -37,7 +37,7 @@ class AwsSecretManagerStorage extends BaseStorage
     private $client = null;
 
     /**
-     * AwsSecretManagerStorage constructor
+     * AwsSecretsManagerStorage constructor
      *
      * @param string $region
      * @param string $profile
@@ -47,7 +47,7 @@ class AwsSecretManagerStorage extends BaseStorage
     public function __construct($region, $profile = null)
     {
         parent::__construct();
-        $this->createAwsSecretManagerClient($region, $profile);
+        $this->createAwsSecretsManagerClient($region, $profile);
     }
 
     /**
@@ -65,8 +65,8 @@ class AwsSecretManagerStorage extends BaseStorage
         }
 
         if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-            LoggingUtil::getInstance()->getLogger(VaultStorage::class)->debug(
-                "Retrieving secret for key name {$key} from AWS Secret Manager"
+            LoggingUtil::getInstance()->getLogger(AwsSecretsManagerStorage::class)->debug(
+                "Retrieving value for key name {$key} from AWS Secrets Manager"
             );
         }
 
@@ -79,7 +79,7 @@ class AwsSecretManagerStorage extends BaseStorage
                 . $vendor
                 . '/'
                 . $key;
-            // Read value by id from AWS Secret Manager, and parse the result
+            // Read value by id from AWS Secrets Manager, and parse the result
             $value = $this->parseAwsSecretResult(
                 $this->client->getSecretValue(['SecretId' => $secretId]),
                 $key
@@ -90,14 +90,14 @@ class AwsSecretManagerStorage extends BaseStorage
         } catch (AwsException $e) {
             $error = $e->getAwsErrorCode();
             if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-                LoggingUtil::getInstance()->getLogger(VaultStorage::class)->debug(
-                    "AWS error code: {$error}. Unable to read secret for key {$key} from AWS Secret Manager"
+                LoggingUtil::getInstance()->getLogger(AwsSecretsManagerStorage::class)->debug(
+                    "AWS error code: {$error}. Unable to read value for key {$key} from AWS Secrets Manager"
                 );
             }
         } catch (\Exception $e) {
             if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-                LoggingUtil::getInstance()->getLogger(VaultStorage::class)->debug(
-                    "Unable to read secret for key {$key} from AWS Secret Manager"
+                LoggingUtil::getInstance()->getLogger(AwsSecretsManagerStorage::class)->debug(
+                    "Unable to read value for key {$key} from AWS Secrets Manager"
                 );
             }
         }
@@ -118,17 +118,17 @@ class AwsSecretManagerStorage extends BaseStorage
         if (isset($awsResult['SecretString'])) {
             $rawSecret = $awsResult['SecretString'];
         } else {
-            throw new TestFrameworkException("Error parsing AWS secret result");
+            throw new TestFrameworkException("Error parsing result from AWS Secrets Manager");
         }
         $secret = json_decode($rawSecret, true);
         if (isset($secret[$key])) {
             return $secret[$key];
         }
-        throw new TestFrameworkException("Error parsing AWS secret result");
+        throw new TestFrameworkException("Error parsing result from AWS Secrets Manager");
     }
 
     /**
-     * Create Aws Secret Manager client
+     * Create Aws Secrets Manager client
      *
      * @param string $region
      * @param string $profile
@@ -136,13 +136,13 @@ class AwsSecretManagerStorage extends BaseStorage
      * @throws TestFrameworkException
      * @throws InvalidArgumentException
      */
-    private function createAwsSecretManagerClient($region, $profile)
+    private function createAwsSecretsManagerClient($region, $profile)
     {
         if (null !== $this->client) {
             return;
         }
 
-        // Create AWS Secret Manager client
+        // Create AWS Secrets Manager client
         $this->client = new SecretsManagerClient([
             'profile' => $profile,
             'region' => $region,
@@ -150,7 +150,7 @@ class AwsSecretManagerStorage extends BaseStorage
         ]);
 
         if ($this->client === null) {
-            throw new TestFrameworkException("Unable to create AWS Secret Manager client");
+            throw new TestFrameworkException("Unable to create AWS Secrets Manager client");
         }
     }
 }
