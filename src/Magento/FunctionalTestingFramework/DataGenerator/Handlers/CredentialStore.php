@@ -18,9 +18,8 @@ class CredentialStore
     const ARRAY_KEY_FOR_FILE = 'file';
     const ARRAY_KEY_FOR_AWS_SECRETS_MANAGER = 'aws';
 
-    const CREDENTIAL_STORAGE_INFO = 'MFTF uses Credential Storage in the following precedence: '
-        . '.credentials file, HashiCorp Vault and AWS Secrets Manager. '
-        . 'You need to configure at least one to use _CREDS in tests.';
+    const CREDENTIAL_STORAGE_INFO = 'You need to configure at least one of these options: '
+        . '.credentials file, HashiCorp Vault or AWS Secrets Manager correctly';
 
     /**
      * Credential storage array
@@ -95,7 +94,7 @@ class CredentialStore
 
         if (empty($this->credStorage)) {
             throw new TestFrameworkException(
-                'Invalid Credential Storage. ' . self::CREDENTIAL_STORAGE_INFO
+                'Invalid Credential Storage. ' . self::CREDENTIAL_STORAGE_INFO . '.'
             );
         }
     }
@@ -119,7 +118,8 @@ class CredentialStore
         }
 
         throw new TestFrameworkException(
-            "{$key} not found. " . self::CREDENTIAL_STORAGE_INFO . ' And make sure key/value exists.'
+            "{$key} not found. " . self::CREDENTIAL_STORAGE_INFO
+            . ' and ensure key, value exists to use _CREDS in tests.'
         );
     }
 
