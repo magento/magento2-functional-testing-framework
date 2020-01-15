@@ -120,6 +120,5 @@ class RunTestGroupCommand extends BaseGenerateCommand
             $exitCode = 0;
         }
         return $exitCode;
-
     }
 }
