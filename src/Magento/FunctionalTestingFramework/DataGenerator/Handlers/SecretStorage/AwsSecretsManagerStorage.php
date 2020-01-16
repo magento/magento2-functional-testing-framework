@@ -23,6 +23,11 @@ class AwsSecretsManagerStorage extends BaseStorage
     const MFTF_PATH = 'mftf';
 
     /**
+     * AWS Secrets Manager partial ARN
+     */
+    const AWS_SM_PARTIAL_ARN = 'arn:aws:secretsmanager:';
+
+    /**
      * AWS Secrets Manager version
      *
      * Last tested version '2017-10-17'
@@ -37,17 +42,34 @@ class AwsSecretsManagerStorage extends BaseStorage
     private $client = null;
 
     /**
+     * AWS account id
+     *
+     * @var string
+     */
+    private $awsAccountId;
+
+    /**
+     * AWS account region
+     *
+     * @var string
+     */
+    private $region;
+
+    /**
      * AwsSecretsManagerStorage constructor
      *
      * @param string $region
      * @param string $profile
+     * @param string $accountId
      * @throws TestFrameworkException
      * @throws InvalidArgumentException
      */
-    public function __construct($region, $profile = null)
+    public function __construct($region, $profile = null, $accountId = null)
     {
         parent::__construct();
         $this->createAwsSecretsManagerClient($region, $profile);
+        $this->region = $region;
+        $this->awsAccountId = $accountId;
     }
 
     /**
@@ -74,7 +96,12 @@ class AwsSecretsManagerStorage extends BaseStorage
         try {
             // Split vendor/key to construct secret id
             list($vendor, $key) = explode('/', trim($key, '/'), 2);
-            $secretId = self::MFTF_PATH
+            // If AWS account id is specified, create and use full ARN, otherwise use partial ARN as secret id
+            $secretId = '';
+            if (!empty($this->awsAccountId)) {
+                $secretId = self::AWS_SM_PARTIAL_ARN . $this->region . ':' . $this->awsAccountId . ':secret:';
+            }
+            $secretId .= self::MFTF_PATH
                 . '/'
                 . $vendor
                 . '/'

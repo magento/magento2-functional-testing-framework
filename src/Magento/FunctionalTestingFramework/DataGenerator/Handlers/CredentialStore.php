@@ -79,14 +79,19 @@ class CredentialStore
         // Initialize AWS Secrets Manager storage
         $awsRegion = getenv('CREDENTIAL_AWS_SECRETS_MANAGER_REGION');
         $awsProfile = getenv('CREDENTIAL_AWS_SECRETS_MANAGER_PROFILE');
+        $awsId = getenv('CREDENTIAL_AWS_ACCOUNT_ID');
         if ($awsRegion !== false) {
             if ($awsProfile === false) {
                 $awsProfile = null;
             }
+            if ($awsId === false) {
+                $awsId = null;
+            }
             try {
                 $this->credStorage[self::ARRAY_KEY_FOR_AWS_SECRETS_MANAGER] = new AwsSecretsManagerStorage(
                     $awsRegion,
-                    $awsProfile
+                    $awsProfile,
+                    $awsId
                 );
             } catch (TestFrameworkException $e) {
             }
