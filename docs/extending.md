@@ -295,7 +295,7 @@ __Use case__: Create an entity named `DivPanelGreen`, which is similar to the `D
 > Entities with "extends":
 
 ```xml
-<entities >
+<entities>
     <entity name="DivPanel">
         <data key="divColor">Red</data>
         <data key="divSize">80px</data>
@@ -310,7 +310,7 @@ __Use case__: Create an entity named `DivPanelGreen`, which is similar to the `D
 > Entities without "extends":
 
 ```xml
-<entities >
+<entities>
     <entity name="DivPanel">
         <data key="divColor">Red</data>
         <data key="divSize">80px</data>
@@ -331,7 +331,7 @@ __Use case__: Create an entity named `DivPanelGreen`, which is similar to the `D
 > Entities with "extends":
 
 ```xml
-<entities >
+<entities>
     <entity name="DivPanel">
         <data key="divColor">Red</data>
         <data key="divSize">80px</data>
@@ -347,7 +347,7 @@ __Use case__: Create an entity named `DivPanelGreen`, which is similar to the `D
 > Entities without "extends":
 
 ```xml
-<entities >
+<entities>
     <entity name="DivPanel">
         <data key="divColor">Red</data>
         <data key="divSize">80px</data>
