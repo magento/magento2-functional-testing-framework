@@ -57,45 +57,10 @@ class CredentialStore
      */
     private function __construct()
     {
-        // Initialize file storage
-        try {
-            $this->credStorage[self::ARRAY_KEY_FOR_FILE]  = new FileStorage();
-        } catch (TestFrameworkException $e) {
-        }
-
-        // Initialize vault storage
-        $cvAddress = getenv('CREDENTIAL_VAULT_ADDRESS');
-        $cvSecretPath = getenv('CREDENTIAL_VAULT_SECRET_BASE_PATH');
-        if ($cvAddress !== false && $cvSecretPath !== false) {
-            try {
-                $this->credStorage[self::ARRAY_KEY_FOR_VAULT] = new VaultStorage(
-                    UrlFormatter::format($cvAddress, false),
-                    '/' . trim($cvSecretPath, '/')
-                );
-            } catch (TestFrameworkException $e) {
-            }
-        }
-
-        // Initialize AWS Secrets Manager storage
-        $awsRegion = getenv('CREDENTIAL_AWS_SECRETS_MANAGER_REGION');
-        $awsProfile = getenv('CREDENTIAL_AWS_SECRETS_MANAGER_PROFILE');
-        $awsId = getenv('CREDENTIAL_AWS_ACCOUNT_ID');
-        if ($awsRegion !== false) {
-            if ($awsProfile === false) {
-                $awsProfile = null;
-            }
-            if ($awsId === false) {
-                $awsId = null;
-            }
-            try {
-                $this->credStorage[self::ARRAY_KEY_FOR_AWS_SECRETS_MANAGER] = new AwsSecretsManagerStorage(
-                    $awsRegion,
-                    $awsProfile,
-                    $awsId
-                );
-            } catch (TestFrameworkException $e) {
-            }
-        }
+        // Initialize credential storage by defined order of precedence as the following
+        $this->initializeFileStorage();
+        $this->initializeVaultStorage();
+        $this->initializeAwsSecretsManagerStorage();
 
         if (empty($this->credStorage)) {
             throw new TestFrameworkException(
@@ -153,6 +118,70 @@ class CredentialStore
         // Loop through storage to decrypt all occurrences from input string
         foreach ($this->credStorage as $storage) {
             return $storage->getAllDecryptedValuesInString($string);
+        }
+    }
+
+    /**
+     * Initialize file storage
+     *
+     * @return void
+     */
+    private function initializeFileStorage()
+    {
+        // Initialize file storage
+        try {
+            $this->credStorage[self::ARRAY_KEY_FOR_FILE]  = new FileStorage();
+        } catch (TestFrameworkException $e) {
+        }
+    }
+
+    /**
+     * Initialize Vault storage
+     *
+     * @return void
+     */
+    private function initializeVaultStorage()
+    {
+        // Initialize vault storage
+        $cvAddress = getenv('CREDENTIAL_VAULT_ADDRESS');
+        $cvSecretPath = getenv('CREDENTIAL_VAULT_SECRET_BASE_PATH');
+        if ($cvAddress !== false && $cvSecretPath !== false) {
+            try {
+                $this->credStorage[self::ARRAY_KEY_FOR_VAULT] = new VaultStorage(
+                    UrlFormatter::format($cvAddress, false),
+                    '/' . trim($cvSecretPath, '/')
+                );
+            } catch (TestFrameworkException $e) {
+            }
+        }
+    }
+
+    /**
+     * Initialize AWS Secrets Manager storage
+     *
+     * @return void
+     */
+    private function initializeAwsSecretsManagerStorage()
+    {
+        // Initialize AWS Secrets Manager storage
+        $awsRegion = getenv('CREDENTIAL_AWS_SECRETS_MANAGER_REGION');
+        $awsProfile = getenv('CREDENTIAL_AWS_SECRETS_MANAGER_PROFILE');
+        $awsId = getenv('CREDENTIAL_AWS_ACCOUNT_ID');
+        if (!empty($awsRegion)) {
+            if (empty($awsProfile)) {
+                $awsProfile = null;
+            }
+            if (empty($awsId)) {
+                $awsId = null;
+            }
+            try {
+                $this->credStorage[self::ARRAY_KEY_FOR_AWS_SECRETS_MANAGER] = new AwsSecretsManagerStorage(
+                    $awsRegion,
+                    $awsProfile,
+                    $awsId
+                );
+            } catch (TestFrameworkException $e) {
+            }
         }
     }
 }

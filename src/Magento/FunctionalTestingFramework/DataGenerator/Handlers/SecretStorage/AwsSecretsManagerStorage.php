@@ -115,17 +115,18 @@ class AwsSecretsManagerStorage extends BaseStorage
             $reValue = openssl_encrypt($value, parent::ENCRYPTION_ALGO, parent::$encodedKey, 0, parent::$iv);
             parent::$cachedSecretData[$key] = $reValue;
         } catch (AwsException $e) {
-            $error = $e->getAwsErrorCode();
+            $errMessage = "\nAWS Exception:\n" . $e->getAwsErrorMessage()
+                . "\nUnable to read value for key {$key} from AWS Secrets Manager\n";
+            print_r($errMessage);
             if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-                LoggingUtil::getInstance()->getLogger(AwsSecretsManagerStorage::class)->debug(
-                    "AWS error code: {$error}. Unable to read value for key {$key} from AWS Secrets Manager"
-                );
+                LoggingUtil::getInstance()->getLogger(AwsSecretsManagerStorage::class)->debug($errMessage);
             }
         } catch (\Exception $e) {
+            $errMessage = "\nException:\n" . $e->getMessage()
+                . "\nUnable to read value for key {$key} from AWS Secrets Manager\n";
+            print_r($errMessage);
             if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-                LoggingUtil::getInstance()->getLogger(AwsSecretsManagerStorage::class)->debug(
-                    "Unable to read value for key {$key} from AWS Secrets Manager"
-                );
+                LoggingUtil::getInstance()->getLogger(AwsSecretsManagerStorage::class)->debug($errMessage);
             }
         }
         return $reValue;
@@ -145,13 +146,22 @@ class AwsSecretsManagerStorage extends BaseStorage
         if (isset($awsResult['SecretString'])) {
             $rawSecret = $awsResult['SecretString'];
         } else {
-            throw new TestFrameworkException("Error parsing result from AWS Secrets Manager");
+            throw new TestFrameworkException(
+                "'SecretString' field is not set in AWS Result. Error parsing result from AWS Secrets Manager"
+            );
         }
+
+        // Secrets are saved as JSON structures of key/value pairs if using AWS Secrets Manager console, and
+        // Secrets are saved as plain text if using AWS CLI. We need to handle both cases.
         $secret = json_decode($rawSecret, true);
         if (isset($secret[$key])) {
             return $secret[$key];
+        } elseif (is_string($rawSecret)) {
+            return $rawSecret;
         }
-        throw new TestFrameworkException("Error parsing result from AWS Secrets Manager");
+        throw new TestFrameworkException(
+            "$key not found or value is not string . Error parsing result from AWS Secrets Manager"
+        );
     }
 
     /**
@@ -169,13 +179,17 @@ class AwsSecretsManagerStorage extends BaseStorage
             return;
         }
 
-        // Create AWS Secrets Manager client
-        $this->client = new SecretsManagerClient([
-            'profile' => $profile,
+        $options = [
             'region' => $region,
-            'version' => self::LATEST_VERSION
-        ]);
+            'version' => self::LATEST_VERSION,
+        ];
 
+        if (!empty($profile)) {
+            $options['profile'] = $profile;
+        }
+
+        // Create AWS Secrets Manager client
+        $this->client = new SecretsManagerClient($options);
         if ($this->client === null) {
             throw new TestFrameworkException("Unable to create AWS Secrets Manager client");
         }

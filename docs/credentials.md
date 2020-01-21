@@ -144,32 +144,54 @@ AWS Secrets Manager offers secret management that supports:
 - Audit secret rotation centrally for resources in the AWS Cloud, third-party services, and on-premises
 
 ### Prerequisites
-- AWS account
-- AWS Secrets Manger is created and configured
+
+#### Use AWS Secrets Manager from your own AWS account
+
+- AWS account with Secrets Manager service available
 - IAM User or Role is created with appropriate AWS Secrets Manger access permission
+
+#### Use AWS Secrets Manager from other AWS account
+
+- AWS account ID where the AWS Secrets Manager service is hosted
+- IAM User or Role with appropriate access permission
 
 ### Store secrets in AWS Secrets Manager
 
+
 #### Secrets format
-`Secret Name`, `Secret Key`, `Secret Value` are three key pieces of information to construct an AWS Secret. 
-`Secret Key` and `Secret Value` can be any content you want to secure, `Secret Name` must follow the format:
+
+`Secret Name` and `Secret Value` are two key pieces of information for creating a secret. 
+
+`Secret Value` can be either plaintext or key/value pairs in JSON format.  
+
+`Secrets Name` must use the following format:
 
 ```conf
-mftf/<VENDOR>/<SECRET_KEY>
+mftf/<VENDOR>/<YOUR/SECRET/KEY>
 ```
 
+`Secrets Value` in plaintext format can be any content you want to secure. `Secrets Value` in key/value pairs format, however, the `key` must be same as the `Secret Name` with `mftf/<VENDOR>/` part removed. 
+e.g. in above example, `key` should be `<YOUR/SECRET/KEY>`
+
+##### Create Secrets using AWS CLI
+
+```bash
+aws secretsmanager create-secret --name "mftf/magento/shipping/carriers_usps_userid" --description "Carriers USPS user id" --secret-string "1234567"
+```
+
+##### Create Secrets using AWS Console
+
+To save the same secret in key/value JSON format, you should use
+
 ```conf
-# Secret name for carriers_usps_userid
-mftf/magento/carriers_usps_userid
+# Secret Name
+mftf/magento/shipping/carriers_usps_userid
 
-# Secret key for carriers_usps_userid
-carriers_usps_userid
+# Secret Key
+shipping/carriers_usps_userid
 
-# Secret name for carriers_usps_password
-mftf/magento/carriers_usps_password
-
-# Secret key for carriers_usps_password
-carriers_usps_password
+# Secret Value
+1234567
 ```
 
 ### Setup MFTF to use AWS Secrets Manager
@@ -184,6 +206,16 @@ Optionally, however, you can explicitly set AWS profile through environment vari
 # Sample AWS Secrets Manager configuration
 CREDENTIAL_AWS_SECRETS_MANAGER_REGION=us-east-1
 CREDENTIAL_AWS_SECRETS_MANAGER_PROFILE=default
+```
+
+### Optionally set CREDENTIAL_AWS_ACCOUNT_ID environment variable
+ 
+Full AWS KMS ([Key Management Service][]) key ARN ([Amazon Resource Name][]) is required when accessing secrets stored in other AWS account.
+If this is the case, you will also need to set `CREDENTIAL_AWS_ACCOUNT_ID` environment variable so that MFTF can construct the full ARN. 
+This is also commonly used in CI system.
+
+```bash
+export CREDENTIAL_AWS_ACCOUNT_ID=<Your_12_Digits_AWS_Account_ID>
 ```
 
 ## Configure multiple credential storage
@@ -240,3 +272,5 @@ The MFTF tests delivered with Magento application do not use credentials and do 
 [credential chain]: https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials.html
 [`CREDENTIAL_AWS_SECRETS_MANAGER_PROFILE`]: configuration.md#credential_aws_secrets_manager_profile
 [`CREDENTIAL_AWS_SECRETS_MANAGER_REGION`]: configuration.md#credential_aws_secrets_manager_region
+[Key Management Service]: https://aws.amazon.com/kms/
+[Amazon Resource Name]: https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html
