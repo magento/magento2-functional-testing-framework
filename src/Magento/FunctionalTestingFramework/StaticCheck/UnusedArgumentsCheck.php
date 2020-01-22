@@ -120,8 +120,8 @@ class UnusedArgumentsCheck implements StaticCheckInterface
 
     /**
      * Returns array of all action attribute values in an action group.
-     * @param $actionGroup
-     * @return array
+     * @param ActionGroupObject $actionGroup
+     * @return array $allAttributeValues
      */
     private function getAllActionAttributeValues($actionGroup)
     {
