@@ -8,6 +8,8 @@ namespace Magento\FunctionalTestingFramework\StaticCheck;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
+use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
+use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Exception;
 
@@ -35,7 +37,7 @@ class UnusedArgumentsCheck implements StaticCheckInterface
      * Checks unused arguments in action groups and prints out error to file.
      *
      * @param  InputInterface $input
-     * @return string
+     * @return void
      * @throws Exception;
      */
     public function execute(InputInterface $input)
@@ -55,7 +57,6 @@ class UnusedArgumentsCheck implements StaticCheckInterface
         $this->errors += $this->setErrorOutput($unusedArgumentList);
 
         $this->output = $this->printErrorsToFile();
-
     }
 
     /**
@@ -78,16 +79,16 @@ class UnusedArgumentsCheck implements StaticCheckInterface
 
     /**
      * Builds array of action groups => unused arguments
-     * @param $actionGroups
-     * @return array
+     * @param array $actionGroups
+     * @return array $actionGroupToArguments
      */
-    private function buildUnusedArgumentList($actionGroups) {
-
+    private function buildUnusedArgumentList($actionGroups)
+    {
         $actionGroupToArguments = [];
 
         foreach ($actionGroups as $actionGroup) {
             $unusedArguments = $this->findUnusedArguments($actionGroup);
-            if(!empty($unusedArguments)) {
+            if (!empty($unusedArguments)) {
                 $actionGroupToArguments[$actionGroup->getFilename()][$actionGroup->getName()] = $unusedArguments;
             }
         }
@@ -96,11 +97,11 @@ class UnusedArgumentsCheck implements StaticCheckInterface
 
     /**
      * Returns unused arguments in an action group.
-     * @param $actionGroup
-     * @return array
+     * @param ActionGroupObject $actionGroup
+     * @return array $unusedArguments
      */
-    private function findUnusedArguments($actionGroup) {
-
+    private function findUnusedArguments($actionGroup)
+    {
         $unusedArguments = [];
         //extract all action attribute values
         $actionAttributeValues = $this->getAllActionAttributeValues($actionGroup);
@@ -108,7 +109,7 @@ class UnusedArgumentsCheck implements StaticCheckInterface
         foreach ($argumentList as $argument) {
             $argumentName = $argument->getName();
             //pattern to match all argument references
-            $pattern = '(.*\.*[\W]+(?<!\.)' . $argumentName . '[\W]+.*)';
+            $pattern = '(.*[\W]+(?<!\.)' . $argumentName . '[\W]+.*)';
             if (preg_grep($pattern, $actionAttributeValues)) {
                 continue;
             }
@@ -122,8 +123,8 @@ class UnusedArgumentsCheck implements StaticCheckInterface
      * @param $actionGroup
      * @return array
      */
-    private function getAllActionAttributeValues($actionGroup) {
-
+    private function getAllActionAttributeValues($actionGroup)
+    {
         $allAttributeValues = [];
         $actions = $actionGroup->getActions();
         foreach ($actions as $action) {
@@ -133,22 +134,20 @@ class UnusedArgumentsCheck implements StaticCheckInterface
         return array_unique($allAttributeValues);
     }
 
-
     /**
      * Builds and returns flattened attribute value list for an action.
-     * @param $action
-     * @return array
+     * @param ActionObject $action
+     * @return array $flattenedAttributeValues
      */
-    private function extractAttributeValues($action) {
-
+    private function extractAttributeValues($action)
+    {
         $flattenedAttributeValues = [];
         $actionAttributes = $action->getCustomActionAttributes();
         //check if action has nodes eg. expectedResult, actualResult and flatten array
         foreach ($actionAttributes as $attributeName => $attributeValue) {
             if (is_array($attributeValue)) {
                 $flattenedAttributeValues = array_merge($flattenedAttributeValues, array_values($attributeValue));
-            }
-            else {
+            } else {
                 $flattenedAttributeValues[] = $attributeValue;
             }
         }
@@ -158,7 +157,7 @@ class UnusedArgumentsCheck implements StaticCheckInterface
     /**
      * Builds and returns error output for unused arguments
      *
-     * @param array  $unusedArgumentList
+     * @param array $unusedArgumentList
      * @return mixed
      */
     private function setErrorOutput($unusedArgumentList)
@@ -168,7 +167,6 @@ class UnusedArgumentsCheck implements StaticCheckInterface
         if (!empty($unusedArgumentList)) {
             // Build error output
             foreach ($unusedArgumentList as $path => $actionGroupToArguments) {
-
                 $errorOutput = "\nFile \"{$path}\"";
                 $errorOutput .= "\ncontains action group(s) with unused arguments.\n\t\t";
 
@@ -208,5 +206,4 @@ class UnusedArgumentsCheck implements StaticCheckInterface
 
         return $output;
     }
-
 }
