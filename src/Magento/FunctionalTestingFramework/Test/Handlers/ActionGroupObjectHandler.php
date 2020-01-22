@@ -99,10 +99,10 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
     /**
      * Method which populates field array with objects from parsed action_group.xml
      *
-     * @return void
+     * @return array
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
-    private function initActionGroups()
+    public function initActionGroups()
     {
         $actionGroupParser = ObjectManagerFactory::getObjectManager()->create(ActionGroupDataParser::class);
         $parsedActionGroups = $actionGroupParser->readActionGroupData();
@@ -118,6 +118,7 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
             $this->actionGroups[$actionGroupName] =
                 $actionGroupObjectExtractor->extractActionGroup($actionGroupData);
         }
+        return $this->actionGroups;
     }
 
     /**
