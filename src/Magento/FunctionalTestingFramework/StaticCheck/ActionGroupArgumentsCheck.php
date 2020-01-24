@@ -14,12 +14,13 @@ use Symfony\Component\Console\Input\InputInterface;
 use Exception;
 
 /**
- * Class UnusedArgumentsCheck
+ * Class ActionGroupArgumentsCheck
  * @package Magento\FunctionalTestingFramework\StaticCheck
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class UnusedArgumentsCheck implements StaticCheckInterface
+class ActionGroupArgumentsCheck implements StaticCheckInterface
 {
+    const ERROR_LOG_FILENAME = 'mftf-arguments-checks';
+    const ERROR_LOG_MESSAGE = 'MFTF Unused Arguments Check';
 
     /**
      * Array containing all errors found after running the execute() function.
@@ -38,10 +39,11 @@ class UnusedArgumentsCheck implements StaticCheckInterface
      *
      * @param  InputInterface $input
      * @return void
-     * @throws Exception;
+     * @throws Exception
      */
     public function execute(InputInterface $input)
     {
+
         MftfApplicationConfig::create(
             true,
             MftfApplicationConfig::UNIT_TEST_PHASE,
@@ -56,7 +58,8 @@ class UnusedArgumentsCheck implements StaticCheckInterface
 
         $this->errors += $this->setErrorOutput($unusedArgumentList);
 
-        $this->output = $this->printErrorsToFile();
+        $this->output = StaticCheckHelper::printErrorsToFile($this->errors,
+            self::ERROR_LOG_FILENAME, self::ERROR_LOG_MESSAGE);
     }
 
     /**
@@ -109,13 +112,43 @@ class UnusedArgumentsCheck implements StaticCheckInterface
         foreach ($argumentList as $argument) {
             $argumentName = $argument->getName();
             //pattern to match all argument references
-            $pattern = '(.*[\W]+(?<!\.)' . $argumentName . '[\W]+.*)';
-            if (preg_grep($pattern, $actionAttributeValues)) {
+            $patterns = [
+                '(\{{2}' . $argumentName . '(\.[a-zA-Z0-9_\[\]\(\).,\'\/ ]+)?}{2})',
+                '([(,\s\']' . $argumentName . '(\.[a-zA-Z0-9_\[\]]+)?[),\s\'])'
+            ];
+            // matches entity references
+            if (preg_grep($patterns[0], $actionAttributeValues)) {
                 continue;
             }
-            $unusedArguments[] = $argument->getName();
+            //matches parametrized references
+            if (preg_grep($patterns[1], $actionAttributeValues)) {
+                continue;
+            }
+            //exclude arguments that are also defined in parent action group for extending action groups
+            if ($this->isParentActionGroupArgument($argument, $actionGroup)) {
+                continue;
+            }
+            $unusedArguments[] = $argumentName;
         }
         return $unusedArguments;
+    }
+
+    /**
+     * Checks if the argument is also defined in the parent for extending action groups.
+     * @param string $argument
+     * @param ActionGroupObject $actionGroup
+     * @return bool
+     */
+    private function isParentActionGroupArgument($argument, $actionGroup) {
+
+        if ($actionGroup->getParentName() !== null) {
+            $parentActionGroup = ActionGroupObjectHandler::getInstance()->getObject($actionGroup->getParentName());
+            $parentArguments = $parentActionGroup->getArguments();
+            if ($parentArguments !== null) {
+                return in_array($argument, $parentArguments);
+            }
+            return false;
+        }
     }
 
     /**
@@ -163,7 +196,6 @@ class UnusedArgumentsCheck implements StaticCheckInterface
     private function setErrorOutput($unusedArgumentList)
     {
         $testErrors = [];
-
         if (!empty($unusedArgumentList)) {
             // Build error output
             foreach ($unusedArgumentList as $path => $actionGroupToArguments) {
@@ -177,33 +209,5 @@ class UnusedArgumentsCheck implements StaticCheckInterface
             }
         }
         return $testErrors;
-    }
-
-    /**
-     * Prints out given errors to file, and returns summary result string
-     * @return string
-     */
-    private function printErrorsToFile()
-    {
-        $errors = $this->getErrors();
-
-        if (empty($errors)) {
-            return "No unused arguments found.";
-        }
-
-        $outputPath = getcwd() . DIRECTORY_SEPARATOR . "mftf-arguments-checks.txt";
-        $fileResource = fopen($outputPath, 'w');
-        $header = "MFTF ActionGroup Arguments Check:\n";
-        fwrite($fileResource, $header);
-
-        foreach ($errors as $test => $error) {
-            fwrite($fileResource, $error[0] . PHP_EOL);
-        }
-
-        fclose($fileResource);
-        $errorCount = count($errors);
-        $output = "Unused arguments found across {$errorCount} actionGroup(s). Error details output to {$outputPath}";
-
-        return $output;
     }
 }

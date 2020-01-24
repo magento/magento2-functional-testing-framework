@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\StaticCheck;
 
+use Magento\FunctionalTestingFramework\StaticCheck\StaticCheckHelper;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
@@ -31,6 +32,9 @@ class TestDependencyCheck implements StaticCheckInterface
     const EXTENDS_REGEX_PATTERN = '/extends=["\']([^\'"]*)/';
     const ACTIONGROUP_REGEX_PATTERN = '/ref=["\']([^\'"]*)/';
     const ACTIONGROUP_ARGUMENT_REGEX_PATTERN = '/<argument[^\/>]*name="([^"\']*)/';
+
+    const ERROR_LOG_FILENAME = 'mftf-dependency-checks';
+    const ERROR_LOG_MESSAGE = 'MFTF File Dependency Check';
 
     /**
      * Array of FullModuleName => [dependencies]
@@ -123,7 +127,8 @@ class TestDependencyCheck implements StaticCheckInterface
         $this->errors += $this->findErrorsInFileSet($dataXmlFiles);
 
         // hold on to the output and print any errors to a file
-        $this->output = $this->printErrorsToFile();
+        $this->output = StaticCheckHelper::printErrorsToFile($this->errors,
+            self::ERROR_LOG_FILENAME, self::ERROR_LOG_MESSAGE);
     }
 
     /**
@@ -460,33 +465,5 @@ class TestDependencyCheck implements StaticCheckInterface
         } catch (TestReferenceException $e) {
         }
         return null;
-    }
-
-    /**
-     * Prints out given errors to file, and returns summary result string
-     * @return string
-     */
-    private function printErrorsToFile()
-    {
-        $errors = $this->getErrors();
-
-        if (empty($errors)) {
-            return "No Dependency errors found.";
-        }
-
-        $outputPath = getcwd() . DIRECTORY_SEPARATOR . "mftf-dependency-checks.txt";
-        $fileResource = fopen($outputPath, 'w');
-        $header = "MFTF File Dependency Check:\n";
-        fwrite($fileResource, $header);
-
-        foreach ($errors as $test => $error) {
-            fwrite($fileResource, $error[0] . PHP_EOL);
-        }
-
-        fclose($fileResource);
-        $errorCount = count($errors);
-        $output = "Dependency errors found across {$errorCount} file(s). Error details output to {$outputPath}";
-
-        return $output;
     }
 }

@@ -29,7 +29,7 @@ class StaticChecksList implements StaticCheckListInterface
     {
         $this->checks = [
             'testDependencies' => new TestDependencyCheck(),
-            'unusedArgumentsCheck' => new UnusedArgumentsCheck(),
+            'actionGroupArguments' => new ActionGroupArgumentsCheck(),
         ] + $checks;
     }
 
