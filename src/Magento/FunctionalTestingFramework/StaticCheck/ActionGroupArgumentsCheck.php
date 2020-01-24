@@ -58,8 +58,11 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
 
         $this->errors += $this->setErrorOutput($unusedArgumentList);
 
-        $this->output = StaticCheckHelper::printErrorsToFile($this->errors,
-            self::ERROR_LOG_FILENAME, self::ERROR_LOG_MESSAGE);
+        $this->output = StaticCheckHelper::printErrorsToFile(
+            $this->errors,
+            self::ERROR_LOG_FILENAME,
+            self::ERROR_LOG_MESSAGE
+        );
     }
 
     /**
@@ -135,12 +138,12 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
 
     /**
      * Checks if the argument is also defined in the parent for extending action groups.
-     * @param string $argument
+     * @param string            $argument
      * @param ActionGroupObject $actionGroup
-     * @return bool
+     * @return boolean
      */
-    private function isParentActionGroupArgument($argument, $actionGroup) {
-
+    private function isParentActionGroupArgument($argument, $actionGroup)
+    {
         if ($actionGroup->getParentName() !== null) {
             $parentActionGroup = ActionGroupObjectHandler::getInstance()->getObject($actionGroup->getParentName());
             $parentArguments = $parentActionGroup->getArguments();

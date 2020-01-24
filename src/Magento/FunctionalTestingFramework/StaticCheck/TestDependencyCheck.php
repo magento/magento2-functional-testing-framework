@@ -127,8 +127,11 @@ class TestDependencyCheck implements StaticCheckInterface
         $this->errors += $this->findErrorsInFileSet($dataXmlFiles);
 
         // hold on to the output and print any errors to a file
-        $this->output = StaticCheckHelper::printErrorsToFile($this->errors,
-            self::ERROR_LOG_FILENAME, self::ERROR_LOG_MESSAGE);
+        $this->output = StaticCheckHelper::printErrorsToFile(
+            $this->errors,
+            self::ERROR_LOG_FILENAME,
+            self::ERROR_LOG_MESSAGE
+        );
     }
 
     /**
