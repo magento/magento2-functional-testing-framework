@@ -44,6 +44,26 @@ class ExceptionCollector
     }
 
     /**
+     * Return all errors
+     *
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors ?? [];
+    }
+
+    /**
+     * Reset error to empty array
+     *
+     * @return void
+     */
+    public function reset()
+    {
+        $this->errors = [];
+    }
+
+    /**
      * If there are multiple exceptions for a single file, the function flattens the array so they can be printed
      * as separate messages.
      *

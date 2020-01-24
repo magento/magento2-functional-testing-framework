@@ -6,7 +6,9 @@
 
 namespace Magento\FunctionalTestingFramework\DataGenerator\Handlers;
 
+use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage\BaseStorage;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage\FileStorage;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage\VaultStorage;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage\AwsSecretsManagerStorage;
@@ -24,9 +26,16 @@ class CredentialStore
     /**
      * Credential storage array
      *
-     * @var array
+     * @var BaseStorage[]
      */
     private $credStorage = [];
+
+    /**
+     * Boolean to indicate if credential storage have been initialized
+     *
+     * @var boolean
+     */
+    private $initialized;
 
     /**
      * Singleton instance
@@ -36,10 +45,16 @@ class CredentialStore
     private static $INSTANCE = null;
 
     /**
+     * Exception contexts
+     *
+     * @var ExceptionCollector
+     */
+    private $exceptionContexts;
+
+    /**
      * Static singleton getter for CredentialStore Instance
      *
      * @return CredentialStore
-     * @throws TestFrameworkException
      */
     public static function getInstance()
     {
@@ -52,21 +67,11 @@ class CredentialStore
 
     /**
      * CredentialStore constructor
-     *
-     * @throws TestFrameworkException
      */
     private function __construct()
     {
-        // Initialize credential storage by defined order of precedence as the following
-        $this->initializeFileStorage();
-        $this->initializeVaultStorage();
-        $this->initializeAwsSecretsManagerStorage();
-
-        if (empty($this->credStorage)) {
-            throw new TestFrameworkException(
-                'Invalid Credential Storage. ' . self::CREDENTIAL_STORAGE_INFO . '.'
-            );
-        }
+        $this->initialized = false;
+        $this->exceptionContexts = new ExceptionCollector();
     }
 
     /**
@@ -78,6 +83,9 @@ class CredentialStore
      */
     public function getSecret($key)
     {
+        // Initialize credential storage if it's not been done
+        $this->initializeCredentialStorage();
+
         // Get secret data from storage according to the order they are stored which follows this precedence:
         // FileStorage > VaultStorage > AwsSecretsManagerStorage
         foreach ($this->credStorage as $storage) {
@@ -87,9 +95,12 @@ class CredentialStore
             }
         }
 
+        $exceptionContexts = $this->getExceptionContexts();
+        $this->resetExceptionContext();
         throw new TestFrameworkException(
             "{$key} not found. " . self::CREDENTIAL_STORAGE_INFO
-            . ' and ensure key, value exists to use _CREDS in tests.'
+            . " and ensure key, value exists to use _CREDS in tests."
+            . $exceptionContexts
         );
     }
 
@@ -97,28 +108,112 @@ class CredentialStore
      * Return decrypted input value
      *
      * @param string $value
-     * @return string
+     * @return string|false The decrypted string on success or false on failure
+     * @throws TestFrameworkException
      */
     public function decryptSecretValue($value)
     {
-        // Loop through storage to decrypt value
-        foreach ($this->credStorage as $storage) {
-            return $storage->getDecryptedValue($value);
-        }
+        // Initialize credential storage if it's not been done
+        $this->initializeCredentialStorage();
+
+        // Decrypt secret value
+        return BaseStorage::getDecryptedValue($value);
     }
 
     /**
      * Return decrypted values for all occurrences from input string
      *
      * @param string $string
-     * @return mixed
+     * @return string|false The decrypted string on success or false on failure
+     * @throws TestFrameworkException
      */
     public function decryptAllSecretsInString($string)
     {
-        // Loop through storage to decrypt all occurrences from input string
-        foreach ($this->credStorage as $storage) {
-            return $storage->getAllDecryptedValuesInString($string);
+        // Initialize credential storage if it's not been done
+        $this->initializeCredentialStorage();
+
+        // Decrypt all secret values in string
+        return BaseStorage::getAllDecryptedValuesInString($string);
+    }
+
+    /**
+     * Setter for exception contexts
+     *
+     * @param string $type
+     * @param string $context
+     * @return void
+     */
+    public function setExceptionContexts($type, $context)
+    {
+        $typeArray = [self::ARRAY_KEY_FOR_FILE, self::ARRAY_KEY_FOR_VAULT, self::ARRAY_KEY_FOR_AWS_SECRETS_MANAGER];
+        if (in_array($type, $typeArray) && !empty($context)) {
+            $this->exceptionContexts->addError($type, $context);
         }
+    }
+
+    /**
+     * Return collected exception contexts
+     *
+     * @return string
+     */
+    private function getExceptionContexts()
+    {
+        // Gather all exceptions collected
+        $exceptionMessage = "\n";
+        foreach ($this->exceptionContexts->getErrors() as $type => $exceptions) {
+            $exceptionMessage .= "\nException from ";
+            if ($type == self::ARRAY_KEY_FOR_FILE) {
+                $exceptionMessage .= "File Storage: \n";
+            }
+            if ($type == self::ARRAY_KEY_FOR_VAULT) {
+                $exceptionMessage .= "Vault Storage: \n";
+            }
+            if ($type == self::ARRAY_KEY_FOR_AWS_SECRETS_MANAGER) {
+                $exceptionMessage .= "AWS Secrets Manager Storage: \n";
+            }
+
+            if (is_array($exceptions)) {
+                $exceptionMessage .= implode("\n", $exceptions) . "\n";
+            } else {
+                $exceptionMessage .= $exceptions . "\n";
+            }
+        }
+        return $exceptionMessage;
+    }
+
+    /**
+     * Reset exception contexts to empty array
+     *
+     * @return void
+     */
+    private function resetExceptionContext()
+    {
+        $this->exceptionContexts->reset();
+    }
+
+    /**
+     * Initialize all available credential storage
+     *
+     * @return void
+     * @throws TestFrameworkException
+     */
+    private function initializeCredentialStorage()
+    {
+        if (!$this->initialized) {
+            // Initialize credential storage by defined order of precedence as the following
+            $this->initializeFileStorage();
+            $this->initializeVaultStorage();
+            $this->initializeAwsSecretsManagerStorage();
+            $this->initialized = true;
+        }
+
+        if (empty($this->credStorage)) {
+            throw new TestFrameworkException(
+                'Invalid Credential Storage. ' . self::CREDENTIAL_STORAGE_INFO
+                . '.' . $this->getExceptionContexts()
+            );
+        }
+        $this->resetExceptionContext();
     }
 
     /**
@@ -132,6 +227,10 @@ class CredentialStore
         try {
             $this->credStorage[self::ARRAY_KEY_FOR_FILE]  = new FileStorage();
         } catch (TestFrameworkException $e) {
+            // Print error message in console
+            print_r($e->getMessage());
+            // Save to exception context for Allure report
+            $this->setExceptionContexts(self::ARRAY_KEY_FOR_FILE, $e->getMessage());
         }
     }
 
@@ -152,6 +251,10 @@ class CredentialStore
                     '/' . trim($cvSecretPath, '/')
                 );
             } catch (TestFrameworkException $e) {
+                // Print error message in console
+                print_r($e->getMessage());
+                // Save to exception context for Allure report
+                $this->setExceptionContexts(self::ARRAY_KEY_FOR_VAULT, $e->getMessage());
             }
         }
     }
@@ -181,6 +284,10 @@ class CredentialStore
                     $awsId
                 );
             } catch (TestFrameworkException $e) {
+                // Print error message in console
+                print_r($e->getMessage());
+                // Save to exception context for Allure report
+                $this->setExceptionContexts(self::ARRAY_KEY_FOR_AWS_SECRETS_MANAGER, $e->getMessage());
             }
         }
     }

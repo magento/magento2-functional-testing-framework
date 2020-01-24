@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Aws\SecretsManager\SecretsManagerClient;
@@ -117,17 +118,31 @@ class AwsSecretsManagerStorage extends BaseStorage
         } catch (AwsException $e) {
             $errMessage = "\nAWS Exception:\n" . $e->getAwsErrorMessage()
                 . "\nUnable to read value for key {$key} from AWS Secrets Manager\n";
+            // Print error message in console
             print_r($errMessage);
+            // Add error message in mftf log if verbose is enable
             if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
                 LoggingUtil::getInstance()->getLogger(AwsSecretsManagerStorage::class)->debug($errMessage);
             }
+            // Save to exception context for Allure report
+            CredentialStore::getInstance()->setExceptionContexts(
+                CredentialStore::ARRAY_KEY_FOR_AWS_SECRETS_MANAGER,
+                $errMessage
+            );
         } catch (\Exception $e) {
             $errMessage = "\nException:\n" . $e->getMessage()
                 . "\nUnable to read value for key {$key} from AWS Secrets Manager\n";
+            // Print error message in console
             print_r($errMessage);
+            // Add error message in mftf log if verbose is enable
             if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
                 LoggingUtil::getInstance()->getLogger(AwsSecretsManagerStorage::class)->debug($errMessage);
             }
+            // Save to exception context for Allure report
+            CredentialStore::getInstance()->setExceptionContexts(
+                CredentialStore::ARRAY_KEY_FOR_AWS_SECRETS_MANAGER,
+                $errMessage
+            );
         }
         return $reValue;
     }

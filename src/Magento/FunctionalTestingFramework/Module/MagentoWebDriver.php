@@ -769,6 +769,9 @@ class MagentoWebDriver extends WebDriver
         // decrypted value
 
         $decryptedValue = CredentialStore::getInstance()->decryptSecretValue($value);
+        if ($decryptedValue === false) {
+            throw new TestFrameworkException("\nFailed to decrypt value {$value} for field {$field}\n");
+        }
         $this->fillField($field, $decryptedValue);
     }
 
@@ -788,6 +791,9 @@ class MagentoWebDriver extends WebDriver
         // decrypted value
 
         $decryptedCommand = CredentialStore::getInstance()->decryptAllSecretsInString($command);
+        if ($decryptedCommand === false) {
+            throw new TestFrameworkException("\nFailed to decrypt magentoCLI command {$command}\n");
+        }
         return $this->magentoCLI($decryptedCommand, $timeout, $arguments);
     }
 

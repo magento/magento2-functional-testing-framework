@@ -147,16 +147,15 @@ AWS Secrets Manager offers secret management that supports:
 
 #### Use AWS Secrets Manager from your own AWS account
 
-- AWS account with Secrets Manager service available
-- IAM User or Role is created with appropriate AWS Secrets Manger access permission
+- An AWS account with Secrets Manager service
+- An IAM user with AWS Secrets Manager access permission
 
-#### Use AWS Secrets Manager from other AWS account
+#### Use AWS Secrets Manager in CI/CD
 
 - AWS account ID where the AWS Secrets Manager service is hosted
-- IAM User or Role with appropriate access permission
+- Authorized CI/CD EC2 instances with AWS Secrets Manager service access IAM role attached
 
 ### Store secrets in AWS Secrets Manager
-
 
 #### Secrets format
 
@@ -164,14 +163,17 @@ AWS Secrets Manager offers secret management that supports:
 
 `Secret Value` can be either plaintext or key/value pairs in JSON format.  
 
-`Secrets Name` must use the following format:
+`Secret Name` must use the following format:
 
 ```conf
 mftf/<VENDOR>/<YOUR/SECRET/KEY>
 ```
 
-`Secrets Value` in plaintext format can be any content you want to secure. `Secrets Value` in key/value pairs format, however, the `key` must be same as the `Secret Name` with `mftf/<VENDOR>/` part removed. 
-e.g. in above example, `key` should be `<YOUR/SECRET/KEY>`
+`Secret Value` can be stored in two different formats: plaintext or key/value pairs.
+
+For plaintext format, `Secret Value` can be any string you want to secure.
+
+For key/value pairs format, `Secret Value` is a key/value pair with `key` the same as `Secret Name` without `mftf/<VENDOR>/` prefix,  which is `<YOUR/SECRET/KEY>`, and value can be any string you want to secure.
 
 ##### Create Secrets using AWS CLI
 
@@ -181,8 +183,11 @@ aws secretsmanager create-secret --name "mftf/magento/shipping/carriers_usps_use
 
 ##### Create Secrets using AWS Console
 
-To save the same secret in key/value JSON format, you should use
-
+- Sign in to the AWS Secrets Manager console
+- Choose Store a new secret
+- In the Select secret type section, specify "Other type of secret"
+- For `Secret Name`, `Secret Key` and `Secret Value` field, for example, to save the same secret in key/value JSON format, you should use
+ 
 ```conf
 # Secret Name
 mftf/magento/shipping/carriers_usps_userid
@@ -210,9 +215,8 @@ CREDENTIAL_AWS_SECRETS_MANAGER_PROFILE=default
 
 ### Optionally set CREDENTIAL_AWS_ACCOUNT_ID environment variable
  
-Full AWS KMS ([Key Management Service][]) key ARN ([Amazon Resource Name][]) is required when accessing secrets stored in other AWS account.
-If this is the case, you will also need to set `CREDENTIAL_AWS_ACCOUNT_ID` environment variable so that MFTF can construct the full ARN. 
-This is also commonly used in CI system.
+In case AWS credentials cannot resolve to a valid AWS account, full AWS KMS ([Key Management Service][]) key ARN ([Amazon Resource Name][]) is required.
+You will also need to set `CREDENTIAL_AWS_ACCOUNT_ID` environment variable so that MFTF can construct the full ARN. This is mostly used for CI/CD.
 
 ```bash
 export CREDENTIAL_AWS_ACCOUNT_ID=<Your_12_Digits_AWS_Account_ID>
@@ -236,7 +240,7 @@ Define the value as a reference to the corresponding key in the credentials file
 
 -  `_CREDS` is an environment constant pointing to the `.credentials` file
 -  `my_data_key` is a key in the the `.credentials` file or vault that contains the value to be used in a test step
-   - for File Storage, ensure your key contains the vendor prefix, i.e. `vendor/my_data_key`
+   - for File Storage, ensure your key contains the vendor prefix, which is `vendor/my_data_key`
 
 For example, to reference secret data in the [`fillField`][] action, use the `userInput` attribute using a typical File Storage:
 
