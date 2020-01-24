@@ -9,7 +9,7 @@ class StaticCheckHelper
 {
     /**
      * Prints out given errors to file, and returns summary result string
-     * @param array $errors
+     * @param array  $errors
      * @param string $filename
      * @param string $message
      * @return string
