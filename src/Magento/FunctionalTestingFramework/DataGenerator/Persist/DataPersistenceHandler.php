@@ -59,7 +59,10 @@ class DataPersistenceHandler
                 array_merge($entityObject->getAllData(), $customFields),
                 $entityObject->getLinkedEntities(),
                 $this->stripCustomFieldsFromUniquenessData($entityObject->getUniquenessData(), $customFields),
-                $entityObject->getVarReferences()
+                $entityObject->getVarReferences(),
+                $entityObject->getParentName(),
+                $entityObject->getFilename(),
+                $entityObject->getDeprecated()
             );
         } else {
             $this->entityObject = clone $entityObject;

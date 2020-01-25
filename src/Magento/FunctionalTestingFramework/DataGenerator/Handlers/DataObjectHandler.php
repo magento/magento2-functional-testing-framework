@@ -13,6 +13,8 @@ use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\DataGenerator\Util\DataExtensionUtil;
+use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 class DataObjectHandler implements ObjectHandlerInterface
 {
@@ -163,6 +165,14 @@ class DataObjectHandler implements ObjectHandlerInterface
                 $parentEntity = $rawEntity[self::_EXTENDS];
             }
 
+            if (array_key_exists('deprecated', $rawEntity)) {
+                $deprecated = $rawEntity['deprecated'];
+                LoggingUtil::getInstance()->getLogger(self::class)->deprecation(
+                    $deprecated,
+                    ["dataName" => $filename, "deprecatedEntity" => $deprecated]
+                );
+            }
+
             $entityDataObject = new EntityDataObject(
                 $name,
                 $type,
@@ -171,7 +181,8 @@ class DataObjectHandler implements ObjectHandlerInterface
                 $uniquenessData,
                 $vars,
                 $parentEntity,
-                $filename
+                $filename,
+                $deprecated
             );
 
             $entityDataObjects[$entityDataObject->getName()] = $entityDataObject;

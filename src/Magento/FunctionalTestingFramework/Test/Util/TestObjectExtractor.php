@@ -8,8 +8,10 @@ namespace Magento\FunctionalTestingFramework\Test\Util;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
+use Magento\FunctionalTestingFramework\Page\Objects\ElementObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\ModulePathExtractor;
 use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
 
@@ -19,6 +21,7 @@ use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
 class TestObjectExtractor extends BaseObjectExtractor
 {
     const TEST_ANNOTATIONS = 'annotations';
+    const TEST_DEPRECATED = 'deprecated';
     const TEST_BEFORE_HOOK = 'before';
     const TEST_AFTER_HOOK = 'after';
     const TEST_FAILED_HOOK = 'failed';
@@ -95,7 +98,8 @@ class TestObjectExtractor extends BaseObjectExtractor
         $fileNames = explode(",", $filename);
         $baseFileName = $fileNames[0];
         $module = $this->modulePathExtractor->extractModuleName($baseFileName);
-        $testReference = $testData['extends'] ?? null;
+        $testReference = $testData['extends']  ?? null;
+        $deprecated = isset($testData[self::TEST_DEPRECATED]) ? $testData[self::TEST_DEPRECATED] : null;
         $testActions = $this->stripDescriptorTags(
             $testData,
             self::NODE_NAME,
@@ -107,6 +111,7 @@ class TestObjectExtractor extends BaseObjectExtractor
             self::TEST_INSERT_BEFORE,
             self::TEST_INSERT_AFTER,
             self::TEST_FILENAME,
+            self::TEST_DEPRECATED,
             'extends'
         );
 
@@ -122,12 +127,19 @@ class TestObjectExtractor extends BaseObjectExtractor
         // when $fileNames is not available
         if (!isset($testAnnotations["description"])) {
             $testAnnotations["description"] = [];
+        } else {
+            $testAnnotations["description"]['main'] = $testAnnotations["description"][0];
+            unset($testAnnotations["description"][0]);
         }
-        $description = $testAnnotations["description"][0] ?? '';
-        $testAnnotations["description"][0] = $this->appendFileNamesInDescriptionAnnotation(
-            $description,
-            $fileNames
-        );
+        $testAnnotations["description"]['test_files'] = $this->appendFileNamesInDescriptionAnnotation($fileNames);
+
+        if ($deprecated !== null) {
+            $testAnnotations["description"][self::TEST_DEPRECATED][] = $deprecated;
+            LoggingUtil::getInstance()->getLogger(TestObject::class)->deprecation(
+                $deprecated,
+                ["testName" => $filename, "deprecatedTest" => $deprecated]
+            );
+        }
 
         // extract before
         if (array_key_exists(self::TEST_BEFORE_HOOK, $testData) && is_array($testData[self::TEST_BEFORE_HOOK])) {
@@ -152,6 +164,10 @@ class TestObjectExtractor extends BaseObjectExtractor
             );
         }
 
+        if (!empty($testData[self::TEST_DEPRECATED])) {
+            $testAnnotations[self::TEST_DEPRECATED] = $testData[self::TEST_DEPRECATED];
+        }
+
         // TODO extract filename info and store
         try {
             return new TestObject(
@@ -170,14 +186,13 @@ class TestObjectExtractor extends BaseObjectExtractor
     /**
      * Append names of test files, including merge files, in description annotation
      *
-     * @param string $description
-     * @param array  $fileNames
+     * @param array $fileNames
      *
      * @return string
      */
-    private function appendFileNamesInDescriptionAnnotation($description, $fileNames)
+    private function appendFileNamesInDescriptionAnnotation(array $fileNames)
     {
-        $description .= '<br><br><b><font size=+0.9>Test files</font></b><br><br>';
+        $filePaths = '<h3>Test files</h3>';
 
         foreach ($fileNames as $fileName) {
             if (!empty($fileName) && realpath($fileName) !== false) {
@@ -187,11 +202,11 @@ class TestObjectExtractor extends BaseObjectExtractor
                     DIRECTORY_SEPARATOR
                 );
                 if (!empty($relativeFileName)) {
-                    $description .= $relativeFileName . '<br>';
+                    $filePaths .= $relativeFileName . '<br>';
                 }
             }
         }
 
-        return $description;
+        return $filePaths;
     }
 }
