@@ -19,4 +19,15 @@ class DeprecatedTest extends MftfTestCase
     {
         $this->generateAndCompareTest('DeprecatedTest');
     }
+
+    /**
+     * Tests flat generation of a test which uses deprecated entities.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testDeprecatedEntitiesOnlyGeneration()
+    {
+        $this->generateAndCompareTest('DeprecatedEntitiesTest');
+    }
 }

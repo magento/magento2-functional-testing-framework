@@ -314,7 +314,8 @@ class ActionObject
             if ($appConfig->getPhase() == MftfApplicationConfig::GENERATION_PHASE && $appConfig->verboseEnabled()) {
                 LoggingUtil::getInstance()->getLogger(ActionObject::class)->deprecation(
                     "use of one line Assertion actions will be deprecated in MFTF 3.0.0, please use nested syntax",
-                    ["action" => $this->type, "stepKey" => $this->stepKey]
+                    ["action" => $this->type, "stepKey" => $this->stepKey],
+                    true
                 );
             }
             return;
