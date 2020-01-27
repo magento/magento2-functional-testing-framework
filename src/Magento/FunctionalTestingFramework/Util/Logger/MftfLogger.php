@@ -16,8 +16,8 @@ class MftfLogger extends Logger
      * Prints a deprecation warning, as well as adds a log at the WARNING level.
      *
      * @param string $message The log message.
-     * @param array $context The log context.
-     * @param bool $verbose
+     * @param array  $context The log context.
+     * @param bool   $verbose
      * @return void
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException
      */
@@ -35,8 +35,8 @@ class MftfLogger extends Logger
      * Prints a critical failure, as well as adds a log at the CRITICAL level.
      *
      * @param string $message The log message.
-     * @param array $context The log context.
-     * @param bool $verbose
+     * @param array  $context The log context.
+     * @param bool   $verbose
      * @return void
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException
      */
