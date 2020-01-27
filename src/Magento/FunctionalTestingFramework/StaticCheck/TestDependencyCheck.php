@@ -6,7 +6,6 @@
 
 namespace Magento\FunctionalTestingFramework\StaticCheck;
 
-use Magento\FunctionalTestingFramework\StaticCheck\StaticCheckHelper;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
@@ -117,9 +116,9 @@ class TestDependencyCheck implements StaticCheckInterface
             DIRECTORY_SEPARATOR . 'Data' . DIRECTORY_SEPARATOR,
         ];
         // These files can contain references to other modules.
-        $testXmlFiles = $this->buildFileList($allModules, $filePaths[0]);
-        $actionGroupXmlFiles = $this->buildFileList($allModules, $filePaths[1]);
-        $dataXmlFiles= $this->buildFileList($allModules, $filePaths[2]);
+        $testXmlFiles = StaticCheckHelper::buildFileList($allModules, $filePaths[0]);
+        $actionGroupXmlFiles = StaticCheckHelper::buildFileList($allModules, $filePaths[1]);
+        $dataXmlFiles= StaticCheckHelper::buildFileList($allModules, $filePaths[2]);
 
         $this->errors = [];
         $this->errors += $this->findErrorsInFileSet($testXmlFiles);
@@ -419,24 +418,6 @@ class TestDependencyCheck implements StaticCheckInterface
             }
         }
         return $filenames;
-    }
-
-    /**
-     * Builds list of all XML files in given modulePaths + path given
-     * @param string $modulePaths
-     * @param string $path
-     * @return Finder
-     */
-    private function buildFileList($modulePaths, $path)
-    {
-        $finder = new Finder();
-        foreach ($modulePaths as $modulePath) {
-            if (!realpath($modulePath . $path)) {
-                continue;
-            }
-            $finder->files()->in($modulePath . $path)->name("*.xml");
-        }
-        return $finder->files();
     }
 
     /**

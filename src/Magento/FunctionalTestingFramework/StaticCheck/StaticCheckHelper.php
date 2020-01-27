@@ -5,6 +5,8 @@
  */
 namespace Magento\FunctionalTestingFramework\StaticCheck;
 
+use Symfony\Component\Finder\Finder;
+
 class StaticCheckHelper
 {
     /**
@@ -33,4 +35,23 @@ class StaticCheckHelper
 
         return $output;
     }
+
+    /**
+     * Builds list of all XML files in given modulePaths + path given
+     * @param array $modulePaths
+     * @param string $path
+     * @return Finder
+     */
+    public static function buildFileList($modulePaths, $path)
+    {
+        $finder = new Finder();
+        foreach ($modulePaths as $modulePath) {
+            if (!realpath($modulePath . $path)) {
+                continue;
+            }
+            $finder->files()->in($modulePath . $path)->name("*.xml");
+        }
+        return $finder->files();
+    }
+
 }

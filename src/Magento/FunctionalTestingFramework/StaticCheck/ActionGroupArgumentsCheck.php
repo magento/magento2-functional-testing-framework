@@ -9,8 +9,9 @@ namespace Magento\FunctionalTestingFramework\StaticCheck;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
-use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Symfony\Component\Console\Input\InputInterface;
+use Magento\FunctionalTestingFramework\Util\ModuleResolver;
+use Symfony\Component\Finder\Finder;
 use Exception;
 
 /**
@@ -19,6 +20,11 @@ use Exception;
  */
 class ActionGroupArgumentsCheck implements StaticCheckInterface
 {
+
+    const ACTIONGROUP_XML_REGEX_PATTERN = '/<actionGroup\sname=(?: (?!<\/actionGroup>).)*/mxs';
+    const ACTIONGROUP_ARGUMENT_REGEX_PATTERN = '/<argument[^\/>]*name="([^"\']*)/mxs';
+    const ACTIONGROUP_NAME_REGEX_PATTERN = '/<actionGroup name=["\']([^\'"]*)/';
+
     const ERROR_LOG_FILENAME = 'mftf-arguments-checks';
     const ERROR_LOG_MESSAGE = 'MFTF Unused Arguments Check';
 
@@ -43,7 +49,6 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
      */
     public function execute(InputInterface $input)
     {
-
         MftfApplicationConfig::create(
             true,
             MftfApplicationConfig::UNIT_TEST_PHASE,
@@ -52,11 +57,14 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
             true
         );
 
-        $actionGroups = ActionGroupObjectHandler::getInstance()->initActionGroups();
+        $allModules = ModuleResolver::getInstance()->getModulesPath();
 
-        $unusedArgumentList = $this->buildUnusedArgumentList($actionGroups);
+        $actionGroupXmlFiles = StaticCheckHelper::buildFileList(
+            $allModules,
+            DIRECTORY_SEPARATOR . 'ActionGroup' . DIRECTORY_SEPARATOR
+        );
 
-        $this->errors += $this->setErrorOutput($unusedArgumentList);
+        $this->errors = $this->findErrorsInFileSet($actionGroupXmlFiles);
 
         $this->output = StaticCheckHelper::printErrorsToFile(
             $this->errors,
@@ -84,7 +92,24 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
     }
 
     /**
-     * Builds array of action groups => unused arguments
+     * Finds all unused arguments in given set of actionGroup files
+     * @param Finder $files
+     * @return array $testErrors
+     */
+    private function findErrorsInFileSet($files)
+    {
+        $actionGroupErrors = [];
+        foreach ($files as $filePath) {
+            $contents = file_get_contents($filePath);
+            preg_match_all(self::ACTIONGROUP_XML_REGEX_PATTERN, $contents, $actionGroups);
+            $actionGroupToArguments = $this->buildUnusedArgumentList($actionGroups[0]);
+            $actionGroupErrors += $this->setErrorOutput($actionGroupToArguments, $filePath);
+        }
+        return $actionGroupErrors;
+    }
+
+    /**
+     * Builds array of action group => unused arguments
      * @param array $actionGroups
      * @return array $actionGroupToArguments
      */
@@ -92,46 +117,48 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
     {
         $actionGroupToArguments = [];
 
-        foreach ($actionGroups as $actionGroup) {
-            $unusedArguments = $this->findUnusedArguments($actionGroup);
+        foreach ($actionGroups as $actionGroupXml) {
+            preg_match(self::ACTIONGROUP_NAME_REGEX_PATTERN, $actionGroupXml, $actionGroupName);
+            $unusedArguments = $this->findUnusedArguments($actionGroupXml);
             if (!empty($unusedArguments)) {
-                $actionGroupToArguments[$actionGroup->getFilename()][$actionGroup->getName()] = $unusedArguments;
+                $actionGroupToArguments[$actionGroupName[1]] = $unusedArguments;
             }
         }
         return $actionGroupToArguments;
     }
 
     /**
-     * Returns unused arguments in an action group.
-     * @param ActionGroupObject $actionGroup
-     * @return array $unusedArguments
+     * @param $actionGroupXml
+     * @return array
      */
-    private function findUnusedArguments($actionGroup)
+    private function findUnusedArguments($actionGroupXml)
     {
         $unusedArguments = [];
-        //extract all action attribute values
-        $actionAttributeValues = $this->getAllActionAttributeValues($actionGroup);
-        $argumentList = $actionGroup->getArguments();
-        foreach ($argumentList as $argument) {
-            $argumentName = $argument->getName();
+
+        preg_match_all(self::ACTIONGROUP_ARGUMENT_REGEX_PATTERN, $actionGroupXml, $arguments);
+        preg_match(self::ACTIONGROUP_NAME_REGEX_PATTERN, $actionGroupXml, $actionGroupName);
+
+        $actionGroup = ActionGroupObjectHandler::getInstance()->getObject($actionGroupName[1]);
+
+        foreach ($arguments[1] as $argument) {
             //pattern to match all argument references
             $patterns = [
-                '(\{{2}' . $argumentName . '(\.[a-zA-Z0-9_\[\]\(\).,\'\/ ]+)?}{2})',
-                '([(,\s\']' . $argumentName . '(\.[a-zA-Z0-9_\[\]]+)?[),\s\'])'
+                '(\{{2}' . $argument . '(\.[a-zA-Z0-9_\[\]\(\).,\'\/ ]+)?}{2})',
+                '([(,\s\']' . $argument . '(\.[a-zA-Z0-9_\[\]]+)?[),\s\'])'
             ];
             // matches entity references
-            if (preg_grep($patterns[0], $actionAttributeValues)) {
+            if (preg_match($patterns[0], $actionGroupXml)) {
                 continue;
             }
             //matches parametrized references
-            if (preg_grep($patterns[1], $actionAttributeValues)) {
+            if (preg_match($patterns[1], $actionGroupXml)) {
                 continue;
             }
-            //exclude arguments that are also defined in parent action group for extending action groups
+            //for extending action groups, exclude arguments that are also defined in parent action group
             if ($this->isParentActionGroupArgument($argument, $actionGroup)) {
                 continue;
             }
-            $unusedArguments[] = $argumentName;
+            $unusedArguments[] = $argument;
         }
         return $unusedArguments;
     }
@@ -147,70 +174,34 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
         if ($actionGroup->getParentName() !== null) {
             $parentActionGroup = ActionGroupObjectHandler::getInstance()->getObject($actionGroup->getParentName());
             $parentArguments = $parentActionGroup->getArguments();
-            if ($parentArguments !== null) {
-                return in_array($argument, $parentArguments);
-            }
-            return false;
-        }
-    }
-
-    /**
-     * Returns array of all action attribute values in an action group.
-     * @param ActionGroupObject $actionGroup
-     * @return array $allAttributeValues
-     */
-    private function getAllActionAttributeValues($actionGroup)
-    {
-        $allAttributeValues = [];
-        $actions = $actionGroup->getActions();
-        foreach ($actions as $action) {
-            $actionAttributeValues = $this->extractAttributeValues($action);
-            $allAttributeValues = array_merge($allAttributeValues, $actionAttributeValues);
-        }
-        return array_unique($allAttributeValues);
-    }
-
-    /**
-     * Builds and returns flattened attribute value list for an action.
-     * @param ActionObject $action
-     * @return array $flattenedAttributeValues
-     */
-    private function extractAttributeValues($action)
-    {
-        $flattenedAttributeValues = [];
-        $actionAttributes = $action->getCustomActionAttributes();
-        //check if action has nodes eg. expectedResult, actualResult and flatten array
-        foreach ($actionAttributes as $attributeName => $attributeValue) {
-            if (is_array($attributeValue)) {
-                $flattenedAttributeValues = array_merge($flattenedAttributeValues, array_values($attributeValue));
-            } else {
-                $flattenedAttributeValues[] = $attributeValue;
+            foreach ($parentArguments as $parentArgument) {
+                if ($argument === $parentArgument->getName()) {
+                    return true;
+                }
             }
         }
-        return $flattenedAttributeValues;
+        return false;
     }
 
     /**
-     * Builds and returns error output for unused arguments
+     * Builds and returns error output for violating references
      *
-     * @param array $unusedArgumentList
+     * @param array  $actionGroupToArguments
+     * @param string $path
      * @return mixed
      */
-    private function setErrorOutput($unusedArgumentList)
+    private function setErrorOutput($actionGroupToArguments, $path)
     {
-        $testErrors = [];
-        if (!empty($unusedArgumentList)) {
+        $actionGroupErrors = [];
+        if (!empty($actionGroupToArguments)) {
             // Build error output
-            foreach ($unusedArgumentList as $path => $actionGroupToArguments) {
-                $errorOutput = "\nFile \"{$path}\"";
-                $errorOutput .= "\ncontains action group(s) with unused arguments.\n\t\t";
-
-                foreach ($actionGroupToArguments as $actionGroup => $arguments) {
-                    $errorOutput .= "\n\t {$actionGroup} has unused argument(s): " . implode(", ", $arguments);
-                }
-                $testErrors[$path][] = $errorOutput;
+            $errorOutput = "\nFile \"{$path->getRealPath()}\"";
+            $errorOutput .= "\ncontains action group(s) with unused arguments.\n\t\t";
+            foreach ($actionGroupToArguments as $actionGroup => $arguments) {
+                $errorOutput .= "\n\t {$actionGroup} has unused argument(s): " . implode(", ", $arguments);
             }
+            $actionGroupErrors[$path->getRealPath()][] = $errorOutput;
         }
-        return $testErrors;
+        return $actionGroupErrors;
     }
 }
