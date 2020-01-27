@@ -22,7 +22,6 @@ use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
 class TestObjectExtractor extends BaseObjectExtractor
 {
     const TEST_ANNOTATIONS = 'annotations';
-    const TEST_DEPRECATED = 'deprecated';
     const TEST_BEFORE_HOOK = 'before';
     const TEST_AFTER_HOOK = 'after';
     const TEST_FAILED_HOOK = 'failed';
@@ -100,7 +99,7 @@ class TestObjectExtractor extends BaseObjectExtractor
         $baseFileName = $fileNames[0];
         $module = $this->modulePathExtractor->extractModuleName($baseFileName);
         $testReference = $testData['extends']  ?? null;
-        $deprecated = isset($testData[self::TEST_DEPRECATED]) ? $testData[self::TEST_DEPRECATED] : null;
+        $deprecated = isset($testData[self::OBJ_DEPRECATED]) ? $testData[self::OBJ_DEPRECATED] : null;
         $testActions = $this->stripDescriptorTags(
             $testData,
             self::NODE_NAME,
@@ -112,7 +111,7 @@ class TestObjectExtractor extends BaseObjectExtractor
             self::TEST_INSERT_BEFORE,
             self::TEST_INSERT_AFTER,
             self::TEST_FILENAME,
-            self::TEST_DEPRECATED,
+            self::OBJ_DEPRECATED,
             'extends'
         );
 
@@ -134,9 +133,9 @@ class TestObjectExtractor extends BaseObjectExtractor
         }
         $testAnnotations["description"]['test_files'] = $this->appendFileNamesInDescriptionAnnotation($fileNames);
 
-        $testAnnotations["description"][self::TEST_DEPRECATED] = [];
+        $testAnnotations["description"][self::OBJ_DEPRECATED] = [];
         if ($deprecated !== null) {
-            $testAnnotations["description"][self::TEST_DEPRECATED][] = $deprecated;
+            $testAnnotations["description"][self::OBJ_DEPRECATED][] = $deprecated;
             LoggingUtil::getInstance()->getLogger(TestObject::class)->deprecation(
                 $deprecated,
                 ["testName" => $filename, "deprecatedTest" => $deprecated]
@@ -166,8 +165,8 @@ class TestObjectExtractor extends BaseObjectExtractor
             );
         }
 
-        if (!empty($testData[self::TEST_DEPRECATED])) {
-            $testAnnotations[self::TEST_DEPRECATED] = $testData[self::TEST_DEPRECATED];
+        if (!empty($testData[self::OBJ_DEPRECATED])) {
+            $testAnnotations[self::OBJ_DEPRECATED] = $testData[self::OBJ_DEPRECATED];
         }
 
         // TODO extract filename info and store

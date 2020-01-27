@@ -7,7 +7,6 @@
 namespace Magento\FunctionalTestingFramework\Util;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
@@ -17,14 +16,11 @@ use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
-use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+use Magento\FunctionalTestingFramework\Test\Util\BaseObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Manifest\BaseTestManifest;
-use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
-use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
@@ -510,9 +506,9 @@ class TestGenerator
         $descriptionText = "";
 
         $descriptionText .= $descriptions["main"] ?? '';
-        if (!empty($descriptions[TestObjectExtractor::TEST_DEPRECATED]) || !empty($this->deprecationMessages)) {
+        if (!empty($descriptions[BaseObjectExtractor::OBJ_DEPRECATED]) || !empty($this->deprecationMessages)) {
             $deprecatedMessages = array_merge(
-                $descriptions[TestObjectExtractor::TEST_DEPRECATED],
+                $descriptions[BaseObjectExtractor::OBJ_DEPRECATED],
                 $this->deprecationMessages
             );
 

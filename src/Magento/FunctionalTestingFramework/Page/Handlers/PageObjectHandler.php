@@ -69,7 +69,7 @@ class PageObjectHandler implements ObjectHandlerInterface
             $sectionNames = array_keys($pageData[self::SECTION] ?? []);
             $parameterized = $pageData[self::PARAMETERIZED] ?? false;
             $filename = $pageData[self::FILENAME] ?? null;
-            $deprecated = $pageData['deprecated'] ?? null;
+            $deprecated = $pageData[self::OBJ_DEPRECATED] ?? null;
 
             if ($deprecated !== null) {
                 LoggingUtil::getInstance()->getLogger(self::class)->deprecation(
