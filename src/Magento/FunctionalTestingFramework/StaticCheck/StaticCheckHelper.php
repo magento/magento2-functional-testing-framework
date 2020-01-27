@@ -38,7 +38,7 @@ class StaticCheckHelper
 
     /**
      * Builds list of all XML files in given modulePaths + path given
-     * @param array $modulePaths
+     * @param array  $modulePaths
      * @param string $path
      * @return Finder
      */
@@ -53,5 +53,4 @@ class StaticCheckHelper
         }
         return $finder->files();
     }
-
 }

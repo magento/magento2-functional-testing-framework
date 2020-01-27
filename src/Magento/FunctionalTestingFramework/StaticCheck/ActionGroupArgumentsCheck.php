@@ -128,7 +128,8 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
     }
 
     /**
-     * @param $actionGroupXml
+     * Returns unused arguments in an action group
+     * @param string $actionGroupXml
      * @return array
      */
     private function findUnusedArguments($actionGroupXml)
@@ -171,8 +172,9 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
      */
     private function isParentActionGroupArgument($argument, $actionGroup)
     {
-        if ($actionGroup->getParentName() !== null) {
-            $parentActionGroup = ActionGroupObjectHandler::getInstance()->getObject($actionGroup->getParentName());
+        $parentActionGroupName = $actionGroup->getParentName();
+        if ($parentActionGroupName !== null) {
+            $parentActionGroup = ActionGroupObjectHandler::getInstance()->getObject($parentActionGroupName);
             $parentArguments = $parentActionGroup->getArguments();
             foreach ($parentArguments as $parentArgument) {
                 if ($argument === $parentArgument->getName()) {
