@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\StaticCheck;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Symfony\Component\Console\Input\InputInterface;
@@ -138,9 +139,10 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
 
         preg_match_all(self::ACTIONGROUP_ARGUMENT_REGEX_PATTERN, $actionGroupXml, $arguments);
         preg_match(self::ACTIONGROUP_NAME_REGEX_PATTERN, $actionGroupXml, $actionGroupName);
-
-        $actionGroup = ActionGroupObjectHandler::getInstance()->getObject($actionGroupName[1]);
-
+        try {
+            $actionGroup = ActionGroupObjectHandler::getInstance()->getObject($actionGroupName[1]);
+        } catch (XmlException $e){
+        }
         foreach ($arguments[1] as $argument) {
             //pattern to match all argument references
             $patterns = [
