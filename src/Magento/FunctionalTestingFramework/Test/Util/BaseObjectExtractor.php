@@ -13,6 +13,7 @@ class BaseObjectExtractor
 {
     const NODE_NAME = 'nodeName';
     const NAME = 'name';
+    const OBJ_DEPRECATED = 'deprecated';
 
     /**
      * BaseObjectExtractor constructor.
