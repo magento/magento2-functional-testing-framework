@@ -104,13 +104,13 @@ class ActionGroupObject
     /**
      * ActionGroupObject constructor.
      *
-     * @param string $name
-     * @param array $annotations
+     * @param string           $name
+     * @param array            $annotations
      * @param ArgumentObject[] $arguments
-     * @param array $actions
-     * @param string $parentActionGroup
-     * @param string $filename
-     * @param $deprecated
+     * @param array            $actions
+     * @param string           $parentActionGroup
+     * @param string           $filename
+     * @param string|null      $deprecated
      */
     public function __construct(
         $name,

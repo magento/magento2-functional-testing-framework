@@ -8,6 +8,7 @@ namespace Magento\FunctionalTestingFramework\DataGenerator\Objects;
 
 /**
  * Class OperationDefinitionObject
+ * @SuppressWarnings(PHPMD)
  */
 class OperationDefinitionObject
 {
@@ -126,20 +127,20 @@ class OperationDefinitionObject
 
     /**
      * OperationDefinitionObject constructor.
-     * @param string  $name
-     * @param string  $operation
-     * @param string  $dataType
-     * @param string  $apiMethod
-     * @param string  $apiUri
-     * @param string  $auth
-     * @param array   $headers
-     * @param array   $params
-     * @param array   $metaData
-     * @param string  $contentType
-     * @param boolean $removeBackend
-     * @param string  $successRegex
-     * @param string  $returnRegex
-     * @param string  $returnIndex
+     * @param string      $name
+     * @param string      $operation
+     * @param string      $dataType
+     * @param string      $apiMethod
+     * @param string      $apiUri
+     * @param string      $auth
+     * @param array       $headers
+     * @param array       $params
+     * @param array       $metaData
+     * @param string      $contentType
+     * @param boolean     $removeBackend
+     * @param string      $successRegex
+     * @param string      $returnRegex
+     * @param string      $returnIndex
      * @param string|null $deprecated
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */

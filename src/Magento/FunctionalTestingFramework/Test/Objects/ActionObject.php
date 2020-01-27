@@ -84,7 +84,6 @@ class ActionObject
      */
     private $stepKey;
 
-
     /**
      * Array of deprecated entities used in action.
      *
@@ -144,13 +143,13 @@ class ActionObject
     /**
      * ActionObject constructor.
      *
-     * @param string $stepKey
-     * @param string $type
-     * @param array $actionAttributes
+     * @param string      $stepKey
+     * @param string      $type
+     * @param array       $actionAttributes
      * @param string|null $linkedAction
-     * @param string $order
-     * @param array $actionOrigin
-     * @param array $deprecatedUsage
+     * @param string      $order
+     * @param array       $actionOrigin
+     * @param array       $deprecatedUsage
      */
     public function __construct(
         $stepKey,
@@ -573,7 +572,8 @@ class ActionObject
                 }
             } elseif (get_class($obj) == EntityDataObject::class) {
                 if ($obj->getDeprecated() !== null) {
-                    $this->deprecatedUsage[] = "DEPRECATED DATA ENTITY in Test: " . $match . ' ' . $obj->getDeprecated();
+                    $this->deprecatedUsage[] = "DEPRECATED DATA ENTITY in Test: "
+                        . $match . ' ' . $obj->getDeprecated();
                 }
                 $replacement = $this->resolveEntityDataObjectReference($obj, $match);
 

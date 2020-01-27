@@ -13,7 +13,6 @@ use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\DataGenerator\Util\DataExtensionUtil;
-use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 class DataObjectHandler implements ObjectHandlerInterface
@@ -121,6 +120,7 @@ class DataObjectHandler implements ObjectHandlerInterface
      * @param string[] $parserOutput Primitive array output from the Magento parser.
      * @return EntityDataObject[]
      * @throws XmlException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function processParserOutput($parserOutput)
     {
@@ -134,6 +134,7 @@ class DataObjectHandler implements ObjectHandlerInterface
 
             $type = $rawEntity[self::_TYPE] ?? null;
             $data = [];
+            $deprecated = null;
             $linkedEntities = [];
             $uniquenessData = [];
             $vars = [];

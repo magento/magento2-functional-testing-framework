@@ -18,6 +18,9 @@ use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
+/**
+ * @SuppressWarnings(PHPMD)
+ */
 class Console extends \Codeception\Subscriber\Console
 {
     /**
@@ -60,6 +63,13 @@ class Console extends \Codeception\Subscriber\Console
         parent::__construct($options);
     }
 
+    /**
+     * Triggered event before each test.
+     *
+     * @param TestEvent $e
+     * @return void
+     * @throws \Exception
+     */
     public function startTest(TestEvent $e)
     {
         $test = $e->getTest()->getTestClass();
@@ -80,7 +90,7 @@ class Console extends \Codeception\Subscriber\Console
             LoggingUtil::getInstance()->getLogger(self::class)->error($e->getMessage(), $e->getTrace());
         }
 
-        return parent::startTest($e);
+        parent::startTest($e);
     }
 
     /**

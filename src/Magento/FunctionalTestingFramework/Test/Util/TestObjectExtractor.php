@@ -17,6 +17,7 @@ use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
 
 /**
  * Class TestObjectExtractor
+ * @SuppressWarnings(PHPMD)
  */
 class TestObjectExtractor extends BaseObjectExtractor
 {
@@ -133,6 +134,7 @@ class TestObjectExtractor extends BaseObjectExtractor
         }
         $testAnnotations["description"]['test_files'] = $this->appendFileNamesInDescriptionAnnotation($fileNames);
 
+        $testAnnotations["description"][self::TEST_DEPRECATED] = [];
         if ($deprecated !== null) {
             $testAnnotations["description"][self::TEST_DEPRECATED][] = $deprecated;
             LoggingUtil::getInstance()->getLogger(TestObject::class)->deprecation(

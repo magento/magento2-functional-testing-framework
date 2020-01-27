@@ -74,12 +74,12 @@ class PageObject
 
     /**
      * PageObject constructor.
-     * @param string $name
-     * @param string $url
-     * @param string $module
-     * @param array $sections
-     * @param boolean $parameterized
-     * @param string $area
+     * @param string      $name
+     * @param string      $url
+     * @param string      $module
+     * @param array       $sections
+     * @param boolean     $parameterized
+     * @param string      $area
      * @param string|null $filename
      * @param string|null $deprecated
      */

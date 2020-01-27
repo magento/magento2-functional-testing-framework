@@ -129,9 +129,7 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
      * @return void
      * @throws \Exception
      *
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD)
      */
     private function initialize()
     {

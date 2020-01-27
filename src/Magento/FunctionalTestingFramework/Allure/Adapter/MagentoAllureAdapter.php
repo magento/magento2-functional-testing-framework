@@ -5,7 +5,6 @@
  */
 namespace Magento\FunctionalTestingFramework\Allure\Adapter;
 
-use Codeception\Event\TestEvent;
 use Codeception\Step\Comment;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;

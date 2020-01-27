@@ -41,8 +41,8 @@ class SectionObject
 
     /**
      * SectionObject constructor.
-     * @param string $name
-     * @param array $elements
+     * @param string      $name
+     * @param array       $elements
      * @param string|null $filename
      * @param string|null $deprecated
      */

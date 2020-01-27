@@ -463,7 +463,7 @@ class TestGenerator
      * Method which return formatted class level annotations based on type and name(s).
      *
      * @param string $annotationType
-     * @param array $annotationName
+     * @param array  $annotationName
      * @return null|string
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
@@ -509,8 +509,8 @@ class TestGenerator
     {
         $descriptionText = "";
 
-        $descriptionText .= $descriptions["main"];
-        if (!empty($descriptions[TestObjectExtractor::TEST_DEPRECATED])) {
+        $descriptionText .= $descriptions["main"] ?? '';
+        if (!empty($descriptions[TestObjectExtractor::TEST_DEPRECATED]) || !empty($this->deprecationMessages)) {
             $deprecatedMessages = array_merge(
                 $descriptions[TestObjectExtractor::TEST_DEPRECATED],
                 $this->deprecationMessages
