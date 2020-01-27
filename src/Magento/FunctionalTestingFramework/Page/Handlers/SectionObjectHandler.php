@@ -100,7 +100,7 @@ class SectionObjectHandler implements ObjectHandlerInterface
             $sectionDeprecated = $sectionData[self::OBJ_DEPRECATED] ?? null;
 
             if ($sectionDeprecated !== null) {
-                LoggingUtil::getInstance()->getLogger(ElementObject::class)->deprecation(
+                LoggingUtil::getInstance()->getLogger(SectionObject::class)->deprecation(
                     $sectionDeprecated,
                     ["sectionName" => $filename, "deprecatedSection" => $sectionDeprecated]
                 );
