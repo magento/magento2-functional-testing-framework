@@ -1,0 +1,34 @@
+<?php
+namespace Magento\AcceptanceTest\_default\Backend;
+
+use Magento\FunctionalTestingFramework\AcceptanceTester;
+use \Codeception\Util\Locator;
+use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
+use Yandex\Allure\Adapter\Annotation\Title;
+use Yandex\Allure\Adapter\Annotation\Description;
+use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
+use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
+
+/**
+ * @Description("<h3 class='y-label y-label_status_broken'>Deprecated Notice(s):</h3><ul><li>Test is deprecated</li><li>DEPRECATED ACTION GROUP in Test: DeprecatedActionGroup Deprecated action group</li><li>DEPRECATED SECTION in Test: {{DeprecatedSection.deprecatedElement}} Deprecated section</li><li>DEPRECATED ELEMENT in Test: {{DeprecatedSection.deprecatedElement}} Deprecated element</li><li>DEPRECATED DATA ENTITY in Test: {{DeprecatedData.field}} Data entity deprecated</li><li>DEPRECATED PAGE in Test: {{DeprecatedPage.url}} Deprecated page</li></ul><h3>Test files</h3>verification/TestModule/Test/DeprecatedTest.xml<br>")
+ */
+class DeprecatedTestCest
+{
+	/**
+	 * @Features({"TestModule"})
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function DeprecatedTest(AcceptanceTester $I)
+	{
+		$I->comment("Entering Action Group [deprecatedActionGroup] DeprecatedActionGroup");
+		$I->see("deprecated", "#element"); // stepKey: deprecatedSeeDeprecatedActionGroup
+		$I->comment("Exiting Action Group [deprecatedActionGroup] DeprecatedActionGroup");
+		$I->amOnPage("/test.html"); // stepKey: amOnPage
+	}
+}
