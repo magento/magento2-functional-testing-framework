@@ -27,7 +27,7 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
     const ACTIONGROUP_NAME_REGEX_PATTERN = '/<actionGroup name=["\']([^\'"]*)/';
 
     const ERROR_LOG_FILENAME = 'mftf-arguments-checks';
-    const ERROR_LOG_MESSAGE = 'MFTF Unused Arguments Check';
+    const ERROR_LOG_MESSAGE = 'MFTF Action Group Unused Arguments Check';
 
     /**
      * Array containing all errors found after running the execute() function.
@@ -141,13 +141,13 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
         preg_match(self::ACTIONGROUP_NAME_REGEX_PATTERN, $actionGroupXml, $actionGroupName);
         try {
             $actionGroup = ActionGroupObjectHandler::getInstance()->getObject($actionGroupName[1]);
-        } catch (XmlException $e){
+        } catch (XmlException $e) {
         }
         foreach ($arguments[1] as $argument) {
             //pattern to match all argument references
             $patterns = [
                 '(\{{2}' . $argument . '(\.[a-zA-Z0-9_\[\]\(\).,\'\/ ]+)?}{2})',
-                '([(,\s\']' . $argument . '(\.[a-zA-Z0-9_\[\]]+)?[),\s\'])'
+                '([(,\s\'$$]' . $argument . '(\.[a-zA-Z0-9_$\[\]]+)?[),\s\'])'
             ];
             // matches entity references
             if (preg_match($patterns[0], $actionGroupXml)) {
