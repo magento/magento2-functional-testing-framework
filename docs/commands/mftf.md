@@ -463,18 +463,46 @@ The example parameters are taken from the `etc/config/.env.example` file.
 
 ### `static-checks`
 
-Runs all MFTF static-checks on the test codebase that MFTF is currently attached to.
-
-#### Existing static checks
-
-* Test Dependency: Checks that test dependencies do not violate Magento module's composer dependencies.
+Runs all or specific MFTF static-checks on the test codebase that MFTF is currently attached to. 
+If no script name argument is specified, all existing static check scripts will run.
 
 #### Usage
+
+```bash
+vendor/bin/mftf static-checks [<names>]...
+```
+
+#### Examples
+
+To check what existing static check scripts are available
+
+```bash
+vendor/bin/mftf static-checks --help
+```
+
+To run all existing static check scripts 
 
 ```bash
 vendor/bin/mftf static-checks
 ```
 
+To run specific static check scripts
+
+```bash
+vendor/bin/mftf static-checks testDependencies
+```
+```bash
+vendor/bin/mftf static-checks actionGroupArguments
+```
+```bash
+vendor/bin/mftf static-checks testDependencies actionGroupArguments
+```
+
+#### Existing static checks
+
+* Test Dependency: Checks that test dependencies do not violate Magento module's composer dependencies.
+* Action Group Unused Arguments: Checks that action groups do not have unused arguments.
+    
 ### `upgrade:tests`
 
 Applies all the MFTF major version upgrade scripts to test components in the given path (`test.xml`, `data.xml`, etc).
