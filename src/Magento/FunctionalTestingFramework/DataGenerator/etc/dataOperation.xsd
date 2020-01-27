@@ -22,6 +22,13 @@
                         </xs:choice>
                         <xs:attribute type="xs:string" name="name"/>
                         <xs:attribute type="xs:string" name="dataType" use="required"/>
+                        <xs:attribute type="xs:string" name="deprecated">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Message and flag which shows that entity is deprecated.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
                         <xs:attribute type="operationEnum" name="type" use="required"/>
                         <xs:attribute type="xs:string" name="url"/>
                         <xs:attribute type="authEnum" name="auth"/>

@@ -9,6 +9,7 @@ namespace Magento\FunctionalTestingFramework\Page\Handlers;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\XmlParser\PageParser;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 
@@ -68,9 +69,17 @@ class PageObjectHandler implements ObjectHandlerInterface
             $sectionNames = array_keys($pageData[self::SECTION] ?? []);
             $parameterized = $pageData[self::PARAMETERIZED] ?? false;
             $filename = $pageData[self::FILENAME] ?? null;
+            $deprecated = $pageData[self::OBJ_DEPRECATED] ?? null;
+
+            if ($deprecated !== null) {
+                LoggingUtil::getInstance()->getLogger(self::class)->deprecation(
+                    $deprecated,
+                    ["pageName" => $filename, "deprecatedPage" => $deprecated]
+                );
+            }
 
             $this->pageObjects[$pageName] =
-                new PageObject($pageName, $url, $module, $sectionNames, $parameterized, $area, $filename);
+                new PageObject($pageName, $url, $module, $sectionNames, $parameterized, $area, $filename, $deprecated);
         }
     }
 

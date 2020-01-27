@@ -48,6 +48,14 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute type="xs:string" name="deprecated">
+                <xs:annotation>
+                    <xs:documentation>
+                        Message and flag which shows that entity is deprecated.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+
             <xs:attribute type="notEmptyType" name="url" use="required">
                 <xs:annotation>
                     <xs:documentation>

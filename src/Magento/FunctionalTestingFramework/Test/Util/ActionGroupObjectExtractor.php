@@ -11,6 +11,8 @@ use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ArgumentObject;
+use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
  * Class ActionGroupObjectExtractor
@@ -58,7 +60,15 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
     public function extractActionGroup($actionGroupData)
     {
         $arguments = [];
+        $deprecated = null;
 
+        if (array_key_exists(self::OBJ_DEPRECATED, $actionGroupData)) {
+            $deprecated = $actionGroupData[self::OBJ_DEPRECATED];
+            LoggingUtil::getInstance()->getLogger(ActionGroupObject::class)->deprecation(
+                $deprecated,
+                ["actionGroupName" => $actionGroupData[self::FILENAME], "deprecatedActionGroup" => $deprecated]
+            );
+        }
         $actionGroupReference = $actionGroupData[self::EXTENDS_ACTION_GROUP] ?? null;
         $actionData = $this->stripDescriptorTags(
             $actionGroupData,
@@ -69,7 +79,8 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
             self::FILENAME,
             self::ACTION_GROUP_INSERT_BEFORE,
             self::ACTION_GROUP_INSERT_AFTER,
-            self::EXTENDS_ACTION_GROUP
+            self::EXTENDS_ACTION_GROUP,
+            'deprecated'
         );
 
         // TODO filename is now available to the ActionGroupObject, integrate this into debug and error statements
@@ -99,7 +110,8 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
             $arguments,
             $actions,
             $actionGroupReference,
-            $actionGroupData[self::FILENAME]
+            $actionGroupData[self::FILENAME],
+            $deprecated
         );
     }
 
