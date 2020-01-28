@@ -21,6 +21,6 @@
 
         <!--   Open MFTF DevDocs Page -->
         <amOnPage stepKey="openMFTFDevDocPage" url="{{MFTFDocPage.url}}" />
-        <see stepKey="verifyPageIntroText" selector="{{contentSection.pageIntro}}" userInput="Introduction to the Magento Functional Testing Framework" />
+        <see stepKey="verifyPageIntroText" selector="{{contentSection.pageIntro}}" userInput="{{MessageData.message}}" />
     </test>
 </tests>

@@ -5,12 +5,12 @@ Check out our best practices below to ensure you are getting the absolute most o
 ## Action group
 
 1. [Action group] names should be sufficiently descriptive to inform a test writer of what the action group does and when it should be used.
- Add additional explanation in comments if needed.
+ Add additional explanation in annotations if needed.
 2. Provide default values for the arguments that apply to your most common case scenarios.
 
 ## `actionGroups` vs `extends`
 
-Use an action group to wraps a set of actions to reuse them multiple times.
+Use an action group to wrap a set of actions to reuse them multiple times.
 
 Use an [extension] when a test or action group needs to be repeated with the exception of a few steps.
 
@@ -58,11 +58,19 @@ The following pattern is used when merging with `extends`:
 
 Name files according to the following patterns to make searching in future more easy:
 
+<!-- {% raw %} -->
+
 #### Test file name
 
 Format: {_Admin_ or _Storefront_}{Functionality}_Test.xml_, where Functionality briefly describes the testing functionality.
 
 Example: _StorefrontCreateCustomerTest.xml_.
+
+#### Action Group file name
+
+Format: {_Admin_ or _Storefront_}{Action Group Summary}ActionGroup.xml`, where Action Group Summary describes with a few words what we can expect from it.
+
+Example: _AdminCreateStoreActionGroup.xml_ 
 
 #### Section file name
 
@@ -73,6 +81,8 @@ Example: _AdminNavbarSection.xml_.
 #### Data file name
 
 Format: {Type}_Data.xml_, where Type represents the entity type.
+
+<!-- {% endraw %} -->
 
 Example: _ProductData.xml_.
 
@@ -85,18 +95,19 @@ Use the _Foo.camelCase_ naming convention, which is similar to _Classes_ and _cl
 Use an upper case first letter for:
 
 -  File names. Example: _StorefrontCreateCustomerTest.xml_
--  Test name attributes. Example: `<test name="TestAllTheThingsTest">`.
--  Data entity names. Example: `<entity name="OutOfStockProduct">`.
--  Page name. Example: `<page name="AdminLoginPage">`.
--  Section name. Example: `<section name="AdminCategorySidebarActionSection">`.
--  Action group name. Example: `<actionGroup name="LoginToAdminActionGroup">`.
+-  Test name attributes. Example: `<test name="TestAllTheThingsTest">`
+-  Data entity names. Example: `<entity name="OutOfStockProduct">`
+-  Page name. Example: `<page name="AdminLoginPage">`
+-  Section name. Example: `<section name="AdminCategorySidebarActionSection">`
+-  Action group name. Example: `<actionGroup name="LoginToAdminActionGroup">`
 
 #### Lower case
 
 Use a lower case first letter for:
 
--  Data keys. Example: `<data key="firstName">`.
--  Element names. Examples: `<element name="confirmDeleteButton"/>`.
+-  Data keys. Example: `<data key="firstName">`
+-  Element names. Examples: `<element name="confirmDeleteButton"/>`
+-  Step keys. For example: `<click selector="..." stepKey="clickLogin"/>`
 
 ## Page object
 

@@ -11,6 +11,7 @@ use Magento\FunctionalTestingFramework\DataGenerator\Parsers\OperationDefinition
 use Magento\FunctionalTestingFramework\DataGenerator\Util\OperationElementExtractor;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 class OperationDefinitionObjectHandler implements ObjectHandlerInterface
 {
@@ -128,9 +129,7 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
      * @return void
      * @throws \Exception
      *
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD)
      */
     private function initialize()
     {
@@ -145,6 +144,7 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
             $auth = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH] ?? null;
             $successRegex = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_SUCCESS_REGEX] ?? null;
             $returnRegex = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_RETURN_REGEX] ?? null;
+            $deprecated = $opDefArray[ObjectHandlerInterface::OBJ_DEPRECATED] ?? null;
             $returnIndex = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_RETURN_INDEX] ?? 0;
             $contentType = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_CONTENT_TYPE][0]['value']
                 ?? null;
@@ -205,6 +205,13 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
                 }
             }
 
+            if ($deprecated !== null) {
+                LoggingUtil::getInstance()->getLogger(self::class)->deprecation(
+                    $deprecated,
+                    ["operationName" => $dataDefName, "deprecatedOperation" => $deprecated]
+                );
+            }
+
             $this->operationDefinitionObjects[$operation . $dataType] = new OperationDefinitionObject(
                 $dataDefName,
                 $operation,
@@ -219,7 +226,8 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
                 $removeBackend,
                 $successRegex,
                 $returnRegex,
-                $returnIndex
+                $returnIndex,
+                $deprecated
             );
         }
     }

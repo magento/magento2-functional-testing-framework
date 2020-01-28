@@ -61,6 +61,13 @@
             <xs:element type="hookType" name="after" maxOccurs="1"/>
         </xs:choice>
         <xs:attribute type="xs:string" name="name"/>
+        <xs:attribute type="xs:string" name="deprecated">
+            <xs:annotation>
+                <xs:documentation>
+                    Message and flag which shows that entity is deprecated.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:complexType>
     <xs:complexType name="suiteConfigType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">

@@ -43,6 +43,13 @@
         <xs:attribute type="xs:string" name="insertBefore"/>
         <xs:attribute type="xs:string" name="insertAfter"/>
         <xs:attribute type="xs:string" name="extends"/>
+        <xs:attribute type="xs:string" name="deprecated">
+            <xs:annotation>
+                <xs:documentation>
+                    Message and flag which shows that entity is deprecated.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:complexType>
     <xs:simpleType name="dataTypeEnum" final="restriction">
         <xs:restriction base="xs:string">

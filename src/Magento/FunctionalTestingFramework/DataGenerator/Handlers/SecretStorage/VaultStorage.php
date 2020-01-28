@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Vault\Client;
@@ -67,7 +68,7 @@ class VaultStorage extends BaseStorage
     private $secretBasePath;
 
     /**
-     * CredentialVault constructor
+     * VaultStorage constructor
      *
      * @param string $baseUrl
      * @param string $secretBasePath
@@ -123,10 +124,14 @@ class VaultStorage extends BaseStorage
             $reValue = openssl_encrypt($value, parent::ENCRYPTION_ALGO, parent::$encodedKey, 0, parent::$iv);
             parent::$cachedSecretData[$key] = $reValue;
         } catch (\Exception $e) {
+            $errMessage = "\nUnable to read secret for key name {$key} from vault." . $e->getMessage();
+            // Print error message in console
+            print_r($errMessage);
+            // Save to exception context for Allure report
+            CredentialStore::getInstance()->setExceptionContexts('vault', $errMessage);
+            // Add error message in mftf log if verbose is enable
             if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-                LoggingUtil::getInstance()->getLogger(VaultStorage::class)->debug(
-                    "Unable to read secret for key name {$key} from vault"
-                );
+                LoggingUtil::getInstance()->getLogger(VaultStorage::class)->debug($errMessage);
             }
         }
         return $reValue;
@@ -149,6 +154,13 @@ class VaultStorage extends BaseStorage
                 return true;
             }
         } catch (\Exception $e) {
+            // Print error message in console
+            print_r($e->getMessage());
+            // Save to exception context for Allure report
+            CredentialStore::getInstance()->setExceptionContexts(
+                CredentialStore::ARRAY_KEY_FOR_VAULT,
+                $e->getMessage()
+            );
         }
         return false;
     }

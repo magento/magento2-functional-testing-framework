@@ -58,30 +58,38 @@ abstract class BaseStorage
 
     /**
      * Takes a value encrypted at runtime and decrypts it using the object's initial vector
+     * return the decrypted string on success or false on failure
      *
      * @param string $value
-     * @return string
+     * @return string|false The decrypted string on success or false on failure
      */
-    public function getDecryptedValue($value)
+    public static function getDecryptedValue($value)
     {
         return openssl_decrypt($value, self::ENCRYPTION_ALGO, self::$encodedKey, 0, self::$iv);
     }
 
     /**
      * Takes a string that contains encrypted data at runtime and decrypts each value
+     * return false if no decryption happens or a failure occurs
      *
      * @param string $string
-     * @return mixed
+     * @return string|false The decrypted string on success or false on failure
      */
-    public function getAllDecryptedValuesInString($string)
+    public static function getAllDecryptedValuesInString($string)
     {
-        $newString = $string;
+        $decrypted = false;
         foreach (self::$cachedSecretData as $key => $secretValue) {
-            if (strpos($newString, $secretValue) !== false) {
+            if (strpos($string, $secretValue) !== false) {
                 $decryptedValue = self::getDecryptedValue($secretValue);
-                $newString = str_replace($secretValue, $decryptedValue, $newString);
+                if ($decryptedValue === false) {
+                    return false;
+                }
+                if (!$decrypted) {
+                    $decrypted = true;
+                }
+                $string = str_replace($secretValue, $decryptedValue, $string);
             }
         }
-        return $newString;
+        return $decrypted ? $string : false;
     }
 }
