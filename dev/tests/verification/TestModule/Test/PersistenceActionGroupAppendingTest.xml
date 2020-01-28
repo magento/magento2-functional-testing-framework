@@ -10,8 +10,8 @@
        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
     <test name="PersistenceActionGroupAppendingTest">
         <before>
-            <actionGroup ref="DataPersistenceAppendingActionGroup" stepKey="ACTIONGROUPBEFORE"/>
+            <actionGroup ref="DataPersistenceAppendingActionGroup" stepKey="aCTIONGROUPBEFORE"/>
         </before>
-        <actionGroup ref="DataPersistenceAppendingActionGroup" stepKey="ACTIONGROUP"/>
+        <actionGroup ref="DataPersistenceAppendingActionGroup" stepKey="aCTIONGROUP"/>
     </test>
 </tests>

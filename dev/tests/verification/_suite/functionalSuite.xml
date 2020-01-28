@@ -43,7 +43,7 @@
             </createData>
             <!-- <click stepKey="comment with element" userInput="helloworld"/> -->
             <click stepKey="clickWithData" userInput="$create.data$"/>
-            <actionGroup ref="actionGroupWithTwoArguments" stepKey="AC">
+            <actionGroup ref="ActionGroupWithTwoArgumentsActionGroup" stepKey="aC">
                 <!--Comment in AG Args-->
                 <argument name="somePerson" value="simpleData"/>
                 <argument name="anotherPerson" value="uniqueData"/>

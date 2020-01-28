@@ -33,8 +33,8 @@ Given the above element definitions, you call the elements in a test just like a
 
 ```xml
 <test name="LocatorFuctionTest">
-   <click selector="{{LocatorFunctionSection.simpleLocator}}" stepKey="SimpleLocator"/>
-   <click selector="{{LocatorFunctionSection.simpleLocatorTwoParam('string1', 'string2')}}" stepKey="TwoParamLiteral"/>
+   <click selector="{{LocatorFunctionSection.simpleLocator}}" stepKey="simpleLocator"/>
+   <click selector="{{LocatorFunctionSection.simpleLocatorTwoParam('string1', 'string2')}}" stepKey="twoParamLiteral"/>
 </test>
 ```
 

@@ -7,11 +7,11 @@
 -->
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
-    <actionGroup name="actionGroupWithoutArguments">
+    <actionGroup name="ActionGroupWithoutArgumentsActionGroup">
         <wait time="1" stepKey="waitForNothing" />
     </actionGroup>
 
-    <actionGroup name="actionGroupWithDefaultArgumentAndStringSelectorParam">
+    <actionGroup name="ActionGroupWithDefaultArgumentAndStringSelectorParamActionGroup">
         <arguments>
             <argument name="someArgument" defaultValue="ReplacementPerson" />
         </arguments>
@@ -19,7 +19,7 @@
         <see selector="{{SampleSection.oneParamElement('test1')}}" userInput="{{someArgument.firstname}}" stepKey="seeFirstName" />
     </actionGroup>
 
-    <actionGroup name="actionGroupWithTwoArguments">
+    <actionGroup name="ActionGroupWithTwoArgumentsActionGroup">
         <arguments>
             <argument name="somePerson"/>
             <argument name="anotherPerson"/>
@@ -28,7 +28,7 @@
         <see selector="{{anotherPerson.firstname}}" userInput="{{somePerson.firstname}}" stepKey="seeFirstName" />
     </actionGroup>
 
-    <actionGroup name="actionGroupWithSingleParameterSelectorFromArgument">
+    <actionGroup name="ActionGroupWithSingleParameterSelectorFromArgumentActionGroup">
         <arguments>
             <argument name="someArgument" defaultValue="ReplacementPerson" />
         </arguments>
@@ -36,7 +36,7 @@
         <see selector="{{SampleSection.oneParamElement(someArgument.firstname)}}" userInput="{{someArgument.lastname}}" stepKey="seeLastName" />
     </actionGroup>
 
-    <actionGroup name="actionGroupWithMultipleParameterSelectorsFromArgument">
+    <actionGroup name="ActionGroupWithMultipleParameterSelectorsFromArgumentActionGroup">
         <arguments>
             <argument name="someArgument" defaultValue="ReplacementPerson" />
         </arguments>
@@ -44,21 +44,21 @@
         <see selector="{{SampleSection.threeParamElement(someArgument.firstname, someArgument.lastname, 'test')}}" userInput="{{someArgument.lastname}}" stepKey="seeLastName" />
     </actionGroup>
 
-    <actionGroup name="actionGroupWithStringUsage">
+    <actionGroup name="ActionGroupWithStringUsageActionGroup">
         <arguments>
             <argument name="someArgument" type="string" defaultValue="stringLiteral"/>
         </arguments>
         <see selector="{{SampleSection.oneParamElement(someArgument)}}" userInput="{{someArgument}}" stepKey="see1" />
     </actionGroup>
 
-    <actionGroup name="actionGroupWithEntityUsage">
+    <actionGroup name="ActionGroupWithEntityUsageActionGroup">
         <arguments>
             <argument name="someArgument" type="entity" defaultValue="stringLiteral"/>
         </arguments>
         <see selector="{{SampleSection.oneParamElement(someArgument)}}" userInput="{{someArgument}}" stepKey="see1" />
     </actionGroup>
 
-    <actionGroup name="actionGroupWithNestedArgument">
+    <actionGroup name="ActionGroupWithNestedArgumentActionGroup">
         <arguments>
             <argument name="count" defaultValue="10" type="string"/>
         </arguments>
@@ -69,7 +69,7 @@
         </assertCount>
     </actionGroup>
 
-    <actionGroup name="ActionGroupToExtend">
+    <actionGroup name="ActionGroupToExtendActionGroup">
         <arguments>
             <argument name="count" type="string"/>
         </arguments>
@@ -80,7 +80,7 @@
         </assertCount>
     </actionGroup>
 
-    <actionGroup name="extendTestActionGroup" extends="ActionGroupToExtend">
+    <actionGroup name="ExtendTestActionGroup" extends="ActionGroupToExtendActionGroup">
         <arguments>
             <argument name="otherCount" type="string"/>
         </arguments>
@@ -93,29 +93,29 @@
         </assertCount>
     </actionGroup>
 
-    <actionGroup name="extendBasicActionGroup">
+    <actionGroup name="ExtendBasicActionGroup">
         <comment stepKey="removeMe" userInput="This Should Be Removed"/>
     </actionGroup>
 
-    <actionGroup name="extendRemoveTestActionGroup" extends="extendBasicActionGroup">
+    <actionGroup name="ExtendRemoveTestActionGroup" extends="extendBasicActionGroup">
         <remove keyForRemoval="removeMe"/>
     </actionGroup>
 
-    <actionGroup name="actionGroupWithCreateData">
+    <actionGroup name="ActionGroupWithCreateDataActionGroup">
         <createData entity="ApiCategory" stepKey="createCategory"/>
         <createData entity="ApiConfigurableProduct" stepKey="createConfigProduct">
             <requiredEntity createDataKey="createCategory"/>
         </createData>
     </actionGroup>
 
-    <actionGroup name="actionGroupContainsStepKeyInArgValue">
+    <actionGroup name="ActionGroupContainsStepKeyInArgValueActionGroup">
         <arguments>
             <argument name="sameStepKeyAsArg" type="string" defaultValue="stringLiteral"/>
         </arguments>
         <see selector=".selector" userInput="{{sameStepKeyAsArg}}" stepKey="arg1" />
     </actionGroup>
 
-    <actionGroup name="actionGroupWithSectionAndData">
+    <actionGroup name="ActionGroupWithSectionAndDataActionGroup">
         <arguments>
             <argument name="content" type="string"/>
             <argument name="section"/>

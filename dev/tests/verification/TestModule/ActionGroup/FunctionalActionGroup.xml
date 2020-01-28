@@ -12,7 +12,7 @@
         <fillField selector="#foo" userInput="myData1" stepKey="fillField1"/>
         <fillField selector="#bar" userInput="myData2" stepKey="fillField2"/>
     </actionGroup>
-    <actionGroup name="FunctionalActionGroupWithData">
+    <actionGroup name="FunctionalActionGroupWithDataActionGroup">
         <arguments>
             <argument name="person" defaultValue="DefaultPerson"/>
         </arguments>
@@ -22,7 +22,7 @@
         <searchAndMultiSelectOption selector="#foo" parameterArray="[{{person.firstname}}, {{person.lastname}}]" stepKey="multi1"/>
         <see selector="{{SampleSection.oneParamElement(person.firstname)}}" stepKey="see1"/>
     </actionGroup>
-    <actionGroup name="FunctionalActionGroupNoDefault">
+    <actionGroup name="FunctionalActionGroupNoDefaultActionGroup">
         <arguments>
             <argument name="person"/>
         </arguments>
@@ -30,7 +30,7 @@
         <fillField selector="#bar" userInput="{{person.lastname}}" stepKey="fillField2"/>
         <see selector="{{SampleSection.twoParamElement(person.firstname,person.lastname)}}" stepKey="see2"/>
     </actionGroup>
-    <actionGroup name="FunctionalActionGroupForMerge">
+    <actionGroup name="FunctionalActionGroupForMergeActionGroup">
         <arguments>
             <argument name="myArg"/>
         </arguments>
@@ -38,14 +38,14 @@
         <see selector="{{SampleSection.oneParamElement(myArg.firstname)}}" stepKey="see1"/>
         <amOnPage url="{{SamplePage.url(myArg.firstname,myArg.lastname)}}" stepKey="amOnPage1"/>
     </actionGroup>
-    <actionGroup name="FunctionalActionGroupWithTrickyArgument">
+    <actionGroup name="FunctionalActionGroupWithTrickyArgumentActionGroup">
         <arguments>
             <argument name="simple" defaultValue="simpleData"/>
         </arguments>
         <seeElement stepKey="see1" selector="{{SampleSection.simpleElement}}"/>
         <seeElement stepKey="see2" selector="{{SampleSection.simpleElementOneParam(simple.firstname)}}"/>
     </actionGroup>
-    <actionGroup name="FunctionActionGroupWithStepKeyReferences">
+    <actionGroup name="FunctionActionGroupWithStepKeyReferencesActionGroup">
         <createData entity="simpleData" stepKey="createSimpleData"/>
         <grabTextFrom selector=".class" stepKey="grabTextData"/>
         <fillField stepKey="fill1" selector=".{$grabTextData}" userInput="$createSimpleData.field$"/>
@@ -68,30 +68,30 @@
         <grabTextFrom selector="{$action15}" stepKey="action15"/>
         <grabValueFrom selector="{$action16}" stepKey="action16"/>
     </actionGroup>
-    <actionGroup name="FunctionalActionGroupForMassMergeBefore">
+    <actionGroup name="FunctionalActionGroupForMassMergeBeforeActionGroup">
         <fillField selector="#foo" userInput="foo" stepKey="fillField1"/>
         <fillField selector="#bar" userInput="bar" stepKey="fillField2"/>
         <fillField selector="#baz" userInput="baz" stepKey="fillField3"/>
     </actionGroup>
-    <actionGroup name="FunctionalActionGroupForMassMergeAfter">
+    <actionGroup name="FunctionalActionGroupForMassMergeAfterActionGroup">
         <fillField selector="#foo" userInput="foo" stepKey="fillField1"/>
         <fillField selector="#bar" userInput="bar" stepKey="fillField2"/>
         <fillField selector="#baz" userInput="baz" stepKey="fillField3"/>
     </actionGroup>
-    <actionGroup name="FunctionalActionGroupWithXmlAndPersistedData">
+    <actionGroup name="FunctionalActionGroupWithXmlAndPersistedDataActionGroup">
         <arguments>
             <argument name="xmlData" defaultValue="uniqueData"/>
             <argument name="persistedData"/>
         </arguments>
         <seeInCurrentUrl url="/{{persistedData.urlKey}}.html?___store={{xmlData.firstname}}" stepKey="checkUrl"/>
     </actionGroup>
-    <actionGroup name="SectionArgumentWithParameterizedSelector">
+    <actionGroup name="SectionArgumentWithParameterizedSelectorActionGroup">
         <arguments>
             <argument name="section" defaultValue="SampleSection"/>
         </arguments>
         <executeJS function="{{section.oneParamElement('full-width')}}" stepKey="keyone"/>
     </actionGroup>
-    <actionGroup name="actionGroupWithParametrizedSelectors">
+    <actionGroup name="ActionGroupWithParametrizedSelectorsActionGroup">
         <arguments>
             <argument name="param" type="entity"/>
             <argument name="param2" type="entity" defaultValue="simpleParamData"/>

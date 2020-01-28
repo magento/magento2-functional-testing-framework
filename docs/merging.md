@@ -22,7 +22,7 @@ For example:
 -  All pages with `<page name="SamplePage>` will be merged into one.
 -  All sections with `<section name="SampleAction">` will be merged into one.
 -  All data entities with `<entity name="sampleData" type="sample">` will be merged into one.
--  All action groups with `<actionGroup name="selectNotLoggedInCustomerGroup">` will be merged into one.
+-  All action groups with `<actionGroup name="SelectNotLoggedInCustomerGroupActionGroup">` will be merged into one.
 
 Although a file name does not influence merging, we recommend using the same file names in merging updates.
 This makes it easier to search later on.
@@ -284,7 +284,7 @@ The controls change drastically in the B2B version, so it was abstracted to an a
 > Action group for selecting `customerGroup` in the `Cart Price Rules` section:
 
 ```xml
-<actionGroup name="selectNotLoggedInCustomerGroup">
+<actionGroup name="SelectNotLoggedInCustomerGroupActionGroup">
     <selectOption selector="{{AdminCartPriceRulesFormSection.customerGroups}}" userInput="NOT LOGGED IN" stepKey="selectCustomerGroup"/>
 </actionGroup>
 ```
@@ -293,7 +293,7 @@ The controls change drastically in the B2B version, so it was abstracted to an a
 
 ```xml
 <!-- name matches -->
-<actionGroup name="selectNotLoggedInCustomerGroup">
+<actionGroup name="SelectNotLoggedInCustomerGroupActionGroup">
     <!-- removes the original action -->
     <remove keyForRemoval="selectCustomerGroup"/>
     <!-- adds in sequence of actions to be performed instead-->

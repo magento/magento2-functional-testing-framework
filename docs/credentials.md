@@ -155,7 +155,7 @@ Define the value as a reference to the corresponding key in the credentials file
 For example, to reference secret data in the [`fillField`][] action, use the `userInput` attribute using a typical File Storage:
 
 ```xml
-<fillField stepKey="FillApiToken" selector=".api-token" userInput="{{_CREDS.vendor/my_data_key}}" />
+<fillField stepKey="fillApiToken" selector=".api-token" userInput="{{_CREDS.vendor/my_data_key}}" />
 ```
 
 <!-- {% endraw %} -->

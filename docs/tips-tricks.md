@@ -21,13 +21,13 @@ Good
 
 ```xml
 <test>
-    <actionGroup ref="VerifyOptionInProductStorefront" stepKey="verifyConfigurableOption" after="AssertProductInStorefrontProductPage">
+    <actionGroup ref="VerifyOptionInProductStorefrontActionGroup" stepKey="verifyConfigurableOption" after="assertProductInStorefrontProductPage">
         <argument name="attributeCode" value="$createConfigProductAttribute.default_frontend_label$"/>
         <argument name="optionName" value="$createConfigProductAttributeOption1.option[store_labels][1][label]$"/>
     </actionGroup>
 </test>
 
-<actionGroup name="VerifyOptionInProductStorefront">
+<actionGroup name="VerifyOptionInProductStorefrontActionGroup">
     <arguments>
         <argument name="attributeCode" type="string"/>
         <argument name="optionName" type="string"/>
@@ -70,7 +70,7 @@ Good:
     <actionGroup ref="AdminDeleteStoreViewActionGroup" stepKey="deleteStoreViewFr">
         <argument name="customStore" value="customStoreFR"/>
     </actionGroup>
-    <actionGroup ref="logout" stepKey="logout"/>
+    <actionGroup ref="LogoutActionGroup" stepKey="logout"/>
 </after>
 ```
 
@@ -90,7 +90,7 @@ Bad:
     <deleteData createDataKey="createSimpleProduct" stepKey="deleteSimpleProduct"/>
     <magentoCLI command="config:set catalog/frontend/flat_catalog_category 0" stepKey="setFlatCatalogCategory"/>
     <magentoCLI command="indexer:set-mode" arguments="schedule" stepKey="setIndexerMode"/>
-    <actionGroup ref="logout" stepKey="logout"/>
+    <actionGroup ref="LogoutActionGroup" stepKey="logout"/>
 </after>
 ```
 

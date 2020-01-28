@@ -7,7 +7,7 @@ We strive to write tests using only action groups. Fortunately, we have built up
 Action groups simplify maintainability by reducing duplication. Because they are re-usable building blocks, odds are that they are already made use of by existing tests in the Magento codebase. This proves their stability through real-world use. Take for example, the action group named `LoginAsAdmin`:
 
 ```xml
-<actionGroup name="LoginAsAdmin">
+<actionGroup name="LoginAsAdminActionGroup">
     <annotations>
         <description>Login to Backend Admin using provided User Data. PLEASE NOTE: This Action Group does NOT validate that you are Logged In.</description>
     </annotations>
@@ -32,7 +32,7 @@ Imagine if this was not an action group and instead we were to copy and paste th
 Again using `LoginAsAdmin` as our example, we trim away metadata to clearly reveal that this action group performs 5 actions:
 
 ```xml
-<actionGroup name="LoginAsAdmin">
+<actionGroup name="LoginAsAdminActionGroup">
     ...
     <amOnPage url="{{AdminLoginPage.url}}" .../>
     <fillField selector="{{AdminLoginFormSection.username}}" .../>
@@ -47,7 +47,7 @@ This works against the standard Magento admin panel login page. Bu imagine we ar
 We can overcome this by making use of MFTF's extensibility. All we need to do is to provide a "merge" that modifies the existing `LoginAsAdmin` action group. Our merge file will look like:
 
 ```xml
-<actionGroup name="LoginAsAdmin">
+<actionGroup name="LoginAsAdminActionGroup">
     <fillField selector="{{CaptchaSection.captchaInput}}" before="signIn" .../>
 </actionGroup>
 ```
@@ -57,7 +57,7 @@ Because the name of this merge is also `LoginAsAdmin`, the two get merged togeth
 To continue this example, imagine someone else is working on a 'Two-Factor Authentication' extension and they also provide a merge for the `LoginAsAdmin` action group. Their merge looks similar to what we have already seen. The only difference is that this time we fill a different field:
 
 ```xml
-<actionGroup name="LoginAsAdmin">
+<actionGroup name="LoginAsAdminActionGroup">
     <fillField selector="{{TwoFactorSection.twoFactorInput}}" before="signIn" .../>
 </actionGroup>
 ```
@@ -65,7 +65,7 @@ To continue this example, imagine someone else is working on a 'Two-Factor Authe
 Bringing it all together, our resulting `LoginAsAdmin` action group becomes this:
 
 ```xml
-<actionGroup name="LoginAsAdmin">
+<actionGroup name="LoginAsAdminActionGroup">
     ...
     <amOnPage url="{{AdminLoginPage.url}}" .../>
     <fillField selector="{{AdminLoginFormSection.username}}" .../>

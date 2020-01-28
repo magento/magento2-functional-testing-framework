@@ -24,7 +24,7 @@
         <remove keyForRemoval="step6"/>
         <click stepKey="step6Merge" selector="#step6Merged" after="step5"/>
         <click stepKey="step10" selector="#step10MergedInResult"/>
-        <actionGroup ref="FunctionalActionGroupWithData" stepKey="step8Merge" after="step7Merge"/>
+        <actionGroup ref="FunctionalActionGroupWithDataActionGroup" stepKey="step8Merge" after="step7Merge"/>
     </test>
     <test name="MergeSkip">
         <annotations>

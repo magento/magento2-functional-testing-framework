@@ -51,7 +51,7 @@ To create the `<actionGroup>` declaration:
 
     <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
-        <actionGroup name="{Action Group Name}">
+        <actionGroup name="{Action Group Name}ActionGroup">
 
         </actionGroup>
     </actionGroups>
@@ -82,7 +82,7 @@ To create the `<actionGroup>` declaration:
 
     <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
-        <actionGroup name="LoginAsAdmin">
+        <actionGroup name="LoginAsAdminActionGroup">
                 <annotations>
                     <description>Login to Backend Admin using provided User Data. PLEASE NOTE: This Action Group does NOT validate that you are Logged In.</description>
                 </annotations>
@@ -133,7 +133,7 @@ There are cases when you use a string instead of a whole entity.
 For example, the following defines the replacement argument `relevantString` using a primitive data type:
 
 ```xml
-<actionGroup name="fillExample">
+<actionGroup name="FillExampleActionGroup">
     <arguments>
         <argument name="relevantString" defaultValue="defaultString" type="string"/>
     </arguments>
@@ -149,7 +149,7 @@ The `string` argument type provides a method to pass a single piece of data to t
 ### Explicitly define the argument value
 
 ```xml
-<actionGroup stepKey="fillWithStringLiteral" ref="fillExample">
+<actionGroup stepKey="fillWithStringLiteral" ref="fillExampleActionGroup">
     <argument name="relevantString" value="overrideString"/>
 </actionGroup>
 ```
@@ -157,7 +157,7 @@ The `string` argument type provides a method to pass a single piece of data to t
 ### Use persisted data references to define the argument value
 
 ```xml
-<actionGroup stepKey="fillWithStringLiteral" ref="fillExample">
+<actionGroup stepKey="fillWithStringLiteral" ref="fillExampleActionGroup">
     <argument name="relevantString" value="$persistedData.field1$"/>
 </actionGroup>
 ```
@@ -173,7 +173,7 @@ The `field1` data contains the required string.
 MFTF resolves `{{myCustomEntity.field1}}` the same as it would in a `selector` or `userInput` attribute.
 
 ```xml
-<actionGroup stepKey="fillWithXmlData" ref="fillExample">
+<actionGroup stepKey="fillWithXmlData" ref="fillExampleActionGroup">
     <argument name="relevantString" value="{{myCustomEntity.field1}}"/>
 </actionGroup>
 ```
@@ -185,7 +185,7 @@ Structuring properly an action group increases code reusability and readability.
 Starting with an action group such as:
 
 ```xml
-<actionGroup name="CreateCategory">
+<actionGroup name="CreateCategoryActionGroup">
     <arguments>
         <argument name="categoryEntity" defaultValue="_defaultCategory"/>
     </arguments>
@@ -205,7 +205,7 @@ Starting with an action group such as:
 It can be reworked into more manageable pieces, as below. These smaller steps are easier to read, update, and reuse.
 * GoToCategoryGridAndAddNewCategory
     ```xml
-    <actionGroup name="GoToCategoryGridAndAddNewCategory">
+    <actionGroup name="GoToCategoryGridAndAddNewCategoryActionGroup">
         <seeInCurrentUrl url="{{AdminCategoryPage.url}}" stepKey="seeOnCategoryPage"/>
         <click selector="{{AdminCategorySidebarActionSection.AddSubcategoryButton}}" stepKey="clickOnAddSubCategory"/>
         <see selector="{{AdminHeaderSection.pageTitle}}" userInput="New Category" stepKey="seeCategoryPageTitle"/>
@@ -213,7 +213,7 @@ It can be reworked into more manageable pieces, as below. These smaller steps ar
     ```
 * FillInBasicCategoryFields
     ```xml
-    <actionGroup name="FillInBasicCategoryFields">
+    <actionGroup name="FillInBasicCategoryFieldsActionGroup">
         <arguments>
             <argument name="categoryEntity" defaultValue="_defaultCategory"/>
         </arguments>
@@ -224,7 +224,7 @@ It can be reworked into more manageable pieces, as below. These smaller steps ar
     ```
 * SaveAndVerifyCategoryCreation
     ```xml
-    <actionGroup name="SaveAndVerifyCategoryCreation">
+    <actionGroup name="SaveAndVerifyCategoryCreationActionGroup">
         <click selector="{{AdminCategoryMainActionsSection.SaveButton}}" stepKey="saveCategory"/>
         <seeElement selector="{{AdminCategoryMessagesSection.SuccessMessage}}" stepKey="assertSuccess"/>
         <seeInTitle userInput="{{categoryEntity.name}}" stepKey="seeNewCategoryPageTitle"/>

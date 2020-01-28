@@ -25,16 +25,16 @@ In this example, we add an action group to a new copy of the original test for o
         <deleteData createDataKey="createPreReqCategory" stepKey="deletePreReqCategory"/>
     </after>
 
-    <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
-    <actionGroup ref="FillAdminSimpleProductForm" stepKey="fillProductFieldsInAdmin">
+    <actionGroup ref="LoginAsAdminActionGroup" stepKey="loginAsAdmin1"/>
+    <actionGroup ref="FillAdminSimpleProductFormActionGroup" stepKey="fillProductFieldsInAdmin">
         <argument name="category" value="$$createPreReqCategory$$"/>
         <argument name="simpleProduct" value="_defaultProduct"/>
     </actionGroup>
-    <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="assertProductInStorefront1">
+    <actionGroup ref="AssertProductInStorefrontCategoryPageActionGroup" stepKey="assertProductInStorefront1">
         <argument name="category" value="$$createPreReqCategory$$"/>
         <argument name="product" value="_defaultProduct"/>
     </actionGroup>
-    <actionGroup ref="AssertProductInStorefrontProductPage" stepKey="assertProductInStorefront2">
+    <actionGroup ref="AssertProductInStorefrontProductPageActionGroup" stepKey="assertProductInStorefront2">
         <argument name="product" value="_defaultProduct"/>
     </actionGroup>
 </test>
@@ -55,12 +55,12 @@ In this example, we add an action group to a new copy of the original test for o
         <group value="product"/>
     </annotations>
     <!-- This will be added after the step "fillProductFieldsInAdmin" on line 20 in the above test. -->
-    <actionGroup ref="AddMyExtensionData" stepKey="extensionField" after="fillProductFieldsInAdmin">
+    <actionGroup ref="AddMyExtensionDataActionGroup" stepKey="extensionField" after="fillProductFieldsInAdmin">
         <argument name="extensionData" value="_myData"/>
     </actionGroup>
 
     <!-- This will be added after the step "assertProductInStorefront2" on line 28 in the above test. -->
-    <actionGroup ref="AssertMyExtensionDataExists" stepKey="assertExtensionInformation" after="assertProductInStorefront2">
+    <actionGroup ref="AssertMyExtensionDataExistsActionGroup" stepKey="assertExtensionInformation" after="assertProductInStorefront2">
         <argument name="extensionData" value="_myData"/>
     </actionGroup>
 </test>
@@ -89,16 +89,16 @@ Note that there are now two tests below.
         <deleteData createDataKey="createPreReqCategory" stepKey="deletePreReqCategory"/>
     </after>
 
-    <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
-    <actionGroup ref="FillAdminSimpleProductForm" stepKey="fillProductFieldsInAdmin">
+    <actionGroup ref="LoginAsAdminActionGroup" stepKey="loginAsAdmin1"/>
+    <actionGroup ref="FillAdminSimpleProductFormActionGroup" stepKey="fillProductFieldsInAdmin">
         <argument name="category" value="$$createPreReqCategory$$"/>
         <argument name="simpleProduct" value="_defaultProduct"/>
     </actionGroup>
-    <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="assertProductInStorefront1">
+    <actionGroup ref="AssertProductInStorefrontCategoryPageActionGroup" stepKey="assertProductInStorefront1">
         <argument name="category" value="$$createPreReqCategory$$"/>
         <argument name="product" value="_defaultProduct"/>
     </actionGroup>
-    <actionGroup ref="AssertProductInStorefrontProductPage" stepKey="assertProductInStorefront2">
+    <actionGroup ref="AssertProductInStorefrontProductPageActionGroup" stepKey="assertProductInStorefront2">
         <argument name="product" value="_defaultProduct"/>
     </actionGroup>
 </test>
@@ -120,25 +120,25 @@ Note that there are now two tests below.
         <deleteData createDataKey="createPreReqCategory" stepKey="deletePreReqCategory"/>
     </after>
 
-    <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
-    <actionGroup ref="FillAdminSimpleProductForm" stepKey="fillProductFieldsInAdmin">
+    <actionGroup ref="LoginAsAdminActionGroup" stepKey="loginAsAdmin1"/>
+    <actionGroup ref="FillAdminSimpleProductFormActionGroup" stepKey="fillProductFieldsInAdmin">
         <argument name="category" value="$$createPreReqCategory$$"/>
         <argument name="simpleProduct" value="_defaultProduct"/>
     </actionGroup>
 
-    <actionGroup ref="AddMyExtensionData" stepKey="extensionField">
+    <actionGroup ref="AddMyExtensionDataActionGroup" stepKey="extensionField">
         <argument name="extensionData" value="_myData"/>
     </actionGroup>
 
-    <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="assertProductInStorefront1">
+    <actionGroup ref="AssertProductInStorefrontCategoryPageActionGroup" stepKey="assertProductInStorefront1">
         <argument name="category" value="$$createPreReqCategory$$"/>
         <argument name="product" value="_defaultProduct"/>
     </actionGroup>
-    <actionGroup ref="AssertProductInStorefrontProductPage" stepKey="assertProductInStorefront2">
+    <actionGroup ref="AssertProductInStorefrontProductPageActionGroup" stepKey="assertProductInStorefront2">
         <argument name="product" value="_defaultProduct"/>
     </actionGroup>
 
-    <actionGroup ref="AssertMyExtensionDataExists" stepKey="assertExtensionInformation">
+    <actionGroup ref="AssertMyExtensionDataExistsActionGroup" stepKey="assertExtensionInformation">
         <argument name="extensionData" value="_myData"/>
     </actionGroup>
 </test>

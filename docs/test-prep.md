@@ -323,7 +323,7 @@ To create an action group, take the steps and put them within an `<actionGroup>`
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
 <!--Fill main fields in create product form-->
-    <actionGroup name="fillMainProductForm">
+    <actionGroup name="FillMainProductFormActionGroup">
         <arguments>
             <argument name="product" defaultValue="_defaultProduct"/>
         </arguments>
@@ -366,7 +366,7 @@ Now we can reference this action group within our test (and any other test).
         </annotations>
         <before>
             <!-- Login to Admin panel -->
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminPanel" />
+            <actionGroup ref="LoginAsAdminActionGroup" stepKey="loginToAdminPanel" />
         </before>
         <after>
             <!-- Logout from Admin panel -->
@@ -377,19 +377,19 @@ Now we can reference this action group within our test (and any other test).
         <waitForPageLoad stepKey="waitForProductGridPageLoaded" />
 
         <!-- Click "Add Product" button -->
-        <actionGroup ref="goToCreateProductPage" stepKey="goToCreateProductPage" />
+        <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateProductPage" />
   -----><fillField selector="{{AdminProductFormSection.productName}}" userInput="{{product.name}}" stepKey="fillProductName"/>
-        <actionGroup ref="fillMainProductForm" stepKey="fillProductForm">
+        <actionGroup ref="FillMainProductFormActionGroup" stepKey="fillProductForm">
             <argument name="product" value="_defaultProduct" />
         </actionGroup>
 
         <!-- See success save message "You saved the product." -->
-        <actionGroup ref="saveProductForm" stepKey="clickSaveOnProductForm" />
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="clickSaveOnProductForm" />
 
         <actionGroup ref="AssertProductInGridActionGroup" stepKey="assertProductInGrid" />
 
         <!-- Open Storefront Product Page and verify "Name", "SKU", "Price" -->
-        <actionGroup ref="AssertProductInStorefrontProductPage" stepKey="assertProductInStorefrontProductPage">
+        <actionGroup ref="AssertProductInStorefrontProductPageActionGroup" stepKey="assertProductInStorefrontProductPage">
             <argument name="product" value="_defaultProduct" />
         </actionGroup>
     </test>

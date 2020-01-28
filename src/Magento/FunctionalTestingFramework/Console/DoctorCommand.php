@@ -138,6 +138,7 @@ class DoctorCommand extends Command
                 $e->getMessage() . "\nPlease verify if " . $urlVar . ", "
                 . "MAGENTO_ADMIN_USERNAME and MAGENTO_ADMIN_PASSWORD in .env are valid."
             );
+            $this->ioStyle->comment('Context: '.print_r($e->getContext(), true));
         }
         return $result;
     }

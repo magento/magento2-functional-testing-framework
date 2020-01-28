@@ -35,7 +35,7 @@
             <actionGroup ref="FunctionalActionGroup" stepKey="beforeGroup"/>
         </before>
         <amOnPage stepKey="step1" url="/someUrl"/>
-        <actionGroup ref="FunctionalActionGroupWithData" stepKey="actionGroupWithData1"/>
+        <actionGroup ref="FunctionalActionGroupWithDataActionGroup" stepKey="actionGroupWithData1"/>
         <click stepKey="step6" selector="loginButton"/>
         <after>
             <actionGroup ref="FunctionalActionGroup" stepKey="afterGroup"/>
@@ -53,7 +53,7 @@
             <actionGroup ref="FunctionalActionGroup" stepKey="beforeGroup"/>
         </before>
         <amOnPage stepKey="step1" url="/someUrl"/>
-        <actionGroup ref="FunctionalActionGroupWithData" stepKey="actionGroupWithDataOverride1">
+        <actionGroup ref="FunctionalActionGroupWithDataActionGroup" stepKey="actionGroupWithDataOverride1">
             <argument name="person" value="ReplacementPerson"/>
         </actionGroup>
         <click stepKey="step6" selector="loginButton"/>
@@ -73,7 +73,7 @@
             <actionGroup ref="FunctionalActionGroup" stepKey="beforeGroup"/>
         </before>
         <amOnPage stepKey="step1" url="/someUrl"/>
-        <actionGroup ref="FunctionalActionGroupNoDefault" stepKey="actionGroupWithDataOverride1">
+        <actionGroup ref="FunctionalActionGroupNoDefaultActionGroup" stepKey="actionGroupWithDataOverride1">
             <argument name="person" value="DefaultPerson"/>
         </actionGroup>
         <click stepKey="step6" selector="loginButton"/>
@@ -93,7 +93,7 @@
             <actionGroup ref="FunctionalActionGroup" stepKey="beforeGroup"/>
         </before>
         <createData entity="DefaultPerson" stepKey="createPerson"/>
-        <actionGroup ref="FunctionalActionGroupWithData" stepKey="actionGroupWithPersistedData1">
+        <actionGroup ref="FunctionalActionGroupWithDataActionGroup" stepKey="actionGroupWithPersistedData1">
             <argument name="person" value="$createPerson$"/>
         </actionGroup>
         <after>
@@ -111,7 +111,7 @@
             <createData entity="ReplacementPerson" stepKey="createPersonParam"/>
             <actionGroup ref="FunctionalActionGroup" stepKey="beforeGroup"/>
         </before>
-        <actionGroup ref="FunctionalActionGroupWithData" stepKey="actionGroupWithPersistedData1">
+        <actionGroup ref="FunctionalActionGroupWithDataActionGroup" stepKey="actionGroupWithPersistedData1">
             <argument name="person" value="$$createPersonParam$$"/>
         </actionGroup>
         <after>
@@ -130,9 +130,9 @@
             <actionGroup ref="FunctionalActionGroup" stepKey="beforeGroup"/>
         </before>
         <amOnPage stepKey="step1" url="/someUrl"/>
-        <actionGroup ref="FunctionalActionGroupWithData" stepKey="actionGroup1"/>
+        <actionGroup ref="FunctionalActionGroupWithDataActionGroup" stepKey="actionGroup1"/>
         <click stepKey="step6" selector="loginButton"/>
-        <actionGroup ref="FunctionalActionGroupWithData" stepKey="actionGroupWithDataOverride2">
+        <actionGroup ref="FunctionalActionGroupWithDataActionGroup" stepKey="actionGroupWithDataOverride2">
             <argument name="person" value="ReplacementPerson"/>
         </actionGroup>
         <after>
@@ -150,7 +150,7 @@
             <createData entity="ReplacementPerson" stepKey="createPersonParam"/>
             <actionGroup ref="FunctionalActionGroup" stepKey="beforeGroup"/>
         </before>
-        <actionGroup ref="FunctionalActionGroupForMerge" stepKey="actionGroupForMerge">
+        <actionGroup ref="FunctionalActionGroupForMergeActionGroup" stepKey="actionGroupForMerge">
             <argument name="myArg" value="DefaultPerson"/>
         </actionGroup>
         <after>
@@ -168,19 +168,19 @@
             <createData entity="ReplacementPerson" stepKey="createPersonParam"/>
             <actionGroup ref="FunctionalActionGroup" stepKey="beforeGroup"/>
         </before>
-        <actionGroup ref="FunctionalActionGroupWithTrickyArgument" stepKey="actionGroup1"/>
+        <actionGroup ref="FunctionalActionGroupWithTrickyArgumentActionGroup" stepKey="actionGroup1"/>
         <after>
             <actionGroup ref="FunctionalActionGroup" stepKey="afterGroup"/>
         </after>
     </test>
     <test name="ActionGroupMergedViaInsertBefore">
-        <actionGroup ref="FunctionalActionGroupForMassMergeBefore" stepKey="keyone"/>
+        <actionGroup ref="FunctionalActionGroupForMassMergeBeforeActionGroup" stepKey="keyone"/>
     </test>
     <test name="ActionGroupMergedViaInsertAfter">
-        <actionGroup ref="FunctionalActionGroupForMassMergeAfter" stepKey="keyone"/>
+        <actionGroup ref="FunctionalActionGroupForMassMergeAfterActionGroup" stepKey="keyone"/>
     </test>
     <test name="PersistedAndXmlEntityArguments">
-        <actionGroup ref="FunctionalActionGroupWithXmlAndPersistedData" stepKey="afterGroup">
+        <actionGroup ref="FunctionalActionGroupWithXmlAndPersistedDataActionGroup" stepKey="afterGroup">
             <argument name="persistedData" value="$persistedInTest$"/>
         </actionGroup>
     </test>

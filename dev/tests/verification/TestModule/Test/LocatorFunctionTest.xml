@@ -11,20 +11,20 @@
     <test name="LocatorFunctionTest">
         <createData entity="ReplacementPerson" stepKey="data"/>
 
-        <click stepKey="SimpleLocator" selector="{{LocatorFunctionSection.simpleLocator}}"/>
-        <click stepKey="SimpleLocatorNonShorthand" selector="{{LocatorFunctionSection.simpleLocatorNonShorthand}}"/>
-        <click stepKey="ArrayLocator" selector="{{LocatorFunctionSection.arrayLocator}}"/>
+        <click stepKey="simpleLocator" selector="{{LocatorFunctionSection.simpleLocator}}"/>
+        <click stepKey="simpleLocatorNonShorthand" selector="{{LocatorFunctionSection.simpleLocatorNonShorthand}}"/>
+        <click stepKey="arrayLocator" selector="{{LocatorFunctionSection.arrayLocator}}"/>
 
-        <click stepKey="OneParamLiteral" selector="{{LocatorFunctionSection.simpleLocatorOneParam('string')}}"/>
-        <click stepKey="OneParamData" selector="{{LocatorFunctionSection.simpleLocatorOneParam(ReplacementPerson.firstname)}}"/>
-        <click stepKey="OneParamPersisted" selector="{{LocatorFunctionSection.simpleLocatorOneParam($data.key$)}}"/>
+        <click stepKey="oneParamLiteral" selector="{{LocatorFunctionSection.simpleLocatorOneParam('string')}}"/>
+        <click stepKey="oneParamData" selector="{{LocatorFunctionSection.simpleLocatorOneParam(ReplacementPerson.firstname)}}"/>
+        <click stepKey="oneParamPersisted" selector="{{LocatorFunctionSection.simpleLocatorOneParam($data.key$)}}"/>
 
-        <click stepKey="TwoParamLiteral" selector="{{LocatorFunctionSection.simpleLocatorTwoParam('string1', 'string2')}}"/>
-        <click stepKey="TwoParamData" selector="{{LocatorFunctionSection.simpleLocatorTwoParam(ReplacementPerson.firstname, ReplacementPerson.lastname)}}"/>
-        <click stepKey="TwoParamPersisted" selector="{{LocatorFunctionSection.simpleLocatorTwoParam($data.key1$, $data.key2$)}}"/>
+        <click stepKey="twoParamLiteral" selector="{{LocatorFunctionSection.simpleLocatorTwoParam('string1', 'string2')}}"/>
+        <click stepKey="twoParamData" selector="{{LocatorFunctionSection.simpleLocatorTwoParam(ReplacementPerson.firstname, ReplacementPerson.lastname)}}"/>
+        <click stepKey="twoParamPersisted" selector="{{LocatorFunctionSection.simpleLocatorTwoParam($data.key1$, $data.key2$)}}"/>
 
-        <click stepKey="TwoParamMix1" selector="{{LocatorFunctionSection.simpleLocatorTwoParam('string1', ReplacementPerson.firstname)}}"/>
-        <click stepKey="TwoParamMix2" selector="{{LocatorFunctionSection.simpleLocatorTwoParam('string1', $data.key1$)}}"/>
-        <click stepKey="TwoParamMix3" selector="{{LocatorFunctionSection.simpleLocatorTwoParam(ReplacementPerson.firstname, $data.key1$)}}"/>
+        <click stepKey="twoParamMix1" selector="{{LocatorFunctionSection.simpleLocatorTwoParam('string1', ReplacementPerson.firstname)}}"/>
+        <click stepKey="twoParamMix2" selector="{{LocatorFunctionSection.simpleLocatorTwoParam('string1', $data.key1$)}}"/>
+        <click stepKey="twoParamMix3" selector="{{LocatorFunctionSection.simpleLocatorTwoParam(ReplacementPerson.firstname, $data.key1$)}}"/>
     </test>
 </tests>

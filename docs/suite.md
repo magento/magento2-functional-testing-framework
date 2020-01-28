@@ -100,7 +100,7 @@ There are several ways to generate and execute your new test in the context of a
 <suites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Suite/etc/suiteSchema.xsd">
     <suite name="WYSIWYG">
         <before>
-            <actionGroup ref="LoginAsAdmin" stepKey="login"/>
+            <actionGroup ref="LoginAsAdminActionGroup" stepKey="login"/>
             <amOnPage url="admin/admin/system_config/edit/section/cms/" stepKey="navigateToConfigurationPage" />
             <waitForPageLoad stepKey="wait1"/>
             <conditionalClick stepKey="expandWYSIWYGOptions" selector="{{ContentManagementSection.WYSIWYGOptions}}" dependentSelector="{{ContentManagementSection.CheckIfTabExpand}}" visible="true" />
@@ -112,8 +112,8 @@ There are several ways to generate and execute your new test in the context of a
             <click selector="{{ContentManagementSection.Save}}" stepKey="saveConfig" />
         </before>
         <after>
-            <actionGroup ref="LoginAsAdmin" stepKey="login"/>
-            <actionGroup ref="DisabledWYSIWYG" stepKey="disable"/>
+            <actionGroup ref="LoginAsAdminActionGroup" stepKey="login"/>
+            <actionGroup ref="DisabledWYSIWYGActionGroup" stepKey="disable"/>
         </after>
         <include>
             <group name="WYSIWYG"/>

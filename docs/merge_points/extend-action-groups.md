@@ -9,7 +9,7 @@ In this example we add a `<click>` command to check the checkbox that our extens
 <!-- {% raw %} -->
 
 ```xml
-<actionGroup name="FillAdminSimpleProductForm">
+<actionGroup name="FillAdminSimpleProductFormActionGroup">
     <arguments>
         <argument name="category"/>
         <argument name="simpleProduct"/>
@@ -37,8 +37,8 @@ In this example we add a `<click>` command to check the checkbox that our extens
 ## File to merge
 
 ```xml
-<actionGroup name="FillAdminSimpleProductFormWithMyExtension" extends="FillAdminSimpleProductForm">
-    <!-- This will be added after the step "fillQuantity" on line 12 in the above test. -->
+<actionGroup name="FillAdminSimpleProductFormWithMyExtensionActionGroup" extends="FillAdminSimpleProductForm>
+    <!-- This will be added after the step ActionGroup"fillQuantity" on line 12 in the above test. -->
     <click selector="{{MyExtensionSection.myCheckbox}}" stepKey="clickMyCheckbox" after="fillQuantity"/>
 </actionGroup>
 ```
@@ -48,7 +48,7 @@ In this example we add a `<click>` command to check the checkbox that our extens
 Note that there are now two action groups below.
 
 ```xml
-<actionGroup name="FillAdminSimpleProductForm">
+<actionGroup name="FillAdminSimpleProductFormActionGroup">
     <arguments>
         <argument name="category"/>
         <argument name="simpleProduct"/>
@@ -71,7 +71,7 @@ Note that there are now two action groups below.
     <click selector="{{AdminProductSEOSection.sectionHeader}}" stepKey="openSeoSectionAssert"/>
     <seeInField userInput="{{simpleProduct.urlKey}}" selector="{{AdminProductSEOSection.urlKeyInput}}" stepKey="assertFieldUrlKey"/>
 </actionGroup>
-<actionGroup name="FillAdminSimpleProductFormWithMyExtension">
+<actionGroup name="FillAdminSimpleProductFormWithMyExtensionActionGroup">
     <arguments>
         <argument name="category"/>
         <argument name="simpleProduct"/>

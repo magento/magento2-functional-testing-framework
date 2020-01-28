@@ -54,10 +54,10 @@ class ActionGroupDomTest extends MagentoTestCase
     public function testActionGroupDomDuplicateActionGroupsValidation()
     {
         $sampleXml = '<actionGroups>
-            <actionGroup name="actionGroupName">
+            <actionGroup name="ActionGroupNameActionGroup">
                 <wait time="1" stepKey="key1" />
             </actionGroup>
-            <actionGroup name="actionGroupName">
+            <actionGroup name="ActionGroupNameActionGroup">
                 <wait time="1" stepKey="key1" />
             </actionGroup>
         </actionGroups>';

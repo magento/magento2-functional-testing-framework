@@ -7,7 +7,7 @@
 -->
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
-    <actionGroup name="xmlDuplicateActionGroup">
+    <actionGroup name="XmlDuplicateActionGroup">
         <acceptPopup stepKey="ap1"/>
         <acceptPopup stepKey="ap2"/>
         <amOnPage stepKey="aop1" url="1"/>

@@ -63,16 +63,16 @@ Other test data can be more difficult to detect, and requires an understanding o
 ```xml
 <test name="AdminAddImageForCategoryTest">
     <before>
-        <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+        <actionGroup ref="LoginAsAdminActionGroup" stepKey="loginAsAdmin"/>
     </before>
     <after>
-        <actionGroup ref="DeleteCategory" stepKey="DeleteCategory">
+        <actionGroup ref="DeleteCategoryActionGroup" stepKey="deleteCategory">
             <argument name="categoryEntity" value="SimpleSubCategory"/>
         </actionGroup>
-        <actionGroup ref="logout" stepKey="logout"/>
+        <actionGroup ref="LogoutActionGroup" stepKey="logout"/>
     </after>
     <!-- Go to create a new category with image -->
-    <actionGroup ref="goToCreateCategoryPage" stepKey="goToCreateCategoryPage"/>
+    <actionGroup ref="GoToCreateCategoryPageActionGroup" stepKey="goToCreateCategoryPage"/>
     ...
 </test>
 ```

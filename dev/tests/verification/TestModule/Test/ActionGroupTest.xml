@@ -12,7 +12,7 @@
             <severity value="BLOCKER"/>
             <title value="Action Group With No Argument"/>
         </annotations>
-        <actionGroup ref="actionGroupWithoutArguments" stepKey="actionGroup"/>
+        <actionGroup ref="ActionGroupWithoutArgumentsActionGroup" stepKey="actionGroup"/>
     </test>
 
     <test name="ActionGroupWithDefaultArgumentAndStringSelectorParam">
@@ -21,7 +21,7 @@
             <title value="Action Group With Default Argument Value and Hardcoded Value in Param"/>
         </annotations>
 
-        <actionGroup ref="actionGroupWithDefaultArgumentAndStringSelectorParam" stepKey="actionGroup"/>
+        <actionGroup ref="ActionGroupWithDefaultArgumentAndStringSelectorParamActionGroup" stepKey="actionGroup"/>
     </test>
 
     <test name="ActionGroupWithPassedArgumentAndStringSelectorParam">
@@ -30,7 +30,7 @@
             <title value="Action Group With Passed Argument Value and Hardcoded Value in Param"/>
         </annotations>
 
-        <actionGroup ref="actionGroupWithDefaultArgumentAndStringSelectorParam" stepKey="actionGroup">
+        <actionGroup ref="ActionGroupWithDefaultArgumentAndStringSelectorParamActionGroup" stepKey="actionGroup">
             <argument name="someArgument" value="UniquePerson"/>
         </actionGroup>
     </test>
@@ -41,7 +41,7 @@
             <title value="Action Group With Default Argument Value and Argument Value in Param"/>
         </annotations>
 
-        <actionGroup ref="actionGroupWithSingleParameterSelectorFromArgument" stepKey="actionGroup"/>
+        <actionGroup ref="ActionGroupWithSingleParameterSelectorFromArgumentActionGroup" stepKey="actionGroup"/>
     </test>
 
     <test name="ActionGroupWithSingleParameterSelectorFromPassedArgument">
@@ -50,7 +50,7 @@
             <title value="Action Group With Passed Argument Value and Argument Value in Param"/>
         </annotations>
 
-        <actionGroup ref="actionGroupWithSingleParameterSelectorFromArgument" stepKey="actionGroup">
+        <actionGroup ref="ActionGroupWithSingleParameterSelectorFromArgumentActionGroup" stepKey="actionGroup">
             <argument name="someArgument" value="UniquePerson"/>
         </actionGroup>
     </test>
@@ -61,7 +61,7 @@
             <title value="Action Group With Passed Argument Value and Multiple Argument Values in Param"/>
         </annotations>
 
-        <actionGroup ref="actionGroupWithMultipleParameterSelectorsFromArgument" stepKey="actionGroup"/>
+        <actionGroup ref="ActionGroupWithMultipleParameterSelectorsFromArgumentActionGroup" stepKey="actionGroup"/>
     </test>
 
     <test name="ActionGroupWithSimpleDataUsageFromPassedArgument">
@@ -70,35 +70,35 @@
             <title value="Action Group With Simple Data Usage From Passed Argument"/>
         </annotations>
 
-        <actionGroup ref="actionGroupWithStringUsage" stepKey="actionGroup1">
+        <actionGroup ref="ActionGroupWithStringUsageActionGroup" stepKey="actionGroup1">
             <argument name="someArgument" value="overrideString"/>
         </actionGroup>
-        <actionGroup ref="actionGroupWithStringUsage" stepKey="actionGroup11">
+        <actionGroup ref="ActionGroupWithStringUsageActionGroup" stepKey="actionGroup11">
             <argument name="someArgument" value="1"/>
         </actionGroup>
-        <actionGroup ref="actionGroupWithStringUsage" stepKey="actionGroup12">
+        <actionGroup ref="ActionGroupWithStringUsageActionGroup" stepKey="actionGroup12">
             <argument name="someArgument" value="1.5"/>
         </actionGroup>
-        <actionGroup ref="actionGroupWithStringUsage" stepKey="actionGroup13">
+        <actionGroup ref="ActionGroupWithStringUsageActionGroup" stepKey="actionGroup13">
             <argument name="someArgument" value="true"/>
         </actionGroup>
-        <actionGroup ref="actionGroupWithStringUsage" stepKey="actionGroup2">
+        <actionGroup ref="ActionGroupWithStringUsageActionGroup" stepKey="actionGroup2">
             <argument name="someArgument" value="simpleData.firstname"/>
         </actionGroup>
-        <actionGroup ref="actionGroupWithStringUsage" stepKey="actionGroup3">
+        <actionGroup ref="ActionGroupWithStringUsageActionGroup" stepKey="actionGroup3">
             <argument name="someArgument" value="$persisted.data$"/>
         </actionGroup>
 
-        <actionGroup ref="actionGroupWithEntityUsage" stepKey="actionGroup4">
+        <actionGroup ref="ActionGroupWithEntityUsageActionGroup" stepKey="actionGroup4">
             <argument name="someArgument" value="simpleData.firstname"/>
         </actionGroup>
-        <actionGroup ref="actionGroupWithEntityUsage" stepKey="actionGroup5">
+        <actionGroup ref="ActionGroupWithEntityUsageActionGroup" stepKey="actionGroup5">
             <argument name="someArgument" value="$simpleData.firstname$"/>
         </actionGroup>
-        <actionGroup ref="actionGroupWithEntityUsage" stepKey="actionGroup6">
+        <actionGroup ref="ActionGroupWithEntityUsageActionGroup" stepKey="actionGroup6">
             <argument name="someArgument" value="$simpleData.firstname[0]$"/>
         </actionGroup>
-        <actionGroup ref="actionGroupWithEntityUsage" stepKey="actionGroup7">
+        <actionGroup ref="ActionGroupWithEntityUsageActionGroup" stepKey="actionGroup7">
             <argument name="someArgument" value="$simpleData.firstname[data_index]$"/>
         </actionGroup>
     </test>
@@ -108,72 +108,72 @@
             <severity value="CRITICAL"/>
             <title value="Action Group With Simple Data Usage From Default Argument"/>
         </annotations>
-        <actionGroup ref="actionGroupWithStringUsage" stepKey="actionGroup"/>
+        <actionGroup ref="ActionGroupWithStringUsageActionGroup" stepKey="actionGroup"/>
     </test>
 
     <test name="ActionGroupWithStepKeyReferences">
-        <actionGroup ref="FunctionActionGroupWithStepKeyReferences" stepKey="actionGroup"/>
+        <actionGroup ref="FunctionActionGroupWithStepKeyReferencesActionGroup" stepKey="actionGroup"/>
     </test>
 
     <test name="ActionGroupUsingNestedArgument">
-        <actionGroup ref="ActionGroupToExtend" stepKey="actionGroup">
+        <actionGroup ref="ActionGroupToExtendActionGroup" stepKey="actionGroup">
             <argument name="count" value="99"/>
         </actionGroup>
     </test>
 
     <test name="ActionGroupToExtend">
-        <actionGroup ref="ActionGroupToExtend" stepKey="actionGroup">
+        <actionGroup ref="ActionGroupToExtendActionGroup" stepKey="actionGroup">
             <argument name="count" value="99"/>
         </actionGroup>
     </test>
 
     <test name="ExtendedActionGroup">
-        <actionGroup ref="extendTestActionGroup" stepKey="actionGroup">
+        <actionGroup ref="ExtendTestActionGroup" stepKey="actionGroup">
             <argument name="count" value="99"/>
             <argument name="otherCount" value="8000"/>
         </actionGroup>
     </test>
 
     <test name="ExtendedRemoveActionGroup">
-        <actionGroup ref="extendRemoveTestActionGroup" stepKey="actionGroup"/>
+        <actionGroup ref="ExtendRemoveTestActionGroup" stepKey="actionGroup"/>
     </test>
 
     <test name="ActionGroupUsingCreateData">
         <before>
-            <actionGroup ref="actionGroupWithCreateData" stepKey="Key1"/>
+            <actionGroup ref="ActionGroupWithCreateDataActionGroup" stepKey="key1"/>
         </before>
     </test>
 
     <test name="ActionGroupSkipReadiness">
-        <actionGroup ref="actionGroupWithSkipReadinessActions" stepKey="skipReadinessActionGroup"/>
+        <actionGroup ref="ActionGroupWithSkipReadinessActionsActionGroup" stepKey="skipReadinessActionGroup"/>
     </test>
 
     <test name="ActionGroupContainsStepKeyInArgText">
         <before>
-            <actionGroup ref="actionGroupContainsStepKeyInArgValue" stepKey="actionGroup">
+            <actionGroup ref="ActionGroupContainsStepKeyInArgValueActionGroup" stepKey="actionGroup">
                 <argument name="sameStepKeyAsArg" value="arg1"/>
             </actionGroup>
         </before>
-        <actionGroup ref="actionGroupContainsStepKeyInArgValue" stepKey="actionGroup">
+        <actionGroup ref="ActionGroupContainsStepKeyInArgValueActionGroup" stepKey="actionGroup">
             <argument name="sameStepKeyAsArg" value="arg1"/>
         </actionGroup>
     </test>
 
     <test name="ActionGroupWithSectionAndDataAsArguments">
-        <actionGroup ref="actionGroupWithSectionAndData" stepKey="actionGroup">
+        <actionGroup ref="ActionGroupWithSectionAndDataActionGroup" stepKey="actionGroup">
             <argument name="content" value="{{simpleData.firstname}}"/>
             <argument name="section" value="SampleSection"/>
         </actionGroup>
     </test>
 
     <test name="ActionGroupWithParameterizedElementWithHyphen">
-        <actionGroup ref="SectionArgumentWithParameterizedSelector" stepKey="actionGroup">
+        <actionGroup ref="SectionArgumentWithParameterizedSelectorActionGroup" stepKey="actionGroup">
             <argument name="section" value="SampleSection"/>
         </actionGroup>
     </test>
 
     <test name="ActionGroupWithParameterizedElementsWithStepKeyReferences">
-        <actionGroup ref="actionGroupWithParametrizedSelectors" stepKey="actionGroup">
+        <actionGroup ref="ActionGroupWithParametrizedSelectorsActionGroup" stepKey="actionGroup">
             <argument name="param" value="simpleData"/>
             <argument name="param2" value="simpleParamData"/>
         </actionGroup>

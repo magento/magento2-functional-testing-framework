@@ -17,7 +17,7 @@
                 <field key="someKey">dataHere</field>
             </createData>
             <click stepKey="clickWithData" userInput="$create.data$"/>
-            <actionGroup ref="actionGroupWithTwoArguments" stepKey="AC">
+            <actionGroup ref="ActionGroupWithTwoArgumentsActionGroup" stepKey="aC">
                 <argument name="somePerson" value="simpleData"/>
                 <argument name="anotherPerson" value="uniqueData"/>
             </actionGroup>
@@ -25,7 +25,7 @@
         <after>
             <amOnPage url="some.url" stepKey="after"/>
             <deleteData url="deleteThis" stepKey="delete"/>
-            <actionGroup ref="actionGroupWithTwoArguments" stepKey="AC">
+            <actionGroup ref="ActionGroupWithTwoArgumentsActionGroup" stepKey="aC">
                 <argument name="somePerson" value="simpleData"/>
                 <argument name="anotherPerson" value="uniqueData"/>
             </actionGroup>

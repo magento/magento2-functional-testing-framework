@@ -184,7 +184,7 @@ Modify the action group to use another product.
 
 ```xml
 <actionGroups>
-    <actionGroup name="CountProductA">
+    <actionGroup name="CountProductAActionGroup">
         <arguments>
             <argument name="count" type="string"/>
         </arguments>
@@ -195,8 +195,8 @@ Modify the action group to use another product.
         </assertCount>
     </actionGroup>
 
-    <actionGroup name="CountProductB" extends="CountProductA">
-        <grabMultiple selector="selectorForProductB" stepKey="grabProducts"/>
+    <actionGroup name="CountProductBActionGroup" extends="CountProductA>
+        <grabMultiple selector=ActionGroup"selectorForProductB" stepKey="grabProducts"/>
     </actionGroup>
 </actionGroups>
 ```
@@ -205,7 +205,7 @@ Modify the action group to use another product.
 
 ```xml
 <actionGroups>
-    <actionGroup name="CountProductA">
+    <actionGroup name="CountProductAActionGroup">
         <arguments>
             <argument name="count" type="string"/>
         </arguments>
@@ -216,7 +216,7 @@ Modify the action group to use another product.
         </assertCount>
     </actionGroup>
 
-    <actionGroup name="CountProductB">
+    <actionGroup name="CountProductBActionGroup">
         <arguments>
             <argument name="count" type="string"/>
         </arguments>
@@ -238,16 +238,16 @@ Add a new test `VerifyProductCount` that asserts the count of products:
 
 ```xml
 <actionGroups>
-    <actionGroup name="GetProductCount">
+    <actionGroup name="GetProductCountActionGroup">
         <arguments>
             <argument name="productSelector" type="string"/>
         </arguments>
         <grabMultiple selector="{{productSelector}}" stepKey="grabProducts"/>
     </actionGroup>
 
-    <actionGroup name="VerifyProductCount" extends="GetProductCount">
+    <actionGroup name="VerifyProductCountActionGroup" extends="GetProductCount>
         <arguments>
-            <argument name="count" type="string"/>
+            <argument name=ActionGroup"count" type="string"/>
         </arguments>
         <assertCount stepKey="assertCount" after="grabProducts">
             <expectedResult type="int">{{count}}</expectedResult>
@@ -261,14 +261,14 @@ Add a new test `VerifyProductCount` that asserts the count of products:
 
 ```xml
 <actionGroups>
-    <actionGroup name="GetProductCount">
+    <actionGroup name="GetProductCountActionGroup">
         <arguments>
             <argument name="productSelector" type="string"/>
         </arguments>
         <grabMultiple selector="{{productSelector}}" stepKey="grabProducts"/>
     </actionGroup>
 
-    <actionGroup name="VerifyProductCount">
+    <actionGroup name="VerifyProductCountActionGroup">
         <arguments>
             <argument name="count" type="string"/>
             <argument name="productSelector" type="string"/>
