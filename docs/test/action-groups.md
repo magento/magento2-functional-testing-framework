@@ -149,7 +149,7 @@ The `string` argument type provides a method to pass a single piece of data to t
 ### Explicitly define the argument value
 
 ```xml
-<actionGroup stepKey="fillWithStringLiteral" ref="fillExampleActionGroup">
+<actionGroup stepKey="fillWithStringLiteral" ref="FillExampleActionGroup">
     <argument name="relevantString" value="overrideString"/>
 </actionGroup>
 ```
@@ -157,7 +157,7 @@ The `string` argument type provides a method to pass a single piece of data to t
 ### Use persisted data references to define the argument value
 
 ```xml
-<actionGroup stepKey="fillWithStringLiteral" ref="fillExampleActionGroup">
+<actionGroup stepKey="fillWithStringLiteral" ref="FillExampleActionGroup">
     <argument name="relevantString" value="$persistedData.field1$"/>
 </actionGroup>
 ```
@@ -173,7 +173,7 @@ The `field1` data contains the required string.
 MFTF resolves `{{myCustomEntity.field1}}` the same as it would in a `selector` or `userInput` attribute.
 
 ```xml
-<actionGroup stepKey="fillWithXmlData" ref="fillExampleActionGroup">
+<actionGroup stepKey="fillWithXmlData" ref="FillExampleActionGroup">
     <argument name="relevantString" value="{{myCustomEntity.field1}}"/>
 </actionGroup>
 ```

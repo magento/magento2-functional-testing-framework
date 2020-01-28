@@ -97,7 +97,7 @@
         <comment stepKey="removeMe" userInput="This Should Be Removed"/>
     </actionGroup>
 
-    <actionGroup name="ExtendRemoveTestActionGroup" extends="extendBasicActionGroup">
+    <actionGroup name="ExtendRemoveTestActionGroup" extends="ExtendBasicActionGroup">
         <remove keyForRemoval="removeMe"/>
     </actionGroup>
 
