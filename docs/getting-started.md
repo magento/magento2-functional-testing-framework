@@ -115,9 +115,9 @@ The MFTF does not support executing CLI commands if your web server points to `<
 
 ### Nginx settings {#nginx-settings}
 
-If Nginx Web server is used on your development environment then **Use Web Server Rewrites** setting in **Stores** > Settings > **Configuration** > **Web** > **Search Engine Optimization** must be set to **Yes**.
+If Nginx Web server is used on your development environment then **Use Web Server Rewrites** setting in **Stores** > Settings > **Configuration** > **General** > **Web** > **Search Engine Optimization** must be set to **Yes**.
 
-To be able to run Magento command line commands in tests add the following location block to Nginx configuration file:
+To be able to run Magento command line commands in tests add the following location block to Nginx configuration file in the Magento root directory:
 
 ```conf
 location ~* ^/dev/tests/acceptance/utils($|/) {
