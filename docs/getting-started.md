@@ -74,6 +74,12 @@ or via command line:
 bin/magento config:set cms/wysiwyg/enabled disabled
 ```
 
+Clean the cache after changing the configuration values
+
+```bash
+bin/magento cache:clean config full_page
+```
+
 <div class="bs-callout bs-callout-tip">
 When you want to test the WYSIWYG functionality, re-enable WYSIWYG in your test suite.
 </div>
@@ -95,6 +101,12 @@ bin/magento config:set admin/security/admin_account_sharing 1
 
 ```bash
 bin/magento config:set admin/security/use_form_key 0
+```
+
+Clean the cache after changing the configuration values
+
+```bash
+bin/magento cache:clean config full_page
 ```
 
 ### Webserver configuration {#web-server-configuration}
