@@ -196,7 +196,7 @@ Modify the action group to use another product.
     </actionGroup>
 
     <actionGroup name="CountProductBActionGroup" extends="CountProductA>
-        <grabMultiple selector=ActionGroup"selectorForProductB" stepKey="grabProducts"/>
+        <grabMultiple selector="selectorForProductB" stepKey="grabProducts"/>
     </actionGroup>
 </actionGroups>
 ```
@@ -247,7 +247,7 @@ Add a new test `VerifyProductCount` that asserts the count of products:
 
     <actionGroup name="VerifyProductCountActionGroup" extends="GetProductCount>
         <arguments>
-            <argument name=ActionGroup"count" type="string"/>
+            <argument name="count" type="string"/>
         </arguments>
         <assertCount stepKey="assertCount" after="grabProducts">
             <expectedResult type="int">{{count}}</expectedResult>
