@@ -1274,6 +1274,29 @@ Attribute|Type|Use|Description
 <magentoCLI command="indexer:reindex" stepKey="reindex"/>
 ```
 
+### magentoCron
+
+Used to execute Magento Cron jobs. Groups may be provided optionally. Internal mechanism of `<magentoCron>` ensures that Cron Job of single group is ran with 60 seconds interval.
+
+Attribute|Type|Use|Description
+---|---|---|---
+`groups`|string |optional| Run only specified groups of Cron Jobs
+`arguments`|string |optional| Unescaped arguments to be passed in with the CLI command.
+`timeout`|string|optional| Number of seconds CLI command can run without outputting anything.
+`stepKey`|string|required| A unique identifier of the action.
+`before`|string|optional| `stepKey` of action that must be executed next.
+`after`|string|optional| `stepKey` of preceding action.
+
+
+#### Example
+```xml
+<magentoCron stepKey="runStagingCronJobs" groups="staging"/>
+<!-- No interval here -->
+<magentoCron stepKey="runIndexCronJobs" groups="index"/>
+<!-- 60 seconds interval takes place here -->
+<magentoCron stepKey="runAllCronJobs"/>
+```
+
 ### makeScreenshot
 
 See [makeScreenshot docs on codeception.com](http://codeception.com/docs/modules/WebDriver#makeScreenshot).

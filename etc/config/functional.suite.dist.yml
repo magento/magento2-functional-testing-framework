@@ -16,6 +16,7 @@ modules:
         - \Magento\FunctionalTestingFramework\Helper\MagentoFakerData
         - \Magento\FunctionalTestingFramework\Module\MagentoSequence
         - \Magento\FunctionalTestingFramework\Module\MagentoAssert
+        - \Magento\FunctionalTestingFramework\Module\MagentoActionProxies
         - Asserts
     config:
         \Magento\FunctionalTestingFramework\Module\MagentoWebDriver:

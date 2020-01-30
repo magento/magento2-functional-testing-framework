@@ -94,21 +94,31 @@ class RunTestGroupCommand extends BaseGenerateCommand
             $command->run(new ArrayInput($args), $output);
         }
 
-        $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional --verbose --steps';
+        $commandString = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional --verbose --steps';
 
+        $exitCode = -1;
+        $returnCodes = [];
         foreach ($groups as $group) {
-            $codeceptionCommand .= " -g {$group}";
+            $codeceptionCommandString = $commandString . " -g {$group}";
+
+            $process = new Process($codeceptionCommandString);
+            $process->setWorkingDirectory(TESTS_BP);
+            $process->setIdleTimeout(600);
+            $process->setTimeout(0);
+
+            $returnCodes[] = $process->run(
+                function ($type, $buffer) use ($output) {
+                    $output->write($buffer);
+                }
+            );
         }
 
-        $process = new Process($codeceptionCommand);
-        $process->setWorkingDirectory(TESTS_BP);
-        $process->setIdleTimeout(600);
-        $process->setTimeout(0);
-
-        return $process->run(
-            function ($type, $buffer) use ($output) {
-                $output->write($buffer);
+        foreach ($returnCodes as $returnCode) {
+            if ($returnCode != 0) {
+                return $returnCode;
             }
-        );
+            $exitCode = 0;
+        }
+        return $exitCode;
     }
 }

@@ -8,7 +8,8 @@ namespace Magento\FunctionalTestingFramework\Allure\Adapter;
 use Codeception\Step\Comment;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
-use \Magento\FunctionalTestingFramework\Util\TestGenerator;
+use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
+use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Yandex\Allure\Adapter\Model\Status;
 use Yandex\Allure\Adapter\Model\Step;
 use Yandex\Allure\Codeception\AllureCodeception;
@@ -40,6 +41,13 @@ class MagentoAllureAdapter extends AllureCodeception
      * @var array
      */
     private $testFiles = [];
+
+    /**
+     * Boolean value to indicate if steps are invisible steps
+     *
+     * @var boolean
+     */
+    private $atInvisibleSteps = false;
 
     /**
      * Array of group values passed to test runner command
@@ -125,6 +133,19 @@ class MagentoAllureAdapter extends AllureCodeception
      */
     public function stepBefore(StepEvent $stepEvent)
     {
+        $stepAction = $stepEvent->getStep()->getAction();
+
+        // Set atInvisibleSteps flag and return if step is in INVISIBLE_STEP_ACTIONS
+        if (in_array($stepAction, ActionObject::INVISIBLE_STEP_ACTIONS)) {
+            $this->atInvisibleSteps = true;
+            return;
+        }
+
+        // Set back atInvisibleSteps flag
+        if ($this->atInvisibleSteps && !in_array($stepAction, ActionObject::INVISIBLE_STEP_ACTIONS)) {
+                $this->atInvisibleSteps = false;
+        }
+
         //Hard set to 200; we don't expose this config in MFTF
         $argumentsLength = 200;
         $stepKey = null;
@@ -134,11 +155,9 @@ class MagentoAllureAdapter extends AllureCodeception
         }
 
         // DO NOT alter action if actionGroup is starting, need the exact actionGroup name for good logging
-        if (strpos($stepEvent->getStep()->getAction(), ActionGroupObject::ACTION_GROUP_CONTEXT_START) !== false
-            || $stepEvent->getStep() instanceof Comment
+        if (strpos($stepAction, ActionGroupObject::ACTION_GROUP_CONTEXT_START) === false
+            && !($stepEvent->getStep() instanceof Comment)
         ) {
-            $stepAction = $stepEvent->getStep()->getAction();
-        } else {
             $stepAction = $stepEvent->getStep()->getHumanizedActionWithoutArguments();
         }
         $stepArgs = $stepEvent->getStep()->getArgumentsAsString($argumentsLength);
@@ -169,9 +188,18 @@ class MagentoAllureAdapter extends AllureCodeception
      */
     public function stepAfter(StepEvent $stepEvent = null)
     {
+        // Simply return if step is INVISIBLE_STEP_ACTIONS
+        if ($this->atInvisibleSteps) {
+            if ($stepEvent->getStep()->hasFailed()) {
+                $this->atInvisibleSteps = false;
+            }
+            return;
+        }
+
         if ($stepEvent->getStep()->hasFailed()) {
             $this->getLifecycle()->fire(new StepFailedEvent());
         }
+
         $this->getLifecycle()->fire(new StepFinishedEvent());
     }
 

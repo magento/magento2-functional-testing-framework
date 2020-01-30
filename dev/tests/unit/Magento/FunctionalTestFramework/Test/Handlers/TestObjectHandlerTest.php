@@ -92,7 +92,7 @@ class TestObjectHandlerTest extends MagentoTestCase
             [
                 'features' => ['NO MODULE DETECTED'],
                 'group' => ['test'],
-                'description' => ['<br><br><b><font size=+0.9>Test files</font></b><br><br>']
+                'description' => ['test_files' => '<h3>Test files</h3>', 'deprecated' => []]
             ],
             [
                 TestObjectExtractor::TEST_BEFORE_HOOK => $expectedBeforeHookObject,
