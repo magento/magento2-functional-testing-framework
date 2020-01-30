@@ -491,11 +491,18 @@ To run specific static check scripts
 ```bash
 vendor/bin/mftf static-checks testDependencies
 ```
+```bash
+vendor/bin/mftf static-checks actionGroupArguments
+```
+```bash
+vendor/bin/mftf static-checks testDependencies actionGroupArguments
+```
 
 #### Existing static checks
 
 * Test Dependency: Checks that test dependencies do not violate Magento module's composer dependencies.
-
+* Action Group Unused Arguments: Checks that action groups do not have unused arguments.
+    
 ### `upgrade:tests`
 
 Applies all the MFTF major version upgrade scripts to test components in the given path (`test.xml`, `data.xml`, etc).

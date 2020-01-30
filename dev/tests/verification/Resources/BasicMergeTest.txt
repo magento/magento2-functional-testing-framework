@@ -16,7 +16,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
  * @Title("[NO TESTCASEID]: BasicMergeTest")
  * @group functional
  * @group mergeTest
- * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/MergeFunctionalTest.xml<br>verification/TestModuleMerged/Test/MergeFunctionalTest.xml<br>")
+ * @Description("<h3>Test files</h3>verification/TestModule/Test/MergeFunctionalTest.xml<br>verification/TestModuleMerged/Test/MergeFunctionalTest.xml<br>")
  */
 class BasicMergeTestCest
 {

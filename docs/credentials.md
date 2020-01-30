@@ -3,10 +3,11 @@
 When you test functionality that involves external services such as UPS, FedEx, PayPal, or SignifyD,
 use the MFTF credentials feature to hide sensitive [data][] like integration tokens and API keys.
 
-Currently the MFTF supports two types of credential storage:
+Currently the MFTF supports three types of credential storage:
 
 -  **.credentials file**
--  **HashiCorp vault**
+-  **HashiCorp Vault**
+-  **AWS Secrets Manager**
 
 ## Configure File Storage
 
@@ -135,11 +136,100 @@ CREDENTIAL_VAULT_ADDRESS=http://127.0.0.1:8200
 CREDENTIAL_VAULT_SECRET_BASE_PATH=secret
 ```
 
-## Configure both File Storage and Vault Storage
+## Configure AWS Secrets Manager
 
-It is possible and sometimes useful to setup and use both `.credentials` file and vault for secret storage at the same time.
-In this case, the MFTF tests are able to read secret data at runtime from both storage options, but the local `.credentials` file will take precedence.
+AWS Secrets Manager offers secret management that supports:
+- Secret rotation with built-in integration for Amazon RDS, Amazon Redshift, and Amazon DocumentDB
+- Fine-grained policies and permissions
+- Audit secret rotation centrally for resources in the AWS Cloud, third-party services, and on-premises
 
+### Prerequisites
+
+#### Use AWS Secrets Manager from your own AWS account
+
+- An AWS account with Secrets Manager service
+- An IAM user with AWS Secrets Manager access permission
+
+#### Use AWS Secrets Manager in CI/CD
+
+- AWS account ID where the AWS Secrets Manager service is hosted
+- Authorized CI/CD EC2 instances with AWS Secrets Manager service access IAM role attached
+
+### Store secrets in AWS Secrets Manager
+
+#### Secrets format
+
+`Secret Name` and `Secret Value` are two key pieces of information for creating a secret. 
+
+`Secret Value` can be either plaintext or key/value pairs in JSON format.  
+
+`Secret Name` must use the following format:
+
+```conf
+mftf/<VENDOR>/<YOUR/SECRET/KEY>
+```
+
+`Secret Value` can be stored in two different formats: plaintext or key/value pairs.
+
+For plaintext format, `Secret Value` can be any string you want to secure.
+
+For key/value pairs format, `Secret Value` is a key/value pair with `key` the same as `Secret Name` without `mftf/<VENDOR>/` prefix,  which is `<YOUR/SECRET/KEY>`, and value can be any string you want to secure.
+
+##### Create Secrets using AWS CLI
+
+```bash
+aws secretsmanager create-secret --name "mftf/magento/shipping/carriers_usps_userid" --description "Carriers USPS user id" --secret-string "1234567"
+```
+
+##### Create Secrets using AWS Console
+
+- Sign in to the AWS Secrets Manager console
+- Choose Store a new secret
+- In the Select secret type section, specify "Other type of secret"
+- For `Secret Name`, `Secret Key` and `Secret Value` field, for example, to save the same secret in key/value JSON format, you should use
+ 
+```conf
+# Secret Name
+mftf/magento/shipping/carriers_usps_userid
+
+# Secret Key
+shipping/carriers_usps_userid
+
+# Secret Value
+1234567
+```
+
+### Setup MFTF to use AWS Secrets Manager
+
+To use AWS Secrets Manager, the AWS region to connect to is required. You can set it through environment variable [`CREDENTIAL_AWS_SECRETS_MANAGER_REGION`][] in `.env`.
+
+MFTF uses the recommended [Default Credential Provider Chain][credential chain] to establish connection to AWS Secrets Manager service. 
+You can setup credentials according to [Default Credential Provider Chain][credential chain] and there is no MFTF specific setup required. 
+Optionally, however, you can explicitly set AWS profile through environment variable [`CREDENTIAL_AWS_SECRETS_MANAGER_PROFILE`][] in `.env`.
+
+```conf
+# Sample AWS Secrets Manager configuration
+CREDENTIAL_AWS_SECRETS_MANAGER_REGION=us-east-1
+CREDENTIAL_AWS_SECRETS_MANAGER_PROFILE=default
+```
+
+### Optionally set CREDENTIAL_AWS_ACCOUNT_ID environment variable
+ 
+In case AWS credentials cannot resolve to a valid AWS account, full AWS KMS ([Key Management Service][]) key ARN ([Amazon Resource Name][]) is required.
+You will also need to set `CREDENTIAL_AWS_ACCOUNT_ID` environment variable so that MFTF can construct the full ARN. This is mostly used for CI/CD.
+
+```bash
+export CREDENTIAL_AWS_ACCOUNT_ID=<Your_12_Digits_AWS_Account_ID>
+```
+
+## Configure multiple credential storage
+
+It is possible and sometimes useful to setup and use multiple credential storage at the same time.
+In this case, the MFTF tests are able to read secret data at runtime from all storage options, in this case MFTF use the following precedence:
+
+```
+.credentials File > HashiCorp Vault > AWS Secrets Manager
+```
 <!-- {% raw %} -->
 
 ## Use credentials in a test
@@ -150,7 +240,7 @@ Define the value as a reference to the corresponding key in the credentials file
 
 -  `_CREDS` is an environment constant pointing to the `.credentials` file
 -  `my_data_key` is a key in the the `.credentials` file or vault that contains the value to be used in a test step
-   - for File Storage, ensure your key contains the vendor prefix, i.e. `vendor/my_data_key`
+   - for File Storage, ensure your key contains the vendor prefix, which is `vendor/my_data_key`
 
 For example, to reference secret data in the [`fillField`][] action, use the `userInput` attribute using a typical File Storage:
 
@@ -183,3 +273,8 @@ The MFTF tests delivered with Magento application do not use credentials and do 
 [Vault KV2]: https://www.vaultproject.io/docs/secrets/kv/kv-v2.html
 [`CREDENTIAL_VAULT_ADDRESS`]: configuration.md#credential_vault_address
 [`CREDENTIAL_VAULT_SECRET_BASE_PATH`]: configuration.md#credential_vault_secret_base_path
+[credential chain]: https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials.html
+[`CREDENTIAL_AWS_SECRETS_MANAGER_PROFILE`]: configuration.md#credential_aws_secrets_manager_profile
+[`CREDENTIAL_AWS_SECRETS_MANAGER_REGION`]: configuration.md#credential_aws_secrets_manager_region
+[Key Management Service]: https://aws.amazon.com/kms/
+[Amazon Resource Name]: https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html

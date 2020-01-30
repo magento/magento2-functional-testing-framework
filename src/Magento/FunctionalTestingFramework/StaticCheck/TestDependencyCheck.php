@@ -32,6 +32,9 @@ class TestDependencyCheck implements StaticCheckInterface
     const ACTIONGROUP_REGEX_PATTERN = '/ref=["\']([^\'"]*)/';
     const ACTIONGROUP_ARGUMENT_REGEX_PATTERN = '/<argument[^\/>]*name="([^"\']*)/';
 
+    const ERROR_LOG_FILENAME = 'mftf-dependency-checks';
+    const ERROR_LOG_MESSAGE = 'MFTF File Dependency Check';
+
     /**
      * Array of FullModuleName => [dependencies]
      * @var array
@@ -113,9 +116,9 @@ class TestDependencyCheck implements StaticCheckInterface
             DIRECTORY_SEPARATOR . 'Data' . DIRECTORY_SEPARATOR,
         ];
         // These files can contain references to other modules.
-        $testXmlFiles = $this->buildFileList($allModules, $filePaths[0]);
-        $actionGroupXmlFiles = $this->buildFileList($allModules, $filePaths[1]);
-        $dataXmlFiles= $this->buildFileList($allModules, $filePaths[2]);
+        $testXmlFiles = StaticCheckHelper::buildFileList($allModules, $filePaths[0]);
+        $actionGroupXmlFiles = StaticCheckHelper::buildFileList($allModules, $filePaths[1]);
+        $dataXmlFiles= StaticCheckHelper::buildFileList($allModules, $filePaths[2]);
 
         $this->errors = [];
         $this->errors += $this->findErrorsInFileSet($testXmlFiles);
@@ -123,7 +126,11 @@ class TestDependencyCheck implements StaticCheckInterface
         $this->errors += $this->findErrorsInFileSet($dataXmlFiles);
 
         // hold on to the output and print any errors to a file
-        $this->output = $this->printErrorsToFile();
+        $this->output = StaticCheckHelper::printErrorsToFile(
+            $this->errors,
+            self::ERROR_LOG_FILENAME,
+            self::ERROR_LOG_MESSAGE
+        );
     }
 
     /**
@@ -414,24 +421,6 @@ class TestDependencyCheck implements StaticCheckInterface
     }
 
     /**
-     * Builds list of all XML files in given modulePaths + path given
-     * @param string $modulePaths
-     * @param string $path
-     * @return Finder
-     */
-    private function buildFileList($modulePaths, $path)
-    {
-        $finder = new Finder();
-        foreach ($modulePaths as $modulePath) {
-            if (!realpath($modulePath . $path)) {
-                continue;
-            }
-            $finder->files()->in($modulePath . $path)->name("*.xml");
-        }
-        return $finder->files();
-    }
-
-    /**
      * Attempts to find any MFTF entity by its name. Returns null if none are found.
      * @param string $name
      * @return mixed
@@ -460,33 +449,5 @@ class TestDependencyCheck implements StaticCheckInterface
         } catch (TestReferenceException $e) {
         }
         return null;
-    }
-
-    /**
-     * Prints out given errors to file, and returns summary result string
-     * @return string
-     */
-    private function printErrorsToFile()
-    {
-        $errors = $this->getErrors();
-
-        if (empty($errors)) {
-            return "No Dependency errors found.";
-        }
-
-        $outputPath = getcwd() . DIRECTORY_SEPARATOR . "mftf-dependency-checks.txt";
-        $fileResource = fopen($outputPath, 'w');
-        $header = "MFTF File Dependency Check:\n";
-        fwrite($fileResource, $header);
-
-        foreach ($errors as $test => $error) {
-            fwrite($fileResource, $error[0] . PHP_EOL);
-        }
-
-        fclose($fileResource);
-        $errorCount = count($errors);
-        $output = "Dependency errors found across {$errorCount} file(s). Error details output to {$outputPath}";
-
-        return $output;
     }
 }

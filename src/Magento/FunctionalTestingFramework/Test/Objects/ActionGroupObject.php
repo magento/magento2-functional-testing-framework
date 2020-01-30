@@ -95,6 +95,13 @@ class ActionGroupObject
     private $cachedStepKeys = null;
 
     /**
+     * Deprecation message.
+     *
+     * @var string|null
+     */
+    private $deprecated;
+
+    /**
      * ActionGroupObject constructor.
      *
      * @param string           $name
@@ -103,9 +110,17 @@ class ActionGroupObject
      * @param array            $actions
      * @param string           $parentActionGroup
      * @param string           $filename
+     * @param string|null      $deprecated
      */
-    public function __construct($name, $annotations, $arguments, $actions, $parentActionGroup, $filename = null)
-    {
+    public function __construct(
+        $name,
+        $annotations,
+        $arguments,
+        $actions,
+        $parentActionGroup,
+        $filename = null,
+        $deprecated = null
+    ) {
         $this->varAttributes = array_merge(
             ActionObject::SELECTOR_ENABLED_ATTRIBUTES,
             ActionObject::DATA_ENABLED_ATTRIBUTES
@@ -117,6 +132,17 @@ class ActionGroupObject
         $this->parsedActions = $actions;
         $this->parentActionGroup = $parentActionGroup;
         $this->filename = $filename;
+        $this->deprecated = $deprecated;
+    }
+
+    /**
+     * Returns deprecated messages.
+     *
+     * @return string|null
+     */
+    public function getDeprecated()
+    {
+        return $this->deprecated;
     }
 
     /**
@@ -213,7 +239,8 @@ class ActionGroupObject
                 $action->getLinkedAction() == null ? null : $action->getLinkedAction() . ucfirst($actionReferenceKey),
                 $orderOffset,
                 [self::ACTION_GROUP_ORIGIN_NAME => $this->name,
-                    self::ACTION_GROUP_ORIGIN_TEST_REF => $actionReferenceKey]
+                    self::ACTION_GROUP_ORIGIN_TEST_REF => $actionReferenceKey],
+                $action->getDeprecatedUsages()
             );
         }
 
@@ -543,10 +570,20 @@ class ActionGroupObject
     {
         $actionStartComment = self::ACTION_GROUP_CONTEXT_START . "[" . $actionReferenceKey . "] " . $this->name;
         $actionEndComment = self::ACTION_GROUP_CONTEXT_END . "[" . $actionReferenceKey . "] " . $this->name;
+
+        $deprecationNotices = [];
+        if ($this->getDeprecated() !== null) {
+            $deprecationNotices[] = "DEPRECATED ACTION GROUP in Test: " . $this->name . ' ' . $this->getDeprecated();
+        }
+
         $startAction = new ActionObject(
             $actionStartComment,
             ActionObject::ACTION_TYPE_COMMENT,
-            [ActionObject::ACTION_ATTRIBUTE_USERINPUT => $actionStartComment]
+            [ActionObject::ACTION_ATTRIBUTE_USERINPUT => $actionStartComment],
+            null,
+            ActionObject::MERGE_ACTION_ORDER_BEFORE,
+            null,
+            $deprecationNotices
         );
         $endAction = new ActionObject(
             $actionEndComment,

@@ -7,17 +7,27 @@
 namespace Magento\FunctionalTestingFramework\Codeception\Subscriber;
 
 use Codeception\Event\StepEvent;
+use Codeception\Event\TestEvent;
 use Codeception\Lib\Console\Message;
 use Codeception\Step;
 use Codeception\Step\Comment;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
+/**
+ * @SuppressWarnings(PHPMD)
+ */
 class Console extends \Codeception\Subscriber\Console
 {
+    /**
+     * Regular expresion to find deprecated notices.
+     */
+    const DEPRECATED_NOTICE = '/<li>(?<deprecatedMessage>.*?)<\/li>/m';
+
     /**
      * Test files cache.
      *
@@ -51,6 +61,36 @@ class Console extends \Codeception\Subscriber\Console
     public function __construct($extensionOptions = [], $options = [])
     {
         parent::__construct($options);
+    }
+
+    /**
+     * Triggered event before each test.
+     *
+     * @param TestEvent $e
+     * @return void
+     * @throws \Exception
+     */
+    public function startTest(TestEvent $e)
+    {
+        $test = $e->getTest()->getTestClass();
+        try {
+            $testReflection = new \ReflectionClass($test);
+            $isDeprecated = preg_match_all(self::DEPRECATED_NOTICE, $testReflection->getDocComment(), $match);
+            if ($isDeprecated) {
+                $this->message('DEPRECATION NOTICE(S): ')
+                    ->style('debug')
+                    ->writeln();
+                foreach ($match['deprecatedMessage'] as $deprecatedMessage) {
+                    $this->message(' - ' . $deprecatedMessage)
+                        ->style('debug')
+                        ->writeln();
+                }
+            }
+        } catch (\ReflectionException $e) {
+            LoggingUtil::getInstance()->getLogger(self::class)->error($e->getMessage(), $e->getTrace());
+        }
+
+        parent::startTest($e);
     }
 
     /**

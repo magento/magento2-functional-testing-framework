@@ -7,7 +7,6 @@
 namespace Magento\FunctionalTestingFramework\Util;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
@@ -17,14 +16,11 @@ use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
-use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+use Magento\FunctionalTestingFramework\Test\Util\BaseObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Manifest\BaseTestManifest;
-use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
-use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
@@ -111,6 +107,13 @@ class TestGenerator
      * @var string
      */
     private $currentGenerationScope = TestGenerator::TEST_SCOPE;
+
+    /**
+     * Test deprecation messages.
+     *
+     * @var array
+     */
+    private $deprecationMessages = [];
 
     /**
      * Private constructor for Factory
@@ -244,7 +247,6 @@ class TestGenerator
     public function assembleTestPhp($testObject)
     {
         $usePhp = $this->generateUseStatementsPhp();
-        $classAnnotationsPhp = $this->generateAnnotationsPhp($testObject->getAnnotations());
 
         $className = $testObject->getCodeceptionName();
         try {
@@ -257,6 +259,7 @@ class TestGenerator
         } catch (TestReferenceException $e) {
             throw new TestReferenceException($e->getMessage() . "\n" . $testObject->getFilename());
         }
+        $classAnnotationsPhp = $this->generateAnnotationsPhp($testObject->getAnnotations());
 
         $cestPhp = "<?php\n";
         $cestPhp .= "namespace Magento\AcceptanceTest\\_" . $this->exportDirName . "\Backend;\n\n";
@@ -456,7 +459,7 @@ class TestGenerator
      * Method which return formatted class level annotations based on type and name(s).
      *
      * @param string $annotationType
-     * @param string $annotationName
+     * @param array  $annotationName
      * @return null|string
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
@@ -470,7 +473,8 @@ class TestGenerator
                 break;
 
             case "description":
-                $annotationToAppend = sprintf(" * @Description(\"%s\")\n", $annotationName[0]);
+                $template = " * @Description(\"%s\")\n";
+                $annotationToAppend = sprintf($template, $this->generateDescriptionAnnotation($annotationName));
                 break;
 
             case "testCaseId":
@@ -489,6 +493,36 @@ class TestGenerator
         }
 
         return $annotationToAppend;
+    }
+
+    /**
+     * Generates Description
+     *
+     * @param array $descriptions
+     * @return string
+     */
+    private function generateDescriptionAnnotation(array $descriptions)
+    {
+        $descriptionText = "";
+
+        $descriptionText .= $descriptions["main"] ?? '';
+        if (!empty($descriptions[BaseObjectExtractor::OBJ_DEPRECATED]) || !empty($this->deprecationMessages)) {
+            $deprecatedMessages = array_merge(
+                $descriptions[BaseObjectExtractor::OBJ_DEPRECATED],
+                $this->deprecationMessages
+            );
+
+            $descriptionText .= "<h3 class='y-label y-label_status_broken'>Deprecated Notice(s):</h3>";
+            $descriptionText .= "<ul>";
+
+            foreach ($deprecatedMessages as $deprecatedMessage) {
+                $descriptionText .= "<li>" . $deprecatedMessage . "</li>";
+            }
+            $descriptionText .= "</ul>";
+        }
+        $descriptionText .= $descriptions["test_files"];
+
+        return $descriptionText;
     }
 
     /**
@@ -511,8 +545,10 @@ class TestGenerator
         $testSteps = '';
         $this->actor = $actor;
         $this->currentGenerationScope = $generationScope;
+        $this->deprecationMessages = [];
 
         foreach ($actionObjects as $actionObject) {
+            $this->deprecationMessages = array_merge($this->deprecationMessages, $actionObject->getDeprecatedUsages());
             $stepKey = $actionObject->getStepKey();
             $customActionAttributes = $actionObject->getCustomActionAttributes();
             $attribute = null;
