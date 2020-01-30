@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2325a3a38edb33b24f6e33bd3009fd8a",
+    "content-hash": "859ddf6506836faaabb056ae7b377c63",
     "packages": [
         {
             "name": "allure-framework/allure-codeception",
@@ -1710,6 +1710,7 @@
                 "selenium",
                 "webdriver"
             ],
+            "abandoned": "php-webdriver/webdriver",
             "time": "2018-05-16T17:37:13+00:00"
         },
         {
