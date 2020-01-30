@@ -13,10 +13,10 @@ Magento Functional Testing Framework Changelog
         * Test
         * Action Group
         * Data
+        * Metadata
         * Page
         * Section
         * Section Element
-        * Suite
             * See DevDocs for details 
     * Improved `mftf static-checks` command to allow executing all or specific static checks.
     * Added a new static check that checks and reports unused arguments in action groups.
