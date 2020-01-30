@@ -7,7 +7,7 @@ Magento Functional Testing Framework Changelog
 * Traceability
     * MFTF generated cest files are fully compatible for Codeception `dry-run`.
 * Modularity
-    * `mftf generate:tests` and `mftf run:test` commands now accept suite scoped test names in format `[<suitename:>testname]...`.
+    * `mftf generate:tests` and `mftf run:test` commands now accept suite scoped test names in format `[suitename:testname]...`.
 * Maintainability
     * Support `deprecated` syntax for the following test entities:
         * Test
@@ -17,12 +17,11 @@ Magento Functional Testing Framework Changelog
         * Section
         * Section Element
         * Suite
-        
-        See DevDocs for details 
+            * See DevDocs for details 
     * Improved `mftf static-checks` command to allow executing all or specific static checks.
     * Added a new static check that checks and reports unused arguments in action groups.
 * Customizability
-    * AWS Secrets Manager is added as an additional credential storage.
+    * AWS Secrets Manager has been added as an additional credential storage.
         * See DevDocs for details
 
 ### Fixes
