@@ -79,6 +79,9 @@
         <magentoCLI command="maintenance:enable" arguments="&quot;stuffHere&quot;" timeout="120" stepKey="magentoCli2"/>
         <magentoCLI command="config:set somePath {{_CREDS.someKey}}" stepKey="magentoCli3"/>
         <magentoCLI command="config:set somePath {{_CREDS.someKey}}" timeout="120" stepKey="magentoCli4"/>
+        <magentoCron stepKey="cronAllGroups"/>
+        <magentoCron groups="index" stepKey="cronSingleGroup"/>
+        <magentoCron groups="a b c" stepKey="cronMultipleGroups"/>
         <makeScreenshot userInput="screenShotInput" stepKey="makeScreenshotKey1"/>
         <maximizeWindow stepKey="maximizeWindowKey1"/>
         <moveBack stepKey="moveBackKey1"/>

@@ -10,8 +10,10 @@ The following diagram shows the structure of an MFTF action group:
 
 The following conventions apply to MFTF action groups:
 
-- All action groups are declared in XML files and stored in the `<module>/ActionGroup/` directory.
-- Every file name ends with `ActionGroup`, such as `LoginToAdminActionGroup`.
+- All action groups are declared in XML files and stored in the `<module>/Test/Mftf/ActionGroup/` directory.
+- Every file name ends with `ActionGroup` suffix. For exampe `LoginAsAdminActionGroup.xml`.
+- Action group name should be the same as file name without extension.
+- Single file should contain only one `<actionGroup>` node
 
 The XML format for the `actionGroups` declaration is:
 
@@ -34,32 +36,31 @@ The XML format for the `actionGroups` declaration is:
 
 These examples build a declaration for a group of actions that grant authorization to the Admin area, and use the declaration in a test.
 
-The _Backend/ActionGroup/LoginToAdminActionGroup.xml_ `<actionGroup>` relates to the functionality of the _Backend_ module.
-In [test][], the name and identifier of the `<actionGroup>` is used as a reference in the `ref` parameter, such as `ref="LoginToAdminActionGroup"`.
+The _Magento/Backend/Test/Mftf/ActionGroup/LoginAsAdminActionGroup.xml_ `<actionGroup>` relates to the functionality of the _Magento_Backend_ module.
+
+In [test][], the name and identifier of the `<actionGroup>` is used as a reference in the `ref` parameter, such as `ref="LoginAsAdminActionGroup"`.
 
 ### Create an action group declaration
 
 To create the `<actionGroup>` declaration:
 
-1. Begin with a _Backend/ActionGroup/LoginToAdminActionGroup.xml_ template for the `<actionGroup>`:
+1. Begin with a template for the `<actionGroup>`:
 
     ```xml
     <?xml version="1.0" encoding="UTF-8"?>
 
     <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
-        <actionGroup name="LoginToAdminActionGroup">
-    ...
+        <actionGroup name="{Action Group Name}">
+
         </actionGroup>
     </actionGroups>
     ```
 
-<!-- {% raw %} -->
-
 1. Add actions to the `actionGroup` arguments:
 
     ```xml
-    <actionGroup name="LoginToAdminActionGroup">
+    <actionGroup name="LoginAsAdminActionGroup">
         <fillField stepKey="fillUsername" selector="#username" userInput="{{adminUser.username}}" />
         <fillField stepKey="fillPassword" selector="#password" userInput="{{adminUser.password}}" />
         <click stepKey="click" selector="#login" />
@@ -81,14 +82,20 @@ To create the `<actionGroup>` declaration:
 
     <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
-        <actionGroup name="LoginToAdminActionGroup">
-            <arguments>
-                <argument name="adminUser" defaultValue="_defaultAdmin"/>
-            </arguments>
-            <fillField stepKey="fillUsername" selector="#username" userInput="{{adminUser.username}}" />
-            <fillField stepKey="fillPassword" selector="#password" userInput="{{adminUser.password}}" />
-            <click stepKey="click" selector="#login" />
-        </actionGroup>
+        <actionGroup name="LoginAsAdmin">
+                <annotations>
+                    <description>Login to Backend Admin using provided User Data. PLEASE NOTE: This Action Group does NOT validate that you are Logged In.</description>
+                </annotations>
+                <arguments>
+                    <argument name="adminUser" type="entity" defaultValue="DefaultAdminUser"/>
+                </arguments>
+        
+                <amOnPage url="{{AdminLoginPage.url}}" stepKey="navigateToAdmin"/>
+                <fillField selector="{{AdminLoginFormSection.username}}" userInput="{{adminUser.username}}" stepKey="fillUsername"/>
+                <fillField selector="{{AdminLoginFormSection.password}}" userInput="{{adminUser.password}}" stepKey="fillPassword"/>
+                <click selector="{{AdminLoginFormSection.signIn}}" stepKey="clickLogin"/>
+                <closeAdminNotification stepKey="closeAdminNotification"/>
+            </actionGroup>
     </actionGroups>
     ```
 
@@ -97,23 +104,23 @@ To create the `<actionGroup>` declaration:
 In this test example, we want to add the following set of actions:
 
 ```xml
-<fillField stepKey="fillUsername" selector="#username" userInput="{{CustomAdminUser.username}}" />
-<fillField stepKey="fillPassword" selector="#password" userInput="{{CustomAdminUser.password}}" />
-<click stepKey="click" selector="#login" />
+<fillField selector="{{AdminLoginFormSection.username}}" userInput="{{adminUser.username}}" stepKey="fillUsername"/>
+<fillField selector="{{AdminLoginFormSection.password}}" userInput="{{adminUser.password}}" stepKey="fillPassword"/>
+<click selector="{{AdminLoginFormSection.signIn}}" stepKey="clickLogin"/>
 ```
 
-Instead of adding this set of actions, use the _LoginToAdminActionGroup_ `<actionGroup>` declaration in tests:
+Instead of adding this set of actions, use the _LoginAsAdminActionGroup_ `<actionGroup>` declaration in tests:
 
-1. Reference the `LoginToAdminActionGroup` action group:
+1. Reference the `LoginAsAdminActionGroup` action group:
 
     ```xml
-    <actionGroup stepKey="loginToAdminPanel" ref="LoginToAdminActionGroup"/>
+    <actionGroup stepKey="loginToAdminPanel" ref="LoginAsAdminActionGroup"/>
     ```
 
 1. Update the argument name/value pair to `adminUser` and `CustomAdminUser`:
 
     ```xml
-    <actionGroup stepKey="loginToAdminPanel" ref="LoginToAdminActionGroup">
+    <actionGroup stepKey="loginToAdminPanel" ref="LoginAsAdminActionGroup">
         <argument name="adminUser" value="CustomAdminUser"/>
     </actionGroup>
     ```
@@ -196,30 +203,34 @@ Starting with an action group such as:
 ```
 
 It can be reworked into more manageable pieces, as below. These smaller steps are easier to read, update, and reuse.
-
-```xml
-<actionGroup name="GoToCategoryGridAndAddNewCategory">
-    <seeInCurrentUrl url="{{AdminCategoryPage.url}}" stepKey="seeOnCategoryPage"/>
-    <click selector="{{AdminCategorySidebarActionSection.AddSubcategoryButton}}" stepKey="clickOnAddSubCategory"/>
-    <see selector="{{AdminHeaderSection.pageTitle}}" userInput="New Category" stepKey="seeCategoryPageTitle"/>
-</actionGroup>
-
-<actionGroup name="FillInBasicCategoryFields">
-    <arguments>
-        <argument name="categoryEntity" defaultValue="_defaultCategory"/>
-    </arguments>
-    <fillField selector="{{AdminCategoryBasicFieldSection.CategoryNameInput}}" userInput="{{categoryEntity.name}}" stepKey="enterCategoryName"/>
-    <click selector="{{AdminCategorySEOSection.SectionHeader}}" stepKey="openSEO"/>
-    <fillField selector="{{AdminCategorySEOSection.UrlKeyInput}}" userInput="{{categoryEntity.name_lwr}}" stepKey="enterURLKey"/>
-</actionGroup>
-
-<actionGroup name="SaveAndVerifyCategoryCreation">
-    <click selector="{{AdminCategoryMainActionsSection.SaveButton}}" stepKey="saveCategory"/>
-    <seeElement selector="{{AdminCategoryMessagesSection.SuccessMessage}}" stepKey="assertSuccess"/>
-    <seeInTitle userInput="{{categoryEntity.name}}" stepKey="seeNewCategoryPageTitle"/>
-    <seeElement selector="{{AdminCategorySidebarTreeSection.categoryInTree(categoryEntity.name)}}" stepKey="seeCategoryInTree"/>
-</actionGroup>
-```
+* GoToCategoryGridAndAddNewCategory
+    ```xml
+    <actionGroup name="GoToCategoryGridAndAddNewCategory">
+        <seeInCurrentUrl url="{{AdminCategoryPage.url}}" stepKey="seeOnCategoryPage"/>
+        <click selector="{{AdminCategorySidebarActionSection.AddSubcategoryButton}}" stepKey="clickOnAddSubCategory"/>
+        <see selector="{{AdminHeaderSection.pageTitle}}" userInput="New Category" stepKey="seeCategoryPageTitle"/>
+    </actionGroup>
+    ```
+* FillInBasicCategoryFields
+    ```xml
+    <actionGroup name="FillInBasicCategoryFields">
+        <arguments>
+            <argument name="categoryEntity" defaultValue="_defaultCategory"/>
+        </arguments>
+        <fillField selector="{{AdminCategoryBasicFieldSection.CategoryNameInput}}" userInput="{{categoryEntity.name}}" stepKey="enterCategoryName"/>
+        <click selector="{{AdminCategorySEOSection.SectionHeader}}" stepKey="openSEO"/>
+        <fillField selector="{{AdminCategorySEOSection.UrlKeyInput}}" userInput="{{categoryEntity.name_lwr}}" stepKey="enterURLKey"/>
+    </actionGroup>
+    ```
+* SaveAndVerifyCategoryCreation
+    ```xml
+    <actionGroup name="SaveAndVerifyCategoryCreation">
+        <click selector="{{AdminCategoryMainActionsSection.SaveButton}}" stepKey="saveCategory"/>
+        <seeElement selector="{{AdminCategoryMessagesSection.SuccessMessage}}" stepKey="assertSuccess"/>
+        <seeInTitle userInput="{{categoryEntity.name}}" stepKey="seeNewCategoryPageTitle"/>
+        <seeElement selector="{{AdminCategorySidebarTreeSection.categoryInTree(categoryEntity.name)}}" stepKey="seeCategoryInTree"/>
+    </actionGroup>
+    ```
 
 <!-- {% endraw %} -->
 
