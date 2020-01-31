@@ -8,6 +8,8 @@ The following diagram shows the structure of an MFTF action group:
 
 ## Principles
 
+{% raw %}
+
 The following conventions apply to MFTF action groups:
 
 - All action groups are declared in XML files and stored in the `<module>/Test/Mftf/ActionGroup/` directory.
