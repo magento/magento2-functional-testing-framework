@@ -26,7 +26,7 @@ __Use case__: Create two similar tests with different `url` (`"{{AdminCategoryPa
 > Test with "extends":
 
 ```xml
-<tests >
+<tests>
     <test name="AdminCategoryTest">
             <annotations>
                 ...
@@ -47,7 +47,7 @@ __Use case__: Create two similar tests with different `url` (`"{{AdminCategoryPa
 > Test without "extends":
 
 ```xml
-<tests >
+<tests>
     <test name="AdminCategoryTest">
             <annotations>
                 ...
@@ -77,7 +77,7 @@ __Use case__: Create two similar tests where the second test contains two additi
 > Tests with "extends":
 
 ```xml
-<tests >
+<tests>
     <test name="LogInAsAdminTest">
         <amOnPage url="{{AdminLoginPage}}" stepKey="navigateToAdmin"/>
         <fillField selector="{{AdminLoginFormSection.username}}" userInput="admin" stepKey="fillUsername"/>
@@ -95,7 +95,7 @@ __Use case__: Create two similar tests where the second test contains two additi
 > Tests without "extends":
 
 ```xml
-<tests >
+<tests>
     <test name="LogInAsAdminTest">
         <amOnPage url="{{AdminLoginPage}}" stepKey="navigateToAdmin"/>
         <fillField selector="{{AdminLoginFormSection.username}}" userInput="admin" stepKey="fillUsername"/>
@@ -125,7 +125,7 @@ __Use case__: Create two similar tests where the second one contains two additio
 > Tests with "extends":
 
 ```xml
-<tests >
+<tests>
     <test name="LogInAsAdminTest">
         <before>
             <amOnPage url="{{AdminLoginPage}}" stepKey="navigateToAdmin"/>
@@ -147,7 +147,7 @@ __Use case__: Create two similar tests where the second one contains two additio
 > Tests without "extends":
 
 ```xml
-<tests >
+<tests>
     <test name="LogInAsAdminTest">
         <before>
             <amOnPage url="{{AdminLoginPage}}" stepKey="navigateToAdmin"/>
@@ -295,7 +295,7 @@ __Use case__: Create an entity named `DivPanelGreen`, which is similar to the `D
 > Entities with "extends":
 
 ```xml
-<entities >
+<entities>
     <entity name="DivPanel">
         <data key="divColor">Red</data>
         <data key="divSize">80px</data>
@@ -310,7 +310,7 @@ __Use case__: Create an entity named `DivPanelGreen`, which is similar to the `D
 > Entities without "extends":
 
 ```xml
-<entities >
+<entities>
     <entity name="DivPanel">
         <data key="divColor">Red</data>
         <data key="divSize">80px</data>
@@ -331,7 +331,7 @@ __Use case__: Create an entity named `DivPanelGreen`, which is similar to the `D
 > Entities with "extends":
 
 ```xml
-<entities >
+<entities>
     <entity name="DivPanel">
         <data key="divColor">Red</data>
         <data key="divSize">80px</data>
@@ -347,7 +347,7 @@ __Use case__: Create an entity named `DivPanelGreen`, which is similar to the `D
 > Entities without "extends":
 
 ```xml
-<entities >
+<entities>
     <entity name="DivPanel">
         <data key="divColor">Red</data>
         <data key="divSize">80px</data>

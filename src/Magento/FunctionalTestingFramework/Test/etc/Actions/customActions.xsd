@@ -12,6 +12,7 @@
     <xs:group name="customTags">
         <xs:choice>
             <xs:element type="magentoCLIType" name="magentoCLI" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="magentoCronType" name="magentoCron" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="closeAdminNotificationType" name="closeAdminNotification" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="searchAndMultiSelectOptionType" name="searchAndMultiSelectOption" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="selectMultipleOptionsType" name="selectMultipleOptions" minOccurs="0" maxOccurs="unbounded"/>
@@ -40,6 +41,40 @@
                     <xs:annotation>
                         <xs:documentation>
                             Magento CLI command to be executed. Can be given options just like normal CLI interaction.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute type="xs:string" name="arguments">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Arguments for Magento CLI command, will not be escaped.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute type="xs:string" name="timeout">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Idle timeout in seconds, defaulted to 60s when not specified.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="magentoCronType">
+        <xs:annotation>
+            <xs:documentation>
+                Executes Magento Cron Jobs (selected groups)
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="groups">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Cron groups to be executed (separated by space)
                         </xs:documentation>
                     </xs:annotation>
                 </xs:attribute>

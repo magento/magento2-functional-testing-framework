@@ -277,6 +277,28 @@ Example:
 CREDENTIAL_VAULT_SECRET_BASE_PATH=secret
 ```
 
+### CREDENTIAL_AWS_SECRETS_MANAGER_REGION
+
+The region that AWS Secrets Manager is located.
+
+Example:
+
+```conf
+# Region of AWS Secrets Manager
+CREDENTIAL_AWS_SECRETS_MANAGER_REGION=us-east-1
+```
+
+### CREDENTIAL_AWS_SECRETS_MANAGER_PROFILE
+
+The profile used to connect to AWS Secrets Manager.
+
+Example:
+
+```conf
+# Profile used to connect to AWS Secrets Manager.
+CREDENTIAL_AWS_SECRETS_MANAGER_PROFILE=default
+```
+
 ### ENABLE_BROWSER_LOG
 
 Enables addition of browser logs to Allure steps

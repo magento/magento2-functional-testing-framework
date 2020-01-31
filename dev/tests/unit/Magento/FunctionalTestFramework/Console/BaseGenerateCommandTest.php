@@ -156,6 +156,24 @@ class BaseGenerateCommandTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testSuiteToTestSyntax()
+    {
+        $testOne = new TestObject('Test1', [], [], []);
+        $suiteOne = new SuiteObject(
+            'Suite1',
+            ['Test1' => $testOne],
+            [],
+            []
+        );
+
+        $testArray = ['Test1' => $testOne];
+        $suiteArray = ['Suite1' => $suiteOne];
+        $this->mockHandlers($testArray, $suiteArray);
+        $actual = json_decode($this->callTestConfig(['Suite1:Test1']), true);
+        $expected = ['tests' => null, 'suites' => ['Suite1' => ['Test1']]];
+        $this->assertEquals($expected, $actual);
+    }
+
     /**
      * Mock handlers to skip parsing
      * @param array $testArray
