@@ -208,6 +208,7 @@ Attributes|Type|Use|Description
 ---|---|---|---
 `key`|string|optional|Key attribute of data/value pair.
 `unique`|enum: `"prefix"`, `"suffix"`|optional|Add suite or test wide unique sequence as "prefix" or "suffix" to the data value if specified.
+`deprecated`|string|optional|Used to warn about the future deprecation of the data entity. String will appear in Allure reports and console output at runtime.
 
 ### var {#var-tag}
 

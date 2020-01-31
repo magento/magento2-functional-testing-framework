@@ -89,6 +89,7 @@ The following is an example of a call in test:
 Attributes|Type|Use|Description
 ---|---|---|---
 `name`|string|required|Unique section name identifier.
+`deprecated`|string|optional|Used to warn about the future deprecation of the section. String will appear in Allure reports and console output at runtime.
 `remove`|boolean|optional|The default is `false`. Set to `true` to remove this element during parsing.
 
 ### element {#element-tag}
@@ -103,6 +104,7 @@ Attributes|Type|Use|Description
 `locatorFunction`|string|optional|[Locator function][] declaration to be used in lieu of a selector.
 `timeout`|string|optional|The timeout after interaction with the element (in seconds). The default is _none_.
 `parameterized`|boolean|optional|Include and set to `true` if the `selector` for this element has parameters that need to be replaced for proper use. Learn more in [Parameterized selectors][].
+`deprecated`|string|optional|Used to warn about the future deprecation of the element. String will appear in Allure reports and console output at runtime.
 `remove`|boolean|optional|The default is `false`. Set to `true` to remove this element during parsing.
 
 #### `timeout` attribute {#timeout-attribute}

@@ -255,6 +255,7 @@ Attribute|Type|Use|Description
 ---|---|---|---
 `name`|string|required|Identifier of the action group.
 `extends`|string|optional|Identifies the action group to extend.
+`deprecated`|string|optional|Used to warn about the future deprecation of the actionGroup. String will appear in Allure reports and console output at runtime.
 
 It may contain `<arguments>`.
 
