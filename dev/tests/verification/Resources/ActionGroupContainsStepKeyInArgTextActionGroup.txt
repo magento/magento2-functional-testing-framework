@@ -13,23 +13,32 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("[NO TESTCASEID]: Action Group With Default Argument Value and Hardcoded Value in Param")
  * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupTest.xml<br>")
  */
-class ActionGroupWithDefaultArgumentAndStringSelectorParamCest
+class ActionGroupContainsStepKeyInArgTextActionGroupCest
 {
 	/**
-	 * @Severity(level = SeverityLevel::BLOCKER)
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _before(AcceptanceTester $I)
+	{
+		$I->comment("Entering Action Group [actionGroup] ActionGroupContainsStepKeyInArgValueActionGroup");
+		$I->see("arg1", ".selector"); // stepKey: arg1ActionGroup
+		$I->comment("Exiting Action Group [actionGroup] ActionGroupContainsStepKeyInArgValueActionGroup");
+	}
+
+	/**
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupWithDefaultArgumentAndStringSelectorParam(AcceptanceTester $I)
+	public function ActionGroupContainsStepKeyInArgText(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group [actionGroup] actionGroupWithDefaultArgumentAndStringSelectorParam");
-		$I->see("John", "#element .test1"); // stepKey: seeFirstNameActionGroup
-		$I->comment("Exiting Action Group [actionGroup] actionGroupWithDefaultArgumentAndStringSelectorParam");
+		$I->comment("Entering Action Group [actionGroup] ActionGroupContainsStepKeyInArgValueActionGroup");
+		$I->see("arg1", ".selector"); // stepKey: arg1ActionGroup
+		$I->comment("Exiting Action Group [actionGroup] ActionGroupContainsStepKeyInArgValueActionGroup");
 	}
 }

@@ -15,7 +15,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 /**
  * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupTest.xml<br>")
  */
-class ActionGroupUsingNestedArgumentCest
+class ActionGroupWithSectionAndDataAsArgumentsActionGroupCest
 {
 	/**
 	 * @Features({"TestModule"})
@@ -24,11 +24,10 @@ class ActionGroupUsingNestedArgumentCest
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupUsingNestedArgument(AcceptanceTester $I)
+	public function ActionGroupWithSectionAndDataAsArgumentsActionGroup(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group [actionGroup] ActionGroupToExtend");
-		$grabProductsActionGroup = $I->grabMultiple("selector"); // stepKey: grabProductsActionGroup
-		$I->assertCount(99, $grabProductsActionGroup); // stepKey: assertCountActionGroup
-		$I->comment("Exiting Action Group [actionGroup] ActionGroupToExtend");
+		$I->comment("Entering Action Group [actionGroup] ActionGroupWithSectionAndDataActionGroup");
+		$I->waitForElementVisible("#element .John", 10); // stepKey: arg1ActionGroup
+		$I->comment("Exiting Action Group [actionGroup] ActionGroupWithSectionAndDataActionGroup");
 	}
 }

@@ -15,8 +15,20 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 /**
  * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupTest.xml<br>")
  */
-class ActionGroupWithSectionAndDataAsArgumentsCest
+class ActionGroupUsingCreateDataActionGroupCest
 {
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _before(AcceptanceTester $I)
+	{
+		$I->comment("Entering Action Group [Key1] ActionGroupWithCreateDataActionGroup");
+		$I->createEntity("createCategoryKey1", "hook", "ApiCategory", [], []); // stepKey: createCategoryKey1
+		$I->createEntity("createConfigProductKey1", "hook", "ApiConfigurableProduct", ["createCategoryKey1"], []); // stepKey: createConfigProductKey1
+		$I->comment("Exiting Action Group [Key1] ActionGroupWithCreateDataActionGroup");
+	}
+
 	/**
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
@@ -24,10 +36,7 @@ class ActionGroupWithSectionAndDataAsArgumentsCest
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupWithSectionAndDataAsArguments(AcceptanceTester $I)
+	public function ActionGroupUsingCreateDataActionGroupAcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group [actionGroup] actionGroupWithSectionAndData");
-		$I->waitForElementVisible("#element .John", 10); // stepKey: arg1ActionGroup
-		$I->comment("Exiting Action Group [actionGroup] actionGroupWithSectionAndData");
 	}
 }

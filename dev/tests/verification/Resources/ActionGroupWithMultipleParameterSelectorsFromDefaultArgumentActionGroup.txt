@@ -13,21 +13,23 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
+ * @Title("[NO TESTCASEID]: Action Group With Passed Argument Value and Multiple Argument Values in Param")
  * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupTest.xml<br>")
  */
-class ActionGroupWithParameterizedElementWithHyphenCest
+class ActionGroupWithMultipleParameterSelectorsFromDefaultArgumentActionGroupCest
 {
 	/**
+	 * @Severity(level = SeverityLevel::BLOCKER)
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupWithParameterizedElementWithHyphen(AcceptanceTester $I)
+	public function ActionGroupWithMultipleParameterSelectorsFromDefaultArgumentActionGroup(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group [actionGroup] SectionArgumentWithParameterizedSelector");
-		$keyoneActionGroup = $I->executeJS("#element .full-width"); // stepKey: keyoneActionGroup
-		$I->comment("Exiting Action Group [actionGroup] SectionArgumentWithParameterizedSelector");
+		$I->comment("Entering Action Group [actionGroup] ActionGroupWithMultipleParameterSelectorsFromArgumentActionGroup");
+		$I->see("Doe", "#John-Doe .test"); // stepKey: seeLastNameActionGroup
+		$I->comment("Exiting Action Group [actionGroup] ActionGroupWithMultipleParameterSelectorsFromArgumentActionGroup");
 	}
 }

@@ -13,30 +13,23 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
+ * @Title("[NO TESTCASEID]: Action Group With Default Argument Value and Hardcoded Value in Param")
  * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupTest.xml<br>")
  */
-class ActionGroupUsingCreateDataCest
+class ActionGroupWithDefaultArgumentAndStringSelectorParamActionGroupCest
 {
 	/**
-	  * @param AcceptanceTester $I
-	  * @throws \Exception
-	  */
-	public function _before(AcceptanceTester $I)
-	{
-		$I->comment("Entering Action Group [Key1] actionGroupWithCreateData");
-		$I->createEntity("createCategoryKey1", "hook", "ApiCategory", [], []); // stepKey: createCategoryKey1
-		$I->createEntity("createConfigProductKey1", "hook", "ApiConfigurableProduct", ["createCategoryKey1"], []); // stepKey: createConfigProductKey1
-		$I->comment("Exiting Action Group [Key1] actionGroupWithCreateData");
-	}
-
-	/**
+	 * @Severity(level = SeverityLevel::BLOCKER)
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupUsingCreateData(AcceptanceTester $I)
+	public function ActionGroupWithDefaultArgumentAndStringSelectorParamActionGroup(AcceptanceTester $I)
 	{
+		$I->comment("Entering Action Group [actionGroup] ActionGroupWithDefaultArgumentAndStringSelectorParamActionGroup");
+		$I->see("John", "#element .test1"); // stepKey: seeFirstNameActionGroup
+		$I->comment("Exiting Action Group [actionGroup] ActionGroupWithDefaultArgumentAndStringSelectorParamActionGroup");
 	}
 }

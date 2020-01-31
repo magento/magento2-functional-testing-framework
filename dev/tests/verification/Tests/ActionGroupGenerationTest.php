@@ -17,7 +17,7 @@ class ActionGroupGenerationTest extends MftfTestCase
      */
     public function testActionGroupWithNoArguments()
     {
-        $this->generateAndCompareTest('ActionGroupWithNoArguments');
+        $this->generateAndCompareTest('ActionGroupWithNoArgumentsActionGroup');
     }
 
     /**
@@ -28,7 +28,7 @@ class ActionGroupGenerationTest extends MftfTestCase
      */
     public function testActionGroupWithDefaultArgumentAndStringSelectorParam()
     {
-        $this->generateAndCompareTest('ActionGroupWithDefaultArgumentAndStringSelectorParam');
+        $this->generateAndCompareTest('ActionGroupWithDefaultArgumentAndStringSelectorParamActionGroup');
     }
 
     /**
@@ -39,7 +39,7 @@ class ActionGroupGenerationTest extends MftfTestCase
      */
     public function testActionGroupWithPassedArgumentAndStringSelectorParam()
     {
-        $this->generateAndCompareTest('ActionGroupWithPassedArgumentAndStringSelectorParam');
+        $this->generateAndCompareTest('ActionGroupWithPassedArgumentAndStringSelectorParamActionGroup');
     }
 
     /**
@@ -50,7 +50,7 @@ class ActionGroupGenerationTest extends MftfTestCase
      */
     public function testActionGroupWithSingleParameterSelectorFromDefaultArgument()
     {
-        $this->generateAndCompareTest('ActionGroupWithSingleParameterSelectorFromDefaultArgument');
+        $this->generateAndCompareTest('ActionGroupWithSingleParameterSelectorFromDefaultArgumentActionGroup');
     }
 
     /**
@@ -61,7 +61,7 @@ class ActionGroupGenerationTest extends MftfTestCase
      */
     public function testActionGroupWithSingleParameterSelectorFromPassedArgument()
     {
-        $this->generateAndCompareTest('ActionGroupWithSingleParameterSelectorFromPassedArgument');
+        $this->generateAndCompareTest('ActionGroupWithSingleParameterSelectorFromPassedArgumentActionGroup');
     }
 
     /**
@@ -72,7 +72,7 @@ class ActionGroupGenerationTest extends MftfTestCase
      */
     public function testActionGroupWithMultipleParameterSelectorsFromDefaultArgument()
     {
-        $this->generateAndCompareTest('ActionGroupWithMultipleParameterSelectorsFromDefaultArgument');
+        $this->generateAndCompareTest('ActionGroupWithMultipleParameterSelectorsFromDefaultArgumentActionGroup');
     }
 
     /**
@@ -83,7 +83,7 @@ class ActionGroupGenerationTest extends MftfTestCase
      */
     public function testActionGroupWithSimpleDataUsageFromPassedArgument()
     {
-        $this->generateAndCompareTest('ActionGroupWithSimpleDataUsageFromPassedArgument');
+        $this->generateAndCompareTest('ActionGroupWithSimpleDataUsageFromPassedArgumentActionGroup');
     }
 
     /**
@@ -94,7 +94,7 @@ class ActionGroupGenerationTest extends MftfTestCase
      */
     public function testActionGroupWithSimpleDataUsageFromDefaultArgument()
     {
-        $this->generateAndCompareTest('ActionGroupWithSimpleDataUsageFromDefaultArgument');
+        $this->generateAndCompareTest('ActionGroupWithSimpleDataUsageFromDefaultArgumentActionGroup');
     }
 
     /**
@@ -105,7 +105,7 @@ class ActionGroupGenerationTest extends MftfTestCase
      */
     public function testActionGroupWithStepKeyReferences()
     {
-        $this->generateAndCompareTest('ActionGroupWithStepKeyReferences');
+        $this->generateAndCompareTest('ActionGroupWithStepKeyReferencesActionGroup');
     }
 
     /**
@@ -116,7 +116,7 @@ class ActionGroupGenerationTest extends MftfTestCase
      */
     public function testActionGroupWithNestedArgument()
     {
-        $this->generateAndCompareTest('ActionGroupUsingNestedArgument');
+        $this->generateAndCompareTest('ActionGroupUsingNestedArgumentActionGroup');
     }
 
     /**
@@ -127,7 +127,7 @@ class ActionGroupGenerationTest extends MftfTestCase
      */
     public function testActionGroupWithPersistedAndXmlEntityArguments()
     {
-        $this->generateAndCompareTest('PersistedAndXmlEntityArguments');
+        $this->generateAndCompareTest('PersistedAndXmlEntityArgumentsActionGroup');
     }
 
     /**
@@ -138,7 +138,7 @@ class ActionGroupGenerationTest extends MftfTestCase
      */
     public function testActionGroupToExtend()
     {
-        $this->generateAndCompareTest('ActionGroupToExtend');
+        $this->generateAndCompareTest('ActionGroupToExtendActionGroup');
     }
 
     /**
@@ -149,7 +149,7 @@ class ActionGroupGenerationTest extends MftfTestCase
      */
     public function testExtendedActionGroup()
     {
-        $this->generateAndCompareTest('ExtendedActionGroup');
+        $this->generateAndCompareTest('ExtendedActionGroupActionGroup');
     }
 
     /**

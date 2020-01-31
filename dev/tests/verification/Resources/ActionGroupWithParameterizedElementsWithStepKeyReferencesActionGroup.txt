@@ -15,7 +15,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 /**
  * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupTest.xml<br>")
  */
-class ActionGroupWithParameterizedElementsWithStepKeyReferencesCest
+class ActionGroupWithParameterizedElementsWithStepKeyReferencesActionGroupCest
 {
 	/**
 	 * @Features({"TestModule"})
@@ -24,15 +24,15 @@ class ActionGroupWithParameterizedElementsWithStepKeyReferencesCest
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupWithParameterizedElementsWithStepKeyReferences(AcceptanceTester $I)
+	public function ActionGroupWithParameterizedElementsWithStepKeyReferencesActionGroup(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group [actionGroup] actionGroupWithParametrizedSelectors");
+		$I->comment("Entering Action Group [actionGroup] ActionGroupWithParametrizedSelectorsActionGroup");
 		$testVariableActionGroup = $I->executeJS("return 1"); // stepKey: testVariableActionGroup
 		$testVariable2ActionGroup = $I->executeJS("return 'test'"); // stepKey: testVariable2ActionGroup
 		$I->createEntity("createSimpleDataActionGroup", "test", "simpleData", [], []); // stepKey: createSimpleDataActionGroup
 		$I->click("#{$testVariable2ActionGroup} .John"); // stepKey: click1ActionGroup
 		$I->click("#Doe-" . msq("simpleParamData") . "prename .{$testVariableActionGroup}"); // stepKey: click2ActionGroup
 		$I->seeElement("//div[@name='Tiberius'][@class={$testVariableActionGroup}][@data-element='{$testVariable2ActionGroup}'][" . $I->retrieveEntityField('createSimpleData', 'name', 'test') . "]"); // stepKey: see1ActionGroup
-		$I->comment("Exiting Action Group [actionGroup] actionGroupWithParametrizedSelectors");
+		$I->comment("Exiting Action Group [actionGroup] ActionGroupWithParametrizedSelectorsActionGroup");
 	}
 }

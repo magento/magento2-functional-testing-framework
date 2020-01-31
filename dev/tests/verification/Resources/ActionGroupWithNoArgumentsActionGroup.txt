@@ -13,23 +13,23 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
+ * @Title("[NO TESTCASEID]: Action Group With No Argument")
  * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupTest.xml<br>")
  */
-class ActionGroupSkipReadinessCest
+class ActionGroupWithNoArgumentsActionGroupCest
 {
 	/**
+	 * @Severity(level = SeverityLevel::BLOCKER)
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupSkipReadiness(AcceptanceTester $I)
+	public function ActionGroupWithNoArgumentsActionGroup(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group actionGroupWithSkipReadinessActions (skipReadinessActionGroup)");
-		$I->skipReadinessCheck(true);
-		$I->comment("ActionGroupSkipReadiness");
-		$I->skipReadinessCheck(false);
-		$I->comment("Exiting Action Group actionGroupWithSkipReadinessActions (skipReadinessActionGroup)");
+		$I->comment("Entering Action Group [actionGroup] ActionGroupWithoutArgumentsActionGroup");
+		$I->wait(1); // stepKey: waitForNothingActionGroup
+		$I->comment("Exiting Action Group [actionGroup] ActionGroupWithoutArgumentsActionGroup");
 	}
 }

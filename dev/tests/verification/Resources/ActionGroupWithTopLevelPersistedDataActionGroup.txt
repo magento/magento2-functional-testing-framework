@@ -16,7 +16,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
  * @group functional
  * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupFunctionalTest.xml<br>")
  */
-class ActionGroupWithDataTestCest
+class ActionGroupWithTopLevelPersistedDataActionGroupCest
 {
 	/**
 	  * @param AcceptanceTester $I
@@ -61,16 +61,14 @@ class ActionGroupWithDataTestCest
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupWithDataTest(AcceptanceTester $I)
+	public function ActionGroupWithTopLevelPersistedDataActionGroup(AcceptanceTester $I)
 	{
-		$I->amOnPage("/someUrl"); // stepKey: step1
-		$I->comment("Entering Action Group [actionGroupWithData1] FunctionalActionGroupWithData");
-		$I->amOnPage("/Jane/Dane.html"); // stepKey: amOnPage1ActionGroupWithData1
-		$I->fillField("#foo", "Jane"); // stepKey: fillField1ActionGroupWithData1
-		$I->fillField("#bar", "Dane"); // stepKey: fillField2ActionGroupWithData1
-		$I->searchAndMultiSelectOption("#foo", ["Jane", "Dane"]); // stepKey: multi1ActionGroupWithData1
-		$I->see("#element .Jane"); // stepKey: see1ActionGroupWithData1
-		$I->comment("Exiting Action Group [actionGroupWithData1] FunctionalActionGroupWithData");
-		$I->click("loginButton"); // stepKey: step6
+		$I->comment("Entering Action Group [actionGroupWithPersistedData1] FunctionalActionGroupWithDataActionGroup");
+		$I->amOnPage("/" . $I->retrieveEntityField('createPersonParam', 'firstname', 'test') . "/" . $I->retrieveEntityField('createPersonParam', 'lastname', 'test') . ".html"); // stepKey: amOnPage1ActionGroupWithPersistedData1
+		$I->fillField("#foo", $I->retrieveEntityField('createPersonParam', 'firstname', 'test')); // stepKey: fillField1ActionGroupWithPersistedData1
+		$I->fillField("#bar", $I->retrieveEntityField('createPersonParam', 'lastname', 'test')); // stepKey: fillField2ActionGroupWithPersistedData1
+		$I->searchAndMultiSelectOption("#foo", [$I->retrieveEntityField('createPersonParam', 'firstname', 'test'), $I->retrieveEntityField('createPersonParam', 'lastname', 'test')]); // stepKey: multi1ActionGroupWithPersistedData1
+		$I->see("#element ." . $I->retrieveEntityField('createPersonParam', 'firstname', 'test')); // stepKey: see1ActionGroupWithPersistedData1
+		$I->comment("Exiting Action Group [actionGroupWithPersistedData1] FunctionalActionGroupWithDataActionGroup");
 	}
 }

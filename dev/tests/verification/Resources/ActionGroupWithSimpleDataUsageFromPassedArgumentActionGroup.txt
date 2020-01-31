@@ -16,7 +16,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
  * @Title("[NO TESTCASEID]: Action Group With Simple Data Usage From Passed Argument")
  * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupTest.xml<br>")
  */
-class ActionGroupWithSimpleDataUsageFromPassedArgumentCest
+class ActionGroupWithSimpleDataUsageFromPassedArgumentActionGroupCest
 {
 	/**
 	 * @Severity(level = SeverityLevel::CRITICAL)
@@ -26,37 +26,37 @@ class ActionGroupWithSimpleDataUsageFromPassedArgumentCest
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupWithSimpleDataUsageFromPassedArgument(AcceptanceTester $I)
+	public function ActionGroupWithSimpleDataUsageFromPassedArgumentActionGroup(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group [actionGroup1] actionGroupWithStringUsage");
+		$I->comment("Entering Action Group [actionGroup1] ActionGroupWithStringUsageActionGroup");
 		$I->see("overrideString", "#element .overrideString"); // stepKey: see1ActionGroup1
-		$I->comment("Exiting Action Group [actionGroup1] actionGroupWithStringUsage");
-		$I->comment("Entering Action Group [actionGroup11] actionGroupWithStringUsage");
+		$I->comment("Exiting Action Group [actionGroup1] ActionGroupWithStringUsageActionGroup");
+		$I->comment("Entering Action Group [actionGroup11] ActionGroupWithStringUsageActionGroup");
 		$I->see("1", "#element .1"); // stepKey: see1ActionGroup11
-		$I->comment("Exiting Action Group [actionGroup11] actionGroupWithStringUsage");
-		$I->comment("Entering Action Group [actionGroup12] actionGroupWithStringUsage");
+		$I->comment("Exiting Action Group [actionGroup11] ActionGroupWithStringUsageActionGroup");
+		$I->comment("Entering Action Group [actionGroup12] ActionGroupWithStringUsageActionGroup");
 		$I->see("1.5", "#element .1.5"); // stepKey: see1ActionGroup12
-		$I->comment("Exiting Action Group [actionGroup12] actionGroupWithStringUsage");
-		$I->comment("Entering Action Group [actionGroup13] actionGroupWithStringUsage");
+		$I->comment("Exiting Action Group [actionGroup12] ActionGroupWithStringUsageActionGroup");
+		$I->comment("Entering Action Group [actionGroup13] ActionGroupWithStringUsageActionGroup");
 		$I->see("true", "#element .true"); // stepKey: see1ActionGroup13
-		$I->comment("Exiting Action Group [actionGroup13] actionGroupWithStringUsage");
-		$I->comment("Entering Action Group [actionGroup2] actionGroupWithStringUsage");
+		$I->comment("Exiting Action Group [actionGroup13] ActionGroupWithStringUsageActionGroup");
+		$I->comment("Entering Action Group [actionGroup2] ActionGroupWithStringUsageActionGroup");
 		$I->see("simpleData.firstname", "#element .simpleData.firstname"); // stepKey: see1ActionGroup2
-		$I->comment("Exiting Action Group [actionGroup2] actionGroupWithStringUsage");
-		$I->comment("Entering Action Group [actionGroup3] actionGroupWithStringUsage");
+		$I->comment("Exiting Action Group [actionGroup2] ActionGroupWithStringUsageActionGroup");
+		$I->comment("Entering Action Group [actionGroup3] ActionGroupWithStringUsageActionGroup");
 		$I->see($I->retrieveEntityField('persisted', 'data', 'test'), "#element ." . $I->retrieveEntityField('persisted', 'data', 'test')); // stepKey: see1ActionGroup3
-		$I->comment("Exiting Action Group [actionGroup3] actionGroupWithStringUsage");
-		$I->comment("Entering Action Group [actionGroup4] actionGroupWithEntityUsage");
+		$I->comment("Exiting Action Group [actionGroup3] ActionGroupWithStringUsageActionGroup");
+		$I->comment("Entering Action Group [actionGroup4] ActionGroupWithEntityUsageActionGroup");
 		$I->see("John", "#element .John"); // stepKey: see1ActionGroup4
-		$I->comment("Exiting Action Group [actionGroup4] actionGroupWithEntityUsage");
-		$I->comment("Entering Action Group [actionGroup5] actionGroupWithEntityUsage");
+		$I->comment("Exiting Action Group [actionGroup4] ActionGroupWithEntityUsageActionGroup");
+		$I->comment("Entering Action Group [actionGroup5] ActionGroupWithEntityUsageActionGroup");
 		$I->see($I->retrieveEntityField('simpleData', 'firstname', 'test'), "#element ." . $I->retrieveEntityField('simpleData', 'firstname', 'test')); // stepKey: see1ActionGroup5
-		$I->comment("Exiting Action Group [actionGroup5] actionGroupWithEntityUsage");
-		$I->comment("Entering Action Group [actionGroup6] actionGroupWithEntityUsage");
+		$I->comment("Exiting Action Group [actionGroup5] ActionGroupWithEntityUsageActionGroup");
+		$I->comment("Entering Action Group [actionGroup6] ActionGroupWithEntityUsageActionGroup");
 		$I->see($I->retrieveEntityField('simpleData', 'firstname[0]', 'test'), "#element ." . $I->retrieveEntityField('simpleData', 'firstname[0]', 'test')); // stepKey: see1ActionGroup6
-		$I->comment("Exiting Action Group [actionGroup6] actionGroupWithEntityUsage");
-		$I->comment("Entering Action Group [actionGroup7] actionGroupWithEntityUsage");
+		$I->comment("Exiting Action Group [actionGroup6] ActionGroupWithEntityUsageActionGroup");
+		$I->comment("Entering Action Group [actionGroup7] ActionGroupWithEntityUsageActionGroup");
 		$I->see($I->retrieveEntityField('simpleData', 'firstname[data_index]', 'test'), "#element ." . $I->retrieveEntityField('simpleData', 'firstname[data_index]', 'test')); // stepKey: see1ActionGroup7
-		$I->comment("Exiting Action Group [actionGroup7] actionGroupWithEntityUsage");
+		$I->comment("Exiting Action Group [actionGroup7] ActionGroupWithEntityUsageActionGroup");
 	}
 }

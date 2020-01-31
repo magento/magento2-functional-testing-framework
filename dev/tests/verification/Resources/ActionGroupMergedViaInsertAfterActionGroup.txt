@@ -15,7 +15,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 /**
  * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupFunctionalTest.xml<br>")
  */
-class ActionGroupMergedViaInsertAfterCest
+class ActionGroupMergedViaInsertAfterActionGroupCest
 {
 	/**
 	 * @Features({"TestModule"})
@@ -26,13 +26,13 @@ class ActionGroupMergedViaInsertAfterCest
 	 */
 	public function ActionGroupMergedViaInsertAfter(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group [keyone] FunctionalActionGroupForMassMergeAfter");
+		$I->comment("Entering Action Group [keyone] FunctionalActionGroupForMassMergeAfterActionGroup");
 		$I->fillField("#foo", "foo"); // stepKey: fillField1Keyone
 		$I->fillField("#bar", "bar"); // stepKey: fillField2Keyone
 		$I->click("#foo2"); // stepKey: mergeAfterBarKeyone
 		$I->click("#bar2"); // stepKey: mergeAfterFoo2Keyone
 		$I->click("#baz2"); // stepKey: mergeAfterBar2Keyone
 		$I->fillField("#baz", "baz"); // stepKey: fillField3Keyone
-		$I->comment("Exiting Action Group [keyone] FunctionalActionGroupForMassMergeAfter");
+		$I->comment("Exiting Action Group [keyone] FunctionalActionGroupForMassMergeAfterActionGroup");
 	}
 }

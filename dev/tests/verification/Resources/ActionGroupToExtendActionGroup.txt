@@ -13,23 +13,22 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("[NO TESTCASEID]: Action Group With Passed Argument Value and Hardcoded Value in Param")
  * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupTest.xml<br>")
  */
-class ActionGroupWithPassedArgumentAndStringSelectorParamCest
+class ActionGroupToExtendActionGroupCest
 {
 	/**
-	 * @Severity(level = SeverityLevel::BLOCKER)
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupWithPassedArgumentAndStringSelectorParam(AcceptanceTester $I)
+	public function ActionGroupToExtendActionGroup(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group [actionGroup] actionGroupWithDefaultArgumentAndStringSelectorParam");
-		$I->see("John" . msq("UniquePerson"), "#element .test1"); // stepKey: seeFirstNameActionGroup
-		$I->comment("Exiting Action Group [actionGroup] actionGroupWithDefaultArgumentAndStringSelectorParam");
+		$I->comment("Entering Action Group [actionGroup] ActionGroupToExtendActionGroup");
+		$grabProductsActionGroup = $I->grabMultiple("selector"); // stepKey: grabProductsActionGroup
+		$I->assertCount(99, $grabProductsActionGroup); // stepKey: assertCountActionGroup
+		$I->comment("Exiting Action Group [actionGroup] ActionGroupToExtendActionGroup");
 	}
 }

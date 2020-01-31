@@ -13,23 +13,21 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("[NO TESTCASEID]: Action Group With No Argument")
  * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupTest.xml<br>")
  */
-class ActionGroupWithNoArgumentsCest
+class ActionGroupWithParameterizedElementWithHyphenActionGroupCest
 {
 	/**
-	 * @Severity(level = SeverityLevel::BLOCKER)
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupWithNoArguments(AcceptanceTester $I)
+	public function ActionGroupWithParameterizedElementWithHyphenActionGroup(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group [actionGroup] actionGroupWithoutArguments");
-		$I->wait(1); // stepKey: waitForNothingActionGroup
-		$I->comment("Exiting Action Group [actionGroup] actionGroupWithoutArguments");
+		$I->comment("Entering Action Group [actionGroup] SectionArgumentWithParameterizedSelector");
+		$keyoneActionGroup = $I->executeJS("#element .full-width"); // stepKey: keyoneActionGroup
+		$I->comment("Exiting Action Group [actionGroup] SectionArgumentWithParameterizedSelector");
 	}
 }

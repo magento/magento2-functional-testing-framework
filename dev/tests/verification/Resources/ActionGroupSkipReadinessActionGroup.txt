@@ -13,23 +13,23 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("[NO TESTCASEID]: Action Group With Simple Data Usage From Default Argument")
  * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupTest.xml<br>")
  */
-class ActionGroupWithSimpleDataUsageFromDefaultArgumentCest
+class ActionGroupSkipReadinessActionGroupCest
 {
 	/**
-	 * @Severity(level = SeverityLevel::CRITICAL)
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupWithSimpleDataUsageFromDefaultArgument(AcceptanceTester $I)
+	public function ActionGroupSkipReadinessActionGroup(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group [actionGroup] actionGroupWithStringUsage");
-		$I->see("stringLiteral", "#element .stringLiteral"); // stepKey: see1ActionGroup
-		$I->comment("Exiting Action Group [actionGroup] actionGroupWithStringUsage");
+		$I->comment("Entering Action Group ActionGroupWithSkipReadinessActionsActionGroup (skipReadinessActionGroup)");
+		$I->skipReadinessCheck(true);
+		$I->comment("ActionGroupSkipReadiness");
+		$I->skipReadinessCheck(false);
+		$I->comment("Exiting Action Group ActionGroupWithSkipReadinessActionsActionGroup (skipReadinessActionGroup)");
 	}
 }

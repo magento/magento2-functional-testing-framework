@@ -15,7 +15,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 /**
  * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupTest.xml<br>")
  */
-class ActionGroupWithStepKeyReferencesCest
+class ActionGroupWithStepKeyReferencesActionGroupCest
 {
 	/**
 	 * @Features({"TestModule"})
@@ -24,7 +24,7 @@ class ActionGroupWithStepKeyReferencesCest
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupWithStepKeyReferences(AcceptanceTester $I)
+	public function ActionGroupWithStepKeyReferencesActionGroup(AcceptanceTester $I)
 	{
 		$I->comment("Entering Action Group [actionGroup] FunctionActionGroupWithStepKeyReferences");
 		$I->createEntity("createSimpleDataActionGroup", "test", "simpleData", [], []); // stepKey: createSimpleDataActionGroup

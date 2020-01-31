@@ -13,10 +13,10 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Title("[NO TESTCASEID]: Action Group With Passed Argument Value and Argument Value in Param")
+ * @Title("[NO TESTCASEID]: Action Group With Passed Argument Value and Hardcoded Value in Param")
  * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupTest.xml<br>")
  */
-class ActionGroupWithSingleParameterSelectorFromPassedArgumentCest
+class ActionGroupWithPassedArgumentAndStringSelectorParamActionGroupCest
 {
 	/**
 	 * @Severity(level = SeverityLevel::BLOCKER)
@@ -26,10 +26,10 @@ class ActionGroupWithSingleParameterSelectorFromPassedArgumentCest
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupWithSingleParameterSelectorFromPassedArgument(AcceptanceTester $I)
+	public function ActionGroupWithPassedArgumentAndStringSelectorParamActionGroup(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group [actionGroup] actionGroupWithSingleParameterSelectorFromArgument");
-		$I->see("Doe", "#element .John" . msq("UniquePerson")); // stepKey: seeLastNameActionGroup
-		$I->comment("Exiting Action Group [actionGroup] actionGroupWithSingleParameterSelectorFromArgument");
+		$I->comment("Entering Action Group [actionGroup] ActionGroupWithDefaultArgumentAndStringSelectorParamActionGroup");
+		$I->see("John" . msq("UniquePerson"), "#element .test1"); // stepKey: seeFirstNameActionGroup
+		$I->comment("Exiting Action Group [actionGroup] ActionGroupWithDefaultArgumentAndStringSelectorParamActionGroup");
 	}
 }

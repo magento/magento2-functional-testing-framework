@@ -13,32 +13,23 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
+ * @Title("[NO TESTCASEID]: Action Group With Passed Argument Value and Argument Value in Param")
  * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupTest.xml<br>")
  */
-class ActionGroupContainsStepKeyInArgTextCest
+class ActionGroupWithSingleParameterSelectorFromPassedArgumentActionGroupCest
 {
 	/**
-	  * @param AcceptanceTester $I
-	  * @throws \Exception
-	  */
-	public function _before(AcceptanceTester $I)
-	{
-		$I->comment("Entering Action Group [actionGroup] actionGroupContainsStepKeyInArgValue");
-		$I->see("arg1", ".selector"); // stepKey: arg1ActionGroup
-		$I->comment("Exiting Action Group [actionGroup] actionGroupContainsStepKeyInArgValue");
-	}
-
-	/**
+	 * @Severity(level = SeverityLevel::BLOCKER)
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupContainsStepKeyInArgText(AcceptanceTester $I)
+	public function ActionGroupWithSingleParameterSelectorFromPassedArgumentActionGroup(AcceptanceTester $I)
 	{
-		$I->comment("Entering Action Group [actionGroup] actionGroupContainsStepKeyInArgValue");
-		$I->see("arg1", ".selector"); // stepKey: arg1ActionGroup
-		$I->comment("Exiting Action Group [actionGroup] actionGroupContainsStepKeyInArgValue");
+		$I->comment("Entering Action Group [actionGroup] ActionGroupWithSingleParameterSelectorFromArgumentActionGroup");
+		$I->see("Doe", "#element .John" . msq("UniquePerson")); // stepKey: seeLastNameActionGroup
+		$I->comment("Exiting Action Group [actionGroup] ActionGroupWithSingleParameterSelectorFromArgumentActionGroup");
 	}
 }

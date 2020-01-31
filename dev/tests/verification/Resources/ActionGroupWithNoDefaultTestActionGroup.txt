@@ -16,7 +16,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
  * @group functional
  * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupFunctionalTest.xml<br>")
  */
-class ActionGroupWithPersistedDataCest
+class ActionGroupWithNoDefaultTestActionGroupCest
 {
 	/**
 	  * @param AcceptanceTester $I
@@ -61,15 +61,14 @@ class ActionGroupWithPersistedDataCest
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupWithPersistedData(AcceptanceTester $I)
+	public function ActionGroupWithNoDefaultTestActionGroup(AcceptanceTester $I)
 	{
-		$I->createEntity("createPerson", "test", "DefaultPerson", [], []); // stepKey: createPerson
-		$I->comment("Entering Action Group [actionGroupWithPersistedData1] FunctionalActionGroupWithData");
-		$I->amOnPage("/" . $I->retrieveEntityField('createPerson', 'firstname', 'test') . "/" . $I->retrieveEntityField('createPerson', 'lastname', 'test') . ".html"); // stepKey: amOnPage1ActionGroupWithPersistedData1
-		$I->fillField("#foo", $I->retrieveEntityField('createPerson', 'firstname', 'test')); // stepKey: fillField1ActionGroupWithPersistedData1
-		$I->fillField("#bar", $I->retrieveEntityField('createPerson', 'lastname', 'test')); // stepKey: fillField2ActionGroupWithPersistedData1
-		$I->searchAndMultiSelectOption("#foo", [$I->retrieveEntityField('createPerson', 'firstname', 'test'), $I->retrieveEntityField('createPerson', 'lastname', 'test')]); // stepKey: multi1ActionGroupWithPersistedData1
-		$I->see("#element ." . $I->retrieveEntityField('createPerson', 'firstname', 'test')); // stepKey: see1ActionGroupWithPersistedData1
-		$I->comment("Exiting Action Group [actionGroupWithPersistedData1] FunctionalActionGroupWithData");
+		$I->amOnPage("/someUrl"); // stepKey: step1
+		$I->comment("Entering Action Group [actionGroupWithDataOverride1] FunctionalActionGroupNoDefault");
+		$I->fillField("#foo", "Jane"); // stepKey: fillField1ActionGroupWithDataOverride1
+		$I->fillField("#bar", "Dane"); // stepKey: fillField2ActionGroupWithDataOverride1
+		$I->see("#Jane .Dane"); // stepKey: see2ActionGroupWithDataOverride1
+		$I->comment("Exiting Action Group [actionGroupWithDataOverride1] FunctionalActionGroupNoDefault");
+		$I->click("loginButton"); // stepKey: step6
 	}
 }

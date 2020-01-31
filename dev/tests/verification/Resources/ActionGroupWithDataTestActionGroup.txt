@@ -16,7 +16,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
  * @group functional
  * @Description("<br><br><b><font size=+0.9>Test files</font></b><br><br>verification/TestModule/Test/ActionGroupFunctionalTest.xml<br>")
  */
-class ActionGroupWithDataOverrideTestCest
+class ActionGroupWithDataTestActionGroupCest
 {
 	/**
 	  * @param AcceptanceTester $I
@@ -61,16 +61,16 @@ class ActionGroupWithDataOverrideTestCest
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ActionGroupWithDataOverrideTest(AcceptanceTester $I)
+	public function ActionGroupWithDataTestActionGroup(AcceptanceTester $I)
 	{
 		$I->amOnPage("/someUrl"); // stepKey: step1
-		$I->comment("Entering Action Group [actionGroupWithDataOverride1] FunctionalActionGroupWithData");
-		$I->amOnPage("/John/Doe.html"); // stepKey: amOnPage1ActionGroupWithDataOverride1
-		$I->fillField("#foo", "John"); // stepKey: fillField1ActionGroupWithDataOverride1
-		$I->fillField("#bar", "Doe"); // stepKey: fillField2ActionGroupWithDataOverride1
-		$I->searchAndMultiSelectOption("#foo", ["John", "Doe"]); // stepKey: multi1ActionGroupWithDataOverride1
-		$I->see("#element .John"); // stepKey: see1ActionGroupWithDataOverride1
-		$I->comment("Exiting Action Group [actionGroupWithDataOverride1] FunctionalActionGroupWithData");
+		$I->comment("Entering Action Group [actionGroupWithData1] FunctionalActionGroupWithData");
+		$I->amOnPage("/Jane/Dane.html"); // stepKey: amOnPage1ActionGroupWithData1
+		$I->fillField("#foo", "Jane"); // stepKey: fillField1ActionGroupWithData1
+		$I->fillField("#bar", "Dane"); // stepKey: fillField2ActionGroupWithData1
+		$I->searchAndMultiSelectOption("#foo", ["Jane", "Dane"]); // stepKey: multi1ActionGroupWithData1
+		$I->see("#element .Jane"); // stepKey: see1ActionGroupWithData1
+		$I->comment("Exiting Action Group [actionGroupWithData1] FunctionalActionGroupWithData");
 		$I->click("loginButton"); // stepKey: step6
 	}
 }
