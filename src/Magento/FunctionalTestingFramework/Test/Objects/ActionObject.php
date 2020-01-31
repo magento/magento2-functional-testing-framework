@@ -75,6 +75,7 @@ class ActionObject
     const DEFAULT_COMMAND_WAIT_TIMEOUT = 60;
     const ACTION_ATTRIBUTE_USERINPUT = 'userInput';
     const ACTION_TYPE_COMMENT = 'comment';
+    const INVISIBLE_STEP_ACTIONS = ['retrieveEntityField', 'getSecret'];
 
     /**
      * The unique identifier for the action
@@ -82,6 +83,13 @@ class ActionObject
      * @var string $stepKey
      */
     private $stepKey;
+
+    /**
+     * Array of deprecated entities used in action.
+     *
+     * @var array
+     */
+    private $deprecatedUsage = [];
 
     /**
      * The type of action (e.g. fillField, createData, etc)
@@ -141,6 +149,7 @@ class ActionObject
      * @param string|null $linkedAction
      * @param string      $order
      * @param array       $actionOrigin
+     * @param array       $deprecatedUsage
      */
     public function __construct(
         $stepKey,
@@ -148,13 +157,15 @@ class ActionObject
         $actionAttributes,
         $linkedAction = null,
         $order = ActionObject::MERGE_ACTION_ORDER_BEFORE,
-        $actionOrigin = null
+        $actionOrigin = null,
+        $deprecatedUsage = []
     ) {
         $this->stepKey = $stepKey;
         $this->type = $type === self::COMMENT_ACTION ? self::ACTION_TYPE_COMMENT : $type;
         $this->actionAttributes = $actionAttributes;
         $this->linkedAction = $linkedAction;
         $this->actionOrigin = $actionOrigin;
+        $this->deprecatedUsage = $deprecatedUsage;
 
         if ($order === ActionObject::MERGE_ACTION_ORDER_AFTER) {
             $this->orderOffset = 1;
@@ -194,7 +205,7 @@ class ActionObject
     /**
      * Getter for actionOrigin
      *
-     * @return string
+     * @return array
      */
     public function getActionOrigin()
     {
@@ -303,7 +314,8 @@ class ActionObject
             if ($appConfig->getPhase() == MftfApplicationConfig::GENERATION_PHASE && $appConfig->verboseEnabled()) {
                 LoggingUtil::getInstance()->getLogger(ActionObject::class)->deprecation(
                     "use of one line Assertion actions will be deprecated in MFTF 3.0.0, please use nested syntax",
-                    ["action" => $this->type, "stepKey" => $this->stepKey]
+                    ["action" => $this->type, "stepKey" => $this->stepKey],
+                    true
                 );
             }
             return;
@@ -533,11 +545,18 @@ class ActionObject
                 $replacement = null;
                 $parameterized = false;
             } elseif (get_class($obj) == PageObject::class) {
+                if ($obj->getDeprecated() !== null) {
+                    $this->deprecatedUsage[] = "DEPRECATED PAGE in Test: " . $match . ' ' . $obj->getDeprecated();
+                }
                 $this->validateUrlAreaAgainstActionType($obj);
                 $replacement = $obj->getUrl();
                 $parameterized = $obj->isParameterized();
             } elseif (get_class($obj) == SectionObject::class) {
+                if ($obj->getDeprecated() !== null) {
+                    $this->deprecatedUsage[] = "DEPRECATED SECTION in Test: " . $match . ' ' . $obj->getDeprecated();
+                }
                 list(,$objField) = $this->stripAndSplitReference($match);
+
                 if ($obj->getElement($objField) == null) {
                     throw new TestReferenceException(
                         "Could not resolve entity reference \"{$inputString}\" "
@@ -548,7 +567,15 @@ class ActionObject
                 $parameterized = $obj->getElement($objField)->isParameterized();
                 $replacement = $obj->getElement($objField)->getPrioritizedSelector();
                 $this->setTimeout($obj->getElement($objField)->getTimeout());
+                if ($obj->getElement($objField)->getDeprecated() !== null) {
+                    $this->deprecatedUsage[] = "DEPRECATED ELEMENT in Test: " . $match . ' '
+                        . $obj->getElement($objField)->getDeprecated();
+                }
             } elseif (get_class($obj) == EntityDataObject::class) {
+                if ($obj->getDeprecated() !== null) {
+                    $this->deprecatedUsage[] = "DEPRECATED DATA ENTITY in Test: "
+                        . $match . ' ' . $obj->getDeprecated();
+                }
                 $replacement = $this->resolveEntityDataObjectReference($obj, $match);
 
                 if (is_array($replacement)) {
@@ -764,5 +791,15 @@ class ActionObject
                 ["reference" => $reference]
             );
         }
+    }
+
+    /**
+     * Returns array of deprecated usages in Action.
+     *
+     * @return array
+     */
+    public function getDeprecatedUsages()
+    {
+        return $this->deprecatedUsage;
     }
 }

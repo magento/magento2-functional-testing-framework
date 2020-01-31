@@ -128,7 +128,8 @@ class ActionMergeUtil
                 $action->getCustomActionAttributes(),
                 $action->getLinkedAction(),
                 $action->getOrderOffset(),
-                $action->getActionOrigin()
+                $action->getActionOrigin(),
+                $action->getDeprecatedUsages()
             );
 
             $actions[$action->getStepKey()] = $action;

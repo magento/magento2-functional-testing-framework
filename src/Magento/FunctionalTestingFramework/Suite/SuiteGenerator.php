@@ -178,12 +178,14 @@ class SuiteGenerator
     {
         $suiteRef = $originalSuiteName ?? $suiteName;
         $possibleTestRef = SuiteObjectHandler::getInstance()->getObject($suiteRef)->getTests();
-        $errorMsg = "Cannot reference tests whcih are not declared as part of suite.";
+        $errorMsg = "Cannot reference tests which are not declared as part of suite";
 
         $invalidTestRef = array_diff($testsReferenced, array_keys($possibleTestRef));
 
         if (!empty($invalidTestRef)) {
-            throw new TestReferenceException($errorMsg, ['suite' => $suiteRef, 'test' => $invalidTestRef]);
+            $testList = implode("\", \"", $invalidTestRef);
+            $fullError = $errorMsg . " (Suite: \"{$suiteRef}\" Tests: \"{$testList}\")";
+            throw new TestReferenceException($fullError, ['suite' => $suiteRef, 'test' => $invalidTestRef]);
         }
     }
 

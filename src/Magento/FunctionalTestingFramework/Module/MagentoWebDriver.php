@@ -26,6 +26,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Exception\WebDriverCurlException;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 
 /**
  * MagentoWebDriver module provides common Magento web actions through Selenium WebDriver.
@@ -46,10 +47,14 @@ use Facebook\WebDriver\Exception\WebDriverCurlException;
  * ```
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  */
 class MagentoWebDriver extends WebDriver
 {
     use AttachmentSupport;
+
+    const MAGENTO_CRON_INTERVAL = 60;
+    const MAGENTO_CRON_COMMAND = 'cron:run';
 
     /**
      * List of known magento loading masks by selector
@@ -118,6 +123,13 @@ class MagentoWebDriver extends WebDriver
      * @var string[]
      */
     private $jsErrors = [];
+
+    /**
+     * Contains last execution times for Cron
+     *
+     * @var int[]
+     */
+    private $cronExecution = [];
 
     /**
      * Sanitizes config, then initializes using parent.
@@ -551,6 +563,75 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
+     * Executes Magento Cron keeping the interval (> 60 seconds between each run)
+     *
+     * @param string|null  $cronGroups
+     * @param integer|null $timeout
+     * @param string|null  $arguments
+     * @return string
+     */
+    public function magentoCron($cronGroups = null, $timeout = null, $arguments = null)
+    {
+        $cronGroups = explode(' ', $cronGroups);
+        return $this->executeCronjobs($cronGroups, $timeout, $arguments);
+    }
+
+    /**
+     * Updates last execution time for Cron
+     *
+     * @param array $cronGroups
+     * @return void
+     */
+    private function notifyCronFinished(array $cronGroups = [])
+    {
+        if (empty($cronGroups)) {
+            $this->cronExecution['*'] = time();
+        }
+
+        foreach ($cronGroups as $group) {
+            $this->cronExecution[$group] = time();
+        }
+    }
+
+    /**
+     * Returns last Cron execution time for specific cron or all crons
+     *
+     * @param array $cronGroups
+     * @return integer
+     */
+    private function getLastCronExecution(array $cronGroups = [])
+    {
+        if (empty($cronGroups)) {
+            return (int)max($this->cronExecution);
+        }
+
+        $cronGroups = array_merge($cronGroups, ['*']);
+
+        return array_reduce($cronGroups, function ($lastExecution, $group) {
+            if (isset($this->cronExecution[$group]) && $this->cronExecution[$group] > $lastExecution) {
+                $lastExecution = $this->cronExecution[$group];
+            }
+
+            return (int)$lastExecution;
+        }, 0);
+    }
+
+    /**
+     * Returns time to wait for next run
+     *
+     * @param array   $cronGroups
+     * @param integer $cronInterval
+     * @return integer
+     */
+    private function getCronWait(array $cronGroups = [], int $cronInterval = self::MAGENTO_CRON_INTERVAL)
+    {
+        $nextRun = $this->getLastCronExecution($cronGroups) + $cronInterval;
+        $toNextRun = $nextRun - time();
+
+        return max(0, $toNextRun);
+    }
+
+    /**
      * Runs DELETE request to delete a Magento entity against the url given.
      *
      * @param string $url
@@ -688,6 +769,9 @@ class MagentoWebDriver extends WebDriver
         // decrypted value
 
         $decryptedValue = CredentialStore::getInstance()->decryptSecretValue($value);
+        if ($decryptedValue === false) {
+            throw new TestFrameworkException("\nFailed to decrypt value {$value} for field {$field}\n");
+        }
         $this->fillField($field, $decryptedValue);
     }
 
@@ -707,6 +791,9 @@ class MagentoWebDriver extends WebDriver
         // decrypted value
 
         $decryptedCommand = CredentialStore::getInstance()->decryptAllSecretsInString($command);
+        if ($decryptedCommand === false) {
+            throw new TestFrameworkException("\nFailed to decrypt magentoCLI command {$command}\n");
+        }
         return $this->magentoCLI($decryptedCommand, $timeout, $arguments);
     }
 
@@ -854,5 +941,151 @@ class MagentoWebDriver extends WebDriver
         $this->_saveScreenshot($screenName);
         $this->debug("Screenshot saved to $screenName");
         AllureHelper::addAttachmentToCurrentStep($screenName, 'Screenshot');
+    }
+
+    /**
+     * Create an entity
+     * TODO: move this function to MagentoActionProxies after MQE-1904
+     *
+     * @param string $key                 StepKey of the createData action.
+     * @param string $scope
+     * @param string $entity              Name of xml entity to create.
+     * @param array  $dependentObjectKeys StepKeys of other createData actions that are required.
+     * @param array  $overrideFields      Array of FieldName => Value of override fields.
+     * @param string $storeCode
+     * @return void
+     */
+    public function createEntity(
+        $key,
+        $scope,
+        $entity,
+        $dependentObjectKeys = [],
+        $overrideFields = [],
+        $storeCode = ''
+    ) {
+        PersistedObjectHandler::getInstance()->createEntity(
+            $key,
+            $scope,
+            $entity,
+            $dependentObjectKeys,
+            $overrideFields,
+            $storeCode
+        );
+    }
+
+    /**
+     * Retrieves and updates a previously created entity
+     * TODO: move this function to MagentoActionProxies after MQE-1904
+     *
+     * @param string $key                 StepKey of the createData action.
+     * @param string $scope
+     * @param string $updateEntity        Name of the static XML data to update the entity with.
+     * @param array  $dependentObjectKeys StepKeys of other createData actions that are required.
+     * @return void
+     */
+    public function updateEntity($key, $scope, $updateEntity, $dependentObjectKeys = [])
+    {
+        PersistedObjectHandler::getInstance()->updateEntity(
+            $key,
+            $scope,
+            $updateEntity,
+            $dependentObjectKeys
+        );
+    }
+
+    /**
+     * Performs GET on given entity and stores entity for use
+     * TODO: move this function to MagentoActionProxies after MQE-1904
+     *
+     * @param string  $key                 StepKey of getData action.
+     * @param string  $scope
+     * @param string  $entity              Name of XML static data to use.
+     * @param array   $dependentObjectKeys StepKeys of other createData actions that are required.
+     * @param string  $storeCode
+     * @param integer $index
+     * @return void
+     */
+    public function getEntity($key, $scope, $entity, $dependentObjectKeys = [], $storeCode = '', $index = null)
+    {
+        PersistedObjectHandler::getInstance()->getEntity(
+            $key,
+            $scope,
+            $entity,
+            $dependentObjectKeys,
+            $storeCode,
+            $index
+        );
+    }
+
+    /**
+     * Retrieves and deletes a previously created entity
+     * TODO: move this function to MagentoActionProxies after MQE-1904
+     *
+     * @param string $key   StepKey of the createData action.
+     * @param string $scope
+     * @return void
+     */
+    public function deleteEntity($key, $scope)
+    {
+        PersistedObjectHandler::getInstance()->deleteEntity($key, $scope);
+    }
+
+    /**
+     * Retrieves a field from an entity, according to key and scope given
+     * TODO: move this function to MagentoActionProxies after MQE-1904
+     *
+     * @param string $stepKey
+     * @param string $field
+     * @param string $scope
+     * @return string
+     */
+    public function retrieveEntityField($stepKey, $field, $scope)
+    {
+        return PersistedObjectHandler::getInstance()->retrieveEntityField($stepKey, $field, $scope);
+    }
+
+    /**
+     * Get encrypted value by key
+     * TODO: move this function to MagentoActionProxies after MQE-1904
+     *
+     * @param string $key
+     * @return string|null
+     * @throws TestFrameworkException
+     */
+    public function getSecret($key)
+    {
+        return CredentialStore::getInstance()->getSecret($key);
+    }
+
+    /**
+     * Waits proper amount of time to perform Cron execution
+     *
+     * @param string  $cronGroups
+     * @param integer $timeout
+     * @param string  $arguments
+     * @return string
+     * @throws TestFrameworkException
+     */
+    private function executeCronjobs($cronGroups, $timeout, $arguments): string
+    {
+        $cronGroups = array_filter($cronGroups);
+
+        $waitFor = $this->getCronWait($cronGroups);
+
+        if ($waitFor) {
+            $this->wait($waitFor);
+        }
+
+        $command = array_reduce($cronGroups, function ($command, $cronGroup) {
+            $command .= ' --group=' . $cronGroup;
+            return $command;
+        }, self::MAGENTO_CRON_COMMAND);
+        $timeStart = microtime(true);
+        $cronResult = $this->magentoCLI($command, $timeout, $arguments);
+        $timeEnd = microtime(true);
+
+        $this->notifyCronFinished($cronGroups);
+
+        return sprintf('%s (wait: %ss, execution: %ss)', $cronResult, $waitFor, round($timeEnd - $timeStart, 2));
     }
 }

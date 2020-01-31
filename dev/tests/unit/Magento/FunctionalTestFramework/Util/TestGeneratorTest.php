@@ -9,6 +9,7 @@ namespace Tests\unit\Magento\FunctionalTestFramework\Test\Handlers;
 use AspectMock\Test as AspectMock;
 
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
+use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
@@ -76,14 +77,26 @@ class TestGeneratorTest extends MagentoTestCase
         $actionObject = new ActionObject('fakeAction', 'comment', [
             'userInput' => $actionInput
         ]);
+        $beforeActionInput = 'beforeInput';
+        $beforeActionObject = new ActionObject('beforeAction', 'comment', [
+            'userInput' => $beforeActionInput
+        ]);
 
         $annotations = ['skip' => ['issue']];
-        $testObject = new TestObject("sampleTest", ["merge123" => $actionObject], $annotations, [], "filename");
+        $beforeHook = new TestHookObject("before", "sampleTest", ['beforeAction' => $beforeActionObject]);
+        $testObject = new TestObject(
+            "sampleTest",
+            ["fakeAction" => $actionObject],
+            $annotations,
+            ["before" => $beforeHook],
+            "filename"
+        );
 
         $testGeneratorObject = TestGenerator::getInstance("", ["sampleTest" => $testObject]);
         $output = $testGeneratorObject->assembleTestPhp($testObject);
 
         $this->assertNotContains('This test is skipped', $output);
         $this->assertContains($actionInput, $output);
+        $this->assertContains($beforeActionInput, $output);
     }
 }

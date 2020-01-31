@@ -7,16 +7,27 @@
 namespace Magento\FunctionalTestingFramework\Codeception\Subscriber;
 
 use Codeception\Event\StepEvent;
+use Codeception\Event\TestEvent;
 use Codeception\Lib\Console\Message;
 use Codeception\Step;
 use Codeception\Step\Comment;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
+use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
+/**
+ * @SuppressWarnings(PHPMD)
+ */
 class Console extends \Codeception\Subscriber\Console
 {
+    /**
+     * Regular expresion to find deprecated notices.
+     */
+    const DEPRECATED_NOTICE = '/<li>(?<deprecatedMessage>.*?)<\/li>/m';
+
     /**
      * Test files cache.
      *
@@ -30,6 +41,13 @@ class Console extends \Codeception\Subscriber\Console
      * @var null|string
      */
     private $actionGroupStepKey = null;
+
+    /**
+     * Boolean value to indicate if steps are invisible steps
+     *
+     * @var boolean
+     */
+    private $atInvisibleSteps = false;
 
     /**
      * Console constructor. Parent constructor requires codeception CLI options, and does not have its own configs.
@@ -46,6 +64,36 @@ class Console extends \Codeception\Subscriber\Console
     }
 
     /**
+     * Triggered event before each test.
+     *
+     * @param TestEvent $e
+     * @return void
+     * @throws \Exception
+     */
+    public function startTest(TestEvent $e)
+    {
+        $test = $e->getTest()->getTestClass();
+        try {
+            $testReflection = new \ReflectionClass($test);
+            $isDeprecated = preg_match_all(self::DEPRECATED_NOTICE, $testReflection->getDocComment(), $match);
+            if ($isDeprecated) {
+                $this->message('DEPRECATION NOTICE(S): ')
+                    ->style('debug')
+                    ->writeln();
+                foreach ($match['deprecatedMessage'] as $deprecatedMessage) {
+                    $this->message(' - ' . $deprecatedMessage)
+                        ->style('debug')
+                        ->writeln();
+                }
+            }
+        } catch (\ReflectionException $e) {
+            LoggingUtil::getInstance()->getLogger(self::class)->error($e->getMessage(), $e->getTrace());
+        }
+
+        parent::startTest($e);
+    }
+
+    /**
      * Printing stepKey in before step action.
      *
      * @param StepEvent $e
@@ -55,6 +103,19 @@ class Console extends \Codeception\Subscriber\Console
     {
         if ($this->silent or !$this->steps or !$e->getTest() instanceof ScenarioDriven) {
             return;
+        }
+
+        $stepAction = $e->getStep()->getAction();
+
+        // Set atInvisibleSteps flag and return if step is in INVISIBLE_STEP_ACTIONS
+        if (in_array($stepAction, ActionObject::INVISIBLE_STEP_ACTIONS)) {
+            $this->atInvisibleSteps = true;
+            return;
+        }
+
+        // Set back atInvisibleSteps flag
+        if ($this->atInvisibleSteps && !in_array($stepAction, ActionObject::INVISIBLE_STEP_ACTIONS)) {
+            $this->atInvisibleSteps = false;
         }
 
         $metaStep = $e->getStep()->getMetaStep();
@@ -77,9 +138,14 @@ class Console extends \Codeception\Subscriber\Console
      */
     public function afterStep(StepEvent $e)
     {
-        parent::afterStep($e);
+        // Do usual after step if step is not INVISIBLE_STEP_ACTIONS
+        if (!$this->atInvisibleSteps) {
+            parent::afterStep($e);
+        }
+
         if ($e->getStep()->hasFailed()) {
             $this->actionGroupStepKey = null;
+            $this->atInvisibleSteps = false;
         }
     }
 

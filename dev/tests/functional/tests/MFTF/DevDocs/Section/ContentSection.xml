@@ -10,5 +10,6 @@
           xsi:noNamespaceSchemaLocation="../../../../../../../src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
     <section name="contentSection">
         <element name="pageIntro" type="text" selector=".page-intro"/>
+        <element name="deprecatedPageIntro" type="text" selector=".page-intro-old" deprecated="New element was introduced. Please use 'contentSection.pageIntro'"/>
     </section>
 </sections>

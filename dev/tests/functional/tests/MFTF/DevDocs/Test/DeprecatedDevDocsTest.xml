@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="DeprecatedDevDocsTest" deprecated="Test is deprecated due to more stable test was introduces. Please use 'DevDocsTest'.">
+        <annotations>
+            <!--   Comment in Annotations for DevDocs Test are not affecting test generation  -->
+            <features value="DevDocs available"/>
+            <stories value="[Deprecated] MFTF DevDocs available"/>
+            <title value="[Deprecated] Magento Functional Testing Framework Documentation is available."/>
+            <description value="[Deprecated] Magento Functional Testing Framework Documentation is available."/>
+            <severity value="CRITICAL"/>
+            <group value="mftf"/>
+        </annotations>
+
+        <!--   Open MFTF DevDocs Page -->
+        <amOnPage stepKey="openMFTFDevDocPage" url="{{DeprecatedMFTFDocPage.url}}" />
+        <see stepKey="verifyPageIntroText" selector="{{DeprecatedContentSection.pageIntro}}" userInput="{{DeprecatedMessageData.message}}" />
+        <actionGroup ref="DeprecatedCommentActionGroup" stepKey="commentActionGroup" />
+    </test>
+</tests>
