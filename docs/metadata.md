@@ -61,6 +61,7 @@ The following diagram demonstrates the XML structure of a metadata file:
             </array>
         </object>
     </operation>
+</operations>
 ```
 
 ## Principles {#principles}
