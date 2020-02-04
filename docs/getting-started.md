@@ -2,7 +2,7 @@
 
 <div class="bs-callout bs-callout-info" markdown="1">
 [Find your MFTF version][] of the MFTF.
-The latest Magento 2.3.x release supports MFTF 2.6.0.
+The latest Magento 2.3.x release supports MFTF 2.5.3.
 The latest Magento 2.2.x release supports MFTF 2.4.5.
 </div>
 
