@@ -157,7 +157,6 @@ A section is a reusable piece or part of a page.
 
 Attributes|Type|Use|Description
 ---|---|---|---
-`deprecated`|string|optional|Used to warn about the future deprecation of the section. String will appear in Allure reports and console output at runtime.
 `name`|string|required|Unique section name identifier.
 `remove`|boolean|optional|The default value is `"false"`. Set to `"true"` to remove this element during parsing.
 
