@@ -601,6 +601,10 @@ class MagentoWebDriver extends WebDriver
      */
     private function getLastCronExecution(array $cronGroups = [])
     {
+        if (empty($this->cronExecution)) {
+            return 0;
+        }
+
         if (empty($cronGroups)) {
             return (int)max($this->cronExecution);
         }
@@ -1060,7 +1064,7 @@ class MagentoWebDriver extends WebDriver
     /**
      * Waits proper amount of time to perform Cron execution
      *
-     * @param string  $cronGroups
+     * @param array   $cronGroups
      * @param integer $timeout
      * @param string  $arguments
      * @return string
