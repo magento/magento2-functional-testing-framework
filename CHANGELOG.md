@@ -4,6 +4,8 @@ Magento Functional Testing Framework Changelog
 2.6.0
 -----
 
+* Usability
+    * `magentoCron` action added by community maintainer @lbajsarowicz
 * Traceability
     * MFTF generated cest files are fully compatible for Codeception `dry-run`.
 * Modularity
@@ -23,6 +25,7 @@ Magento Functional Testing Framework Changelog
 * Customizability
     * AWS Secrets Manager has been added as an additional credential storage.
         * See DevDocs for details
+* Bumped dependencies to latest possible versions
 
 ### Fixes
 * Fixed missing before, after, failed steps in cest file when generating tests with `--allow-skipped` option.
