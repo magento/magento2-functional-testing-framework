@@ -24,7 +24,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class BaseGenerateCommand extends Command
 {
     const MFTF_3_O_0_DEPRECATION_MESSAGE = "MFTF NOTICES:\n"
-        . "\"executeInSelenium\" and \"performOn\" actions are DEPRECATED and will be removed in MFTF 3.0.0\n";
+        . "DEPRECATED ACTIONS: \"executeInSelenium\" and \"performOn\" actions will be removed in MFTF 3.0.0\n"
+        . "DEPRECATED TEST PATH: \"dev/tests/acceptance/tests/functional/Magento/FunctionalTest will not be read"
+        . " in MFTF 3.0.0 and after\n"
+        . "Single entity per xml file for all entities except data and metadata in MFTF 3.0.0 and after\n";
 
     /**
      * Console output style
