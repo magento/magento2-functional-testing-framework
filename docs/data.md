@@ -197,6 +197,7 @@ Attributes|Type|Use|Description
 ---|---|---|---
 `name`|string|optional|Name of the `<entity>`.
 `type`|string|optional|Node containing the exact name of `<entity>` type. Used later to find specific Persistence Layer Model class. `type` in `<data>` can be whatever the user wants; There are no constraints. It is important when persisting data, depending on the `type` given, as it will try to match a metadata definition with the operation being done. Example: A `myCustomer` entity with `type="customer"`, calling `<createData entity="myCustomer"/>`, will try to find a metadata entry with the following attributes: `<operation dataType="customer" type="create">`.
+`deprecated`|string|optional|Used to warn about the future deprecation of the data entity. String will appear in Allure reports and console output at runtime.
 
 `<entity>` may contain one or more [`<data>`][], [`<var>`][], [`<required-entities>`][], or [`<array>`][] elements in any sequence.
 

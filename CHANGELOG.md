@@ -1,5 +1,41 @@
 Magento Functional Testing Framework Changelog
 ================================================
+
+2.6.0
+-----
+
+* Usability
+    * `magentoCron` action added by community maintainer @lbajsarowicz
+* Traceability
+    * MFTF generated cest files are fully compatible for Codeception `dry-run`.
+* Modularity
+    * `mftf generate:tests` and `mftf run:test` commands now accept suite scoped test names in format `[suitename:testname]...`.
+* Maintainability
+    * Support `deprecated` syntax for the following test entities:
+        * Test
+        * Action Group
+        * Data
+        * Metadata
+        * Page
+        * Section
+        * Section Element
+            * See DevDocs for details 
+    * Improved `mftf static-checks` command to allow executing all or specific static checks.
+    * Added a new static check that checks and reports unused arguments in action groups.
+* Customizability
+    * AWS Secrets Manager has been added as an additional credential storage.
+        * See DevDocs for details
+* Bumped dependencies to latest possible versions
+
+### Fixes
+* Fixed missing before, after, failed steps in cest file when generating tests with `--allow-skipped` option.
+* Fixed suites and tests display issue in Allure `Suites` page after `mftf run:group` command.
+* `createData` action now shows a meaningful error message at runtime when the entity does not exist.
+
+### GitHub Issues/Pull requests:
+* [#537](https://github.com/magento/magento2-functional-testing-framework/pull/537) -- Refactor of TestGenerator class
+* [#538](https://github.com/magento/magento2-functional-testing-framework/pull/538) -- FEATURE: <magentoCron> command to execute Cron Jobs
+
 2.5.4
 -----
 [Demo Video](https://www.youtube.com/watch?v=tguvkw1HWKg)
