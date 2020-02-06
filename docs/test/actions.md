@@ -971,24 +971,6 @@ Attribute|Type|Use|Description
 <dragAndDrop selector1="#block1" selector2="#block2" x="50" y="50" stepKey="dragAndDrop"/>
 ```
 
-### executeInSelenium
-
-See [executeInSelenium docs on codeception.com](http://codeception.com/docs/modules/WebDriver#executeInSelenium).
-
-Attribute|Type|Use|Description
----|---|---|---
-`function`|string|optional| Name of Selenium function to run.
-`stepKey`|string|required| A unique identifier of the action.
-`before`|string|optional| `stepKey` of action that must be executed next.
-`after`|string|optional| `stepKey` of preceding action.
-
-#### Example
-
-```xml
-<!-- Execute the Selenium function `function(\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) {$webdriver->get('http://google.com');}`. -->
-<executeInSelenium function="function(\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) {$webdriver->get('http://google.com');}" stepKey="executeInSelenium"/>
-```
-
 ### executeJS
 
 See [executeJS docs on codeception.com](http://codeception.com/docs/modules/WebDriver#executeJS).
@@ -1458,18 +1440,6 @@ Attribute|Type|Use|Description
 <pauseExecution stepKey="pause"/>
 ```
 
-### performOn
-
-See [performOn docs on codeception.com](http://codeception.com/docs/modules/WebDriver#performOn).
-
-Attribute|Type|Use|Description
----|---|---|---
-`selector`|string|optional| The selector identifying the corresponding HTML element.
-`function`|string|optional| Function or actions to be taken on the selected element.
-`stepKey`|string|required| A unique identifier of the action.
-`before`|string|optional| `stepKey` of action that must be executed next.
-`after`|string|optional| `stepKey` of preceding action.
-
 ### pressKey
 
 See [pressKey docs on codeception.com](http://codeception.com/docs/modules/WebDriver#pressKey).
@@ -1484,7 +1454,7 @@ Attribute|Type|Use|Description
 `after`|string|optional| `stepKey` of preceding action.
 
 #### Examples
-
+F
 ```xml
 <!-- Press the `a` key within the selected area. -->
 <pressKey userInput="a" selector="#targetElement" stepKey="pressA"/>
