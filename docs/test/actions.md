@@ -1454,7 +1454,7 @@ Attribute|Type|Use|Description
 `after`|string|optional| `stepKey` of preceding action.
 
 #### Examples
-F
+
 ```xml
 <!-- Press the `a` key within the selected area. -->
 <pressKey userInput="a" selector="#targetElement" stepKey="pressA"/>
