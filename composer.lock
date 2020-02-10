@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "480a0e5b9ab3d1248398361c90a5e246",
+    "content-hash": "b96147186af064985bb758d6f51bd01d",
     "packages": [
         {
             "name": "allure-framework/allure-codeception",
@@ -2975,7 +2975,7 @@
         },
         {
             "name": "php-webdriver/webdriver",
-            "version": "dev-master",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-webdriver/php-webdriver.git",
@@ -6864,9 +6864,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "php-webdriver/webdriver": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
