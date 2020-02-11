@@ -1043,7 +1043,7 @@ class TestGenerator
                     );
                     break;
                 case "executeInSelenium":
-                    $this->deprecationMessages[] = "DEPRECATED ACTION in Test: at step {$stepKey} \"executeInSelenium\""
+                    $this->deprecationMessages[] = "DEPRECATED ACTION in Test: at step {$stepKey} 'executeInSelenium'"
                         . self::MFTF_3_O_0_DEPRECATION_MESSAGE;
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $function);
                     break;
@@ -1056,7 +1056,7 @@ class TestGenerator
                     );
                     break;
                 case "performOn":
-                    $this->deprecationMessages[] = "DEPRECATED ACTION in Test: at step {$stepKey} \"performOn\""
+                    $this->deprecationMessages[] = "DEPRECATED ACTION in Test: at step {$stepKey} 'performOn'"
                         . self::MFTF_3_O_0_DEPRECATION_MESSAGE;
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
