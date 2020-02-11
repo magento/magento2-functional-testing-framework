@@ -973,6 +973,8 @@ Attribute|Type|Use|Description
 
 ### executeInSelenium
 
+#### NOTE: `executeInSelenium` action is DEPRECATED and will be removed in MFTF 3.0.0.
+
 See [executeInSelenium docs on codeception.com](http://codeception.com/docs/modules/WebDriver#executeInSelenium).
 
 Attribute|Type|Use|Description
@@ -1459,6 +1461,8 @@ Attribute|Type|Use|Description
 ```
 
 ### performOn
+
+#### NOTE: `performOn` action is DEPRECATED and will be removed in MFTF 3.0.0.
 
 See [performOn docs on codeception.com](http://codeception.com/docs/modules/WebDriver#performOn).
 

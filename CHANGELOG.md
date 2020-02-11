@@ -1,6 +1,15 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.6.1
+-----
+
+* Usability
+    * Introduced new `.env` configuration `ELASTICSEARCH_VERSION` to support multiple elasticsearch versions
+* Maintainability
+    * Added deprecation notices for upcoming MFTF 3.0.0
+* Replaced facebook webdriver with php-webdriver to support PHP version updates
+
 2.6.0
 -----
 

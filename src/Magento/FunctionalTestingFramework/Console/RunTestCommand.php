@@ -84,6 +84,9 @@ class RunTestCommand extends BaseGenerateCommand
             $allowSkipped
         );
 
+        $this->setOutputStyle($input, $output);
+        $this->showMftfNotices($output);
+
         $testConfiguration = $this->getTestAndSuiteConfiguration($tests);
 
         if (!$skipGeneration) {
