@@ -58,6 +58,9 @@ class GenerateSuiteCommand extends BaseGenerateCommand
             $allowSkipped
         );
 
+        $this->setOutputStyle($input, $output);
+        $this->showMftfNotices($output);
+
         // Remove previous GENERATED_DIR if --remove option is used
         if ($remove) {
             $this->removeGeneratedDirectory($output, $output->isVerbose());
