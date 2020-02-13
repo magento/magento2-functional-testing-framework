@@ -2194,6 +2194,6 @@ class TestGenerator
      */
     private function hasDecimalPoint(string $outStr)
     {
-        return strpos($outStr, localeconv()['decimal_point']) === false;
+        return strpos($outStr, localeconv()['decimal_point']) !== false;
     }
 }
