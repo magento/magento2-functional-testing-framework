@@ -1,6 +1,12 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.6.2
+-----
+
+### Fixes
+* Fixed float conversion error in test generation
+
 2.6.1
 -----
 
