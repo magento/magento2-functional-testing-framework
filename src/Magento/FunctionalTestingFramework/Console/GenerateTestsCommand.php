@@ -82,6 +82,9 @@ class GenerateTestsCommand extends BaseGenerateCommand
             $allowSkipped
         );
 
+        $this->setOutputStyle($input, $output);
+        $this->showMftfNotices($output);
+
         if (!empty($tests)) {
             $json = $this->getTestAndSuiteConfiguration($tests);
         }
