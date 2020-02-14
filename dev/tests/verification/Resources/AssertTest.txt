@@ -49,6 +49,7 @@ class AssertTestCest
 		$I->assertEmpty([], "pass"); // stepKey: assertEmpty
 		$I->assertEquals($text, "Copyright © 2013-2017 Magento, Inc. All rights reserved.", "pass"); // stepKey: assertEquals1
 		$I->assertEquals("Copyright © 2013-2017 Magento, Inc. All rights reserved.", $text, "pass"); // stepKey: assertEquals2
+		$I->assertEquals(1.5, $text, "pass"); // stepKey: assertFloatTypeIsCorrect
 		$I->assertFalse(false, "pass"); // stepKey: assertFalse1
 		$I->assertFileNotExists("/out.txt", "pass"); // stepKey: assertFileNotExists1
 		$I->assertFileNotExists($text, "pass"); // stepKey: assertFileNotExists2

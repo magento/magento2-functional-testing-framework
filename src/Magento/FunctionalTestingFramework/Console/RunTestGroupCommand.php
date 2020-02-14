@@ -79,6 +79,9 @@ class RunTestGroupCommand extends BaseGenerateCommand
             $allowSkipped
         );
 
+        $this->setOutputStyle($input, $output);
+        $this->showMftfNotices($output);
+
         if (!$skipGeneration) {
             $testConfiguration = $this->getGroupAndSuiteConfiguration($groups);
             $command = $this->getApplication()->find('generate:tests');

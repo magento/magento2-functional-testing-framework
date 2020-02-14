@@ -96,6 +96,9 @@ class RunTestFailedCommand extends BaseGenerateCommand
             $allowSkipped
         );
 
+        $this->setOutputStyle($input, $output);
+        $this->showMftfNotices($output);
+
         $testConfiguration = $this->getFailedTestList();
 
         if ($testConfiguration === null) {
