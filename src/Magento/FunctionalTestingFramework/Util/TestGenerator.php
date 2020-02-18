@@ -59,8 +59,6 @@ class TestGenerator
     const ARRAY_WRAP_OPEN = '[';
     const ARRAY_WRAP_CLOSE = ']';
 
-    const MFTF_3_O_0_DEPRECATION_MESSAGE = ' is DEPRECATED and will be removed in MFTF 3.0.0.';
-
     /**
      * Actor name for AcceptanceTest
      *
@@ -1039,28 +1037,12 @@ class TestGenerator
                         $parameterArray
                     );
                     break;
-                case "executeInSelenium":
-                    $this->deprecationMessages[] = "DEPRECATED ACTION in Test: at step {$stepKey} 'executeInSelenium'"
-                        . self::MFTF_3_O_0_DEPRECATION_MESSAGE;
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $function);
-                    break;
                 case "executeJS":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
                         $actionObject,
                         $function
-                    );
-                    break;
-                case "performOn":
-                    $this->deprecationMessages[] = "DEPRECATED ACTION in Test: at step {$stepKey} 'performOn'"
-                        . self::MFTF_3_O_0_DEPRECATION_MESSAGE;
-                    $testSteps .= $this->wrapFunctionCall(
-                        $actor,
-                        $actionObject,
-                        $selector,
-                        $function,
-                        $time
                     );
                     break;
                 case "waitForElementChange":

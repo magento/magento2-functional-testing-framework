@@ -23,12 +23,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class BaseGenerateCommand extends Command
 {
-    const MFTF_3_O_0_DEPRECATION_MESSAGE = "MFTF NOTICES:\n"
-        . "DEPRECATED ACTIONS: \"executeInSelenium\" and \"performOn\" actions will be removed in MFTF 3.0.0\n"
-        . "DEPRECATED TEST PATH: support for \"dev/tests/acceptance/tests/functional/Magento/FunctionalTest will be "
-        . "removed in MFTF 3.0.0\n"
-        . "XSD schema change to only allow single entity per xml file for all entities except data and metadata in "
-        . "MFTF 3.0.0\n";
+    const MFTF_NOTICES = "Placeholder text for MFTF notices\n";
 
     /**
      * Console output style
@@ -218,9 +213,9 @@ class BaseGenerateCommand extends Command
     protected function showMftfNotices(OutputInterface $output)
     {
         if (null !== $this->ioStyle) {
-            $this->ioStyle->note(self::MFTF_3_O_0_DEPRECATION_MESSAGE);
+            $this->ioStyle->note(self::MFTF_NOTICES);
         } else {
-            $output->writeln(self::MFTF_3_O_0_DEPRECATION_MESSAGE);
+            $output->writeln(self::MFTF_NOTICES);
         }
     }
 }
