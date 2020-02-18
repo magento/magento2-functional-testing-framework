@@ -85,7 +85,7 @@ The following example shows the usage of `grabValueFrom` in testing, where the r
 <fillField selector=".functionalTestSelector" userInput="{$grabStepKey}" stepKey="fillFieldKey1"/>
 ```
 
-Below is an example used in Magento/Catalog/Test/Mftf/ActionGroup/AssertDiscountsPercentageOfProductsActionGroup.xml test.
+The following is an example of the `Magento/Catalog/Test/Mftf/ActionGroup/AssertDiscountsPercentageOfProductsActionGroup.xml` test:
 
 ```xml
 <grabValueFrom selector="{{AdminProductFormAdvancedPricingSection.productTierPricePercentageValuePriceInput('0')}}" stepKey="grabProductTierPriceInput"/>
