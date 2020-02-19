@@ -6,9 +6,12 @@
 
 namespace Magento\FunctionalTestingFramework\Upgrade;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Util\Script\ScriptUtil;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class UpdateTestSchemaPaths
@@ -19,10 +22,12 @@ class UpdateTestSchemaPaths implements UpgradeInterface
     /**
      * Upgrades all test xml files, replacing relative schema paths to URN.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
+     * @param OutputInterface $output
      * @return string
+     * @throws TestFrameworkException
      */
-    public function execute(InputInterface $input)
+    public function execute(InputInterface $input, OutputInterface $output)
     {
         // @codingStandardsIgnoreStart
         $relativeToUrn = [
@@ -52,19 +57,21 @@ class UpdateTestSchemaPaths implements UpgradeInterface
             $urns[] = $urn;
         }
 
-        $testsPath = $input->getArgument('path');
-        $finder = new Finder();
-        $finder->files()->in($testsPath)->name("*.xml");
-
-        $fileSystem = new Filesystem();
         $testsUpdated = 0;
-        foreach ($finder->files() as $file) {
-            $count = 0;
-            $contents = $file->getContents();
-            $contents = preg_replace($relativePatterns, $urns, $contents, -1, $count);
-            $fileSystem->dumpFile($file->getRealPath(), $contents);
-            if ($count > 0) {
-                $testsUpdated++;
+        $allModulePaths = ScriptUtil::getAllModulePaths();
+        foreach ($allModulePaths as $testsPath) {
+            $finder = new Finder();
+            $finder->files()->in($testsPath)->name("*.xml");
+
+            $fileSystem = new Filesystem();
+            foreach ($finder->files() as $file) {
+                $count = 0;
+                $contents = $file->getContents();
+                $contents = preg_replace($relativePatterns, $urns, $contents, -1, $count);
+                $fileSystem->dumpFile($file->getRealPath(), $contents);
+                if ($count > 0) {
+                    $testsUpdated++;
+                }
             }
         }
 

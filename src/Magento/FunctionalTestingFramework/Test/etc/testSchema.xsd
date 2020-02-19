@@ -12,7 +12,7 @@
             <xs:complexContent>
                 <xs:restriction base="configType">
                     <xs:choice>
-                        <xs:element type="testType" name="test" maxOccurs="unbounded">
+                        <xs:element type="testType" name="test" maxOccurs="1">
                             <xs:unique name="uniqueStepKeyInTestBlock">
                                 <xs:annotation>
                                     <xs:documentation>

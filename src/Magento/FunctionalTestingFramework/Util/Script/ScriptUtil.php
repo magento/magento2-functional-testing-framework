@@ -3,12 +3,39 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace Magento\FunctionalTestingFramework\StaticCheck;
+namespace Magento\FunctionalTestingFramework\Util\Script;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Symfony\Component\Finder\Finder;
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Util\ModuleResolver;
 
-class StaticCheckHelper
+/**
+ * ScriptUtil class that contains helper functions for static and upgrade scripts
+ *
+ * @package Magento\FunctionalTestingFramework\Util\Script
+ */
+class ScriptUtil
 {
+    /**
+     * Return all installed Magento module paths
+     *
+     * @return array
+     * @throws TestFrameworkException
+     */
+    public static function getAllModulePaths()
+    {
+        MftfApplicationConfig::create(
+            true,
+            MftfApplicationConfig::UNIT_TEST_PHASE,
+            false,
+            MftfApplicationConfig::LEVEL_NONE,
+            true
+        );
+
+        return ModuleResolver::getInstance()->getModulesPath();
+    }
+
     /**
      * Prints out given errors to file, and returns summary result string
      * @param array  $errors

@@ -15,11 +15,11 @@ use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
-use Magento\FunctionalTestingFramework\Util\ModuleResolver;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Finder\Finder;
 use Exception;
+use Magento\FunctionalTestingFramework\Util\Script\ScriptUtil;
 
 /**
  * Class TestDependencyCheck
@@ -92,15 +92,8 @@ class TestDependencyCheck implements StaticCheckInterface
      */
     public function execute(InputInterface $input)
     {
-        MftfApplicationConfig::create(
-            true,
-            MftfApplicationConfig::UNIT_TEST_PHASE,
-            false,
-            MftfApplicationConfig::LEVEL_NONE,
-            true
-        );
+        $allModules = ScriptUtil::getAllModulePaths();
 
-        ModuleResolver::getInstance()->getModulesPath();
         if (!class_exists('\Magento\Framework\Component\ComponentRegistrar')) {
             return "TEST DEPENDENCY CHECK ABORTED: MFTF must be attached or pointing to Magento codebase.";
         }
@@ -109,16 +102,15 @@ class TestDependencyCheck implements StaticCheckInterface
         $this->moduleNameToComposerName = $this->buildModuleNameToComposerName($this->moduleNameToPath);
         $this->flattenedDependencies = $this->buildComposerDependencyList();
 
-        $allModules = ModuleResolver::getInstance()->getModulesPath();
         $filePaths = [
             DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR,
             DIRECTORY_SEPARATOR . 'ActionGroup' . DIRECTORY_SEPARATOR,
             DIRECTORY_SEPARATOR . 'Data' . DIRECTORY_SEPARATOR,
         ];
         // These files can contain references to other modules.
-        $testXmlFiles = StaticCheckHelper::buildFileList($allModules, $filePaths[0]);
-        $actionGroupXmlFiles = StaticCheckHelper::buildFileList($allModules, $filePaths[1]);
-        $dataXmlFiles= StaticCheckHelper::buildFileList($allModules, $filePaths[2]);
+        $testXmlFiles = ScriptUtil::buildFileList($allModules, $filePaths[0]);
+        $actionGroupXmlFiles = ScriptUtil::buildFileList($allModules, $filePaths[1]);
+        $dataXmlFiles= ScriptUtil::buildFileList($allModules, $filePaths[2]);
 
         $this->errors = [];
         $this->errors += $this->findErrorsInFileSet($testXmlFiles);
@@ -126,7 +118,7 @@ class TestDependencyCheck implements StaticCheckInterface
         $this->errors += $this->findErrorsInFileSet($dataXmlFiles);
 
         // hold on to the output and print any errors to a file
-        $this->output = StaticCheckHelper::printErrorsToFile(
+        $this->output = ScriptUtil::printErrorsToFile(
             $this->errors,
             self::ERROR_LOG_FILENAME,
             self::ERROR_LOG_MESSAGE

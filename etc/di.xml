@@ -70,12 +70,12 @@
 
     <virtualType name="Magento\FunctionalTestingFramework\Config\SchemaLocator\Page" type="Magento\FunctionalTestingFramework\Config\SchemaLocator">
         <arguments>
-            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Page/etc/PageObject.xsd</argument>
+            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Page/etc/mergedPageObject.xsd</argument>
         </arguments>
     </virtualType>
     <virtualType name="Magento\FunctionalTestingFramework\Config\SchemaLocator\Section" type="Magento\FunctionalTestingFramework\Config\SchemaLocator">
         <arguments>
-            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd</argument>
+            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Page/etc/mergedSectionObject.xsd</argument>
         </arguments>
     </virtualType>
     <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\Page" type="Magento\FunctionalTestingFramework\Config\Reader\MftfFilesystem">
@@ -94,7 +94,7 @@
     </virtualType>
     <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\Section" type="Magento\FunctionalTestingFramework\Config\Reader\MftfFilesystem">
         <arguments>
-            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
+            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Mask</argument>
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\Section</argument>
             <argument name="domDocumentClass" xsi:type="string">Magento\FunctionalTestingFramework\Page\Config\SectionDom</argument>
@@ -150,7 +150,7 @@
     </virtualType>
     <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\DataProfile" type="Magento\FunctionalTestingFramework\Config\Reader\MftfFilesystem">
         <arguments>
-            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
+            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Mask</argument>
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
             <argument name="domDocumentClass" xsi:type="string">Magento\FunctionalTestingFramework\DataGenerator\Config\Dom</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\DataProfile</argument>
@@ -187,7 +187,7 @@
     </virtualType>
     <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\Metadata" type="Magento\FunctionalTestingFramework\Config\Reader\MftfFilesystem">
         <arguments>
-            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
+            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Mask</argument>
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\Converter</argument>
             <argument name="domDocumentClass" xsi:type="string">Magento\FunctionalTestingFramework\DataGenerator\Config\OperationDom</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\Metadata</argument>
@@ -212,7 +212,7 @@
     </virtualType>
     <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\TestData" type="Magento\FunctionalTestingFramework\Config\Reader\MftfFilesystem">
         <arguments>
-            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
+            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Mask</argument>
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\TestDataConverter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\TestData</argument>
             <argument name="domDocumentClass" xsi:type="string">Magento\FunctionalTestingFramework\Test\Config\Dom</argument>
@@ -286,13 +286,13 @@
 
     <virtualType name="Magento\FunctionalTestingFramework\Config\SchemaLocator\ActionGroup" type="Magento\FunctionalTestingFramework\Config\SchemaLocator">
         <arguments>
-            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd</argument>
+            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Test/etc/mergedActionGroupSchema.xsd</argument>
         </arguments>
     </virtualType>
 
     <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\ActionGroupData" type="Magento\FunctionalTestingFramework\Config\Reader\MftfFilesystem">
         <arguments>
-            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Module</argument>
+            <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Mask</argument>
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\ActionGroupDataConverter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\ActionGroup</argument>
             <argument name="domDocumentClass" xsi:type="string">Magento\FunctionalTestingFramework\Test\Config\ActionGroupDom</argument>
@@ -353,7 +353,7 @@
     </virtualType>
     <virtualType name="Magento\FunctionalTestingFramework\Config\SchemaLocator\SuiteData" type="Magento\FunctionalTestingFramework\Config\SchemaLocator">
         <arguments>
-            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Suite/etc/suiteSchema.xsd</argument>
+            <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Suite/etc/mergedSuiteSchema.xsd</argument>
         </arguments>
     </virtualType>
     <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\SuiteData" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
