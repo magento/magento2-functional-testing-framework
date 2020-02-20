@@ -62,7 +62,7 @@ class ActionObject
     const ASSERTION_VALUE_ATTRIBUTE = "value";
     const DELETE_DATA_MUTUAL_EXCLUSIVE_ATTRIBUTES = ["url", "createDataKey"];
     const EXTERNAL_URL_AREA_INVALID_ACTIONS = ['amOnPage'];
-    const FUNCTION_CLOSURE_ACTIONS = ['waitForElementChange', 'performOn', 'executeInSelenium'];
+    const FUNCTION_CLOSURE_ACTIONS = ['waitForElementChange'];
     const COMMAND_ACTION_ATTRIBUTES = ['magentoCLI', 'magentoCLISecret'];
     const MERGE_ACTION_ORDER_AFTER = 'after';
     const MERGE_ACTION_ORDER_BEFORE = 'before';

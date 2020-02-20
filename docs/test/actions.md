@@ -971,26 +971,6 @@ Attribute|Type|Use|Description
 <dragAndDrop selector1="#block1" selector2="#block2" x="50" y="50" stepKey="dragAndDrop"/>
 ```
 
-### executeInSelenium
-
-#### NOTE: `executeInSelenium` action is DEPRECATED and will be removed in MFTF 3.0.0.
-
-See [executeInSelenium docs on codeception.com](http://codeception.com/docs/modules/WebDriver#executeInSelenium).
-
-Attribute|Type|Use|Description
----|---|---|---
-`function`|string|optional| Name of Selenium function to run.
-`stepKey`|string|required| A unique identifier of the action.
-`before`|string|optional| `stepKey` of action that must be executed next.
-`after`|string|optional| `stepKey` of preceding action.
-
-#### Example
-
-```xml
-<!-- Execute the Selenium function `function(\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) {$webdriver->get('http://google.com');}`. -->
-<executeInSelenium function="function(\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) {$webdriver->get('http://google.com');}" stepKey="executeInSelenium"/>
-```
-
 ### executeJS
 
 See [executeJS docs on codeception.com](http://codeception.com/docs/modules/WebDriver#executeJS).
@@ -1458,20 +1438,6 @@ Attribute|Type|Use|Description
 <!-- Halt test execution until the `enter` key is pressed to continue. -->
 <pauseExecution stepKey="pause"/>
 ```
-
-### performOn
-
-#### NOTE: `performOn` action is DEPRECATED and will be removed in MFTF 3.0.0.
-
-See [performOn docs on codeception.com](http://codeception.com/docs/modules/WebDriver#performOn).
-
-Attribute|Type|Use|Description
----|---|---|---
-`selector`|string|optional| The selector identifying the corresponding HTML element.
-`function`|string|optional| Function or actions to be taken on the selected element.
-`stepKey`|string|required| A unique identifier of the action.
-`before`|string|optional| `stepKey` of action that must be executed next.
-`after`|string|optional| `stepKey` of preceding action.
 
 ### pressKey
 

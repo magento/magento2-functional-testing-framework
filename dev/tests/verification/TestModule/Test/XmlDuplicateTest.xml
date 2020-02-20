@@ -82,8 +82,6 @@
             <doubleClick selector="1" stepKey="dblclick2"/>
             <dragAndDrop selector1="1" selector2="2" stepKey="dragndrop1"/>
             <dragAndDrop selector1="1" selector2="2" stepKey="dragndrop2"/>
-            <executeInSelenium function="1" stepKey="executeSelenium1"/>
-            <executeInSelenium function="1" stepKey="executeSelenium2"/>
             <executeJS function="1" stepKey="execJS1"/>
             <executeJS function="1" stepKey="execJS2"/>
             <fillField stepKey="fill1"/>
@@ -130,8 +128,6 @@
             <parseFloat stepKey="parsefloat12"/>
             <pauseExecution stepKey="pause1"/>
             <pauseExecution stepKey="pause12"/>
-            <performOn selector="1" function="1" stepKey="performon1"/>
-            <performOn selector="1" function="1" stepKey="performon12"/>
             <pressKey selector="1" stepKey="press1"/>
             <pressKey selector="1" stepKey="press12"/>
             <reloadPage stepKey="reload1"/>
@@ -298,8 +294,6 @@
             <doubleClick selector="1" stepKey="dblclick2"/>
             <dragAndDrop selector1="1" selector2="2" stepKey="dragndrop1"/>
             <dragAndDrop selector1="1" selector2="2" stepKey="dragndrop2"/>
-            <executeInSelenium function="1" stepKey="executeSelenium1"/>
-            <executeInSelenium function="1" stepKey="executeSelenium2"/>
             <executeJS function="1" stepKey="execJS1"/>
             <executeJS function="1" stepKey="execJS2"/>
             <fillField stepKey="fill1"/>
@@ -346,8 +340,6 @@
             <parseFloat stepKey="parsefloat12"/>
             <pauseExecution stepKey="pause1"/>
             <pauseExecution stepKey="pause12"/>
-            <performOn selector="1" function="1" stepKey="performon1"/>
-            <performOn selector="1" function="1" stepKey="performon12"/>
             <pressKey selector="1" stepKey="press1"/>
             <pressKey selector="1" stepKey="press12"/>
             <reloadPage stepKey="reload1"/>
@@ -513,8 +505,6 @@
         <doubleClick selector="1" stepKey="dblclick2"/>
         <dragAndDrop selector1="1" selector2="2" stepKey="dragndrop1"/>
         <dragAndDrop selector1="1" selector2="2" stepKey="dragndrop2"/>
-        <executeInSelenium function="1" stepKey="executeSelenium1"/>
-        <executeInSelenium function="1" stepKey="executeSelenium2"/>
         <executeJS function="1" stepKey="execJS1"/>
         <executeJS function="1" stepKey="execJS2"/>
         <fillField stepKey="fill1"/>
@@ -561,8 +551,6 @@
         <parseFloat stepKey="parsefloat12"/>
         <pauseExecution stepKey="pause1"/>
         <pauseExecution stepKey="pause12"/>
-        <performOn selector="1" function="1" stepKey="performon1"/>
-        <performOn selector="1" function="1" stepKey="performon12"/>
         <pressKey selector="1" stepKey="press1"/>
         <pressKey selector="1" stepKey="press12"/>
         <reloadPage stepKey="reload1"/>
