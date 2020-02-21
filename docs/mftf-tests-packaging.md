@@ -19,11 +19,11 @@ vendor/<Vendor>/<TestModule>
 ```
 
 To support future service isolation, Test module in `dev/tests/acceptance/tests/functional/<Vendor>/<TestModule>` and 
-`vendor/<Vendor>/<TestModule>` must define the module type as `magento2-functional-test-module` in a `composer.json` file. 
+`vendor/<Vendor>/<TestModule>` must define the module type as `magento2-functional-test-module` in its `composer.json` file. 
 No `composer.json` file is required for tests in `app/code/<Vendor>/<Module>/Test/Mftf` and `vendor/<Vendor>/<Module>/Test/Mftf` 
 as they are part of the Magento modules.
 
-Test module for a specific Magento module can only be in one of the path.
+Test module for a specific Magento module can only be in one of the paths.
 
 ## Test module composer.json format
 
