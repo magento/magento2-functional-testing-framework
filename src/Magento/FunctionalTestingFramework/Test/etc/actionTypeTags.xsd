@@ -34,7 +34,6 @@
             <xs:element type="closeTabType" name="closeTab" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="commentType" name="comment" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dragAndDropType" name="dragAndDrop" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="executeInSeleniumType" name="executeInSelenium" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="executeJSType" name="executeJS" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="fillFieldType" name="fillField" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="loadSessionSnapshotType" name="loadSessionSnapshot" minOccurs="0" maxOccurs="unbounded"/>
@@ -45,7 +44,6 @@
             <xs:element type="moveMouseOverType" name="moveMouseOver" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="openNewTabType" name="openNewTab" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="pauseExecutionType" name="pauseExecution" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="performOnType" name="performOn" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="pressKeyType" name="pressKey" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="reloadPageType" name="reloadPage" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="resetCookieType" name="resetCookie" minOccurs="0" maxOccurs="unbounded"/>
@@ -290,20 +288,6 @@
         </xs:simpleContent>
     </xs:complexType>
 
-    <xs:complexType name="executeInSeleniumType">
-        <xs:annotation>
-            <xs:documentation>
-                Allows you to use Selenium WebDriver methods directly; last resort method, do not use regularly.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute ref="function" use="required"/>
-                <xs:attributeGroup ref="commonActionAttributes"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-
     <xs:complexType name="executeJSType">
         <xs:annotation>
             <xs:documentation>
@@ -439,21 +423,6 @@
         </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attributeGroup ref="commonActionAttributes"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-
-    <xs:complexType name="performOnType">
-        <xs:annotation>
-            <xs:documentation>
-                Performs given function on element.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute ref="selector" use="required"/>
-                <xs:attribute ref="function" use="required"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>

@@ -711,10 +711,7 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['function'])) {
-                $function = $this->addUniquenessFunctionCall(
-                    $customActionAttributes['function'],
-                    $actionObject->getType() !== "executeInSelenium"
-                );
+                $function = $this->addUniquenessFunctionCall($customActionAttributes['function']);
                 if (in_array($actionObject->getType(), ActionObject::FUNCTION_CLOSURE_ACTIONS)) {
                     // Argument must be a closure function, not a string.
                     $function = trim($function, '"');
@@ -1040,9 +1037,6 @@ class TestGenerator
                         $parameterArray
                     );
                     break;
-                case "executeInSelenium":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $function);
-                    break;
                 case "executeJS":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
@@ -1051,7 +1045,6 @@ class TestGenerator
                         $function
                     );
                     break;
-                case "performOn":
                 case "waitForElementChange":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
@@ -2180,6 +2173,6 @@ class TestGenerator
      */
     private function hasDecimalPoint(string $outStr)
     {
-        return strpos($outStr, localeconv()['decimal_point']) === false;
+        return strpos($outStr, localeconv()['decimal_point']) !== false;
     }
 }

@@ -54,6 +54,10 @@
             <expectedResult type="string">Copyright © 2013-2017 Magento, Inc. All rights reserved.</expectedResult>
             <actualResult type="variable">text</actualResult>
         </assertEquals>
+        <assertEquals stepKey="assertFloatTypeIsCorrect" message="pass">
+            <expectedResult type="float">1.5</expectedResult>
+            <actualResult type="variable">text</actualResult>
+        </assertEquals>
         <assertFalse stepKey="assertFalse1" message="pass">
             <actualResult type="bool">0</actualResult>
         </assertFalse>
