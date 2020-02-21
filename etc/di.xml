@@ -88,7 +88,7 @@
                 <item name="/pages/page" xsi:type="string">name</item>
                 <item name="/pages/page/section" xsi:type="string">name</item>
             </argument>
-            <argument name="fileName" xsi:type="string">*Page.xml</argument>
+            <argument name="fileName" xsi:type="string">/[\p{L}\p{N}_\-]+Page.xml$/</argument>
             <argument name="defaultScope" xsi:type="string">Page</argument>
         </arguments>
     </virtualType>
@@ -102,7 +102,7 @@
                 <item name="/sections/section" xsi:type="string">name</item>
                 <item name="/sections/section/element" xsi:type="string">name</item>
             </argument>
-            <argument name="fileName" xsi:type="string">*Section.xml</argument>
+            <argument name="fileName" xsi:type="string">/[\p{L}\p{N}_\-]+Section.xml$/</argument>
             <argument name="defaultScope" xsi:type="string">Section</argument>
         </arguments>
     </virtualType>
@@ -163,7 +163,7 @@
                 <item name="/entities/entity/requiredEntity" xsi:type="string"/>
                 <item name="/entities/entity/array" xsi:type="string"/>
             </argument>
-            <argument name="fileName" xsi:type="string">*Data.xml</argument>
+            <argument name="fileName" xsi:type="string">/[\p{L}\p{N}_\-]+Data.xml$/</argument>
             <argument name="defaultScope" xsi:type="string">Data</argument>
         </arguments>
     </virtualType>
@@ -198,7 +198,7 @@
             <argument name="mergeablePaths" xsi:type="array">
                 <item name="/operations/operation/object" xsi:type="string"/>
             </argument>
-            <argument name="fileName" xsi:type="string">*-meta.xml</argument>
+            <argument name="fileName" xsi:type="string">/[\p{L}\p{N}_\-]+-meta.xml$/</argument>
             <argument name="defaultScope" xsi:type="string">Metadata</argument>
         </arguments>
     </virtualType>
@@ -229,7 +229,7 @@
                 <item name="/tests/test/(before|after)/(createData|updateData|getData)/field" xsi:type="string">key</item>
                 <item name="/tests/test/annotations(/group)+" xsi:type="string">value</item>
             </argument>
-            <argument name="fileName" xsi:type="string">*.xml</argument>
+            <argument name="fileName" xsi:type="string">/[\p{L}\p{N}_\-]+.xml$/</argument>
             <argument name="defaultScope" xsi:type="string">Test</argument>
         </arguments>
     </virtualType>
@@ -304,7 +304,7 @@
                 <item name="/actionGroups/actionGroup/(createData|updateData|getData)/field" xsi:type="string">key</item>
                 <item name="/actionGroups/actionGroup/remove" xsi:type="string">keyForRemoval</item>
             </argument>
-            <argument name="fileName" xsi:type="string">*ActionGroup.xml</argument>
+            <argument name="fileName" xsi:type="string">/[\p{L}\p{N}_\-]+ActionGroup.xml$/</argument>
             <argument name="defaultScope" xsi:type="string">ActionGroup</argument>
         </arguments>
     </virtualType>
@@ -371,7 +371,7 @@
                 <item name="/suites/suite/include/(group|test|module)" xsi:type="string">name</item>
                 <item name="/suites/suite/exclude/(group|test|module)" xsi:type="string">name</item>
             </argument>
-            <argument name="fileName" xsi:type="string">*.xml</argument>
+            <argument name="fileName" xsi:type="string">/[\p{L}\p{N}_\-]+.xml$/</argument>
             <argument name="defaultScope" xsi:type="string">Suite</argument>
         </arguments>
     </virtualType>
