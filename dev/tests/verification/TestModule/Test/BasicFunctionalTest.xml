@@ -89,7 +89,6 @@
         <moveMouseOver selector=".functionalTestSelector" stepKey="moveMouseOverKey1"/>
         <openNewTab stepKey="openNewTabKey1"/>
         <pauseExecution stepKey="pauseExecutionKey1"/>
-        <performOn selector="#selector" function="function(\WebDriverElement $el) {return $el->isDisplayed();}" stepKey="performOnKey1"/>
         <pressKey selector="#page" userInput="a" stepKey="pressKey1"/>
         <pressKey selector="#page" parameterArray="[['ctrl','a'],'new']" stepKey="pressKey2"/>
         <pressKey selector="#page" parameterArray="[['shift','111'],'1','x']" stepKey="pressKey3"/>
