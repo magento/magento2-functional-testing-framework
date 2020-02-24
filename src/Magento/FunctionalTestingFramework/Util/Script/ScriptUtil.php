@@ -65,19 +65,27 @@ class ScriptUtil
 
     /**
      * Builds list of all XML files in given modulePaths + path given
+     * Return empty array if Finder is not run
+     *
      * @param array  $modulePaths
      * @param string $path
-     * @return Finder
+     * @return Finder|array
      */
     public static function buildFileList($modulePaths, $path)
     {
+        $finderRun = false;
         $finder = new Finder();
         foreach ($modulePaths as $modulePath) {
             if (!realpath($modulePath . $path)) {
                 continue;
             }
             $finder->files()->in($modulePath . $path)->name("*.xml");
+            $finderRun = true;
         }
-        return $finder->files();
+        if ($finderRun) {
+            return $finder->files();
+        } else {
+            return [];
+        }
     }
 }

@@ -33,8 +33,11 @@ class UpgradeTestsCommand extends Command
     {
         $this->setName('upgrade:tests')
             ->setDescription(
-                'This command will upgrade all installed mftf tests according to new MFTF Major version requirements.'
-            );
+                'This command will upgrade MFTF tests according to new MFTF Major version requirements. '
+                . 'It will upgrade MFTF tests in specific path when "path" argument is specified, otherwise it will '
+                . 'upgrade all MFTF tests installed.'
+            )
+            ->addArgument('path', InputArgument::OPTIONAL, 'path to MFTF tests to upgrade');
         $this->upgradeScriptsList = new UpgradeScriptList();
     }
 

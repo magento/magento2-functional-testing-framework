@@ -58,8 +58,12 @@ class UpdateTestSchemaPaths implements UpgradeInterface
         }
 
         $testsUpdated = 0;
-        $allModulePaths = ScriptUtil::getAllModulePaths();
-        foreach ($allModulePaths as $testsPath) {
+        $testPaths[] = $input->getArgument('path');
+        if (empty($testPaths[0])) {
+            $testPaths = ScriptUtil::getAllModulePaths();
+        }
+
+        foreach ($testPaths as $testsPath) {
             $finder = new Finder();
             $finder->files()->in($testsPath)->name("*.xml");
 
