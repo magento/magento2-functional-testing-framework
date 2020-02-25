@@ -18,7 +18,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
+/**
+ * @SuppressWarnings(PHPMD)
+ */
 class GenerateTestsCommand extends BaseGenerateCommand
 {
     /**
@@ -30,6 +34,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
     {
         $this->setName('generate:tests')
             ->setDescription('Run validation and generate all test files and suites based on xml declarations')
+            ->addUsage('AdminLoginTest')
             ->addArgument(
                 'name',
                 InputArgument::OPTIONAL | InputArgument::IS_ARRAY,
@@ -46,6 +51,15 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 't',
                 InputOption::VALUE_REQUIRED,
                 'A parameter accepting a JSON string used to determine the test configuration'
+            )->addOption(
+                'filter',
+                null,
+                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL,
+                'Option to filter tests to be generated.' . PHP_EOL
+                . '<info>Template:</info> <filterName>:<filterValue>' . PHP_EOL
+                . '<info>Existing filter types:</info> severity.' . PHP_EOL
+                . '<info>Existing severity values:</info> BLOCKER, CRITICAL, MAJOR, AVERAGE, MINOR.' . PHP_EOL
+                . '<info>Example:</info> --filter=severity:CRITICAL' . PHP_EOL
             );
 
         parent::configure();
@@ -56,13 +70,14 @@ class GenerateTestsCommand extends BaseGenerateCommand
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return void
+     * @return void|integer
      * @throws TestFrameworkException
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $ioStyle = new SymfonyStyle($input, $output);
         $tests = $input->getArgument('name');
         $config = $input->getOption('config');
         $json = $input->getOption('tests'); // for backward compatibility
@@ -72,15 +87,25 @@ class GenerateTestsCommand extends BaseGenerateCommand
         $remove = $input->getOption('remove');
         $verbose = $output->isVerbose();
         $allowSkipped = $input->getOption('allow-skipped');
-
+        $filters = $input->getOption('filter');
+        foreach ($filters as $filter) {
+            list($filterType, $filterValue) = explode(':', $filter);
+            $filterList[$filterType][] = $filterValue;
+        }
         // Set application configuration so we can references the user options in our framework
-        MftfApplicationConfig::create(
-            $force,
-            MftfApplicationConfig::GENERATION_PHASE,
-            $verbose,
-            $debug,
-            $allowSkipped
-        );
+        try {
+            MftfApplicationConfig::create(
+                $force,
+                MftfApplicationConfig::GENERATION_PHASE,
+                $verbose,
+                $debug,
+                $allowSkipped,
+                $filterList ?? []
+            );
+        } catch (\Exception $exception) {
+            $ioStyle->error("Test generation failed." . PHP_EOL . $exception->getMessage());
+            return 1;
+        }
 
         $this->setOutputStyle($input, $output);
         $this->showMftfNotices($output);
@@ -105,20 +130,31 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 ($debug !== MftfApplicationConfig::LEVEL_NONE));
         }
 
-        $testConfiguration = $this->createTestConfiguration($json, $tests);
+        try {
+            $testConfiguration = $this->createTestConfiguration($json, $tests);
 
-        // create our manifest file here
-        $testManifest = TestManifestFactory::makeManifest($config, $testConfiguration['suites']);
-        TestGenerator::getInstance(null, $testConfiguration['tests'])->createAllTestFiles($testManifest);
+            // create our manifest file here
+            $testManifest = TestManifestFactory::makeManifest($config, $testConfiguration['suites']);
 
-        if ($config == 'parallel') {
-            /** @var ParallelTestManifest $testManifest */
-            $testManifest->createTestGroups($time);
+            TestGenerator::getInstance(null, $testConfiguration['tests'])->createAllTestFiles($testManifest);
+
+            if ($config == 'parallel') {
+                /** @var ParallelTestManifest $testManifest */
+                $testManifest->createTestGroups($time);
+            }
+
+            SuiteGenerator::getInstance()->generateAllSuites($testManifest);
+
+            $testManifest->generate();
+        } catch (\Exception $e) {
+            $message = $e->getMessage() . PHP_EOL;
+            $message .= !empty($filters) ? 'Filter(s): ' . implode(', ', $filters) . PHP_EOL : '';
+            $message .= !empty($tests) ? 'Test name(s): ' . implode(', ', $tests) . PHP_EOL : '';
+            $message .= !empty($json) && empty($tests) ? 'Test configuration: ' . $json . PHP_EOL : '';
+            $ioStyle->note($message);
+
+            return 1;
         }
-
-        SuiteGenerator::getInstance()->generateAllSuites($testManifest);
-
-        $testManifest->generate();
 
         $output->writeln("Generate Tests Command Run");
     }
