@@ -8,7 +8,6 @@ namespace Magento\FunctionalTestingFramework\Upgrade;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\Script\ScriptUtil;
-use PHP_CodeSniffer\Exceptions\DeepExitException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -32,6 +31,13 @@ class SplitMultipleEntitiesFiles implements UpgradeInterface
     const FILENAME_SUFFIX = 'type';
 
     /**
+     * OutputInterface
+     *
+     * @var OutputInterface
+     */
+    private $output;
+
+    /**
      * Entity categories for the upgrade script
      *
      * @var array
@@ -45,7 +51,7 @@ class SplitMultipleEntitiesFiles implements UpgradeInterface
     ];
 
     /**
-     * Scan all test xml files and split xml files that contains more than one entities
+     * Scan all xml files and split xml files that contains more than one entities
      * for Test, Action Group, Page, Section, Suite types.
      *
      * @param InputInterface  $input
@@ -55,6 +61,7 @@ class SplitMultipleEntitiesFiles implements UpgradeInterface
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->output = $output;
         $testsUpdated = 0;
         $testPaths[] = $input->getArgument('path');
         if (empty($testPaths[0])) {
@@ -72,7 +79,9 @@ class SplitMultipleEntitiesFiles implements UpgradeInterface
                 $entityContents = $this->getEntityContents($contents, $type);
                 if (count($entityContents) > 1) {
                     $filename = $file->getRealPath();
-                    $output->writeln('Processing file:' . $filename);
+                    if ($this->output->isVerbose()) {
+                        $this->output->writeln('Processing file:' . $filename);
+                    }
                     foreach ($entityContents as $entityName => $entityContent) {
                         $dir = dirname($file);
                         $dir .= DIRECTORY_SEPARATOR . ucfirst(basename($file, '.xml'));
@@ -83,13 +92,17 @@ class SplitMultipleEntitiesFiles implements UpgradeInterface
                             $urn,
                             $entityContent
                         );
-                        $output->writeln(
-                            'Created file:' . $dir . DIRECTORY_SEPARATOR . $splitFileName . '.xml'
-                        );
+                        if ($this->output->isVerbose()) {
+                            $this->output->writeln(
+                                'Created file:' . $dir . DIRECTORY_SEPARATOR . $splitFileName . '.xml'
+                            );
+                        }
                         $testsUpdated++;
                     }
                     unlink($file);
-                    $output->writeln('Unlinked file:' . $filename . PHP_EOL);
+                    if ($this->output->isVerbose()) {
+                        $this->output->writeln('Unlinked file:' . $filename . PHP_EOL);
+                    }
                 }
             }
         }
@@ -105,12 +118,13 @@ class SplitMultipleEntitiesFiles implements UpgradeInterface
      */
     private function getEntityContents($contents, $type)
     {
-        $pattern = '/[\S\s]+\n(?<entity>[\s]+<' . lcfirst($type)
-            . '[ \t]+name="(?<name>[^\W]+)"[\S\s]+<\/'. lcfirst($type) . '>)+[\S\s]+/';
+        $pattern = '/[\S\s]+\n(?<entity>[\s]*<' . lcfirst($type)
+            . '[^\<\>]+name[\s]*=[\s]*"(?<name>[^\"\'\<\>\&]+)"[^\<\>]*>[\S\s]+<\/'
+            . lcfirst($type) . '[\s]*>)+[\S\s]+/';
         preg_match($pattern, $contents, $matches);
         if (isset($matches['entity']) && isset($matches['name'])) {
             $contents = str_replace($matches['entity'], '', $contents);
-            $entityContents[$matches['name']] = $matches['entity'];
+            $entityContents[trim($matches['name'])] = $matches['entity'];
             if (!empty($this->getEntityContents($contents, $type))) {
                 $entityContents = array_merge($entityContents, $this->getEntityContents($contents, $type));
             }
@@ -137,6 +151,7 @@ class SplitMultipleEntitiesFiles implements UpgradeInterface
             mkdir($dir, 0777, true);
         }
 
+        // Make sure not overwriting an existing file
         $fullPath = $this->getNonExistingFileFullPath($fullPath, $type);
 
         $fullContents = self::XML_VERSION

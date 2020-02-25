@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="DataPersistenceSelfReferenceActionGroup">
+        <createData entity="entity1" stepKey="createData1"/>
+        <createData entity="entity2" stepKey="createData2"/>
+        <createData entity="entity3" stepKey="createData3">
+            <field key="key1">$createData1.field$</field>
+            <field key="key2">$createData2.field$</field>
+        </createData>
+    </actionGroup>
+</actionGroups>

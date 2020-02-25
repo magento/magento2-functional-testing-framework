@@ -15,6 +15,7 @@ use Magento\FunctionalTestingFramework\Test\Util\TestHookObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
+use Magento\FunctionalTestingFramework\Util\Filesystem\RecursiveGlobUtil;
 
 class SuiteObjectExtractor extends BaseObjectExtractor
 {
@@ -23,7 +24,6 @@ class SuiteObjectExtractor extends BaseObjectExtractor
     const INCLUDE_TAG_NAME = 'include';
     const EXCLUDE_TAG_NAME = 'exclude';
     const MODULE_TAG_NAME = 'module';
-    const MODULE_TAG_FILE_ATTRIBUTE = 'file';
     const TEST_TAG_NAME = 'test';
     const GROUP_TAG_NAME = 'group';
 
@@ -181,7 +181,6 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      */
     private function isSuiteEmpty($suiteHooks, $includeTests, $excludeTests)
     {
-
         $noHooks = count($suiteHooks) == 0 ||
             (
                 empty($suiteHooks['before']->getActions()) &&
@@ -220,32 +219,15 @@ class SuiteObjectExtractor extends BaseObjectExtractor
                         TestObjectHandler::getInstance()->getTestsByGroup($suiteRefData[self::NAME]);
                     break;
                 case self::MODULE_TAG_NAME:
-                    $testObjectList = array_merge($testObjectList, $this->extractModuleAndFiles(
-                        $suiteRefData[self::NAME],
-                        $suiteRefData[self::MODULE_TAG_FILE_ATTRIBUTE] ?? null
-                    ));
+                    $testObjectList = array_merge(
+                        $testObjectList,
+                        $this->resolveModulePathTestNames($suiteRefData[self::NAME])
+                    );
                     break;
             }
         }
 
         return $testObjectList;
-    }
-
-    /**
-     * Takes an array of modules/files and resolves to an array of test objects.
-     *
-     * @param string $moduleName
-     * @param string $moduleFilePath
-     * @return array
-     * @throws \Exception
-     */
-    private function extractModuleAndFiles($moduleName, $moduleFilePath)
-    {
-        if (empty($moduleFilePath)) {
-            return $this->resolveModulePathTestNames($moduleName);
-        }
-
-        return $this->resolveFilePathTestNames($moduleFilePath, $moduleName);
     }
 
     /**
@@ -259,17 +241,14 @@ class SuiteObjectExtractor extends BaseObjectExtractor
     private function resolveFilePathTestNames($filename, $moduleName = null)
     {
         $filepath = $filename;
-        if (!strstr($filepath, DIRECTORY_SEPARATOR)) {
-            $filepath = FilePathFormatter::format(TESTS_MODULE_PATH) .
-                $moduleName .
-                DIRECTORY_SEPARATOR .
-                'Test' .
-                DIRECTORY_SEPARATOR .
-                $filename;
-        }
-
-        if (!file_exists($filepath)) {
-            throw new Exception("Could not find file ${filename}");
+        if (!file_exists($filename) && null !== $moduleName) {
+            $dir = FilePathFormatter::format(TESTS_MODULE_PATH) . $moduleName . DIRECTORY_SEPARATOR . 'Test';
+            $filepaths = RecursiveGlobUtil::glob($filename, $dir);
+            if (isset($filepaths[0]) && file_exists($filepaths[0])) {
+                $filepath = $filepaths[0];
+            } else {
+                throw new Exception("Could not find file ${filename}");
+            }
         }
 
         $testObjects = [];

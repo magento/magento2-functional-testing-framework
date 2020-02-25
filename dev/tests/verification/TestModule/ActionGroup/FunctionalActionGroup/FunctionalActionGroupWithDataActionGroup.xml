@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="FunctionalActionGroupWithData">
+        <arguments>
+            <argument name="person" defaultValue="DefaultPerson"/>
+        </arguments>
+        <amOnPage url="{{SamplePage.url(person.firstname,person.lastname)}}" stepKey="amOnPage1"/>
+        <fillField selector="#foo" userInput="{{person.firstname}}" stepKey="fillField1"/>
+        <fillField selector="#bar" userInput="{{person.lastname}}" stepKey="fillField2"/>
+        <searchAndMultiSelectOption selector="#foo" parameterArray="[{{person.firstname}}, {{person.lastname}}]" stepKey="multi1"/>
+        <see selector="{{SampleSection.oneParamElement(person.firstname)}}" stepKey="see1"/>
+    </actionGroup>
+</actionGroups>

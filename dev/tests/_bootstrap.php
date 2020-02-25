@@ -108,7 +108,9 @@ foreach (sortInterfaces($unitUtilFiles) as $unitUtilFile) {
 $suiteDirectory =  TESTS_BP . DIRECTORY_SEPARATOR . "verification" . DIRECTORY_SEPARATOR . "_suite";
 
 $paths = [
-    $suiteDirectory . DIRECTORY_SEPARATOR . 'functionalSuite.xml',
+    $suiteDirectory . DIRECTORY_SEPARATOR . 'functionalSuite' . DIRECTORY_SEPARATOR . 'functionalSuite1.xml',
+    $suiteDirectory . DIRECTORY_SEPARATOR . 'functionalSuite' . DIRECTORY_SEPARATOR . 'functionalSuite2.xml',
+    $suiteDirectory . DIRECTORY_SEPARATOR . 'functionalSuite' . DIRECTORY_SEPARATOR . 'functionalSuiteWithComments.xml',
     $suiteDirectory . DIRECTORY_SEPARATOR . 'functionalSuiteHooks.xml',
     $suiteDirectory . DIRECTORY_SEPARATOR . 'functionalSuiteExtends.xml'
 ];

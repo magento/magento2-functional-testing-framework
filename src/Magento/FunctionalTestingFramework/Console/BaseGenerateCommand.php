@@ -193,8 +193,9 @@ class BaseGenerateCommand extends Command
     /**
      * Set Symfony Style for output
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
+     * @return void
      */
     protected function setOutputStyle(InputInterface $input, OutputInterface $output)
     {
