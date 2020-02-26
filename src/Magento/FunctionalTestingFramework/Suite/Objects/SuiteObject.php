@@ -5,6 +5,8 @@
  */
 namespace Magento\FunctionalTestingFramework\Suite\Objects;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Filter\FilterInterface;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
@@ -97,12 +99,10 @@ class SuiteObject
             unset($finalTestList[$testName]);
         }
 
-        if (empty($finalTestList)) {
-            LoggingUtil::getInstance()->getLogger(self::class)->notification(
-                "Current suite configuration for " . $this->name . " contains no tests." . PHP_EOL,
-                [],
-                true
-            );
+        $filters = MftfApplicationConfig::getConfig()->getFilterList()->getFilters();
+        /** @var FilterInterface $filter */
+        foreach ($filters as $filter) {
+            $filter->filter($finalTestList);
         }
 
         return $finalTestList;

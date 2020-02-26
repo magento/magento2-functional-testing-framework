@@ -11,6 +11,7 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHan
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Filter\FilterInterface;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
@@ -171,6 +172,9 @@ class TestGenerator
     {
         if ($this->tests === null || empty($this->tests)) {
             $testObjects = TestObjectHandler::getInstance()->getAllObjects();
+
+
+
             return array_diff_key($testObjects, $testsToIgnore);
         }
 
@@ -288,6 +292,12 @@ class TestGenerator
         /** @var TestObject[] $testObjects */
         $testObjects = $this->loadAllTestObjects($testsToIgnore);
         $cestPhpArray = [];
+        $filters = MftfApplicationConfig::getConfig()->getFilterList()->getFilters();
+        /** @var FilterInterface $filter */
+        foreach ($filters as $filter) {
+            $filter->filter($testObjects);
+        }
+
 
         foreach ($testObjects as $test) {
             // Do not generate test if it is an extended test and parent does not exist

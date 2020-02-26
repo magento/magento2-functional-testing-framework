@@ -10,6 +10,7 @@ namespace Magento\FunctionalTestingFramework\Filter\Test;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Filter\FilterInterface;
+use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 
 /**
  * Class Severity
@@ -51,17 +52,17 @@ class Severity implements FilterInterface
     /**
      * Filter tests by severity.
      *
-     * @param array $tests
+     * @param TestObject[] $tests
      * @return void
      */
     public function filter(array &$tests)
     {
+        /** @var TestObject $test */
         foreach ($tests as $testName => $test) {
-            if (is_array($test) && !empty($test['annotations'][self::ANNOTATION_TAG])) {
-                foreach ($test['annotations'][self::ANNOTATION_TAG] as $severity) {
-                    if (!in_array($severity['value'], $this->filterValues, true)) {
-                        unset($tests[$testName]);
-                    }
+            $severities = $test->getAnnotationByName(self::ANNOTATION_TAG);
+            foreach ($severities as $severity) {
+                if (!in_array($severity, $this->filterValues, true)) {
+                    unset($tests[$testName]);
                 }
             }
         }

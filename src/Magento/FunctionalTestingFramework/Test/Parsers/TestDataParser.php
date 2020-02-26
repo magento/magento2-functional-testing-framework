@@ -23,11 +23,6 @@ class TestDataParser
     private $testData;
 
     /**
-     * @var \Magento\FunctionalTestingFramework\Filter\FilterList
-     */
-    private $filterList;
-
-    /**
      * TestDataParser constructor.
      *
      * @param DataInterface $testData
@@ -38,8 +33,6 @@ class TestDataParser
         $this->testData = array_filter($testData->get('tests'), function ($value) {
             return is_array($value);
         });
-
-        $this->filterList = MftfApplicationConfig::getConfig()->getFilterList();
     }
 
     /**
@@ -50,15 +43,6 @@ class TestDataParser
      */
     public function readTestData()
     {
-        /** @var FilterInterface $filter */
-        foreach ($this->filterList->getFilters() as $filter) {
-            $filter->filter($this->testData);
-        }
-
-        if (empty($this->testData)) {
-            throw new TestFrameworkException("No tests found.");
-        }
-
         return $this->testData;
     }
 }
