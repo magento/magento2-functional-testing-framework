@@ -24,8 +24,6 @@ use PHP_CodeSniffer\Tokenizers\PHP;
  */
 class TestObjectHandler implements ObjectHandlerInterface
 {
-    const XML_ROOT = 'tests';
-
     /**
      * Test Object Handler
      *
