@@ -77,7 +77,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $ioStyle = new SymfonyStyle($input, $output);
+        $this->setOutputStyle($input, $output);
         $tests = $input->getArgument('name');
         $config = $input->getOption('config');
         $json = $input->getOption('tests'); // for backward compatibility
@@ -103,7 +103,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 $filterList ?? []
             );
         } catch (\Exception $exception) {
-            $ioStyle->error("Test generation failed." . PHP_EOL . $exception->getMessage());
+            $this->ioStyle->error("Test generation failed." . PHP_EOL . $exception->getMessage());
             return 1;
         }
 
@@ -151,7 +151,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
             $message .= !empty($filters) ? 'Filter(s): ' . implode(', ', $filters) . PHP_EOL : '';
             $message .= !empty($tests) ? 'Test name(s): ' . implode(', ', $tests) . PHP_EOL : '';
             $message .= !empty($json) && empty($tests) ? 'Test configuration: ' . $json . PHP_EOL : '';
-            $ioStyle->note($message);
+            $this->ioStyle->note($message);
 
             return 1;
         }
