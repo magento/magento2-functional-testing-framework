@@ -156,7 +156,5 @@ class TestGeneratorTest extends MagentoTestCase
         // Ensure Test1 was Generated but not Test 2
         $this->assertArrayHasKey('test1Cest', $generatedTests);
         $this->assertArrayNotHasKey('test2Cest', $generatedTests);
-
     }
-
 }
