@@ -172,9 +172,6 @@ class TestGenerator
     {
         if ($this->tests === null || empty($this->tests)) {
             $testObjects = TestObjectHandler::getInstance()->getAllObjects();
-
-
-
             return array_diff_key($testObjects, $testsToIgnore);
         }
 
@@ -297,7 +294,6 @@ class TestGenerator
         foreach ($filters as $filter) {
             $filter->filter($testObjects);
         }
-
 
         foreach ($testObjects as $test) {
             // Do not generate test if it is an extended test and parent does not exist

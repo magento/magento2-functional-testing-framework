@@ -97,7 +97,9 @@ class SuiteGenerator
         foreach ($suites as $suiteName => $suiteContent) {
             if (empty($suiteContent)) {
                 LoggingUtil::getInstance()->getLogger(self::class)->notification(
-                    "Suite '" . $suiteName . "' contains no tests and won't be generated." . PHP_EOL, [], true
+                    "Suite '" . $suiteName . "' contains no tests and won't be generated." . PHP_EOL,
+                    [],
+                    true
                 );
                 continue;
             }

@@ -11,6 +11,7 @@ namespace Magento\FunctionalTestingFramework\Filter\Test;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Filter\FilterInterface;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
+use Magento\FunctionalTestingFramework\Test\Util\AnnotationExtractor;
 
 /**
  * Class Severity
@@ -18,13 +19,6 @@ use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 class Severity implements FilterInterface
 {
     const ANNOTATION_TAG = 'severity';
-    const SEVERITY_VALUES = [
-        "BLOCKER",
-        "CRITICAL",
-        "MAJOR",
-        "AVERAGE",
-        "MINOR",
-    ];
 
     /**
      * @var array
@@ -39,14 +33,18 @@ class Severity implements FilterInterface
      */
     public function __construct(array $filterValues = [])
     {
-        if (array_diff($filterValues, self::SEVERITY_VALUES) ==! []) {
-            throw new TestFrameworkException(
-                'Not existing severity specified.' . PHP_EOL
-                . 'Possible values: '. implode(', ', self::SEVERITY_VALUES) . '.' . PHP_EOL
-                . 'Provided values: ' . implode(', ', $filterValues) . '.'  . PHP_EOL
-            );
+        $severityValues = AnnotationExtractor::MAGENTO_TO_ALLURE_SEVERITY_MAP;
+
+        foreach ($filterValues as $filterValue) {
+            if (!isset($severityValues[$filterValue])) {
+                throw new TestFrameworkException(
+                    'Not existing severity specified.' . PHP_EOL
+                    . 'Possible values: '. implode(', ', array_keys($severityValues)) . '.' . PHP_EOL
+                    . 'Provided values: ' . implode(', ', $filterValues) . '.'  . PHP_EOL
+                );
+            }
+            $this->filterValues[] = $severityValues[$filterValue];
         }
-        $this->filterValues = $filterValues;
     }
 
     /**
