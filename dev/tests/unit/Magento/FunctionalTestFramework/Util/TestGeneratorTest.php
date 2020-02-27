@@ -119,7 +119,10 @@ class TestGeneratorTest extends MagentoTestCase
     public function testFilter()
     {
         // Mock filters for TestGenerator
-        AspectMock::double(MftfApplicationConfig::class, ['getFilterList' => new FilterList(['severity' => ["CRITICAL"]])]);
+        AspectMock::double(
+            MftfApplicationConfig::class,
+            ['getFilterList' => new FilterList(['severity' => ["CRITICAL"]])]
+        );
 
         $actionInput = 'fakeInput';
         $actionObject = new ActionObject('fakeAction', 'comment', [
@@ -146,7 +149,7 @@ class TestGeneratorTest extends MagentoTestCase
 
         // Mock createCestFile to return name of tests that testGenerator tried to create
         $generatedTests = [];
-        AspectMock::double(TestGenerator::class, ['createCestFile' => function ($arg1, $arg2) use (&$generatedTests){
+        AspectMock::double(TestGenerator::class, ['createCestFile' => function ($arg1, $arg2) use (&$generatedTests) {
             $generatedTests[$arg2] = true;
         }]);
 
