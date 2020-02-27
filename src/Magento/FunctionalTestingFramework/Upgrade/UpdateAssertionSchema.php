@@ -18,8 +18,18 @@ class UpdateAssertionSchema implements UpgradeInterface
 {
     const OLD_ASSERTION_ATTRIBUTES = ["expected", "expectedType", "actual", "actualType"];
 
+    /**
+     * Current file being inspected, for error messaging
+     * @var string
+     */
     private $currentFile;
+
+    /**
+     * Potential errors reported during replacement.
+     * @var array
+     */
     private $errors = [];
+
     /**
      * Upgrades all test xml files, changing <assert> actions to be nested
      *
@@ -40,7 +50,7 @@ class UpdateAssertionSchema implements UpgradeInterface
             }
             $this->currentFile = $file->getFilename();
             $contents = $file->getContents();
-            // Isolate <assert ... /> but not <assert ... >
+            // Isolate <assert ... /> but not <assert> ... </assert>
             preg_match_all('/<assert[^>]*\/>/', $contents, $potentialAssertions);
             $newAssertions = [];
             $index = 0;
@@ -58,6 +68,12 @@ class UpdateAssertionSchema implements UpgradeInterface
         return ("Assertion Syntax updated in {$testsUpdated} file(s).\n" . implode("\n\t", $this->errors));
     }
 
+    /**
+     * Detects present of attributes in file
+     *
+     * @param string $file
+     * @return boolean
+     */
     private function detectOldAttributes($file)
     {
         foreach (self::OLD_ASSERTION_ATTRIBUTES as $OLD_ASSERTION_ATTRIBUTE) {
@@ -68,6 +84,13 @@ class UpdateAssertionSchema implements UpgradeInterface
         return false;
     }
 
+    /**
+     * Takes given string and attempts to convert it from single line to multi-line
+     *
+     * @param string $assertion
+     * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
     private function convertOldAssertionToNew($assertion)
     {
         // <assertSomething => assertSomething
@@ -112,7 +135,8 @@ class UpdateAssertionSchema implements UpgradeInterface
         foreach ($subElements as $type => $subElement) {
             if (!isset($subElement['value']) || !isset($subElement['type'])) {
                 //don't have all the info we need to rebuild
-                $this->errors[] = "UNABLE TO FULLY REBUILD ASSERTION, PLEASE MANUALLY CHECK FORMAT ($assertType \"$stepKey\" in $this->currentFile)";
+                $this->errors[] = "UNABLE TO FULLY REBUILD ASSERTION, PLEASE MANUALLY CHECK FORMAT " .
+                    "($assertType \"$stepKey\" in $this->currentFile)";
                 continue;
             }
             $value = $subElement['value'];
@@ -122,5 +146,4 @@ class UpdateAssertionSchema implements UpgradeInterface
         $newString .= "</$assertType>";
         return $newString;
     }
-
 }
