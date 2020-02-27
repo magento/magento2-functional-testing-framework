@@ -1,5 +1,10 @@
 Magento Functional Testing Framework Changelog
 ================================================
+2.6.3
+-----
+
+### New Feature
+* `--filter` option was added to `bin/mftf generate:tests` command. For more details please go to https://devdocs.magento.com/mftf/docs/commands/mftf.html#generatetests
 
 2.6.2
 -----

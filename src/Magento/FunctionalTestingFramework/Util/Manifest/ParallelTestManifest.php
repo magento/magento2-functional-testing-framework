@@ -132,7 +132,7 @@ class ParallelTestManifest extends BaseTestManifest
             $fileResource = fopen($this->dirPath . DIRECTORY_SEPARATOR . "group{$nodeNumber}.txt", 'a');
 
             $line = null;
-            if (array_key_exists($entryName, $suites)) {
+            if (!empty($suites[$entryName])) {
                 $line = "-g {$entryName}";
             } else {
                 $line = $this->relativeDirPath . DIRECTORY_SEPARATOR . $entryName . '.php';
