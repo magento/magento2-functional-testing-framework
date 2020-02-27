@@ -67,7 +67,7 @@ class ObjectExtensionUtilTest extends TestCase
             ->withTestReference("simpleTest")
             ->build();
 
-        $mockTestData = ['tests' => array_merge($mockSimpleTest, $mockExtendedTest)];
+        $mockTestData = array_merge($mockSimpleTest, $mockExtendedTest);
         $this->setMockTestOutput($mockTestData);
 
         // parse and generate test object with mocked data
@@ -112,7 +112,7 @@ class ObjectExtensionUtilTest extends TestCase
             ->withTestReference("simpleTest")
             ->build();
 
-        $mockTestData = ['tests' => array_merge($mockSimpleTest, $mockExtendedTest)];
+        $mockTestData = array_merge($mockSimpleTest, $mockExtendedTest);
         $this->setMockTestOutput($mockTestData);
 
         // parse and generate test object with mocked data
@@ -143,7 +143,7 @@ class ObjectExtensionUtilTest extends TestCase
             ->withTestReference("simpleTest")
             ->build();
 
-        $mockTestData = ['tests' => array_merge($mockExtendedTest)];
+        $mockTestData = array_merge($mockExtendedTest);
         $this->setMockTestOutput($mockTestData);
 
         // parse and generate test object with mocked data
@@ -182,7 +182,7 @@ class ObjectExtensionUtilTest extends TestCase
             ->withTestReference("simpleTest")
             ->build();
 
-        $mockTestData = ['tests' => array_merge($mockParentTest, $mockSimpleTest, $mockExtendedTest)];
+        $mockTestData = array_merge($mockParentTest, $mockSimpleTest, $mockExtendedTest);
         $this->setMockTestOutput($mockTestData);
 
         $this->expectExceptionMessage("Cannot extend a test that already extends another test. Test: simpleTest");
