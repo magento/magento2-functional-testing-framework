@@ -98,10 +98,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>        
         <xs:attribute ref="message"/>
         <xs:attribute ref="delta"/>
         <xs:attribute ref="strict"/>
@@ -145,10 +141,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -163,10 +155,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>        
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -181,10 +169,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attribute ref="strict"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
@@ -200,10 +184,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -218,10 +198,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -235,10 +211,6 @@
         <xs:choice maxOccurs="unbounded">
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -253,10 +225,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>        
         <xs:attribute ref="delta"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
@@ -271,10 +239,6 @@
         <xs:choice maxOccurs="unbounded">
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -288,10 +252,6 @@
         <xs:choice maxOccurs="unbounded">
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -305,10 +265,6 @@
         <xs:choice maxOccurs="unbounded">
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -323,10 +279,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -341,10 +293,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -359,10 +307,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -377,10 +321,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -395,10 +335,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -412,10 +348,6 @@
         <xs:choice maxOccurs="unbounded">
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -430,10 +362,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -448,10 +376,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -466,10 +390,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -484,10 +404,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -501,10 +417,6 @@
         <xs:choice maxOccurs="unbounded">
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -519,10 +431,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>        
         <xs:attribute ref="message"/>
         <xs:attribute ref="delta"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
@@ -538,10 +446,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -555,10 +459,6 @@
         <xs:choice maxOccurs="unbounded">
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -573,10 +473,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -591,10 +487,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -608,10 +500,6 @@
         <xs:choice maxOccurs="unbounded">
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -626,10 +514,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -644,10 +528,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -662,10 +542,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -680,10 +556,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -697,10 +569,6 @@
         <xs:choice maxOccurs="unbounded">
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
@@ -715,10 +583,6 @@
             <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
             <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
 
