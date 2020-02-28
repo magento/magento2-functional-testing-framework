@@ -28,7 +28,7 @@ class UpgradeScriptList implements UpgradeScriptListInterface
     public function __construct(array $scripts = [])
     {
         $this->scripts = [
-            'upgradeTestSchema' => new UpgradePageWithNoUrl(),
+            'upgradeTestSchema' => new UpdatePageWithNoUrl(),
             'upgradeTestUrl' => new UpdatePageWithNoUrl(),
         ] + $scripts;
     }
