@@ -73,6 +73,7 @@ Attribute|Type|Use|Description
 `remove`|boolean|optional|Set `true` to remove the test when merging.
 `insertBefore`|string|optional| This option is used for [merging]. It enables you to add all test actions contained in the original test into a test with the same name BEFORE the test step with `stepKey` that you assigned in `insertBefore`.
 `insertAfter`|string|optional| Set `stepKey` of the test step after which you want to insert the test when [merging].
+`deprecated`|string|optional|Used to warn about the future deprecation of the test. String will appear in Allure reports and console output at runtime.
 `extends`|string|optional|A name of the parent test to [extend].
 
 `<test>` may also contain [`<annotations>`], [`<before>`], [`<after>`], any [action][actions], or [`<actionGroup>`].

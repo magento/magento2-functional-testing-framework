@@ -5,8 +5,11 @@
  */
 namespace Magento\FunctionalTestingFramework\Suite\Objects;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Filter\FilterInterface;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
  * Class SuiteObject
@@ -84,6 +87,7 @@ class SuiteObject
      * @param TestObject[] $includeTests
      * @param TestObject[] $excludeTests
      * @return TestObject[]
+     * @throws \Exception
      */
     private function resolveTests($includeTests, $excludeTests)
     {
@@ -95,12 +99,10 @@ class SuiteObject
             unset($finalTestList[$testName]);
         }
 
-        if (empty($finalTestList)) {
-            trigger_error(
-                "Current suite configuration for " .
-                $this->name . " contains no tests.",
-                E_USER_WARNING
-            );
+        $filters = MftfApplicationConfig::getConfig()->getFilterList()->getFilters();
+        /** @var FilterInterface $filter */
+        foreach ($filters as $filter) {
+            $filter->filter($finalTestList);
         }
 
         return $finalTestList;
