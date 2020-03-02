@@ -49,4 +49,23 @@ class MftfLogger extends Logger
         }
         parent::critical($message, $context);
     }
+
+    /**
+     * Adds a log record at the NOTICE level.
+     *
+     * @param string  $message
+     * @param array   $context
+     * @param boolean $verbose
+     * @return void
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException
+     */
+    public function notification($message, array $context = [], $verbose = false)
+    {
+        $message = "NOTICE: " . $message;
+        // Suppress print during unit testing
+        if (MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE && $verbose) {
+            print ($message . implode("\n", $context) . "\n");
+        }
+        parent::notice($message, $context);
+    }
 }

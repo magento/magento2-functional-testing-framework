@@ -8,6 +8,7 @@ namespace Tests\unit\Magento\FunctionalTestFramework\Test\Handlers;
 
 use AspectMock\Test as AspectMock;
 
+use Magento\FunctionalTestingFramework\Filter\FilterList;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
@@ -17,6 +18,16 @@ use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 
 class TestGeneratorTest extends MagentoTestCase
 {
+    /**
+     * After method functionality
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        AspectMock::clean();
+    }
+
     /**
      * Basic test to check exceptions for incorrect entities.
      *
@@ -98,5 +109,55 @@ class TestGeneratorTest extends MagentoTestCase
         $this->assertNotContains('This test is skipped', $output);
         $this->assertContains($actionInput, $output);
         $this->assertContains($beforeActionInput, $output);
+    }
+
+    /**
+     * Tests that TestGenerator createAllTestFiles correctly filters based on severity
+     *
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testFilter()
+    {
+        // Mock filters for TestGenerator
+        AspectMock::double(
+            MftfApplicationConfig::class,
+            ['getFilterList' => new FilterList(['severity' => ["CRITICAL"]])]
+        );
+
+        $actionInput = 'fakeInput';
+        $actionObject = new ActionObject('fakeAction', 'comment', [
+            'userInput' => $actionInput
+        ]);
+
+        $annotation1 = ['severity' => ['CRITICAL']];
+        $annotation2 = ['severity' => ['MINOR']];
+        $test1 = new TestObject(
+            "test1",
+            ["fakeAction" => $actionObject],
+            $annotation1,
+            [],
+            "filename"
+        );
+        $test2 = new TestObject(
+            "test2",
+            ["fakeAction" => $actionObject],
+            $annotation2,
+            [],
+            "filename"
+        );
+        AspectMock::double(TestGenerator::class, ['loadAllTestObjects' => ["sampleTest" => $test1, "test2" => $test2]]);
+
+        // Mock createCestFile to return name of tests that testGenerator tried to create
+        $generatedTests = [];
+        AspectMock::double(TestGenerator::class, ['createCestFile' => function ($arg1, $arg2) use (&$generatedTests) {
+            $generatedTests[$arg2] = true;
+        }]);
+
+        $testGeneratorObject = TestGenerator::getInstance("", ["sampleTest" => $test1, "test2" => $test2]);
+        $testGeneratorObject->createAllTestFiles(null, []);
+
+        // Ensure Test1 was Generated but not Test 2
+        $this->assertArrayHasKey('test1Cest', $generatedTests);
+        $this->assertArrayNotHasKey('test2Cest', $generatedTests);
     }
 }

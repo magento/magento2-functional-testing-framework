@@ -41,7 +41,7 @@ class TestObjectHandlerTest extends MagentoTestCase
 
         $resolverMock = new MockModuleResolverBuilder();
         $resolverMock->setup();
-        $this->setMockParserOutput(['tests' => $mockData]);
+        $this->setMockParserOutput($mockData);
 
         // run object handler method
         $toh = TestObjectHandler::getInstance();
@@ -135,7 +135,7 @@ class TestObjectHandlerTest extends MagentoTestCase
 
         $resolverMock = new MockModuleResolverBuilder();
         $resolverMock->setup();
-        $this->setMockParserOutput(['tests' => array_merge($includeTest, $excludeTest)]);
+        $this->setMockParserOutput(array_merge($includeTest, $excludeTest));
 
         // execute test method
         $toh = TestObjectHandler::getInstance();
@@ -184,7 +184,7 @@ class TestObjectHandlerTest extends MagentoTestCase
         $resolverMock = new MockModuleResolverBuilder();
         $resolverMock->setup(['Vendor_' . $moduleExpected => $filepath]);
 
-        $this->setMockParserOutput(['tests' => $mockData]);
+        $this->setMockParserOutput($mockData);
         // Execute Test Method
         $toh = TestObjectHandler::getInstance();
         $actualTestObject = $toh->getObject($testDataArrayBuilder->testName);
@@ -212,7 +212,7 @@ class TestObjectHandlerTest extends MagentoTestCase
             ->build();
         $resolverMock = new MockModuleResolverBuilder();
         $resolverMock->setup();
-        $this->setMockParserOutput(['tests' => $testOne]);
+        $this->setMockParserOutput($testOne);
 
         $toh = TestObjectHandler::getInstance();
 
@@ -250,7 +250,7 @@ class TestObjectHandlerTest extends MagentoTestCase
 
         $resolverMock = new MockModuleResolverBuilder();
         $resolverMock->setup();
-        $this->setMockParserOutput(['tests' => array_merge($testOne, $testTwo)]);
+        $this->setMockParserOutput(array_merge($testOne, $testTwo));
 
         $toh = TestObjectHandler::getInstance();
 

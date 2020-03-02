@@ -69,7 +69,7 @@ class SuiteGeneratorTest extends MagentoTestCase
             ->withTestActions()
             ->build();
 
-        $mockTestData = ['tests' => array_merge($mockSimpleTest)];
+        $mockTestData = array_merge($mockSimpleTest);
         $this->setMockTestAndSuiteParserOutput($mockTestData, $mockData);
 
         // parse and generate suite object with mocked data
@@ -105,7 +105,7 @@ class SuiteGeneratorTest extends MagentoTestCase
             ->withTestActions()
             ->build();
 
-        $mockTestData = ['tests' => array_merge($mockSimpleTest)];
+        $mockTestData = array_merge($mockSimpleTest);
         $this->setMockTestAndSuiteParserOutput($mockTestData, $mockData);
 
         // parse and retrieve suite object with mocked data
@@ -172,7 +172,7 @@ class SuiteGeneratorTest extends MagentoTestCase
             ->withAnnotations(['group' => [['value' => 'group2']]])
             ->withTestActions()
             ->build();
-        $mockTestData = ['tests' => array_merge($mockSimpleTest, $mockSimpleTest2)];
+        $mockTestData = array_merge($mockSimpleTest, $mockSimpleTest2);
         $this->setMockTestAndSuiteParserOutput($mockTestData, $mockSuiteData);
 
         // Make invalid manifest
@@ -196,7 +196,7 @@ class SuiteGeneratorTest extends MagentoTestCase
             ->withAnnotations(['group' => [['value' => 'group1']]])
             ->withTestActions()
             ->build();
-        $mockTestData = ['tests' => array_merge($mockSimpleTest)];
+        $mockTestData = array_merge($mockSimpleTest);
         $this->setMockTestAndSuiteParserOutput($mockTestData, []);
 
         // Make invalid manifest
