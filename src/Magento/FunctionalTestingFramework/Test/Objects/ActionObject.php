@@ -323,7 +323,7 @@ class ActionObject
                 $this->actionAttributes[$prefix . ucfirst(ActionObject::ASSERTION_TYPE_ATTRIBUTE)] =
                     $subAttributes[ActionObject::ASSERTION_TYPE_ATTRIBUTE] ?? "NO_TYPE";
                 $this->actionAttributes[$prefix] =
-                    $subAttributes[ActionObject::ASSERTION_VALUE_ATTRIBUTE];
+                    $subAttributes[ActionObject::ASSERTION_VALUE_ATTRIBUTE] ?? "";
                 unset($this->actionAttributes[$key]);
             }
         }
