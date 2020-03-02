@@ -117,8 +117,17 @@ class UpdateAssertionSchema implements UpgradeInterface
         $newString = "<$assertType";
         $subElements = ["actual" => [], "expected" => []];
         foreach ($sortedParts as $type => $value) {
-            $value = rtrim(ltrim($value, '"'), '"');
-            $value = rtrim(ltrim($value, "'"), "'");
+            if (strpos($value, '"') === 0) {
+                $value = rtrim(ltrim($value, '"'), '"');
+            } elseif(strpos($value, "'") === 0) {
+                $value = rtrim(ltrim($value, "'"), "'");
+            }
+            // If value is empty string, trim again
+            if (str_replace(" ", "", $value) == "''") {
+                $value = "";
+            } elseif (str_replace(" ", "", $value) == '""') {
+                $value = "";
+            }
             $trimmedParts[$type] = $value;
             if (in_array($type, ["stepKey", "delta", "message", "before", "after", "remove"])) {
                 if ($type == "stepKey") {
@@ -131,7 +140,7 @@ class UpdateAssertionSchema implements UpgradeInterface
                 $subElements["actual"]["value"] = $value;
             } elseif ($type == "actualType") {
                 $subElements["actual"]["type"] = $value;
-            } elseif ($type == "expected" || $type = "expectedValue") {
+            } elseif ($type == "expected" or $type == "expectedValue") {
                 $subElements["expected"]["value"] = $value;
             } elseif ($type == "expectedType") {
                 $subElements["expected"]["type"] = $value;
@@ -159,10 +168,6 @@ class UpdateAssertionSchema implements UpgradeInterface
                 }
                 $value = $subElement['value'];
                 $typeValue = $subElement['type'];
-                if (empty($value)) {
-                    $this->errors[] = "POTENTIAL ANOMALOUS OUPUT DETECTED, PLEASE MANUALLY CHECK OUTPUT " .
-                        "($assertType \"$stepKey\" in $this->currentFile)";
-                }
                 $newString .= "\t\t\t<{$type}Result type=\"$typeValue\">$value</{$type}Result>\n";
             }
         }
