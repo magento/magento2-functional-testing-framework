@@ -617,9 +617,6 @@ class TestGenerator
             } elseif (isset($customActionAttributes['url'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['url']);
                 $url = $this->addUniquenessFunctionCall($customActionAttributes['url']);
-            } elseif (isset($customActionAttributes['expectedValue'])) {
-                //For old Assert backwards Compatibility, remove when deprecating
-                $assertExpected = $this->addUniquenessFunctionCall($customActionAttributes['expectedValue']);
             } elseif (isset($customActionAttributes['regex'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['regex']);
             }
@@ -1234,7 +1231,7 @@ class TestGenerator
                         $actionObject,
                         $selector,
                         $this->wrapWithDoubleQuotes($attribute),
-                        $assertExpected
+                        $this->wrapWithDoubleQuotes($assertExpected)
                     );
                     break;
                 case "assertEmpty":

@@ -54,6 +54,9 @@ class UpdateAssertionSchema implements UpgradeInterface
             preg_match_all('/<assert[^>]*\/>/', $contents, $potentialAssertions);
             $newAssertions = [];
             $index = 0;
+            if (empty($potentialAssertions[0])) {
+                continue;
+            }
             foreach ($potentialAssertions[0] as $potentialAssertion) {
                 $newAssertions[$index] = $this->convertOldAssertionToNew($potentialAssertion);
                 $index++;
@@ -98,8 +101,7 @@ class UpdateAssertionSchema implements UpgradeInterface
         $stepKey = "";
 
         // regex to grab values
-        $grabValueRegex = '/(stepKey|actual|actualType|expected|expectedType|delta|message)="([^"]*)"/';
-
+        $grabValueRegex = '/(stepKey|actual|actualType|expected|expectedType|delta|message|selector|attribute|expectedValue|before|after|remove)=(\'[^\']*\'|"[^"]*")/';
         // Make 3 arrays in $grabbedParts:
         // 0 contains stepKey="value"
         // 1 contains stepKey
@@ -110,40 +112,69 @@ class UpdateAssertionSchema implements UpgradeInterface
             $sortedParts[$grabbedParts[1][$i]] = $grabbedParts[2][$i];
         }
 
-        // Build new String
-        $newString = "<$assertType ";
+        // Build new String, trim ' and "
+        $trimmedParts = [];
+        $newString = "<$assertType";
         $subElements = ["actual" => [], "expected" => []];
         foreach ($sortedParts as $type => $value) {
-            if (in_array($type, ["stepKey", "delta", "message"])) {
+            $value = rtrim(ltrim($value, '"'), '"');
+            $value = rtrim(ltrim($value, "'"), "'");
+            $trimmedParts[$type] = $value;
+            if (in_array($type, ["stepKey", "delta", "message", "before", "after", "remove"])) {
                 if ($type == "stepKey") {
                     $stepKey = $value;
                 }
-                $newString .= "$type=\"$value\"";
+                $newString .= " $type=\"$value\"";
                 continue;
             }
             if ($type == "actual") {
                 $subElements["actual"]["value"] = $value;
             } elseif ($type == "actualType") {
                 $subElements["actual"]["type"] = $value;
-            } elseif ($type == "expected") {
+            } elseif ($type == "expected" || $type = "expectedValue") {
                 $subElements["expected"]["value"] = $value;
             } elseif ($type == "expectedType") {
                 $subElements["expected"]["type"] = $value;
             }
         }
         $newString .= ">\n";
-        foreach ($subElements as $type => $subElement) {
-            if (!isset($subElement['value']) || !isset($subElement['type'])) {
-                //don't have all the info we need to rebuild
-                $this->errors[] = "UNABLE TO FULLY REBUILD ASSERTION, PLEASE MANUALLY CHECK FORMAT " .
-                    "($assertType \"$stepKey\" in $this->currentFile)";
-                continue;
-            }
-            $value = $subElement['value'];
-            $typeValue = $subElement['type'];
-            $newString .= "<{$type}Result type=\"$typeValue\">$value</{$type}Result>\n";
+        // Guess value type if not set in either case
+        if (!isset($subElements["actual"]['type']) && isset($subElements["actual"]["value"])) {
+            $subElements["actual"]['type'] = $this->guessValueType($subElements["actual"]["value"]);
         }
-        $newString .= "</$assertType>";
+        if (!isset($subElements["expected"]['type']) && isset($subElements["expected"]["value"])) {
+            $subElements["expected"]['type'] = $this->guessValueType($subElements["expected"]["value"]);
+        }
+        // Massage subElements with data for edge cases
+        if ($assertType == 'assertElementContainsAttribute') {
+            // Assert type is very edge-cased, completely different schema
+            $value = $subElements['expected']['value'];
+            $selector = $trimmedParts['selector'];
+            $attribute = $trimmedParts['attribute'];
+            $newString .= "\t\t\t<expectedResult selector=\"$selector\" attribute=\"$attribute\">$value</expectedResult>\n";
+        } else {
+            foreach ($subElements as $type => $subElement) {
+                if (empty($subElement)) {
+                    continue;
+                }
+                $value = $subElement['value'];
+                $typeValue = $subElement['type'];
+                if (empty($value)) {
+                    $this->errors[] = "POTENTIAL ANOMALOUS OUPUT DETECTED, PLEASE MANUALLY CHECK OUTPUT " .
+                        "($assertType \"$stepKey\" in $this->currentFile)";
+                }
+                $newString .= "\t\t\t<{$type}Result type=\"$typeValue\">$value</{$type}Result>\n";
+            }
+        }
+        $newString .= "        </$assertType>";
         return $newString;
+    }
+
+    private function guessValueType($string) {
+        preg_match('/\$[a-zA-Z0-9]*/', $string, $matches);
+        if (isset($matches[0]) && $matches[0] == $string) {
+            return "variable";
+        }
+        return "string";
     }
 }

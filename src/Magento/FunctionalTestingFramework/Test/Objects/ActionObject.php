@@ -59,6 +59,7 @@ class ActionObject
     const ASSERTION_ATTRIBUTES = ["expectedResult" => "expected", "actualResult" => "actual"];
     const ASSERTION_TYPE_ATTRIBUTE = "type";
     const ASSERTION_VALUE_ATTRIBUTE = "value";
+    const ASSERTION_ELEMENT_ATTRIBUTES = ["selector", "attribute"];
     const DELETE_DATA_MUTUAL_EXCLUSIVE_ATTRIBUTES = ["url", "createDataKey"];
     const EXTERNAL_URL_AREA_INVALID_ACTIONS = ['amOnPage'];
     const FUNCTION_CLOSURE_ACTIONS = ['waitForElementChange'];
@@ -310,11 +311,17 @@ class ActionObject
         }
 
         // Flatten nested Elements's type and value into key=>value entries
+        // Also, add selector/value attributes if they are present in nested Element
         foreach ($this->actionAttributes as $key => $subAttributes) {
+            foreach (self::ASSERTION_ELEMENT_ATTRIBUTES as $ATTRIBUTE) {
+                if (isset($subAttributes[$ATTRIBUTE])) {
+                    $this->actionAttributes[$ATTRIBUTE] = $subAttributes[$ATTRIBUTE];
+                }
+            }
             if (in_array($key, $relevantKeys)) {
                 $prefix = ActionObject::ASSERTION_ATTRIBUTES[$key];
                 $this->actionAttributes[$prefix . ucfirst(ActionObject::ASSERTION_TYPE_ATTRIBUTE)] =
-                    $subAttributes[ActionObject::ASSERTION_TYPE_ATTRIBUTE];
+                    $subAttributes[ActionObject::ASSERTION_TYPE_ATTRIBUTE] ?? "NO_TYPE";
                 $this->actionAttributes[$prefix] =
                     $subAttributes[ActionObject::ASSERTION_VALUE_ATTRIBUTE];
                 unset($this->actionAttributes[$key]);
