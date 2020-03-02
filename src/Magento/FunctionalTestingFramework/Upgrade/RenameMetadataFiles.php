@@ -47,7 +47,8 @@ class RenameMetadataFiles implements UpgradeInterface
      * @param string $oldFileName
      * @return string
      */
-    private function convertFileName(string $oldFileName) {
+    private function convertFileName(string $oldFileName)
+    {
         $stripEnding = preg_replace("/-meta.xml/", "", $oldFileName);
         $hyphenToUnderscore = str_replace("-", "_", $stripEnding);
         $parts = explode("_", $hyphenToUnderscore);
