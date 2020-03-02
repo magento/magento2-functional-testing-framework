@@ -45,9 +45,9 @@ class UpdateAssertionSchema implements UpgradeInterface
         $fileSystem = new Filesystem();
         $testsUpdated = 0;
         foreach ($finder->files() as $file) {
-            if (!$this->detectOldAttributes($file)) {
-                continue;
-            }
+//            if (!$this->detectOldAttributes($file)) {
+//                continue;
+//            }
             $this->currentFile = $file->getFilename();
             $contents = $file->getContents();
             // Isolate <assert ... /> but not <assert> ... </assert>
@@ -157,7 +157,7 @@ class UpdateAssertionSchema implements UpgradeInterface
         // Massage subElements with data for edge cases
         if ($assertType == 'assertElementContainsAttribute') {
             // Assert type is very edge-cased, completely different schema
-            $value = $subElements['expected']['value'];
+            $value = $subElements['expected']['value'] ?? "";
             $selector = $trimmedParts['selector'];
             $attribute = $trimmedParts['attribute'];
             $newString .= "\t\t\t<expectedResult selector=\"$selector\" attribute=\"$attribute\">$value</expectedResult>\n";
