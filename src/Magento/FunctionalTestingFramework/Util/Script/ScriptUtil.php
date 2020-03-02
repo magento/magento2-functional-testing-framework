@@ -6,6 +6,8 @@
 namespace Magento\FunctionalTestingFramework\Util\Script;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Util\Filesystem\FinderUtil;
+use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Symfony\Component\Finder\Finder;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Util\ModuleResolver;
@@ -17,6 +19,8 @@ use Magento\FunctionalTestingFramework\Util\ModuleResolver;
  */
 class ScriptUtil
 {
+    const ROOT_SUITE_DIR = 'tests/_suite';
+
     /**
      * Return all installed Magento module paths
      *
@@ -64,28 +68,44 @@ class ScriptUtil
     }
 
     /**
-     * Builds list of all XML files in given modulePaths + path given
-     * Return empty array if Finder is not run
+     * Return all XML files for $scope in given module paths, empty array if no path is valid
      *
      * @param array  $modulePaths
-     * @param string $path
+     * @param string $scope
      * @return Finder|array
      */
-    public static function buildFileList($modulePaths, $path)
+    public static function getModuleXmlFilesByScope($modulePaths, $scope)
     {
-        $finderRun = false;
+        $found = false;
+        $scopePath = DIRECTORY_SEPARATOR . ucfirst($scope) . DIRECTORY_SEPARATOR;
         $finder = new Finder();
+
         foreach ($modulePaths as $modulePath) {
-            if (!realpath($modulePath . $path)) {
+            if (!realpath($modulePath . $scopePath)) {
                 continue;
             }
-            $finder->files()->in($modulePath . $path)->name("*.xml");
-            $finderRun = true;
+            $finder->files()->followLinks()->in($modulePath . $scopePath)->name("*.xml");
+            $found = true;
         }
-        if ($finderRun) {
-            return $finder->files();
-        } else {
+        return $found ? $finder->files() : [];
+    }
+
+    /**
+     * Return root Suite XML files, empty array if root suite file is not valid
+     *
+     * @return Finder|array
+     * @throws TestFrameworkException
+     */
+    public static function getRootSuiteXmlFiles()
+    {
+        //$rootSuitePath = FilePathFormatter::format(TESTS_BP) . self::ROOT_SUITE_DIR;
+        $rootSuitePath = FilePathFormatter::format(TESTS_BP) . 'tests/verification/_suite';
+        $finder = new Finder();
+        if (!realpath($rootSuitePath)) {
             return [];
         }
+        $finder->files()->followLinks()->in($rootSuitePath)->name("*.xml");
+
+        return $finder->files();
     }
 }

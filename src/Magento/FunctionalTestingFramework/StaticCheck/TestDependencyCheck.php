@@ -108,9 +108,9 @@ class TestDependencyCheck implements StaticCheckInterface
             DIRECTORY_SEPARATOR . 'Data' . DIRECTORY_SEPARATOR,
         ];
         // These files can contain references to other modules.
-        $testXmlFiles = ScriptUtil::buildFileList($allModules, $filePaths[0]);
-        $actionGroupXmlFiles = ScriptUtil::buildFileList($allModules, $filePaths[1]);
-        $dataXmlFiles= ScriptUtil::buildFileList($allModules, $filePaths[2]);
+        $testXmlFiles = ScriptUtil::getModuleXmlFilesByScope($allModules, $filePaths[0]);
+        $actionGroupXmlFiles = ScriptUtil::getModuleXmlFilesByScope($allModules, $filePaths[1]);
+        $dataXmlFiles= ScriptUtil::getModuleXmlFilesByScope($allModules, $filePaths[2]);
 
         $this->errors = [];
         $this->errors += $this->findErrorsInFileSet($testXmlFiles);

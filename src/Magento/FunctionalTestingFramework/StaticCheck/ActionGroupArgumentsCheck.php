@@ -53,7 +53,7 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
     {
         $allModules = ScriptUtil::getAllModulePaths();
 
-        $actionGroupXmlFiles = ScriptUtil::buildFileList(
+        $actionGroupXmlFiles = ScriptUtil::getModuleXmlFilesByScope(
             $allModules,
             DIRECTORY_SEPARATOR . 'ActionGroup' . DIRECTORY_SEPARATOR
         );

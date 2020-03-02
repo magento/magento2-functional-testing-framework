@@ -15,7 +15,7 @@ use Magento\FunctionalTestingFramework\Test\Util\TestHookObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
-use Magento\FunctionalTestingFramework\Util\Filesystem\RecursiveGlobUtil;
+use Symfony\Component\Finder\Finder;
 
 class SuiteObjectExtractor extends BaseObjectExtractor
 {
@@ -240,15 +240,21 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      */
     private function resolveFilePathTestNames($filename, $moduleName = null)
     {
-        $filepath = $filename;
+        $filepath = null;
         if (!file_exists($filename) && null !== $moduleName) {
             $dir = FilePathFormatter::format(TESTS_MODULE_PATH) . $moduleName . DIRECTORY_SEPARATOR . 'Test';
-            $filepaths = RecursiveGlobUtil::glob($filename, $dir);
-            if (isset($filepaths[0]) && file_exists($filepaths[0])) {
-                $filepath = $filepaths[0];
-            } else {
-                throw new Exception("Could not find file ${filename}");
+            if (file_exists($dir)) {
+                $finder = new Finder();
+                $finder->files()->followLinks()->name($filename)->in($dir);
+                foreach ($finder as $file) {
+                    $filepath = $file->getRealPath();
+                    break;
+                }
             }
+        }
+
+        if (null === $filepath) {
+            throw new Exception("Could not find file ${filename}");
         }
 
         $testObjects = [];

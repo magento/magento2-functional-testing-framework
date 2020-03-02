@@ -11,6 +11,7 @@ use Magento\FunctionalTestingFramework\Util\Script\ScriptUtil;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Class RemoveModuleFileInSuiteFiles
@@ -63,17 +64,30 @@ class RemoveModuleFileInSuiteFiles implements UpgradeInterface
             $testPaths = ScriptUtil::getAllModulePaths();
         }
 
-        $xmlFiles = ScriptUtil::buildFileList(
-            $testPaths,
-            DIRECTORY_SEPARATOR . 'Suite' . DIRECTORY_SEPARATOR
-        );
+        // Get module suite xml files
+        $xmlFiles = ScriptUtil::getModuleXmlFilesByScope($testPaths, 'Suite');
+        $this->processXmlFiles($xmlFiles);
 
+        // Get root suite xml files
+        $xmlFiles = ScriptUtil::getRootSuiteXmlFiles();
+        $this->processXmlFiles($xmlFiles);
+
+        return ("Removed module file reference in {$this->testsUpdated} suite file(s).");
+    }
+
+    /**
+     * Process on list of xml files
+     *
+     * @param Finder $xmlFiles
+     * @return void
+     */
+    private function processXmlFiles($xmlFiles)
+    {
         foreach ($xmlFiles as $file) {
             $contents = $file->getContents();
             $filePath = $file->getRealPath();
             file_put_contents($filePath, $this->removeModuleFileAttributeInSuite($contents, $filePath));
         }
-        return ("Removed module file reference in {$this->testsUpdated} suite file(s).");
     }
 
     /**
@@ -91,8 +105,8 @@ class RemoveModuleFileInSuiteFiles implements UpgradeInterface
             function ($matches) use ($file) {
                 if (!$this->printNotice) {
                     $this->ioStyle->note(
-                        '`file` attribute is removed from <module> in Suite XML schema.' . PHP_EOL
-                        . 'The references in the following xml files are removed. Consider using <test> instead.'
+                        '`file` is not a valid attribute for <module> in Suite XML schema.' . PHP_EOL
+                        . 'The `file`references in the following xml files are removed. Consider using <test> instead.'
                     );
                     $this->printNotice = true;
                 }
@@ -101,11 +115,11 @@ class RemoveModuleFileInSuiteFiles implements UpgradeInterface
                     . '"' . trim($matches[0]) . '"' . PHP_EOL
                     . 'is removed from file: ' . $file . PHP_EOL
                 );
+                $this->testsUpdated += 1;
                 return '';
             },
             $contents
         );
-        $this->testsUpdated += 1;
         return $contents;
     }
 

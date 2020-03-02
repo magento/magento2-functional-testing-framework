@@ -10,6 +10,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\Script\ScriptUtil;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Class SplitMultipleEntitiesFiles
@@ -38,6 +39,13 @@ class SplitMultipleEntitiesFiles implements UpgradeInterface
     private $output;
 
     /**
+     * Total test updated
+     *
+     * @var integer
+     */
+    private $testsUpdated = 0;
+
+    /**
      * Entity categories for the upgrade script
      *
      * @var array
@@ -62,51 +70,66 @@ class SplitMultipleEntitiesFiles implements UpgradeInterface
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->output = $output;
-        $testsUpdated = 0;
+        $this->testsUpdated = 0;
         $testPaths[] = $input->getArgument('path');
         if (empty($testPaths[0])) {
             $testPaths = ScriptUtil::getAllModulePaths();
         }
 
+        // Process module xml files
         foreach ($this->entityCategories as $type => $urn) {
-            $xmlFiles = ScriptUtil::buildFileList(
-                $testPaths,
-                DIRECTORY_SEPARATOR . $type . DIRECTORY_SEPARATOR
-            );
+            $xmlFiles = ScriptUtil::getModuleXmlFilesByScope($testPaths, $type);
+            $this->processXmlFiles($xmlFiles, $type, $urn);
+        }
 
-            foreach ($xmlFiles as $file) {
-                $contents = $file->getContents();
-                $entityContents = $this->getEntityContents($contents, $type);
-                if (count($entityContents) > 1) {
-                    $filename = $file->getRealPath();
+        // Process root suite xml files
+        $xmlFiles = ScriptUtil::getRootSuiteXmlFiles();
+        $this->processXmlFiles($xmlFiles, 'Suite', $this->entityCategories['Suite']);
+
+        return ("Split multiple entities in {$this->testsUpdated} file(s).");
+    }
+
+    /**
+     * Split on list of xml files
+     *
+     * @param Finder $xmlFiles
+     * @param string $type
+     * @param string $urn
+     * @return void
+     */
+    private function processXmlFiles($xmlFiles, $type, $urn)
+    {
+        foreach ($xmlFiles as $file) {
+            $contents = $file->getContents();
+            $entityContents = $this->getEntityContents($contents, $type);
+            if (count($entityContents) > 1) {
+                $filename = $file->getRealPath();
+                if ($this->output->isVerbose()) {
+                    $this->output->writeln('Processing file:' . $filename);
+                }
+                foreach ($entityContents as $entityName => $entityContent) {
+                    $dir = dirname($file);
+                    $dir .= DIRECTORY_SEPARATOR . ucfirst(basename($file, '.xml'));
+                    $splitFileName = $this->formatName($entityName, $type);
+                    $this->filePutContents(
+                        $dir . DIRECTORY_SEPARATOR . $splitFileName . '.xml',
+                        $type,
+                        $urn,
+                        $entityContent
+                    );
                     if ($this->output->isVerbose()) {
-                        $this->output->writeln('Processing file:' . $filename);
-                    }
-                    foreach ($entityContents as $entityName => $entityContent) {
-                        $dir = dirname($file);
-                        $dir .= DIRECTORY_SEPARATOR . ucfirst(basename($file, '.xml'));
-                        $splitFileName = $this->formatName($entityName, $type);
-                        $this->filePutContents(
-                            $dir . DIRECTORY_SEPARATOR . $splitFileName . '.xml',
-                            $type,
-                            $urn,
-                            $entityContent
+                        $this->output->writeln(
+                            'Created file:' . $dir . DIRECTORY_SEPARATOR . $splitFileName . '.xml'
                         );
-                        if ($this->output->isVerbose()) {
-                            $this->output->writeln(
-                                'Created file:' . $dir . DIRECTORY_SEPARATOR . $splitFileName . '.xml'
-                            );
-                        }
-                        $testsUpdated++;
                     }
-                    unlink($file);
-                    if ($this->output->isVerbose()) {
-                        $this->output->writeln('Unlinked file:' . $filename . PHP_EOL);
-                    }
+                    $this->testsUpdated++;
+                }
+                unlink($file);
+                if ($this->output->isVerbose()) {
+                    $this->output->writeln('Unlinked file:' . $filename . PHP_EOL);
                 }
             }
         }
-        return ("Split multiple entities in {$testsUpdated} file(s).");
     }
 
     /**
