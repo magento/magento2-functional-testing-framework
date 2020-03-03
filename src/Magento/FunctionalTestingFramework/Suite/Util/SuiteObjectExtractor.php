@@ -248,7 +248,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
             /** @var TestObject $testObject */
             $filename = $testObject->getFilename();
             if ($pathExtractor->extractModuleName($filename) === $moduleName) {
-                $testObjects[] = $testObject;
+                $testObjects[$testName] = $testObject;
             }
         }
         return $testObjects;

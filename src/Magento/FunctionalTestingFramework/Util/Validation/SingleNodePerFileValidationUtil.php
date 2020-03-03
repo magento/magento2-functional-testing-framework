@@ -42,8 +42,8 @@ class SingleNodePerFileValidationUtil
     public function validateSingleNodeForTag($dom, $tag, $filename = '')
     {
         $tagNodes = $dom->getElementsByTagName($tag);
-        $count = $tagNodes->count();
-        if ( $count == 1) {
+        $count = $tagNodes->length;
+        if ($count == 1) {
             return;
         }
 

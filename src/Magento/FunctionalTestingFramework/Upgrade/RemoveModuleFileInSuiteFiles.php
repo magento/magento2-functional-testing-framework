@@ -102,7 +102,8 @@ class RemoveModuleFileInSuiteFiles implements UpgradeInterface
                 if (!$this->printNotice) {
                     $this->ioStyle->note(
                         '`file` is not a valid attribute for <module> in Suite XML schema.' . PHP_EOL
-                        . 'The `file`references in the following xml files are commented out. Consider using <test> instead.'
+                        . 'The `file`references in the following xml files are commented out. '
+                        . 'Consider using <test> instead.'
                     );
                     $this->printNotice = true;
                 }

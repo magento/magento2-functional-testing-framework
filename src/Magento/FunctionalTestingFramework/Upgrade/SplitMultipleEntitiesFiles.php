@@ -137,15 +137,35 @@ class SplitMultipleEntitiesFiles implements UpgradeInterface
      */
     private function getEntityContents($contents, $type)
     {
-        $pattern = '/[\S\s]+\n(?<entity>[\s]*<' . lcfirst($type)
+        $nonEmptyTag = '/[\S\s]+\n(?<entity>[\s]*<' . lcfirst($type)
             . '[^\<\>]+name[\s]*=[\s]*"(?<name>[^\"\'\<\>\&]+)"[^\<\>]*>[\S\s]+<\/'
             . lcfirst($type) . '[\s]*>)+[\S\s]+/';
+        $entityContents = $this->scanForPattern($contents, $type, $nonEmptyTag);
+
+        $emptyTag = '/[\S\s]+\n(?<entity>[\s]*<' . lcfirst($type)
+            . '[^\<\>]+name[\s]*=[\s]*"(?<name>[^\"\'\<\>\&]+)"[^\<\>]*\/>)/';
+        $entityContents = array_merge($entityContents, $this->scanForPattern($contents, $type, $emptyTag));
+
+        return $entityContents;
+    }
+
+    /**
+     * Scan contents to match given pattern
+     *
+     * @param string $contents
+     * @param string $type
+     * @param string $pattern
+     * @return array
+     */
+    private function scanForPattern($contents, $type, $pattern)
+    {
         preg_match($pattern, $contents, $matches);
         if (isset($matches['entity']) && isset($matches['name'])) {
             $contents = str_replace($matches['entity'], '', $contents);
             $entityContents[trim($matches['name'])] = $matches['entity'];
-            if (!empty($this->getEntityContents($contents, $type))) {
-                $entityContents = array_merge($entityContents, $this->getEntityContents($contents, $type));
+            $restEntityContents = $this->scanForPattern($contents, $type, $pattern);
+            if (!empty($restEntityContents)) {
+                $entityContents = array_merge($entityContents, $restEntityContents);
             }
             return $entityContents;
         } else {
