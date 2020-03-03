@@ -68,10 +68,6 @@ class RemoveModuleFileInSuiteFiles implements UpgradeInterface
         $xmlFiles = ScriptUtil::getModuleXmlFilesByScope($testPaths, 'Suite');
         $this->processXmlFiles($xmlFiles);
 
-        // Get root suite xml files
-        $xmlFiles = ScriptUtil::getRootSuiteXmlFiles();
-        $this->processXmlFiles($xmlFiles);
-
         return ("Removed module file reference in {$this->testsUpdated} suite file(s).");
     }
 
@@ -106,17 +102,19 @@ class RemoveModuleFileInSuiteFiles implements UpgradeInterface
                 if (!$this->printNotice) {
                     $this->ioStyle->note(
                         '`file` is not a valid attribute for <module> in Suite XML schema.' . PHP_EOL
-                        . 'The `file`references in the following xml files are removed. Consider using <test> instead.'
+                        . 'The `file`references in the following xml files are commented out. Consider using <test> instead.'
                     );
                     $this->printNotice = true;
                 }
                 $this->output->writeln(
                     PHP_EOL
                     . '"' . trim($matches[0]) . '"' . PHP_EOL
-                    . 'is removed from file: ' . $file . PHP_EOL
+                    . 'is commented out from file: ' . $file . PHP_EOL
                 );
                 $this->testsUpdated += 1;
-                return '';
+                $result = str_replace('<module', '<!--module', $matches[0]);
+                $result = str_replace('>', '--> <!-- Please replace with <test name="" -->', $result);
+                return $result;
             },
             $contents
         );

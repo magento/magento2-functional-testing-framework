@@ -356,11 +356,12 @@
             <argument name="schemaPath" xsi:type="string">Magento/FunctionalTestingFramework/Suite/etc/mergedSuiteSchema.xsd</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\SuiteData" type="Magento\FunctionalTestingFramework\Config\Reader\Filesystem">
+    <virtualType name="Magento\FunctionalTestingFramework\Config\Reader\SuiteData" type="Magento\FunctionalTestingFramework\Config\Reader\MftfFilesystem">
         <arguments>
             <argument name="fileResolver" xsi:type="object">Magento\FunctionalTestingFramework\Config\FileResolver\Root</argument>
             <argument name="converter" xsi:type="object">Magento\FunctionalTestingFramework\Config\SuiteDataConverter</argument>
             <argument name="schemaLocator" xsi:type="object">Magento\FunctionalTestingFramework\Config\SchemaLocator\SuiteData</argument>
+            <argument name="domDocumentClass" xsi:type="string">Magento\FunctionalTestingFramework\Suite\Config\SuiteDom</argument>
             <argument name="idAttributes" xsi:type="array">
                 <item name="/suites/suite" xsi:type="string">name</item>
                 <item name="/suites/suite/(before|after)/remove" xsi:type="string">keyForRemoval</item>

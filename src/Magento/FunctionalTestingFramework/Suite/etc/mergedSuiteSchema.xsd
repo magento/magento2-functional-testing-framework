@@ -47,11 +47,6 @@
             <xs:element type="moduleSuiteOptionType" name="module" minOccurs="0"/>
         </xs:choice>
     </xs:complexType>
-    <!--<xs:complexType name="suiteHookType">-->
-        <!--<xs:choice minOccurs="0" maxOccurs="unbounded">-->
-            <!--<xs:group ref="dataOperationTags" maxOccurs="unbounded" minOccurs="0"/>-->
-        <!--</xs:choice>-->
-    <!--</xs:complexType>-->
     <xs:complexType name="suiteType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
             <xs:element type="includeType" name="include" maxOccurs="1"/>
@@ -67,6 +62,7 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute type="xs:string" name="filename"/>
     </xs:complexType>
     <xs:complexType name="suiteConfigType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">

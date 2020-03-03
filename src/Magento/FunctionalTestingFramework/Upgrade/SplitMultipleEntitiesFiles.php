@@ -82,10 +82,6 @@ class SplitMultipleEntitiesFiles implements UpgradeInterface
             $this->processXmlFiles($xmlFiles, $type, $urn);
         }
 
-        // Process root suite xml files
-        $xmlFiles = ScriptUtil::getRootSuiteXmlFiles();
-        $this->processXmlFiles($xmlFiles, 'Suite', $this->entityCategories['Suite']);
-
         return ("Split multiple entities in {$this->testsUpdated} file(s).");
     }
 

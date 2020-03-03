@@ -27,23 +27,10 @@ class Root extends Mask
     public function get($filename, $scope)
     {
         // First pick up the root level test suite dir
-        $paths = [];
-        $dir = FilePathFormatter::format(TESTS_BP) . self::ROOT_SUITE_DIR;
-        if (is_readable($dir)) {
-            $directoryIterator = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator(
-                    $dir,
-                    \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::FOLLOW_SYMLINKS
-                )
-            );
-            $regexpIterator = new \RegexIterator($directoryIterator, $filename);
-            /** @var \SplFileInfo $file */
-            foreach ($regexpIterator as $file) {
-                if ($file->isFile() && $file->isReadable()) {
-                    $paths[] = $file->getRealPath();
-                }
-            }
-        }
+        $paths = glob(
+            FilePathFormatter::format(TESTS_BP) . self::ROOT_SUITE_DIR
+            . DIRECTORY_SEPARATOR . '*.xml'
+        );
 
         // Then merge this path into the module based paths
         // Since we are sharing this code with Module based resolution we will unnecessarily glob against modules in the
