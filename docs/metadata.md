@@ -61,13 +61,14 @@ The following diagram demonstrates the XML structure of a metadata file:
             </array>
         </object>
     </operation>
+</operations>
 ```
 
 ## Principles {#principles}
 
 1. A `dataType` value must match the `type` value of the corresponding entity.
-2. A file name should contain data type split with `_` and must end with `-meta`.
-   Example: `product_attribute-meta.xml`.
+2. A file name should be PascalCase and end with `Meta.xml`.
+   Example: `ProductAttributeMeta.xml`.
 3. A metadata file may contain different types of operations (`type`) with the same data entity (`dataType`).
 
 Example:
@@ -138,7 +139,7 @@ _Catalog/Data/CategoryData.xml_:
 Here, `type` is equal to `"category"`, which instructs the MFTF to search an operation with `dataType="category"`.
 Since the action is __to create__ a category, the MFTF will also search for operation with `type="create"` in _Metadata_ for `dataType="category"`.
 
-_Catalog/Metadata/category-meta.xml_:
+_Catalog/Metadata/CategoryMeta.xml_:
 
 ```xml
 <operation name="CreateCategory" dataType="category" type="create" auth="adminOauth" url="/V1/categories" method="POST">
@@ -186,10 +187,10 @@ Comments in the example below are used to demonstrate relation between JSON requ
 JSON does not support comments.
 </div>
 
-Model schema for _catalogCategoryRepositoryV1SavePostBody_ with XML representation of _Catalog/Metadata/category-meta.xml_ in comments:
+Model schema for _catalogCategoryRepositoryV1SavePostBody_ with XML representation of _Catalog/Metadata/CategoryMeta.xml_ in comments:
 
 ```json
-{                                           // XML representation in the MFTF metadata format (see 'Catalog/Metadata/category-meta.xml')
+{                                           // XML representation in the MFTF metadata format (see 'Catalog/Metadata/CategoryMeta.xml')
   "category": {                             // <object key="category" dataType="category">
     "id": 0,                                // Skipped, because Category ID is not available on UI when you create a new category.
     "parent_id": 0,                         // <field key="parent_id">integer</field>
@@ -205,9 +206,9 @@ Model schema for _catalogCategoryRepositoryV1SavePostBody_ with XML representati
       "string"                              // <value>string</value>
     ],                                      // </array>
     "include_in_menu": true,                // <field key="include_in_menu">boolean</field>
-    "extension_attributes": {},             // <field key="extension_attributes">empty_extension_attribute</field>, where 'empty_extension_attribute' is a reference to operation with 'dataType="empty_extension_attribute"' (see 'Catalog/Metadata/empty_extension_attribute-meta.xml')
+    "extension_attributes": {},             // <field key="extension_attributes">empty_extension_attribute</field>, where 'empty_extension_attribute' is a reference to operation with 'dataType="empty_extension_attribute"' (see 'Catalog/Metadata/EmptyExtensionAttributeMeta.xml')
     "custom_attributes": [                  // <array key="custom_attributes">
-      {                                     // <value>custom_attribute</value>, where 'custom_attribute' is a reference to operation with 'dataType="custom_attribute"' (see 'Catalog/Metadata/custom_attribute-meta.xml')
+      {                                     // <value>custom_attribute</value>, where 'custom_attribute' is a reference to operation with 'dataType="custom_attribute"' (see 'Catalog/Metadata/CustomAttributeMeta.xml')
         "attribute_code": "string",
         "value": "string"
       }
@@ -342,7 +343,7 @@ You are able to create assurances with `successRegex`, and, optionally, return v
 
 The `CreateStoreGroup` operation is used to persist a store group:
 
-Source file is _Store/Metadata/store_group-meta.xml_:
+Source file is _Store/Metadata/StoreGroupMeta.xml_:
 
 ```xml
 <operation name="CreateStoreGroup" dataType="group" type="create" auth="adminFormKey" url="/admin/system_store/save" method="POST" successRegex="/messages-message-success/" >
@@ -378,7 +379,7 @@ The operation enables you to assign the following form fields:
 
 The MFTF uses the `CreateWishlist` operation to create a wish list on storefront:
 
-Source file is _Wishlist/Metadata/wishlist-meta.xml_
+Source file is _Wishlist/Metadata/WishlistMeta.xml_
 
 ```xml
 <operation name="CreateWishlist" dataType="wishlist" type="create" auth="customerFormKey" url="/wishlist/index/add/" method="POST" successRegex="" returnRegex="~\/wishlist_id\/(\d*?)\/~" >

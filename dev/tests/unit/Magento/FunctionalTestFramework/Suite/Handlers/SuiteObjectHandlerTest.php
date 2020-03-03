@@ -65,7 +65,7 @@ class SuiteObjectHandlerTest extends MagentoTestCase
             ->withTestActions()
             ->build();
 
-        $mockTestData = ['tests' => array_merge($mockSimpleTest, $mockGroup1Test1, $mockGroup1Test2, $mockGroup2Test1)];
+        $mockTestData = array_merge($mockSimpleTest, $mockGroup1Test1, $mockGroup1Test2, $mockGroup2Test1);
         $this->setMockTestAndSuiteParserOutput($mockTestData, $mockData);
 
         // parse and retrieve suite object with mocked data

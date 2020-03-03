@@ -15,7 +15,7 @@
             <stories value="[Deprecated] MFTF DevDocs available"/>
             <title value="[Deprecated] Magento Functional Testing Framework Documentation is available."/>
             <description value="[Deprecated] Magento Functional Testing Framework Documentation is available."/>
-            <severity value="CRITICAL"/>
+            <severity value="MINOR"/>
             <group value="mftf"/>
         </annotations>
 
