@@ -198,7 +198,7 @@
             <argument name="mergeablePaths" xsi:type="array">
                 <item name="/operations/operation/object" xsi:type="string"/>
             </argument>
-            <argument name="fileName" xsi:type="string">/[\p{L}\p{N}_\-]+-meta.xml$/</argument>
+            <argument name="fileName" xsi:type="string">/[\p{L}\p{N}_\-]+Meta.xml$/</argument>
             <argument name="defaultScope" xsi:type="string">Metadata</argument>
         </arguments>
     </virtualType>

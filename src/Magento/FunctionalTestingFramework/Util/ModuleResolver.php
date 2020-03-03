@@ -56,12 +56,6 @@ class ModuleResolver
     . 'tests'
     . DIRECTORY_SEPARATOR
     . 'functional';
-    const DEPRECATED_DEV_TESTS = DIRECTORY_SEPARATOR
-        . self:: DEV_TESTS
-        . DIRECTORY_SEPARATOR
-        . "Magento"
-        . DIRECTORY_SEPARATOR
-        . "FunctionalTest";
 
     /**
      * Enabled modules.
@@ -332,8 +326,7 @@ class ModuleResolver
         $codePathsToPattern = [
             $modulePath => '',
             $magentoBaseCodePath . $vendorCodePath => self::TEST_MFTF_PATTERN,
-            $magentoBaseCodePath . $appCodePath => self::TEST_MFTF_PATTERN,
-            $magentoBaseCodePath . self::DEPRECATED_DEV_TESTS => ''
+            $magentoBaseCodePath . $appCodePath => self::TEST_MFTF_PATTERN
         ];
 
         foreach ($codePathsToPattern as $codePath => $pattern) {
@@ -379,22 +372,6 @@ class ModuleResolver
             }
         }
 
-        /* TODO uncomment this to show deprecation warning when we ready to fully deliver test packaging feature
-        if (strpos($testPath, self::DEPRECATED_DEV_TESTS) !== false && !empty($modulePaths)) {
-            $deprecatedPath = ltrim(self::DEPRECATED_DEV_TESTS, DIRECTORY_SEPARATOR);
-            $suggestedPath = self::DEV_TESTS . DIRECTORY_SEPARATOR . 'Magento';
-            $message = "DEPRECATION: Found MFTF test modules in the deprecated path: $deprecatedPath."
-                . " Move these test modules to $suggestedPath.";
-
-            if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-                LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->warning($message);
-            }
-            // Suppress print during unit testing
-            if (MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE) {
-                print ("\n$message\n\n");
-            }
-        }
-        */
         return $modulePaths;
     }
 

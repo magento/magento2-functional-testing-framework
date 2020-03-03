@@ -85,6 +85,16 @@ The following example shows the usage of `grabValueFrom` in testing, where the r
 <fillField selector=".functionalTestSelector" userInput="{$grabStepKey}" stepKey="fillFieldKey1"/>
 ```
 
+The following is an example of the `Magento/Catalog/Test/Mftf/ActionGroup/AssertDiscountsPercentageOfProductsActionGroup.xml` test:
+
+```xml
+<grabValueFrom selector="{{AdminProductFormAdvancedPricingSection.productTierPricePercentageValuePriceInput('0')}}" stepKey="grabProductTierPriceInput"/>
+<assertEquals stepKey="assertProductTierPriceInput">
+    <expectedResult type="string">{{amount}}</expectedResult>
+    <actualResult type="string">$grabProductTierPriceInput</actualResult>
+</assertEquals>
+```
+
 ## Hard-coded data input
 
 The data to operate against can be included as literals in a test. Hard-coded data input can be useful in assertions.

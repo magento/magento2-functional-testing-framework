@@ -30,7 +30,7 @@ class BaseGenerateCommand extends Command
      *
      * @var SymfonyStyle
      */
-    private $ioStyle = null;
+    protected $ioStyle = null;
 
     /**
      * Configures the base command.
