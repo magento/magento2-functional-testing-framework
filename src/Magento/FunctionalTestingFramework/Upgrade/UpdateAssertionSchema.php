@@ -147,12 +147,12 @@ class UpdateAssertionSchema implements UpgradeInterface
             }
         }
         $newString .= ">\n";
-        // Guess value type if not set in either case
-        if (!isset($subElements["actual"]['type']) && isset($subElements["actual"]["value"])) {
-            $subElements["actual"]['type'] = $this->guessValueType($subElements["actual"]["value"]);
+        // Set type to const if it's absent
+        if (isset($subElements["actual"]['value']) && !isset($subElements["actual"]['type'])) {
+            $subElements["actual"]['type'] = "const";
         }
-        if (!isset($subElements["expected"]['type']) && isset($subElements["expected"]["value"])) {
-            $subElements["expected"]['type'] = $this->guessValueType($subElements["expected"]["value"]);
+        if (isset($subElements["expected"]['value']) && !isset($subElements["expected"]['type'])) {
+            $subElements["expected"]['type'] = "const";
         }
         // Massage subElements with data for edge cases
         if ($assertType == 'assertElementContainsAttribute') {
