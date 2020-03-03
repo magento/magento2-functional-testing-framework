@@ -31,7 +31,8 @@ class UpdateAssertionSchema implements UpgradeInterface
     private $errors = [];
 
     /**
-     * Upgrades all test xml files, changing <assert> actions to be nested
+     * Upgrades all test xml files, changing as many <assert> actions to be nested as possible
+     * WILL NOT CATCH cases where style is a mix of old and new
      *
      * @param InputInterface $input
      * @return string
@@ -45,12 +46,9 @@ class UpdateAssertionSchema implements UpgradeInterface
         $fileSystem = new Filesystem();
         $testsUpdated = 0;
         foreach ($finder->files() as $file) {
-//            if (!$this->detectOldAttributes($file)) {
-//                continue;
-//            }
             $this->currentFile = $file->getFilename();
             $contents = $file->getContents();
-            // Isolate <assert ... /> but not <assert> ... </assert>
+            // Isolate <assert ... /> but never <assert> ... </assert>
             preg_match_all('/<assert[^>]*\/>/', $contents, $potentialAssertions);
             $newAssertions = [];
             $index = 0;
@@ -98,7 +96,6 @@ class UpdateAssertionSchema implements UpgradeInterface
     {
         // <assertSomething => assertSomething
         $assertType = ltrim(explode(' ', $assertion)[0], '<');
-        $stepKey = "";
 
         // regex to grab values
         $grabValueRegex = '/(stepKey|actual|actualType|expected|expectedType|delta|message|selector|attribute|expectedValue|before|after|remove)=(\'[^\']*\'|"[^"]*")/';
@@ -130,9 +127,6 @@ class UpdateAssertionSchema implements UpgradeInterface
             }
             $trimmedParts[$type] = $value;
             if (in_array($type, ["stepKey", "delta", "message", "before", "after", "remove"])) {
-                if ($type == "stepKey") {
-                    $stepKey = $value;
-                }
                 $newString .= " $type=\"$value\"";
                 continue;
             }
@@ -154,7 +148,7 @@ class UpdateAssertionSchema implements UpgradeInterface
         if (isset($subElements["expected"]['value']) && !isset($subElements["expected"]['type'])) {
             $subElements["expected"]['type'] = "const";
         }
-        // Massage subElements with data for edge cases
+        // Massage subElements with data for edge case
         if ($assertType == 'assertElementContainsAttribute') {
             // Assert type is very edge-cased, completely different schema
             $value = $subElements['expected']['value'] ?? "";
@@ -173,13 +167,5 @@ class UpdateAssertionSchema implements UpgradeInterface
         }
         $newString .= "        </$assertType>";
         return $newString;
-    }
-
-    private function guessValueType($string) {
-        preg_match('/\$[a-zA-Z0-9]*/', $string, $matches);
-        if (isset($matches[0]) && $matches[0] == $string) {
-            return "variable";
-        }
-        return "string";
     }
 }
