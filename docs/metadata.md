@@ -61,6 +61,7 @@ The following diagram demonstrates the XML structure of a metadata file:
             </array>
         </object>
     </operation>
+</operations>
 ```
 
 ## Principles {#principles}
@@ -421,6 +422,7 @@ Root element that points to the corresponding XML Schema.
 | `returnIndex`   | string                                                                       | optional | Specifies index at which the value will be returned when `returnRegex` matches multiple values                                                                          |
 | `removeBackend` | boolean                                                                      | optional | Removes backend name from requested URL. Applicable when `auth="adminFormKey"`.                                                              |
 | `filename`      | string                                                                       | optional |                                                                                                                                              |
+|`deprecated`|string|optional|Used to warn about the future deprecation of the test. String will appear in Allure reports and console output at runtime.|
 
 -  \*`url` - full URL is a concatenation of _ENV.baseUrl_ + `/rest/` + _url_.
   To reuse data of a required entity or returned response use a field key wrapped in curly braces such as `{sku}`.

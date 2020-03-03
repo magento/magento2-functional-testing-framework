@@ -11,6 +11,7 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHan
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Filter\FilterInterface;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
@@ -286,6 +287,11 @@ class TestGenerator
         /** @var TestObject[] $testObjects */
         $testObjects = $this->loadAllTestObjects($testsToIgnore);
         $cestPhpArray = [];
+        $filters = MftfApplicationConfig::getConfig()->getFilterList()->getFilters();
+        /** @var FilterInterface $filter */
+        foreach ($filters as $filter) {
+            $filter->filter($testObjects);
+        }
 
         foreach ($testObjects as $test) {
             // Do not generate test if it is an extended test and parent does not exist
@@ -711,10 +717,7 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['function'])) {
-                $function = $this->addUniquenessFunctionCall(
-                    $customActionAttributes['function'],
-                    $actionObject->getType() !== "executeInSelenium"
-                );
+                $function = $this->addUniquenessFunctionCall($customActionAttributes['function']);
                 if (in_array($actionObject->getType(), ActionObject::FUNCTION_CLOSURE_ACTIONS)) {
                     // Argument must be a closure function, not a string.
                     $function = trim($function, '"');
@@ -1040,9 +1043,6 @@ class TestGenerator
                         $parameterArray
                     );
                     break;
-                case "executeInSelenium":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $function);
-                    break;
                 case "executeJS":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
@@ -1051,7 +1051,6 @@ class TestGenerator
                         $function
                     );
                     break;
-                case "performOn":
                 case "waitForElementChange":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
@@ -2180,6 +2179,6 @@ class TestGenerator
      */
     private function hasDecimalPoint(string $outStr)
     {
-        return strpos($outStr, localeconv()['decimal_point']) === false;
+        return strpos($outStr, localeconv()['decimal_point']) !== false;
     }
 }

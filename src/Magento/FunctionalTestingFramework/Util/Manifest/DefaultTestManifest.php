@@ -86,6 +86,9 @@ class DefaultTestManifest extends BaseTestManifest
     protected function generateSuiteEntries($fileResource)
     {
         foreach ($this->getSuiteConfig() as $suiteName => $tests) {
+            if (count($tests) === 0) {
+                continue;
+            }
             $line = "-g {$suiteName}";
             fwrite($fileResource, $line . PHP_EOL);
         }

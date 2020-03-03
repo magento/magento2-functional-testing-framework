@@ -1,6 +1,5 @@
 # Locator functions
 
-
 ## Define Locator::functions in elements
 
  Codeception has a set of very useful [Locator functions][] that may be used by elements inside a [section][].

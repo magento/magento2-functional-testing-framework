@@ -2,11 +2,11 @@
 
 <div class="bs-callout bs-callout-info" markdown="1">
 [Find your MFTF version][] of the MFTF.
-The latest Magento 2.3.x release supports MFTF 2.4.5.
+The latest Magento 2.3.x release supports MFTF 2.5.3.
 The latest Magento 2.2.x release supports MFTF 2.4.5.
 </div>
 
-## Prepare environment  {#prepare-environment}
+## Prepare environment {#prepare-environment}
 
 Make sure that you have the following software installed and configured on your development environment:
 
@@ -53,11 +53,11 @@ Install the Magento application.
 composer install
 ```
 
-## Prepare Magento  {#prepare-magento}
+## Prepare Magento {#prepare-magento}
 
 Configure the following settings in Magento as described below.
 
-### WYSIWYG settings    {#wysiwyg-settings}
+### WYSIWYG settings {#wysiwyg-settings}
 
 A Selenium web driver cannot enter data to fields with WYSIWYG.
 
@@ -72,6 +72,12 @@ or via command line:
 
 ```bash
 bin/magento config:set cms/wysiwyg/enabled disabled
+```
+
+Clean the cache after changing the configuration values:
+
+```bash
+bin/magento cache:clean config full_page
 ```
 
 <div class="bs-callout bs-callout-tip">
@@ -97,15 +103,21 @@ bin/magento config:set admin/security/admin_account_sharing 1
 bin/magento config:set admin/security/use_form_key 0
 ```
 
+Clean the cache after changing the configuration values:
+
+```bash
+bin/magento cache:clean config full_page
+```
+
 ### Webserver configuration {#web-server-configuration}
 
 The MFTF does not support executing CLI commands if your web server points to `<MAGE_ROOT_DIR>/pub` directory as recommended in the [Installation Guide][Installation Guide docroot]. For the MFTF to execute the CLI commands, the web server must point to the Magento root directory.
 
 ### Nginx settings {#nginx-settings}
 
-If Nginx Web server is used on your development environment then **Use Web Server Rewrites** setting in **Stores** > Settings > **Configuration** > **Web** > **Search Engine Optimization** must be set to **Yes**.
+If the Nginx Web server is used on your development environment, then **Use Web Server Rewrites** setting in **Stores** > Settings > **Configuration** > **General** > **Web** > **Search Engine Optimization** must be set to **Yes**.
 
-To be able to run Magento command line commands in tests add the following location block to Nginx configuration file:
+To be able to run Magento command line commands in tests, add the following location block to the Nginx configuration file in the Magento root directory:
 
 ```conf
 location ~* ^/dev/tests/acceptance/utils($|/) {
