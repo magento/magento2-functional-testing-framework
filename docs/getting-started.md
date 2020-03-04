@@ -200,7 +200,7 @@ Learn more about environmental settings in [Configuration][].
 
 ### Step 3. Enable the Magento CLI commands
 
-In the `magento2/dev/tests/acceptance` directory, run the following command to enable the MFTF to send Magento CLI commands to your Magento instance.
+In the Magento project root, run the following command to enable the MFTF to send Magento CLI commands to your Magento instance.
 
  ```bash
 cp dev/tests/acceptance/.htaccess.sample dev/tests/acceptance/.htaccess
