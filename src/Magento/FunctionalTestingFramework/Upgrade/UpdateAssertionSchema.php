@@ -16,20 +16,6 @@ use Symfony\Component\Finder\Finder;
  */
 class UpdateAssertionSchema implements UpgradeInterface
 {
-    const OLD_ASSERTION_ATTRIBUTES = ["expected", "expectedType", "actual", "actualType"];
-
-    /**
-     * Current file being inspected, for error messaging
-     * @var string
-     */
-    private $currentFile;
-
-    /**
-     * Potential errors reported during replacement.
-     * @var array
-     */
-    private $errors = [];
-
     /**
      * Upgrades all test xml files, changing as many <assert> actions to be nested as possible
      * WILL NOT CATCH cases where style is a mix of old and new
@@ -46,10 +32,10 @@ class UpdateAssertionSchema implements UpgradeInterface
         $fileSystem = new Filesystem();
         $testsUpdated = 0;
         foreach ($finder->files() as $file) {
-            $this->currentFile = $file->getFilename();
             $contents = $file->getContents();
-            // Isolate <assert ... /> but never <assert> ... </assert>
-            preg_match_all('/<assert[^>]*\/>/', $contents, $potentialAssertions);
+            // Isolate <assert ... /> but never <assert> ... </assert>, stops after finding first />
+//            preg_match_all('/<assert[^>]*\/>/', $contents, $potentialAssertions);
+            preg_match_all('/<assert.*\/>/', $contents, $potentialAssertions);
             $newAssertions = [];
             $index = 0;
             if (empty($potentialAssertions[0])) {
@@ -66,23 +52,7 @@ class UpdateAssertionSchema implements UpgradeInterface
             $testsUpdated++;
         }
 
-        return ("Assertion Syntax updated in {$testsUpdated} file(s).\n" . implode("\n\t", $this->errors));
-    }
-
-    /**
-     * Detects present of attributes in file
-     *
-     * @param string $file
-     * @return boolean
-     */
-    private function detectOldAttributes($file)
-    {
-        foreach (self::OLD_ASSERTION_ATTRIBUTES as $OLD_ASSERTION_ATTRIBUTE) {
-            if (strpos($file->getContents(), $OLD_ASSERTION_ATTRIBUTE) !== false) {
-                return true;
-            }
-        }
-        return false;
+        return ("Assertion Syntax updated in {$testsUpdated} file(s).\n");
     }
 
     /**
@@ -91,15 +61,19 @@ class UpdateAssertionSchema implements UpgradeInterface
      * @param string $assertion
      * @return string
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     private function convertOldAssertionToNew($assertion)
     {
         // <assertSomething => assertSomething
         $assertType = ltrim(explode(' ', $assertion)[0], '<');
 
-        // regex to grab values
-        $grabValueRegex = '/(stepKey|actual|actualType|expected|expectedType|delta|message|selector|attribute|expectedValue|before|after|remove)=(\'[^\']*\'|"[^"]*")/';
-        // Make 3 arrays in $grabbedParts:
+        // regex to all attribute=>value pairs
+        $allAttributes = "stepKey|actual|actualType|expected|expectedType|expectedValue|";
+        $allAttributes .= "delta|message|selector|attribute|before|after|remove";
+        $grabValueRegex = '/('. $allAttributes .')=(\'[^\']*\'|"[^"]*")/';
+
+        // Makes 3 arrays in $grabbedParts:
         // 0 contains stepKey="value"
         // 1 contains stepKey
         // 2 contains value
@@ -109,27 +83,33 @@ class UpdateAssertionSchema implements UpgradeInterface
             $sortedParts[$grabbedParts[1][$i]] = $grabbedParts[2][$i];
         }
 
-        // Build new String, trim ' and "
+        // Begin trimming values and adding back into new string
         $trimmedParts = [];
         $newString = "<$assertType";
         $subElements = ["actual" => [], "expected" => []];
         foreach ($sortedParts as $type => $value) {
+            // If attribute="'value'", elseif attribute='"value"', new nested format will break if we leave these in
             if (strpos($value, '"') === 0) {
                 $value = rtrim(ltrim($value, '"'), '"');
-            } elseif(strpos($value, "'") === 0) {
+            } elseif (strpos($value, "'") === 0) {
                 $value = rtrim(ltrim($value, "'"), "'");
             }
-            // If value is empty string, trim again
+            // If value is empty string (" " or ' '), trim again to become empty
             if (str_replace(" ", "", $value) == "''") {
                 $value = "";
             } elseif (str_replace(" ", "", $value) == '""') {
                 $value = "";
             }
+
+            // Value is ready for storage/reapply
             $trimmedParts[$type] = $value;
             if (in_array($type, ["stepKey", "delta", "message", "before", "after", "remove"])) {
+                // Add back as attribute safely
                 $newString .= " $type=\"$value\"";
                 continue;
             }
+
+            // Store in subtype for child element creation
             if ($type == "actual") {
                 $subElements["actual"]["value"] = $value;
             } elseif ($type == "actualType") {
@@ -141,21 +121,28 @@ class UpdateAssertionSchema implements UpgradeInterface
             }
         }
         $newString .= ">\n";
-        // Set type to const if it's absent
-        if (isset($subElements["actual"]['value']) && !isset($subElements["actual"]['type'])) {
-            $subElements["actual"]['type'] = "const";
-        }
-        if (isset($subElements["expected"]['value']) && !isset($subElements["expected"]['type'])) {
-            $subElements["expected"]['type'] = "const";
-        }
-        // Massage subElements with data for edge case
+
+        // Assert type is very edge-cased, completely different schema
         if ($assertType == 'assertElementContainsAttribute') {
-            // Assert type is very edge-cased, completely different schema
+            // assertElementContainsAttribute type defaulted to string if not present
+            if (!isset($subElements["expected"]['type'])) {
+                $subElements["expected"]['type'] = "string";
+            }
             $value = $subElements['expected']['value'] ?? "";
+            $type = $subElements["expected"]['type'];
             $selector = $trimmedParts['selector'];
             $attribute = $trimmedParts['attribute'];
-            $newString .= "\t\t\t<expectedResult selector=\"$selector\" attribute=\"$attribute\">$value</expectedResult>\n";
+            // @codingStandardsIgnoreStart
+            $newString .= "\t\t\t<expectedResult selector=\"$selector\" attribute=\"$attribute\" type=\"$type\">$value</expectedResult>\n";
+            // @codingStandardsIgnoreEnd
         } else {
+            // Set type to const if it's absent, old default
+            if (isset($subElements["actual"]['value']) && !isset($subElements["actual"]['type'])) {
+                $subElements["actual"]['type'] = "const";
+            }
+            if (isset($subElements["expected"]['value']) && !isset($subElements["expected"]['type'])) {
+                $subElements["expected"]['type'] = "const";
+            }
             foreach ($subElements as $type => $subElement) {
                 if (empty($subElement)) {
                     continue;

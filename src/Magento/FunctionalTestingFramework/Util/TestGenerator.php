@@ -1237,7 +1237,7 @@ class TestGenerator
                         $actionObject,
                         $selector,
                         $this->wrapWithDoubleQuotes($attribute),
-                        $this->wrapWithDoubleQuotes($assertExpected)
+                        $assertExpected
                     );
                     break;
                 case "assertEmpty":
