@@ -24,8 +24,6 @@ use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
  */
 class ActionObjectTest extends MagentoTestCase
 {
-    const STUB_PAGE_URL_WITH_NO_ATTRIBUTE = '{{PageObject}}/some/path';
-
     /**
      * Before test functionality
      * @return void
@@ -229,17 +227,16 @@ class ActionObjectTest extends MagentoTestCase
     }
 
     /**
-     * {{PageObject}} should not be replaced and should throw an exception!
+     * {{PageObject}} should not be replaced and should elicit a warning in console
      *
      * @throws /Exception
      */
     public function testResolveUrlWithNoAttribute()
     {
-        // Given
+        // Set up mocks
         $actionObject = new ActionObject('merge123', 'amOnPage', [
-            'url' => self::STUB_PAGE_URL_WITH_NO_ATTRIBUTE
+            'url' => '{{PageObject}}'
         ]);
-
         $pageObject = new PageObject('PageObject', '/replacement/url.html', 'Test', [], false, "test");
         $pageObjectList = ["PageObject" => $pageObject];
         $instance = AspectMock::double(
@@ -248,14 +245,20 @@ class ActionObjectTest extends MagentoTestCase
         )->make(); // bypass the private constructor
         AspectMock::double(PageObjectHandler::class, ['getInstance' => $instance]);
 
-        // Expect
-        $this->expectExceptionMessage('Can not resolve replacements: "{{PageObject}}"');
-        $expected = [
-            'url' => self::STUB_PAGE_URL_WITH_NO_ATTRIBUTE
-        ];
-
-        // When
+        // Call the method under test
         $actionObject->resolveReferences();
+
+        // Expect this warning to get generated
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            "warning",
+            "page url attribute not found and is required",
+            ['action' => $actionObject->getType(), 'url' => '{{PageObject}}', 'stepKey' => $actionObject->getStepKey()]
+        );
+
+        // Verify
+        $expected = [
+            'url' => '{{PageObject}}'
+        ];
         $this->assertEquals($expected, $actionObject->getCustomActionAttributes());
     }
 
