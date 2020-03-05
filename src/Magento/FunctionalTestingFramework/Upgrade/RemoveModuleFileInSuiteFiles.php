@@ -48,6 +48,13 @@ class RemoveModuleFileInSuiteFiles implements UpgradeInterface
     private $testsUpdated = 0;
 
     /**
+     * Indicate if a match and replace has happened
+     *
+     * @var boolean
+     */
+    private $replaced = false;
+
+    /**
      * Scan all suite xml files, remove <module file="".../> node, and print update message
      *
      * @param InputInterface  $input
@@ -82,7 +89,12 @@ class RemoveModuleFileInSuiteFiles implements UpgradeInterface
         foreach ($xmlFiles as $file) {
             $contents = $file->getContents();
             $filePath = $file->getRealPath();
-            file_put_contents($filePath, $this->removeModuleFileAttributeInSuite($contents, $filePath));
+            $this->replaced = false;
+            $contents = $this->removeModuleFileAttributeInSuite($contents, $filePath);
+            if ($this->replaced) {
+                file_put_contents($filePath, $contents);
+                $this->testsUpdated++;
+            }
         }
     }
 
@@ -112,9 +124,9 @@ class RemoveModuleFileInSuiteFiles implements UpgradeInterface
                     . '"' . trim($matches[0]) . '"' . PHP_EOL
                     . 'is commented out from file: ' . $file . PHP_EOL
                 );
-                $this->testsUpdated += 1;
                 $result = str_replace('<module', '<!--module', $matches[0]);
                 $result = str_replace('>', '--> <!-- Please replace with <test name="" -->', $result);
+                $this->replaced = true;
                 return $result;
             },
             $contents
