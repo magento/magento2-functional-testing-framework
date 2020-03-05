@@ -113,7 +113,7 @@ Use a lower case first letter for:
 ## Page object
 
 1. One `<page>` tag is allowed per page XML file.
-2. Use [parameterized selectors] for constructing a selector when test specific or runtime generated information is needed.
+2. Use [parameterized selectors] for constructing a selector when test-specific or runtime-generated information is needed.
 Do not use them for static elements.
 
 <span class="color:red">

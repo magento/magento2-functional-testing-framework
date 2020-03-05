@@ -28,7 +28,7 @@ vendor/bin/mftf build:project
 vendor/bin/mftf build:project --upgrade
 ```
 
-Upgrades the all installed MFTF tests after the MFTF major upgrade.
+Upgrades all installed MFTF tests after a major MFTF upgrade.
 
 ### Generate all tests
 
@@ -506,8 +506,8 @@ vendor/bin/mftf static-checks testDependencies actionGroupArguments
     
 ### `upgrade:tests`
 
-When path argument is specified, this command will apply all the MFTF major version upgrade scripts to test components in the given path (`test.xml`, `data.xml`, etc);
-otherwise it will apply all the MFTF major version upgrade scripts to all installed test components.
+When the path argument is specified, this command applies all the major version MFTF upgrade scripts to the test components in the given path (test.xml, data.xml, etc).
+Otherwise, it will apply all the major version MFTF upgrade scripts to all installed test components.
 
 #### Usage
 
@@ -520,7 +520,7 @@ The command searches recursively for any `*.xml` files to upgrade.
 
 #### Examples
 
-To upgrade all installed MFTF tests
+To upgrade all installed MFTF tests:
 
 ```bash
 vendor/bin/mftf upgrade:tests
