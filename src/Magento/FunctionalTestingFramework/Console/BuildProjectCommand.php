@@ -107,11 +107,12 @@ class BuildProjectCommand extends Command
             );
         }
 
-        if ($input->getOption('upgrade')) {
+        // Temporary enable upgrade at build time for testing
+        //if ($input->getOption('upgrade')) {
             $upgradeCommand = new UpgradeTestsCommand();
             $upgradeOptions = new ArrayInput([]);
             $upgradeCommand->run($upgradeOptions, $output);
-        }
+        //}
     }
 
     /**
