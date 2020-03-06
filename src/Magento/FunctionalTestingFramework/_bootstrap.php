@@ -66,7 +66,7 @@ defined('MAGENTO_BP') || define('MAGENTO_BP', realpath(PROJECT_ROOT));
 // define TEST_PATH and TEST_MODULE_PATH
 defined('TESTS_BP') || define('TESTS_BP', realpath(MAGENTO_BP . DIRECTORY_SEPARATOR . 'dev/tests/acceptance'));
 
-$RELATIVE_TESTS_MODULE_PATH = '/tests/functional/Magento/FunctionalTest';
+$RELATIVE_TESTS_MODULE_PATH = '/tests/functional/Magento';
 defined('TESTS_MODULE_PATH') || define(
     'TESTS_MODULE_PATH',
     realpath(TESTS_BP . $RELATIVE_TESTS_MODULE_PATH)
