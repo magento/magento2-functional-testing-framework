@@ -97,13 +97,20 @@ class SplitMultipleEntitiesFiles implements UpgradeInterface
     {
         foreach ($xmlFiles as $file) {
             $contents = $file->getContents();
-            $entityContents = $this->getEntityContents($contents, $type);
-            if (count($entityContents) > 1) {
+            $domDocument = new \DOMDocument();
+            $domDocument->loadXML($contents);
+            $entities = $domDocument->getElementsByTagName(lcfirst($type));
+
+            if ($entities->length > 1) {
                 $filename = $file->getRealPath();
                 if ($this->output->isVerbose()) {
                     $this->output->writeln('Processing file:' . $filename);
                 }
-                foreach ($entityContents as $entityName => $entityContent) {
+                foreach ($entities as $entity) {
+                    /** @var \DOMElement $entity*/
+                    $entityName = $entity->getAttribute('name');
+                    $entityContent = $entity->ownerDocument->saveXML($entity);
+
                     $dir = dirname($file);
                     $dir .= DIRECTORY_SEPARATOR . ucfirst(basename($file, '.xml'));
                     $splitFileName = $this->formatName($entityName, $type);
@@ -128,50 +135,6 @@ class SplitMultipleEntitiesFiles implements UpgradeInterface
         }
     }
 
-    /**
-     * Parse contents and return array of single entity content according to entity type
-     *
-     * @param string $contents
-     * @param string $type
-     * @return array
-     */
-    private function getEntityContents($contents, $type)
-    {
-        $nonEmptyTag = '/[\S\s]+\n(?<entity>[\s]*<' . lcfirst($type)
-            . '[^\<\>]+name[\s]*=[\s]*"(?<name>[^\"\'\<\>\&]+)"[^\<\>]*>[\S\s]+<\/'
-            . lcfirst($type) . '[\s]*>)+[\S\s]+/';
-        $entityContents = $this->scanForPattern($contents, $type, $nonEmptyTag);
-
-        $emptyTag = '/[\S\s]+\n(?<entity>[\s]*<' . lcfirst($type)
-            . '[^\<\>]+name[\s]*=[\s]*"(?<name>[^\"\'\<\>\&]+)"[^\<\>]*\/>)/';
-        $entityContents = array_merge($entityContents, $this->scanForPattern($contents, $type, $emptyTag));
-
-        return $entityContents;
-    }
-
-    /**
-     * Scan contents to match given pattern
-     *
-     * @param string $contents
-     * @param string $type
-     * @param string $pattern
-     * @return array
-     */
-    private function scanForPattern($contents, $type, $pattern)
-    {
-        preg_match($pattern, $contents, $matches);
-        if (isset($matches['entity']) && isset($matches['name'])) {
-            $contents = str_replace($matches['entity'], '', $contents);
-            $entityContents[trim($matches['name'])] = $matches['entity'];
-            $restEntityContents = $this->scanForPattern($contents, $type, $pattern);
-            if (!empty($restEntityContents)) {
-                $entityContents = array_merge($entityContents, $restEntityContents);
-            }
-            return $entityContents;
-        } else {
-            return [];
-        }
-    }
 
     /**
      * Create file with contents and create dir if needed
@@ -198,7 +161,7 @@ class SplitMultipleEntitiesFiles implements UpgradeInterface
             . '<' . lcfirst($type) . 's '
             . self::XML_NAMESPACE
             . self::XML_SCHEMA_LOCATION . $urn . '">' . PHP_EOL
-            . $contents . PHP_EOL
+            . '    ' . $contents . PHP_EOL
             . '</' . lcfirst($type) . 's>' . PHP_EOL;
 
         file_put_contents($fullPath, $fullContents);
