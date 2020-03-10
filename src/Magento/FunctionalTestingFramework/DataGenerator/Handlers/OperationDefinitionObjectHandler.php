@@ -12,6 +12,7 @@ use Magento\FunctionalTestingFramework\DataGenerator\Util\OperationElementExtrac
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
 
 class OperationDefinitionObjectHandler implements ObjectHandlerInterface
 {
@@ -136,7 +137,11 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
         $objectManager = ObjectManagerFactory::getObjectManager();
         $parser = $objectManager->create(OperationDefinitionParser::class);
         $parserOutput = $parser->readOperationMetadata()[OperationDefinitionObjectHandler::ENTITY_OPERATION_ROOT_TAG];
+
+        $operationNameValidator = new NameValidationUtil();
         foreach ($parserOutput as $dataDefName => $opDefArray) {
+            $operationNameValidator->validateMetadataOperationName($dataDefName);
+
             $operation = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE];
             $dataType = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE];
             $url = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_URL] ?? null;
@@ -230,6 +235,7 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
                 $deprecated
             );
         }
+        $operationNameValidator->summarize("metadata operation name");
     }
 
     /**

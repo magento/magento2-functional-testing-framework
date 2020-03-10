@@ -9,10 +9,10 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
-use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Parsers\ActionGroupDataParser;
 use Magento\FunctionalTestingFramework\Test\Util\ActionGroupObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\ObjectExtensionUtil;
+use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
 
 /**
  * Class ActionGroupObjectHandler
@@ -22,6 +22,7 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
     const BEFORE_AFTER_ERROR_MSG = "Merge Error - Steps cannot have both before and after attributes.\tTestStep='%s'";
     const ACTION_GROUP_ROOT = 'actionGroups';
     const ACTION_GROUP = 'actionGroup';
+    const ACTION_GROUP_FILENAME_ATTRIBUTE = 'filename';
 
     /**
      * Single instance of class var
@@ -110,7 +111,13 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
         $actionGroupObjectExtractor = new ActionGroupObjectExtractor();
         $neededActionGroup = $parsedActionGroups[ActionGroupObjectHandler::ACTION_GROUP_ROOT];
 
+        $actionGroupNameValidator = new NameValidationUtil();
         foreach ($neededActionGroup as $actionGroupName => $actionGroupData) {
+            if (!in_array($actionGroupName, ["nodeName", "xsi:noNamespaceSchemaLocation"])) {
+                $filename = $actionGroupData[ActionGroupObjectHandler::ACTION_GROUP_FILENAME_ATTRIBUTE];
+                $actionGroupNameValidator->validateActionGroupName($actionGroupName, $filename);
+            }
+
             if (!is_array($actionGroupData)) {
                 continue;
             }
@@ -118,6 +125,7 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
             $this->actionGroups[$actionGroupName] =
                 $actionGroupObjectExtractor->extractActionGroup($actionGroupData);
         }
+        $actionGroupNameValidator->summarize("action group name");
     }
 
     /**
