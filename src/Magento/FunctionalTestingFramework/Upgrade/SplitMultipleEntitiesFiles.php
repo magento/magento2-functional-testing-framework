@@ -107,7 +107,7 @@ class SplitMultipleEntitiesFiles implements UpgradeInterface
                     $this->output->writeln('Processing file:' . $filename);
                 }
                 foreach ($entities as $entity) {
-                    /** @var \DOMElement $entity*/
+                    /** @var \DOMElement $entity */
                     $entityName = $entity->getAttribute('name');
                     $entityContent = $entity->ownerDocument->saveXML($entity);
 
@@ -134,7 +134,6 @@ class SplitMultipleEntitiesFiles implements UpgradeInterface
             }
         }
     }
-
 
     /**
      * Create file with contents and create dir if needed
