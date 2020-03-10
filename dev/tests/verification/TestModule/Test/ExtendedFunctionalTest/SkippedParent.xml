@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="SkippedParent">
+        <annotations>
+            <severity value="CRITICAL"/>
+            <title value="PARENTSKIPPED"/>
+            <group value="Parent"/>
+            <features value="Parent"/>
+            <stories value="Parent"/>
+            <skip>
+                <issueId value="NONE"/>
+            </skip>
+        </annotations>
+        <before>
+            <amOnPage url="/beforeUrl" stepKey="beforeAmOnPageKey"/>
+        </before>
+        <after>
+            <amOnPage url="/afterUrl" stepKey="afterAmOnPageKey"/>
+        </after>
+        <comment userInput="text" stepKey="keepMe"/>
+        <comment userInput="text" stepKey="replaceMe"/>
+    </test>
+</tests>
