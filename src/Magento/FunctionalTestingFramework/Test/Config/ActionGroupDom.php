@@ -31,15 +31,23 @@ class ActionGroupDom extends Dom
 
         if ($this->checkFilenameSuffix($filename, self::ACTION_GROUP_FILE_NAME_ENDING)) {
             $actionGroupsNode = $dom->getElementsByTagName('actionGroups')[0];
-            $actionGroupNodes = $dom->getElementsByTagName('actionGroup');
 
             $this->testsValidationUtil->validateChildUniqueness(
                 $actionGroupsNode,
                 $filename,
                 null
             );
-            foreach ($actionGroupNodes as $actionGroupNode) {
+
+            // Validate single action group node per file
+            $this->singleNodePerFileValidationUtil->validateSingleNodeForTag(
+                $dom,
+                'actionGroup',
+                $filename
+            );
+
+            if ($dom->getElementsByTagName('actionGroup')->length > 0) {
                 /** @var \DOMElement $actionGroupNode */
+                $actionGroupNode = $dom->getElementsByTagName('actionGroup')[0];
                 $actionGroupNode->setAttribute(self::TEST_META_FILENAME_ATTRIBUTE, $filename);
                 $this->actionsValidationUtil->validateChildUniqueness(
                     $actionGroupNode,

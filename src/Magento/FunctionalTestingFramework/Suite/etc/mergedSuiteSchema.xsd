@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:include schemaLocation="../../Test/etc/testSchema.xsd"/>
+    <xs:element name="suites" type="suiteConfigType"/>
+    <xs:complexType name="groupSuiteOptionType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="name" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="testSuiteOptionType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="name" use="required"/>
+                <xs:attribute type="xs:boolean" name="remove" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="moduleSuiteOptionType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="name" use="optional"/>
+                <xs:attribute type="xs:boolean" name="remove" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="includeType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element type="groupSuiteOptionType" name="group" minOccurs="0"/>
+            <xs:element type="testSuiteOptionType" name="test" minOccurs="0"/>
+            <xs:element type="moduleSuiteOptionType" name="module" minOccurs="0"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="excludeType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element type="groupSuiteOptionType" name="group" minOccurs="0"/>
+            <xs:element type="testSuiteOptionType" name="test" minOccurs="0"/>
+            <xs:element type="moduleSuiteOptionType" name="module" minOccurs="0"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="suiteType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element type="includeType" name="include" maxOccurs="1"/>
+            <xs:element type="excludeType" name="exclude" maxOccurs="1"/>
+            <xs:element type="hookType" name="before" maxOccurs="1"/>
+            <xs:element type="hookType" name="after" maxOccurs="1"/>
+        </xs:choice>
+        <xs:attribute type="xs:string" name="name"/>
+        <xs:attribute type="xs:string" name="deprecated">
+            <xs:annotation>
+                <xs:documentation>
+                    Message and flag which shows that entity is deprecated.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="filename"/>
+    </xs:complexType>
+    <xs:complexType name="suiteConfigType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element type="suiteType" name="suite"/>
+        </xs:choice>
+    </xs:complexType>
+</xs:schema>
