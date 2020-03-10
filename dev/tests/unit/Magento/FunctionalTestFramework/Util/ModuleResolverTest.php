@@ -146,20 +146,6 @@ class ModuleResolverTest extends MagentoTestCase
                 'Test' . DIRECTORY_SEPARATOR .'Mftf'
             ]
         );
-        $mockResolver->verifyInvoked(
-            'globRelevantPaths',
-            [
-                $magentoBaseCodePath
-                    . DIRECTORY_SEPARATOR . "dev"
-                    . DIRECTORY_SEPARATOR . "tests"
-                    . DIRECTORY_SEPARATOR . "acceptance"
-                    . DIRECTORY_SEPARATOR . "tests"
-                    . DIRECTORY_SEPARATOR . "functional"
-                    . DIRECTORY_SEPARATOR . "Magento"
-                    . DIRECTORY_SEPARATOR . "FunctionalTest"
-                , ''
-            ]
-        );
     }
 
     /**

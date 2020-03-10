@@ -2,14 +2,14 @@
     "name": "magento/magento2-functional-testing-framework",
     "description": "Magento2 Functional Testing Framework",
     "type": "library",
-    "version": "2.6.3",
+    "version": "3.0.0",
     "license": "AGPL-3.0",
     "keywords": ["magento", "automation", "functional", "testing"],
     "config": {
         "sort-packages": true
     },
     "require": {
-        "php": "7.0.2||7.0.4||~7.0.6||~7.1.0||~7.2.0||~7.3.0",
+        "php": "~7.2.0||~7.3.0",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-openssl": "*",
