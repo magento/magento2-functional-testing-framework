@@ -506,8 +506,10 @@ vendor/bin/mftf static-checks testDependencies actionGroupArguments
     
 ### `upgrade:tests`
 
-When the path argument is specified, this command applies all the major version MFTF upgrade scripts to the test components in the given path (test.xml, data.xml, etc).
+When the path argument is specified, this `upgrade` command applies all the major version MFTF upgrade scripts to a `Test Module` in the given path.
 Otherwise, it will apply all the major version MFTF upgrade scripts to all installed test components.
+
+`Test Module` should have the directory structure of ActionGroup, Data, Metadata, Page, Section, Test, and Suite.
 
 #### Usage
 
@@ -515,7 +517,7 @@ Otherwise, it will apply all the major version MFTF upgrade scripts to all insta
 vendor/bin/mftf upgrade:tests [<path>]
 ```
 
-`<path>` is the path that contains MFTF test components that need to be upgraded.
+`<path>` is the path to a MFTF `Test Module` that needs to be upgraded.
 The command searches recursively for any `*.xml` files to upgrade.
 
 #### Examples
