@@ -420,7 +420,7 @@ class ActionObject
             $allPages = PageObjectHandler::getInstance()->getAllObjects();
             if ($replacement === $url && array_key_exists(trim($url, "{}"), $allPages)
             ) {
-                LoggingUtil::getInstance()->getLogger(ActionObject::class)->warning(
+                throw new TestReferenceException(
                     "page url attribute not found and is required",
                     ["action" => $this->type, "url" => $url, "stepKey" => $this->stepKey]
                 );

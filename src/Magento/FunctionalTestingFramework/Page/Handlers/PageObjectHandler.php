@@ -67,7 +67,8 @@ class PageObjectHandler implements ObjectHandlerInterface
 
             $module = $pageData[self::MODULE] ?? null;
             $sectionNames = array_keys($pageData[self::SECTION] ?? []);
-            $parameterized = $pageData[self::PARAMETERIZED] ?? false;
+            $urlContainsMustaches = strpos($url, "{{") !== false && strpos($url, "}}") !== false;
+            $parameterized = $pageData[self::PARAMETERIZED] ?? $urlContainsMustaches ?? false;
             $filename = $pageData[self::FILENAME] ?? null;
             $deprecated = $pageData[self::OBJ_DEPRECATED] ?? null;
 
