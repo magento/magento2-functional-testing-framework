@@ -1,5 +1,10 @@
 # Introduction to the Magento Functional Testing Framework
 
+<div class="bs-callout bs-callout-info" markdown="1">
+These are the docs for the latest MFTF release.
+To find older documentation, please refer to the `docs` folder inside you desired release in Github.
+</div>
+
 [Find your MFTF version][] of the MFTF.
 
 The Magento Functional Testing Framework (MFTF) aims to replace the [Functional Testing Framework] in future releases.
