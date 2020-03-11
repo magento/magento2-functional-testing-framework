@@ -62,7 +62,7 @@ class PageObjectHandler implements ObjectHandlerInterface
             }
 
             $filename = $pageData[self::FILENAME] ?? null;
-            $pageNameValidator->validatePageName($pageName, $filename);
+            $pageNameValidator->validateAffixes($pageName, NameValidationUtil::PAGE, $filename);
             $area = $pageData[self::AREA] ?? null;
             $url = $pageData[self::URL] ?? null;
 
@@ -85,7 +85,7 @@ class PageObjectHandler implements ObjectHandlerInterface
             $this->pageObjects[$pageName] =
                 new PageObject($pageName, $url, $module, $sectionNames, $parameterized, $area, $filename, $deprecated);
         }
-        $pageNameValidator->summarize("page name");
+        $pageNameValidator->summarize(NameValidationUtil::PAGE . " name");
     }
 
     /**

@@ -145,7 +145,7 @@ class TestObjectHandler implements ObjectHandlerInterface
         $testNameValidator = new NameValidationUtil();
         foreach ($parsedTestArray as $testName => $testData) {
             $filename = $testData[TestObjectHandler::TEST_FILENAME_ATTRIBUTE];
-            $testNameValidator->validateTestName($testName, $filename);
+            $testNameValidator->validatePascalCase($testName, NameValidationUtil::TEST_NAME, $filename);
             if (!is_array($testData)) {
                 continue;
             }
@@ -156,7 +156,7 @@ class TestObjectHandler implements ObjectHandlerInterface
             }
         }
         $exceptionCollector->throwException();
-        $testNameValidator->summarize("test name");
+        $testNameValidator->summarize(NameValidationUtil::TEST_NAME);
         $testObjectExtractor->getAnnotationExtractor()->validateStoryTitleUniqueness();
         $testObjectExtractor->getAnnotationExtractor()->validateTestCaseIdTitleUniqueness();
     }

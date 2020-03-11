@@ -14,6 +14,15 @@ class NameValidationUtil
 {
     const PHP_CLASS_REGEX_PATTERN = '/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/';
 
+    const DATA_ENTITY_NAME = "data entity name";
+    const DATA_ENTITY_KEY = "data entity key";
+    const METADATA_OPERATION_NAME = "metadata operation name";
+    const PAGE = "Page";
+    const SECTION = "Section";
+    const SECTION_ELEMENT_NAME = "section element name";
+    const ACTION_GROUP_NAME = "action group name";
+    const TEST_NAME = "test name";
+
     /**
      * The number of violations this instance has detected.
      *
@@ -70,17 +79,18 @@ class NameValidationUtil
     }
 
     /**
-     * Validates data entity names.
+     * Validates that the string is PascalCase.
      *
      * @param string $str
+     * @param string $type
      * @param string $filename
      * @throws Exception
      * @return void
      */
-    public function validateDataEntityName($str, $filename = null)
+    public function validatePascalCase($str, $type, $filename = null)
     {
         if (!ctype_upper($str[0])) {
-            $message = "The data entity name {$str} should be PascalCase with an uppercase first letter.";
+            $message = "The {$type} {$str} should be PascalCase with an uppercase first letter.";
 
             if ($filename !== null) {
                 $message .= " See file {$filename}.";
@@ -97,17 +107,18 @@ class NameValidationUtil
     }
 
     /**
-     * Validates data entity key names.
+     * Validates that the string is camelCase.
      *
      * @param string $str
+     * @param string $type
      * @param string $filename
      * @throws Exception
      * @return void
      */
-    public function validateDataEntityKey($str, $filename = null)
+    public function validateCamelCase($str, $type, $filename = null)
     {
         if (!ctype_lower($str[0])) {
-            $message = "The data entity key {$str} should be camelCase with a lowercase first letter.";
+            $message = "The {$type} {$str} should be camelCase with a lowercase first letter.";
 
             if ($filename !== null) {
                 $message .= " See file {$filename}.";
@@ -124,160 +135,22 @@ class NameValidationUtil
     }
 
     /**
-     * Validates metadata operation names.
+     * Validates that the string is of the pattern {Admin or Storefront}{Description}{Type}.
      *
      * @param string $str
+     * @param string $type
      * @param string $filename
      * @throws Exception
      * @return void
      */
-    public function validateMetadataOperationName($str, $filename = null)
-    {
-        if (!ctype_upper($str[0])) {
-            $message = "The metadata operation name {$str} should be PascalCase with an uppercase first letter.";
-
-            if ($filename !== null) {
-                $message .= " See file {$filename}.";
-            }
-
-            LoggingUtil::getInstance()->getLogger(self::class)->notification(
-                $message,
-                [],
-                false
-            );
-
-            $this->count++;
-        }
-    }
-
-    /**
-     * Validates page names.
-     *
-     * @param string $str
-     * @param string $filename
-     * @throws Exception
-     * @return void
-     */
-    public function validatePageName($str, $filename = null)
+    public function validateAffixes($str, $type, $filename = null)
     {
         $isPrefixAdmin = substr($str, 0, 5) === "Admin";
         $isPrefixStorefront = substr($str, 0, 10) === "Storefront";
-        $isSuffixPage = substr($str, -4) === "Page";
+        $isSuffixType = substr($str, -strlen($type)) === $type;
 
-        if ((!$isPrefixAdmin && !$isPrefixStorefront) || !$isSuffixPage) {
-            $message = "The page name {$str} should follow the pattern {Admin or Storefront}{Description}Page.";
-
-            if ($filename !== null) {
-                $message .= " See file {$filename}.";
-            }
-
-            LoggingUtil::getInstance()->getLogger(self::class)->notification(
-                $message,
-                [],
-                false
-            );
-
-            $this->count++;
-        }
-    }
-
-    /**
-     * Validates section names.
-     *
-     * @param string $str
-     * @param string $filename
-     * @throws Exception
-     * @return void
-     */
-    public function validateSectionName($str, $filename = null)
-    {
-        $isPrefixAdmin = substr($str, 0, 5) === "Admin";
-        $isPrefixStorefront = substr($str, 0, 10) === "Storefront";
-        $isSuffixSection = substr($str, -7) === "Section";
-
-        if ((!$isPrefixAdmin && !$isPrefixStorefront) || !$isSuffixSection) {
-            $message = "The section name {$str} should follow the pattern {Admin or Storefront}{Description}Section.";
-
-            if ($filename !== null) {
-                $message .= " See file {$filename}.";
-            }
-
-            LoggingUtil::getInstance()->getLogger(self::class)->notification(
-                $message,
-                [],
-                false
-            );
-
-            $this->count++;
-        }
-    }
-
-    /**
-     * Validates section element names.
-     *
-     * @param string $str
-     * @param string $filename
-     * @throws Exception
-     * @return void
-     */
-    public function validateElementName($str, $filename = null)
-    {
-        if (!ctype_lower($str[0])) {
-            $message = "The element name {$str} should be camelCase with a lowercase first letter.";
-
-            if ($filename !== null) {
-                $message .= " See file {$filename}.";
-            }
-
-            LoggingUtil::getInstance()->getLogger(self::class)->notification(
-                $message,
-                [],
-                false
-            );
-
-            $this->count++;
-        }
-    }
-
-    /**
-     * Validates action group names.
-     *
-     * @param string $str
-     * @param string $filename
-     * @throws Exception
-     * @return void
-     */
-    public function validateActionGroupName($str, $filename = null)
-    {
-        if (!ctype_upper($str[0])) {
-            $message = "The action group name {$str} should be PascalCase with an uppercase first letter.";
-
-            if ($filename !== null) {
-                $message .= " See file {$filename}.";
-            }
-
-            LoggingUtil::getInstance()->getLogger(self::class)->notification(
-                $message,
-                [],
-                false
-            );
-
-            $this->count++;
-        }
-    }
-
-    /**
-     * Validates test names.
-     *
-     * @param string $str
-     * @param string $filename
-     * @throws Exception
-     * @return void
-     */
-    public function validateTestName($str, $filename = null)
-    {
-        if (!ctype_upper($str[0])) {
-            $message = "The test name {$str} should be PascalCase with an uppercase first letter.";
+        if ((!$isPrefixAdmin && !$isPrefixStorefront) || !$isSuffixType) {
+            $message = "The {$type} name {$str} should follow the pattern {Admin or Storefront}{Description}{$type}.";
 
             if ($filename !== null) {
                 $message .= " See file {$filename}.";

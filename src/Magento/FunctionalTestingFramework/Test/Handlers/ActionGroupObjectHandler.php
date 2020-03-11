@@ -115,7 +115,11 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
         foreach ($neededActionGroup as $actionGroupName => $actionGroupData) {
             if (!in_array($actionGroupName, ["nodeName", "xsi:noNamespaceSchemaLocation"])) {
                 $filename = $actionGroupData[ActionGroupObjectHandler::ACTION_GROUP_FILENAME_ATTRIBUTE];
-                $actionGroupNameValidator->validateActionGroupName($actionGroupName, $filename);
+                $actionGroupNameValidator->validatePascalCase(
+                    $actionGroupName,
+                    NameValidationUtil::ACTION_GROUP_NAME,
+                    $filename
+                );
             }
 
             if (!is_array($actionGroupData)) {
@@ -125,7 +129,7 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
             $this->actionGroups[$actionGroupName] =
                 $actionGroupObjectExtractor->extractActionGroup($actionGroupData);
         }
-        $actionGroupNameValidator->summarize("action group name");
+        $actionGroupNameValidator->summarize(NameValidationUtil::ACTION_GROUP_NAME);
     }
 
     /**

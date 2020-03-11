@@ -150,7 +150,11 @@ class DataObjectHandler implements ObjectHandlerInterface
             }
 
             $filename = $rawEntity[self::_FILENAME] ?? null;
-            $this->entityNameValidator->validateDataEntityName($name, $filename);
+            $this->entityNameValidator->validatePascalCase(
+                $name,
+                NameValidationUtil::DATA_ENTITY_NAME,
+                $filename
+            );
             $type = $rawEntity[self::_TYPE] ?? null;
             $data = [];
             $deprecated = null;
@@ -206,8 +210,8 @@ class DataObjectHandler implements ObjectHandlerInterface
 
             $entityDataObjects[$entityDataObject->getName()] = $entityDataObject;
         }
-        $this->entityNameValidator->summarize("data entity name");
-        $this->entityKeyValidator->summarize("data entity key");
+        $this->entityNameValidator->summarize(NameValidationUtil::DATA_ENTITY_NAME);
+        $this->entityKeyValidator->summarize(NameValidationUtil::DATA_ENTITY_KEY);
         return $entityDataObjects;
     }
 
@@ -241,7 +245,11 @@ class DataObjectHandler implements ObjectHandlerInterface
         foreach ($entityData[self::_DATA] as $dataElement) {
             $originalDataElementKey = $dataElement[self::_KEY];
             $filename = $entityData[self::_FILENAME] ?? null;
-            $this->entityKeyValidator->validateDataEntityKey($originalDataElementKey, $filename);
+            $this->entityKeyValidator->validateCamelCase(
+                $originalDataElementKey,
+                NameValidationUtil::DATA_ENTITY_KEY,
+                $filename
+            );
             $dataElementKey = strtolower($originalDataElementKey);
             $dataElementValue = $dataElement[self::_VALUE] ?? "";
             $dataValues[$dataElementKey] = $dataElementValue;

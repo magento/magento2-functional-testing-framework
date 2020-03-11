@@ -68,7 +68,7 @@ class SectionObjectHandler implements ObjectHandlerInterface
             }
 
             $filename = $sectionData[self::FILENAME] ?? null;
-            $sectionNameValidator->validateSectionName($sectionName, $filename);
+            $sectionNameValidator->validateAffixes($sectionName, NameValidationUtil::SECTION, $filename);
 
             try {
                 foreach ($sectionData[SectionObjectHandler::ELEMENT] as $elementName => $elementData) {
@@ -76,7 +76,11 @@ class SectionObjectHandler implements ObjectHandlerInterface
                         throw new XmlException(sprintf(self::ELEMENT_NAME_ERROR_MSG, $elementName, $sectionName));
                     }
 
-                    $elementNameValidator->validateElementName($elementName, $filename);
+                    $elementNameValidator->validateCamelCase(
+                        $elementName,
+                        NameValidationUtil::SECTION_ELEMENT_NAME,
+                        $filename
+                    );
                     $elementType = $elementData[SectionObjectHandler::TYPE] ?? null;
                     $elementSelector = $elementData[SectionObjectHandler::SELECTOR] ?? null;
                     $elementLocatorFunc = $elementData[SectionObjectHandler::LOCATOR_FUNCTION] ?? null;
@@ -119,8 +123,8 @@ class SectionObjectHandler implements ObjectHandlerInterface
                 $sectionDeprecated
             );
         }
-        $sectionNameValidator->summarize("section name");
-        $elementNameValidator->summarize("element name");
+        $sectionNameValidator->summarize(NameValidationUtil::SECTION . " name");
+        $elementNameValidator->summarize(NameValidationUtil::SECTION_ELEMENT_NAME);
     }
 
     /**

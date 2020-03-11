@@ -140,7 +140,10 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
 
         $operationNameValidator = new NameValidationUtil();
         foreach ($parserOutput as $dataDefName => $opDefArray) {
-            $operationNameValidator->validateMetadataOperationName($dataDefName);
+            $operationNameValidator->validatePascalCase(
+                $dataDefName,
+                NameValidationUtil::METADATA_OPERATION_NAME
+            );
 
             $operation = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE];
             $dataType = $opDefArray[OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE];
@@ -235,7 +238,7 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
                 $deprecated
             );
         }
-        $operationNameValidator->summarize("metadata operation name");
+        $operationNameValidator->summarize(NameValidationUtil::METADATA_OPERATION_NAME);
     }
 
     /**
