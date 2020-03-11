@@ -10,6 +10,7 @@ use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
 use Magento\FunctionalTestingFramework\XmlParser\PageParser;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 
@@ -54,10 +55,14 @@ class PageObjectHandler implements ObjectHandlerInterface
             return;
         }
 
+        $pageNameValidator = new NameValidationUtil();
         foreach ($parserOutput as $pageName => $pageData) {
             if (preg_match('/[^a-zA-Z0-9_]/', $pageName)) {
                 throw new XmlException(sprintf(self::NAME_BLACKLIST_ERROR_MSG, $pageName));
             }
+
+            $filename = $pageData[self::FILENAME] ?? null;
+            $pageNameValidator->validateAffixes($pageName, NameValidationUtil::PAGE, $filename);
             $area = $pageData[self::AREA] ?? null;
             $url = $pageData[self::URL] ?? null;
 
@@ -82,6 +87,7 @@ class PageObjectHandler implements ObjectHandlerInterface
             $this->pageObjects[$pageName] =
                 new PageObject($pageName, $url, $module, $sectionNames, $parameterized, $area, $filename, $deprecated);
         }
+        $pageNameValidator->summarize(NameValidationUtil::PAGE . " name");
     }
 
     /**
