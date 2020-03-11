@@ -1,5 +1,15 @@
 Magento Functional Testing Framework Changelog
 ================================================
+3.0.0
+-----
+### Upgrade Instructions
+* Run `bin/mftf reset --hard` to remove old generated configurations.
+* Run `bin/mftf upgrade:tests`. [See command page for details](./docs/commands/mftf.md#upgradetests).
+* After running the above command, you will need to manually update some tests:
+    * Remove all occurrences of `<executeInSelenium>` and `<performOn>`
+* Lastly, try to generate and all tests. Tests should all be generating as a result of the upgrades.
+    If not, the most likely issue will be changed XML schema. You will need to check error messaging and search your codebase for the attributes listed.
+
 2.6.3
 -----
 
