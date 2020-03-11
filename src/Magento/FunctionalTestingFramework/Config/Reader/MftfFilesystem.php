@@ -42,7 +42,7 @@ class MftfFilesystem extends \Magento\FunctionalTestingFramework\Config\Reader\F
                     $configMerger->merge($content, $fileList->getFilename(), $exceptionCollector);
                 }
                  // run per file validation with generate:tests -d
-                if ($debugLevel === MftfApplicationConfig::LEVEL_DEVELOPER) {
+                if (strcasecmp($debugLevel, MftfApplicationConfig::LEVEL_DEVELOPER) == 0) {
                     $this->validateSchema($configMerger, $fileList->getFilename());
                 }
             } catch (\Magento\FunctionalTestingFramework\Config\Dom\ValidationException $e) {
@@ -52,7 +52,7 @@ class MftfFilesystem extends \Magento\FunctionalTestingFramework\Config\Reader\F
         $exceptionCollector->throwException();
 
          //run validation on merged file with generate:tests
-        if ($debugLevel === MftfApplicationConfig::LEVEL_DEFAULT) {
+        if (strcasecmp($debugLevel, MftfApplicationConfig::LEVEL_DEFAULT) == 0) {
             $this->validateSchema($configMerger);
         }
 

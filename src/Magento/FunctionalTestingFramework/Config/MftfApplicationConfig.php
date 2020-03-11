@@ -23,8 +23,7 @@ class MftfApplicationConfig
      */
     const LEVEL_DEFAULT = "default";
     const LEVEL_DEVELOPER = "developer";
-    const LEVEL_NONE = "none";
-    const MFTF_DEBUG_LEVEL = [self::LEVEL_DEFAULT, self::LEVEL_DEVELOPER, self::LEVEL_NONE];
+    const MFTF_DEBUG_LEVEL = [self::LEVEL_DEFAULT, self::LEVEL_DEVELOPER];
 
     /**
      * Contains object with test filters.
@@ -89,7 +88,7 @@ class MftfApplicationConfig
         $forceGenerate = false,
         $phase = self::EXECUTION_PHASE,
         $verboseEnabled = null,
-        $debugLevel = self::LEVEL_NONE,
+        $debugLevel = self::LEVEL_DEFAULT,
         $allowSkipped = false,
         $filters = []
     ) {
@@ -101,14 +100,17 @@ class MftfApplicationConfig
 
         $this->phase = $phase;
         $this->verboseEnabled = $verboseEnabled;
-        switch ($debugLevel) {
+        if (isset($debugLevel) && !in_array(strtolower($debugLevel), self::MFTF_DEBUG_LEVEL)) {
+            throw new TestFrameworkException("{$debugLevel} is not a debug level. Use 'DEFAULT' or 'DEVELOPER'");
+        }
+        switch (strtolower($debugLevel)) {
             case self::LEVEL_DEVELOPER:
             case self::LEVEL_DEFAULT:
-            case self::LEVEL_NONE:
                 $this->debugLevel = $debugLevel;
                 break;
-            default:
+            case null:
                 $this->debugLevel = self::LEVEL_DEVELOPER;
+                break;
         }
         $this->allowSkipped = $allowSkipped;
         $this->filterList = new FilterList($filters);
@@ -131,7 +133,7 @@ class MftfApplicationConfig
         $forceGenerate = false,
         $phase = self::EXECUTION_PHASE,
         $verboseEnabled = null,
-        $debugLevel = self::LEVEL_NONE,
+        $debugLevel = self::LEVEL_DEFAULT,
         $allowSkipped = false,
         $filters = []
     ) {
