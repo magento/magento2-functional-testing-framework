@@ -49,22 +49,6 @@
     </xs:group>
 
     <!-- Data Attributes -->
-    <xs:attribute type="xs:string" name="expected">
-        <xs:annotation>
-            <xs:documentation>
-                Assertion's Expected value. Cast by expectedType.
-            </xs:documentation>
-        </xs:annotation>
-    </xs:attribute>
-
-    <xs:attribute type="xs:string" name="actual">
-        <xs:annotation>
-            <xs:documentation>
-                Assertion's Actual value. Cast by actualType.
-            </xs:documentation>
-        </xs:annotation>
-    </xs:attribute>
-
     <xs:attribute type="xs:string" name="message">
         <xs:annotation>
             <xs:documentation>
@@ -112,13 +96,6 @@
         <xs:choice maxOccurs="unbounded">
             <xs:element name="expectedResult" type="expectedElementContainsType" minOccurs="0"/>
         </xs:choice>
-        <xs:attribute type="xs:string" name="expectedValue">
-            <xs:annotation>
-                <xs:documentation>
-                    Assertion's Expected value. Cast by expectedType.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
 

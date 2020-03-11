@@ -34,7 +34,6 @@ class UpdateAssertionSchema implements UpgradeInterface
         foreach ($finder->files() as $file) {
             $contents = $file->getContents();
             // Isolate <assert ... /> but never <assert> ... </assert>, stops after finding first />
-//            preg_match_all('/<assert[^>]*\/>/', $contents, $potentialAssertions);
             preg_match_all('/<assert.*\/>/', $contents, $potentialAssertions);
             $newAssertions = [];
             $index = 0;
