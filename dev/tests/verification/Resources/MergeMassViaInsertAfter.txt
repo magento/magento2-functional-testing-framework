@@ -13,7 +13,7 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Description("<h3>Test files</h3>verification/TestModule/Test/BasicFunctionalTest.xml<br>verification/TestModule/Test/MergeFunctionalTest.xml<br>")
+ * @Description("<h3>Test files</h3>verification/TestModule/Test/BasicFunctionalTest/MergeMassViaInsertAfter.xml<br>verification/TestModule/Test/MergeFunctionalTest/MergeMassViaInsertAfter.xml<br>")
  */
 class MergeMassViaInsertAfterCest
 {

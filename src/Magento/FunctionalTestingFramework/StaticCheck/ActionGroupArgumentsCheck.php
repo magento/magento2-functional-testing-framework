@@ -14,6 +14,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Magento\FunctionalTestingFramework\Util\ModuleResolver;
 use Symfony\Component\Finder\Finder;
 use Exception;
+use Magento\FunctionalTestingFramework\Util\Script\ScriptUtil;
 
 /**
  * Class ActionGroupArgumentsCheck
@@ -50,24 +51,16 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
      */
     public function execute(InputInterface $input)
     {
-        MftfApplicationConfig::create(
-            true,
-            MftfApplicationConfig::UNIT_TEST_PHASE,
-            false,
-            MftfApplicationConfig::LEVEL_DEFAULT,
-            true
-        );
+        $allModules = ScriptUtil::getAllModulePaths();
 
-        $allModules = ModuleResolver::getInstance()->getModulesPath();
-
-        $actionGroupXmlFiles = StaticCheckHelper::buildFileList(
+        $actionGroupXmlFiles = ScriptUtil::getModuleXmlFilesByScope(
             $allModules,
             DIRECTORY_SEPARATOR . 'ActionGroup' . DIRECTORY_SEPARATOR
         );
 
         $this->errors = $this->findErrorsInFileSet($actionGroupXmlFiles);
 
-        $this->output = StaticCheckHelper::printErrorsToFile(
+        $this->output = ScriptUtil::printErrorsToFile(
             $this->errors,
             self::ERROR_LOG_FILENAME,
             self::ERROR_LOG_MESSAGE

@@ -190,14 +190,15 @@ class BaseGenerateCommand extends Command
     }
 
     /**
-     * Set Symfony Style for output
+     * Set Symfony IO Style
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
+     * @return void
      */
-    protected function setOutputStyle(InputInterface $input, OutputInterface $output)
+    protected function setIOStyle(InputInterface $input, OutputInterface $output)
     {
-        // For output style
+        // For IO style
         if (null === $this->ioStyle) {
             $this->ioStyle = new SymfonyStyle($input, $output);
         }

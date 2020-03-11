@@ -12,6 +12,8 @@ use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
 use Symfony\Component\HttpFoundation\Response;
+use \Magento\FunctionalTestingFramework\Util\ModuleResolver\AlphabeticSequenceSorter;
+use \Magento\FunctionalTestingFramework\Util\ModuleResolver\SequenceSorterInterface;
 
 /**
  * Class ModuleResolver, resolve module path based on enabled modules of target Magento instance.
@@ -174,9 +176,12 @@ class ModuleResolver
     private function __construct()
     {
         $objectManager = \Magento\FunctionalTestingFramework\ObjectManagerFactory::getObjectManager();
-        $this->sequenceSorter = $objectManager->get(
-            \Magento\FunctionalTestingFramework\Util\ModuleResolver\SequenceSorterInterface::class
-        );
+
+        if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::UNIT_TEST_PHASE) {
+            $this->sequenceSorter = $objectManager->get(AlphabeticSequenceSorter::class);
+        } else {
+            $this->sequenceSorter = $objectManager->get(SequenceSorterInterface::class);
+        }
     }
 
     /**

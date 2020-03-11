@@ -28,7 +28,7 @@ vendor/bin/mftf build:project
 vendor/bin/mftf build:project --upgrade
 ```
 
-Upgrades the existing MFTF tests after the MFTF major upgrade.
+Upgrades all installed MFTF tests after a major MFTF upgrade.
 
 ### Generate all tests
 
@@ -115,7 +115,7 @@ vendor/bin/mftf build:project [--upgrade] [config_param_options]
 
 | Option            | Description                                                                                                                                                                                   |
 | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `-u`, `--upgrade` | Upgrades existing MFTF tests according to requirements of the last major release. Specifying this flag upgrades only those tests in the default location. Example: `build:project --upgrade`. |
+| `-u`, `--upgrade` | Upgrades all installed MFTF tests according to requirements of the last major release. Specifying this flag upgrades only those tests in the default location. Example: `build:project --upgrade`. |
 
 You can include options to set configuration parameter values for your environment since the project build process also [sets up the environment][setup].
 
@@ -506,18 +506,25 @@ vendor/bin/mftf static-checks testDependencies actionGroupArguments
     
 ### `upgrade:tests`
 
-Applies all the MFTF major version upgrade scripts to test components in the given path (`test.xml`, `data.xml`, etc).
+When the path argument is specified, this command applies all the major version MFTF upgrade scripts to the test components in the given path (test.xml, data.xml, etc).
+Otherwise, it will apply all the major version MFTF upgrade scripts to all installed test components.
 
 #### Usage
 
 ```bash
-vendor/bin/mftf upgrade:tests <path>
+vendor/bin/mftf upgrade:tests [<path>]
 ```
 
 `<path>` is the path that contains MFTF test components that need to be upgraded.
 The command searches recursively for any `*.xml` files to upgrade.
 
 #### Examples
+
+To upgrade all installed MFTF tests:
+
+```bash
+vendor/bin/mftf upgrade:tests
+```
 
 To upgrade all test components inside modules in the `dev/tests/acceptance/tests/` directory:
 

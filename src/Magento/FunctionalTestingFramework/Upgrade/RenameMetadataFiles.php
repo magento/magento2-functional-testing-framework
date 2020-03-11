@@ -6,7 +6,9 @@
 
 namespace Magento\FunctionalTestingFramework\Upgrade;
 
+use Magento\FunctionalTestingFramework\Util\Script\ScriptUtil;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -18,22 +20,29 @@ class RenameMetadataFiles implements UpgradeInterface
     /**
      * Upgrades all test xml files
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
+     * @param OutputInterface $output
      * @return string
      */
-    public function execute(InputInterface $input)
+    public function execute(InputInterface $input, OutputInterface $output)
     {
-        $path = $input->getArgument("path");
-        $finder = new Finder();
-        $finder->files()->in($path)->name("*-meta.xml");
+        $testPaths[] = $input->getArgument('path');
+        if (empty($testPaths[0])) {
+            $testPaths = ScriptUtil::getAllModulePaths();
+        }
 
-        foreach ($finder->files() as $file) {
-            $oldFileName = $file->getFileName();
-            $newFileName = $this->convertFileName($oldFileName);
-            $oldPath = $file->getPathname();
-            $newPath = $file->getPath() . "/" . $newFileName;
-            print("Renaming " . $oldPath . " => " . $newPath . "\n");
-            rename($oldPath, $newPath);
+        foreach ($testPaths as $testsPath) {
+            $finder = new Finder();
+            $finder->files()->in($testsPath)->name("*-meta.xml");
+
+            foreach ($finder->files() as $file) {
+                $oldFileName = $file->getFileName();
+                $newFileName = $this->convertFileName($oldFileName);
+                $oldPath = $file->getPathname();
+                $newPath = $file->getPath() . "/" . $newFileName;
+                print("Renaming " . $oldPath . " => " . $newPath . "\n");
+                rename($oldPath, $newPath);
+            }
         }
 
         return "Finished renaming -meta.xml files.";
