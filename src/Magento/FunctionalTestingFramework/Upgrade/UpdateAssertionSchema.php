@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Upgrade;
 
+use Magento\FunctionalTestingFramework\Util\Script\ScriptUtil;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -27,33 +28,39 @@ class UpdateAssertionSchema implements UpgradeInterface
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $testsPath = $input->getArgument('path');
-        $finder = new Finder();
-        $finder->files()->in($testsPath)->name("*.xml");
-
-        $fileSystem = new Filesystem();
-        $testsUpdated = 0;
-        foreach ($finder->files() as $file) {
-            $contents = $file->getContents();
-            // Isolate <assert ... /> but never <assert> ... </assert>, stops after finding first />
-            preg_match_all('/<assert.*\/>/', $contents, $potentialAssertions);
-            $newAssertions = [];
-            $index = 0;
-            if (empty($potentialAssertions[0])) {
-                continue;
-            }
-            foreach ($potentialAssertions[0] as $potentialAssertion) {
-                $newAssertions[$index] = $this->convertOldAssertionToNew($potentialAssertion);
-                $index++;
-            }
-            foreach ($newAssertions as $currentIndex => $replacements) {
-                $contents = str_replace($potentialAssertions[0][$currentIndex], $replacements, $contents);
-            }
-            $fileSystem->dumpFile($file->getRealPath(), $contents);
-            $testsUpdated++;
+        $testPaths[] = $input->getArgument('path');
+        if (empty($testPaths[0])) {
+            $testPaths = ScriptUtil::getAllModulePaths();
         }
 
-        return ("Assertion Syntax updated in {$testsUpdated} file(s).\n");
+        $testsUpdated = 0;
+        foreach ($testPaths as $testsPath) {
+            $finder = new Finder();
+            $finder->files()->in($testsPath)->name("*.xml");
+
+            $fileSystem = new Filesystem();
+            foreach ($finder->files() as $file) {
+                $contents = $file->getContents();
+                // Isolate <assert ... /> but never <assert> ... </assert>, stops after finding first />
+                preg_match_all('/<assert.*\/>/', $contents, $potentialAssertions);
+                $newAssertions = [];
+                $index = 0;
+                if (empty($potentialAssertions[0])) {
+                    continue;
+                }
+                foreach ($potentialAssertions[0] as $potentialAssertion) {
+                    $newAssertions[$index] = $this->convertOldAssertionToNew($potentialAssertion);
+                    $index++;
+                }
+                foreach ($newAssertions as $currentIndex => $replacements) {
+                    $contents = str_replace($potentialAssertions[0][$currentIndex], $replacements, $contents);
+                }
+                $fileSystem->dumpFile($file->getRealPath(), $contents);
+                $testsUpdated++;
+            }
+        }
+
+        return ("Assertion Syntax updated in {$testsUpdated} file(s).");
     }
 
     /**
