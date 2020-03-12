@@ -21,7 +21,7 @@ class UpdateAssertionSchema implements UpgradeInterface
      * Upgrades all test xml files, changing as many <assert> actions to be nested as possible
      * WILL NOT CATCH cases where style is a mix of old and new
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      * @return string
      */
