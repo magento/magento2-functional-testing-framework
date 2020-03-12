@@ -89,14 +89,6 @@ vendor/bin/mftf run:failed
 This command cleans up the previously generated tests; generates and runs the tests listed in `dev/tests/acceptance/tests/_output/failed`.
 For more details about `failed`, refer to [Reporting][].
 
-### Generate documentation for action groups
-
-```bash
-vendor/bin/mftf generate:docs
-```
-
-This command generates documentation for action groups.
-
 ## Reference
 
 ### `build:project`
@@ -268,32 +260,6 @@ vendor/bin/mftf generate:urn-catalog [--force] [<path to the directory with misc
 
 ```bash
 vendor/bin/mftf generate:urn-catalog .idea/
-```
-
-### `generate:docs`
-
-#### Description
-
-Generates documentation that lists all action groups available in the codebase.
-The default path is `<projectRoot>/dev/tests/docs/documentation.md`.
-
-#### Usage
-
-```bash
-vendor/bin/mftf generate:docs [--clean] [--output=/path/to/alternate/dir]
-```
-
-#### Options
-
-| Option        | Description                                                           |
-| ------------- | --------------------------------------------------------------------- |
-| `-c, --clean` | Overwrites previously existing documentation |
-| `-o, --output` | Changes the default output directory to a user specified directory |
-
-#### Example
-
-```bash
-vendor/bin/mftf generate:docs --clean
 ```
 
 ### `reset`
@@ -506,8 +472,10 @@ vendor/bin/mftf static-checks testDependencies actionGroupArguments
     
 ### `upgrade:tests`
 
-When the path argument is specified, this command applies all the major version MFTF upgrade scripts to the test components in the given path (test.xml, data.xml, etc).
+When the path argument is specified, this `upgrade` command applies all the major version MFTF upgrade scripts to a `Test Module` in the given path.
 Otherwise, it will apply all the major version MFTF upgrade scripts to all installed test components.
+
+`Test Module` should have the directory structure of ActionGroup, Data, Metadata, Page, Section, Test, and Suite.
 
 #### Usage
 
@@ -515,7 +483,7 @@ Otherwise, it will apply all the major version MFTF upgrade scripts to all insta
 vendor/bin/mftf upgrade:tests [<path>]
 ```
 
-`<path>` is the path that contains MFTF test components that need to be upgraded.
+`<path>` is the path to a MFTF `Test Module` that needs to be upgraded.
 The command searches recursively for any `*.xml` files to upgrade.
 
 #### Examples

@@ -14,6 +14,7 @@ use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\DataGenerator\Util\DataExtensionUtil;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
 
 class DataObjectHandler implements ObjectHandlerInterface
 {
@@ -59,6 +60,20 @@ class DataObjectHandler implements ObjectHandlerInterface
     private $extendUtil;
 
     /**
+     * Validates and keeps track of entity name violations.
+     *
+     * @var NameValidationUtil
+     */
+    private $entityNameValidator;
+
+    /**
+     * Validates and keeps track of entity key violations.
+     *
+     * @var NameValidationUtil
+     */
+    private $entityKeyValidator;
+
+    /**
      * Constructor
      */
     private function __construct()
@@ -68,6 +83,8 @@ class DataObjectHandler implements ObjectHandlerInterface
         if (!$parserOutput) {
             return;
         }
+        $this->entityNameValidator = new NameValidationUtil();
+        $this->entityKeyValidator = new NameValidationUtil();
         $this->entityDataObjects = $this->processParserOutput($parserOutput);
         $this->extendUtil = new DataExtensionUtil();
     }
@@ -132,6 +149,12 @@ class DataObjectHandler implements ObjectHandlerInterface
                 throw new XmlException(sprintf(self::DATA_NAME_ERROR_MSG, $name));
             }
 
+            $filename = $rawEntity[self::_FILENAME] ?? null;
+            $this->entityNameValidator->validatePascalCase(
+                $name,
+                NameValidationUtil::DATA_ENTITY_NAME,
+                $filename
+            );
             $type = $rawEntity[self::_TYPE] ?? null;
             $data = [];
             $deprecated = null;
@@ -139,7 +162,6 @@ class DataObjectHandler implements ObjectHandlerInterface
             $uniquenessData = [];
             $vars = [];
             $parentEntity = null;
-            $filename = $rawEntity[self::_FILENAME] ?? null;
 
             if (array_key_exists(self::_DATA, $rawEntity)) {
                 $data = $this->processDataElements($rawEntity);
@@ -188,7 +210,8 @@ class DataObjectHandler implements ObjectHandlerInterface
 
             $entityDataObjects[$entityDataObject->getName()] = $entityDataObject;
         }
-
+        $this->entityNameValidator->summarize(NameValidationUtil::DATA_ENTITY_NAME);
+        $this->entityKeyValidator->summarize(NameValidationUtil::DATA_ENTITY_KEY);
         return $entityDataObjects;
     }
 
@@ -220,7 +243,14 @@ class DataObjectHandler implements ObjectHandlerInterface
     {
         $dataValues = [];
         foreach ($entityData[self::_DATA] as $dataElement) {
-            $dataElementKey = strtolower($dataElement[self::_KEY]);
+            $originalDataElementKey = $dataElement[self::_KEY];
+            $filename = $entityData[self::_FILENAME] ?? null;
+            $this->entityKeyValidator->validateCamelCase(
+                $originalDataElementKey,
+                NameValidationUtil::DATA_ENTITY_KEY,
+                $filename
+            );
+            $dataElementKey = strtolower($originalDataElementKey);
             $dataElementValue = $dataElement[self::_VALUE] ?? "";
             $dataValues[$dataElementKey] = $dataElementValue;
         }
