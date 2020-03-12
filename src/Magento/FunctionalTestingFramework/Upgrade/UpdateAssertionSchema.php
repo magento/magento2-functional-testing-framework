@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Upgrade;
 
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
@@ -21,9 +22,10 @@ class UpdateAssertionSchema implements UpgradeInterface
      * WILL NOT CATCH cases where style is a mix of old and new
      *
      * @param InputInterface $input
+     * @param OutputInterface $output
      * @return string
      */
-    public function execute(InputInterface $input)
+    public function execute(InputInterface $input, OutputInterface $output)
     {
         $testsPath = $input->getArgument('path');
         $finder = new Finder();
