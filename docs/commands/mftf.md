@@ -509,6 +509,10 @@ vendor/bin/mftf static-checks testDependencies actionGroupArguments
 When the path argument is specified, this command applies all the major version MFTF upgrade scripts to the test components in the given path (test.xml, data.xml, etc).
 Otherwise, it will apply all the major version MFTF upgrade scripts to all installed test components.
 
+**Note**:
+
+The upgrade scripts are meant to be used for Test Modules under source code control. However, if you have old version of test modules under `vendor`, those test modules will get upgraded.
+
 #### Usage
 
 ```bash
