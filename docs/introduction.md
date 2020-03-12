@@ -104,14 +104,14 @@ codeception.dist.yml            // Codeception configuration (generated while ru
 
 ## MFTF tests
 
-The MFTF supports two different locations for storing the tests and test artifacts:
-
+The MFTF supports three different locations for storing the tests and test artifacts:
 -  `<magento_root>/app/code/<vendor_name>/<module_name>/Test/Mftf/` is the directory to create new tests.
 -  `<magento_root>/vendor/<vendor_name>/<module_name>/Test/Mftf/` is the directory with the out of the box tests (fetched by the Composer).
+-  `<magento_root>/dev/tests/acceptance/tests/functional/<vendor_name>/<module_name>/` is the directory to create new tests that depends on more than one Magento modules.
 
 All tests and test data from these locations are merged in the order indicated in the above list.
 
-The file structure under the both path cases is the same:
+The directories immediately follow above three paths use the same format and further sub-directories under each category are supported.
 
 ```tree
 <Path>
@@ -124,6 +124,8 @@ The file structure under the both path cases is the same:
 ├── Page
 │   └── ...
 ├── Section
+│   └── ...
+├── Suite
 │   └── ...
 └── Test
     └── ...
