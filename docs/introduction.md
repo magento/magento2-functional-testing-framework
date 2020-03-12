@@ -2,7 +2,7 @@
 
 <div class="bs-callout bs-callout-info" markdown="1">
 These are the docs for the latest MFTF release.
-To find older documentation, please refer to the `docs` folder inside you desired release in Github.
+To find older documentation, please refer to the [docs folder] of your desired release in Github.
 </div>
 
 [Find your MFTF version][] of the MFTF.
@@ -141,3 +141,4 @@ Follow the [MFTF project] and [contribute on Github].
 [MFTF project]: https://github.com/magento/magento2-functional-testing-framework
 [Find your MFTF version]: #find-your-mftf-version
 [MFTF Test Migration]: https://github.com/magento/magento-functional-tests-migration
+[docs folder]: https://github.com/magento/magento2-functional-testing-framework/tree/master/docs
