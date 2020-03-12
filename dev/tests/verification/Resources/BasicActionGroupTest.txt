@@ -14,7 +14,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  * @group functional
- * @Description("<h3>Test files</h3>verification/TestModule/Test/ActionGroupFunctionalTest.xml<br>")
+ * @Description("<h3>Test files</h3>verification/TestModule/Test/ActionGroupFunctionalTest/BasicActionGroupTest.xml<br>")
  */
 class BasicActionGroupTestCest
 {

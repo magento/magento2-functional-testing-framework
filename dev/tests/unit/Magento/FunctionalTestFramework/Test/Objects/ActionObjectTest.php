@@ -233,6 +233,8 @@ class ActionObjectTest extends MagentoTestCase
      */
     public function testResolveUrlWithNoAttribute()
     {
+        $this->expectException(TestReferenceException::class);
+
         // Set up mocks
         $actionObject = new ActionObject('merge123', 'amOnPage', [
             'url' => '{{PageObject}}'
@@ -247,19 +249,6 @@ class ActionObjectTest extends MagentoTestCase
 
         // Call the method under test
         $actionObject->resolveReferences();
-
-        // Expect this warning to get generated
-        TestLoggingUtil::getInstance()->validateMockLogStatement(
-            "warning",
-            "page url attribute not found and is required",
-            ['action' => $actionObject->getType(), 'url' => '{{PageObject}}', 'stepKey' => $actionObject->getStepKey()]
-        );
-
-        // Verify
-        $expected = [
-            'url' => '{{PageObject}}'
-        ];
-        $this->assertEquals($expected, $actionObject->getCustomActionAttributes());
     }
 
     /**

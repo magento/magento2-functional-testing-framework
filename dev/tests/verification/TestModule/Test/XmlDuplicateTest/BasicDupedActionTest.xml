@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="BasicDupedActionTest">
+        <before>
+            <createData entity="simpleData" stepKey="cb1">
+                <requiredEntity createDataKey="simpleData2"/>
+            </createData>
+            <amOnPage stepKey="aopb1" url="1"/>
+            <amOnPage stepKey="aopb2" url="2"/>
+        </before>
+        <after>
+            <createData entity="simpleData" stepKey="ca1">
+                <requiredEntity createDataKey="simpleData2"/>
+            </createData>
+            <amOnPage stepKey="aopf1" url="1"/>
+            <amOnPage stepKey="aopf2" url="2"/>
+        </after>
+        <createData entity="simpleData" stepKey="c1">
+            <requiredEntity createDataKey="simpleData2"/>
+        </createData>
+        <amOnPage stepKey="aop1" url="1"/>
+        <amOnPage stepKey="aop2" url="2"/>
+    </test>
+</tests>

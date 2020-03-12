@@ -15,7 +15,7 @@ The following conventions apply to MFTF action groups:
 - All action groups are declared in XML files and stored in the `<module>/Test/Mftf/ActionGroup/` directory.
 - Every file name ends with `ActionGroup` suffix. For exampe `LoginAsAdminActionGroup.xml`.
 - Action group name should be the same as file name without extension.
-- Single file should contain only one `<actionGroup>` node
+- One `<actionGroup>` tag is allowed per action group XML file.
 
 The XML format for the `actionGroups` declaration is:
 

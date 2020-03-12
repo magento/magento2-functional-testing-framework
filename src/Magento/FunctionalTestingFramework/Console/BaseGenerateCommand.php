@@ -58,8 +58,7 @@ class BaseGenerateCommand extends Command
             'debug',
             'd',
             InputOption::VALUE_OPTIONAL,
-            'Run extra validation when generating and running tests. Use option \'none\' to turn off debugging -- 
-             added for backward compatibility, will be removed in the next MAJOR release',
+            'Run extra validation when generating and running tests.',
             MftfApplicationConfig::LEVEL_DEFAULT
         );
     }
@@ -191,14 +190,15 @@ class BaseGenerateCommand extends Command
     }
 
     /**
-     * Set Symfony Style for output
+     * Set Symfony IO Style
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
+     * @return void
      */
-    protected function setOutputStyle(InputInterface $input, OutputInterface $output)
+    protected function setIOStyle(InputInterface $input, OutputInterface $output)
     {
-        // For output style
+        // For IO style
         if (null === $this->ioStyle) {
             $this->ioStyle = new SymfonyStyle($input, $output);
         }

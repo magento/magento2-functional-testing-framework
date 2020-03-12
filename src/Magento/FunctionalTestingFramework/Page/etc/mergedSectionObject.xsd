@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="sections">
+        <xs:annotation>
+            <xs:documentation>
+                The root element for configuration data.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="section" maxOccurs="unbounded" minOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Contains sequence of ui elements in a section of a page.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="section">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="element" maxOccurs="unbounded" minOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Contains information of an ui element.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute type="notEmptyType" name="name" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        Unique section name identifier.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="deprecated">
+                <xs:annotation>
+                    <xs:documentation>
+                        Message and flag which shows that entity is deprecated.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attributeGroup ref="removeAttribute"/>
+            <xs:attribute type="xs:string" name="filename"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="element">
+        <xs:complexType>
+            <xs:attribute type="notEmptyType" name="name" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        Element name.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="deprecated">
+                <xs:annotation>
+                    <xs:documentation>
+                        Message and flag which shows that entity is deprecated.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="uiElementType" name="type" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        The type of the element, e.g. select, radio, etc.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="notEmptyType" name="selector" use="optional">
+                <xs:annotation>
+                    <xs:documentation>
+                        Selector of the element. Optional due to being able to use either this or locatorFunction.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="notEmptyType" name="locatorFunction" use="optional">
+                <xs:annotation>
+                    <xs:documentation>
+                        LocatorFunction of an element, substitute for a selector.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="timeoutType" name="timeout" use="optional">
+                <xs:annotation>
+                    <xs:documentation>
+                        Optional timeout value in second to wait for the operation on the element. use "-" for default value.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:boolean" name="parameterized" use="optional"/>
+            <xs:attributeGroup ref="removeAttribute"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="uiElementType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="text"/>
+            <xs:enumeration value="textarea"/>
+            <xs:enumeration value="input"/>
+            <xs:enumeration value="button"/>
+            <xs:enumeration value="checkbox"/>
+            <xs:enumeration value="radio"/>
+            <xs:enumeration value="checkboxset"/>
+            <xs:enumeration value="radioset"/>
+            <xs:enumeration value="date"/>
+            <xs:enumeration value="file"/>
+            <xs:enumeration value="select"/>
+            <xs:enumeration value="multiselect"/>
+            <xs:enumeration value="wysiwyg"/>
+            <xs:enumeration value="iframe"/>
+            <xs:enumeration value="block"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="notEmptyType">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="timeoutType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="([0-9])+|-"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:attributeGroup name="removeAttribute">
+        <xs:attribute type="xs:boolean" name="remove" use="optional" default="false">
+            <xs:annotation>
+                <xs:documentation>
+                    Set to true to remove this element during parsing.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+</xs:schema>

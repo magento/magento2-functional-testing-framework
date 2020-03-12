@@ -28,7 +28,7 @@ vendor/bin/mftf build:project
 vendor/bin/mftf build:project --upgrade
 ```
 
-Upgrades the existing MFTF tests after the MFTF major upgrade.
+Upgrades all installed MFTF tests after a major MFTF upgrade.
 
 ### Generate all tests
 
@@ -115,7 +115,7 @@ vendor/bin/mftf build:project [--upgrade] [config_param_options]
 
 | Option            | Description                                                                                                                                                                                   |
 | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `-u`, `--upgrade` | Upgrades existing MFTF tests according to requirements of the last major release. Specifying this flag upgrades only those tests in the default location. Example: `build:project --upgrade`. |
+| `-u`, `--upgrade` | Upgrades all installed MFTF tests according to requirements of the last major release. Specifying this flag upgrades only those tests in the default location. Example: `build:project --upgrade`. |
 
 You can include options to set configuration parameter values for your environment since the project build process also [sets up the environment][setup].
 
@@ -164,7 +164,7 @@ vendor/bin/mftf generate:tests [option] [<test name>] [<test name>] [--remove]
 | `-i,--time` | Set time in minutes to determine the group size when `--config=parallel` is used. The __default value__ is `10`. Example: `generate:tests --config=parallel --time=15`|
 | `--tests` | Defines the test configuration as a JSON string.|
 | `--allow-skipped` | Allows MFTF to generate and run tests marked with `<skip>.`|
-| `--debug or --debug=[<none>]`| Performs schema validations on XML files. <br/> DEFAULT: `generate:tests` implicitly performs schema validation on merged files. It does not indicate the file name where the error is encountered. <br/> DEVELOPER: `--debug` performs per-file validation and returns additional debug information (such as the filename where an error occurred) when test generation fails because of an invalid XML schema. This option takes extra processing time. Use it after test generation has failed once.<br/>NONE: `--debug=none` skips debugging during test generation. Added for backward compatibility, it will be removed in the next MAJOR release.<br/>|
+| `--debug` | Performs schema validations on XML files. <br/> DEFAULT: `generate:tests` implicitly performs schema validation on merged files. It does not indicate the file name where the error is encountered. <br/> DEVELOPER: `--debug` performs per-file validation and returns additional debug information (such as the filename where an error occurred) when test generation fails because of an invalid XML schema. This option takes extra processing time. Use it after test generation has failed once.<br/>|
 | `-r,--remove`| Removes the existing generated suites and tests cleaning up the `_generated` directory before the actual run. For example, `generate:tests SampleTest --remove` cleans up the entire `_generated` directory and generates `SampleTest` only.|
 
 #### Examples of the JSON configuration
@@ -337,7 +337,7 @@ vendor/bin/mftf run:group [--skip-generate|--remove] [--] <group1> [<group2>]
 | --------------------- | --------------------------------------------------------------------------------------------------------- |
 | `-k, --skip-generate` | Skips generating from the source XML. Instead, the command executes previously-generated groups of tests. |
 | `-r, --remove`        | Removes previously generated suites and tests before the actual generation and run.                       |
-| `--debug or --debug=[<none>]`| Performs schema validations on XML files. `run:group` implicitly performs schema validation on merged files. It does not indicate the file name where the error is encountered. `--debug` performs per-file validation and returns additional debug information (such as the filename where an error occurred). `--debug=none` skips debugging during test run. Added for backward compatibility, it will be removed in the next MAJOR release.|
+| `--debug`             | Performs schema validations on XML files. `run:group` implicitly performs schema validation on merged files. It does not indicate the file name where the error is encountered. `--debug` performs per-file validation and returns additional debug information (such as the filename where an error occurred).|
 
 #### Examples
 
@@ -369,7 +369,7 @@ vendor/bin/mftf run:test [--skip-generate|--remove] [--] <name1> [<name2>]
 |-----------------------|-----------------------------------------------------------------------------------------------------------|
 | `-k, --skip-generate` | Skips generating from the source XML. Instead, the command executes previously-generated groups of tests. |
 | `-r, --remove`        | Remove previously generated suites and tests.                                                             |
-| `--debug or --debug=[<none>]`| Performs schema validations on XML files. `run:test` implicitly performs schema validation on merged files. It does not indicate the file name where the error is encountered. `--debug` performs per-file validation and returns additional debug information (such as the filename where an error occurred). `--debug=none` skips debugging during test run. Added for backward compatibility, it will be removed in the next MAJOR release.
+| `--debug`             | Performs schema validations on XML files. `run:test` implicitly performs schema validation on merged files. It does not indicate the file name where the error is encountered. `--debug` performs per-file validation and returns additional debug information (such as the filename where an error occurred).|
 
 #### Examples
 
@@ -419,7 +419,7 @@ vendor/bin/mftf run:failed
 
 | Option                | Description                                                                                               |
 |-----------------------|-----------------------------------------------------------------------------------------------------------|
-| `--debug or --debug=[<none>]`| Performs schema validations on XML files. `run:failed` implicitly performs schema validation on merged files. It does not indicate the file name where the error is encountered. `--debug` performs per-file validation and returns additional debug information (such as the filename where an error occurred). Use it after test run has failed once. `--debug=none` skips debugging during test run. Added for backward compatibility, it will be removed in the next MAJOR release.|
+| `--debug` | Performs schema validations on XML files. `run:failed` implicitly performs schema validation on merged files. It does not indicate the file name where the error is encountered. `--debug` performs per-file validation and returns additional debug information (such as the filename where an error occurred). Use it after test run has failed once.|
 
 #### Examples
 
@@ -506,18 +506,25 @@ vendor/bin/mftf static-checks testDependencies actionGroupArguments
     
 ### `upgrade:tests`
 
-Applies all the MFTF major version upgrade scripts to test components in the given path (`test.xml`, `data.xml`, etc).
+When the path argument is specified, this command applies all the major version MFTF upgrade scripts to the test components in the given path (test.xml, data.xml, etc).
+Otherwise, it will apply all the major version MFTF upgrade scripts to all installed test components.
 
 #### Usage
 
 ```bash
-vendor/bin/mftf upgrade:tests <path>
+vendor/bin/mftf upgrade:tests [<path>]
 ```
 
 `<path>` is the path that contains MFTF test components that need to be upgraded.
 The command searches recursively for any `*.xml` files to upgrade.
 
 #### Examples
+
+To upgrade all installed MFTF tests:
+
+```bash
+vendor/bin/mftf upgrade:tests
+```
 
 To upgrade all test components inside modules in the `dev/tests/acceptance/tests/` directory:
 

@@ -30,7 +30,9 @@ class UpgradeScriptList implements UpgradeScriptListInterface
         $this->scripts = [
             'upgradeTestSchema' => new UpdateTestSchemaPaths(),
             'upgradeAssertionSchema' => new UpdateAssertionSchema(),
-            'renameMetadataFiles' => new RenameMetadataFiles()
+            'renameMetadataFiles' => new RenameMetadataFiles(),
+            'removeModuleFileInSuiteFiles' => new RemoveModuleFileInSuiteFiles(),
+            'splitMultipleEntitiesFiles' => new SplitMultipleEntitiesFiles(),
         ] + $scripts;
     }
 

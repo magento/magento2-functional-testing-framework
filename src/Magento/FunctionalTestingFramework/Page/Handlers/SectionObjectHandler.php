@@ -10,8 +10,8 @@ use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Page\Objects\ElementObject;
 use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
-use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
 use Magento\FunctionalTestingFramework\XmlParser\SectionParser;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 
@@ -58,6 +58,8 @@ class SectionObjectHandler implements ObjectHandlerInterface
             return;
         }
 
+        $sectionNameValidator = new NameValidationUtil();
+        $elementNameValidator = new NameValidationUtil();
         foreach ($parserOutput as $sectionName => $sectionData) {
             $elements = [];
 
@@ -65,11 +67,20 @@ class SectionObjectHandler implements ObjectHandlerInterface
                 throw new XmlException(sprintf(self::SECTION_NAME_ERROR_MSG, $sectionName));
             }
 
+            $filename = $sectionData[self::FILENAME] ?? null;
+            $sectionNameValidator->validateAffixes($sectionName, NameValidationUtil::SECTION, $filename);
+
             try {
                 foreach ($sectionData[SectionObjectHandler::ELEMENT] as $elementName => $elementData) {
                     if (preg_match('/[^a-zA-Z0-9_]/', $elementName)) {
                         throw new XmlException(sprintf(self::ELEMENT_NAME_ERROR_MSG, $elementName, $sectionName));
                     }
+
+                    $elementNameValidator->validateCamelCase(
+                        $elementName,
+                        NameValidationUtil::SECTION_ELEMENT_NAME,
+                        $filename
+                    );
                     $elementType = $elementData[SectionObjectHandler::TYPE] ?? null;
                     $elementSelector = $elementData[SectionObjectHandler::SELECTOR] ?? null;
                     $elementLocatorFunc = $elementData[SectionObjectHandler::LOCATOR_FUNCTION] ?? null;
@@ -96,7 +107,6 @@ class SectionObjectHandler implements ObjectHandlerInterface
                 throw new XmlException($exception->getMessage() . " in Section '{$sectionName}'");
             }
 
-            $filename = $sectionData[self::FILENAME] ?? null;
             $sectionDeprecated = $sectionData[self::OBJ_DEPRECATED] ?? null;
 
             if ($sectionDeprecated !== null) {
@@ -113,6 +123,8 @@ class SectionObjectHandler implements ObjectHandlerInterface
                 $sectionDeprecated
             );
         }
+        $sectionNameValidator->summarize(NameValidationUtil::SECTION . " name");
+        $elementNameValidator->summarize(NameValidationUtil::SECTION_ELEMENT_NAME);
     }
 
     /**
