@@ -320,14 +320,16 @@ class ModuleResolver
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
         $modulePath = FilePathFormatter::format($modulePath, false);
 
-        $vendorCodePath = DIRECTORY_SEPARATOR . self::VENDOR;
-        $appCodePath = DIRECTORY_SEPARATOR . self::APP_CODE;
+        // If $modulePath is DEV_TESTS path, we don't need to search by pattern
+        if (strpos($modulePath, self::DEV_TESTS) === false) {
+            $codePathsToPattern[$modulePath] = '';
+        }
 
-        $codePathsToPattern = [
-            $modulePath => '',
-            $magentoBaseCodePath . $vendorCodePath => self::TEST_MFTF_PATTERN,
-            $magentoBaseCodePath . $appCodePath => self::TEST_MFTF_PATTERN
-        ];
+        $vendorCodePath = DIRECTORY_SEPARATOR . self::VENDOR;
+        $codePathsToPattern[$magentoBaseCodePath . $vendorCodePath] = self::TEST_MFTF_PATTERN;
+
+        $appCodePath = DIRECTORY_SEPARATOR . self::APP_CODE;
+        $codePathsToPattern[$magentoBaseCodePath . $appCodePath] = self::TEST_MFTF_PATTERN;
 
         foreach ($codePathsToPattern as $codePath => $pattern) {
             $allModulePaths = array_merge_recursive($allModulePaths, $this->globRelevantPaths($codePath, $pattern));
@@ -538,10 +540,10 @@ class ModuleResolver
         foreach ($objectArray as $path => $modules) {
             if (is_array($modules) && count($modules) > 1) {
                 // The "one path => many module names" case is designed to be strictly used when it's
-                // impossible to write tests in dedicated modules. Due to performance consideration and there
-                // is no real usage of this currently, we will use the first module name for the path.
-                // TODO: consider saving all module names if this information is needed in the future.
-                $module = $modules[0];
+                // impossible to write tests in dedicated modules.
+                // For now we will set module name based on path.
+                // TODO: Consider saving all module names if this information is needed in the future.
+                $module = $this->findVendorAndModuleNameFromPath($path);
             } elseif (is_array($modules)) {
                 if (strpos($modules[0], '_') === false) {
                     $module = $this->findVendorNameFromPath($path) . '_' . $modules[0];
