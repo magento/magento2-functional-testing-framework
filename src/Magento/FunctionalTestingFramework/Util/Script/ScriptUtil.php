@@ -29,7 +29,7 @@ class ScriptUtil
             true,
             MftfApplicationConfig::UNIT_TEST_PHASE,
             false,
-            MftfApplicationConfig::LEVEL_NONE,
+            MftfApplicationConfig::LEVEL_DEFAULT,
             true
         );
 
