@@ -230,10 +230,6 @@ vendor/bin/mftf generate:tests
 ```
 
 ```bash
-cd dev/tests/acceptance
-```
-
-```bash
 vendor/bin/codecept run functional -c dev/tests/acceptance/codeception.yml
 ```
 
