@@ -6,7 +6,7 @@
   */
 -->
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
     <actionGroup name="DeprecatedActionGroup" deprecated="Deprecated action group">
         <see stepKey="deprecatedSee" userInput="{{DeprecatedData.field}}" selector="{{DeprecatedSection.deprecatedElement}}" />
     </actionGroup>
