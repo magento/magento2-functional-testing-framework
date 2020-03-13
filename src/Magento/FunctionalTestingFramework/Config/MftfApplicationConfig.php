@@ -100,6 +100,12 @@ class MftfApplicationConfig
 
         $this->phase = $phase;
         $this->verboseEnabled = $verboseEnabled;
+
+        //TODO: overriding pipeline config, to be removed for MFTF 3.0.0
+        if (strtolower($debugLevel) === 'none') {
+            $debugLevel = self::LEVEL_DEFAULT;
+        }
+
         if (isset($debugLevel) && !in_array(strtolower($debugLevel), self::MFTF_DEBUG_LEVEL)) {
             throw new TestFrameworkException("{$debugLevel} is not a debug level. Use 'DEFAULT' or 'DEVELOPER'");
         }
