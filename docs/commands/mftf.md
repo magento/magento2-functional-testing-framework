@@ -477,6 +477,10 @@ Otherwise, it will apply all the major version MFTF upgrade scripts to all insta
 
 `Test Module` should have the directory structure of ActionGroup, Data, Metadata, Page, Section, Test, and Suite.
 
+**Note**:
+
+The upgrade scripts are meant to be used for Test Modules under source code control. If you have old versions of test modules under vendor, those test modules will get upgraded
+
 #### Usage
 
 ```bash
