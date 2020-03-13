@@ -479,7 +479,7 @@ Otherwise, it will apply all the major version MFTF upgrade scripts to all insta
 
 **Note**:
 
-The upgrade scripts are meant to be used for Test Modules under source code control. However, if you have old version of test modules under `vendor`, those test modules will get upgraded.
+The upgrade scripts are meant to be used for Test Modules under source code control. If you have old versions of test modules under vendor, those test modules will get upgraded
 
 #### Usage
 
