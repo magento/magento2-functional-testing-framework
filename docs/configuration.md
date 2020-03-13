@@ -34,7 +34,7 @@ MAGENTO_BACKEND_NAME=admin_12346
 
 ### MAGENTO_BACKEND_BASE_URL
 
-(Optional) If you are running Admin Panel on separate domain, you may need to specify this value:
+(Optional) If you are running the Admin Panel on separate a domain, specify this value:
 
 Example:
 

@@ -1,20 +1,15 @@
 # Update the Magento Functional Testing Framework
 
 <div class="bs-callout bs-callout-info" markdown="1">
-
 Both Magento `2.2` and `2.3` supports MFTF `2.5.3` ([Find your version][] of the MFTF).
-
 </div>
 
+Tests and the Framework itself are stored in different repositories.
 
-**Tests and the Framework itself are stored in different repositories.**
+*  Tests are stored in Module's directory.
+*  MFTF is installed separately (usually as a Composer dependency)
 
-* Tests are stored in Module's directory.
-* The MFTF is installed separately (usually as a Composer dependency)
-
-While pulling the latest Magento codebase, you are going to get Tests and it's dependencies (eg. Action Groups).
-
-To understand types of update - please follow the [Versioning][] page. 
+To understand different types of update - please follow the [Versioning][] page.
 
 ## Patch version update
 
@@ -33,11 +28,11 @@ Takes place when **second** digit of version number changes.
 1. When updating from versions below `2.5.0`, verify [WYSIWYG settings][]
 1. You may need to run the `upgrade:tests` using `vendor/bin/mftf upgrade:tests app`
 
-## Always after update
+## After updating
 
-1. It's good to regenerate your IDE Schema Definition catalog with `vendor/bin/mftf generate:urn-catalog .idea/`
-1. Update your own tests, including data, metadata and other resoruces. Validate if they contain tags that are unsupported in the newer version.
-1. As soon as possible - remove the references to resources (ActionGroups, Sections, Tests) marked as deprecated.
+1. It is a good idea to regenerate your IDE Schema Definition catalog with `vendor/bin/mftf generate:urn-catalog .idea/`
+1. Update your tests, including data, metadata and other resoruces. Check if they contain tags that are unsupported in the newer version.
+1. Remove the references to resources (ActionGroups, Sections, Tests) marked as deprecated.
 
 <!-- Link Definitions -->
 [Changelog]: https://github.com/magento/magento2-functional-testing-framework/blob/master/CHANGELOG.md

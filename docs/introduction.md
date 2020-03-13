@@ -1,26 +1,26 @@
 # Introduction to the Magento Functional Testing Framework
 
-The **Magento Functional Tesitng Framework** (MFTF) is framework to perform end-to-end acceptance testing. Tests are performed in real web browser (eg. Google Chrome) just like the real user of the Magento store.
+The Magento Functional Tesitng Framework (MFTF) is a framework used to perform automated end-to-end functional testing.
 
 ## Goals
 
-- Facilitate functional testing and minimize the effort it takes to perform regression testing.
-- Enable extension developers to provide the Functional Tests to offered extensions.
-- Having common standard of Quality Assurrance between Magento, Extension Developers and System Intergrators.
+-  To facilitate functional testing and minimize the effort it takes to perform regression testing.
+-  Enable extension developers to provide the Functional Tests to offered extensions.
+-  Ensuring a common standard of quality between Magento, Extension Developers and System Intergrators.
 
-**MFTF also focuses on**
+MFTF also focuses on
 
-- **Traceability** for clear logging and reporting capabilities.
-- **Modularity** to run tests based on installed modules and extensions.
-- **Customizability** for existing tests.
-- **Readability** using clear and declarative XML test steps.
-- **Maintainability** based on simple test creation and overall structure.
+-  **Traceability** for clear logging and reporting capabilities.
+-  **Modularity** to run tests based on installed modules and extensions.
+-  **Customizability** for existing tests.
+-  **Readability** using clear and declarative XML test steps.
+-  **Maintainability** based on simple test creation and overall structure.
 
 ## Audience
 
-- **Contributors**: Tests build their confidence about the results of changes introduced to the platform.
-- **Extension Developers**: Can adjust expected behaviour according to their customizations.
-- **System Integrators**: MFTF coverage provided out-of-the-box with Magento is solid base for Acceptance / Regression Tests.
+-  **Contributors**: Tests build confidence about the results of changes introduced to the platform.
+-  **Extension Developers**: Can adjust expected behaviour according to their customizations.
+-  **System Integrators**: MFTF coverage provided out-of-the-box with Magento is solid base for Acceptance / Regression Tests.
 
 ## MFTF tests
 
@@ -52,7 +52,6 @@ Test
         └── ...
 ```
 
-
 <div class="bs-callout bs-callout-info" markdown="1">
 
 We are actively developing functional tests. Check out the [MFTF Test Migration][] repository.
@@ -61,30 +60,27 @@ We are actively developing functional tests. Check out the [MFTF Test Migration]
 
 ## Use cases
 
-* **Contributor** changes the core behaviour, fixing the annoing bug.
-  He wants to have automated "supervisor" which is going to verify his work continuously across the stages of bug fixing. Finally, when fix is done - Functional Test is also proof of work done.
-
-* **Extension Developer** offers extension that changes core behaviour.
-  He can easily write new tests to make sure that after enabling the feature, Magento behaves properly. Everything with just extending existing tests. As a result he don't need to write coverage from scratch.
-  
-* **Integration Agency** maintains Client's e-commerce.
-  They are able to customize tests delivered with Magento core to follow customizations implemented to Magento. After each upgrade they can just run the MFTF tests to know that no regression was introduced.
-
+-  Contributor: changes the core behaviour, fixing the annoing bug.
+   He wants to have automated "supervisor" which is going to verify his work continuously across the stages of bug fixing. Finally, when fix is done - Functional Test is also proof of work done.
+-  Extension Developer: offers extension that changes core behaviour.
+   He can easily write new tests to make sure that after enabling the feature, Magento behaves properly. Everything with just extending existing tests. As a result he don't need to write coverage from scratch.
+-  Integration Agency: maintains Client's e-commerce.
+   They are able to customize tests delivered with Magento core to follow customizations implemented to Magento. After each upgrade they can just run the MFTF tests to know that no regression was introduced.
 
 ## MFTF output
 
-- Generated PHP Codeception tests
-- Codeception results and console logs
-- Screenshots and HTML failure report
-- Allure formatted XML results
-- Allure report dashboard of results
+-  Generated PHP Codeception tests
+-  Codeception results and console logs
+-  Screenshots and HTML failure report
+-  Allure formatted XML results
+-  Allure report dashboard of results
 
 ## Find your MFTF version
 
 There are two options to find out your MFTF version:
 
-- using the MFTF CLI
-- using the Composer CLI
+-  using the MFTF CLI
+-  using the Composer CLI
 
 All the Command Line commands needs to be executed from `<magento_root>`
 
