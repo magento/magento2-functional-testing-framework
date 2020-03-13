@@ -861,18 +861,6 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * Turn Readiness check on or off
-     *
-     * @param boolean $check
-     * @return void
-     * @throws \Exception
-     */
-    public function skipReadinessCheck($check)
-    {
-        $this->config['skipReadiness'] = $check;
-    }
-
-    /**
      * Clean Javascript errors in internal array
      *
      * @return void
