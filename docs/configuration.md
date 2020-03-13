@@ -32,6 +32,16 @@ Example:
 MAGENTO_BACKEND_NAME=admin_12346
 ```
 
+### MAGENTO_BACKEND_BASE_URL
+
+(Optional) If you are running Admin Panel on separate domain, you may need to specify this value:
+
+Example:
+
+```conf
+MAGENTO_BACKEND_BASE_URL=https://admin.magento2.test
+```
+
 ### MAGENTO_ADMIN_USERNAME
 
 The username that tests can use to access the Magento Admin page
