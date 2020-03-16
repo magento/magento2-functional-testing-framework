@@ -1334,9 +1334,6 @@ class TestGenerator
 
                     $testSteps .= $dateGenerateCode;
                     break;
-                case "skipReadinessCheck":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $customActionAttributes['state']);
-                    break;
                 case "comment":
                     $input = $input === null ? strtr($value, ['$' => '\$', '{' => '\{', '}' => '\}']) : $input;
                 // Combining userInput from native XML comment and <comment/> action to fall-through 'default' case
