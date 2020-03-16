@@ -29,7 +29,12 @@ class CustomHelper extends Helper
         $bla = 'blaValue',
         array $arraysomething = []
     ) {
-        print("this is it: " . $url . PHP_EOL);
-        sleep(4);
+        print('Hello, this is custom helper which gives an ability to write custom solutions without usage of <executeInSelenium /> and <performOn /> actions.');
+        print('string $url = ' . $url . PHP_EOL);
+        print('$test = ' . $test . PHP_EOL);
+        print('array $module = [' . implode(', ', $module) . ']' . PHP_EOL);
+        print('$superBla = ' . $superBla . PHP_EOL);
+        print('$bla = ' . $url . PHP_EOL);
+        print('array $arraysomething = [' . implode(', ', $arraysomething) . ']' . PHP_EOL);
     }
 }
