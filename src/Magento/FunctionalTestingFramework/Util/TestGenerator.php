@@ -832,7 +832,12 @@ class TestGenerator
                             );
                         }
                     }
-
+                    $testSteps .= sprintf(
+                        "\t\t$%s->comment('[%s] %s()');" . PHP_EOL,
+                        $actor,
+                        $stepKey,
+                        $customActionAttributes['class'] . '::' . $customActionAttributes['method']
+                    );
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $arguments);
                     break;
                 case "createData":
