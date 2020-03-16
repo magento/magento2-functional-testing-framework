@@ -296,8 +296,10 @@ class ActionObject
     }
 
     /**
+     * Resolves references for helpers.
+     *
      * @throws TestReferenceException
-     * @throws XmlException
+     * @return void
      */
     private function resolveHelperReferences()
     {
@@ -308,7 +310,10 @@ class ActionObject
 
         try {
             foreach ($this->actionAttributes as $attrKey => $attrValue) {
-                $this->actionAttributes[$attrKey] = $this->findAndReplaceReferences(SectionObjectHandler::getInstance(), $attrValue);
+                $this->actionAttributes[$attrKey] = $this->findAndReplaceReferences(
+                    SectionObjectHandler::getInstance(),
+                    $attrValue
+                );
             }
             $isResolved = true;
         } catch (\Exception $e) {
@@ -317,7 +322,10 @@ class ActionObject
 
         try {
             foreach ($this->actionAttributes as $attrKey => $attrValue) {
-                $this->actionAttributes[$attrKey] = $this->findAndReplaceReferences(PageObjectHandler::getInstance(), $attrValue);
+                $this->actionAttributes[$attrKey] = $this->findAndReplaceReferences(
+                    PageObjectHandler::getInstance(),
+                    $attrValue
+                );
             }
             $isResolved = true;
         } catch (\Exception $e) {
@@ -326,7 +334,10 @@ class ActionObject
 
         try {
             foreach ($this->actionAttributes as $attrKey => $attrValue) {
-                $this->actionAttributes[$attrKey] = $this->findAndReplaceReferences(DataObjectHandler::getInstance(), $attrValue);
+                $this->actionAttributes[$attrKey] = $this->findAndReplaceReferences(
+                    DataObjectHandler::getInstance(),
+                    $attrValue
+                );
             }
             $isResolved = true;
         } catch (\Exception $e) {
@@ -339,7 +350,6 @@ class ActionObject
                 . "in Action with stepKey \"{$this->getStepKey()}\"",
                 ["input" => $attrValue, "stepKey" => $this->getStepKey()]
             );
-
         }
     }
 

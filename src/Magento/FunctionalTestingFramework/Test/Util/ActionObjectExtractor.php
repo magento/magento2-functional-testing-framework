@@ -176,6 +176,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
      * @param string $actionType
      * @param array  $actionAttributeData
      * @return array
+     * @throws TestFrameworkException
      */
     private function processHelperArgs($actionType, $actionAttributeData)
     {
@@ -187,9 +188,12 @@ class ActionObjectExtractor extends BaseObjectExtractor
         $actionAttributeArgData = [];
         foreach ($actionAttributeData as $attributeDataKey => $attributeDataValues) {
             if (isset($attributeDataValues['nodeName']) && $attributeDataValues['nodeName'] == 'argument') {
-                if (isset($attributeDataValues['name']) && in_array($attributeDataValues['name'], $reservedHelperVariableNames)) {
+                if (isset($attributeDataValues['name'])
+                    && in_array($attributeDataValues['name'], $reservedHelperVariableNames)) {
+                    $message = 'Helper argument names ' . implode(',', $reservedHelperVariableNames);
+                    $message .= ' are reserved and can not be used.';
                     throw new TestFrameworkException(
-                        'Helper argument names ' . implode(',', $reservedHelperVariableNames) . ' are reserved and can not be used.'
+                        $message
                     );
                 }
                 $actionAttributeArgData[$attributeDataValues['name']] = $attributeDataValues['value'] ?? null;

@@ -285,6 +285,11 @@ class TestGenerator
         return $cestPhp;
     }
 
+    /**
+     * Generates _injectMethod based on $this->customHelpers.
+     *
+     * @return string
+     */
     private function generateInjectMethod()
     {
         if (empty($this->customHelpers)) {
@@ -292,7 +297,9 @@ class TestGenerator
         }
 
         $mustacheEngine = new Mustache_Engine([
-            'loader' => new Mustache_Loader_FilesystemLoader(dirname(__DIR__) . DIRECTORY_SEPARATOR . "Helper" . DIRECTORY_SEPARATOR . 'views')
+            'loader' => new Mustache_Loader_FilesystemLoader(
+                dirname(__DIR__) . DIRECTORY_SEPARATOR . "Helper" . DIRECTORY_SEPARATOR . 'views'
+            )
         ]);
 
         $argumentsWithType = [];
