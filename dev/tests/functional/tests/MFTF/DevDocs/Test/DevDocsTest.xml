@@ -27,5 +27,11 @@
             <argument name="module">['Test', 'Bla']</argument>
             <argument name="url">{{MFTFDocPage.url}}</argument>
         </helper>
+
+        <helper class="\MFTF\DevDocs\Helper\CustomHelper" method="goTo" stepKey="custobhhmHelper">
+            <argument name="test">{{contentSection.pageIntro}}</argument>
+            <argument name="module">['{{DeprecatedContentSection.pageIntro}}', 'Bla']</argument>
+            <argument name="url">{{DeprecatedMFTFDocPage.url}}</argument>
+        </helper>
     </test>
 </tests>
