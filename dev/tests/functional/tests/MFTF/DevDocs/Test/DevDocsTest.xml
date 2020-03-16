@@ -22,5 +22,10 @@
         <!--   Open MFTF DevDocs Page -->
         <amOnPage stepKey="openMFTFDevDocPage" url="{{MFTFDocPage.url}}" />
         <see stepKey="verifyPageIntroText" selector="{{contentSection.pageIntro}}" userInput="{{MessageData.message}}" />
+        <helper class="\MFTF\DevDocs\Helper\CustomHelper" method="goTo" stepKey="customHelper">
+            <argument name="test">{{contentSection.pageIntro}}</argument>
+            <argument name="module">['Test', 'Bla']</argument>
+            <argument name="url">{{MFTFDocPage.url}}</argument>
+        </helper>
     </test>
 </tests>

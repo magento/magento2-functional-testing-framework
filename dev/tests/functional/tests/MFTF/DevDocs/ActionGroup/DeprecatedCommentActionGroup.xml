@@ -8,6 +8,15 @@
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
     <actionGroup name="DeprecatedCommentActionGroup" deprecated="This Action Group is outdated and will be deleted next release.">
+        <arguments>
+            <argument name="test" type="string" />
+        </arguments>
         <comment userInput="Action group to demonstrate deprecation notices." stepKey="comment" />
+        <helper class="\MFTF\DevDocs\Helper\CustomHelper" method="goTo" stepKey="custobhhmHelper">
+            <argument name="test">{{contentSection.pageIntro}}</argument>
+            <argument name="module">['{{test}}', 'Bla']</argument>
+            <argument name="url">{{test}}</argument>
+        </helper>
+
     </actionGroup>
 </actionGroups>
