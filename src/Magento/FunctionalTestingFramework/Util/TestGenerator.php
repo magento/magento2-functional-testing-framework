@@ -825,20 +825,25 @@ class TestGenerator
                         $customActionAttributes['method']
                     );
                     $typesToQuote = ['string', 'float'];
+                    $errors = [];
                     foreach ($parameters as $parameter) {
-                        if (isset($customActionAttributes[$parameter['variableName']])) {
+                        if (array_key_exists($parameter['variableName'], $customActionAttributes)) {
                             $value = $customActionAttributes[$parameter['variableName']];
                             $arguments[] = $this->addUniquenessFunctionCall(
                                 $value,
                                 in_array($parameter['type'], $typesToQuote) || $parameter['type'] === null
                             );
-                        } elseif (!$parameter['isOptional']) {
-                            throw new TestFrameworkException(
-                                'Argument \'' . $parameter['variableName'] . '\' for method '
+                        } elseif ($parameter['isOptional']) {
+                            $value = $parameter['optionalValue'];
+                            $arguments[] = str_replace(PHP_EOL, '', var_export($value, true));
+                        } else {
+                            $errors[] = 'Argument \'' . $parameter['variableName'] . '\' for method '
                                 . $customActionAttributes['class'] . '::' . $customActionAttributes['method']
-                                . ' is not found.'
-                            );
+                                . ' is not found.';
                         }
+                    }
+                    if (!empty($errors)) {
+                        throw new TestFrameworkException(implode(PHP_EOL, $errors));
                     }
                     $testSteps .= sprintf(
                         "\t\t$%s->comment('[%s] %s()');" . PHP_EOL,
