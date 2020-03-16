@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ddf9b7965d3a2369bf0f22f5172d75dc",
+    "content-hash": "937f8aeec0fcd6baee435d37fe8c0070",
     "packages": [
         {
             "name": "allure-framework/allure-codeception",
@@ -5854,6 +5854,7 @@
             ],
             "description": "Sends PHP test coverage information to Codacy.",
             "homepage": "https://github.com/codacy/php-codacy-coverage",
+            "abandoned": true,
             "time": "2020-01-10T10:52:12+00:00"
         },
         {
@@ -6869,10 +6870,11 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "~7.2.0||~7.3.0",
+        "php": "~7.2.0||~7.3.0||~7.4.0",
         "ext-curl": "*",
         "ext-json": "*",
-        "ext-openssl": "*"
+        "ext-openssl": "*",
+        "ext-dom": "*"
     },
     "platform-dev": []
 }

@@ -9,7 +9,7 @@
         "sort-packages": true
     },
     "require": {
-        "php": "~7.2.0||~7.3.0",
+        "php": "~7.2.0||~7.3.0||~7.4.0",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-openssl": "*",
@@ -38,7 +38,7 @@
         "goaop/framework": "2.2.0",
         "codacy/coverage": "^1.4",
         "phpmd/phpmd": "^2.6.0",
-        "phpunit/phpunit": "~6.5.0 || ~7.0.0",
+        "phpunit/phpunit": "~6.5.0 || ~7.0.0 || ~8.0.0",
         "rregeer/phpunit-coverage-check": "^0.1.4",
         "php-coveralls/php-coveralls": "^1.0",
         "symfony/stopwatch": "~3.4.6"
