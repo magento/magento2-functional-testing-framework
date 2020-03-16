@@ -2,6 +2,10 @@ language: php
 php:
   - 7.2
   - 7.3
+services:
+  - docker
+before_install:
+  - docker run -d -p 4444:4444 -v /dev/shm:/dev/shm selenium/standalone-chrome:3.141.59-zirconium
 install: composer install --no-interaction --prefer-source
 env:
   matrix:
