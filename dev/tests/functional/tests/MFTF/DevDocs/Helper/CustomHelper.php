@@ -23,7 +23,7 @@ class CustomHelper extends Helper
      */
     public function goTo(
         string $url,
-        float $test,
+        $test,
         array $module = [],
         $superBla = null,
         $bla = 'blaValue',

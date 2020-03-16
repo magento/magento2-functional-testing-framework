@@ -11,6 +11,7 @@ env:
   matrix:
     - VERIFICATION_TOOL=phpunit-checks
     - VERIFICATION_TOOL=static-checks
+    - VERIFICATION_TOOL=functional
 script:
   - bin/$VERIFICATION_TOOL
 after_success:
