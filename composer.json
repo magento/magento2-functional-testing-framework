@@ -53,7 +53,7 @@
         "files": ["src/Magento/FunctionalTestingFramework/_bootstrap.php"],
         "psr-4": {
             "Magento\\FunctionalTestingFramework\\": "src/Magento/FunctionalTestingFramework",
-            "MFTF\\": "dev/tests/functional/MFTF"
+            "MFTF\\": "dev/tests/functional/tests/MFTF"
         }
     },
     "autoload-dev": {

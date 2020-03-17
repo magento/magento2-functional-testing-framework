@@ -25,6 +25,8 @@ use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
+use Mustache_Engine;
+use Mustache_Loader_FilesystemLoader;
 
 /**
  * Class TestGenerator
@@ -59,6 +61,13 @@ class TestGenerator
     const CRON_INTERVAL = 60;
     const ARRAY_WRAP_OPEN = '[';
     const ARRAY_WRAP_CLOSE = ']';
+
+    /**
+     * Array with helpers classes and methods.
+     *
+     * @var array
+     */
+    private $customHelpers = [];
 
     /**
      * Actor name for AcceptanceTest
@@ -268,11 +277,41 @@ class TestGenerator
         $cestPhp .= $classAnnotationsPhp;
         $cestPhp .= sprintf("class %s\n", $className);
         $cestPhp .= "{\n";
+        $cestPhp .= $this->generateInjectMethod();
         $cestPhp .= $hookPhp;
         $cestPhp .= $testsPhp;
         $cestPhp .= "}\n";
 
         return $cestPhp;
+    }
+
+    /**
+     * Generates _injectMethod based on $this->customHelpers.
+     *
+     * @return string
+     */
+    private function generateInjectMethod()
+    {
+        if (empty($this->customHelpers)) {
+            return "";
+        }
+
+        $mustacheEngine = new Mustache_Engine([
+            'loader' => new Mustache_Loader_FilesystemLoader(
+                dirname(__DIR__) . DIRECTORY_SEPARATOR . "Helper" . DIRECTORY_SEPARATOR . 'views'
+            )
+        ]);
+
+        $argumentsWithType = [];
+        $arguments = [];
+        foreach ($this->customHelpers as $customHelperVar => $customHelperType) {
+            $argumentsWithType[] = $customHelperType . ' ' . $customHelperVar;
+            $arguments[] = ['type' => $customHelperType, 'var' => $customHelperVar];
+        }
+        $mustacheData['argumentsWithTypes'] = implode(', ' . PHP_EOL, $argumentsWithType);
+        $mustacheData['arguments'] = $arguments;
+
+        return $mustacheEngine->render('TestInjectMethod', $mustacheData);
     }
 
     /**
@@ -774,6 +813,45 @@ class TestGenerator
             }
 
             switch ($actionObject->getType()) {
+                case "helper":
+                    if (!in_array($customActionAttributes['class'], $this->customHelpers)) {
+                        $this->customHelpers['$' . $stepKey] = $customActionAttributes['class'];
+                    }
+
+                    $arguments = [];
+                    $classReader = new \Magento\FunctionalTestingFramework\Helper\Code\ClassReader();
+                    $parameters = $classReader->getParameters(
+                        $customActionAttributes['class'],
+                        $customActionAttributes['method']
+                    );
+                    $errors = [];
+                    foreach ($parameters as $parameter) {
+                        if (array_key_exists($parameter['variableName'], $customActionAttributes)) {
+                            $value = $customActionAttributes[$parameter['variableName']];
+                            $arguments[] = $this->addUniquenessFunctionCall(
+                                $value,
+                                $parameter['type'] === 'string' || $parameter['type'] === null
+                            );
+                        } elseif ($parameter['isOptional']) {
+                            $value = $parameter['optionalValue'];
+                            $arguments[] = str_replace(PHP_EOL, '', var_export($value, true));
+                        } else {
+                            $errors[] = 'Argument \'' . $parameter['variableName'] . '\' for method '
+                                . $customActionAttributes['class'] . '::' . $customActionAttributes['method']
+                                . ' is not found.';
+                        }
+                    }
+                    if (!empty($errors)) {
+                        throw new TestFrameworkException(implode(PHP_EOL, $errors));
+                    }
+                    $testSteps .= sprintf(
+                        "\t\t$%s->comment('[%s] %s()');" . PHP_EOL,
+                        $actor,
+                        $stepKey,
+                        $customActionAttributes['class'] . '::' . $customActionAttributes['method']
+                    );
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $arguments);
+                    break;
                 case "createData":
                     $entity = $customActionAttributes['entity'];
 
@@ -1841,7 +1919,15 @@ class TestGenerator
     private function wrapFunctionCall($actor, $action, ...$args)
     {
         $isFirst = true;
-        $output = sprintf("\t\t$%s->%s(", $actor, $action->getType());
+        $isActionHelper = $action->getType() === 'helper';
+        $actionType = $action->getType();
+        if ($isActionHelper) {
+            $actor = "this->helperContainer->get('" . $action->getCustomActionAttributes()['class'] . "')";
+            $args = $args[0];
+            $actionType = $action->getCustomActionAttributes()['method'];
+        }
+
+        $output = sprintf("\t\t$%s->%s(", $actor, $actionType);
         for ($i = 0; $i < count($args); $i++) {
             if (null === $args[$i]) {
                 continue;

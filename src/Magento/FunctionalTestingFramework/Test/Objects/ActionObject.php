@@ -75,6 +75,7 @@ class ActionObject
     const DEFAULT_COMMAND_WAIT_TIMEOUT = 60;
     const ACTION_ATTRIBUTE_USERINPUT = 'userInput';
     const ACTION_TYPE_COMMENT = 'comment';
+    const ACTION_TYPE_HELPER = 'helper';
     const INVISIBLE_STEP_ACTIONS = ['retrieveEntityField', 'getSecret'];
 
     /**
@@ -282,6 +283,7 @@ class ActionObject
     public function resolveReferences()
     {
         if (empty($this->resolvedCustomAttributes)) {
+            $this->resolveHelperReferences();
             $this->trimAssertionAttributes();
             $this->resolveSelectorReferenceAndTimeout();
             $this->resolveUrlReference();
@@ -290,6 +292,64 @@ class ActionObject
             if ($this->getType() == "deleteData") {
                 $this->validateMutuallyExclusiveAttributes(self::DELETE_DATA_MUTUAL_EXCLUSIVE_ATTRIBUTES);
             }
+        }
+    }
+
+    /**
+     * Resolves references for helpers.
+     *
+     * @throws TestReferenceException
+     * @return void
+     */
+    private function resolveHelperReferences()
+    {
+        if ($this->getType() !== 'helper') {
+            return;
+        }
+        $isResolved = false;
+
+        try {
+            foreach ($this->actionAttributes as $attrKey => $attrValue) {
+                $this->actionAttributes[$attrKey] = $this->findAndReplaceReferences(
+                    SectionObjectHandler::getInstance(),
+                    $attrValue
+                );
+            }
+            $isResolved = true;
+        } catch (\Exception $e) {
+            // catching exception to allow other entity type resolution to proceed
+        }
+
+        try {
+            foreach ($this->actionAttributes as $attrKey => $attrValue) {
+                $this->actionAttributes[$attrKey] = $this->findAndReplaceReferences(
+                    PageObjectHandler::getInstance(),
+                    $attrValue
+                );
+            }
+            $isResolved = true;
+        } catch (\Exception $e) {
+            // catching exception to allow other entity type resolution to proceed
+        }
+
+        try {
+            foreach ($this->actionAttributes as $attrKey => $attrValue) {
+                $this->actionAttributes[$attrKey] = $this->findAndReplaceReferences(
+                    DataObjectHandler::getInstance(),
+                    $attrValue
+                );
+            }
+            $isResolved = true;
+        } catch (\Exception $e) {
+            // catching exception to allow other entity type resolution to proceed
+        }
+
+        if ($isResolved !== true) {
+            throw new TestReferenceException(
+                "Could not resolve entity reference \"{$attrValue}\" "
+                . "in Action with stepKey \"{$this->getStepKey()}\"",
+                ["input" => $attrValue, "stepKey" => $this->getStepKey()]
+            );
         }
     }
 

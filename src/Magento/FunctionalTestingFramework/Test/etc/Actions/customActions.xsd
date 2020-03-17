@@ -11,6 +11,7 @@
 
     <xs:group name="customTags">
         <xs:choice>
+            <xs:element name="helper" type="helperType" minOccurs="0" maxOccurs="unbounded" />
             <xs:element type="magentoCLIType" name="magentoCLI" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="magentoCronType" name="magentoCron" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="closeAdminNotificationType" name="closeAdminNotification" minOccurs="0" maxOccurs="unbounded"/>
@@ -28,6 +29,25 @@
     </xs:group>
 
     <!-- Complex Types -->
+
+    <xs:complexType name="helperType">
+        <xs:sequence>
+            <xs:element name="argument" type="argumentType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="class" use="required" />
+        <xs:attribute type="xs:string" name="method" use="required" />
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="argumentType" mixed="true">
+        <xs:attribute name="name" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="[^cm].*|c(.{0,3}|[^l].*|l[^a].*|la[^s].*|las[^s].*|lass.+)|m(.{0,4}|[^e].*|e[^t].*|et[^h].*|eth[^o].*|etho[^d].*|ethod.+)" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
 
     <xs:complexType name="magentoCLIType">
         <xs:annotation>

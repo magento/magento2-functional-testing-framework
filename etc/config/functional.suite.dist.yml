@@ -12,8 +12,6 @@ namespace: Magento\FunctionalTestingFramework
 modules:
     enabled:
         - \Magento\FunctionalTestingFramework\Module\MagentoWebDriver
-        - \Magento\FunctionalTestingFramework\Helper\Acceptance
-        - \Magento\FunctionalTestingFramework\Helper\MagentoFakerData
         - \Magento\FunctionalTestingFramework\Module\MagentoSequence
         - \Magento\FunctionalTestingFramework\Module\MagentoAssert
         - \Magento\FunctionalTestingFramework\Module\MagentoActionProxies

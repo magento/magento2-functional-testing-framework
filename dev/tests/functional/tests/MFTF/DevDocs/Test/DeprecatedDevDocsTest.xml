@@ -22,6 +22,6 @@
         <!--   Open MFTF DevDocs Page -->
         <amOnPage stepKey="openMFTFDevDocPage" url="{{DeprecatedMFTFDocPage.url}}" />
         <see stepKey="verifyPageIntroText" selector="{{DeprecatedContentSection.pageIntro}}" userInput="{{DeprecatedMessageData.message}}" />
-        <actionGroup ref="DeprecatedCommentActionGroup" stepKey="commentActionGroup" />
+        <actionGroup ref="DeprecatedCommentActionGroup" stepKey="commentActionGroup"/>
     </test>
 </tests>
