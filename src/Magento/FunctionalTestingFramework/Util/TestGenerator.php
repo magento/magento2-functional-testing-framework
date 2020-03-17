@@ -824,14 +824,13 @@ class TestGenerator
                         $customActionAttributes['class'],
                         $customActionAttributes['method']
                     );
-                    $typesToQuote = ['string', 'float'];
                     $errors = [];
                     foreach ($parameters as $parameter) {
                         if (array_key_exists($parameter['variableName'], $customActionAttributes)) {
                             $value = $customActionAttributes[$parameter['variableName']];
                             $arguments[] = $this->addUniquenessFunctionCall(
                                 $value,
-                                in_array($parameter['type'], $typesToQuote) || $parameter['type'] === null
+                                $parameter['type'] === 'string' || $parameter['type'] === null
                             );
                         } elseif ($parameter['isOptional']) {
                             $value = $parameter['optionalValue'];

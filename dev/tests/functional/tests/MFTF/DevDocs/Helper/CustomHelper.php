@@ -35,9 +35,12 @@ class CustomHelper extends Helper
         $bla = 'blaValue',
         array $arraysomething = ['key' => 'value', 'test']
     ) {
-        print('Hello, this is custom helper which gives an ability to write custom solutions without usage of <executeInSelenium /> and <performOn /> actions.');
+        print('Hello, this is custom helper which provides an ability to write custom solutions.' . PHP_EOL);
         print('string $url = ' . $url . PHP_EOL);
         print('$test = ' . $test . PHP_EOL);
+        print('$bool = ' . $bool . PHP_EOL);
+        print('$int = ' . $int . PHP_EOL);
+        print('$float = ' . $float . PHP_EOL);
         print('array $module = [' . implode(', ', $module) . ']' . PHP_EOL);
         print('$superBla = ' . $superBla . PHP_EOL);
         print('$bla = ' . $bla . PHP_EOL);
