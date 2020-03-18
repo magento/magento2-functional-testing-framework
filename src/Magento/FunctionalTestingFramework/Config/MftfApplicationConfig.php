@@ -6,6 +6,7 @@
 namespace Magento\FunctionalTestingFramework\Config;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Filter\FilterList;
 
 class MftfApplicationConfig
 {
@@ -22,8 +23,14 @@ class MftfApplicationConfig
      */
     const LEVEL_DEFAULT = "default";
     const LEVEL_DEVELOPER = "developer";
-    const LEVEL_NONE = "none";
-    const MFTF_DEBUG_LEVEL = [self::LEVEL_DEFAULT, self::LEVEL_DEVELOPER, self::LEVEL_NONE];
+    const MFTF_DEBUG_LEVEL = [self::LEVEL_DEFAULT, self::LEVEL_DEVELOPER];
+
+    /**
+     * Contains object with test filters.
+     *
+     * @var FilterList
+     */
+    private $filterList;
 
     /**
      * Determines whether the user has specified a force option for generation
@@ -74,14 +81,16 @@ class MftfApplicationConfig
      * @param boolean $verboseEnabled
      * @param string  $debugLevel
      * @param boolean $allowSkipped
+     * @param array   $filters
      * @throws TestFrameworkException
      */
     private function __construct(
         $forceGenerate = false,
         $phase = self::EXECUTION_PHASE,
         $verboseEnabled = null,
-        $debugLevel = self::LEVEL_NONE,
-        $allowSkipped = false
+        $debugLevel = self::LEVEL_DEFAULT,
+        $allowSkipped = false,
+        $filters = []
     ) {
         $this->forceGenerate = $forceGenerate;
 
@@ -91,16 +100,26 @@ class MftfApplicationConfig
 
         $this->phase = $phase;
         $this->verboseEnabled = $verboseEnabled;
-        switch ($debugLevel) {
+
+        //TODO: overriding pipeline config, to be removed for MFTF 3.0.0
+        if (strtolower($debugLevel) === 'none') {
+            $debugLevel = self::LEVEL_DEFAULT;
+        }
+
+        if (isset($debugLevel) && !in_array(strtolower($debugLevel), self::MFTF_DEBUG_LEVEL)) {
+            throw new TestFrameworkException("{$debugLevel} is not a debug level. Use 'DEFAULT' or 'DEVELOPER'");
+        }
+        switch (strtolower($debugLevel)) {
             case self::LEVEL_DEVELOPER:
             case self::LEVEL_DEFAULT:
-            case self::LEVEL_NONE:
                 $this->debugLevel = $debugLevel;
                 break;
-            default:
+            case null:
                 $this->debugLevel = self::LEVEL_DEVELOPER;
+                break;
         }
         $this->allowSkipped = $allowSkipped;
+        $this->filterList = new FilterList($filters);
     }
 
     /**
@@ -112,6 +131,7 @@ class MftfApplicationConfig
      * @param boolean $verboseEnabled
      * @param string  $debugLevel
      * @param boolean $allowSkipped
+     * @param array   $filters
      * @return void
      * @throws TestFrameworkException
      */
@@ -119,12 +139,20 @@ class MftfApplicationConfig
         $forceGenerate = false,
         $phase = self::EXECUTION_PHASE,
         $verboseEnabled = null,
-        $debugLevel = self::LEVEL_NONE,
-        $allowSkipped = false
+        $debugLevel = self::LEVEL_DEFAULT,
+        $allowSkipped = false,
+        $filters = []
     ) {
         if (self::$MFTF_APPLICATION_CONTEXT == null) {
             self::$MFTF_APPLICATION_CONTEXT =
-                new MftfApplicationConfig($forceGenerate, $phase, $verboseEnabled, $debugLevel, $allowSkipped);
+                new MftfApplicationConfig(
+                    $forceGenerate,
+                    $phase,
+                    $verboseEnabled,
+                    $debugLevel,
+                    $allowSkipped,
+                    $filters
+                );
         }
     }
 
@@ -195,5 +223,15 @@ class MftfApplicationConfig
     public function getPhase()
     {
         return $this->phase;
+    }
+
+    /**
+     * Returns a class with registered filter list.
+     *
+     * @return FilterList
+     */
+    public function getFilterList()
+    {
+        return $this->filterList;
     }
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="FunctionalActionGroupForMerge">
+        <arguments>
+            <argument name="myArg"/>
+        </arguments>
+        <fillField stepKey="deleteMe" userInput="Please delete me" selector="#delete" />
+        <see selector="{{SampleSection.oneParamElement(myArg.firstname)}}" stepKey="see1"/>
+        <amOnPage url="{{SamplePage.url(myArg.firstname,myArg.lastname)}}" stepKey="amOnPage1"/>
+    </actionGroup>
+</actionGroups>

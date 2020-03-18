@@ -85,6 +85,16 @@ The following example shows the usage of `grabValueFrom` in testing, where the r
 <fillField selector=".functionalTestSelector" userInput="{$grabStepKey}" stepKey="fillFieldKey1"/>
 ```
 
+The following is an example of the `Magento/Catalog/Test/Mftf/ActionGroup/AssertDiscountsPercentageOfProductsActionGroup.xml` test:
+
+```xml
+<grabValueFrom selector="{{AdminProductFormAdvancedPricingSection.productTierPricePercentageValuePriceInput('0')}}" stepKey="grabProductTierPriceInput"/>
+<assertEquals stepKey="assertProductTierPriceInput">
+    <expectedResult type="string">{{amount}}</expectedResult>
+    <actualResult type="string">$grabProductTierPriceInput</actualResult>
+</assertEquals>
+```
+
 ## Hard-coded data input
 
 The data to operate against can be included as literals in a test. Hard-coded data input can be useful in assertions.
@@ -197,6 +207,7 @@ Attributes|Type|Use|Description
 ---|---|---|---
 `name`|string|optional|Name of the `<entity>`.
 `type`|string|optional|Node containing the exact name of `<entity>` type. Used later to find specific Persistence Layer Model class. `type` in `<data>` can be whatever the user wants; There are no constraints. It is important when persisting data, depending on the `type` given, as it will try to match a metadata definition with the operation being done. Example: A `myCustomer` entity with `type="customer"`, calling `<createData entity="myCustomer"/>`, will try to find a metadata entry with the following attributes: `<operation dataType="customer" type="create">`.
+`deprecated`|string|optional|Used to warn about the future deprecation of the data entity. String will appear in Allure reports and console output at runtime.
 
 `<entity>` may contain one or more [`<data>`][], [`<var>`][], [`<required-entities>`][], or [`<array>`][] elements in any sequence.
 

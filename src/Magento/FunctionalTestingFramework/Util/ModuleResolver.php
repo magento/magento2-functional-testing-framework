@@ -12,6 +12,8 @@ use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
 use Symfony\Component\HttpFoundation\Response;
+use \Magento\FunctionalTestingFramework\Util\ModuleResolver\AlphabeticSequenceSorter;
+use \Magento\FunctionalTestingFramework\Util\ModuleResolver\SequenceSorterInterface;
 
 /**
  * Class ModuleResolver, resolve module path based on enabled modules of target Magento instance.
@@ -54,12 +56,6 @@ class ModuleResolver
     . 'tests'
     . DIRECTORY_SEPARATOR
     . 'functional';
-    const DEPRECATED_DEV_TESTS = DIRECTORY_SEPARATOR
-        . self:: DEV_TESTS
-        . DIRECTORY_SEPARATOR
-        . "Magento"
-        . DIRECTORY_SEPARATOR
-        . "FunctionalTest";
 
     /**
      * Enabled modules.
@@ -180,9 +176,12 @@ class ModuleResolver
     private function __construct()
     {
         $objectManager = \Magento\FunctionalTestingFramework\ObjectManagerFactory::getObjectManager();
-        $this->sequenceSorter = $objectManager->get(
-            \Magento\FunctionalTestingFramework\Util\ModuleResolver\SequenceSorterInterface::class
-        );
+
+        if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::UNIT_TEST_PHASE) {
+            $this->sequenceSorter = $objectManager->get(AlphabeticSequenceSorter::class);
+        } else {
+            $this->sequenceSorter = $objectManager->get(SequenceSorterInterface::class);
+        }
     }
 
     /**
@@ -321,15 +320,16 @@ class ModuleResolver
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
         $modulePath = FilePathFormatter::format($modulePath, false);
 
-        $vendorCodePath = DIRECTORY_SEPARATOR . self::VENDOR;
-        $appCodePath = DIRECTORY_SEPARATOR . self::APP_CODE;
+        // If $modulePath is DEV_TESTS path, we don't need to search by pattern
+        if (strpos($modulePath, self::DEV_TESTS) === false) {
+            $codePathsToPattern[$modulePath] = '';
+        }
 
-        $codePathsToPattern = [
-            $modulePath => '',
-            $magentoBaseCodePath . $vendorCodePath => self::TEST_MFTF_PATTERN,
-            $magentoBaseCodePath . $appCodePath => self::TEST_MFTF_PATTERN,
-            $magentoBaseCodePath . self::DEPRECATED_DEV_TESTS => ''
-        ];
+        $vendorCodePath = DIRECTORY_SEPARATOR . self::VENDOR;
+        $codePathsToPattern[$magentoBaseCodePath . $vendorCodePath] = self::TEST_MFTF_PATTERN;
+
+        $appCodePath = DIRECTORY_SEPARATOR . self::APP_CODE;
+        $codePathsToPattern[$magentoBaseCodePath . $appCodePath] = self::TEST_MFTF_PATTERN;
 
         foreach ($codePathsToPattern as $codePath => $pattern) {
             $allModulePaths = array_merge_recursive($allModulePaths, $this->globRelevantPaths($codePath, $pattern));
@@ -374,22 +374,6 @@ class ModuleResolver
             }
         }
 
-        /* TODO uncomment this to show deprecation warning when we ready to fully deliver test packaging feature
-        if (strpos($testPath, self::DEPRECATED_DEV_TESTS) !== false && !empty($modulePaths)) {
-            $deprecatedPath = ltrim(self::DEPRECATED_DEV_TESTS, DIRECTORY_SEPARATOR);
-            $suggestedPath = self::DEV_TESTS . DIRECTORY_SEPARATOR . 'Magento';
-            $message = "DEPRECATION: Found MFTF test modules in the deprecated path: $deprecatedPath."
-                . " Move these test modules to $suggestedPath.";
-
-            if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-                LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->warning($message);
-            }
-            // Suppress print during unit testing
-            if (MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE) {
-                print ("\n$message\n\n");
-            }
-        }
-        */
         return $modulePaths;
     }
 
@@ -556,10 +540,10 @@ class ModuleResolver
         foreach ($objectArray as $path => $modules) {
             if (is_array($modules) && count($modules) > 1) {
                 // The "one path => many module names" case is designed to be strictly used when it's
-                // impossible to write tests in dedicated modules. Due to performance consideration and there
-                // is no real usage of this currently, we will use the first module name for the path.
-                // TODO: consider saving all module names if this information is needed in the future.
-                $module = $modules[0];
+                // impossible to write tests in dedicated modules.
+                // For now we will set module name based on path.
+                // TODO: Consider saving all module names if this information is needed in the future.
+                $module = $this->findVendorAndModuleNameFromPath($path);
             } elseif (is_array($modules)) {
                 if (strpos($modules[0], '_') === false) {
                     $module = $this->findVendorNameFromPath($path) . '_' . $modules[0];

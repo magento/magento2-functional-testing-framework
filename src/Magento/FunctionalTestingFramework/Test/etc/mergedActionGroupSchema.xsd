@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:include schemaLocation="../../Test/etc/actionTypeTags.xsd"/>
+    <xs:element name="actionGroups" type="actionGroupType"/>
+    <xs:complexType name="actionGroupType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element type="actionsRefType" name="actionGroup" maxOccurs="unbounded"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="actionsRefType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="actionTypeTags"/>
+            <xs:element name="arguments">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="argument" maxOccurs="unbounded" minOccurs="0">
+                            <xs:complexType>
+                                <xs:attribute type="xs:string" name="name" use="required"/>
+                                <xs:attribute type="xs:string" name="defaultValue"/>
+                                <xs:attribute type="dataTypeEnum" name="type" default="entity"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="annotations">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="description"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="filename"/>
+        <xs:attribute type="xs:string" name="insertBefore"/>
+        <xs:attribute type="xs:string" name="insertAfter"/>
+        <xs:attribute type="xs:string" name="extends"/>
+        <xs:attribute type="xs:string" name="deprecated">
+            <xs:annotation>
+                <xs:documentation>
+                    Message and flag which shows that entity is deprecated.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:simpleType name="dataTypeEnum" final="restriction">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="string"/>
+            <xs:enumeration value="entity"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

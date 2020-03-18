@@ -8,7 +8,6 @@ namespace Magento\FunctionalTestingFramework\Test\Objects;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
-use Magento\FunctionalTestingFramework\Test\Util\ObjectExtension;
 
 /**
  * Class ActionGroupObject

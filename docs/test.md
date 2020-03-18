@@ -49,9 +49,7 @@ The following conventions apply to MFTF tests:
 *  Each action and action group has its own identifier `<stepKey>` for reference purposes.
 *  A test may have any number of [assertions][assertion] at any point within the `<test>`.
 *  If `<test>` is included in `<suite>`, it **cannot be generated in isolation** to the rest of the contents of the suite (see [suites] for details).
-
-Multiple `<test>` tags per XML file can make it hard to find and organize tags.
-To simplify, we generate one `test.php` file per `<test>` tag provided, though we support both single and multiple `<test>` tags per XML file.
+*  One `<test>` tag is allowed per test XML file.
 
 ## Elements reference
 
@@ -73,6 +71,7 @@ Attribute|Type|Use|Description
 `remove`|boolean|optional|Set `true` to remove the test when merging.
 `insertBefore`|string|optional| This option is used for [merging]. It enables you to add all test actions contained in the original test into a test with the same name BEFORE the test step with `stepKey` that you assigned in `insertBefore`.
 `insertAfter`|string|optional| Set `stepKey` of the test step after which you want to insert the test when [merging].
+`deprecated`|string|optional|Used to warn about the future deprecation of the test. String will appear in Allure reports and console output at runtime.
 `extends`|string|optional|A name of the parent test to [extend].
 
 `<test>` may also contain [`<annotations>`], [`<before>`], [`<after>`], any [action][actions], or [`<actionGroup>`].

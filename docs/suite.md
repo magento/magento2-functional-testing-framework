@@ -52,6 +52,7 @@ The format of a suite:
     
 -  A suite must contain at least one `<include>`, or one `<exclude>`, or both.
 -  Using `<before>` in a suite, you must add the corresponding `<after>` to restore the initial state of your testing instance.
+-  One `<suite>` tag is allowed per suite XML file.
 
 ## Conditions
 

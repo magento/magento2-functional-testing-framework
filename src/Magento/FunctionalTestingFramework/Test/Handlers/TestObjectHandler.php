@@ -15,7 +15,8 @@ use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
 use Magento\FunctionalTestingFramework\Test\Util\ObjectExtensionUtil;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
-use Magento\FunctionalTestingFramework\Test\Util\AnnotationExtractor;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
 
 /**
  * Class TestObjectHandler
@@ -23,6 +24,7 @@ use Magento\FunctionalTestingFramework\Test\Util\AnnotationExtractor;
 class TestObjectHandler implements ObjectHandlerInterface
 {
     const XML_ROOT = 'tests';
+    const TEST_FILENAME_ATTRIBUTE = 'filename';
 
     /**
      * Test Object Handler
@@ -140,7 +142,10 @@ class TestObjectHandler implements ObjectHandlerInterface
         }
 
         $exceptionCollector = new ExceptionCollector();
-        foreach ($parsedTestArray[TestObjectHandler::XML_ROOT] as $testName => $testData) {
+        $testNameValidator = new NameValidationUtil();
+        foreach ($parsedTestArray as $testName => $testData) {
+            $filename = $testData[TestObjectHandler::TEST_FILENAME_ATTRIBUTE];
+            $testNameValidator->validatePascalCase($testName, NameValidationUtil::TEST_NAME, $filename);
             if (!is_array($testData)) {
                 continue;
             }
@@ -151,7 +156,7 @@ class TestObjectHandler implements ObjectHandlerInterface
             }
         }
         $exceptionCollector->throwException();
-        
+        $testNameValidator->summarize(NameValidationUtil::TEST_NAME);
         $testObjectExtractor->getAnnotationExtractor()->validateStoryTitleUniqueness();
         $testObjectExtractor->getAnnotationExtractor()->validateTestCaseIdTitleUniqueness();
     }
