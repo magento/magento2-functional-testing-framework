@@ -12,11 +12,15 @@ Instead of writing everything by yourself - use `extends` attribute to refer to 
 
 **Reusable Resources**
 
+{%raw%}
+
 *  Tests (reusable with `<test extends="...">` argument)
 *  Action Group (reusable with including `<actionGroup ref="...">`, or extending `<actionGroup extends="...">`)
 *  Pages (reusable with reference `{{PageDefinition.url}}`)
 *  Sections (reusable with reference `{{SectionDefinition.elementDefinition}}`)
 *  Data Entities (reusable with reference `<createData entity="...">"` or extending `<entity extends="...">`)
+
+{%endraw%}
 
 <div class="bs-callout bs-callout-warning" markdown="1">
 
