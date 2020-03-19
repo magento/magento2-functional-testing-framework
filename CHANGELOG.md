@@ -1,7 +1,32 @@
 Magento Functional Testing Framework Changelog
 ================================================
-3.0.0
------
+3.0.0 RC1
+---------
+
+### Enhancements
+* Customizability
+    * Introduced MFTF helpers `<helper>` to create custom actions outside of MFTF.
+    * Removed deprecated actions `<executeSelenium>` and `<performOn>`.
+* Maintainability
+    * Schema updates for test entities to only allow single entity per file except Data and Metadata.
+    * Support for sub-folders in test modules.
+    * Removed support to read test entities from `<magento>dev/tests/acceptance/tests/functional/Magento/FunctionalTest`. 
+    * Removed support for PHP 7.0 and 7.1.
+    * Removed file attribute for `<module>` in suiteSchema.
+* Traceability
+    * Removed `--debug` option NONE to disallow ability to turn off schema validation.
+    * Notices added for test entity naming convention violations.
+    * Metadata file names changed to `*Meta.xml`.
+* Readability
+    * Support only nested assertion syntax [See assertions page for details](./docs/test/assertions.md)       
+* Upgrade scripts added to upgrade tests to MFTF major version requirements. See upgrade instructions below.
+* Bumped dependencies to latest possible versions.
+
+### Fixes
+* Throw exception during generation when leaving out .url for `amOnPage`.
+* `request_timeout` and `connection_timeout` added to functional.suite.yml.dist.
+* Fixed `ModuleResolver` to resolve test modules moved out of deprecated path.
+
 ### Upgrade Instructions
 * Run `bin/mftf reset --hard` to remove old generated configurations.
 * Run `bin/mftf build:project` to generate new configurations.
