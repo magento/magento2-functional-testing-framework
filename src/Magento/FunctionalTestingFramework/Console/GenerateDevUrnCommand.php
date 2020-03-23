@@ -4,7 +4,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
@@ -20,6 +20,14 @@ use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 class GenerateDevUrnCommand extends Command
 {
     /**
+     * Argument for the path to IDE config file
+     */
+    const IDE_FILE_PATH_ARGUMENT = 'path';
+
+    const PROJECT_PATH_IDENTIFIER = '$PROJECT_DIR$';
+    const MFTF_SRC_PATH = 'src/Magento/FunctionalTestingFramework/';
+
+    /**
      * Configures the current command.
      *
      * @return void
@@ -27,8 +35,12 @@ class GenerateDevUrnCommand extends Command
     protected function configure()
     {
         $this->setName('generate:urn-catalog')
-            ->setDescription('This command generates an URN catalog to enable PHPStorm to recognize and highlight URNs.')
-            ->addArgument('path', InputArgument::REQUIRED, 'path to PHPStorm misc.xml file (typically located in [ProjectRoot]/.idea/misc.xml)')
+            ->setDescription('Generates the catalog of URNs to *.xsd mappings for the IDE to highlight xml.')
+            ->addArgument(
+                self::IDE_FILE_PATH_ARGUMENT,
+                InputArgument::REQUIRED,
+                'Path to file to output the catalog. For PhpStorm use .idea/misc.xml'
+            )
             ->addOption(
                 "force",
                 'f',
@@ -47,7 +59,7 @@ class GenerateDevUrnCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $miscXmlFilePath = $input->getArgument('path') . DIRECTORY_SEPARATOR . "misc.xml";
+        $miscXmlFilePath = $input->getArgument(self::IDE_FILE_PATH_ARGUMENT);
         $miscXmlFile = realpath($miscXmlFilePath);
         $force = $input->getOption('force');
 
@@ -71,7 +83,7 @@ class GenerateDevUrnCommand extends Command
 
         //Locate ProjectResources node, create one if none are found.
         $nodeForWork = null;
-        foreach($dom->getElementsByTagName('component') as $child) {
+        foreach ($dom->getElementsByTagName('component') as $child) {
             if ($child->getAttribute('name') === 'ProjectResources') {
                 $nodeForWork = $child;
             }
@@ -109,35 +121,74 @@ class GenerateDevUrnCommand extends Command
 
     /**
      * Generates urn => location array for all MFTF schema.
+     *
      * @return array
-     * @throws TestFrameworkException
      */
     private function generateResourcesArray()
     {
         $resourcesArray = [
             'urn:magento:mftf:DataGenerator/etc/dataOperation.xsd' =>
-                realpath(FilePathFormatter::format(FW_BP)
-                    . 'src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataOperation.xsd'),
+                $this->getResourcePath('DataGenerator/etc/dataOperation.xsd'),
             'urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd' =>
-                realpath(FilePathFormatter::format(FW_BP)
-                    . 'src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd'),
+                $this->getResourcePath('DataGenerator/etc/dataProfileSchema.xsd'),
             'urn:magento:mftf:Page/etc/PageObject.xsd' =>
-                realpath(FilePathFormatter::format(FW_BP)
-                    . 'src/Magento/FunctionalTestingFramework/Page/etc/PageObject.xsd'),
+                $this->getResourcePath('Page/etc/PageObject.xsd'),
             'urn:magento:mftf:Page/etc/SectionObject.xsd' =>
-                realpath(FilePathFormatter::format(FW_BP)
-                    . 'src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd'),
+                $this->getResourcePath('Page/etc/SectionObject.xsd'),
             'urn:magento:mftf:Test/etc/actionGroupSchema.xsd' =>
-                realpath(FilePathFormatter::format(FW_BP)
-                    . 'src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd'),
+                $this->getResourcePath('Test/etc/actionGroupSchema.xsd'),
             'urn:magento:mftf:Test/etc/testSchema.xsd' =>
-                realpath(FilePathFormatter::format(FW_BP)
-                    . 'src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd'),
+                $this->getResourcePath('Test/etc/testSchema.xsd'),
             'urn:magento:mftf:Suite/etc/suiteSchema.xsd' =>
-                realpath(FilePathFormatter::format(FW_BP)
-                    . 'src/Magento/FunctionalTestingFramework/Suite/etc/suiteSchema.xsd')
+                $this->getResourcePath('Suite/etc/suiteSchema.xsd')
         ];
         return $resourcesArray;
     }
 
+    /**
+     * Returns path (full or PhpStorm project-based) to XSD file
+     *
+     * @param $relativePath
+     * @return string
+     * @throws TestFrameworkException
+     */
+    private function getResourcePath($relativePath)
+    {
+        $urnPath = realpath(FilePathFormatter::format(FW_BP) . self::MFTF_SRC_PATH . $relativePath);
+        $projectRoot = $this->getProjectRootPath();
+
+        if ($projectRoot !== null) {
+            return str_replace($projectRoot, self::PROJECT_PATH_IDENTIFIER, $urnPath);
+        }
+
+        return $urnPath;
+    }
+
+    /**
+     * Returns Project root directory absolute path
+     * @TODO Find out how to detect other types of installation
+     *
+     * @return string|null
+     */
+    private function getProjectRootPath()
+    {
+        $frameworkRoot = realpath(__DIR__);
+
+        if ($this->isInstalledByComposer($frameworkRoot)) {
+            return strstr($frameworkRoot, '/vendor/', true);
+        }
+
+        return null;
+    }
+
+    /**
+     * Determines whether MFTF was installed using Composer
+     *
+     * @param string $frameworkRoot
+     * @return bool
+     */
+    private function isInstalledByComposer($frameworkRoot)
+    {
+        return false !== strpos($frameworkRoot, '/vendor/');
+    }
 }
