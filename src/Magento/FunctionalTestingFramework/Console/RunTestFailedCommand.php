@@ -84,6 +84,12 @@ class RunTestFailedCommand extends BaseGenerateCommand
 
         $force = $input->getOption('force');
         $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
+
+        @TODO: Remove when builds are fixed
+        if (strtolower($debug) === 'none') {
+            $debug = MftfApplicationConfig::LEVEL_DEFAULT;
+        }
+        
         $allowSkipped = $input->getOption('allow-skipped');
         $verbose = $output->isVerbose();
 
