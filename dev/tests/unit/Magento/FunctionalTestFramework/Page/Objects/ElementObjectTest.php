@@ -32,7 +32,7 @@ class ElementObjectTest extends MagentoTestCase
         $element = new ElementObject('name', 'type', 'selector', null, '15', false);
         $timeout = $element->getTimeout();
         $this->assertEquals(15, $timeout);
-        $this->assertInternalType('int', $timeout);
+        $this->assertIsInt($timeout);
     }
 
     /**
@@ -43,7 +43,7 @@ class ElementObjectTest extends MagentoTestCase
         $element = new ElementObject('name', 'type', 'selector', null, 'helloString', true);
         $timeout = $element->getTimeout();
         $this->assertEquals(0, $timeout);
-        $this->assertInternalType('int', $timeout);
+        $this->assertIsInt($timeout);
     }
 
     /**

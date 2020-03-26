@@ -23,7 +23,7 @@ class TestGeneratorTest extends MagentoTestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         AspectMock::clean();
     }
@@ -70,8 +70,8 @@ class TestGeneratorTest extends MagentoTestCase
         $testGeneratorObject = TestGenerator::getInstance("", ["sampleTest" => $testObject]);
         $output = $testGeneratorObject->assembleTestPhp($testObject);
 
-        $this->assertContains('This test is skipped', $output);
-        $this->assertNotContains($actionInput, $output);
+        $this->assertStringContainsString('This test is skipped', $output);
+        $this->assertStringNotContainsString($actionInput, $output);
     }
 
     /**
@@ -106,9 +106,9 @@ class TestGeneratorTest extends MagentoTestCase
         $testGeneratorObject = TestGenerator::getInstance("", ["sampleTest" => $testObject]);
         $output = $testGeneratorObject->assembleTestPhp($testObject);
 
-        $this->assertNotContains('This test is skipped', $output);
-        $this->assertContains($actionInput, $output);
-        $this->assertContains($beforeActionInput, $output);
+        $this->assertStringNotContainsString('This test is skipped', $output);
+        $this->assertStringContainsString($actionInput, $output);
+        $this->assertStringContainsString($beforeActionInput, $output);
     }
 
     /**

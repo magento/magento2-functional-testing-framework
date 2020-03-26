@@ -29,7 +29,7 @@ class SuiteGeneratorTest extends MagentoTestCase
     /**
      * Setup entry append and clear for Suite Generator
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         AspectMock::double(SuiteGenerator::class, [
             'clearPreviousSessionConfigEntries' => null,
@@ -41,7 +41,7 @@ class SuiteGeneratorTest extends MagentoTestCase
      * Before test functionality
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
         $resolverMock = new MockModuleResolverBuilder();
@@ -274,7 +274,7 @@ class SuiteGeneratorTest extends MagentoTestCase
     /**
      * clean up function runs after all tests
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
         parent::tearDownAfterClass();
