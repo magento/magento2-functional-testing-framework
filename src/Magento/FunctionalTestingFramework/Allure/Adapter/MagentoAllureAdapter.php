@@ -253,6 +253,8 @@ class MagentoAllureAdapter extends AllureCodeception
      * @param TestEvent $testEvent
      *
      * @throws \Yandex\Allure\Adapter\AllureException
+     *
+     * @return void
      */
     public function testEnd(TestEvent $testEvent)
     {
