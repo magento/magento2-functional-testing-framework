@@ -14,6 +14,7 @@ use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Yandex\Allure\Adapter\Model\Status;
 use Yandex\Allure\Adapter\Model\Step;
+use Yandex\Allure\Adapter\Allure;
 use Yandex\Allure\Codeception\AllureCodeception;
 use Yandex\Allure\Adapter\Event\StepStartedEvent;
 use Yandex\Allure\Adapter\Event\StepFinishedEvent;
@@ -82,7 +83,7 @@ class MagentoAllureAdapter extends AllureCodeception
 
             call_user_func(\Closure::bind(
                 function () use ($suite, $suiteName) {
-                    $suite->name = $suiteName;
+                    $suite->setName($suiteName);
                 },
                 null,
                 $suite
@@ -249,11 +250,8 @@ class MagentoAllureAdapter extends AllureCodeception
 
     /**
      * Override of parent method, polls stepStorage for testcase and formats it according to actionGroup nesting.
-     *
      * @param TestEvent $testEvent
-     *
      * @throws \Yandex\Allure\Adapter\AllureException
-     *
      * @return void
      */
     public function testEnd(TestEvent $testEvent)
@@ -317,6 +315,19 @@ class MagentoAllureAdapter extends AllureCodeception
 
         $this->getLifecycle()->getStepStorage()->put($rootStep);
 
+        $this->addAttachmentEvent($testEvent);
+
+        $this->getLifecycle()->fire(new TestCaseFinishedEvent());
+    }
+
+    /**
+     * Fire add attachment event
+     * @param TestEvent $testEvent
+     * @throws \Yandex\Allure\Adapter\AllureException
+     * @return void
+     */
+    private function addAttachmentEvent(TestEvent $testEvent)
+    {
         // attachments supported since Codeception 3.0
         if (version_compare(Codecept::VERSION, '3.0.0') > -1 && $testEvent->getTest() instanceof Cest) {
             $artifacts = $testEvent->getTest()->getMetadata()->getReports();
@@ -324,8 +335,6 @@ class MagentoAllureAdapter extends AllureCodeception
                 Allure::lifecycle()->fire(new AddAttachmentEvent($artifact, $name, null));
             }
         }
-
-        $this->getLifecycle()->fire(new TestCaseFinishedEvent());
     }
 
     /**
