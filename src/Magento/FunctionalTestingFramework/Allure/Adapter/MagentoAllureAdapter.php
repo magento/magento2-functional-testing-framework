@@ -5,6 +5,8 @@
  */
 namespace Magento\FunctionalTestingFramework\Allure\Adapter;
 
+use Codeception\Codecept;
+use Codeception\Test\Cest;
 use Codeception\Step\Comment;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
@@ -19,9 +21,11 @@ use Yandex\Allure\Adapter\Event\StepFailedEvent;
 use Yandex\Allure\Adapter\Event\TestCaseFailedEvent;
 use Yandex\Allure\Adapter\Event\TestCaseFinishedEvent;
 use Yandex\Allure\Adapter\Event\TestCaseBrokenEvent;
+use Yandex\Allure\Adapter\Event\AddAttachmentEvent;
 use Codeception\Event\FailEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\StepEvent;
+use Codeception\Event\TestEvent;
 
 /**
  * Class MagentoAllureAdapter
@@ -246,9 +250,11 @@ class MagentoAllureAdapter extends AllureCodeception
     /**
      * Override of parent method, polls stepStorage for testcase and formats it according to actionGroup nesting.
      *
-     * @return void
+     * @param TestEvent $testEvent
+     *
+     * @throws \Yandex\Allure\Adapter\AllureException
      */
-    public function testEnd()
+    public function testEnd(TestEvent $testEvent)
     {
         // Pops top of stepStorage, need to add it back in after processing
         $rootStep = $this->getLifecycle()->getStepStorage()->pollLast();
@@ -308,6 +314,14 @@ class MagentoAllureAdapter extends AllureCodeception
         ));
 
         $this->getLifecycle()->getStepStorage()->put($rootStep);
+
+        // attachments supported since Codeception 3.0
+        if (version_compare(Codecept::VERSION, '3.0.0') > -1 && $testEvent->getTest() instanceof Cest) {
+            $artifacts = $testEvent->getTest()->getMetadata()->getReports();
+            foreach ($artifacts as $name => $artifact) {
+                Allure::lifecycle()->fire(new AddAttachmentEvent($artifact, $name, null));
+            }
+        }
 
         $this->getLifecycle()->fire(new TestCaseFinishedEvent());
     }
