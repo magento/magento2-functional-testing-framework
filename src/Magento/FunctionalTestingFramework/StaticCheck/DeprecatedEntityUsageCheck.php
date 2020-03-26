@@ -10,7 +10,10 @@ use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
-use Symfony\Component\Console\Exception\InvalidArgumentException;
+use Magento\FunctionalTestingFramework\Page\Objects\ElementObject;
+use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
+use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
+use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Finder\Finder;
 use Exception;
@@ -26,6 +29,7 @@ use DOMElement;
 /**
  * Class DeprecatedEntityUsageCheck
  * @package Magento\FunctionalTestingFramework\StaticCheck
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class DeprecatedEntityUsageCheck implements StaticCheckInterface
 {
@@ -68,7 +72,7 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
      *
      * @param InputInterface $input
      * @return string
-     * @throws Exception;
+     * @throws Exception
      */
     public function execute(InputInterface $input)
     {
@@ -79,7 +83,7 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
         $path = $input->getOption('path');
         if ($path) {
             if (!realpath($path)) {
-                throw new InvalidArgumentException("Invalid --path option: " . $path);
+                return "Invalid --path option: " . $path;
             }
             MftfApplicationConfig::create(
                 true,
@@ -251,6 +255,7 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
      *
      * @param Finder $files
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function findReferenceErrorsInDataFiles($files)
     {
@@ -329,7 +334,7 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
      * Return attribute value for each node in DOMNodeList as an array
      *
      * @param DOMNodeList $nodes
-     * @param string $attributeName
+     * @param string      $attributeName
      * @return array
      */
     private function getAttributesFromDOMNodeList($nodes, $attributeName)
@@ -411,6 +416,8 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
      *
      * @param array $references
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     private function findViolatingMetadataReferences($references)
     {
@@ -526,9 +533,9 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
             if ($entity->getDeprecated()) {
                 $classType = get_class($entity);
                 $name = $entity->getName();
-                if ($classType === 'Magento\FunctionalTestingFramework\Page\Objects\ElementObject') {
+                if ($classType === ElementObject::class) {
                     $name = $key;
-                    list($section, $field) = explode('.', $key, 2);
+                    list($section,) = explode('.', $key, 2);
                     /** @var SectionObject $references[$section] */
                     $file = $references[$section]->getFilename();
                 } else {
@@ -578,19 +585,19 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
     private function getSubjectFromClassType($classname)
     {
         $subject = null;
-        if ($classname === 'Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject') {
+        if ($classname === ActionGroupObject::class) {
             $subject = 'Deprecated ActionGroup(s)';
-        } elseif ($classname === 'Magento\FunctionalTestingFramework\Test\Objects\TestObject') {
+        } elseif ($classname === TestObject::class) {
             $subject = 'Deprecated Test(s)';
-        } elseif ($classname === 'Magento\FunctionalTestingFramework\Page\Objects\SectionObject') {
+        } elseif ($classname === SectionObject::class) {
             $subject = 'Deprecated Section(s)';
-        } elseif ($classname === 'Magento\FunctionalTestingFramework\Page\Objects\PageObject') {
+        } elseif ($classname === PageObject::class) {
             $subject = 'Deprecated Page(s)';
-        } elseif ($classname === 'Magento\FunctionalTestingFramework\Page\Objects\ElementObject') {
+        } elseif ($classname === ElementObject::class) {
             $subject = 'Deprecated Element(s)';
-        } elseif ($classname === 'Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject') {
+        } elseif ($classname === EntityDataObject::class) {
             $subject = 'Deprecated Data(s)';
-        } elseif ($classname === 'Magento\FunctionalTestingFramework\DataGenerator\Objects\OperationDefinitionObject') {
+        } elseif ($classname === OperationDefinitionObject::class) {
             $subject = 'Deprecated Metadata(s)';
         }
         return $subject;

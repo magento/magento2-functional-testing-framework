@@ -144,7 +144,7 @@ class ScriptUtil
             if ($entity !== null) {
                 $entities[$entity->getName()] = $entity;
                 if ($resolveSectionElement) {
-                    if (get_class($entity) === 'Magento\FunctionalTestingFramework\Page\Objects\SectionObject') {
+                    if (get_class($entity) === SectionObject::class) {
                         // trim `{{data.field}}` to `field`
                         preg_match('/.([^.]+)}}/', $reference, $elementName);
                         /** @var ElementObject $element */
@@ -168,6 +168,7 @@ class ScriptUtil
      * @param boolean $resolveSectionElement
      * @return array
      * @throws XmlException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function resolveParametrizedReferences($braceReferences, $contents, $resolveSectionElement = false)
     {
@@ -197,7 +198,7 @@ class ScriptUtil
                 if ($entity !== null) {
                     $entities[$entity->getName()] = $entity;
                     if ($resolveSectionElement) {
-                        if (get_class($entity) === 'Magento\FunctionalTestingFramework\Page\Objects\SectionObject') {
+                        if (get_class($entity) === SectionObject::class) {
                             // trim `data.field` to `field`
                             preg_match('/.([^.]+)/', $argument, $elementName);
                             /** @var ElementObject $element */

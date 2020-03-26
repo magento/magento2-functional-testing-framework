@@ -85,7 +85,7 @@ class TestDependencyCheck implements StaticCheckInterface
      *
      * @param InputInterface $input
      * @return string
-     * @throws Exception;
+     * @throws Exception
      */
     public function execute(InputInterface $input)
     {
