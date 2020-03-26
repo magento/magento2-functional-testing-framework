@@ -15,6 +15,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Exception;
 
@@ -52,6 +53,12 @@ class StaticChecksCommand extends Command
                 'names',
                 InputArgument::OPTIONAL | InputArgument::IS_ARRAY,
                 'name(s) of specific static check script(s) to run'
+            )->addOption(
+                'path',
+                'p',
+                InputOption::VALUE_OPTIONAL,
+                'Path to a MFTF test module to run "deprecatedEntityUsage" static check script. ' . PHP_EOL
+                . 'Option is ignored by other static check scripts.' . PHP_EOL
             );
     }
 
@@ -66,7 +73,7 @@ class StaticChecksCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $this->validateInputArguments($input, $output);
+            $this->validateInputArguments($input);
         } catch (InvalidArgumentException $e) {
             LoggingUtil::getInstance()->getLogger(StaticChecksCommand::class)->error($e->getMessage());
             $output->writeln($e->getMessage() . " Please fix input arguments and rerun.");
