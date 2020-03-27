@@ -27,8 +27,10 @@ class Root extends Mask
     public function get($filename, $scope)
     {
         // First pick up the root level test suite dir
+        $rootSuitePath = defined('MAGENTO_BP') ? MAGENTO_BP . '/dev/tests/acceptance/' : TESTS_BP;
+
         $paths = glob(
-            FilePathFormatter::format(TESTS_BP) . self::ROOT_SUITE_DIR
+            FilePathFormatter::format($rootSuitePath) . self::ROOT_SUITE_DIR
             . DIRECTORY_SEPARATOR . '*.xml'
         );
 

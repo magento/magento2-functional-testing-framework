@@ -75,8 +75,3 @@ if (!(bool)$debug_mode && extension_loaded('xdebug')) {
     xdebug_disable();
 }
 
-// include suite php files
-$groupPath = PROJECT_ROOT . '/src/Magento/FunctionalTestingFramework/Group';
-foreach (glob($groupPath. '/*.php') as $suitePhpFile) {
-    include_once $suitePhpFile;
-}
