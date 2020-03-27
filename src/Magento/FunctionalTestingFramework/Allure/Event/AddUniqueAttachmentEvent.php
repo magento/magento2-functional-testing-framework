@@ -6,8 +6,7 @@
  */
 namespace Magento\FunctionalTestingFramework\Allure\Event;
 
-use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
+use Symfony\Component\Mime\MimeTypes;
 use Yandex\Allure\Adapter\AllureException;
 use Yandex\Allure\Adapter\Event\AddAttachmentEvent;
 
@@ -73,7 +72,7 @@ class AddUniqueAttachmentEvent extends AddAttachmentEvent
      */
     private function guessFileMimeType($filePath)
     {
-        $type = MimeTypeGuesser::getInstance()->guess($filePath);
+        $type = MimeTypes::getDefault()->guessMimeType($filePath);
         if (!isset($type)) {
             return DEFAULT_MIME_TYPE;
         }
@@ -87,11 +86,11 @@ class AddUniqueAttachmentEvent extends AddAttachmentEvent
      */
     private function guessFileExtension($mimeType)
     {
-        $candidate = ExtensionGuesser::getInstance()->guess($mimeType);
-        if (!isset($candidate)) {
+        $candidate = MimeTypes::getDefault()->getExtensions($mimeType);
+        if (empty($candidate)) {
             return DEFAULT_FILE_EXTENSION;
         }
-        return $candidate;
+        return reset($candidate);
     }
 
     /**
