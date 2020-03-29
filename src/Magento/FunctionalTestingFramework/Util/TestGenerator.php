@@ -261,7 +261,7 @@ class TestGenerator
         $className = $testObject->getCodeceptionName();
         try {
             if (!$testObject->isSkipped() || MftfApplicationConfig::getConfig()->allowSkipped()) {
-                $hookPhp = $this->generateHooksPhp($testObject->getHooks());
+                $hookPhp = $this->generateHooksPhp($testObject);
             } else {
                 $hookPhp = null;
             }
@@ -1658,17 +1658,24 @@ class TestGenerator
     /**
      * Creates a PHP string for the _before/_after methods if the Test contains an <before> or <after> block.
      *
-     * @param TestHookObject[] $hookObjects
+     * @param \Magento\FunctionalTestingFramework\Test\Objects\TestObject $hookObjects
      * @return string
      * @throws TestReferenceException
      * @throws \Exception
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function generateHooksPhp($hookObjects)
+    private function generateHooksPhp(\Magento\FunctionalTestingFramework\Test\Objects\TestObject $testObject)
     {
+        /** @var TestHookObject[] $hookObjects */
+        $hookObjects = $testObject->getHooks();
         $hooks = "";
 
         foreach ($hookObjects as $hookObject) {
+            if ($hookObject->getType() === 'after') {
+                $hooks .= $this->getAfterHook($testObject, $hookObject);
+                continue;
+            }
+
             $type = $hookObject->getType();
             $dependencies = 'AcceptanceTester $I';
 
@@ -1691,6 +1698,52 @@ class TestGenerator
             $hooks .= $steps;
             $hooks .= "\t}\n\n";
         }
+
+        return $hooks;
+    }
+
+    /**
+     * This method overrides the original way of handling `after` section in Tests,
+     * to make sure that all the Actions were executed properly even if one failed.
+     *
+     * @param TestObject $testObject
+     * @param TestHookObject $hook
+     */
+    private function getAfterHook(TestObject $testObject, TestHookObject $hook)
+    {
+        $testName = $testObject->getName();
+
+
+        $dependencies = 'AcceptanceTester $I';
+        $hooks = '';
+
+        $hooks .= "\t/**\n";
+        $hooks .= "\t  * @param AcceptanceTester \$I\n";
+        $hooks .= "\t  * @throws \Exception\n";
+        $hooks .= "\t  */\n";
+
+        $hooks .= sprintf("\tpublic function _after(%s)\n", $dependencies);
+        $hooks .= "\t{\n";
+        $hooks .= "\t\t\$I->comment(\"=== Running `<after>` section to clean up after test:\");\n\n";
+
+        /** @var \Magento\FunctionalTestingFramework\Test\Objects\ActionObject $action */
+        foreach ($hook->getActions() as $action) {
+            try {
+                $hooks .= "\n\t\ttry {\n";
+                $hooks .= $this->generateStepsPhp(
+                    [$action],
+                    TestGenerator::HOOK_SCOPE
+                );
+                $hooks .= "\t\t} catch (\\Exception \$e) {\n";
+                $hooks .= "\t\t\t\$I->comment(\$e);\n";
+                $hooks .= "\t\t}\n";
+            } catch (TestReferenceException $e) {
+                throw new TestReferenceException($e->getMessage() . " in Element \"" . $type . "\"");
+            }
+        }
+
+        $hooks .= "\t}\n\n";
+
 
         return $hooks;
     }
