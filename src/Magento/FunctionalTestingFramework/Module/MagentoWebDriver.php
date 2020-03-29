@@ -1080,4 +1080,26 @@ class MagentoWebDriver extends WebDriver
 
         return sprintf('%s (wait: %ss, execution: %ss)', $cronResult, $waitFor, round($timeEnd - $timeStart, 2));
     }
+
+    /**
+     * Switch to another frame on the page.
+     *
+     * @param string|null $locator (name, ID, CSS or XPath)
+     * @return void
+     * @throws \Exception
+     */
+    public function switchToIFrame($locator = null)
+    {
+        try {
+            parent::switchToIFrame($locator);
+        }
+        catch (\Exception $e) {
+            $els = $this->_findElements("#$locator");
+            if (!count($els)) {
+                $this->debug('Failed to find locator by ID: ' . $e->getMessage());
+                throw new \Exception("IFrame with $locator was not found.");
+            }
+            $this->webDriver->switchTo()->frame($els[0]);
+        }
+    }
 }
