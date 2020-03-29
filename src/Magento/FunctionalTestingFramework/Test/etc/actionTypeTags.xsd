@@ -43,7 +43,7 @@
             <xs:element type="moveForwardType" name="moveForward" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="moveMouseOverType" name="moveMouseOver" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="openNewTabType" name="openNewTab" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="pauseExecutionType" name="pauseExecution" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="pauseType" name="pause" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="pressKeyType" name="pressKey" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="reloadPageType" name="reloadPage" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="resetCookieType" name="resetCookie" minOccurs="0" maxOccurs="unbounded"/>
@@ -415,7 +415,7 @@
         </xs:simpleContent>
     </xs:complexType>
 
-    <xs:complexType name="pauseExecutionType">
+    <xs:complexType name="pauseType">
         <xs:annotation>
             <xs:documentation>
                 Pauses test execution in debug mode. To proceed test, press "ENTER" in console. Useful for test writing.

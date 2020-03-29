@@ -122,8 +122,8 @@
         <openNewTab stepKey="newtab12"/>
         <parseFloat stepKey="parsefloat1"/>
         <parseFloat stepKey="parsefloat12"/>
-        <pauseExecution stepKey="pause1"/>
-        <pauseExecution stepKey="pause12"/>
+        <pause stepKey="pause1"/>
+        <pause stepKey="pause12"/>
         <pressKey selector="1" stepKey="press1"/>
         <pressKey selector="1" stepKey="press12"/>
         <reloadPage stepKey="reload1"/>
