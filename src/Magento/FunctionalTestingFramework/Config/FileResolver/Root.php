@@ -10,6 +10,7 @@ use Magento\FunctionalTestingFramework\Config\FileResolverInterface;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\Iterator\File;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 
 class Root extends Mask
 {
@@ -27,10 +28,8 @@ class Root extends Mask
     public function get($filename, $scope)
     {
         // First pick up the root level test suite dir
-        $rootSuitePath = defined('MAGENTO_BP') ? MAGENTO_BP . '/dev/tests/acceptance/' : TESTS_BP;
-
         $paths = glob(
-            FilePathFormatter::format($rootSuitePath) . self::ROOT_SUITE_DIR
+            FilePathFormatter::format($this->getRootSuiteDirPath()) . self::ROOT_SUITE_DIR
             . DIRECTORY_SEPARATOR . '*.xml'
         );
 
@@ -42,5 +41,26 @@ class Root extends Mask
         // create and return the iterator for these file paths
         $iterator = new File($paths);
         return $iterator;
+    }
+
+    /**
+     * Returns root suite directory _suite 's path
+     *
+     * @return string
+     * @throws TestFrameworkException
+     */
+    public function getRootSuiteDirPath()
+    {
+        if (FilePathFormatter::format(MAGENTO_BP, false)
+            === FilePathFormatter::format(FW_BP, false)) {
+            return TESTS_BP;
+        }
+        else {
+            if (MftfApplicationConfig::getConfig()->getPhase()
+                !== MftfApplicationConfig::UNIT_TEST_PHASE) {
+                return (MAGENTO_BP . DIRECTORY_SEPARATOR . 'dev/tests/acceptance');
+            }
+            return TESTS_BP;
+        }
     }
 }

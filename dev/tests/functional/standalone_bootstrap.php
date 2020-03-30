@@ -74,4 +74,3 @@ $debug_mode = $_ENV['MFTF_DEBUG'] ?? false;
 if (!(bool)$debug_mode && extension_loaded('xdebug')) {
     xdebug_disable();
 }
-
