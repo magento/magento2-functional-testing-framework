@@ -54,8 +54,7 @@ class Root extends Mask
         if (FilePathFormatter::format(MAGENTO_BP, false)
             === FilePathFormatter::format(FW_BP, false)) {
             return TESTS_BP;
-        }
-        else {
+        } else {
             if (MftfApplicationConfig::getConfig()->getPhase()
                 !== MftfApplicationConfig::UNIT_TEST_PHASE) {
                 return (MAGENTO_BP . DIRECTORY_SEPARATOR . 'dev/tests/acceptance');
