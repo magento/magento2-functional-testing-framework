@@ -36,11 +36,13 @@ class Root extends Mask
         $altPath = MAGENTO_BP . DIRECTORY_SEPARATOR . 'dev/tests/acceptance';
 
         if (realpath($altPath) && ($altPath !== TESTS_BP)) {
-         $paths = array_merge($paths,
-             glob(FilePathFormatter::format($altPath) . self::ROOT_SUITE_DIR
-                 . DIRECTORY_SEPARATOR . '*.xml'
-             )
-         );
+            $paths = array_merge(
+                $paths,
+                glob(
+                    FilePathFormatter::format($altPath) . self::ROOT_SUITE_DIR
+                    . DIRECTORY_SEPARATOR . '*.xml'
+                )
+            );
         }
 
         // Then merge this path into the module based paths
