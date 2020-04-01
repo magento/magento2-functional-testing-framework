@@ -33,6 +33,12 @@ class TestContextExtension extends BaseExtension
     public static $events;
 
     /**
+     * The name of the currently running test
+     * @var string
+     */
+    public $currentTest;
+
+    /**
      * Initialize local vars
      *
      * @return void
@@ -55,8 +61,20 @@ class TestContextExtension extends BaseExtension
      * @throws \Exception
      * @return void
      */
-    public function testStart()
+    public function testStart(\Codeception\Event\TestEvent $e)
     {
+        if (getenv('ENABLE_CODE_COVERAGE') === 'true') {
+            // Curl against test.php and pass in the test name. Used when gathering code coverage.
+            $this->currentTest = $e->getTest()->getMetadata()->getName();
+            $cURLConnection = curl_init();
+            curl_setopt_array($cURLConnection, [
+                CURLOPT_RETURNTRANSFER => 1,
+                CURLOPT_URL => getenv('MAGENTO_BASE_URL') . "/test.php?test=" . $this->currentTest,
+            ]);
+            curl_exec($cURLConnection);
+            curl_close($cURLConnection);
+        }
+
         PersistedObjectHandler::getInstance()->clearHookObjects();
         PersistedObjectHandler::getInstance()->clearTestObjects();
     }
