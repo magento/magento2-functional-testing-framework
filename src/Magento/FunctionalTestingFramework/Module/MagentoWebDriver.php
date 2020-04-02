@@ -1082,9 +1082,9 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * Switch to another frame on the page.
+     * Switch to another frame on the page by name, ID, CSS or XPath.
      *
-     * @param string|null $locator (name, ID, CSS or XPath)
+     * @param string|null $locator
      * @return void
      * @throws \Exception
      */
@@ -1092,8 +1092,7 @@ class MagentoWebDriver extends WebDriver
     {
         try {
             parent::switchToIFrame($locator);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             $els = $this->_findElements("#$locator");
             if (!count($els)) {
                 $this->debug('Failed to find locator by ID: ' . $e->getMessage());

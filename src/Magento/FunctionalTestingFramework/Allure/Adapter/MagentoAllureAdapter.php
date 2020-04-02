@@ -83,7 +83,7 @@ class MagentoAllureAdapter extends AllureCodeception
 
             call_user_func(\Closure::bind(
                 function () use ($suite, $suiteName) {
-                    $suite->setName($suiteName);
+                    $suite->name = $suiteName;
                 },
                 null,
                 $suite
@@ -315,7 +315,7 @@ class MagentoAllureAdapter extends AllureCodeception
 
         $this->getLifecycle()->getStepStorage()->put($rootStep);
 
-        $this->addAttachmentEvent($testEvent);
+        //$this->addAttachmentEvent($testEvent);
 
         $this->getLifecycle()->fire(new TestCaseFinishedEvent());
     }
