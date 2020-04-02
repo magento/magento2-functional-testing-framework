@@ -88,13 +88,17 @@ class StaticChecksCommand extends Command
             $output->writeln(
                 "\nRunning static check script for: " . $name
             );
-
+            $start = microtime(true);
             $staticCheck->execute($input);
+            $end = microtime(true);
 
             $staticOutput = $staticCheck->getOutput();
             LoggingUtil::getInstance()->getLogger(get_class($staticCheck))->info($staticOutput);
             $output->writeln($staticOutput);
             $errors += $staticCheck->getErrors();
+            $output->writeln(
+                "\nTotal execution time is " . (string)($end - $start) . " seconds."
+            );
         }
 
         if (empty($errors)) {
