@@ -181,7 +181,7 @@ class SuiteGeneratorTest extends MagentoTestCase
 
         // Set up Expected Exception
         $this->expectException(TestReferenceException::class);
-        $this->expectExceptionMessageRegExp('(Suite: "Suite2" Tests: "Test1")');
+        $this->expectExceptionMessageMatches('(Suite: "Suite2" Tests: "Test1")');
 
         // parse and generate suite object with mocked data and manifest
         $mockSuiteGenerator = SuiteGenerator::getInstance();
@@ -205,7 +205,7 @@ class SuiteGeneratorTest extends MagentoTestCase
 
         // Set up Expected Exception
         $this->expectException(TestReferenceException::class);
-        $this->expectExceptionMessageRegExp('#Suite3 is not defined#');
+        $this->expectExceptionMessageMatches('#Suite3 is not defined#');
 
         // parse and generate suite object with mocked data and manifest
         $mockSuiteGenerator = SuiteGenerator::getInstance();

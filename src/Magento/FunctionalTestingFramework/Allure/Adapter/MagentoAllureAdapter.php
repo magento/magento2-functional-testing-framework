@@ -315,7 +315,7 @@ class MagentoAllureAdapter extends AllureCodeception
 
         $this->getLifecycle()->getStepStorage()->put($rootStep);
 
-        //$this->addAttachmentEvent($testEvent);
+        $this->addAttachmentEvent($testEvent);
 
         $this->getLifecycle()->fire(new TestCaseFinishedEvent());
     }
