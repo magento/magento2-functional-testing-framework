@@ -256,7 +256,7 @@ class MagentoWebDriver extends WebDriver
         $actualUrl = $this->webDriver->getCurrentURL();
         $comparison = "Expected: $needle\nActual: $actualUrl";
         AllureHelper::addAttachmentToCurrentStep($comparison, 'Comparison');
-        $this->assertNotContains($needle, $actualUrl);
+        $this->assertStringContainsString($needle, $actualUrl);
     }
 
     /**
@@ -325,7 +325,7 @@ class MagentoWebDriver extends WebDriver
         $actualUrl = $this->webDriver->getCurrentURL();
         $comparison = "Expected: $needle\nActual: $actualUrl";
         AllureHelper::addAttachmentToCurrentStep($comparison, 'Comparison');
-        $this->assertContains($needle, $actualUrl);
+        $this->assertStringContainsString($needle, $actualUrl);
     }
 
     /**
@@ -692,6 +692,38 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
+     * Asserts that haystack contains needle.
+     *
+     * @param        $needle
+     * @param        $haystack
+     * @param string $message
+     */
+    public function assertContains($needle, $haystack, $message = null)
+    {
+        if (is_string($haystack)) {
+            $this->assertStringContainsString($needle, $haystack, $message = null);
+        } else {
+            parent::assertContains(needle, $haystack, $message = null);
+        }
+    }
+
+    /**
+     * Asserts that haystack does not contain needle.
+     *
+     * @param        $needle
+     * @param        $haystack
+     * @param string $message
+     */
+    public function assertNotContains($needle, $haystack, $message = null)
+    {
+        if (is_string($haystack)) {
+            $this->assertStringNotContainsString($needle, $haystack, $message = null);
+        } else {
+            parent::assertNotContains(needle, $haystack, $message = null);
+        }
+    }
+
+    /**
      * Assert that an element contains a given value for the specific attribute.
      *
      * @param string $selector
@@ -708,7 +740,7 @@ class MagentoWebDriver extends WebDriver
             // When an "attribute" is blank or null it returns "true" so we assert that "true" is present.
             $this->assertEquals($attributes, 'true');
         } else {
-            $this->assertContains($value, $attributes);
+            $this->assertStringNotContainsString($value, $attributes);
         }
     }
 
