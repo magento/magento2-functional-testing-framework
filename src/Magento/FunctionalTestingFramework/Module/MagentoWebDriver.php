@@ -694,9 +694,10 @@ class MagentoWebDriver extends WebDriver
     /**
      * Asserts that haystack contains needle.
      *
-     * @param        $needle
-     * @param        $haystack
+     * @param string $needle
+     * @param string $haystack
      * @param string $message
+     * @return void
      */
     public function assertContains($needle, $haystack, $message = null)
     {
@@ -710,9 +711,10 @@ class MagentoWebDriver extends WebDriver
     /**
      * Asserts that haystack does not contain needle.
      *
-     * @param        $needle
-     * @param        $haystack
+     * @param string $needle
+     * @param string $haystack
      * @param string $message
+     * @return void
      */
     public function assertNotContains($needle, $haystack, $message = null)
     {

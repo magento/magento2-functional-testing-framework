@@ -82,6 +82,7 @@ class AssertTestCest
 		$I->assertArrayNotHasKey("kiwi", ['orange' => 2, 'apple' => 1], "pass"); // stepKey: assertArrayNotHasKeyBackwardCompatible
 		$I->assertArraySubset([1, 2], [1, 2, 3, 5], "pass"); // stepKey: assertArraySubsetBackwardCompatible
 		$I->assertContains("ab", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertContainsBackwardCompatible
+		$I->assertContains("foo", "foobar", "pass"); // stepKey: assertStringContainsString
 		$I->assertCount(2, ['a', 'b'], "pass"); // stepKey: assertCountBackwardCompatible
 		$I->assertEmpty([], "pass"); // stepKey: assertEmptyBackwardCompatible
 		$I->assertEquals($text, "Copyright © 2013-2017 Magento, Inc. All rights reserved.", "pass"); // stepKey: assertEquals1BackwardCompatible

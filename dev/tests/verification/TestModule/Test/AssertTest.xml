@@ -173,6 +173,10 @@
             <expectedResult type="string">ab</expectedResult>
             <actualResult type="const">['item1' => 'a', 'item2' => 'ab']</actualResult>
         </assertContains>
+        <assertContains stepKey="assertStringContainsString" message="pass">
+            <expectedResult type="string">foo</expectedResult>
+            <actualResult type="string">foobar</actualResult>
+        </assertContains>
         <assertCount stepKey="assertCountBackwardCompatible" message="pass">
             <actualResult type="const">['a', 'b']</actualResult>
             <expectedResult type="int">2</expectedResult>
