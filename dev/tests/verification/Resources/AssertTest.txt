@@ -101,6 +101,7 @@ class AssertTestCest
 		$I->assertLessThanOrEqual(5, 2, "pass"); // stepKey: assertLessThanOrEqualBackwardCompatible
 		$I->assertNotContains("bc", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertNotContains1BackwardCompatible
 		$I->assertNotContains("bc", $text, "pass"); // stepKey: assertNotContains2BackwardCompatible
+		$I->assertNotContains("bc", "text", "pass"); // stepKey: assertStringNotContainsString
 		$I->assertNotEmpty([1, 2], "pass"); // stepKey: assertNotEmpty1BackwardCompatible
 		$I->assertNotEmpty($text, "pass"); // stepKey: assertNotEmpty2BackwardCompatible
 		$I->assertNotEquals(2, 5, "pass", 0); // stepKey: assertNotEqualsBackwardCompatible

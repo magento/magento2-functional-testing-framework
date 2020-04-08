@@ -245,6 +245,10 @@
             <actualResult type="variable">text</actualResult>
             <expectedResult type="string">bc</expectedResult>
         </assertNotContains>
+        <assertNotContains stepKey="assertStringNotContainsString" message="pass">
+            <actualResult type="string">text</actualResult>
+            <expectedResult type="string">bc</expectedResult>
+        </assertNotContains>
         <assertNotEmpty stepKey="assertNotEmpty1BackwardCompatible" message="pass">
             <actualResult type="const">[1, 2]</actualResult>
         </assertNotEmpty>
