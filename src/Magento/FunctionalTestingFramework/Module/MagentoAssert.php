@@ -62,7 +62,7 @@ class MagentoAssert extends \Codeception\Module
         if (is_string($haystack)) {
             $this->assertStringContainsString($needle, $haystack, $message);
         } else {
-            parent::assertContains(needle, $haystack, $message);
+            parent::assertContains($needle, $haystack, $message);
         }
     }
 
@@ -79,7 +79,7 @@ class MagentoAssert extends \Codeception\Module
         if (is_string($haystack)) {
             $this->assertStringNotContainsString($needle, $haystack, $message);
         } else {
-            parent::assertNotContains(needle, $haystack, $message);
+            parent::assertNotContains($needle, $haystack, $message);
         }
     }
 }

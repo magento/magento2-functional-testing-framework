@@ -11,6 +11,7 @@ class_name: AcceptanceTester
 namespace: Magento\FunctionalTestingFramework
 modules:
     enabled:
+        - Asserts
         - \Magento\FunctionalTestingFramework\Module\MagentoWebDriver
         - \Magento\FunctionalTestingFramework\Module\MagentoSequence
         - \Magento\FunctionalTestingFramework\Module\MagentoAssert
