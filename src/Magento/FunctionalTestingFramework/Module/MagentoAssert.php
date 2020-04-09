@@ -48,4 +48,38 @@ class MagentoAssert extends \Codeception\Module
             }
         }
     }
+
+    /**
+     * Asserts that haystack contains needle.
+     *
+     * @param string $needle
+     * @param string $haystack
+     * @param string $message
+     * @return void
+     */
+    public function assertContains($needle, $haystack, $message = '')
+    {
+        if (is_string($haystack)) {
+            $this->assertStringContainsString($needle, $haystack, $message);
+        } else {
+            parent::assertContains(needle, $haystack, $message);
+        }
+    }
+
+    /**
+     * Asserts that haystack does not contain needle.
+     *
+     * @param string $needle
+     * @param string $haystack
+     * @param string $message
+     * @return void
+     */
+    public function assertNotContains($needle, $haystack, $message = '')
+    {
+        if (is_string($haystack)) {
+            $this->assertStringNotContainsString($needle, $haystack, $message);
+        } else {
+            parent::assertNotContains(needle, $haystack, $message);
+        }
+    }
 }

@@ -15,7 +15,6 @@ modules:
         - \Magento\FunctionalTestingFramework\Module\MagentoSequence
         - \Magento\FunctionalTestingFramework\Module\MagentoAssert
         - \Magento\FunctionalTestingFramework\Module\MagentoActionProxies
-        - Asserts
     config:
         \Magento\FunctionalTestingFramework\Module\MagentoWebDriver:
             url: "%MAGENTO_BASE_URL%"

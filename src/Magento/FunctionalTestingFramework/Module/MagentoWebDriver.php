@@ -48,7 +48,6 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHan
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class MagentoWebDriver extends WebDriver
 {
@@ -690,40 +689,6 @@ class MagentoWebDriver extends WebDriver
     public function clearField($selector)
     {
         $this->fillField($selector, "");
-    }
-
-    /**
-     * Asserts that haystack contains needle.
-     *
-     * @param string $needle
-     * @param string $haystack
-     * @param string $message
-     * @return void
-     */
-    public function assertContains($needle, $haystack, $message = null)
-    {
-        if (is_string($haystack)) {
-            $this->assertStringContainsString($needle, $haystack, $message = null);
-        } else {
-            parent::assertContains(needle, $haystack, $message = null);
-        }
-    }
-
-    /**
-     * Asserts that haystack does not contain needle.
-     *
-     * @param string $needle
-     * @param string $haystack
-     * @param string $message
-     * @return void
-     */
-    public function assertNotContains($needle, $haystack, $message = null)
-    {
-        if (is_string($haystack)) {
-            $this->assertStringNotContainsString($needle, $haystack, $message = null);
-        } else {
-            parent::assertNotContains(needle, $haystack, $message = null);
-        }
     }
 
     /**
