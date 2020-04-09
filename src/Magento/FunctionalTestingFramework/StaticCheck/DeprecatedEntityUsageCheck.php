@@ -7,6 +7,8 @@
 namespace Magento\FunctionalTestingFramework\StaticCheck;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use InvalidArgumentException;
+use Exception;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
@@ -16,7 +18,6 @@ use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Finder\Finder;
-use Exception;
 use Magento\FunctionalTestingFramework\Util\Script\ScriptUtil;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\OperationDefinitionObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\OperationDefinitionObject;
@@ -71,7 +72,7 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
      * Checks test dependencies, determined by references in tests versus the dependencies listed in the Magento module
      *
      * @param InputInterface $input
-     * @return string
+     * @return void
      * @throws Exception
      */
     public function execute(InputInterface $input)
@@ -83,7 +84,7 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
         $path = $input->getOption('path');
         if ($path) {
             if (!realpath($path)) {
-                return "Invalid --path option: " . $path;
+                throw new InvalidArgumentException("Invalid --path option: " . $path);
             }
             MftfApplicationConfig::create(
                 true,
@@ -92,6 +93,7 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
                 MftfApplicationConfig::LEVEL_DEFAULT,
                 true
             );
+            putenv('CUSTOM_MODULE_PATHS=' . realpath($path));
             $modulePaths[] = realpath($path);
             $includeRootPath = false;
         } else {
@@ -110,9 +112,9 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
         $this->errors = [];
         $this->errors += $this->findReferenceErrorsInActionFiles($testXmlFiles);
         $this->errors += $this->findReferenceErrorsInActionFiles($actionGroupXmlFiles);
-        $this->errors += $this->findReferenceErrorsInActionFiles($suiteXmlFiles);
+        $this->errors += $this->findReferenceErrorsInActionFiles($suiteXmlFiles, true);
         if ($includeRootPath && !empty($rootSuiteXmlFiles)) {
-            $this->errors += $this->findReferenceErrorsInActionFiles($rootSuiteXmlFiles);
+            $this->errors += $this->findReferenceErrorsInActionFiles($rootSuiteXmlFiles, true);
         }
         $this->errors += $this->findReferenceErrorsInDataFiles($dataXmlFiles);
 
@@ -147,11 +149,12 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
     /**
      * Find reference errors in set of action files
      *
-     * @param Finder $files
+     * @param Finder  $files
+     * @param boolean $checkTestRef
      * @return array
      * @throws XmlException
      */
-    private function findReferenceErrorsInActionFiles($files)
+    private function findReferenceErrorsInActionFiles($files, $checkTestRef = false)
     {
         $testErrors = [];
         /** @var SplFileInfo $filePath */
@@ -223,6 +226,23 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
                 $entityReferences,
                 $this->scriptUtil->resolveEntityByNames($getDataReferences)
             );
+
+            // Find test references if needed
+            if ($checkTestRef) {
+                $testReferences = $this->getAttributesFromDOMNodeList(
+                    $domDocument->getElementsByTagName('test'),
+                    'name'
+                );
+
+                // Remove Duplicates
+                $testReferences = array_unique($testReferences);
+
+                // Resolve test entity by names
+                $entityReferences = array_merge(
+                    $entityReferences,
+                    $this->scriptUtil->resolveEntityByNames($testReferences)
+                );
+            }
 
             // Find violating references
             $violatingReferences = $this->findViolatingReferences($entityReferences);
@@ -404,12 +424,18 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
      *  [
      *      $dataName1 => [
      *          $metaDataName1 => 'all',
+     *          $metaDataName2 => 'all',
+     *          ...
      *      ],
      *      $dataName2 => [
      *          $metaDataName2 => 'all',
+     *          ...
      *      ],
      *      $dataName5 => [
      *          $metaDataName5 => 'all',
+     *          $metaDataName4 => 'all',
+     *          $metaDataName1 => 'all',
+     *          ...
      *      ],
      *      ...
      *  ]

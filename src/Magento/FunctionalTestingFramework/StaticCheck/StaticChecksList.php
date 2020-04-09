@@ -13,6 +13,8 @@ namespace Magento\FunctionalTestingFramework\StaticCheck;
  */
 class StaticChecksList implements StaticCheckListInterface
 {
+    const DEPRECATED_ENTITY_USAGE_CHECK_NAME = 'deprecatedEntityUsage';
+
     /**
      * Property contains all static check scripts.
      *
@@ -30,7 +32,7 @@ class StaticChecksList implements StaticCheckListInterface
         $this->checks = [
             'testDependencies' => new TestDependencyCheck(),
             'actionGroupArguments' => new ActionGroupArgumentsCheck(),
-            'deprecatedEntityUsage' => new DeprecatedEntityUsageCheck(),
+            self::DEPRECATED_ENTITY_USAGE_CHECK_NAME => new DeprecatedEntityUsageCheck(),
         ] + $checks;
     }
 
