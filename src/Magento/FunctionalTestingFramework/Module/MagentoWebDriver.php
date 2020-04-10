@@ -708,7 +708,7 @@ class MagentoWebDriver extends WebDriver
             // When an "attribute" is blank or null it returns "true" so we assert that "true" is present.
             $this->assertEquals($attributes, 'true');
         } else {
-            $this->assertStringNotContainsString($value, $attributes);
+            $this->assertStringContainsString($value, $attributes);
         }
     }
 
