@@ -9,6 +9,8 @@ namespace Magento\FunctionalTestingFramework\Module;
 use Codeception\Module\WebDriver;
 use Codeception\Test\Descriptor;
 use Codeception\TestInterface;
+use Facebook\WebDriver\Remote\RemoteWebElement;
+use Facebook\WebDriver\WebDriverBy;
 use Magento\FunctionalTestingFramework\Allure\AllureHelper;
 use Facebook\WebDriver\Interactions\WebDriverActions;
 use Codeception\Exception\ModuleConfigException;
@@ -1100,5 +1102,66 @@ class MagentoWebDriver extends WebDriver
             }
             $this->webDriver->switchTo()->frame($els[0]);
         }
+    }
+
+    /**
+     * Override parent::proceedSeeInField to make for non-strict matching
+     *
+     * @param RemoteWebElement[] $elements
+     * @param string $value
+     * @return array
+     */
+    public function proceedSeeInField(array $elements, $value)
+    {
+        $strField = reset($elements)->getAttribute('name');
+        if (reset($elements)->getTagName() === 'select') {
+            $el = reset($elements);
+            $elements = $el->findElements(WebDriverBy::xpath('.//option'));
+            if (empty($value) && empty($elements)) {
+                return ['True', true];
+            }
+        }
+
+        $currentValues = [];
+        if (is_bool($value)) {
+            $currentValues = [false];
+        }
+        foreach ($elements as $el) {
+            switch ($el->getTagName()) {
+                case 'input':
+                    if ($el->getAttribute('type') === 'radio' || $el->getAttribute('type') === 'checkbox') {
+                        if ($el->getAttribute('checked')) {
+                            if (is_bool($value)) {
+                                $currentValues = [true];
+                                break;
+                            } else {
+                                $currentValues[] = $el->getAttribute('value');
+                            }
+                        }
+                    } else {
+                        $currentValues[] = $el->getAttribute('value');
+                    }
+                    break;
+                case 'option':
+                    // no break we need the trim text and the value also
+                    if (!$el->isSelected()) {
+                        break;
+                    }
+                    $currentValues[] = $el->getText();
+                case 'textarea':
+                    // we include trimmed and real value of textarea for check
+                    $currentValues[] = trim($el->getText());
+                default:
+                    $currentValues[] = $el->getAttribute('value'); // raw value
+                    break;
+            }
+        }
+
+        return [
+            'ContainsEquals',
+            $value,
+            $currentValues,
+            "Failed testing for '$value' in $strField's value: '" . implode("', '", $currentValues) . "'"
+        ];
     }
 }
