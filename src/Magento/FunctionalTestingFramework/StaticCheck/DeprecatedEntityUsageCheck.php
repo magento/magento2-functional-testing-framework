@@ -9,6 +9,7 @@ namespace Magento\FunctionalTestingFramework\StaticCheck;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use InvalidArgumentException;
 use Exception;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
@@ -69,6 +70,41 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
     private $dataOperations = ['create', 'update', 'get', 'delete'];
 
     /**
+     * Test xml files to scan
+     *
+     * @var Finder|array
+     */
+    private $testXmlFiles = [];
+
+    /**
+     * Action group xml files to scan
+     *
+     * @var Finder|array
+     */
+    private $actionGroupXmlFiles = [];
+
+    /**
+     * Suite xml files to scan
+     *
+     * @var Finder|array
+     */
+    private $suiteXmlFiles = [];
+
+    /**
+     * Root suite xml files to scan
+     *
+     * @var Finder|array
+     */
+    private $rootSuiteXmlFiles = [];
+
+    /**
+     * Data xml files to scan
+     *
+     * @var Finder|array
+     */
+    private $dataXmlFiles = [];
+
+    /**
      * Checks test dependencies, determined by references in tests versus the dependencies listed in the Magento module
      *
      * @param InputInterface $input
@@ -78,45 +114,16 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
     public function execute(InputInterface $input)
     {
         $this->scriptUtil = new ScriptUtil();
-
-        $modulePaths = [];
-        $includeRootPath = true;
-        $path = $input->getOption('path');
-        if ($path) {
-            if (!realpath($path)) {
-                throw new InvalidArgumentException("Invalid --path option: " . $path);
-            }
-            MftfApplicationConfig::create(
-                true,
-                MftfApplicationConfig::UNIT_TEST_PHASE,
-                false,
-                MftfApplicationConfig::LEVEL_DEFAULT,
-                true
-            );
-            putenv('CUSTOM_MODULE_PATHS=' . realpath($path));
-            $modulePaths[] = realpath($path);
-            $includeRootPath = false;
-        } else {
-            $modulePaths = $this->scriptUtil->getAllModulePaths();
-        }
-
-        // These files can contain references to other entities
-        $testXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, 'Test');
-        $actionGroupXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, 'ActionGroup');
-        $suiteXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, 'Suite');
-        if ($includeRootPath) {
-            $rootSuiteXmlFiles = $this->scriptUtil->getRootSuiteXmlFiles();
-        }
-        $dataXmlFiles= $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, 'Data');
+        $this->loadAllXmlFiles($input);
 
         $this->errors = [];
-        $this->errors += $this->findReferenceErrorsInActionFiles($testXmlFiles);
-        $this->errors += $this->findReferenceErrorsInActionFiles($actionGroupXmlFiles);
-        $this->errors += $this->findReferenceErrorsInActionFiles($suiteXmlFiles, true);
-        if ($includeRootPath && !empty($rootSuiteXmlFiles)) {
-            $this->errors += $this->findReferenceErrorsInActionFiles($rootSuiteXmlFiles, true);
+        $this->errors += $this->findReferenceErrorsInActionFiles($this->testXmlFiles);
+        $this->errors += $this->findReferenceErrorsInActionFiles($this->actionGroupXmlFiles);
+        $this->errors += $this->findReferenceErrorsInActionFiles($this->suiteXmlFiles, true);
+        if (!empty($this->rootSuiteXmlFiles)) {
+            $this->errors += $this->findReferenceErrorsInActionFiles($this->rootSuiteXmlFiles, true);
         }
-        $this->errors += $this->findReferenceErrorsInDataFiles($dataXmlFiles);
+        $this->errors += $this->findReferenceErrorsInDataFiles($this->dataXmlFiles);
 
         // Hold on to the output and print any errors to a file
         $this->output = $this->scriptUtil->printErrorsToFile(
@@ -144,6 +151,63 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
     public function getOutput()
     {
         return $this->output;
+    }
+
+    /**
+     * Read all XML files for scanning
+     *
+     * @param InputInterface $input
+     * @throws Exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    private function loadAllXmlFiles($input)
+    {
+        $modulePaths = [];
+        $includeRootPath = true;
+        $path = $input->getOption('path');
+        if ($path) {
+            if (!realpath($path)) {
+                throw new InvalidArgumentException('Invalid --path option: ' . $path);
+            }
+            MftfApplicationConfig::create(
+                true,
+                MftfApplicationConfig::UNIT_TEST_PHASE,
+                false,
+                MftfApplicationConfig::LEVEL_DEFAULT,
+                true
+            );
+            putenv('CUSTOM_MODULE_PATHS=' . realpath($path));
+            $modulePaths[] = realpath($path);
+            $includeRootPath = false;
+        } else {
+            $modulePaths = $this->scriptUtil->getAllModulePaths();
+        }
+
+        // These files can contain references to other entities
+        $this->testXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, 'Test');
+        $this->actionGroupXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, 'ActionGroup');
+        $this->suiteXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, 'Suite');
+        if ($includeRootPath) {
+            $this->rootSuiteXmlFiles = $this->scriptUtil->getRootSuiteXmlFiles();
+        }
+        $this->dataXmlFiles= $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, 'Data');
+
+        if (empty($this->thistestXmlFiles)
+            && empty($this->actionGroupXmlFiles)
+            && empty($this->suiteXmlFiles)
+            && empty($this->dataXmlFiles)
+        ) {
+            if ($path) {
+                throw new InvalidArgumentException(
+                    'Invalid --path option: '
+                    . $path
+                    . PHP_EOL
+                    . 'Please make sure --path points to a valid MFTF Test Module.'
+                );
+            } elseif (empty($this->rootSuiteXmlFiles)) {
+                throw new TestFrameworkException('No xml file to scan.');
+            }
+        }
     }
 
     /**
@@ -190,58 +254,39 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
 
             // Resolve entity references
             $entityReferences = $this->scriptUtil->resolveEntityReferences($braceReferences[0], $contents, true);
-
             // Resolve parameterized references
             $entityReferences = array_merge(
                 $entityReferences,
                 $this->scriptUtil->resolveParametrizedReferences($braceReferences[2], $contents, true)
             );
-
             // Resolve action group entity by names
             $entityReferences = array_merge(
                 $entityReferences,
                 $this->scriptUtil->resolveEntityByNames($actionGroupReferences[1])
             );
-
             // Resolve extends entity by names
             $entityReferences = array_merge(
                 $entityReferences,
                 $this->scriptUtil->resolveEntityByNames($extendReferences[1])
             );
-
             // Resolve create data entity by names
             $entityReferences = array_merge(
                 $entityReferences,
                 $this->scriptUtil->resolveEntityByNames($createdDataReferences)
             );
-
             // Resolve update data entity by names
             $entityReferences = array_merge(
                 $entityReferences,
                 $this->scriptUtil->resolveEntityByNames($updatedDataReferences)
             );
-
             // Resolve get data entity by names
             $entityReferences = array_merge(
                 $entityReferences,
                 $this->scriptUtil->resolveEntityByNames($getDataReferences)
             );
-
             // Find test references if needed
             if ($checkTestRef) {
-                $testReferences = $this->getAttributesFromDOMNodeList(
-                    $domDocument->getElementsByTagName('test'),
-                    'name'
-                );
-
-                // Remove Duplicates
-                $testReferences = array_unique($testReferences);
-
-                // Resolve test entity by names
-                $entityReferences = array_merge(
-                    $entityReferences,
-                    $this->scriptUtil->resolveEntityByNames($testReferences)
-                );
+                $entityReferences = array_merge($entityReferences, $this->resolveTestEntityInSuite($domDocument));
             }
 
             // Find violating references
@@ -600,6 +645,30 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
         }
 
         return $testErrors;
+    }
+
+    /**
+     * Resolve test entity in suite
+     *
+     * @param \DOMDocument $domDocument
+     * @return array
+     */
+    private function resolveTestEntityInSuite($domDocument)
+    {
+        $testReferences = $this->getAttributesFromDOMNodeList(
+            $domDocument->getElementsByTagName('test'),
+            'name'
+        );
+
+        // Remove Duplicates
+        $testReferences = array_unique($testReferences);
+
+        // Resolve test entity by names
+        try {
+            return $this->scriptUtil->resolveEntityByNames($testReferences);
+        } catch (XmlException $e) {
+            return [];
+        }
     }
 
     /**

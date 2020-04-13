@@ -32,6 +32,7 @@ class ScriptUtil
 {
     const ACTIONGROUP_ARGUMENT_REGEX_PATTERN = '/<argument[^\/>]*name="([^"\']*)/';
     const ROOT_SUITE_DIR = 'tests/_suite';
+    const DEV_TESTS_DIR = 'dev/tests/acceptance/';
 
     /**
      * Return all installed Magento module paths
@@ -106,18 +107,43 @@ class ScriptUtil
      * Return suite XML files in TESTS_BP/ROOT_SUITE_DIR directory
      *
      * @return Finder|array
-     * @throws TestFrameworkException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getRootSuiteXmlFiles()
     {
-        $rootSuitePath = FilePathFormatter::format(TESTS_BP) . self::ROOT_SUITE_DIR;
-        if (!realpath($rootSuitePath)) {
-            return [];
-        }
-        $finder = new Finder();
-        $finder->files()->followLinks()->in($rootSuitePath)->name("*.xml");
+        $rootSuitePaths = [];
+        $defaultTestPath = null;
+        $devTestsPath = null;
 
-        return $finder->files();
+        try {
+            $defaultTestPath = FilePathFormatter::format(TESTS_BP);
+        } catch (TestFrameworkException $e) {
+        }
+
+        try {
+            $devTestsPath = FilePathFormatter::format(MAGENTO_BP) . self::DEV_TESTS_DIR;
+        } catch (TestFrameworkException $e) {
+        }
+
+        if ($defaultTestPath) {
+            $rootSuitePaths[] = $defaultTestPath . self::ROOT_SUITE_DIR;
+        }
+
+        if ($devTestsPath && realpath($devTestsPath) && $devTestsPath !== $defaultTestPath) {
+            $rootSuitePaths[] = $devTestsPath . self::ROOT_SUITE_DIR;
+        }
+
+        $found = false;
+        $finder = new Finder();
+        foreach ($rootSuitePaths as $rootSuitePath) {
+            if (!realpath($rootSuitePath)) {
+                continue;
+            }
+            $finder->files()->followLinks()->in($rootSuitePath)->name("*.xml");
+            $found = true;
+        }
+
+        return $found ? $finder->files() : [];
     }
 
     /**
