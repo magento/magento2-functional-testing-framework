@@ -157,6 +157,7 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
      * Read all XML files for scanning
      *
      * @param InputInterface $input
+     * @return void
      * @throws Exception
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
