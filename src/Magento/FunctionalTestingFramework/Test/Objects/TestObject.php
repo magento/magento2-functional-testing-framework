@@ -79,6 +79,13 @@ class TestObject
     private $cachedOrderedActions = null;
 
     /**
+     * Deprecation message.
+     *
+     * @var string|null
+     */
+    private $deprecated;
+
+    /**
      * TestObject constructor.
      *
      * @param string           $name
@@ -87,15 +94,24 @@ class TestObject
      * @param TestHookObject[] $hooks
      * @param string           $filename
      * @param string           $parentTest
+     * @param string|null      $deprecated
      */
-    public function __construct($name, $parsedSteps, $annotations, $hooks, $filename = null, $parentTest = null)
-    {
+    public function __construct(
+        $name,
+        $parsedSteps,
+        $annotations,
+        $hooks,
+        $filename = null,
+        $parentTest = null,
+        $deprecated = null
+    ) {
         $this->name = $name;
         $this->parsedSteps = $parsedSteps;
         $this->annotations = $annotations;
         $this->hooks = $hooks;
         $this->filename = $filename;
         $this->parentTest = $parentTest;
+        $this->deprecated = $deprecated;
     }
 
     /**
@@ -126,6 +142,16 @@ class TestObject
     public function getParentName()
     {
         return $this->parentTest;
+    }
+
+    /**
+     * Returns deprecated messages.
+     *
+     * @return string|null
+     */
+    public function getDeprecated()
+    {
+        return $this->deprecated;
     }
 
     /**
