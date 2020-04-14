@@ -130,6 +130,28 @@ Attribute|Type|Use|Description
 `before`|string|optional| `stepKey` of action that must be executed next.
 `after`|string|optional| `stepKey` of the preceding action.
 
+### assertStringContainsString
+
+See [assertStringContainsString docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringContainsString).
+
+Attribute|Type|Use|Description
+---|---|---|---
+`message`|string|optional|Text of informational message about a cause of failure.
+`stepKey`|string|required| A unique identifier of the text step.
+`before`|string|optional| `stepKey` of action that must be executed next.
+`after`|string|optional| `stepKey` of the preceding action.
+
+### assertStringContainsStringIgnoringCase
+
+See [assertStringContainsStringIgnoringCase docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringContainsStringIgnoringCase).
+
+Attribute|Type|Use|Description
+---|---|---|---
+`message`|string|optional|Text of informational message about a cause of failure.
+`stepKey`|string|required| A unique identifier of the text step.
+`before`|string|optional| `stepKey` of action that must be executed next.
+`after`|string|optional| `stepKey` of the preceding action.
+
 ### assertCount
 
 See [assertCount docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertCount).
@@ -299,6 +321,28 @@ Attribute|Type|Use|Description
 ### assertNotContains
 
 See [assertNotContains docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotContains).
+
+Attribute|Type|Use|Description
+---|---|---|---
+`message`|string|optional|Text of informational message about a cause of failure.
+`stepKey`|string|required| A unique identifier of the text step.
+`before`|string|optional| `stepKey` of action that must be executed next.
+`after`|string|optional| `stepKey` of the preceding action.
+
+### assertStringNotContainsString
+
+See [assertStringNotContainsString docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringNotContainsString).
+
+Attribute|Type|Use|Description
+---|---|---|---
+`message`|string|optional|Text of informational message about a cause of failure.
+`stepKey`|string|required| A unique identifier of the text step.
+`before`|string|optional| `stepKey` of action that must be executed next.
+`after`|string|optional| `stepKey` of the preceding action.
+
+### assertStringContainsStringIgnoringCase
+
+See [assertStringNotContainsStringIgnoringCase docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringNotContainsStringIgnoringCase).
 
 Attribute|Type|Use|Description
 ---|---|---|---

@@ -39,6 +39,14 @@
             <expectedResult type="string">ab</expectedResult>
             <actualResult type="const">['item1' => 'a', 'item2' => 'ab']</actualResult>
         </assertContains>
+        <assertStringContainsString stepKey="assertStringContainsString" message="pass">
+            <expectedResult type="string">apple</expectedResult>
+            <actualResult type="string">apple</actualResult>
+        </assertStringContainsString>
+        <assertStringContainsStringIgnoringCase stepKey="assertStringContainsStringIgnoringCase" message="pass">
+            <expectedResult type="string">Banana</expectedResult>
+            <actualResult type="string">banana</actualResult>
+        </assertStringContainsStringIgnoringCase>
         <assertCount stepKey="assertCount" message="pass">
             <expectedResult type="int">2</expectedResult>
             <actualResult type="const">['a', 'b']</actualResult>
@@ -103,14 +111,18 @@
             <expectedResult type="int">5</expectedResult>
             <actualResult type="int">2</actualResult>
         </assertLessThanOrEqual>
-        <assertNotContains stepKey="assertNotContains1" message="pass">
+        <assertNotContains stepKey="assertNotContains" message="pass">
             <expectedResult type="string">bc</expectedResult>
             <actualResult type="const">['item1' => 'a', 'item2' => 'ab']</actualResult>
         </assertNotContains>
-        <assertNotContains stepKey="assertNotContains2" message="pass">
-            <expectedResult type="string">bc</expectedResult>
-            <actualResult type="variable">text</actualResult>
-        </assertNotContains>
+        <assertStringNotContainsString stepKey="assertStringNotContainsString" message="pass">
+            <expectedResult type="string">apple</expectedResult>
+            <actualResult type="string">banana</actualResult>
+        </assertStringNotContainsString>
+        <assertStringNotContainsStringIgnoringCase stepKey="assertStringNotContainsStringIgnoringCase" message="pass">
+            <expectedResult type="string">apple</expectedResult>
+            <actualResult type="string">banana</actualResult>
+        </assertStringNotContainsStringIgnoringCase>
         <assertNotEmpty stepKey="assertNotEmpty1" message="pass">
             <actualResult type="const">[1, 2]</actualResult>
         </assertNotEmpty>
