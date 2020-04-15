@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Module;
 
+use Codeception\Lib\Actor\Shared\Pause;
 use Codeception\Module\WebDriver;
 use Codeception\Test\Descriptor;
 use Codeception\TestInterface;
@@ -52,6 +53,7 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHan
 class MagentoWebDriver extends WebDriver
 {
     use AttachmentSupport;
+    use Pause;
 
     const MAGENTO_CRON_INTERVAL = 60;
     const MAGENTO_CRON_COMMAND = 'cron:run';
