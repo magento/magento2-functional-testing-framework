@@ -1,6 +1,5 @@
 # Assertions
 
-
 Assertions serve to pass or fail the [test](../test.md#test-tag) if a condition is not met. These assertions will look familiar to you if you've used any other testing framework, like PHPUnit.
 
 All assertions contain the same [common actions attributes](./actions.md#common-attributes): `stepKey`, `before`, and `after`.
@@ -138,9 +137,9 @@ See [assertStringContainsString docs on codeception.com](http://codeception.com/
 
 Attribute|Type|Use|Description
 ---|---|---|---
-`message`|string|optional|Text of informational message about a cause of failure.
-`stepKey`|string|required| A unique identifier of the text step.
-`before`|string|optional| `stepKey` of action that must be executed next.
+`message`|string|optional|Text describing the cause of the failure.
+`stepKey`|string|required| Unique identifier of the text step.
+`before`|string|optional| `stepKey` of the action that must be executed next.
 `after`|string|optional| `stepKey` of the preceding action.
 
 ### assertStringContainsStringIgnoringCase
@@ -149,9 +148,9 @@ See [assertStringContainsStringIgnoringCase docs on codeception.com](http://code
 
 Attribute|Type|Use|Description
 ---|---|---|---
-`message`|string|optional|Text of informational message about a cause of failure.
+`message`|string|optional|Message describing the cause of failure.
 `stepKey`|string|required| A unique identifier of the text step.
-`before`|string|optional| `stepKey` of action that must be executed next.
+`before`|string|optional| `stepKey` of the action that must be executed next.
 `after`|string|optional| `stepKey` of the preceding action.
 
 ### assertCount
