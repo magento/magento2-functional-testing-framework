@@ -1,7 +1,7 @@
 # Test
 
 Test cases in the Magento Functional Testing Framework (MFTF) are defined in XML as [`<tests>`].
-`<tests>` is a [Codeception test container][Codeception] that contains individual test [`<test>`] with it's metadata ([`<annotations>`]), before ([`<before>`]) and after ([`<after>`]) section.
+`<tests>` is a [Codeception test container][Codeception] that contains individual test [`<test>`] with its metadata ([`<annotations>`]), before ([`<before>`]) and after ([`<after>`]) section.
 
 MFTF `<test>` is considered a sequence of actions with associated parameters.
 Any failed [assertion] within a test constitutes a failed test.
@@ -18,7 +18,7 @@ The following diagram shows the structure of an MFTF test case:
 
 ## Format
 
-The format of Test XML file is:
+The format of a test XML file is:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -35,7 +35,6 @@ The format of Test XML file is:
         <after>
             <!-- ACTIONS AND ACTION GROUPS PERFORMED AFTER THE TEST -->
         </after>
-
         <!-- TEST ACTIONS, ACTION GROUPS, AND ASSERTIONS-->
     </test>
 </tests>
@@ -47,13 +46,13 @@ The following conventions apply to MFTF tests:
 
 *  One `<test>` tag is allowed per test XML file.
 *  All names within the framework are in the **PascalCase** format and must be alphanumeric.
-*  Each action and action group call has its own identifier `<stepKey>` for reference purposes.
+*  Each action and action group call should have its own identifier `<stepKey>`.
 *  A test may have any number of [assertions][assertion] at any point within the `<test>`.
 *  If `<test>` is included in [`<suite>`][suites], it **cannot be generated in isolation** from `<before>` and `<after>` section of the suite (see [suites] for details).
 
 ## Elements reference
 
-There are several XML elements that are used in `<test>` in the MFTF.
+There are several XML elements that are used within `<test>` in the MFTF.
 
 ### tests {#tests-tag}
 
@@ -92,7 +91,7 @@ Allure annotations provide metadata for reporting.
 
 ### after {#after-tag}
 
-`<after>` wraps the steps to perform after the [`<test>`]. The steps are run in both successful **and** failed test runs. The goal of this section is to  perform cleanup (revert the environment to the pre-test state).
+`<after>` wraps the steps to perform after the [`<test>`]. The steps are run in both successful **and** failed test runs. The goal of this section is to perform cleanup (revert the environment to the pre-test state).
 
 `<after>` may contain:
 
