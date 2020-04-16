@@ -44,6 +44,7 @@
 
         <actionGroup ref="HelperActionGroup" stepKey="actionGroupWithCustomHelper">
             <argument name="test" value="{{HelperData.entityField}}" />
+            <argument name="entityTest" value="HelperData" />
         </actionGroup>
     </test>
 </tests>
