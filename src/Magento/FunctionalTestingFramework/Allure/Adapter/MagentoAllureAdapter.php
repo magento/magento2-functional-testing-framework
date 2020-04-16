@@ -10,6 +10,7 @@ use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
+use Yandex\Allure\Adapter\Model\Failure;
 use Yandex\Allure\Adapter\Model\Provider;
 use Yandex\Allure\Adapter\Model\Status;
 use Yandex\Allure\Adapter\Model\Step;
@@ -260,13 +261,7 @@ class MagentoAllureAdapter extends AllureCodeception
 
         $actionGroupStepKey = null;
         foreach ($rootStep->getSteps() as $step) {
-            //Remove Attachments if verbose flag is not true AND test did not fail
-            if (getenv('VERBOSE_ARTIFACTS') !== true && $testFailed === null) {
-                foreach ($step->getAttachments() as $index => $attachment) {
-                    $step->removeAttachment($index);
-                    unlink(Provider::getOutputDirectory() . DIRECTORY_SEPARATOR . $attachment->getSource());
-                }
-            }
+            $this->removeAttachments($step, $testFailed);
             $stepKey = str_replace($actionGroupStepKey, '', $step->getName());
             if ($stepKey !== '[]' && $stepKey !== null) {
                 $step->setName($stepKey);
@@ -363,5 +358,22 @@ class MagentoAllureAdapter extends AllureCodeception
         }
 
         return $stepKey;
+    }
+
+    /**
+     * Removes attachments from step depending on MFTF configuration
+     * @param Step    $step
+     * @param Failure $testFailed
+     * @return void
+     */
+    private function removeAttachments($step, $testFailed)
+    {
+        //Remove Attachments if verbose flag is not true AND test did not fail
+        if (getenv('VERBOSE_ARTIFACTS') !== true && $testFailed === null) {
+            foreach ($step->getAttachments() as $index => $attachment) {
+                $step->removeAttachment($index);
+                unlink(Provider::getOutputDirectory() . DIRECTORY_SEPARATOR . $attachment->getSource());
+            }
+        }
     }
 }
