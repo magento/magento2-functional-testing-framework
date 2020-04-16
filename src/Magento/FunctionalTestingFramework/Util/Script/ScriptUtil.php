@@ -8,6 +8,9 @@ namespace Magento\FunctionalTestingFramework\Util\Script;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
+use Magento\FunctionalTestingFramework\Page\Objects\ElementObject;
+use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
+use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Symfony\Component\Finder\Finder;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Util\ModuleResolver;
@@ -28,6 +31,8 @@ use Magento\FunctionalTestingFramework\Util\TestGenerator;
 class ScriptUtil
 {
     const ACTIONGROUP_ARGUMENT_REGEX_PATTERN = '/<argument[^\/>]*name="([^"\']*)/';
+    const ROOT_SUITE_DIR = 'tests/_suite';
+    const DEV_TESTS_DIR = 'dev/tests/acceptance/';
 
     /**
      * Return all installed Magento module paths
@@ -99,14 +104,58 @@ class ScriptUtil
     }
 
     /**
+     * Return suite XML files in TESTS_BP/ROOT_SUITE_DIR directory
+     *
+     * @return Finder|array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    public function getRootSuiteXmlFiles()
+    {
+        $rootSuitePaths = [];
+        $defaultTestPath = null;
+        $devTestsPath = null;
+
+        try {
+            $defaultTestPath = FilePathFormatter::format(TESTS_BP);
+        } catch (TestFrameworkException $e) {
+        }
+
+        try {
+            $devTestsPath = FilePathFormatter::format(MAGENTO_BP) . self::DEV_TESTS_DIR;
+        } catch (TestFrameworkException $e) {
+        }
+
+        if ($defaultTestPath) {
+            $rootSuitePaths[] = $defaultTestPath . self::ROOT_SUITE_DIR;
+        }
+
+        if ($devTestsPath && realpath($devTestsPath) && $devTestsPath !== $defaultTestPath) {
+            $rootSuitePaths[] = $devTestsPath . self::ROOT_SUITE_DIR;
+        }
+
+        $found = false;
+        $finder = new Finder();
+        foreach ($rootSuitePaths as $rootSuitePath) {
+            if (!realpath($rootSuitePath)) {
+                continue;
+            }
+            $finder->files()->followLinks()->in($rootSuitePath)->name("*.xml");
+            $found = true;
+        }
+
+        return $found ? $finder->files() : [];
+    }
+
+    /**
      * Resolve entity reference in {{entity.field}} or {{entity.field('param')}}
      *
-     * @param array  $braceReferences
-     * @param string $contents
+     * @param array   $braceReferences
+     * @param string  $contents
+     * @param boolean $resolveSectionElement
      * @return array
      * @throws XmlException
      */
-    public function resolveEntityReferences($braceReferences, $contents)
+    public function resolveEntityReferences($braceReferences, $contents, $resolveSectionElement = false)
     {
         $entities = [];
         foreach ($braceReferences as $reference) {
@@ -120,6 +169,18 @@ class ScriptUtil
             }
             if ($entity !== null) {
                 $entities[$entity->getName()] = $entity;
+                if ($resolveSectionElement) {
+                    if (get_class($entity) === SectionObject::class) {
+                        // trim `{{data.field}}` to `field`
+                        preg_match('/.([^.]+)}}/', $reference, $elementName);
+                        /** @var ElementObject $element */
+                        /** @var SectionObject $entity */
+                        $element = $entity->getElement($elementName[1]);
+                        if ($element) {
+                            $entities[$entity->getName() . '.' . $elementName[1]] = $element;
+                        }
+                    }
+                }
             }
         }
         return $entities;
@@ -128,12 +189,14 @@ class ScriptUtil
     /**
      * Drill down into params in {{ref.params('string', $data.key$, entity.reference)}} to resolve entity reference
      *
-     * @param array  $braceReferences
-     * @param string $contents
+     * @param array   $braceReferences
+     * @param string  $contents
+     * @param boolean $resolveSectionElement
      * @return array
      * @throws XmlException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function resolveParametrizedReferences($braceReferences, $contents)
+    public function resolveParametrizedReferences($braceReferences, $contents, $resolveSectionElement = false)
     {
         $entities = [];
         foreach ($braceReferences as $parameterizedReference) {
@@ -160,6 +223,18 @@ class ScriptUtil
                 }
                 if ($entity !== null) {
                     $entities[$entity->getName()] = $entity;
+                    if ($resolveSectionElement) {
+                        if (get_class($entity) === SectionObject::class) {
+                            // trim `data.field` to `field`
+                            preg_match('/.([^.]+)/', $argument, $elementName);
+                            /** @var ElementObject $element */
+                            /** @var SectionObject $entity */
+                            $element = $entity->getElement($elementName[1]);
+                            if ($element) {
+                                $entities[$entity->getName() . '.' . $elementName[1]] = $element;
+                            }
+                        }
+                    }
                 }
             }
         }

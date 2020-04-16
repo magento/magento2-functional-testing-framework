@@ -439,6 +439,12 @@ If no script name argument is specified, all existing static check scripts will 
 vendor/bin/mftf static-checks [<names>]...
 ```
 
+#### Options
+
+| Option                | Description                                                                                               |
+|-----------------------|-----------------------------------------------------------------------------------------------------------|
+| `-p, --path` | Path to a MFTF test module to run "deprecatedEntityUsage" static check script. Option is ignored by other static check scripts.
+                
 #### Examples
 
 To check what existing static check scripts are available
