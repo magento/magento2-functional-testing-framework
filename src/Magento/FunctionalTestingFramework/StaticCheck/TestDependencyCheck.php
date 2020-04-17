@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\StaticCheck;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Symfony\Component\Console\Input\InputInterface;
@@ -84,8 +85,8 @@ class TestDependencyCheck implements StaticCheckInterface
      * Checks test dependencies, determined by references in tests versus the dependencies listed in the Magento module
      *
      * @param InputInterface $input
-     * @return string
-     * @throws Exception;
+     * @return void
+     * @throws Exception
      */
     public function execute(InputInterface $input)
     {
@@ -93,7 +94,9 @@ class TestDependencyCheck implements StaticCheckInterface
         $allModules = $this->scriptUtil->getAllModulePaths();
 
         if (!class_exists('\Magento\Framework\Component\ComponentRegistrar')) {
-            return "TEST DEPENDENCY CHECK ABORTED: MFTF must be attached or pointing to Magento codebase.";
+            throw new TestFrameworkException(
+                "TEST DEPENDENCY CHECK ABORTED: MFTF must be attached or pointing to Magento codebase."
+            );
         }
         $registrar = new \Magento\Framework\Component\ComponentRegistrar();
         $this->moduleNameToPath = $registrar->getPaths(\Magento\Framework\Component\ComponentRegistrar::MODULE);

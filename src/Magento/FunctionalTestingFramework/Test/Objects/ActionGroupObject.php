@@ -210,6 +210,9 @@ class ActionGroupObject
         foreach ($this->parsedActions as $action) {
             $replacementStepKeys[$action->getStepKey()] = $action->getStepKey() . ucfirst($actionReferenceKey);
             $varAttributes = array_intersect($this->varAttributes, array_keys($action->getCustomActionAttributes()));
+            if ($action->getType() === ActionObject::ACTION_TYPE_HELPER) {
+                $varAttributes = array_keys($action->getCustomActionAttributes());
+            }
 
             // replace createDataKey attributes inside the action group
             $resolvedActionAttributes = $this->replaceCreateDataKeys($action, $replacementStepKeys);

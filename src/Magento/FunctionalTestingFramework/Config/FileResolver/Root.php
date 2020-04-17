@@ -33,7 +33,7 @@ class Root extends Mask
         );
 
         // include root suite dir when running standalone version
-        $altPath = MAGENTO_BP . DIRECTORY_SEPARATOR . 'dev/tests/acceptance';
+        $altPath = FilePathFormatter::format(MAGENTO_BP) . 'dev/tests/acceptance';
 
         if (realpath($altPath) && ($altPath !== TESTS_BP)) {
             $paths = array_merge(
