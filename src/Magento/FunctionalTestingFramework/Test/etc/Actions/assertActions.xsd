@@ -16,6 +16,8 @@
             <xs:element type="assertArrayNotHasKeyType" name="assertArrayNotHasKey" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertArraySubsetType" name="assertArraySubset" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertContainsType" name="assertContains" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertStringContainsStringType" name="assertStringContainsString" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertStringContainsStringIgnoringCaseType" name="assertStringContainsStringIgnoringCase" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertCountType" name="assertCount" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertEmptyType" name="assertEmpty" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertEqualsType" name="assertEquals" minOccurs="0" maxOccurs="unbounded"/>
@@ -32,6 +34,8 @@
             <xs:element type="assertLessThanType" name="assertLessThan" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertLessThanOrEqualType" name="assertLessThanOrEqual" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertNotContainsType" name="assertNotContains" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertStringNotContainsStringType" name="assertStringNotContainsString" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="assertStringNotContainsStringIgnoringCaseType" name="assertStringNotContainsStringIgnoringCase" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertNotEmptyType" name="assertNotEmpty" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertNotEqualsType" name="assertNotEquals" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertNotInstanceOfType" name="assertNotInstanceOf" minOccurs="0" maxOccurs="unbounded"/>
@@ -146,6 +150,34 @@
         <xs:annotation>
             <xs:documentation>
                 Asserts that given array contains a value.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
+        </xs:choice>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertStringContainsStringType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given string contains a value.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
+        </xs:choice>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertStringContainsStringIgnoringCaseType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given string contains a value ignoring case.
             </xs:documentation>
         </xs:annotation>
         <xs:choice maxOccurs="unbounded">
@@ -366,6 +398,34 @@
         <xs:annotation>
             <xs:documentation>
                 Asserts that given array does not contain a value.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
+        </xs:choice>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertStringNotContainsStringType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given string does not contain a value.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
+            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
+        </xs:choice>
+        <xs:attribute ref="message"/>
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="assertStringNotContainsStringIgnoringCaseType">
+        <xs:annotation>
+            <xs:documentation>
+                Asserts that given string does not contain a value ignoring case.
             </xs:documentation>
         </xs:annotation>
         <xs:choice maxOccurs="unbounded">

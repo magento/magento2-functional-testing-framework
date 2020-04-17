@@ -1,6 +1,5 @@
 # Assertions
 
-
 Assertions serve to pass or fail the [test](../test.md#test-tag) if a condition is not met. These assertions will look familiar to you if you've used any other testing framework, like PHPUnit.
 
 All assertions contain the same [common actions attributes](./actions.md#common-attributes): `stepKey`, `before`, and `after`.
@@ -30,6 +29,8 @@ If `variable` is used, the test transforms the corresponding value to `$variable
 To use variables embedded in a string in `expected` and `actual` of your assertion, use the `{$stepKey}` format:
 
 `actual="A long assert string {$stepKeyOfGrab} with an embedded variable reference." actualType="variable"`
+
+In case of `assertContains` actions, `<expectedResult>` is the needle and `<actualResult>` is the haystack.
 
 ## Example
 
@@ -128,6 +129,28 @@ Attribute|Type|Use|Description
 `message`|string|optional|Text of informational message about a cause of failure.
 `stepKey`|string|required| A unique identifier of the text step.
 `before`|string|optional| `stepKey` of action that must be executed next.
+`after`|string|optional| `stepKey` of the preceding action.
+
+### assertStringContainsString
+
+See [assertStringContainsString docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringContainsString).
+
+Attribute|Type|Use|Description
+---|---|---|---
+`message`|string|optional|Text describing the cause of the failure.
+`stepKey`|string|required| Unique identifier of the text step.
+`before`|string|optional| `stepKey` of the action that must be executed next.
+`after`|string|optional| `stepKey` of the preceding action.
+
+### assertStringContainsStringIgnoringCase
+
+See [assertStringContainsStringIgnoringCase docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringContainsStringIgnoringCase).
+
+Attribute|Type|Use|Description
+---|---|---|---
+`message`|string|optional|Message describing the cause of failure.
+`stepKey`|string|required| A unique identifier of the text step.
+`before`|string|optional| `stepKey` of the action that must be executed next.
 `after`|string|optional| `stepKey` of the preceding action.
 
 ### assertCount
@@ -299,6 +322,28 @@ Attribute|Type|Use|Description
 ### assertNotContains
 
 See [assertNotContains docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotContains).
+
+Attribute|Type|Use|Description
+---|---|---|---
+`message`|string|optional|Text of informational message about a cause of failure.
+`stepKey`|string|required| A unique identifier of the text step.
+`before`|string|optional| `stepKey` of action that must be executed next.
+`after`|string|optional| `stepKey` of the preceding action.
+
+### assertStringNotContainsString
+
+See [assertStringNotContainsString docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringNotContainsString).
+
+Attribute|Type|Use|Description
+---|---|---|---
+`message`|string|optional|Text of informational message about a cause of failure.
+`stepKey`|string|required| A unique identifier of the text step.
+`before`|string|optional| `stepKey` of action that must be executed next.
+`after`|string|optional| `stepKey` of the preceding action.
+
+### assertStringContainsStringIgnoringCase
+
+See [assertStringNotContainsStringIgnoringCase docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringNotContainsStringIgnoringCase).
 
 Attribute|Type|Use|Description
 ---|---|---|---
