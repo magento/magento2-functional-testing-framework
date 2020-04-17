@@ -12,15 +12,26 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class BaseGenerateCommand extends Command
 {
+    const MFTF_NOTICES = "Placeholder text for MFTF notices\n";
+
+    /**
+     * Console output style
+     *
+     * @var SymfonyStyle
+     */
+    protected $ioStyle = null;
+
     /**
      * Configures the base command.
      *
@@ -47,8 +58,7 @@ class BaseGenerateCommand extends Command
             'debug',
             'd',
             InputOption::VALUE_OPTIONAL,
-            'Run extra validation when generating and running tests. Use option \'none\' to turn off debugging -- 
-             added for backward compatibility, will be removed in the next MAJOR release',
+            'Run extra validation when generating and running tests.',
             MftfApplicationConfig::LEVEL_DEFAULT
         );
     }
@@ -177,5 +187,35 @@ class BaseGenerateCommand extends Command
 
         $json = json_encode($result);
         return $json;
+    }
+
+    /**
+     * Set Symfony IO Style
+     *
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     * @return void
+     */
+    protected function setIOStyle(InputInterface $input, OutputInterface $output)
+    {
+        // For IO style
+        if (null === $this->ioStyle) {
+            $this->ioStyle = new SymfonyStyle($input, $output);
+        }
+    }
+
+    /**
+     * Show predefined global notice messages
+     *
+     * @param OutputInterface $output
+     * @return void
+     */
+    protected function showMftfNotices(OutputInterface $output)
+    {
+        if (null !== $this->ioStyle) {
+            $this->ioStyle->note(self::MFTF_NOTICES);
+        } else {
+            $output->writeln(self::MFTF_NOTICES);
+        }
     }
 }

@@ -177,7 +177,8 @@ class TestObjectExtractor extends BaseObjectExtractor
                 $testAnnotations,
                 $testHooks,
                 $filename,
-                $testReference
+                $testReference,
+                $deprecated
             );
         } catch (XmlException $exception) {
             throw new XmlException($exception->getMessage() . ' in Test ' . $filename);

@@ -45,7 +45,8 @@ The following conventions apply to MFTF pages:
 -  `<page>` name must be alphanumeric.
 -  `*Page.xml` is stored in the _Page_ directory of a module.
 -  The name format is `{Admin|Storefront}{PageDescription}Page.xml`.
-
+-  One `<page>` tag is allowed per page XML file.
+ 
 The `.url` attribute is required when using the page for [actions] that require the URL argument.
 
 ## Page examples
@@ -145,6 +146,7 @@ Attributes|Type|Use|Description
 `area`|string|required|The area where this page lives. Three possible values: `admin` prepends `BACKEND_NAME` to `url`, `storefront` does not prepend anything to `url`, `external` flags the page for use with `amOnUrl`. The `url` provided must be a full URL, such as `http://myFullUrl.com/`, instead of the URL for a Magento page.
 `parameterized`|boolean |optional|Include and set to `"true"` if the `url` for this page has parameters that need to be replaced for proper use.
 `remove`|boolean|optional|The default value is `"false"`. Set to `"true"` to remove this element during parsing.
+`deprecated`|string|optional|Used to warn about the future deprecation of the data entity. String will appear in Allure reports and console output at runtime.
 
 `<page>` may contain several [`<section>`] elements.
 

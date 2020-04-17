@@ -1,4 +1,0 @@
-operationName: createMyEntity
-operationDataType: myEntityType
-operationUrl: /admin/system_config/save/someEntity
-inputString: entity[param1]=value1&entity[param2]=value2&entity[param3]=value3&entityField=field1

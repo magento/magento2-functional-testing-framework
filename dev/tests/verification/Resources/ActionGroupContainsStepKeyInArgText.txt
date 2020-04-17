@@ -13,7 +13,7 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Description("<h3>Test files</h3>verification/TestModule/Test/ActionGroupTest.xml<br>")
+ * @Description("<h3>Test files</h3>verification/TestModule/Test/ActionGroupTest/ActionGroupContainsStepKeyInArgText.xml<br>")
  */
 class ActionGroupContainsStepKeyInArgTextCest
 {

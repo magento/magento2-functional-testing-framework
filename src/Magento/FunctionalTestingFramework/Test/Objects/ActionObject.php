@@ -56,13 +56,13 @@ class ActionObject
         "command",
         "html"
     ];
-    const OLD_ASSERTION_ATTRIBUTES = ["expected", "expectedType", "actual", "actualType"];
     const ASSERTION_ATTRIBUTES = ["expectedResult" => "expected", "actualResult" => "actual"];
     const ASSERTION_TYPE_ATTRIBUTE = "type";
     const ASSERTION_VALUE_ATTRIBUTE = "value";
+    const ASSERTION_ELEMENT_ATTRIBUTES = ["selector", "attribute"];
     const DELETE_DATA_MUTUAL_EXCLUSIVE_ATTRIBUTES = ["url", "createDataKey"];
     const EXTERNAL_URL_AREA_INVALID_ACTIONS = ['amOnPage'];
-    const FUNCTION_CLOSURE_ACTIONS = ['waitForElementChange', 'performOn', 'executeInSelenium'];
+    const FUNCTION_CLOSURE_ACTIONS = ['waitForElementChange'];
     const COMMAND_ACTION_ATTRIBUTES = ['magentoCLI', 'magentoCLISecret'];
     const MERGE_ACTION_ORDER_AFTER = 'after';
     const MERGE_ACTION_ORDER_BEFORE = 'before';
@@ -75,6 +75,7 @@ class ActionObject
     const DEFAULT_COMMAND_WAIT_TIMEOUT = 60;
     const ACTION_ATTRIBUTE_USERINPUT = 'userInput';
     const ACTION_TYPE_COMMENT = 'comment';
+    const ACTION_TYPE_HELPER = 'helper';
     const INVISIBLE_STEP_ACTIONS = ['retrieveEntityField', 'getSecret'];
 
     /**
@@ -282,6 +283,7 @@ class ActionObject
     public function resolveReferences()
     {
         if (empty($this->resolvedCustomAttributes)) {
+            $this->resolveHelperReferences();
             $this->trimAssertionAttributes();
             $this->resolveSelectorReferenceAndTimeout();
             $this->resolveUrlReference();
@@ -290,6 +292,64 @@ class ActionObject
             if ($this->getType() == "deleteData") {
                 $this->validateMutuallyExclusiveAttributes(self::DELETE_DATA_MUTUAL_EXCLUSIVE_ATTRIBUTES);
             }
+        }
+    }
+
+    /**
+     * Resolves references for helpers.
+     *
+     * @throws TestReferenceException
+     * @return void
+     */
+    private function resolveHelperReferences()
+    {
+        if ($this->getType() !== 'helper') {
+            return;
+        }
+        $isResolved = false;
+
+        try {
+            foreach ($this->actionAttributes as $attrKey => $attrValue) {
+                $this->actionAttributes[$attrKey] = $this->findAndReplaceReferences(
+                    SectionObjectHandler::getInstance(),
+                    $attrValue
+                );
+            }
+            $isResolved = true;
+        } catch (\Exception $e) {
+            // catching exception to allow other entity type resolution to proceed
+        }
+
+        try {
+            foreach ($this->actionAttributes as $attrKey => $attrValue) {
+                $this->actionAttributes[$attrKey] = $this->findAndReplaceReferences(
+                    PageObjectHandler::getInstance(),
+                    $attrValue
+                );
+            }
+            $isResolved = true;
+        } catch (\Exception $e) {
+            // catching exception to allow other entity type resolution to proceed
+        }
+
+        try {
+            foreach ($this->actionAttributes as $attrKey => $attrValue) {
+                $this->actionAttributes[$attrKey] = $this->findAndReplaceReferences(
+                    DataObjectHandler::getInstance(),
+                    $attrValue
+                );
+            }
+            $isResolved = true;
+        } catch (\Exception $e) {
+            // catching exception to allow other entity type resolution to proceed
+        }
+
+        if ($isResolved !== true) {
+            throw new TestReferenceException(
+                "Could not resolve entity reference \"{$attrValue}\" "
+                . "in Action with stepKey \"{$this->getStepKey()}\"",
+                ["input" => $attrValue, "stepKey" => $this->getStepKey()]
+            );
         }
     }
 
@@ -303,24 +363,6 @@ class ActionObject
     public function trimAssertionAttributes()
     {
         $actionAttributeKeys = array_keys($this->actionAttributes);
-
-        /** MQE-683 DEPRECATE OLD METHOD HERE
-         * Checks if action has any of the old, single line attributes
-         * Throws a warning and returns, assuming old syntax is used.
-         */
-        $oldAttributes = array_intersect($actionAttributeKeys, ActionObject::OLD_ASSERTION_ATTRIBUTES);
-        if (!empty($oldAttributes)) {
-            $appConfig = MftfApplicationConfig::getConfig();
-            if ($appConfig->getPhase() == MftfApplicationConfig::GENERATION_PHASE && $appConfig->verboseEnabled()) {
-                LoggingUtil::getInstance()->getLogger(ActionObject::class)->deprecation(
-                    "use of one line Assertion actions will be deprecated in MFTF 3.0.0, please use nested syntax",
-                    ["action" => $this->type, "stepKey" => $this->stepKey],
-                    true
-                );
-            }
-            return;
-        }
-
         $relevantKeys = array_keys(ActionObject::ASSERTION_ATTRIBUTES);
         $relevantAssertionAttributes = array_intersect($actionAttributeKeys, $relevantKeys);
 
@@ -328,43 +370,21 @@ class ActionObject
             return;
         }
 
-        $this->validateAssertionSchema($relevantAssertionAttributes);
-
         // Flatten nested Elements's type and value into key=>value entries
+        // Also, add selector/value attributes if they are present in nested Element
         foreach ($this->actionAttributes as $key => $subAttributes) {
+            foreach (self::ASSERTION_ELEMENT_ATTRIBUTES as $ATTRIBUTE) {
+                if (isset($subAttributes[$ATTRIBUTE])) {
+                    $this->actionAttributes[$ATTRIBUTE] = $subAttributes[$ATTRIBUTE];
+                }
+            }
             if (in_array($key, $relevantKeys)) {
                 $prefix = ActionObject::ASSERTION_ATTRIBUTES[$key];
                 $this->actionAttributes[$prefix . ucfirst(ActionObject::ASSERTION_TYPE_ATTRIBUTE)] =
-                    $subAttributes[ActionObject::ASSERTION_TYPE_ATTRIBUTE];
+                    $subAttributes[ActionObject::ASSERTION_TYPE_ATTRIBUTE] ?? "NO_TYPE";
                 $this->actionAttributes[$prefix] =
-                    $subAttributes[ActionObject::ASSERTION_VALUE_ATTRIBUTE];
+                    $subAttributes[ActionObject::ASSERTION_VALUE_ATTRIBUTE] ?? "";
                 unset($this->actionAttributes[$key]);
-            }
-        }
-    }
-
-    /**
-     * Validates that the given assertion attributes have valid schema according to nested assertion syntax.
-     * @param array $attributes
-     * @return void
-     * @throws TestReferenceException
-     */
-    private function validateAssertionSchema($attributes)
-    {
-        /** MQE-683 DEPRECATE OLD METHOD HERE
-         * Unnecessary validation, only needed for backwards compatibility
-         */
-        $singleChildTypes = ['assertEmpty', 'assertFalse', 'assertFileExists', 'assertFileNotExists',
-            'assertIsEmpty', 'assertNotEmpty', 'assertNotNull', 'assertNull', 'assertTrue',
-            'assertElementContainsAttribute'];
-
-        if (!in_array($this->type, $singleChildTypes)) {
-            if (!in_array('expectedResult', $attributes)
-                || !in_array('actualResult', $attributes)) {
-                throw new TestReferenceException(
-                    "{$this->type} must have both an expectedResult & actualResult defined (stepKey: {$this->stepKey})",
-                    ["action" => $this->type, "stepKey" => $this->stepKey]
-                );
             }
         }
     }
@@ -420,7 +440,7 @@ class ActionObject
             $allPages = PageObjectHandler::getInstance()->getAllObjects();
             if ($replacement === $url && array_key_exists(trim($url, "{}"), $allPages)
             ) {
-                LoggingUtil::getInstance()->getLogger(ActionObject::class)->warning(
+                throw new TestReferenceException(
                     "page url attribute not found and is required",
                     ["action" => $this->type, "url" => $url, "stepKey" => $this->stepKey]
                 );

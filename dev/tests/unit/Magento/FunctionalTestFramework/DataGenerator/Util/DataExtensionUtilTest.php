@@ -22,7 +22,7 @@ class EntityDataExtensionTest extends MagentoTestCase
      * Before method functionality
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         AspectMock::clean();
     }

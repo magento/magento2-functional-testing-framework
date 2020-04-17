@@ -15,7 +15,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 /**
  * @Title("[NO TESTCASEID]: ChildExtendedTestSkippedParent")
  * @group Child
- * @Description("<h3>Test files</h3>verification/TestModule/Test/ExtendedFunctionalTest.xml<br>")
+ * @Description("<h3>Test files</h3>verification/TestModule/Test/ExtendedFunctionalTest/ExtendingSkippedTest.xml<br>")
  */
 class ExtendingSkippedTestCest
 {

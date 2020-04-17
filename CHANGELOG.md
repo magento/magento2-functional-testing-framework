@@ -1,5 +1,99 @@
 Magento Functional Testing Framework Changelog
 ================================================
+3.0.0 RC1
+---------
+
+### Enhancements
+* Customizability
+    * Introduced MFTF helpers `<helper>` to create custom actions outside of MFTF.
+    * Removed deprecated actions `<executeSelenium>` and `<performOn>`.
+* Maintainability
+    * Schema updates for test entities to only allow single entity per file except Data and Metadata.
+    * Support for sub-folders in test modules.
+    * Removed support to read test entities from `<magento>dev/tests/acceptance/tests/functional/Magento/FunctionalTest`. 
+    * Removed support for PHP 7.0 and 7.1.
+    * Removed file attribute for `<module>` in suiteSchema.
+* Traceability
+    * Removed `--debug` option NONE to disallow ability to turn off schema validation.
+    * Notices added for test entity naming convention violations.
+    * Metadata file names changed to `*Meta.xml`.
+* Readability
+    * Support only nested assertion syntax [See assertions page for details](./docs/test/assertions.md)       
+* Upgrade scripts added to upgrade tests to MFTF major version requirements. See upgrade instructions below.
+* Bumped dependencies to latest possible versions.
+
+### Fixes
+* Throw exception during generation when leaving out .url for `amOnPage`.
+* `request_timeout` and `connection_timeout` added to functional.suite.yml.dist.
+* Fixed `ModuleResolver` to resolve test modules moved out of deprecated path.
+
+### Upgrade Instructions
+* Run `bin/mftf reset --hard` to remove old generated configurations.
+* Run `bin/mftf build:project` to generate new configurations.
+* Run `bin/mftf upgrade:tests`. [See command page for details](./docs/commands/mftf.md#upgradetests).
+* After running the above command, some tests may need manually updates:
+    * Remove all occurrences of `<executeInSelenium>` and `<performOn>`
+    * Remove all occurrences of `<module file=""/>` from any `<suite>`s
+    * Ensure all `<assert*>` actions in your tests have a valid schema.
+* Lastly, try to generate all tests. Tests should all be generated as a result of the upgrades.
+    * If not, the most likely issue will be a changed XML schema. Check error messaging and search your codebase for the attributes listed.
+
+2.6.3
+-----
+
+### New Feature
+* `--filter` option was added to `bin/mftf generate:tests` command. For more details please go to https://devdocs.magento.com/mftf/docs/commands/mftf.html#generatetests
+
+2.6.2
+-----
+
+### Fixes
+* Fixed float conversion error in test generation
+
+2.6.1
+-----
+
+* Usability
+    * Introduced new `.env` configuration `ELASTICSEARCH_VERSION` to support multiple elasticsearch versions
+* Maintainability
+    * Added deprecation notices for upcoming MFTF 3.0.0
+* Replaced facebook webdriver with php-webdriver to support PHP version updates
+
+2.6.0
+-----
+
+* Usability
+    * `magentoCron` action added by community maintainer @lbajsarowicz
+* Traceability
+    * MFTF generated cest files are fully compatible for Codeception `dry-run`.
+* Modularity
+    * `mftf generate:tests` and `mftf run:test` commands now accept suite scoped test names in format `[suitename:testname]...`.
+* Maintainability
+    * Support `deprecated` syntax for the following test entities:
+        * Test
+        * Action Group
+        * Data
+        * Metadata
+        * Page
+        * Section
+        * Section Element
+            * See DevDocs for details 
+    * Improved `mftf static-checks` command to allow executing all or specific static checks.
+    * Added a new static check that checks and reports unused arguments in action groups.
+* Customizability
+    * AWS Secrets Manager has been added as an additional credential storage.
+        * See DevDocs for details
+* Bumped dependencies to latest possible versions
+
+### Fixes
+* Fixed missing before, after, failed steps in cest file when generating tests with `--allow-skipped` option.
+* Fixed suites and tests display issue in Allure `Suites` page after `mftf run:group` command.
+* `createData` action now shows a meaningful error message at runtime when the entity does not exist.
+
+### GitHub Issues/Pull requests:
+* [#537](https://github.com/magento/magento2-functional-testing-framework/pull/537) -- Refactor of TestGenerator class
+* [#538](https://github.com/magento/magento2-functional-testing-framework/pull/538) -- FEATURE: <magentoCron> command to execute Cron Jobs
+
 2.5.4
 -----
 [Demo Video](https://www.youtube.com/watch?v=tguvkw1HWKg)

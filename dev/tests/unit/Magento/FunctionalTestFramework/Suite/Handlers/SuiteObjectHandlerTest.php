@@ -19,7 +19,7 @@ use tests\unit\Util\MockModuleResolverBuilder;
 
 class SuiteObjectHandlerTest extends MagentoTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $resolverMock = new MockModuleResolverBuilder();
         $resolverMock->setup();
@@ -65,7 +65,7 @@ class SuiteObjectHandlerTest extends MagentoTestCase
             ->withTestActions()
             ->build();
 
-        $mockTestData = ['tests' => array_merge($mockSimpleTest, $mockGroup1Test1, $mockGroup1Test2, $mockGroup2Test1)];
+        $mockTestData = array_merge($mockSimpleTest, $mockGroup1Test1, $mockGroup1Test2, $mockGroup2Test1);
         $this->setMockTestAndSuiteParserOutput($mockTestData, $mockData);
 
         // parse and retrieve suite object with mocked data

@@ -5,8 +5,11 @@
  */
 namespace Magento\FunctionalTestingFramework\Suite\Objects;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Filter\FilterInterface;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
  * Class SuiteObject
@@ -42,18 +45,27 @@ class SuiteObject
     private $hooks;
 
     /**
+     * Filename of where the suite came from
+     *
+     * @var string
+     */
+    private $filename;
+
+    /**
      * SuiteObject constructor.
      * @param string           $name
      * @param TestObject[]     $includeTests
      * @param TestObject[]     $excludeTests
      * @param TestHookObject[] $hooks
+     * @param string           $filename
      */
-    public function __construct($name, $includeTests, $excludeTests, $hooks)
+    public function __construct($name, $includeTests, $excludeTests, $hooks, $filename = null)
     {
         $this->name = $name;
         $this->includeTests = $includeTests;
         $this->excludeTests = $excludeTests;
         $this->hooks = $hooks;
+        $this->filename = $filename;
     }
 
     /**
@@ -84,6 +96,7 @@ class SuiteObject
      * @param TestObject[] $includeTests
      * @param TestObject[] $excludeTests
      * @return TestObject[]
+     * @throws \Exception
      */
     private function resolveTests($includeTests, $excludeTests)
     {
@@ -95,12 +108,10 @@ class SuiteObject
             unset($finalTestList[$testName]);
         }
 
-        if (empty($finalTestList)) {
-            trigger_error(
-                "Current suite configuration for " .
-                $this->name . " contains no tests.",
-                E_USER_WARNING
-            );
+        $filters = MftfApplicationConfig::getConfig()->getFilterList()->getFilters();
+        /** @var FilterInterface $filter */
+        foreach ($filters as $filter) {
+            $filter->filter($finalTestList);
         }
 
         return $finalTestList;
@@ -145,5 +156,15 @@ class SuiteObject
     public function getAfterHook()
     {
         return $this->hooks['after'] ?? null;
+    }
+
+    /**
+     * Getter for the Suite Filename
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
     }
 }

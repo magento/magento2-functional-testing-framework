@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="HelperActionGroup">
+        <arguments>
+            <argument name="test" type="string" />
+            <argument name="entityTest" type="entity" />
+        </arguments>
+        <comment userInput="Action group to demonstrate helper functionality available from action groups." stepKey="comment" />
+        <helper class="\MFTF\DevDocs\Helper\CustomHelper" method="goTo" stepKey="customHelper">
+            <argument name="test">{{contentSection.parametrizedSelector(entityTest.entityField)}}</argument>
+            <argument name="module">['{{entityTest.entityField}}', 'Bla']</argument>
+            <argument name="url">{{test}}</argument>
+            <argument name="bool">true</argument>
+            <argument name="float">4.400000000234234</argument>
+            <argument name="int">42</argument>
+        </helper>
+    </actionGroup>
+</actionGroups>

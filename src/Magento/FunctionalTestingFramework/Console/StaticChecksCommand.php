@@ -15,8 +15,10 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Exception;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class StaticChecksCommand extends Command
 {
@@ -35,6 +37,13 @@ class StaticChecksCommand extends Command
     private $staticCheckObjects;
 
     /**
+     * Console output style
+     *
+     * @var SymfonyStyle
+     */
+    protected $ioStyle;
+
+    /**
      * Configures the current command.
      *
      * @return void
@@ -44,14 +53,20 @@ class StaticChecksCommand extends Command
         $list = new StaticChecksList();
         $this->allStaticCheckObjects = $list->getStaticChecks();
         $staticCheckNames = implode(', ', array_keys($this->allStaticCheckObjects));
-        $description = "This command will run all static checks on xml test materials. "
-            . "Available static check scripts are:\n{$staticCheckNames}";
+        $description = 'This command will run all static checks on xml test materials. '
+            . 'Available static check scripts are:' . PHP_EOL . $staticCheckNames;
         $this->setName('static-checks')
             ->setDescription($description)
             ->addArgument(
                 'names',
                 InputArgument::OPTIONAL | InputArgument::IS_ARRAY,
                 'name(s) of specific static check script(s) to run'
+            )->addOption(
+                'path',
+                'p',
+                InputOption::VALUE_OPTIONAL,
+                'Path to a MFTF test module to run "deprecatedEntityUsage" static check script. ' . PHP_EOL
+                . 'Option is ignored by other static check scripts.' . PHP_EOL
             );
     }
 
@@ -65,32 +80,41 @@ class StaticChecksCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->ioStyle = new SymfonyStyle($input, $output);
         try {
-            $this->validateInputArguments($input, $output);
+            $this->validateInput($input);
         } catch (InvalidArgumentException $e) {
             LoggingUtil::getInstance()->getLogger(StaticChecksCommand::class)->error($e->getMessage());
-            $output->writeln($e->getMessage() . " Please fix input arguments and rerun.");
+            $this->ioStyle->error($e->getMessage() . ' Please fix input argument(s) or option(s) and rerun.');
             return 1;
         }
 
+        $cmdFailed = false;
         $errors = [];
         foreach ($this->staticCheckObjects as $name => $staticCheck) {
             LoggingUtil::getInstance()->getLogger(get_class($staticCheck))->info(
-                "\nRunning static check script for: " . $name
-            );
-            $output->writeln(
-                "\nRunning static check script for: " . $name
+                'Running static check script for: ' . $name . PHP_EOL
             );
 
-            $staticCheck->execute($input);
+            $this->ioStyle->text(PHP_EOL . 'Running static check script for: ' . $name . PHP_EOL);
+            $start = microtime(true);
+            try {
+                $staticCheck->execute($input);
+            } catch (Exception $e) {
+                $cmdFailed = true;
+                LoggingUtil::getInstance()->getLogger(get_class($staticCheck))->error($e->getMessage() . PHP_EOL);
+                $this->ioStyle->error($e->getMessage());
+            }
+            $end = microtime(true);
+            $errors += $staticCheck->getErrors();
 
             $staticOutput = $staticCheck->getOutput();
             LoggingUtil::getInstance()->getLogger(get_class($staticCheck))->info($staticOutput);
-            $output->writeln($staticOutput);
-            $errors += $staticCheck->getErrors();
-        }
+            $this->ioStyle->text($staticOutput);
 
-        if (empty($errors)) {
+            $this->ioStyle->text('Total execution time is ' . (string)($end - $start) . ' seconds.' . PHP_EOL);
+        }
+        if (!$cmdFailed && empty($errors)) {
             return 0;
         } else {
             return 1;
@@ -104,7 +128,7 @@ class StaticChecksCommand extends Command
      * @return void
      * @throws InvalidArgumentException
      */
-    private function validateInputArguments(InputInterface $input)
+    private function validateInput(InputInterface $input)
     {
         $this->staticCheckObjects = [];
         $requiredChecksNames = $input->getArgument('names');
@@ -126,8 +150,18 @@ class StaticChecksCommand extends Command
 
         if (!empty($invalidCheckNames)) {
             throw new InvalidArgumentException(
-                "Invalid static check script(s): " . implode(', ', $invalidCheckNames) . "."
+                'Invalid static check script(s): ' . implode(', ', $invalidCheckNames) . '.'
             );
+        }
+
+        if ($input->getOption('path')) {
+            if ( (count($this->staticCheckObjects) !== 1)
+                || array_keys($this->staticCheckObjects)[0] !== StaticChecksList::DEPRECATED_ENTITY_USAGE_CHECK_NAME )
+                throw new InvalidArgumentException(
+                    '--path option can only be used for "'
+                    . StaticChecksList::DEPRECATED_ENTITY_USAGE_CHECK_NAME
+                    . '".'
+                );
         }
     }
 }

@@ -13,8 +13,11 @@ use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Util\BaseObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\TestHookObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
+use Magento\FunctionalTestingFramework\Util\ModuleResolver;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
+use Symfony\Component\Finder\Finder;
+use Magento\FunctionalTestingFramework\Util\ModulePathExtractor;
 
 class SuiteObjectExtractor extends BaseObjectExtractor
 {
@@ -23,7 +26,6 @@ class SuiteObjectExtractor extends BaseObjectExtractor
     const INCLUDE_TAG_NAME = 'include';
     const EXCLUDE_TAG_NAME = 'exclude';
     const MODULE_TAG_NAME = 'module';
-    const MODULE_TAG_FILE_ATTRIBUTE = 'file';
     const TEST_TAG_NAME = 'test';
     const GROUP_TAG_NAME = 'group';
 
@@ -181,7 +183,6 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      */
     private function isSuiteEmpty($suiteHooks, $includeTests, $excludeTests)
     {
-
         $noHooks = count($suiteHooks) == 0 ||
             (
                 empty($suiteHooks['before']->getActions()) &&
@@ -220,10 +221,10 @@ class SuiteObjectExtractor extends BaseObjectExtractor
                         TestObjectHandler::getInstance()->getTestsByGroup($suiteRefData[self::NAME]);
                     break;
                 case self::MODULE_TAG_NAME:
-                    $testObjectList = array_merge($testObjectList, $this->extractModuleAndFiles(
-                        $suiteRefData[self::NAME],
-                        $suiteRefData[self::MODULE_TAG_FILE_ATTRIBUTE] ?? null
-                    ));
+                    $testObjectList = array_merge(
+                        $testObjectList,
+                        $this->getTestsByModuleName($suiteRefData[self::NAME])
+                    );
                     break;
             }
         }
@@ -232,83 +233,24 @@ class SuiteObjectExtractor extends BaseObjectExtractor
     }
 
     /**
-     * Takes an array of modules/files and resolves to an array of test objects.
+     * Return all test objects for a module
      *
      * @param string $moduleName
-     * @param string $moduleFilePath
-     * @return array
-     * @throws \Exception
-     */
-    private function extractModuleAndFiles($moduleName, $moduleFilePath)
-    {
-        if (empty($moduleFilePath)) {
-            return $this->resolveModulePathTestNames($moduleName);
-        }
-
-        return $this->resolveFilePathTestNames($moduleFilePath, $moduleName);
-    }
-
-    /**
-     * Takes a filepath (and optionally a module name) and resolves to a test object.
-     *
-     * @param string $filename
-     * @param null   $moduleName
      * @return TestObject[]
      * @throws Exception
      */
-    private function resolveFilePathTestNames($filename, $moduleName = null)
-    {
-        $filepath = $filename;
-        if (!strstr($filepath, DIRECTORY_SEPARATOR)) {
-            $filepath = FilePathFormatter::format(TESTS_MODULE_PATH) .
-                $moduleName .
-                DIRECTORY_SEPARATOR .
-                'Test' .
-                DIRECTORY_SEPARATOR .
-                $filename;
-        }
-
-        if (!file_exists($filepath)) {
-            throw new Exception("Could not find file ${filename}");
-        }
-
-        $testObjects = [];
-        $xml = simplexml_load_file($filepath);
-        for ($i = 0; $i < $xml->count(); $i++) {
-            $testName = (string)$xml->test[$i]->attributes()->name;
-            $testObjects[$testName] = TestObjectHandler::getInstance()->getObject($testName);
-        }
-
-        return $testObjects;
-    }
-
-    /**
-     * Takes a single module name and resolves to an array of tests contained within specified module.
-     *
-     * @param string $moduleName
-     * @return array
-     * @throws \Exception
-     */
-    private function resolveModulePathTestNames($moduleName)
+    private function getTestsByModuleName($moduleName)
     {
         $testObjects = [];
-        $xmlFiles = glob(
-            FilePathFormatter::format(TESTS_MODULE_PATH) .
-            $moduleName .
-            DIRECTORY_SEPARATOR .
-            'Test' .
-            DIRECTORY_SEPARATOR .
-            '*.xml'
-        );
-
-        foreach ($xmlFiles as $xmlFile) {
-            $testObjs = $this->resolveFilePathTestNames($xmlFile);
-
-            foreach ($testObjs as $testObj) {
-                $testObjects[$testObj->getName()] = $testObj;
+        $pathExtractor = new ModulePathExtractor();
+        $allTestObjects = TestObjectHandler::getInstance()->getAllObjects();
+        foreach ($allTestObjects as $testName => $testObject) {
+            /** @var TestObject $testObject */
+            $filename = $testObject->getFilename();
+            if ($pathExtractor->extractModuleName($filename) === $moduleName) {
+                $testObjects[$testName] = $testObject;
             }
         }
-
         return $testObjects;
     }
 }

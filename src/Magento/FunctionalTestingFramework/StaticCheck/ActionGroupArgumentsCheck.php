@@ -6,14 +6,12 @@
 
 namespace Magento\FunctionalTestingFramework\StaticCheck;
 
-use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
-use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Symfony\Component\Console\Input\InputInterface;
-use Magento\FunctionalTestingFramework\Util\ModuleResolver;
 use Symfony\Component\Finder\Finder;
 use Exception;
+use Magento\FunctionalTestingFramework\Util\Script\ScriptUtil;
 
 /**
  * Class ActionGroupArgumentsCheck
@@ -21,7 +19,6 @@ use Exception;
  */
 class ActionGroupArgumentsCheck implements StaticCheckInterface
 {
-
     const ACTIONGROUP_XML_REGEX_PATTERN = '/<actionGroup\sname=(?: (?!<\/actionGroup>).)*/mxs';
     const ACTIONGROUP_ARGUMENT_REGEX_PATTERN = '/<argument[^\/>]*name="([^"\']*)/mxs';
     const ACTIONGROUP_NAME_REGEX_PATTERN = '/<actionGroup name=["\']([^\'"]*)/';
@@ -42,6 +39,13 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
     private $output;
 
     /**
+     * ScriptUtil instance
+     *
+     * @var ScriptUtil
+     */
+    private $scriptUtil;
+
+    /**
      * Checks unused arguments in action groups and prints out error to file.
      *
      * @param  InputInterface $input
@@ -50,24 +54,17 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
      */
     public function execute(InputInterface $input)
     {
-        MftfApplicationConfig::create(
-            true,
-            MftfApplicationConfig::UNIT_TEST_PHASE,
-            false,
-            MftfApplicationConfig::LEVEL_NONE,
-            true
-        );
+        $this->scriptUtil = new ScriptUtil();
+        $allModules = $this->scriptUtil->getAllModulePaths();
 
-        $allModules = ModuleResolver::getInstance()->getModulesPath();
-
-        $actionGroupXmlFiles = StaticCheckHelper::buildFileList(
+        $actionGroupXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope(
             $allModules,
             DIRECTORY_SEPARATOR . 'ActionGroup' . DIRECTORY_SEPARATOR
         );
 
         $this->errors = $this->findErrorsInFileSet($actionGroupXmlFiles);
 
-        $this->output = StaticCheckHelper::printErrorsToFile(
+        $this->output = $this->scriptUtil->printErrorsToFile(
             $this->errors,
             self::ERROR_LOG_FILENAME,
             self::ERROR_LOG_MESSAGE
@@ -139,10 +136,19 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
 
         preg_match_all(self::ACTIONGROUP_ARGUMENT_REGEX_PATTERN, $actionGroupXml, $arguments);
         preg_match(self::ACTIONGROUP_NAME_REGEX_PATTERN, $actionGroupXml, $actionGroupName);
+        $validActionGroup = false;
         try {
             $actionGroup = ActionGroupObjectHandler::getInstance()->getObject($actionGroupName[1]);
-        } catch (XmlException $e) {
+            if ($actionGroup) {
+                $validActionGroup = true;
+            }
+        } catch (Exception $e) {
         }
+
+        if (!$validActionGroup) {
+            return $unusedArguments;
+        }
+
         foreach ($arguments[1] as $argument) {
             //pattern to match all argument references
             $patterns = [

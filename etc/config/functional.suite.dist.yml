@@ -12,8 +12,6 @@ namespace: Magento\FunctionalTestingFramework
 modules:
     enabled:
         - \Magento\FunctionalTestingFramework\Module\MagentoWebDriver
-        - \Magento\FunctionalTestingFramework\Helper\Acceptance
-        - \Magento\FunctionalTestingFramework\Helper\MagentoFakerData
         - \Magento\FunctionalTestingFramework\Module\MagentoSequence
         - \Magento\FunctionalTestingFramework\Module\MagentoAssert
         - \Magento\FunctionalTestingFramework\Module\MagentoActionProxies
@@ -29,6 +27,8 @@ modules:
             username: "%MAGENTO_ADMIN_USERNAME%"
             password: "%MAGENTO_ADMIN_PASSWORD%"
             pageload_timeout: "%WAIT_TIMEOUT%"
+            request_timeout: "%WAIT_TIMEOUT%"
+            connection_timeout: "%WAIT_TIMEOUT%"
             host: "%SELENIUM_HOST%"
             port: "%SELENIUM_PORT%"
             protocol: "%SELENIUM_PROTOCOL%"

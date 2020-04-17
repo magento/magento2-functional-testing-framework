@@ -1,5 +1,10 @@
 # Introduction to the Magento Functional Testing Framework
 
+<div class="bs-callout bs-callout-info" markdown="1">
+These are the docs for the latest MFTF release.
+To find older documentation, please refer to the [docs folder] of your desired release in Github.
+</div>
+
 [Find your MFTF version][] of the MFTF.
 
 The Magento Functional Testing Framework (MFTF) aims to replace the [Functional Testing Framework] in future releases.
@@ -99,14 +104,14 @@ codeception.dist.yml            // Codeception configuration (generated while ru
 
 ## MFTF tests
 
-The MFTF supports two different locations for storing the tests and test artifacts:
-
+The MFTF supports three different locations for storing the tests and test artifacts:
 -  `<magento_root>/app/code/<vendor_name>/<module_name>/Test/Mftf/` is the directory to create new tests.
 -  `<magento_root>/vendor/<vendor_name>/<module_name>/Test/Mftf/` is the directory with the out of the box tests (fetched by the Composer).
+-  `<magento_root>/dev/tests/acceptance/tests/functional/<vendor_name>/<module_name>/` is used to store tests that depend on multiple modules.
 
 All tests and test data from these locations are merged in the order indicated in the above list.
 
-The file structure under the both path cases is the same:
+Directories immediately following the above paths will use the same format, and sub-directories under each category are supported.
 
 ```tree
 <Path>
@@ -119,6 +124,8 @@ The file structure under the both path cases is the same:
 ├── Page
 │   └── ...
 ├── Section
+│   └── ...
+├── Suite
 │   └── ...
 └── Test
     └── ...
@@ -134,3 +141,4 @@ Follow the [MFTF project] and [contribute on Github].
 [MFTF project]: https://github.com/magento/magento2-functional-testing-framework
 [Find your MFTF version]: #find-your-mftf-version
 [MFTF Test Migration]: https://github.com/magento/magento-functional-tests-migration
+[docs folder]: https://github.com/magento/magento2-functional-testing-framework/tree/master/docs

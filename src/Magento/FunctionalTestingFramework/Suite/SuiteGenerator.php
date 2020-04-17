@@ -95,6 +95,14 @@ class SuiteGenerator
         $suites = $testManifest->getSuiteConfig();
 
         foreach ($suites as $suiteName => $suiteContent) {
+            if (empty($suiteContent)) {
+                LoggingUtil::getInstance()->getLogger(self::class)->notification(
+                    "Suite '" . $suiteName . "' contains no tests and won't be generated." . PHP_EOL,
+                    [],
+                    true
+                );
+                continue;
+            }
             $firstElement = array_values($suiteContent)[0];
 
             // if the first element is a string we know that we simply have an array of tests
