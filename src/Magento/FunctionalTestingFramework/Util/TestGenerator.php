@@ -1276,7 +1276,6 @@ class TestGenerator
                 case "assertGreaterOrEquals":
                 case "assertGreaterThan":
                 case "assertGreaterThanOrEqual":
-                case "assertInternalType":
                 case "assertLessOrEquals":
                 case "assertLessThan":
                 case "assertLessThanOrEqual":
@@ -1335,16 +1334,6 @@ class TestGenerator
                         $actor,
                         $actionObject,
                         $assertActual,
-                        $assertMessage
-                    );
-                    break;
-                case "assertArraySubset":
-                    $testSteps .= $this->wrapFunctionCall(
-                        $actor,
-                        $actionObject,
-                        $assertExpected,
-                        $assertActual,
-                        $assertIsStrict,
                         $assertMessage
                     );
                     break;

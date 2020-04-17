@@ -108,18 +108,6 @@ Attribute|Type|Use|Description
 `before`|string|optional| `stepKey` of action that must be executed next.
 `after`|string|optional| `stepKey` of the preceding action.
 
-### assertArraySubset
-
-See [assertArraySubset docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertArraySubset).
-
-Attribute|Type|Use|Description
----|---|---|---
-`strict`|boolean|optional|
-`message`|string|optional|Text of informational message about a cause of failure.
-`stepKey`|string|required| A unique identifier of the text step.
-`before`|string|optional| `stepKey` of action that must be executed next.
-`after`|string|optional| `stepKey` of the preceding action.
-
 ### assertContains
 
 See [assertContains docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertContains).
@@ -256,17 +244,6 @@ Attribute|Type|Use|Description
 ### assertInstanceOf
 
 See [assertInstanceOf docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertInstanceOf).
-
-Attribute|Type|Use|Description
----|---|---|---
-`message`|string|optional|Text of informational message about a cause of failure.
-`stepKey`|string|required| A unique identifier of the text step.
-`before`|string|optional| `stepKey` of action that must be executed next.
-`after`|string|optional| `stepKey` of the preceding action.
-
-### assertInternalType
-
-See [assertInternalType docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertInternalType).
 
 Attribute|Type|Use|Description
 ---|---|---|---
