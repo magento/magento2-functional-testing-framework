@@ -45,6 +45,8 @@ class AssertTestCest
 		$I->assertArrayNotHasKey("kiwi", ['orange' => 2, 'apple' => 1], "pass"); // stepKey: assertArrayNotHasKey
 		$I->assertArraySubset([1, 2], [1, 2, 3, 5], "pass"); // stepKey: assertArraySubset
 		$I->assertContains("ab", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertContains
+		$I->assertStringContainsString("apple", "apple", "pass"); // stepKey: assertStringContainsString
+		$I->assertStringContainsStringIgnoringCase("Banana", "banana", "pass"); // stepKey: assertStringContainsStringIgnoringCase
 		$I->assertCount(2, ['a', 'b'], "pass"); // stepKey: assertCount
 		$I->assertEmpty([], "pass"); // stepKey: assertEmpty
 		$I->assertEquals($text, "Copyright © 2013-2017 Magento, Inc. All rights reserved.", "pass"); // stepKey: assertEquals1
@@ -62,8 +64,9 @@ class AssertTestCest
 		$I->assertLessOrEquals(5, 2, "pass"); // stepKey: assertLessOrEquals
 		$I->assertLessThan(5, 2, "pass"); // stepKey: assertLessThan
 		$I->assertLessThanOrEqual(5, 2, "pass"); // stepKey: assertLessThanOrEquals
-		$I->assertNotContains("bc", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertNotContains1
-		$I->assertNotContains("bc", $text, "pass"); // stepKey: assertNotContains2
+		$I->assertNotContains("bc", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertNotContains
+		$I->assertStringNotContainsString("apple", "banana", "pass"); // stepKey: assertStringNotContainsString
+		$I->assertStringNotContainsStringIgnoringCase("apple", "banana", "pass"); // stepKey: assertStringNotContainsStringIgnoringCase
 		$I->assertNotEmpty([1, 2], "pass"); // stepKey: assertNotEmpty1
 		$I->assertNotEmpty($text, "pass"); // stepKey: assertNotEmpty2
 		$I->assertNotEquals(2, 5, "pass", 0); // stepKey: assertNotEquals

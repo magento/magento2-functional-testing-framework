@@ -17,7 +17,7 @@ class ActionGroupObjectExtractorTest extends MagentoTestCase
     /**
      * Setup method
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->testActionGroupObjectExtractor = new ActionGroupObjectExtractor();
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
@@ -63,7 +63,7 @@ class ActionGroupObjectExtractorTest extends MagentoTestCase
     /**
      * clean up function runs after all tests
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }

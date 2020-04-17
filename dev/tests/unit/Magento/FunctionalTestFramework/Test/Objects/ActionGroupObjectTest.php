@@ -28,7 +28,7 @@ class ActionGroupObjectTest extends MagentoTestCase
      * Before test functionality
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
@@ -243,7 +243,7 @@ class ActionGroupObjectTest extends MagentoTestCase
             ->build();
 
         $this->expectException(TestReferenceException::class);
-        $this->expectExceptionMessageRegExp('/Arguments missed .* for actionGroup/');
+        $this->expectExceptionMessageMatches('/Arguments missed .* for actionGroup/');
         $actionGroupUnderTest->getSteps(['arg2' => 'data1'], self::ACTION_GROUP_MERGE_KEY);
     }
 
@@ -257,7 +257,7 @@ class ActionGroupObjectTest extends MagentoTestCase
             ->build();
 
         $this->expectException(TestReferenceException::class);
-        $this->expectExceptionMessageRegExp('/Arguments missed .* for actionGroup/');
+        $this->expectExceptionMessageMatches('/Arguments missed .* for actionGroup/');
         $actionGroupUnderTest->getSteps(null, self::ACTION_GROUP_MERGE_KEY);
     }
 
@@ -355,7 +355,7 @@ class ActionGroupObjectTest extends MagentoTestCase
      * After class functionality
      * @return void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }

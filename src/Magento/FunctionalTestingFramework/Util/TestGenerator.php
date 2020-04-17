@@ -1294,6 +1294,10 @@ class TestGenerator
                 case "assertCount":
                 case "assertContains":
                 case "assertNotContains":
+                case "assertStringContainsString":
+                case "assertStringContainsStringIgnoringCase":
+                case "assertStringNotContainsString":
+                case "assertStringNotContainsStringIgnoringCase":
                 case "expectException":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
