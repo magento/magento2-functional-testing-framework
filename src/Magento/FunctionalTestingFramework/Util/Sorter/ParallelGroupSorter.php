@@ -252,8 +252,8 @@ class ParallelGroupSorter
             }
 
             $group = $this->createTestGroup($maxTime, $test, $size, $availableTests);
-            $splitSuites["{$suiteName}_${splitCount}"] = $group;
-            $this->addSuiteToConfig($suiteName, "{$suiteName}_${splitCount}", $group);
+            $splitSuites["{$suiteName}_${splitCount}_G"] = $group;
+            $this->addSuiteToConfig($suiteName, "{$suiteName}_${splitCount}_G", $group);
 
             $availableTests = array_diff_key($availableTests, $group);
             $splitCount++;

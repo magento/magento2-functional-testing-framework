@@ -119,6 +119,7 @@ class MagentoAllureAdapter extends AllureCodeception
         // if we can't find this group in the generated suites we have to assume that the group was split for generation
         $groupNameSplit = explode("_", $group);
         array_pop($groupNameSplit);
+        array_pop($groupNameSplit);
         $originalName = implode("_", $groupNameSplit);
 
         // confirm our original name is one of the existing suite names otherwise just return the original group name
