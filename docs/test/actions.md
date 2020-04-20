@@ -1422,9 +1422,9 @@ Attribute|Type|Use|Description
 `before`|string|optional| `stepKey` of action that must be executed next.
 `after`|string|optional| `stepKey` of preceding action.
 
-### pauseExecution
+### pause
 
-See [pauseExecution docs on codeception.com](http://codeception.com/docs/modules/WebDriver#pauseExecution).
+See [pause docs on codeception.com](https://codeception.com/docs/02-GettingStarted).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1436,7 +1436,7 @@ Attribute|Type|Use|Description
 
 ```xml
 <!-- Halt test execution until the `enter` key is pressed to continue. -->
-<pauseExecution stepKey="pause"/>
+<pause stepKey="pause"/>
 ```
 
 ### pressKey

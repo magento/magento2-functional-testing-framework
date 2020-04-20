@@ -87,7 +87,7 @@
         <moveForward stepKey="moveForwardKey1"/>
         <moveMouseOver selector=".functionalTestSelector" stepKey="moveMouseOverKey1"/>
         <openNewTab stepKey="openNewTabKey1"/>
-        <pauseExecution stepKey="pauseExecutionKey1"/>
+        <pause stepKey="pauseKey1"/>
         <pressKey selector="#page" userInput="a" stepKey="pressKey1"/>
         <pressKey selector="#page" parameterArray="[['ctrl','a'],'new']" stepKey="pressKey2"/>
         <pressKey selector="#page" parameterArray="[['shift','111'],'1','x']" stepKey="pressKey3"/>

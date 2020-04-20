@@ -35,7 +35,7 @@ class SchemaValidationTest extends MftfTestCase
      * After method functionality
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         AspectMock::clean();
     }

@@ -22,7 +22,7 @@ class AllureHelperTest extends TestCase
     /**
      * Clear Allure Lifecycle
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         Allure::setDefaultLifecycle();
         AspectMock::clean();

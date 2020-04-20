@@ -134,6 +134,8 @@ class CurlHandler
             false
         );
 
+        AllureHelper::addAttachmentToCurrentStep(json_encode($this->requestData, JSON_PRETTY_PRINT), 'Request Body');
+
         if (($contentType === 'application/json') && ($authorization === 'adminOauth')) {
             $this->isJson = true;
             $executor = new WebapiExecutor($this->storeCode);
@@ -169,7 +171,6 @@ class CurlHandler
         $response = $executor->read($successRegex, $returnRegex, $returnIndex);
         $executor->close();
 
-        AllureHelper::addAttachmentToCurrentStep(json_encode($this->requestData, JSON_PRETTY_PRINT), 'Request Body');
         AllureHelper::addAttachmentToCurrentStep(
             json_encode(json_decode($response, true), JSON_PRETTY_PRINT+JSON_UNESCAPED_UNICODE+JSON_UNESCAPED_SLASHES),
             'Response Data'
@@ -229,7 +230,7 @@ class CurlHandler
                 foreach ($entityObjects as $entityObject) {
                     $param = null;
 
-                    if ($paramEntityParent === "" || $entityObject->getType() == $paramEntityParent) {
+                    if ($paramEntityParent === "" || $entityObject->getType() === $paramEntityParent) {
                         $param = $entityObject->getDataByName(
                             $dataItem,
                             EntityDataObject::CEST_UNIQUE_VALUE
