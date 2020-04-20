@@ -301,7 +301,7 @@ CREDENTIAL_AWS_SECRETS_MANAGER_PROFILE=default
 
 ### VERBOSE_ARTIFACTS
 
-Determines if passed tests should still have all their Allure artifacts. These artifacts include `.txt` attachments for things like `dontSee` actions and `createData` actions.
+Determines if passed tests should still have all their Allure artifacts. These artifacts include `.txt` attachments for `dontSee` actions and `createData` actions.
 
 If enabled, all tests will have all of their normal Allure artifacts.
 
