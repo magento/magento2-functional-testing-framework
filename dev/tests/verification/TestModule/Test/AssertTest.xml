@@ -31,10 +31,6 @@
             <expectedResult type="string">kiwi</expectedResult>
             <actualResult type="const">['orange' => 2, 'apple' => 1]</actualResult>
         </assertArrayNotHasKey>
-        <assertArraySubset stepKey="assertArraySubset" message="pass">
-            <expectedResult type="const">[1, 2]</expectedResult>
-            <actualResult type="const">[1, 2, 3, 5]</actualResult>
-        </assertArraySubset>
         <assertContains stepKey="assertContains" message="pass">
             <expectedResult type="string">ab</expectedResult>
             <actualResult type="const">['item1' => 'a', 'item2' => 'ab']</actualResult>
@@ -87,18 +83,6 @@
             <expectedResult type="int">2</expectedResult>
             <actualResult type="int">5</actualResult>
         </assertGreaterThanOrEqual>
-        <assertInternalType stepKey="assertInternalType1" message="pass">
-            <expectedResult type="string">string</expectedResult>
-            <actualResult type="string">xyz</actualResult>
-        </assertInternalType>
-        <assertInternalType stepKey="assertInternalType2" message="pass">
-            <expectedResult type="string">int</expectedResult>
-            <actualResult type="int">21</actualResult>
-        </assertInternalType>
-        <assertInternalType stepKey="assertInternalType3" message="pass">
-            <expectedResult type="string">string</expectedResult>
-            <actualResult type="variable">text</actualResult>
-        </assertInternalType>
         <assertLessOrEquals stepKey="assertLessOrEquals" message="pass">
             <expectedResult type="int">5</expectedResult>
             <actualResult type="int">2</actualResult>
@@ -177,10 +161,6 @@
             <expectedResult type="string">kiwi</expectedResult>
             <actualResult type="const">['orange' => 2, 'apple' => 1]</actualResult>
         </assertArrayNotHasKey>
-        <assertArraySubset stepKey="assertArraySubsetBackwardCompatible" message="pass">
-            <actualResult type="const">[1, 2, 3, 5]</actualResult>
-            <expectedResult type="const">[1, 2]</expectedResult>
-        </assertArraySubset>
         <assertContains stepKey="assertContainsBackwardCompatible" message="pass">
             <expectedResult type="string">ab</expectedResult>
             <actualResult type="const">['item1' => 'a', 'item2' => 'ab']</actualResult>
@@ -221,18 +201,6 @@
             <actualResult type="int">5</actualResult>
             <expectedResult type="int">2</expectedResult>
         </assertGreaterThanOrEqual>
-        <assertInternalType stepKey="assertInternalType1BackwardCompatible" message="pass">
-            <actualResult type="string">xyz</actualResult>
-            <expectedResult type="string">string</expectedResult>
-        </assertInternalType>
-        <assertInternalType stepKey="assertInternalType2BackwardCompatible" message="pass">
-            <actualResult type="int">21</actualResult>
-            <expectedResult type="string">int</expectedResult>
-        </assertInternalType>
-        <assertInternalType stepKey="assertInternalType3BackwardCompatible" message="pass">
-            <actualResult type="variable">$text</actualResult>
-            <expectedResult type="string">string</expectedResult>
-        </assertInternalType>
         <assertLessOrEquals stepKey="assertLessOrEqualBackwardCompatibles" message="pass">
             <actualResult type="int">2</actualResult>
             <expectedResult type="int">5</expectedResult>
@@ -338,14 +306,6 @@
 
         <!-- array type that use created data -->
         <comment stepKey="c3" userInput="array type that use created data"/>
-        <assertArraySubset stepKey="assert9" message="pass">
-            <expectedResult type="array">[$$createData1.lastname$$, $$createData1.firstname$$]</expectedResult>
-            <actualResult type="array">[$$createData1.lastname$$, $$createData1.firstname$$, 1]</actualResult>
-        </assertArraySubset>
-        <assertArraySubset stepKey="assert10" message="pass">
-            <expectedResult type="array">[$createData2.firstname$, $createData2.lastname$]</expectedResult>
-            <actualResult type="array">[$createData2.firstname$, $createData2.lastname$, 1]</actualResult>
-        </assertArraySubset>
         <assertArrayHasKey stepKey="assert3" message="pass">
             <expectedResult type="string">lastname</expectedResult>
             <actualResult type="array">['lastname' => $$createData1.lastname$$, 'firstname' => $$createData1.firstname$$]</actualResult>

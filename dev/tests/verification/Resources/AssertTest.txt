@@ -43,7 +43,6 @@ class AssertTestCest
 		$I->comment("asserts without variable replacement");
 		$I->assertArrayHasKey("apple", ['orange' => 2, 'apple' => 1], "pass"); // stepKey: assertArrayHasKey
 		$I->assertArrayNotHasKey("kiwi", ['orange' => 2, 'apple' => 1], "pass"); // stepKey: assertArrayNotHasKey
-		$I->assertArraySubset([1, 2], [1, 2, 3, 5], "pass"); // stepKey: assertArraySubset
 		$I->assertContains("ab", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertContains
 		$I->assertStringContainsString("apple", "apple", "pass"); // stepKey: assertStringContainsString
 		$I->assertStringContainsStringIgnoringCase("Banana", "banana", "pass"); // stepKey: assertStringContainsStringIgnoringCase
@@ -58,9 +57,6 @@ class AssertTestCest
 		$I->assertGreaterOrEquals(2, 5, "pass"); // stepKey: assertGreaterOrEquals
 		$I->assertGreaterThan(2, 5, "pass"); // stepKey: assertGreaterthan
 		$I->assertGreaterThanOrEqual(2, 5, "pass"); // stepKey: assertGreaterThanOrEqual
-		$I->assertInternalType("string", "xyz", "pass"); // stepKey: assertInternalType1
-		$I->assertInternalType("int", 21, "pass"); // stepKey: assertInternalType2
-		$I->assertInternalType("string", $text, "pass"); // stepKey: assertInternalType3
 		$I->assertLessOrEquals(5, 2, "pass"); // stepKey: assertLessOrEquals
 		$I->assertLessThan(5, 2, "pass"); // stepKey: assertLessThan
 		$I->assertLessThanOrEqual(5, 2, "pass"); // stepKey: assertLessThanOrEquals
@@ -83,7 +79,6 @@ class AssertTestCest
 		$I->comment("asserts backward compatible");
 		$I->assertArrayHasKey("apple", ['orange' => 2, 'apple' => 1], "pass"); // stepKey: assertArrayHasKeyBackwardCompatible
 		$I->assertArrayNotHasKey("kiwi", ['orange' => 2, 'apple' => 1], "pass"); // stepKey: assertArrayNotHasKeyBackwardCompatible
-		$I->assertArraySubset([1, 2], [1, 2, 3, 5], "pass"); // stepKey: assertArraySubsetBackwardCompatible
 		$I->assertContains("ab", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertContainsBackwardCompatible
 		$I->assertCount(2, ['a', 'b'], "pass"); // stepKey: assertCountBackwardCompatible
 		$I->assertEmpty([], "pass"); // stepKey: assertEmptyBackwardCompatible
@@ -95,9 +90,6 @@ class AssertTestCest
 		$I->assertGreaterOrEquals(2, 5, "pass"); // stepKey: assertGreaterOrEqualsBackwardCompatible
 		$I->assertGreaterThan(2, 5, "pass"); // stepKey: assertGreaterThanBackwardCompatible
 		$I->assertGreaterThanOrEqual(2, 5, "pass"); // stepKey: assertGreaterThanOrEqualBackwardCompatible
-		$I->assertInternalType("string", "xyz", "pass"); // stepKey: assertInternalType1BackwardCompatible
-		$I->assertInternalType("int", 21, "pass"); // stepKey: assertInternalType2BackwardCompatible
-		$I->assertInternalType("string", $text, "pass"); // stepKey: assertInternalType3BackwardCompatible
 		$I->assertLessOrEquals(5, 2, "pass"); // stepKey: assertLessOrEqualBackwardCompatibles
 		$I->assertLessThan(5, 2, "pass"); // stepKey: assertLessThanBackwardCompatible
 		$I->assertLessThanOrEqual(5, 2, "pass"); // stepKey: assertLessThanOrEqualBackwardCompatible
@@ -129,8 +121,6 @@ class AssertTestCest
 		$I->assertEquals($I->retrieveEntityField('createData1', 'lastname', 'test'), $I->retrieveEntityField('createData1', 'lastname', 'test'), "pass"); // stepKey: assert5
 		$I->comment("array type that use created data");
 		$I->comment("array type that use created data");
-		$I->assertArraySubset([$I->retrieveEntityField('createData1', 'lastname', 'test'), $I->retrieveEntityField('createData1', 'firstname', 'test')], [$I->retrieveEntityField('createData1', 'lastname', 'test'), $I->retrieveEntityField('createData1', 'firstname', 'test'), "1"], "pass"); // stepKey: assert9
-		$I->assertArraySubset([$I->retrieveEntityField('createData2', 'firstname', 'test'), $I->retrieveEntityField('createData2', 'lastname', 'test')], [$I->retrieveEntityField('createData2', 'firstname', 'test'), $I->retrieveEntityField('createData2', 'lastname', 'test'), "1"], "pass"); // stepKey: assert10
 		$I->assertArrayHasKey("lastname", ['lastname' => $I->retrieveEntityField('createData1', 'lastname', 'test'), 'firstname' => $I->retrieveEntityField('createData1', 'firstname', 'test')], "pass"); // stepKey: assert3
 		$I->assertArrayHasKey("lastname", ['lastname' => $I->retrieveEntityField('createData2', 'lastname', 'test'), 'firstname' => $I->retrieveEntityField('createData2', 'firstname', 'test')], "pass"); // stepKey: assert4
 		$I->comment("this section can only be generated and cannot run");
