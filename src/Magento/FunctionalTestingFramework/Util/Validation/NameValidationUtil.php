@@ -89,7 +89,7 @@ class NameValidationUtil
      */
     public function validatePascalCase($str, $type, $filename = null)
     {
-        if (!ctype_upper($str[0])) {
+        if (!is_string($str) || !ctype_upper($str[0])) {
             $message = "The {$type} {$str} should be PascalCase with an uppercase first letter.";
 
             if ($filename !== null) {
@@ -117,7 +117,7 @@ class NameValidationUtil
      */
     public function validateCamelCase($str, $type, $filename = null)
     {
-        if (!ctype_lower($str[0])) {
+        if (!is_string($str) || !ctype_lower($str[0])) {
             $message = "The {$type} {$str} should be camelCase with a lowercase first letter.";
 
             if ($filename !== null) {
