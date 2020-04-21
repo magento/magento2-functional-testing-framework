@@ -169,7 +169,40 @@ See [assertEquals docs on codeception.com](http://codeception.com/docs/modules/A
 
 Attribute|Type|Use|Description
 ---|---|---|---
+`message`|string|optional|Text of informational message about a cause of failure.
+`stepKey`|string|required| A unique identifier of the text step.
+`before`|string|optional| `stepKey` of action that must be executed next.
+`after`|string|optional| `stepKey` of the preceding action.
+
+### assertEqualsWithDelta
+
+See [assertEqualsWithDelta docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertEqualsWithDelta).
+
+Attribute|Type|Use|Description
+---|---|---|---
 `delta`|string|optional|
+`message`|string|optional|Text of informational message about a cause of failure.
+`stepKey`|string|required| A unique identifier of the text step.
+`before`|string|optional| `stepKey` of action that must be executed next.
+`after`|string|optional| `stepKey` of the preceding action.
+
+### assertEqualsCanonicalizing
+
+See [assertEqualsCanonicalizing docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertEqualsCanonicalizing).
+
+Attribute|Type|Use|Description
+---|---|---|---
+`message`|string|optional|Text of informational message about a cause of failure.
+`stepKey`|string|required| A unique identifier of the text step.
+`before`|string|optional| `stepKey` of action that must be executed next.
+`after`|string|optional| `stepKey` of the preceding action.
+
+### assertEqualsIgnoringCase
+
+See [assertEqualsIgnoringCase docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertEqualsIgnoringCase).
+
+Attribute|Type|Use|Description
+---|---|---|---
 `message`|string|optional|Text of informational message about a cause of failure.
 `stepKey`|string|required| A unique identifier of the text step.
 `before`|string|optional| `stepKey` of action that must be executed next.
@@ -346,7 +379,40 @@ See [assertNotEquals docs on codeception.com](http://codeception.com/docs/module
 
 Attribute|Type|Use|Description
 ---|---|---|---
+`message`|string|optional|Text of informational message about a cause of failure.
+`stepKey`|string|required| A unique identifier of the text step.
+`before`|string|optional| `stepKey` of action that must be executed next.
+`after`|string|optional| `stepKey` of the preceding action.
+
+### assertNotEqualsWithDelta
+
+See [assertNotEqualsWithDelta docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotEqualsWithDelta).
+
+Attribute|Type|Use|Description
+---|---|---|---
 `delta`|string|optional|
+`message`|string|optional|Text of informational message about a cause of failure.
+`stepKey`|string|required| A unique identifier of the text step.
+`before`|string|optional| `stepKey` of action that must be executed next.
+`after`|string|optional| `stepKey` of the preceding action.
+
+### assertNotEqualsCanonicalizing
+
+See [assertNotEqualsCanonicalizing docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotEqualsCanonicalizing).
+
+Attribute|Type|Use|Description
+---|---|---|---
+`message`|string|optional|Text of informational message about a cause of failure.
+`stepKey`|string|required| A unique identifier of the text step.
+`before`|string|optional| `stepKey` of action that must be executed next.
+`after`|string|optional| `stepKey` of the preceding action.
+
+### assertNotEqualsIgnoringCase
+
+See [assertNotEqualsIgnoringCase docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotEqualsIgnoringCase).
+
+Attribute|Type|Use|Description
+---|---|---|---
 `message`|string|optional|Text of informational message about a cause of failure.
 `stepKey`|string|required| A unique identifier of the text step.
 `before`|string|optional| `stepKey` of action that must be executed next.

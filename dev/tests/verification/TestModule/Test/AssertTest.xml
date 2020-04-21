@@ -113,7 +113,7 @@
         <assertNotEmpty stepKey="assertNotEmpty2" message="pass">
             <actualResult type="variable">text</actualResult>
         </assertNotEmpty>
-        <assertNotEquals stepKey="assertNotEquals" message="pass" delta="">
+        <assertNotEquals stepKey="assertNotEquals" message="pass">
             <expectedResult type="int">2</expectedResult>
             <actualResult type="int">5</actualResult>
         </assertNotEquals>
@@ -227,7 +227,7 @@
         <assertNotEmpty stepKey="assertNotEmpty2BackwardCompatible" message="pass">
             <actualResult type="variable">text</actualResult>
         </assertNotEmpty>
-        <assertNotEquals stepKey="assertNotEqualsBackwardCompatible" message="pass" delta="">
+        <assertNotEquals stepKey="assertNotEqualsBackwardCompatible" message="pass">
             <actualResult type="int">5</actualResult>
             <expectedResult type="int">2</expectedResult>
         </assertNotEquals>
@@ -375,5 +375,30 @@
             <expectedResult type="string">{{simpleData.firstname}}</expectedResult>
             <actualResult type="string">{{simpleData.lastname}}</actualResult>
         </assertEquals>
+
+        <assertEqualsWithDelta stepKey="a1" message="pass" delta="1">
+            <expectedResult type="const">10.0000</expectedResult>
+            <actualResult type="const">10.0000</actualResult>
+        </assertEqualsWithDelta>
+        <assertNotEqualsWithDelta stepKey="a2" message="pass" delta="1">
+            <expectedResult type="const">10.0000</expectedResult>
+            <actualResult type="const">12.0000</actualResult>
+        </assertNotEqualsWithDelta>
+        <assertEqualsCanonicalizing stepKey="a3" message="pass">
+            <expectedResult type="array">[4, 2, 1, 3]</expectedResult>
+            <actualResult type="array">[1, 2, 3, 4]</actualResult>
+        </assertEqualsCanonicalizing>
+        <assertNotEqualsCanonicalizing stepKey="a4" message="pass">
+            <expectedResult type="array">[5, 8, 7, 9]</expectedResult>
+            <actualResult type="array">[1, 2, 3, 4]</actualResult>
+        </assertNotEqualsCanonicalizing>
+        <assertEqualsIgnoringCase stepKey="a5" message="pass">
+            <expectedResult type="string">Cat</expectedResult>
+            <actualResult type="string">cat</actualResult>
+        </assertEqualsIgnoringCase>
+        <assertNotEqualsIgnoringCase stepKey="a6" message="pass">
+            <expectedResult type="string">Cat</expectedResult>
+            <actualResult type="string">Dog</actualResult>
+        </assertNotEqualsIgnoringCase>
     </test>
 </tests>

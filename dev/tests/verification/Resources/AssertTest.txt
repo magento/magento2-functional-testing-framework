@@ -65,7 +65,7 @@ class AssertTestCest
 		$I->assertStringNotContainsStringIgnoringCase("apple", "banana", "pass"); // stepKey: assertStringNotContainsStringIgnoringCase
 		$I->assertNotEmpty([1, 2], "pass"); // stepKey: assertNotEmpty1
 		$I->assertNotEmpty($text, "pass"); // stepKey: assertNotEmpty2
-		$I->assertNotEquals(2, 5, "pass", 0); // stepKey: assertNotEquals
+		$I->assertNotEquals(2, 5, "pass"); // stepKey: assertNotEquals
 		$I->assertNotNull("abc", "pass"); // stepKey: assertNotNull1
 		$I->assertNotNull($text, "pass"); // stepKey: assertNotNull2
 		$I->assertNotRegExp("/foo/", "bar", "pass"); // stepKey: assertNotRegExp
@@ -97,7 +97,7 @@ class AssertTestCest
 		$I->assertNotContains("bc", $text, "pass"); // stepKey: assertNotContains2BackwardCompatible
 		$I->assertNotEmpty([1, 2], "pass"); // stepKey: assertNotEmpty1BackwardCompatible
 		$I->assertNotEmpty($text, "pass"); // stepKey: assertNotEmpty2BackwardCompatible
-		$I->assertNotEquals(2, 5, "pass", 0); // stepKey: assertNotEqualsBackwardCompatible
+		$I->assertNotEquals(2, 5, "pass"); // stepKey: assertNotEqualsBackwardCompatible
 		$I->assertNotNull("abc", "pass"); // stepKey: assertNotNull1BackwardCompatible
 		$I->assertNotNull($text, "pass"); // stepKey: assertNotNull2BackwardCompatible
 		$I->assertNotRegExp("/foo/", "bar", "pass"); // stepKey: assertNotRegExpBackwardCompatible
@@ -145,5 +145,11 @@ class AssertTestCest
 		$I->assertElementContainsAttribute("#username", "value", $I->retrieveEntityField('createData1', 'firstname', 'test')); // stepKey: assertElementContainsAttribute8
 		$I->comment("assert entity resolution");
 		$I->assertEquals("John", "Doe", "pass"); // stepKey: assertEqualsEntity
+		$I->assertEqualsWithDelta(10.0000, 10.0000, 1, "pass"); // stepKey: a1
+		$I->assertNotEqualsWithDelta(10.0000, 12.0000, 1, "pass"); // stepKey: a2
+		$I->assertEqualsCanonicalizing(["4", "2", "1", "3"], ["1", "2", "3", "4"], "pass"); // stepKey: a3
+		$I->assertNotEqualsCanonicalizing(["5", "8", "7", "9"], ["1", "2", "3", "4"], "pass"); // stepKey: a4
+		$I->assertEqualsIgnoringCase("Cat", "cat", "pass"); // stepKey: a5
+		$I->assertNotEqualsIgnoringCase("Cat", "Dog", "pass"); // stepKey: a6
 	}
 }
