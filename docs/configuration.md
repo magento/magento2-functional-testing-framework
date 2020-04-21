@@ -299,6 +299,20 @@ Example:
 CREDENTIAL_AWS_SECRETS_MANAGER_PROFILE=default
 ```
 
+### VERBOSE_ARTIFACTS
+
+Determines if passed tests should still have all their Allure artifacts. These artifacts include `.txt` attachments for `dontSee` actions and `createData` actions.
+
+If enabled, all tests will have all of their normal Allure artifacts.
+
+If disabled, passed tests will have their Allure artifacts trimmed. Failed tests will still contain all their artifacts.
+
+This is set `false` by default.
+
+```conf
+VERBOSE_ARTIFACTS=true
+```
+
 ### ENABLE_BROWSER_LOG
 
 Enables addition of browser logs to Allure steps
