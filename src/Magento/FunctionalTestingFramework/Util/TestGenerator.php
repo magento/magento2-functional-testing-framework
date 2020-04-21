@@ -1272,7 +1272,6 @@ class TestGenerator
                         $visible
                     );
                     break;
-                case "assertEquals":
                 case "assertGreaterOrEquals":
                 case "assertGreaterThan":
                 case "assertGreaterThanOrEqual":
@@ -1280,7 +1279,6 @@ class TestGenerator
                 case "assertLessOrEquals":
                 case "assertLessThan":
                 case "assertLessThanOrEqual":
-                case "assertNotEquals":
                 case "assertInstanceOf":
                 case "assertNotInstanceOf":
                 case "assertNotRegExp":
@@ -1306,6 +1304,31 @@ class TestGenerator
                         $assertActual,
                         $assertMessage,
                         $assertDelta
+                    );
+                    break;
+                case "assertEquals":
+                case "assertNotEquals":
+                case "assertEqualsIgnoringCase":
+                case "assertNotEqualsIgnoringCase":
+                case "assertEqualsCanonicalizing":
+                case "assertNotEqualsCanonicalizing":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $assertExpected,
+                        $assertActual,
+                        $assertMessage
+                    );
+                    break;
+                case "assertEqualsWithDelta":
+                case "assertNotEqualsWithDelta":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $assertExpected,
+                        $assertActual,
+                        $assertDelta,
+                        $assertMessage
                     );
                     break;
                 case "assertElementContainsAttribute":
