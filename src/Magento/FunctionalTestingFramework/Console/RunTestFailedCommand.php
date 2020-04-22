@@ -196,7 +196,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
     private function sanitizeSuiteName($suiteName)
     {
         $suiteNameArray = explode("_", $suiteName);
-        if(array_pop($suiteNameArray) == 'G') {
+        if (array_pop($suiteNameArray) == 'G') {
             if (is_numeric(array_pop($suiteNameArray))) {
                 $suiteName = implode("_", $suiteNameArray);
             }
