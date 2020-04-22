@@ -241,10 +241,10 @@ See more commands in [`codecept`][].
 
 #### Run a simple test {#run-test}
 
-To clean up the previously generated tests, and then generate and run a single test `AdminLoginTest`, run:
+To clean up the previously generated tests, and then generate and run a single test `AdminLoginSuccessfulTest`, run:
 
 ```bash
-vendor/bin/mftf run:test AdminLoginTest --remove
+vendor/bin/mftf run:test AdminLoginSuccessfulTest --remove
 ```
 
 See more commands in [`mftf`][].
@@ -319,7 +319,7 @@ composer remove magento/magento2-functional-testing-framework --dev -d <path to 
 Generate and run a single test that will check your logging to the Magento Admin functionality:
 
 ```bash
-bin/mftf run:test AdminLoginTest
+bin/mftf run:test AdminLoginSuccessfulTest
 ```
 
 You can find the generated test at `dev/tests/functional/tests/MFTF/_generated/default/`.
