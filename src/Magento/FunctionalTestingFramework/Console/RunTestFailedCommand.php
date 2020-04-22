@@ -165,10 +165,12 @@ class RunTestFailedCommand extends BaseGenerateCommand
                     if ($suiteName == self::DEFAULT_TEST_GROUP) {
                         array_push($failedTestDetails['tests'], $testName);
                     } else {
-                        // Trim potential suite_parallel_0 to suite_parallel
+                        // Trim potential suite_parallel_0_G to suite_parallel
                         $suiteNameArray = explode("_", $suiteName);
-                        if (is_numeric(array_pop($suiteNameArray))) {
-                            $suiteName = implode("_", $suiteNameArray);
+                        if (array_pop($suiteNameArray) === 'G') {
+                            if (is_numeric(array_pop($suiteNameArray))) {
+                                $suiteName = implode("_", $suiteNameArray);
+                            }
                         }
                         $failedTestDetails['suites'] = array_merge_recursive(
                             $failedTestDetails['suites'],
