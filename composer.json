@@ -14,6 +14,7 @@
         "ext-dom": "*",
         "ext-json": "*",
         "ext-openssl": "*",
+        "ext-intl": "*",
         "allure-framework/allure-codeception": "~1.4.0",
         "aws/aws-sdk-php": "^3.132",
         "codeception/codeception": "~4.1.4",
@@ -53,8 +54,7 @@
         "files": ["src/Magento/FunctionalTestingFramework/_bootstrap.php"],
         "psr-4": {
             "Magento\\FunctionalTestingFramework\\": "src/Magento/FunctionalTestingFramework",
-            "MFTF\\": "dev/tests/functional/tests/MFTF",
-            "Magento\\": "../magento5/app/code/Magento/"
+            "MFTF\\": "dev/tests/functional/tests/MFTF"
         }
     },
     "autoload-dev": {

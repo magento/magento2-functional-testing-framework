@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aff9cb54455b486036efa97f1fcb14bd",
+    "content-hash": "25cf03eee8281f6787f72fb9f497da74",
     "packages": [
         {
             "name": "allure-framework/allure-codeception",
@@ -112,16 +112,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.135.1",
+            "version": "3.135.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "59587a4f3fc88b36ce7f2e1a102bfcd7a816b27c"
+                "reference": "1810725052836683d0cfd2907d515173058e710e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/59587a4f3fc88b36ce7f2e1a102bfcd7a816b27c",
-                "reference": "59587a4f3fc88b36ce7f2e1a102bfcd7a816b27c",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/1810725052836683d0cfd2907d515173058e710e",
+                "reference": "1810725052836683d0cfd2907d515173058e710e",
                 "shasum": ""
             },
             "require": {
@@ -192,7 +192,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2020-04-21T18:14:29+00:00"
+            "time": "2020-04-22T18:11:15+00:00"
         },
         {
             "name": "behat/gherkin",
@@ -6420,7 +6420,8 @@
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-json": "*",
-        "ext-openssl": "*"
+        "ext-openssl": "*",
+        "ext-intl": "*"
     },
     "platform-dev": []
 }

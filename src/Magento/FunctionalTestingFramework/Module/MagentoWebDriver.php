@@ -452,19 +452,26 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * @param float  $money
+     * Format input to specified currency in locale specified
+     * @link https://php.net/manual/en/numberformatter.formatcurrency.php
+     *
+     * @param float  $value
      * @param string $locale
-     * @return array
+     * @param string $currency
+     * @return string
+     * @throws TestFrameworkException
      */
-    public function formatMoney(float $money, $locale = 'en_US.UTF-8')
+    public function formatCurrency(float $value, $locale, $currency)
     {
-        $this->mSetLocale(LC_MONETARY, $locale);
-        $money = money_format('%.2n', $money);
-        $this->mResetLocale();
-        $prefix = substr($money, 0, 1);
-        $number = substr($money, 1);
+        $formatter = \NumberFormatter::create($locale, \NumberFormatter::CURRENCY);
+        if ($formatter && !empty($formatter)) {
+            $result = $formatter->formatCurrency($value, $currency);
+            if ($result) {
+                return $result;
+            }
+        }
 
-        return ['prefix' => $prefix, 'number' => $number];
+        throw new TestFrameworkException('Invalid attributes used in formatCurrency.');
     }
 
     /**

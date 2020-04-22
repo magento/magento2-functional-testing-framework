@@ -24,7 +24,7 @@ class ActionGroupObject
         "executeJS",
         "magentoCLI",
         "generateDate",
-        "formatMoney",
+        "formatCurrency",
         "deleteData",
         "getData",
         "updateData",

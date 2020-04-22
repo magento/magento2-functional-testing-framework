@@ -610,6 +610,7 @@ class TestGenerator
             $function = null;
             $time = null;
             $locale = null;
+            $currency = null;
             $username = null;
             $password = null;
             $width = null;
@@ -654,7 +655,11 @@ class TestGenerator
                 $sortOrder = $customActionAttributes['sortOrder'];
             }
 
-            if (isset($customActionAttributes['userInput']) && isset($customActionAttributes['url'])) {
+            if (isset($customActionAttributes['userInput'])
+                && isset($customActionAttributes['locale'])
+                && isset($customActionAttributes['currency'])) {
+                $input = $this->parseUserInput($customActionAttributes['userInput']);
+            } elseif (isset($customActionAttributes['userInput']) && isset($customActionAttributes['url'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['userInput']);
                 $url = $this->addUniquenessFunctionCall($customActionAttributes['url']);
             } elseif (isset($customActionAttributes['userInput'])) {
@@ -770,6 +775,10 @@ class TestGenerator
 
             if (isset($customActionAttributes['locale'])) {
                 $locale = $this->wrapWithDoubleQuotes($customActionAttributes['locale']);
+            }
+
+            if (isset($customActionAttributes['currency'])) {
+                $currency = $this->wrapWithDoubleQuotes($customActionAttributes['currency']);
             }
 
             if (isset($customActionAttributes['username'])) {
@@ -1162,13 +1171,14 @@ class TestGenerator
                         $selector
                     );
                     break;
-                case "formatMoney":
+                case "formatCurrency":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
                         $actionObject,
                         $input,
-                        $locale
+                        $locale,
+                        $currency
                     );
                     break;
                 case "mSetLocale":
@@ -2276,5 +2286,28 @@ class TestGenerator
     private function hasDecimalPoint(string $outStr)
     {
         return strpos($outStr, localeconv()['decimal_point']) !== false;
+    }
+
+    /**
+     * Parse userInput for formatCurrency action
+     *
+     * @param string $userInput
+     * @return string
+     */
+    private function parseUserInput($userInput)
+    {
+        $floatPattern = '/^\s*([+-]?[0-9]*\.?[0-9]+)\s*$/';
+        preg_match($floatPattern, $userInput, $float);
+        if (isset($float[1])) {
+            return $float[1];
+        }
+
+        $intPattern = '/^\s*([+-]?[0-9]+)\s*$/';
+        preg_match($intPattern, $userInput, $int);
+        if (isset($int[1])) {
+            return $int[1];
+        }
+
+        return $this->addUniquenessFunctionCall($userInput);
     }
 }
