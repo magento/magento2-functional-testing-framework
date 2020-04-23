@@ -2289,7 +2289,7 @@ class TestGenerator
     }
 
     /**
-     * Parse userInput for formatCurrency action
+     * Parse action attribute `userInput`
      *
      * @param string $userInput
      * @return string
