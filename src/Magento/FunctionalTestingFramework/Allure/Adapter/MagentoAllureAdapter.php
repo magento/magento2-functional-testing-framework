@@ -259,8 +259,11 @@ class MagentoAllureAdapter extends AllureCodeception
      */
     public function testEnd(TestEvent $testEvent)
     {
+        $test = $this->getLifecycle()->getTestCaseStorage()->get();
+        // update testClass label to consolidate re-try reporting
+        $this->formatAllureTestClassName($test);
         // Peek top of testCaseStorage to check of failure
-        $testFailed = $this->getLifecycle()->getTestCaseStorage()->get()->getFailure();
+        $testFailed = $test->getFailure();
         // Pops top of stepStorage, need to add it back in after processing
         $rootStep = $this->getLifecycle()->getStepStorage()->pollLast();
         $formattedSteps = [];
@@ -401,5 +404,44 @@ class MagentoAllureAdapter extends AllureCodeception
                 unlink(Provider::getOutputDirectory() . DIRECTORY_SEPARATOR . $attachment->getSource());
             }
         }
+    }
+
+    /**
+     * Format testClass label to consolidate re-try reporting for groups split for parallel execution
+     * @param TestCase $test
+     * @return void
+     */
+    private function formatAllureTestClassName($test)
+    {
+        if ($this->getGroup() !== null) {
+            foreach ($test->getLabels() as $name => $label) {
+                if ($label->getName() == 'testClass') {
+                    $originalTestClass = $this->sanitizeTestClassLabel($label->getValue());
+                    call_user_func(\Closure::bind(
+                        function () use ($label, $originalTestClass) {
+                            $label->value = $originalTestClass;
+                        },
+                        null,
+                        $label
+                    ));
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Function which sanitizes testClass label for split group runs
+     * @param string $testClass
+     * @return string
+     */
+    private function sanitizeTestClassLabel($testClass)
+    {
+        $originalTestClass = $testClass;
+        $originalGroupName = $this->sanitizeGroupName($this->getGroup());
+        if ($originalGroupName !== $this->getGroup()) {
+            $originalTestClass = str_replace($this->getGroup(), $originalGroupName, $testClass);
+        }
+        return $originalTestClass;
     }
 }
