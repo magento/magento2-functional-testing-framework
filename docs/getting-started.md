@@ -212,11 +212,11 @@ To run tests, you need a running Selenium server and [`mftf`][] commands.
 
 #### Run the Selenium server {#selenium-server}
 
-Run the Selenium server in terminal.
-For example, the following commands run the Selenium server for Google Chrome:
+Run the Selenium server in the terminal.
+For example, the following commands download and run the Selenium server for Google Chrome:
 
 ```bash
-cd <path_to_directory_with_selenium_server_and_webdriver>/
+curl -O http://selenium-release.storage.googleapis.com/3.14/selenium-server-standalone-3.14.0.jar
 ```
 
 ```bash
