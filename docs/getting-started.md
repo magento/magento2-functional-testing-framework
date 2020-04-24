@@ -121,13 +121,13 @@ MFTF does not support executing CLI commands if your web server points to `<MAGE
 
 If the Nginx Web server is used on your development environment, then **Use Web Server Rewrites** setting in **Stores** > Settings > **Configuration** > **General** > **Web** > **Search Engine Optimization** must be set to **Yes**.
 
-or via command line:
+Or via command line:
 
 ```bash
 bin/magento config:set web/seo/use_rewrites 1
 ```
 
-Clean the cache after changing the configuration values:
+You must clean the cache after changing the configuration values:
 
 ```bash
 bin/magento cache:clean config full_page
