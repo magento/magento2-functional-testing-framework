@@ -398,7 +398,7 @@ class MagentoAllureAdapter extends AllureCodeception
     private function removeAttachments($step, $testFailed)
     {
         //Remove Attachments if verbose flag is not true AND test did not fail
-        if (getenv('VERBOSE_ARTIFACTS') !== true && $testFailed === null) {
+        if (getenv('VERBOSE_ARTIFACTS') !== "true" && $testFailed === null) {
             foreach ($step->getAttachments() as $index => $attachment) {
                 $step->removeAttachment($index);
                 unlink(Provider::getOutputDirectory() . DIRECTORY_SEPARATOR . $attachment->getSource());
