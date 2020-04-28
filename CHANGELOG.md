@@ -14,20 +14,20 @@ Magento Functional Testing Framework Changelog
         *  Added new actions: `assertStringContainsString`, `assertStringNotContainsString`, `assertStringContainsStringIgnoringCase`, `assertStringNotContainsStringIgnoringCase` for string haystacks.
         *  Removed actions: `assertInternalType`, `assertNotInternalType`, `assertArraySubset`.
         *  Removed delta option from `assertEquals` and `assertNotEquals`.
-    *  Removed action `pauseExecution` and added `pause`. [See actions page for details](./docs/test/actions.md)
-    *  Removed action `formatMoney` and added `formatCurrency`. [See actions page for details](./docs/test/actions.md)    
+    *  Removed action `pauseExecution` and added `pause`. [See actions page for details](./docs/test/actions.md#pause)
+    *  Removed action `formatMoney` and added `formatCurrency`. [See actions page for details](./docs/test/actions.md#formatcurrency)    
     *  Added new static check that checks and reports references to deprecated test entities.
 *  Bumped dependencies to support PHP/PHPUnit upgrade.
     
 *  Traceability 
-    *  Introduced new .env configuration `VERBOSE_ARTIFACTS` to toggle saving attachments in Allure. [See configuration page for details](./docs/configuration.md)  
+    *  Introduced new `.env` configuration `VERBOSE_ARTIFACTS` to toggle saving attachments in Allure. [See configuration page for details](./docs/configuration.md)  
     
 ### Fixes
 
 *  Fixed issue of resolving arguments of type `entity` in action groups within a custom helper.
 *  Fixed reporting issue in output file for `testDependencies` static check.
 *  Fixed a bug in `actionGroupArguments` static check when action group filename is missing `ActionGroup`.
-*  Fixed issue of running suites under root _suite directory in Standalone MFTF.
+*  Fixed issue of running suites under root `_suite` directory in Standalone MFTF.
 
 3.0.0 RC1
 ---------

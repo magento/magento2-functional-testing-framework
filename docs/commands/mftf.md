@@ -474,6 +474,10 @@ vendor/bin/mftf static-checks deprecatedEntityUsage
 ```
 
 ```bash
+vendor/bin/mftf static-checks deprecatedEntityUsage -p path/to/mftf/test/module
+```
+
+```bash
 vendor/bin/mftf static-checks testDependencies actionGroupArguments
 ```
 
