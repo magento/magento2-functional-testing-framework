@@ -3,34 +3,37 @@ Magento Functional Testing Framework Changelog
 3.0.0 RC2
 ---------
 
-###Enhancements
-* Maintainability
-    * Added support for PHP 7.4.
-    * Removed support for PHP 7.2.
-    * Added support for PHPUnit 9.
-    * Improved assertion actions to support PHPUnit 9 changes. [See assertions page for details](./docs/test/assertions.md)   
-        * Added new actions `assertEqualsWithDelta`, `assertNotEqualsWithDelta`, `assertEqualsCanonicalizing`, `assertNotEqualsCanonicalizing`, `assertEqualsIgnoringCase`, `assertNotEqualsIgnoringCase`.
-        * Added new actions `assertStringContainsString`, `assertStringNotContainsString`, `assertStringContainsStringIgnoringCase`, `assertStringNotContainsStringIgnoringCase` for string haystacks.
-        * Removed actions `assertInternalType`, `assertNotInternalType`, `assertArraySubset`.
-        * Removed delta option from `assertEquals` and `assertNotEquals`.
-    * Removed action `pauseExecution` and added `pause`. [See actions page for details](./docs/test/actions.md)
-    * Removed action `formatMoney` and added `formatCurrency`. [See actions page for details](./docs/test/actions.md)    
-    * Added new static check that checks and reports references to deprecated test entities.
-* Bumped dependencies to support PHP/PHPUnit upgrade.
+### Enhancements
+
+*  Maintainability
+    *  Added support for PHP 7.4.
+    *  Removed support for PHP 7.2.
+    *  Added support for PHPUnit 9.
+    *  Improved assertion actions to support PHPUnit 9 changes. [See assertions page for details](./docs/test/assertions.md)   
+        *  Added new actions: `assertEqualsWithDelta`, `assertNotEqualsWithDelta`, `assertEqualsCanonicalizing`, `assertNotEqualsCanonicalizing`, `assertEqualsIgnoringCase`, `assertNotEqualsIgnoringCase`.
+        *  Added new actions: `assertStringContainsString`, `assertStringNotContainsString`, `assertStringContainsStringIgnoringCase`, `assertStringNotContainsStringIgnoringCase` for string haystacks.
+        *  Removed actions: `assertInternalType`, `assertNotInternalType`, `assertArraySubset`.
+        *  Removed delta option from `assertEquals` and `assertNotEquals`.
+    *  Removed action `pauseExecution` and added `pause`. [See actions page for details](./docs/test/actions.md)
+    *  Removed action `formatMoney` and added `formatCurrency`. [See actions page for details](./docs/test/actions.md)    
+    *  Added new static check that checks and reports references to deprecated test entities.
+*  Bumped dependencies to support PHP/PHPUnit upgrade.
     
-* Traceability 
-    *  Introduced new .env configuration `VERBOSE_ARTIFACTS` to toggle saving attachments in allure. [See configuration page for details](./docs/configuration.md)  
+*  Traceability 
+    *  Introduced new .env configuration `VERBOSE_ARTIFACTS` to toggle saving attachments in Allure. [See configuration page for details](./docs/configuration.md)  
     
 ### Fixes
-* Fixed issue of resolving arguments of type entity in action groups in custom helper.
-* Fixed reporting issue in output file for `testDependencies` static check.
-* Fixed a bug in actionGroupArguments static check when action group filename is missing `ActionGroup`.
-* Fixed issue of running suites under root _suite directory in Standalone MFTF.
+
+*  Fixed issue of resolving arguments of type `entity` in action groups within a custom helper.
+*  Fixed reporting issue in output file for `testDependencies` static check.
+*  Fixed a bug in `actionGroupArguments` static check when action group filename is missing `ActionGroup`.
+*  Fixed issue of running suites under root _suite directory in Standalone MFTF.
 
 3.0.0 RC1
 ---------
 
 ### Enhancements
+
 * Customizability
     * Introduced MFTF helpers `<helper>` to create custom actions outside of MFTF.
     * Removed deprecated actions `<executeSelenium>` and `<performOn>`.
@@ -50,11 +53,13 @@ Magento Functional Testing Framework Changelog
 * Bumped dependencies to latest possible versions.
 
 ### Fixes
+
 * Throw exception during generation when leaving out .url for `amOnPage`.
 * `request_timeout` and `connection_timeout` added to functional.suite.yml.dist.
 * Fixed `ModuleResolver` to resolve test modules moved out of deprecated path.
 
 ### Upgrade Instructions
+
 * Run `bin/mftf reset --hard` to remove old generated configurations.
 * Run `bin/mftf build:project` to generate new configurations.
 * Run `bin/mftf upgrade:tests`. [See command page for details](./docs/commands/mftf.md#upgradetests).
