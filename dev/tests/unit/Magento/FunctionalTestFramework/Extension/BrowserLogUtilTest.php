@@ -6,7 +6,7 @@
 
 namespace tests\unit\Magento\FunctionalTestFramework\Extension;
 
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 use Magento\FunctionalTestingFramework\Extension\BrowserLogUtil;
 
 class BrowserLogUtilTest extends MagentoTestCase

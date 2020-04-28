@@ -6,7 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\DataGenerator\Objects;
 
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use tests\unit\Util\TestLoggingUtil;
 

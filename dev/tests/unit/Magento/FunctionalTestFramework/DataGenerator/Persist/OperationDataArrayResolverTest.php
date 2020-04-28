@@ -10,7 +10,7 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\OperationDefinitionObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\OperationDataArrayResolver;
 use Magento\FunctionalTestingFramework\Util\Iterator\AbstractIterator;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\EntityDataObjectBuilder;
 use tests\unit\Util\OperationDefinitionBuilder;
 use tests\unit\Util\OperationElementBuilder;

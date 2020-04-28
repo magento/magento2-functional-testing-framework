@@ -1090,6 +1090,7 @@ class TestGenerator
                     break;
                 case "selectOption":
                 case "unselectOption":
+                case "seeNumberOfElements":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
                         $actionObject,
@@ -1205,6 +1206,7 @@ class TestGenerator
                     );
                     break;
                 case "grabPageSource":
+                case "getOTP":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
@@ -1253,15 +1255,6 @@ class TestGenerator
                 case "seeInField":
                 case "seeOptionIsSelected":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input);
-                    break;
-                case "seeNumberOfElements":
-                    $testSteps .= $this->wrapFunctionCall(
-                        $actor,
-                        $actionObject,
-                        $selector,
-                        $input,
-                        $parameterArray
-                    );
                     break;
                 case "seeInPageSource":
                 case "dontSeeInPageSource":

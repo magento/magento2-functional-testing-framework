@@ -13,7 +13,7 @@ use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\OperationDefinitionObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Parsers\OperationDefinitionParser;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 
 /**
  * Class OperationDefinitionObjectHandlerTest

@@ -25,6 +25,7 @@
             <xs:element type="clearFieldType" name="clearField" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertArrayIsSortedType" name="assertArrayIsSorted" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="generateDateType" name="generateDate" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="getOTPType" name="getOTP" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
     </xs:group>
 
@@ -315,6 +316,19 @@
                         </xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="getOTPType">
+        <xs:annotation>
+            <xs:documentation>
+                Generates TOTP by a shared secret. Use https://github.com/Spomky-Labs/otphp
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>

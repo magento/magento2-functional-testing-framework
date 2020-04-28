@@ -8,7 +8,7 @@ namespace tests\unit\Magento\FunctionalTestFramework\Page\Objects;
 
 use Magento\FunctionalTestingFramework\Page\Objects\ElementObject;
 use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 
 /**
  * Class SectionObjectTest

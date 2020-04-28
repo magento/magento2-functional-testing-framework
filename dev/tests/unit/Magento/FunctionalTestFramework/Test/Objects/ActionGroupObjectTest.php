@@ -15,7 +15,7 @@ use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ArgumentObject;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\ActionGroupObjectBuilder;
 use tests\unit\Util\EntityDataObjectBuilder;
 use tests\unit\Util\TestLoggingUtil;
