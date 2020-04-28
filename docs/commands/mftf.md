@@ -464,12 +464,15 @@ To run specific static check scripts
 ```bash
 vendor/bin/mftf static-checks testDependencies
 ```
+
 ```bash
 vendor/bin/mftf static-checks actionGroupArguments
 ```
+
 ```bash
 vendor/bin/mftf static-checks deprecatedEntityUsage
 ```
+
 ```bash
 vendor/bin/mftf static-checks testDependencies actionGroupArguments
 ```
