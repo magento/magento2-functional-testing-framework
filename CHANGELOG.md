@@ -29,6 +29,10 @@ Magento Functional Testing Framework Changelog
 *  Fixed a bug in `actionGroupArguments` static check when action group filename is missing `ActionGroup`.
 *  Fixed issue of running suites under root `_suite` directory in Standalone MFTF.
 
+### GitHub Issues/Pull Requests
+
+* [#567](https://github.com/magento/magento2-functional-testing-framework/pull/567) -- log attachments for failed requests.
+
 3.0.0 RC1
 ---------
 
