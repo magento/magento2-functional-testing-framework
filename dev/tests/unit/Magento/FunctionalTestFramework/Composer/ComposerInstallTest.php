@@ -18,7 +18,7 @@ class ComposerInstallTest extends MagentoTestCase
      */
     private $composer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $composerJson = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Composer' . DIRECTORY_SEPARATOR . '_files'
             . DIRECTORY_SEPARATOR . 'dir1' . DIRECTORY_SEPARATOR . 'dir2' . DIRECTORY_SEPARATOR . 'composer.json';

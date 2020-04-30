@@ -1012,12 +1012,15 @@ Attribute|Type|Use|Description
 <fillField userInput="Sample text" selector="input#myfield" stepKey="fillField"/>
 ```
 
-### formatMoney
+### formatCurrency
+Format input to specified currency according to the locale specified. Returns formatted string for test use.
+Use NumberFormatter::formatCurrency(), see https://www.php.net/manual/en/numberformatter.formatcurrency.php
 
 Attribute|Type|Use|Description
 ---|---|---|---
-`userInput`|string|optional| Value for the money form field.
-`locale`|string|optional| The PHP locale value for the store.
+`userInput`|string|required| Number to be formatted.
+`locale`|string|required| The locale to format to.
+`currency`|string|required| The 3-letter ISO 4217 currency code indicating the currency to use.
 `stepKey`|string|required| A unique identifier of the action.
 `before`|string|optional| `stepKey` of action that must be executed next.
 `after`|string|optional| `stepKey` of preceding action.
@@ -1422,9 +1425,9 @@ Attribute|Type|Use|Description
 `before`|string|optional| `stepKey` of action that must be executed next.
 `after`|string|optional| `stepKey` of preceding action.
 
-### pauseExecution
+### pause
 
-See [pauseExecution docs on codeception.com](http://codeception.com/docs/modules/WebDriver#pauseExecution).
+See [pause docs on codeception.com](https://codeception.com/docs/02-GettingStarted).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -1436,7 +1439,7 @@ Attribute|Type|Use|Description
 
 ```xml
 <!-- Halt test execution until the `enter` key is pressed to continue. -->
-<pauseExecution stepKey="pause"/>
+<pause stepKey="pause"/>
 ```
 
 ### pressKey

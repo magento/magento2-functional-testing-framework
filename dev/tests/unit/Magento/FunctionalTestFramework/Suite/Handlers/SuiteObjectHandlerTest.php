@@ -19,7 +19,7 @@ use tests\unit\Util\MockModuleResolverBuilder;
 
 class SuiteObjectHandlerTest extends MagentoTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $resolverMock = new MockModuleResolverBuilder();
         $resolverMock->setup();

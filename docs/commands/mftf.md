@@ -439,6 +439,12 @@ If no script name argument is specified, all existing static check scripts will 
 vendor/bin/mftf static-checks [<names>]...
 ```
 
+#### Options
+
+| Option                | Description                                                                                               |
+|-----------------------|-----------------------------------------------------------------------------------------------------------|
+| `-p, --path` | Path to a MFTF test module to run "deprecatedEntityUsage" static check script. Option is ignored by other static check scripts.
+                
 #### Examples
 
 To check what existing static check scripts are available
@@ -458,18 +464,31 @@ To run specific static check scripts
 ```bash
 vendor/bin/mftf static-checks testDependencies
 ```
+
 ```bash
 vendor/bin/mftf static-checks actionGroupArguments
 ```
+
+```bash
+vendor/bin/mftf static-checks deprecatedEntityUsage
+```
+
+```bash
+vendor/bin/mftf static-checks deprecatedEntityUsage -p path/to/mftf/test/module
+```
+
 ```bash
 vendor/bin/mftf static-checks testDependencies actionGroupArguments
 ```
 
 #### Existing static checks
 
-* Test Dependency: Checks that test dependencies do not violate Magento module's composer dependencies.
-* Action Group Unused Arguments: Checks that action groups do not have unused arguments.
-    
+| Argument              | Description                                                                                               |
+|-----------------------|-----------------------------------------------------------------------------------------------------------|
+|`testDependencies`     | Checks that test dependencies do not violate Magento module's composer dependencies.|
+|`actionGroupArguments` | Checks that action groups do not have unused arguments.|
+|`deprecatedEntityUsage`| Checks that deprecated test entities are not being referenced.|
+         
 ### `upgrade:tests`
 
 When the path argument is specified, this `upgrade` command applies all the major version MFTF upgrade scripts to a `Test Module` in the given path.

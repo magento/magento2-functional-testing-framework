@@ -6,6 +6,7 @@
 namespace Magento\FunctionalTestingFramework\Test\Handlers;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
@@ -49,6 +50,7 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
      * Singleton getter for instance of ActionGroupObjectHandler
      *
      * @return ActionGroupObjectHandler
+     * @throws XmlException
      */
     public static function getInstance(): ActionGroupObjectHandler
     {
@@ -61,6 +63,7 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
 
     /**
      * ActionGroupObjectHandler constructor.
+     * @throws XmlException
      */
     private function __construct()
     {
@@ -73,6 +76,8 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
      *
      * @param string $actionGroupName
      * @return ActionGroupObject
+     * @throws TestFrameworkException
+     * @throws XmlException
      */
     public function getObject($actionGroupName)
     {
@@ -88,6 +93,8 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
      * Function to return all objects for which the handler is responsible
      *
      * @return array
+     * @throws TestFrameworkException
+     * @throws XmlException
      */
     public function getAllObjects(): array
     {
@@ -101,6 +108,7 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
      * Method which populates field array with objects from parsed action_group.xml
      *
      * @return void
+     * @throws XmlException
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function initActionGroups()
@@ -137,6 +145,7 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
      *
      * @param ActionGroupObject $actionGroupObject
      * @return ActionGroupObject
+     * @throws XmlException
      * @throws TestFrameworkException
      */
     private function extendActionGroup($actionGroupObject): ActionGroupObject

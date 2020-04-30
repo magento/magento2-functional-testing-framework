@@ -283,7 +283,7 @@ class TestObjectHandlerTest extends MagentoTestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         AspectMock::clean();
     }
