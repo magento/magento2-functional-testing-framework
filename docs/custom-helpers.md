@@ -109,10 +109,10 @@ Once you have implemented something like the above PHP file, reference it in a t
 ### Notes about the XML
 
 1. Specify an argument value for every argument that matches our PHP implementation. This allows us to pass other test data to the Custom Helper.
-2. The `class` attribute matches the namespace specified in the PHP file.
-3. Specify the method from the class via the `method` attribute.
-4. If the function has a return value, it will be assigned to the `stepKey` variable. In this case, `$selectHeadingTextInTinyMCE` holds the return value.
-5. The types of argument values must match the PHP implementation's expected types.
+1. The `class` attribute matches the namespace specified in the PHP file.
+1. Specify the method from the class via the `method` attribute.
+1. If the function has a return value, it will be assigned to the `stepKey` variable. In this case, `$selectHeadingTextInTinyMCE` holds the return value.
+1. The types of argument values must match the PHP implementation's expected types.
 
 ## Key takeaways
 
