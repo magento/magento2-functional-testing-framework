@@ -25,7 +25,7 @@ class OTP
     private static $totp = null;
 
     /**
-     * Return OTP for custom secret `OTP_SHARED_SECRET` defined in env
+     * Return OTP for custom secret stored in `magento/tfa/OTP_SHARED_SECRET`
      *
      * @return string
      * @throws TestFrameworkException
