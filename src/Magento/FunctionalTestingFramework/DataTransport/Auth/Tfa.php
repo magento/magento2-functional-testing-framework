@@ -20,6 +20,13 @@ class Tfa
     const ADMIN_FORM_AUTH_GOOGLE = 'tfa/google/authpost/?isAjax=true';
     const TFA_SCHEMA = 'schema?services=twoFactorAuthAdminTokenServiceV1';
 
+    /**
+     * If 2FA is enabled
+     *
+     * @var boolean|null
+     */
+    private static $tfaEnabled = null;
+
     /** Rest request headers
      *
      * @var string[]
@@ -55,6 +62,10 @@ class Tfa
      */
     public static function isEnabled()
     {
+        if (self::$tfaEnabled !== null) {
+            return self::$tfaEnabled;
+        }
+
         $schemaUrl = MftfGlobals::getWebApiBaseUrl() . self::TFA_SCHEMA;
         $transport = new CurlTransport();
         try {
