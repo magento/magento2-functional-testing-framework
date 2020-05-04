@@ -87,7 +87,7 @@ class AdminFormExecutor implements CurlInterface
 
         // Get OTP
         if (Tfa::isEnabled()) {
-            $authUrl = MftfGlobals::getBackendBaseUrl() . 'tfa/google/authpost/?isAjax=true';
+            $authUrl = MftfGlobals::getBackendBaseUrl() . Tfa::getProviderAdminFormEndpoint('google');
             $data = [
                 'tfa_code' => OTP::getOTP(),
                 'form_key' => $this->formKey,
