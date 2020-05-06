@@ -98,6 +98,7 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
         $actionGroupErrors = [];
         /** @var SplFileInfo $filePath */
         foreach ($files as $filePath) {
+            $actionGroupToArguments = [];
             $contents = $filePath->getContents();
             /** @var DOMElement $actionGroup */
             $actionGroup = $this->getActionGroupDomElement($contents);

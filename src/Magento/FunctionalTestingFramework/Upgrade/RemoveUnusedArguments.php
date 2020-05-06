@@ -53,7 +53,8 @@ class RemoveUnusedArguments implements UpgradeInterface
                 $contents = preg_replace(self::ARGUMENTS_BLOCK_REGEX_PATTERN, '', $contents);
             } else {
                 foreach ($unusedArguments as $argument) {
-                    $contents = preg_replace("/\s*<argument.*".$argument.".*\/>/", '', $contents);
+                    $argumentRegexPattern = "/\s*<argument.*name\s*=\s*\"".$argument."\".*\/>/";
+                    $contents = preg_replace($argumentRegexPattern, '', $contents);
                 }
             }
             $fileSystem->dumpFile($file->getRealPath(), $contents);
