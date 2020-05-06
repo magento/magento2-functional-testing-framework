@@ -99,10 +99,8 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
         /** @var SplFileInfo $filePath */
         foreach ($files as $filePath) {
             $contents = $filePath->getContents();
-            $domDocument = new \DOMDocument();
-            $domDocument->load($filePath);
             /** @var DOMElement $actionGroup */
-            $actionGroup = $domDocument->getElementsByTagName('actionGroup')->item(0);
+            $actionGroup = $this->getActionGroupDomElement($contents);
             $arguments = $this->extractActionGroupArguments($actionGroup);
             $unusedArguments = $this->findUnusedArguments($arguments, $contents);
             if (!empty($unusedArguments)) {
@@ -111,6 +109,18 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
             }
         }
         return $actionGroupErrors;
+    }
+
+    /**
+     * Extract actionGroup DomElement from xml file
+     * @param string $contents
+     * @return \DOMElement
+     */
+    public function getActionGroupDomElement($contents)
+    {
+        $domDocument = new \DOMDocument();
+        $domDocument->loadXML($contents);
+        return $domDocument->getElementsByTagName('actionGroup')[0];
     }
 
     /**
@@ -123,9 +133,7 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
         $arguments = [];
         $argumentsNodes = $actionGroup->getElementsByTagName('arguments');
         if ($argumentsNodes->length > 0) {
-            /** @var DOMElement $argumentsNode */
-            $argumentsNode = $argumentsNodes->item(0);
-            $argumentNodes = $argumentsNode->getElementsByTagName('argument');
+            $argumentNodes = $argumentsNodes[0]->getElementsByTagName('argument');
             foreach ($argumentNodes as $argumentNode) {
                 $arguments[] = $argumentNode->getAttribute('name');
             }

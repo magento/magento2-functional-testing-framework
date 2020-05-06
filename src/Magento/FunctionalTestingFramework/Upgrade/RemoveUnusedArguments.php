@@ -19,8 +19,10 @@ use DOMElement;
  */
 class RemoveUnusedArguments implements UpgradeInterface
 {
+    const ARGUMENTS_BLOCK_REGEX_PATTERN = "/\s*<arguments.*\/arguments>/s";
+
     /**
-     * Upgrades all test xml files
+     * Updates all actionGroup xml files
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
@@ -33,36 +35,30 @@ class RemoveUnusedArguments implements UpgradeInterface
         if (empty($testPaths[0])) {
             $testPaths = $scriptUtil->getAllModulePaths();
         }
-        $actionGroupXmlFiles = $scriptUtil->getModuleXmlFilesByScope($testPaths,   DIRECTORY_SEPARATOR . 'ActionGroup' . DIRECTORY_SEPARATOR);
+        $xmlFiles = $scriptUtil->getModuleXmlFilesByScope($testPaths, 'ActionGroup');
         $actionGroupsUpdated = 0;
         $fileSystem = new Filesystem();
-        foreach ($actionGroupXmlFiles as $actionGroupXml) {
-            $contents = $actionGroupXml->getContents();
-            $domDocument = new \DOMDocument();
-            $domDocument->load($actionGroupXml);
-            $actionGroupArgumentsCheck = new ActionGroupArgumentsCheck();
-            $unusedArgumentsFound = false;
+        foreach ($xmlFiles as $file) {
+            $contents = $file->getContents();
+            $argumentsCheck = new ActionGroupArgumentsCheck();
             /** @var DOMElement $actionGroup */
-            $actionGroup = $domDocument->getElementsByTagName('actionGroup')->item(0);
-            $arguments = $actionGroupArgumentsCheck->extractActionGroupArguments($actionGroup);
-            $unusedArguments = $actionGroupArgumentsCheck->findUnusedArguments($arguments, $contents);
-            if (sizeof($unusedArguments) == 0) {
+            $actionGroup = $argumentsCheck->getActionGroupDomElement($contents);
+            $allArguments = $argumentsCheck->extractActionGroupArguments($actionGroup);
+            $unusedArguments = $argumentsCheck->findUnusedArguments($allArguments, $contents);
+            if (empty($unusedArguments)) {
                 continue;
             }
-            foreach ($unusedArguments as $argument) {
-                $unusedArgumentsFound = true;
-                $contents = preg_replace("/\s*<argument.*".$argument.".*\/>/", "", $contents);
+            //Remove <arguments> block if all arguments are unused
+            if (!empty(array_diff($allArguments, $unusedArguments))) {
+                $contents = preg_replace(self::ARGUMENTS_BLOCK_REGEX_PATTERN, '', $contents);
             }
-            $newDomDocument = new \DOMDocument();
-            $newDomDocument->loadXML($contents);
-            if ($unusedArgumentsFound) {
-                if ($newDomDocument->getElementsByTagName("argument")->length == 0) {
-                    $contents = preg_replace("/\s*<arguments.*\/arguments>/s", "", $contents);
+            else {
+                foreach ($unusedArguments as $argument) {
+                    $contents = preg_replace("/\s*<argument.*".$argument.".*\/>/", '', $contents);
                 }
-                $fileSystem->dumpFile($actionGroupXml->getRealPath(), $contents);
-                $actionGroupsUpdated++;
-
             }
+            $fileSystem->dumpFile($file->getRealPath(), $contents);
+            $actionGroupsUpdated++;
         }
         return "Finished removing unused action group arguments from " . $actionGroupsUpdated . " files.";
     }
