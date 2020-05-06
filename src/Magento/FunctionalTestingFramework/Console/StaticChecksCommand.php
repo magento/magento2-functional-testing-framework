@@ -181,7 +181,7 @@ class StaticChecksCommand extends Command
      */
     private function parseRulesetJson()
     {
-        $pathToRuleset = PROJECT_ROOT . DIRECTORY_SEPARATOR . "staticRuleset.json";
+        $pathToRuleset = TESTS_BP . DIRECTORY_SEPARATOR . "staticRuleset.json";
         if ($pathToRuleset === null) {
             $this->ioStyle->text("No ruleset under $pathToRuleset" . PHP_EOL);
             return;
