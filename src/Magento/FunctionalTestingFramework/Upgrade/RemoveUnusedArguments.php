@@ -49,10 +49,9 @@ class RemoveUnusedArguments implements UpgradeInterface
                 continue;
             }
             //Remove <arguments> block if all arguments are unused
-            if (!empty(array_diff($allArguments, $unusedArguments))) {
+            if (empty(array_diff($allArguments, $unusedArguments))) {
                 $contents = preg_replace(self::ARGUMENTS_BLOCK_REGEX_PATTERN, '', $contents);
-            }
-            else {
+            } else {
                 foreach ($unusedArguments as $argument) {
                     $contents = preg_replace("/\s*<argument.*".$argument.".*\/>/", '', $contents);
                 }
