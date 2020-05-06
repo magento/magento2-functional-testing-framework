@@ -60,6 +60,6 @@ class RemoveUnusedArguments implements UpgradeInterface
             $fileSystem->dumpFile($file->getRealPath(), $contents);
             $actionGroupsUpdated++;
         }
-        return "Finished removing unused action group arguments from " . $actionGroupsUpdated . " files.";
+        return "Removed unused action group arguments from {$actionGroupsUpdated} file(s).";
     }
 }

@@ -211,7 +211,7 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
     /**
      * Builds and returns error output for violating references
      *
-     * @param array  $actionGroupToArguments
+     * @param array       $actionGroupToArguments
      * @param SplFileInfo $path
      * @return mixed
      */
