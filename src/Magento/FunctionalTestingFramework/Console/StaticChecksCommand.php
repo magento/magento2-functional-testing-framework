@@ -23,6 +23,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class StaticChecksCommand extends Command
 {
     /**
+     * Associative array containing static ruleset properties.
+     *
+     * @var array
+     */
+    private $ruleSet;
+
+    /**
      * Pool of all existing static check objects
      *
      * @var StaticCheckInterface[]
@@ -81,6 +88,7 @@ class StaticChecksCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->ioStyle = new SymfonyStyle($input, $output);
+        $this->parseRulesetJson();
         try {
             $this->validateInput($input);
         } catch (InvalidArgumentException $e) {
@@ -133,8 +141,10 @@ class StaticChecksCommand extends Command
         $this->staticCheckObjects = [];
         $requiredChecksNames = $input->getArgument('names');
         $invalidCheckNames = [];
-        // Found user required static check script(s) to run,
-        // If no static check name is supplied, run all static check scripts
+        // Build list of static check names to run.
+        if (empty($requiredChecksNames) && isset($this->ruleSet['tests'])) {
+            $requiredChecksNames = $this->ruleSet['tests'];
+        }
         if (empty($requiredChecksNames)) {
             $this->staticCheckObjects = $this->allStaticCheckObjects;
         } else {
@@ -163,5 +173,20 @@ class StaticChecksCommand extends Command
                     . '".'
                 );
         }
+    }
+
+    /**
+     * Parses and sets local ruleSet. If not found, simply returns and lets script continue.
+     * @return void;
+     */
+    private function parseRulesetJson()
+    {
+        $pathToRuleset = FW_BP . DIRECTORY_SEPARATOR . "staticRuleset.json";
+        if ($pathToRuleset === null) {
+            $this->ioStyle->text("No ruleset under $pathToRuleset" . PHP_EOL);
+            return;
+        }
+        $this->ioStyle->text("Using ruleset under $pathToRuleset" . PHP_EOL);
+        $this->ruleSet = json_decode(file_get_contents($pathToRuleset), true);
     }
 }
