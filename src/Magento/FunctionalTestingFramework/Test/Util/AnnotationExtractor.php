@@ -59,6 +59,7 @@ class AnnotationExtractor extends BaseObjectExtractor
      * @param string $filename
      * @return array
      * @throws XmlException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function extractAnnotations($testAnnotations, $filename, $validateAnnotations = true)
     {

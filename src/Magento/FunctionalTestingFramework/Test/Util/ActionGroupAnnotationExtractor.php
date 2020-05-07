@@ -17,12 +17,13 @@ class ActionGroupAnnotationExtractor extends AnnotationExtractor
      * This method trims away irrelevant tags and returns annotations used in the array passed. The annotations
      * can be found in both Tests and their child element tests.
      *
-     * @param array  $testAnnotations
-     * @param string $filename
+     * @param array   $testAnnotations
+     * @param string  $filename
+     * @param boolean $validateAnnotations
      * @return array
      * @throws \Exception
      */
-    public function extractAnnotations($testAnnotations, $filename)
+    public function extractAnnotations($testAnnotations, $filename, $validateAnnotations = true)
     {
         $annotationObjects = [];
         $annotations = $this->stripDescriptorTags($testAnnotations, parent::NODE_NAME);

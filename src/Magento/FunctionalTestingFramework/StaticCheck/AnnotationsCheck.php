@@ -8,6 +8,7 @@ namespace Magento\FunctionalTestingFramework\StaticCheck;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
+use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Util\Script\ScriptUtil;
 use Symfony\Component\Console\Input\InputInterface;
 use Exception;
@@ -110,7 +111,8 @@ class AnnotationsCheck implements StaticCheckInterface
      *   description
      *   severity
      *
-     * @param $test
+     * @param TestObject $test
+     * @return void
      */
     private function validateRequiredAnnotations($test)
     {
@@ -146,7 +148,8 @@ class AnnotationsCheck implements StaticCheckInterface
     /**
      * Add the key = "stories appended to title", value = test name, to the class variable.
      *
-     * @param $test
+     * @param TestObject $test
+     * @return void
      */
     private function aggregateStoriesTitlePairs($test)
     {
@@ -161,7 +164,8 @@ class AnnotationsCheck implements StaticCheckInterface
     /**
      * Add the key = "testCaseId appended to title", value = test name, to the class variable.
      *
-     * @param $test
+     * @param TestObject $test
+     * @return void
      */
     private function aggregateTestCaseIdTitlePairs($test)
     {
@@ -177,7 +181,7 @@ class AnnotationsCheck implements StaticCheckInterface
      * Strip away the testCaseId prefix that was automatically added to the test title
      * so that way we have just the raw title from the XML file.
      *
-     * @param $test
+     * @param TestObject $test
      * @return string|null
      */
     private function getTestTitleWithoutPrefix($test)
@@ -194,6 +198,8 @@ class AnnotationsCheck implements StaticCheckInterface
 
     /**
      * Adds an error if any story+title pairs are used by more than one test.
+     *
+     * @return void
      */
     private function validateStoriesTitlePairs()
     {
@@ -206,6 +212,8 @@ class AnnotationsCheck implements StaticCheckInterface
 
     /**
      * Adds an error if any testCaseId+title pairs are used by more than one test.
+     *
+     * @return void
      */
     private function validateTestCaseIdTitlePairs()
     {
