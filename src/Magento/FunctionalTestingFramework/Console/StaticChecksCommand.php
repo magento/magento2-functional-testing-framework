@@ -140,7 +140,6 @@ class StaticChecksCommand extends Command
     {
         $this->staticCheckObjects = [];
         $requiredChecksNames = $input->getArgument('names');
-        $invalidCheckNames = [];
         // Build list of static check names to run.
         if (empty($requiredChecksNames) && isset($this->ruleSet['tests'])) {
             $requiredChecksNames = $this->ruleSet['tests'];
@@ -148,20 +147,7 @@ class StaticChecksCommand extends Command
         if (empty($requiredChecksNames)) {
             $this->staticCheckObjects = $this->allStaticCheckObjects;
         } else {
-            for ($index = 0; $index < count($requiredChecksNames); $index++) {
-                if (in_array($requiredChecksNames[$index], array_keys($this->allStaticCheckObjects))) {
-                    $this->staticCheckObjects[$requiredChecksNames[$index]] =
-                        $this->allStaticCheckObjects[$requiredChecksNames[$index]];
-                } else {
-                    $invalidCheckNames[] = $requiredChecksNames[$index];
-                }
-            }
-        }
-
-        if (!empty($invalidCheckNames)) {
-            throw new InvalidArgumentException(
-                'Invalid static check script(s): ' . implode(', ', $invalidCheckNames) . '.'
-            );
+            $this->validateTestNames($requiredChecksNames);
         }
 
         if ($input->getOption('path')) {
@@ -172,6 +158,30 @@ class StaticChecksCommand extends Command
                     . StaticChecksList::DEPRECATED_ENTITY_USAGE_CHECK_NAME
                     . '".'
                 );
+        }
+    }
+
+    /**
+     * Validates that all passed in static-check names match an existing static check
+     * @param string[] $requiredChecksNames
+     * @return void
+     */
+    private function validateTestNames($requiredChecksNames)
+    {
+        $invalidCheckNames = [];
+        for ($index = 0; $index < count($requiredChecksNames); $index++) {
+            if (in_array($requiredChecksNames[$index], array_keys($this->allStaticCheckObjects))) {
+                $this->staticCheckObjects[$requiredChecksNames[$index]] =
+                    $this->allStaticCheckObjects[$requiredChecksNames[$index]];
+            } else {
+                $invalidCheckNames[] = $requiredChecksNames[$index];
+            }
+        }
+
+        if (!empty($invalidCheckNames)) {
+            throw new InvalidArgumentException(
+                'Invalid static check script(s): ' . implode(', ', $invalidCheckNames) . '.'
+            );
         }
     }
 
