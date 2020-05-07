@@ -60,7 +60,7 @@ class AnnotationExtractor extends BaseObjectExtractor
      * @return array
      * @throws XmlException
      */
-    public function extractAnnotations($testAnnotations, $filename)
+    public function extractAnnotations($testAnnotations, $filename, $validateAnnotations = true)
     {
         $annotationObjects = [];
         $annotations = $this->stripDescriptorTags($testAnnotations, self::NODE_NAME);
@@ -82,7 +82,9 @@ class AnnotationExtractor extends BaseObjectExtractor
 
             if ($annotationKey == "skip") {
                 $annotationData = $annotationData['issueId'];
-                $this->validateSkippedIssues($annotationData, $filename);
+                if ($validateAnnotations) {
+                    $this->validateSkippedIssues($annotationData, $filename);
+                }
             }
 
             foreach ($annotationData as $annotationValue) {
@@ -100,7 +102,9 @@ class AnnotationExtractor extends BaseObjectExtractor
         }
 
         $this->addTestCaseIdToTitle($annotationObjects, $filename);
-        $this->validateMissingAnnotations($annotationObjects, $filename);
+        if ($validateAnnotations) {
+            $this->validateMissingAnnotations($annotationObjects, $filename);
+        }
         $this->addStoryTitleToMap($annotationObjects, $filename);
 
         return $annotationObjects;
