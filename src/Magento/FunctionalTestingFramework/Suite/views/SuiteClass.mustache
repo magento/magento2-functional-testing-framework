@@ -51,6 +51,9 @@ class {{suiteName}} extends \Codeception\GroupObject
                 $webDriver->webDriver = null;
 
             } catch (\Exception $exception) {
+                if ($exception instanceof \Codeception\Exception\ConnectionException) {
+                    throw $exception;
+                }
                 $this->preconditionFailure = $exception->getMessage();
             }
 
