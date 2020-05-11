@@ -191,7 +191,12 @@ class StaticChecksCommand extends Command
      */
     private function parseRulesetJson()
     {
-        $pathToRuleset = TESTS_BP . DIRECTORY_SEPARATOR . "staticRuleset.json";
+        $pathAddition = "/dev/tests/acceptance/";
+        // MFTF is both NOT attached and no MAGENTO_BP defined in .env
+        if (MAGENTO_BP === FW_BP) {
+            $pathAddition = "/dev/";
+        }
+        $pathToRuleset = MAGENTO_BP . $pathAddition . "staticRuleset.json";
         if (!file_exists($pathToRuleset)) {
             $this->ioStyle->text("No ruleset under $pathToRuleset" . PHP_EOL);
             return;
