@@ -88,7 +88,6 @@ class StaticChecksCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->ioStyle = new SymfonyStyle($input, $output);
-        $this->parseRulesetJson();
         try {
             $this->validateInput($input);
         } catch (InvalidArgumentException $e) {
@@ -141,8 +140,9 @@ class StaticChecksCommand extends Command
         $this->staticCheckObjects = [];
         $requiredChecksNames = $input->getArgument('names');
         // Build list of static check names to run.
-        if (empty($requiredChecksNames) && isset($this->ruleSet['tests'])) {
-            $requiredChecksNames = $this->ruleSet['tests'];
+        if (empty($requiredChecksNames)) {
+            $this->parseRulesetJson();
+            $requiredChecksNames = $this->ruleSet['tests'] ?? null;
         }
         if (empty($requiredChecksNames)) {
             $this->staticCheckObjects = $this->allStaticCheckObjects;
@@ -192,7 +192,7 @@ class StaticChecksCommand extends Command
     private function parseRulesetJson()
     {
         $pathToRuleset = TESTS_BP . DIRECTORY_SEPARATOR . "staticRuleset.json";
-        if ($pathToRuleset === null) {
+        if (!file_exists($pathToRuleset)) {
             $this->ioStyle->text("No ruleset under $pathToRuleset" . PHP_EOL);
             return;
         }
