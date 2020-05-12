@@ -430,8 +430,12 @@ The example parameters are taken from the `etc/config/.env.example` file.
 
 ### `static-checks`
 
-Runs all or specific MFTF static-checks on the test codebase that MFTF is currently attached to. 
-If no script name argument is specified, all existing static check scripts will run.
+Runs all or specific MFTF static-checks on the test codebase that MFTF is currently attached to.
+Behavior for determining what tests to run is as follows:
+
+*  If test names are specified, only those tests are run.
+*  If no test names are specified, tests are run according to `staticRuleset.json`.
+*  If no `staticRuleset.json` is found, all tests are run.
 
 #### Usage
 
@@ -489,6 +493,25 @@ vendor/bin/mftf static-checks testDependencies actionGroupArguments
 |`actionGroupArguments` | Checks that action groups do not have unused arguments.|
 |`deprecatedEntityUsage`| Checks that deprecated test entities are not being referenced.|
          
+#### Defining ruleset
+
+The `static-checks` command will look for a `staticRuleset.json` file under either:
+
+*  `dev/tests/acceptance/staticRuleset.json`, if embedded with Magento2
+*  `dev/staticRuleset.json`, if standalone
+
+This file works as the default configuration to easily allow for the integration of `static-checks` in a CI environment.
+Currently, the ruleset only defines the tests to run. Here is an example of the expected format:
+
+```json
+{
+  "tests": [
+    "actionGroupArguments",
+    "anotherTest"
+  ]
+}
+```
+
 ### `upgrade:tests`
 
 When the path argument is specified, this `upgrade` command applies all the major version MFTF upgrade scripts to a `Test Module` in the given path.

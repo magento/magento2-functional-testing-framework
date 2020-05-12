@@ -23,6 +23,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class StaticChecksCommand extends Command
 {
     /**
+     * Associative array containing static ruleset properties.
+     *
+     * @var array
+     */
+    private $ruleSet;
+
+    /**
      * Pool of all existing static check objects
      *
      * @var StaticCheckInterface[]
@@ -132,26 +139,15 @@ class StaticChecksCommand extends Command
     {
         $this->staticCheckObjects = [];
         $requiredChecksNames = $input->getArgument('names');
-        $invalidCheckNames = [];
-        // Found user required static check script(s) to run,
-        // If no static check name is supplied, run all static check scripts
+        // Build list of static check names to run.
+        if (empty($requiredChecksNames)) {
+            $this->parseRulesetJson();
+            $requiredChecksNames = $this->ruleSet['tests'] ?? null;
+        }
         if (empty($requiredChecksNames)) {
             $this->staticCheckObjects = $this->allStaticCheckObjects;
         } else {
-            for ($index = 0; $index < count($requiredChecksNames); $index++) {
-                if (in_array($requiredChecksNames[$index], array_keys($this->allStaticCheckObjects))) {
-                    $this->staticCheckObjects[$requiredChecksNames[$index]] =
-                        $this->allStaticCheckObjects[$requiredChecksNames[$index]];
-                } else {
-                    $invalidCheckNames[] = $requiredChecksNames[$index];
-                }
-            }
-        }
-
-        if (!empty($invalidCheckNames)) {
-            throw new InvalidArgumentException(
-                'Invalid static check script(s): ' . implode(', ', $invalidCheckNames) . '.'
-            );
+            $this->validateTestNames($requiredChecksNames);
         }
 
         if ($input->getOption('path')) {
@@ -163,5 +159,49 @@ class StaticChecksCommand extends Command
                     . '".'
                 );
         }
+    }
+
+    /**
+     * Validates that all passed in static-check names match an existing static check
+     * @param string[] $requiredChecksNames
+     * @return void
+     */
+    private function validateTestNames($requiredChecksNames)
+    {
+        $invalidCheckNames = [];
+        for ($index = 0; $index < count($requiredChecksNames); $index++) {
+            if (in_array($requiredChecksNames[$index], array_keys($this->allStaticCheckObjects))) {
+                $this->staticCheckObjects[$requiredChecksNames[$index]] =
+                    $this->allStaticCheckObjects[$requiredChecksNames[$index]];
+            } else {
+                $invalidCheckNames[] = $requiredChecksNames[$index];
+            }
+        }
+
+        if (!empty($invalidCheckNames)) {
+            throw new InvalidArgumentException(
+                'Invalid static check script(s): ' . implode(', ', $invalidCheckNames) . '.'
+            );
+        }
+    }
+
+    /**
+     * Parses and sets local ruleSet. If not found, simply returns and lets script continue.
+     * @return void;
+     */
+    private function parseRulesetJson()
+    {
+        $pathAddition = "/dev/tests/acceptance/";
+        // MFTF is both NOT attached and no MAGENTO_BP defined in .env
+        if (MAGENTO_BP === FW_BP) {
+            $pathAddition = "/dev/";
+        }
+        $pathToRuleset = MAGENTO_BP . $pathAddition . "staticRuleset.json";
+        if (!file_exists($pathToRuleset)) {
+            $this->ioStyle->text("No ruleset under $pathToRuleset" . PHP_EOL);
+            return;
+        }
+        $this->ioStyle->text("Using ruleset under $pathToRuleset" . PHP_EOL);
+        $this->ruleSet = json_decode(file_get_contents($pathToRuleset), true);
     }
 }
