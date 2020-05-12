@@ -71,6 +71,7 @@ class AnnotationsCheck implements StaticCheckInterface
 
         foreach ($allTests as $test) {
             $this->validateRequiredAnnotations($test);
+            $this->validateSkipIssueId($test);
             $this->aggregateStoriesTitlePairs($test);
             $this->aggregateTestCaseIdTitlePairs($test);
         }
@@ -142,6 +143,25 @@ class AnnotationsCheck implements StaticCheckInterface
         $allMissing = join(", ", $missing);
         if (strlen($allMissing) > 0) {
             $this->errors[][] = "Test {$test->getName()} is missing the required annotations: " . $allMissing;
+        }
+    }
+
+    /**
+     * Validates that if the test is skipped, that it has an issueId value.
+     *
+     * @param TestObject $test
+     * @return void
+     */
+    private function validateSkipIssueId($test)
+    {
+        $annotations = $test->getAnnotations();
+
+        $skip = $annotations['skip'] ?? null;
+        if ($skip !== null) {
+            $issueId = $skip[0] ?? null;
+            if ($issueId === null || strlen($issueId) == 0) {
+                $this->errors[][] = "Test {$test->getName()} is skipped but the issueId is empty.";
+            }
         }
     }
 
