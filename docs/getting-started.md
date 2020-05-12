@@ -109,8 +109,9 @@ Clean the cache after changing the configuration values:
 bin/magento cache:clean config full_page
 ```
 
-### Testing with Magento Two-Factor Authentication (2FA) extension {#2fa}
-If Magento under test has [Magento Two-Factor Authentication (2FA) extension][] installed and enabled, additional configures are needed to run MFTF tests. Learn more in [Configure MFTF for Magento with Two-Factor Authentication (2FA)](../configure-2fa.md).
+### Testing with the Magento Two-Factor Authentication (2FA) extension {#2fa}
+
+If the Magento instance under test has the [Magento Two-Factor Authentication (2FA) extension][] installed and enabled, additional configurations is needed to run MFTF tests. Learn more in [Configure MFTF for Magento with Two-Factor Authentication (2FA)](./configure-2fa.md).
 
 ### Webserver configuration {#web-server-configuration}
 
