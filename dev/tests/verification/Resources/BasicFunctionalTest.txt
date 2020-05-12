@@ -112,6 +112,7 @@ class BasicFunctionalTestCest
 		$date->setTimezone(new \DateTimeZone("UTC"));
 		$generateDateKey2 = $date->format("H:i:s");
 
+		$getOtp = $I->getOTP(); // stepKey: getOtp
 		$grabAttributeFromKey1 = $I->grabAttributeFrom(".functionalTestSelector", "someInput"); // stepKey: grabAttributeFromKey1
 		$grabCookieKey1 = $I->grabCookie("grabCookieInput", ['domain' => 'www.google.com']); // stepKey: grabCookieKey1
 		$grabFromCurrentUrlKey1 = $I->grabFromCurrentUrl("/grabCurrentUrl"); // stepKey: grabFromCurrentUrlKey1
