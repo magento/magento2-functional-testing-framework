@@ -22,7 +22,7 @@ In this example:
 *  `SimpleSubCategory` is an entity name.
 *  `name` is a `<data>` key of the entity. The corresponding value will be assigned to `userInput` as a result.
 
-The following is the usage of `<data>` entity in the `Magento/Customer/Test/Mftf/Test/AdminCustomersAllCustomersNavigateMenuTest.xml` test:
+The following is an example of the usage of `<data>` entity in the `Magento/Customer/Test/Mftf/Test/AdminCustomersAllCustomersNavigateMenuTest.xml` test:
 
 ```xml
 <actionGroup ref="AdminNavigateMenuActionGroup" stepKey="navigateToAllCustomerPage">
@@ -48,7 +48,7 @@ In this example:
 *  `MAGENTO_ADMIN_USERNAME` is a name of an environment variable.
    The corresponding value will be assigned to `userInput` as a result.
 
-The following is the usage of `_ENV` in the `Magento/Braintree/Test/Mftf/ActionGroup/AdminDeleteRoleActionGroup.xml` action group:
+The following is an example of the usage of `_ENV` in the `Magento/Braintree/Test/Mftf/ActionGroup/AdminDeleteRoleActionGroup.xml` action group:
 
 ```xml
 <fillField stepKey="TypeCurrentPassword" selector="{{AdminDeleteRoleSection.current_pass}}" userInput="{{_ENV.MAGENTO_ADMIN_PASSWORD}}"/>
@@ -69,7 +69,7 @@ In this example:
 
 Learn more in [Credentials][].
 
-The following is the usage of `_CREDS` in the `Magento/Braintree/Test/Mftf/Data/BraintreeData.xml` data entity:
+The following is an example of the usage of `_CREDS` in the `Magento/Braintree/Test/Mftf/Data/BraintreeData.xml` data entity:
 
 ```xml
 <entity name="MerchantId" type="merchant_id">
@@ -93,7 +93,7 @@ In this example:
 *  `email` is a data key of the entity.
   The corresponding value will be assigned to `userInput` as a result.
 
-The following is the usage of the persistant data in `Magento/Customer/Test/Mftf/Test/AdminCreateCustomerWithCountryUSATest.xml` test:
+The following is an example of the usage of the persistant data in `Magento/Customer/Test/Mftf/Test/AdminCreateCustomerWithCountryUSATest.xml` test:
 
 ```xml
 <actionGroup ref="AdminFilterCustomerByEmail" stepKey="filterTheCustomerByEmail">
@@ -145,7 +145,7 @@ userInput="We'll email you an order confirmation with details and tracking info.
 
 ## Format
 
-The format of `<data>` entity is:
+The format of the `<data>` entity is:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -243,7 +243,7 @@ You can also call data from the xml definition of a `data` tag directly:
 
 Attributes|Type|Use|Description
 ---|---|---|---
-`name`|string|optional|Name of the `<entity>`. Camel case is used for the entity name.
+`name`|string|optional|Name of the `<entity>`. Use camel case for entity names.
 `type`|string|optional|Node containing the exact name of `<entity>` type. Used later to find specific Persistence Layer Model class. `type` in `<data>` can be whatever the user wants; There are no constraints. It is important when persisting data, depending on the `type` given, as it will try to match a metadata definition with the operation being done. Example: A `myCustomer` entity with `type="customer"`, calling `<createData entity="myCustomer"/>`, will try to find a metadata entry with the following attributes: `<operation dataType="customer" type="create">`.
 `deprecated`|string|optional|Used to warn about the future deprecation of the data entity. String will appear in Allure reports and console output at runtime.
 
@@ -277,7 +277,7 @@ Attributes|Type|Use|Description
 
 Example:
 
-```
+```xml
 <var key="parent_id" entityType="category" entityKey="id" />
 ```
 
