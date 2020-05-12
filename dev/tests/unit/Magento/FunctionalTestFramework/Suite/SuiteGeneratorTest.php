@@ -3,7 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace Tests\unit\Magento\FunctionalTestFramework\Suite;
+namespace tests\unit\Magento\FunctionalTestFramework\Suite;
 
 use AspectMock\Test as AspectMock;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
@@ -17,7 +17,7 @@ use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
 use Magento\FunctionalTestingFramework\Util\Manifest\DefaultTestManifest;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
 use tests\unit\Util\SuiteDataArrayBuilder;
 use tests\unit\Util\TestDataArrayBuilder;

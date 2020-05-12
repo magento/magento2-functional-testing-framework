@@ -4,7 +4,7 @@
  * See COPYING.txt for license details.
  */
 
-namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
+namespace tests\unit\Magento\FunctionalTestFramework\Util;
 
 use AspectMock\Proxy\Verifier;
 use AspectMock\Test as AspectMock;
@@ -15,7 +15,7 @@ use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\ModuleResolver;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 use PHPUnit\Runner\Exception;
 use tests\unit\Util\TestLoggingUtil;
 

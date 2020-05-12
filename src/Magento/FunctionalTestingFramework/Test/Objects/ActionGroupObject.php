@@ -35,7 +35,8 @@ class ActionGroupObject
         "grabMultiple",
         "grabPageSource",
         "grabTextFrom",
-        "grabValueFrom"
+        "grabValueFrom",
+        "getOTP"
     ];
 
     /**

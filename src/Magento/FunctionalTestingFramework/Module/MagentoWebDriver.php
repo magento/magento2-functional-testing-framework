@@ -15,18 +15,17 @@ use Facebook\WebDriver\Interactions\WebDriverActions;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Util\Uri;
+use Magento\FunctionalTestingFramework\DataTransport\WebApiExecutor;
+use Magento\FunctionalTestingFramework\DataTransport\Auth\WebApiAuth;
+use Magento\FunctionalTestingFramework\DataTransport\Auth\Tfa\OTP;
+use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\WebapiExecutor;
 use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
-use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\Util\ConfigSanitizerUtil;
 use Yandex\Allure\Adapter\AllureException;
-use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
+use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlTransport;
 use Yandex\Allure\Adapter\Support\AttachmentSupport;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
-use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
-use Facebook\WebDriver\Remote\RemoteWebDriver;
-use Facebook\WebDriver\Exception\WebDriverCurlException;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 
 /**
@@ -49,6 +48,7 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHan
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class MagentoWebDriver extends WebDriver
 {
@@ -551,12 +551,11 @@ class MagentoWebDriver extends WebDriver
             false
         );
 
-        $restExecutor = new WebapiExecutor();
         $executor = new CurlTransport();
         $executor->write(
             $apiURL,
             [
-                'token' => $restExecutor->getAuthToken(),
+                'token' => WebApiAuth::getAdminToken(),
                 getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command,
                 'arguments' => $arguments,
                 'timeout'   => $timeout,
@@ -565,7 +564,6 @@ class MagentoWebDriver extends WebDriver
             []
         );
         $response = $executor->read();
-        $restExecutor->close();
         $executor->close();
 
         return $response;
@@ -653,7 +651,7 @@ class MagentoWebDriver extends WebDriver
      */
     public function deleteEntityByUrl($url)
     {
-        $executor = new WebapiExecutor(null);
+        $executor = new WebApiExecutor(null);
         $executor->write($url, [], CurlInterface::DELETE, []);
         $response = $executor->read();
         $executor->close();
@@ -942,6 +940,17 @@ class MagentoWebDriver extends WebDriver
         $this->_saveScreenshot($screenName);
         $this->debug("Screenshot saved to $screenName");
         AllureHelper::addAttachmentToCurrentStep($screenName, 'Screenshot');
+    }
+
+    /**
+     * Return OTP based on a shared secret
+     *
+     * @return string
+     * @throws TestFrameworkException
+     */
+    public function getOTP()
+    {
+        return OTP::getOTP();
     }
 
     /**

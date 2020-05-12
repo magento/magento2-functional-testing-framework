@@ -4,10 +4,10 @@
  * See COPYING.txt for license details.
  */
 
-namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
+namespace tests\unit\Magento\FunctionalTestFramework\Util;
 
 use Magento\FunctionalTestingFramework\Util\ModulePathExtractor;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\MockModuleResolverBuilder;
 
 class ModulePathExtractorTest extends MagentoTestCase

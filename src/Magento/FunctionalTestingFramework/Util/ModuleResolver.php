@@ -11,7 +11,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
-use Symfony\Component\HttpFoundation\Response;
+use Magento\FunctionalTestingFramework\DataTransport\Auth\WebApiAuth;
 use \Magento\FunctionalTestingFramework\Util\ModuleResolver\AlphabeticSequenceSorter;
 use \Magento\FunctionalTestingFramework\Util\ModuleResolver\SequenceSorterInterface;
 
@@ -200,7 +200,7 @@ class ModuleResolver
             $this->printMagentoVersionInfo();
         }
 
-        $token = $this->getAdminToken();
+        $token = WebApiAuth::getAdminToken();
 
         $url = UrlFormatter::format(getenv('MAGENTO_BASE_URL')) . $this->moduleUrl;
 
@@ -686,66 +686,6 @@ class ModuleResolver
     }
 
     /**
-     * Get the API token for admin.
-     *
-     * @return string|boolean
-     */
-    public function getAdminToken()
-    {
-        $login = $_ENV['MAGENTO_ADMIN_USERNAME'] ?? null;
-        $password = $_ENV['MAGENTO_ADMIN_PASSWORD'] ?? null;
-        if (!$login || !$password || !$this->getBackendUrl()) {
-            $message = "Cannot retrieve API token without credentials and base url, please fill out .env.";
-            $context = [
-                "MAGENTO_BASE_URL" => getenv("MAGENTO_BASE_URL"),
-                "MAGENTO_BACKEND_BASE_URL" => getenv("MAGENTO_BACKEND_BASE_URL"),
-                "MAGENTO_ADMIN_USERNAME" => getenv("MAGENTO_ADMIN_USERNAME"),
-                "MAGENTO_ADMIN_PASSWORD" => getenv("MAGENTO_ADMIN_PASSWORD"),
-            ];
-            throw new TestFrameworkException($message, $context);
-        }
-
-        $url = $this->getBackendUrl() . $this->adminTokenUrl;
-        $data = [
-            'username' => $login,
-            'password' => $password
-        ];
-        $headers = [
-            'Content-Type: application/json',
-        ];
-
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-        $response = curl_exec($ch);
-        $responseCode = curl_getinfo($ch)['http_code'];
-
-        if ($responseCode !== 200) {
-            if ($responseCode == 0) {
-                $details = "Could not find Magento Backend Instance at MAGENTO_BACKEND_BASE_URL or MAGENTO_BASE_URL";
-            } else {
-                $details = $responseCode . " " . Response::$statusTexts[$responseCode];
-            }
-
-            $message = "Could not retrieve API token from Magento Instance ({$details})";
-            $context = [
-                "tokenUrl" => $url,
-                "responseCode" => $responseCode,
-                "MAGENTO_ADMIN_USERNAME" => getenv("MAGENTO_ADMIN_USERNAME"),
-                "MAGENTO_ADMIN_PASSWORD" => getenv("MAGENTO_ADMIN_PASSWORD"),
-            ];
-            throw new TestFrameworkException($message, $context);
-        }
-
-        return json_decode($response);
-    }
-
-    /**
      * A wrapping method for any custom logic which needs to be applied to the module list
      *
      * @param array $modulesPath
@@ -865,23 +805,6 @@ class ModuleResolver
             );
         }
         return [];
-    }
-
-    /**
-     * Returns custom Backend URL if set, fallback to Magento Base URL
-     * @return string|null
-     */
-    private function getBackendUrl()
-    {
-        try {
-            if (getenv('MAGENTO_BACKEND_BASE_URL')) {
-                return UrlFormatter::format(getenv('MAGENTO_BACKEND_BASE_URL'));
-            } else {
-                return UrlFormatter::format(getenv('MAGENTO_BASE_URL'));
-            }
-        } catch (TestFrameworkException $e) {
-            return null;
-        }
     }
 
     /**

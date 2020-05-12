@@ -4,7 +4,7 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magento\FunctionalTestingFramework\Util;
+namespace tests\unit\Util;
 
 use AspectMock\Test as AspectMock;
 use PHPUnit\Framework\TestCase;
