@@ -28,7 +28,7 @@ bin/magento security:tfa:google:set-secret <MAGENTO_ADMIN_USERNAME> <OTP_SHARED_
 ## Configure the MFTF {#config-mftf-2fa}
 
 Save the same base32-encoded `secret` in a MFTF credential storage, e.g. `.credentials` file, `HashiCorp Vault` or `AWS Secrets Manager`. 
-More details are [here](../credentials.md).
+More details are [here](./credentials.md).
 
 The path of the `secret` should be:
 
@@ -39,7 +39,7 @@ magento/tfa/OTP_SHARED_SECRET
 ## GetOTP {#getOTP}
 
 A one-time password (OTP) is required when an admin user logs into the Magento admin. 
-Use the action `getOTP` [Reference](../test/actions.md#getotp) to generate the code and use it for the `Authenticator code` text field in 2FA - Google Auth page.
+Use the action `getOTP` [Reference](./test/actions.md#getotp) to generate the code and use it for the `Authenticator code` text field in 2FA - Google Auth page.
 
 Note:
 You will need to set the `secret` for any non-default admin users first, before using `getOTP`. For example:
