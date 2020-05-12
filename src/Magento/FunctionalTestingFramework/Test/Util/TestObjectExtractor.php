@@ -83,7 +83,8 @@ class TestObjectExtractor extends BaseObjectExtractor
      * This method takes and array of test data and strips away irrelevant tags. The data is converted into an array of
      * TestObjects.
      *
-     * @param array $testData
+     * @param array   $testData
+     * @param boolean $validateAnnotations
      * @return TestObject
      * @throws \Exception
      */

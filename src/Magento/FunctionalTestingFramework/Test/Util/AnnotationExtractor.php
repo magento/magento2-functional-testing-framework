@@ -55,8 +55,9 @@ class AnnotationExtractor extends BaseObjectExtractor
      * This method trims away irrelevant tags and returns annotations used in the array passed. The annotations
      * can be found in both Tests and their child element tests.
      *
-     * @param array  $testAnnotations
-     * @param string $filename
+     * @param array   $testAnnotations
+     * @param string  $filename
+     * @param boolean $validateAnnotations
      * @return array
      * @throws XmlException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
