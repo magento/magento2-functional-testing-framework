@@ -1075,10 +1075,10 @@ This action can optionally contain one or more [requiredEntity](#requiredentity)
 
 ### getOTP
 
-Generate one-time password (OTP) based on a saved `secret` at path `magento/tfa/OTP_SHARED_SECRET` in MFTF credential storages.
+Generate a one-time password (OTP) based on a saved `secret` at path `magento/tfa/OTP_SHARED_SECRET` in a MFTF credential storage.
 The one-time password (OTP) is returned and accessible through the stepkey. 
 
-MFTF use TOTP from [Spomky-Labs/otphp](https://github.com/Spomky-Labs/otphp) if you want to know about this action.
+MFTF use TOTP from [Spomky-Labs/otphp](https://github.com/Spomky-Labs/otphp), if you want to learn more about this action.
 
 Attribute|Type|Use|Description
 ---|---|---|---
