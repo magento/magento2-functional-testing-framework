@@ -4,7 +4,7 @@
  * See COPYING.txt for license details.
  */
 
-namespace Tests\unit\Magento\FunctionalTestFramework\Test\Handlers;
+namespace tests\unit\Magento\FunctionalTestFramework\Test\Handlers;
 
 use AspectMock\Test as AspectMock;
 
@@ -12,7 +12,7 @@ use Go\Aop\Aspect;
 use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\ActionGroupArrayBuilder;
 use Magento\FunctionalTestingFramework\Test\Parsers\ActionGroupDataParser;
 

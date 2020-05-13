@@ -610,6 +610,7 @@ class TestGenerator
             $function = null;
             $time = null;
             $locale = null;
+            $currency = null;
             $username = null;
             $password = null;
             $width = null;
@@ -654,7 +655,11 @@ class TestGenerator
                 $sortOrder = $customActionAttributes['sortOrder'];
             }
 
-            if (isset($customActionAttributes['userInput']) && isset($customActionAttributes['url'])) {
+            if (isset($customActionAttributes['userInput'])
+                && isset($customActionAttributes['locale'])
+                && isset($customActionAttributes['currency'])) {
+                $input = $this->parseUserInput($customActionAttributes['userInput']);
+            } elseif (isset($customActionAttributes['userInput']) && isset($customActionAttributes['url'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['userInput']);
                 $url = $this->addUniquenessFunctionCall($customActionAttributes['url']);
             } elseif (isset($customActionAttributes['userInput'])) {
@@ -770,6 +775,10 @@ class TestGenerator
 
             if (isset($customActionAttributes['locale'])) {
                 $locale = $this->wrapWithDoubleQuotes($customActionAttributes['locale']);
+            }
+
+            if (isset($customActionAttributes['currency'])) {
+                $currency = $this->wrapWithDoubleQuotes($customActionAttributes['currency']);
             }
 
             if (isset($customActionAttributes['username'])) {
@@ -1081,6 +1090,7 @@ class TestGenerator
                     break;
                 case "selectOption":
                 case "unselectOption":
+                case "seeNumberOfElements":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
                         $actionObject,
@@ -1162,13 +1172,14 @@ class TestGenerator
                         $selector
                     );
                     break;
-                case "formatMoney":
+                case "formatCurrency":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
                         $actionObject,
                         $input,
-                        $locale
+                        $locale,
+                        $currency
                     );
                     break;
                 case "mSetLocale":
@@ -1195,6 +1206,7 @@ class TestGenerator
                     );
                     break;
                 case "grabPageSource":
+                case "getOTP":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
@@ -1244,15 +1256,6 @@ class TestGenerator
                 case "seeOptionIsSelected":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input);
                     break;
-                case "seeNumberOfElements":
-                    $testSteps .= $this->wrapFunctionCall(
-                        $actor,
-                        $actionObject,
-                        $selector,
-                        $input,
-                        $parameterArray
-                    );
-                    break;
                 case "seeInPageSource":
                 case "dontSeeInPageSource":
                 case "seeInSource":
@@ -1272,15 +1275,12 @@ class TestGenerator
                         $visible
                     );
                     break;
-                case "assertEquals":
                 case "assertGreaterOrEquals":
                 case "assertGreaterThan":
                 case "assertGreaterThanOrEqual":
-                case "assertInternalType":
                 case "assertLessOrEquals":
                 case "assertLessThan":
                 case "assertLessThanOrEqual":
-                case "assertNotEquals":
                 case "assertInstanceOf":
                 case "assertNotInstanceOf":
                 case "assertNotRegExp":
@@ -1294,6 +1294,10 @@ class TestGenerator
                 case "assertCount":
                 case "assertContains":
                 case "assertNotContains":
+                case "assertStringContainsString":
+                case "assertStringContainsStringIgnoringCase":
+                case "assertStringNotContainsString":
+                case "assertStringNotContainsStringIgnoringCase":
                 case "expectException":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
@@ -1302,6 +1306,31 @@ class TestGenerator
                         $assertActual,
                         $assertMessage,
                         $assertDelta
+                    );
+                    break;
+                case "assertEquals":
+                case "assertNotEquals":
+                case "assertEqualsIgnoringCase":
+                case "assertNotEqualsIgnoringCase":
+                case "assertEqualsCanonicalizing":
+                case "assertNotEqualsCanonicalizing":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $assertExpected,
+                        $assertActual,
+                        $assertMessage
+                    );
+                    break;
+                case "assertEqualsWithDelta":
+                case "assertNotEqualsWithDelta":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $assertExpected,
+                        $assertActual,
+                        $assertDelta,
+                        $assertMessage
                     );
                     break;
                 case "assertElementContainsAttribute":
@@ -1331,16 +1360,6 @@ class TestGenerator
                         $actor,
                         $actionObject,
                         $assertActual,
-                        $assertMessage
-                    );
-                    break;
-                case "assertArraySubset":
-                    $testSteps .= $this->wrapFunctionCall(
-                        $actor,
-                        $actionObject,
-                        $assertExpected,
-                        $assertActual,
-                        $assertIsStrict,
                         $assertMessage
                     );
                     break;
@@ -2260,5 +2279,28 @@ class TestGenerator
     private function hasDecimalPoint(string $outStr)
     {
         return strpos($outStr, localeconv()['decimal_point']) !== false;
+    }
+
+    /**
+     * Parse action attribute `userInput`
+     *
+     * @param string $userInput
+     * @return string
+     */
+    private function parseUserInput($userInput)
+    {
+        $floatPattern = '/^\s*([+-]?[0-9]*\.?[0-9]+)\s*$/';
+        preg_match($floatPattern, $userInput, $float);
+        if (isset($float[1])) {
+            return $float[1];
+        }
+
+        $intPattern = '/^\s*([+-]?[0-9]+)\s*$/';
+        preg_match($intPattern, $userInput, $int);
+        if (isset($int[1])) {
+            return $int[1];
+        }
+
+        return $this->addUniquenessFunctionCall($userInput);
     }
 }

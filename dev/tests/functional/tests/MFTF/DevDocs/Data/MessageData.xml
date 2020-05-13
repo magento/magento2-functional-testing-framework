@@ -10,5 +10,11 @@
           xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
     <entity name="MessageData">
         <data key="message">Introduction to the Magento Functional Testing Framework</data>
+        <array key="numbers">
+            <item name="zero">0</item>
+            <item name="one">1</item>
+            <item name="two">2</item>
+            <item name="three">3</item>
+        </array>
     </entity>
 </entities>

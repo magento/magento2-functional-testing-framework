@@ -4,16 +4,17 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl;
+namespace Magento\FunctionalTestingFramework\DataTransport;
 
-use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
-use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
+use Magento\FunctionalTestingFramework\Util\MftfGlobals;
+use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlInterface;
+use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlTransport;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
 /**
  * Curl executor for requests to Frontend.
  */
-class FrontendExecutor extends AbstractExecutor implements CurlInterface
+class FrontendFormExecutor implements CurlInterface
 {
     /**
      * Curl transport protocol.
@@ -58,7 +59,7 @@ class FrontendExecutor extends AbstractExecutor implements CurlInterface
     private $customerPassword;
 
     /**
-     * FrontendExecutor constructor.
+     * FrontendFormExecutor constructor.
      *
      * @param string $customerEmail
      * @param string $customerPassWord
@@ -81,11 +82,11 @@ class FrontendExecutor extends AbstractExecutor implements CurlInterface
      */
     private function authorize()
     {
-        $url = $this->getBaseUrl() . 'customer/account/login/';
+        $url = MftfGlobals::getBaseUrl() . 'customer/account/login/';
         $this->transport->write($url, [], CurlInterface::GET);
         $this->read();
 
-        $url = $this->getBaseUrl() . 'customer/account/loginPost/';
+        $url = MftfGlobals::getBaseUrl() . 'customer/account/loginPost/';
         $data = [
             'login[username]' => $this->customerEmail,
             'login[password]' => $this->customerPassword,
@@ -143,7 +144,7 @@ class FrontendExecutor extends AbstractExecutor implements CurlInterface
         if (isset($data['customer_password'])) {
             unset($data['customer_password']);
         }
-        $apiUrl = $this->getBaseUrl() . $url;
+        $apiUrl = MftfGlobals::getBaseUrl() . $url;
         if ($this->formKey) {
             $data['form_key'] = $this->formKey;
         } else {

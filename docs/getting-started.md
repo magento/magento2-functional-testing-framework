@@ -109,6 +109,10 @@ Clean the cache after changing the configuration values:
 bin/magento cache:clean config full_page
 ```
 
+### Testing with the Magento Two-Factor Authentication (2FA) extension {#2fa}
+
+If the Magento instance under test has the [Magento Two-Factor Authentication (2FA) extension][] installed and enabled, additional configurations is needed to run MFTF tests. Learn more in [Configure MFTF for Magento with Two-Factor Authentication (2FA)](./configure-2fa.md).
+
 ### Webserver configuration {#web-server-configuration}
 
 The MFTF does not support executing CLI commands if your web server points to `<MAGE_ROOT_DIR>/pub` directory as recommended in the [Installation Guide][Installation Guide docroot]. For the MFTF to execute the CLI commands, the web server must point to the Magento root directory.
@@ -357,3 +361,4 @@ allure serve dev/tests/_output/allure-results/
 [test suite]: suite.html
 [Find your MFTF version]: introduction.html#find-your-mftf-version
 [Installation Guide docroot]: https://devdocs.magento.com/guides/v2.3/install-gde/tutorials/change-docroot-to-pub.html
+[Magento Two-Factor Authentication (2FA) extension]: https://devdocs.magento.com/guides/v2.3/security/two-factor-authentication.html

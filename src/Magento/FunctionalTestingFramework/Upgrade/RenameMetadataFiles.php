@@ -26,9 +26,10 @@ class RenameMetadataFiles implements UpgradeInterface
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $scriptUtil = new ScriptUtil();
         $testPaths[] = $input->getArgument('path');
         if (empty($testPaths[0])) {
-            $testPaths = ScriptUtil::getAllModulePaths();
+            $testPaths = $scriptUtil->getAllModulePaths();
         }
 
         foreach ($testPaths as $testsPath) {

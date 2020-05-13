@@ -55,12 +55,14 @@ class AnnotationExtractor extends BaseObjectExtractor
      * This method trims away irrelevant tags and returns annotations used in the array passed. The annotations
      * can be found in both Tests and their child element tests.
      *
-     * @param array  $testAnnotations
-     * @param string $filename
+     * @param array   $testAnnotations
+     * @param string  $filename
+     * @param boolean $validateAnnotations
      * @return array
      * @throws XmlException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function extractAnnotations($testAnnotations, $filename)
+    public function extractAnnotations($testAnnotations, $filename, $validateAnnotations = true)
     {
         $annotationObjects = [];
         $annotations = $this->stripDescriptorTags($testAnnotations, self::NODE_NAME);
@@ -82,7 +84,9 @@ class AnnotationExtractor extends BaseObjectExtractor
 
             if ($annotationKey == "skip") {
                 $annotationData = $annotationData['issueId'];
-                $this->validateSkippedIssues($annotationData, $filename);
+                if ($validateAnnotations) {
+                    $this->validateSkippedIssues($annotationData, $filename);
+                }
             }
 
             foreach ($annotationData as $annotationValue) {
@@ -100,7 +104,9 @@ class AnnotationExtractor extends BaseObjectExtractor
         }
 
         $this->addTestCaseIdToTitle($annotationObjects, $filename);
-        $this->validateMissingAnnotations($annotationObjects, $filename);
+        if ($validateAnnotations) {
+            $this->validateMissingAnnotations($annotationObjects, $filename);
+        }
         $this->addStoryTitleToMap($annotationObjects, $filename);
 
         return $annotationObjects;

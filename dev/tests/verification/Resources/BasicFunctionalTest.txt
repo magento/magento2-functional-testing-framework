@@ -112,6 +112,7 @@ class BasicFunctionalTestCest
 		$date->setTimezone(new \DateTimeZone("UTC"));
 		$generateDateKey2 = $date->format("H:i:s");
 
+		$getOtp = $I->getOTP(); // stepKey: getOtp
 		$grabAttributeFromKey1 = $I->grabAttributeFrom(".functionalTestSelector", "someInput"); // stepKey: grabAttributeFromKey1
 		$grabCookieKey1 = $I->grabCookie("grabCookieInput", ['domain' => 'www.google.com']); // stepKey: grabCookieKey1
 		$grabFromCurrentUrlKey1 = $I->grabFromCurrentUrl("/grabCurrentUrl"); // stepKey: grabFromCurrentUrlKey1
@@ -138,7 +139,7 @@ class BasicFunctionalTestCest
 		$I->moveForward(); // stepKey: moveForwardKey1
 		$I->moveMouseOver(".functionalTestSelector"); // stepKey: moveMouseOverKey1
 		$I->openNewTab(); // stepKey: openNewTabKey1
-		$I->pauseExecution(); // stepKey: pauseExecutionKey1
+		$I->pause(); // stepKey: pauseKey1
 		$I->pressKey("#page", "a"); // stepKey: pressKey1
 		$I->pressKey("#page", ['ctrl', 'a'],'new'); // stepKey: pressKey2
 		$I->pressKey("#page", ['shift', '111'],'1','x'); // stepKey: pressKey3

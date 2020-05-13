@@ -64,15 +64,16 @@ class RemoveModuleFileInSuiteFiles implements UpgradeInterface
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $scriptUtil = new ScriptUtil();
         $this->setOutputStyle($input, $output);
         $this->output = $output;
         $testPaths[] = $input->getArgument('path');
         if (empty($testPaths[0])) {
-            $testPaths = ScriptUtil::getAllModulePaths();
+            $testPaths = $scriptUtil->getAllModulePaths();
         }
 
         // Get module suite xml files
-        $xmlFiles = ScriptUtil::getModuleXmlFilesByScope($testPaths, 'Suite');
+        $xmlFiles = $scriptUtil->getModuleXmlFilesByScope($testPaths, 'Suite');
         $this->processXmlFiles($xmlFiles);
 
         return ("Removed module file reference in {$this->testsUpdated} suite file(s).");

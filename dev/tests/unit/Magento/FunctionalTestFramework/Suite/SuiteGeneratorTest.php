@@ -3,7 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace Tests\unit\Magento\FunctionalTestFramework\Suite;
+namespace tests\unit\Magento\FunctionalTestFramework\Suite;
 
 use AspectMock\Test as AspectMock;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
@@ -17,7 +17,7 @@ use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
 use Magento\FunctionalTestingFramework\Util\Manifest\DefaultTestManifest;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
 use tests\unit\Util\SuiteDataArrayBuilder;
 use tests\unit\Util\TestDataArrayBuilder;
@@ -29,7 +29,7 @@ class SuiteGeneratorTest extends MagentoTestCase
     /**
      * Setup entry append and clear for Suite Generator
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         AspectMock::double(SuiteGenerator::class, [
             'clearPreviousSessionConfigEntries' => null,
@@ -41,7 +41,7 @@ class SuiteGeneratorTest extends MagentoTestCase
      * Before test functionality
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
         $resolverMock = new MockModuleResolverBuilder();
@@ -181,7 +181,7 @@ class SuiteGeneratorTest extends MagentoTestCase
 
         // Set up Expected Exception
         $this->expectException(TestReferenceException::class);
-        $this->expectExceptionMessageRegExp('(Suite: "Suite2" Tests: "Test1")');
+        $this->expectExceptionMessageMatches('(Suite: "Suite2" Tests: "Test1")');
 
         // parse and generate suite object with mocked data and manifest
         $mockSuiteGenerator = SuiteGenerator::getInstance();
@@ -205,7 +205,7 @@ class SuiteGeneratorTest extends MagentoTestCase
 
         // Set up Expected Exception
         $this->expectException(TestReferenceException::class);
-        $this->expectExceptionMessageRegExp('#Suite3 is not defined#');
+        $this->expectExceptionMessageMatches('#Suite3 is not defined#');
 
         // parse and generate suite object with mocked data and manifest
         $mockSuiteGenerator = SuiteGenerator::getInstance();
@@ -274,7 +274,7 @@ class SuiteGeneratorTest extends MagentoTestCase
     /**
      * clean up function runs after all tests
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
         parent::tearDownAfterClass();
