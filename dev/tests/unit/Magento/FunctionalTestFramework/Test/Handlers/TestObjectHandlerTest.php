@@ -4,7 +4,7 @@
  * See COPYING.txt for license details.
  */
 
-namespace Tests\unit\Magento\FunctionalTestFramework\Test\Handlers;
+namespace tests\unit\Magento\FunctionalTestFramework\Test\Handlers;
 
 use AspectMock\Test as AspectMock;
 
@@ -16,7 +16,7 @@ use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\TestDataArrayBuilder;
 use tests\unit\Util\MockModuleResolverBuilder;
 
@@ -283,7 +283,7 @@ class TestObjectHandlerTest extends MagentoTestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         AspectMock::clean();
     }

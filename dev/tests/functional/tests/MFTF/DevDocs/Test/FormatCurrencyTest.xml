@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="FormatCurrencyTest">
+        <comment userInput="formatCurrency uses NumberFormatter::formatCurrency(), see https://www.php.net/manual/en/numberformatter.formatcurrency.php" stepKey="comment"/>
+        <formatCurrency userInput="1234.56789000" locale="de_DE" currency="EUR" stepKey="eurInDE"/>
+        <assertEquals  stepKey="assertEurInDE">
+            <expectedResult type="string">1.234,57 €</expectedResult>
+            <actualResult type="variable">$eurInDE</actualResult>
+        </assertEquals>
+        <formatCurrency userInput="+1234" locale="de_DE" currency="EUR" stepKey="eurInDEPos"/>
+        <assertEquals  stepKey="assertEurInDEPos">
+            <expectedResult type="string">1.234,00 €</expectedResult>
+            <actualResult type="variable">$eurInDEPos</actualResult>
+        </assertEquals>
+        <formatCurrency userInput="-1234.56" locale="de_DE" currency="EUR" stepKey="eurInDENeg"/>
+        <assertEquals  stepKey="assertEurInDENeg">
+            <expectedResult type="string">-1.234,56 €</expectedResult>
+            <actualResult type="variable">$eurInDENeg</actualResult>
+        </assertEquals>
+
+        <formatCurrency userInput="1234.56789000" locale="de_DE" currency="USD" stepKey="usdInDE"/>
+        <assertEquals  stepKey="assertUsdInDE">
+            <expectedResult type="string">1.234,57 $</expectedResult>
+            <actualResult type="variable">$usdInDE</actualResult>
+        </assertEquals>
+        <formatCurrency userInput="+1234" locale="de_DE" currency="USD" stepKey="usdInDEPos"/>
+        <assertEquals  stepKey="assertUsdInDEPos">
+            <expectedResult type="string">1.234,00 $</expectedResult>
+            <actualResult type="variable">$usdInDEPos</actualResult>
+        </assertEquals>
+        <formatCurrency userInput="-1234.56" locale="de_DE" currency="USD" stepKey="usdInDENeg"/>
+        <assertEquals  stepKey="assertUsdInDENeg">
+            <expectedResult type="string">-1.234,56 $</expectedResult>
+            <actualResult type="variable">$usdInDENeg</actualResult>
+        </assertEquals>
+
+        <executeJS function="return 10.5;" stepKey="variable"/>
+        <formatCurrency userInput="$variable" locale="de_DE" currency="EUR" stepKey="usingVariable"/>
+        <assertEquals  stepKey="assertUsingVariable">
+            <expectedResult type="string">10,50 €</expectedResult>
+            <actualResult type="variable">$usingVariable</actualResult>
+        </assertEquals>
+    </test>
+</tests>

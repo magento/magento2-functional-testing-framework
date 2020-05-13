@@ -32,6 +32,19 @@ class Root extends Mask
             . DIRECTORY_SEPARATOR . '*.xml'
         );
 
+        // include root suite dir when running standalone version
+        $altPath = FilePathFormatter::format(MAGENTO_BP) . 'dev/tests/acceptance';
+
+        if (realpath($altPath) && ($altPath !== TESTS_BP)) {
+            $paths = array_merge(
+                $paths,
+                glob(
+                    FilePathFormatter::format($altPath) . self::ROOT_SUITE_DIR
+                    . DIRECTORY_SEPARATOR . '*.xml'
+                )
+            );
+        }
+
         // Then merge this path into the module based paths
         // Since we are sharing this code with Module based resolution we will unnecessarily glob against modules in the
         // dev/tests dir tree, however as we plan to migrate to app/code this will be a temporary unneeded check.

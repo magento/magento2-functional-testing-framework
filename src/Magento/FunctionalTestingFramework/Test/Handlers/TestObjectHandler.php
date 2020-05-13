@@ -53,11 +53,11 @@ class TestObjectHandler implements ObjectHandlerInterface
      * @return TestObjectHandler
      * @throws XmlException
      */
-    public static function getInstance()
+    public static function getInstance($validateAnnotations = true)
     {
         if (!self::$testObjectHandler) {
             self::$testObjectHandler = new TestObjectHandler();
-            self::$testObjectHandler->initTestData();
+            self::$testObjectHandler->initTestData($validateAnnotations);
         }
 
         return self::$testObjectHandler;
@@ -129,7 +129,7 @@ class TestObjectHandler implements ObjectHandlerInterface
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      * @throws XmlException
      */
-    private function initTestData()
+    private function initTestData($validateAnnotations = true)
     {
         $testDataParser = ObjectManagerFactory::getObjectManager()->create(TestDataParser::class);
         $parsedTestArray = $testDataParser->readTestData();
@@ -150,15 +150,17 @@ class TestObjectHandler implements ObjectHandlerInterface
                 continue;
             }
             try {
-                $this->tests[$testName] = $testObjectExtractor->extractTestData($testData);
+                $this->tests[$testName] = $testObjectExtractor->extractTestData($testData, $validateAnnotations);
             } catch (XmlException $exception) {
                 $exceptionCollector->addError(self::class, $exception->getMessage());
             }
         }
         $exceptionCollector->throwException();
         $testNameValidator->summarize(NameValidationUtil::TEST_NAME);
-        $testObjectExtractor->getAnnotationExtractor()->validateStoryTitleUniqueness();
-        $testObjectExtractor->getAnnotationExtractor()->validateTestCaseIdTitleUniqueness();
+        if ($validateAnnotations) {
+            $testObjectExtractor->getAnnotationExtractor()->validateStoryTitleUniqueness();
+            $testObjectExtractor->getAnnotationExtractor()->validateTestCaseIdTitleUniqueness();
+        }
     }
 
     /**

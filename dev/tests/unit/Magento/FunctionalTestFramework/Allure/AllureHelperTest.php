@@ -3,7 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace Tests\unit\Magento\FunctionalTestingFramework\Allure;
+namespace tests\unit\Magento\FunctionalTestFramework\Allure;
 
 use Magento\FunctionalTestingFramework\Allure\AllureHelper;
 use Magento\FunctionalTestingFramework\Allure\Event\AddUniqueAttachmentEvent;
@@ -22,7 +22,7 @@ class AllureHelperTest extends TestCase
     /**
      * Clear Allure Lifecycle
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         Allure::setDefaultLifecycle();
         AspectMock::clean();

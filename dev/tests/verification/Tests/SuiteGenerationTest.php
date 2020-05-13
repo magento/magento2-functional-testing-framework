@@ -39,7 +39,7 @@ class SuiteGenerationTest extends MftfTestCase
     /**
      * Set up config.yml for testing
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         // destroy _generated if it exists
         if (file_exists(self::GENERATE_RESULT_DIR)) {
@@ -47,7 +47,7 @@ class SuiteGenerationTest extends MftfTestCase
         }
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         // copy config yml file to test dir
         $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
@@ -118,10 +118,10 @@ class SuiteGenerationTest extends MftfTestCase
         $groupName = 'functionalSuite1';
 
         $expectedGroups = [
-            'functionalSuite1_0',
-            'functionalSuite1_1',
-            'functionalSuite1_2',
-            'functionalSuite1_3'
+            'functionalSuite1_0_G',
+            'functionalSuite1_1_G',
+            'functionalSuite1_2_G',
+            'functionalSuite1_3_G'
         ];
 
         $expectedContents = [
@@ -392,7 +392,7 @@ class SuiteGenerationTest extends MftfTestCase
      * revert any changes made to config.yml
      * remove _generated directory
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         DirSetupUtil::rmdirRecursive(self::GENERATE_RESULT_DIR);
 
@@ -406,7 +406,7 @@ class SuiteGenerationTest extends MftfTestCase
     /**
      * Remove yml if created during tests and did not exist before
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }

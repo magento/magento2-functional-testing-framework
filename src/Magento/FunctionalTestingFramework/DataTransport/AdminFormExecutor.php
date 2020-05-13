@@ -4,17 +4,19 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl;
+namespace Magento\FunctionalTestingFramework\DataTransport;
 
-use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
-use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
-use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
+use Magento\FunctionalTestingFramework\Util\MftfGlobals;
+use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlInterface;
+use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlTransport;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\DataTransport\Auth\Tfa\OTP;
+use Magento\FunctionalTestingFramework\DataTransport\Auth\Tfa;
 
 /**
  * Curl executor for requests to Admin.
  */
-class AdminExecutor extends AbstractExecutor implements CurlInterface
+class AdminFormExecutor implements CurlInterface
 {
     /**
      * Curl transport protocol.
@@ -58,25 +60,6 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
     }
 
     /**
-     * Returns base URL for Magento backend instance
-     * @return string
-     * @throws TestFrameworkException
-     */
-    public function getBaseUrl(): string
-    {
-        $backendHost = getenv('MAGENTO_BACKEND_BASE_URL')
-            ?
-            UrlFormatter::format(getenv('MAGENTO_BACKEND_BASE_URL'))
-            :
-            parent::getBaseUrl();
-        return empty(getenv('MAGENTO_BACKEND_NAME'))
-            ?
-            $backendHost
-            :
-            $backendHost . getenv('MAGENTO_BACKEND_NAME') . '/';
-    }
-
-    /**
      * Authorize admin on backend.
      *
      * @return void
@@ -85,11 +68,11 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
     private function authorize()
     {
         // Perform GET to backend url so form_key is set
-        $this->transport->write($this->getBaseUrl(), [], CurlInterface::GET);
+        $this->transport->write(MftfGlobals::getBackendBaseUrl(), [], CurlInterface::GET);
         $this->read();
 
         // Authenticate admin user
-        $authUrl = $this->getBaseUrl() . 'admin/auth/login/';
+        $authUrl = MftfGlobals::getBackendBaseUrl() . 'admin/auth/login/';
         $data = [
             'login[username]' => getenv('MAGENTO_ADMIN_USERNAME'),
             'login[password]' => getenv('MAGENTO_ADMIN_PASSWORD'),
@@ -97,8 +80,24 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
         ];
         $this->transport->write($authUrl, $data, CurlInterface::POST);
         $response = $this->read();
+
         if (strpos($response, 'login-form')) {
             throw new TestFrameworkException('Admin user authentication failed!');
+        }
+
+        // Get OTP
+        if (Tfa::isEnabled()) {
+            $authUrl = MftfGlobals::getBackendBaseUrl() . Tfa::getProviderAdminFormEndpoint('google');
+            $data = [
+                'tfa_code' => OTP::getOTP(),
+                'form_key' => $this->formKey,
+            ];
+            $this->transport->write($authUrl, $data, CurlInterface::POST);
+            $response = json_decode($this->read());
+
+            if (!$response->success) {
+                throw new TestFrameworkException('Admin user 2FA authentication failed!');
+            }
         }
     }
 
@@ -128,10 +127,11 @@ class AdminExecutor extends AbstractExecutor implements CurlInterface
     public function write($url, $data = [], $method = CurlInterface::POST, $headers = [])
     {
         $url = ltrim($url, "/");
-        $apiUrl = $this->getBaseUrl() . $url;
+        $apiUrl = MftfGlobals::getBackendBaseUrl() . $url;
 
         if ($this->removeBackend) {
-            $apiUrl = parent::getBaseUrl() . $url;
+            //TODO
+            //Cannot find usage. Do we need this?
         }
 
         if ($this->formKey) {

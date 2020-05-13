@@ -4,11 +4,11 @@
  * See COPYING.txt for license details.
  */
 
-namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
+namespace tests\unit\Magento\FunctionalTestFramework\Util;
 
 use ReflectionClass;
 use Magento\FunctionalTestingFramework\Util\ComposerModuleResolver;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 
 class ComposerModuleResolverTest extends MagentoTestCase
 {

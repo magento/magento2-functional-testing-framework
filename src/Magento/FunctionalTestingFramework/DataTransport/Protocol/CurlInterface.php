@@ -4,7 +4,7 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magento\FunctionalTestingFramework\Util\Protocol;
+namespace Magento\FunctionalTestingFramework\DataTransport\Protocol;
 
 /**
  * Curl protocol interface.
