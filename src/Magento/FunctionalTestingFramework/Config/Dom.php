@@ -246,8 +246,8 @@ class Dom
         $idAttribute = $this->nodeMergingConfig->getIdAttribute($path);
         if ($idAttribute) {
             foreach (explode('|', $idAttribute) as $idAttributeValue) {
-                if ($value = $node->getAttribute($idAttributeValue)) {
-                    $path .= "[@{$idAttributeValue}='{$value}']";
+                if ($node->hasAttribute($idAttributeValue)) {
+                    $path .= "[@{$idAttributeValue}='" . $node->getAttribute($idAttributeValue) . "']";
                     break;
                 }
             }
