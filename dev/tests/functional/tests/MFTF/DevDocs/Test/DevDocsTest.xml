@@ -46,6 +46,10 @@
             <argument name="test" value="{{HelperData.entityField}}" />
             <argument name="entityTest" value="HelperData" />
         </actionGroup>
-        <comment userInput="{{MessageData.numbers}}" stepKey="outputMergedArray" />
+
+        <assertEqualsCanonicalizing stepKey="assertMergedArray">
+            <actualResult type="array">{{MessageData.numbers}}</actualResult>
+            <expectedResult type="array">["Something New", "0", "1", "2", "3"]</expectedResult>
+        </assertEqualsCanonicalizing>
     </test>
 </tests>
