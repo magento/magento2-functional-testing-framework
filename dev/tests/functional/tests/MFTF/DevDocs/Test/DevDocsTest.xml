@@ -46,5 +46,6 @@
             <argument name="test" value="{{HelperData.entityField}}" />
             <argument name="entityTest" value="HelperData" />
         </actionGroup>
+        <comment userInput="{{MessageData.numbers}}" stepKey="outputMergedArray" />
     </test>
 </tests>
