@@ -6,7 +6,7 @@
 namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
 
 use Magento\FunctionalTestingFramework\Test\Util\ActionGroupObjectExtractor;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\TestLoggingUtil;
 
 class ActionGroupObjectExtractorTest extends MagentoTestCase

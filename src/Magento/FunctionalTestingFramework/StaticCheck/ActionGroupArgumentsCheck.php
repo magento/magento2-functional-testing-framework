@@ -12,6 +12,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Finder\Finder;
 use Exception;
 use Magento\FunctionalTestingFramework\Util\Script\ScriptUtil;
+use Symfony\Component\Finder\SplFileInfo;
+use DOMElement;
 
 /**
  * Class ActionGroupArgumentsCheck
@@ -19,10 +21,7 @@ use Magento\FunctionalTestingFramework\Util\Script\ScriptUtil;
  */
 class ActionGroupArgumentsCheck implements StaticCheckInterface
 {
-    const ACTIONGROUP_XML_REGEX_PATTERN = '/<actionGroup\sname=(?: (?!<\/actionGroup>).)*/mxs';
-    const ACTIONGROUP_ARGUMENT_REGEX_PATTERN = '/<argument[^\/>]*name="([^"\']*)/mxs';
     const ACTIONGROUP_NAME_REGEX_PATTERN = '/<actionGroup name=["\']([^\'"]*)/';
-
     const ERROR_LOG_FILENAME = 'mftf-arguments-checks';
     const ERROR_LOG_MESSAGE = 'MFTF Action Group Unused Arguments Check';
 
@@ -97,45 +96,62 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
     private function findErrorsInFileSet($files)
     {
         $actionGroupErrors = [];
+        /** @var SplFileInfo $filePath */
         foreach ($files as $filePath) {
-            $contents = file_get_contents($filePath);
-            preg_match_all(self::ACTIONGROUP_XML_REGEX_PATTERN, $contents, $actionGroups);
-            $actionGroupToArguments = $this->buildUnusedArgumentList($actionGroups[0]);
-            $actionGroupErrors += $this->setErrorOutput($actionGroupToArguments, $filePath);
+            $actionGroupToArguments = [];
+            $contents = $filePath->getContents();
+            /** @var DOMElement $actionGroup */
+            $actionGroup = $this->getActionGroupDomElement($contents);
+            $arguments = $this->extractActionGroupArguments($actionGroup);
+            $unusedArguments = $this->findUnusedArguments($arguments, $contents);
+            if (!empty($unusedArguments)) {
+                $actionGroupToArguments[$actionGroup->getAttribute('name')] = $unusedArguments;
+                $actionGroupErrors += $this->setErrorOutput($actionGroupToArguments, $filePath);
+            }
         }
         return $actionGroupErrors;
     }
 
     /**
-     * Builds array of action group => unused arguments
-     * @param array $actionGroups
-     * @return array $actionGroupToArguments
+     * Extract actionGroup DomElement from xml file
+     * @param string $contents
+     * @return \DOMElement
      */
-    private function buildUnusedArgumentList($actionGroups)
+    public function getActionGroupDomElement($contents)
     {
-        $actionGroupToArguments = [];
+        $domDocument = new \DOMDocument();
+        $domDocument->loadXML($contents);
+        return $domDocument->getElementsByTagName('actionGroup')[0];
+    }
 
-        foreach ($actionGroups as $actionGroupXml) {
-            preg_match(self::ACTIONGROUP_NAME_REGEX_PATTERN, $actionGroupXml, $actionGroupName);
-            $unusedArguments = $this->findUnusedArguments($actionGroupXml);
-            if (!empty($unusedArguments)) {
-                $actionGroupToArguments[$actionGroupName[1]] = $unusedArguments;
+    /**
+     * Get list of action group arguments declared in an action group
+     * @param \DOMElement $actionGroup
+     * @return array $arguments
+     */
+    public function extractActionGroupArguments($actionGroup)
+    {
+        $arguments = [];
+        $argumentsNodes = $actionGroup->getElementsByTagName('arguments');
+        if ($argumentsNodes->length > 0) {
+            $argumentNodes = $argumentsNodes[0]->getElementsByTagName('argument');
+            foreach ($argumentNodes as $argumentNode) {
+                $arguments[] = $argumentNode->getAttribute('name');
             }
         }
-        return $actionGroupToArguments;
+        return $arguments;
     }
 
     /**
      * Returns unused arguments in an action group
-     * @param string $actionGroupXml
+     * @param array  $arguments
+     * @param string $contents
      * @return array
      */
-    private function findUnusedArguments($actionGroupXml)
+    public function findUnusedArguments($arguments, $contents)
     {
         $unusedArguments = [];
-
-        preg_match_all(self::ACTIONGROUP_ARGUMENT_REGEX_PATTERN, $actionGroupXml, $arguments);
-        preg_match(self::ACTIONGROUP_NAME_REGEX_PATTERN, $actionGroupXml, $actionGroupName);
+        preg_match(self::ACTIONGROUP_NAME_REGEX_PATTERN, $contents, $actionGroupName);
         $validActionGroup = false;
         try {
             $actionGroup = ActionGroupObjectHandler::getInstance()->getObject($actionGroupName[1]);
@@ -149,18 +165,18 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
             return $unusedArguments;
         }
 
-        foreach ($arguments[1] as $argument) {
+        foreach ($arguments as $argument) {
             //pattern to match all argument references
             $patterns = [
                 '(\{{2}' . $argument . '(\.[a-zA-Z0-9_\[\]\(\).,\'\/ ]+)?}{2})',
                 '([(,\s\'$$]' . $argument . '(\.[a-zA-Z0-9_$\[\]]+)?[),\s\'])'
             ];
             // matches entity references
-            if (preg_match($patterns[0], $actionGroupXml)) {
+            if (preg_match($patterns[0], $contents)) {
                 continue;
             }
             //matches parametrized references
-            if (preg_match($patterns[1], $actionGroupXml)) {
+            if (preg_match($patterns[1], $contents)) {
                 continue;
             }
             //for extending action groups, exclude arguments that are also defined in parent action group
@@ -196,8 +212,8 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
     /**
      * Builds and returns error output for violating references
      *
-     * @param array  $actionGroupToArguments
-     * @param string $path
+     * @param array       $actionGroupToArguments
+     * @param SplFileInfo $path
      * @return mixed
      */
     private function setErrorOutput($actionGroupToArguments, $path)

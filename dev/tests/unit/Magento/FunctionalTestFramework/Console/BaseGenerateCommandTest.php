@@ -3,7 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace Tests\unit\Magento\FunctionalTestingFramework\Console;
+namespace tests\unit\Magento\FunctionalTestFramework\Console;
 
 use AspectMock\Test as AspectMock;
 use PHPUnit\Framework\TestCase;

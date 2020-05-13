@@ -4,13 +4,11 @@
  * See COPYING.txt for license details.
  */
 
-namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
+namespace tests\unit\Magento\FunctionalTestFramework\Util\Validation;
 
 use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
-use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Util\Validation\DuplicateNodeValidationUtil;
-use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 
 class DuplicateNodeValidationUtilTest extends MagentoTestCase
 {

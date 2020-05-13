@@ -17,7 +17,7 @@ use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
 use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use tests\unit\Util\TestLoggingUtil;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 
 /**
  * Class ActionObjectTest

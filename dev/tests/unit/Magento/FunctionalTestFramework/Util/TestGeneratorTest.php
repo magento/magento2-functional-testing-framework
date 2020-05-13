@@ -4,7 +4,7 @@
  * See COPYING.txt for license details.
  */
 
-namespace Tests\unit\Magento\FunctionalTestFramework\Test\Handlers;
+namespace tests\unit\Magento\FunctionalTestFramework\Util;
 
 use AspectMock\Test as AspectMock;
 
@@ -12,7 +12,7 @@ use Magento\FunctionalTestingFramework\Filter\FilterList;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 

@@ -4,12 +4,12 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl;
+namespace Magento\FunctionalTestingFramework\DataTransport;
 
 /**
  * Curl executor for Magento Web Api requests that do not require authorization.
  */
-class WebapiNoAuthExecutor extends WebapiExecutor
+class WebApiNoAuthExecutor extends WebApiExecutor
 {
     /**
      * No authorization is needed and just return.

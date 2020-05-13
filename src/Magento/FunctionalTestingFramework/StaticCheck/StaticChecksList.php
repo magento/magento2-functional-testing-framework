@@ -33,6 +33,7 @@ class StaticChecksList implements StaticCheckListInterface
             'testDependencies' => new TestDependencyCheck(),
             'actionGroupArguments' => new ActionGroupArgumentsCheck(),
             self::DEPRECATED_ENTITY_USAGE_CHECK_NAME => new DeprecatedEntityUsageCheck(),
+            'annotations' => new AnnotationsCheck()
         ] + $checks;
     }
 

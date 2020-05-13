@@ -3,7 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace Tests\unit\Magento\FunctionalTestFramework\Util\Sorter;
+namespace tests\unit\Magento\FunctionalTestFramework\Util\Sorter;
 
 use AspectMock\Test as AspectMock;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
@@ -11,7 +11,7 @@ use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Util\Sorter\ParallelGroupSorter;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 
 class ParallelGroupSorterTest extends MagentoTestCase
 {

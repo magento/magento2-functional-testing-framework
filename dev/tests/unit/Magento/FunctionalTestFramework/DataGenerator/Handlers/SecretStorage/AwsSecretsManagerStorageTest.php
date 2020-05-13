@@ -9,7 +9,7 @@ namespace tests\unit\Magento\FunctionalTestFramework\DataGenerator\Handlers\Secr
 use Aws\SecretsManager\SecretsManagerClient;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage\AwsSecretsManagerStorage;
 use Aws\Result;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 use ReflectionClass;
 
 class AwsSecretsManagerStorageTest extends MagentoTestCase

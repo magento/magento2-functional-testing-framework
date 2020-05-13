@@ -4,10 +4,10 @@
  * See COPYING.txt for license details.
  */
 
-namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
+namespace tests\unit\Magento\FunctionalTestFramework\Composer;
 
 use Magento\FunctionalTestingFramework\Composer\ComposerInstall;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 
 class ComposerInstallTest extends MagentoTestCase
 {
