@@ -157,6 +157,7 @@
             <argument name="idAttributes" xsi:type="array">
                 <item name="/entities/entity" xsi:type="string">name</item>
                 <item name="/entities/entity/(data|array)" xsi:type="string">key</item>
+                <item name="/entities/entity/array/item" xsi:type="string">name</item>
                 <item name="/entities/entity/requiredEntity" xsi:type="string">type</item>
             </argument>
             <argument name="mergeablePaths" xsi:type="array">
