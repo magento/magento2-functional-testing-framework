@@ -7,7 +7,7 @@
 namespace tests\unit\Magento\FunctionalTestFramework\DataGenerator\Handlers\SecretStorage;
 
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage\FileStorage;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 use AspectMock\Test as AspectMock;
 
 class FileStorageTest extends MagentoTestCase

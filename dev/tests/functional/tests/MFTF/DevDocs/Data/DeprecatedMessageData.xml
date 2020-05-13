@@ -11,4 +11,7 @@
     <entity name="DeprecatedMessageData" deprecated="Entity is deprecated. Please use 'MessageData'.">
         <data key="message">Introduction to the Magento Functional Testing Framework</data>
     </entity>
+    <entity name="MessageData">
+        <data key="justSomeField">Some data</data>
+    </entity>
 </entities>

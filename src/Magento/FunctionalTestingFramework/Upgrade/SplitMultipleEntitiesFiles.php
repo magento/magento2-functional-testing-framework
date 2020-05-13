@@ -69,16 +69,17 @@ class SplitMultipleEntitiesFiles implements UpgradeInterface
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $scriptUtil = new ScriptUtil();
         $this->output = $output;
         $this->testsUpdated = 0;
         $testPaths[] = $input->getArgument('path');
         if (empty($testPaths[0])) {
-            $testPaths = ScriptUtil::getAllModulePaths();
+            $testPaths = $scriptUtil->getAllModulePaths();
         }
 
         // Process module xml files
         foreach ($this->entityCategories as $type => $urn) {
-            $xmlFiles = ScriptUtil::getModuleXmlFilesByScope($testPaths, $type);
+            $xmlFiles = $scriptUtil->getModuleXmlFilesByScope($testPaths, $type);
             $this->processXmlFiles($xmlFiles, $type, $urn);
         }
 

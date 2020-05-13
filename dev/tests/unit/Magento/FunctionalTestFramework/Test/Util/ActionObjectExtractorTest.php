@@ -7,7 +7,7 @@ namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
 
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\TestLoggingUtil;
 
 class ActionObjectExtractorTest extends MagentoTestCase
@@ -18,7 +18,7 @@ class ActionObjectExtractorTest extends MagentoTestCase
     /**
      * Setup method
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->testActionObjectExtractor = new ActionObjectExtractor();
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
@@ -130,7 +130,7 @@ class ActionObjectExtractorTest extends MagentoTestCase
     /**
      * clean up function runs after all tests
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }

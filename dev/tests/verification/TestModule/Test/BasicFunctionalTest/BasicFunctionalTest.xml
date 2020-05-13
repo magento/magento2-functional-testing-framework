@@ -68,6 +68,7 @@
         <fillField selector=".functionalTestSelector" userInput="0" stepKey="fillFieldKey2" />
         <generateDate date="Now" format="H:i:s" stepKey="generateDateKey"/>
         <generateDate date="Now" format="H:i:s" stepKey="generateDateKey2" timezone="UTC"/>
+        <getOTP stepKey="getOtp"/>
         <grabAttributeFrom selector=".functionalTestSelector" userInput="someInput" stepKey="grabAttributeFromKey1" />
         <grabCookie userInput="grabCookieInput" parameterArray="['domain' => 'www.google.com']" stepKey="grabCookieKey1" />
         <grabFromCurrentUrl regex="/grabCurrentUrl" stepKey="grabFromCurrentUrlKey1" />
@@ -87,7 +88,7 @@
         <moveForward stepKey="moveForwardKey1"/>
         <moveMouseOver selector=".functionalTestSelector" stepKey="moveMouseOverKey1"/>
         <openNewTab stepKey="openNewTabKey1"/>
-        <pauseExecution stepKey="pauseExecutionKey1"/>
+        <pause stepKey="pauseKey1"/>
         <pressKey selector="#page" userInput="a" stepKey="pressKey1"/>
         <pressKey selector="#page" parameterArray="[['ctrl','a'],'new']" stepKey="pressKey2"/>
         <pressKey selector="#page" parameterArray="[['shift','111'],'1','x']" stepKey="pressKey3"/>

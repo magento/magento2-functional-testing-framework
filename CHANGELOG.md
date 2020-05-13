@@ -1,8 +1,69 @@
 Magento Functional Testing Framework Changelog
 ================================================
-3.0.0
------
+3.0.0 RC2
+---------
+
+### Enhancements
+
+*  Maintainability
+    *  Added support for PHP 7.4.
+    *  Removed support for PHP 7.2.
+    *  Added support for PHPUnit 9.
+    *  Improved assertion actions to support PHPUnit 9 changes. [See assertions page for details](./docs/test/assertions.md)   
+        *  Added new actions: `assertEqualsWithDelta`, `assertNotEqualsWithDelta`, `assertEqualsCanonicalizing`, `assertNotEqualsCanonicalizing`, `assertEqualsIgnoringCase`, `assertNotEqualsIgnoringCase`.
+        *  Added new actions: `assertStringContainsString`, `assertStringNotContainsString`, `assertStringContainsStringIgnoringCase`, `assertStringNotContainsStringIgnoringCase` for string haystacks.
+        *  Removed actions: `assertInternalType`, `assertNotInternalType`, `assertArraySubset`.
+        *  Removed delta option from `assertEquals` and `assertNotEquals`.
+    *  Removed action `pauseExecution` and added `pause`. [See actions page for details](./docs/test/actions.md#pause)
+    *  Removed action `formatMoney` and added `formatCurrency`. [See actions page for details](./docs/test/actions.md#formatcurrency)    
+    *  Added new static check that checks and reports references to deprecated test entities.
+*  Bumped dependencies to support PHP/PHPUnit upgrade.
+    
+*  Traceability 
+    *  Introduced new `.env` configuration `VERBOSE_ARTIFACTS` to toggle saving attachments in Allure. [See configuration page for details](./docs/configuration.md)  
+    
+### Fixes
+
+*  Fixed issue of resolving arguments of type `entity` in action groups within a custom helper.
+*  Fixed reporting issue in output file for `testDependencies` static check.
+*  Fixed a bug in `actionGroupArguments` static check when action group filename is missing `ActionGroup`.
+*  Fixed issue of running suites under root `_suite` directory in Standalone MFTF.
+
+### GitHub Issues/Pull Requests
+
+* [#567](https://github.com/magento/magento2-functional-testing-framework/pull/567) -- log attachments for failed requests.
+
+3.0.0 RC1
+---------
+
+### Enhancements
+
+* Customizability
+    * Introduced MFTF helpers `<helper>` to create custom actions outside of MFTF.
+    * Removed deprecated actions `<executeSelenium>` and `<performOn>`.
+* Maintainability
+    * Schema updates for test entities to only allow single entity per file except Data and Metadata.
+    * Support for sub-folders in test modules.
+    * Removed support to read test entities from `<magento>dev/tests/acceptance/tests/functional/Magento/FunctionalTest`. 
+    * Removed support for PHP 7.0 and 7.1.
+    * Removed file attribute for `<module>` in suiteSchema.
+* Traceability
+    * Removed `--debug` option NONE to disallow ability to turn off schema validation.
+    * Notices added for test entity naming convention violations.
+    * Metadata file names changed to `*Meta.xml`.
+* Readability
+    * Support only nested assertion syntax [See assertions page for details](./docs/test/assertions.md)       
+* Upgrade scripts added to upgrade tests to MFTF major version requirements. See upgrade instructions below.
+* Bumped dependencies to latest possible versions.
+
+### Fixes
+
+* Throw exception during generation when leaving out .url for `amOnPage`.
+* `request_timeout` and `connection_timeout` added to functional.suite.yml.dist.
+* Fixed `ModuleResolver` to resolve test modules moved out of deprecated path.
+
 ### Upgrade Instructions
+
 * Run `bin/mftf reset --hard` to remove old generated configurations.
 * Run `bin/mftf build:project` to generate new configurations.
 * Run `bin/mftf upgrade:tests`. [See command page for details](./docs/commands/mftf.md#upgradetests).
