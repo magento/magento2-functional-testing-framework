@@ -265,7 +265,7 @@ class PersistedObjectHandler
         foreach ($overrideFields as $index => $field) {
             if (is_array($field)) {
                 $overrideFields[$index] = $this->resolveOverrideFields($field);
-            } else {
+            } elseif (is_string($field)) {
                 try {
                     $decrptedField = CredentialStore::getInstance()->decryptAllSecretsInString($field);
                     if ($decrptedField !== false) {
