@@ -86,17 +86,6 @@ class PersistedObjectHandler
         foreach ($dependentObjectKeys as $objectKey) {
             $retrievedDependentObjects[] = $this->retrieveEntity($objectKey, $scope);
         }
-
-        foreach ($overrideFields as $index => $field) {
-            try {
-                $decrptedField = CredentialStore::getInstance()->decryptAllSecretsInString($field);
-                if ($decrptedField !== false) {
-                    $overrideFields[$index] = $decrptedField;
-                }
-            } catch (TestFrameworkException $e) {
-                //catch exception if Credentials are not defined
-            }
-        }
         
         $retrievedEntity = DataObjectHandler::getInstance()->getObject($entity);
 
@@ -106,6 +95,8 @@ class PersistedObjectHandler
                 "\nException occurred executing action at StepKey \"" . $key . "\""
             );
         }
+
+        $overrideFields = $this->resolveOverrideFields($overrideFields);
 
         $persistedObject = new DataPersistenceHandler(
             $retrievedEntity,
@@ -261,5 +252,30 @@ class PersistedObjectHandler
     public function clearSuiteObjects()
     {
         $this->suiteObjects = [];
+    }
+
+    /**
+     * Resolve secret values in $overrideFields
+     *
+     * @param array $overrideFields
+     * @return array
+     */
+    private function resolveOverrideFields($overrideFields)
+    {
+        foreach ($overrideFields as $index => $field) {
+            if (is_array($field)) {
+                $overrideFields[$index] = $this->resolveOverrideFields($field);
+            } elseif (is_string($field)) {
+                try {
+                    $decrptedField = CredentialStore::getInstance()->decryptAllSecretsInString($field);
+                    if ($decrptedField !== false) {
+                        $overrideFields[$index] = $decrptedField;
+                    }
+                } catch (TestFrameworkException $e) {
+                    //catch exception if Credentials are not defined
+                }
+            }
+        }
+        return $overrideFields;
     }
 }
