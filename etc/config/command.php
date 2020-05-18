@@ -20,7 +20,7 @@ if (!empty($_POST['token']) && !empty($_POST['command'])) {
     $tokenFromMagento = $tokenModel->loadByToken($tokenPassedIn)->getToken();
     if (!empty($tokenFromMagento) && ($tokenFromMagento == $tokenPassedIn)) {
         $php = PHP_BINDIR ? PHP_BINDIR . '/php' : 'php';
-        $magentoBinary = $php . ' -f ../../../../bin/magento';
+        $magentoBinary = $php . ' -f '. __DIR__ .'/../../../../bin/magento';
         $valid = validateCommand($magentoBinary, $command);
         if ($valid) {
             $fullCommand = escapeshellcmd($magentoBinary . " $command" . " $arguments");
