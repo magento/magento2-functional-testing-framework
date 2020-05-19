@@ -7,7 +7,7 @@ The following diagram shows the XML structure of an MFTF data object:
 
 <!-- {% raw %} -->
 
-The MFTF `<data>` entities are stored in the following directory <module_dir>/Test/Mftf/Data/
+The MFTF `<data>` entities are stored in `<module_dir>/Test/Mftf/Data/`.
 
 ## Supply data to test by reference to a data entity
 
