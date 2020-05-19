@@ -1,5 +1,24 @@
 Magento Functional Testing Framework Changelog
 ================================================
+3.0.0 RC3
+---------
+
+###Enhancements
+
+*  Maintainability
+    * Added support for Two-Factor Authentication (2FA). [See configure-2fa page for details](./docs/configure-2fa.md)  
+    * Added new static check `annotationsCheck` that checks and reports missing annotations in tests.
+    * Updated `mftf static-checks` command to allow executing static-checks defined in `staticRuleSet.json`by default. [See command page for details](./docs/commands/mftf.md#static-checks)
+    * Added new upgrade script to remove unused arguments from action groups.
+    * Added unhandledPromptBehavior driver capability for Chrome 75+ support.
+    * Removed redundant and unused classes.
+
+### Fixes
+
+* Fixed issue with custom helper usage in suites.
+* Fixed issue with decryption of secrets during data entity creation.
+* Fixed issue with merging of `array` items in data entity.
+
 3.0.0 RC2
 ---------
 
