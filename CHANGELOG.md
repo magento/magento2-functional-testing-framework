@@ -3,7 +3,7 @@ Magento Functional Testing Framework Changelog
 3.0.0 RC3
 ---------
 
-###Enhancements
+### Enhancements
 
 *  Maintainability
     * Added support for Two-Factor Authentication (2FA). [See configure-2fa page for details](./docs/configure-2fa.md)  
