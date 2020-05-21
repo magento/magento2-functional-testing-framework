@@ -70,6 +70,10 @@ class AnnotationsCheck implements StaticCheckInterface
         $allTests = TestObjectHandler::getInstance(false)->getAllObjects();
 
         foreach ($allTests as $test) {
+            // if test is skipped ignore other checks
+            if ($this->validateSkipIssueId($test)) {
+                continue;
+            }
             $this->validateRequiredAnnotations($test);
             $this->validateSkipIssueId($test);
             $this->aggregateStoriesTitlePairs($test);
@@ -150,19 +154,21 @@ class AnnotationsCheck implements StaticCheckInterface
      * Validates that if the test is skipped, that it has an issueId value.
      *
      * @param TestObject $test
-     * @return void
+     * @return boolean
      */
     private function validateSkipIssueId($test)
     {
+        $validateSkipped = false;
         $annotations = $test->getAnnotations();
-
         $skip = $annotations['skip'] ?? null;
         if ($skip !== null) {
+            $validateSkipped = true;
             $issueId = $skip[0] ?? null;
             if ($issueId === null || strlen($issueId) == 0) {
                 $this->errors[][] = "Test {$test->getName()} is skipped but the issueId is empty.";
             }
         }
+        return $validateSkipped;
     }
 
     /**
