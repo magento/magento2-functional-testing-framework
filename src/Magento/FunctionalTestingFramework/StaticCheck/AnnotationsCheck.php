@@ -163,8 +163,8 @@ class AnnotationsCheck implements StaticCheckInterface
         $skip = $annotations['skip'] ?? null;
         if ($skip !== null) {
             $validateSkipped = true;
-            $issueId = $skip[0] ?? null;
-            if ($issueId === null || strlen($issueId) == 0) {
+            if ((!isset($skip[0]) || strlen($skip[0]) == 0)
+                && (!isset($skip['issueId']) || strlen($skip['issueId']) == 0)) {
                 $this->errors[][] = "Test {$test->getName()} is skipped but the issueId is empty.";
             }
         }
