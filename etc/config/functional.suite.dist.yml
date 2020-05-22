@@ -37,4 +37,4 @@ modules:
             capabilities:
                 unhandledPromptBehavior: "ignore"
                 chromeOptions:
-                    args: ["--window-size=1280,1024", "--disable-extensions", "--enable-automation", "--disable-gpu", "--enable-Passthrough"]
+                    args: ["--window-size=1280,1024", "--disable-extensions", "--enable-automation", "--disable-gpu", "--enable-Passthrough", "--disable-dev-shm-usage"]
