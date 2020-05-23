@@ -26,7 +26,7 @@
         "csharpru/vault-php-guzzle6-transport": "^2.0",
         "monolog/monolog": "^1.17",
         "mustache/mustache": "~2.5",
-        "php-webdriver/webdriver": "^1.8.0",
+        "php-webdriver/webdriver": "1.8.1",
         "spomky-labs/otphp": "^10.0",
         "symfony/console": "^4.4",
         "symfony/finder": "^5.0",
