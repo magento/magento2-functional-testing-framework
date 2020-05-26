@@ -57,9 +57,11 @@ Here's how you can upgrade tests:
 
 **Reason**: `executeInSelenium` and `performOn` allowed custom PHP code to be written inline inside of XML files which was difficult to maintain, troubleshoot, and modify.
 
-**Details**: `helper` will allow test writers to solve advanced requirements beyond what MFTF offers out of the box.[See custom-helpers](./docs/custom-helpers.md) for more information on the usage. 
+**Details**: 
 
-Here's an example of using `helper` instead of `executeSelenium` to achieve same workflow.
+`helper` will allow test writers to solve advanced requirements beyond what MFTF offers out of the box.[See custom-helpers](./docs/custom-helpers.md) for more information on the usage. 
+
+Here's an example of using `helper` in place of `executeSelenium` to achieve same workflow.
 
 Old usage:
 ```xml
@@ -84,13 +86,16 @@ New usage:
     <argument name="endY">{{TinyMCEPartialHeadingSelection.endY}}</argument>
 </helper>
 ```
+
 ### `pauseExecution` removed
 
 **Action**: `pauseExecution` is removed in favor of `pause`.
 
 **Reason**: `[WebDriver]pauseExecution` is removed in Codeception 3 in favor of `I->pause()`.
 
-**Description**: [See actions page for details](./docs/test/actions.md#pause). Here's a usage example.
+**Details**: 
+
+[See actions page for details](./docs/test/actions.md#pause). Here's a usage example.
 ```xml
 <pause stepKey="pauseExecutionKey"/>
 ```
@@ -113,7 +118,9 @@ New usage:
 
 **Reason**: PHPUnit 9 has dropped support for optional parameters for `assertEquals` and `assertNotEquals` and has introduced these new assertions.
 
-**Description**: Usages of `assertEquals` or `assertNotEquals` with `delta` specified, should be replaced with appropriate assertion from above list.
+**Details**: 
+
+Usages of `assertEquals` or `assertNotEquals` with `delta` specified, should be replaced with appropriate assertion from above list.
 
 ### `assertContains` supports only iterable haystacks
 
@@ -125,7 +132,9 @@ New usage:
 
 **Reason**: With PHPUnit 9, `assertContains` and `assertNotContains` only allows iterable haystacks. New assertions have been introduced to support string haystacks.
 
-**Description**: Usages of `assertContains` and `assertNotContains` with string haystacks should be replaced with appropriate assertion from above list.
+**Details**: 
+
+Usages of `assertContains` and `assertNotContains` with string haystacks should be replaced with appropriate assertion from above list.
 
 Usage example for string haystacks:
 ```xml
@@ -141,11 +150,9 @@ Usage example for string haystacks:
 
 **Reason**: PHP 7.4 has deprecated use of `formatMoney`. 
 
-**Description**: Format input to specified currency according to the locale specified. 
+**Details**: Format input to specified currency according to the locale specified. 
 
 Usage example:
 ```xml
 <formatCurrency userInput="1234.56789000" locale="de_DE" currency="USD" stepKey="usdInDE"/>
 ```
-
-
