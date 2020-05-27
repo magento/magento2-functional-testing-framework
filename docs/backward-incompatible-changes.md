@@ -4,46 +4,44 @@ This page highlights backward incompatible changes between releases that have a 
 
 ## Version requirement changes
 
-We changed the minimum PHP version requirement from 7.0 to 7.3. Because of the PHP version requirement change, this MFTF version supports only Magento 2.4 or later.
+We changed the minimum PHP version requirement from 7.0 to 7.3. Because of the PHP version requirement change, this MFTF version only supports Magento 2.4 or later.
 
 ## Folder structure changes
 
-We removed support to read test modules from deprecated path `dev/tests/acceptance/tests/functional/Magento/FunctionalTest`. If there are test modules in this path, they would need to be moved to `dev/tests/acceptance/tests/functional/Magento`. 
+We removed support to read test modules from the deprecated path `dev/tests/acceptance/tests/functional/Magento/FunctionalTest`. If there are test modules in this path, they should be moved to `dev/tests/acceptance/tests/functional/Magento`. 
 
 ## XSD schema changes
 
-- Files under test modules `ActionGroup`, `Page`, `Section`, `Test` and `Suite` support only a single entity per file. 
+-  Files under test modules `ActionGroup`, `Page`, `Section`, `Test` and `Suite` only support a single entity per file. 
+-  The `file` attribute from `<module>` has been removed from the suite schema. `<module file=""/>` is no longer supported in suites.
+-  Metadata filename format changed to ***`*Meta.xml`***.
+-  Only nested assertion syntax will be supported. See the [assertions page](./docs/test/assertions.md) for details. Here is an example of the nested assertion syntax:
+   ```xml
+   <assertEquals stepKey="assertAddressOrderPage">
+      <actualResult type="const">$billingAddressOrderPage</actualResult>
+      <expectedResult type="const">$shippingAddressOrderPage</expectedResult>
+   </assertEquals>
+   ```
 
-- `file` attribute from `<module>` has been removed from suite schema. `<module file=""/>` is no longer supported in suites.
-
-- Metadata filename format changed to ***`*Meta.xml`***.
-
-- Only nested assertion syntax will be supported. [See assertions page for details](./docs/test/assertions.md). Here is an example of a nested assertion syntax.
-```xml
-<assertEquals stepKey="assertAddressOrderPage">
-    <actualResult type="const">$billingAddressOrderPage</actualResult>
-    <expectedResult type="const">$shippingAddressOrderPage</expectedResult>
-</assertEquals>
-```
-### Upgrading tests to new schema
+### Upgrading tests to the new schema
 
 The following table lists the upgrade scripts that are available to upgrade tests to the new schema.
 
 | Script name           | Description                                                                                               |
 |-----------------------|-----------------------------------------------------------------------------------------------------------|
 |`splitMultipleEntitiesFiles`| Splits files that have multiple entities into multiple files with one entity per file. |
-|`upgradeAssertionSchema`| Updates assert actions that use old assertion syntax to new nested syntax.|
+|`upgradeAssertionSchema`| Updates assert actions that uses the old assertion syntax into the new nested syntax.|
 |`renameMetadataFiles`| Renames Metadata filenames to `*Meta.xml`.|
 |`removeModuleFileInSuiteFiles`| Removes occurrences of `<module file=""/>` from all `<suite>`s.|
 |`removeUnusedArguments`| Removes unused arguments from action groups.|
 |`upgradeTestSchema`| Replaces relative schema paths to URN in test files.| 
 
-Here's how you can upgrade tests:
+To run the upgrade tests:
 
-- Run `bin/mftf reset --hard` to remove old generated configurations.
-- Run `bin/mftf build:project` to generate new configurations.
-- Run `bin/mftf upgrade:tests`. [See command page for details](./docs/commands/mftf.md#upgradetests).
-- Lastly, try to generate all tests. Tests should all be generated as a result of the upgrades. If not, the most likely issue will be a changed XML schema. Check error messaging and search your codebase for the attributes listed.
+1. Run `bin/mftf reset --hard` to remove old generated configurations.
+1. Run `bin/mftf build:project` to generate new configurations.
+1. Run `bin/mftf upgrade:tests`. [See command page for details](./docs/commands/mftf.md#upgradetests).
+1. Lastly, try to generate all tests. Tests should all be generated as a result of the upgrades. If not, the most likely issue will be a changed XML schema. Check error messaging and search your codebase for the attributes listed.
 
 ## MFTF commands
 
@@ -51,7 +49,7 @@ Here's how you can upgrade tests:
 
 ## MFTF actions
 
-###`executeInSelenium` and `performOn` removed
+### `executeInSelenium` and `performOn` removed
 
 **Action**: Deprecated actions `executeInSelenium` and `performOn` are removed in favor of new action `helper`.
 
@@ -59,11 +57,12 @@ Here's how you can upgrade tests:
 
 **Details**: 
 
-`helper` will allow test writers to solve advanced requirements beyond what MFTF offers out of the box.[See custom-helpers](./docs/custom-helpers.md) for more information on the usage. 
+The `helper` allows test writers to solve advanced requirements beyond what MFTF offers out of the box. See [custom-helpers](./docs/custom-helpers.md) for more information on usage. 
 
-Here's an example of using `helper` in place of `executeSelenium` to achieve same workflow.
+Here is an example of using `helper` in place of `executeSelenium` to achieve same workflow.
 
 Old usage:
+
 ```xml
 <executeInSelenium function="function ($webdriver) use ($I) {
         $heading = $webdriver->findElement(\Facebook\WebDriver\WebDriverBy::xpath('//div[contains(@class, \'inline-wysiwyg\')]//h2'));
@@ -77,6 +76,7 @@ Old usage:
 ```    
 
 New usage:
+
 ```xml
 <helper class="\Magento\PageBuilder\Test\Mftf\Helper\SelectText" method="selectText" stepKey="selectHeadingTextInTinyMCE">
     <argument name="context">//div[contains(@class, 'inline-wysiwyg')]//h2</argument>
@@ -95,7 +95,8 @@ New usage:
 
 **Details**: 
 
-[See actions page for details](./docs/test/actions.md#pause). Here's a usage example.
+See the [actions page for details](./docs/test/actions.md#pause). Here is a usage example:
+
 ```xml
 <pause stepKey="pauseExecutionKey"/>
 ```
@@ -108,39 +109,42 @@ New usage:
 
 ### Updated assert actions
 
-**Action**: `delta` attribute has been removed from `assertEquals` and `assertNotEquals`. Instead, below assert actions have been introduced:
- - `assertEqualsWithDelta`
- - `assertNotEqualsWithDelta` 
- - `assertEqualsCanonicalizing`
- - `assertNotEqualsCanonicalizing`
- - `assertEqualsIgnoringCase`
- - `assertNotEqualsIgnoringCase`
+**Action**: The `delta` attribute has been removed from `assertEquals` and `assertNotEquals`. Instead, new assert actions have been introduced:
+
+ -  `assertEqualsWithDelta`
+ -  `assertNotEqualsWithDelta` 
+ -  `assertEqualsCanonicalizing`
+ -  `assertNotEqualsCanonicalizing`
+ -  `assertEqualsIgnoringCase`
+ -  `assertNotEqualsIgnoringCase`
 
 **Reason**: PHPUnit 9 has dropped support for optional parameters for `assertEquals` and `assertNotEquals` and has introduced these new assertions.
 
 **Details**: 
 
-Usages of `assertEquals` or `assertNotEquals` with `delta` specified, should be replaced with appropriate assertion from above list.
+Usage of `assertEquals` or `assertNotEquals` with a specified `delta`, should be replaced with appropriate assertion from the above list.
 
 ### `assertContains` supports only iterable haystacks
 
-**Action**: `assertContains` and `assertNotContains` now support only iterable haystacks. Below assert actions have been added to work with string haystacks:
-- `assertStringContainsString`
-- `assertStringNotContainsString`
-- `assertStringContainsStringIgnoringCase`
-- `assertStringNotContainsStringIgnoringCase`
+**Action**: `assertContains` and `assertNotContains` now only supports iterable haystacks. These assert actions have been added to work with string haystacks:
+
+-  `assertStringContainsString`
+-  `assertStringNotContainsString`
+-  `assertStringContainsStringIgnoringCase`
+-  `assertStringNotContainsStringIgnoringCase`
 
 **Reason**: With PHPUnit 9, `assertContains` and `assertNotContains` only allows iterable haystacks. New assertions have been introduced to support string haystacks.
 
 **Details**: 
 
-Usages of `assertContains` and `assertNotContains` with string haystacks should be replaced with appropriate assertion from above list.
+Usages of `assertContains` and `assertNotContains` with string haystacks should be replaced with appropriate assertion from the above list.
 
 Usage example for string haystacks:
+
 ```xml
 <assertStringContainsString stepKey="assertDiscountOnPrice2">
-<actualResult type="const">$grabSimpleProdPrice2</actualResult>
-<expectedResult type="string">$110.70</expectedResult>
+  <actualResult type="const">$grabSimpleProdPrice2</actualResult>
+  <expectedResult type="string">$110.70</expectedResult>
 </assertStringContainsString>
 ```
 
@@ -153,6 +157,7 @@ Usage example for string haystacks:
 **Details**: Format input to specified currency according to the locale specified. 
 
 Usage example:
+
 ```xml
 <formatCurrency userInput="1234.56789000" locale="de_DE" currency="USD" stepKey="usdInDE"/>
 ```
