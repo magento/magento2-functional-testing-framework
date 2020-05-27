@@ -13,7 +13,7 @@ use Monolog\Logger;
 class MftfLogger extends Logger
 {
     /**
-     * Prints a deprecation warning, as well as adds a log at the WARNING level.
+     * Prints a deprecation warning, as well as adds a log at the WARNING level during test generation.
      *
      * @param string  $message The log message.
      * @param array   $context The log context.
@@ -23,12 +23,14 @@ class MftfLogger extends Logger
      */
     public function deprecation($message, array $context = [], $verbose = false)
     {
-        $message = "DEPRECATION: " . $message;
         // Suppress print during unit testing
-        if (MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE && $verbose) {
-            print ($message . json_encode($context) . "\n");
+        if (MftfApplicationConfig::getConfig()->getPhase() === MftfApplicationConfig::GENERATION_PHASE) {
+            $message = "DEPRECATION: " . $message;
+            if ($verbose) {
+                print ($message . json_encode($context) . "\n");
+            }
+            parent::warning($message, $context);
         }
-        parent::warning($message, $context);
     }
 
     /**
@@ -51,7 +53,7 @@ class MftfLogger extends Logger
     }
 
     /**
-     * Adds a log record at the NOTICE level.
+     * Adds a log record at the NOTICE level during test generation.
      *
      * @param string  $message
      * @param array   $context
@@ -61,11 +63,13 @@ class MftfLogger extends Logger
      */
     public function notification($message, array $context = [], $verbose = false)
     {
-        $message = "NOTICE: " . $message;
-        // Suppress print during unit testing
-        if (MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE && $verbose) {
-            print ($message . implode("\n", $context) . "\n");
+        // Print during generation phase
+        if (MftfApplicationConfig::getConfig()->getPhase() === MftfApplicationConfig::GENERATION_PHASE) {
+            $message = "NOTICE: " . $message;
+            if ($verbose) {
+                print ($message . implode("\n", $context) . "\n");
+            }
+            parent::notice($message, $context);
         }
-        parent::notice($message, $context);
     }
 }
