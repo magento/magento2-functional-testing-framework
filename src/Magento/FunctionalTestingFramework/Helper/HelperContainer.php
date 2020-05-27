@@ -3,6 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types = 1);
 
 namespace Magento\FunctionalTestingFramework\Helper;
 
@@ -11,7 +12,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 /**
  * Class HelperContainer
  */
-class HelperContainer
+class HelperContainer extends \Codeception\Module
 {
     /**
      * @var Helper[]
@@ -19,12 +20,22 @@ class HelperContainer
     private $helpers = [];
 
     /**
-     * HelperContainer constructor.
-     * @param array $helpers
+     * Create custom helper class.
+     *
+     * @param string $helperClass
+     * @return Helper
+     * @throws \Exception
      */
-    public function __construct(array $helpers = [])
+    public function create(string $helperClass): Helper
     {
-        $this->helpers = $helpers;
+        if (get_parent_class($helperClass) !== Helper::class) {
+            throw new \Exception("Helper class must extend " . Helper::class);
+        }
+        if (!isset($this->helpers[$helperClass])) {
+            $this->helpers[$helperClass] = $this->moduleContainer->create($helperClass);
+        }
+
+        return $this->helpers[$helperClass];
     }
 
     /**
@@ -34,7 +45,7 @@ class HelperContainer
      * @return Helper
      * @throws TestFrameworkException
      */
-    public function get(string $className)
+    public function get(string $className): Helper
     {
         if ($this->has($className)) {
             return $this->helpers[$className];
@@ -48,7 +59,7 @@ class HelperContainer
      * @param string $className
      * @return boolean
      */
-    public function has(string $className)
+    public function has(string $className): bool
     {
         return array_key_exists($className, $this->helpers);
     }

@@ -20,12 +20,25 @@ class {{suiteName}} extends \Codeception\GroupObject
     private $testCount = {{testCount}};
     private $preconditionFailure = null;
     private $currentTestRun = 0;
+    {{#helpers}}
+    /**
+     * @var \Magento\FunctionalTestingFramework\Helper\HelperContainer $helperContainer
+     */
+    private $helperContainer;
+    {{/helpers}}
     private static $HOOK_EXECUTION_INIT = "\n/******** Beginning execution of {{suiteName}} suite %s block ********/\n";
     private static $HOOK_EXECUTION_END = "\n/******** Execution of {{suiteName}} suite %s block complete ********/\n";
 
     {{#before}}
     public function _before(\Codeception\Event\TestEvent $e)
     {
+        {{#helpers}}
+        /** @var \Magento\FunctionalTestingFramework\Helper\HelperContainer $helperContainer */
+        $this->helperContainer = $this->getModule('\Magento\FunctionalTestingFramework\Helper\HelperContainer');
+        {{/helpers}}
+        {{#helpers}}
+        $this->helperContainer->create("{{ . }}");
+        {{/helpers}}
         // increment test count per execution
         $this->currentTestRun++;
         $this->executePreConditions();
