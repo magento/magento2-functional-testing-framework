@@ -9,5 +9,5 @@ modules:
             window_size: false
             capabilities:
                 chromeOptions:
-                    args: ["--headless", "--disable-gpu", "--disable-extensions", "--log-path=/var/www/html/dev/tests/acceptance/mftf.log"]
+                    args: ["--headless", "--disable-gpu", "--disable-extensions"]
                     binary: "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"

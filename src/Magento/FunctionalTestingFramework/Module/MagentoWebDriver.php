@@ -20,6 +20,7 @@ use Magento\FunctionalTestingFramework\DataTransport\Auth\WebApiAuth;
 use Magento\FunctionalTestingFramework\DataTransport\Auth\Tfa\OTP;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
+use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
 use Magento\FunctionalTestingFramework\Util\ConfigSanitizerUtil;
 use Yandex\Allure\Adapter\AllureException;
@@ -141,6 +142,8 @@ class MagentoWebDriver extends WebDriver
     public function _initialize()
     {
         $this->config = ConfigSanitizerUtil::sanitizeWebDriverConfig($this->config);
+        $mftfLogFilePathname = FilePathFormatter::format(TESTS_BP) . 'mftf.log';
+        $this->config['capabilities']['chromeOptions']['args'][] = '--log-path=' . $mftfLogFilePathname;
         parent::_initialize();
         $this->cleanJsError();
     }

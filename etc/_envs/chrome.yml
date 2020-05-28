@@ -8,4 +8,4 @@ modules:
             browser: 'chrome'
             capabilities:
                 chromeOptions:
-                    args: ["--start-maximized", "--disable-extensions", "--enable-automation", "--log-path=/var/www/html/dev/tests/acceptance/mftf.log"]
+                    args: ["--start-maximized", "--disable-extensions", "--enable-automation"]
