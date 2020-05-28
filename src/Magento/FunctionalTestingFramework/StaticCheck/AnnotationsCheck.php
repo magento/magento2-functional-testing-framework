@@ -82,7 +82,7 @@ class AnnotationsCheck implements StaticCheckInterface
         $scriptUtil = new ScriptUtil();
         $this->output = $scriptUtil->printErrorsToFile(
             $this->errors,
-            self::ERROR_LOG_FILENAME,
+            StaticChecksList::getErrorFilesPath() . DIRECTORY_SEPARATOR . self::ERROR_LOG_FILENAME . '.txt',
             self::ERROR_LOG_MESSAGE
         );
     }
