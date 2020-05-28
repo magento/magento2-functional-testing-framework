@@ -23,12 +23,12 @@ class MftfLogger extends Logger
     /**
      * MftfLogger constructor.
      *
-     * @param string $name The logging channel
-     * @param HandlerInterface[] $handlers Optional stack of handlers, the first one in the array is called first, etc.
-     * @param callable[] $processors Optional array of processors
+     * @param string             $name
+     * @param HandlerInterface[] $handlers
+     * @param callable[]         $processors
      * @throws TestFrameworkException
      */
-    public function __construct($name, array $handlers = array(), array $processors = array())
+    public function __construct($name, array $handlers = [], array $processors = [])
     {
         parent::__construct($name, $handlers, $processors);
         $this->phase = MftfApplicationConfig::getConfig()->getPhase();
