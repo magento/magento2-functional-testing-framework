@@ -24,7 +24,7 @@ interface ObjectHandlerInterface
      * Function to return a single object by name
      *
      * @param string $objectName
-     * @return object
+     * @return mixed
      */
     public function getObject($objectName);
 

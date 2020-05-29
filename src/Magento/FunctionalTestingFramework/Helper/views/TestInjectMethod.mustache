@@ -6,14 +6,10 @@
     /**
      * Special method which automatically creates the respective objects.
      */
-    public function _inject(
-        {{argumentsWithTypes}}
-    ) {
-        $this->helperContainer = new \Magento\FunctionalTestingFramework\Helper\HelperContainer(
-            [
-            {{#arguments}}
-                '{{type}}' => {{var}},
-            {{/arguments}}
-            ]
-        );
+    public function _inject(\Magento\FunctionalTestingFramework\Helper\HelperContainer $helperContainer)
+    {
+        $this->helperContainer = $helperContainer;
+        {{#arguments}}
+        $this->helperContainer->create("{{type}}");
+        {{/arguments}}
     }
