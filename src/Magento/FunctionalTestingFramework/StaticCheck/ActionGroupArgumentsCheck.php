@@ -65,7 +65,7 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
 
         $this->output = $this->scriptUtil->printErrorsToFile(
             $this->errors,
-            self::ERROR_LOG_FILENAME,
+            StaticChecksList::getErrorFilesPath() . DIRECTORY_SEPARATOR . self::ERROR_LOG_FILENAME . '.txt',
             self::ERROR_LOG_MESSAGE
         );
     }
