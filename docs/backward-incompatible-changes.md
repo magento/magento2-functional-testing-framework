@@ -2,7 +2,7 @@
 
 This page highlights backward incompatible changes between releases that have a major impact and require detailed explanation and special instructions to ensure third-party tests continue working with Magento core tests.
 
-## Version requirement changes
+## Minimum supported PHP version changes
 
 We changed the minimum PHP version requirement from 7.0 to 7.3. Because of the PHP version requirement change, this MFTF version only supports Magento 2.4 or later.
 
