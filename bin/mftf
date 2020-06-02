@@ -31,7 +31,7 @@ try {
     $version = $version['version'];
     $application = new Symfony\Component\Console\Application();
     $application->setName('Magento Functional Testing Framework CLI');
-    $application->setVersion($version);
+    $application->setVersion('3.0.0');
     /** @var \Magento\FunctionalTestingFramework\Console\CommandListInterface $commandList */
     $commandList = new \Magento\FunctionalTestingFramework\Console\CommandList;
     foreach ($commandList->getCommands() as $command) {
