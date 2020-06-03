@@ -26,9 +26,9 @@ class ExtendParentDataTestCest
 	public function ExtendParentDataTest(AcceptanceTester $I)
 	{
 		$I->createEntity("simpleDataKey", "test", "extendParentData", [], []); // stepKey: simpleDataKey
-		$I->searchAndMultiSelectOption("#selector", ["name", "otherName"]);
+		$I->searchAndMultiSelectOption("#selector", ["otherName"]);
 		$I->searchAndMultiSelectOption("#selector", ["extendName"]);
-		$I->searchAndMultiSelectOption("#selector", ["postname", "item"]);
+		$I->searchAndMultiSelectOption("#selector", ["item"]);
 		$I->searchAndMultiSelectOption("#selector", [msq("extendParentData") . "prename"]);
 		$I->searchAndMultiSelectOption("#selector", ["postnameExtend" . msq("extendParentData")]);
 	}
