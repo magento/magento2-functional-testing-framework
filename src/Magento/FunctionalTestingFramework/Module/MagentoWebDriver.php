@@ -754,11 +754,14 @@ class MagentoWebDriver extends WebDriver
 
             $travelX = intval($targetX - $snodes->getLocation()->getX());
             $travelY = intval($targetY - $snodes->getLocation()->getY());
+            $action->moveToElement($snodes);
+            $action->clickAndHold($snodes);
+            $action->moveByOffset($travelX, $travelY);
+            $action->release()->perform();
 
-            $action->dragAndDropBy($snodes, $travelX, $travelY)->perform();
         } else {
-            $action->clickAndHold($snodes)->perform();
-            $action->moveToElement($tnodes)->perform();
+            $action->clickAndHold($snodes);
+            $action->moveToElement($tnodes);
             $action->release($tnodes)->perform();
         }
     }
