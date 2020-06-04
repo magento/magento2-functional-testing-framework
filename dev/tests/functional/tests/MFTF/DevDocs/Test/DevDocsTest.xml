@@ -48,8 +48,8 @@
         </actionGroup>
 
         <assertEqualsCanonicalizing stepKey="assertMergedArray">
-            <actualResult type="array">{{MessageData.numbers}}</actualResult>
-            <expectedResult type="array">["Something New", "0", "1", "2", "3"]</expectedResult>
+            <actualResult type="array">{{ExtendedMessageData.numbers}}</actualResult>
+            <expectedResult type="array">["Something New", "0", "1", "2", "3", "TESTING CASE"]</expectedResult>
         </assertEqualsCanonicalizing>
     </test>
 </tests>
