@@ -1,5 +1,24 @@
 Magento Functional Testing Framework Changelog
 ================================================
+3.0.0 RC4
+---------
+
+### Enhancements
+
+* Customizability
+    * Changed `<group value="skip"/>` to no longer skip a test, instead test is added to `skip` group.
+* Maintainability
+    * Trimmed `mftf.log` to not include notices and warnings at test execution time.
+    * Added chrome option `--ignore-certificate-errors` in `functional.suite.dist.yml`.
+* Traceability
+    * Changed `bin/mftf static-checks` error file directory from current working directory to `TESTS_BP/tests/_output/static-results/`.
+* Readability
+    * Documented [3.0.0 Backward Incompatible Changes.](./docs/backward-incompatible-changes.md)
+
+### Fixes
+
+* Fixed issue with Extended data entity won't merge array items.
+
 3.0.0 RC3
 ---------
 
@@ -8,7 +27,7 @@ Magento Functional Testing Framework Changelog
 *  Maintainability
     * Added support for Two-Factor Authentication (2FA). [See configure-2fa page for details](./docs/configure-2fa.md)  
     * Added new static check `annotationsCheck` that checks and reports missing annotations in tests.
-    * Updated `mftf static-checks` command to allow executing static-checks defined in `staticRuleSet.json` by default. [See command page for details](./docs/commands/mftf.md#static-checks)
+    * Updated `bin/mftf static-checks` command to allow executing static-checks defined in `staticRuleSet.json` by default. [See command page for details](./docs/commands/mftf.md#static-checks)
     * Added new upgrade script to remove unused arguments from action groups.
     * Added unhandledPromptBehavior driver capability for Chrome 75+ support.
     * Removed redundant and unused classes.
