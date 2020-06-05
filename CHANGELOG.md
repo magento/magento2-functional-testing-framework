@@ -6,18 +6,18 @@ Magento Functional Testing Framework Changelog
 ### Enhancements
 
 * Customizability
-    * Changed `<group value="skip"/>` to no longer skip a test, instead test is added to `skip` group.
+    * `<group value="skip"/>` no longer skips a test. Instead, the test is added to the `skip` group.
 * Maintainability
-    * Trimmed `mftf.log` to not include notices and warnings at test execution time.
-    * Added chrome option `--ignore-certificate-errors` in `functional.suite.dist.yml`.
+    * `mftf.log` no longer includes notices and warnings at test execution time.
+    * Added the Chrome option `--ignore-certificate-errors` to `functional.suite.dist.yml`.
 * Traceability
-    * Changed `bin/mftf static-checks` error file directory from current working directory to `TESTS_BP/tests/_output/static-results/`.
+    * Changed the `bin/mftf static-checks` error file directory from the current working directory to `TESTS_BP/tests/_output/static-results/`.
 * Readability
     * Documented [3.0.0 Backward Incompatible Changes.](./docs/backward-incompatible-changes.md)
 
 ### Fixes
 
-* Fixed issue with extended data entity won't merge array items.
+* Fixed issue where an extended data entity would not merge array items. Array items should merge properly now.
 
 3.0.0 RC3
 ---------
