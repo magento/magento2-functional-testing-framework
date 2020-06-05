@@ -17,7 +17,7 @@ Magento Functional Testing Framework Changelog
 
 ### Fixes
 
-* Fixed issue with Extended data entity won't merge array items.
+* Fixed issue with extended data entity won't merge array items.
 
 3.0.0 RC3
 ---------
