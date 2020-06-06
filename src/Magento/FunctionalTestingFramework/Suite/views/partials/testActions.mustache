@@ -1,11 +1,9 @@
 {{#actions}}
 {{#webDriverInit}}
-/** @var MagentoWebDriver $webDriver */
-$webDriver = $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver');
-if (isset($webDriver->webDriver)) {
+if ($webDriver->webDriver != null) {
     $webDriver->_restart();
 } else {
-    $webDriver->_initialize();
+    $webDriver->_initializeSession();
 }
 {{/webDriverInit}}
 {{#action}}

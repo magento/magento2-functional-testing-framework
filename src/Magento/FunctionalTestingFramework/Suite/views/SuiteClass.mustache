@@ -2,6 +2,7 @@
 
 namespace Group;
 
+use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\Module\MagentoWebDriver;
@@ -56,14 +57,19 @@ class {{suiteName}} extends \Codeception\GroupObject
         if ($this->currentTestRun == 1) {
             print sprintf(self::$HOOK_EXECUTION_INIT, "before");
 
+            /** @var MagentoWebDriver $webDriver */
+            $webDriver = $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver');
+
             try {
                 {{> testActions}}
             } catch (\Exception $exception) {
                 $this->preconditionFailure = $exception->getMessage();
             }
 
-            // Quits this driver, closing every associated window.
-            $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver')->webDriver->quit();
+            // reset configuration and close session
+            $webDriver->_resetConfig();
+            $webDriver->webDriver->close();
+            $webDriver->webDriver = null;
 
             print sprintf(self::$HOOK_EXECUTION_END, "before");
         }
@@ -81,6 +87,9 @@ class {{suiteName}} extends \Codeception\GroupObject
     {
         if ($this->currentTestRun == $this->testCount) {
             print sprintf(self::$HOOK_EXECUTION_INIT, "after");
+
+            /** @var MagentoWebDriver $webDriver */
+            $webDriver = $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver');
 
             try {
                 // Find out if Test in Suite failed, will cause potential failures in suite after
@@ -111,11 +120,37 @@ class {{suiteName}} extends \Codeception\GroupObject
 
             PersistedObjectHandler::getInstance()->clearSuiteObjects();
 
-            // Quits this driver, closing every associated window.
-            $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver')->webDriver->quit();
+            $this->closeSession($webDriver);
 
             print sprintf(self::$HOOK_EXECUTION_END, "after");
         }
     }
     {{/after}}
+
+    /**
+     * Close session method closes current session.
+     * If config 'close_all_sessions' is set to 'true' all sessions will be closed.
+     *
+     * @param MagentoWebDriver $webDriver
+     * return void
+     */
+    private function closeSession(MagentoWebDriver $webDriver): void
+    {
+        $webDriverConfig = $webDriver->_getConfig();
+        $webDriver->_closeSession();
+        if (isset($webDriverConfig['close_all_sessions']) && $webDriverConfig['close_all_sessions'] === "true") {
+            $wdHost = sprintf(
+                '%s://%s:%s%s',
+                $webDriverConfig['protocol'],
+                $webDriverConfig['host'],
+                $webDriverConfig['port'],
+                $webDriverConfig['path']
+            );
+            $availableSessions = RemoteWebDriver::getAllSessions($wdHost);
+            foreach ($availableSessions as $session) {
+                $remoteWebDriver = RemoteWebDriver::createBySessionID($session['id'], $wdHost);
+                $remoteWebDriver->quit();
+            }
+        }
+    }
 }
