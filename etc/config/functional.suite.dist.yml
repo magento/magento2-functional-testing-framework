@@ -34,6 +34,7 @@ modules:
             port: "%SELENIUM_PORT%"
             protocol: "%SELENIUM_PROTOCOL%"
             path: "%SELENIUM_PATH%"
+            close_all_sessions: "%SELENIUM_CLOSE_ALL_SESSIONS%"
             capabilities:
                 unhandledPromptBehavior: "ignore"
                 chromeOptions:
