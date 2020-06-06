@@ -2,7 +2,11 @@
 {{#webDriverInit}}
 /** @var MagentoWebDriver $webDriver */
 $webDriver = $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver');
-$webDriver->_restart();
+if (isset($webDriver->webDriver)) {
+    $webDriver->_restart();
+} else {
+    $webDriver->_initialize();
+}
 {{/webDriverInit}}
 {{#action}}
 {{{action}}}
