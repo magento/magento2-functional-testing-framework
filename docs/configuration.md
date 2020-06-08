@@ -321,6 +321,16 @@ Enables addition of browser logs to Allure steps
 ENABLE_BROWSER_LOG=true
 ```
 
+### SELENIUM_CLOSE_ALL_SESSIONS
+
+Forces MFTF to close all Selenium sessions after running a suite.
+
+Use this if you're having issues with sessions hanging in an MFTF suite.
+
+```conf
+SELENIUM_CLOSE_ALL_SESSIONS=true
+```
+
 ### BROWSER_LOG_BLACKLIST
 
 Blacklists types of browser log entries from appearing in Allure steps.
