@@ -18,6 +18,7 @@ Magento Functional Testing Framework Changelog
 ### Fixes
 
 * Fixed issue where an extended data entity would not merge array items. Array items should merge properly now.
+* Fixed issue where Chrome remains running after MFTF suite finishes.
 
 3.0.0 RC3
 ---------
