@@ -214,15 +214,15 @@ Example:
 TESTS_MODULE_PATH=~/magento2/dev/tests/acceptance/tests/functional/Magento/FunctionalTest
 ```
 
-### MODULE_WHITELIST
+### MODULE_ALLOWLIST
 
 Use for a new module.
-When adding a new directory at `Magento/FunctionalTest`, add the directory name to `MODULE_WHITELIST` to enable the MFTF to process it.
+When adding a new directory at `Magento/FunctionalTest`, add the directory name to `MODULE_ALLOWLIST` to enable the MFTF to process it.
 
 Example:
 
 ```conf
-MODULE_WHITELIST=Magento_Framework,Magento_ConfigurableProductWishlist,Magento_ConfigurableProductCatalogSearch
+MODULE_ALLOWLIST=Magento_Framework,Magento_ConfigurableProductWishlist,Magento_ConfigurableProductCatalogSearch
 ```
 
 ### MAGENTO_CLI_COMMAND_PATH
@@ -331,14 +331,14 @@ Use this if you're having issues with sessions hanging in an MFTF suite.
 SELENIUM_CLOSE_ALL_SESSIONS=true
 ```
 
-### BROWSER_LOG_BLACKLIST
+### BROWSER_LOG_BLOCKLIST
 
-Blacklists types of browser log entries from appearing in Allure steps.
+Blocklists types of browser log entries from appearing in Allure steps.
 
 Denoted in browser log entry as `"SOURCE": "type"`.
 
 ```conf
-BROWSER_LOG_BLACKLIST=other,console-api
+BROWSER_LOG_BLOCKLIST=other,console-api
 ```
 
 ### WAIT_TIMEOUT

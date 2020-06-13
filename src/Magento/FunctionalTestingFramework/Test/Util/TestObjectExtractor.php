@@ -90,7 +90,7 @@ class TestObjectExtractor extends BaseObjectExtractor
      */
     public function extractTestData($testData, $validateAnnotations = true)
     {
-        // validate the test name for blacklisted char (will cause allure report issues) MQE-483
+        // validate the test name for blocklisted char (will cause allure report issues) MQE-483
         NameValidationUtil::validateName($testData[self::NAME], "Test");
 
         $testAnnotations = [];
