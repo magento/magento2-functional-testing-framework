@@ -40,7 +40,7 @@ class NameValidationUtil
     }
 
     /**
-     * Function which runs a validation against the blacklisted char defined in this class. Validation occurs to insure
+     * Function which runs a validation against the blocklisted char defined in this class. Validation occurs to insure
      * allure report does not error/future devOps builds do not error against illegal char.
      *
      * @param string $name

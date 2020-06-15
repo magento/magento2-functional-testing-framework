@@ -27,7 +27,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
     const ACTION_GROUP_ARGUMENTS = 'arguments';
     const ACTION_GROUP_ARG_VALUE = 'value';
     const BEFORE_AFTER_ERROR_MSG = "Merge Error - Steps cannot have both before and after attributes.\tStepKey='%s'";
-    const STEP_KEY_BLACKLIST_ERROR_MSG = "StepKeys cannot contain non alphanumeric characters.\tStepKey='%s'";
+    const STEP_KEY_BLOCKLIST_ERROR_MSG = "StepKeys cannot contain non alphanumeric characters.\tStepKey='%s'";
     const STEP_KEY_EMPTY_ERROR_MSG = "StepKeys cannot be empty.\tAction='%s'";
     const DATA_PERSISTENCE_CUSTOM_FIELD = 'field';
     const DATA_PERSISTENCE_CUSTOM_FIELD_KEY = 'key';
@@ -70,7 +70,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
             }
 
             if (preg_match('/[^a-zA-Z0-9_]/', $stepKey)) {
-                throw new XmlException(sprintf(self::STEP_KEY_BLACKLIST_ERROR_MSG, $actionName));
+                throw new XmlException(sprintf(self::STEP_KEY_BLOCKLIST_ERROR_MSG, $actionName));
             }
 
             $actionAttributes = $this->stripDescriptorTags(
