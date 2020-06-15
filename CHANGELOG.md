@@ -6,7 +6,7 @@ Magento Functional Testing Framework Changelog
 ### Enhancements
 
 * Readability
-    * Removed blacklist/whitelist terminologies in MFTF.
+    * Removed blacklist/whitelist terminology in MFTF.
 
 ### Fixes
 
