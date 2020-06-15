@@ -1,5 +1,18 @@
 Magento Functional Testing Framework Changelog
 ================================================
+3.0.0 RC5
+---------
+
+### Enhancements
+
+* Readability
+    * Removed blacklist/whitelist terminologies in MFTF.
+
+### Fixes
+
+* Fixed javascript error seen on chrome 81 for dragAndDrop action.
+* Fixed allure issue when `WebDriverCurlException` is encountered in `afterStep`.
+
 3.0.0 RC4
 ---------
 
