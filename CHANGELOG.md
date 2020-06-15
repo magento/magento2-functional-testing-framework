@@ -177,9 +177,9 @@ Magento Functional Testing Framework Changelog
         * Command verifies and troubleshoots some configuration steps required for running tests
         * Please see DevDocs for more details
     * `<*Data>` actions now contain `API Endpoint` and `Request Header` artifacts.
-    * Introduced new `.env` configurations `ENABLE_BROWSER_LOG` and `BROWSER_LOG_BLACKLIST`
+    * Introduced new `.env` configurations `ENABLE_BROWSER_LOG` and `BROWSER_LOG_BLOCKLIST`
         * Configuration enables allure artifacts for browser log entries if they are present after the step.
-        * Blacklist filters out logs from specific sources.
+        * Blocklist filters out logs from specific sources.
 * Customizability
     * Introduced `timeout=""` to `magentoCLI` actions.
 
