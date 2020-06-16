@@ -26,6 +26,8 @@ class MagentoPwaWebDriver extends MagentoWebDriver
      */
     protected $loadingMasksLocators = [
         '//div[contains(@class, "indicator-global-3ae")]',
+        '//div[contains(@class, "indicator-root-3J-")]',
+        '//div[contains(@class, "indicator-indicator-JHR")]',
         '//div[contains(@class, "indicator-message-2he")]'
     ];
 
