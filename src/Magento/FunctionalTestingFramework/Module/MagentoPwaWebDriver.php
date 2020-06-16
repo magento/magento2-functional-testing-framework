@@ -18,18 +18,32 @@ use Codeception\Module\WebDriver;
 class MagentoPwaWebDriver extends MagentoWebDriver
 {
     /**
+     * List of known PWA loading masks by selector
+     *
+     * Overriding the MagentoWebDriver array to contain applicable PWA locators.
+     *
+     * @var array
+     */
+    protected $loadingMasksLocators = [
+        '//div[contains(@class, "indicator-global-3ae")]',
+        '//div[contains(@class, "indicator-message-2he")]'
+    ];
+
+    /**
      * Go to the page.
      *
      * Overriding the MagentoWebDriver version because it contains 'waitForPageLoad'.
      * The AJAX check in 'waitForPageLoad' does NOT work with a PWA.
      *
      * @param string $page
+     * @param null $timeout
      * @throws \Exception
      * @return void
      */
-    public function amOnPage($page)
+    public function amOnPage($page, $timeout = null)
     {
         WebDriver::amOnPage($page);
+        $this->waitForLoadingMaskToDisappear($timeout);
     }
 
     /**
@@ -43,11 +57,15 @@ class MagentoPwaWebDriver extends MagentoWebDriver
      */
     public function waitForPwaElementNotVisible($selector, $timeout = null)
     {
+        $timeout = $timeout ?? $this->_getConfig()['pageload_timeout'];
+
         // Determine what type of Selector is used.
         // Then use the correct JavaScript to locate the Element.
         if (\Codeception\Util\Locator::isXPath($selector)) {
+            $this->waitForLoadingMaskToDisappear($timeout);
             $this->waitForJS("return !document.evaluate(`$selector`, document);", $timeout);
         } else {
+            $this->waitForLoadingMaskToDisappear($timeout);
             $this->waitForJS("return !document.querySelector(`$selector`);", $timeout);
         }
     }
@@ -63,11 +81,15 @@ class MagentoPwaWebDriver extends MagentoWebDriver
      */
     public function waitForPwaElementVisible($selector, $timeout = null)
     {
+        $timeout = $timeout ?? $this->_getConfig()['pageload_timeout'];
+        
         // Determine what type of Selector is used.
         // Then use the correct JavaScript to locate the Element.
         if (\Codeception\Util\Locator::isXPath($selector)) {
+            $this->waitForLoadingMaskToDisappear($timeout);
             $this->waitForJS("return !!document && !!document.evaluate(`$selector`, document);", $timeout);
         } else {
+            $this->waitForLoadingMaskToDisappear($timeout);
             $this->waitForJS("return !!document && !!document.querySelector(`$selector`);", $timeout);
         }
     }
