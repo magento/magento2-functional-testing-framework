@@ -37,7 +37,7 @@ class MagentoPwaWebDriver extends MagentoWebDriver
      * Overriding the MagentoWebDriver version because it contains 'waitForPageLoad'.
      * The AJAX check in 'waitForPageLoad' does NOT work with a PWA.
      *
-     * @param string $page
+     * @param string  $page
      * @param integer $timeout
      * @throws \Exception
      * @return void
@@ -52,7 +52,7 @@ class MagentoPwaWebDriver extends MagentoWebDriver
      * Wait for a PWA Element to NOT be visible using JavaScript.
      * Add the WAIT_TIMEOUT variable to your .env file for this action.
      *
-     * @param string $selector
+     * @param string  $selector
      * @param integer $timeout
      * @throws \Exception
      * @return void
@@ -76,7 +76,7 @@ class MagentoPwaWebDriver extends MagentoWebDriver
      * Wait for a PWA Element to be visible using JavaScript.
      * Add the WAIT_TIMEOUT variable to your .env file for this action.
      *
-     * @param string $selector
+     * @param string  $selector
      * @param integer $timeout
      * @throws \Exception
      * @return void
