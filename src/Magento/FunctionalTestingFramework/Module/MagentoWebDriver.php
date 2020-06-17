@@ -63,7 +63,7 @@ class MagentoWebDriver extends WebDriver
      *
      * @var array
      */
-    public static $loadingMasksLocators = [
+    protected $loadingMasksLocators = [
         '//div[contains(@class, "loading-mask")]',
         '//div[contains(@class, "admin_data-grid-loading-mask")]',
         '//div[contains(@class, "admin__data-grid-loading-mask")]',
@@ -439,7 +439,9 @@ class MagentoWebDriver extends WebDriver
      */
     public function waitForLoadingMaskToDisappear($timeout = null)
     {
-        foreach (self::$loadingMasksLocators as $maskLocator) {
+        $timeout = $timeout ?? $this->_getConfig()['pageload_timeout'];
+        
+        foreach ($this->loadingMasksLocators as $maskLocator) {
             // Get count of elements found for looping.
             // Elements are NOT useful for interaction, as they cannot be fed to codeception actions.
             $loadingMaskElements = $this->_findElements($maskLocator);
