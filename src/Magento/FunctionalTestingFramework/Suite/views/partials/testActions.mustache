@@ -13,9 +13,9 @@ if ($webDriver->webDriver != null) {
 PersistedObjectHandler::getInstance()->createEntity(
     "{{stepKey}}",
     "suite",
-    "{{entityName}}"{{#requiredEntities}},
-    [$this->{{entityName}}{{^last}}, {{/last}}]{{/requiredEntities}}{{#customFields}},
-     ${{customFields}}{{/customFields}}
+    "{{entityName}}",
+    [{{#requiredEntities}}"{{entityName}}"{{^last}}, {{/last}}{{/requiredEntities}}]{{#customFields}},
+    ${{customFields}}{{/customFields}}
 );
 {{/createData}}
 {{#deleteData}}
