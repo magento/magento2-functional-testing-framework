@@ -1,6 +1,11 @@
 Magento Functional Testing Framework Changelog
 ================================================
-2.6.3
+2.6.5
+-----
+### GitHub Issues/Pull requests:
+* [#547](https://github.com/magento/magento2-functional-testing-framework/pull/547) -- Fix invalid behavior of MAGENTO_BACKEND_BASE_URL
+
+2.6.4
 -----
 
 ### Fixes
