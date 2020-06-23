@@ -705,8 +705,15 @@ class ActionObject
         } else {
             $resolvedReplacement = $replacement;
         }
-        if (get_class($object) == PageObject::class && $object->getArea() == PageObject::ADMIN_AREA) {
-            $resolvedReplacement = "/{{_ENV.MAGENTO_BACKEND_NAME}}/" . $resolvedReplacement;
+
+        if (get_class($object) === PageObject::class && $object->getArea() === PageObject::ADMIN_AREA) {
+            $urlSegments = [
+                '{{_ENV.MAGENTO_BACKEND_BASE_URL}}',
+                '{{_ENV.MAGENTO_BACKEND_NAME}}',
+                $resolvedReplacement
+            ];
+
+            $resolvedReplacement = implode('/', $urlSegments);
         }
         return $resolvedReplacement;
     }

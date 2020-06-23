@@ -1942,20 +1942,23 @@ class TestGenerator
         $newArgs = [];
 
         foreach ($args as $key => $arg) {
+            $newArgs[$key] = $arg;
+
             preg_match_all($regex, $arg, $matches);
             if (!empty($matches[0])) {
-                $fullMatch = $matches[0][0];
-                $refVariable = $matches[1][0];
-                unset($matches);
-                $replacement = "{$func}(\"{$refVariable}\")";
+                foreach ($matches[0] as $matchKey => $fullMatch) {
+                    $refVariable = $matches[1][$matchKey];
 
-                $outputArg = $this->processQuoteBreaks($fullMatch, $arg, $replacement);
-                $newArgs[$key] = $outputArg;
+                    $replacement = $this->getReplacement($func, $refVariable);
+
+                    $outputArg = $this->processQuoteBreaks($fullMatch, $newArgs[$key], $replacement);
+                    $newArgs[$key] = $outputArg;
+                }
+
+                unset($matches);
                 continue;
             }
-            $newArgs[$key] = $arg;
         }
-
         // override passed in args for use later.
         return $newArgs;
     }
@@ -2201,5 +2204,21 @@ class TestGenerator
     private function hasDecimalPoint(string $outStr)
     {
         return strpos($outStr, localeconv()['decimal_point']) !== false;
+    }
+
+    /**
+     * Supports fallback for BACKEND URL
+     *
+     * @param string $func
+     * @param string $refVariable
+     * @return string
+     */
+    private function getReplacement($func, $refVariable): string
+    {
+        if ($refVariable === 'MAGENTO_BACKEND_BASE_URL') {
+            return "({$func}(\"{$refVariable}\") ? rtrim({$func}(\"{$refVariable}\"), \"/\") : \"\")";
+        }
+
+        return "{$func}(\"{$refVariable}\")";
     }
 }
