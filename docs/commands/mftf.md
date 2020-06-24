@@ -39,13 +39,13 @@ vendor/bin/mftf generate:tests
 ### Generate tests by test name
 
 ```bash
-vendor/bin/mftf generate:tests AdminLoginTest StorefrontPersistedCustomerLoginTest
+vendor/bin/mftf generate:tests AdminLoginSuccessfulTest StorefrontPersistedCustomerLoginTest
 ```
 
 ### Generate test by test and suite name
 
 ```bash
-vendor/bin/mftf generate:tests LoginSuite:AdminLoginTest
+vendor/bin/mftf generate:tests LoginSuite:AdminLoginSuccessfulTest
 ```
 
 ### Generate and run the tests for a specified group
@@ -59,7 +59,7 @@ This command cleans up the previously generated tests; generates and runs tests 
 ### Generate and run particular tests
 
 ```bash
-vendor/bin/mftf run:test AdminLoginTest StorefrontPersistedCustomerLoginTest -r
+vendor/bin/mftf run:test AdminLoginSuccessfulTest StorefrontPersistedCustomerLoginTest -r
 ```
 
 This command cleans up the previously generated tests; generates and runs the `LoginAsAdminTest` and `LoginAsCustomerTest` tests.
@@ -67,10 +67,10 @@ This command cleans up the previously generated tests; generates and runs the `L
 ### Generate and run particular test in a specific suite's context
 
 ```bash
-vendor/bin/mftf run:test LoginSuite:AdminLoginTest -r
+vendor/bin/mftf run:test LoginSuite:AdminLoginSuccessfulTest -r
 ```
 
-This command cleans up previously generated tests; generates and run `AdminLoginTest` within the context of the `LoginSuite`.
+This command cleans up previously generated tests; generates and run `AdminLoginSuccessfulTest` within the context of the `LoginSuite`.
 
 ### Generate and run a testManifest.txt file
 
@@ -362,7 +362,7 @@ vendor/bin/mftf run:manifest path/to/your/testManifest.txt
 Each line should contain either: one test path or one group (-g) reference.
 
 ```
-tests/functional/tests/MFTF/_generated/default/AdminLoginTestCest.php
+tests/functional/tests/MFTF/_generated/default/AdminLoginSuccessfulTestCest.php
 -g PaypalTestSuite
 tests/functional/tests/MFTF/_generated/default/SomeOtherTestCest.php
 tests/functional/tests/MFTF/_generated/default/ThirdTestCest.php
