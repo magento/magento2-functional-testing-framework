@@ -131,14 +131,18 @@ class GroupClassGenerator
     {
         $actions = [];
         $mustacheHookArray['actions'][] = ['webDriverInit' => true];
+        $mustacheHookArray['helpers'] = [];
 
         foreach ($hookObj->getActions() as $action) {
             /** @var ActionObject $action */
             $index = count($actions);
+            if ($action->getType() === ActionObject::ACTION_TYPE_HELPER) {
+                $mustacheHookArray['helpers'][] = $action->getCustomActionAttributes()['class'];
+            }
             //deleteData contains either url or createDataKey, if it contains the former it needs special formatting
             if ($action->getType() !== "createData"
                 && !array_key_exists(TestGenerator::REQUIRED_ENTITY_REFERENCE, $action->getCustomActionAttributes())) {
-                $actions = $this->buildWebDriverActionsMustacheArray($action, $actions, $index);
+                $actions = $this->buildWebDriverActionsMustacheArray($action, $actions);
                 continue;
             }
 

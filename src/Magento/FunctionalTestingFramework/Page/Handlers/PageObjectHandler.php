@@ -23,7 +23,7 @@ class PageObjectHandler implements ObjectHandlerInterface
     const PARAMETERIZED = 'parameterized';
     const AREA = 'area';
     const FILENAME = 'filename';
-    const NAME_BLACKLIST_ERROR_MSG = "Page names cannot contain non alphanumeric characters.\tPage='%s'";
+    const NAME_BLOCKLIST_ERROR_MSG = "Page names cannot contain non alphanumeric characters.\tPage='%s'";
 
     /**
      * The singleton instance of this class
@@ -58,7 +58,7 @@ class PageObjectHandler implements ObjectHandlerInterface
         $pageNameValidator = new NameValidationUtil();
         foreach ($parserOutput as $pageName => $pageData) {
             if (preg_match('/[^a-zA-Z0-9_]/', $pageName)) {
-                throw new XmlException(sprintf(self::NAME_BLACKLIST_ERROR_MSG, $pageName));
+                throw new XmlException(sprintf(self::NAME_BLOCKLIST_ERROR_MSG, $pageName));
             }
 
             $filename = $pageData[self::FILENAME] ?? null;

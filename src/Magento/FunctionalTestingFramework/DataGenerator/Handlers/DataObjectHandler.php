@@ -226,8 +226,8 @@ class DataObjectHandler implements ObjectHandlerInterface
     private function processArray($arrayItems, $data, $key)
     {
         $items = [];
-        foreach ($arrayItems as $item) {
-            $items[] = $item[self::_VALUE];
+        foreach ($arrayItems as $key => $item) {
+            $items[$key] = $item[self::_VALUE];
         }
 
         return array_merge($items, $data[$key] ?? []);
