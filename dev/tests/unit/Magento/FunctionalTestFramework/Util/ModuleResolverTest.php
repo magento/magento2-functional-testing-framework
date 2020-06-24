@@ -705,12 +705,12 @@ class ModuleResolverTest extends MagentoTestCase
     }
 
     /**
-     * Validate blacklisted modules are removed
+     * Validate blocklisted modules are removed
      * Module paths are sorted according to module name in alphabetically ascending order
      *
      * @throws \Exception
      */
-    public function testGetModulePathsBlacklist()
+    public function testGetModulePathsBlocklist()
     {
         $this->setMockResolverClass(
             false,
@@ -946,10 +946,10 @@ class ModuleResolverTest extends MagentoTestCase
      * @param ModuleResolver $instance
      * @param array $mockPaths
      * @param array $mockModules
-     * @param array $mockBlacklist
+     * @param array $mockBlocklist
      * @throws \Exception
      */
-    private function setMockResolverProperties($instance, $mockPaths = null, $mockModules = null, $mockBlacklist = [])
+    private function setMockResolverProperties($instance, $mockPaths = null, $mockModules = null, $mockBlocklist = [])
     {
         $property = new \ReflectionProperty(ModuleResolver::class, 'enabledModulePaths');
         $property->setAccessible(true);
@@ -959,9 +959,9 @@ class ModuleResolverTest extends MagentoTestCase
         $property->setAccessible(true);
         $property->setValue($instance, $mockModules);
 
-        $property = new \ReflectionProperty(ModuleResolver::class, 'moduleBlacklist');
+        $property = new \ReflectionProperty(ModuleResolver::class, 'moduleBlocklist');
         $property->setAccessible(true);
-        $property->setValue($instance, $mockBlacklist);
+        $property->setValue($instance, $mockBlocklist);
     }
 
     /**

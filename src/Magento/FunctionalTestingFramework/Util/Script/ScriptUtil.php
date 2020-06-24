@@ -56,18 +56,22 @@ class ScriptUtil
     /**
      * Prints out given errors to file, and returns summary result string
      * @param array  $errors
-     * @param string $filename
+     * @param string $filePath
      * @param string $message
      * @return string
      */
-    public function printErrorsToFile($errors, $filename, $message)
+    public function printErrorsToFile($errors, $filePath, $message)
     {
         if (empty($errors)) {
             return $message . ": No errors found.";
         }
 
-        $outputPath = getcwd() . DIRECTORY_SEPARATOR . $filename . ".txt";
-        $fileResource = fopen($outputPath, 'w');
+        $dirname = dirname($filePath);
+        if (!file_exists($dirname)) {
+            mkdir($dirname, 0777, true);
+        }
+
+        $fileResource = fopen($filePath, 'w');
 
         foreach ($errors as $test => $error) {
             fwrite($fileResource, $error[0] . PHP_EOL);
@@ -75,7 +79,7 @@ class ScriptUtil
 
         fclose($fileResource);
         $errorCount = count($errors);
-        $output = $message . ": Errors found across {$errorCount} file(s). Error details output to {$outputPath}";
+        $output = $message . ": Errors found across {$errorCount} file(s). Error details output to {$filePath}";
 
         return $output;
     }

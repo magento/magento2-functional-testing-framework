@@ -25,9 +25,9 @@ use \Magento\FunctionalTestingFramework\Util\ModuleResolver\SequenceSorterInterf
 class ModuleResolver
 {
     /**
-     * Environment field name for module whitelist.
+     * Environment field name for module allowlist.
      */
-    const MODULE_WHITELIST = 'MODULE_WHITELIST';
+    const MODULE_ALLOWLIST = 'MODULE_ALLOWLIST';
 
     /**
      * Environment field name for custom module paths.
@@ -132,7 +132,7 @@ class ModuleResolver
      *
      * @var array
      */
-    protected $moduleBlacklist = [
+    protected $moduleBlocklist = [
         'SampleTests', 'SampleTemplates'
     ];
 
@@ -270,7 +270,7 @@ class ModuleResolver
             return $this->enabledModulePaths;
         }
 
-        $enabledModules = array_merge($this->getEnabledModules(), $this->getModuleWhitelist());
+        $enabledModules = array_merge($this->getEnabledModules(), $this->getModuleAllowlist());
         $enabledDirectoryPaths = $this->flipAndFilterModulePathsArray($allModulePaths, $enabledModules);
         $this->enabledModulePaths = $this->applyCustomModuleMethods($enabledDirectoryPaths);
 
@@ -289,18 +289,18 @@ class ModuleResolver
     }
 
     /**
-     * Return an array of module whitelist that not exist in target Magento instance.
+     * Return an array of module allowlist that not exist in target Magento instance.
      *
      * @return array
      */
-    protected function getModuleWhitelist()
+    protected function getModuleAllowlist()
     {
-        $moduleWhitelist = getenv(self::MODULE_WHITELIST);
+        $moduleAllowlist = getenv(self::MODULE_ALLOWLIST);
 
-        if (empty($moduleWhitelist)) {
+        if (empty($moduleAllowlist)) {
             return [];
         }
-        return array_map('trim', explode(',', $moduleWhitelist));
+        return array_map('trim', explode(',', $moduleAllowlist));
     }
 
     /**
@@ -693,7 +693,7 @@ class ModuleResolver
      */
     protected function applyCustomModuleMethods($modulesPath)
     {
-        $modulePathsResult = $this->removeBlacklistModules($modulesPath);
+        $modulePathsResult = $this->removeBlocklistModules($modulesPath);
         $customModulePaths = $this->getCustomModulePaths();
 
         array_map(function ($key, $value) {
@@ -710,17 +710,17 @@ class ModuleResolver
     }
 
     /**
-     * Remove blacklist modules from input module paths.
+     * Remove blocklist modules from input module paths.
      *
      * @param array $modulePaths
      * @return string[]
      */
-    private function removeBlacklistModules($modulePaths)
+    private function removeBlocklistModules($modulePaths)
     {
         $modulePathsResult = $modulePaths;
         foreach ($modulePathsResult as $moduleName => $modulePath) {
-            // Remove module if it is in blacklist
-            if (in_array($moduleName, $this->getModuleBlacklist())) {
+            // Remove module if it is in blocklist
+            if (in_array($moduleName, $this->getModuleBlocklist())) {
                 unset($modulePathsResult[$moduleName]);
                 LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
                     "excluding module",
@@ -754,13 +754,13 @@ class ModuleResolver
     }
 
     /**
-     * Getter for moduleBlacklist.
+     * Getter for moduleBlocklist.
      *
      * @return string[]
      */
-    private function getModuleBlacklist()
+    private function getModuleBlocklist()
     {
-        return $this->moduleBlacklist;
+        return $this->moduleBlocklist;
     }
 
     /**

@@ -430,12 +430,14 @@ The example parameters are taken from the `etc/config/.env.example` file.
 
 ### `static-checks`
 
-Runs all or specific MFTF static-checks on the test codebase that MFTF is currently attached to.
+Runs all or specific MFTF static-checks on the test codebase that MFTF is currently attached to. 
 Behavior for determining what tests to run is as follows:
 
 *  If test names are specified, only those tests are run.
 *  If no test names are specified, tests are run according to `staticRuleset.json`.
 *  If no `staticRuleset.json` is found, all tests are run.
+
+Static checks errors are written to *.txt files under TEST_BP/tests/_output/static-results/
 
 #### Usage
 

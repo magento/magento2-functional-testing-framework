@@ -54,8 +54,8 @@ foreach ($TEST_ENVS as $key => $value) {
     putenv("{$key}=${value}");
 }
 
-// Add our test module to the whitelist
-putenv('MODULE_WHITELIST=Magento_TestModule');
+// Add our test module to the allowlist
+putenv('MODULE_ALLOWLIST=Magento_TestModule');
 
 // Define our own set of paths for the tests
 defined('FW_BP') || define('FW_BP', PROJECT_ROOT);

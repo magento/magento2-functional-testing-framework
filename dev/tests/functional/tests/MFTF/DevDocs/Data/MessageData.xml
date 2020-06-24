@@ -17,4 +17,10 @@
             <item name="three">3</item>
         </array>
     </entity>
+
+    <entity name="ExtendedMessageData" extends="MessageData">
+        <array key="numbers">
+            <item name="TESTING CASE">TESTING CASE</item>
+        </array>
+    </entity>
 </entities>

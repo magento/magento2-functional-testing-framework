@@ -13,7 +13,7 @@ class IsNullSniff implements Sniff
     /**
      * @var string
      */
-    protected $blacklist = 'is_null';
+    protected $blocklist = 'is_null';
 
     /**
      * @inheritdoc
@@ -29,7 +29,7 @@ class IsNullSniff implements Sniff
     public function process(File $sourceFile, $stackPtr)
     {
         $tokens = $sourceFile->getTokens();
-        if ($tokens[$stackPtr]['content'] === $this->blacklist) {
+        if ($tokens[$stackPtr]['content'] === $this->blocklist) {
             $sourceFile->addError(
                 "is_null must be avoided. Use strict comparison instead.",
                 $stackPtr,
