@@ -53,14 +53,33 @@ class functionalSuiteHooks extends \Codeception\GroupObject
                     $webDriver->_initializeSession();
                 }
                 $webDriver->amOnPage("some.url"); // stepKey: before
-                $createFields['someKey'] = "dataHere";
+                $createOneFields['someKey'] = "dataHere";
                 PersistedObjectHandler::getInstance()->createEntity(
-                    "create",
+                    "createOne",
                     "suite",
-                    "createThis",
-                     $createFields
+                    "createEntityOne",
+                    [],
+                    $createOneFields
                 );
-                $webDriver->click(PersistedObjectHandler::getInstance()->retrieveEntityField('create', 'data', 'suite')); // stepKey: clickWithData
+                PersistedObjectHandler::getInstance()->createEntity(
+                    "createTwo",
+                    "suite",
+                    "createEntityTwo",
+                    ["createEntityOne"]
+                );
+                PersistedObjectHandler::getInstance()->createEntity(
+                    "createThree",
+                    "suite",
+                    "createEntityThree",
+                    []
+                );
+                PersistedObjectHandler::getInstance()->createEntity(
+                    "createFour",
+                    "suite",
+                    "createEntityFour",
+                    ["createEntityTwo", "createEntityThree"]
+                );
+                $webDriver->click(PersistedObjectHandler::getInstance()->retrieveEntityField('createTwo', 'data', 'suite')); // stepKey: clickWithData
                 print("Entering Action Group [AC] actionGroupWithTwoArguments");
                 $webDriver->see("John", msq("uniqueData") . "John"); // stepKey: seeFirstNameAC
                 print("Exiting Action Group [AC] actionGroupWithTwoArguments");
