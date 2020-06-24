@@ -67,6 +67,18 @@ class functionalSuiteHooks extends \Codeception\GroupObject
                     "createEntityTwo",
                     ["createEntityOne"]
                 );
+                PersistedObjectHandler::getInstance()->createEntity(
+                    "createThree",
+                    "suite",
+                    "createEntityThree",
+                    []
+                );
+                PersistedObjectHandler::getInstance()->createEntity(
+                    "createFour",
+                    "suite",
+                    "createEntityFour",
+                    ["createEntityTwo", "createEntityThree"]
+                );
                 $webDriver->click(PersistedObjectHandler::getInstance()->retrieveEntityField('createTwo', 'data', 'suite')); // stepKey: clickWithData
                 print("Entering Action Group [AC] actionGroupWithTwoArguments");
                 $webDriver->see("John", msq("uniqueData") . "John"); // stepKey: seeFirstNameAC

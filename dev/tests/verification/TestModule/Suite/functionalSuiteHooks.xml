@@ -19,6 +19,11 @@
             <createData entity="createEntityTwo" stepKey="createTwo">
                 <requiredEntity createDataKey="createEntityOne"/>
             </createData>
+            <createData entity="createEntityThree" stepKey="createThree"/>
+            <createData entity="createEntityFour" stepKey="createFour">
+                <requiredEntity createDataKey="createEntityTwo"/>
+                <requiredEntity createDataKey="createEntityThree"/>
+            </createData>
             <click stepKey="clickWithData" userInput="$createTwo.data$"/>
             <actionGroup ref="actionGroupWithTwoArguments" stepKey="AC">
                 <argument name="somePerson" value="simpleData"/>
