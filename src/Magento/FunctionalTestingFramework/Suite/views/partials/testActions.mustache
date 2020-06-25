@@ -1,15 +1,10 @@
 {{#actions}}
 {{#webDriverInit}}
-$webDriver = $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver');
-
-// close any open sessions
 if ($webDriver->webDriver != null) {
-    $webDriver->webDriver->close();
-    $webDriver->webDriver = null;
+    $webDriver->_restart();
+} else {
+    $webDriver->_initializeSession();
 }
-
-// initialize the webdriver session
-$webDriver->_initializeSession();
 {{/webDriverInit}}
 {{#action}}
 {{{action}}}
@@ -18,9 +13,9 @@ $webDriver->_initializeSession();
 PersistedObjectHandler::getInstance()->createEntity(
     "{{stepKey}}",
     "suite",
-    "{{entityName}}"{{#requiredEntities}},
-    [$this->{{entityName}}{{^last}}, {{/last}}]{{/requiredEntities}}{{#customFields}},
-     ${{customFields}}{{/customFields}}
+    "{{entityName}}",
+    [{{#requiredEntities}}"{{entityName}}"{{^last}}, {{/last}}{{/requiredEntities}}]{{#customFields}},
+    ${{customFields}}{{/customFields}}
 );
 {{/createData}}
 {{#deleteData}}

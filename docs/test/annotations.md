@@ -87,7 +87,7 @@ Add `<skip>` to the test to skip it during test run.
 
 Attribute|Type|Use|Definition
 ---|---|---|---
-`value`|string|required|A value that is used to group tests. It should be lower case. `skip` is reserved to ignore content of the test and generate an empty test.
+`value`|string|required|A value that is used to group tests. It should be lower case.
 
 #### Example
 
