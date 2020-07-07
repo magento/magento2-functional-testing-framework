@@ -129,6 +129,12 @@ Magento Functional Testing Framework Changelog
 2.6.3
 -----
 
+### Fixes
+* added dependency to packages MFTF used but never specified in composer.json
+
+2.6.3
+-----
+
 ### New Feature
 * `--filter` option was added to `bin/mftf generate:tests` command. For more details please go to https://devdocs.magento.com/mftf/docs/commands/mftf.html#generatetests
 
