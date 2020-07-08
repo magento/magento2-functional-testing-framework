@@ -52,12 +52,6 @@ Test
         └── ...
 ```
 
-<div class="bs-callout bs-callout-info" markdown="1">
-
-We are actively developing functional tests. Check out the [MFTF Test Migration][] repository.
-
-</div>
-
 ## Use cases
 
 -  Contributor: changes the core behaviour, fixing the annoing bug.
@@ -122,4 +116,3 @@ Follow the [MFTF project] and [contribute on Github].
 [Functional Testing Framework]: https://devdocs.magento.com/guides/v2.3/mtf/mtf_introduction.html
 [MFTF project]: https://github.com/magento/magento2-functional-testing-framework
 [Find your MFTF version]: #find-your-mftf-version
-[MFTF Test Migration]: https://github.com/magento/magento-functional-tests-migration
