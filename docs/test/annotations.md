@@ -112,7 +112,7 @@ Attribute|Type|Use
 
 ### severity
 
-The `<severity>` element is an implementation of the [`@Severity`] Allure annotation, which is used to prioritise test methods by severity.
+The `<severity>` element is an implementation of the [`@Severity`] Allure annotation, which is used to prioritise tests by severity.
 
 Attribute|Type|Use|Acceptable values
 ---|---|---|---
