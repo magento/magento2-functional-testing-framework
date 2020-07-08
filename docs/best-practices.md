@@ -40,8 +40,6 @@ We recommend to keep Action Groups having single responsibility, for example `Ad
 Althought the Magento Core team and Contributors join forces to cover most of the features with tests, it is impossible to have this done quickly.
 If you've covered Magento Core feature with Functional Tests - you are more than welcome to contribute.
 
-You can also help with MFTF Test Migration to get the experience and valuable feedback from other community members and maintainers.
-
 ## Action group
 
 1. [Action group] names should be sufficiently descriptive to inform a test writer of what the action group does and when it should be used. Add additional explanation in annotations if needed.
@@ -214,4 +212,3 @@ Since the configurable product module could be disabled, this approach is more r
 [merging]: merging.html
 [parameterized selectors]: section/parameterized-selectors.html
 [sections]: section.html
-[MFTF Test Migration]: https://github.com/magento/magento-functional-tests-migration
