@@ -116,7 +116,7 @@ The `<severity>` element is an implementation of the [`@Severity`] Allure annota
 
 Attribute|Type|Use|Acceptable values
 ---|---|---|---
-`value`|string|required|`MINOR`, `AVERAGE`, `MAJOR`, `BLOCKER`, `CRITICAL`
+`value`|string|required|`MINOR`, `AVERAGE`, `MAJOR`, `CRITICAL`, `BLOCKER`
 
 #### Example
 
