@@ -12,7 +12,6 @@ If a modification to MFTF forces tests to be changed, this is a backward incompa
 To find the version of MFTF that you are using, run the Magento CLI command:
 
 ```bash
-cd <magento_root>/
 vendor/bin/mftf --version
 ```
 
@@ -61,8 +60,10 @@ You must reset the patch and minor version to 0 when you change the major versio
 This table lists the version of the MFTF that was released with a particular version of Magento.
 
 |Magento version| MFTF  version|
-|---|---|
+|---    |---     |
+| 2.3.4 | 2.5.3  |
+| 2.3.3 | 2.4.5  |
 | 2.3.2 | 2.3.14 |
 | 2.3.1 | 2.3.13 |
-| 2.3.0 | 2.3.9 |
+| 2.3.0 | 2.3.9  |
 | 2.2.8 | 2.3.13 |
