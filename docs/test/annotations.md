@@ -124,6 +124,16 @@ Attribute|Type|Use|Acceptable values
 <severity value="CRITICAL"/>
 ```
 
+#### Usage guidelines
+
+Severity Level|Usage
+---|---
+`BLOCKER`|If this test fails, the customer is completely blocked from purchasing a product.
+`CRITICAL`|This is a serious problem impacting conversion, or affecting the operation of the store.
+`MAJOR`|Store conversion rate is reduced owing to this issue. For example, something is broken or missing that impacts checkout frequency or cart volume.
+`AVERAGE`|A fault on the storefront that can negatively impact conversion rate (like UI errors or omissions), or problems with Magento admin functionality.
+`MINOR`|An application or configuration fault that has no impact on conversion rate.
+
 ### skip
 
 Use the `<skip>` element to skip a test.
