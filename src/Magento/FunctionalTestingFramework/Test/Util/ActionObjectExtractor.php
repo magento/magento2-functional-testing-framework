@@ -22,11 +22,12 @@ class ActionObjectExtractor extends BaseObjectExtractor
     const TEST_ACTION_AFTER = 'after';
     const TEST_STEP_MERGE_KEY = 'stepKey';
     const ACTION_GROUP_TAG = 'actionGroup';
+    const HELPER_TAG = 'helper';
     const ACTION_GROUP_REF = 'ref';
     const ACTION_GROUP_ARGUMENTS = 'arguments';
     const ACTION_GROUP_ARG_VALUE = 'value';
     const BEFORE_AFTER_ERROR_MSG = "Merge Error - Steps cannot have both before and after attributes.\tStepKey='%s'";
-    const STEP_KEY_BLACKLIST_ERROR_MSG = "StepKeys cannot contain non alphanumeric characters.\tStepKey='%s'";
+    const STEP_KEY_BLOCKLIST_ERROR_MSG = "StepKeys cannot contain non alphanumeric characters.\tStepKey='%s'";
     const STEP_KEY_EMPTY_ERROR_MSG = "StepKeys cannot be empty.\tAction='%s'";
     const DATA_PERSISTENCE_CUSTOM_FIELD = 'field';
     const DATA_PERSISTENCE_CUSTOM_FIELD_KEY = 'key';
@@ -69,7 +70,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
             }
 
             if (preg_match('/[^a-zA-Z0-9_]/', $stepKey)) {
-                throw new XmlException(sprintf(self::STEP_KEY_BLACKLIST_ERROR_MSG, $actionName));
+                throw new XmlException(sprintf(self::STEP_KEY_BLOCKLIST_ERROR_MSG, $actionName));
             }
 
             $actionAttributes = $this->stripDescriptorTags(
@@ -84,6 +85,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
             }
 
             $actionAttributes = $this->processActionGroupArgs($actionType, $actionAttributes);
+            $actionAttributes = $this->processHelperArgs($actionType, $actionAttributes);
             $linkedAction = $this->processLinkedActions($actionName, $actionData);
             $actions = $this->extractFieldActions($actionData, $actions);
             $actionAttributes = $this->extractFieldReferences($actionData, $actionAttributes);
@@ -162,6 +164,42 @@ class ActionObjectExtractor extends BaseObjectExtractor
 
             $actionAttributeArgData[self::ACTION_GROUP_ARGUMENTS][$attributeDataKey] =
                 $attributeDataValues[self::ACTION_GROUP_ARG_VALUE] ?? null;
+        }
+
+        return $actionAttributeArgData;
+    }
+
+    /**
+     * Takes the helper arguments as an array that can be passed to PHP class
+     * defined in the action group xml.
+     *
+     * @param string $actionType
+     * @param array  $actionAttributeData
+     * @return array
+     * @throws TestFrameworkException
+     */
+    private function processHelperArgs($actionType, $actionAttributeData)
+    {
+        $reservedHelperVariableNames = ['class', 'method'];
+        if ($actionType !== self::HELPER_TAG) {
+            return $actionAttributeData;
+        }
+
+        $actionAttributeArgData = [];
+        foreach ($actionAttributeData as $attributeDataKey => $attributeDataValues) {
+            if (isset($attributeDataValues['nodeName']) && $attributeDataValues['nodeName'] == 'argument') {
+                if (isset($attributeDataValues['name'])
+                    && in_array($attributeDataValues['name'], $reservedHelperVariableNames)) {
+                    $message = 'Helper argument names ' . implode(',', $reservedHelperVariableNames);
+                    $message .= ' are reserved and can not be used.';
+                    throw new TestFrameworkException(
+                        $message
+                    );
+                }
+                $actionAttributeArgData[$attributeDataValues['name']] = $attributeDataValues['value'] ?? null;
+                continue;
+            }
+            $actionAttributeArgData[$attributeDataKey] = $attributeDataValues;
         }
 
         return $actionAttributeArgData;

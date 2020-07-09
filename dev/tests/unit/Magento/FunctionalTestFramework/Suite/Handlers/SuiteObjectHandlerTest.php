@@ -3,7 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace Tests\unit\Magento\FunctionalTestFramework\Suite\Handlers;
+namespace tests\unit\Magento\FunctionalTestFramework\Suite\Handlers;
 
 use AspectMock\Test as AspectMock;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectManager;
@@ -12,14 +12,14 @@ use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Suite\Parsers\SuiteDataParser;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\SuiteDataArrayBuilder;
 use tests\unit\Util\TestDataArrayBuilder;
 use tests\unit\Util\MockModuleResolverBuilder;
 
 class SuiteObjectHandlerTest extends MagentoTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $resolverMock = new MockModuleResolverBuilder();
         $resolverMock->setup();

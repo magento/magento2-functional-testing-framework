@@ -109,7 +109,7 @@ class BuildProjectCommand extends Command
 
         if ($input->getOption('upgrade')) {
             $upgradeCommand = new UpgradeTestsCommand();
-            $upgradeOptions = new ArrayInput(['path' => FilePathFormatter::format(TESTS_MODULE_PATH)]);
+            $upgradeOptions = new ArrayInput([]);
             $upgradeCommand->run($upgradeOptions, $output);
         }
     }

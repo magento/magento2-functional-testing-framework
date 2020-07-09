@@ -25,6 +25,8 @@ use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
+use Mustache_Engine;
+use Mustache_Loader_FilesystemLoader;
 
 /**
  * Class TestGenerator
@@ -60,7 +62,12 @@ class TestGenerator
     const ARRAY_WRAP_OPEN = '[';
     const ARRAY_WRAP_CLOSE = ']';
 
-    const MFTF_3_O_0_DEPRECATION_MESSAGE = ' is DEPRECATED and will be removed in MFTF 3.0.0.';
+    /**
+     * Array with helpers classes and methods.
+     *
+     * @var array
+     */
+    private $customHelpers = [];
 
     /**
      * Actor name for AcceptanceTest
@@ -270,11 +277,41 @@ class TestGenerator
         $cestPhp .= $classAnnotationsPhp;
         $cestPhp .= sprintf("class %s\n", $className);
         $cestPhp .= "{\n";
+        $cestPhp .= $this->generateInjectMethod();
         $cestPhp .= $hookPhp;
         $cestPhp .= $testsPhp;
         $cestPhp .= "}\n";
 
         return $cestPhp;
+    }
+
+    /**
+     * Generates _injectMethod based on $this->customHelpers.
+     *
+     * @return string
+     */
+    private function generateInjectMethod()
+    {
+        if (empty($this->customHelpers)) {
+            return "";
+        }
+
+        $mustacheEngine = new Mustache_Engine([
+            'loader' => new Mustache_Loader_FilesystemLoader(
+                dirname(__DIR__) . DIRECTORY_SEPARATOR . "Helper" . DIRECTORY_SEPARATOR . 'views'
+            )
+        ]);
+
+        $argumentsWithType = [];
+        $arguments = [];
+        foreach ($this->customHelpers as $customHelperVar => $customHelperType) {
+            $argumentsWithType[] = $customHelperType . ' ' . $customHelperVar;
+            $arguments[] = ['type' => $customHelperType, 'var' => $customHelperVar];
+        }
+        $mustacheData['argumentsWithTypes'] = implode(', ' . PHP_EOL, $argumentsWithType);
+        $mustacheData['arguments'] = $arguments;
+
+        return $mustacheEngine->render('TestInjectMethod', $mustacheData);
     }
 
     /**
@@ -573,6 +610,7 @@ class TestGenerator
             $function = null;
             $time = null;
             $locale = null;
+            $currency = null;
             $username = null;
             $password = null;
             $width = null;
@@ -617,7 +655,11 @@ class TestGenerator
                 $sortOrder = $customActionAttributes['sortOrder'];
             }
 
-            if (isset($customActionAttributes['userInput']) && isset($customActionAttributes['url'])) {
+            if (isset($customActionAttributes['userInput'])
+                && isset($customActionAttributes['locale'])
+                && isset($customActionAttributes['currency'])) {
+                $input = $this->parseUserInput($customActionAttributes['userInput']);
+            } elseif (isset($customActionAttributes['userInput']) && isset($customActionAttributes['url'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['userInput']);
                 $url = $this->addUniquenessFunctionCall($customActionAttributes['url']);
             } elseif (isset($customActionAttributes['userInput'])) {
@@ -625,9 +667,6 @@ class TestGenerator
             } elseif (isset($customActionAttributes['url'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['url']);
                 $url = $this->addUniquenessFunctionCall($customActionAttributes['url']);
-            } elseif (isset($customActionAttributes['expectedValue'])) {
-                //For old Assert backwards Compatibility, remove when deprecating
-                $assertExpected = $this->addUniquenessFunctionCall($customActionAttributes['expectedValue']);
             } elseif (isset($customActionAttributes['regex'])) {
                 $input = $this->addUniquenessFunctionCall($customActionAttributes['regex']);
             }
@@ -719,10 +758,7 @@ class TestGenerator
             }
 
             if (isset($customActionAttributes['function'])) {
-                $function = $this->addUniquenessFunctionCall(
-                    $customActionAttributes['function'],
-                    $actionObject->getType() !== "executeInSelenium"
-                );
+                $function = $this->addUniquenessFunctionCall($customActionAttributes['function']);
                 if (in_array($actionObject->getType(), ActionObject::FUNCTION_CLOSURE_ACTIONS)) {
                     // Argument must be a closure function, not a string.
                     $function = trim($function, '"');
@@ -739,6 +775,10 @@ class TestGenerator
 
             if (isset($customActionAttributes['locale'])) {
                 $locale = $this->wrapWithDoubleQuotes($customActionAttributes['locale']);
+            }
+
+            if (isset($customActionAttributes['currency'])) {
+                $currency = $this->wrapWithDoubleQuotes($customActionAttributes['currency']);
             }
 
             if (isset($customActionAttributes['username'])) {
@@ -782,6 +822,45 @@ class TestGenerator
             }
 
             switch ($actionObject->getType()) {
+                case "helper":
+                    if (!in_array($customActionAttributes['class'], $this->customHelpers)) {
+                        $this->customHelpers['$' . $stepKey] = $customActionAttributes['class'];
+                    }
+
+                    $arguments = [];
+                    $classReader = new \Magento\FunctionalTestingFramework\Helper\Code\ClassReader();
+                    $parameters = $classReader->getParameters(
+                        $customActionAttributes['class'],
+                        $customActionAttributes['method']
+                    );
+                    $errors = [];
+                    foreach ($parameters as $parameter) {
+                        if (array_key_exists($parameter['variableName'], $customActionAttributes)) {
+                            $value = $customActionAttributes[$parameter['variableName']];
+                            $arguments[] = $this->addUniquenessFunctionCall(
+                                $value,
+                                $parameter['type'] === 'string' || $parameter['type'] === null
+                            );
+                        } elseif ($parameter['isOptional']) {
+                            $value = $parameter['optionalValue'];
+                            $arguments[] = str_replace(PHP_EOL, '', var_export($value, true));
+                        } else {
+                            $errors[] = 'Argument \'' . $parameter['variableName'] . '\' for method '
+                                . $customActionAttributes['class'] . '::' . $customActionAttributes['method']
+                                . ' is not found.';
+                        }
+                    }
+                    if (!empty($errors)) {
+                        throw new TestFrameworkException(implode(PHP_EOL, $errors));
+                    }
+                    $testSteps .= sprintf(
+                        "\t\t$%s->comment('[%s] %s()');" . PHP_EOL,
+                        $actor,
+                        $stepKey,
+                        $customActionAttributes['class'] . '::' . $customActionAttributes['method']
+                    );
+                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $arguments);
+                    break;
                 case "createData":
                     $entity = $customActionAttributes['entity'];
 
@@ -1011,6 +1090,7 @@ class TestGenerator
                     break;
                 case "selectOption":
                 case "unselectOption":
+                case "seeNumberOfElements":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
                         $actionObject,
@@ -1048,28 +1128,12 @@ class TestGenerator
                         $parameterArray
                     );
                     break;
-                case "executeInSelenium":
-                    $this->deprecationMessages[] = "DEPRECATED ACTION in Test: at step {$stepKey} 'executeInSelenium'"
-                        . self::MFTF_3_O_0_DEPRECATION_MESSAGE;
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $function);
-                    break;
                 case "executeJS":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
                         $actionObject,
                         $function
-                    );
-                    break;
-                case "performOn":
-                    $this->deprecationMessages[] = "DEPRECATED ACTION in Test: at step {$stepKey} 'performOn'"
-                        . self::MFTF_3_O_0_DEPRECATION_MESSAGE;
-                    $testSteps .= $this->wrapFunctionCall(
-                        $actor,
-                        $actionObject,
-                        $selector,
-                        $function,
-                        $time
                     );
                     break;
                 case "waitForElementChange":
@@ -1108,13 +1172,14 @@ class TestGenerator
                         $selector
                     );
                     break;
-                case "formatMoney":
+                case "formatCurrency":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
                         $actionObject,
                         $input,
-                        $locale
+                        $locale,
+                        $currency
                     );
                     break;
                 case "mSetLocale":
@@ -1141,6 +1206,7 @@ class TestGenerator
                     );
                     break;
                 case "grabPageSource":
+                case "getOTP":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
@@ -1190,15 +1256,6 @@ class TestGenerator
                 case "seeOptionIsSelected":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input);
                     break;
-                case "seeNumberOfElements":
-                    $testSteps .= $this->wrapFunctionCall(
-                        $actor,
-                        $actionObject,
-                        $selector,
-                        $input,
-                        $parameterArray
-                    );
-                    break;
                 case "seeInPageSource":
                 case "dontSeeInPageSource":
                 case "seeInSource":
@@ -1218,15 +1275,12 @@ class TestGenerator
                         $visible
                     );
                     break;
-                case "assertEquals":
                 case "assertGreaterOrEquals":
                 case "assertGreaterThan":
                 case "assertGreaterThanOrEqual":
-                case "assertInternalType":
                 case "assertLessOrEquals":
                 case "assertLessThan":
                 case "assertLessThanOrEqual":
-                case "assertNotEquals":
                 case "assertInstanceOf":
                 case "assertNotInstanceOf":
                 case "assertNotRegExp":
@@ -1240,6 +1294,10 @@ class TestGenerator
                 case "assertCount":
                 case "assertContains":
                 case "assertNotContains":
+                case "assertStringContainsString":
+                case "assertStringContainsStringIgnoringCase":
+                case "assertStringNotContainsString":
+                case "assertStringNotContainsStringIgnoringCase":
                 case "expectException":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
@@ -1248,6 +1306,31 @@ class TestGenerator
                         $assertActual,
                         $assertMessage,
                         $assertDelta
+                    );
+                    break;
+                case "assertEquals":
+                case "assertNotEquals":
+                case "assertEqualsIgnoringCase":
+                case "assertNotEqualsIgnoringCase":
+                case "assertEqualsCanonicalizing":
+                case "assertNotEqualsCanonicalizing":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $assertExpected,
+                        $assertActual,
+                        $assertMessage
+                    );
+                    break;
+                case "assertEqualsWithDelta":
+                case "assertNotEqualsWithDelta":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $assertExpected,
+                        $assertActual,
+                        $assertDelta,
+                        $assertMessage
                     );
                     break;
                 case "assertElementContainsAttribute":
@@ -1277,16 +1360,6 @@ class TestGenerator
                         $actor,
                         $actionObject,
                         $assertActual,
-                        $assertMessage
-                    );
-                    break;
-                case "assertArraySubset":
-                    $testSteps .= $this->wrapFunctionCall(
-                        $actor,
-                        $actionObject,
-                        $assertExpected,
-                        $assertActual,
-                        $assertIsStrict,
                         $assertMessage
                     );
                     break;
@@ -1357,9 +1430,6 @@ class TestGenerator
                     $dateGenerateCode .= "\t\t\${$stepKey} = \$date->format({$format});\n";
 
                     $testSteps .= $dateGenerateCode;
-                    break;
-                case "skipReadinessCheck":
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $customActionAttributes['state']);
                     break;
                 case "comment":
                     $input = $input === null ? strtr($value, ['$' => '\$', '{' => '\{', '}' => '\}']) : $input;
@@ -1868,7 +1938,15 @@ class TestGenerator
     private function wrapFunctionCall($actor, $action, ...$args)
     {
         $isFirst = true;
-        $output = sprintf("\t\t$%s->%s(", $actor, $action->getType());
+        $isActionHelper = $action->getType() === 'helper';
+        $actionType = $action->getType();
+        if ($isActionHelper) {
+            $actor = "this->helperContainer->get('" . $action->getCustomActionAttributes()['class'] . "')";
+            $args = $args[0];
+            $actionType = $action->getCustomActionAttributes()['method'];
+        }
+
+        $output = sprintf("\t\t$%s->%s(", $actor, $actionType);
         for ($i = 0; $i < count($args); $i++) {
             if (null === $args[$i]) {
                 continue;
@@ -2201,5 +2279,28 @@ class TestGenerator
     private function hasDecimalPoint(string $outStr)
     {
         return strpos($outStr, localeconv()['decimal_point']) !== false;
+    }
+
+    /**
+     * Parse action attribute `userInput`
+     *
+     * @param string $userInput
+     * @return string
+     */
+    private function parseUserInput($userInput)
+    {
+        $floatPattern = '/^\s*([+-]?[0-9]*\.?[0-9]+)\s*$/';
+        preg_match($floatPattern, $userInput, $float);
+        if (isset($float[1])) {
+            return $float[1];
+        }
+
+        $intPattern = '/^\s*([+-]?[0-9]+)\s*$/';
+        preg_match($intPattern, $userInput, $int);
+        if (isset($int[1])) {
+            return $int[1];
+        }
+
+        return $this->addUniquenessFunctionCall($userInput);
     }
 }

@@ -7,8 +7,20 @@
 -->
 
 <entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:noNamespaceSchemaLocation="../../../../../../../src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd">
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
     <entity name="MessageData">
         <data key="message">Introduction to the Magento Functional Testing Framework</data>
+        <array key="numbers">
+            <item name="zero">0</item>
+            <item name="one">1</item>
+            <item name="two">2</item>
+            <item name="three">3</item>
+        </array>
+    </entity>
+
+    <entity name="ExtendedMessageData" extends="MessageData">
+        <array key="numbers">
+            <item name="TESTING CASE">TESTING CASE</item>
+        </array>
     </entity>
 </entities>

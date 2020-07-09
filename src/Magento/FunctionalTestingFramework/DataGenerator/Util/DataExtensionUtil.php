@@ -62,7 +62,7 @@ class DataExtensionUtil
 
         // Get all data for both parent and child and merge
         $referencedData = $parentEntity->getAllData();
-        $newData = array_merge($referencedData, $entityObject->getAllData());
+        $newData = array_extend($referencedData, $entityObject->getAllData());
 
         // Get all linked references for both parent and child and merge
         $referencedLinks = $parentEntity->getLinkedEntities();

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="BasicFunctionalTest">
+        <annotations>
+            <severity value="CRITICAL"/>
+            <title value="A Functional Cest"/>
+            <group value="functional"/>
+            <features value="Basic Functional Cest"/>
+            <stories value="MQE-305"/>
+        </annotations>
+        <before>
+            <amOnPage url="/beforeUrl" stepKey="beforeAmOnPageKey"/>
+        </before>
+        <after>
+            <amOnPage url="/afterUrl" stepKey="afterAmOnPageKey"/>
+        </after>
+        <comment stepKey="basicCommentWithNoData" userInput="{{emptyData.noData}}"/>
+        <comment stepKey="basicCommentWithDefinitelyNoData" userInput="{{emptyData.definitelyNoData}}"/>
+        <comment stepKey="basicCommentWithData" userInput="seeComment"/>
+        <grabValueFrom stepKey="someVarDefinition"/>
+        <acceptPopup stepKey="acceptPopupKey1"/>
+        <amOnPage stepKey="amOnPageKey1" url="/test/url"/>
+        <appendField selector=".functionalTestSelector" stepKey="appendFieldKey1" />
+        <attachFile userInput="testFileAttachment" selector=".functionalTestSelector" stepKey="attachFileKey1" />
+        <cancelPopup stepKey="cancelPopupKey1"/>
+        <checkOption selector=".functionalTestSelector" stepKey="checkOptionKey1"/>
+        <click selector=".functionalTestSelector" stepKey="clickKey1"/>
+        <clickWithLeftButton selector=".functionalTestSelector" stepKey="clickWithLeftButtonKey1"/>
+        <clickWithRightButton selector=".functionalTestSelector" stepKey="clickWithRightButtonKey1"/>
+        <clickWithLeftButton selector="{{SampleSection.simpleElement}}{{SampleSection.simpleElementOneParam(offset.x)}}" x="{{offset.x}}" y="{{offset.y}}" stepKey="clickWithLeftButtonKeyXY1" />
+        <clickWithRightButton selector="{{SampleSection.simpleElementOneParam('4123')}}{{SampleSection.simpleElement}}" x="{{offset.x}}" y="{{offset.y}}" stepKey="clickWithRightButtonKeyXY1" />
+        <closeTab stepKey="closeTabKey1"/>
+        <conditionalClick selector=".functionalTestSelector" dependentSelector=".functionalDependentTestSelector" visible="true" stepKey="conditionalClickKey1"/>
+        <deleteData stepKey="deleteKey1" createDataKey="createKey1"/>
+        <deleteData stepKey="deleteKey2" url="/V1/categories{$grabbedData}"/>
+        <dontSee userInput="someInput" selector=".functionalTestSelector" stepKey="dontSeeKey1" />
+        <dontSeeCheckboxIsChecked selector=".functionalTestSelector" stepKey="dontSeeCheckboxIsCheckedKey1"/>
+        <dontSeeCookie userInput="someInput" stepKey="dontSeeCookieKey1"/>
+        <dontSeeCurrentUrlEquals url="/functionalUrl" stepKey="dontSeeCurrentUrlEqualsKey1"/>
+        <dontSeeCurrentUrlMatches regex="/[0-9]+/" stepKey="dontSeeCurrentUrlMatchesKey1"/>
+        <dontSeeElement selector=".functionalTestSelector" stepKey="dontSeeElementKey1"/>
+        <dontSeeElementInDOM selector=".functionalTestSelector" stepKey="dontSeeElementInDOMKey1"/>
+        <dontSeeInCurrentUrl url="/functionalUrl" stepKey="dontSeeInCurrentUrlKey1"/>
+        <dontSeeInField selector=".functionalTestSelector" stepKey="dontSeeInFieldKey1" />
+        <dontSeeInPageSource html="Cosmo Kramer" stepKey="dontSeeInPageSourceKey1"/>
+        <dontSeeInPageSource html="&#60;p&#62;Jerry Seinfeld&#60;&#47;p&#62;" stepKey="dontSeeInPageSourceKey2"/>
+        <dontSeeInPageSource userInput="Cosmo Kramer" stepKey="dontSeeInPageSourceKey3"/>
+        <dontSeeInPageSource userInput="&#60;p&#62;Jerry Seinfeld&#60;&#47;p&#62;" stepKey="dontSeeInPageSourceKey4"/>
+        <dontSeeInPageSource userInput="bar" html="foo" stepKey="dontSeeInPageSourceKey5"/>
+        <dontSeeInPageSource userInput="&#60;p&#62;bar&#60;&#47;p&#62;" html="&#60;p&#62;foo&#60;&#47;p&#62;" stepKey="dontSeeInPageSourceKey6"/>
+        <dontSeeInSource html="Cosmo Kramer" stepKey="dontSeeInSourceKey1"/>
+        <dontSeeInSource html="&#60;p&#62;Jerry Seinfeld&#60;&#47;p&#62;" stepKey="dontSeeInSourceKey2"/>
+        <dontSeeInTitle userInput="someInput" stepKey="dontSeeInTitleKey1"/>
+        <dontSeeLink userInput="someInput" url="/functionalUrl" stepKey="dontSeeLinkKey1" />
+        <dontSeeOptionIsSelected selector=".functionalTestSelector" userInput="someInput" stepKey="dontSeeOptionIsSelectedKey1" />
+        <doubleClick selector=".functionalTestSelector" stepKey="doubleClickKey1"/>
+        <dragAndDrop selector1=".functionalTestSelector" selector2=".functionalTestSelector2" stepKey="dragAndDropKey1" />
+        <dragAndDrop selector1=".functionalTestSelector" selector2=".functionalTestSelector2" stepKey="dragAndDropKey2" x="100" y="900"/>
+        <executeJS function="someJSFunction" stepKey="executeJSKey1"/>
+        <fillField selector=".functionalTestSelector" userInput="someInput" stepKey="fillFieldKey1" />
+        <fillField selector=".functionalTestSelector" userInput="0" stepKey="fillFieldKey2" />
+        <generateDate date="Now" format="H:i:s" stepKey="generateDateKey"/>
+        <generateDate date="Now" format="H:i:s" stepKey="generateDateKey2" timezone="UTC"/>
+        <getOTP stepKey="getOtp"/>
+        <grabAttributeFrom selector=".functionalTestSelector" userInput="someInput" stepKey="grabAttributeFromKey1" />
+        <grabCookie userInput="grabCookieInput" parameterArray="['domain' => 'www.google.com']" stepKey="grabCookieKey1" />
+        <grabFromCurrentUrl regex="/grabCurrentUrl" stepKey="grabFromCurrentUrlKey1" />
+        <grabMultiple selector=".functionalTestSelector" stepKey="grabMultipleKey1" />
+        <grabTextFrom selector=".functionalTestSelector" stepKey="grabTextFromKey1" />
+        <grabValueFrom selector=".functionalTestSelector" stepKey="grabValueFromKey1" />
+        <magentoCLI command="maintenance:enable" arguments="&quot;stuffHere&quot;" stepKey="magentoCli1"/>
+        <magentoCLI command="maintenance:enable" arguments="&quot;stuffHere&quot;" timeout="120" stepKey="magentoCli2"/>
+        <magentoCLI command="config:set somePath {{_CREDS.someKey}}" stepKey="magentoCli3"/>
+        <magentoCLI command="config:set somePath {{_CREDS.someKey}}" timeout="120" stepKey="magentoCli4"/>
+        <magentoCron stepKey="cronAllGroups"/>
+        <magentoCron groups="index" stepKey="cronSingleGroup"/>
+        <magentoCron groups="a b c" stepKey="cronMultipleGroups"/>
+        <makeScreenshot userInput="screenShotInput" stepKey="makeScreenshotKey1"/>
+        <maximizeWindow stepKey="maximizeWindowKey1"/>
+        <moveBack stepKey="moveBackKey1"/>
+        <moveForward stepKey="moveForwardKey1"/>
+        <moveMouseOver selector=".functionalTestSelector" stepKey="moveMouseOverKey1"/>
+        <openNewTab stepKey="openNewTabKey1"/>
+        <pause stepKey="pauseKey1"/>
+        <pressKey selector="#page" userInput="a" stepKey="pressKey1"/>
+        <pressKey selector="#page" parameterArray="[['ctrl','a'],'new']" stepKey="pressKey2"/>
+        <pressKey selector="#page" parameterArray="[['shift','111'],'1','x']" stepKey="pressKey3"/>
+        <pressKey selector="#page" parameterArray="[['ctrl', 'a'], \Facebook\WebDriver\WebDriverKeys::DELETE]" stepKey="pressKey4"/>
+        <reloadPage stepKey="reloadPageKey1"/>
+        <resetCookie userInput="cookieInput" stepKey="resetCookieKey1"/>
+        <resizeWindow width="0" height="0" stepKey="resizeWindowKey1" />
+        <scrollTo selector=".functionalTestSelector" stepKey="scrollToKey1"/>
+        <see userInput="someInput" selector=".functionalTestSelector" stepKey="seeKey1" />
+        <seeCheckboxIsChecked selector=".functionalTestSelector" stepKey="seeCheckboxIsCheckedKey1"/>
+        <seeCookie userInput="someInput" stepKey="seeCookieKey1"/>
+        <seeCurrentUrlEquals url="/functionalUrl" stepKey="seeCurrentUrlEqualsKey1"/>
+        <seeCurrentUrlMatches regex="/[0-9]+/" stepKey="seeCurrentUrlMatchesKey1"/>
+        <seeElement selector=".functionalTestSelector" stepKey="seeElementKey1"/>
+        <seeElementInDOM selector=".functionalTestSelector" stepKey="seeElementInDOMKey1"/>
+        <seeInCurrentUrl url="/functionalUrl" stepKey="seeInCurrentUrlKey1"/>
+        <seeInField selector=".functionalTestSelector" userInput="someInput" stepKey="seeInFieldKey1" />
+        <seeInPageSource html="Home Page" stepKey="seeInPageSourceKey1"/>
+        <seeInPageSource html="&#60;h1 class&#61;&#34;page-title&#34;&#62;" stepKey="seeInPageSourceKey2"/>
+        <seeInPopup userInput="someInput" stepKey="seeInPopupKey1"/>
+        <seeInSource html="Home Page" stepKey="seeInSourceKey1"/>
+        <seeInSource html="&#60;h1 class&#61;&#34;page-title&#34;&#62;" stepKey="seeInSourceKey2"/>
+        <seeInTitle userInput="someInput" stepKey="seeInTitleKey1"/>
+        <seeLink userInput="someInput" url="/functionalUrl" stepKey="seeLinkKey1" />
+        <seeNumberOfElements selector=".functionalTestSelector" stepKey="seeNumberOfElementsKey1"/>
+        <seeOptionIsSelected selector=".functionalTestSelector" userInput="someInput" stepKey="seeOptionIsSelectedKey1" />
+        <selectOption selector=".functionalTestSelector" stepKey="selectOptionKey1"/>
+        <selectMultipleOptions filterSelector=".filter" optionSelector=".option" stepKey="selectMultipleOpts1">
+            <array>['opt1', 'opt2']</array>
+        </selectMultipleOptions>
+        <setCookie value="someCookieValue" userInput="someInput" stepKey="setCookieKey1" />
+        <switchToIFrame userInput="someInput" stepKey="switchToIFrameKey1"/>
+        <switchToNextTab stepKey="switchToNextTabKey1"/>
+        <switchToPreviousTab stepKey="switchToPreviousTabKey1"/>
+        <switchToWindow stepKey="switchToWindowKey1"/>
+        <typeInPopup userInput="someInput" stepKey="typeInPopupKey1"/>
+        <uncheckOption selector=".functionalTestSelector" stepKey="uncheckOptionKey1"/>
+        <unselectOption selector=".functionalTestSelector" userInput="someInput" stepKey="unselectOptionKey1" />
+        <wait time="30" stepKey="waitKey1"/>
+        <waitForElement time="30" selector=".functionalTestSelector" stepKey="waitForElementKey1" />
+        <waitForElementNotVisible selector=".functionalTestSelector" time="30" stepKey="waitForElementNotVisibleKey1" />
+        <waitForElementVisible selector=".functionalTestSelector" time="30" stepKey="waitForElementVisibleKey1" />
+        <waitForElementChange selector="#selector" function="function(\WebDriverElement $el) {return $el->isDisplayed();}" stepKey="waitForElementChangeKey1"/>
+        <waitForJS function="someJsFunction" time="30" stepKey="waitForJSKey1" />
+        <waitForText selector=".functionalTestSelector" userInput="someInput" time="30" stepKey="waitForText1"/>
+    </test>
+</tests>

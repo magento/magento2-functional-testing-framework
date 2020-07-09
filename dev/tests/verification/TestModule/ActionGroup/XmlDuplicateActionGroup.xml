@@ -6,7 +6,7 @@
   */
 -->
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
     <actionGroup name="xmlDuplicateActionGroup">
         <acceptPopup stepKey="ap1"/>
         <acceptPopup stepKey="ap2"/>
@@ -78,14 +78,12 @@
         <doubleClick selector="1" stepKey="dblclick2"/>
         <dragAndDrop selector1="1" selector2="2" stepKey="dragndrop1"/>
         <dragAndDrop selector1="1" selector2="2" stepKey="dragndrop2"/>
-        <executeInSelenium function="1" stepKey="executeSelenium1"/>
-        <executeInSelenium function="1" stepKey="executeSelenium2"/>
         <executeJS function="1" stepKey="execJS1"/>
         <executeJS function="1" stepKey="execJS2"/>
         <fillField stepKey="fill1"/>
         <fillField stepKey="fill21"/>
-        <formatMoney stepKey="frmtmoney1"/>
-        <formatMoney stepKey="frmtmoney12"/>
+        <formatCurrency userInput="1234.567890" locale="de_DE" currency="EUR" stepKey="frmtmoney1"/>
+        <formatCurrency userInput="1234.567890" locale="de_DE" currency="USD" stepKey="frmtmoney12"/>
         <getData entity="1" stepKey="getdata1"/>
         <getData entity="1" stepKey="getdata12"/>
         <grabAttributeFrom selector="1" stepKey="grabattribute1"/>
@@ -124,10 +122,8 @@
         <openNewTab stepKey="newtab12"/>
         <parseFloat stepKey="parsefloat1"/>
         <parseFloat stepKey="parsefloat12"/>
-        <pauseExecution stepKey="pause1"/>
-        <pauseExecution stepKey="pause12"/>
-        <performOn selector="1" function="1" stepKey="performon1"/>
-        <performOn selector="1" function="1" stepKey="performon12"/>
+        <pause stepKey="pause1"/>
+        <pause stepKey="pause12"/>
         <pressKey selector="1" stepKey="press1"/>
         <pressKey selector="1" stepKey="press12"/>
         <reloadPage stepKey="reload1"/>

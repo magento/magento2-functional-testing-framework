@@ -6,7 +6,7 @@
   */
 -->
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:noNamespaceSchemaLocation="../../../../../../../src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
     <actionGroup name="DeprecatedCommentActionGroup" deprecated="This Action Group is outdated and will be deleted next release.">
         <comment userInput="Action group to demonstrate deprecation notices." stepKey="comment" />
     </actionGroup>

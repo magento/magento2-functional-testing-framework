@@ -11,7 +11,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 class UrlFormatter implements FormatterInterface
 {
     /**
-     * Return formatted url path from input string, or false on error
+     * Return formatted url path from input string
      *
      * @param string  $url
      * @param boolean $withTrailingSeparator

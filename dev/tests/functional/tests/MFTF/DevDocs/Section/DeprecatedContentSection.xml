@@ -7,7 +7,7 @@
 -->
 
 <sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:noNamespaceSchemaLocation="../../../../../../../src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
     <section name="DeprecatedContentSection" deprecated="New section was introduces. Please use 'contentSection'">
         <element name="pageIntro" type="text" selector=".page-intro"/>
     </section>

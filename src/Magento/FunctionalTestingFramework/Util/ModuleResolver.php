@@ -11,7 +11,9 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
-use Symfony\Component\HttpFoundation\Response;
+use Magento\FunctionalTestingFramework\DataTransport\Auth\WebApiAuth;
+use \Magento\FunctionalTestingFramework\Util\ModuleResolver\AlphabeticSequenceSorter;
+use \Magento\FunctionalTestingFramework\Util\ModuleResolver\SequenceSorterInterface;
 
 /**
  * Class ModuleResolver, resolve module path based on enabled modules of target Magento instance.
@@ -23,9 +25,9 @@ use Symfony\Component\HttpFoundation\Response;
 class ModuleResolver
 {
     /**
-     * Environment field name for module whitelist.
+     * Environment field name for module allowlist.
      */
-    const MODULE_WHITELIST = 'MODULE_WHITELIST';
+    const MODULE_ALLOWLIST = 'MODULE_ALLOWLIST';
 
     /**
      * Environment field name for custom module paths.
@@ -54,12 +56,6 @@ class ModuleResolver
     . 'tests'
     . DIRECTORY_SEPARATOR
     . 'functional';
-    const DEPRECATED_DEV_TESTS = DIRECTORY_SEPARATOR
-        . self:: DEV_TESTS
-        . DIRECTORY_SEPARATOR
-        . "Magento"
-        . DIRECTORY_SEPARATOR
-        . "FunctionalTest";
 
     /**
      * Enabled modules.
@@ -136,7 +132,7 @@ class ModuleResolver
      *
      * @var array
      */
-    protected $moduleBlacklist = [
+    protected $moduleBlocklist = [
         'SampleTests', 'SampleTemplates'
     ];
 
@@ -180,9 +176,12 @@ class ModuleResolver
     private function __construct()
     {
         $objectManager = \Magento\FunctionalTestingFramework\ObjectManagerFactory::getObjectManager();
-        $this->sequenceSorter = $objectManager->get(
-            \Magento\FunctionalTestingFramework\Util\ModuleResolver\SequenceSorterInterface::class
-        );
+
+        if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::UNIT_TEST_PHASE) {
+            $this->sequenceSorter = $objectManager->get(AlphabeticSequenceSorter::class);
+        } else {
+            $this->sequenceSorter = $objectManager->get(SequenceSorterInterface::class);
+        }
     }
 
     /**
@@ -201,7 +200,7 @@ class ModuleResolver
             $this->printMagentoVersionInfo();
         }
 
-        $token = $this->getAdminToken();
+        $token = WebApiAuth::getAdminToken();
 
         $url = UrlFormatter::format(getenv('MAGENTO_BASE_URL')) . $this->moduleUrl;
 
@@ -271,7 +270,7 @@ class ModuleResolver
             return $this->enabledModulePaths;
         }
 
-        $enabledModules = array_merge($this->getEnabledModules(), $this->getModuleWhitelist());
+        $enabledModules = array_merge($this->getEnabledModules(), $this->getModuleAllowlist());
         $enabledDirectoryPaths = $this->flipAndFilterModulePathsArray($allModulePaths, $enabledModules);
         $this->enabledModulePaths = $this->applyCustomModuleMethods($enabledDirectoryPaths);
 
@@ -290,18 +289,18 @@ class ModuleResolver
     }
 
     /**
-     * Return an array of module whitelist that not exist in target Magento instance.
+     * Return an array of module allowlist that not exist in target Magento instance.
      *
      * @return array
      */
-    protected function getModuleWhitelist()
+    protected function getModuleAllowlist()
     {
-        $moduleWhitelist = getenv(self::MODULE_WHITELIST);
+        $moduleAllowlist = getenv(self::MODULE_ALLOWLIST);
 
-        if (empty($moduleWhitelist)) {
+        if (empty($moduleAllowlist)) {
             return [];
         }
-        return array_map('trim', explode(',', $moduleWhitelist));
+        return array_map('trim', explode(',', $moduleAllowlist));
     }
 
     /**
@@ -321,15 +320,16 @@ class ModuleResolver
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
         $modulePath = FilePathFormatter::format($modulePath, false);
 
-        $vendorCodePath = DIRECTORY_SEPARATOR . self::VENDOR;
-        $appCodePath = DIRECTORY_SEPARATOR . self::APP_CODE;
+        // If $modulePath is DEV_TESTS path, we don't need to search by pattern
+        if (strpos($modulePath, self::DEV_TESTS) === false) {
+            $codePathsToPattern[$modulePath] = '';
+        }
 
-        $codePathsToPattern = [
-            $modulePath => '',
-            $magentoBaseCodePath . $vendorCodePath => self::TEST_MFTF_PATTERN,
-            $magentoBaseCodePath . $appCodePath => self::TEST_MFTF_PATTERN,
-            $magentoBaseCodePath . self::DEPRECATED_DEV_TESTS => ''
-        ];
+        $vendorCodePath = DIRECTORY_SEPARATOR . self::VENDOR;
+        $codePathsToPattern[$magentoBaseCodePath . $vendorCodePath] = self::TEST_MFTF_PATTERN;
+
+        $appCodePath = DIRECTORY_SEPARATOR . self::APP_CODE;
+        $codePathsToPattern[$magentoBaseCodePath . $appCodePath] = self::TEST_MFTF_PATTERN;
 
         foreach ($codePathsToPattern as $codePath => $pattern) {
             $allModulePaths = array_merge_recursive($allModulePaths, $this->globRelevantPaths($codePath, $pattern));
@@ -374,22 +374,6 @@ class ModuleResolver
             }
         }
 
-        /* TODO uncomment this to show deprecation warning when we ready to fully deliver test packaging feature
-        if (strpos($testPath, self::DEPRECATED_DEV_TESTS) !== false && !empty($modulePaths)) {
-            $deprecatedPath = ltrim(self::DEPRECATED_DEV_TESTS, DIRECTORY_SEPARATOR);
-            $suggestedPath = self::DEV_TESTS . DIRECTORY_SEPARATOR . 'Magento';
-            $message = "DEPRECATION: Found MFTF test modules in the deprecated path: $deprecatedPath."
-                . " Move these test modules to $suggestedPath.";
-
-            if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-                LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->warning($message);
-            }
-            // Suppress print during unit testing
-            if (MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE) {
-                print ("\n$message\n\n");
-            }
-        }
-        */
         return $modulePaths;
     }
 
@@ -556,10 +540,10 @@ class ModuleResolver
         foreach ($objectArray as $path => $modules) {
             if (is_array($modules) && count($modules) > 1) {
                 // The "one path => many module names" case is designed to be strictly used when it's
-                // impossible to write tests in dedicated modules. Due to performance consideration and there
-                // is no real usage of this currently, we will use the first module name for the path.
-                // TODO: consider saving all module names if this information is needed in the future.
-                $module = $modules[0];
+                // impossible to write tests in dedicated modules.
+                // For now we will set module name based on path.
+                // TODO: Consider saving all module names if this information is needed in the future.
+                $module = $this->findVendorAndModuleNameFromPath($path);
             } elseif (is_array($modules)) {
                 if (strpos($modules[0], '_') === false) {
                     $module = $this->findVendorNameFromPath($path) . '_' . $modules[0];
@@ -702,66 +686,6 @@ class ModuleResolver
     }
 
     /**
-     * Get the API token for admin.
-     *
-     * @return string|boolean
-     */
-    public function getAdminToken()
-    {
-        $login = $_ENV['MAGENTO_ADMIN_USERNAME'] ?? null;
-        $password = $_ENV['MAGENTO_ADMIN_PASSWORD'] ?? null;
-        if (!$login || !$password || !$this->getBackendUrl()) {
-            $message = "Cannot retrieve API token without credentials and base url, please fill out .env.";
-            $context = [
-                "MAGENTO_BASE_URL" => getenv("MAGENTO_BASE_URL"),
-                "MAGENTO_BACKEND_BASE_URL" => getenv("MAGENTO_BACKEND_BASE_URL"),
-                "MAGENTO_ADMIN_USERNAME" => getenv("MAGENTO_ADMIN_USERNAME"),
-                "MAGENTO_ADMIN_PASSWORD" => getenv("MAGENTO_ADMIN_PASSWORD"),
-            ];
-            throw new TestFrameworkException($message, $context);
-        }
-
-        $url = $this->getBackendUrl() . $this->adminTokenUrl;
-        $data = [
-            'username' => $login,
-            'password' => $password
-        ];
-        $headers = [
-            'Content-Type: application/json',
-        ];
-
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-        $response = curl_exec($ch);
-        $responseCode = curl_getinfo($ch)['http_code'];
-
-        if ($responseCode !== 200) {
-            if ($responseCode == 0) {
-                $details = "Could not find Magento Backend Instance at MAGENTO_BACKEND_BASE_URL or MAGENTO_BASE_URL";
-            } else {
-                $details = $responseCode . " " . Response::$statusTexts[$responseCode];
-            }
-
-            $message = "Could not retrieve API token from Magento Instance ({$details})";
-            $context = [
-                "tokenUrl" => $url,
-                "responseCode" => $responseCode,
-                "MAGENTO_ADMIN_USERNAME" => getenv("MAGENTO_ADMIN_USERNAME"),
-                "MAGENTO_ADMIN_PASSWORD" => getenv("MAGENTO_ADMIN_PASSWORD"),
-            ];
-            throw new TestFrameworkException($message, $context);
-        }
-
-        return json_decode($response);
-    }
-
-    /**
      * A wrapping method for any custom logic which needs to be applied to the module list
      *
      * @param array $modulesPath
@@ -769,7 +693,7 @@ class ModuleResolver
      */
     protected function applyCustomModuleMethods($modulesPath)
     {
-        $modulePathsResult = $this->removeBlacklistModules($modulesPath);
+        $modulePathsResult = $this->removeBlocklistModules($modulesPath);
         $customModulePaths = $this->getCustomModulePaths();
 
         array_map(function ($key, $value) {
@@ -786,17 +710,17 @@ class ModuleResolver
     }
 
     /**
-     * Remove blacklist modules from input module paths.
+     * Remove blocklist modules from input module paths.
      *
      * @param array $modulePaths
      * @return string[]
      */
-    private function removeBlacklistModules($modulePaths)
+    private function removeBlocklistModules($modulePaths)
     {
         $modulePathsResult = $modulePaths;
         foreach ($modulePathsResult as $moduleName => $modulePath) {
-            // Remove module if it is in blacklist
-            if (in_array($moduleName, $this->getModuleBlacklist())) {
+            // Remove module if it is in blocklist
+            if (in_array($moduleName, $this->getModuleBlocklist())) {
                 unset($modulePathsResult[$moduleName]);
                 LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
                     "excluding module",
@@ -830,13 +754,13 @@ class ModuleResolver
     }
 
     /**
-     * Getter for moduleBlacklist.
+     * Getter for moduleBlocklist.
      *
      * @return string[]
      */
-    private function getModuleBlacklist()
+    private function getModuleBlocklist()
     {
-        return $this->moduleBlacklist;
+        return $this->moduleBlocklist;
     }
 
     /**
@@ -881,23 +805,6 @@ class ModuleResolver
             );
         }
         return [];
-    }
-
-    /**
-     * Returns custom Backend URL if set, fallback to Magento Base URL
-     * @return string|null
-     */
-    private function getBackendUrl()
-    {
-        try {
-            if (getenv('MAGENTO_BACKEND_BASE_URL')) {
-                return UrlFormatter::format(getenv('MAGENTO_BACKEND_BASE_URL'));
-            } else {
-                return UrlFormatter::format(getenv('MAGENTO_BASE_URL'));
-            }
-        } catch (TestFrameworkException $e) {
-            return null;
-        }
     }
 
     /**

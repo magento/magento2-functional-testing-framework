@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="FunctionActionGroupWithStepKeyReferences">
+        <createData entity="simpleData" stepKey="createSimpleData"/>
+        <grabTextFrom selector=".class" stepKey="grabTextData"/>
+        <fillField stepKey="fill1" selector=".{$grabTextData}" userInput="$createSimpleData.field$"/>
+        <comment userInput="Invocation stepKey will not be appended in non stepKey instances" stepKey="comment1"/>
+        <click selector="{$action0}" stepKey="action0"/>
+        <fillField selector="{$action1}" stepKey="action1"/>
+        <comment userInput="Invocation stepKey will be appended in non stepKey instances" stepKey="comment2"/>
+        <executeJS function="{$action3}" stepKey="action3"/>
+        <magentoCLI command="{$action4}" arguments="&quot;stuffHere&quot;" stepKey="action4"/>
+        <generateDate date="{$action5}" format="H:i:s" stepKey="action5"/>
+        <formatCurrency userInput="{$action6}" locale="en_CA" currency="USD" stepKey="action6"/>
+        <deleteData createDataKey="{$action7}" stepKey="action7"/>
+        <getData entity="{$action8}" stepKey="action8"/>
+        <updateData entity="{$action9}" stepKey="action9" createDataKey="1"/>
+        <createData entity="{$action10}" stepKey="action10"/>
+        <grabAttributeFrom selector="{$action11}" userInput="someInput" stepKey="action11"/>
+        <grabCookie userInput="{$action12}" parameterArray="['domain' => 'www.google.com']" stepKey="action12"/>
+        <grabFromCurrentUrl regex="{$action13}" stepKey="action13"/>
+        <grabMultiple selector="{$action14}" stepKey="action14"/>
+        <grabTextFrom selector="{$action15}" stepKey="action15"/>
+        <grabValueFrom selector="{$action16}" stepKey="action16"/>
+    </actionGroup>
+</actionGroups>

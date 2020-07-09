@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="BasicActionGroupTest">
+        <annotations>
+            <severity value="CRITICAL"/>
+            <group value="functional"/>
+            <features value="Action Group Functional Cest"/>
+            <stories value="MQE-433"/>
+        </annotations>
+        <before>
+            <createData entity="ReplacementPerson" stepKey="createPersonParam"/>
+            <actionGroup ref="FunctionalActionGroup" stepKey="beforeGroup"/>
+        </before>
+        <amOnPage stepKey="step1" url="/someUrl"/>
+        <actionGroup ref="FunctionalActionGroup" stepKey="actionGroup1"/>
+        <click stepKey="step6" selector="loginButton"/>
+    </test>
+</tests>
