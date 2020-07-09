@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="ParentExtendedTestNoHooks">
+        <annotations>
+            <severity value="AVERAGE"/>
+            <title value="ParentExtendedTestNoHooks"/>
+            <group value="Parent"/>
+            <features value="Parent"/>
+            <stories value="Parent"/>
+        </annotations>
+        <comment stepKey="basicCommentWithNoData" userInput="Parent Comment"/>
+    </test>
+</tests>

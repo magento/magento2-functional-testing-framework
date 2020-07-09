@@ -45,7 +45,8 @@ You can also help with MFTF Test Migration to get the experience and valuable fe
 ## Action group
 
 1. [Action group] names should be sufficiently descriptive to inform a test writer of what the action group does and when it should be used. Add additional explanation in annotations if needed.
-1. Provide default values for the arguments that apply to your most common case scenarios.
+2. Provide default values for the arguments that apply to your most common case scenarios.
+3. One `<actionGroup>` tag is allowed per action group XML file.
 
 ## `actionGroups` vs `extends`
 
@@ -150,7 +151,8 @@ Use a lower case first letter for:
 
 ## Page object
 
-Use [parameterized selectors] for constructing a selector when test specific or runtime generated information is needed.
+1. One `<page>` tag is allowed per page XML file.
+2. Use [parameterized selectors] for constructing a selector when test-specific or runtime-generated information is needed.
 Do not use them for static elements.
 
 <span class="color:red">
@@ -188,6 +190,7 @@ Define these three elements and reference them by name in the tests.
      It helps to inform the reader of what you are testing and to yield a more descriptive Allure report.
    *  Explain in comments unclear or tricky test steps.
 1. Refer to [sections] instead of writing selectors.
+1. One `<test>` tag is allowed per test XML file.
 
 ## Test step merging order
 

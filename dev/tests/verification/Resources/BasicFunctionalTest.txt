@@ -15,7 +15,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 /**
  * @Title("[NO TESTCASEID]: A Functional Cest")
  * @group functional
- * @Description("<h3 class='y-label y-label_status_broken'>Deprecated Notice(s):</h3><ul><li>DEPRECATED ACTION in Test: at step performOnKey1 'performOn' is DEPRECATED and will be removed in MFTF 3.0.0.</li></ul><h3>Test files</h3>verification/TestModule/Test/BasicFunctionalTest.xml<br>")
+ * @Description("<h3>Test files</h3>verification/TestModule/Test/BasicFunctionalTest/BasicFunctionalTest.xml<br>")
  */
 class BasicFunctionalTestCest
 {
@@ -112,6 +112,7 @@ class BasicFunctionalTestCest
 		$date->setTimezone(new \DateTimeZone("UTC"));
 		$generateDateKey2 = $date->format("H:i:s");
 
+		$getOtp = $I->getOTP(); // stepKey: getOtp
 		$grabAttributeFromKey1 = $I->grabAttributeFrom(".functionalTestSelector", "someInput"); // stepKey: grabAttributeFromKey1
 		$grabCookieKey1 = $I->grabCookie("grabCookieInput", ['domain' => 'www.google.com']); // stepKey: grabCookieKey1
 		$grabFromCurrentUrlKey1 = $I->grabFromCurrentUrl("/grabCurrentUrl"); // stepKey: grabFromCurrentUrlKey1
@@ -138,8 +139,7 @@ class BasicFunctionalTestCest
 		$I->moveForward(); // stepKey: moveForwardKey1
 		$I->moveMouseOver(".functionalTestSelector"); // stepKey: moveMouseOverKey1
 		$I->openNewTab(); // stepKey: openNewTabKey1
-		$I->pauseExecution(); // stepKey: pauseExecutionKey1
-		$I->performOn("#selector", function(\WebDriverElement $el) {return $el->isDisplayed();}, 10); // stepKey: performOnKey1
+		$I->pause(); // stepKey: pauseKey1
 		$I->pressKey("#page", "a"); // stepKey: pressKey1
 		$I->pressKey("#page", ['ctrl', 'a'],'new'); // stepKey: pressKey2
 		$I->pressKey("#page", ['shift', '111'],'1','x'); // stepKey: pressKey3

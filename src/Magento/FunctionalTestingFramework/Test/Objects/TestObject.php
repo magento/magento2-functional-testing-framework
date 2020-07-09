@@ -79,6 +79,13 @@ class TestObject
     private $cachedOrderedActions = null;
 
     /**
+     * Deprecation message.
+     *
+     * @var string|null
+     */
+    private $deprecated;
+
+    /**
      * TestObject constructor.
      *
      * @param string           $name
@@ -87,15 +94,24 @@ class TestObject
      * @param TestHookObject[] $hooks
      * @param string           $filename
      * @param string           $parentTest
+     * @param string|null      $deprecated
      */
-    public function __construct($name, $parsedSteps, $annotations, $hooks, $filename = null, $parentTest = null)
-    {
+    public function __construct(
+        $name,
+        $parsedSteps,
+        $annotations,
+        $hooks,
+        $filename = null,
+        $parentTest = null,
+        $deprecated = null
+    ) {
         $this->name = $name;
         $this->parsedSteps = $parsedSteps;
         $this->annotations = $annotations;
         $this->hooks = $hooks;
         $this->filename = $filename;
         $this->parentTest = $parentTest;
+        $this->deprecated = $deprecated;
     }
 
     /**
@@ -129,16 +145,23 @@ class TestObject
     }
 
     /**
+     * Returns deprecated messages.
+     *
+     * @return string|null
+     */
+    public function getDeprecated()
+    {
+        return $this->deprecated;
+    }
+
+    /**
      * Getter for the skip_test boolean
      *
      * @return string
      */
     public function isSkipped()
     {
-        // TODO deprecation|deprecate MFTF 3.0.0 remove elseif when group skip is no longer allowed
         if (array_key_exists('skip', $this->annotations)) {
-            return true;
-        } elseif (array_key_exists('group', $this->annotations) && (in_array("skip", $this->annotations['group']))) {
             return true;
         }
         return false;

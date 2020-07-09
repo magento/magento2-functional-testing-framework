@@ -13,7 +13,7 @@ use Yandex\Allure\Adapter\Model\SeverityLevel;
 use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
- * @Description("<h3>Test files</h3>verification/TestModule/Test/ActionGroupTest.xml<br>")
+ * @Description("<h3>Test files</h3>verification/TestModule/Test/ActionGroupTest/ActionGroupWithStepKeyReferences.xml<br>")
  */
 class ActionGroupWithStepKeyReferencesCest
 {
@@ -42,7 +42,7 @@ class ActionGroupWithStepKeyReferencesCest
 		$date->setTimezone(new \DateTimeZone("America/Los_Angeles"));
 		$action5ActionGroup = $date->format("H:i:s");
 
-		$action6ActionGroup = $I->formatMoney($action6ActionGroup); // stepKey: action6ActionGroup
+		$action6ActionGroup = $I->formatCurrency($action6ActionGroup, "en_CA", "USD"); // stepKey: action6ActionGroup
 		$I->deleteEntity("{$action7ActionGroupActionGroup}", "test"); // stepKey: action7ActionGroup
 		$I->getEntity("action8ActionGroup", "test", "{$action8}", [], null); // stepKey: action8ActionGroup
 		$I->updateEntity("1", "test", "{$action9}",[]); // stepKey: action9ActionGroup

@@ -4,11 +4,11 @@
  * See COPYING.txt for license details.
  */
 
-namespace Tests\unit\Magento\FunctionalTestFramework\Test\Handlers;
+namespace tests\unit\Magento\FunctionalTestFramework\Util;
 
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 
 class ActionMergeUtilTest extends MagentoTestCase
 {

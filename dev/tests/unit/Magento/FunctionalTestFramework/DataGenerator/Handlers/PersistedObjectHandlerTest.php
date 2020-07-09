@@ -15,7 +15,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\TestLoggingUtil;
 
 /**
@@ -27,7 +27,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
      * Before test functionality
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
@@ -510,7 +510,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         ]);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         // Clear out Singleton between tests
         $property = new \ReflectionProperty(PersistedObjectHandler::class, "INSTANCE");
@@ -524,7 +524,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
      * After class functionality
      * @return void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
         parent::tearDownAfterClass();

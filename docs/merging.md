@@ -44,7 +44,7 @@ To add a `<test>`, create a new `*Test.xml` file or add a `<test>` node to an ex
 ## Remove a test
 
 Tests cannot be removed while merging.
-If a [`<test>`][tests] must be skipped due to a module completely invalidating a function, you can add the test to the `skip` group.
+If a [`<test>`][tests] must be skipped due to a module completely invalidating a function, you can use `skip` annotation to skip the test.
 
 Learn more about running tests with different options using [`mftf`] or [`codecept`] commands.
 

@@ -7,7 +7,7 @@
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="../../../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="DevDocsTest">
         <annotations>
             <!--   Comment in Annotations for DevDocs Test are not affecting test generation  -->
@@ -22,5 +22,34 @@
         <!--   Open MFTF DevDocs Page -->
         <amOnPage stepKey="openMFTFDevDocPage" url="{{MFTFDocPage.url}}" />
         <see stepKey="verifyPageIntroText" selector="{{contentSection.pageIntro}}" userInput="{{MessageData.message}}" />
+        <helper class="\MFTF\DevDocs\Helper\CustomHelper" method="goTo" stepKey="customHelper">
+            <argument name="test">{{contentSection.pageIntro}}</argument>
+            <argument name="module">['Test', 'Bla']</argument>
+            <argument name="url">{{MFTFDocPage.url}}</argument>
+            <argument name="bool">true</argument>
+            <argument name="float">1.2</argument>
+            <argument name="int">123</argument>
+        </helper>
+
+        <helper class="\MFTF\DevDocs\Helper\CustomHelper" method="goTo" stepKey="customHelperWithArrayParametrized">
+            <argument name="test">{{contentSection.pageIntro}}</argument>
+            <argument name="module">[]</argument>
+            <argument name="url">{{DeprecatedMFTFDocPage.url}}</argument>
+            <argument name="superBla">1.2</argument>
+            <argument name="bla" />
+            <argument name="bool">false</argument>
+            <argument name="float">4.223</argument>
+            <argument name="int">987</argument>
+        </helper>
+
+        <actionGroup ref="HelperActionGroup" stepKey="actionGroupWithCustomHelper">
+            <argument name="test" value="{{HelperData.entityField}}" />
+            <argument name="entityTest" value="HelperData" />
+        </actionGroup>
+
+        <assertEqualsCanonicalizing stepKey="assertMergedArray">
+            <actualResult type="array">{{ExtendedMessageData.numbers}}</actualResult>
+            <expectedResult type="array">["Something New", "0", "1", "2", "3", "TESTING CASE"]</expectedResult>
+        </assertEqualsCanonicalizing>
     </test>
 </tests>

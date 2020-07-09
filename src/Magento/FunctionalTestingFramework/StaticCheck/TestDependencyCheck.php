@@ -6,31 +6,22 @@
 
 namespace Magento\FunctionalTestingFramework\StaticCheck;
 
-use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
-use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
-use Magento\FunctionalTestingFramework\Page\Handlers\PageObjectHandler;
-use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
-use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
-use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
-use Magento\FunctionalTestingFramework\Util\ModuleResolver;
-use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Finder\Finder;
 use Exception;
+use Magento\FunctionalTestingFramework\Util\Script\ScriptUtil;
 
 /**
  * Class TestDependencyCheck
  * @package Magento\FunctionalTestingFramework\StaticCheck
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TestDependencyCheck implements StaticCheckInterface
 {
     const EXTENDS_REGEX_PATTERN = '/extends=["\']([^\'"]*)/';
     const ACTIONGROUP_REGEX_PATTERN = '/ref=["\']([^\'"]*)/';
-    const ACTIONGROUP_ARGUMENT_REGEX_PATTERN = '/<argument[^\/>]*name="([^"\']*)/';
 
     const ERROR_LOG_FILENAME = 'mftf-dependency-checks';
     const ERROR_LOG_MESSAGE = 'MFTF File Dependency Check';
@@ -84,41 +75,43 @@ class TestDependencyCheck implements StaticCheckInterface
     private $allEntities = [];
 
     /**
+     * ScriptUtil instance
+     *
+     * @var ScriptUtil
+     */
+    private $scriptUtil;
+
+    /**
      * Checks test dependencies, determined by references in tests versus the dependencies listed in the Magento module
      *
      * @param InputInterface $input
-     * @return string
-     * @throws Exception;
+     * @return void
+     * @throws Exception
      */
     public function execute(InputInterface $input)
     {
-        MftfApplicationConfig::create(
-            true,
-            MftfApplicationConfig::UNIT_TEST_PHASE,
-            false,
-            MftfApplicationConfig::LEVEL_NONE,
-            true
-        );
+        $this->scriptUtil = new ScriptUtil();
+        $allModules = $this->scriptUtil->getAllModulePaths();
 
-        ModuleResolver::getInstance()->getModulesPath();
         if (!class_exists('\Magento\Framework\Component\ComponentRegistrar')) {
-            return "TEST DEPENDENCY CHECK ABORTED: MFTF must be attached or pointing to Magento codebase.";
+            throw new TestFrameworkException(
+                "TEST DEPENDENCY CHECK ABORTED: MFTF must be attached or pointing to Magento codebase."
+            );
         }
         $registrar = new \Magento\Framework\Component\ComponentRegistrar();
         $this->moduleNameToPath = $registrar->getPaths(\Magento\Framework\Component\ComponentRegistrar::MODULE);
         $this->moduleNameToComposerName = $this->buildModuleNameToComposerName($this->moduleNameToPath);
         $this->flattenedDependencies = $this->buildComposerDependencyList();
 
-        $allModules = ModuleResolver::getInstance()->getModulesPath();
         $filePaths = [
             DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR,
             DIRECTORY_SEPARATOR . 'ActionGroup' . DIRECTORY_SEPARATOR,
             DIRECTORY_SEPARATOR . 'Data' . DIRECTORY_SEPARATOR,
         ];
         // These files can contain references to other modules.
-        $testXmlFiles = StaticCheckHelper::buildFileList($allModules, $filePaths[0]);
-        $actionGroupXmlFiles = StaticCheckHelper::buildFileList($allModules, $filePaths[1]);
-        $dataXmlFiles= StaticCheckHelper::buildFileList($allModules, $filePaths[2]);
+        $testXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($allModules, $filePaths[0]);
+        $actionGroupXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($allModules, $filePaths[1]);
+        $dataXmlFiles= $this->scriptUtil->getModuleXmlFilesByScope($allModules, $filePaths[2]);
 
         $this->errors = [];
         $this->errors += $this->findErrorsInFileSet($testXmlFiles);
@@ -126,9 +119,9 @@ class TestDependencyCheck implements StaticCheckInterface
         $this->errors += $this->findErrorsInFileSet($dataXmlFiles);
 
         // hold on to the output and print any errors to a file
-        $this->output = StaticCheckHelper::printErrorsToFile(
+        $this->output = $this->scriptUtil->printErrorsToFile(
             $this->errors,
-            self::ERROR_LOG_FILENAME,
+            StaticChecksList::getErrorFilesPath() . DIRECTORY_SEPARATOR . self::ERROR_LOG_FILENAME . '.txt',
             self::ERROR_LOG_MESSAGE
         );
     }
@@ -155,17 +148,16 @@ class TestDependencyCheck implements StaticCheckInterface
      * Finds all reference errors in given set of files
      * @param Finder $files
      * @return array
-     * @throws TestReferenceException
      * @throws XmlException
      */
     private function findErrorsInFileSet($files)
     {
         $testErrors = [];
         foreach ($files as $filePath) {
-            $modulePath = dirname(dirname(dirname(dirname($filePath))));
-            $moduleFullName = array_search($modulePath, $this->moduleNameToPath) ?? null;
+            $this->allEntities = [];
+            $moduleName = $this->getModuleName($filePath);
             // Not a module, is either dev/tests/acceptance or loose folder with test materials
-            if ($moduleFullName == null) {
+            if ($moduleName == null) {
                 continue;
             }
 
@@ -180,106 +172,35 @@ class TestDependencyCheck implements StaticCheckInterface
             $braceReferences[1] = array_unique($braceReferences[1]);
             $braceReferences[2] = array_filter(array_unique($braceReferences[2]));
 
-            // resolve data entity references
-            $this->resolveDataEntityReferences($braceReferences[0], $contents);
+            // resolve entity references
+            $this->allEntities = array_merge(
+                $this->allEntities,
+                $this->scriptUtil->resolveEntityReferences($braceReferences[0], $contents)
+            );
 
-            //resolve entity references
-            $this->resolveParametrizedReferences($braceReferences[2], $contents);
+            // resolve parameterized references
+            $this->allEntities = array_merge(
+                $this->allEntities,
+                $this->scriptUtil->resolveParametrizedReferences($braceReferences[2], $contents)
+            );
 
-            // Check actionGroup references
-            $this->resolveEntityReferences($actionGroupReferences[1]);
+            // resolve entity by names
+            $this->allEntities = array_merge(
+                $this->allEntities,
+                $this->scriptUtil->resolveEntityByNames($actionGroupReferences[1])
+            );
 
-            // Check extended objects
-            $this->resolveEntityReferences($extendReferences[1]);
+            // resolve entity by names
+            $this->allEntities = array_merge(
+                $this->allEntities,
+                $this->scriptUtil->resolveEntityByNames($extendReferences[1])
+            );
 
             // Find violating references and set error output
-            $violatingReferences = $this->findViolatingReferences($moduleFullName);
-            $testErrors = $this->setErrorOutput($violatingReferences, $filePath);
+            $violatingReferences = $this->findViolatingReferences($moduleName);
+            $testErrors = array_merge($testErrors, $this->setErrorOutput($violatingReferences, $filePath));
         }
         return $testErrors;
-    }
-
-    /**
-     * Drill down into params in {{ref.params('string', $data.key$, entity.reference)}}
-     * and resolve references.
-     *
-     * @param array  $braceReferences
-     * @param string $contents
-     * @return void
-     * @throws XmlException
-     */
-    private function resolveParametrizedReferences($braceReferences, $contents)
-    {
-        foreach ($braceReferences as $parameterizedReference) {
-            preg_match(
-                ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER,
-                $parameterizedReference,
-                $arguments
-            );
-            $splitArguments = explode(',', ltrim(rtrim($arguments[0], ")"), "("));
-            foreach ($splitArguments as $argument) {
-                // Do nothing for 'string' or $persisted.data$
-                if (preg_match(ActionObject::STRING_PARAMETER_REGEX, $argument)) {
-                    continue;
-                } elseif (preg_match(TestGenerator::PERSISTED_OBJECT_NOTATION_REGEX, $argument)) {
-                    continue;
-                }
-                // trim `data.field` to `data`
-                preg_match('/([^.]+)/', $argument, $entityName);
-                // Double check that {{data.field}} isn't an argument for an ActionGroup
-                $entity = $this->findEntity($entityName[1]);
-                preg_match_all(self::ACTIONGROUP_ARGUMENT_REGEX_PATTERN, $contents, $possibleArgument);
-                if (array_search($entityName[1], $possibleArgument[1]) !== false) {
-                    continue;
-                }
-                if ($entity !== null) {
-                    $this->allEntities[$entity->getName()] = $entity;
-                }
-            }
-        }
-    }
-
-    /**
-     * Check `data` entities in {{data.field}} or {{data.field('param')}} and resolve references
-     *
-     * @param array  $braceReferences
-     * @param string $contents
-     * @return void
-     * @throws XmlException
-
-     */
-    private function resolveDataEntityReferences($braceReferences, $contents)
-    {
-        foreach ($braceReferences as $reference) {
-            // trim `{{data.field}}` to `data`
-            preg_match('/{{([^.]+)/', $reference, $entityName);
-            // Double check that {{data.field}} isn't an argument for an ActionGroup
-            $entity = $this->findEntity($entityName[1]);
-            preg_match_all(self::ACTIONGROUP_ARGUMENT_REGEX_PATTERN, $contents, $possibleArgument);
-            if (array_search($entityName[1], $possibleArgument[1]) !== false) {
-                continue;
-            }
-            if ($entity !== null) {
-                $this->allEntities[$entity->getName()] = $entity;
-            }
-        }
-    }
-
-    /**
-     * Resolve entity references
-     *
-     * @param array $references
-     * @return void
-     * @throws XmlException
-     */
-    private function resolveEntityReferences($references)
-    {
-        foreach ($references as $reference) {
-            $entity = $this->findEntity($reference);
-            if ($entity !== null) {
-                $this->allEntities[$entity->getName()] = $entity;
-            }
-        }
     }
 
     /**
@@ -359,7 +280,10 @@ class TestDependencyCheck implements StaticCheckInterface
         $flattenedDependencies = [];
 
         foreach ($this->moduleNameToPath as $moduleName => $pathToModule) {
-            $composerData = json_decode(file_get_contents($pathToModule . DIRECTORY_SEPARATOR . "composer.json"), true);
+            $composerData = json_decode(
+                file_get_contents($pathToModule . DIRECTORY_SEPARATOR . "composer.json"),
+                true
+            );
             $this->allDependencies[$moduleName] = $composerData['require'];
         }
         foreach ($this->allDependencies as $moduleName => $dependencies) {
@@ -411,43 +335,31 @@ class TestDependencyCheck implements StaticCheckInterface
             // Should it append ALL filenames, including merges?
             $allFiles = explode(",", $item->getFilename());
             foreach ($allFiles as $file) {
-                $modulePath = dirname(dirname(dirname(dirname($file))));
-                $fullModuleName = array_search($modulePath, $this->moduleNameToPath);
-                $composerModuleName = $this->moduleNameToComposerName[$fullModuleName];
-                $filenames[$item->getName()][] = $composerModuleName;
+                $moduleName = $this->getModuleName($file);
+                if (isset($this->moduleNameToComposerName[$moduleName])) {
+                    $composerModuleName = $this->moduleNameToComposerName[$moduleName];
+                    $filenames[$item->getName()][] = $composerModuleName;
+                }
             }
         }
         return $filenames;
     }
 
     /**
-     * Attempts to find any MFTF entity by its name. Returns null if none are found.
-     * @param string $name
-     * @return mixed
-     * @throws XmlException
+     * Return module name for a file path
+     *
+     * @param string $filePath
+     * @return string|null
      */
-    private function findEntity($name)
+    private function getModuleName($filePath)
     {
-        if ($name == '_ENV' || $name == '_CREDS') {
-            return null;
+        $moduleName = null;
+        foreach ($this->moduleNameToPath as $name => $path) {
+            if (strpos($filePath, $path) !== false) {
+                $moduleName = $name;
+                break;
+            }
         }
-
-        if (DataObjectHandler::getInstance()->getObject($name)) {
-            return DataObjectHandler::getInstance()->getObject($name);
-        } elseif (PageObjectHandler::getInstance()->getObject($name)) {
-            return PageObjectHandler::getInstance()->getObject($name);
-        } elseif (SectionObjectHandler::getInstance()->getObject($name)) {
-            return SectionObjectHandler::getInstance()->getObject($name);
-        }
-
-        try {
-            return ActionGroupObjectHandler::getInstance()->getObject($name);
-        } catch (TestReferenceException $e) {
-        }
-        try {
-            return TestObjectHandler::getInstance()->getObject($name);
-        } catch (TestReferenceException $e) {
-        }
-        return null;
+        return $moduleName;
     }
 }

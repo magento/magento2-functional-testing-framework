@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="PersistenceActionGroup">
+        <arguments>
+            <argument name="arg1" type="string"/>
+            <argument name="arg2"/>
+            <argument name="arg3"/>
+        </arguments>
+        <createData entity="simpleData" stepKey="createDataAG1">
+            <field key="firstname">{{arg1}}</field>
+        </createData>
+        <createData entity="simpleData" stepKey="createDataAG2">
+            <field key="firstname">{{arg2}}</field>
+        </createData>
+        <createData entity="simpleData" stepKey="createDataAG3">
+            <field key="firstname">{{arg3}}</field>
+        </createData>
+    </actionGroup>
+</actionGroups>

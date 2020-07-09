@@ -15,9 +15,8 @@ use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
 use Magento\FunctionalTestingFramework\Test\Util\ObjectExtensionUtil;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
-use Magento\FunctionalTestingFramework\Test\Util\AnnotationExtractor;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
-use PHP_CodeSniffer\Tokenizers\PHP;
+use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
 
 /**
  * Class TestObjectHandler
@@ -25,6 +24,7 @@ use PHP_CodeSniffer\Tokenizers\PHP;
 class TestObjectHandler implements ObjectHandlerInterface
 {
     const XML_ROOT = 'tests';
+    const TEST_FILENAME_ATTRIBUTE = 'filename';
 
     /**
      * Test Object Handler
@@ -53,11 +53,11 @@ class TestObjectHandler implements ObjectHandlerInterface
      * @return TestObjectHandler
      * @throws XmlException
      */
-    public static function getInstance()
+    public static function getInstance($validateAnnotations = true)
     {
         if (!self::$testObjectHandler) {
             self::$testObjectHandler = new TestObjectHandler();
-            self::$testObjectHandler->initTestData();
+            self::$testObjectHandler->initTestData($validateAnnotations);
         }
 
         return self::$testObjectHandler;
@@ -129,7 +129,7 @@ class TestObjectHandler implements ObjectHandlerInterface
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      * @throws XmlException
      */
-    private function initTestData()
+    private function initTestData($validateAnnotations = true)
     {
         $testDataParser = ObjectManagerFactory::getObjectManager()->create(TestDataParser::class);
         $parsedTestArray = $testDataParser->readTestData();
@@ -142,20 +142,25 @@ class TestObjectHandler implements ObjectHandlerInterface
         }
 
         $exceptionCollector = new ExceptionCollector();
+        $testNameValidator = new NameValidationUtil();
         foreach ($parsedTestArray as $testName => $testData) {
+            $filename = $testData[TestObjectHandler::TEST_FILENAME_ATTRIBUTE];
+            $testNameValidator->validatePascalCase($testName, NameValidationUtil::TEST_NAME, $filename);
             if (!is_array($testData)) {
                 continue;
             }
             try {
-                $this->tests[$testName] = $testObjectExtractor->extractTestData($testData);
+                $this->tests[$testName] = $testObjectExtractor->extractTestData($testData, $validateAnnotations);
             } catch (XmlException $exception) {
                 $exceptionCollector->addError(self::class, $exception->getMessage());
             }
         }
         $exceptionCollector->throwException();
-        
-        $testObjectExtractor->getAnnotationExtractor()->validateStoryTitleUniqueness();
-        $testObjectExtractor->getAnnotationExtractor()->validateTestCaseIdTitleUniqueness();
+        $testNameValidator->summarize(NameValidationUtil::TEST_NAME);
+        if ($validateAnnotations) {
+            $testObjectExtractor->getAnnotationExtractor()->validateStoryTitleUniqueness();
+            $testObjectExtractor->getAnnotationExtractor()->validateTestCaseIdTitleUniqueness();
+        }
     }
 
     /**

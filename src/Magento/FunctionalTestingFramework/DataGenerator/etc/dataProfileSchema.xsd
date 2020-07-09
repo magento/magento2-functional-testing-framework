@@ -118,15 +118,30 @@
 
     <xs:complexType name="arrayType">
         <xs:sequence>
-            <xs:element name="item" type="xs:string" maxOccurs="unbounded" minOccurs="0">
-            <xs:annotation>
-                <xs:documentation>
-                    Individual piece of data to be passed in as part of the parrent array type.
-                </xs:documentation>
-            </xs:annotation>
+            <xs:element name="item" type="itemType" maxOccurs="unbounded" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Individual piece of data to be passed in as part of the parrent array type.
+                    </xs:documentation>
+                </xs:annotation>
             </xs:element>
         </xs:sequence>
         <xs:attribute type="xs:string" name="key" use="required"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="itemType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="name" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Key attribute of item pair.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
     </xs:complexType>
 
     <xs:complexType name="requiredEntityType">

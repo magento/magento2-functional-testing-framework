@@ -3,9 +3,9 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace Tests\unit\Magento\FunctionalTestFramework\Util\Path;
+namespace tests\unit\Magento\FunctionalTestFramework\Util\Path;
 
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 

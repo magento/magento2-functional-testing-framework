@@ -1,0 +1,646 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="XmlDuplicateTest">
+        <before>
+            <acceptPopup stepKey="ap1"/>
+            <acceptPopup stepKey="ap2"/>
+            <amOnPage stepKey="aop1" url="1"/>
+            <amOnPage stepKey="aop2" url="1"/>
+            <amOnSubdomain stepKey="aosd1" url="1"/>
+            <amOnSubdomain stepKey="aosd2" url="1"/>
+            <amOnUrl stepKey="aou1" url="1"/>
+            <amOnUrl stepKey="aou2" url="1"/>
+            <appendField selector="1" stepKey="app1"/>
+            <appendField selector="1" stepKey="app2"/>
+            <attachFile selector="1" stepKey="atf1"/>
+            <attachFile selector="1" stepKey="atf2"/>
+            <cancelPopup stepKey="cp1"/>
+            <cancelPopup stepKey="cp2"/>
+            <checkOption selector="1" stepKey="chk1"/>
+            <checkOption selector="1" stepKey="chk2"/>
+            <clearField selector="1" stepKey="clf1"/>
+            <clearField selector="1" stepKey="clf2"/>
+            <click stepKey="ck1"/>
+            <click stepKey="ck2"/>
+            <clickWithLeftButton stepKey="clb1"/>
+            <clickWithLeftButton stepKey="clb2"/>
+            <clickWithRightButton stepKey="crb1"/>
+            <clickWithRightButton stepKey="crb2"/>
+            <closeAdminNotification stepKey="closeadminb1"/>
+            <closeAdminNotification stepKey="closeadminb2"/>
+            <closeTab stepKey="clt1"/>
+            <closeTab stepKey="clt2"/>
+            <comment userInput="1" stepKey="comm1"/>
+            <comment userInput="1" stepKey="comm2"/>
+            <conditionalClick selector="1" dependentSelector="1" visible="true" stepKey="condcli1"/>
+            <conditionalClick selector="1" dependentSelector="1" visible="true" stepKey="condcli2"/>
+            <createData entity="1" stepKey="crdt1"/>
+            <createData entity="1" stepKey="crdt2"/>
+            <deleteData createDataKey="1" stepKey="dldt1"/>
+            <deleteData createDataKey="1" stepKey="dldt2"/>
+            <dontSee stepKey="dnts1"/>
+            <dontSee stepKey="dnts2"/>
+            <dontSeeCheckboxIsChecked selector="1" stepKey="dntschk1"/>
+            <dontSeeCheckboxIsChecked selector="1" stepKey="dntschk2"/>
+            <dontSeeCookie stepKey="dntsck1"/>
+            <dontSeeCookie stepKey="dntsck2"/>
+            <dontSeeCurrentUrlEquals stepKey="dntsurle1"/>
+            <dontSeeCurrentUrlEquals stepKey="dntsurle2"/>
+            <dontSeeCurrentUrlMatches stepKey="dntsurlm1"/>
+            <dontSeeCurrentUrlMatches stepKey="dntsurlm2"/>
+            <dontSeeElement selector="1" stepKey="dntsele1"/>
+            <dontSeeElement selector="1" stepKey="dntsele2"/>
+            <dontSeeElementInDOM selector="1" stepKey="dntseledom1"/>
+            <dontSeeElementInDOM selector="1" stepKey="dntseledom2"/>
+            <dontSeeInCurrentUrl stepKey="dntscurl1"/>
+            <dontSeeInCurrentUrl stepKey="dntscurl2"/>
+            <dontSeeInField stepKey="dntsinfld1"/>
+            <dontSeeInField stepKey="dntsinfld2"/>
+            <dontSeeInFormFields selector="1" stepKey="dntsinffld1"/>
+            <dontSeeInFormFields selector="1" stepKey="dntsinffld2"/>
+            <dontSeeInPageSource html="1" stepKey="dntsinpgs1"/>
+            <dontSeeInPageSource html="1" stepKey="dntsinpgs2"/>
+            <dontSeeInSource html="1" stepKey="dntsinsource1"/>
+            <dontSeeInSource html="1" stepKey="dntsinsource2"/>
+            <dontSeeInTitle stepKey="dntsintitle1"/>
+            <dontSeeInTitle stepKey="dntsintitle2"/>
+            <dontSeeJsError stepKey="dntsjserr1"/>
+            <dontSeeJsError stepKey="dntsjserr2"/>
+            <dontSeeLink stepKey="dntslink1"/>
+            <dontSeeLink stepKey="dntslink2"/>
+            <dontSeeOptionIsSelected selector="1" stepKey="dntsoptionsel1"/>
+            <dontSeeOptionIsSelected selector="1" stepKey="dntsoptionse2"/>
+            <doubleClick selector="1" stepKey="dblclick1"/>
+            <doubleClick selector="1" stepKey="dblclick2"/>
+            <dragAndDrop selector1="1" selector2="2" stepKey="dragndrop1"/>
+            <dragAndDrop selector1="1" selector2="2" stepKey="dragndrop2"/>
+            <executeJS function="1" stepKey="execJS1"/>
+            <executeJS function="1" stepKey="execJS2"/>
+            <fillField stepKey="fill1"/>
+            <fillField stepKey="fill21"/>
+            <formatCurrency userInput="1234.567890" locale="de_DE" currency="EUR" stepKey="frmtmoney1"/>
+            <formatCurrency userInput="1234.567890" locale="en_US" currency="EUR" stepKey="frmtmoney12"/>
+            <getData entity="1" stepKey="getdata1"/>
+            <getData entity="1" stepKey="getdata12"/>
+            <grabAttributeFrom selector="1" stepKey="grabattribute1"/>
+            <grabAttributeFrom selector="1" stepKey="grabattribute12"/>
+            <grabCookie stepKey="grabcookie1"/>
+            <grabCookie stepKey="grabcookie12"/>
+            <grabFromCurrentUrl stepKey="grabfromcurl1"/>
+            <grabFromCurrentUrl stepKey="grabfromcurl12"/>
+            <grabMultiple selector="1" stepKey="grabmulti1"/>
+            <grabMultiple selector="1" stepKey="grabmulti12"/>
+            <grabPageSource stepKey="grabpage1"/>
+            <grabPageSource stepKey="grabpage12"/>
+            <grabTextFrom selector="1" stepKey="grabtext1"/>
+            <grabTextFrom selector="1" stepKey="grabtext12"/>
+            <grabValueFrom stepKey="grabvalue1"/>
+            <grabValueFrom stepKey="grabvalue12"/>
+            <loadSessionSnapshot stepKey="loadsession1"/>
+            <loadSessionSnapshot stepKey="loadsession12"/>
+            <magentoCLI stepKey="magentocli1"/>
+            <magentoCLI stepKey="magentocli2"/>
+            <makeScreenshot stepKey="screenshot1"/>
+            <makeScreenshot stepKey="screenshot12"/>
+            <maximizeWindow stepKey="maxwindow1"/>
+            <maximizeWindow stepKey="maxwindow12"/>
+            <moveBack stepKey="moveb1"/>
+            <moveBack stepKey="moveb21"/>
+            <moveForward stepKey="movef1"/>
+            <moveForward stepKey="movef12"/>
+            <moveMouseOver stepKey="movemouseover1"/>
+            <moveMouseOver stepKey="movemouseover12"/>
+            <mSetLocale locale="1" stepKey="setlocale1"/>
+            <mSetLocale locale="1" stepKey="setlocale12"/>
+            <mResetLocale stepKey="resetlocale1"/>
+            <mResetLocale stepKey="resetlocale12"/>
+            <openNewTab stepKey="newtab1"/>
+            <openNewTab stepKey="newtab12"/>
+            <parseFloat stepKey="parsefloat1"/>
+            <parseFloat stepKey="parsefloat12"/>
+            <pause stepKey="pause1"/>
+            <pause stepKey="pause12"/>
+            <pressKey selector="1" stepKey="press1"/>
+            <pressKey selector="1" stepKey="press12"/>
+            <reloadPage stepKey="reload1"/>
+            <reloadPage stepKey="reload12"/>
+            <resetCookie stepKey="resetck1"/>
+            <resetCookie stepKey="resetck12"/>
+            <resizeWindow width="1" height="1" stepKey="resize1"/>
+            <resizeWindow width="1" height="1" stepKey="resize12"/>
+            <saveSessionSnapshot stepKey="savesession1"/>
+            <saveSessionSnapshot stepKey="savesession12"/>
+            <scrollTo stepKey="scrollto1"/>
+            <scrollTo stepKey="scrollto12"/>
+            <scrollToTopOfPage stepKey="scrolltop1"/>
+            <scrollToTopOfPage stepKey="scrolltop12"/>
+            <searchAndMultiSelectOption selector="1" parameterArray="[1]" stepKey="searchSelect1"/>
+            <searchAndMultiSelectOption selector="1" parameterArray="[1]" stepKey="searchSelect12"/>
+            <see stepKey="see1"/>
+            <see stepKey="see12"/>
+            <seeCheckboxIsChecked selector="2" stepKey="seecheckbox1"/>
+            <seeCheckboxIsChecked selector="2" stepKey="seecheckbox12"/>
+            <seeCookie stepKey="seecookie1"/>
+            <seeCookie stepKey="seecookie12"/>
+            <seeCurrentUrlEquals stepKey="seeurlequals1"/>
+            <seeCurrentUrlEquals stepKey="seeurlequals12"/>
+            <seeCurrentUrlMatches stepKey="seeurlmatches1"/>
+            <seeCurrentUrlMatches stepKey="seeurlmatches12"/>
+            <seeElement stepKey="seeelement1"/>
+            <seeElement stepKey="seeelement12"/>
+            <seeElementInDOM selector="1" stepKey="seeelementdom1"/>
+            <seeElementInDOM selector="1" stepKey="seeelementdom12"/>
+            <seeInCurrentUrl stepKey="seeincurl1"/>
+            <seeInCurrentUrl stepKey="seeincurl12"/>
+            <seeInField stepKey="seeinfield1"/>
+            <seeInField stepKey="seeinfield12"/>
+            <seeInFormFields selector="2" parameterArray="[2]" stepKey="seeinformfields1"/>
+            <seeInFormFields selector="2" parameterArray="[2]" stepKey="seeinformfields12"/>
+            <seeInPageSource html="1" stepKey="seeinpagesource1"/>
+            <seeInPageSource html="1" stepKey="seeinpagesource12"/>
+            <seeInPopup stepKey="seeinpopup1"/>
+            <seeInPopup stepKey="seeinpopup12"/>
+            <seeInSource html="1" stepKey="seeinsource1"/>
+            <seeInSource html="1" stepKey="seeinsource12"/>
+            <seeInTitle stepKey="seeintitle1"/>
+            <seeInTitle stepKey="seeintitle12"/>
+            <seeLink stepKey="seelink1"/>
+            <seeLink stepKey="seelink12"/>
+            <seeNumberOfElements selector="1" stepKey="seenumberelements1"/>
+            <seeNumberOfElements selector="1" stepKey="seenumberelements12"/>
+            <seeOptionIsSelected selector="1" stepKey="seeoptionselected1"/>
+            <seeOptionIsSelected selector="1" stepKey="seeoptionselected12"/>
+            <selectOption selector="1" stepKey="selectopt1"/>
+            <selectOption selector="1" stepKey="selectopt12"/>
+            <setCookie userInput="1" value="1" stepKey="setcookie1"/>
+            <setCookie userInput="1" value="1" stepKey="setcookie12"/>
+            <submitForm selector="2" parameterArray="[1]"  stepKey="submitform1"/>
+            <submitForm selector="2" parameterArray="[1]"  stepKey="submitform12"/>
+            <switchToIFrame stepKey="switchtoiframe1"/>
+            <switchToIFrame stepKey="switchtoiframe12"/>
+            <switchToNextTab stepKey="switchntab1"/>
+            <switchToNextTab stepKey="switchntab12"/>
+            <switchToPreviousTab stepKey="switchptab1"/>
+            <switchToPreviousTab stepKey="switchptab12"/>
+            <switchToWindow stepKey="switchwindow1"/>
+            <switchToWindow stepKey="switchwindow12"/>
+            <typeInPopup stepKey="typeinpopup1"/>
+            <typeInPopup stepKey="typeinpopup12"/>
+            <uncheckOption selector="1" stepKey="uncheckopt1"/>
+            <uncheckOption selector="1" stepKey="uncheckopt12"/>
+            <unselectOption selector="2" stepKey="unselectopt1"/>
+            <unselectOption selector="2" stepKey="unselectopt12"/>
+            <updateData entity="2" stepKey="updatedata1" createDataKey="1"/>
+            <updateData entity="2" stepKey="updatedata12" createDataKey="1"/>
+            <wait stepKey="wait1"/>
+            <wait stepKey="wait12"/>
+            <waitForAjaxLoad stepKey="waitforajax1"/>
+            <waitForAjaxLoad stepKey="waitforajax12"/>
+            <waitForElementChange selector="1" function="1" stepKey="waitforelementchange1"/>
+            <waitForElementChange selector="1" function="1" stepKey="waitforelementchange12"/>
+            <waitForElement selector="1" stepKey="waitelement1"/>
+            <waitForElement selector="1" stepKey="waitelement12"/>
+            <waitForElementNotVisible selector="1" stepKey="waitelementnotvisible1"/>
+            <waitForElementNotVisible selector="1" stepKey="waitelementnotvisible12"/>
+            <waitForElementVisible selector="1" stepKey="waitelementvisible1"/>
+            <waitForElementVisible selector="1" stepKey="waitelementvisible12"/>
+            <waitForJS function="1" stepKey="waitjs1"/>
+            <waitForJS function="1" stepKey="waitjs12"/>
+            <waitForLoadingMaskToDisappear stepKey="waitloadingmask1"/>
+            <waitForLoadingMaskToDisappear stepKey="waitloadingmask12"/>
+            <waitForPageLoad stepKey="waitpageload1"/>
+            <waitForPageLoad stepKey="waitpageload12"/>
+            <waitForText stepKey="waittext1"/>
+            <waitForText stepKey="waittext12"/>
+        </before>
+        <after>
+            <acceptPopup stepKey="ap1"/>
+            <acceptPopup stepKey="ap2"/>
+            <amOnPage stepKey="aop1" url="1"/>
+            <amOnPage stepKey="aop2" url="1"/>
+            <amOnSubdomain stepKey="aosd1" url="1"/>
+            <amOnSubdomain stepKey="aosd2" url="1"/>
+            <amOnUrl stepKey="aou1" url="1"/>
+            <amOnUrl stepKey="aou2" url="1"/>
+            <appendField selector="1" stepKey="app1"/>
+            <appendField selector="1" stepKey="app2"/>
+            <attachFile selector="1" stepKey="atf1"/>
+            <attachFile selector="1" stepKey="atf2"/>
+            <cancelPopup stepKey="cp1"/>
+            <cancelPopup stepKey="cp2"/>
+            <checkOption selector="1" stepKey="chk1"/>
+            <checkOption selector="1" stepKey="chk2"/>
+            <clearField selector="1" stepKey="clf1"/>
+            <clearField selector="1" stepKey="clf2"/>
+            <click stepKey="ck1"/>
+            <click stepKey="ck2"/>
+            <clickWithLeftButton stepKey="clb1"/>
+            <clickWithLeftButton stepKey="clb2"/>
+            <clickWithRightButton stepKey="crb1"/>
+            <clickWithRightButton stepKey="crb2"/>
+            <closeAdminNotification stepKey="closeadmina1"/>
+            <closeAdminNotification stepKey="closeadmina2"/>
+            <closeTab stepKey="clt1"/>
+            <closeTab stepKey="clt2"/>
+            <comment userInput="1" stepKey="comm1"/>
+            <comment userInput="1" stepKey="comm2"/>
+            <conditionalClick selector="1" dependentSelector="1" visible="true" stepKey="condcli1"/>
+            <conditionalClick selector="1" dependentSelector="1" visible="true" stepKey="condcli2"/>
+            <createData entity="1" stepKey="crdt1"/>
+            <createData entity="1" stepKey="crdt2"/>
+            <deleteData createDataKey="1" stepKey="dldt1"/>
+            <deleteData createDataKey="1" stepKey="dldt2"/>
+            <dontSee stepKey="dnts1"/>
+            <dontSee stepKey="dnts2"/>
+            <dontSeeCheckboxIsChecked selector="1" stepKey="dntschk1"/>
+            <dontSeeCheckboxIsChecked selector="1" stepKey="dntschk2"/>
+            <dontSeeCookie stepKey="dntsck1"/>
+            <dontSeeCookie stepKey="dntsck2"/>
+            <dontSeeCurrentUrlEquals stepKey="dntsurle1"/>
+            <dontSeeCurrentUrlEquals stepKey="dntsurle2"/>
+            <dontSeeCurrentUrlMatches stepKey="dntsurlm1"/>
+            <dontSeeCurrentUrlMatches stepKey="dntsurlm2"/>
+            <dontSeeElement selector="1" stepKey="dntsele1"/>
+            <dontSeeElement selector="1" stepKey="dntsele2"/>
+            <dontSeeElementInDOM selector="1" stepKey="dntseledom1"/>
+            <dontSeeElementInDOM selector="1" stepKey="dntseledom2"/>
+            <dontSeeInCurrentUrl stepKey="dntscurl1"/>
+            <dontSeeInCurrentUrl stepKey="dntscurl2"/>
+            <dontSeeInField stepKey="dntsinfld1"/>
+            <dontSeeInField stepKey="dntsinfld2"/>
+            <dontSeeInFormFields selector="1" stepKey="dntsinffld1"/>
+            <dontSeeInFormFields selector="1" stepKey="dntsinffld2"/>
+            <dontSeeInPageSource html="1" stepKey="dntsinpgs1"/>
+            <dontSeeInPageSource html="1" stepKey="dntsinpgs2"/>
+            <dontSeeInSource html="1" stepKey="dntsinsource1"/>
+            <dontSeeInSource html="1" stepKey="dntsinsource2"/>
+            <dontSeeInTitle stepKey="dntsintitle1"/>
+            <dontSeeInTitle stepKey="dntsintitle2"/>
+            <dontSeeJsError stepKey="dntsjserr1"/>
+            <dontSeeJsError stepKey="dntsjserr2"/>
+            <dontSeeLink stepKey="dntslink1"/>
+            <dontSeeLink stepKey="dntslink2"/>
+            <dontSeeOptionIsSelected selector="1" stepKey="dntsoptionsel1"/>
+            <dontSeeOptionIsSelected selector="1" stepKey="dntsoptionse2"/>
+            <doubleClick selector="1" stepKey="dblclick1"/>
+            <doubleClick selector="1" stepKey="dblclick2"/>
+            <dragAndDrop selector1="1" selector2="2" stepKey="dragndrop1"/>
+            <dragAndDrop selector1="1" selector2="2" stepKey="dragndrop2"/>
+            <executeJS function="1" stepKey="execJS1"/>
+            <executeJS function="1" stepKey="execJS2"/>
+            <fillField stepKey="fill1"/>
+            <fillField stepKey="fill21"/>
+            <formatCurrency userInput="1234.567890" locale="de_DE" currency="EUR" stepKey="frmtmoney1"/>
+            <formatCurrency userInput="1234.567890" locale="en_US" currency="EUR" stepKey="frmtmoney12"/>
+            <getData entity="1" stepKey="getdata1"/>
+            <getData entity="1" stepKey="getdata12"/>
+            <grabAttributeFrom selector="1" stepKey="grabattribute1"/>
+            <grabAttributeFrom selector="1" stepKey="grabattribute12"/>
+            <grabCookie stepKey="grabcookie1"/>
+            <grabCookie stepKey="grabcookie12"/>
+            <grabFromCurrentUrl stepKey="grabfromcurl1"/>
+            <grabFromCurrentUrl stepKey="grabfromcurl12"/>
+            <grabMultiple selector="1" stepKey="grabmulti1"/>
+            <grabMultiple selector="1" stepKey="grabmulti12"/>
+            <grabPageSource stepKey="grabpage1"/>
+            <grabPageSource stepKey="grabpage12"/>
+            <grabTextFrom selector="1" stepKey="grabtext1"/>
+            <grabTextFrom selector="1" stepKey="grabtext12"/>
+            <grabValueFrom stepKey="grabvalue1"/>
+            <grabValueFrom stepKey="grabvalue12"/>
+            <loadSessionSnapshot stepKey="loadsession1"/>
+            <loadSessionSnapshot stepKey="loadsession12"/>
+            <magentoCLI stepKey="magentocli1"/>
+            <magentoCLI stepKey="magentocli2"/>
+            <makeScreenshot stepKey="screenshot1"/>
+            <makeScreenshot stepKey="screenshot12"/>
+            <maximizeWindow stepKey="maxwindow1"/>
+            <maximizeWindow stepKey="maxwindow12"/>
+            <moveBack stepKey="moveb1"/>
+            <moveBack stepKey="moveb21"/>
+            <moveForward stepKey="movef1"/>
+            <moveForward stepKey="movef12"/>
+            <moveMouseOver stepKey="movemouseover1"/>
+            <moveMouseOver stepKey="movemouseover12"/>
+            <mSetLocale locale="1" stepKey="setlocale1"/>
+            <mSetLocale locale="1" stepKey="setlocale12"/>
+            <mResetLocale stepKey="resetlocale1"/>
+            <mResetLocale stepKey="resetlocale12"/>
+            <openNewTab stepKey="newtab1"/>
+            <openNewTab stepKey="newtab12"/>
+            <parseFloat stepKey="parsefloat1"/>
+            <parseFloat stepKey="parsefloat12"/>
+            <pause stepKey="pause1"/>
+            <pause stepKey="pause12"/>
+            <pressKey selector="1" stepKey="press1"/>
+            <pressKey selector="1" stepKey="press12"/>
+            <reloadPage stepKey="reload1"/>
+            <reloadPage stepKey="reload12"/>
+            <resetCookie stepKey="resetck1"/>
+            <resetCookie stepKey="resetck12"/>
+            <resizeWindow width="1" height="1" stepKey="resize1"/>
+            <resizeWindow width="1" height="1" stepKey="resize12"/>
+            <saveSessionSnapshot stepKey="savesession1"/>
+            <saveSessionSnapshot stepKey="savesession12"/>
+            <scrollTo stepKey="scrollto1"/>
+            <scrollTo stepKey="scrollto12"/>
+            <scrollToTopOfPage stepKey="scrolltop1"/>
+            <scrollToTopOfPage stepKey="scrolltop12"/>
+            <searchAndMultiSelectOption selector="1" parameterArray="[1]" stepKey="searchSelect1"/>
+            <searchAndMultiSelectOption selector="1" parameterArray="[1]" stepKey="searchSelect12"/>
+            <see stepKey="see1"/>
+            <see stepKey="see12"/>
+            <seeCheckboxIsChecked selector="2" stepKey="seecheckbox1"/>
+            <seeCheckboxIsChecked selector="2" stepKey="seecheckbox12"/>
+            <seeCookie stepKey="seecookie1"/>
+            <seeCookie stepKey="seecookie12"/>
+            <seeCurrentUrlEquals stepKey="seeurlequals1"/>
+            <seeCurrentUrlEquals stepKey="seeurlequals12"/>
+            <seeCurrentUrlMatches stepKey="seeurlmatches1"/>
+            <seeCurrentUrlMatches stepKey="seeurlmatches12"/>
+            <seeElement stepKey="seeelement1"/>
+            <seeElement stepKey="seeelement12"/>
+            <seeElementInDOM selector="1" stepKey="seeelementdom1"/>
+            <seeElementInDOM selector="1" stepKey="seeelementdom12"/>
+            <seeInCurrentUrl stepKey="seeincurl1"/>
+            <seeInCurrentUrl stepKey="seeincurl12"/>
+            <seeInField stepKey="seeinfield1"/>
+            <seeInField stepKey="seeinfield12"/>
+            <seeInFormFields selector="2" parameterArray="[1]"  stepKey="seeinformfields1"/>
+            <seeInFormFields selector="2" parameterArray="[1]"  stepKey="seeinformfields12"/>
+            <seeInPageSource html="1" stepKey="seeinpagesource1"/>
+            <seeInPageSource html="1" stepKey="seeinpagesource12"/>
+            <seeInPopup stepKey="seeinpopup1"/>
+            <seeInPopup stepKey="seeinpopup12"/>
+            <seeInSource html="1" stepKey="seeinsource1"/>
+            <seeInSource html="1" stepKey="seeinsource12"/>
+            <seeInTitle stepKey="seeintitle1"/>
+            <seeInTitle stepKey="seeintitle12"/>
+            <seeLink stepKey="seelink1"/>
+            <seeLink stepKey="seelink12"/>
+            <seeNumberOfElements selector="1" stepKey="seenumberelements1"/>
+            <seeNumberOfElements selector="1" stepKey="seenumberelements12"/>
+            <seeOptionIsSelected selector="1" stepKey="seeoptionselected1"/>
+            <seeOptionIsSelected selector="1" stepKey="seeoptionselected12"/>
+            <selectOption selector="1" stepKey="selectopt1"/>
+            <selectOption selector="1" stepKey="selectopt12"/>
+            <setCookie userInput="1" value="1" stepKey="setcookie1"/>
+            <setCookie userInput="1" value="1" stepKey="setcookie12"/>
+            <submitForm selector="2" parameterArray="[1]"  stepKey="submitform1"/>
+            <submitForm selector="2" parameterArray="[1]"  stepKey="submitform12"/>
+            <switchToIFrame stepKey="switchtoiframe1"/>
+            <switchToIFrame stepKey="switchtoiframe12"/>
+            <switchToNextTab stepKey="switchntab1"/>
+            <switchToNextTab stepKey="switchntab12"/>
+            <switchToPreviousTab stepKey="switchptab1"/>
+            <switchToPreviousTab stepKey="switchptab12"/>
+            <switchToWindow stepKey="switchwindow1"/>
+            <switchToWindow stepKey="switchwindow12"/>
+            <typeInPopup stepKey="typeinpopup1"/>
+            <typeInPopup stepKey="typeinpopup12"/>
+            <uncheckOption selector="1" stepKey="uncheckopt1"/>
+            <uncheckOption selector="1" stepKey="uncheckopt12"/>
+            <unselectOption selector="2" stepKey="unselectopt1"/>
+            <unselectOption selector="2" stepKey="unselectopt12"/>
+            <updateData entity="2" stepKey="updatedata1" createDataKey="1"/>
+            <updateData entity="2" stepKey="updatedata12" createDataKey="1"/>
+            <wait stepKey="wait1"/>
+            <wait stepKey="wait12"/>
+            <waitForAjaxLoad stepKey="waitforajax1"/>
+            <waitForAjaxLoad stepKey="waitforajax12"/>
+            <waitForElementChange selector="1" function="1" stepKey="waitforelementchange1"/>
+            <waitForElementChange selector="1" function="1" stepKey="waitforelementchange12"/>
+            <waitForElement selector="1" stepKey="waitelement1"/>
+            <waitForElement selector="1" stepKey="waitelement12"/>
+            <waitForElementNotVisible selector="1" stepKey="waitelementnotvisible1"/>
+            <waitForElementNotVisible selector="1" stepKey="waitelementnotvisible12"/>
+            <waitForElementVisible selector="1" stepKey="waitelementvisible1"/>
+            <waitForElementVisible selector="1" stepKey="waitelementvisible12"/>
+            <waitForJS function="1" stepKey="waitjs1"/>
+            <waitForJS function="1" stepKey="waitjs12"/>
+            <waitForLoadingMaskToDisappear stepKey="waitloadingmask1"/>
+            <waitForLoadingMaskToDisappear stepKey="waitloadingmask12"/>
+            <waitForPageLoad stepKey="waitpageload1"/>
+            <waitForPageLoad stepKey="waitpageload12"/>
+            <waitForText stepKey="waittext1"/>
+            <waitForText stepKey="waittext12"/>
+        </after>
+        <acceptPopup stepKey="ap1"/>
+        <acceptPopup stepKey="ap2"/>
+        <amOnPage stepKey="aop1" url="1"/>
+        <amOnPage stepKey="aop2" url="1"/>
+        <amOnSubdomain stepKey="aosd1" url="1"/>
+        <amOnSubdomain stepKey="aosd2" url="1"/>
+        <amOnUrl stepKey="aou1" url="1"/>
+        <amOnUrl stepKey="aou2" url="1"/>
+        <appendField selector="1" stepKey="app1"/>
+        <appendField selector="1" stepKey="app2"/>
+        <attachFile selector="1" stepKey="atf1"/>
+        <attachFile selector="1" stepKey="atf2"/>
+        <cancelPopup stepKey="cp1"/>
+        <cancelPopup stepKey="cp2"/>
+        <checkOption selector="1" stepKey="chk1"/>
+        <checkOption selector="1" stepKey="chk2"/>
+        <clearField selector="1" stepKey="clf1"/>
+        <clearField selector="1" stepKey="clf2"/>
+        <click stepKey="ck1"/>
+        <click stepKey="ck2"/>
+        <clickWithLeftButton stepKey="clb1"/>
+        <clickWithLeftButton stepKey="clb2"/>
+        <clickWithRightButton stepKey="crb1"/>
+        <clickWithRightButton stepKey="crb2"/>
+        <closeAdminNotification stepKey="closeadmin1"/>
+        <closeAdminNotification stepKey="closeadmin2"/>
+        <closeTab stepKey="clt1"/>
+        <closeTab stepKey="clt2"/>
+        <comment userInput="1" stepKey="comm1"/>
+        <comment userInput="1" stepKey="comm2"/>
+        <conditionalClick selector="1" dependentSelector="1" visible="true" stepKey="condcli1"/>
+        <conditionalClick selector="1" dependentSelector="1" visible="true" stepKey="condcli2"/>
+        <createData entity="1" stepKey="crdt1"/>
+        <createData entity="1" stepKey="crdt2"/>
+        <deleteData createDataKey="1" stepKey="dldt1"/>
+        <deleteData createDataKey="1" stepKey="dldt2"/>
+        <dontSee stepKey="dnts1"/>
+        <dontSee stepKey="dnts2"/>
+        <dontSeeCheckboxIsChecked selector="1" stepKey="dntschk1"/>
+        <dontSeeCheckboxIsChecked selector="1" stepKey="dntschk2"/>
+        <dontSeeCookie stepKey="dntsck1"/>
+        <dontSeeCookie stepKey="dntsck2"/>
+        <dontSeeCurrentUrlEquals stepKey="dntsurle1"/>
+        <dontSeeCurrentUrlEquals stepKey="dntsurle2"/>
+        <dontSeeCurrentUrlMatches stepKey="dntsurlm1"/>
+        <dontSeeCurrentUrlMatches stepKey="dntsurlm2"/>
+        <dontSeeElement selector="1" stepKey="dntsele1"/>
+        <dontSeeElement selector="1" stepKey="dntsele2"/>
+        <dontSeeElementInDOM selector="1" stepKey="dntseledom1"/>
+        <dontSeeElementInDOM selector="1" stepKey="dntseledom2"/>
+        <dontSeeInCurrentUrl stepKey="dntscurl1"/>
+        <dontSeeInCurrentUrl stepKey="dntscurl2"/>
+        <dontSeeInField stepKey="dntsinfld1"/>
+        <dontSeeInField stepKey="dntsinfld2"/>
+        <dontSeeInFormFields selector="1" stepKey="dntsinffld1"/>
+        <dontSeeInFormFields selector="1" stepKey="dntsinffld2"/>
+        <dontSeeInPageSource html="1" stepKey="dntsinpgs1"/>
+        <dontSeeInPageSource html="1" stepKey="dntsinpgs2"/>
+        <dontSeeInSource html="1" stepKey="dntsinsource1"/>
+        <dontSeeInSource html="1" stepKey="dntsinsource2"/>
+        <dontSeeInTitle stepKey="dntsintitle1"/>
+        <dontSeeInTitle stepKey="dntsintitle2"/>
+        <dontSeeJsError stepKey="dntsjserr1"/>
+        <dontSeeJsError stepKey="dntsjserr2"/>
+        <dontSeeLink stepKey="dntslink1"/>
+        <dontSeeLink stepKey="dntslink2"/>
+        <dontSeeOptionIsSelected selector="1" stepKey="dntsoptionsel1"/>
+        <dontSeeOptionIsSelected selector="1" stepKey="dntsoptionse2"/>
+        <doubleClick selector="1" stepKey="dblclick1"/>
+        <doubleClick selector="1" stepKey="dblclick2"/>
+        <dragAndDrop selector1="1" selector2="2" stepKey="dragndrop1"/>
+        <dragAndDrop selector1="1" selector2="2" stepKey="dragndrop2"/>
+        <executeJS function="1" stepKey="execJS1"/>
+        <executeJS function="1" stepKey="execJS2"/>
+        <fillField stepKey="fill1"/>
+        <fillField stepKey="fill21"/>
+        <formatCurrency userInput="1234.567890" locale="de_DE" currency="EUR" stepKey="frmtmoney1"/>
+        <formatCurrency userInput="1234.567890" locale="en_US" currency="EUR" stepKey="frmtmoney12"/>
+        <getData entity="1" stepKey="getdata1"/>
+        <getData entity="1" stepKey="getdata12"/>
+        <grabAttributeFrom selector="1" stepKey="grabattribute1"/>
+        <grabAttributeFrom selector="1" stepKey="grabattribute12"/>
+        <grabCookie stepKey="grabcookie1"/>
+        <grabCookie stepKey="grabcookie12"/>
+        <grabFromCurrentUrl stepKey="grabfromcurl1"/>
+        <grabFromCurrentUrl stepKey="grabfromcurl12"/>
+        <grabMultiple selector="1" stepKey="grabmulti1"/>
+        <grabMultiple selector="1" stepKey="grabmulti12"/>
+        <grabPageSource stepKey="grabpage1"/>
+        <grabPageSource stepKey="grabpage12"/>
+        <grabTextFrom selector="1" stepKey="grabtext1"/>
+        <grabTextFrom selector="1" stepKey="grabtext12"/>
+        <grabValueFrom stepKey="grabvalue1"/>
+        <grabValueFrom stepKey="grabvalue12"/>
+        <loadSessionSnapshot stepKey="loadsession1"/>
+        <loadSessionSnapshot stepKey="loadsession12"/>
+        <magentoCLI stepKey="magentocli1"/>
+        <magentoCLI stepKey="magentocli2"/>
+        <makeScreenshot stepKey="screenshot1"/>
+        <makeScreenshot stepKey="screenshot12"/>
+        <maximizeWindow stepKey="maxwindow1"/>
+        <maximizeWindow stepKey="maxwindow12"/>
+        <moveBack stepKey="moveb1"/>
+        <moveBack stepKey="moveb21"/>
+        <moveForward stepKey="movef1"/>
+        <moveForward stepKey="movef12"/>
+        <moveMouseOver stepKey="movemouseover1"/>
+        <moveMouseOver stepKey="movemouseover12"/>
+        <mSetLocale locale="1" stepKey="setlocale1"/>
+        <mSetLocale locale="1" stepKey="setlocale12"/>
+        <mResetLocale stepKey="resetlocale1"/>
+        <mResetLocale stepKey="resetlocale12"/>
+        <openNewTab stepKey="newtab1"/>
+        <openNewTab stepKey="newtab12"/>
+        <parseFloat stepKey="parsefloat1"/>
+        <parseFloat stepKey="parsefloat12"/>
+        <pause stepKey="pause1"/>
+        <pause stepKey="pause12"/>
+        <pressKey selector="1" stepKey="press1"/>
+        <pressKey selector="1" stepKey="press12"/>
+        <reloadPage stepKey="reload1"/>
+        <reloadPage stepKey="reload12"/>
+        <resetCookie stepKey="resetck1"/>
+        <resetCookie stepKey="resetck12"/>
+        <resizeWindow width="1" height="1" stepKey="resize1"/>
+        <resizeWindow width="1" height="1" stepKey="resize12"/>
+        <saveSessionSnapshot stepKey="savesession1"/>
+        <saveSessionSnapshot stepKey="savesession12"/>
+        <scrollTo stepKey="scrollto1"/>
+        <scrollTo stepKey="scrollto12"/>
+        <scrollToTopOfPage stepKey="scrolltop1"/>
+        <scrollToTopOfPage stepKey="scrolltop12"/>
+        <searchAndMultiSelectOption selector="1" parameterArray="[1]" stepKey="searchSelect1"/>
+        <searchAndMultiSelectOption selector="1" parameterArray="[1]" stepKey="searchSelect12"/>
+        <see stepKey="see1"/>
+        <see stepKey="see12"/>
+        <seeCheckboxIsChecked selector="2" stepKey="seecheckbox1"/>
+        <seeCheckboxIsChecked selector="2" stepKey="seecheckbox12"/>
+        <seeCookie stepKey="seecookie1"/>
+        <seeCookie stepKey="seecookie12"/>
+        <seeCurrentUrlEquals stepKey="seeurlequals1"/>
+        <seeCurrentUrlEquals stepKey="seeurlequals12"/>
+        <seeCurrentUrlMatches stepKey="seeurlmatches1"/>
+        <seeCurrentUrlMatches stepKey="seeurlmatches12"/>
+        <seeElement stepKey="seeelement1"/>
+        <seeElement stepKey="seeelement12"/>
+        <seeElementInDOM selector="1" stepKey="seeelementdom1"/>
+        <seeElementInDOM selector="1" stepKey="seeelementdom12"/>
+        <seeInCurrentUrl stepKey="seeincurl1"/>
+        <seeInCurrentUrl stepKey="seeincurl12"/>
+        <seeInField stepKey="seeinfield1"/>
+        <seeInField stepKey="seeinfield12"/>
+        <seeInFormFields selector="2" parameterArray="[1]"  stepKey="seeinformfields1"/>
+        <seeInFormFields selector="2" parameterArray="[1]"  stepKey="seeinformfields12"/>
+        <seeInPageSource html="1" stepKey="seeinpagesource1"/>
+        <seeInPageSource html="1" stepKey="seeinpagesource12"/>
+        <seeInPopup stepKey="seeinpopup1"/>
+        <seeInPopup stepKey="seeinpopup12"/>
+        <seeInSource html="1" stepKey="seeinsource1"/>
+        <seeInSource html="1" stepKey="seeinsource12"/>
+        <seeInTitle stepKey="seeintitle1"/>
+        <seeInTitle stepKey="seeintitle12"/>
+        <seeLink stepKey="seelink1"/>
+        <seeLink stepKey="seelink12"/>
+        <seeNumberOfElements selector="1" stepKey="seenumberelements1"/>
+        <seeNumberOfElements selector="1" stepKey="seenumberelements12"/>
+        <seeOptionIsSelected selector="1" stepKey="seeoptionselected1"/>
+        <seeOptionIsSelected selector="1" stepKey="seeoptionselected12"/>
+        <selectOption selector="1" stepKey="selectopt1"/>
+        <selectOption selector="1" stepKey="selectopt12"/>
+        <setCookie userInput="1" value="1" stepKey="setcookie1"/>
+        <setCookie userInput="1" value="1" stepKey="setcookie12"/>
+        <submitForm selector="2" parameterArray="[1]"  stepKey="submitform1"/>
+        <submitForm selector="2" parameterArray="[1]"  stepKey="submitform12"/>
+        <switchToIFrame stepKey="switchtoiframe1"/>
+        <switchToIFrame stepKey="switchtoiframe12"/>
+        <switchToNextTab stepKey="switchntab1"/>
+        <switchToNextTab stepKey="switchntab12"/>
+        <switchToPreviousTab stepKey="switchptab1"/>
+        <switchToPreviousTab stepKey="switchptab12"/>
+        <switchToWindow stepKey="switchwindow1"/>
+        <switchToWindow stepKey="switchwindow12"/>
+        <typeInPopup stepKey="typeinpopup1"/>
+        <typeInPopup stepKey="typeinpopup12"/>
+        <uncheckOption selector="1" stepKey="uncheckopt1"/>
+        <uncheckOption selector="1" stepKey="uncheckopt12"/>
+        <unselectOption selector="2" stepKey="unselectopt1"/>
+        <unselectOption selector="2" stepKey="unselectopt12"/>
+        <updateData entity="2" stepKey="updatedata1" createDataKey="1"/>
+        <updateData entity="2" stepKey="updatedata12" createDataKey="1"/>
+        <wait stepKey="wait1"/>
+        <wait stepKey="wait12"/>
+        <waitForAjaxLoad stepKey="waitforajax1"/>
+        <waitForAjaxLoad stepKey="waitforajax12"/>
+        <waitForElementChange selector="1" function="1" stepKey="waitforelementchange1"/>
+        <waitForElementChange selector="1" function="1" stepKey="waitforelementchange12"/>
+        <waitForElement selector="1" stepKey="waitelement1"/>
+        <waitForElement selector="1" stepKey="waitelement12"/>
+        <waitForElementNotVisible selector="1" stepKey="waitelementnotvisible1"/>
+        <waitForElementNotVisible selector="1" stepKey="waitelementnotvisible12"/>
+        <waitForElementVisible selector="1" stepKey="waitelementvisible1"/>
+        <waitForElementVisible selector="1" stepKey="waitelementvisible12"/>
+        <waitForJS function="1" stepKey="waitjs1"/>
+        <waitForJS function="1" stepKey="waitjs12"/>
+        <waitForLoadingMaskToDisappear stepKey="waitloadingmask1"/>
+        <waitForLoadingMaskToDisappear stepKey="waitloadingmask12"/>
+        <waitForPageLoad stepKey="waitpageload1"/>
+        <waitForPageLoad stepKey="waitpageload12"/>
+        <waitForText stepKey="waittext1"/>
+        <waitForText stepKey="waittext12"/>
+    </test>
+</tests>

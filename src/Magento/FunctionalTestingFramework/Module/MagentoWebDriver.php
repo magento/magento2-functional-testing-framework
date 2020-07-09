@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Module;
 
+use Codeception\Lib\Actor\Shared\Pause;
 use Codeception\Module\WebDriver;
 use Codeception\Test\Descriptor;
 use Codeception\TestInterface;
@@ -14,18 +15,17 @@ use Facebook\WebDriver\Interactions\WebDriverActions;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Util\Uri;
+use Magento\FunctionalTestingFramework\DataTransport\WebApiExecutor;
+use Magento\FunctionalTestingFramework\DataTransport\Auth\WebApiAuth;
+use Magento\FunctionalTestingFramework\DataTransport\Auth\Tfa\OTP;
+use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Persist\Curl\WebapiExecutor;
 use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
-use Magento\FunctionalTestingFramework\Util\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\Util\ConfigSanitizerUtil;
 use Yandex\Allure\Adapter\AllureException;
-use Magento\FunctionalTestingFramework\Util\Protocol\CurlTransport;
+use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlTransport;
 use Yandex\Allure\Adapter\Support\AttachmentSupport;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
-use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
-use Facebook\WebDriver\Remote\RemoteWebDriver;
-use Facebook\WebDriver\Exception\WebDriverCurlException;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 
 /**
@@ -48,10 +48,12 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHan
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class MagentoWebDriver extends WebDriver
 {
     use AttachmentSupport;
+    use Pause;
 
     const MAGENTO_CRON_INTERVAL = 60;
     const MAGENTO_CRON_COMMAND = 'cron:run';
@@ -256,7 +258,7 @@ class MagentoWebDriver extends WebDriver
         $actualUrl = $this->webDriver->getCurrentURL();
         $comparison = "Expected: $needle\nActual: $actualUrl";
         AllureHelper::addAttachmentToCurrentStep($comparison, 'Comparison');
-        $this->assertNotContains($needle, $actualUrl);
+        $this->assertStringNotContainsString($needle, $actualUrl);
     }
 
     /**
@@ -325,7 +327,7 @@ class MagentoWebDriver extends WebDriver
         $actualUrl = $this->webDriver->getCurrentURL();
         $comparison = "Expected: $needle\nActual: $actualUrl";
         AllureHelper::addAttachmentToCurrentStep($comparison, 'Comparison');
-        $this->assertContains($needle, $actualUrl);
+        $this->assertStringContainsString($needle, $actualUrl);
     }
 
     /**
@@ -450,19 +452,26 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * @param float  $money
+     * Format input to specified currency in locale specified
+     * @link https://php.net/manual/en/numberformatter.formatcurrency.php
+     *
+     * @param float  $value
      * @param string $locale
-     * @return array
+     * @param string $currency
+     * @return string
+     * @throws TestFrameworkException
      */
-    public function formatMoney(float $money, $locale = 'en_US.UTF-8')
+    public function formatCurrency(float $value, $locale, $currency)
     {
-        $this->mSetLocale(LC_MONETARY, $locale);
-        $money = money_format('%.2n', $money);
-        $this->mResetLocale();
-        $prefix = substr($money, 0, 1);
-        $number = substr($money, 1);
+        $formatter = \NumberFormatter::create($locale, \NumberFormatter::CURRENCY);
+        if ($formatter && !empty($formatter)) {
+            $result = $formatter->formatCurrency($value, $currency);
+            if ($result) {
+                return $result;
+            }
+        }
 
-        return ['prefix' => $prefix, 'number' => $number];
+        throw new TestFrameworkException('Invalid attributes used in formatCurrency.');
     }
 
     /**
@@ -542,12 +551,11 @@ class MagentoWebDriver extends WebDriver
             false
         );
 
-        $restExecutor = new WebapiExecutor();
         $executor = new CurlTransport();
         $executor->write(
             $apiURL,
             [
-                'token' => $restExecutor->getAuthToken(),
+                'token' => WebApiAuth::getAdminToken(),
                 getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command,
                 'arguments' => $arguments,
                 'timeout'   => $timeout,
@@ -556,7 +564,6 @@ class MagentoWebDriver extends WebDriver
             []
         );
         $response = $executor->read();
-        $restExecutor->close();
         $executor->close();
 
         return $response;
@@ -644,7 +651,7 @@ class MagentoWebDriver extends WebDriver
      */
     public function deleteEntityByUrl($url)
     {
-        $executor = new WebapiExecutor(null);
+        $executor = new WebApiExecutor(null);
         $executor->write($url, [], CurlInterface::DELETE, []);
         $response = $executor->read();
         $executor->close();
@@ -708,7 +715,7 @@ class MagentoWebDriver extends WebDriver
             // When an "attribute" is blank or null it returns "true" so we assert that "true" is present.
             $this->assertEquals($attributes, 'true');
         } else {
-            $this->assertContains($value, $attributes);
+            $this->assertStringContainsString($value, $attributes);
         }
     }
 
@@ -738,23 +745,24 @@ class MagentoWebDriver extends WebDriver
      */
     public function dragAndDrop($source, $target, $xOffset = null, $yOffset = null)
     {
-        if ($xOffset !== null || $yOffset !== null) {
-            $snodes = $this->matchFirstOrFail($this->baseElement, $source);
-            $tnodes = $this->matchFirstOrFail($this->baseElement, $target);
+        $snodes = $this->matchFirstOrFail($this->baseElement, $source);
+        $tnodes = $this->matchFirstOrFail($this->baseElement, $target);
+        $action = new WebDriverActions($this->webDriver);
 
+        if ($xOffset !== null || $yOffset !== null) {
             $targetX = intval($tnodes->getLocation()->getX() + $xOffset);
             $targetY = intval($tnodes->getLocation()->getY() + $yOffset);
 
             $travelX = intval($targetX - $snodes->getLocation()->getX());
             $travelY = intval($targetY - $snodes->getLocation()->getY());
-
-            $action = new WebDriverActions($this->webDriver);
-            $action->moveToElement($snodes)->perform();
-            $action->clickAndHold($snodes)->perform();
-            $action->moveByOffset($travelX, $travelY)->perform();
+            $action->moveToElement($snodes);
+            $action->clickAndHold($snodes);
+            $action->moveByOffset($travelX, $travelY);
             $action->release()->perform();
         } else {
-            parent::dragAndDrop($source, $target);
+            $action->clickAndHold($snodes);
+            $action->moveToElement($tnodes);
+            $action->release($tnodes)->perform();
         }
     }
 
@@ -861,18 +869,6 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * Turn Readiness check on or off
-     *
-     * @param boolean $check
-     * @return void
-     * @throws \Exception
-     */
-    public function skipReadinessCheck($check)
-    {
-        $this->config['skipReadiness'] = $check;
-    }
-
-    /**
      * Clean Javascript errors in internal array
      *
      * @return void
@@ -945,6 +941,17 @@ class MagentoWebDriver extends WebDriver
         $this->_saveScreenshot($screenName);
         $this->debug("Screenshot saved to $screenName");
         AllureHelper::addAttachmentToCurrentStep($screenName, 'Screenshot');
+    }
+
+    /**
+     * Return OTP based on a shared secret
+     *
+     * @return string
+     * @throws TestFrameworkException
+     */
+    public function getOTP()
+    {
+        return OTP::getOTP();
     }
 
     /**
@@ -1091,5 +1098,26 @@ class MagentoWebDriver extends WebDriver
         $this->notifyCronFinished($cronGroups);
 
         return sprintf('%s (wait: %ss, execution: %ss)', $cronResult, $waitFor, round($timeEnd - $timeStart, 2));
+    }
+
+    /**
+     * Switch to another frame on the page by name, ID, CSS or XPath.
+     *
+     * @param string|null $locator
+     * @return void
+     * @throws \Exception
+     */
+    public function switchToIFrame($locator = null)
+    {
+        try {
+            parent::switchToIFrame($locator);
+        } catch (\Exception $e) {
+            $els = $this->_findElements("#$locator");
+            if (!count($els)) {
+                $this->debug('Failed to find locator by ID: ' . $e->getMessage());
+                throw new \Exception("IFrame with $locator was not found.");
+            }
+            $this->webDriver->switchTo()->frame($els[0]);
+        }
     }
 }

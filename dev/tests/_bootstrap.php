@@ -35,7 +35,7 @@ $kernel->init([
     true,
     \Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::UNIT_TEST_PHASE,
     true,
-    \Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::LEVEL_NONE,
+    \Magento\FunctionalTestingFramework\Config\MftfApplicationConfig::LEVEL_DEFAULT,
     false
 );
 
@@ -54,8 +54,8 @@ foreach ($TEST_ENVS as $key => $value) {
     putenv("{$key}=${value}");
 }
 
-// Add our test module to the whitelist
-putenv('MODULE_WHITELIST=Magento_TestModule');
+// Add our test module to the allowlist
+putenv('MODULE_ALLOWLIST=Magento_TestModule');
 
 // Define our own set of paths for the tests
 defined('FW_BP') || define('FW_BP', PROJECT_ROOT);
@@ -100,28 +100,6 @@ foreach (sortInterfaces($functionalUtilFiles) as $functionalUtilFile) {
 $unitUtilFiles = glob(TESTS_BP . DIRECTORY_SEPARATOR . 'unit' . $utilDir);
 foreach (sortInterfaces($unitUtilFiles) as $unitUtilFile) {
     require($unitUtilFile);
-}
-
-
-// Mocks suite files location getter return to get files in verification/_suite Directory
-// This mocks the paths of the suite files but still parses the xml files
-$suiteDirectory =  TESTS_BP . DIRECTORY_SEPARATOR . "verification" . DIRECTORY_SEPARATOR . "_suite";
-
-$paths = [
-    $suiteDirectory . DIRECTORY_SEPARATOR . 'functionalSuite.xml',
-    $suiteDirectory . DIRECTORY_SEPARATOR . 'functionalSuiteHooks.xml',
-    $suiteDirectory . DIRECTORY_SEPARATOR . 'functionalSuiteExtends.xml'
-];
-
-// create and return the iterator for these file paths
-$iterator = new Magento\FunctionalTestingFramework\Util\Iterator\File($paths);
-try {
-    AspectMock\Test::double(
-        Magento\FunctionalTestingFramework\Config\FileResolver\Root::class,
-        ['get' => $iterator]
-    )->make();
-} catch (Exception $e) {
-    echo "Suite directory not mocked.";
 }
 
 function sortInterfaces($files)
