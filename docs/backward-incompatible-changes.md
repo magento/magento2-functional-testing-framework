@@ -15,7 +15,7 @@ We removed support to read test modules from the deprecated path `dev/tests/acce
 -  Files under test modules `ActionGroup`, `Page`, `Section`, `Test` and `Suite` only support a single entity per file. 
 -  The `file` attribute from `<module>` has been removed from the suite schema. `<module file=""/>` is no longer supported in suites.
 -  Metadata filename format changed to ***`*Meta.xml`***.
--  Only nested assertion syntax will be supported. See the [assertions page](./docs/test/assertions.md) for details. Here is an example of the nested assertion syntax:
+-  Only nested assertion syntax will be supported. Here is an example of the nested assertion syntax:
    ```xml
    <assertEquals stepKey="assertAddressOrderPage">
       <actualResult type="const">$billingAddressOrderPage</actualResult>
@@ -40,7 +40,7 @@ To run the upgrade tests:
 
 1. Run `bin/mftf reset --hard` to remove old generated configurations.
 1. Run `bin/mftf build:project` to generate new configurations.
-1. Run `bin/mftf upgrade:tests`. [See command page for details](./docs/commands/mftf.md#upgradetests).
+1. Run `bin/mftf upgrade:tests`.
 1. Lastly, try to generate all tests. Tests should all be generated as a result of the upgrades. If not, the most likely issue will be a changed XML schema. Check error messaging and search your codebase for the attributes listed.
 
 ## MFTF commands
@@ -57,7 +57,7 @@ To run the upgrade tests:
 
 **Details**: 
 
-The `helper` allows test writers to solve advanced requirements beyond what MFTF offers out of the box. See [custom-helpers](./docs/custom-helpers.md) for more information on usage. 
+The `helper` allows test writers to solve advanced requirements beyond what MFTF offers out of the box.
 
 Here is an example of using `helper` in place of `executeSelenium` to achieve same workflow.
 
@@ -95,7 +95,7 @@ New usage:
 
 **Details**: 
 
-See the [actions page for details](./docs/test/actions.md#pause). Here is a usage example:
+Here is a usage example:
 
 ```xml
 <pause stepKey="pauseExecutionKey"/>
