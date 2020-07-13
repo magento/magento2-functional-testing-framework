@@ -115,7 +115,7 @@ __Use case__: Create two similar tests where the second test contains two additi
 </tests>
 ```
 
-### Update a test annotation
+### Update a test before hook
 
 __Use case__: Create two similar tests where the second one contains two additional actions in the `before` hook:
 
