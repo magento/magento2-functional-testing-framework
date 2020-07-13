@@ -180,6 +180,34 @@ MFTF resolves `{{myCustomEntity.field1}}` the same as it would in a `selector` o
 </actionGroup>
 ```
 
+## Returning a value
+
+Action groups can return a value using `<return>` action.
+
+```xml
+<actionGroup name="GetOrderIdActionGroup">
+    <seeElement selector="{{CheckoutSuccessMainSection.orderLink}}"  stepKey="assertOrderLink"/>
+    <grabTextFrom selector="{{CheckoutSuccessMainSection.orderLink}}" stepKey="orderId"/>
+    <return value="{$grabTextFrom1}" stepKey="returnOrderId"/>
+</actionGroup>
+```
+
+This value can be accessed as below:
+
+1. Reference `GetOrderIdActionGroup` action group:
+```xml
+<!-- Open Orders Index Page -->
+<actionGroup ref="GetOrderIdActionGroup" stepKey="getOrderId"/>
+```
+
+1. To use the value returned in another action group, using action group stepKey {getOrderId}:
+```xml
+<!--Filter the Order using Order ID -->
+<actionGroup ref="FilterOrderGridByIdActionGroup" stepKey="filterOrderGridById">
+    <argument name="orderId" value="{$getOrderId}"/>
+</actionGroup>
+```
+
 ## Optimizing action group structures
 
 Structuring properly an action group increases code reusability and readability.

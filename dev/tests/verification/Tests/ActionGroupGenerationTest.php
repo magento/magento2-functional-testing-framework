@@ -228,4 +228,15 @@ class ActionGroupGenerationTest extends MftfTestCase
     {
         $this->generateAndCompareTest('ActionGroupWithParameterizedElementsWithStepKeyReferences');
     }
+
+    /**
+     * Test generation of a test referencing an action group that returns a value.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testActionGroupReturningValue()
+    {
+        $this->generateAndCompareTest('ActionGroupReturningValueTest');
+    }
 }

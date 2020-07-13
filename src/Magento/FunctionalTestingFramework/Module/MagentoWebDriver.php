@@ -1122,4 +1122,16 @@ class MagentoWebDriver extends WebDriver
             $this->webDriver->switchTo()->frame($els[0]);
         }
     }
+
+    /**
+     * Returns a value to origin of the action.
+     * TODO: move this function to MagentoActionProxies after MQE-1904
+     *
+     * @param mixed $value
+     * @return mixed
+     */
+    public function return($value)
+    {
+        return $value;
+    }
 }

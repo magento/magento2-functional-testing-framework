@@ -151,6 +151,7 @@ The following test actions return a variable:
 *  [grabValueFrom](#grabvaluefrom)
 *  [executeJS](#executejs)
 *  [getOTP](#getotp)
+*  [return](#return)
 
 Learn more in [Using data returned by test actions](../data.md#use-data-returned-by-test-actions).
 
@@ -1238,6 +1239,34 @@ Attribute|Type|Use|Description
 <!-- Store the value currently entered in <input id="name" ... >...</input>.
 To access this value, use `{$grabInputName}` in later actions. -->
 <grabValueFrom selector="input#name" stepKey="grabInputName"/>
+```
+
+### return
+
+Allows action group to return a value. Value can be then accessed in the test using the action group stepKey.
+
+Attribute|Type|Use|Description
+---|---|---|---
+`value`|string|required| value returned by actionGroup.
+`stepKey`|string|required| A unique identifier of the action.
+
+#### Example
+
+```xml
+<!-- Returns a value to the action group's step key. -->
+<actionGroup name="ActionGroupWithReturnValue">
+    <grabTextFrom selector="#foo" stepKey="grabTextFrom1"/>
+    <return value="{$grabTextFrom1}" stepKey="returnValue"/>
+</actionGroup>
+```
+```xml
+<!-- To access this value, use `{$actionGroupWithReturnValue}` in later actions or action groups. -->
+<test name="ActionGroupReturningValueTest">
+    <actionGroup ref="ActionGroupWithReturnValue" stepKey="actionGroupWithReturnValue"/>
+    <actionGroup ref="ActionGroupWithStringUsage" stepKey="actionGroupWithStringUsage">
+        <argument name="someArgument" value="{$actionGroupWithReturnValue}"/>
+    </actionGroup>
+</test>
 ```
 
 ### loadSessionSnapshot
