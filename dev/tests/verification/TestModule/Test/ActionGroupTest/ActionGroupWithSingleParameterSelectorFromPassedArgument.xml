@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="ActionGroupWithSingleParameterSelectorFromPassedArgument">
+        <annotations>
+            <severity value="BLOCKER"/>
+            <title value="Action Group With Passed Argument Value and Argument Value in Param"/>
+        </annotations>
+
+        <actionGroup ref="actionGroupWithSingleParameterSelectorFromArgument" stepKey="actionGroup">
+            <argument name="someArgument" value="UniquePerson"/>
+        </actionGroup>
+    </test>
+</tests>

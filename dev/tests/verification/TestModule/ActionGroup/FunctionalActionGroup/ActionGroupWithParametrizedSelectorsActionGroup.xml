@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="actionGroupWithParametrizedSelectors">
+        <arguments>
+            <argument name="param" type="entity"/>
+            <argument name="param2" type="entity" defaultValue="simpleParamData"/>
+        </arguments>
+        <executeJS function="return 1" stepKey="testVariable"/>
+        <executeJS function="return 'test'" stepKey="testVariable2"/>
+        <createData entity="simpleData" stepKey="createSimpleData"/>
+        <click selector="{{SampleSection.twoParamElement({$testVariable2}, param.firstname)}}" stepKey="click1"/>
+        <click selector="{{SampleSection.threeParamElement(param.lastname, param2.uniqueNamePre, {$testVariable})}}" stepKey="click2"/>
+        <seeElement selector="{{SampleSection.fourParamElement(param.middlename, {$testVariable}, {$testVariable2}, $$createSimpleData.name$$)}}" stepKey="see1"/>
+    </actionGroup>
+</actionGroups>

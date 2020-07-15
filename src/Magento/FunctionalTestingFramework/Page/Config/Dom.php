@@ -12,6 +12,7 @@ use Magento\FunctionalTestingFramework\Config\Dom\NodeMergingConfig;
 use Magento\FunctionalTestingFramework\Config\Dom\NodePathMatcher;
 use Magento\FunctionalTestingFramework\Util\ModulePathExtractor;
 use Magento\FunctionalTestingFramework\Util\Validation\DuplicateNodeValidationUtil;
+use Magento\FunctionalTestingFramework\Util\Validation\SingleNodePerFileValidationUtil;
 
 /**
  * MFTF page.xml configuration XML DOM utility
@@ -36,6 +37,12 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
      */
     private $validationUtil;
 
+    /** SingleNodePerFileValidationUtil
+     *
+     * @var SingleNodePerFileValidationUtil
+     */
+    private $singleNodePerFileValidationUtil;
+
     /**
      * Page Dom constructor.
      * @param string             $xml
@@ -57,6 +64,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
     ) {
         $this->modulePathExtractor = new ModulePathExtractor();
         $this->validationUtil = new DuplicateNodeValidationUtil('name', $exceptionCollector);
+        $this->singleNodePerFileValidationUtil = new SingleNodePerFileValidationUtil($exceptionCollector);
         parent::__construct(
             $xml,
             $filename,
@@ -79,31 +87,44 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
     {
         $dom = parent::initDom($xml, $filename);
 
-        $pagesNode = $dom->getElementsByTagName('pages')->item(0);
-        $this->validationUtil->validateChildUniqueness(
-            $pagesNode,
-            $filename,
-            $pagesNode->getAttribute(self::PAGE_META_NAME_ATTRIBUTE)
-        );
-        $pageNodes = $dom->getElementsByTagName('page');
-        $currentModule =
-            $this->modulePathExtractor->getExtensionPath($filename)
-            . '_'
-            . $this->modulePathExtractor->extractModuleName($filename);
-        foreach ($pageNodes as $pageNode) {
-            $pageModule = $pageNode->getAttribute("module");
-            $pageName = $pageNode->getAttribute("name");
-            if ($pageModule !== $currentModule) {
-                if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-                    print(
-                        "Page Module does not match path Module. " .
-                        "(Page, Module): ($pageName, $pageModule) - Path Module: $currentModule" .
-                        PHP_EOL
-                    );
+        if ($dom->getElementsByTagName('pages')->length > 0) {
+            /** @var \DOMElement $pagesNode */
+            $pagesNode = $dom->getElementsByTagName('pages')[0];
+            $this->validationUtil->validateChildUniqueness(
+                $pagesNode,
+                $filename,
+                $pagesNode->getAttribute(self::PAGE_META_NAME_ATTRIBUTE)
+            );
+
+            // Validate single page node per file
+            $this->singleNodePerFileValidationUtil->validateSingleNodeForTag(
+                $dom,
+                'page',
+                $filename
+            );
+
+            if ($dom->getElementsByTagName('page')->length > 0) {
+                /** @var \DOMElement $pageNode */
+                $pageNode = $dom->getElementsByTagName('page')[0];
+                $currentModule =
+                    $this->modulePathExtractor->getExtensionPath($filename)
+                    . '_'
+                    . $this->modulePathExtractor->extractModuleName($filename);
+                $pageModule = $pageNode->getAttribute("module");
+                $pageName = $pageNode->getAttribute("name");
+                if ($pageModule !== $currentModule) {
+                    if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
+                        print(
+                            "Page Module does not match path Module. " .
+                            "(Page, Module): ($pageName, $pageModule) - Path Module: $currentModule" .
+                            PHP_EOL
+                        );
+                    }
                 }
+                $pageNode->setAttribute(self::PAGE_META_FILENAME_ATTRIBUTE, $filename);
             }
-            $pageNode->setAttribute(self::PAGE_META_FILENAME_ATTRIBUTE, $filename);
         }
+
         return $dom;
     }
 }

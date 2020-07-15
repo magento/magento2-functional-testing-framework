@@ -4,7 +4,7 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magento\FunctionalTestingFramework\Util;
+namespace tests\unit\Util;
 
 use AspectMock\Test as AspectMock;
 use PHPUnit\Framework\TestCase;
@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  */
 class MagentoTestCase extends TestCase
 {
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         if (!self::fileExists(DOCS_OUTPUT_DIR)) {
             mkdir(DOCS_OUTPUT_DIR, 0755, true);
@@ -26,7 +26,7 @@ class MagentoTestCase extends TestCase
      * Teardown for removing AspectMock Double References
      * @return void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         AspectMock::clean();
         array_map('unlink', glob(DOCS_OUTPUT_DIR . DIRECTORY_SEPARATOR . "*"));

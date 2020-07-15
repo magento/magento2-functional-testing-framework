@@ -16,7 +16,7 @@ class ActionGroupAnnotationExtractorTest extends TestCase
      * Before test functionality
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
@@ -45,53 +45,10 @@ class ActionGroupAnnotationExtractorTest extends TestCase
     }
 
     /**
-     * Annotation extractor should throw warning when required annotations are missing
-     *
-     * @throws \Exception
-     */
-    public function testActionGroupMissingAnnotations()
-    {
-        // Action Group Data, missing description
-        $testAnnotations = [];
-        // Perform Test
-        $extractor = new ActionGroupAnnotationExtractor();
-        AspectMock::double($extractor, ['isCommandDefined' => true]);
-        $extractor->extractAnnotations($testAnnotations, "fileName");
-
-        // Asserts
-        TestLoggingUtil::getInstance()->validateMockLogStatement(
-            'warning',
-            'DEPRECATION: Action Group File fileName is missing required annotations.',
-            [
-                'actionGroup' => 'fileName',
-                'missingAnnotations' => "description"
-            ]
-        );
-    }
-
-    /**
-     * Annotation extractor should not throw warning when required
-     * annotations are missing if command is not generate:docs
-     *
-     * @throws \Exception
-     */
-    public function testActionGroupMissingAnnotationsNoWarning()
-    {
-        // Action Group Data, missing description
-        $testAnnotations = [];
-        // Perform Test
-        $extractor = new ActionGroupAnnotationExtractor();
-        $extractor->extractAnnotations($testAnnotations, "fileName");
-
-        // Asserts
-        TestLoggingUtil::getInstance()->validateMockLogEmpty();
-    }
-
-    /**
      * After class functionality
      * @return void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }

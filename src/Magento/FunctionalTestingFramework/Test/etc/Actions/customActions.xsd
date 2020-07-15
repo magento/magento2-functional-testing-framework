@@ -11,12 +11,13 @@
 
     <xs:group name="customTags">
         <xs:choice>
+            <xs:element name="helper" type="helperType" minOccurs="0" maxOccurs="unbounded" />
             <xs:element type="magentoCLIType" name="magentoCLI" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="magentoCronType" name="magentoCron" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="closeAdminNotificationType" name="closeAdminNotification" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="searchAndMultiSelectOptionType" name="searchAndMultiSelectOption" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="selectMultipleOptionsType" name="selectMultipleOptions" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="formatMoneyType" name="formatMoney" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="formatCurrencyType" name="formatCurrency" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="parseFloatType" name="parseFloat" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="mSetLocaleType" name="mSetLocale" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="mResetLocaleType" name="mResetLocale" minOccurs="0" maxOccurs="unbounded"/>
@@ -24,10 +25,30 @@
             <xs:element type="clearFieldType" name="clearField" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertArrayIsSortedType" name="assertArrayIsSorted" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="generateDateType" name="generateDate" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="getOTPType" name="getOTP" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
     </xs:group>
 
     <!-- Complex Types -->
+
+    <xs:complexType name="helperType">
+        <xs:sequence>
+            <xs:element name="argument" type="argumentType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="class" use="required" />
+        <xs:attribute type="xs:string" name="method" use="required" />
+        <xs:attributeGroup ref="commonActionAttributes"/>
+    </xs:complexType>
+
+    <xs:complexType name="argumentType" mixed="true">
+        <xs:attribute name="name" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="[^cm].*|c(.{0,3}|[^l].*|l[^a].*|la[^s].*|las[^s].*|lass.+)|m(.{0,4}|[^e].*|e[^t].*|et[^h].*|eth[^o].*|etho[^d].*|ethod.+)" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
 
     <xs:complexType name="magentoCLIType">
         <xs:annotation>
@@ -158,25 +179,29 @@
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
 
-    <xs:complexType name="formatMoneyType">
+    <xs:complexType name="formatCurrencyType">
         <xs:annotation>
             <xs:documentation>
-                Formats given input to given locale. Returns formatted string for test use.
+                Format input to specified currency according to the locale specified. Returns formatted string for test use.
+                Use NumberFormatter::formatCurrency(), see https://www.php.net/manual/en/numberformatter.formatcurrency.php
             </xs:documentation>
         </xs:annotation>
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute ref="userInput"/>
-                <xs:attribute type="xs:string" name="locale">
-                    <xs:annotation>
-                        <xs:documentation>
-                            Locale to format given input. Defaults to 'en_US.UTF-8' if nothing is given.
-                        </xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-                <xs:attributeGroup ref="commonActionAttributes"/>
-            </xs:extension>
-        </xs:simpleContent>
+        <xs:attribute type="xs:string" name="userInput" use="required"/>
+        <xs:attribute type="xs:string" name="locale" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    Locale in which the input would be formatted (e.g. en_US).
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="currency" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The 3-letter ISO 4217 currency code indicating the currency to use.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="parseFloatType">
@@ -296,6 +321,18 @@
         </xs:simpleContent>
     </xs:complexType>
 
+    <xs:complexType name="getOTPType">
+        <xs:annotation>
+            <xs:documentation>
+                Generates TOTP by a shared secret. Use https://github.com/Spomky-Labs/otphp
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
 
     <xs:complexType name="arrayType">
         <xs:simpleContent>

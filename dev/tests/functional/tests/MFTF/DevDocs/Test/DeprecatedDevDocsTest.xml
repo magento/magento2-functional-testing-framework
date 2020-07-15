@@ -7,7 +7,7 @@
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="../../../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="DeprecatedDevDocsTest" deprecated="Test is deprecated due to more stable test was introduces. Please use 'DevDocsTest'.">
         <annotations>
             <!--   Comment in Annotations for DevDocs Test are not affecting test generation  -->
@@ -22,6 +22,6 @@
         <!--   Open MFTF DevDocs Page -->
         <amOnPage stepKey="openMFTFDevDocPage" url="{{DeprecatedMFTFDocPage.url}}" />
         <see stepKey="verifyPageIntroText" selector="{{DeprecatedContentSection.pageIntro}}" userInput="{{DeprecatedMessageData.message}}" />
-        <actionGroup ref="DeprecatedCommentActionGroup" stepKey="commentActionGroup" />
+        <actionGroup ref="DeprecatedCommentActionGroup" stepKey="commentActionGroup"/>
     </test>
 </tests>

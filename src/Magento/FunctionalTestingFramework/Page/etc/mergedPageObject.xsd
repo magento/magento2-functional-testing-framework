@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:annotation>
+        <xs:documentation>The definition of a page object.</xs:documentation>
+    </xs:annotation>
+
+    <xs:element name="pages">
+        <xs:annotation>
+            <xs:documentation>
+                The root element for configuration data.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="page" maxOccurs="unbounded" minOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Contains sequence of ui sections in a page.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="page">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="section" maxOccurs="unbounded" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Contains sequence of ui elements.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute type="notEmptyType" name="name" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        Unique page name identifier.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="deprecated">
+                <xs:annotation>
+                    <xs:documentation>
+                        Message and flag which shows that entity is deprecated.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+
+            <xs:attribute type="notEmptyType" name="url" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        URL for the page. Do not include the hostname. For example: "/admin/customer/index/"
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="notEmptyType" name="module" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        The name of the module to which the page belongs. For example: "Magento_Catalog".
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:boolean" name="parameterized" use="optional"/>
+            <xs:attribute type="pageArea" name="area" use="required"/>
+            <xs:attributeGroup ref="removeAttribute"/>
+            <xs:attribute type="xs:string" name="filename"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="section">
+        <xs:complexType>
+            <xs:attribute type="notEmptyType" name="name" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        Unique section name identifier.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attributeGroup ref="removeAttribute"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="notEmptyType">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:attributeGroup name="removeAttribute">
+        <xs:attribute type="xs:boolean" name="remove" use="optional" default="false">
+            <xs:annotation>
+                <xs:documentation>
+                    Set to true to remove this element during parsing.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+
+    <xs:simpleType name="pageArea" final="restriction" >
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="admin" />
+            <xs:enumeration value="storefront" />
+            <xs:enumeration value="external" />
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

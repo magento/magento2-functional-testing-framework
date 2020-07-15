@@ -15,7 +15,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 /**
  * @Title("[NO TESTCASEID]: MergedReferencesTest")
  * @group functional
- * @Description("<h3>Test files</h3>verification/TestModule/Test/MergeFunctionalTest.xml<br>")
+ * @Description("<h3>Test files</h3>verification/TestModule/Test/MergeFunctionalTest/MergedReferencesTest.xml<br>")
  */
 class MergedReferencesTestCest
 {

@@ -45,7 +45,8 @@ The following conventions apply to MFTF pages:
 -  `<page>` name must be alphanumeric.
 -  `*Page.xml` is stored in the _Page_ directory of a module.
 -  The name format is `{Admin|Storefront}{PageDescription}Page.xml`.
-
+-  One `<page>` tag is allowed per page XML file.
+ 
 The `.url` attribute is required when using the page for [actions] that require the URL argument.
 
 ## Page examples

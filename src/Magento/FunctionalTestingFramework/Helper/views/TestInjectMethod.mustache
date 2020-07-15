@@ -1,0 +1,15 @@
+    /**
+     * @var \Magento\FunctionalTestingFramework\Helper\HelperContainer
+     */
+    private $helperContainer;
+
+    /**
+     * Special method which automatically creates the respective objects.
+     */
+    public function _inject(\Magento\FunctionalTestingFramework\Helper\HelperContainer $helperContainer)
+    {
+        $this->helperContainer = $helperContainer;
+        {{#arguments}}
+        $this->helperContainer->create("{{type}}");
+        {{/arguments}}
+    }

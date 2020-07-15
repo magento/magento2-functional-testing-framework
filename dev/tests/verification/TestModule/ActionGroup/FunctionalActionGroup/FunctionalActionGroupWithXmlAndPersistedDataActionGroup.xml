@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="FunctionalActionGroupWithXmlAndPersistedData">
+        <arguments>
+            <argument name="xmlData" defaultValue="uniqueData"/>
+            <argument name="persistedData"/>
+        </arguments>
+        <seeInCurrentUrl url="/{{persistedData.urlKey}}.html?___store={{xmlData.firstname}}" stepKey="checkUrl"/>
+    </actionGroup>
+</actionGroups>

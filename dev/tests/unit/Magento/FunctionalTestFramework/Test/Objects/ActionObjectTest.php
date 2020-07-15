@@ -17,7 +17,7 @@ use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
 use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use tests\unit\Util\TestLoggingUtil;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 
 /**
  * Class ActionObjectTest
@@ -28,7 +28,7 @@ class ActionObjectTest extends MagentoTestCase
      * Before test functionality
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
@@ -233,6 +233,8 @@ class ActionObjectTest extends MagentoTestCase
      */
     public function testResolveUrlWithNoAttribute()
     {
+        $this->expectException(TestReferenceException::class);
+
         // Set up mocks
         $actionObject = new ActionObject('merge123', 'amOnPage', [
             'url' => '{{PageObject}}'
@@ -247,19 +249,6 @@ class ActionObjectTest extends MagentoTestCase
 
         // Call the method under test
         $actionObject->resolveReferences();
-
-        // Expect this warning to get generated
-        TestLoggingUtil::getInstance()->validateMockLogStatement(
-            "warning",
-            "page url attribute not found and is required",
-            ['action' => $actionObject->getType(), 'url' => '{{PageObject}}', 'stepKey' => $actionObject->getStepKey()]
-        );
-
-        // Verify
-        $expected = [
-            'url' => '{{PageObject}}'
-        ];
-        $this->assertEquals($expected, $actionObject->getCustomActionAttributes());
     }
 
     /**
@@ -404,7 +393,7 @@ class ActionObjectTest extends MagentoTestCase
      * After class functionality
      * @return void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }

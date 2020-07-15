@@ -1,6 +1,13 @@
 # Introduction to the Magento Functional Testing Framework
 
-The Magento Functional Tesitng Framework (MFTF) is a framework used to perform automated end-to-end functional testing.
+<div class="bs-callout bs-callout-info" markdown="1">
+These are the docs for the latest MFTF release.
+To find older documentation, please refer to the [docs folder] of your desired release in Github.
+</div>
+
+[Find your MFTF version][] of the MFTF.
+
+The Magento Functional Testing Framework (MFTF) is a framework used to perform automated end-to-end functional testing.
 
 ## Goals
 
@@ -105,6 +112,43 @@ utils                           // The test-running utilities.
 .gitignore                      // List of files ignored by git.
 .htaccess.sample                // Access settings for the Apache web server to perform the Magento CLI commands.
 codeception.dist.yml            // Codeception configuration (generated while running 'bin/mftf build:project')
+```
+
+## MFTF output
+
+-  Generated PHP Codeception tests
+-  Codeception results and console logs
+-  Screenshots and HTML failure report
+-  Allure formatted XML results
+-  Allure report dashboard of results
+
+## MFTF tests
+
+The MFTF supports three different locations for storing the tests and test artifacts:
+-  `<magento_root>/app/code/<vendor_name>/<module_name>/Test/Mftf/` is the directory to create new tests.
+-  `<magento_root>/vendor/<vendor_name>/<module_name>/Test/Mftf/` is the directory with the out of the box tests (fetched by the Composer).
+-  `<magento_root>/dev/tests/acceptance/tests/functional/<vendor_name>/<module_name>/` is used to store tests that depend on multiple modules.
+
+All tests and test data from these locations are merged in the order indicated in the above list.
+
+Directories immediately following the above paths will use the same format, and sub-directories under each category are supported.
+
+```tree
+<Path>
+├── ActionGroup
+│   └── ...
+├── Data
+│   └── ...
+├── Metadata
+│   └── ...
+├── Page
+│   └── ...
+├── Section
+│   └── ...
+├── Suite
+│   └── ...
+└── Test
+    └── ...
 ```
 
 ## MFTF on Github

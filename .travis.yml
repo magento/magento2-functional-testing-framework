@@ -1,13 +1,17 @@
 language: php
 php:
-  - 7.1
-  - 7.2
   - 7.3
+  - 7.4
+services:
+  - docker
+before_install:
+  - docker run -d -p 4444:4444 -v /dev/shm:/dev/shm selenium/standalone-chrome:3.141.59-zirconium
 install: composer install --no-interaction --prefer-source
 env:
   matrix:
     - VERIFICATION_TOOL=phpunit-checks
     - VERIFICATION_TOOL=static-checks
+    - VERIFICATION_TOOL=functional
 script:
   - bin/$VERIFICATION_TOOL
 after_success:

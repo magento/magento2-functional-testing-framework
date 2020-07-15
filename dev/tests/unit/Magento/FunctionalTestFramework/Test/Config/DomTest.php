@@ -3,12 +3,12 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace Tests\unit\Magento\FunctionalTestFramework\Test\Config;
+namespace tests\unit\Magento\FunctionalTestFramework\Test\Config;
 
 use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
 use Magento\FunctionalTestingFramework\Config\Dom\ValidationException;
 use Magento\FunctionalTestingFramework\Test\Config\ActionGroupDom;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 
 class DomTest extends MagentoTestCase
 {
@@ -28,7 +28,7 @@ class DomTest extends MagentoTestCase
         new ActionGroupDom($sampleXml, 'dupeStepKeyTest.xml', $exceptionCollector);
 
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessageRegExp("/stepKey: key1 is used more than once. \(Parent: testName\)/");
+        $this->expectExceptionMessageMatches("/stepKey: key1 is used more than once. \(Parent: testName\)/");
         $exceptionCollector->throwException();
     }
 
@@ -49,7 +49,7 @@ class DomTest extends MagentoTestCase
         $exceptionCollector = new ExceptionCollector();
         new ActionGroupDom($sampleXml, 'dupeTestsTest.xml', $exceptionCollector);
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessageRegExp("/name: testName is used more than once./");
+        $this->expectExceptionMessageMatches("/name: testName is used more than once./");
         $exceptionCollector->throwException();
     }
 }

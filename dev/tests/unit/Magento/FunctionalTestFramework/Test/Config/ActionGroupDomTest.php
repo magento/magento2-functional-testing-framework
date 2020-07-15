@@ -3,12 +3,12 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace Tests\unit\Magento\FunctionalTestFramework\Test\Config;
+namespace tests\unit\Magento\FunctionalTestFramework\Test\Config;
 
 use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
 use Magento\FunctionalTestingFramework\Config\Dom\ValidationException;
 use Magento\FunctionalTestingFramework\Test\Config\ActionGroupDom;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 
 class ActionGroupDomTest extends MagentoTestCase
 {
@@ -65,7 +65,7 @@ class ActionGroupDomTest extends MagentoTestCase
         $exceptionCollector = new ExceptionCollector();
         new ActionGroupDom($sampleXml, 'dupeNameActionGroup.xml', $exceptionCollector);
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessageRegExp("/name: actionGroupName is used more than once./");
+        $this->expectExceptionMessageMatches("/name: actionGroupName is used more than once./");
         $exceptionCollector->throwException();
     }
 }

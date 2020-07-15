@@ -4,11 +4,11 @@
  * See COPYING.txt for license details.
  */
 
-namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
+namespace tests\unit\Magento\FunctionalTestFramework\Util\Validation;
 
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
-use Magento\FunctionalTestingFramework\Util\MagentoTestCase;
+use tests\unit\Util\MagentoTestCase;
 
 class NameValidationUtilTest extends MagentoTestCase
 {
@@ -17,7 +17,7 @@ class NameValidationUtilTest extends MagentoTestCase
      */
     public function testCurlyBracesInTestName()
     {
-        $this->validateBlacklistedTestName("{{curlyBraces}}");
+        $this->validateBlocklistedTestName("{{curlyBraces}}");
     }
 
     /**
@@ -25,7 +25,7 @@ class NameValidationUtilTest extends MagentoTestCase
      */
     public function testQuotesInTestName()
     {
-        $this->validateBlacklistedTestName("\"quotes\"");
+        $this->validateBlocklistedTestName("\"quotes\"");
     }
 
     /**
@@ -33,7 +33,7 @@ class NameValidationUtilTest extends MagentoTestCase
      */
     public function testSingleQuotesInTestName()
     {
-        $this->validateBlacklistedTestName("'singleQuotes'");
+        $this->validateBlocklistedTestName("'singleQuotes'");
     }
 
     /**
@@ -41,7 +41,7 @@ class NameValidationUtilTest extends MagentoTestCase
      */
     public function testParenthesesInTestName()
     {
-        $this->validateBlacklistedTestName("(parenthesis)");
+        $this->validateBlocklistedTestName("(parenthesis)");
     }
 
     /**
@@ -49,7 +49,7 @@ class NameValidationUtilTest extends MagentoTestCase
      */
     public function testDollarSignInTestName()
     {
-        $this->validateBlacklistedTestName("\$dollarSign\$");
+        $this->validateBlocklistedTestName("\$dollarSign\$");
     }
 
     /**
@@ -57,7 +57,7 @@ class NameValidationUtilTest extends MagentoTestCase
      */
     public function testSpacesInTestName()
     {
-        $this->validateBlacklistedTestName("Test Name With Spaces");
+        $this->validateBlocklistedTestName("Test Name With Spaces");
     }
 
     /**
@@ -66,7 +66,7 @@ class NameValidationUtilTest extends MagentoTestCase
      * @param string $testName
      * @return void
      */
-    private function validateBlacklistedTestName($testName)
+    private function validateBlocklistedTestName($testName)
     {
         $this->expectException(XmlException::class);
         NameValidationUtil::validateName($testName, "Test");

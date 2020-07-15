@@ -8,7 +8,6 @@ namespace Magento\FunctionalTestingFramework\Test\Objects;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
-use Magento\FunctionalTestingFramework\Test\Util\ObjectExtension;
 
 /**
  * Class ActionGroupObject
@@ -25,7 +24,7 @@ class ActionGroupObject
         "executeJS",
         "magentoCLI",
         "generateDate",
-        "formatMoney",
+        "formatCurrency",
         "deleteData",
         "getData",
         "updateData",
@@ -36,7 +35,8 @@ class ActionGroupObject
         "grabMultiple",
         "grabPageSource",
         "grabTextFrom",
-        "grabValueFrom"
+        "grabValueFrom",
+        "getOTP"
     ];
 
     /**
@@ -211,6 +211,9 @@ class ActionGroupObject
         foreach ($this->parsedActions as $action) {
             $replacementStepKeys[$action->getStepKey()] = $action->getStepKey() . ucfirst($actionReferenceKey);
             $varAttributes = array_intersect($this->varAttributes, array_keys($action->getCustomActionAttributes()));
+            if ($action->getType() === ActionObject::ACTION_TYPE_HELPER) {
+                $varAttributes = array_keys($action->getCustomActionAttributes());
+            }
 
             // replace createDataKey attributes inside the action group
             $resolvedActionAttributes = $this->replaceCreateDataKeys($action, $replacementStepKeys);

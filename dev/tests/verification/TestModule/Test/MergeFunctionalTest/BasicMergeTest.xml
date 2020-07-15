@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="BasicMergeTest">
+        <annotations>
+            <severity value="CRITICAL"/>
+            <title value="BasicMergeTest"/>
+            <group value="functional"/>
+            <features value="Merge Functional Cest"/>
+            <stories value="MQE-433"/>
+        </annotations>
+        <before>
+            <amOnPage url="/beforeUrl" stepKey="before1"/>
+        </before>
+        <after>
+            <amOnPage url="/afterUrl" stepKey="after1"/>
+        </after>
+        <amOnPage stepKey="step1" url="/step1"/>
+        <fillField stepKey="step3" selector="#username" userInput="step3"/>
+        <fillField stepKey="step5" selector="#password" userInput="step5"/>
+        <click stepKey="step6" selector=".step6"/>
+        <click stepKey="step10" selector="#step10ShouldNotInResult"/>
+    </test>
+</tests>

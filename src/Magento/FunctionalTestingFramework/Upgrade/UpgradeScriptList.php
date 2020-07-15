@@ -28,7 +28,12 @@ class UpgradeScriptList implements UpgradeScriptListInterface
     public function __construct(array $scripts = [])
     {
         $this->scripts = [
+            'removeUnusedArguments' => new RemoveUnusedArguments(),
             'upgradeTestSchema' => new UpdateTestSchemaPaths(),
+            'upgradeAssertionSchema' => new UpdateAssertionSchema(),
+            'renameMetadataFiles' => new RenameMetadataFiles(),
+            'removeModuleFileInSuiteFiles' => new RemoveModuleFileInSuiteFiles(),
+            'splitMultipleEntitiesFiles' => new SplitMultipleEntitiesFiles(),
         ] + $scripts;
     }
 

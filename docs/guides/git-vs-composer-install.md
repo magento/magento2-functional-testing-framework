@@ -55,6 +55,8 @@ The file structure under both paths is the same:
 │   └── ...
 ├── Section
 │   └── ...
+├── Suite
+│   └── ...
 └── Test
     └── ...
 ```
@@ -65,6 +67,7 @@ With either type of installation, all tests and test data are read and merged by
 
 1. `<magento_root>/app/code/<vendor_name>/<module_name>/Test/Mftf/`
 1. `<magento_root>/vendor/<vendor_name>/<module_name>/Test/Mftf/`
+1. `<magento_root>/dev/tests/acceptance/tests/functional/<vendor_name>/<module_name>/`
 
 ## Conclusion
 

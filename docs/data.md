@@ -276,6 +276,11 @@ Attributes|Type|Use|Description
 
 `<item>` is an individual piece of data to be passed in as part of the parent `<array>` type.
 
+Attributes|Type|Use|Description
+---|---|---|---
+`name`|string|optional|Key attribute of <item/> entity in which to assign a value. By default numeric key will be generated.
+
+
 <!-- Link Definitions -->
 [`<array>`]: #array-tag
 [`<data>`]: #data-tag
