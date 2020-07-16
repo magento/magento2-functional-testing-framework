@@ -2,7 +2,7 @@
     "name": "magento/magento2-functional-testing-framework",
     "description": "Magento2 Functional Testing Framework",
     "type": "library",
-    "version": "3.0.0-RC5",
+    "version": "3.0.0",
     "license": "AGPL-3.0",
     "keywords": ["magento", "automation", "functional", "testing"],
     "config": {
@@ -30,6 +30,7 @@
         "spomky-labs/otphp": "^10.0",
         "symfony/console": "^4.4",
         "symfony/finder": "^5.0",
+        "symfony/http-foundation": "^5.0",
         "symfony/mime": "^5.0",
         "symfony/process": "^4.4",
         "vlucas/phpdotenv": "^2.4",

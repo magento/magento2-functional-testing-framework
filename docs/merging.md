@@ -27,6 +27,15 @@ For example:
 Although a file name does not influence merging, we recommend using the same file names in merging updates.
 This makes it easier to search later on.
 
+## Merging precedence
+
+**Magento Functional Testing Framework** uses Module's `<sequence>` to merge all XML configurations into Codeception instructions. If there's no Sequence specified, MFTF would use:
+
+1. Vendor modules (Magento & Vendors) located in `vendor/`
+1. Tests located in `app/code/*/*/Test/Mftf`
+
+![Usual precedence for merging MFTF Tests and resources][mftfExtendingPrecedence image]
+
 ## Add a test
 
 You cannot add another [`<test>`][tests] using merging functionality.
@@ -570,3 +579,4 @@ The `_defaultSample` results corresponds to:
 [`<sections>`]: ./section.md
 [`<tests>`]: ./test.md
 [`<action groups>`]: ./test/action-groups.md
+[mftfExtendingPrecedence image]: img/mftf-extending-precedence.png
