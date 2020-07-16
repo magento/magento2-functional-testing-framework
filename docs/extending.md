@@ -177,14 +177,14 @@ Extend an [action group] to add or update [actions] in your module.
 
 ### Update an action
 
-__Use case__: The `CountProductA` test counts the particular product.
+__Use case__: The `AssertAdminCountProductActionGroup` action group counts the particular product.
 Modify the action group to use another product.
 
 > Action groups with "extends":
 
 ```xml
 <actionGroups>
-    <actionGroup name="CountProductA">
+    <actionGroup name="AssertAdminCountProductActionGroup">
         <arguments>
             <argument name="count" type="string"/>
         </arguments>
@@ -195,7 +195,7 @@ Modify the action group to use another product.
         </assertCount>
     </actionGroup>
 
-    <actionGroup name="CountProductB" extends="CountProductA">
+    <actionGroup name="AssertAdminOtherCountProductActionGroup" extends="AssertAdminCountProductActionGroup">
         <grabMultiple selector="selectorForProductB" stepKey="grabProducts"/>
     </actionGroup>
 </actionGroups>
@@ -205,7 +205,7 @@ Modify the action group to use another product.
 
 ```xml
 <actionGroups>
-    <actionGroup name="CountProductA">
+    <actionGroup name="AssertAdminCountProductActionGroup">
         <arguments>
             <argument name="count" type="string"/>
         </arguments>
@@ -216,7 +216,7 @@ Modify the action group to use another product.
         </assertCount>
     </actionGroup>
 
-    <actionGroup name="CountProductB">
+    <actionGroup name="AssertAdminOtherCountProductActionGroup">
         <arguments>
             <argument name="count" type="string"/>
         </arguments>
@@ -231,21 +231,21 @@ Modify the action group to use another product.
 
 ### Add an action
 
-__Use case__: The `GetProductCount` action group returns the count of products.
-Add a new test `VerifyProductCount` that asserts the count of products:
+__Use case__: The `AdminGetProductCountActionGroup` action group returns the count of products.
+Add a new test `AssertAdminVerifyProductCountActionGroup` that asserts the count of products:
 
 > Action groups with "extends":
 
 ```xml
 <actionGroups>
-    <actionGroup name="GetProductCount">
+    <actionGroup name="AdminGetProductCountActionGroup">
         <arguments>
             <argument name="productSelector" type="string"/>
         </arguments>
         <grabMultiple selector="{{productSelector}}" stepKey="grabProducts"/>
     </actionGroup>
 
-    <actionGroup name="VerifyProductCount" extends="GetProductCount">
+    <actionGroup name="AssertAdminVerifyProductCountActionGroup" extends="AdminGetProductCountActionGroup">
         <arguments>
             <argument name="count" type="string"/>
         </arguments>
@@ -261,14 +261,14 @@ Add a new test `VerifyProductCount` that asserts the count of products:
 
 ```xml
 <actionGroups>
-    <actionGroup name="GetProductCount">
+    <actionGroup name="AdminGetProductCountActionGroup">
         <arguments>
             <argument name="productSelector" type="string"/>
         </arguments>
         <grabMultiple selector="{{productSelector}}" stepKey="grabProducts"/>
     </actionGroup>
 
-    <actionGroup name="VerifyProductCount">
+    <actionGroup name="AssertAdminVerifyProductCountActionGroup">
         <arguments>
             <argument name="count" type="string"/>
             <argument name="productSelector" type="string"/>

@@ -221,13 +221,13 @@ The path to where the MFTF modules mirror Magento modules.
 Example:
 
 ```conf
-TESTS_MODULE_PATH=~/magento2/dev/tests/acceptance/tests/functional/Magento/FunctionalTest
+TESTS_MODULE_PATH=~/magento2/dev/tests/acceptance/tests/functional/Magento
 ```
 
 ### MODULE_ALLOWLIST
 
 Use for a new module.
-When adding a new directory at `Magento/FunctionalTest`, add the directory name to `MODULE_ALLOWLIST` to enable MFTF to process it.
+When adding a new directory at `tests/functional/Magento`, add the directory name to `MODULE_ALLOWLIST` to enable MFTF to process it.
 
 Example:
 
