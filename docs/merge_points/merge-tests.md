@@ -25,7 +25,7 @@ In this example we add an action group that modifies the original test to intera
         <deleteData createDataKey="createPreReqCategory" stepKey="deletePreReqCategory"/>
     </after>
 
-    <actionGroup ref="AdminLoginActionGroup" stepKey="AdminLoginActionGroup1"/>
+    <actionGroup ref="AdminLoginActionGroup" stepKey="adminLoginActionGroup1"/>
     <actionGroup ref="AdminFillSimpleProductFormActionGroup" stepKey="fillProductFieldsInAdmin">
         <argument name="category" value="$$createPreReqCategory$$"/>
         <argument name="simpleProduct" value="_defaultProduct"/>
