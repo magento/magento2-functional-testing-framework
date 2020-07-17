@@ -1,6 +1,6 @@
 # Input testing data
 
-The MFTF enables you to specify and use `<data>` entities defined in XML. Default `<data>` entities are provided for use and as templates for entity creation and manipulation.
+MFTF enables you to specify and use `<data>` entities defined in XML. Default `<data>` entities are provided for use and as templates for entity creation and manipulation.
 The following diagram shows the XML structure of an MFTF data object:
 
 ![MFTF Data Object](img/data-dia.svg)
@@ -67,7 +67,7 @@ In this example:
 As of MFTF 2.3.6, you no longer need to differentiate between scopes (a test, a hook, or a suite) for persisted data when referencing it in tests.
 </div>
 
-The MFTF now stores the persisted data and attempts to retrieve it using the combination of `stepKey` and the scope of where it has been called.
+MFTF now stores the persisted data and attempts to retrieve it using the combination of `stepKey` and the scope of where it has been called.
 The current scope is preferred, then widening to _test > hook > suite_ or _hook > test > suite_.
 
 This emphasizes the practice for the `stepKey` of `createData` to be descriptive and unique, as a duplicated `stepKey` in both a `<test>` and `<before>` prefers the `<test>` data.
