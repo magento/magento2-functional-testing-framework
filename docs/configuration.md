@@ -1,12 +1,12 @@
 # Configuration
 
 The `*.env` file provides additional configuration for the Magento Functional Testing Framework (MFTF).
-To run the MFTF on your Magento instance, specify the basic configuration values.
+To run MFTF on your Magento instance, specify the basic configuration values.
 Advanced users can create custom configurations based on requirements and environment.
 
 ## Basic configuration
 
-These basic configuration values are __required__ and must be set by the user before the MFTF can function correctly.
+These basic configuration values are __required__ and must be set by the user before MFTF can function correctly.
 
 ### MAGENTO_BASE_URL
 
@@ -34,7 +34,7 @@ MAGENTO_BACKEND_NAME=admin_12346
 
 ### MAGENTO_BACKEND_BASE_URL
 
-(Optional) If you are running the Admin Panel on separate a domain, specify this value:
+(Optional) If you are running the Admin Panel on a separate domain, specify this value:
 
 Example:
 
@@ -64,7 +64,7 @@ MAGENTO_ADMIN_PASSWORD=1234reTyt%$7
 
 ## Advanced configuration
 
-Depending on the environment you use, you may need to configure the MFTF more precisely by setting more configuration parameters then for basic configuration.
+Depending on the environment you use, you may need to configure MFTF more precisely by setting additional configuration parameters.
 This section describes available configuration parameters and their default values (where applicable).
 
 ### DEFAULT_TIMEZONE
@@ -173,8 +173,8 @@ MAGENTO_RESTAPI_SERVER_PORT=5000
 ### \*_BP
 
 Settings to override base paths for the framework.
-You can use it when the MFTF is applied as a separate tool.
-For example, when you need to place the MFTF and the Magento codebase in separate projects.
+You can use it when MFTF is applied as a separate tool.
+For example, when you need to place MFTF and the Magento codebase in separate projects.
 
 ```conf
 MAGENTO_BP
@@ -221,13 +221,13 @@ The path to where the MFTF modules mirror Magento modules.
 Example:
 
 ```conf
-TESTS_MODULE_PATH=~/magento2/dev/tests/acceptance/tests/functional/Magento/FunctionalTest
+TESTS_MODULE_PATH=~/magento2/dev/tests/acceptance/tests/functional/Magento
 ```
 
 ### MODULE_ALLOWLIST
 
 Use for a new module.
-When adding a new directory at `Magento/FunctionalTest`, add the directory name to `MODULE_ALLOWLIST` to enable the MFTF to process it.
+When adding a new directory at `tests/functional/Magento`, add the directory name to `MODULE_ALLOWLIST` to enable MFTF to process it.
 
 Example:
 
@@ -245,7 +245,7 @@ It points to `MAGENTO_BASE_URL` + `dev/tests/acceptance/utils/command.php`
 Modify the default value:
 
 -  for non-default Magento installation
--  when use a subdirectory in the `MAGENTO_BASE_URL`
+-  when using a subdirectory in the `MAGENTO_BASE_URL`
 
 Example: `dev/tests/acceptance/utils/command.php`
 
