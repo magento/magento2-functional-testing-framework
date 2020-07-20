@@ -180,33 +180,33 @@ MFTF resolves `{{myCustomEntity.field1}}` the same as it would in a `selector` o
 </actionGroup>
 ```
 
-## Returning a value
+## Return a value
 
-Action groups can return a value using `<return>` action.
+Action groups can return a value using a `return` tag.
 
 ```xml
 <actionGroup name="GetOrderIdActionGroup">
     <seeElement selector="{{CheckoutSuccessMainSection.orderLink}}"  stepKey="assertOrderLink"/>
     <grabTextFrom selector="{{CheckoutSuccessMainSection.orderLink}}" stepKey="orderId"/>
-    <return value="{$grabTextFrom1}" stepKey="returnOrderId"/>
+    <return value="{$orderId}" stepKey="returnOrderId"/>
 </actionGroup>
 ```
 
-This value can be accessed as below:
-
-1. Reference `GetOrderIdActionGroup` action group:
+The value returned can be accessed in later steps using action group step key `{$getOrderId}`.
 ```xml
-<!-- Open Orders Index Page -->
 <actionGroup ref="GetOrderIdActionGroup" stepKey="getOrderId"/>
-```
-
-1. To use the value returned in another action group, using action group stepKey {getOrderId}:
-```xml
 <!--Filter the Order using Order ID -->
 <actionGroup ref="FilterOrderGridByIdActionGroup" stepKey="filterOrderGridById">
     <argument name="orderId" value="{$getOrderId}"/>
 </actionGroup>
 ```
+### Convention to return a value 
+
+The following conventions apply to action groups returning a value:
+- Only action groups can return value. Use of `return` tag is dis-allowed in tests and suites.
+- An action group does not support multiple `return` tags.
+- For [merging action groups](../merging.md#merge-action-groups), `return` is allowed only in one of the merging action groups.
+- Value returned by an action group can only be referenced within the scope that the action group is defined in (`test`, `before/after`). 
 
 ## Optimizing action group structures
 

@@ -1243,30 +1243,17 @@ To access this value, use `{$grabInputName}` in later actions. -->
 
 ### return
 
-Allows action group to return a value. Value can be then accessed in the test using the action group stepKey.
+Specifies what value is returned by an action group. The value can be then accessed in later steps using the action group stepKey. See [Action groups returning a value](./action-groups.md#return-a-value) for usage information.
 
 Attribute|Type|Use|Description
 ---|---|---|---
-`value`|string|required| value returned by actionGroup.
+`value`|string|required| value returned by action group.
 `stepKey`|string|required| A unique identifier of the action.
 
 #### Example
-
 ```xml
-<!-- Returns a value to the action group's step key. -->
-<actionGroup name="ActionGroupWithReturnValue">
-    <grabTextFrom selector="#foo" stepKey="grabTextFrom1"/>
-    <return value="{$grabTextFrom1}" stepKey="returnValue"/>
-</actionGroup>
-```
-```xml
-<!-- To access this value, use `{$actionGroupWithReturnValue}` in later actions or action groups. -->
-<test name="ActionGroupReturningValueTest">
-    <actionGroup ref="ActionGroupWithReturnValue" stepKey="actionGroupWithReturnValue"/>
-    <actionGroup ref="ActionGroupWithStringUsage" stepKey="actionGroupWithStringUsage">
-        <argument name="someArgument" value="{$actionGroupWithReturnValue}"/>
-    </actionGroup>
-</test>
+<!-- Returns value of $grabInputName to the calling 
+<return value="{$grabInputName}" stepKey="returnInputName"/>
 ```
 
 ### loadSessionSnapshot
