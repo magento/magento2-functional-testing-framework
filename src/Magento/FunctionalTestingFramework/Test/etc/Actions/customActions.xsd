@@ -363,7 +363,7 @@
                 <xs:attribute name="value" use="required" type="xs:string">
                     <xs:annotation>
                         <xs:documentation>
-                            Value to be returned.
+                            Value or variable to be returned.
                         </xs:documentation>
                     </xs:annotation>
                 </xs:attribute>

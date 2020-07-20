@@ -51,5 +51,11 @@
             <actualResult type="array">{{ExtendedMessageData.numbers}}</actualResult>
             <expectedResult type="array">["Something New", "0", "1", "2", "3", "TESTING CASE"]</expectedResult>
         </assertEqualsCanonicalizing>
+
+        <actionGroup ref="ReturnValueActionGroup" stepKey="actionGroupValue"/>
+        <assertEquals stepKey="assertActionGroupValue">
+            <expectedResult type="variable">actionGroupValue</expectedResult>
+            <actualResult type="string">test</actualResult>
+        </assertEquals>
     </test>
 </tests>
