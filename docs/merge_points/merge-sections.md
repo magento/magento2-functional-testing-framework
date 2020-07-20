@@ -9,7 +9,7 @@ In this example we add another selector to the section on the products page sect
 <!-- {% raw %} -->
 
 ```xml
-<section name="ProductsPageSection">
+<section name="AdminProductsPageSection">
     <element name="addProductButton" type="button" selector="//button[@id='add_new_product-button']"/>
     <element name="checkboxForProduct" type="button" selector="//*[contains(text(),'{{args}}')]/parent::td/preceding-sibling::td/label[@class='data-grid-checkbox-cell-inner']" parameterized="true"/>
     <element name="actions" type="button" selector="//div[@class='col-xs-2']/div[@class='action-select-wrap']/button[@class='action-select']"/>
@@ -22,7 +22,7 @@ In this example we add another selector to the section on the products page sect
 ## File to merge
 
 ```xml
-<section name="ProductsPageSection">
+<section name="AdminProductsPageSection">
     <!-- myExtensionElement will simply be added to the page -->
     <element name="myExtensionElement" type="button" selector="input.myExtension"/>
 </section>
@@ -31,7 +31,7 @@ In this example we add another selector to the section on the products page sect
 ## Resultant section
 
 ```xml
-<section name="ProductsPageSection">
+<section name="AdminProductsPageSection">
     <element name="addProductButton" type="button" selector="//button[@id='add_new_product-button']"/>
     <element name="checkboxForProduct" type="button" selector="//*[contains(text(),'{{args}}')]/parent::td/preceding-sibling::td/label[@class='data-grid-checkbox-cell-inner']" parameterized="true"/>
     <element name="actions" type="button" selector="//div[@class='col-xs-2']/div[@class='action-select-wrap']/button[@class='action-select']"/>
@@ -41,7 +41,6 @@ In this example we add another selector to the section on the products page sect
     <!-- New element merged -->
     <element name="myExtensionElement" type="button" selector="input.myExtension"/>
 </section>
-</page>
 ```
 
 <!-- {% endraw %} -->
