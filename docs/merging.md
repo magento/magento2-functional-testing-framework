@@ -259,7 +259,7 @@ The `AdminLoginSuccessfulTest` result corresponds to:
 
 ```xml
 <tests ...>
-    <test name="AdminLoginSuccessfulTest" insertAfter="loginAsAdmin">
+    <test name="AdminLoginSuccessfulTest">
         <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         <actionGroup ref="AdminCheckOptionSalesActionGroup" stepKey="checkOptionSales"/>
         <actionGroup ref="AssertAdminSuccessLoginActionGroup" stepKey="assertLoggedIn"/>
@@ -280,9 +280,9 @@ The controls change drastically in the B2B version, so it was abstracted to an a
 > Action group for selecting `customerGroup` in the `Cart Price Rules` section:
 
 ```xml
-    <actionGroup name="SelectNotLoggedInCustomerGroupActionGroup">
-        <selectOption selector="{{AdminCartPriceRulesFormSection.customerGroups}}" userInput="NOT LOGGED IN" stepKey="selectCustomerGroup"/>
-    </actionGroup>
+<actionGroup name="SelectNotLoggedInCustomerGroupActionGroup">
+    <selectOption selector="{{AdminCartPriceRulesFormSection.customerGroups}}" userInput="NOT LOGGED IN" stepKey="selectCustomerGroup"/>
+</actionGroup>
 ```
 
 > B2B Merge file
