@@ -79,7 +79,7 @@ The next chunk of the log reports about test execution of the first test:
 ```terminal
 AdminLoginSuccessfulTestCest: Admin login successful test
 Signature: Magento\AcceptanceTest\_default\Backend\AdminLoginSuccessfulTestCest:AdminLoginSuccessfulTest
-Test: tests/functional/tests/MFTF/_generated/default/AdminLoginSuccessfulTestCest.php:AdminLoginSuccessfulTest
+Test: tests/functional/Magento/_generated/default/AdminLoginSuccessfulTestCest.php:AdminLoginSuccessfulTest
 Scenario --
 [loginAsAdmin] AdminLoginActionGroup
   [navigateToAdmin] am on page "/admin/admin"
@@ -99,7 +99,7 @@ Scenario --
 
 The running test is `AdminLoginSuccessfulTestCest`, which is `Admin login successful test` (this text is generated from the test name but with the `Cest` part excluded).
 Its test signature is `Magento\AcceptanceTest\_default\Backend\AdminLoginSuccessfulTestCest:AdminLoginSuccessfulTest` that matches a `className:methodName` format using namespaces.
-A path to the corresponding `Test` is `tests/functional/tests/MFTF/_generated/default/AdminLoginSuccessfulTestCest.php:AdminLoginSuccessfulTest` (relative to the `acceptance/` directory).
+A path to the corresponding `Test` is `tests/functional/Magento/_generated/default/AdminLoginSuccessfulTestCest.php:AdminLoginSuccessfulTest` (relative to the `acceptance/` directory).
 
 `Scenario` lists the tests steps as they run during test execution, ending with the successful test verdict `PASSED`.
 It means that all test steps were processed as expected.
@@ -111,7 +111,7 @@ The second test fails with the following report:
 ```terminal
 AdminMenuNavigationWithSecretKeysTestCest: Admin menu navigation with secret keys test
 Signature: Magento\AcceptanceTest\_default\Backend\AdminMenuNavigationWithSecretKeysTestCest:AdminMenuNavigationWithSecretKeysTest
-Test: tests/functional/tests/MFTF/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:AdminMenuNavigationWithSecretKeysTest
+Test: tests/functional/Magento/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:AdminMenuNavigationWithSecretKeysTest
 Scenario --
 [enableUrlSecretKeys] magento cli "config:set admin/security/use_form_key 1",60
 Value was saved.
@@ -158,7 +158,7 @@ The general test details and scenario has the same format as in the Passed test.
 ```
 
 When a test step fails, MFTF always saves a screenshot of the web page with the failing state immediately after the failure occurs.
-`[saveScreenshot] save screenshot ` follows the failing test step `[clickCatalogMenuOption] click "#something"` in our case.
+`[saveScreenshot] save screenshot` follows the failing test step `[clickCatalogMenuOption] click "#something"` in our case.
 
 A screenshot of the fail goes at the `acceptance/tests/_output` directory in both PNG and HTML formats:
 
@@ -214,7 +214,7 @@ full_page
 
 -  `1) AdminMenuNavigationWithSecretKeysTestCest: Admin menu navigation with secret keys test` - the failed Codeception test is *AdminMenuNavigationWithSecretKeysTestCest*. It references to the PHP class that implemented the failed test.
 
--  `Test  tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:AdminMenuNavigationWithSecretKeysTest` - the test is implemented in the *AdminMenuNavigationWithSecretKeysTest* test method of the *tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php* file under `<magento root>/dev/tests/acceptance/`.
+-  `Test  tests/functional/Magento/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:AdminMenuNavigationWithSecretKeysTest` - the test is implemented in the *AdminMenuNavigationWithSecretKeysTest* test method of the *tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php* file under `<magento root>/dev/tests/acceptance/`.
   It matches the corresponding test defined in XML that is *AdminMenuNavigationWithSecretKeysTest* defined in `<test name="AdminMenuNavigationWithSecretKeysTest">...</test>`
 
 -  `Step  Click "#something"` - the failing test step is the *click* action with the *#something* selector. It would correspond the `<click selector="#something" ... />` test step in the XML defined tests.

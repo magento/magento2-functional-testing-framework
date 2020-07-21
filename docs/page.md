@@ -107,7 +107,7 @@ Example (_Catalog/Page/StorefrontCategoryPage.xml_ file):
 This example shows the page with the name `StorefrontCategoryPage`.
 It will be merged with the other `StorefrontCategoryPage` pages from other modules.
 
-The following is an example of a call in an action group:
+The following is an example of a call in a test:
 
 ```xml
 <amOnPage url="{{StorefrontCategoryPage.url($createPreReqCategory.name$)}}" stepKey="navigateToCategoryPage"/>
