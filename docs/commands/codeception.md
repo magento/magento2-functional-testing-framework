@@ -15,16 +15,16 @@ Run all the generated tests:
 vendor/bin/codecept run functional -c dev/tests/acceptance/codeception.yml
 ```
 
-Run all tests without the `<group value="example"/>` [annotation][]:
+Run all tests without the `<group value="skip"/>` [annotation][]:
 
 ```bash
-vendor/bin/codecept run functional --skip-group example  -c dev/tests/acceptance/codeception.yml
+vendor/bin/codecept run functional --skip-group skip  -c dev/tests/acceptance/codeception.yml
 ```
 
-Run all tests with the `<group value="login"/>` [annotation][] but with no `<group value="example"/>`:
+Run all tests with the `<group value="example"/>` [annotation][] but with no `<group value="skip"/>`:
 
 ```bash
-vendor/bin/codecept run functional --group login --skip-group example -c dev/tests/acceptance/codeception.yml
+vendor/bin/codecept run functional --group example --skip-group skip -c dev/tests/acceptance/codeception.yml
 ```
 
 ## `codecept run`
