@@ -58,11 +58,11 @@ Example (`.../Catalog/Section/AdminCategorySidebarActionSection.xml` file):
 <?xml version="1.0" encoding="utf-8"?>
 
 <sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
-   <section name="AdminCategorySidebarActionSection">
+        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="AdminCategorySidebarActionSection">
         <element name="AddRootCategoryButton" type="button" selector="#add_root_category_button" timeout="30"/>
         <element name="AddSubcategoryButton" type="button" selector="#add_subcategory_button" timeout="30"/>
-   </section>
+    </section>
 </sections>
 ```
 
