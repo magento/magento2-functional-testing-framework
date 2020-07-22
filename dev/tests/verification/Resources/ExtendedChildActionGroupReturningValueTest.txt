@@ -1,0 +1,43 @@
+<?php
+namespace Magento\AcceptanceTest\_default\Backend;
+
+use Magento\FunctionalTestingFramework\AcceptanceTester;
+use \Codeception\Util\Locator;
+use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
+use Yandex\Allure\Adapter\Annotation\Title;
+use Yandex\Allure\Adapter\Annotation\Description;
+use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
+use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
+
+/**
+ * @Title("[NO TESTCASEID]: Extended Child ActionGroup Returning Value Test")
+ * @Description("<h3>Test files</h3>verification/TestModule/Test/ActionGroupTest/ExtendedChildActionGroupReturningValueTest.xml<br>")
+ */
+class ExtendedChildActionGroupReturningValueTestCest
+{
+	/**
+	 * @Severity(level = SeverityLevel::CRITICAL)
+	 * @Features({"TestModule"})
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function ExtendedChildActionGroupReturningValueTest(AcceptanceTester $I)
+	{
+		$I->comment("Entering Action Group [extendedActionGroupReturningValue] ExtendedActionGroupReturningValueActionGroup");
+		$grabProducts1ExtendedActionGroupReturningValue = $I->grabMultiple("selector"); // stepKey: grabProducts1ExtendedActionGroupReturningValue
+		$I->assertCount(99, $grabProducts1ExtendedActionGroupReturningValue); // stepKey: assertCountExtendedActionGroupReturningValue
+		$extendedActionGroupReturningValue = $I->return($grabProducts1ExtendedActionGroupReturningValue); // stepKey: returnProducts1ExtendedActionGroupReturningValue
+		$grabProducts2ExtendedActionGroupReturningValue = $I->grabMultiple("otherSelector"); // stepKey: grabProducts2ExtendedActionGroupReturningValue
+		$I->assertCount(8000, $grabProducts2ExtendedActionGroupReturningValue); // stepKey: assertSecondCountExtendedActionGroupReturningValue
+		$extendedActionGroupReturningValue = $I->return($grabProducts2ExtendedActionGroupReturningValue); // stepKey: returnProducts2ExtendedActionGroupReturningValue
+		$I->comment("Exiting Action Group [extendedActionGroupReturningValue] ExtendedActionGroupReturningValueActionGroup");
+		$I->comment("Entering Action Group [actionGroupWithStringUsage1] actionGroupWithStringUsage");
+		$I->see($extendedActionGroupReturningValue, "#element .{$extendedActionGroupReturningValue}"); // stepKey: see1ActionGroupWithStringUsage1
+		$I->comment("Exiting Action Group [actionGroupWithStringUsage1] actionGroupWithStringUsage");
+	}
+}
