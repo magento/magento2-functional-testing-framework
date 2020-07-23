@@ -11,7 +11,7 @@ The overall workflow that tests should follow is:
     -  Set options for single or parallel running.
 -  Delegate and run tests and gather test-run artifacts.
     -  Re-run options.
--  Generate the Allure reports from results.
+-  Generate the Allure reports from the results.
 
 ## Obtain a Magento instance
 
@@ -29,7 +29,7 @@ composer create-project --repository=https://repo.magento.com/ magento/project-c
 
 For more information on installing magento see [Install Magento using Composer][].
 
-After installing the Magento instance, you need to set a couple of configurations to the magento instance:
+After installing the Magento instance, set a couple of configurations to the Magento instance:
 
 ```bash
 bin/magento config:set general/locale/timezone America/Los_Angeles
@@ -38,13 +38,13 @@ bin/magento config:set admin/security/use_form_key 0
 bin/magento config:set cms/wysiwyg/enabled disabled
 ```
 
-These help set the `default` state of the Magento instance. If you wish to change the default state of the application (and have updated your tests sufficiently to account for it), this is the step in which you would do it.
+These set the default state of the Magento instance. If you wish to change the default state of the application (and have updated your tests sufficiently to account for it), this is the step to do it.
 
 If your magento instance has Two-Factor Authentication enabled, see [Configure 2FA][] to configure MFTF tests.
 
-## Install allure
+## Install Allure
 
-This will be required to generate the report after your test runs. See [Allure][] for details.
+This is required for generating the report after your test runs. See [Allure][] for details.
 
 ## Generate tests
 
@@ -56,7 +56,7 @@ Generate tests based on what you want to run:
 vendor/bin/mftf generate:tests
 ```
 
-This will generate all tests and a single manifest file under `dev/tests/acceptance/tests/functional/Magento/_generated/testManifest.txt`
+This will generate all tests and a single manifest file under `dev/tests/acceptance/tests/functional/Magento/_generated/testManifest.txt`.
 
 ### Parallel execution
 
@@ -66,7 +66,7 @@ To generate all tests for use in parallel nodes:
 vendor/bin/mftf generate:tests --config parallel
 ```
 
-This will generate a folder under `dev/tests/acceptance/tests/functional/Magento/_generated/groups`. This folder contains several `group#.txt` files that can be used later with the `mftf run:manifest` command.
+This generates a folder under `dev/tests/acceptance/tests/functional/Magento/_generated/groups`. This folder contains several `group#.txt` files that can be used later with the `mftf run:manifest` command.
 
 ## Delegate and run tests
 
@@ -84,17 +84,17 @@ You can optimize your pipeline by running tests in parallel across multiple node
 
 Tests can be split up into roughly equal running groups using `--config parallel`.
 
-You don't want perform installation on each node again and build it. So, to save time, stash pre-made artifacts from earlier steps and un-stash on the nodes.
+You do not want to perform installations on each node again and build it. So, to save time, stash pre-made artifacts from earlier steps and un-stash on the nodes.
 
 The groups can be then distributed on each of the nodes and run separately in an isolated environment.
 
-    - Stash artifacts from main node and un-stash on current node.
-    - Run `vendor/bin/mftf run:manifest <current_group.txt>` on current node.
-    - Gather artifacts from `dev/tests/acceptance/tests/_output` from current node to main node.
+- Stash artifacts from main node and un-stash on current node.
+- Run `vendor/bin/mftf run:manifest <current_group.txt>` on current node.
+- Gather artifacts from `dev/tests/acceptance/tests/_output` from current node to main node.
 
 ### Rerun options
 
-In either single or parallel execution, to re-run failed tests simply add the `run:failed` command after executing a manifest:
+In either single or parallel execution, to re-run failed tests, simply add the `run:failed` command after executing a manifest:
 
 ```bash
 vendor/bin/mftf run:failed
@@ -102,7 +102,7 @@ vendor/bin/mftf run:failed
 
 ### Generate Allure report
 
-In the main node, simply generate using your `<path_to_results>` into a desired output path
+In the main node, generate reports using your `<path_to_results>` into a desired output path:
 
 ```bash
 allure generate <path_to_results> -c -o <path_to_output>
