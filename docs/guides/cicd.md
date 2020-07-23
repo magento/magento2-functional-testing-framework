@@ -1,6 +1,6 @@
 # How to use MFTF in CICD
 
-To integrate MFTF tests into your CICD pipeline, then it is best to start with the conceptual flow of the pipeline code.
+To integrate MFTF tests into your CICD pipeline, it is best to start with the conceptual flow of the pipeline code.
 
 ## Concept
 
@@ -40,6 +40,8 @@ bin/magento config:set cms/wysiwyg/enabled disabled
 
 These help set the `default` state of the Magento instance. If you wish to change the default state of the application (and have updated your tests sufficiently to account for it), this is the step in which you would do it.
 
+If your magento instance has Two-Factor Authentication enabled, see [Configure 2FA][] to configure MFTF tests.
+
 ## Install allure
 
 This will be required to generate the report after your test runs. See [Allure][] for details.
@@ -54,7 +56,7 @@ Generate tests based on what you want to run:
 vendor/bin/mftf generate:tests
 ```
 
-This will generate all tests and a single manifest file under `dev/tests/acceptance/tests/functional/Magento/FunctionalTest/_generated/testManifest.txt`
+This will generate all tests and a single manifest file under `dev/tests/acceptance/tests/functional/Magento/_generated/testManifest.txt`
 
 ### Parallel execution
 
@@ -64,7 +66,7 @@ To generate all tests for use in parallel nodes:
 vendor/bin/mftf generate:tests --config parallel
 ```
 
-This will generate a folder under `dev/tests/acceptance/tests/functional/Magento/FunctionalTest/_generated/groups`. This folder contains several `group#.txt` files that can be used later with the `mftf run:manifest` command.
+This will generate a folder under `dev/tests/acceptance/tests/functional/Magento/_generated/groups`. This folder contains several `group#.txt` files that can be used later with the `mftf run:manifest` command.
 
 ## Delegate and run tests
 
@@ -73,21 +75,24 @@ This will generate a folder under `dev/tests/acceptance/tests/functional/Magento
 If you are running on a single node, call:
 
 ```bash
-vendor/bin/mftf run:manifest dev/tests/acceptance/tests/functional/Magento/FunctionalTest/_generated/testManifest.txt
+vendor/bin/mftf run:manifest dev/tests/acceptance/tests/functional/Magento/_generated/testManifest.txt
 ```
 
 ### Parallel execution
 
-To run MFTF tests in parallel, clone the contents of the current node and duplicate them depending on how many nodes you have.
+You can optimize your pipeline by running tests in parallel across multiple nodes.
 
-- Clone contents of current node as a baseline.
-- For each `groups/group#.txt` file:
+Tests can be split up into roughly equal running groups using `--config parallel`.
 
-    - Set a node's contents to the baseline.
-    - Run `vendor/bin/mftf run:manifest <current_group.txt>`.
-    - Gather artifacts from `dev/tests/acceptance/tests/_output` from current node to master.
+You don't want perform installation on each node again and build it. So, to save time, stash pre-made artifacts from earlier steps and un-stash on the nodes.
 
-#### Rerun options
+The groups can be then distributed on each of the nodes and run separately in an isolated environment.
+
+    - Stash artifacts from main node and un-stash on current node.
+    - Run `vendor/bin/mftf run:manifest <current_group.txt>` on current node.
+    - Gather artifacts from `dev/tests/acceptance/tests/_output` from current node to main node.
+
+### Rerun options
 
 In either single or parallel execution, to re-run failed tests simply add the `run:failed` command after executing a manifest:
 
@@ -97,12 +102,13 @@ vendor/bin/mftf run:failed
 
 ### Generate Allure report
 
-In the master node, simply generate using your `<path_to_results>` into a desired output path
+In the main node, simply generate using your `<path_to_results>` into a desired output path
 
 ```bash
 allure generate <path_to_results> -c -o <path_to_output>
 ```
 
 <!-- Link definitions -->
-[Install Magento using Composer]: https://devdocs.magento.com/guides/v2.3/install-gde/composer.html
+[Install Magento using Composer]: https://devdocs.magento.com/guides/v2.4/install-gde/composer.html
+[Configure 2FA]: ../configure-2fa.md
 [Allure]: https://docs.qameta.io/allure/
