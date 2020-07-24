@@ -215,4 +215,3 @@ Since the configurable product module could be disabled, this approach is more r
 [merging]: merging.html
 [parameterized selectors]: section/parameterized-selectors.html
 [sections]: section.html
-[MFTF Test Migration]: https://github.com/magento/magento-functional-tests-migration
