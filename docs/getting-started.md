@@ -121,6 +121,18 @@ The MFTF does not support executing CLI commands if your web server points to `<
 
 If the Nginx Web server is used on your development environment, then **Use Web Server Rewrites** setting in **Stores** > Settings > **Configuration** > **General** > **Web** > **Search Engine Optimization** must be set to **Yes**.
 
+Or via command line:
+
+```bash
+bin/magento config:set web/seo/use_rewrites 1
+```
+
+You must clean the cache after changing the configuration values:
+
+```bash
+bin/magento cache:clean config full_page
+```
+
 To be able to run Magento command line commands in tests, add the following location block to the Nginx configuration file in the Magento root directory:
 
 ```conf
