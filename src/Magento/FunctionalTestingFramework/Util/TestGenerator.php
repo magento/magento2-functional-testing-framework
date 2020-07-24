@@ -1172,6 +1172,16 @@ class TestGenerator
                         $selector
                     );
                     break;
+                case "return":
+                    $actionOrigin = $actionObject->getActionOrigin();
+                    $actionOriginStepKey = $actionOrigin[ActionGroupObject::ACTION_GROUP_ORIGIN_TEST_REF];
+                    $testSteps .= $this->wrapFunctionCallWithReturnValue(
+                        $actionOriginStepKey,
+                        $actor,
+                        $actionObject,
+                        $value
+                    );
+                    break;
                 case "formatCurrency":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,

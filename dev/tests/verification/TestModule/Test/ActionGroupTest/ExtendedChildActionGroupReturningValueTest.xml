@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="ExtendedChildActionGroupReturningValueTest">
+        <annotations>
+            <severity value="CRITICAL"/>
+            <title value="Extended Child ActionGroup Returning Value Test"/>
+        </annotations>
+        <actionGroup ref="ExtendedActionGroupReturningValueActionGroup" stepKey="extendedActionGroupReturningValue">
+            <argument name="count" value="99"/>
+            <argument name="otherCount" value="8000"/>
+        </actionGroup>
+        <actionGroup ref="actionGroupWithStringUsage" stepKey="actionGroupWithStringUsage1">
+            <argument name="someArgument" value="{$extendedActionGroupReturningValue}"/>
+        </actionGroup>
+    </test>
+</tests>
