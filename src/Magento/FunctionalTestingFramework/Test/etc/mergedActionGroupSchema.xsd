@@ -15,29 +15,21 @@
         </xs:choice>
     </xs:complexType>
     <xs:complexType name="actionsRefType">
-        <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="actionTypeTags"/>
-            <xs:element name="arguments">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="argument" maxOccurs="unbounded" minOccurs="0">
-                            <xs:complexType>
-                                <xs:attribute type="xs:string" name="name" use="required"/>
-                                <xs:attribute type="xs:string" name="defaultValue"/>
-                                <xs:attribute type="dataTypeEnum" name="type" default="entity"/>
-                            </xs:complexType>
-                        </xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="annotations">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="description"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-        </xs:choice>
+        <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:group ref="actionTypeTags"/>
+                <xs:element ref="arguments"/>
+                <xs:element ref="annotations"/>
+            </xs:choice>
+            <xs:sequence minOccurs="0">
+                <xs:group ref="returnTags"/>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                    <xs:group ref="actionTypeTags"/>
+                    <xs:element ref="arguments"/>
+                    <xs:element ref="annotations"/>
+                </xs:choice>
+            </xs:sequence>
+        </xs:sequence>
         <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute type="xs:string" name="filename"/>
         <xs:attribute type="xs:string" name="insertBefore"/>
@@ -57,4 +49,28 @@
             <xs:enumeration value="entity"/>
         </xs:restriction>
     </xs:simpleType>
+
+    <!-- elements -->
+
+    <xs:element name="arguments">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="argument" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                        <xs:attribute type="xs:string" name="name" use="required"/>
+                        <xs:attribute type="xs:string" name="defaultValue"/>
+                        <xs:attribute type="dataTypeEnum" name="type" default="entity"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="annotations">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="description"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>

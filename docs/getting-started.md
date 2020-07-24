@@ -216,7 +216,7 @@ Learn more about environmental settings in [Configuration][].
 
 ### Step 3. Enable the Magento CLI commands
 
-In the `magento2/dev/tests/acceptance` directory, run the following command to enable the MFTF to send Magento CLI commands to your Magento instance.
+In the Magento project root, run the following command to enable the MFTF to send Magento CLI commands to your Magento instance.
 
  ```bash
 cp dev/tests/acceptance/.htaccess.sample dev/tests/acceptance/.htaccess
@@ -228,11 +228,11 @@ To run tests, you need a running Selenium server and [`mftf`][] commands.
 
 #### Run the Selenium server {#selenium-server}
 
-Run the Selenium server in terminal.
-For example, the following commands run the Selenium server for Google Chrome:
+Run the Selenium server in the terminal.
+For example, the following commands download and run the Selenium server for Google Chrome:
 
 ```bash
-cd <path_to_directory_with_selenium_server_and_webdriver>/
+curl -O http://selenium-release.storage.googleapis.com/3.14/selenium-server-standalone-3.14.0.jar
 ```
 
 ```bash
@@ -243,10 +243,6 @@ java -Dwebdriver.chrome.driver=chromedriver -jar selenium-server-standalone-3.14
 
 ```bash
 vendor/bin/mftf generate:tests
-```
-
-```bash
-cd dev/tests/acceptance
 ```
 
 ```bash

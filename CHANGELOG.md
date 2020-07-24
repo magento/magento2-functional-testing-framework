@@ -1,118 +1,53 @@
 Magento Functional Testing Framework Changelog
 ================================================
-3.0.0 RC5
----------
-
-### Enhancements
-
-* Readability
-    * Removed blacklist/whitelist terminology in MFTF.
-
-### Fixes
-
-* Fixed javascript error seen on chrome 81 for dragAndDrop action.
-* Fixed allure issue when `WebDriverCurlException` is encountered in `afterStep`.
-
-3.0.0 RC4
+3.0.0
 ---------
 
 ### Enhancements
 
 * Customizability
-    * `<group value="skip"/>` no longer skips a test. Instead, the test is added to the `skip` group.
-* Maintainability
-    * `mftf.log` no longer includes notices and warnings at test execution time.
-    * Added the Chrome option `--ignore-certificate-errors` to `functional.suite.dist.yml`.
-* Traceability
-    * Changed the `bin/mftf static-checks` error file directory from the current working directory to `TESTS_BP/tests/_output/static-results/`.
-* Readability
-    * Documented [3.0.0 Backward Incompatible Changes.](./docs/backward-incompatible-changes.md)
-
-### Fixes
-
-* Fixed issue where an extended data entity would not merge array items. Array items should merge properly now.
-* Fixed issue where Chrome remains running after MFTF suite finishes.
-
-3.0.0 RC3
----------
-
-### Enhancements
-
-*  Maintainability
-    * Added support for Two-Factor Authentication (2FA). [See configure-2fa page for details](./docs/configure-2fa.md)  
-    * Added new static check `annotationsCheck` that checks and reports missing annotations in tests.
-    * Updated `bin/mftf static-checks` command to allow executing static-checks defined in `staticRuleSet.json` by default. [See command page for details](./docs/commands/mftf.md#static-checks)
-    * Added new upgrade script to remove unused arguments from action groups.
-    * Added unhandledPromptBehavior driver capability for Chrome 75+ support.
-    * Removed redundant and unused classes.
-
-### Fixes
-
-* Fixed issue with custom helper usage in suites.
-* Fixed issue with decryption of secrets during data entity creation.
-* Fixed issue with merging of `array` items in data entity.
-
-3.0.0 RC2
----------
-
-### Enhancements
-
-*  Maintainability
-    *  Added support for PHP 7.4.
-    *  Removed support for PHP 7.2.
-    *  Added support for PHPUnit 9.
-    *  Improved assertion actions to support PHPUnit 9 changes. [See assertions page for details](./docs/test/assertions.md)   
-        *  Added new actions: `assertEqualsWithDelta`, `assertNotEqualsWithDelta`, `assertEqualsCanonicalizing`, `assertNotEqualsCanonicalizing`, `assertEqualsIgnoringCase`, `assertNotEqualsIgnoringCase`.
-        *  Added new actions: `assertStringContainsString`, `assertStringNotContainsString`, `assertStringContainsStringIgnoringCase`, `assertStringNotContainsStringIgnoringCase` for string haystacks.
-        *  Removed actions: `assertInternalType`, `assertNotInternalType`, `assertArraySubset`.
-        *  Removed delta option from `assertEquals` and `assertNotEquals`.
-    *  Removed action `pauseExecution` and added `pause`. [See actions page for details](./docs/test/actions.md#pause)
-    *  Removed action `formatMoney` and added `formatCurrency`. [See actions page for details](./docs/test/actions.md#formatcurrency)    
-    *  Added new static check that checks and reports references to deprecated test entities.
-*  Bumped dependencies to support PHP/PHPUnit upgrade.
-    
-*  Traceability 
-    *  Introduced new `.env` configuration `VERBOSE_ARTIFACTS` to toggle saving attachments in Allure. [See configuration page for details](./docs/configuration.md)  
-    
-### Fixes
-
-*  Fixed issue of resolving arguments of type `entity` in action groups within a custom helper.
-*  Fixed reporting issue in output file for `testDependencies` static check.
-*  Fixed a bug in `actionGroupArguments` static check when action group filename is missing `ActionGroup`.
-*  Fixed issue of running suites under root `_suite` directory in Standalone MFTF.
-
-### GitHub Issues/Pull Requests
-
-* [#567](https://github.com/magento/magento2-functional-testing-framework/pull/567) -- log attachments for failed requests.
-
-3.0.0 RC1
----------
-
-### Enhancements
-
-* Customizability
-    * Introduced MFTF helpers `<helper>` to create custom actions outside of MFTF.
+    * Introduced MFTF helpers `<helper>` to create custom actions outside of MFTF.[See custom-helpers page for details](./docs/custom-helpers.md)
     * Removed deprecated actions `<executeSelenium>` and `<performOn>`.
+    * `<group value="skip"/>` no longer skips a test. Instead, the test is added to the `skip` group.
+    
 * Maintainability
+    * Added support for PHP 7.4.
+    * Added support for PHPUnit 9.
+    * Dropped support for PHP 7.0, 7.1, 7.2.
     * Schema updates for test entities to only allow single entity per file except Data and Metadata.
     * Support for sub-folders in test modules.
     * Removed support to read test entities from `<magento>dev/tests/acceptance/tests/functional/Magento/FunctionalTest`. 
-    * Removed support for PHP 7.0 and 7.1.
     * Removed file attribute for `<module>` in suiteSchema.
+    * Removed action `pauseExecution` and added `pause`. [See actions page for details](./docs/test/actions.md#pause)
+    * Removed action `formatMoney` and added `formatCurrency`. [See actions page for details](./docs/test/actions.md#formatcurrency) 
+    * Improved assertion actions to support PHPUnit 9 changes. [See assertions page for details](./docs/test/assertions.md)   
+        *  Added new actions: `assertEqualsWithDelta`, `assertNotEqualsWithDelta`, `assertEqualsCanonicalizing`, `assertNotEqualsCanonicalizing`, `assertEqualsIgnoringCase`, `assertNotEqualsIgnoringCase`.
+        *  Added new actions: `assertStringContainsString`, `assertStringNotContainsString`, `assertStringContainsStringIgnoringCase`, `assertStringNotContainsStringIgnoringCase` for string haystacks.
+        *  Removed actions: `assertInternalType`, `assertNotInternalType`, `assertArraySubset`.
+        *  Removed delta option from `assertEquals` and `assertNotEquals`.   
+    * Added static check `deprecatedEntityUsage` that checks and reports references to deprecated test entities.
+    * Added static check `annotations` that checks and reports missing annotations in tests.
+    * Updated `bin/mftf static-checks` command to allow executing static-checks defined in `staticRuleSet.json` by default. [See command page for details](./docs/commands/mftf.md#static-checks)
+    * Added support for Two-Factor Authentication (2FA). [See configure-2fa page for details](./docs/configure-2fa.md)
+    * Added new upgrade script to remove unused arguments from action groups.
+    * `mftf.log` no longer includes notices and warnings at test execution time.
+    * Added unhandledPromptBehavior driver capability for Chrome 75+ support.
+    * Added the Chrome option `--ignore-certificate-errors` to `functional.suite.dist.yml`.
+    
 * Traceability
-    * Removed `--debug` option NONE to disallow ability to turn off schema validation.
+    * Removed `--debug` option `NONE` to disallow ability to turn off schema validation.
     * Notices added for test entity naming convention violations.
     * Metadata file names changed to `*Meta.xml`.
+    * Introduced new `.env` configuration `VERBOSE_ARTIFACTS` to toggle saving attachments in Allure. [See configuration page for details](./docs/configuration.md)  
+    * Changed the `bin/mftf static-checks` error file directory from the current working directory to `TESTS_BP/tests/_output/static-results/`.
+    
 * Readability
-    * Support only nested assertion syntax [See assertions page for details](./docs/test/assertions.md)       
+    * Support only nested assertion syntax [See assertions page for details](./docs/test/assertions.md).      
+    * Documented [3.0.0 Backward Incompatible Changes](./docs/backward-incompatible-changes.md).
+    * Removed blacklist/whitelist terminology in MFTF. 
+    
 * Upgrade scripts added to upgrade tests to MFTF major version requirements. See upgrade instructions below.
-* Bumped dependencies to latest possible versions.
-
-### Fixes
-
-* Throw exception during generation when leaving out .url for `amOnPage`.
-* `request_timeout` and `connection_timeout` added to functional.suite.yml.dist.
-* Fixed `ModuleResolver` to resolve test modules moved out of deprecated path.
+* Bumped dependencies to support PHP/PHPUnit upgrade.
 
 ### Upgrade Instructions
 
@@ -120,11 +55,44 @@ Magento Functional Testing Framework Changelog
 * Run `bin/mftf build:project` to generate new configurations.
 * Run `bin/mftf upgrade:tests`. [See command page for details](./docs/commands/mftf.md#upgradetests).
 * After running the above command, some tests may need manually updates:
-    * Remove all occurrences of `<executeInSelenium>` and `<performOn>`
-    * Remove all occurrences of `<module file=""/>` from any `<suite>`s
+    * Remove all occurrences of `<executeInSelenium>` and `<performOn>`.
+    * Remove all occurrences of `<module file=""/>` from any `<suite>`s.
     * Ensure all `<assert*>` actions in your tests have a valid schema.
 * Lastly, try to generate all tests. Tests should all be generated as a result of the upgrades.
     * If not, the most likely issue will be a changed XML schema. Check error messaging and search your codebase for the attributes listed.
+
+### Fixes
+
+* Throw exception during generation when leaving out .url for `amOnPage`.
+* `request_timeout` and `connection_timeout` added to functional.suite.yml.dist.
+* Fixed `ModuleResolver` to resolve test modules moved out of deprecated path.
+* Fixed issue of resolving arguments of type `entity` in action groups within a custom helper.
+* Fixed reporting issue in output file for `testDependencies` static check.
+* Fixed a bug in `actionGroupArguments` static check when action group filename is missing `ActionGroup`.
+* Fixed issue of running suites under root `_suite` directory in Standalone MFTF.
+* Fixed issue with custom helper usage in suites.
+* Fixed issue with decryption of secrets during data entity creation.
+* Fixed issue with merging of `array` items in data entity.
+* Fixed issue where an extended data entity would not merge array items. Array items should merge properly now.
+* Fixed issue where Chrome remains running after MFTF suite finishes.
+* Fixed javascript error seen on Chrome 83 for dragAndDrop action.
+* Fixed allure issue when `WebDriverCurlException` is encountered in `afterStep`.
+
+### GitHub Issues/Pull Requests
+
+* [#567](https://github.com/magento/magento2-functional-testing-framework/pull/567) -- log attachments for failed requests.
+
+### Demo Video links
+
+* [MFTF 3.0.0 RC1](https://www.youtube.com/watch?v=z0ZaZCmnw-A&t=2s)
+* [MFTF 3.0.0 RC2](https://www.youtube.com/watch?v=BJOQAw6dX5o)
+* [MFTF 3.0.0 RC3](https://www.youtube.com/watch?v=scLb7pi8pR0)
+
+2.6.4
+-----
+
+### Fixes
+* added dependency to packages MFTF used but never specified in composer.json
 
 2.6.3
 -----

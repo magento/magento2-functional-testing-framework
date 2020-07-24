@@ -78,6 +78,8 @@ A test can also reference data that was returned as a result of [test actions][]
 
 Further in the test, the data grabbed by the `someSelector` selector can be referenced using the `stepKey` value. In this case, it is `grabStepKey`.
 
+The `stepKey` value can only be referenced within the test scope that it is defined in (`test`, `before/after`). 
+
 The following example shows the usage of `grabValueFrom` in testing, where the returned value is used by action's `stepKey`:
 
 ```xml
