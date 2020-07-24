@@ -31,7 +31,7 @@ An element cannot, however, have both a `selector` and a `locatorFunction`.
 Given the above element definitions, you call the elements in a test just like any other element. No special reference is required, as you are still just referring to an `element` inside a `section`:
 
 ```xml
-<test name="LocatorFuctionTest">
+<test name="LocatorFunctionTest">
    <click selector="{{LocatorFunctionSection.simpleLocator}}" stepKey="SimpleLocator"/>
    <click selector="{{LocatorFunctionSection.simpleLocatorTwoParam('string1', 'string2')}}" stepKey="TwoParamLiteral"/>
 </test>
