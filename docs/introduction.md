@@ -1,8 +1,9 @@
 # Introduction to the Magento Functional Testing Framework
 
 <div class="bs-callout bs-callout-info" markdown="1">
-These are the docs for the latest MFTF release.
-To find older documentation, please refer to the [docs folder] of your desired release in Github.
+This documentation is for MFTF 3.0, which was release in conjunction with Magento 2.4.
+MFTF 3.0 is a major update and introduces many new changes and fixes.
+MFTF 2 docs can be found [here][].
 </div>
 
 [Find your version] of MFTF.
@@ -159,4 +160,4 @@ Follow the [MFTF project] and [contribute on Github].
 [contribute on Github]: https://github.com/magento/magento2-functional-testing-framework/blob/master/.github/CONTRIBUTING.md
 [MFTF project]: https://github.com/magento/magento2-functional-testing-framework
 [Find your version]: #find-your-mftf-version
-[docs folder]: https://github.com/magento/magento2-functional-testing-framework/tree/master/docs
+[here]: ../v2/docs/introduction.html
