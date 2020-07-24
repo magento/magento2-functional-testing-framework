@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="MergeActionGroupReturningValueActionGroup">
+        <arguments>
+            <argument name="myArg"/>
+        </arguments>
+        <fillField userInput="Please delete me" selector="#delete" stepKey="deleteMe"/>
+        <amOnPage url="{{SamplePage.url(myArg.firstname,myArg.lastname)}}" stepKey="amOnPage1"/>
+        <grabMultiple selector="#foo" stepKey="grabMultiple1"/>
+        <return value="{$grabMultiple1}" stepKey="returnValue"/>
+    </actionGroup>
+</actionGroups>

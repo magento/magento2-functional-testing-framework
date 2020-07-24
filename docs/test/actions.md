@@ -151,6 +151,7 @@ The following test actions return a variable:
 *  [grabValueFrom](#grabvaluefrom)
 *  [executeJS](#executejs)
 *  [getOTP](#getotp)
+*  [return](#return)
 
 Learn more in [Using data returned by test actions](../data.md#use-data-returned-by-test-actions).
 
@@ -1238,6 +1239,21 @@ Attribute|Type|Use|Description
 <!-- Store the value currently entered in <input id="name" ... >...</input>.
 To access this value, use `{$grabInputName}` in later actions. -->
 <grabValueFrom selector="input#name" stepKey="grabInputName"/>
+```
+
+### return
+
+Specifies what value is returned by an action group. The value can be then accessed in later steps using the action group stepKey. See [Action groups returning a value](./action-groups.md#return-a-value) for usage information.
+
+Attribute|Type|Use|Description
+---|---|---|---
+`value`|string|required| value returned by action group.
+`stepKey`|string|required| A unique identifier of the action.
+
+#### Example
+```xml
+<!-- Returns value of $grabInputName to the calling 
+<return value="{$grabInputName}" stepKey="returnInputName"/>
 ```
 
 ### loadSessionSnapshot

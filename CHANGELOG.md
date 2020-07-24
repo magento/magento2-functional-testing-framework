@@ -88,6 +88,12 @@ Magento Functional Testing Framework Changelog
 * [MFTF 3.0.0 RC2](https://www.youtube.com/watch?v=BJOQAw6dX5o)
 * [MFTF 3.0.0 RC3](https://www.youtube.com/watch?v=scLb7pi8pR0)
 
+2.6.4
+-----
+
+### Fixes
+* added dependency to packages MFTF used but never specified in composer.json
+
 2.6.3
 -----
 
