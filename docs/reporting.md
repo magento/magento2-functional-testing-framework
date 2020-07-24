@@ -57,42 +57,49 @@ The general information can be useful for MFTF contributors, but can be ignored 
 Let's consider the general part of the following test execution report:
 
 ```terminal
-==== Redirecting to Composer-installed version in vendor/codeception ====
-Codeception PHP Testing Framework v2.3.9
-Powered by PHPUnit 6.5.13 by Sebastian Bergmann and contributors.
+Generate Tests Command Run
+Codeception PHP Testing Framework v4.1.4
+Powered by PHPUnit 9.1.3 by Sebastian Bergmann and contributors.
+Running with seed: 
 
 Magento\FunctionalTestingFramework.functional Tests (2) ------------------------
-Modules: \Magento\FunctionalTestingFramework\Module\MagentoWebDriver, \Magento\FunctionalTestingFramework\Helper\Acceptance, \Magento\FunctionalTestingFramework\Helper\MagentoFakerData, \Magento\FunctionalTestingFramework\Module\MagentoRestDriver, PhpBrowser, \Magento\FunctionalTestingFramework\Module\MagentoSequence, \Magento\FunctionalTes
+Modules: \Magento\FunctionalTestingFramework\Module\MagentoWebDriver, \Magento\FunctionalTestingFramework\Module\MagentoSequence, \Magento\FunctionalTestingFramework\Module\MagentoAssert, \Magento\FunctionalTestingFramework\Module\MagentoActionProxies, Asserts, \Magento\FunctionalTestingFramework\Helper\HelperContainer
 ```
 
-After the test generation command (mentioned in the previous section), MFTF delegates control to the `vendor/codeception` tool, which is the `Codeception PHP Testing Framework` of version `2.3.9` that uses `PHPUnit` of version `6.5.13`.
+After the test generation command (mentioned in the previous section), MFTF delegates control to the `vendor/codeception` tool, which is the `Codeception PHP Testing Framework` of version `4.1.4` that uses `PHPUnit` of version `9.1.3`.
 
 The tool runs `2 Tests` using the configuration defined in the `functional` suite under the `Magento\FunctionalTestingFramework` namespace.
 The corresponding configuration file is `acceptance/tests/functional.suite.yml`.
-It enables `Modules: \Magento\FunctionalTestingFramework\Module\MagentoWebDriver, \Magento\FunctionalTestingFramework\Helper\Acceptance, \Magento\FunctionalTestingFramework\Helper\MagentoFakerData, \Magento\FunctionalTestingFramework\Module\MagentoRestDriver, PhpBrowser, \Magento\FunctionalTestingFramework\Module\MagentoSequence, ...`
+It enables `Modules: \Magento\FunctionalTestingFramework\Module\MagentoWebDriver, \Magento\FunctionalTestingFramework\Module\MagentoSequence, \Magento\FunctionalTestingFramework\Module\MagentoAssert, \Magento\FunctionalTestingFramework\Module\MagentoActionProxies, Asserts, \Magento\FunctionalTestingFramework\Helper\HelperContainer,..`
 
 #### Passed tests
 
 The next chunk of the log reports about test execution of the first test:
 
 ```terminal
-AdminLoginTestCest: Admin login test
-Signature: Magento\AcceptanceTest\_default\Backend\AdminLoginTestCest:AdminLoginTest
-Test: tests/functional/Magento/FunctionalTest/_generated/default/AdminLoginTestCest.php:AdminLoginTest
+AdminLoginSuccessfulTestCest: Admin login successful test
+Signature: Magento\AcceptanceTest\_default\Backend\AdminLoginSuccessfulTestCest:AdminLoginSuccessfulTest
+Test: tests/functional/Magento/_generated/default/AdminLoginSuccessfulTestCest.php:AdminLoginSuccessfulTest
 Scenario --
-I am on page "/admin/admin"
-I fill field "#username","admin"
-I fill field "#login","123123q"
-I click ".actions .action-primary"
-I wait for page load 30
-I close admin notification
-I see in current url "/admin/admin"
-PASSED
+[loginAsAdmin] AdminLoginActionGroup
+  [navigateToAdmin] am on page "/admin/admin"
+  [fillUsername] fill field "#username","admin"
+  [fillPassword] fill field "#login","123123q"
+  [clickLogin] click ".actions .action-primary"
+  [clickLoginWaitForPageLoad] wait for page load 30
+  [clickDontAllowButtonIfVisible] conditional click ".modal-popup .action-secondary",".modal-popup .action-secondary",true
+  [closeAdminNotification] close admin notification 
+[assertLoggedIn] AssertAdminSuccessLoginActionGroup
+  [waitForAdminAccountTextVisible] wait for element visible ".page-header .admin-user-account-text",60
+  [assertAdminAccountTextElement] see element ".page-header .admin-user-account-text"
+[logoutFromAdmin] AdminLogoutActionGroup
+  [amOnLogoutPage] am on page "/admin/admin/auth/logout/"
+ PASSED 
 ```
 
-The running test is `AdminLoginTestCest`, which is `Admin login test` (this text is generated from the test name but with the `Cest` part excluded).
-Its test signature is `Magento\AcceptanceTest\_default\Backend\AdminLoginTestCest:AdminLoginTest` that matches a `className:methodName` format using namespaces.
-A path to the corresponding `Test` is `tests/functional/Magento/FunctionalTest/_generated/default/AdminLoginTestCest.php:AdminLoginTest` (relative to the `acceptance/` directory).
+The running test is `AdminLoginSuccessfulTestCest`, which is `Admin login successful test` (this text is generated from the test name but with the `Cest` part excluded).
+Its test signature is `Magento\AcceptanceTest\_default\Backend\AdminLoginSuccessfulTestCest:AdminLoginSuccessfulTest` that matches a `className:methodName` format using namespaces.
+A path to the corresponding `Test` is `tests/functional/Magento/_generated/default/AdminLoginSuccessfulTestCest.php:AdminLoginSuccessfulTest` (relative to the `acceptance/` directory).
 
 `Scenario` lists the tests steps as they run during test execution, ending with the successful test verdict `PASSED`.
 It means that all test steps were processed as expected.
@@ -104,51 +111,54 @@ The second test fails with the following report:
 ```terminal
 AdminMenuNavigationWithSecretKeysTestCest: Admin menu navigation with secret keys test
 Signature: Magento\AcceptanceTest\_default\Backend\AdminMenuNavigationWithSecretKeysTestCest:AdminMenuNavigationWithSecretKeysTest
-Test: tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:AdminMenuNavigationWithSecretKeysTest
+Test: tests/functional/Magento/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:AdminMenuNavigationWithSecretKeysTest
 Scenario --
-I magento cli "config:set admin/security/use_form_key 1"
+[enableUrlSecretKeys] magento cli "config:set admin/security/use_form_key 1",60
 Value was saved.
-I magento cli "cache:clean config full_page"
-Cleaned cache types:
-config
-full_page
-I am on page "/admin/admin"
-I wait for page load
-I fill field "#username","admin"
-I fill field "#login","123123q"
-I click ".actions .action-primary"
-I wait for page load 30
-I close admin notification
-I click "//li[@id='menu-magento-backend-stores']"
-I wait for loading mask to disappear
-I click "#nav li[data-ui-id='menu-magento-config-system-config']"
-I wait for page load
-I see current url matches "~\/admin\/system_config\/~"
-I see "#something"
-I save screenshot
-FAIL
 
-I magento cli "config:set admin/security/use_form_key 0"
-Value was saved.
-I magento cli "cache:clean config full_page"
+[cleanInvalidatedCaches1] magento cli "cache:clean config full_page",60
 Cleaned cache types:
 config
 full_page
-I am on page "/admin/admin/auth/logout/"
+
+[loginAsAdmin] AdminLoginActionGroup
+  [navigateToAdmin] am on page "/admin/admin"
+  [fillUsername] fill field "#username","admin"
+  [fillPassword] fill field "#login","123123q"
+  [clickLogin] click ".actions .action-primary"
+  [clickLoginWaitForPageLoad] wait for page load 30
+  [clickDontAllowButtonIfVisible] conditional click ".modal-popup .action-secondary",".modal-popup .action-secondary",true
+  [closeAdminNotification] close admin notification 
+[clickStoresMenuOption1] click "#menu-magento-backend-stores"
+[waitForStoresMenu1] wait for loading mask to disappear 
+[clickStoresConfigurationMenuOption1] click "#nav li[data-ui-id='menu-magento-config-system-config']"
+[waitForConfigurationPageLoad1] wait for page load 60
+[seeCurrentUrlMatchesConfigPath1] see current url matches "~\/admin\/system_config\/~"
+[clickCatalogMenuOption] click "#something"
+[saveScreenshot] save screenshot 
+[disableUrlSecretKeys] magento cli "config:set admin/security/use_form_key 0",60
+Value was saved.
+
+[cleanInvalidatedCaches2] magento cli "cache:clean config full_page",60
+Cleaned cache types:
+config
+full_page
+
+[logout] AdminLogoutActionGroup
+  [amOnPage] am on page "/admin/admin/auth/logout/"
+ FAIL 
 --------------------------------------------------------------------------------
 ```
 
 The general test details and scenario has the same format as in the Passed test.
-The interesting part starts near the `FAIL` line.
 
 ```terminal
-I see "#something"
-I save screenshot
-FAIL
+[clickCatalogMenuOption] click "#something"
+[saveScreenshot] save screenshot 
 ```
 
 When a test step fails, MFTF always saves a screenshot of the web page with the failing state immediately after the failure occurs.
-`I save screenshot` follows the failing test step `I see "#something"` in our case.
+`[saveScreenshot] save screenshot` follows the failing test step `[clickCatalogMenuOption] click "#something"` in our case.
 
 A screenshot of the fail goes at the `acceptance/tests/_output` directory in both PNG and HTML formats:
 
@@ -165,27 +175,19 @@ The file name encodes:
 -  with the `AdminMenuNavigationWithSecretKeysTest` test name
 -  and execution status `fail`
 
-Actions after `FAIL` are run as a part of the [`after`][] hook of the test.
+Actions after `saveScreenshot` are run as a part of the [`after`][] hook of the test.
 
 ### Test result report
 
 After MFTF completed test execution, it generates a general report about test results along with detailed information about each fail.
 
 ```terminal
---------------------------------------------------------------------------------
-DEPRECATION: Calling the "Symfony\Component\BrowserKit\Client::getInternalResponse()" method before the "request()" one is deprecated since Symfony 4.1 and will throw an exception in 5.0. /Users/.../magento2ce/vendor/symfony/browser-kit/Client.php:208
-
-Time: 52.43 seconds, Memory: 16.00MB
+Time: 02:07.534, Memory: 150.50 MB
 
 There was 1 failure:
 ---------
 ```
-
-First you see warnings and deprecations.
-The `DEPRECATION` here is thrown by an MFTF dependency (Symfony) that is out of the scope for test writers and should be considered by MFTF contributors.
-If you encounter this type of reporting, [report an issue][].
-
-Then, MFTF reports that the test run took 52.43 seconds using 16 MB of system RAM.
+MFTF reports that the test run took 02:07.534 using 150.50 MB of system RAM.
 And, finally, that there was `1 failure`.
 
 Next, the report provides details about the test failure.
@@ -193,75 +195,38 @@ Next, the report provides details about the test failure.
 ```terminal
 ---------
 1) AdminMenuNavigationWithSecretKeysTestCest: Admin menu navigation with secret keys test
-Test  tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:AdminMenuNavigationWithSecretKeysTest
-Step  See "#something"
-Fail  Failed asserting that  on page /admin/admin/system_config/index/key/678b7ba922c.../
---> DASHBOARD
-SALES
-CATALOG
-CUSTOMERS
-MARKETING
-CONTENT
-REPORTS
-STORES
-SYSTEM
-FIND PARTNERS & EXTENSIONS
-Configuration
-admin
-1
-Store View: Default Config
-What is this?
-Save Config
-Country Options
-State Options
-Locale Options
-Store Information
-Store Name
-Store Phone Number
-Store Hours of Operation
-Countr
-[Content too long to display. See complete response in '/Users/dmytroshevtsov/Projects/vagrant/vagrant-magento/magento2ce/dev/tests/acceptance/tests/_output/' directory]
---> contains "#something".
+ Test  tests/functional/Magento/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:AdminMenuNavigationWithSecretKeysTest
+ Step  Click "#something"
+ Fail  CSS or XPath element with '#something' was not found.
 
 Scenario Steps:
 
-23. $I->amOnPage("/admin/admin/auth/logout/") at tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:54
-22. // Cleaned cache types:
+ 27. // Exiting Action Group [logout] AdminLogoutActionGroup
+ 26. $I->amOnPage("/admin/admin/auth/logout/") at tests/functional/Magento/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:55
+ 25. // Entering Action Group [logout] AdminLogoutActionGroup
+ 24. // Cleaned cache types:
 config
 full_page
-21. $I->magentoCLI("cache:clean config full_page") at tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:52
-20. // Value was saved.
-19. $I->magentoCLI("config:set admin/security/use_form_key 0") at tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:50
-18. $I->saveScreenshot() at tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:63
+
+ 23. $I->magentoCLI("cache:clean config full_page",60) at tests/functional/Magento/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:52
+ 22. // Value was saved.
 ```
 
 -  `1) AdminMenuNavigationWithSecretKeysTestCest: Admin menu navigation with secret keys test` - the failed Codeception test is *AdminMenuNavigationWithSecretKeysTestCest*. It references to the PHP class that implemented the failed test.
 
--  `Test  tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:AdminMenuNavigationWithSecretKeysTest` - the test is implemented in the *AdminMenuNavigationWithSecretKeysTest* test method of the *tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php* file under `<magento root>/dev/tests/acceptance/`.
+-  `Test  tests/functional/Magento/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php:AdminMenuNavigationWithSecretKeysTest` - the test is implemented in the *AdminMenuNavigationWithSecretKeysTest* test method of the *tests/functional/Magento/FunctionalTest/_generated/default/AdminMenuNavigationWithSecretKeysTestCest.php* file under `<magento root>/dev/tests/acceptance/`.
   It matches the corresponding test defined in XML that is *AdminMenuNavigationWithSecretKeysTest* defined in `<test name="AdminMenuNavigationWithSecretKeysTest">...</test>`
 
--  `Step  See "#something"` - the failing test step is the *see* action with the *#something* selector. It would correspond the `<see selector="#something" ... />` test step in the XML defined tests.
-
--  `Fail  Failed asserting that  on page /admin/admin/system_config/index/key/678b7ba922c.../` - the fail occurred on the web page `<MAGENTO_BASE_URL>/admin/admin/system_config/index/key/678b7ba922c.../`.
-
-```terminal
---> ...
-[Content too long to display. See complete response in '/../../magento2/dev/tests/acceptance/tests/_output/' directory]
---> contains "#something".
-```
-
-The web page is too long to be reported in the CLI, and it is stored at *'/../../magento2/dev/tests/acceptance/tests/_output/'*.
-Search the web page by test name *AdminMenuNavigationWithSecretKeysTest*.
-The failing test assertion is that the web page contains *contains* a CSS locator *#something*.
+-  `Step  Click "#something"` - the failing test step is the *click* action with the *#something* selector. It would correspond the `<click selector="#something" ... />` test step in the XML defined tests.
 
 Finally, the report finishes with fairly self-descriptive lines.
 
 ```terminal
 FAILURES!
-Tests: 2, Assertions: 3, Failures: 1.
+Tests: 2, Assertions: 2, Failures: 1.
 ```
 
-MFTF encountered failures due to the last test run, that included *2* tests with *3* assertions.
+MFTF encountered failures due to the last test run, that included *2* tests with *2* assertions.
 *1* assertion fails.
 
 ## Allure
@@ -324,8 +289,7 @@ And if you run the `open` command with no arguments while you are in the same di
 allure open
 ```
 
-Allure would attempt to open a generated report at the `magento2/allure-report/` directory.'
-%}
+Allure would attempt to open a generated report at the `magento2/allure-report/` directory.
 
 To clean up existing reports before generation (for example after getting new results), use the `--clean` flag:
 

@@ -21,25 +21,19 @@ Unlike merging, the parent test (or action group) will still exist after the tes
 
 <!-- {% raw %} -->
 
-__Use case__: Create two similar tests with different `url` (`"{{AdminCategoryPage.url}}"` and `"{{OtherCategoryPage.url}}"`) in a test step.
+__Use case__: Create two similar tests with a different action group reference by overwriting a `stepKey`.
 
 > Test with "extends":
 
 ```xml
 <tests>
-    <test name="AdminCategoryTest">
-            <annotations>
-                ...
-            </annotations>
-        ...(several steps)
-        <amOnPage url="{{AdminCategoryPage.url}}" stepKey="navigateToAdminCategory"/>
-        ...(several steps)
+    <test name="AdminLoginSuccessfulTest">
+        <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+        <actionGroup ref="AssertAdminSuccessLoginActionGroup" stepKey="assertLoggedIn"/>
+        <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdmin"/>
     </test>
-    <test name="OtherCategoryTest" extends="AdminCategoryTest">
-            <annotations>
-                ...
-            </annotations>
-        <amOnPage url="{{OtherCategoryPage.url}}" stepKey="navigateToAdminCategory"/>
+    <test name="AdminLoginAsOtherUserSuccessfulTest" extends="AdminLoginSuccessfulTest">
+        <actionGroup ref="AdminLoginAsOtherUserActionGroup" stepKey="loginAsAdmin"/>
     </test>
 </tests>
 ```
@@ -48,46 +42,35 @@ __Use case__: Create two similar tests with different `url` (`"{{AdminCategoryPa
 
 ```xml
 <tests>
-    <test name="AdminCategoryTest">
-            <annotations>
-                ...
-            </annotations>
-        ...(several steps)
-        <amOnPage url="{{AdminCategoryPage.url}}" stepKey="navigateToAdminCategory"/>
-        ...(several steps)
+    <test name="AdminLoginSuccessfulTest">
+        <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+        <actionGroup ref="AssertAdminSuccessLoginActionGroup" stepKey="assertLoggedIn"/>
+        <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdmin"/>
     </test>
-    <test name="OtherCategoryTest">
-            <annotations>
-                ...
-            </annotations>
-        ...(several steps)
-        <amOnPage url="{{OtherCategoryPage.url}}" stepKey="navigateToAdminCategory"/>
-        ...(several steps)
+    <test name="AdminLoginAsOtherUserSuccessfulTest">
+        <actionGroup ref="AdminLoginAsOtherUserActionGroup" stepKey="loginAsAdmin"/>
+        <actionGroup ref="AssertAdminSuccessLoginActionGroup" stepKey="assertLoggedIn"/>
+        <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdmin"/>
     </test>
 </tests>
 ```
 
 ### Add a test step
 
-__Use case__: Create two similar tests where the second test contains two additional steps:
-
-*  `checkOption` before `click` (`stepKey="clickLogin"`)
-*  `seeInCurrentUrl` after `click` in the `LogInAsAdminTest` test (in the `.../Backend/Test/LogInAsAdminTest.xml` file)
+__Use case__: Create two similar tests where the second test contains two additional steps specified to occur `before` or `after` other `stepKeys`.
 
 > Tests with "extends":
 
 ```xml
 <tests>
-    <test name="LogInAsAdminTest">
-        <amOnPage url="{{AdminLoginPage}}" stepKey="navigateToAdmin"/>
-        <fillField selector="{{AdminLoginFormSection.username}}" userInput="admin" stepKey="fillUsername"/>
-        <fillField selector="{{AdminLoginFormSection.password}}" userInput="password" stepKey="fillPassword"/>
-        <click selector="{{AdminLoginFormSection.signIn}}" stepKey="clickLogin"/>
-        <see userInput="Lifetime Sales" stepKey="seeLifetimeSales"/>
+    <test name="AdminLoginSuccessfulTest">
+        <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+        <actionGroup ref="AssertAdminSuccessLoginActionGroup" stepKey="assertLoggedIn"/>
+        <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdmin"/>
     </test>
-    <test name="AlternativeLogInAsAdminTest" extends="LogInAsAdminTest">
-        <checkOption selector="{{AdminLoginFormSection.rememberMe}}" stepKey="checkRememberMe" before="clickLogin"/>
-        <seeInCurrentUrl url="admin/admin/dashboard/" stepKey="seeAdminUrl" after="clickLogin"/>
+    <test name="AdminLoginCheckRememberMeSuccessfulTest" extends="AdminLoginSuccessfulTest">
+        <actionGroup ref="AdminCheckRememberMeActionGroup" stepKey="checkRememberMe" after="loginAsAdmin"/>
+        <actionGroup ref="AssertAdminRememberMeActionGroup" stepKey="assertRememberMe" before="logoutFromAdmin"/>
     </test>
 </tests>
 ```
@@ -96,49 +79,39 @@ __Use case__: Create two similar tests where the second test contains two additi
 
 ```xml
 <tests>
-    <test name="LogInAsAdminTest">
-        <amOnPage url="{{AdminLoginPage}}" stepKey="navigateToAdmin"/>
-        <fillField selector="{{AdminLoginFormSection.username}}" userInput="admin" stepKey="fillUsername"/>
-        <fillField selector="{{AdminLoginFormSection.password}}" userInput="password" stepKey="fillPassword"/>
-        <click selector="{{AdminLoginFormSection.signIn}}" stepKey="clickLogin"/>
-        <see userInput="Lifetime Sales" stepKey="seeLifetimeSales"/>
+    <test name="AdminLoginSuccessfulTest">
+        <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+        <actionGroup ref="AssertAdminSuccessLoginActionGroup" stepKey="assertLoggedIn"/>
+        <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdmin"/>
     </test>
-    <test name="AlternativeLogInAsAdminTest">
-        <amOnPage url="{{AdminLoginPage}}" stepKey="navigateToAdmin"/>
-        <fillField selector="{{AdminLoginFormSection.username}}" userInput="admin" stepKey="fillUsername"/>
-        <fillField selector="{{AdminLoginFormSection.password}}" userInput="password" stepKey="fillPassword"/>
-        <checkOption selector="{{AdminLoginFormSection.rememberMe}}" stepKey="checkRememberMe"/>
-        <click selector="{{AdminLoginFormSection.signIn}}" stepKey="clickLogin"/>
-        <seeInCurrentUrl url="admin/admin/dashboard/" stepKey="seeAdminUrl"/>
-        <see userInput="Lifetime Sales" stepKey="seeLifetimeSales"/>
+    <test name="AdminLoginCheckRememberMeSuccessfulTest">
+        <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+        <actionGroup ref="AdminCheckRememberMeActionGroup" stepKey="checkRememberMe"/>
+        <actionGroup ref="AssertAdminSuccessLoginActionGroup" stepKey="assertLoggedIn"/>
+        <actionGroup ref="AssertAdminRememberMeActionGroup" stepKey="assertRememberMe"/>
+        <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdmin"/>
     </test>
 </tests>
 ```
 
-### Update a test annotation
+### Update a test before hook
 
-__Use case__: Create two similar tests where the second one contains two additional actions in the `before` hook:
-
-*  `checkOption` before `click` (`stepKey="clickLogin"`)
-*  `seeInCurrentUrl` after `click` in the `LogInAsAdminTest` test (in the `.../Backend/Test/LogInAsAdminTest.xml` file)
+__Use case__: Create two similar tests where the second test contains an additional action in the `before` hook.
 
 > Tests with "extends":
 
 ```xml
 <tests>
-    <test name="LogInAsAdminTest">
+    <test name="AdminLoginSuccessfulTest">
         <before>
-            <amOnPage url="{{AdminLoginPage}}" stepKey="navigateToAdmin"/>
-            <fillField selector="{{AdminLoginFormSection.username}}" userInput="admin" stepKey="fillUsername"/>
-            <fillField selector="{{AdminLoginFormSection.password}}" userInput="password" stepKey="fillPassword"/>
-            <click selector="{{AdminLoginFormSection.signIn}}" stepKey="clickLogin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
-        <see userInput="Lifetime Sales" stepKey="seeLifetimeSales"/>
+        <actionGroup ref="AssertAdminSuccessLoginActionGroup" stepKey="assertLoggedIn"/>
+        <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdmin"/>
     </test>
-    <test name="AlternativeLogInAsAdminTest" extends="LogInAsAdminTest">
+    <test name="AdminLoginCheckRememberMeSuccessfulTest" extends="AdminLoginSuccessfulTest">
         <before>
-            <checkOption selector="{{AdminLoginFormSection.rememberMe}}" stepKey="checkRememberMe" before="clickLogin"/>
-            <seeInCurrentUrl url="admin/admin/dashboard/" stepKey="seeAdminUrl" after="clickLogin"/>
+            <actionGroup ref="AdminCheckRememberMeActionGroup" stepKey="checkRememberMe" after="loginAsAdmin"/>
         </before>
     </test>
 </tests>
@@ -148,25 +121,20 @@ __Use case__: Create two similar tests where the second one contains two additio
 
 ```xml
 <tests>
-    <test name="LogInAsAdminTest">
+    <test name="AdminLoginSuccessfulTest">
         <before>
-            <amOnPage url="{{AdminLoginPage}}" stepKey="navigateToAdmin"/>
-            <fillField selector="{{AdminLoginFormSection.username}}" userInput="admin" stepKey="fillUsername"/>
-            <fillField selector="{{AdminLoginFormSection.password}}" userInput="password" stepKey="fillPassword"/>
-            <click selector="{{AdminLoginFormSection.signIn}}" stepKey="clickLogin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
-        <see userInput="Lifetime Sales" stepKey="seeLifetimeSales"/>
+        <actionGroup ref="AssertAdminSuccessLoginActionGroup" stepKey="assertLoggedIn"/>
+        <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdmin"/>
     </test>
-    <test name="AlternativeLogInAsAdminTest">
+    <test name="AdminLoginCheckRememberMeSuccessfulTest">
         <before>
-            <amOnPage url="{{AdminLoginPage}}" stepKey="navigateToAdmin"/>
-            <fillField selector="{{AdminLoginFormSection.username}}" userInput="admin" stepKey="fillUsername"/>
-            <fillField selector="{{AdminLoginFormSection.password}}" userInput="password" stepKey="fillPassword"/>
-            <checkOption selector="{{AdminLoginFormSection.rememberMe}}" stepKey="checkRememberMe"/>
-            <click selector="{{AdminLoginFormSection.signIn}}" stepKey="clickLogin"/>
-            <seeInCurrentUrl url="admin/admin/dashboard/" stepKey="seeAdminUrl"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminCheckRememberMeActionGroup" stepKey="checkRememberMe"/>
         </before>
-        <see userInput="Lifetime Sales" stepKey="seeLifetimeSales"/>
+        <actionGroup ref="AssertAdminSuccessLoginActionGroup" stepKey="assertLoggedIn"/>
+        <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdmin"/>
     </test>
 </tests>
 ```
@@ -177,14 +145,14 @@ Extend an [action group] to add or update [actions] in your module.
 
 ### Update an action
 
-__Use case__: The `CountProductA` test counts the particular product.
+__Use case__: The `AssertAdminCountProductActionGroup` action group counts the particular product.
 Modify the action group to use another product.
 
 > Action groups with "extends":
 
 ```xml
 <actionGroups>
-    <actionGroup name="CountProductA">
+    <actionGroup name="AssertAdminCountProductActionGroup">
         <arguments>
             <argument name="count" type="string"/>
         </arguments>
@@ -195,7 +163,7 @@ Modify the action group to use another product.
         </assertCount>
     </actionGroup>
 
-    <actionGroup name="CountProductB" extends="CountProductA">
+    <actionGroup name="AssertAdminOtherCountProductActionGroup" extends="AssertAdminCountProductActionGroup">
         <grabMultiple selector="selectorForProductB" stepKey="grabProducts"/>
     </actionGroup>
 </actionGroups>
@@ -205,7 +173,7 @@ Modify the action group to use another product.
 
 ```xml
 <actionGroups>
-    <actionGroup name="CountProductA">
+    <actionGroup name="AssertAdminCountProductActionGroup">
         <arguments>
             <argument name="count" type="string"/>
         </arguments>
@@ -216,7 +184,7 @@ Modify the action group to use another product.
         </assertCount>
     </actionGroup>
 
-    <actionGroup name="CountProductB">
+    <actionGroup name="AssertAdminOtherCountProductActionGroup">
         <arguments>
             <argument name="count" type="string"/>
         </arguments>
@@ -231,21 +199,21 @@ Modify the action group to use another product.
 
 ### Add an action
 
-__Use case__: The `GetProductCount` action group returns the count of products.
-Add a new test `VerifyProductCount` that asserts the count of products:
+__Use case__: The `AdminGetProductCountActionGroup` action group returns the count of products.
+Add a new test `AssertAdminVerifyProductCountActionGroup` that asserts the count of products:
 
 > Action groups with "extends":
 
 ```xml
 <actionGroups>
-    <actionGroup name="GetProductCount">
+    <actionGroup name="AdminGetProductCountActionGroup">
         <arguments>
             <argument name="productSelector" type="string"/>
         </arguments>
         <grabMultiple selector="{{productSelector}}" stepKey="grabProducts"/>
     </actionGroup>
 
-    <actionGroup name="VerifyProductCount" extends="GetProductCount">
+    <actionGroup name="AssertAdminVerifyProductCountActionGroup" extends="AdminGetProductCountActionGroup">
         <arguments>
             <argument name="count" type="string"/>
         </arguments>
@@ -261,14 +229,14 @@ Add a new test `VerifyProductCount` that asserts the count of products:
 
 ```xml
 <actionGroups>
-    <actionGroup name="GetProductCount">
+    <actionGroup name="AdminGetProductCountActionGroup">
         <arguments>
             <argument name="productSelector" type="string"/>
         </arguments>
         <grabMultiple selector="{{productSelector}}" stepKey="grabProducts"/>
     </actionGroup>
 
-    <actionGroup name="VerifyProductCount">
+    <actionGroup name="AssertAdminVerifyProductCountActionGroup">
         <arguments>
             <argument name="count" type="string"/>
             <argument name="productSelector" type="string"/>

@@ -25,8 +25,8 @@ In this example, we add an action group to a new copy of the original test for o
         <deleteData createDataKey="createPreReqCategory" stepKey="deletePreReqCategory"/>
     </after>
 
-    <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
-    <actionGroup ref="FillAdminSimpleProductForm" stepKey="fillProductFieldsInAdmin">
+    <actionGroup ref="AdminLoginActionGroup" stepKey="AdminLoginActionGroup1"/>
+    <actionGroup ref="AdminFillSimpleProductFormActionGroup" stepKey="fillProductFieldsInAdmin">
         <argument name="category" value="$$createPreReqCategory$$"/>
         <argument name="simpleProduct" value="_defaultProduct"/>
     </actionGroup>
@@ -40,7 +40,7 @@ In this example, we add an action group to a new copy of the original test for o
 </test>
 ```
 
-## File to merge
+## Extend file
 
 ```xml
 <test name="AdminCreateSimpleProductExtensionTest" extends="AdminCreateSimpleProductTest">
@@ -89,8 +89,8 @@ Note that there are now two tests below.
         <deleteData createDataKey="createPreReqCategory" stepKey="deletePreReqCategory"/>
     </after>
 
-    <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
-    <actionGroup ref="FillAdminSimpleProductForm" stepKey="fillProductFieldsInAdmin">
+    <actionGroup ref="AdminLoginActionGroup" stepKey="AdminLoginActionGroup1"/>
+    <actionGroup ref="AdminFillSimpleProductFormActionGroup" stepKey="fillProductFieldsInAdmin">
         <argument name="category" value="$$createPreReqCategory$$"/>
         <argument name="simpleProduct" value="_defaultProduct"/>
     </actionGroup>
@@ -120,8 +120,8 @@ Note that there are now two tests below.
         <deleteData createDataKey="createPreReqCategory" stepKey="deletePreReqCategory"/>
     </after>
 
-    <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
-    <actionGroup ref="FillAdminSimpleProductForm" stepKey="fillProductFieldsInAdmin">
+    <actionGroup ref="AdminLoginActionGroup" stepKey="AdminLoginActionGroup1"/>
+    <actionGroup ref="AdminFillSimpleProductFormActionGroup" stepKey="fillProductFieldsInAdmin">
         <argument name="category" value="$$createPreReqCategory$$"/>
         <argument name="simpleProduct" value="_defaultProduct"/>
     </actionGroup>

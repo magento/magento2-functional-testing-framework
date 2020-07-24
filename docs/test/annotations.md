@@ -112,7 +112,7 @@ Attribute|Type|Use
 
 ### severity
 
-The `<return>` element is an implementation of a [`@Severity`] Allure tag; Metadata for report.
+The `<severity>` element is an implementation of a [`@Severity`] Allure tag; Metadata for report.
 
 Attribute|Type|Use|Acceptable values
 ---|---|---|---
