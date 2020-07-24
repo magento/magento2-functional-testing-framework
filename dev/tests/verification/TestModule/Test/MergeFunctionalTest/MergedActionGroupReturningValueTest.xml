@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="MergedActionGroupReturningValueTest">
+        <annotations>
+            <severity value="CRITICAL"/>
+            <group value="functional"/>
+            <features value="Action Group Functional Cest"/>
+            <stories value="MQE-433"/>
+        </annotations>
+        <before>
+            <createData entity="ReplacementPerson" stepKey="createPersonParam"/>
+            <actionGroup ref="FunctionalActionGroup" stepKey="beforeGroup"/>
+        </before>
+        <amOnPage url="/someUrl" stepKey="step1"/>
+        <actionGroup ref="MergeActionGroupReturningValueActionGroup" stepKey="actionGroupWithReturnValue1">
+            <argument name="myArg" value="DefaultPerson"/>
+        </actionGroup>
+        <actionGroup ref="actionGroupWithStringUsage" stepKey="actionGroupWithStringUsage1">
+            <argument name="someArgument" value="{$actionGroupWithReturnValue1}"/>
+        </actionGroup>
+        <after>
+            <actionGroup ref="FunctionalActionGroup" stepKey="afterGroup"/>
+        </after>
+    </test>
+</tests>

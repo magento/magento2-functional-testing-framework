@@ -1,0 +1,77 @@
+<?php
+namespace Magento\AcceptanceTest\_default\Backend;
+
+use Magento\FunctionalTestingFramework\AcceptanceTester;
+use \Codeception\Util\Locator;
+use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
+use Yandex\Allure\Adapter\Annotation\Title;
+use Yandex\Allure\Adapter\Annotation\Description;
+use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
+use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
+
+/**
+ * @group functional
+ * @Description("<h3>Test files</h3>verification/TestModule/Test/MergeFunctionalTest/MergedActionGroupReturningValueTest.xml<br>")
+ */
+class MergedActionGroupReturningValueTestCest
+{
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _before(AcceptanceTester $I)
+	{
+		$I->createEntity("createPersonParam", "hook", "ReplacementPerson", [], []); // stepKey: createPersonParam
+		$I->comment("Entering Action Group [beforeGroup] FunctionalActionGroup");
+		$I->fillField("#foo", "myData1"); // stepKey: fillField1BeforeGroup
+		$I->fillField("#bar", "myData2"); // stepKey: fillField2BeforeGroup
+		$I->comment("Exiting Action Group [beforeGroup] FunctionalActionGroup");
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		$I->comment("Entering Action Group [afterGroup] FunctionalActionGroup");
+		$I->fillField("#foo", "myData1"); // stepKey: fillField1AfterGroup
+		$I->fillField("#bar", "myData2"); // stepKey: fillField2AfterGroup
+		$I->comment("Exiting Action Group [afterGroup] FunctionalActionGroup");
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _failed(AcceptanceTester $I)
+	{
+		$I->saveScreenshot(); // stepKey: saveScreenshot
+	}
+
+	/**
+	 * @Severity(level = SeverityLevel::CRITICAL)
+	 * @Features({"TestModule"})
+	 * @Stories({"MQE-433"})
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function MergedActionGroupReturningValueTest(AcceptanceTester $I)
+	{
+		$I->amOnPage("/someUrl"); // stepKey: step1
+		$I->comment("Entering Action Group [actionGroupWithReturnValue1] MergeActionGroupReturningValueActionGroup");
+		$I->amOnPage("/Jane/Dane.html"); // stepKey: amOnPage1ActionGroupWithReturnValue1
+		$I->click(".merge .Jane"); // stepKey: myMergedClickActionGroupWithReturnValue1
+		$grabMultiple1ActionGroupWithReturnValue1 = $I->grabMultiple("#foo"); // stepKey: grabMultiple1ActionGroupWithReturnValue1
+		$actionGroupWithReturnValue1 = $I->return($grabMultiple1ActionGroupWithReturnValue1); // stepKey: returnValueActionGroupWithReturnValue1
+		$I->comment("Exiting Action Group [actionGroupWithReturnValue1] MergeActionGroupReturningValueActionGroup");
+		$I->comment("Entering Action Group [actionGroupWithStringUsage1] actionGroupWithStringUsage");
+		$I->see($actionGroupWithReturnValue1, "#element .{$actionGroupWithReturnValue1}"); // stepKey: see1ActionGroupWithStringUsage1
+		$I->comment("Exiting Action Group [actionGroupWithStringUsage1] actionGroupWithStringUsage");
+	}
+}

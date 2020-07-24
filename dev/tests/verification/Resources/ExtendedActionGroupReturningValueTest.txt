@@ -1,0 +1,40 @@
+<?php
+namespace Magento\AcceptanceTest\_default\Backend;
+
+use Magento\FunctionalTestingFramework\AcceptanceTester;
+use \Codeception\Util\Locator;
+use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
+use Yandex\Allure\Adapter\Annotation\Title;
+use Yandex\Allure\Adapter\Annotation\Description;
+use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
+use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
+
+/**
+ * @Title("[NO TESTCASEID]: Extended ActionGroup Returning Value Test")
+ * @Description("<h3>Test files</h3>verification/TestModule/Test/ActionGroupTest/ExtendedActionGroupReturningValueTest.xml<br>")
+ */
+class ExtendedActionGroupReturningValueTestCest
+{
+	/**
+	 * @Severity(level = SeverityLevel::CRITICAL)
+	 * @Features({"TestModule"})
+	 * @Parameter(name = "AcceptanceTester", value="$I")
+	 * @param AcceptanceTester $I
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function ExtendedActionGroupReturningValueTest(AcceptanceTester $I)
+	{
+		$I->comment("Entering Action Group [actionGroupReturningValue] ActionGroupReturningValueActionGroup");
+		$grabProducts1ActionGroupReturningValue = $I->grabMultiple("selector"); // stepKey: grabProducts1ActionGroupReturningValue
+		$I->assertCount(99, $grabProducts1ActionGroupReturningValue); // stepKey: assertCountActionGroupReturningValue
+		$actionGroupReturningValue = $I->return($grabProducts1ActionGroupReturningValue); // stepKey: returnProducts1ActionGroupReturningValue
+		$I->comment("Exiting Action Group [actionGroupReturningValue] ActionGroupReturningValueActionGroup");
+		$I->comment("Entering Action Group [actionGroupWithStringUsage1] actionGroupWithStringUsage");
+		$I->see($actionGroupReturningValue, "#element .{$actionGroupReturningValue}"); // stepKey: see1ActionGroupWithStringUsage1
+		$I->comment("Exiting Action Group [actionGroupWithStringUsage1] actionGroupWithStringUsage");
+	}
+}
