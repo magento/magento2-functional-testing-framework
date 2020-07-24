@@ -44,7 +44,7 @@ cd magento2/
 ```
 
 ```bash
-git checkout 2.3-develop
+git checkout 2.4-develop
 ```
 
 Install the Magento application.
