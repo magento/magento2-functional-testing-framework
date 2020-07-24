@@ -59,7 +59,8 @@ class functionalSuiteWithComments extends \Codeception\GroupObject
                     "create",
                     "suite",
                     "createThis",
-                     $createFields
+                    [],
+                    $createFields
                 );
                 print("<click stepKey=\"comment with element\" userInput=\"helloworld\"/>");
                 $webDriver->click(PersistedObjectHandler::getInstance()->retrieveEntityField('create', 'data', 'suite')); // stepKey: clickWithData

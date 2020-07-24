@@ -29,6 +29,12 @@
         </xs:choice>
     </xs:group>
 
+    <xs:group name="returnTags">
+        <xs:choice>
+            <xs:element type="returnType" name="return" minOccurs="0" maxOccurs="1"/>
+        </xs:choice>
+    </xs:group>
+
     <!-- Complex Types -->
 
     <xs:complexType name="helperType">
@@ -342,6 +348,26 @@
                         Array to be asserted for proper sorting. Must be in parameterArray format (ex. [1,2,3,4,5] or [alpha, brontosaurus, zebra]).
                     </xs:documentation>
                 </xs:annotation>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="returnType">
+        <xs:annotation>
+            <xs:documentation>
+                Used in an action group to return a value. Must be used only once in action group. Do not use in tests or suites.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="value" use="required" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Value or variable to be returned.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>

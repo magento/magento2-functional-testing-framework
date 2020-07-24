@@ -225,16 +225,16 @@ class GroupClassGenerator
             $action->getCustomActionAttributes()[TestGenerator::REQUIRED_ENTITY_REFERENCE];
 
         // append entries for any required entities to this entry
-        if (array_key_exists('requiredEntities', $action->getCustomActionAttributes())) {
-            $entityArray[self::REQUIRED_ENTITY_KEY] =
-                $this->buildReqEntitiesMustacheArray($action->getCustomActionAttributes());
+        $requiredEntities = $this->buildReqEntitiesMustacheArray($action->getCustomActionAttributes());
+        if (!array_key_exists(-1, $requiredEntities)) {
+            $entityArray[self::REQUIRED_ENTITY_KEY] = $requiredEntities;
         }
 
         // append entries for customFields if specified by the user.
         if (array_key_exists('customFields', $action->getCustomActionAttributes())) {
             $entityArray['customFields'] = $action->getStepKey() . 'Fields';
         }
-        
+
         return $entityArray;
     }
 

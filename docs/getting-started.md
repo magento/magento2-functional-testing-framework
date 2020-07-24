@@ -44,7 +44,7 @@ cd magento2/
 ```
 
 ```bash
-git checkout 2.3-develop
+git checkout 2.4-develop
 ```
 
 Install the Magento application.
@@ -120,6 +120,18 @@ The MFTF does not support executing CLI commands if your web server points to `<
 ### Nginx settings {#nginx-settings}
 
 If the Nginx Web server is used on your development environment, then **Use Web Server Rewrites** setting in **Stores** > Settings > **Configuration** > **General** > **Web** > **Search Engine Optimization** must be set to **Yes**.
+
+Or via command line:
+
+```bash
+bin/magento config:set web/seo/use_rewrites 1
+```
+
+You must clean the cache after changing the configuration values:
+
+```bash
+bin/magento cache:clean config full_page
+```
 
 To be able to run Magento command line commands in tests, add the following location block to the Nginx configuration file in the Magento root directory:
 
@@ -204,7 +216,7 @@ Learn more about environmental settings in [Configuration][].
 
 ### Step 3. Enable the Magento CLI commands
 
-In the `magento2/dev/tests/acceptance` directory, run the following command to enable the MFTF to send Magento CLI commands to your Magento instance.
+In the Magento project root, run the following command to enable the MFTF to send Magento CLI commands to your Magento instance.
 
  ```bash
 cp dev/tests/acceptance/.htaccess.sample dev/tests/acceptance/.htaccess
@@ -216,11 +228,11 @@ To run tests, you need a running Selenium server and [`mftf`][] commands.
 
 #### Run the Selenium server {#selenium-server}
 
-Run the Selenium server in terminal.
-For example, the following commands run the Selenium server for Google Chrome:
+Run the Selenium server in the terminal.
+For example, the following commands download and run the Selenium server for Google Chrome:
 
 ```bash
-cd <path_to_directory_with_selenium_server_and_webdriver>/
+curl -O http://selenium-release.storage.googleapis.com/3.14/selenium-server-standalone-3.14.0.jar
 ```
 
 ```bash
@@ -231,10 +243,6 @@ java -Dwebdriver.chrome.driver=chromedriver -jar selenium-server-standalone-3.14
 
 ```bash
 vendor/bin/mftf generate:tests
-```
-
-```bash
-cd dev/tests/acceptance
 ```
 
 ```bash
