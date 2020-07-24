@@ -95,7 +95,7 @@ Here, `url` contains a pointer to a `url` attribute of the `StorefrontCustomerSi
 ### 2. Enter a customer's email  {#example-step2}
 
 ```xml
-<fillField userInput="$$customer.email$$" selector="{{StorefrontCustomerSignInFormSection.emailField}}" stepKey="fillEmail"/>
+<fillField userInput="$customer.email$" selector="{{StorefrontCustomerSignInFormSection.emailField}}" stepKey="fillEmail"/>
 ```
 
 [`<fillField>`](#fillfield) fills a text field with the given string.
@@ -122,7 +122,7 @@ This section is declared in `.../Customer/Section/StorefrontCustomerSignInFormSe
 ### 3. Enter a customer's password  {#example-step3}
 
 ```xml
-<fillField  userInput="$$customer.password$$" selector="{{StorefrontCustomerSignInFormSection.passwordField}}" stepKey="fillPassword"/>
+<fillField  userInput="$customer.password$" selector="{{StorefrontCustomerSignInFormSection.passwordField}}" stepKey="fillPassword"/>
 ```
 
 This `<action>` is very similar to the `<action>` in a previous step.
@@ -218,7 +218,7 @@ Attribute|Type|Use|Description
 
 ```xml
 <!-- Open the `(baseURL)/admin` page. -->
-<amOnPage url="/admin" stepKey="goToLogoutPage"/>
+<amOnPage url="{{AdminLogoutPage.url}}" stepKey="goToLogoutPage"/>
 ```
 
 ### amOnSubdomain
