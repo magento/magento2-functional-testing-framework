@@ -23,7 +23,7 @@ In this example we update the quantity to 1001 and add a new piece of data relev
 </entity>
 ```
 
-## File to merge
+## Extend file
 
 ```xml
 <entity name="ExtensionProduct" type="product" extends="SimpleProduct">
