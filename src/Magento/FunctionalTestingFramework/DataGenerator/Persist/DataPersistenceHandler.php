@@ -110,7 +110,7 @@ class DataPersistenceHandler
         foreach ($updateDependentObjects as $dependentObject) {
             $this->dependentObjects[] = $dependentObject->getCreatedObject();
         }
-        $updateEntityObject = DataObjectHandler::getInstance()->getObject($updateDataName);
+        $updateEntityObject = DataObjectHandler::getInstance(false)->getObject($updateDataName);
         $curlHandler = new CurlHandler('update', $updateEntityObject, $this->storeCode);
         $result = $curlHandler->executeRequest(array_merge($this->dependentObjects, [$this->createdObject]));
         $this->setCreatedObject(

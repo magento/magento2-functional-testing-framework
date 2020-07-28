@@ -92,6 +92,7 @@ class CurlHandler
             $this->operation,
             $this->entityObject->getType()
         );
+        $this->operationDefinition->logDeprecated();
         $this->isJson = false;
     }
 
@@ -125,7 +126,6 @@ class CurlHandler
         $method = $this->operationDefinition->getApiMethod();
         AllureHelper::addAttachmentToCurrentStep($apiUrl, 'API Endpoint');
         AllureHelper::addAttachmentToCurrentStep(json_encode($headers, JSON_PRETTY_PRINT), 'Request Headers');
-
         $operationDataResolver = new OperationDataArrayResolver($dependentEntities);
         $this->requestData = $operationDataResolver->resolveOperationDataArray(
             $this->entityObject,

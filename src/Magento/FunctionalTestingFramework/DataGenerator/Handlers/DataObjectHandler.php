@@ -75,8 +75,10 @@ class DataObjectHandler implements ObjectHandlerInterface
 
     /**
      * Constructor
+     * @param bool $validateName Set to false to disable name validations
+     * @throws XmlException
      */
-    private function __construct()
+    private function __construct($validateName = true)
     {
         $parser = ObjectManagerFactory::getObjectManager()->create(DataProfileSchemaParser::class);
         $parserOutput = $parser->readDataProfiles();
@@ -85,20 +87,21 @@ class DataObjectHandler implements ObjectHandlerInterface
         }
         $this->entityNameValidator = new NameValidationUtil();
         $this->entityKeyValidator = new NameValidationUtil();
-        $this->entityDataObjects = $this->processParserOutput($parserOutput);
+        $this->entityDataObjects = $this->processParserOutput($parserOutput, $validateName);
         $this->extendUtil = new DataExtensionUtil();
     }
 
     /**
      * Return the singleton instance of this class. Initialize it if needed.
      *
+     * @param bool $validateName
      * @return DataObjectHandler
      * @throws \Exception
      */
-    public static function getInstance()
+    public static function getInstance($validateName = true)
     {
         if (!self::$INSTANCE) {
-            self::$INSTANCE = new DataObjectHandler();
+            self::$INSTANCE = new DataObjectHandler($validateName);
         }
         return self::$INSTANCE;
     }
@@ -135,11 +138,12 @@ class DataObjectHandler implements ObjectHandlerInterface
      * Convert the parser output into a collection of EntityDataObjects
      *
      * @param string[] $parserOutput Primitive array output from the Magento parser.
+     * @param bool     $validateName
      * @return EntityDataObject[]
      * @throws XmlException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function processParserOutput($parserOutput)
+    private function processParserOutput($parserOutput, $validateName = true)
     {
         $entityDataObjects = [];
         $rawEntities = $parserOutput[self::_ENTITY];
@@ -150,11 +154,13 @@ class DataObjectHandler implements ObjectHandlerInterface
             }
 
             $filename = $rawEntity[self::_FILENAME] ?? null;
-            $this->entityNameValidator->validatePascalCase(
-                $name,
-                NameValidationUtil::DATA_ENTITY_NAME,
-                $filename
-            );
+            if ($validateName) {
+                $this->entityNameValidator->validatePascalCase(
+                    $name,
+                    NameValidationUtil::DATA_ENTITY_NAME,
+                    $filename
+                );
+            }
             $type = $rawEntity[self::_TYPE] ?? null;
             $data = [];
             $deprecated = null;
@@ -164,7 +170,7 @@ class DataObjectHandler implements ObjectHandlerInterface
             $parentEntity = null;
 
             if (array_key_exists(self::_DATA, $rawEntity)) {
-                $data = $this->processDataElements($rawEntity);
+                $data = $this->processDataElements($rawEntity, $validateName);
                 $uniquenessData = $this->processUniquenessData($rawEntity);
             }
 
@@ -191,8 +197,8 @@ class DataObjectHandler implements ObjectHandlerInterface
             if (array_key_exists(self::OBJ_DEPRECATED, $rawEntity)) {
                 $deprecated = $rawEntity[self::OBJ_DEPRECATED];
                 LoggingUtil::getInstance()->getLogger(self::class)->deprecation(
-                    $deprecated,
-                    ["dataName" => $filename, "deprecatedEntity" => $deprecated]
+                    "The data entity '{$name}' is deprecated.",
+                    ["fileName" => $filename, "deprecatedMessage" => $deprecated]
                 );
             }
 
@@ -210,8 +216,10 @@ class DataObjectHandler implements ObjectHandlerInterface
 
             $entityDataObjects[$entityDataObject->getName()] = $entityDataObject;
         }
-        $this->entityNameValidator->summarize(NameValidationUtil::DATA_ENTITY_NAME);
-        $this->entityKeyValidator->summarize(NameValidationUtil::DATA_ENTITY_KEY);
+        if ($validateName) {
+            $this->entityNameValidator->summarize(NameValidationUtil::DATA_ENTITY_NAME);
+            $this->entityKeyValidator->summarize(NameValidationUtil::DATA_ENTITY_KEY);
+        }
         return $entityDataObjects;
     }
 
@@ -237,19 +245,22 @@ class DataObjectHandler implements ObjectHandlerInterface
      * Parses <data> elements in an entity, and returns them as an array of "lowerKey"=>value.
      *
      * @param string[] $entityData
+     * @param bool     $validateName
      * @return string[]
      */
-    private function processDataElements($entityData)
+    private function processDataElements($entityData, $validateName = true)
     {
         $dataValues = [];
         foreach ($entityData[self::_DATA] as $dataElement) {
             $originalDataElementKey = $dataElement[self::_KEY];
             $filename = $entityData[self::_FILENAME] ?? null;
-            $this->entityKeyValidator->validateCamelCase(
-                $originalDataElementKey,
-                NameValidationUtil::DATA_ENTITY_KEY,
-                $filename
-            );
+            if ($validateName) {
+                $this->entityKeyValidator->validateCamelCase(
+                    $originalDataElementKey,
+                    NameValidationUtil::DATA_ENTITY_KEY,
+                    $filename
+                );
+            }
             $dataElementKey = strtolower($originalDataElementKey);
             $dataElementValue = $dataElement[self::_VALUE] ?? "";
             $dataValues[$dataElementKey] = $dataElementValue;
