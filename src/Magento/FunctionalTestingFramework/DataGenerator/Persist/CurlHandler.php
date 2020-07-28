@@ -126,6 +126,7 @@ class CurlHandler
         $method = $this->operationDefinition->getApiMethod();
         AllureHelper::addAttachmentToCurrentStep($apiUrl, 'API Endpoint');
         AllureHelper::addAttachmentToCurrentStep(json_encode($headers, JSON_PRETTY_PRINT), 'Request Headers');
+
         $operationDataResolver = new OperationDataArrayResolver($dependentEntities);
         $this->requestData = $operationDataResolver->resolveOperationDataArray(
             $this->entityObject,

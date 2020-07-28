@@ -75,7 +75,7 @@ class DataObjectHandler implements ObjectHandlerInterface
 
     /**
      * Constructor
-     * @param bool $validateName Set to false to disable name validations
+     * @param boolean $validateName Set to false to disable name validations.
      * @throws XmlException
      */
     private function __construct($validateName = true)
@@ -94,7 +94,7 @@ class DataObjectHandler implements ObjectHandlerInterface
     /**
      * Return the singleton instance of this class. Initialize it if needed.
      *
-     * @param bool $validateName
+     * @param boolean $validateName
      * @return DataObjectHandler
      * @throws \Exception
      */
@@ -138,10 +138,11 @@ class DataObjectHandler implements ObjectHandlerInterface
      * Convert the parser output into a collection of EntityDataObjects
      *
      * @param string[] $parserOutput Primitive array output from the Magento parser.
-     * @param bool     $validateName
+     * @param boolean  $validateName
      * @return EntityDataObject[]
      * @throws XmlException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     private function processParserOutput($parserOutput, $validateName = true)
     {
@@ -245,7 +246,7 @@ class DataObjectHandler implements ObjectHandlerInterface
      * Parses <data> elements in an entity, and returns them as an array of "lowerKey"=>value.
      *
      * @param string[] $entityData
-     * @param bool     $validateName
+     * @param boolean  $validateName
      * @return string[]
      */
     private function processDataElements($entityData, $validateName = true)
