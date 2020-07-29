@@ -160,7 +160,6 @@ Label| Description
 **bugfix**| The issue or pull request is about fixing a bug.
 **enhancement**| The issue or pull request that makes the MFTF even more awesome (for example new features, optimization, refactoring, etc).
 
-
 [fork]: #fork-a-repository
 [issue]: #report-an-issue
 [labels]: #read-labels
