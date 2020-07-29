@@ -37,6 +37,7 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
 {
     const EXTENDS_REGEX_PATTERN = '/extends=["\']([^\'"]*)/';
     const ACTIONGROUP_REGEX_PATTERN = '/ref=["\']([^\'"]*)/';
+    const DEPRECATED_REGEX_PATTERN = '/deprecated=["\']([^\'"]*)/';
 
     const ERROR_LOG_FILENAME = 'mftf-deprecated-entity-usage-checks';
     const ERROR_LOG_MESSAGE = 'MFTF Deprecated Entity Usage Check';
@@ -225,6 +226,9 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
         /** @var SplFileInfo $filePath */
         foreach ($files as $filePath) {
             $contents = file_get_contents($filePath);
+            if ($this->isDeprecated($contents)) {
+                continue;
+            }
             preg_match_all(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN, $contents, $braceReferences);
             preg_match_all(self::ACTIONGROUP_REGEX_PATTERN, $contents, $actionGroupReferences);
             preg_match_all(self::EXTENDS_REGEX_PATTERN, $contents, $extendReferences);
@@ -314,6 +318,17 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
             $testErrors = array_merge($testErrors, $this->setErrorOutput($violatingReferences, $filePath));
         }
         return $testErrors;
+    }
+
+    /**
+     * Checks if entity is deprecated in action files.
+     * @param string $contents
+     * @return boolean
+     */
+    private function isDeprecated($contents)
+    {
+        preg_match_all(self::DEPRECATED_REGEX_PATTERN, $contents, $deprecatedEntity);
+        return (!empty($deprecatedEntity[1]));
     }
 
     /**
