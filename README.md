@@ -58,7 +58,7 @@ These labels are applied by the MFTF development team to community contributed i
 To report security vulnerabilities and other security issues in the Magento software or web sites, send an email with the report at [security@magento.com][].
 Do not report security issues using GitHub.
 Be sure to encrypt your e-mail with our [encryption key][] if it includes sensitive information.
-Learn more about reporting security issues [here][].
+Learn more about reporting [security][] issues.
 
 Stay up-to-date on the latest security news and patches for Magento by signing up for [Security Alert Notifications][].
 
@@ -66,15 +66,15 @@ Stay up-to-date on the latest security news and patches for Magento by signing u
 
 Each Magento source file included in this distribution is licensed under AGPL 3.0.
 
-See the license [here][] or contact [license@magentocommerce.com][] for a copy.
+See the [license][] or contact [license@magentocommerce.com][] for a copy.
 
 <!-- Link Definitions -->
 [Getting Started]: docs/getting-started.md
-[Contribution Guidelines]: https://github.com/magento/magento2-functional-testing-framework/blob/develop/.github/CONTRIBUTING.md
+[Contribution Guidelines]: .github/CONTRIBUTING.md
 [DevDocs Contributing]: https://github.com/magento/devdocs/blob/master/.github/CONTRIBUTING.md
 [security@magento.com]: mailto:security@magento.com
 [encryption key]: https://info2.magento.com/rs/magentoenterprise/images/security_at_magento.asc
-[here]: https://magento.com/security/reporting-magento-security-issue
+[security]: https://magento.com/security/reporting-magento-security-issue
 [Security Alert Notifications]: https://magento.com/security/sign-up
-[here]: LICENSE_AGPL3.txt
+[license]: LICENSE_AGPL3.txt
 [license@magentocommerce.com]: mailto:license@magentocommerce.com

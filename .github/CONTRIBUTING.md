@@ -24,8 +24,16 @@ If there is no response from the contributor for two weeks, the issue is closed.
 Often when the MFTF team works on reviewing the suggested changes, we will add a label to the issue to indicate to our internal team certain information, like status or who is working the issue.
 If you’re ever curious what the different labels mean, see the [table][labels] below for an explanation of each one.
 
-Refer to [Magento Contributor Agreement] for detailed information about the License Agreement.
-All contributors are required to submit a click-through form to agree to the terms.
+## Code Of Conduct
+
+This project adheres to the Adobe [Code Of Conduct](../CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. 
+Please report unacceptable behavior to [Grp-opensourceoffice@adobe.com](mailto:Grp-opensourceoffice@adobe.com).
+
+## Contributor License Agreement
+
+All third-party contributions to this project must be accompanied by a signed Contributor License Agreement (CLA).
+This gives Adobe permission to redistribute your contributions as part of the project.
+[Sign our CLA](https://opensource.adobe.com/cla.html). You only need to sign it once.
 
 ## Contribution requirements
 
