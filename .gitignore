@@ -19,4 +19,4 @@ dev/tests/mftf.log
 dev/tests/docs/*
 dev/tests/_output
 dev/tests/functional.suite.yml
-
+/v2/
