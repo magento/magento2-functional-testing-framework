@@ -190,7 +190,8 @@ class GroupClassGenerator
         $multipleCommands = array_filter($multipleCommands);
         foreach ($multipleCommands as $command) {
             $actionEntries = $this->replaceReservedTesterFunctions(
-                $command . PHP_EOL, $actionEntries,
+                $command . PHP_EOL,
+                $actionEntries,
                 self::FUNCTION_PLACEHOLDER
             );
         }
@@ -221,7 +222,7 @@ class GroupClassGenerator
                 $end = self::FUNCTION_END;
                 $resultingStep = preg_replace_callback(
                     self::FUNCTION_REPLACE_REGEX,
-                    function($matches) use ($placeholder, $begin, $end) {
+                    function ($matches) use ($placeholder, $begin, $end) {
                         return str_replace($placeholder, $begin . $matches[2] . $end, $matches[1]) . '(';
                     },
                     $formattedStep
