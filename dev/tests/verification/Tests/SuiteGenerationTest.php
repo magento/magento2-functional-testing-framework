@@ -389,14 +389,14 @@ class SuiteGenerationTest extends MftfTestCase
     }
 
     /**
-     * Test hook groups generated during suite generation
+     * Test suite generation with actions from different modules
      */
-    public function testSuiteGenerationCreds()
+    public function testSuiteGenerationActionsInDifferentModules()
     {
-        $groupName = 'functionalSuiteUsingSecretData';
+        $groupName = 'ActionsInDifferentModulesSuite';
 
         $expectedContents = [
-            'IncludeUsingSecretDataTestCest.php'
+            'IncludeActionsInDifferentModulesTestCest.php'
         ];
 
         // Generate the Suite

@@ -21,14 +21,14 @@ use Codeception\Module;
  *
  * To use this group extension, include it to "extensions" option of global Codeception config.
  */
-class functionalSuiteUsingSecretData extends \Codeception\GroupObject
+class ActionsInDifferentModulesSuite extends \Codeception\GroupObject
 {
-    public static $group = 'functionalSuiteUsingSecretData';
+    public static $group = 'ActionsInDifferentModulesSuite';
     private $testCount = 1;
     private $preconditionFailure = null;
     private $currentTestRun = 0;
-    private static $HOOK_EXECUTION_INIT = "\n/******** Beginning execution of functionalSuiteUsingSecretData suite %s block ********/\n";
-    private static $HOOK_EXECUTION_END = "\n/******** Execution of functionalSuiteUsingSecretData suite %s block complete ********/\n";
+    private static $HOOK_EXECUTION_INIT = "\n/******** Beginning execution of ActionsInDifferentModulesSuite suite %s block ********/\n";
+    private static $HOOK_EXECUTION_END = "\n/******** Execution of ActionsInDifferentModulesSuite suite %s block complete ********/\n";
     /** @var MagentoWebDriver */
     private $webDriver;
     /** @var ModuleContainer */
@@ -83,6 +83,11 @@ class functionalSuiteUsingSecretData extends \Codeception\GroupObject
                 );
                 $this->getModuleForAction("fillSecretField")->fillSecretField("#fill", $this->getModuleForAction("getSecret")->getSecret("magento/some/secret") . "+" . $this->getModuleForAction("getSecret")->getSecret("magento/some/secret")); // stepKey: fillBefore
                 $this->getModuleForAction("click")->click(PersistedObjectHandler::getInstance()->retrieveEntityField('create2', 'key2', 'suite')); // stepKey: click
+                print("Entering Action Group [return1] ActionGroupReturningValueActionGroup");
+                $grabProducts1Return1 = $this->getModuleForAction("grabMultiple")->grabMultiple("selector"); // stepKey: grabProducts1Return1
+                $this->getModuleForAction("assertCount")->assertCount(1, $grabProducts1Return1); // stepKey: assertCountReturn1
+                $return1 = $this->getModuleForAction("return")->return($grabProducts1Return1); // stepKey: returnProducts1Return1
+                print("Exiting Action Group [return1] ActionGroupReturningValueActionGroup");
             } catch (\Exception $exception) {
                 $this->preconditionFailure = $exception->getMessage();
             }
@@ -133,6 +138,14 @@ class functionalSuiteUsingSecretData extends \Codeception\GroupObject
                 } else {
                     $this->webDriver->_initializeSession();
                 }
+                print("Entering Action Group [return2] ExtendedActionGroupReturningValueActionGroup");
+                $grabProducts1Return2 = $this->getModuleForAction("grabMultiple")->grabMultiple("selector"); // stepKey: grabProducts1Return2
+                $this->getModuleForAction("assertCount")->assertCount(1, $grabProducts1Return2); // stepKey: assertCountReturn2
+                $return2 = $this->getModuleForAction("return")->return($grabProducts1Return2); // stepKey: returnProducts1Return2
+                $grabProducts2Return2 = $this->getModuleForAction("grabMultiple")->grabMultiple("otherSelector"); // stepKey: grabProducts2Return2
+                $this->getModuleForAction("assertCount")->assertCount(2, $grabProducts2Return2); // stepKey: assertSecondCountReturn2
+                $return2 = $this->getModuleForAction("return")->return($grabProducts2Return2); // stepKey: returnProducts2Return2
+                print("Exiting Action Group [return2] ExtendedActionGroupReturningValueActionGroup");
                 PersistedObjectHandler::getInstance()->deleteEntity(
                 	"create1",
                     "suite"

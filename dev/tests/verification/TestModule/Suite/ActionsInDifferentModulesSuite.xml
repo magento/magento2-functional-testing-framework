@@ -7,9 +7,9 @@
 -->
 
 <suites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Suite/etc/suiteSchema.xsd">
-    <suite name="functionalSuiteUsingSecretData">
+    <suite name="ActionsInDifferentModulesSuite">
         <include>
-            <test name="IncludeUsingSecretDataTest"/>
+            <test name="IncludeActionsInDifferentModulesTest"/>
         </include>
         <before>
             <magentoCLI command="{{SecretData.key2}}" stepKey="cli"/>
@@ -23,8 +23,15 @@
             </createData>
             <fillField selector="#fill" userInput="{{SecretData.key2}}+{{SecretData.key2}}" stepKey="fillBefore"/>
             <click userInput="$create2.key2$" stepKey="click"/>
+            <actionGroup ref="ActionGroupReturningValueActionGroup" stepKey="return1">
+                <argument name="count" value="1"/>
+            </actionGroup>
         </before>
         <after>
+            <actionGroup ref="ExtendedActionGroupReturningValueActionGroup" stepKey="return2">
+                <argument name="count" value="1"/>
+                <argument name="otherCount" value="2"/>
+            </actionGroup>
             <deleteData createDataKey="create1" stepKey="delete1"/>
             <deleteData createDataKey="create2" stepKey="delete2"/>
             <deleteData createDataKey="create3" stepKey="delete3"/>

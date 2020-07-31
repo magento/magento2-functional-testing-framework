@@ -7,11 +7,14 @@
 -->
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="IncludeUsingSecretDataTest">
+    <test name="IncludeActionsInDifferentModulesTest">
         <createData entity="SecretData" stepKey="create">
             <field key="someKey">dataHere</field>
         </createData>
         <fillField selector="#fill" userInput="{{SecretData.key2}}+$create.key2$" stepKey="fill"/>
         <magentoCLI command="create.key2$" stepKey="cli"/>
+        <actionGroup ref="ActionGroupReturningValueActionGroup" stepKey="return">
+            <argument name="count" value="3"/>
+        </actionGroup>
     </test>
 </tests>
