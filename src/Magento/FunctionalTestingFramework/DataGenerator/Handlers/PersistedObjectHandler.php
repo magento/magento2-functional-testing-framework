@@ -87,7 +87,7 @@ class PersistedObjectHandler
             $retrievedDependentObjects[] = $this->retrieveEntity($objectKey, $scope);
         }
         
-        $retrievedEntity = DataObjectHandler::getInstance(false)->getObject($entity);
+        $retrievedEntity = DataObjectHandler::getInstance()->getObject($entity);
 
         if ($retrievedEntity === null) {
             throw new TestReferenceException(
@@ -163,7 +163,7 @@ class PersistedObjectHandler
             $retrievedDependentObjects[] = $this->retrieveEntity($objectKey, $scope);
         }
 
-        $retrievedEntity = DataObjectHandler::getInstance(false)->getObject($entity);
+        $retrievedEntity = DataObjectHandler::getInstance()->getObject($entity);
         $persistedObject = new DataPersistenceHandler(
             $retrievedEntity,
             $retrievedDependentObjects
