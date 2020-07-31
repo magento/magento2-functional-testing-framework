@@ -6,12 +6,13 @@
 
 namespace Magento\FunctionalTestingFramework\DataTransport;
 
-use Magento\FunctionalTestingFramework\Util\MftfGlobals;
+use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlTransport;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\DataTransport\Auth\Tfa\OTP;
 use Magento\FunctionalTestingFramework\DataTransport\Auth\Tfa;
+use Magento\FunctionalTestingFramework\Provider\UrlProvider;
 
 /**
  * Curl executor for requests to Admin.
@@ -60,6 +61,16 @@ class AdminFormExecutor implements CurlInterface
     }
 
     /**
+     * Returns base URL for Magento backend instance
+     * @return string
+     * @throws TestFrameworkException
+     */
+    public function getBaseUrl(): string
+    {
+        return UrlProvider::getBaseUrl(PageObject::ADMIN_AREA);
+    }
+
+    /**
      * Authorize admin on backend.
      *
      * @return void
@@ -68,11 +79,11 @@ class AdminFormExecutor implements CurlInterface
     private function authorize()
     {
         // Perform GET to backend url so form_key is set
-        $this->transport->write(MftfGlobals::getBackendBaseUrl(), [], CurlInterface::GET);
+        $this->transport->write($this->getBaseUrl(), [], CurlInterface::GET);
         $this->read();
 
         // Authenticate admin user
-        $authUrl = MftfGlobals::getBackendBaseUrl() . 'admin/auth/login/';
+        $authUrl = $this->getBaseUrl() . 'admin/auth/login/';
         $data = [
             'login[username]' => getenv('MAGENTO_ADMIN_USERNAME'),
             'login[password]' => getenv('MAGENTO_ADMIN_PASSWORD'),
@@ -87,7 +98,7 @@ class AdminFormExecutor implements CurlInterface
 
         // Get OTP
         if (Tfa::isEnabled()) {
-            $authUrl = MftfGlobals::getBackendBaseUrl() . Tfa::getProviderAdminFormEndpoint('google');
+            $authUrl = $this->getBaseUrl() . Tfa::getProviderAdminFormEndpoint('google');
             $data = [
                 'tfa_code' => OTP::getOTP(),
                 'form_key' => $this->formKey,
@@ -127,7 +138,7 @@ class AdminFormExecutor implements CurlInterface
     public function write($url, $data = [], $method = CurlInterface::POST, $headers = [])
     {
         $url = ltrim($url, "/");
-        $apiUrl = MftfGlobals::getBackendBaseUrl() . $url;
+        $apiUrl = $this->getBaseUrl() . $url;
 
         if ($this->removeBackend) {
             //TODO

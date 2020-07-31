@@ -7,10 +7,10 @@
 namespace Magento\FunctionalTestingFramework\DataTransport;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
-use Magento\FunctionalTestingFramework\Util\MftfGlobals;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlTransport;
 use Magento\FunctionalTestingFramework\DataTransport\Auth\WebApiAuth;
+use Magento\FunctionalTestingFramework\Provider\UrlProvider;
 
 /**
  * Curl executor for Magento Web Api requests.
@@ -133,7 +133,7 @@ class WebApiExecutor implements CurlInterface
      */
     protected function getFormattedUrl($resource)
     {
-        $urlResult = MftfGlobals::getWebApiBaseUrl();
+        $urlResult = UrlProvider::getWebApiBaseUrl();
         if ($this->storeCode != null) {
             $urlResult .= $this->storeCode . '/';
         }

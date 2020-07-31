@@ -4,30 +4,17 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magento\FunctionalTestingFramework\Util;
+namespace Magento\FunctionalTestingFramework\Provider;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
 use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
 
 /**
- * MFTF Globals
+ * Provider responsible for returning right URLs for provided scope.
  */
-class MftfGlobals
+class UrlProvider
 {
-    /**
-     * Magento Base URL
-     *
-     * @var string null
-     */
-    private static $baseUrl = null;
-
-    /**
-     * Magento Backend Base URL
-     *
-     * @var string null
-     */
-    private static $backendBaseUrl = null;
-
     /**
      * Magento Web API Base URL
      *
@@ -36,69 +23,35 @@ class MftfGlobals
     private static $webApiBaseUrl = null;
 
     /**
-     * Returns Magento Base URL
+     * Returns proper Base URL for specified Area.
      *
-     * @param boolean $withTrailingSeparator
+     * @param string|null $customArea
+     * @param boolean     $withTrailingSeparator
      * @return string
      * @throws TestFrameworkException
      */
-    public static function getBaseUrl($withTrailingSeparator = true)
+    public static function getBaseUrl($customArea = null, $withTrailingSeparator = true)
     {
-        if (!self::$baseUrl) {
-            try {
-                $url = getenv('MAGENTO_BASE_URL');
-                if ($url) {
-                    self::$baseUrl = UrlFormatter::format($url, false);
-                }
-            } catch (TestFrameworkException $e) {
-            }
-        }
 
-        if (self::$baseUrl) {
-            return UrlFormatter::format(self::$baseUrl, $withTrailingSeparator);
-        }
+        try {
+            $baseUrl = getenv('MAGENTO_BASE_URL');
 
-        throw new TestFrameworkException(
-            'Unable to retrieve Magento Base URL. Please check .env and set:'
-            . PHP_EOL
-            . '"MAGENTO_BASE_URL"'
-        );
-    }
-
-    /**
-     * Return Magento Backend Base URL
-     *
-     * @param boolean $withTrailingSeparator
-     * @return string
-     * @throws TestFrameworkException
-     */
-    public static function getBackendBaseUrl($withTrailingSeparator = true)
-    {
-        if (!self::$backendBaseUrl) {
-            try {
-                $bUrl = getenv('MAGENTO_BACKEND_BASE_URL');
-                if ($bUrl) {
-                    self::$backendBaseUrl = UrlFormatter::format($bUrl, false);
-                } else {
-                    $baseUrl = getenv('MAGENTO_BASE_URL');
+            switch ($customArea) {
+                case PageObject::ADMIN_AREA:
                     $backendName = getenv('MAGENTO_BACKEND_NAME');
-                    if ($baseUrl && $backendName) {
-                        self::$backendBaseUrl = UrlFormatter::format(
-                            UrlFormatter::format($baseUrl) . $backendName,
-                            false
-                        );
-                    }
-                }
-            } catch (TestFrameworkException $e) {
-            }
-        }
+                    $baseUrl = self::getBackendBaseUrl() ?: $baseUrl;
 
-        if (self::$backendBaseUrl) {
-            return UrlFormatter::format(self::$backendBaseUrl, $withTrailingSeparator);
+                    return UrlFormatter::format(
+                        UrlFormatter::format($baseUrl) . $backendName,
+                        $withTrailingSeparator
+                    );
+            }
+            return UrlFormatter::format($baseUrl, $withTrailingSeparator);
+        } catch (TestFrameworkException $e) {
         }
 
         throw new TestFrameworkException(
-            'Unable to retrieve Magento Backend Base URL. Please check .env and set either:'
+            'Unable to retrieve Magento Base URL. Please check .env and set either:'
             . PHP_EOL
             . '"MAGENTO_BASE_URL" and "MAGENTO_BACKEND_NAME"'
             . PHP_EOL
@@ -106,6 +59,25 @@ class MftfGlobals
             . PHP_EOL
             . '"MAGENTO_BACKEND_BASE_URL"'
         );
+    }
+
+    /**
+     * Returns MAGENTO_BACKEND_BASE_URL if set or null
+     *
+     * @param boolean $withTrailingSeparator
+     * @return string|null
+     * @throws TestFrameworkException
+     */
+    public static function getBackendBaseUrl($withTrailingSeparator = true)
+    {
+        $bUrl = getenv('MAGENTO_BACKEND_BASE_URL');
+
+        $backendBaseUrl = $bUrl ?: null;
+
+        if ($backendBaseUrl) {
+            $backendBaseUrl = UrlFormatter::format($backendBaseUrl, $withTrailingSeparator);
+        }
+        return $backendBaseUrl;
     }
 
     /**
@@ -133,7 +105,7 @@ class MftfGlobals
                 }
 
                 if (!isset($baseUrl)) {
-                    $baseUrl = MftfGlobals::getBaseUrl(false);
+                    $baseUrl = self::getBaseUrl();
                 }
 
                 if ($webapiPort) {

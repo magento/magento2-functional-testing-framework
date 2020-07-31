@@ -6,7 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\DataTransport;
 
-use Magento\FunctionalTestingFramework\Util\MftfGlobals;
+use Magento\FunctionalTestingFramework\Provider\UrlProvider;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlTransport;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
@@ -82,11 +82,11 @@ class FrontendFormExecutor implements CurlInterface
      */
     private function authorize()
     {
-        $url = MftfGlobals::getBaseUrl() . 'customer/account/login/';
+        $url = UrlProvider::getBaseUrl() . 'customer/account/login/';
         $this->transport->write($url, [], CurlInterface::GET);
         $this->read();
 
-        $url = MftfGlobals::getBaseUrl() . 'customer/account/loginPost/';
+        $url = UrlProvider::getBaseUrl() . 'customer/account/loginPost/';
         $data = [
             'login[username]' => $this->customerEmail,
             'login[password]' => $this->customerPassword,
@@ -144,7 +144,7 @@ class FrontendFormExecutor implements CurlInterface
         if (isset($data['customer_password'])) {
             unset($data['customer_password']);
         }
-        $apiUrl = MftfGlobals::getBaseUrl() . $url;
+        $apiUrl = UrlProvider::getBaseUrl() . $url;
         if ($this->formKey) {
             $data['form_key'] = $this->formKey;
         } else {
