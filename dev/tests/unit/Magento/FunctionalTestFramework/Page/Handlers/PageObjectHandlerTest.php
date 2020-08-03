@@ -12,9 +12,18 @@ use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Page\Handlers\PageObjectHandler;
 use Magento\FunctionalTestingFramework\XmlParser\PageParser;
 use tests\unit\Util\MagentoTestCase;
+use tests\unit\Util\TestLoggingUtil;
 
 class PageObjectHandlerTest extends MagentoTestCase
 {
+    /**
+     * Setup method
+     */
+    public function setUp(): void
+    {
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
+    }
+
     public function testGetPageObject()
     {
         $mockData = [
@@ -70,6 +79,30 @@ class PageObjectHandlerTest extends MagentoTestCase
         $this->addToAssertionCount(1);
     }
 
+    public function testDeprecatedPage()
+    {
+        $mockData = [
+            "testPage1" => [
+                "url" => "testURL1",
+                "module" => "testModule1",
+                "section" => [
+                ],
+                "area" => "test",
+                "deprecated" => "deprecation message",
+                "filename" => "filename.xml"
+            ]];
+        $this->setMockParserOutput($mockData);
+
+        // get pages
+        $page = PageObjectHandler::getInstance()->getObject('testPage1');
+
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'notice',
+            "NOTICE: 1 Page name violations detected. See mftf.log for details.",
+            []
+        );
+    }
+
     /**
      * Function used to set mock for parser return and force init method to run between tests.
      *
@@ -85,5 +118,13 @@ class PageObjectHandlerTest extends MagentoTestCase
         $mockSectionParser = AspectMock::double(PageParser::class, ["getData" => $data])->make();
         $instance = AspectMock::double(ObjectManager::class, ['get' => $mockSectionParser])->make();
         AspectMock::double(ObjectManagerFactory::class, ['getObjectManager' => $instance]);
+    }
+
+    /**
+     * clean up function runs after all tests
+     */
+    public static function tearDownAfterClass(): void
+    {
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 }
