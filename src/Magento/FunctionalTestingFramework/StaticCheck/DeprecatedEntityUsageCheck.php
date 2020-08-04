@@ -350,6 +350,11 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
             $entities = $domDocument->getElementsByTagName('entity');
             foreach ($entities as $entity) {
                 /** @var DOMElement $entity */
+                $deprecated = $entity->getAttribute('deprecated');
+                // skip check if entity is deprecated
+                if (!empty($deprecated)) {
+                    continue;
+                }
                 $entityName = $entity->getAttribute('name');
                 $metadataType = $entity->getAttribute('type');
                 $parentEntityName = $entity->getAttribute('extends');
