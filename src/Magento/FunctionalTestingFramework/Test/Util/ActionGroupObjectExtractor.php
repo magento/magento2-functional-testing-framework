@@ -65,8 +65,8 @@ class ActionGroupObjectExtractor extends BaseObjectExtractor
         if (array_key_exists(self::OBJ_DEPRECATED, $actionGroupData)) {
             $deprecated = $actionGroupData[self::OBJ_DEPRECATED];
             LoggingUtil::getInstance()->getLogger(ActionGroupObject::class)->deprecation(
-                $deprecated,
-                ["actionGroupName" => $actionGroupData[self::FILENAME], "deprecatedActionGroup" => $deprecated]
+                "The action group '{$actionGroupData[self::NAME]}' is deprecated.",
+                ["fileName" => $actionGroupData[self::FILENAME], "deprecatedMessage" => $deprecated]
             );
         }
         $actionGroupReference = $actionGroupData[self::EXTENDS_ACTION_GROUP] ?? null;

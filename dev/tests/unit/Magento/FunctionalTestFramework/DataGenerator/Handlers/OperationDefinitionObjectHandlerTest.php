@@ -14,12 +14,21 @@ use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\OperationDefinitionObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Parsers\OperationDefinitionParser;
 use tests\unit\Util\MagentoTestCase;
+use tests\unit\Util\TestLoggingUtil;
 
 /**
  * Class OperationDefinitionObjectHandlerTest
  */
 class OperationDefinitionObjectHandlerTest extends MagentoTestCase
 {
+    /**
+     * Setup method
+     */
+    public function setUp(): void
+    {
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
+    }
+
     public function testGetMultipleObjects()
     {
         // Data Variables for Assertions
@@ -70,6 +79,56 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
         $operations = $operationDefinitionManager->getAllObjects();
         $this->assertArrayHasKey($operationType1 . $dataType1, $operations);
         $this->assertArrayHasKey($operationType2 . $dataType1, $operations);
+    }
+
+    public function testDeprecatedOperation()
+    {
+        // Data Variables for Assertions
+        $dataType1 = "type1";
+        $operationType1 = "create";
+
+        /**
+         * Parser Output. Just one metadata with 1 field
+         * operationName
+         *      createType1
+         *          has field
+         *              key=id, value=integer
+         */
+        $mockData = [OperationDefinitionObjectHandler::ENTITY_OPERATION_ROOT_TAG => [
+            "testOperationName" => [
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $dataType1,
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $operationType1,
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH => "auth",
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_URL => "V1/Type1",
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_METHOD => "POST",
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
+                    0 => [
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => "id",
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => "integer"
+                    ],
+                ],
+                OperationDefinitionObjectHandler::OBJ_DEPRECATED => 'deprecation message'
+            ]]];
+        $this->setMockParserOutput($mockData);
+
+        //Perform Assertions
+        $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
+        $operations = $operationDefinitionManager->getAllObjects();
+
+        $this->assertArrayHasKey($operationType1 . $dataType1, $operations);
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'notice',
+            "NOTICE: 1 metadata operation name violations detected. See mftf.log for details.",
+            []
+        );
+        // test run time deprecation notice
+        $operation = $operationDefinitionManager->getOperationDefinition($operationType1, $dataType1);
+        $operation->logDeprecated();
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'warning',
+            "DEPRECATION: The operation testOperationName is deprecated.",
+            ['operationType' => 'create', 'deprecatedMessage' => 'deprecation message']
+        );
     }
 
     public function testObjectCreation()
@@ -378,5 +437,13 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
         )->make();
         $instance = AspectMock::double(ObjectManager::class, ['create' => $mockOperationParser])->make();
         AspectMock::double(ObjectManagerFactory::class, ['getObjectManager' => $instance]);
+    }
+
+    /**
+     * clean up function runs after all tests
+     */
+    public static function tearDownAfterClass(): void
+    {
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 }
