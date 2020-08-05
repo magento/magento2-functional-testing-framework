@@ -6,6 +6,11 @@ use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\Module\MagentoWebDriver;
+use Magento\FunctionalTestingFramework\Module\MagentoAssert;
+use Magento\FunctionalTestingFramework\Module\MagentoActionProxies;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Codeception\Lib\ModuleContainer;
+use Codeception\Module;
 
 /**
  * Group class is Codeception Extension which is allowed to handle to all internal events.
@@ -30,10 +35,16 @@ class {{suiteName}} extends \Codeception\GroupObject
     {{/helpers}}
     private static $HOOK_EXECUTION_INIT = "\n/******** Beginning execution of {{suiteName}} suite %s block ********/\n";
     private static $HOOK_EXECUTION_END = "\n/******** Execution of {{suiteName}} suite %s block complete ********/\n";
+    /** @var MagentoWebDriver */
+    private $webDriver;
+    /** @var ModuleContainer */
+    private $moduleContainer;
 
     {{#before}}
     public function _before(\Codeception\Event\TestEvent $e)
     {
+        $this->webDriver = $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver');
+        $this->moduleContainer = $this->webDriver->getModuleContainer();
         {{#helpers}}
         /** @var \Magento\FunctionalTestingFramework\Helper\HelperContainer $helperContainer */
         $this->helperContainer = $this->getModule('\Magento\FunctionalTestingFramework\Helper\HelperContainer');
@@ -51,14 +62,10 @@ class {{suiteName}} extends \Codeception\GroupObject
         }
     }
 
-
     private function executePreConditions()
     {
         if ($this->currentTestRun == 1) {
             print sprintf(self::$HOOK_EXECUTION_INIT, "before");
-
-            /** @var MagentoWebDriver $webDriver */
-            $webDriver = $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver');
 
             try {
                 {{> testActions}}
@@ -67,9 +74,9 @@ class {{suiteName}} extends \Codeception\GroupObject
             }
 
             // reset configuration and close session
-            $webDriver->_resetConfig();
-            $webDriver->webDriver->close();
-            $webDriver->webDriver = null;
+            $this->webDriver->_resetConfig();
+            $this->webDriver->webDriver->close();
+            $this->webDriver->webDriver = null;
 
             print sprintf(self::$HOOK_EXECUTION_END, "before");
         }
@@ -82,14 +89,10 @@ class {{suiteName}} extends \Codeception\GroupObject
         $this->executePostConditions($e);
     }
 
-
     private function executePostConditions(\Codeception\Event\TestEvent $e)
     {
         if ($this->currentTestRun == $this->testCount) {
             print sprintf(self::$HOOK_EXECUTION_INIT, "after");
-
-            /** @var MagentoWebDriver $webDriver */
-            $webDriver = $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver');
 
             try {
                 // Find out if Test in Suite failed, will cause potential failures in suite after
@@ -120,7 +123,7 @@ class {{suiteName}} extends \Codeception\GroupObject
 
             PersistedObjectHandler::getInstance()->clearSuiteObjects();
 
-            $this->closeSession($webDriver);
+            $this->closeSession($this->webDriver);
 
             print sprintf(self::$HOOK_EXECUTION_END, "after");
         }
@@ -131,13 +134,12 @@ class {{suiteName}} extends \Codeception\GroupObject
      * Close session method closes current session.
      * If config 'close_all_sessions' is set to 'true' all sessions will be closed.
      *
-     * @param MagentoWebDriver $webDriver
      * return void
      */
-    private function closeSession(MagentoWebDriver $webDriver): void
+    private function closeSession(): void
     {
-        $webDriverConfig = $webDriver->_getConfig();
-        $webDriver->_closeSession();
+        $webDriverConfig = $this->webDriver->_getConfig();
+        $this->webDriver->_closeSession();
         if (isset($webDriverConfig['close_all_sessions']) && $webDriverConfig['close_all_sessions'] === "true") {
             $wdHost = sprintf(
                 '%s://%s:%s%s',
@@ -152,5 +154,21 @@ class {{suiteName}} extends \Codeception\GroupObject
                 $remoteWebDriver->quit();
             }
         }
+    }
+
+    /**
+     * Return the module for an action.
+     *
+     * @param string $action
+     * @return Module
+     * @throws \Exception
+     */
+    private function getModuleForAction($action)
+    {
+        $module = $this->moduleContainer->moduleForAction($action);
+        if ($module === null) {
+            throw new TestFrameworkException('Invalid action "' . $action . '"' . PHP_EOL);
+        }
+        return $module;
     }
 }

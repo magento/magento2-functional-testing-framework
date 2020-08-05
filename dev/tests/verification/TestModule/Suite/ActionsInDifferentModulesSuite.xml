@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<suites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Suite/etc/suiteSchema.xsd">
+    <suite name="ActionsInDifferentModulesSuite">
+        <include>
+            <test name="IncludeActionsInDifferentModulesTest"/>
+        </include>
+        <before>
+            <magentoCLI command="{{SecretData.key2}}" stepKey="cli"/>
+            <createData entity="SecretData" stepKey="create1">
+                <field key="someKey">dataHere</field>
+            </createData>
+            <createData entity="SecretData" stepKey="create2"/>
+            <createData entity="SecretData" stepKey="create3">
+                <requiredEntity createDataKey="create1"/>
+                <requiredEntity createDataKey="create2"/>
+            </createData>
+            <fillField selector="#fill" userInput="{{SecretData.key2}}+{{SecretData.key2}}" stepKey="fillBefore"/>
+            <click userInput="$create2.key2$" stepKey="click"/>
+            <actionGroup ref="ActionGroupReturningValueActionGroup" stepKey="return1">
+                <argument name="count" value="1"/>
+            </actionGroup>
+        </before>
+        <after>
+            <actionGroup ref="ExtendedActionGroupReturningValueActionGroup" stepKey="return2">
+                <argument name="count" value="1"/>
+                <argument name="otherCount" value="2"/>
+            </actionGroup>
+            <deleteData createDataKey="create1" stepKey="delete1"/>
+            <deleteData createDataKey="create2" stepKey="delete2"/>
+            <deleteData createDataKey="create3" stepKey="delete3"/>
+            <deleteData url="deleteThis" stepKey="deleteThis"/>
+            <fillField selector="#fill" userInput="{{SecretData.key2}}" stepKey="fillAfter"/>
+            <magentoCLI command="{{SecretData.key2}}-{{SecretData.key1}}-{{SecretData.key2}}" stepKey="cli2"/>
+        </after>
+    </suite>
+</suites>
