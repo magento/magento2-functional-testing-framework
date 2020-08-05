@@ -13,12 +13,21 @@ use Magento\FunctionalTestingFramework\DataGenerator\Parsers\DataProfileSchemaPa
 use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use tests\unit\Util\MagentoTestCase;
+use tests\unit\Util\TestLoggingUtil;
 
 /**
  * Class DataObjectHandlerTest
  */
 class DataObjectHandlerTest extends MagentoTestCase
 {
+    /**
+     * Setup method
+     */
+    public function setUp(): void
+    {
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
+    }
+
     // All tests share this array, feel free to add but be careful modifying or removing
     const PARSER_OUTPUT = [
         'entity' => [
@@ -40,6 +49,22 @@ class DataObjectHandlerTest extends MagentoTestCase
                         'value' => 'testValueTwo'
                     ]
                 ]
+            ],
+        ]
+    ];
+
+    const PARSER_OUTPUT_DEPRECATED = [
+        'entity' => [
+            'EntityOne' => [
+                'type' => 'testType',
+                'data' => [
+                    0 => [
+                        'key' => 'testKey',
+                        'value' => 'testValue'
+                    ]
+                ],
+                'deprecated' => "deprecation message",
+                'filename' => "filename.xml"
             ],
         ]
     ];
@@ -132,6 +157,24 @@ class DataObjectHandlerTest extends MagentoTestCase
         $expected = new EntityDataObject('EntityOne', 'testType', ['testkey' => 'testValue'], [], null, []);
         $this->assertArrayHasKey('EntityOne', $actual);
         $this->assertEquals($expected, $actual['EntityOne']);
+    }
+
+    /**
+     * test deprecated data object
+     */
+    public function testDeprecatedDataObject()
+    {
+        $this->setUpMockDataObjectHander(self::PARSER_OUTPUT_DEPRECATED);
+
+        // Call the method under test
+        $actual = DataObjectHandler::getInstance()->getAllObjects();
+
+        //validate deprecation warning
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'warning',
+            "DEPRECATION: The data entity 'EntityOne' is deprecated.",
+            ["fileName" => "filename.xml", "deprecatedMessage" => "deprecation message"]
+        );
     }
 
     /**
@@ -268,5 +311,13 @@ class DataObjectHandlerTest extends MagentoTestCase
         AspectMock::double(ObjectManagerFactory::class, [
             'getObjectManager' => $mockObjectManager
         ]);
+    }
+
+    /**
+     * clean up function runs after all tests
+     */
+    public static function tearDownAfterClass(): void
+    {
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 }

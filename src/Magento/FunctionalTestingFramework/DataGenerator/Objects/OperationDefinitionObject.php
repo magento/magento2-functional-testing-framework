@@ -6,6 +6,8 @@
 
 namespace Magento\FunctionalTestingFramework\DataGenerator\Objects;
 
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+
 /**
  * Class OperationDefinitionObject
  * @SuppressWarnings(PHPMD)
@@ -339,6 +341,22 @@ class OperationDefinitionObject
                 $this->apiUrl = $this->apiUrl . "&";
             }
             $this->apiUrl = $this->apiUrl . $paramName . "=" . $paramValue;
+        }
+    }
+
+    /**
+     * Function to log a referenced deprecated operation at runtime.
+     *
+     * @return void
+     */
+    public function logDeprecated()
+    {
+        if ($this->deprecated != null) {
+            LoggingUtil::getInstance()->getLogger(self::class)->deprecation(
+                $message = "The operation {$this->name} is deprecated.",
+                ["operationType" => $this->operation, "deprecatedMessage" => $this->deprecated],
+                true
+            );
         }
     }
 }
