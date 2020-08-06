@@ -14,6 +14,7 @@ use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\OperationDefinitionObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Parsers\OperationDefinitionParser;
 use tests\unit\Util\MagentoTestCase;
+use tests\unit\Util\ObjectHandlerUtil;
 use tests\unit\Util\TestLoggingUtil;
 
 /**
@@ -72,7 +73,7 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
                     ],
                 ]
                 ]]];
-        $this->setMockParserOutput($mockData);
+        ObjectHandlerUtil::getInstance()->setMockOperationParserOutput($mockData);
 
         //Perform Assertions
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
@@ -109,7 +110,7 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
                 ],
                 OperationDefinitionObjectHandler::OBJ_DEPRECATED => 'deprecation message'
             ]]];
-        $this->setMockParserOutput($mockData);
+        ObjectHandlerUtil::getInstance()->setMockOperationParserOutput($mockData);
 
         //Perform Assertions
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
@@ -239,7 +240,7 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
         );
 
         // Set up mocked data output
-        $this->setMockParserOutput($mockData);
+        ObjectHandlerUtil::getInstance()->setMockOperationParserOutput($mockData);
 
         // Get Operation
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
@@ -337,7 +338,7 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
         );
 
         // Set up mocked data output
-        $this->setMockParserOutput($mockData);
+        ObjectHandlerUtil::getInstance()->setMockOperationParserOutput($mockData);
 
         // Get Operation
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
@@ -405,7 +406,7 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
         );
 
         // Set up mocked data output
-        $this->setMockParserOutput($mockData);
+        ObjectHandlerUtil::getInstance()->setMockOperationParserOutput($mockData);
 
         // get Operations
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
@@ -414,29 +415,6 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
         // Perform Assertions
         $this->assertEquals($entry, $operation->getOperationMetadata()[0]);
         $this->assertEquals($array, $operation->getOperationMetadata()[1]);
-    }
-
-    /**
-     * Function used to set mock for parser return and force init method to run between tests.
-     *
-     * @param array $data
-     */
-    private function setMockParserOutput($data)
-    {
-        // clear Operation object handler value to inject parsed content
-        $property = new \ReflectionProperty(
-            OperationDefinitionObjectHandler::class,
-            'INSTANCE'
-        );
-        $property->setAccessible(true);
-        $property->setValue(null);
-
-        $mockOperationParser = AspectMock::double(
-            OperationDefinitionParser::class,
-            ["readOperationMetadata" => $data]
-        )->make();
-        $instance = AspectMock::double(ObjectManager::class, ['create' => $mockOperationParser])->make();
-        AspectMock::double(ObjectManagerFactory::class, ['getObjectManager' => $instance]);
     }
 
     /**
