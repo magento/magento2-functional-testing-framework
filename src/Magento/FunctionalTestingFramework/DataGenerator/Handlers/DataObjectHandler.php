@@ -191,8 +191,8 @@ class DataObjectHandler implements ObjectHandlerInterface
             if (array_key_exists(self::OBJ_DEPRECATED, $rawEntity)) {
                 $deprecated = $rawEntity[self::OBJ_DEPRECATED];
                 LoggingUtil::getInstance()->getLogger(self::class)->deprecation(
-                    $deprecated,
-                    ["dataName" => $filename, "deprecatedEntity" => $deprecated]
+                    "The data entity '{$name}' is deprecated.",
+                    ["fileName" => $filename, "deprecatedMessage" => $deprecated]
                 );
             }
 

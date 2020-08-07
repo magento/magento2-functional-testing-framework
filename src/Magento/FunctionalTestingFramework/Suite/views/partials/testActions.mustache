@@ -1,9 +1,9 @@
 {{#actions}}
 {{#webDriverInit}}
-if ($webDriver->webDriver != null) {
-    $webDriver->_restart();
+if ($this->webDriver->webDriver != null) {
+    $this->webDriver->_restart();
 } else {
-    $webDriver->_initializeSession();
+    $this->webDriver->_initializeSession();
 }
 {{/webDriverInit}}
 {{#action}}

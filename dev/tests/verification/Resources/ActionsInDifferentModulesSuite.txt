@@ -21,14 +21,14 @@ use Codeception\Module;
  *
  * To use this group extension, include it to "extensions" option of global Codeception config.
  */
-class functionalSuiteWithComments extends \Codeception\GroupObject
+class ActionsInDifferentModulesSuite extends \Codeception\GroupObject
 {
-    public static $group = 'functionalSuiteWithComments';
+    public static $group = 'ActionsInDifferentModulesSuite';
     private $testCount = 1;
     private $preconditionFailure = null;
     private $currentTestRun = 0;
-    private static $HOOK_EXECUTION_INIT = "\n/******** Beginning execution of functionalSuiteWithComments suite %s block ********/\n";
-    private static $HOOK_EXECUTION_END = "\n/******** Execution of functionalSuiteWithComments suite %s block complete ********/\n";
+    private static $HOOK_EXECUTION_INIT = "\n/******** Beginning execution of ActionsInDifferentModulesSuite suite %s block ********/\n";
+    private static $HOOK_EXECUTION_END = "\n/******** Execution of ActionsInDifferentModulesSuite suite %s block complete ********/\n";
     /** @var MagentoWebDriver */
     private $webDriver;
     /** @var ModuleContainer */
@@ -59,21 +59,35 @@ class functionalSuiteWithComments extends \Codeception\GroupObject
                 } else {
                     $this->webDriver->_initializeSession();
                 }
-                print("Comment in Before");
-                $this->getModuleForAction("amOnPage")->amOnPage("some.url"); // stepKey: before
-                $createFields['someKey'] = "dataHere";
+                $cli = $this->getModuleForAction("magentoCLISecret")->magentoCLISecret($this->getModuleForAction("getSecret")->getSecret("magento/some/secret"), 60); // stepKey: cli
+                print($cli); // stepKey: cli
+                $create1Fields['someKey'] = "dataHere";
                 PersistedObjectHandler::getInstance()->createEntity(
-                    "create",
+                    "create1",
                     "suite",
-                    "createThis",
+                    "SecretData",
                     [],
-                    $createFields
+                    $create1Fields
                 );
-                print("<click stepKey=\"comment with element\" userInput=\"helloworld\"/>");
-                $this->getModuleForAction("click")->click(PersistedObjectHandler::getInstance()->retrieveEntityField('create', 'data', 'suite')); // stepKey: clickWithData
-                print("Entering Action Group [AC] actionGroupWithTwoArguments");
-                $this->getModuleForAction("see")->see("John", msq("uniqueData") . "John"); // stepKey: seeFirstNameAC
-                print("Exiting Action Group [AC] actionGroupWithTwoArguments");
+                PersistedObjectHandler::getInstance()->createEntity(
+                    "create2",
+                    "suite",
+                    "SecretData",
+                    []
+                );
+                PersistedObjectHandler::getInstance()->createEntity(
+                    "create3",
+                    "suite",
+                    "SecretData",
+                    ["create1", "create2"]
+                );
+                $this->getModuleForAction("fillSecretField")->fillSecretField("#fill", $this->getModuleForAction("getSecret")->getSecret("magento/some/secret") . "+" . $this->getModuleForAction("getSecret")->getSecret("magento/some/secret")); // stepKey: fillBefore
+                $this->getModuleForAction("click")->click(PersistedObjectHandler::getInstance()->retrieveEntityField('create2', 'key2', 'suite')); // stepKey: click
+                print("Entering Action Group [return1] ActionGroupReturningValueActionGroup");
+                $grabProducts1Return1 = $this->getModuleForAction("grabMultiple")->grabMultiple("selector"); // stepKey: grabProducts1Return1
+                $this->getModuleForAction("assertCount")->assertCount(1, $grabProducts1Return1); // stepKey: assertCountReturn1
+                $return1 = $this->getModuleForAction("return")->return($grabProducts1Return1); // stepKey: returnProducts1Return1
+                print("Exiting Action Group [return1] ActionGroupReturningValueActionGroup");
             } catch (\Exception $exception) {
                 $this->preconditionFailure = $exception->getMessage();
             }
@@ -124,7 +138,30 @@ class functionalSuiteWithComments extends \Codeception\GroupObject
                 } else {
                     $this->webDriver->_initializeSession();
                 }
-                print("afterBlock");
+                print("Entering Action Group [return2] ExtendedActionGroupReturningValueActionGroup");
+                $grabProducts1Return2 = $this->getModuleForAction("grabMultiple")->grabMultiple("selector"); // stepKey: grabProducts1Return2
+                $this->getModuleForAction("assertCount")->assertCount(1, $grabProducts1Return2); // stepKey: assertCountReturn2
+                $return2 = $this->getModuleForAction("return")->return($grabProducts1Return2); // stepKey: returnProducts1Return2
+                $grabProducts2Return2 = $this->getModuleForAction("grabMultiple")->grabMultiple("otherSelector"); // stepKey: grabProducts2Return2
+                $this->getModuleForAction("assertCount")->assertCount(2, $grabProducts2Return2); // stepKey: assertSecondCountReturn2
+                $return2 = $this->getModuleForAction("return")->return($grabProducts2Return2); // stepKey: returnProducts2Return2
+                print("Exiting Action Group [return2] ExtendedActionGroupReturningValueActionGroup");
+                PersistedObjectHandler::getInstance()->deleteEntity(
+                	"create1",
+                    "suite"
+                );
+                PersistedObjectHandler::getInstance()->deleteEntity(
+                	"create2",
+                    "suite"
+                );
+                PersistedObjectHandler::getInstance()->deleteEntity(
+                	"create3",
+                    "suite"
+                );
+                $this->getModuleForAction("deleteEntityByUrl")->deleteEntityByUrl("deleteThis"); // stepKey: deleteThis
+                $this->getModuleForAction("fillSecretField")->fillSecretField("#fill", $this->getModuleForAction("getSecret")->getSecret("magento/some/secret")); // stepKey: fillAfter
+                $cli2 = $this->getModuleForAction("magentoCLISecret")->magentoCLISecret($this->getModuleForAction("getSecret")->getSecret("magento/some/secret") . "-some/data-" . $this->getModuleForAction("getSecret")->getSecret("magento/some/secret"), 60); // stepKey: cli2
+                print($cli2); // stepKey: cli2
             } catch (\Exception $exception) {
                 print $exception->getMessage();
             }
