@@ -178,7 +178,6 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
                 MftfApplicationConfig::LEVEL_DEFAULT,
                 true
             );
-            putenv('CUSTOM_MODULE_PATHS=' . realpath($path));
             $modulePaths[] = realpath($path);
             $includeRootPath = false;
         } else {
@@ -629,9 +628,9 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
                     $name = $key;
                     list($section,) = explode('.', $key, 2);
                     /** @var SectionObject $references[$section] */
-                    $file = $references[$section]->getFilename();
+                    $file = StaticChecksList::getFilePath($references[$section]->getFilename());
                 } else {
-                    $file = $entity->getFilename();
+                    $file = StaticChecksList::getFilePath($entity->getFilename());
                 }
                 $violatingReferences[$this->getSubjectFromClassType($classType)][] = [
                     'name' => $name,
@@ -653,16 +652,18 @@ class DeprecatedEntityUsageCheck implements StaticCheckInterface
     {
         $testErrors = [];
 
+        $filePath = StaticChecksList::getFilePath($path->getRealPath());
+
         if (!empty($violatingReferences)) {
             // Build error output
-            $errorOutput = "\nFile \"{$path->getRealPath()}\" contains:\n";
+            $errorOutput = "\nFile \"{$filePath}\" contains:\n";
             foreach ($violatingReferences as $subject => $data) {
                 $errorOutput .= "\t- {$subject}:\n";
                 foreach ($data as $item) {
                     $errorOutput .= "\t\t\"" . $item['name'] . "\" in " . $item['file'] . "\n";
                 }
             }
-            $testErrors[$path->getRealPath()][] = $errorOutput;
+            $testErrors[$filePath][] = $errorOutput;
         }
 
         return $testErrors;

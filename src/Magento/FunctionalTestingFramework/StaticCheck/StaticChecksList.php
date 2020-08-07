@@ -69,4 +69,22 @@ class StaticChecksList implements StaticCheckListInterface
     {
         return self::$errorFilesPath;
     }
+
+    /**
+     * Return relative path to files for unit testing purposes.
+     * @param string $fileNames
+     * @return string
+     */
+    public static function getFilePath($fileNames)
+    {
+        if (!empty($fileNames)) {
+            $relativeFileNames = ltrim(
+                str_replace(MAGENTO_BP, '', $fileNames)
+            );
+            if (!empty($relativeFileNames)) {
+                return $relativeFileNames;
+            }
+        }
+        return $fileNames;
+    }
 }
