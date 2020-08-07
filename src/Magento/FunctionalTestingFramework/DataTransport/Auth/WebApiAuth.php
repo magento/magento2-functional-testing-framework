@@ -10,7 +10,7 @@ use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlTransport;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\DataTransport\Auth\Tfa\OTP;
-use Magento\FunctionalTestingFramework\Provider\UrlProvider;
+use Magento\FunctionalTestingFramework\Util\Provider\UrlProvider;
 
 /**
  * Class WebApiAuth

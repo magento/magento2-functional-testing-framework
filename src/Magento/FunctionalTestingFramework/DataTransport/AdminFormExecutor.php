@@ -12,7 +12,7 @@ use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlTransport;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\DataTransport\Auth\Tfa\OTP;
 use Magento\FunctionalTestingFramework\DataTransport\Auth\Tfa;
-use Magento\FunctionalTestingFramework\Provider\UrlProvider;
+use Magento\FunctionalTestingFramework\Util\Provider\UrlProvider;
 
 /**
  * Curl executor for requests to Admin.
@@ -47,6 +47,12 @@ class AdminFormExecutor implements CurlInterface
     private $removeBackend;
 
     /**
+     * Base url.
+     * @var string
+     */
+    private $baseUrl;
+
+    /**
      * Constructor.
      * @param boolean $removeBackend
      *
@@ -55,6 +61,7 @@ class AdminFormExecutor implements CurlInterface
      */
     public function __construct($removeBackend)
     {
+        $this->baseUrl = $this->getBaseUrl();
         $this->removeBackend = $removeBackend;
         $this->transport = new CurlTransport();
         $this->authorize();
@@ -79,11 +86,11 @@ class AdminFormExecutor implements CurlInterface
     private function authorize()
     {
         // Perform GET to backend url so form_key is set
-        $this->transport->write($this->getBaseUrl(), [], CurlInterface::GET);
+        $this->transport->write($this->baseUrl, [], CurlInterface::GET);
         $this->read();
 
         // Authenticate admin user
-        $authUrl = $this->getBaseUrl() . 'admin/auth/login/';
+        $authUrl = $this->baseUrl . 'admin/auth/login/';
         $data = [
             'login[username]' => getenv('MAGENTO_ADMIN_USERNAME'),
             'login[password]' => getenv('MAGENTO_ADMIN_PASSWORD'),
@@ -98,7 +105,7 @@ class AdminFormExecutor implements CurlInterface
 
         // Get OTP
         if (Tfa::isEnabled()) {
-            $authUrl = $this->getBaseUrl() . Tfa::getProviderAdminFormEndpoint('google');
+            $authUrl = $this->baseUrl . Tfa::getProviderAdminFormEndpoint('google');
             $data = [
                 'tfa_code' => OTP::getOTP(),
                 'form_key' => $this->formKey,
@@ -138,7 +145,7 @@ class AdminFormExecutor implements CurlInterface
     public function write($url, $data = [], $method = CurlInterface::POST, $headers = [])
     {
         $url = ltrim($url, "/");
-        $apiUrl = $this->getBaseUrl() . $url;
+        $apiUrl = $this->baseUrl . $url;
 
         if ($this->removeBackend) {
             //TODO

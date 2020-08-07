@@ -9,7 +9,7 @@ namespace Magento\FunctionalTestingFramework\Module;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
-use Magento\FunctionalTestingFramework\Provider\UrlProvider;
+use Magento\FunctionalTestingFramework\Util\Provider\UrlProvider;
 
 /**
  * MagentoWebDriverDoctor module extends MagentoWebDriver module and is a light weighted module to diagnose webdriver

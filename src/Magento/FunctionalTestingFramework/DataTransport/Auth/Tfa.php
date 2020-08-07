@@ -9,7 +9,7 @@ namespace Magento\FunctionalTestingFramework\DataTransport\Auth;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlTransport;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
-use Magento\FunctionalTestingFramework\Provider\UrlProvider;
+use Magento\FunctionalTestingFramework\Util\Provider\UrlProvider;
 
 /**
  * Class Tfa (i.e. 2FA)

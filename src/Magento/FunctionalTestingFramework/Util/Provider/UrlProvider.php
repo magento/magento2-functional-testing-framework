@@ -4,7 +4,7 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magento\FunctionalTestingFramework\Provider;
+namespace Magento\FunctionalTestingFramework\Util\Provider;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
@@ -32,7 +32,6 @@ class UrlProvider
      */
     public static function getBaseUrl($customArea = null, $withTrailingSeparator = true)
     {
-
         try {
             $baseUrl = getenv('MAGENTO_BASE_URL');
 
@@ -68,7 +67,7 @@ class UrlProvider
      * @return string|null
      * @throws TestFrameworkException
      */
-    public static function getBackendBaseUrl($withTrailingSeparator = true)
+    private static function getBackendBaseUrl($withTrailingSeparator = true)
     {
         $bUrl = getenv('MAGENTO_BACKEND_BASE_URL');
 

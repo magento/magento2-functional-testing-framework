@@ -6,7 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\DataTransport;
 
-use Magento\FunctionalTestingFramework\Provider\UrlProvider;
+use Magento\FunctionalTestingFramework\Util\Provider\UrlProvider;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlTransport;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
@@ -59,6 +59,13 @@ class FrontendFormExecutor implements CurlInterface
     private $customerPassword;
 
     /**
+     * Base url
+     *
+     * @var string
+     */
+    private $baseUrl;
+
+    /**
      * FrontendFormExecutor constructor.
      *
      * @param string $customerEmail
@@ -68,6 +75,7 @@ class FrontendFormExecutor implements CurlInterface
      */
     public function __construct($customerEmail, $customerPassWord)
     {
+        $this->baseUrl = UrlProvider::getBaseUrl();
         $this->transport = new CurlTransport();
         $this->customerEmail = $customerEmail;
         $this->customerPassword = $customerPassWord;
@@ -82,11 +90,11 @@ class FrontendFormExecutor implements CurlInterface
      */
     private function authorize()
     {
-        $url = UrlProvider::getBaseUrl() . 'customer/account/login/';
+        $url = $this->baseUrl . 'customer/account/login/';
         $this->transport->write($url, [], CurlInterface::GET);
         $this->read();
 
-        $url = UrlProvider::getBaseUrl() . 'customer/account/loginPost/';
+        $url = $this->baseUrl . 'customer/account/loginPost/';
         $data = [
             'login[username]' => $this->customerEmail,
             'login[password]' => $this->customerPassword,
@@ -144,7 +152,7 @@ class FrontendFormExecutor implements CurlInterface
         if (isset($data['customer_password'])) {
             unset($data['customer_password']);
         }
-        $apiUrl = UrlProvider::getBaseUrl() . $url;
+        $apiUrl = $this->baseUrl . $url;
         if ($this->formKey) {
             $data['form_key'] = $this->formKey;
         } else {
