@@ -26,6 +26,13 @@ class BaseGenerateCommand extends Command
     const MFTF_NOTICES = "Placeholder text for MFTF notices\n";
 
     /**
+     * Enable pause()
+     *
+     * @var boolean
+     */
+    private $enablePause = null;
+
+    /**
      * Console output style
      *
      * @var SymfonyStyle
@@ -217,5 +224,22 @@ class BaseGenerateCommand extends Command
         } else {
             $output->writeln(self::MFTF_NOTICES);
         }
+    }
+
+    /**
+     * Return if pause() is enabled
+     *
+     * @return boolean
+     */
+    protected function pauseEnabled()
+    {
+        if (null === $this->enablePause) {
+            if (getenv('ENABLE_PAUSE') === 'true') {
+                $this->enablePause = true;
+            } else {
+                $this->enablePause = false;
+            }
+        }
+        return $this->enablePause;
     }
 }

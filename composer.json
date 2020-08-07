@@ -24,6 +24,7 @@
         "composer/composer": "^1.9",
         "csharpru/vault-php": "~3.5.3",
         "csharpru/vault-php-guzzle6-transport": "^2.0",
+        "hoa/console": "~3.0",
         "monolog/monolog": "^1.17",
         "mustache/mustache": "~2.5",
         "php-webdriver/webdriver": "^1.8.0",

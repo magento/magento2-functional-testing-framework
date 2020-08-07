@@ -95,6 +95,9 @@ class RunTestGroupCommand extends BaseGenerateCommand
         }
 
         $commandString = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional --verbose --steps';
+        if ($this->pauseEnabled()) {
+            $commandString .= ' --debug';
+        }
 
         $exitCode = -1;
         $returnCodes = [];
@@ -105,6 +108,7 @@ class RunTestGroupCommand extends BaseGenerateCommand
             $process->setWorkingDirectory(TESTS_BP);
             $process->setIdleTimeout(600);
             $process->setTimeout(0);
+            $process->setInput(STDIN);
 
             $returnCodes[] = $process->run(
                 function ($type, $buffer) use ($output) {

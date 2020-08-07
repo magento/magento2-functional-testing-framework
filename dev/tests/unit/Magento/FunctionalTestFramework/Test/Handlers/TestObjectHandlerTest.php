@@ -78,7 +78,7 @@ class TestObjectHandlerTest extends MagentoTestCase
         $expectedFailedHookObject = new TestHookObject(
             TestObjectExtractor::TEST_FAILED_HOOK,
             $testDataArrayBuilder->testName,
-            [$expectedFailedActionObject]
+            ["saveScreenshot" => $expectedFailedActionObject]
         );
 
         $expectedTestActionObject = new ActionObject(
@@ -276,6 +276,99 @@ class TestObjectHandlerTest extends MagentoTestCase
         $instance = AspectMock::double(ObjectManager::class, ['create' => $mockDataParser])
             ->make(); // bypass the private constructor
         AspectMock::double(ObjectManagerFactory::class, ['getObjectManager' => $instance]);
+    }
+
+    /**
+     * Validate test object when ENABLE_PAUSE is set to true
+     *
+     * @throws \Exception
+     */
+    public function testGetTestObjectWhenEnablePause()
+    {
+        // set up mock data
+        putenv('ENABLE_PAUSE=true');
+        $testDataArrayBuilder = new TestDataArrayBuilder();
+        $mockData = $testDataArrayBuilder
+            ->withAnnotations()
+            ->withFailedHook()
+            ->withAfterHook()
+            ->withBeforeHook()
+            ->withTestActions()
+            ->build();
+
+        $resolverMock = new MockModuleResolverBuilder();
+        $resolverMock->setup();
+        $this->setMockParserOutput($mockData);
+
+        // run object handler method
+        $toh = TestObjectHandler::getInstance();
+        $mockConfig = AspectMock::double(TestObjectHandler::class, ['initTestData' => false]);
+        $actualTestObject = $toh->getObject($testDataArrayBuilder->testName);
+
+        // perform asserts
+        $expectedBeforeActionObject = new ActionObject(
+            $testDataArrayBuilder->testActionBeforeName,
+            $testDataArrayBuilder->testActionType,
+            []
+        );
+        $expectedAfterActionObject = new ActionObject(
+            $testDataArrayBuilder->testActionAfterName,
+            $testDataArrayBuilder->testActionType,
+            []
+        );
+        $expectedFailedActionObject1 = new ActionObject(
+            'saveScreenshot',
+            'saveScreenshot',
+            []
+        );
+        $expectedFailedActionObject2 = new ActionObject(
+            'pauseWhenFailed',
+            'pause',
+            []
+        );
+
+        $expectedBeforeHookObject = new TestHookObject(
+            TestObjectExtractor::TEST_BEFORE_HOOK,
+            $testDataArrayBuilder->testName,
+            ["testActionBefore" => $expectedBeforeActionObject]
+        );
+        $expectedAfterHookObject = new TestHookObject(
+            TestObjectExtractor::TEST_AFTER_HOOK,
+            $testDataArrayBuilder->testName,
+            ["testActionAfter" => $expectedAfterActionObject]
+        );
+        $expectedFailedHookObject = new TestHookObject(
+            TestObjectExtractor::TEST_FAILED_HOOK,
+            $testDataArrayBuilder->testName,
+            [
+                "saveScreenshot" => $expectedFailedActionObject1,
+                "pauseWhenFailed" => $expectedFailedActionObject2,
+            ]
+        );
+
+        $expectedTestActionObject = new ActionObject(
+            $testDataArrayBuilder->testTestActionName,
+            $testDataArrayBuilder->testActionType,
+            []
+        );
+        $expectedTestObject = new TestObject(
+            $testDataArrayBuilder->testName,
+            ["testActionInTest" => $expectedTestActionObject],
+            [
+                'features' => ['NO MODULE DETECTED'],
+                'group' => ['test'],
+                'description' => ['test_files' => '<h3>Test files</h3>', 'deprecated' => []]
+            ],
+            [
+                TestObjectExtractor::TEST_BEFORE_HOOK => $expectedBeforeHookObject,
+                TestObjectExtractor::TEST_AFTER_HOOK => $expectedAfterHookObject,
+                TestObjectExtractor::TEST_FAILED_HOOK => $expectedFailedHookObject
+            ],
+            null
+        );
+
+        $this->assertEquals($expectedTestObject, $actualTestObject);
+        putenv('ENABLE_PAUSE');
     }
 
     /**

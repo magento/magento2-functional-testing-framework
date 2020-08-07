@@ -137,6 +137,9 @@ class RunTestCommand extends BaseGenerateCommand
                 );
             }
             $fullCommand = $codeceptionCommand . $testsDirectory . $testName . ' --verbose --steps';
+            if ($this->pauseEnabled()) {
+                $fullCommand .= ' --debug';
+            }
             $this->returnCode = max($this->returnCode, $this->executeTestCommand($fullCommand, $output));
         }
     }
@@ -151,6 +154,9 @@ class RunTestCommand extends BaseGenerateCommand
     private function runTestsInSuite(array $suitesConfig, OutputInterface $output)
     {
         $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional --verbose --steps ';
+        if ($this->pauseEnabled()) {
+            $codeceptionCommand .= ' --debug';
+        }
         //for tests in suites, run them as a group to run before and after block
         foreach (array_keys($suitesConfig) as $suite) {
             $fullCommand = $codeceptionCommand . " -g {$suite}";
@@ -173,6 +179,7 @@ class RunTestCommand extends BaseGenerateCommand
         $process->setWorkingDirectory(TESTS_BP);
         $process->setIdleTimeout(600);
         $process->setTimeout(0);
+        $process->setInput(STDIN);
         return $process->run(function ($type, $buffer) use ($output) {
             $output->write($buffer);
         });

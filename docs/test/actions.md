@@ -1463,7 +1463,7 @@ Attribute|Type|Use|Description
 
 ### pause
 
-See [pause docs on codeception.com](https://codeception.com/docs/02-GettingStarted).
+See [pause docs on codeception.com](https://codeception.com/docs/02-GettingStarted#Interactive-Pause).
 
 Attribute|Type|Use|Description
 ---|---|---|---

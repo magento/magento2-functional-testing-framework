@@ -359,6 +359,15 @@ Global MFTF configuration for the default amount of time (in seconds) that a tes
 WAIT_TIMEOUT=30
 ```
 
+### ENABLE_PAUSE
+
+Enables pause of test execution in any point and enter interactive shell where you will be able to try commands in action.
+When pause is enabled, MFTF will generate pause() command in _failed() hook so that test will pause execution when failed. 
+
+```conf
+ENABLE_PAUSE=true
+```
+
 <!-- Link definitions -->
 
 [`MAGENTO_CLI_COMMAND_PATH`]: #magento_cli_command_path

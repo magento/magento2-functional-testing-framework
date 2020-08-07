@@ -108,15 +108,18 @@ class RunManifestCommand extends Command
      */
     private function runManifestLine(string $manifestLine, OutputInterface $output)
     {
-        $codeceptionCommand = realpath(PROJECT_ROOT . "/vendor/bin/codecept")
-            . " run functional --verbose --steps "
-            . $manifestLine;
+        $codeceptionCommand = realpath(PROJECT_ROOT . "/vendor/bin/codecept") . " run functional --verbose --steps ";
+        if (getenv('ENABLE_PAUSE') === 'true') {
+            $codeceptionCommand .= ' --debug';
+        }
+        $codeceptionCommand .= $manifestLine;
 
         // run the codecept command in a sub process
         $process = new Process($codeceptionCommand);
         $process->setWorkingDirectory(TESTS_BP);
         $process->setIdleTimeout(600);
         $process->setTimeout(0);
+        $process->setInput(STDIN);
         $subReturnCode = $process->run(function ($type, $buffer) use ($output) {
             $output->write($buffer);
         });

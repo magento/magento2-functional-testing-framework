@@ -119,11 +119,15 @@ class RunTestFailedCommand extends BaseGenerateCommand
         foreach ($testManifestList as $testCommand) {
             $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
             $codeceptionCommand .= $testCommand;
+            if ($this->pauseEnabled()) {
+                $codeceptionCommand .= ' --debug';
+            }
 
             $process = new Process($codeceptionCommand);
             $process->setWorkingDirectory(TESTS_BP);
             $process->setIdleTimeout(600);
             $process->setTimeout(0);
+            $process->setInput(STDIN);
             $returnCode = max($returnCode, $process->run(
                 function ($type, $buffer) use ($output) {
                     $output->write($buffer);
