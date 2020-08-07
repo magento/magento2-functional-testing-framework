@@ -127,7 +127,9 @@ class RunTestFailedCommand extends BaseGenerateCommand
             $process->setWorkingDirectory(TESTS_BP);
             $process->setIdleTimeout(600);
             $process->setTimeout(0);
-            $process->setInput(STDIN);
+            if ($this->pauseEnabled()) {
+                $process->setInput(STDIN);
+            }
             $returnCode = max($returnCode, $process->run(
                 function ($type, $buffer) use ($output) {
                     $output->write($buffer);

@@ -119,7 +119,9 @@ class RunManifestCommand extends Command
         $process->setWorkingDirectory(TESTS_BP);
         $process->setIdleTimeout(600);
         $process->setTimeout(0);
-        $process->setInput(STDIN);
+        if (getenv('ENABLE_PAUSE') === 'true') {
+            $process->setInput(STDIN);
+        }
         $subReturnCode = $process->run(function ($type, $buffer) use ($output) {
             $output->write($buffer);
         });
