@@ -194,7 +194,7 @@ class DeprecatedEntityUsageCheckTest extends MagentoTestCase
                 ]
             ]]];
 
-        ObjectHandlerUtil::getInstance()->setMockOperationParserOutput($mockData);
+        ObjectHandlerUtil::mockOperationHandlerWithData($mockData);
         $dataName = 'dataName1';
         $references = [
             $dataName => [

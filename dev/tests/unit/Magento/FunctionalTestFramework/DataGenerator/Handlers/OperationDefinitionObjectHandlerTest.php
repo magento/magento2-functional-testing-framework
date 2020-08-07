@@ -73,7 +73,7 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
                     ],
                 ]
                 ]]];
-        ObjectHandlerUtil::getInstance()->setMockOperationParserOutput($mockData);
+        ObjectHandlerUtil::mockOperationHandlerWithData($mockData);
 
         //Perform Assertions
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
@@ -110,7 +110,7 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
                 ],
                 OperationDefinitionObjectHandler::OBJ_DEPRECATED => 'deprecation message'
             ]]];
-        ObjectHandlerUtil::getInstance()->setMockOperationParserOutput($mockData);
+        ObjectHandlerUtil::mockOperationHandlerWithData($mockData);
 
         //Perform Assertions
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
@@ -240,7 +240,7 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
         );
 
         // Set up mocked data output
-        ObjectHandlerUtil::getInstance()->setMockOperationParserOutput($mockData);
+        ObjectHandlerUtil::mockOperationHandlerWithData($mockData);
 
         // Get Operation
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
@@ -338,7 +338,7 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
         );
 
         // Set up mocked data output
-        ObjectHandlerUtil::getInstance()->setMockOperationParserOutput($mockData);
+        ObjectHandlerUtil::mockOperationHandlerWithData($mockData);
 
         // Get Operation
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
@@ -406,7 +406,7 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
         );
 
         // Set up mocked data output
-        ObjectHandlerUtil::getInstance()->setMockOperationParserOutput($mockData);
+        ObjectHandlerUtil::mockOperationHandlerWithData($mockData);
 
         // get Operations
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
