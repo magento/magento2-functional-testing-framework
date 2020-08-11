@@ -8,8 +8,6 @@ namespace Magento\FunctionalTestingFramework\Module;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
-use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
-use Magento\FunctionalTestingFramework\Util\Provider\UrlProvider;
 
 /**
  * MagentoWebDriverDoctor module extends MagentoWebDriver module and is a light weighted module to diagnose webdriver
@@ -49,14 +47,16 @@ class MagentoWebDriverDoctor extends MagentoWebDriver
         }
 
         try {
-            $adminUrl = UrlProvider::getBaseUrl(PageObject::ADMIN_AREA);
+            $adminUrl = rtrim(getenv('MAGENTO_BACKEND_BASE_URL'), '/')
+                ?: rtrim(getenv('MAGENTO_BASE_URL'), '/')
+                . '/' . getenv('MAGENTO_BACKEND_NAME') . '/admin';
             $this->loadPageAtUrl($adminUrl);
         } catch (\Exception $e) {
             $context[self::EXCEPTION_CONTEXT_ADMIN] = $e->getMessage();
         }
 
         try {
-            $storeUrl = UrlProvider::getBaseUrl();
+            $storeUrl = getenv('MAGENTO_BASE_URL');
             $this->loadPageAtUrl($storeUrl);
         } catch (\Exception $e) {
             $context[self::EXCEPTION_CONTEXT_STOREFRONT] = $e->getMessage();

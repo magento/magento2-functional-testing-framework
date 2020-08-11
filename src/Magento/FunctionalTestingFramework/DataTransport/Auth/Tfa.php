@@ -6,10 +6,10 @@
 
 namespace Magento\FunctionalTestingFramework\DataTransport\Auth;
 
+use Magento\FunctionalTestingFramework\Util\MftfGlobals;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlTransport;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
-use Magento\FunctionalTestingFramework\Util\Provider\UrlProvider;
 
 /**
  * Class Tfa (i.e. 2FA)
@@ -66,7 +66,7 @@ class Tfa
             return self::$tfaEnabled;
         }
 
-        $schemaUrl = UrlProvider::getWebApiBaseUrl() . self::TFA_SCHEMA;
+        $schemaUrl = MftfGlobals::getWebApiBaseUrl() . self::TFA_SCHEMA;
         $transport = new CurlTransport();
         try {
             $transport->write($schemaUrl, [], CurlInterface::GET, self::$headers);

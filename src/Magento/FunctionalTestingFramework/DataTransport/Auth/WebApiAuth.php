@@ -6,11 +6,11 @@
 
 namespace Magento\FunctionalTestingFramework\DataTransport\Auth;
 
+use Magento\FunctionalTestingFramework\Util\MftfGlobals;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlTransport;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\DataTransport\Auth\Tfa\OTP;
-use Magento\FunctionalTestingFramework\Util\Provider\UrlProvider;
 
 /**
  * Class WebApiAuth
@@ -63,7 +63,7 @@ class WebApiAuth
             return self::$adminAuthTokens[$login];
         }
 
-        $authUrl = UrlProvider::getWebApiBaseUrl() . self::PATH_ADMIN_AUTH;
+        $authUrl = MftfGlobals::getWebApiBaseUrl() . self::PATH_ADMIN_AUTH;
 
         $data = [
             'username' => $login,
@@ -71,7 +71,7 @@ class WebApiAuth
         ];
 
         if (Tfa::isEnabled()) {
-            $authUrl = UrlProvider::getWebApiBaseUrl() . Tfa::getProviderWebApiAuthEndpoint('google');
+            $authUrl = MftfGlobals::getWebApiBaseUrl() . Tfa::getProviderWebApiAuthEndpoint('google');
             $data['otp'] = OTP::getOTP();
         }
 

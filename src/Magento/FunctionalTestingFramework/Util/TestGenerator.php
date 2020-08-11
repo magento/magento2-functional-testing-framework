@@ -2031,7 +2031,6 @@ class TestGenerator
 
         foreach ($args as $key => $arg) {
             $newArgs[$key] = $arg;
-
             preg_match_all($regex, $arg, $matches);
             if (!empty($matches[0])) {
                 foreach ($matches[0] as $matchKey => $fullMatch) {
@@ -2042,11 +2041,11 @@ class TestGenerator
                     $outputArg = $this->processQuoteBreaks($fullMatch, $newArgs[$key], $replacement);
                     $newArgs[$key] = $outputArg;
                 }
-
                 unset($matches);
                 continue;
             }
         }
+
         // override passed in args for use later.
         return $newArgs;
     }

@@ -725,7 +725,7 @@ class ActionObject
         } else {
             $resolvedReplacement = $replacement;
         }
-        if (get_class($object) === PageObject::class && $object->getArea() === PageObject::ADMIN_AREA) {
+        if (get_class($object) == PageObject::class && $object->getArea() == PageObject::ADMIN_AREA) {
             $urlSegments = [
                 '{{_ENV.MAGENTO_BACKEND_BASE_URL}}',
                 '{{_ENV.MAGENTO_BACKEND_NAME}}',
