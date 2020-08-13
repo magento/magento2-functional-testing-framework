@@ -101,7 +101,7 @@ class ScriptUtil
             if (!realpath($modulePath . $scopePath)) {
                 continue;
             }
-            $finder->files()->followLinks()->in($modulePath . $scopePath)->name("*.xml");
+            $finder->files()->followLinks()->in($modulePath . $scopePath)->name("*.xml")->sortByName();
             $found = true;
         }
         return $found ? $finder->files() : [];

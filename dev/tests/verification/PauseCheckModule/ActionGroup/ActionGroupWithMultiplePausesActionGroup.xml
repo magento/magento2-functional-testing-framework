@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="ActionGroupWithMultiplePausesActionGroup">
+        <fillField selector="#foo" userInput="foo" stepKey="fillField1"/>
+        <pause stepKey="pauseAfterFillField1"/>
+        <fillField selector="#bar" userInput="bar" stepKey="fillField2"/>
+        <pause stepKey="pauseAfterFillField2"/>
+        <fillField selector="#baz" userInput="baz" stepKey="fillField3"/>
+        <pause stepKey="pauseAfterFillField3"/>
+    </actionGroup>
+</actionGroups>

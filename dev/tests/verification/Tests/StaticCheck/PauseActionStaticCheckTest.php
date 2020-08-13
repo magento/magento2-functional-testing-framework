@@ -6,31 +6,32 @@
 namespace tests\verification\Tests;
 
 use AspectMock\Test as AspectMock;
-use Magento\FunctionalTestingFramework\StaticCheck\DeprecatedEntityUsageCheck;
+use Magento\FunctionalTestingFramework\StaticCheck\PauseActionUsageCheck;
 use Magento\FunctionalTestingFramework\StaticCheck\StaticChecksList;
 use Symfony\Component\Console\Input\InputInterface;
+
 use tests\util\MftfStaticTestCase;
 
-class DeprecationStaticCheckTest extends MftfStaticTestCase
+class PauseActionStaticCheckTest extends MftfStaticTestCase
 {
     const LOG_FILE = self::STATIC_RESULTS_DIR .
     DIRECTORY_SEPARATOR .
-    DeprecatedEntityUsageCheck::ERROR_LOG_FILENAME .
+    PauseActionUsageCheck::ERROR_LOG_FILENAME .
     '.txt';
 
     const TEST_MODULE_PATH = TESTS_MODULE_PATH .
     DIRECTORY_SEPARATOR .
-    'DeprecationCheckModule'.
+    'PauseCheckModule'.
     DIRECTORY_SEPARATOR;
 
     /**
-     * test static-check DeprecatedEntityUsageCheck.
+     * test static-check PauseActionUsageCheck.
      *
      * @throws \Exception
      */
-    public function testDeprecatedEntityUsageCheck()
+    public function testPauseActionUsageCheck()
     {
-        $staticCheck = new DeprecatedEntityUsageCheck();
+        $staticCheck = new PauseActionUsageCheck();
 
         $input = $this->mockInputInterface(self::TEST_MODULE_PATH);
         AspectMock::double(StaticChecksList::class, ['getErrorFilesPath' => self::STATIC_RESULTS_DIR]);
@@ -42,7 +43,7 @@ class DeprecationStaticCheckTest extends MftfStaticTestCase
         $this->assertFileEquals(
             self::RESOURCES_PATH.
             DIRECTORY_SEPARATOR .
-            DeprecatedEntityUsageCheck::ERROR_LOG_FILENAME .
+            PauseActionUsageCheck::ERROR_LOG_FILENAME .
             ".txt",
             self::LOG_FILE
         );

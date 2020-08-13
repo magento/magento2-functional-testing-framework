@@ -449,7 +449,7 @@ vendor/bin/mftf static-checks [<names>]...
 
 | Option                | Description                                                                                               |
 |-----------------------|-----------------------------------------------------------------------------------------------------------|
-| `-p, --path` | Path to a MFTF test module to run "deprecatedEntityUsage" static check script. Option is ignored by other static check scripts.
+| `-p, --path` | Path to a MFTF test module to run "deprecatedEntityUsage" and "pauseActionUsage" static check scripts. Option is ignored by other static check scripts.
                 
 #### Examples
 
@@ -480,11 +480,19 @@ vendor/bin/mftf static-checks deprecatedEntityUsage
 ```
 
 ```bash
+vendor/bin/mftf static-checks pauseActionUsage
+```
+
+```bash
 vendor/bin/mftf static-checks annotations
 ```
 
 ```bash
 vendor/bin/mftf static-checks deprecatedEntityUsage -p path/to/mftf/test/module
+```
+
+```bash
+vendor/bin/mftf static-checks pauseActionUsage -p path/to/mftf/test/module
 ```
 
 ```bash
@@ -499,6 +507,7 @@ vendor/bin/mftf static-checks testDependencies actionGroupArguments
 |`actionGroupArguments` | Checks that action groups do not have unused arguments.|
 |`deprecatedEntityUsage`| Checks that deprecated test entities are not being referenced.|
 |`annotations`| Checks various details of test annotations, such as missing annotations or duplicate annotations.|
+|`pauseUsage`| Checks that pause action is not used in action groups, tests or suites.|
          
 #### Defining ruleset
 
