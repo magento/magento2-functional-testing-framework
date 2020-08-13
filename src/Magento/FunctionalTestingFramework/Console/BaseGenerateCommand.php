@@ -31,7 +31,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class BaseGenerateCommand extends Command
 {
     const MFTF_NOTICES = "Placeholder text for MFTF notices\n";
-    const CODECEPT_RUN_COMMAND = 'codecept:run functional ';
+    const CODECEPT_RUN = 'codecept:run ';
+    const CODECEPT_RUN_FUNCTIONAL = self::CODECEPT_RUN . 'functional ';
 
     /**
      * Enable pause()
@@ -254,15 +255,15 @@ class BaseGenerateCommand extends Command
     /**
      * Runs the bin/mftf codecept:run command and returns exit code
      *
-     * @param string          $command
+     * @param string          $commandStr
      * @param OutputInterface $output
      * @return integer
      * @throws \Exception
      */
-    protected function codeceptRunTest(string $command, OutputInterface $output)
+    protected function codeceptRunTest(string $commandStr, OutputInterface $output)
     {
-        $input = new StringInput($command);
-        $command = $this->getApplication()->find('codecept:run');
+        $input = new StringInput($commandStr);
+        $command = $this->getApplication()->find(self::CODECEPT_RUN);
         return $command->run($input, $output);
     }
 }

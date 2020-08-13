@@ -95,7 +95,7 @@ class RunTestGroupCommand extends BaseGenerateCommand
         }
 
         if ($this->pauseEnabled()) {
-            $commandString = self::CODECEPT_RUN_COMMAND . '--verbose --steps --debug';
+            $commandString = self::CODECEPT_RUN_FUNCTIONAL . '--verbose --steps --debug';
         } else {
             $commandString = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional --verbose --steps';
         }

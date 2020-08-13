@@ -111,8 +111,8 @@ class RunManifestCommand extends Command
     private function runManifestLine(string $manifestLine, OutputInterface $output)
     {
         if (getenv('ENABLE_PAUSE') === 'true') {
-            $codeceptionCommand = BaseGenerateCommand::CODECEPT_RUN_COMMAND
-                . '--verbose --steps --debug' . $manifestLine;
+            $codeceptionCommand = BaseGenerateCommand::CODECEPT_RUN_FUNCTIONAL
+                . '--verbose --steps --debug ' . $manifestLine;
             $input = new StringInput($codeceptionCommand);
             $command = $this->getApplication()->find('codecept:run');
             $subReturnCode = $command->run($input, $output);

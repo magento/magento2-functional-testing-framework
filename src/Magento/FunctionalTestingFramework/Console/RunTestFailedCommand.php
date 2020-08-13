@@ -118,8 +118,8 @@ class RunTestFailedCommand extends BaseGenerateCommand
         $returnCode = 0;
         foreach ($testManifestList as $testCommand) {
             if ($this->pauseEnabled()) {
-                $codeceptionCommand = self::CODECEPT_RUN_COMMAND . $testCommand . ' --debug';
-                $this->codeceptRunTest($codeceptionCommand, $output);
+                $codeceptionCommand = self::CODECEPT_RUN_FUNCTIONAL . $testCommand . ' --debug';
+                $returnCode = $this->codeceptRunTest($codeceptionCommand, $output);
             } else {
                 $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
                 $codeceptionCommand .= $testCommand;

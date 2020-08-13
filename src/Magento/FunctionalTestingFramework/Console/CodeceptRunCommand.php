@@ -24,7 +24,7 @@ class CodeceptRunCommand extends Run
     {
         $this->setName('codecept:run')
             ->setDescription(
-                "Wrapper command to codecept:run. See https://codeception.com/docs/reference/Commands"
+                "Wrapper command to vendor/bin/codecept:run. See https://codeception.com/docs/reference/Commands#Run"
             );
 
         parent::configure();

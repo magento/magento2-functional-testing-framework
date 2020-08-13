@@ -836,6 +836,9 @@ class MagentoWebDriver extends WebDriver
 
         if ($this->pngReport === null && $this->htmlReport === null) {
             $this->saveScreenshot();
+            if (getenv('ENABLE_PAUSE') === 'true') {
+                $this->pause();
+            }
         }
 
         if ($this->current_test == null) {

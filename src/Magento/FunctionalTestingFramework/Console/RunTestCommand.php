@@ -124,7 +124,7 @@ class RunTestCommand extends BaseGenerateCommand
     private function runTests(array $tests, OutputInterface $output)
     {
         if ($this->pauseEnabled()) {
-            $codeceptionCommand = self::CODECEPT_RUN_COMMAND;
+            $codeceptionCommand = self::CODECEPT_RUN_FUNCTIONAL;
         } else {
             $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
         }
@@ -164,7 +164,7 @@ class RunTestCommand extends BaseGenerateCommand
     private function runTestsInSuite(array $suitesConfig, OutputInterface $output)
     {
         if ($this->pauseEnabled()) {
-            $codeceptionCommand = self::CODECEPT_RUN_COMMAND . '--verbose --steps --debug';
+            $codeceptionCommand = self::CODECEPT_RUN_FUNCTIONAL . '--verbose --steps --debug';
         } else {
             $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept')
                 . ' run functional --verbose --steps ';
