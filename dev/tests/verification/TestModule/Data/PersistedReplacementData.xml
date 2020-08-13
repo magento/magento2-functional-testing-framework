@@ -22,4 +22,8 @@
         <data key="lastName">Dane</data>
         <data key="mergedField">unmerged</data>
     </entity>
+    <entity name="SecretData" type="SecretData">
+        <data key="key1">some/data</data>
+        <data key="key2">{{_CREDS.magento/some/secret}}</data>
+    </entity>
 </entities>

@@ -1,0 +1,23 @@
+
+File "/verification/DeprecationCheckModule/Test/DeprecationCheckTest.xml" contains:
+	- Deprecated Page(s):
+		"DeprecationCheckPage" in /verification/DeprecationCheckModule/Page/DeprecationCheckPage.xml
+	- Deprecated ActionGroup(s):
+		"DeprecationCheckDeprecatedActionGroup" in /verification/DeprecationCheckModule/ActionGroup/DeprecationCheckDeprecatedActionGroup.xml
+	- Deprecated Data(s):
+		"DeprecationCheckData" in /verification/DeprecationCheckModule/Data/DeprecationCheckData.xml
+	- "DeprecationCheckData" references deprecated:
+		"type1" in metadata xml file
+
+
+File "/verification/DeprecationCheckModule/ActionGroup/DeprecationCheckActionGroup.xml" contains:
+	- Deprecated Section(s):
+		"DeprecationCheckSection" in /verification/DeprecationCheckModule/Section/DeprecationCheckSection.xml
+	- Deprecated Element(s):
+		"DeprecationCheckSection.deprecationCheckElement" in /verification/DeprecationCheckModule/Section/DeprecationCheckSection.xml
+
+
+File "/verification/DeprecationCheckModule/Suite/deprecationCheckSuite.xml" contains:
+	- Deprecated Test(s):
+		"DeprecationCheckDeprecatedTest" in /verification/DeprecationCheckModule/Test/DeprecationCheckDeprecatedTest.xml
+

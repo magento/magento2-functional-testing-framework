@@ -15,6 +15,7 @@ use Facebook\WebDriver\Interactions\WebDriverActions;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Util\Uri;
+use Codeception\Lib\ModuleContainer;
 use Magento\FunctionalTestingFramework\DataTransport\WebApiExecutor;
 use Magento\FunctionalTestingFramework\DataTransport\Auth\WebApiAuth;
 use Magento\FunctionalTestingFramework\DataTransport\Auth\Tfa\OTP;
@@ -178,6 +179,16 @@ class MagentoWebDriver extends WebDriver
     public function _after(TestInterface $test)
     {
         // DO NOT RESET SESSIONS
+    }
+
+    /**
+     * Return ModuleContainer
+     *
+     * @return ModuleContainer
+     */
+    public function getModuleContainer()
+    {
+        return $this->moduleContainer;
     }
 
     /**
@@ -866,7 +877,7 @@ class MagentoWebDriver extends WebDriver
      */
     public function amOnPage($page)
     {
-        parent::amOnPage($page);
+        (0 === strpos($page, 'http')) ? parent::amOnUrl($page) : parent::amOnPage($page);
         $this->waitForPageLoad();
     }
 
@@ -957,120 +968,6 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * Create an entity
-     * TODO: move this function to MagentoActionProxies after MQE-1904
-     *
-     * @param string $key                 StepKey of the createData action.
-     * @param string $scope
-     * @param string $entity              Name of xml entity to create.
-     * @param array  $dependentObjectKeys StepKeys of other createData actions that are required.
-     * @param array  $overrideFields      Array of FieldName => Value of override fields.
-     * @param string $storeCode
-     * @return void
-     */
-    public function createEntity(
-        $key,
-        $scope,
-        $entity,
-        $dependentObjectKeys = [],
-        $overrideFields = [],
-        $storeCode = ''
-    ) {
-        PersistedObjectHandler::getInstance()->createEntity(
-            $key,
-            $scope,
-            $entity,
-            $dependentObjectKeys,
-            $overrideFields,
-            $storeCode
-        );
-    }
-
-    /**
-     * Retrieves and updates a previously created entity
-     * TODO: move this function to MagentoActionProxies after MQE-1904
-     *
-     * @param string $key                 StepKey of the createData action.
-     * @param string $scope
-     * @param string $updateEntity        Name of the static XML data to update the entity with.
-     * @param array  $dependentObjectKeys StepKeys of other createData actions that are required.
-     * @return void
-     */
-    public function updateEntity($key, $scope, $updateEntity, $dependentObjectKeys = [])
-    {
-        PersistedObjectHandler::getInstance()->updateEntity(
-            $key,
-            $scope,
-            $updateEntity,
-            $dependentObjectKeys
-        );
-    }
-
-    /**
-     * Performs GET on given entity and stores entity for use
-     * TODO: move this function to MagentoActionProxies after MQE-1904
-     *
-     * @param string  $key                 StepKey of getData action.
-     * @param string  $scope
-     * @param string  $entity              Name of XML static data to use.
-     * @param array   $dependentObjectKeys StepKeys of other createData actions that are required.
-     * @param string  $storeCode
-     * @param integer $index
-     * @return void
-     */
-    public function getEntity($key, $scope, $entity, $dependentObjectKeys = [], $storeCode = '', $index = null)
-    {
-        PersistedObjectHandler::getInstance()->getEntity(
-            $key,
-            $scope,
-            $entity,
-            $dependentObjectKeys,
-            $storeCode,
-            $index
-        );
-    }
-
-    /**
-     * Retrieves and deletes a previously created entity
-     * TODO: move this function to MagentoActionProxies after MQE-1904
-     *
-     * @param string $key   StepKey of the createData action.
-     * @param string $scope
-     * @return void
-     */
-    public function deleteEntity($key, $scope)
-    {
-        PersistedObjectHandler::getInstance()->deleteEntity($key, $scope);
-    }
-
-    /**
-     * Retrieves a field from an entity, according to key and scope given
-     * TODO: move this function to MagentoActionProxies after MQE-1904
-     *
-     * @param string $stepKey
-     * @param string $field
-     * @param string $scope
-     * @return string
-     */
-    public function retrieveEntityField($stepKey, $field, $scope)
-    {
-        return PersistedObjectHandler::getInstance()->retrieveEntityField($stepKey, $field, $scope);
-    }
-
-    /**
-     * Get encrypted value by key
-     * TODO: move this function to MagentoActionProxies after MQE-1904
-     *
-     * @param string $key
-     * @return string|null
-     * @throws TestFrameworkException
-     */
-    public function getSecret($key)
-    {
-        return CredentialStore::getInstance()->getSecret($key);
-    }
-
-    /**
      * Waits proper amount of time to perform Cron execution
      *
      * @param array   $cronGroups
@@ -1121,17 +1018,5 @@ class MagentoWebDriver extends WebDriver
             }
             $this->webDriver->switchTo()->frame($els[0]);
         }
-    }
-
-    /**
-     * Returns a value to origin of the action.
-     * TODO: move this function to MagentoActionProxies after MQE-1904
-     *
-     * @param mixed $value
-     * @return mixed
-     */
-    public function return($value)
-    {
-        return $value;
     }
 }

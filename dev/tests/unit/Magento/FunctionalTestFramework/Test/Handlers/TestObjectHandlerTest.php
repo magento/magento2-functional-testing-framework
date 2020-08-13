@@ -17,6 +17,7 @@ use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use tests\unit\Util\MagentoTestCase;
+use tests\unit\Util\ObjectHandlerUtil;
 use tests\unit\Util\TestDataArrayBuilder;
 use tests\unit\Util\MockModuleResolverBuilder;
 
@@ -41,7 +42,7 @@ class TestObjectHandlerTest extends MagentoTestCase
 
         $resolverMock = new MockModuleResolverBuilder();
         $resolverMock->setup();
-        $this->setMockParserOutput($mockData);
+        ObjectHandlerUtil::mockTestObjectHandlerWitData($mockData);
 
         // run object handler method
         $toh = TestObjectHandler::getInstance();
@@ -135,7 +136,7 @@ class TestObjectHandlerTest extends MagentoTestCase
 
         $resolverMock = new MockModuleResolverBuilder();
         $resolverMock->setup();
-        $this->setMockParserOutput(array_merge($includeTest, $excludeTest));
+        ObjectHandlerUtil::mockTestObjectHandlerWitData(array_merge($includeTest, $excludeTest));
 
         // execute test method
         $toh = TestObjectHandler::getInstance();
@@ -184,7 +185,7 @@ class TestObjectHandlerTest extends MagentoTestCase
         $resolverMock = new MockModuleResolverBuilder();
         $resolverMock->setup(['Vendor_' . $moduleExpected => $filepath]);
 
-        $this->setMockParserOutput($mockData);
+        ObjectHandlerUtil::mockTestObjectHandlerWitData($mockData);
         // Execute Test Method
         $toh = TestObjectHandler::getInstance();
         $actualTestObject = $toh->getObject($testDataArrayBuilder->testName);
@@ -212,7 +213,7 @@ class TestObjectHandlerTest extends MagentoTestCase
             ->build();
         $resolverMock = new MockModuleResolverBuilder();
         $resolverMock->setup();
-        $this->setMockParserOutput($testOne);
+        ObjectHandlerUtil::mockTestObjectHandlerWitData($testOne);
 
         $toh = TestObjectHandler::getInstance();
 
@@ -250,7 +251,7 @@ class TestObjectHandlerTest extends MagentoTestCase
 
         $resolverMock = new MockModuleResolverBuilder();
         $resolverMock->setup();
-        $this->setMockParserOutput(array_merge($testOne, $testTwo));
+        ObjectHandlerUtil::mockTestObjectHandlerWitData(array_merge($testOne, $testTwo));
 
         $toh = TestObjectHandler::getInstance();
 
