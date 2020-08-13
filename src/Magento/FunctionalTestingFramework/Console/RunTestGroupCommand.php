@@ -94,9 +94,10 @@ class RunTestGroupCommand extends BaseGenerateCommand
             $command->run(new ArrayInput($args), $output);
         }
 
-        $commandString = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional --verbose --steps';
         if ($this->pauseEnabled()) {
-            $commandString .= ' --debug';
+            $commandString = self::CODECEPT_RUN_COMMAND . '--verbose --steps --debug';
+        } else {
+            $commandString = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional --verbose --steps';
         }
 
         $exitCode = -1;
@@ -104,19 +105,19 @@ class RunTestGroupCommand extends BaseGenerateCommand
         foreach ($groups as $group) {
             $codeceptionCommandString = $commandString . " -g {$group}";
 
-            $process = new Process($codeceptionCommandString);
-            $process->setWorkingDirectory(TESTS_BP);
-            $process->setIdleTimeout(600);
-            $process->setTimeout(0);
             if ($this->pauseEnabled()) {
-                $process->setInput(STDIN);
+                $returnCodes[] = $this->codeceptRunTest($codeceptionCommandString, $output);
+            } else {
+                $process = new Process($codeceptionCommandString);
+                $process->setWorkingDirectory(TESTS_BP);
+                $process->setIdleTimeout(600);
+                $process->setTimeout(0);
+                $returnCodes[] = $process->run(
+                    function ($type, $buffer) use ($output) {
+                        $output->write($buffer);
+                    }
+                );
             }
-
-            $returnCodes[] = $process->run(
-                function ($type, $buffer) use ($output) {
-                    $output->write($buffer);
-                }
-            );
         }
 
         foreach ($returnCodes as $returnCode) {
