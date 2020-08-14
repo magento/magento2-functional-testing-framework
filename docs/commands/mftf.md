@@ -579,7 +579,7 @@ vendor/bin/mftf codecept:run functional
 # Run all tests in functional suite with options
 vendor/bin/mftf codecept:run functional --verbose --steps --debug
 # Run one test
-vendor/bin/mftf codecept:run functional Magento/_generated/default/AdminLoginSuccessfulTestCest
+vendor/bin/mftf codecept:run functional Magento/_generated/default/AdminCreateCmsPageTestCest.php --debug
 # Run all tests in default group
 vendor/bin/mftf codecept:run functional --verbose --steps -g default
 ```

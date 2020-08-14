@@ -13,7 +13,7 @@ In short, when a test gets to `$I->pause()` step, it stops and shows a console w
 ## Generation Time
 
 A `<pause>` action in xml will always be generated into php regardless if `ENABLE_PAUSE=true` is set or not. 
-However, when `ENABLE_PAUSE=true` is set, an additional`pause()` action will be generated in `_failed()` hook for a test,
+However, when `ENABLE_PAUSE=true` is set, an additional `pause()` action will be generated in `_failed()` hook for a test,
 so that the test may pause on failure at run time.
 
 ## Execution Time
@@ -40,10 +40,6 @@ vendor/bin/mftf run:manifest
 vendor/bin/mftf run:failed
 ```
 
-<div class="bs-callout-warning">
-Note: MFTF run command's `--debug` option is different from Codeception `--debug` mode option. 
-</div>
-
 ### MFTF Codecept Run Command
 
 You can also use MFTF's wrapper command to run Codeception directly and activate `Interactive Pause` by passing `--debug` option. 
@@ -54,7 +50,11 @@ vendor/bin/mftf codecept:run --debug
 ```
 
 <div class="bs-callout-warning">
-You may want to limit the usage of this Codeception command with arguments and options for `acceptance` only, since it is what is supported by MFTF. You should also change `acceptance` to `functional` when using this command when referring to Codeception documentation.
+Note: MFTF run command's `--debug` option is different from Codeception `--debug` mode option. 
+</div>
+
+<div class="bs-callout-warning">
+Note: You may want to limit the usage of this Codeception command with arguments and options for `acceptance` only, since it is what is supported by MFTF. You should also change `acceptance` to `functional` when using this command when referring to Codeception documentation.
 </div>
 
 ## References
