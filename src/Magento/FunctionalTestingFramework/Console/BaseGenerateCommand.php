@@ -31,8 +31,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class BaseGenerateCommand extends Command
 {
     const MFTF_NOTICES = "Placeholder text for MFTF notices\n";
-    const CODECEPT_RUN = 'codecept:run ';
-    const CODECEPT_RUN_FUNCTIONAL = self::CODECEPT_RUN . 'functional ';
+    const CODECEPT_RUN = 'codecept:run';
+    const CODECEPT_RUN_FUNCTIONAL = self::CODECEPT_RUN . ' functional ';
 
     /**
      * Enable pause()
