@@ -561,11 +561,11 @@ vendor/bin/mftf upgrade:tests /Users/user/magento2/app/code/Magento/Catalog/Test
 
 ### `codecept:run`
 
-MFTF wrapper command invokes `vendor/bin/codecept run`. This command runs tests in functional suite. It does not generate tests for you. You must do that first.
+A MFTF wrapper command that invokes `vendor/bin/codecept run`. This command runs tests in functional suite. Tests must be generated before using this command.
 
 #### Usage
 
-See https://codeception.com/docs/reference/Commands#Run
+See the [Run Command](https://codeception.com/docs/reference/Commands#Run).
 
 ```bash
 vendor/bin/mftf codecept:run [<suite|test>] --[<option(s)>]
