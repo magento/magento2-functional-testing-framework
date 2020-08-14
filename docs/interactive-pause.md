@@ -35,7 +35,7 @@ vendor/bin/mftf run:failed
 Here is a typical work flow for this use case:
  
 - Set `ENABLE_PAUSE` to `true` under `.env`
-- Add `<pause>` action in a test where you want to stop for investigation
+- Add <pause> action in a test where you want to pause execution for debugging
 - Run test
 - Execution should pause at <pause> action and invoke interactive console
 - Try out commands in interactive console
@@ -54,7 +54,7 @@ This allows you to use `pause` to debug test failure for a long running test. Th
 ## MFTF Codecept Run Command
 
 You can also use MFTF's wrapper command to run Codeception directly and activate `Interactive Pause` by passing `--debug` option. 
-You do not need to set `ENABLE_PAUSE=true` for this command if you are not using `Pause on Failure`.
+You do not need to set `ENABLE_PAUSE` to `true` for this command if you don't want to pause on test failure.
 
 ```bash
 vendor/bin/mftf codecept:run --debug
