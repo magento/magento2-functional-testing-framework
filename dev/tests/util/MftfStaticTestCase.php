@@ -24,14 +24,6 @@ class MftfStaticTestCase extends TestCase
     DIRECTORY_SEPARATOR .
     'StaticChecks';
 
-    public static function setUpBeforeClass(): void
-    {
-        // remove static-results if it exists
-        if (file_exists(self::STATIC_RESULTS_DIR)) {
-            DirSetupUtil::rmdirRecursive(self::STATIC_RESULTS_DIR);
-        }
-    }
-
     /**
      * Sets input interface
      * @param $path

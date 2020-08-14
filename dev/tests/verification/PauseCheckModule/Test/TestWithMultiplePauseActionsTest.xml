@@ -15,10 +15,16 @@
             <features value="Pause check"/>
             <stories value="MQE-433"/>
         </annotations>
-        <amOnPage stepKey="step1" url="/step1"/>
-        <fillField stepKey="step2" selector="#username" userInput="step2"/>
+        <before>
+            <amOnPage url="/beforeUrl" stepKey="beforeAmOnPageKey"/>
+            <pause stepKey="pauseBeforeAmOnPageKey"/>
+        </before>
+        <fillField stepKey="step1" selector="#username" userInput="step1"/>
+        <fillField stepKey="step2" selector="#password" userInput="step2"/>
         <pause stepKey="pauseAfterStep2"/>
-        <fillField stepKey="step3" selector="#password" userInput="step3"/>
-        <pause stepKey="pauseAfterStep3"/>
+        <after>
+            <amOnPage url="/afterUrl" stepKey="afterAmOnPageKey"/>
+            <pause stepKey="pauseAfterAmOnPageKey"/>
+        </after>
     </test>
 </tests>

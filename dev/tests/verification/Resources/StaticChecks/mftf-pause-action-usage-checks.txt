@@ -12,7 +12,7 @@ contains pause action(s):
 File "/verification/PauseCheckModule/Test/TestWithMultiplePauseActionsTest.xml"
 contains pause action(s):
 		
-	 TestWithMultiplePauseActionsTest has pause action at stepKey(s): pauseAfterStep2, pauseAfterStep3
+	 TestWithMultiplePauseActionsTest has pause action at stepKey(s): pauseBeforeAmOnPageKey, pauseAfterStep2, pauseAfterAmOnPageKey
 
 File "/verification/PauseCheckModule/Test/TestWithPauseActionTest.xml"
 contains pause action(s):
