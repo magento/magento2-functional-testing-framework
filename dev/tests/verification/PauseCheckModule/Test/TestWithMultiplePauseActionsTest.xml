@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="TestWithMultiplePauseActionsTest">
+        <annotations>
+            <severity value="CRITICAL"/>
+            <group value="functional"/>
+            <features value="Pause check"/>
+            <stories value="MQE-433"/>
+        </annotations>
+        <before>
+            <amOnPage url="/beforeUrl" stepKey="beforeAmOnPageKey"/>
+            <pause stepKey="pauseBeforeAmOnPageKey"/>
+        </before>
+        <fillField stepKey="step1" selector="#username" userInput="step1"/>
+        <fillField stepKey="step2" selector="#password" userInput="step2"/>
+        <pause stepKey="pauseAfterStep2"/>
+        <after>
+            <amOnPage url="/afterUrl" stepKey="afterAmOnPageKey"/>
+            <pause stepKey="pauseAfterAmOnPageKey"/>
+        </after>
+    </test>
+</tests>

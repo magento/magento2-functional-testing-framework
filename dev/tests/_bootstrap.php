@@ -9,9 +9,11 @@ define('PROJECT_ROOT', dirname(dirname(__DIR__)));
 
 $vendorAutoloadPath = realpath(PROJECT_ROOT . '/vendor/autoload.php');
 $mftfTestCasePath = realpath(PROJECT_ROOT . '/dev/tests/util/MftfTestCase.php');
+$mftfStaticTestCasePath = realpath(PROJECT_ROOT . '/dev/tests/util/MftfStaticTestCase.php');
 
 require_once $vendorAutoloadPath;
 require_once $mftfTestCasePath;
+require_once $mftfStaticTestCasePath;
 
 // Set up AspectMock
 $kernel = \AspectMock\Kernel::getInstance();
