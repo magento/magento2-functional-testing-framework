@@ -6,7 +6,7 @@ Since Codeception 3.0 you can pause execution in any point and enter interactive
 
 Now this `Interactive Pause` feature is available in MFTF and all you need to do is to set `ENABLE_PAUSE=true` in `.env`.
 
-Check it out at [Codeception website][] for documentation and a video to see `Interactive Pause` in action.
+Check [pause on codeception.com][] for documentation and a video to see `Interactive Pause` in action.
  
 In short, when a test gets to `$I->pause()` step, it stops and shows a console where you can try all available commands with auto-completion, stash commands, and save screenshot, etc. 
 
@@ -53,6 +53,11 @@ You don't need to set `ENABLE_PAUSE=true` for this command.
 vendor/bin/mftf codecept:run --debug
 ```
 
+<div class="bs-callout-warning">
+Note: You may want to limit the usage of this Codeception command with arguments and options for `acceptance` only 
+since it's what is supported by MFTF. You should also replace `acceptance` to `functional` when using this command when referring to Codeception documentation.
+</div>
+
 ## References
 
-[Codeception website](https://codeception.com/docs/02-GettingStarted#Interactive-Pause)
+[pause on codeception.com](https://codeception.com/docs/02-GettingStarted#Interactive-Pause)
