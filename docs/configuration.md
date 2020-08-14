@@ -361,7 +361,7 @@ WAIT_TIMEOUT=30
 
 ### ENABLE_PAUSE
 
-Enables pause of test execution in any point and enter interactive shell where you will be able to try commands in action.
+Enables the ability to pause test execution at any point, and enter an interactive shell where you can try commands in action.
 When pause is enabled, MFTF will generate pause() command in _failed() hook so that test will pause execution when failed. 
 
 ```conf
