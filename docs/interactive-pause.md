@@ -4,25 +4,15 @@ It can be difficut to write a successful test on the first attempt. You will nee
 
 Since Codeception 3.0, you can pause execution in any point and enter an interactive shell where you will be able to try commands in action. 
 
-Now this `Interactive Pause` feature is available in MFTF. All you need to do is to set `ENABLE_PAUSE=true` in `.env`.
+Now this `Interactive Pause` feature is available in MFTF. All you need to do is to set `ENABLE_PAUSE` to `true` in `.env`.
 
 Check [pause on codeception.com][] for documentation and a video to see `Interactive Pause` in action.
  
 In short, when a test gets to `$I->pause()` step, it stops and shows a console where you can try all available commands with auto-completion, stash commands, save screenshots, etc. 
 
-## Generation Time
+## MFTF Run Commands
 
-A `<pause>` action in xml will always be generated into php regardless if `ENABLE_PAUSE=true` is set or not. 
-However, when `ENABLE_PAUSE=true` is set, an additional `pause()` action will be generated in `_failed()` hook for a test,
-so that the test may pause on failure at run time.
-
-## Execution Time
-
-To use `Interactive Pause` at run time, there are two types of MFTF commands to use:
-
-### MFTF Run Commands
-
-When `ENABLE_PAUSE=true` is set, the following MFTF run commands support `Interactive Pause`.
+The following MFTF run commands support `Interactive Pause` when `ENABLE_PAUSE` is set to `true`.
 
 ```bash
 vendor/bin/mftf run:group
@@ -40,10 +30,31 @@ vendor/bin/mftf run:manifest
 vendor/bin/mftf run:failed
 ```
 
-### MFTF Codecept Run Command
+### Use `Interactive Pause` During Test Development
+
+Here is a typical work flow for this use case:
+ 
+- Set `ENABLE_PAUSE` to `true` under `.env`
+- Add `<pause>` action in a test where you want to stop for investigation
+- Run test
+- Execution should pause at <pause> action and invoke interactive console
+- Try out commands in interactive console
+- Resume test execution by pressing `ENTER`
+
+### Use `Pause` On Test Failure
+
+When `ENABLE_PAUSE` is set to `true`, MFTF automatically generates `pause()` action in `_failed()` hook for tests and in `_failed()` function in `MagentoWebDriver`.
+This allows you to use `pause` to debug test failure for a long running test. The work flow might look like:
+
+- Set `ENABLE_PAUSE` to `true` under `.env`
+- Run test
+- Execution pauses and invokes interactive console right after test fails
+- Examine and debug on the spot of failure
+
+## MFTF Codecept Run Command
 
 You can also use MFTF's wrapper command to run Codeception directly and activate `Interactive Pause` by passing `--debug` option. 
-You do not need to set `ENABLE_PAUSE=true` for this command.
+You do not need to set `ENABLE_PAUSE=true` for this command if you are not using `Pause on Failure`.
 
 ```bash
 vendor/bin/mftf codecept:run --debug
@@ -51,10 +62,6 @@ vendor/bin/mftf codecept:run --debug
 
 <div class="bs-callout-warning">
 Note: MFTF run command's `--debug` option is different from Codeception `--debug` mode option. 
-</div>
-
-<div class="bs-callout-warning">
-Note: You may want to limit the usage of this Codeception command with arguments and options for `acceptance` only, since it is what is supported by MFTF. You should also change `acceptance` to `functional` when using this command when referring to Codeception documentation.
 </div>
 
 ## References

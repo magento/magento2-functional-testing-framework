@@ -584,6 +584,10 @@ vendor/bin/mftf codecept:run functional Magento/_generated/default/AdminCreateCm
 vendor/bin/mftf codecept:run functional --verbose --steps -g default
 ```
 
+<div class="bs-callout-warning">
+Note: You may want to limit the usage of this Codeception command with arguments and options for `acceptance` only, since it is what is supported by MFTF. You should also change `acceptance` to `functional` when using this command when referring to Codeception documentation.
+</div>
+
 <!-- LINK DEFINITIONS -->
 
 [configuration]: ../configuration.md
