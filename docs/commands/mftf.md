@@ -585,16 +585,28 @@ vendor/bin/mftf codecept:run [<suite|test>] --[<option(s)>]
 ```bash
 # Run all tests in functional suite
 vendor/bin/mftf codecept:run functional
+```
+
+```bash
 # Run all tests in functional suite with options
 vendor/bin/mftf codecept:run functional --verbose --steps --debug
+```
+
+```bash
 # Run one test
 vendor/bin/mftf codecept:run functional Magento/_generated/default/AdminCreateCmsPageTestCest.php --debug
+```
+
+```bash
 # Run all tests in default group
 vendor/bin/mftf codecept:run functional --verbose --steps -g default
 ```
 
 <div class="bs-callout-warning">
-Note: You may want to limit the usage of this Codeception command with arguments and options for `acceptance` only, since it is what is supported by MFTF. You should also change `acceptance` to `functional` when using this command when referring to Codeception documentation.
+<p>
+Note: You may want to limit the usage of this Codeception command with arguments and options for "acceptance" only, since it is what's supported by MFTF. 
+When using this command, you should change "acceptance" to "functional" when referring to Codeception documentation.
+</p>
 </div>
 
 <!-- LINK DEFINITIONS -->
