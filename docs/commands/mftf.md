@@ -568,6 +568,35 @@ To upgrade all test components inside the `Catalog` module:
 vendor/bin/mftf upgrade:tests /Users/user/magento2/app/code/Magento/Catalog/Test/Mftf/
 ```
 
+### `codecept:run`
+
+A MFTF wrapper command that invokes `vendor/bin/codecept run`. This command runs tests in functional suite. Tests must be generated before using this command.
+
+#### Usage
+
+See the [Run Command](https://codeception.com/docs/reference/Commands#Run).
+
+```bash
+vendor/bin/mftf codecept:run [<suite|test>] --[<option(s)>]
+```
+
+#### Examples
+
+```bash
+# Run all tests in functional suite
+vendor/bin/mftf codecept:run functional
+# Run all tests in functional suite with options
+vendor/bin/mftf codecept:run functional --verbose --steps --debug
+# Run one test
+vendor/bin/mftf codecept:run functional Magento/_generated/default/AdminCreateCmsPageTestCest.php --debug
+# Run all tests in default group
+vendor/bin/mftf codecept:run functional --verbose --steps -g default
+```
+
+<div class="bs-callout-warning">
+Note: You may want to limit the usage of this Codeception command with arguments and options for `acceptance` only, since it is what is supported by MFTF. You should also change `acceptance` to `functional` when using this command when referring to Codeception documentation.
+</div>
+
 <!-- LINK DEFINITIONS -->
 
 [configuration]: ../configuration.md

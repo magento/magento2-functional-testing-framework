@@ -117,18 +117,24 @@ class RunTestFailedCommand extends BaseGenerateCommand
         $testManifestList = $this->readTestManifestFile();
         $returnCode = 0;
         foreach ($testManifestList as $testCommand) {
-            $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
-            $codeceptionCommand .= $testCommand;
+            if ($this->pauseEnabled()) {
+                $codeceptionCommand = self::CODECEPT_RUN_FUNCTIONAL . $testCommand . ' --debug';
+                $returnCode = $this->codeceptRunTest($codeceptionCommand, $output);
+            } else {
+                $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
+                $codeceptionCommand .= $testCommand;
 
-            $process = new Process($codeceptionCommand);
-            $process->setWorkingDirectory(TESTS_BP);
-            $process->setIdleTimeout(600);
-            $process->setTimeout(0);
-            $returnCode = max($returnCode, $process->run(
-                function ($type, $buffer) use ($output) {
-                    $output->write($buffer);
-                }
-            ));
+                $process = new Process($codeceptionCommand);
+                $process->setWorkingDirectory(TESTS_BP);
+                $process->setIdleTimeout(600);
+                $process->setTimeout(0);
+                $returnCode = max($returnCode, $process->run(
+                    function ($type, $buffer) use ($output) {
+                        $output->write($buffer);
+                    }
+                ));
+            }
+
             if (file_exists($this->testsFailedFile)) {
                 $this->failedList = array_merge(
                     $this->failedList,

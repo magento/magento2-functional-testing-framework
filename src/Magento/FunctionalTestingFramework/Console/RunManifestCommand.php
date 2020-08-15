@@ -11,6 +11,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
@@ -103,23 +104,32 @@ class RunManifestCommand extends Command
      * @param string          $manifestLine
      * @param OutputInterface $output
      * @return void
+     * @throws \Exception
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable) Need this because of the unused $type variable in the closure
      */
     private function runManifestLine(string $manifestLine, OutputInterface $output)
     {
-        $codeceptionCommand = realpath(PROJECT_ROOT . "/vendor/bin/codecept")
-            . " run functional --verbose --steps "
-            . $manifestLine;
+        if (getenv('ENABLE_PAUSE') === 'true') {
+            $codeceptionCommand = BaseGenerateCommand::CODECEPT_RUN_FUNCTIONAL
+                . '--verbose --steps --debug ' . $manifestLine;
+            $input = new StringInput($codeceptionCommand);
+            $command = $this->getApplication()->find('codecept:run');
+            $subReturnCode = $command->run($input, $output);
+        } else {
+            $codeceptionCommand = realpath(PROJECT_ROOT . "/vendor/bin/codecept")
+                . " run functional --verbose --steps " . $manifestLine;
 
-        // run the codecept command in a sub process
-        $process = new Process($codeceptionCommand);
-        $process->setWorkingDirectory(TESTS_BP);
-        $process->setIdleTimeout(600);
-        $process->setTimeout(0);
-        $subReturnCode = $process->run(function ($type, $buffer) use ($output) {
-            $output->write($buffer);
-        });
+            // run the codecept command in a sub process
+            $process = new Process($codeceptionCommand);
+            $process->setWorkingDirectory(TESTS_BP);
+            $process->setIdleTimeout(600);
+            $process->setTimeout(0);
+            $subReturnCode = $process->run(function ($type, $buffer) use ($output) {
+                $output->write($buffer);
+            });
+        }
+
         $this->returnCode = max($this->returnCode, $subReturnCode);
     }
 
