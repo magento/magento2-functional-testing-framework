@@ -769,16 +769,16 @@ class MagentoWebDriver extends WebDriver
             $action->moveToElement($snodes);
             $action->clickAndHold($snodes);
             // Fix Start
-            $action->moveByOffset(-1,-1);
-            $action->moveByOffset(1,1);
+            $action->moveByOffset(-1, -1);
+            $action->moveByOffset(1, 1);
             // Fix End
             $action->moveByOffset($travelX, $travelY);
             $action->release()->perform();
         } else {
             $action->clickAndHold($snodes);
             // Fix Start
-            $action->moveByOffset(-1,-1);
-            $action->moveByOffset(1,1);
+            $action->moveByOffset(-1, -1);
+            $action->moveByOffset(1, 1);
             // Fix End
             $action->moveToElement($tnodes);
             $action->release($tnodes)->perform();
