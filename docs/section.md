@@ -58,11 +58,11 @@ Example (`.../Catalog/Section/AdminCategorySidebarActionSection.xml` file):
 <?xml version="1.0" encoding="utf-8"?>
 
 <sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
-   <section name="AdminCategorySidebarActionSection">
-      <element name="addRootCategoryButton" type="button" selector="#add_root_category_button" timeout="30"/>
-      <element name="addSubcategoryButton" type="button" selector="#add_subcategory_button" timeout="30"/>
-   </section>
+        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="AdminCategorySidebarActionSection">
+        <element name="AddRootCategoryButton" type="button" selector="#add_root_category_button" timeout="30"/>
+        <element name="AddSubcategoryButton" type="button" selector="#add_subcategory_button" timeout="30"/>
+    </section>
 </sections>
 ```
 
@@ -70,14 +70,14 @@ This example uses a `AdminCategorySidebarActionSection` section. All sections wi
 
 The `AdminCategorySidebarActionSection` section declares two buttons:
 
--  `addRootCategoryButton` - button with a `#add_root_category_button` locator on the parent web page
--  `addSubcategoryButton` - button with a `#add_subcategory_button` locator on the parent web page
+-  `AddRootCategoryButton` - button with a `#add_root_category_button` locator on the parent web page
+-  `AddSubcategoryButton` - button with a `#add_subcategory_button` locator on the parent web page
 
 The following is an example of a call in test:
 
 ```xml
 <!-- Click on the button with locator "#add_subcategory_button" on the web page-->
-<click selector="{{AdminCategorySidebarActionSection.addSubcategoryButton}}" stepKey="clickOnAddSubCategory"/>
+<click selector="{{AdminCategorySidebarActionSection.AddSubcategoryButton}}" stepKey="clickOnAddSubCategory"/>
 ```
 
 ## Elements reference
@@ -116,21 +116,21 @@ The most usual use case is a test step with a button click action.
 
 The section element code declaration containing the timeout attribute:
 
-> StorefrontSigninSection.xml
+> StorefrontCustomerSignInPopupFormSection.xml
 
 ```xml
 ...
-<element name="signIn" type="button" selector="#signIn" timeout="30"/>
+<element name="signIn" type="button" selector="#send2" timeout="30"/>
 ...
 ```
 
 The test step that covers the use case:
 
-> StorefrontSigninTest.xml
+> CaptchaWithDisabledGuestCheckoutTest.xml
 
 ```xml
 ...
-<click selector="{{StorefrontSigninSection.signIn}}" ../>
+<click selector="{{StorefrontCustomerSignInPopupFormSection.signIn}}" stepKey="clickSignIn"/>
 ...
 ```
 

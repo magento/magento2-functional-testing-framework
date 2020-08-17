@@ -45,7 +45,7 @@ vendor/bin/mftf generate:tests AdminLoginSuccessfulTest StorefrontPersistedCusto
 ### Generate test by test and suite name
 
 ```bash
-vendor/bin/mftf generate:tests LoginSuite:AdminLoginSuccessfulTest
+vendor/bin/mftf generate:tests WYSIWYGDisabledSuite:AdminCMSPageCreatePageTest
 ```
 
 ### Generate and run the tests for a specified group
@@ -62,15 +62,15 @@ This command cleans up the previously generated tests; generates and runs tests 
 vendor/bin/mftf run:test AdminLoginSuccessfulTest StorefrontPersistedCustomerLoginTest -r
 ```
 
-This command cleans up the previously generated tests; generates and runs the `LoginAsAdminTest` and `LoginAsCustomerTest` tests.
+This command cleans up the previously generated tests; generates and runs the `AdminLoginSuccessfulTest` and `StorefrontPersistedCustomerLoginTest` tests.
 
 ### Generate and run particular test in a specific suite's context
 
 ```bash
-vendor/bin/mftf run:test LoginSuite:AdminLoginSuccessfulTest -r
+vendor/bin/mftf run:test WYSIWYGDisabledSuite:AdminCMSPageCreatePageTest -r
 ```
 
-This command cleans up previously generated tests; generates and run `AdminLoginSuccessfulTest` within the context of the `LoginSuite`.
+This command cleans up previously generated tests; generates and run `AdminCMSPageCreatePageTest` within the context of the `WYSIWYGDisabledSuite`.
 
 ### Generate and run a testManifest.txt file
 

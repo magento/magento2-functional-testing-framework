@@ -44,6 +44,10 @@ Use the action `getOTP` [Reference](./test/actions.md#getotp) to generate the co
 Note:
 You will need to set the `secret` for any non-default admin users first, before using `getOTP`. For example:
 
+{%raw%}
+
 ```xml
 <magentoCLI command="security:tfa:google:set-secret admin2 {{_CREDS.magento/tfa/OTP_SHARED_SECRET}}" stepKey="setSecret"/>
 ```
+
+{%endraw%}
