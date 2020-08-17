@@ -761,19 +761,25 @@ class MagentoWebDriver extends WebDriver
         $snodes = $this->matchFirstOrFail($this->baseElement, $source);
         $tnodes = $this->matchFirstOrFail($this->baseElement, $target);
         $action = new WebDriverActions($this->webDriver);
-
         if ($xOffset !== null || $yOffset !== null) {
             $targetX = intval($tnodes->getLocation()->getX() + $xOffset);
             $targetY = intval($tnodes->getLocation()->getY() + $yOffset);
-
             $travelX = intval($targetX - $snodes->getLocation()->getX());
             $travelY = intval($targetY - $snodes->getLocation()->getY());
             $action->moveToElement($snodes);
             $action->clickAndHold($snodes);
+            // Fix Start
+            $action->moveByOffset(-1,-1);
+            $action->moveByOffset(1,1);
+            // Fix End
             $action->moveByOffset($travelX, $travelY);
             $action->release()->perform();
         } else {
             $action->clickAndHold($snodes);
+            // Fix Start
+            $action->moveByOffset(-1,-1);
+            $action->moveByOffset(1,1);
+            // Fix End
             $action->moveToElement($tnodes);
             $action->release($tnodes)->perform();
         }
