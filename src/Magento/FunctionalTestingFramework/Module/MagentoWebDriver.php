@@ -54,7 +54,9 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHan
 class MagentoWebDriver extends WebDriver
 {
     use AttachmentSupport;
-    use Pause;
+    use Pause {
+        pause as codeceptPause;
+    }
 
     const MAGENTO_CRON_INTERVAL = 60;
     const MAGENTO_CRON_COMMAND = 'cron:run';
@@ -843,7 +845,7 @@ class MagentoWebDriver extends WebDriver
         if ($this->pngReport === null && $this->htmlReport === null) {
             $this->saveScreenshot();
             if (getenv('ENABLE_PAUSE') === 'true') {
-                $this->pause();
+                $this->pause(true);
             }
         }
 
@@ -1027,5 +1029,24 @@ class MagentoWebDriver extends WebDriver
             }
             $this->webDriver->switchTo()->frame($els[0]);
         }
+    }
+
+    /**
+     * Invoke Codeption pause()
+     *
+     * @param boolean $pauseOnFail
+     * @return void
+     */
+    public function pause($pauseOnFail = false)
+    {
+        if (!\Codeception\Util\Debug::isEnabled()) {
+            return;
+        }
+
+        if ($pauseOnFail) {
+            print(PHP_EOL . "Failure encountered. Pausing execution..." . PHP_EOL . PHP_EOL);
+        }
+
+        $this->codeceptPause();
     }
 }

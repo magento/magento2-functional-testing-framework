@@ -66,7 +66,11 @@ class TestHookObjectExtractor extends BaseObjectExtractor
     {
         $defaultSteps['saveScreenshot'] = new ActionObject("saveScreenshot", "saveScreenshot", []);
         if (getenv('ENABLE_PAUSE') === 'true') {
-            $defaultSteps['pauseWhenFailed'] = new ActionObject('pauseWhenFailed', 'pause', []);
+            $defaultSteps['pauseWhenFailed'] = new ActionObject(
+                'pauseWhenFailed',
+                'pause',
+                [ActionObject::PAUSE_ACTION_INTERNAL_ATTRIBUTE => true]
+            );
         }
 
         $hook = new TestHookObject(
