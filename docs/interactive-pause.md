@@ -61,9 +61,11 @@ vendor/bin/mftf codecept:run --debug
 ```
 
 <div class="bs-callout-warning">
-Note: MFTF run command's `--debug` option is different from Codeception `--debug` mode option. 
+<p>
+Note: MFTF command "--debug" option has different meaning than Codeception command "--debug" mode option.
+</p>
 </div>
 
-## References
+<!-- Link definitions -->
 
-[pause on codeception.com](https://codeception.com/docs/02-GettingStarted#Interactive-Pause)
+[pause on codeception.com]: https://codeception.com/docs/02-GettingStarted#Interactive-Pause
