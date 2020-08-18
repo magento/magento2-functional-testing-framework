@@ -102,10 +102,13 @@ class RunTestGroupCommand extends BaseGenerateCommand
 
         $exitCode = -1;
         $returnCodes = [];
-        foreach ($groups as $group) {
-            $codeceptionCommandString = $commandString . " -g {$group}";
+        for ($i = 0; $i < count($groups); $i++) {
+            $codeceptionCommandString = $commandString . ' -g ' . $groups[$i];
 
             if ($this->pauseEnabled()) {
+                if ($i != count($groups) - 1) {
+                    $codeceptionCommandString .= self::CODECEPT_RUN_OPTION_NO_EXIT;
+                }
                 $returnCodes[] = $this->codeceptRunTest($codeceptionCommandString, $output);
             } else {
                 $process = new Process($codeceptionCommandString);

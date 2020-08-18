@@ -81,12 +81,17 @@ class RunManifestCommand extends Command
         // Delete the Codeception failed file just in case it exists from any previous test runs
         $this->deleteFailedFile();
 
-        foreach ($manifestFile as $manifestLine) {
-            if (empty($manifestLine)) {
+        for ($line = 0; $line < count($manifestFile); $line++) {
+            if (empty($manifestFile[$line])) {
                 continue;
             }
 
-            $this->runManifestLine($manifestLine, $output);
+            if ($line == count($manifestFile) - 1) {
+                $this->runManifestLine($manifestFile[$line], $output, true);
+            } else {
+                $this->runManifestLine($manifestFile[$line], $output);
+            }
+
             $this->aggregateFailed();
         }
 
@@ -103,18 +108,23 @@ class RunManifestCommand extends Command
      *
      * @param string          $manifestLine
      * @param OutputInterface $output
+     * @param boolean         $exit
      * @return void
      * @throws \Exception
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable) Need this because of the unused $type variable in the closure
      */
-    private function runManifestLine(string $manifestLine, OutputInterface $output)
+    private function runManifestLine($manifestLine, $output, $exit = false)
     {
         if (getenv('ENABLE_PAUSE') === 'true') {
             $codeceptionCommand = BaseGenerateCommand::CODECEPT_RUN_FUNCTIONAL
-                . '--verbose --steps --debug ' . $manifestLine;
+                . '--verbose --steps --debug ';
+            if (!$exit) {
+                $codeceptionCommand .= BaseGenerateCommand::CODECEPT_RUN_OPTION_NO_EXIT;
+            }
+            $codeceptionCommand .= $manifestLine;
             $input = new StringInput($codeceptionCommand);
-            $command = $this->getApplication()->find('codecept:run');
+            $command = $this->getApplication()->find(BaseGenerateCommand::CODECEPT_RUN);
             $subReturnCode = $command->run($input, $output);
         } else {
             $codeceptionCommand = realpath(PROJECT_ROOT . "/vendor/bin/codecept")

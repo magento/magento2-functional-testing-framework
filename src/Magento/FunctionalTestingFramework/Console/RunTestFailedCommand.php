@@ -116,13 +116,16 @@ class RunTestFailedCommand extends BaseGenerateCommand
 
         $testManifestList = $this->readTestManifestFile();
         $returnCode = 0;
-        foreach ($testManifestList as $testCommand) {
+        for ($i = 0; $i < count($testManifestList); $i++) {
             if ($this->pauseEnabled()) {
-                $codeceptionCommand = self::CODECEPT_RUN_FUNCTIONAL . $testCommand . ' --debug';
+                $codeceptionCommand = self::CODECEPT_RUN_FUNCTIONAL . $testManifestList[$i] . ' --debug ';
+                if ($i != count($testManifestList) - 1) {
+                    $codeceptionCommand .= self::CODECEPT_RUN_OPTION_NO_EXIT;
+                }
                 $returnCode = $this->codeceptRunTest($codeceptionCommand, $output);
             } else {
                 $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
-                $codeceptionCommand .= $testCommand;
+                $codeceptionCommand .= $testManifestList[$i];
 
                 $process = new Process($codeceptionCommand);
                 $process->setWorkingDirectory(TESTS_BP);
@@ -142,6 +145,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
                 );
             }
         }
+
         foreach ($this->failedList as $test) {
             $this->writeFailedTestToFile($test, $this->testsFailedFile);
         }
