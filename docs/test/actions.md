@@ -1251,8 +1251,9 @@ Attribute|Type|Use|Description
 `stepKey`|string|required| A unique identifier of the action.
 
 #### Example
+
 ```xml
-<!-- Returns value of $grabInputName to the calling 
+<!-- Returns value of $grabInputName to the calling -->
 <return value="{$grabInputName}" stepKey="returnInputName"/>
 ```
 
