@@ -1441,6 +1441,16 @@ class TestGenerator
 
                     $testSteps .= $dateGenerateCode;
                     break;
+                case "pause":
+                    $pauseAttr =  $actionObject->getCustomActionAttributes(
+                        ActionObject::PAUSE_ACTION_INTERNAL_ATTRIBUTE
+                    );
+                    if ($pauseAttr) {
+                        $testSteps .= sprintf("\t\t$%s->%s(%s);", $actor, $actionObject->getType(), 'true');
+                    } else {
+                        $testSteps .= sprintf("\t\t$%s->%s();", $actor, $actionObject->getType());
+                    }
+                    break;
                 case "comment":
                     $input = $input === null ? strtr($value, ['$' => '\$', '{' => '\{', '}' => '\}']) : $input;
                 // Combining userInput from native XML comment and <comment/> action to fall-through 'default' case
