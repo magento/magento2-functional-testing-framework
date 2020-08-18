@@ -52,6 +52,7 @@ class RunTestGroupCommand extends BaseGenerateCommand
      * @throws \Exception
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
