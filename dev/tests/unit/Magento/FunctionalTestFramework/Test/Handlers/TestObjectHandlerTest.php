@@ -261,25 +261,6 @@ class TestObjectHandlerTest extends MagentoTestCase
     }
 
     /**
-     * Function used to set mock for parser return and force init method to run between tests.
-     *
-     * @param array $data
-     * @throws \Exception
-     */
-    private function setMockParserOutput($data)
-    {
-        // clear test object handler value to inject parsed content
-        $property = new \ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
-        $property->setAccessible(true);
-        $property->setValue(null);
-
-        $mockDataParser = AspectMock::double(TestDataParser::class, ['readTestData' => $data])->make();
-        $instance = AspectMock::double(ObjectManager::class, ['create' => $mockDataParser])
-            ->make(); // bypass the private constructor
-        AspectMock::double(ObjectManagerFactory::class, ['getObjectManager' => $instance]);
-    }
-
-    /**
      * Validate test object when ENABLE_PAUSE is set to true
      *
      * @throws \Exception
@@ -299,7 +280,7 @@ class TestObjectHandlerTest extends MagentoTestCase
 
         $resolverMock = new MockModuleResolverBuilder();
         $resolverMock->setup();
-        $this->setMockParserOutput($mockData);
+        ObjectHandlerUtil::mockTestObjectHandlerWitData($mockData);
 
         // run object handler method
         $toh = TestObjectHandler::getInstance();
@@ -325,7 +306,7 @@ class TestObjectHandlerTest extends MagentoTestCase
         $expectedFailedActionObject2 = new ActionObject(
             'pauseWhenFailed',
             'pause',
-            []
+            [ActionObject::PAUSE_ACTION_INTERNAL_ATTRIBUTE => true]
         );
 
         $expectedBeforeHookObject = new TestHookObject(
