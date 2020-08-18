@@ -135,8 +135,8 @@ class RunTestCommand extends BaseGenerateCommand
             TestGenerator::DEFAULT_DIR .
             DIRECTORY_SEPARATOR ;
 
-        foreach ($tests as $test) {
-            $testName = $test . 'Cest.php';
+        for ($i = 0; $i < count($tests); $i++) {
+            $testName = $tests[$i] . 'Cest.php';
             if (!realpath($testsDirectory . $testName)) {
                 throw new TestFrameworkException(
                     $testName . " is not available under " . $testsDirectory
@@ -145,6 +145,9 @@ class RunTestCommand extends BaseGenerateCommand
 
             if ($this->pauseEnabled()) {
                 $fullCommand = $codeceptionCommand . $testsDirectory . $testName . ' --verbose --steps --debug';
+                if ($i != count($tests) - 1) {
+                    $fullCommand .= self::CODECEPT_RUN_OPTION_NO_EXIT;
+                }
                 $this->returnCode = max($this->returnCode, $this->codeceptRunTest($fullCommand, $output));
             } else {
                 $fullCommand = $codeceptionCommand . $testsDirectory . $testName . ' --verbose --steps';
@@ -169,10 +172,18 @@ class RunTestCommand extends BaseGenerateCommand
             $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept')
                 . ' run functional --verbose --steps ';
         }
+
+        $count = count($suitesConfig);
+        $index = 0;
         //for tests in suites, run them as a group to run before and after block
         foreach (array_keys($suitesConfig) as $suite) {
             $fullCommand = $codeceptionCommand . " -g {$suite}";
+
+            $index += 1;
             if ($this->pauseEnabled()) {
+                if ($index != $count) {
+                    $fullCommand .= self::CODECEPT_RUN_OPTION_NO_EXIT;
+                }
                 $this->returnCode = max($this->returnCode, $this->codeceptRunTest($fullCommand, $output));
             } else {
                 $this->returnCode = max($this->returnCode, $this->executeTestCommand($fullCommand, $output));
