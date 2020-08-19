@@ -14,6 +14,7 @@ use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
@@ -21,9 +22,25 @@ use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/**
+ * Class BaseGenerateCommand
+ * @package Magento\FunctionalTestingFramework\Console
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class BaseGenerateCommand extends Command
 {
     const MFTF_NOTICES = "Placeholder text for MFTF notices\n";
+    const CODECEPT_RUN = 'codecept:run';
+    const CODECEPT_RUN_FUNCTIONAL = self::CODECEPT_RUN . ' functional ';
+    const CODECEPT_RUN_OPTION_NO_EXIT = ' --no-exit ';
+
+    /**
+     * Enable pause()
+     *
+     * @var boolean
+     */
+    private $enablePause = null;
 
     /**
      * Console output style
@@ -217,5 +234,37 @@ class BaseGenerateCommand extends Command
         } else {
             $output->writeln(self::MFTF_NOTICES);
         }
+    }
+
+    /**
+     * Return if pause() is enabled
+     *
+     * @return boolean
+     */
+    protected function pauseEnabled()
+    {
+        if (null === $this->enablePause) {
+            if (getenv('ENABLE_PAUSE') === 'true') {
+                $this->enablePause = true;
+            } else {
+                $this->enablePause = false;
+            }
+        }
+        return $this->enablePause;
+    }
+
+    /**
+     * Runs the bin/mftf codecept:run command and returns exit code
+     *
+     * @param string          $commandStr
+     * @param OutputInterface $output
+     * @return integer
+     * @throws \Exception
+     */
+    protected function codeceptRunTest(string $commandStr, OutputInterface $output)
+    {
+        $input = new StringInput($commandStr);
+        $command = $this->getApplication()->find(self::CODECEPT_RUN);
+        return $command->run($input, $output);
     }
 }

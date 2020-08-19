@@ -215,8 +215,8 @@ class OperationDefinitionObjectHandler implements ObjectHandlerInterface
 
             if ($deprecated !== null) {
                 LoggingUtil::getInstance()->getLogger(self::class)->deprecation(
-                    $deprecated,
-                    ["operationName" => $dataDefName, "deprecatedOperation" => $deprecated]
+                    $message = "The operation {$dataDefName} is deprecated.",
+                    ["operationType" => $operation, "deprecatedMessage" => $deprecated]
                 );
             }
 

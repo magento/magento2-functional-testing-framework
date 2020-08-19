@@ -52,6 +52,7 @@ class RunTestGroupCommand extends BaseGenerateCommand
      * @throws \Exception
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -94,23 +95,33 @@ class RunTestGroupCommand extends BaseGenerateCommand
             $command->run(new ArrayInput($args), $output);
         }
 
-        $commandString = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional --verbose --steps';
+        if ($this->pauseEnabled()) {
+            $commandString = self::CODECEPT_RUN_FUNCTIONAL . '--verbose --steps --debug';
+        } else {
+            $commandString = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional --verbose --steps';
+        }
 
         $exitCode = -1;
         $returnCodes = [];
-        foreach ($groups as $group) {
-            $codeceptionCommandString = $commandString . " -g {$group}";
+        for ($i = 0; $i < count($groups); $i++) {
+            $codeceptionCommandString = $commandString . ' -g ' . $groups[$i];
 
-            $process = new Process($codeceptionCommandString);
-            $process->setWorkingDirectory(TESTS_BP);
-            $process->setIdleTimeout(600);
-            $process->setTimeout(0);
-
-            $returnCodes[] = $process->run(
-                function ($type, $buffer) use ($output) {
-                    $output->write($buffer);
+            if ($this->pauseEnabled()) {
+                if ($i != count($groups) - 1) {
+                    $codeceptionCommandString .= self::CODECEPT_RUN_OPTION_NO_EXIT;
                 }
-            );
+                $returnCodes[] = $this->codeceptRunTest($codeceptionCommandString, $output);
+            } else {
+                $process = new Process($codeceptionCommandString);
+                $process->setWorkingDirectory(TESTS_BP);
+                $process->setIdleTimeout(600);
+                $process->setTimeout(0);
+                $returnCodes[] = $process->run(
+                    function ($type, $buffer) use ($output) {
+                        $output->write($buffer);
+                    }
+                );
+            }
         }
 
         foreach ($returnCodes as $returnCode) {

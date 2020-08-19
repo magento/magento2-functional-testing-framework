@@ -116,19 +116,28 @@ class RunTestFailedCommand extends BaseGenerateCommand
 
         $testManifestList = $this->readTestManifestFile();
         $returnCode = 0;
-        foreach ($testManifestList as $testCommand) {
-            $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
-            $codeceptionCommand .= $testCommand;
-
-            $process = new Process($codeceptionCommand);
-            $process->setWorkingDirectory(TESTS_BP);
-            $process->setIdleTimeout(600);
-            $process->setTimeout(0);
-            $returnCode = max($returnCode, $process->run(
-                function ($type, $buffer) use ($output) {
-                    $output->write($buffer);
+        for ($i = 0; $i < count($testManifestList); $i++) {
+            if ($this->pauseEnabled()) {
+                $codeceptionCommand = self::CODECEPT_RUN_FUNCTIONAL . $testManifestList[$i] . ' --debug ';
+                if ($i != count($testManifestList) - 1) {
+                    $codeceptionCommand .= self::CODECEPT_RUN_OPTION_NO_EXIT;
                 }
-            ));
+                $returnCode = $this->codeceptRunTest($codeceptionCommand, $output);
+            } else {
+                $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
+                $codeceptionCommand .= $testManifestList[$i];
+
+                $process = new Process($codeceptionCommand);
+                $process->setWorkingDirectory(TESTS_BP);
+                $process->setIdleTimeout(600);
+                $process->setTimeout(0);
+                $returnCode = max($returnCode, $process->run(
+                    function ($type, $buffer) use ($output) {
+                        $output->write($buffer);
+                    }
+                ));
+            }
+
             if (file_exists($this->testsFailedFile)) {
                 $this->failedList = array_merge(
                     $this->failedList,
@@ -136,6 +145,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
                 );
             }
         }
+
         foreach ($this->failedList as $test) {
             $this->writeFailedTestToFile($test, $this->testsFailedFile);
         }

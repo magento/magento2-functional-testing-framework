@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<suites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Suite/etc/suiteSchema.xsd">
+    <suite name="suiteWithMultiplePauseActionsSuite">
+        <include>
+            <group name="include" />
+        </include>
+        <before>
+            <amOnPage url="some.url" stepKey="before"/>
+            <createData entity="SecretData" stepKey="create1">
+                <field key="someKey">dataHere</field>
+            </createData>
+            <pause stepKey="pauseCreate1"/>
+        </before>
+        <after>
+            <deleteData createDataKey="create1" stepKey="delete1"/>
+            <deleteData url="deleteThis" stepKey="deleteThis"/>
+            <fillField selector="#fill" userInput="{{SecretData.key2}}" stepKey="fillAfter"/>
+            <pause stepKey="pauseFillAfter"/>
+        </after>
+    </suite>
+</suites>

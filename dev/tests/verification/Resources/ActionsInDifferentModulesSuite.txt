@@ -1,0 +1,218 @@
+<?php
+
+namespace Group;
+
+use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
+use Magento\FunctionalTestingFramework\Module\MagentoWebDriver;
+use Magento\FunctionalTestingFramework\Module\MagentoAssert;
+use Magento\FunctionalTestingFramework\Module\MagentoActionProxies;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Codeception\Lib\ModuleContainer;
+use Codeception\Module;
+
+/**
+ * Group class is Codeception Extension which is allowed to handle to all internal events.
+ * This class itself can be used to listen events for test execution of one particular group.
+ * It may be especially useful to create fixtures data, prepare server, etc.
+ *
+ * INSTALLATION:
+ *
+ * To use this group extension, include it to "extensions" option of global Codeception config.
+ */
+class ActionsInDifferentModulesSuite extends \Codeception\GroupObject
+{
+    public static $group = 'ActionsInDifferentModulesSuite';
+    private $testCount = 1;
+    private $preconditionFailure = null;
+    private $currentTestRun = 0;
+    private static $HOOK_EXECUTION_INIT = "\n/******** Beginning execution of ActionsInDifferentModulesSuite suite %s block ********/\n";
+    private static $HOOK_EXECUTION_END = "\n/******** Execution of ActionsInDifferentModulesSuite suite %s block complete ********/\n";
+    /** @var MagentoWebDriver */
+    private $webDriver;
+    /** @var ModuleContainer */
+    private $moduleContainer;
+
+    public function _before(\Codeception\Event\TestEvent $e)
+    {
+        $this->webDriver = $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver');
+        $this->moduleContainer = $this->webDriver->getModuleContainer();
+        // increment test count per execution
+        $this->currentTestRun++;
+        $this->executePreConditions();
+
+        if ($this->preconditionFailure != null) {
+            //if our preconditions fail, we need to mark all the tests as incomplete.
+            $e->getTest()->getMetadata()->setIncomplete("SUITE PRECONDITION FAILED:" . PHP_EOL . $this->preconditionFailure);
+        }
+    }
+
+    private function executePreConditions()
+    {
+        if ($this->currentTestRun == 1) {
+            print sprintf(self::$HOOK_EXECUTION_INIT, "before");
+
+            try {
+                if ($this->webDriver->webDriver != null) {
+                    $this->webDriver->_restart();
+                } else {
+                    $this->webDriver->_initializeSession();
+                }
+                $cli = $this->getModuleForAction("magentoCLISecret")->magentoCLISecret($this->getModuleForAction("getSecret")->getSecret("magento/some/secret"), 60); // stepKey: cli
+                print($cli); // stepKey: cli
+                $create1Fields['someKey'] = "dataHere";
+                PersistedObjectHandler::getInstance()->createEntity(
+                    "create1",
+                    "suite",
+                    "SecretData",
+                    [],
+                    $create1Fields
+                );
+                PersistedObjectHandler::getInstance()->createEntity(
+                    "create2",
+                    "suite",
+                    "SecretData",
+                    []
+                );
+                PersistedObjectHandler::getInstance()->createEntity(
+                    "create3",
+                    "suite",
+                    "SecretData",
+                    ["create1", "create2"]
+                );
+                $this->getModuleForAction("fillSecretField")->fillSecretField("#fill", $this->getModuleForAction("getSecret")->getSecret("magento/some/secret") . "+" . $this->getModuleForAction("getSecret")->getSecret("magento/some/secret")); // stepKey: fillBefore
+                $this->getModuleForAction("click")->click(PersistedObjectHandler::getInstance()->retrieveEntityField('create2', 'key2', 'suite')); // stepKey: click
+                print("Entering Action Group [return1] ActionGroupReturningValueActionGroup");
+                $grabProducts1Return1 = $this->getModuleForAction("grabMultiple")->grabMultiple("selector"); // stepKey: grabProducts1Return1
+                $this->getModuleForAction("assertCount")->assertCount(1, $grabProducts1Return1); // stepKey: assertCountReturn1
+                $return1 = $this->getModuleForAction("return")->return($grabProducts1Return1); // stepKey: returnProducts1Return1
+                print("Exiting Action Group [return1] ActionGroupReturningValueActionGroup");
+            } catch (\Exception $exception) {
+                $this->preconditionFailure = $exception->getMessage();
+            }
+
+            // reset configuration and close session
+            $this->webDriver->_resetConfig();
+            $this->webDriver->webDriver->close();
+            $this->webDriver->webDriver = null;
+
+            print sprintf(self::$HOOK_EXECUTION_END, "before");
+        }
+    }
+
+    public function _after(\Codeception\Event\TestEvent $e)
+    {
+        $this->executePostConditions($e);
+    }
+
+    private function executePostConditions(\Codeception\Event\TestEvent $e)
+    {
+        if ($this->currentTestRun == $this->testCount) {
+            print sprintf(self::$HOOK_EXECUTION_INIT, "after");
+
+            try {
+                // Find out if Test in Suite failed, will cause potential failures in suite after
+                $cest = $e->getTest();
+
+                //Access private TestResultObject to find stack and if there are any errors (as opposed to failures)
+                $testResultObject = call_user_func(\Closure::bind(
+                    function () use ($cest) {
+                        return $cest->getTestResultObject();
+                    },
+                    $cest
+                ));
+                $errors = $testResultObject->errors();
+
+                if (!empty($errors)) {
+                    foreach ($errors as $error) {
+                        if ($error->failedTest()->getTestMethod() == $cest->getName()) {
+                            // Do not attempt to run _after if failure was in the _after block
+                            // Try to run _after but catch exceptions to prevent them from overwriting original failure.
+                            print("LAST TEST IN SUITE FAILED, TEST AFTER MAY NOT BE SUCCESSFUL\n");
+                        }
+                    }
+                }
+                if ($this->webDriver->webDriver != null) {
+                    $this->webDriver->_restart();
+                } else {
+                    $this->webDriver->_initializeSession();
+                }
+                print("Entering Action Group [return2] ExtendedActionGroupReturningValueActionGroup");
+                $grabProducts1Return2 = $this->getModuleForAction("grabMultiple")->grabMultiple("selector"); // stepKey: grabProducts1Return2
+                $this->getModuleForAction("assertCount")->assertCount(1, $grabProducts1Return2); // stepKey: assertCountReturn2
+                $return2 = $this->getModuleForAction("return")->return($grabProducts1Return2); // stepKey: returnProducts1Return2
+                $grabProducts2Return2 = $this->getModuleForAction("grabMultiple")->grabMultiple("otherSelector"); // stepKey: grabProducts2Return2
+                $this->getModuleForAction("assertCount")->assertCount(2, $grabProducts2Return2); // stepKey: assertSecondCountReturn2
+                $return2 = $this->getModuleForAction("return")->return($grabProducts2Return2); // stepKey: returnProducts2Return2
+                print("Exiting Action Group [return2] ExtendedActionGroupReturningValueActionGroup");
+                PersistedObjectHandler::getInstance()->deleteEntity(
+                	"create1",
+                    "suite"
+                );
+                PersistedObjectHandler::getInstance()->deleteEntity(
+                	"create2",
+                    "suite"
+                );
+                PersistedObjectHandler::getInstance()->deleteEntity(
+                	"create3",
+                    "suite"
+                );
+                $this->getModuleForAction("deleteEntityByUrl")->deleteEntityByUrl("deleteThis"); // stepKey: deleteThis
+                $this->getModuleForAction("fillSecretField")->fillSecretField("#fill", $this->getModuleForAction("getSecret")->getSecret("magento/some/secret")); // stepKey: fillAfter
+                $cli2 = $this->getModuleForAction("magentoCLISecret")->magentoCLISecret($this->getModuleForAction("getSecret")->getSecret("magento/some/secret") . "-some/data-" . $this->getModuleForAction("getSecret")->getSecret("magento/some/secret"), 60); // stepKey: cli2
+                print($cli2); // stepKey: cli2
+            } catch (\Exception $exception) {
+                print $exception->getMessage();
+            }
+
+            PersistedObjectHandler::getInstance()->clearSuiteObjects();
+
+            $this->closeSession($this->webDriver);
+
+            print sprintf(self::$HOOK_EXECUTION_END, "after");
+        }
+    }
+
+    /**
+     * Close session method closes current session.
+     * If config 'close_all_sessions' is set to 'true' all sessions will be closed.
+     *
+     * return void
+     */
+    private function closeSession(): void
+    {
+        $webDriverConfig = $this->webDriver->_getConfig();
+        $this->webDriver->_closeSession();
+        if (isset($webDriverConfig['close_all_sessions']) && $webDriverConfig['close_all_sessions'] === "true") {
+            $wdHost = sprintf(
+                '%s://%s:%s%s',
+                $webDriverConfig['protocol'],
+                $webDriverConfig['host'],
+                $webDriverConfig['port'],
+                $webDriverConfig['path']
+            );
+            $availableSessions = RemoteWebDriver::getAllSessions($wdHost);
+            foreach ($availableSessions as $session) {
+                $remoteWebDriver = RemoteWebDriver::createBySessionID($session['id'], $wdHost);
+                $remoteWebDriver->quit();
+            }
+        }
+    }
+
+    /**
+     * Return the module for an action.
+     *
+     * @param string $action
+     * @return Module
+     * @throws \Exception
+     */
+    private function getModuleForAction($action)
+    {
+        $module = $this->moduleContainer->moduleForAction($action);
+        if ($module === null) {
+            throw new TestFrameworkException('Invalid action "' . $action . '"' . PHP_EOL);
+        }
+        return $module;
+    }
+}

@@ -57,19 +57,26 @@ class TestHookObjectExtractor extends BaseObjectExtractor
 
     /**
      * Creates the default failed hook object with a single saveScreenshot action.
+     * And a pause action when ENABLE_PAUSE is set to true.
      *
      * @param string $parentName
      * @return TestHookObject
      */
     public function createDefaultFailedHook($parentName)
     {
-
-        $saveScreenshotStep = [new ActionObject("saveScreenshot", "saveScreenshot", [])];
+        $defaultSteps['saveScreenshot'] = new ActionObject("saveScreenshot", "saveScreenshot", []);
+        if (getenv('ENABLE_PAUSE') === 'true') {
+            $defaultSteps['pauseWhenFailed'] = new ActionObject(
+                'pauseWhenFailed',
+                'pause',
+                [ActionObject::PAUSE_ACTION_INTERNAL_ATTRIBUTE => true]
+            );
+        }
 
         $hook = new TestHookObject(
             TestObjectExtractor::TEST_FAILED_HOOK,
             $parentName,
-            $saveScreenshotStep
+            $defaultSteps
         );
 
         return $hook;

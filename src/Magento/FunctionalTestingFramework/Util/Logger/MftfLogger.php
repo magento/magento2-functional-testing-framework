@@ -46,12 +46,14 @@ class MftfLogger extends Logger
     public function deprecation($message, array $context = [], $verbose = false)
     {
         $message = "DEPRECATION: " . $message;
-        // print during test generation
-        if ($this->phase === MftfApplicationConfig::GENERATION_PHASE && $verbose) {
+        // print during test generation including metadata
+        if ((array_key_exists('operationType', $context) ||
+                $this->phase === MftfApplicationConfig::GENERATION_PHASE) && $verbose) {
             print ($message . json_encode($context) . "\n");
         }
-        // suppress logging during test execution
-        if ($this->phase !== MftfApplicationConfig::EXECUTION_PHASE) {
+        // suppress logging during test execution except metadata
+        if (array_key_exists('operationType', $context) ||
+            $this->phase !== MftfApplicationConfig::EXECUTION_PHASE) {
             parent::warning($message, $context);
         }
     }

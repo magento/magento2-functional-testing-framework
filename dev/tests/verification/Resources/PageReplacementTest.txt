@@ -35,8 +35,8 @@ class PageReplacementTestCest
 		$I->amOnPage("/John/StringLiteral2.html"); // stepKey: twoParamPageStringData
 		$I->amOnPage("/John/" . $I->retrieveEntityField('datakey', 'firstname', 'test') . ".html"); // stepKey: twoParamPageDataPersist
 		$I->amOnPage("/" . $I->retrieveEntityField('datakey', 'firstname', 'test') . "/StringLiteral2.html"); // stepKey: twoParamPagePersistString
-		$I->amOnPage("/" . getenv("MAGENTO_BACKEND_NAME") . "/backend"); // stepKey: onAdminPage
-		$I->amOnPage("/" . getenv("MAGENTO_BACKEND_NAME") . "/StringLiteral/page.html"); // stepKey: oneParamAdminPageString
+		$I->amOnPage((getenv("MAGENTO_BACKEND_BASE_URL") ? rtrim(getenv("MAGENTO_BACKEND_BASE_URL"), "/") : "") . "/" . getenv("MAGENTO_BACKEND_NAME") . "/backend"); // stepKey: onAdminPage
+		$I->amOnPage((getenv("MAGENTO_BACKEND_BASE_URL") ? rtrim(getenv("MAGENTO_BACKEND_BASE_URL"), "/") : "") . "/" . getenv("MAGENTO_BACKEND_NAME") . "/StringLiteral/page.html"); // stepKey: oneParamAdminPageString
 		$I->amOnUrl("http://myFullUrl.com/"); // stepKey: onExternalPage
 	}
 }

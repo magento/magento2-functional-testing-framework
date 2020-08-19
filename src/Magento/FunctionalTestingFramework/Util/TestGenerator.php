@@ -1172,6 +1172,16 @@ class TestGenerator
                         $selector
                     );
                     break;
+                case "return":
+                    $actionOrigin = $actionObject->getActionOrigin();
+                    $actionOriginStepKey = $actionOrigin[ActionGroupObject::ACTION_GROUP_ORIGIN_TEST_REF];
+                    $testSteps .= $this->wrapFunctionCallWithReturnValue(
+                        $actionOriginStepKey,
+                        $actor,
+                        $actionObject,
+                        $value
+                    );
+                    break;
                 case "formatCurrency":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
@@ -1430,6 +1440,16 @@ class TestGenerator
                     $dateGenerateCode .= "\t\t\${$stepKey} = \$date->format({$format});\n";
 
                     $testSteps .= $dateGenerateCode;
+                    break;
+                case "pause":
+                    $pauseAttr =  $actionObject->getCustomActionAttributes(
+                        ActionObject::PAUSE_ACTION_INTERNAL_ATTRIBUTE
+                    );
+                    if ($pauseAttr) {
+                        $testSteps .= sprintf("\t\t$%s->%s(%s);", $actor, $actionObject->getType(), 'true');
+                    } else {
+                        $testSteps .= sprintf("\t\t$%s->%s();", $actor, $actionObject->getType());
+                    }
                     break;
                 case "comment":
                     $input = $input === null ? strtr($value, ['$' => '\$', '{' => '\{', '}' => '\}']) : $input;
@@ -2020,18 +2040,20 @@ class TestGenerator
         $newArgs = [];
 
         foreach ($args as $key => $arg) {
+            $newArgs[$key] = $arg;
             preg_match_all($regex, $arg, $matches);
             if (!empty($matches[0])) {
-                $fullMatch = $matches[0][0];
-                $refVariable = $matches[1][0];
-                unset($matches);
-                $replacement = "{$func}(\"{$refVariable}\")";
+                foreach ($matches[0] as $matchKey => $fullMatch) {
+                    $refVariable = $matches[1][$matchKey];
 
-                $outputArg = $this->processQuoteBreaks($fullMatch, $arg, $replacement);
-                $newArgs[$key] = $outputArg;
+                    $replacement = $this->getReplacement($func, $refVariable);
+
+                    $outputArg = $this->processQuoteBreaks($fullMatch, $newArgs[$key], $replacement);
+                    $newArgs[$key] = $outputArg;
+                }
+                unset($matches);
                 continue;
             }
-            $newArgs[$key] = $arg;
         }
 
         // override passed in args for use later.
@@ -2302,5 +2324,21 @@ class TestGenerator
         }
 
         return $this->addUniquenessFunctionCall($userInput);
+    }
+
+    /**
+     * Supports fallback for BACKEND URL
+     *
+     * @param string $func
+     * @param string $refVariable
+     * @return string
+     */
+    private function getReplacement($func, $refVariable): string
+    {
+        if ($refVariable === 'MAGENTO_BACKEND_BASE_URL') {
+            return "({$func}(\"{$refVariable}\") ? rtrim({$func}(\"{$refVariable}\"), \"/\") : \"\")";
+        }
+
+        return "{$func}(\"{$refVariable}\")";
     }
 }

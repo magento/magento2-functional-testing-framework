@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="IncludeActionsInDifferentModulesTest">
+        <createData entity="SecretData" stepKey="create">
+            <field key="someKey">dataHere</field>
+        </createData>
+        <fillField selector="#fill" userInput="{{SecretData.key2}}+$create.key2$" stepKey="fill"/>
+        <magentoCLI command="create.key2$" stepKey="cli"/>
+        <actionGroup ref="ActionGroupReturningValueActionGroup" stepKey="return">
+            <argument name="count" value="3"/>
+        </actionGroup>
+    </test>
+</tests>

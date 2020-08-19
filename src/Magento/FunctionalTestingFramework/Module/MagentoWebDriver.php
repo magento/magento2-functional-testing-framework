@@ -15,6 +15,7 @@ use Facebook\WebDriver\Interactions\WebDriverActions;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Util\Uri;
+use Codeception\Lib\ModuleContainer;
 use Magento\FunctionalTestingFramework\DataTransport\WebApiExecutor;
 use Magento\FunctionalTestingFramework\DataTransport\Auth\WebApiAuth;
 use Magento\FunctionalTestingFramework\DataTransport\Auth\Tfa\OTP;
@@ -53,7 +54,9 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHan
 class MagentoWebDriver extends WebDriver
 {
     use AttachmentSupport;
-    use Pause;
+    use Pause {
+        pause as codeceptPause;
+    }
 
     const MAGENTO_CRON_INTERVAL = 60;
     const MAGENTO_CRON_COMMAND = 'cron:run';
@@ -63,7 +66,7 @@ class MagentoWebDriver extends WebDriver
      *
      * @var array
      */
-    public static $loadingMasksLocators = [
+    protected $loadingMasksLocators = [
         '//div[contains(@class, "loading-mask")]',
         '//div[contains(@class, "admin_data-grid-loading-mask")]',
         '//div[contains(@class, "admin__data-grid-loading-mask")]',
@@ -178,6 +181,16 @@ class MagentoWebDriver extends WebDriver
     public function _after(TestInterface $test)
     {
         // DO NOT RESET SESSIONS
+    }
+
+    /**
+     * Return ModuleContainer
+     *
+     * @return ModuleContainer
+     */
+    public function getModuleContainer()
+    {
+        return $this->moduleContainer;
     }
 
     /**
@@ -439,7 +452,9 @@ class MagentoWebDriver extends WebDriver
      */
     public function waitForLoadingMaskToDisappear($timeout = null)
     {
-        foreach (self::$loadingMasksLocators as $maskLocator) {
+        $timeout = $timeout ?? $this->_getConfig()['pageload_timeout'];
+        
+        foreach ($this->loadingMasksLocators as $maskLocator) {
             // Get count of elements found for looping.
             // Elements are NOT useful for interaction, as they cannot be fed to codeception actions.
             $loadingMaskElements = $this->_findElements($maskLocator);
@@ -748,19 +763,25 @@ class MagentoWebDriver extends WebDriver
         $snodes = $this->matchFirstOrFail($this->baseElement, $source);
         $tnodes = $this->matchFirstOrFail($this->baseElement, $target);
         $action = new WebDriverActions($this->webDriver);
-
         if ($xOffset !== null || $yOffset !== null) {
             $targetX = intval($tnodes->getLocation()->getX() + $xOffset);
             $targetY = intval($tnodes->getLocation()->getY() + $yOffset);
-
             $travelX = intval($targetX - $snodes->getLocation()->getX());
             $travelY = intval($targetY - $snodes->getLocation()->getY());
             $action->moveToElement($snodes);
             $action->clickAndHold($snodes);
+            // Fix Start
+            $action->moveByOffset(-1, -1);
+            $action->moveByOffset(1, 1);
+            // Fix End
             $action->moveByOffset($travelX, $travelY);
             $action->release()->perform();
         } else {
             $action->clickAndHold($snodes);
+            // Fix Start
+            $action->moveByOffset(-1, -1);
+            $action->moveByOffset(1, 1);
+            // Fix End
             $action->moveToElement($tnodes);
             $action->release($tnodes)->perform();
         }
@@ -823,6 +844,9 @@ class MagentoWebDriver extends WebDriver
 
         if ($this->pngReport === null && $this->htmlReport === null) {
             $this->saveScreenshot();
+            if (getenv('ENABLE_PAUSE') === 'true') {
+                $this->pause(true);
+            }
         }
 
         if ($this->current_test == null) {
@@ -864,7 +888,7 @@ class MagentoWebDriver extends WebDriver
      */
     public function amOnPage($page)
     {
-        parent::amOnPage($page);
+        (0 === strpos($page, 'http')) ? parent::amOnUrl($page) : parent::amOnPage($page);
         $this->waitForPageLoad();
     }
 
@@ -955,120 +979,6 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * Create an entity
-     * TODO: move this function to MagentoActionProxies after MQE-1904
-     *
-     * @param string $key                 StepKey of the createData action.
-     * @param string $scope
-     * @param string $entity              Name of xml entity to create.
-     * @param array  $dependentObjectKeys StepKeys of other createData actions that are required.
-     * @param array  $overrideFields      Array of FieldName => Value of override fields.
-     * @param string $storeCode
-     * @return void
-     */
-    public function createEntity(
-        $key,
-        $scope,
-        $entity,
-        $dependentObjectKeys = [],
-        $overrideFields = [],
-        $storeCode = ''
-    ) {
-        PersistedObjectHandler::getInstance()->createEntity(
-            $key,
-            $scope,
-            $entity,
-            $dependentObjectKeys,
-            $overrideFields,
-            $storeCode
-        );
-    }
-
-    /**
-     * Retrieves and updates a previously created entity
-     * TODO: move this function to MagentoActionProxies after MQE-1904
-     *
-     * @param string $key                 StepKey of the createData action.
-     * @param string $scope
-     * @param string $updateEntity        Name of the static XML data to update the entity with.
-     * @param array  $dependentObjectKeys StepKeys of other createData actions that are required.
-     * @return void
-     */
-    public function updateEntity($key, $scope, $updateEntity, $dependentObjectKeys = [])
-    {
-        PersistedObjectHandler::getInstance()->updateEntity(
-            $key,
-            $scope,
-            $updateEntity,
-            $dependentObjectKeys
-        );
-    }
-
-    /**
-     * Performs GET on given entity and stores entity for use
-     * TODO: move this function to MagentoActionProxies after MQE-1904
-     *
-     * @param string  $key                 StepKey of getData action.
-     * @param string  $scope
-     * @param string  $entity              Name of XML static data to use.
-     * @param array   $dependentObjectKeys StepKeys of other createData actions that are required.
-     * @param string  $storeCode
-     * @param integer $index
-     * @return void
-     */
-    public function getEntity($key, $scope, $entity, $dependentObjectKeys = [], $storeCode = '', $index = null)
-    {
-        PersistedObjectHandler::getInstance()->getEntity(
-            $key,
-            $scope,
-            $entity,
-            $dependentObjectKeys,
-            $storeCode,
-            $index
-        );
-    }
-
-    /**
-     * Retrieves and deletes a previously created entity
-     * TODO: move this function to MagentoActionProxies after MQE-1904
-     *
-     * @param string $key   StepKey of the createData action.
-     * @param string $scope
-     * @return void
-     */
-    public function deleteEntity($key, $scope)
-    {
-        PersistedObjectHandler::getInstance()->deleteEntity($key, $scope);
-    }
-
-    /**
-     * Retrieves a field from an entity, according to key and scope given
-     * TODO: move this function to MagentoActionProxies after MQE-1904
-     *
-     * @param string $stepKey
-     * @param string $field
-     * @param string $scope
-     * @return string
-     */
-    public function retrieveEntityField($stepKey, $field, $scope)
-    {
-        return PersistedObjectHandler::getInstance()->retrieveEntityField($stepKey, $field, $scope);
-    }
-
-    /**
-     * Get encrypted value by key
-     * TODO: move this function to MagentoActionProxies after MQE-1904
-     *
-     * @param string $key
-     * @return string|null
-     * @throws TestFrameworkException
-     */
-    public function getSecret($key)
-    {
-        return CredentialStore::getInstance()->getSecret($key);
-    }
-
-    /**
      * Waits proper amount of time to perform Cron execution
      *
      * @param array   $cronGroups
@@ -1119,5 +1029,24 @@ class MagentoWebDriver extends WebDriver
             }
             $this->webDriver->switchTo()->frame($els[0]);
         }
+    }
+
+    /**
+     * Invoke Codeption pause()
+     *
+     * @param boolean $pauseOnFail
+     * @return void
+     */
+    public function pause($pauseOnFail = false)
+    {
+        if (!\Codeception\Util\Debug::isEnabled()) {
+            return;
+        }
+
+        if ($pauseOnFail) {
+            print(PHP_EOL . "Failure encountered. Pausing execution..." . PHP_EOL . PHP_EOL);
+        }
+
+        $this->codeceptPause();
     }
 }

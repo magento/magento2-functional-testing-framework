@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="DeprecationCheckSection" deprecated="deprecated">
+        <element name="deprecationCheckElement" type="button" selector="#elementOne" deprecated="deprecated"/>
+        <element name="elementTwo" type="button" selector="#elementTwo"/>
+        <element name="elementThree" type="button" selector="#elementThree"/>
+    </section>
+</sections>

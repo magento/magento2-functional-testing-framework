@@ -16,6 +16,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use tests\unit\Util\MagentoTestCase;
+use tests\unit\Util\ObjectHandlerUtil;
 use tests\unit\Util\TestLoggingUtil;
 
 /**
@@ -84,7 +85,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         ";
 
         // Mock Classes
-        $this->mockDataHandlerWithOutput($parserOutput);
+        ObjectHandlerUtil::mockDataObjectHandlerWithData($parserOutput);
         $this->mockCurlHandler($jsonResponse);
         $handler = PersistedObjectHandler::getInstance();
 
@@ -127,7 +128,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         ";
 
         // Mock Classes
-        $this->mockDataHandlerWithOutput($parserOutput);
+        ObjectHandlerUtil::mockDataObjectHandlerWithData($parserOutput);
         $this->mockCurlHandler($jsonResponse);
         $handler = PersistedObjectHandler::getInstance();
 
@@ -175,7 +176,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         ";
 
         // Mock Classes
-        $this->mockDataHandlerWithOutput($parserOutput);
+        ObjectHandlerUtil::mockDataObjectHandlerWithData($parserOutput);
         $this->mockCurlHandler($jsonResponse);
         $handler = PersistedObjectHandler::getInstance();
 
@@ -235,7 +236,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         ";
 
         // Mock Classes
-        $this->mockDataHandlerWithOutput($parserOutput);
+        ObjectHandlerUtil::mockDataObjectHandlerWithData($parserOutput);
         $this->mockCurlHandler($jsonResponse);
         $handler = PersistedObjectHandler::getInstance();
         $handler->createEntity(
@@ -322,7 +323,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         // Mock Classes and Create Entities
         $handler = PersistedObjectHandler::getInstance();
 
-        $this->mockDataHandlerWithOutput($parserOutputOne);
+        ObjectHandlerUtil::mockDataObjectHandlerWithData($parserOutputOne);
         $this->mockCurlHandler($jsonReponseOne);
         $handler->createEntity(
             $entityStepKeyOne,
@@ -399,7 +400,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         // Mock Classes and Create Entities
         $handler = PersistedObjectHandler::getInstance();
 
-        $this->mockDataHandlerWithOutput($parserOutputOne);
+        ObjectHandlerUtil::mockDataObjectHandlerWithData($parserOutputOne);
         $this->mockCurlHandler($jsonReponseOne);
         $handler->createEntity($stepKey, $scope, $name);
 
@@ -447,8 +448,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
 
         // Mock Classes and Create Entities
         $handler = PersistedObjectHandler::getInstance();
-
-        $this->mockDataHandlerWithOutput($parserOutputOne);
+        ObjectHandlerUtil::mockDataObjectHandlerWithData($parserOutputOne);
         $this->mockCurlHandler($jsonReponseOne);
         $handler->createEntity($stepKey, $scope, $name);
 
@@ -473,31 +473,6 @@ class PersistedObjectHandlerTest extends MagentoTestCase
             ['Entity2', 'testKey2', 'testValue2', 'testType', PersistedObjectHandler::SUITE_SCOPE, 'StepKey2'],
             ['Entity3', 'testKey3', 'testValue3', 'testType', PersistedObjectHandler::TEST_SCOPE, 'StepKey3']
         ];
-    }
-
-    /**
-     * Mocks DataObjectHandler to use given output to create
-     * @param $parserOutput
-     * @throws \Exception
-     */
-    public function mockDataHandlerWithOutput($parserOutput)
-    {
-        // Clear DataObjectHandler singleton if already set
-        $property = new \ReflectionProperty(DataObjectHandler::class, "INSTANCE");
-        $property->setAccessible(true);
-        $property->setValue(null);
-
-        $mockDataProfileSchemaParser = AspectMock::double(DataProfileSchemaParser::class, [
-            'readDataProfiles' => $parserOutput
-        ])->make();
-
-        $mockObjectManager = AspectMock::double(ObjectManager::class, [
-            'create' => $mockDataProfileSchemaParser
-        ])->make();
-
-        AspectMock::double(ObjectManagerFactory::class, [
-            'getObjectManager' => $mockObjectManager
-        ]);
     }
 
     public function mockCurlHandler($response)
