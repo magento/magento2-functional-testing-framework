@@ -1,5 +1,41 @@
 Magento Functional Testing Framework Changelog
 ================================================
+3.1.0
+________
+
+### Enhancements
+
+* Customizability
+  * Introduced the new `return` action that allows action groups to return a value. See the [actions page](./docs/test/actions.md#return) for details.
+  * Introduced new MFTF command that invokes `vendor/bin/codecept run`. See the [mftf page](./docs/commands/mftf.md#codeceptrun) for details.
+
+* Usability
+  * Introduced new action `pause`, to invoke codeception interactive pause for debugging during test execution. See the [Interactive Pause](./docs/interactive-pause.md) page for details.
+  * Introduced a new `.env` configuration option `ENABLE_PAUSE`, to enable the new pause feature.
+    
+* Maintainability    
+  * Added a new static check that checks for the usage of the `pause` action. See the [command page](./docs/commands/mftf.md#static-checks) for details.
+   
+* Modularity   
+  * MFTF now supports the use of actions from multiple modules within suites.
+    
+* Traceability
+  * A deprecation notice is now added at test execution time for deprecated metadata usage.
+
+### Fixes
+
+* Fixed issue with suite precondition failure for `createData` with required entity.
+
+### GitHub Issues/Pull requests:
+
+  * [#547](https://github.com/magento/magento2-functional-testing-framework/pull/547) -- Fix invalid behavior of MAGENTO_BACKEND_BASE_URL
+  * [#742](https://github.com/magento/magento2-functional-testing-framework/pull/742) -- Fix Waits In MagentoPwaWebDriver
+  * [#750](https://github.com/magento/magento2-functional-testing-framework/pull/750) -- Docs: Outlining the difference between Allure severity levels
+  * [#683](https://github.com/magento/magento2-functional-testing-framework/pull/683) -- Docs: Renamed sample test name with the correct one
+  * [#691](https://github.com/magento/magento2-functional-testing-framework/pull/691) -- Docs: Branch name updates
+  * [#678](https://github.com/magento/magento2-functional-testing-framework/pull/678) -- Docs: Command added to modify the web server rewrites configuration
+  * [#745](https://github.com/magento/magento2-functional-testing-framework/pull/745) -- Docs: Remove invalid sample test name 
+
 3.0.0
 ---------
 
