@@ -6,21 +6,21 @@ ________
 ### Enhancements
 
 * Customizability
-    * Introduced new action `return` that allows action group to return a value. [See actions page for details](./docs/test/actions.md#return)
-    * Introduced new MFTF command that invokes `vendor/bin/codecept run`. [See mftf page for details](./docs/commands/mftf.md#codeceptrun)
+  * Introduced the new `return` action that allows action groups to return a value. See the [actions page](./docs/test/actions.md#return) for details.
+  * Introduced new MFTF command that invokes `vendor/bin/codecept run`. See the [mftf page](./docs/commands/mftf.md#codeceptrun) for details.
 
 * Usability
-    * Introduced new action `pause`, to invoke codeception interactive pause for debugging during test execution. [See Interactive Pause page for details](./docs/interactive-pause.md)
-    * Introduced new `.env` configuration `ENABLE_PAUSE` to enable the new pause feature.
+  * Introduced new action `pause`, to invoke codeception interactive pause for debugging during test execution. See the [Interactive Pause](./docs/interactive-pause.md) page for details.
+  * Introduced a new `.env` configuration option `ENABLE_PAUSE`, to enable the new pause feature.
     
 * Maintainability    
-    * Added new static check that checks for usage of `pause` action. [See command page for details](./docs/commands/mftf.md#static-checks)
+  * Added a new static check that checks for the usage of the `pause` action. See the [command page](./docs/commands/mftf.md#static-checks) for details.
    
 * Modularity   
-    * Support use of actions from multiple modules in suites.
+  * MFTF now supports the use of actions from multiple modules within suites.
     
 * Traceability
-    * Deprecation notice added at test execution time for deprecated metadata usage.
+  * A deprecation notice is now added at test execution time for deprecated metadata usage.
 
 ### Fixes
 
