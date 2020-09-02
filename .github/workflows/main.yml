@@ -149,8 +149,4 @@ jobs:
       - name: Run tests
         run: bin/functional
 
-      - name: Allure report
-        uses: afiore/action-allure-report@v0.1.0
-        with:
-          results-dir: dev/tests/_output/allure-results
 
