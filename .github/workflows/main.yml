@@ -20,6 +20,7 @@ jobs:
         uses: shivammathur/setup-php@master
         with:
           php-version: ${{ matrix.php-versions }}
+          extensions: curl, dom, intl, json, openssl
 
       - name: Cache Composer packages
         id: composer-cache
@@ -60,7 +61,7 @@ jobs:
         uses: shivammathur/setup-php@master
         with:
           php-version: ${{ matrix.php-versions }}
-          extensions: bcmath, ctype, curl, dom, gd, hash, iconv, intl, mbstring, openssl, pdo_mysql, simplexml, soap, xsl, zip
+          extensions: curl, dom, intl, json, openssl
 
       - name: Cache Composer packages
         id: composer-cache
@@ -92,7 +93,7 @@ jobs:
         uses: shivammathur/setup-php@master
         with:
           php-version: ${{ matrix.php-versions }}
-          extensions: bcmath, ctype, curl, dom, gd, hash, iconv, intl, mbstring, openssl, pdo_mysql, simplexml, soap, xsl, zip
+          extensions: curl, dom, intl, json, openssl
 
       - name: Cache Composer packages
         id: composer-cache
@@ -130,7 +131,7 @@ jobs:
         uses: shivammathur/setup-php@master
         with:
           php-version: ${{ matrix.php-versions }}
-          extensions: bcmath, ctype, curl, dom, gd, hash, iconv, intl, mbstring, openssl, pdo_mysql, simplexml, soap, xsl, zip
+          extensions: curl, dom, intl, json, openssl
 
       - name: Cache Composer packages
         id: composer-cache
@@ -147,3 +148,9 @@ jobs:
 
       - name: Run tests
         run: bin/functional
+
+      - name: Allure report
+        uses: afiore/action-allure-report@v0.1.0
+        with:
+          results-dir: dev/tests/_output/allure-results
+
