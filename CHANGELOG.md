@@ -5,7 +5,7 @@ ________
 
 ### Enhancements
 
-* Customizability
+* Customizability test
   * Introduced the new `return` action that allows action groups to return a value. See the [actions page](./docs/test/actions.md#return) for details.
   * Introduced new MFTF command that invokes `vendor/bin/codecept run`. See the [mftf page](./docs/commands/mftf.md#codeceptrun) for details.
 
