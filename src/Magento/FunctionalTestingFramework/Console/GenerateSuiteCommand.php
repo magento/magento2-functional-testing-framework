@@ -72,6 +72,13 @@ class GenerateSuiteCommand extends BaseGenerateCommand
             }
         }
 
-        $output->writeLn("Suites Generated");
+        if ($this->cmdStatus) {
+            $output->writeLn("Suites Generated");
+            return 0;
+        } else {
+            $output->writeLn("Suite parsing error found. See mftf.log for details.");
+            $output->writeLn("Suites Generated");
+            return 1;
+        }
     }
 }

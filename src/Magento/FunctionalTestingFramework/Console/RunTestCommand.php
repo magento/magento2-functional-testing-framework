@@ -109,7 +109,11 @@ class RunTestCommand extends BaseGenerateCommand
             $this->runTestsInSuite($testConfigArray['suites'], $output);
         }
 
-        return $this->returnCode;
+        if ($this->returnCode == 0 && $this->cmdStatus) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 
     /**

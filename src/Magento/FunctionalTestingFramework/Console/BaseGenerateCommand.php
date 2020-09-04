@@ -50,6 +50,13 @@ class BaseGenerateCommand extends Command
     protected $ioStyle = null;
 
     /**
+     * Command status
+     *
+     * @var bool
+     */
+    protected $cmdStatus = true;
+
+    /**
      * Configures the base command.
      *
      * @return void
@@ -111,6 +118,7 @@ class BaseGenerateCommand extends Command
         $testConfiguration['tests'] = null;
         $testConfiguration['suites'] = null;
         $testsReferencedInSuites = SuiteObjectHandler::getInstance()->getAllTestReferences();
+        $this->cmdStatus = SuiteObjectHandler::getInstance()->parseSuccessful();
         $suiteToTestPair = [];
 
         foreach($tests as $test) {

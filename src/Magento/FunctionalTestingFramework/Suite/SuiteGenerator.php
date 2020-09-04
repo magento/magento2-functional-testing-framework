@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Suite;
 
+use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
@@ -94,27 +95,34 @@ class SuiteGenerator
     {
         $suites = $testManifest->getSuiteConfig();
 
+        $exceptionCollector = new ExceptionCollector();
         foreach ($suites as $suiteName => $suiteContent) {
-            if (empty($suiteContent)) {
-                LoggingUtil::getInstance()->getLogger(self::class)->notification(
-                    "Suite '" . $suiteName . "' contains no tests and won't be generated." . PHP_EOL,
-                    [],
-                    true
-                );
-                continue;
-            }
-            $firstElement = array_values($suiteContent)[0];
+            try {
+                if (empty($suiteContent)) {
+                    LoggingUtil::getInstance()->getLogger(self::class)->notification(
+                        "Suite '" . $suiteName . "' contains no tests and won't be generated." . PHP_EOL,
+                        [],
+                        true
+                    );
+                    continue;
+                }
+                $firstElement = array_values($suiteContent)[0];
 
-            // if the first element is a string we know that we simply have an array of tests
-            if (is_string($firstElement)) {
-                $this->generateSuiteFromTest($suiteName, $suiteContent);
-            }
+                // if the first element is a string we know that we simply have an array of tests
+                if (is_string($firstElement)) {
+                    $this->generateSuiteFromTest($suiteName, $suiteContent);
+                }
 
-            // if our first element is an array we know that we have split the suites
-            if (is_array($firstElement)) {
-                $this->generateSplitSuiteFromTest($suiteName, $suiteContent);
+                // if our first element is an array we know that we have split the suites
+                if (is_array($firstElement)) {
+                    $this->generateSplitSuiteFromTest($suiteName, $suiteContent);
+                }
+            } catch (\Exception $e) {
+                $exceptionCollector->addError(self::class, $e->getMessage());
             }
         }
+        // Report failure
+        $this->throwCollectedExceptions($exceptionCollector);
     }
 
     /**
@@ -140,9 +148,7 @@ class SuiteGenerator
      * @param array  $tests
      * @param string $originalSuiteName
      * @return void
-     * @throws TestReferenceException
-     * @throws XmlException
-     * @throws TestFrameworkException
+     * @throws \Exception
      */
     private function generateSuiteFromTest($suiteName, $tests = [], $originalSuiteName = null)
     {
@@ -152,10 +158,18 @@ class SuiteGenerator
         DirSetupUtil::createGroupDir($fullPath);
 
         $relevantTests = [];
+        $exceptionCollector = new ExceptionCollector();
         if (!empty($tests)) {
             $this->validateTestsReferencedInSuite($suiteName, $tests, $originalSuiteName);
             foreach ($tests as $testName) {
-                $relevantTests[$testName] = TestObjectHandler::getInstance()->getObject($testName);
+                try {
+                    $relevantTests[$testName] = TestObjectHandler::getInstance()->getObject($testName);
+                } catch (\Exception $e) {
+                    $exceptionCollector->addError(
+                        self::class,
+                        "Unable to find relevant test \"{$testName}\" for suite \"{$suiteName}\"\n" . $e->getMessage()
+                    );
+                }
             }
         } else {
             $relevantTests = SuiteObjectHandler::getInstance()->getObject($suiteName)->getTests();
@@ -169,6 +183,8 @@ class SuiteGenerator
             "suite generated",
             ['suite' => $suiteName, 'relative_path' => $relativePath]
         );
+
+        $this->throwCollectedExceptions($exceptionCollector);
     }
 
     /**
@@ -370,5 +386,28 @@ class SuiteGenerator
     private static function getYamlConfigFilePath()
     {
         return FilePathFormatter::format(TESTS_BP);
+    }
+
+    /**
+     * Log error and throw collected exceptions
+     *
+     * @param ExceptionCollector $exceptionCollector
+     * @return void
+     * @throws \Exception
+     */
+    private function throwCollectedExceptions($exceptionCollector)
+    {
+        if (!empty($exceptionCollector->getErrors())) {
+            foreach ($exceptionCollector->getErrors() as $file => $errorMessage) {
+                if (is_array($errorMessage)) {
+                    foreach (array_unique($errorMessage) as $message) {
+                        LoggingUtil::getInstance()->getLogger(SuiteGenerator::class)->error($message);
+                    }
+                } else {
+                    LoggingUtil::getInstance()->getLogger(SuiteGenerator::class)->error($errorMessage);
+                }
+            }
+            $exceptionCollector->throwException();
+        }
     }
 }

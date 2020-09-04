@@ -34,6 +34,13 @@ class SuiteObjectHandler implements ObjectHandlerInterface
     private $suiteObjects;
 
     /**
+     * If suites parsing are successful
+     *
+     * @var bool
+     */
+    private $status;
+
+    /**
      * Avoids instantiation of SuiteObjectHandler by new.
      * @return void
      */
@@ -53,7 +60,6 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      * Function to enforce singleton design pattern
      *
      * @return ObjectHandlerInterface
-     * @throws XmlException
      */
     public static function getInstance(): ObjectHandlerInterface
     {
@@ -90,6 +96,16 @@ class SuiteObjectHandler implements ObjectHandlerInterface
     }
 
     /**
+     * Return if there is any parsing errors
+     *
+     * @return bool
+     */
+    public function parseSuccessful(): bool
+    {
+        return $this->status;
+    }
+
+    /**
      * Function which return all tests referenced by suites.
      *
      * @return array
@@ -114,12 +130,17 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      *
      * @return void
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
-     * @throws XmlException
      */
     private function initSuiteData()
     {
         $suiteDataParser = ObjectManagerFactory::getObjectManager()->create(SuiteDataParser::class);
         $suiteObjectExtractor = new SuiteObjectExtractor();
-        $this->suiteObjects = $suiteObjectExtractor->parseSuiteDataIntoObjects($suiteDataParser->readSuiteData());
+        $parsedArray = $suiteObjectExtractor->parseSuiteDataIntoObjects($suiteDataParser->readSuiteData());
+        $this->suiteObjects = $parsedArray['objects'] ?? [];
+        if (empty($this->suiteObjects)) {
+            $this->status = false;
+        } else {
+            $this->status = $parsedArray['status'] ?? false;
+        }
     }
 }

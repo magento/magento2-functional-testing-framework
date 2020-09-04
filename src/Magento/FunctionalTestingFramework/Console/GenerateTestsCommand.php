@@ -126,20 +126,29 @@ class GenerateTestsCommand extends BaseGenerateCommand
             $this->removeGeneratedDirectory($output, $verbose);
         }
 
+        $errMessages = [];
         try {
             $testConfiguration = $this->createTestConfiguration($json, $tests);
 
             // create our manifest file here
             $testManifest = TestManifestFactory::makeManifest($config, $testConfiguration['suites']);
 
-            TestGenerator::getInstance(null, $testConfiguration['tests'])->createAllTestFiles($testManifest);
+            try {
+                TestGenerator::getInstance(null, $testConfiguration['tests'])->createAllTestFiles($testManifest);
+            } catch (\Exception $e) {
+                $errMessages[] = $e->getMessage();
+            }
 
             if ($config == 'parallel') {
                 /** @var ParallelTestManifest $testManifest */
                 $testManifest->createTestGroups($time);
             }
 
-            SuiteGenerator::getInstance()->generateAllSuites($testManifest);
+            try {
+                SuiteGenerator::getInstance()->generateAllSuites($testManifest);
+            } catch (\Exception $e) {
+                $errMessages[] = $e->getMessage();
+            }
 
             $testManifest->generate();
         } catch (\Exception $e) {
@@ -152,7 +161,16 @@ class GenerateTestsCommand extends BaseGenerateCommand
             return 1;
         }
 
-        $output->writeln("Generate Tests Command Run");
+        if (!empty($errMessages)) {
+            foreach (array_unique($errMessages) as $errMessage) {
+                $output->writeln($errMessage);
+                $output->writeln("\nGenerate Tests Command Run");
+            }
+            return 1;
+        } else {
+            $output->writeln("\nGenerate Tests Command Run");
+            return 0;
+        }
     }
 
     /**

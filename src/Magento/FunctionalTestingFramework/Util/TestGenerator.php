@@ -11,6 +11,7 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHan
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Filter\FilterInterface;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
@@ -20,6 +21,7 @@ use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Util\BaseObjectExtractor;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Manifest\BaseTestManifest;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
@@ -124,6 +126,20 @@ class TestGenerator
      * @var array
      */
     private $deprecationMessages = [];
+
+    /**
+     * Test deprecation messages.
+     *
+     * @var array
+     */
+    private $cestPhpArray = [];
+
+    /**
+     * Test deprecation messages.
+     *
+     * @var array
+     */
+    private $notGeneratedTestsArray = [];
 
     /**
      * Private constructor for Factory
@@ -239,9 +255,16 @@ class TestGenerator
             $testsToIgnore = SuiteObjectHandler::getInstance()->getAllTestReferences();
         }
 
-        $testPhpArray = $this->assembleAllTestPhp($testManifest, $testsToIgnore);
-        foreach ($testPhpArray as $testPhpFile) {
+        $noError = $this->assembleAllTestPhp($testManifest, $testsToIgnore);
+        foreach ($this->cestPhpArray as $testPhpFile) {
             $this->createCestFile($testPhpFile[1], $testPhpFile[0]);
+        }
+
+        if (!$noError) {
+            throw new TestFrameworkException("ERROR: " .
+                strval(count($this->notGeneratedTestsArray))
+                . " Test failed to generate. See mftf.log for details."
+            );
         }
     }
 
@@ -319,45 +342,67 @@ class TestGenerator
      *
      * @param BaseTestManifest $testManifest
      * @param array            $testsToIgnore
-     * @return array
+     * @return boolean
+     * @throws TestFrameworkException
+     * @throws TestReferenceException
+     * @throws XmlException
      */
     private function assembleAllTestPhp($testManifest, array $testsToIgnore)
     {
+        $this->cestPhpArray = [];
+        $this->notGeneratedTestsArray = [];
+
         /** @var TestObject[] $testObjects */
         $testObjects = $this->loadAllTestObjects($testsToIgnore);
-        $cestPhpArray = [];
+
         $filters = MftfApplicationConfig::getConfig()->getFilterList()->getFilters();
         /** @var FilterInterface $filter */
         foreach ($filters as $filter) {
             $filter->filter($testObjects);
         }
 
+        $removeLastTest = false;
         foreach ($testObjects as $test) {
-            // Do not generate test if it is an extended test and parent does not exist
-            if ($test->isSkipped() && !empty($test->getParentName())) {
-                try {
-                    TestObjectHandler::getInstance()->getObject($test->getParentName());
-                } catch (TestReferenceException $e) {
-                    print("{$test->getName()} will not be generated. Parent {$e->getMessage()} \n");
-                    continue;
+            try {
+                // Do not generate test if it is an extended test and parent does not exist
+                if ($test->isSkipped() && !empty($test->getParentName())) {
+                    try {
+                        TestObjectHandler::getInstance()->getObject($test->getParentName());
+                    } catch (TestReferenceException $e) {
+                        print("{$test->getName()} will not be generated. Parent {$e->getMessage()} \n");
+                        continue;
+                    }
                 }
-            }
 
-            $this->debug("<comment>Start creating test: " . $test->getCodeceptionName() . "</comment>");
-            $php = $this->assembleTestPhp($test);
-            $cestPhpArray[] = [$test->getCodeceptionName(), $php];
+                $this->debug("<comment>Start creating test: " . $test->getCodeceptionName() . "</comment>");
+                $php = $this->assembleTestPhp($test);
+                $this->cestPhpArray[] = [$test->getCodeceptionName(), $php];
+                $removeLastTest = true;
 
-            $debugInformation = $test->getDebugInformation();
-            $this->debug($debugInformation);
-            $this->debug("<comment>Finish creating test: " . $test->getCodeceptionName() . "</comment>" . PHP_EOL);
+                $debugInformation = $test->getDebugInformation();
+                $this->debug($debugInformation);
+                $this->debug("<comment>Finish creating test: " . $test->getCodeceptionName() . "</comment>" . PHP_EOL);
 
-            //write to manifest here if manifest is not null
-            if ($testManifest != null) {
-                $testManifest->addTest($test);
+                //write to manifest here if manifest is not null
+                if ($testManifest != null) {
+                    $testManifest->addTest($test);
+                }
+            } catch (\Exception $e) {
+                $this->notGeneratedTestsArray[] = [$test->getName() => $e->getMessage()];
+                LoggingUtil::getInstance()->getLogger(self::class)->error(
+                    "Failed to generate {$test->getName()}\n"
+                );
+                if ($removeLastTest) {
+                    array_pop($this->cestPhpArray);
+                }
             }
         }
 
-        return $cestPhpArray;
+        if (empty($this->notGeneratedTestsArray)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

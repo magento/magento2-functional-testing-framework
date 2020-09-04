@@ -130,6 +130,11 @@ class RunTestGroupCommand extends BaseGenerateCommand
             }
             $exitCode = 0;
         }
-        return $exitCode;
+
+        if ($exitCode == 0 && $this->cmdStatus) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 }

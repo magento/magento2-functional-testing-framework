@@ -99,8 +99,12 @@ class RunTestFailedCommand extends BaseGenerateCommand
         $testConfiguration = $this->getFailedTestList();
 
         if ($testConfiguration === null) {
-            // no failed tests found, run is a success
-            return 0;
+            // no failed tests found
+            if ($this->cmdStatus) {
+                return 0;
+            } else {
+                return 1;
+            }
         }
 
         $command = $this->getApplication()->find('generate:tests');
@@ -150,7 +154,11 @@ class RunTestFailedCommand extends BaseGenerateCommand
             $this->writeFailedTestToFile($test, $this->testsFailedFile);
         }
 
-        return $returnCode;
+        if ($returnCode == 0 && $this->cmdStatus) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 
     /**
