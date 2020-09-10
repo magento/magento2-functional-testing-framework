@@ -112,7 +112,7 @@ class RunTestCommand extends BaseGenerateCommand
         if ($this->returnCode == 0 && $this->cmdStatus) {
             return 0;
         } else {
-            return 0;
+            return 1;
         }
     }
 
