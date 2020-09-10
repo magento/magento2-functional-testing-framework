@@ -164,7 +164,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
         if (!empty($errMessages)) {
             foreach (array_unique($errMessages) as $errMessage) {
                 $output->writeln($errMessage);
-                $output->writeln("\nGenerate Tests Command Run");
+                $output->writeln("\nGenerate Tests Command Run (with failures)");
             }
             return 1;
         } else {

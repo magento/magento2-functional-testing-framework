@@ -20,6 +20,7 @@ use Magento\FunctionalTestingFramework\Util\Manifest\BaseTestManifest;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Symfony\Component\Yaml\Yaml;
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 
 /**
  * Class SuiteGenerator
@@ -118,7 +119,7 @@ class SuiteGenerator
                     $this->generateSplitSuiteFromTest($suiteName, $suiteContent);
                 }
             } catch (\Exception $e) {
-                $exceptionCollector->addError(self::class, $e->getMessage());
+                $exceptionCollector->addError(self::class, self::class . ': ' . $e->getMessage());
             }
         }
         // Report failure
@@ -149,6 +150,8 @@ class SuiteGenerator
      * @param string $originalSuiteName
      * @return void
      * @throws \Exception
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function generateSuiteFromTest($suiteName, $tests = [], $originalSuiteName = null)
     {
@@ -156,33 +159,57 @@ class SuiteGenerator
         $fullPath = FilePathFormatter::format(TESTS_MODULE_PATH) . $relativePath . DIRECTORY_SEPARATOR;
 
         DirSetupUtil::createGroupDir($fullPath);
-
-        $relevantTests = [];
         $exceptionCollector = new ExceptionCollector();
-        if (!empty($tests)) {
-            $this->validateTestsReferencedInSuite($suiteName, $tests, $originalSuiteName);
-            foreach ($tests as $testName) {
-                try {
-                    $relevantTests[$testName] = TestObjectHandler::getInstance()->getObject($testName);
-                } catch (\Exception $e) {
-                    $exceptionCollector->addError(
-                        self::class,
-                        "Unable to find relevant test \"{$testName}\" for suite \"{$suiteName}\"\n" . $e->getMessage()
-                    );
+        try {
+            $relevantTests = [];
+            if (!empty($tests)) {
+                $this->validateTestsReferencedInSuite($suiteName, $tests, $originalSuiteName);
+                foreach ($tests as $testName) {
+                    try {
+                        $relevantTests[$testName] = TestObjectHandler::getInstance()->getObject($testName);
+                    } catch (\Exception $e) {
+                        $exceptionCollector->addError(
+                            self::class,
+                            "Unable to find relevant test \"{$testName}\" for suite \"{$suiteName}\""
+                        );
+                    }
                 }
+            } else {
+                $relevantTests = SuiteObjectHandler::getInstance()->getObject($suiteName)->getTests();
             }
-        } else {
-            $relevantTests = SuiteObjectHandler::getInstance()->getObject($suiteName)->getTests();
+
+            if (empty($relevantTests)) {
+                $exceptionCollector->reset();
+                throw new TestFrameworkException("No relevant test found for suite \"{$suiteName}\"");
+            }
+
+            try {
+                $this->generateRelevantGroupTests($suiteName, $relevantTests);
+            } catch (\Exception $e) {
+                $exceptionCollector->addError(
+                    self::class,
+                    "Failed to generate tests for suite \"{$suiteName}\""
+                );
+            }
+
+            $groupNamespace = $this->generateGroupFile($suiteName, $relevantTests, $originalSuiteName);
+
+            $this->appendEntriesToConfig($suiteName, $fullPath, $groupNamespace);
+
+            if (MftfApplicationConfig::getConfig()->verboseEnabled()
+                && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+                print("suite {$suiteName} generated\n");
+            }
+            LoggingUtil::getInstance()->getLogger(self::class)->info(
+                "suite generated",
+                ['suite' => $suiteName, 'relative_path' => $relativePath]
+            );
+        } catch (\Exception $e) {
+            if (file_exists($fullPath)) {
+                DirSetupUtil::rmdirRecursive($fullPath);
+            }
+            $exceptionCollector->addError(self::class, $e->getMessage());
         }
-
-        $this->generateRelevantGroupTests($suiteName, $relevantTests);
-        $groupNamespace = $this->generateGroupFile($suiteName, $relevantTests, $originalSuiteName);
-
-        $this->appendEntriesToConfig($suiteName, $fullPath, $groupNamespace);
-        LoggingUtil::getInstance()->getLogger(SuiteGenerator::class)->info(
-            "suite generated",
-            ['suite' => $suiteName, 'relative_path' => $relativePath]
-        );
 
         $this->throwCollectedExceptions($exceptionCollector);
     }
@@ -401,10 +428,10 @@ class SuiteGenerator
             foreach ($exceptionCollector->getErrors() as $file => $errorMessage) {
                 if (is_array($errorMessage)) {
                     foreach (array_unique($errorMessage) as $message) {
-                        LoggingUtil::getInstance()->getLogger(SuiteGenerator::class)->error($message);
+                        LoggingUtil::getInstance()->getLogger(self::class)->error(trim($message));
                     }
                 } else {
-                    LoggingUtil::getInstance()->getLogger(SuiteGenerator::class)->error($errorMessage);
+                    LoggingUtil::getInstance()->getLogger(self::class)->error(trim($errorMessage));
                 }
             }
             $exceptionCollector->throwException();

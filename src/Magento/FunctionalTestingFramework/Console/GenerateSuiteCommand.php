@@ -65,19 +65,20 @@ class GenerateSuiteCommand extends BaseGenerateCommand
 
         $suites = $input->getArgument('suites');
 
+        $errMessages = [];
         foreach ($suites as $suite) {
-            SuiteGenerator::getInstance()->generateSuite($suite);
-            if ($output->isVerbose()) {
-                $output->writeLn("suite $suite generated");
+            try {
+                SuiteGenerator::getInstance()->generateSuite($suite);
+            } catch (\Exception $e) {
+                $errMessages[] = $e->getMessage();
             }
         }
 
-        if ($this->cmdStatus) {
+        if ($this->cmdStatus && empty($errMessages)) {
             $output->writeLn("Suites Generated");
             return 0;
         } else {
-            $output->writeLn("Suite parsing error found. See mftf.log for details.");
-            $output->writeLn("Suites Generated");
+            $output->writeLn("Suites Generated (with failures)");
             return 1;
         }
     }

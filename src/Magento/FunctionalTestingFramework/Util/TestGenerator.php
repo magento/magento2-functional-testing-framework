@@ -222,6 +222,7 @@ class TestGenerator
      */
     private function createCestFile(string $testPhp, string $filename)
     {
+        DirSetupUtil::createGroupDir($this->exportDirectory);
         $exportFilePath = $this->exportDirectory . DIRECTORY_SEPARATOR . $filename . ".php";
         $file = fopen($exportFilePath, 'w');
 
@@ -261,9 +262,10 @@ class TestGenerator
         }
 
         if (!$noError) {
-            throw new TestFrameworkException("ERROR: " .
-                strval(count($this->notGeneratedTestsArray))
-                . " Test failed to generate. See mftf.log for details."
+            throw new TestFrameworkException(
+                "ERROR: "
+                . strval(count($this->notGeneratedTestsArray))
+                . " Test failed to generate."
             );
         }
     }
@@ -361,15 +363,23 @@ class TestGenerator
             $filter->filter($testObjects);
         }
 
-        $removeLastTest = false;
         foreach ($testObjects as $test) {
             try {
+                // Reset flag for new test
+                $removeLastTest = false;
+
                 // Do not generate test if it is an extended test and parent does not exist
                 if ($test->isSkipped() && !empty($test->getParentName())) {
                     try {
                         TestObjectHandler::getInstance()->getObject($test->getParentName());
                     } catch (TestReferenceException $e) {
-                        print("{$test->getName()} will not be generated. Parent {$e->getMessage()} \n");
+                        TestObjectHandler::getInstance()->sanitizeTests([$test->getName()]);
+                        if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+                            print("{$test->getName()} will not be generated. Parent {$e->getMessage()} \n");
+                            LoggingUtil::getInstance()->getLogger(self::class)->info(
+                                "{$test->getName()} will not be generated. Parent does not exist."
+                            );
+                        }
                         continue;
                     }
                 }
@@ -377,24 +387,26 @@ class TestGenerator
                 $this->debug("<comment>Start creating test: " . $test->getCodeceptionName() . "</comment>");
                 $php = $this->assembleTestPhp($test);
                 $this->cestPhpArray[] = [$test->getCodeceptionName(), $php];
+                // Set flag in case something goes wrong
                 $removeLastTest = true;
 
                 $debugInformation = $test->getDebugInformation();
                 $this->debug($debugInformation);
                 $this->debug("<comment>Finish creating test: " . $test->getCodeceptionName() . "</comment>" . PHP_EOL);
 
-                //write to manifest here if manifest is not null
+                // Write to manifest here if manifest is not null
                 if ($testManifest != null) {
                     $testManifest->addTest($test);
                 }
             } catch (\Exception $e) {
                 $this->notGeneratedTestsArray[] = [$test->getName() => $e->getMessage()];
                 LoggingUtil::getInstance()->getLogger(self::class)->error(
-                    "Failed to generate {$test->getName()}\n"
+                    "Failed to generate {$test->getName()}"
                 );
                 if ($removeLastTest) {
                     array_pop($this->cestPhpArray);
                 }
+                TestObjectHandler::getInstance()->sanitizeTests([$test->getName()]);
             }
         }
 

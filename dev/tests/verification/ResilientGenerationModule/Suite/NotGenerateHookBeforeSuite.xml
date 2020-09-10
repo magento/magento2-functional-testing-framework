@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<suites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Suite/etc/suiteSchema.xsd">
+    <suite name="NotGenerateHookBeforeSuite">
+        <include>
+            <test name="IncludeTest"/>
+        </include>
+        <before>
+            <actionGroup ref="actionGroupWithTwoArgumentsN" stepKey="AC">
+                <argument name="somePerson" value="simpleData"/>
+                <argument name="anotherPerson" value="uniqueData"/>
+            </actionGroup>
+        </before>
+        <after>
+            <amOnPage url="some.url" stepKey="after"/>
+        </after>
+    </suite>
+</suites>

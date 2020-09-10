@@ -81,6 +81,28 @@ abstract class MftfTestCase extends TestCase
     }
 
     /**
+     * Asserts that the given callback throws the given exception
+     *
+     * @param string $expectClass
+     * @param array $expectedMessages
+     * @param callable $callback
+     */
+    protected function assertExceptionRegex(string $expectClass, array $expectedMessages, callable $callback)
+    {
+        try {
+            $callback();
+        } catch (\Throwable $exception) {
+            $this->assertInstanceOf($expectClass, $exception, 'An invalid exception was thrown.');
+            foreach ($expectedMessages as $expectedMessage) {
+                $this->assertMatchesRegularExpression($expectedMessage, $exception->getMessage());
+            }
+            return;
+        }
+
+        $this->fail('No exception was thrown.');
+    }
+
+    /**
      * Clears test handler and object manager to force recollection of test data
      *
      * @throws \Exception

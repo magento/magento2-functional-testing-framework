@@ -9,6 +9,7 @@ namespace tests\unit\Magento\FunctionalTestFramework\Util;
 use AspectMock\Test as AspectMock;
 
 use Magento\FunctionalTestingFramework\Filter\FilterList;
+use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
@@ -41,13 +42,13 @@ class TestGeneratorTest extends MagentoTestCase
 
         $testObject = new TestObject("sampleTest", ["merge123" => $actionObject], [], [], "filename");
 
+        AspectMock::double(TestObjectHandler::class, ['initTestData' => '']);
+
         $testGeneratorObject = TestGenerator::getInstance("", ["sampleTest" => $testObject]);
 
         AspectMock::double(TestGenerator::class, ['loadAllTestObjects' => ["sampleTest" => $testObject]]);
 
-        $this->expectExceptionMessage("Could not resolve entity reference \"{{someEntity.entity}}\" " .
-            "in Action with stepKey \"fakeAction\".\n" .
-            "Exception occurred parsing action at StepKey \"fakeAction\" in Test \"sampleTest\"");
+        $this->expectExceptionMessage("ERROR: 1 Test failed to generate.");
 
         $testGeneratorObject->createAllTestFiles(null, []);
     }

@@ -138,7 +138,7 @@ class SuiteGeneratorTest extends MagentoTestCase
         $this->setMockTestAndSuiteParserOutput($mockTestData, $mockData);
 
         // set expected error message
-        $this->expectExceptionMessage("Suites must not be empty. Suite: \"basicTestSuite\"");
+        $this->expectExceptionMessage("Suite basicTestSuite is not defined in xml or is invalid");
 
         // parse and generate suite object with mocked data
         $mockSuiteGenerator = SuiteGenerator::getInstance();
@@ -180,7 +180,7 @@ class SuiteGeneratorTest extends MagentoTestCase
         $manifest = TestManifestFactory::makeManifest('default', $suiteConfig);
 
         // Set up Expected Exception
-        $this->expectException(TestReferenceException::class);
+        $this->expectException(\Exception::class);
         $this->expectExceptionMessageMatches('(Suite: "Suite2" Tests: "Test1")');
 
         // parse and generate suite object with mocked data and manifest
@@ -204,7 +204,7 @@ class SuiteGeneratorTest extends MagentoTestCase
         $manifest = TestManifestFactory::makeManifest('default', $suiteConfig);
 
         // Set up Expected Exception
-        $this->expectException(TestReferenceException::class);
+        $this->expectException(\Exception::class);
         $this->expectExceptionMessageMatches('#Suite3 is not defined#');
 
         // parse and generate suite object with mocked data and manifest

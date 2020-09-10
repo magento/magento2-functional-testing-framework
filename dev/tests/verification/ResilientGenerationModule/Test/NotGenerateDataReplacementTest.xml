@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="NotGenerateDataReplacementTest">
+        <fillField stepKey="inputReplace" selector="#selector" userInput="StringBefore {{simpleDataN.firstname}} StringAfter"/>
+        <seeCurrentUrlMatches stepKey="seeInRegex" regex="~\/{{simpleData.Nfirstname}}~i"/>
+        <fillField stepKey="selectorReplace" selector="#{{simpleData.Nfirstname}}" userInput="input"/>
+        <dragAndDrop stepKey="selector12Replace" selector1="#{{simpleData.Nfirstname}}" selector2="{{NsimpleData.lastname}}"/>
+        <conditionalClick stepKey="dependentSelectorReplace" dependentSelector="#{{simpleData.Nfirstname}}" selector="{{simpleDataN.lastname}}" visible="true"/>
+        <amOnUrl stepKey="urlReplace" url="{{simpleData.firstnameN}}.html"/>
+        <searchAndMultiSelectOption stepKey="parameterArrayReplacement" selector="#selector" parameterArray="[{{simpleData.firstnameN}}, {{NsimpleData.lastname}}]"/>
+
+        <seeInPageSource html="StringBefore {{simpleData.Nfirstname}} StringAfter" stepKey="htmlReplace1"/>
+        <seeInPageSource html="#{{simpleDataN.firstname}}" stepKey="htmlReplace2"/>
+    </test>
+</tests>

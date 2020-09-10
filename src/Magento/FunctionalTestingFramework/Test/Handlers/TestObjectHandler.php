@@ -123,6 +123,22 @@ class TestObjectHandler implements ObjectHandlerInterface
     }
 
     /**
+     * Sanitize test objects
+     *
+     * @param array $testsToRemove
+     * @return void
+     */
+    public function sanitizeTests($testsToRemove)
+    {
+        foreach ($testsToRemove as $name) {
+            unset($this->tests[$name]);
+            LoggingUtil::getInstance()->getLogger(self::class)->error(
+                "Failed to parse and removed test object {$name}."
+            );
+        }
+    }
+
+    /**
      * This method reads all Test.xml files into objects and stores them in an array for future access.
      *
      * @return void

@@ -36,7 +36,7 @@ class SuiteObjectHandler implements ObjectHandlerInterface
     /**
      * If suites parsing are successful
      *
-     * @var bool
+     * @var boolean
      */
     private $status;
 
@@ -80,7 +80,9 @@ class SuiteObjectHandler implements ObjectHandlerInterface
     public function getObject($objectName): SuiteObject
     {
         if (!array_key_exists($objectName, $this->suiteObjects)) {
-            throw new TestReferenceException("Suite ${objectName} is not defined in xml.");
+            throw new TestReferenceException(
+                "Suite ${objectName} is not defined in xml or is invalid."
+            );
         }
         return $this->suiteObjects[$objectName];
     }
@@ -98,9 +100,9 @@ class SuiteObjectHandler implements ObjectHandlerInterface
     /**
      * Return if there is any parsing errors
      *
-     * @return bool
+     * @return boolean
      */
-    public function parseSuccessful(): bool
+    public function parseSuccessful()
     {
         return $this->status;
     }
