@@ -303,7 +303,9 @@ class SuiteGenerationTest extends MftfTestCase
         foreach ($expectedFileNames as $expectedFileName) {
             $this->assertTrue(in_array($expectedFileName, $dirContents));
             $this->assertFileEquals(
-                self::RESOURCES_PATH . DIRECTORY_SEPARATOR . substr($expectedFileName, 0, strlen($expectedFileName)-4) . ".txt",
+                self::RESOURCES_PATH . DIRECTORY_SEPARATOR
+                    . substr($expectedFileName, 0, strlen($expectedFileName)-4)
+                    . ".txt",
                 $suiteResultBaseDir . $expectedFileName
             );
         }
