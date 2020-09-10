@@ -6,6 +6,7 @@
 namespace Magento\FunctionalTestingFramework\Suite\Util;
 
 use Exception;
+use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
@@ -19,6 +20,12 @@ use Magento\FunctionalTestingFramework\Util\ModulePathExtractor;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 
+/**
+ * Class SuiteObjectExtractor
+ * @package Magento\FunctionalTestingFramework\Suite\Util
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class SuiteObjectExtractor extends BaseObjectExtractor
 {
     const SUITE_ROOT_TAG = 'suites';
@@ -70,9 +77,8 @@ class SuiteObjectExtractor extends BaseObjectExtractor
                 continue;
             }
 
+            $this->validateSuiteName($parsedSuite);
             try {
-                $this->validateSuiteName($parsedSuite);
-
                 // extract include and exclude references
                 $groupTestsToInclude = $parsedSuite[self::INCLUDE_TAG_NAME] ?? [];
                 $groupTestsToExclude = $parsedSuite[self::EXCLUDE_TAG_NAME] ?? [];
@@ -116,11 +122,13 @@ class SuiteObjectExtractor extends BaseObjectExtractor
                     print($includeMessage);
                     LoggingUtil::getInstance()->getLogger(self::class)->error($includeMessage);
                 }
+            } catch (FastFailException $e) {
+                throw $e;
             } catch (\Exception $e) {
                 $noError = false;
                 $suiteSkipped++;
                 if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
-                    print("Unable to parse suite \"" . $parsedSuite[self::NAME] . "\"");
+                    print("Unable to parse suite \"" . $parsedSuite[self::NAME] . "\"\n");
                     LoggingUtil::getInstance()->getLogger(self::class)->error(
                         "Unable to parse suite \"" . $parsedSuite[self::NAME] . "\"\n" . $e->getMessage()
                     );
@@ -159,14 +167,14 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      *
      * @param array $parsedSuite
      * @return void
-     * @throws XmlException
+     * @throws FastFailException
      */
     private function validateSuiteName($parsedSuite)
     {
         //check if name used is using special char or the "default" reserved name
         NameValidationUtil::validateName($parsedSuite[self::NAME], 'Suite');
         if ($parsedSuite[self::NAME] == 'default') {
-            throw new XmlException("A Suite can not have the name \"default\"");
+            throw new FastFailException("A Suite can not have the name \"default\"");
         }
 
         $suiteName = $parsedSuite[self::NAME];
@@ -179,7 +187,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
             }
             $exceptionmessage = "\"Suite names and Group names can not have the same value. \t\n" .
                 "Suite: \"{$suiteName}\" also exists as a group annotation in: \n{$testGroupConflictsFileNames}";
-            throw new XmlException($exceptionmessage);
+            throw new FastFailException($exceptionmessage);
         }
     }
 
@@ -281,6 +289,8 @@ class SuiteObjectExtractor extends BaseObjectExtractor
                         );
                         break;
                 }
+            } catch (FastFailException $e) {
+                throw $e;
             } catch (\Exception $e) {
                 $errCount++;
                 LoggingUtil::getInstance()->getLogger(self::class)->error(

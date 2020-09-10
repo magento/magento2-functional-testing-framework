@@ -8,6 +8,7 @@ declare(strict_types = 1);
 namespace Magento\FunctionalTestingFramework\Console;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Suite\SuiteGenerator;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
@@ -135,6 +136,8 @@ class GenerateTestsCommand extends BaseGenerateCommand
 
             try {
                 TestGenerator::getInstance(null, $testConfiguration['tests'])->createAllTestFiles($testManifest);
+            } catch (FastFailException $e) {
+                throw $e;
             } catch (\Exception $e) {
                 $errMessages[] = $e->getMessage();
             }
@@ -146,31 +149,27 @@ class GenerateTestsCommand extends BaseGenerateCommand
 
             try {
                 SuiteGenerator::getInstance()->generateAllSuites($testManifest);
+            } catch (FastFailException $e) {
+                throw $e;
             } catch (\Exception $e) {
                 $errMessages[] = $e->getMessage();
             }
 
             $testManifest->generate();
-        } catch (\Exception $e) {
-            $message = $e->getMessage() . PHP_EOL;
-            $message .= !empty($filters) ? 'Filter(s): ' . implode(', ', $filters) . PHP_EOL : '';
-            $message .= !empty($tests) ? 'Test name(s): ' . implode(', ', $tests) . PHP_EOL : '';
-            $message .= !empty($json) && empty($tests) ? 'Test configuration: ' . $json . PHP_EOL : '';
-            $this->ioStyle->note($message);
 
-            return 1;
-        }
+            if (empty($errMessages)) {
+                $this->ioStyle->text("Generate Tests Command Run" . PHP_EOL);
 
-        if (!empty($errMessages)) {
-            foreach (array_unique($errMessages) as $errMessage) {
-                $output->writeln($errMessage);
-                $output->writeln("\nGenerate Tests Command Run (with failures)");
+                return 0;
             }
-            return 1;
-        } else {
-            $output->writeln("\nGenerate Tests Command Run");
-            return 0;
+        } catch (\Exception $e) {
+            $errMessages[] = $e->getMessage();
         }
+
+        $this->printMessages($errMessages, $tests, $filters, $json);
+        $this->ioStyle->text("Generate Tests Command Run (with failures)". PHP_EOL);
+
+        return 1;
     }
 
     /**
@@ -227,5 +226,36 @@ class GenerateTestsCommand extends BaseGenerateCommand
         ;
         $jsonTestConfiguration['suites'] = $testConfigArray['suites'] ?? null;
         return $jsonTestConfiguration;
+    }
+
+    /**
+     * Print messages to console
+     *
+     * @param array  $errMessages
+     * @param array  $tests
+     * @param array  $filters
+     * @param string $json
+     * @return void
+     */
+    private function printMessages($errMessages, $tests, $filters, $json)
+    {
+        if (empty($errMessages)) {
+            return;
+        }
+
+        // Print error
+        foreach (array_unique($errMessages) as $errMessage) {
+            if (!empty(trim($errMessage))) {
+                $this->ioStyle->error(trim($errMessage));
+            }
+        }
+
+        // Print notice
+        $message = !empty($filters) ? 'Filter(s): ' . implode(', ', $filters) . PHP_EOL : '';
+        $message .= !empty($tests) ? 'Test name(s): ' . implode(', ', $tests) . PHP_EOL : '';
+        $message .= !empty($json) && empty($tests) ? 'Test configuration: ' . $json . PHP_EOL : '';
+        if (!empty($message)) {
+            $this->ioStyle->note($message);
+        }
     }
 }

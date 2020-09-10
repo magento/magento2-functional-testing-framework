@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Suite;
 
 use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
+use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
@@ -118,6 +119,8 @@ class SuiteGenerator
                 if (is_array($firstElement)) {
                     $this->generateSplitSuiteFromTest($suiteName, $suiteContent);
                 }
+            } catch (FastFailException $e) {
+                throw $e;
             } catch (\Exception $e) {
                 $exceptionCollector->addError(self::class, self::class . ': ' . $e->getMessage());
             }
@@ -167,6 +170,8 @@ class SuiteGenerator
                 foreach ($tests as $testName) {
                     try {
                         $relevantTests[$testName] = TestObjectHandler::getInstance()->getObject($testName);
+                    } catch (FastFailException $e) {
+                        throw $e;
                     } catch (\Exception $e) {
                         $exceptionCollector->addError(
                             self::class,
@@ -185,6 +190,8 @@ class SuiteGenerator
 
             try {
                 $this->generateRelevantGroupTests($suiteName, $relevantTests);
+            } catch (FastFailException $e) {
+                throw $e;
             } catch (\Exception $e) {
                 $exceptionCollector->addError(
                     self::class,
@@ -204,6 +211,8 @@ class SuiteGenerator
                 "suite generated",
                 ['suite' => $suiteName, 'relative_path' => $relativePath]
             );
+        } catch (FastFailException $e) {
+            throw $e;
         } catch (\Exception $e) {
             if (file_exists($fullPath)) {
                 DirSetupUtil::rmdirRecursive($fullPath);

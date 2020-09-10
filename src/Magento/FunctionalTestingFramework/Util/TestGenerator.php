@@ -9,6 +9,7 @@ namespace Magento\FunctionalTestingFramework\Util;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
@@ -348,6 +349,7 @@ class TestGenerator
      * @throws TestFrameworkException
      * @throws TestReferenceException
      * @throws XmlException
+     * @throws FastFailException
      */
     private function assembleAllTestPhp($testManifest, array $testsToIgnore)
     {
@@ -398,6 +400,8 @@ class TestGenerator
                 if ($testManifest != null) {
                     $testManifest->addTest($test);
                 }
+            } catch (FastFailException $e) {
+                throw $e;
             } catch (\Exception $e) {
                 $this->notGeneratedTestsArray[] = [$test->getName() => $e->getMessage()];
                 LoggingUtil::getInstance()->getLogger(self::class)->error(

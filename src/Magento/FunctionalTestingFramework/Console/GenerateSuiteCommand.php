@@ -8,6 +8,7 @@ declare(strict_types = 1);
 namespace Magento\FunctionalTestingFramework\Console;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Suite\SuiteGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -43,6 +44,7 @@ class GenerateSuiteCommand extends BaseGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->setIOStyle($input, $output);
         $force = $input->getOption('force');
         $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
         $remove = $input->getOption('remove');
@@ -69,17 +71,40 @@ class GenerateSuiteCommand extends BaseGenerateCommand
         foreach ($suites as $suite) {
             try {
                 SuiteGenerator::getInstance()->generateSuite($suite);
+            } catch (FastFailException $e) {
+                throw $e;
             } catch (\Exception $e) {
                 $errMessages[] = $e->getMessage();
             }
         }
 
         if ($this->cmdStatus && empty($errMessages)) {
-            $output->writeLn("Suites Generated");
+            $this->ioStyle->text("Suites Generated" . PHP_EOL);
             return 0;
         } else {
-            $output->writeLn("Suites Generated (with failures)");
+            $this->printMessages($errMessages);
+            $this->ioStyle->text("Suites Generated (with failures)" . PHP_EOL);
             return 1;
+        }
+    }
+
+    /**
+     * Print messages to console
+     *
+     * @param string[] $errMessages
+     * @return void
+     */
+    private function printMessages($errMessages)
+    {
+        if (empty($errMessages)) {
+            return;
+        }
+
+        // Print error
+        foreach (array_unique($errMessages) as $errMessage) {
+            if (!empty(trim($errMessage))) {
+                $this->ioStyle->error(trim($errMessage));
+            }
         }
     }
 }
