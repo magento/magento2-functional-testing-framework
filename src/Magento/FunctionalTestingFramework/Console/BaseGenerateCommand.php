@@ -8,7 +8,9 @@ declare(strict_types = 1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
+use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Symfony\Component\Console\Command\Command;
@@ -48,13 +50,6 @@ class BaseGenerateCommand extends Command
      * @var SymfonyStyle
      */
     protected $ioStyle = null;
-
-    /**
-     * Command status
-     *
-     * @var bool
-     */
-    protected $cmdStatus = true;
 
     /**
      * Configures the base command.
@@ -111,14 +106,13 @@ class BaseGenerateCommand extends Command
      * Returns an array of test configuration to be used as an argument for generation of tests
      * @param array $tests
      * @return false|string
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
+     * @throws FastFailException
      */
     protected function getTestAndSuiteConfiguration(array $tests)
     {
         $testConfiguration['tests'] = null;
         $testConfiguration['suites'] = null;
         $testsReferencedInSuites = SuiteObjectHandler::getInstance()->getAllTestReferences();
-        $this->cmdStatus = SuiteObjectHandler::getInstance()->parseSuccessful();
         $suiteToTestPair = [];
 
         foreach($tests as $test) {
@@ -150,7 +144,8 @@ class BaseGenerateCommand extends Command
      * Returns an array of test configuration to be used as an argument for generation of tests
      * This function uses group or suite names for generation
      * @return false|string
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
+     * @throws FastFailException
+     * @throws TestFrameworkException
      */
     protected function getGroupAndSuiteConfiguration(array $groupOrSuiteNames)
     {

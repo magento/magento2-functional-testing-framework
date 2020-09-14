@@ -12,6 +12,7 @@ use Monolog\Handler\TestHandler;
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 use tests\unit\Util\TestLoggingUtil;
+use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
 
 class AnnotationExtractorTest extends TestCase
 {
@@ -195,14 +196,20 @@ class AnnotationExtractorTest extends TestCase
         $extractor = new AnnotationExtractor();
         $extractor->extractAnnotations($firstTestAnnotation, "firstTest");
         $extractor->extractAnnotations($secondTestannotation, "secondTest");
-
-        //Expect Exception
-        $this->expectException(\Magento\FunctionalTestingFramework\Exceptions\XmlException::class);
-        $this->expectExceptionMessage("TestCaseId and Title pairs must be unique:\n\n" .
-            "TestCaseId: 'MQE-0001' Title: 'TEST TITLE' in Tests 'firstTest', 'secondTest'");
-
-        //Trigger Exception
         $extractor->validateTestCaseIdTitleUniqueness();
+
+        // assert that no exception for validateTestCaseIdTitleUniqueness
+        // and validation error is stored in GenerationErrorHandler
+        $errorMessage = '/' . preg_quote("TestCaseId and Title pairs is not unique in Tests 'firstTest', 'secondTest'") . '/';
+        TestLoggingUtil::getInstance()->validateMockLogStatmentRegex('error', $errorMessage, []);
+        $testErrors = GenerationErrorHandler::getInstance()->getErrorsByType('test');
+        $this->assertArrayHasKey('firstTest', $testErrors);
+        $this->assertArrayHasKey('secondTest', $testErrors);
+    }
+
+    public function tearDown(): void
+    {
+        GenerationErrorHandler::getInstance()->reset();
     }
 
     /**

@@ -53,7 +53,6 @@ class RunTestGroupCommand extends BaseGenerateCommand
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -131,11 +130,6 @@ class RunTestGroupCommand extends BaseGenerateCommand
             }
             $exitCode = 0;
         }
-
-        if ($exitCode == 0 && $this->cmdStatus) {
-            return 0;
-        } else {
-            return 1;
-        }
+        return $exitCode;
     }
 }

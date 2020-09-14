@@ -6,6 +6,7 @@
 namespace Magento\FunctionalTestingFramework\Suite\Objects;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Filter\FilterInterface;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
@@ -82,6 +83,7 @@ class SuiteObject
      * Returns an array of Test Objects based on specifications in exclude and include arrays.
      *
      * @return array
+     * @throws TestFrameworkException
      */
     public function getTests()
     {
@@ -96,7 +98,7 @@ class SuiteObject
      * @param TestObject[] $includeTests
      * @param TestObject[] $excludeTests
      * @return TestObject[]
-     * @throws \Exception
+     * @throws TestFrameworkException
      */
     private function resolveTests($includeTests, $excludeTests)
     {

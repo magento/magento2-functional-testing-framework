@@ -16,9 +16,19 @@ use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use tests\unit\Util\MagentoTestCase;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use tests\unit\Util\TestLoggingUtil;
+use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
 
 class TestGeneratorTest extends MagentoTestCase
 {
+    /**
+     * Before method functionality
+     */
+    public function setUp(): void
+    {
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
+    }
+
     /**
      * After method functionality
      *
@@ -27,6 +37,7 @@ class TestGeneratorTest extends MagentoTestCase
     public function tearDown(): void
     {
         AspectMock::clean();
+        GenerationErrorHandler::getInstance()->reset();
     }
 
     /**
@@ -48,9 +59,13 @@ class TestGeneratorTest extends MagentoTestCase
 
         AspectMock::double(TestGenerator::class, ['loadAllTestObjects' => ["sampleTest" => $testObject]]);
 
-        $this->expectExceptionMessage("ERROR: 1 Test failed to generate.");
-
         $testGeneratorObject->createAllTestFiles(null, []);
+
+        // assert that no exception for createAllTestFiles and generation error is stored in GenerationErrorHandler
+        $errorMessage = '/' . preg_quote("Removed invalid test object sampleTest") . '/';
+        TestLoggingUtil::getInstance()->validateMockLogStatmentRegex('error', $errorMessage, []);
+        $testErrors = GenerationErrorHandler::getInstance()->getErrorsByType('test');
+        $this->assertArrayHasKey('sampleTest', $testErrors);
     }
 
     /**

@@ -5,6 +5,9 @@
  */
 namespace Magento\FunctionalTestingFramework\Suite\Handlers;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
@@ -13,6 +16,8 @@ use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Suite\Parsers\SuiteDataParser;
 use Magento\FunctionalTestingFramework\Suite\Util\SuiteObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\ObjectExtractor;
+use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
  * Class SuiteObjectHandler
@@ -34,13 +39,6 @@ class SuiteObjectHandler implements ObjectHandlerInterface
     private $suiteObjects;
 
     /**
-     * If suites parsing are successful
-     *
-     * @var boolean
-     */
-    private $status;
-
-    /**
      * Avoids instantiation of SuiteObjectHandler by new.
      * @return void
      */
@@ -60,6 +58,7 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      * Function to enforce singleton design pattern
      *
      * @return ObjectHandlerInterface
+     * @throws FastFailException
      */
     public static function getInstance(): ObjectHandlerInterface
     {
@@ -98,19 +97,10 @@ class SuiteObjectHandler implements ObjectHandlerInterface
     }
 
     /**
-     * Return if there is any parsing errors
-     *
-     * @return boolean
-     */
-    public function parseSuccessful()
-    {
-        return $this->status;
-    }
-
-    /**
      * Function which return all tests referenced by suites.
      *
      * @return array
+     * @throws TestFrameworkException
      */
     public function getAllTestReferences(): array
     {
@@ -132,17 +122,12 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      *
      * @return void
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     * @throws FastFailException
      */
     private function initSuiteData()
     {
         $suiteDataParser = ObjectManagerFactory::getObjectManager()->create(SuiteDataParser::class);
         $suiteObjectExtractor = new SuiteObjectExtractor();
-        $parsedArray = $suiteObjectExtractor->parseSuiteDataIntoObjects($suiteDataParser->readSuiteData());
-        $this->suiteObjects = $parsedArray['objects'] ?? [];
-        if (empty($this->suiteObjects)) {
-            $this->status = false;
-        } else {
-            $this->status = $parsedArray['status'] ?? false;
-        }
+        $this->suiteObjects = $suiteObjectExtractor->parseSuiteDataIntoObjects($suiteDataParser->readSuiteData());
     }
 }

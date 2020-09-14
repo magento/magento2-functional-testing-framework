@@ -7,8 +7,10 @@
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
+use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
@@ -171,38 +173,50 @@ class AnnotationExtractor extends BaseObjectExtractor
 
     /**
      * Validates that all Story/Title combinations are unique, builds list of violators if found.
-     * @throws XmlException
+     *
      * @return void
+     * @throws TestFrameworkException
      */
     public function validateStoryTitleUniqueness()
     {
-        $dupes = [];
+        if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::EXECUTION_PHASE) {
+            return;
+        }
 
+        $dupes = [];
         foreach ($this->storyToTitleMappings as $storyTitle => $files) {
             if (count($files) > 1) {
                 $dupes[$storyTitle] = "'" . implode("', '", $files) . "'";
             }
         }
         if (!empty($dupes)) {
-            $message = "Story and Title annotation pairs must be unique:\n\n";
             foreach ($dupes as $storyTitle => $tests) {
-                $storyTitleArray = explode("/", $storyTitle);
-                $story = $storyTitleArray[0];
-                $title = $storyTitleArray[1];
-                $message .= "Story: '{$story}' Title: '{$title}' in Tests {$tests}\n\n";
+                $message = "Story and Title annotation pairs is not unique in Tests {$tests}\n";
+                LoggingUtil::getInstance()->getLogger(self::class)->error($message);
+                if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+                    print('ERROR: ' . $message);
+                }
+                $testArray = explode(',', $tests);
+                foreach ($testArray as $test) {
+                    GenerationErrorHandler::getInstance()->addError(
+                        'test', trim($test, "' \t"), $message, true
+                    );
+                }
             }
-            throw new XmlException($message);
         }
     }
 
     /**
      * Validates uniqueness between Test Case ID and Titles globally
-     * @returns void
-     * @throws XmlException
      * @return void
+     * @throws TestFrameworkException
      */
     public function validateTestCaseIdTitleUniqueness()
     {
+        if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::EXECUTION_PHASE) {
+            return;
+        }
+
         $dupes = [];
         foreach ($this->testCaseToTitleMappings as $newTitle => $files) {
             if (count($files) > 1) {
@@ -210,14 +224,19 @@ class AnnotationExtractor extends BaseObjectExtractor
             }
         }
         if (!empty($dupes)) {
-            $message = "TestCaseId and Title pairs must be unique:\n\n";
             foreach ($dupes as $newTitle => $tests) {
-                $testCaseTitleArray = explode(": ", $newTitle);
-                $testCaseId = $testCaseTitleArray[0];
-                $title = $testCaseTitleArray[1];
-                $message .= "TestCaseId: '{$testCaseId}' Title: '{$title}' in Tests {$tests}\n\n";
+                $message = "TestCaseId and Title pairs is not unique in Tests {$tests}\n";
+                LoggingUtil::getInstance()->getLogger(self::class)->error($message);
+                if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+                    print('ERROR: ' . $message);
+                }
+                $testArray = explode(',', $tests);
+                foreach ($testArray as $test) {
+                    GenerationErrorHandler::getInstance()->addError(
+                        'test', trim($test, "' \t"), $message, true
+                    );
+                }
             }
-            throw new XmlException($message);
         }
     }
 

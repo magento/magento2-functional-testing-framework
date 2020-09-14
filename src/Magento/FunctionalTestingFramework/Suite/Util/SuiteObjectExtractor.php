@@ -7,6 +7,7 @@ namespace Magento\FunctionalTestingFramework\Suite\Util;
 
 use Exception;
 use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
+use Magento\FunctionalTestingFramework\Exceptions\GenerationErrorCollector;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
@@ -14,6 +15,7 @@ use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Util\BaseObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\TestHookObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
+use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
 use Magento\FunctionalTestingFramework\Util\ModulePathExtractor;
@@ -56,9 +58,11 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      *
      * @param array $parsedSuiteData
      * @return array
+     * @throws FastFailException
      *
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function parseSuiteDataIntoObjects($parsedSuiteData)
     {
@@ -69,8 +73,6 @@ class SuiteObjectExtractor extends BaseObjectExtractor
             return $suiteObjects;
         }
 
-        $noError = true;
-        $suiteSkipped = 0;
         foreach ($parsedSuiteData[self::SUITE_ROOT_TAG] as $parsedSuite) {
             if (!is_array($parsedSuite)) {
                 // skip non array items parsed from suite (suite objects will always be arrays)
@@ -78,6 +80,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
             }
 
             $this->validateSuiteName($parsedSuite);
+
             try {
                 // extract include and exclude references
                 $groupTestsToInclude = $parsedSuite[self::INCLUDE_TAG_NAME] ?? [];
@@ -90,9 +93,8 @@ class SuiteObjectExtractor extends BaseObjectExtractor
                 $stepError = $include['status'] ?? 0;
                 $includeMessage = '';
                 if ($stepError != 0) {
-                    $noError = false;
-                    $includeMessage = strval($stepError) . " test(s) not included for suite \""
-                        . $parsedSuite[self::NAME] . "\"";
+                    $includeMessage = "ERROR: " . strval($stepError) . " test(s) not included for suite "
+                        . $parsedSuite[self::NAME];
                 }
 
                 // it's ok if failed in exclude
@@ -104,11 +106,16 @@ class SuiteObjectExtractor extends BaseObjectExtractor
 
                 // log error if suite is empty
                 if ($this->isSuiteEmpty($suiteHooks, $includeTests, $excludeTests)) {
-                    $suiteSkipped++;
-                    $noError = false;
                     LoggingUtil::getInstance()->getLogger(self::class)->error(
-                        "Unable to parse suite \"" . $parsedSuite[self::NAME] . "\"\nSuite must not be empty."
+                        "Unable to parse suite " . $parsedSuite[self::NAME] . ". Suite must not be empty."
                     );
+                    if (MftfApplicationConfig::getConfig()->getPhase() != MftfApplicationConfig::EXECUTION_PHASE) {
+                        GenerationErrorHandler::getInstance()->addError(
+                            'suite',
+                            $parsedSuite[self::NAME],
+                            self::class . ': ' . 'Suite must not be empty.'
+                        );
+                    }
                     continue;
                 };
 
@@ -117,20 +124,34 @@ class SuiteObjectExtractor extends BaseObjectExtractor
                     $includeTests = TestObjectHandler::getInstance()->getAllObjects();
                 }
 
-                if (!empty($includeMessage)
-                    && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
-                    print($includeMessage);
+                if (!empty($includeMessage)) {
                     LoggingUtil::getInstance()->getLogger(self::class)->error($includeMessage);
+                    if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+                        print($includeMessage);
+                    }
+                    if (MftfApplicationConfig::getConfig()->getPhase() != MftfApplicationConfig::EXECUTION_PHASE) {
+                        GenerationErrorHandler::getInstance()->addError(
+                            'suite',
+                            $parsedSuite[self::NAME],
+                            self::class . ': ' . $includeMessage,
+                            true
+                        );
+                    }
                 }
             } catch (FastFailException $e) {
                 throw $e;
             } catch (\Exception $e) {
-                $noError = false;
-                $suiteSkipped++;
+                LoggingUtil::getInstance()->getLogger(self::class)->error(
+                    "Unable to parse suite " . $parsedSuite[self::NAME] . "\n" . $e->getMessage()
+                );
                 if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
-                    print("Unable to parse suite \"" . $parsedSuite[self::NAME] . "\"\n");
-                    LoggingUtil::getInstance()->getLogger(self::class)->error(
-                        "Unable to parse suite \"" . $parsedSuite[self::NAME] . "\"\n" . $e->getMessage()
+                    print("ERROR: Unable to parse suite " . $parsedSuite[self::NAME] . "\n");
+                }
+                if (MftfApplicationConfig::getConfig()->getPhase() != MftfApplicationConfig::EXECUTION_PHASE) {
+                    GenerationErrorHandler::getInstance()->addError(
+                        'suite',
+                        $parsedSuite[self::NAME],
+                        self::class . ': Unable to parse suite ' . $e->getMessage()
                     );
                 }
                 continue;
@@ -145,19 +166,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
             );
         }
 
-        if ($suiteSkipped != 0
-            && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
-            print("ERROR: " . strval($suiteSkipped)
-                . " Suite failed to generate. See mftf.log for details.");
-            LoggingUtil::getInstance()->getLogger(self::class)->error(
-                "ERROR: " . strval($suiteSkipped) . " Suite failed to generate."
-            );
-        }
-
-        return [
-            'status' => $noError,
-            'objects' => $suiteObjects,
-        ];
+        return $suiteObjects;
     }
 
     /**
@@ -262,6 +271,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      *
      * @param array $suiteReferences
      * @return array
+     * @throws FastFailException
      */
     private function extractTestObjectsFromSuiteRef($suiteReferences)
     {
@@ -294,7 +304,12 @@ class SuiteObjectExtractor extends BaseObjectExtractor
             } catch (\Exception $e) {
                 $errCount++;
                 LoggingUtil::getInstance()->getLogger(self::class)->error(
-                    "Unable to find tests by reference for suite \"" . $suiteRefData[self::NAME] . '"'
+                    "Unable to find <"
+                    . $suiteRefData[self::NODE_NAME]
+                    . "> reference "
+                    . $suiteRefData[self::NAME]
+                    . " for suite "
+                    . $suiteRefData[self::NAME]
                 );
             }
         }

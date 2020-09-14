@@ -129,20 +129,6 @@ class TestGenerator
     private $deprecationMessages = [];
 
     /**
-     * Test deprecation messages.
-     *
-     * @var array
-     */
-    private $cestPhpArray = [];
-
-    /**
-     * Test deprecation messages.
-     *
-     * @var array
-     */
-    private $notGeneratedTestsArray = [];
-
-    /**
      * Private constructor for Factory
      *
      * @param string  $exportDir
@@ -191,6 +177,9 @@ class TestGenerator
      *
      * @param array $testsToIgnore
      * @return array
+     * @throws TestReferenceException
+     * @throws TestFrameworkException
+     * @throws FastFailException
      */
     private function loadAllTestObjects($testsToIgnore)
     {
@@ -219,7 +208,7 @@ class TestGenerator
      * @param string $testPhp
      * @param string $filename
      * @return void
-     * @throws \Exception
+     * @throws TestFrameworkException
      */
     private function createCestFile(string $testPhp, string $filename)
     {
@@ -228,7 +217,7 @@ class TestGenerator
         $file = fopen($exportFilePath, 'w');
 
         if (!$file) {
-            throw new \Exception(sprintf('Could not open test file: "%s"', $exportFilePath));
+            throw new TestFrameworkException(sprintf('Could not open test file: "%s"', $exportFilePath));
         }
 
         fwrite($file, $testPhp);
@@ -242,8 +231,10 @@ class TestGenerator
      * @param BaseTestManifest $testManifest
      * @param array            $testsToIgnore
      * @return void
+     * @throws TestFrameworkException
+     * @throws XmlException
+     * @throws FastFailException
      * @throws TestReferenceException
-     * @throws \Exception
      */
     public function createAllTestFiles($testManifest = null, $testsToIgnore = null)
     {
@@ -257,17 +248,9 @@ class TestGenerator
             $testsToIgnore = SuiteObjectHandler::getInstance()->getAllTestReferences();
         }
 
-        $noError = $this->assembleAllTestPhp($testManifest, $testsToIgnore);
-        foreach ($this->cestPhpArray as $testPhpFile) {
+        $testPhpArray = $this->assembleAllTestPhp($testManifest, $testsToIgnore);
+        foreach ($testPhpArray as $testPhpFile) {
             $this->createCestFile($testPhpFile[1], $testPhpFile[0]);
-        }
-
-        if (!$noError) {
-            throw new TestFrameworkException(
-                "ERROR: "
-                . strval(count($this->notGeneratedTestsArray))
-                . " Test failed to generate."
-            );
         }
     }
 
@@ -345,20 +328,16 @@ class TestGenerator
      *
      * @param BaseTestManifest $testManifest
      * @param array            $testsToIgnore
-     * @return boolean
+     * @return array
      * @throws TestFrameworkException
      * @throws TestReferenceException
-     * @throws XmlException
      * @throws FastFailException
      */
     private function assembleAllTestPhp($testManifest, array $testsToIgnore)
     {
-        $this->cestPhpArray = [];
-        $this->notGeneratedTestsArray = [];
-
         /** @var TestObject[] $testObjects */
         $testObjects = $this->loadAllTestObjects($testsToIgnore);
-
+        $cestPhpArray = [];
         $filters = MftfApplicationConfig::getConfig()->getFilterList()->getFilters();
         /** @var FilterInterface $filter */
         foreach ($filters as $filter) {
@@ -377,8 +356,8 @@ class TestGenerator
                     } catch (TestReferenceException $e) {
                         TestObjectHandler::getInstance()->sanitizeTests([$test->getName()]);
                         if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
-                            print("{$test->getName()} will not be generated. Parent {$e->getMessage()} \n");
-                            LoggingUtil::getInstance()->getLogger(self::class)->info(
+                            print("ERROR: {$test->getName()} will not be generated. Parent {$e->getMessage()} \n");
+                            LoggingUtil::getInstance()->getLogger(self::class)->error(
                                 "{$test->getName()} will not be generated. Parent does not exist."
                             );
                         }
@@ -388,7 +367,7 @@ class TestGenerator
 
                 $this->debug("<comment>Start creating test: " . $test->getCodeceptionName() . "</comment>");
                 $php = $this->assembleTestPhp($test);
-                $this->cestPhpArray[] = [$test->getCodeceptionName(), $php];
+                $cestPhpArray[] = [$test->getCodeceptionName(), $php];
                 // Set flag in case something goes wrong
                 $removeLastTest = true;
 
@@ -403,22 +382,24 @@ class TestGenerator
             } catch (FastFailException $e) {
                 throw $e;
             } catch (\Exception $e) {
-                $this->notGeneratedTestsArray[] = [$test->getName() => $e->getMessage()];
+                if (MftfApplicationConfig::getConfig()->getPhase() != MftfApplicationConfig::EXECUTION_PHASE) {
+                    GenerationErrorHandler::getInstance()->addError(
+                        'test',
+                        $test->getName(),
+                        self::class . ': ' . $e->getMessage()
+                    );
+                }
                 LoggingUtil::getInstance()->getLogger(self::class)->error(
                     "Failed to generate {$test->getName()}"
                 );
                 if ($removeLastTest) {
-                    array_pop($this->cestPhpArray);
+                    array_pop($cestPhpArray);
                 }
                 TestObjectHandler::getInstance()->sanitizeTests([$test->getName()]);
             }
         }
 
-        if (empty($this->notGeneratedTestsArray)) {
-            return true;
-        } else {
-            return false;
-        }
+        return $cestPhpArray;
     }
 
     /**

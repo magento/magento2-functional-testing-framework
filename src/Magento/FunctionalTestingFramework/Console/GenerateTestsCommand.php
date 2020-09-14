@@ -10,8 +10,11 @@ namespace Magento\FunctionalTestingFramework\Console;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Suite\SuiteGenerator;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
+use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Manifest\ParallelTestManifest;
 use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
@@ -73,8 +76,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
      * @param OutputInterface $output
      * @return void|integer
      * @throws TestFrameworkException
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
+     * @throws FastFailException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -127,7 +129,6 @@ class GenerateTestsCommand extends BaseGenerateCommand
             $this->removeGeneratedDirectory($output, $verbose);
         }
 
-        $errMessages = [];
         try {
             $testConfiguration = $this->createTestConfiguration($json, $tests);
 
@@ -139,7 +140,6 @@ class GenerateTestsCommand extends BaseGenerateCommand
             } catch (FastFailException $e) {
                 throw $e;
             } catch (\Exception $e) {
-                $errMessages[] = $e->getMessage();
             }
 
             if ($config == 'parallel') {
@@ -147,29 +147,31 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 $testManifest->createTestGroups($time);
             }
 
-            try {
-                SuiteGenerator::getInstance()->generateAllSuites($testManifest);
-            } catch (FastFailException $e) {
-                throw $e;
-            } catch (\Exception $e) {
-                $errMessages[] = $e->getMessage();
-            }
+            SuiteGenerator::getInstance()->generateAllSuites($testManifest);
 
             $testManifest->generate();
-
-            if (empty($errMessages)) {
-                $this->ioStyle->text("Generate Tests Command Run" . PHP_EOL);
-
-                return 0;
-            }
         } catch (\Exception $e) {
-            $errMessages[] = $e->getMessage();
+            if (!empty(GenerationErrorHandler::getInstance()->getAllErrors())) {
+                GenerationErrorHandler::getInstance()->printErrorSummary();
+            }
+            $message = $e->getMessage() . PHP_EOL;
+            $message .= !empty($filters) ? 'Filter(s): ' . implode(', ', $filters) . PHP_EOL : '';
+            $message .= !empty($tests) ? 'Test name(s): ' . implode(', ', $tests) . PHP_EOL : '';
+            $message .= !empty($json) && empty($tests) ? 'Test configuration: ' . $json . PHP_EOL : '';
+            $this->ioStyle->note($message);
+
+            return 1;
         }
 
-        $this->printMessages($errMessages, $tests, $filters, $json);
-        $this->ioStyle->text("Generate Tests Command Run (with failures)". PHP_EOL);
-
-        return 1;
+        if (empty(GenerationErrorHandler::getInstance()->getAllErrors())) {
+            $output->writeln("Generate Tests Command Run");
+            return 0;
+        } else {
+            GenerationErrorHandler::getInstance()->printErrorSummary();
+            GenerationErrorHandler::getInstance()->reset();
+            $output->writeln("Generate Tests Command Run (with failures)");
+            return 1;
+        }
     }
 
     /**
@@ -178,8 +180,8 @@ class GenerateTestsCommand extends BaseGenerateCommand
      * @param string $json
      * @param array  $tests
      * @return array
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
+     * @throws FastFailException
+     * @throws TestFrameworkException
      */
     private function createTestConfiguration(
         $json,
@@ -196,7 +198,20 @@ class GenerateTestsCommand extends BaseGenerateCommand
             $testObjects = [];
 
             foreach ($testConfiguration['tests'] as $test) {
-                $testObjects[$test] = TestObjectHandler::getInstance()->getObject($test);
+                try {
+                    $testObjects[$test] = TestObjectHandler::getInstance()->getObject($test);
+                } catch (TestReferenceException $e) {
+                    $message = "Unable to find test {$test} from test configuration";
+                    LoggingUtil::getInstance()->getLogger(self::class)->error(
+                        $message. PHP_EOL . $e->getMessage()
+                    );
+                    if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+                        print($message . PHP_EOL);
+                    }
+                    if (MftfApplicationConfig::getConfig()->getPhase() != MftfApplicationConfig::EXECUTION_PHASE) {
+                        GenerationErrorHandler::getInstance()->addError('test', $test, $message);
+                    }
+                }
             }
 
             $testConfiguration['tests'] = $testObjects;
@@ -226,36 +241,5 @@ class GenerateTestsCommand extends BaseGenerateCommand
         ;
         $jsonTestConfiguration['suites'] = $testConfigArray['suites'] ?? null;
         return $jsonTestConfiguration;
-    }
-
-    /**
-     * Print messages to console
-     *
-     * @param array  $errMessages
-     * @param array  $tests
-     * @param array  $filters
-     * @param string $json
-     * @return void
-     */
-    private function printMessages($errMessages, $tests, $filters, $json)
-    {
-        if (empty($errMessages)) {
-            return;
-        }
-
-        // Print error
-        foreach (array_unique($errMessages) as $errMessage) {
-            if (!empty(trim($errMessage))) {
-                $this->ioStyle->error(trim($errMessage));
-            }
-        }
-
-        // Print notice
-        $message = !empty($filters) ? 'Filter(s): ' . implode(', ', $filters) . PHP_EOL : '';
-        $message .= !empty($tests) ? 'Test name(s): ' . implode(', ', $tests) . PHP_EOL : '';
-        $message .= !empty($json) && empty($tests) ? 'Test configuration: ' . $json . PHP_EOL : '';
-        if (!empty($message)) {
-            $this->ioStyle->note($message);
-        }
     }
 }

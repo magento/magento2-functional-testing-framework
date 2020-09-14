@@ -33,9 +33,6 @@ class ResilientGenerationTest extends MftfTestCase
      * @var string[][]
      */
     private static $exceptionGrpLogs = [
-        'PartialGenerateForIncludeSuite' => [
-            '/Failed to generate tests for suite "PartialGenerateForIncludeSuite"/'
-        ],
         'NotGenerateHookBeforeSuite' => [
             '/Suite NotGenerateHookBeforeSuite is not defined in xml or is invalid./'
         ],
@@ -96,17 +93,8 @@ class ResilientGenerationTest extends MftfTestCase
      */
     public function testGenerateAllTests()
     {
-        $exceptionMessage = '/ERROR: 21 Test failed to generate./';
-
         $testManifest = TestManifestFactory::makeManifest('default', []);
-        // Validate exception is thrown
-        $this->assertExceptionRegex(
-            \Exception::class,
-            [$exceptionMessage],
-            function () use ($testManifest) {
-                TestGenerator::getInstance(null, [])->createAllTestFiles($testManifest);
-            }
-        );
+        TestGenerator::getInstance(null, [])->createAllTestFiles($testManifest);
 
         // Validate tests have been generated
         $dirContents = array_diff(
@@ -121,13 +109,6 @@ class ResilientGenerationTest extends MftfTestCase
                 "string {$dirContent} should not contains \"NotGenerate\""
             );
         }
-
-        // Validate log message
-        TestLoggingUtil::getInstance()->validateMockLogStatmentRegex(
-            'error',
-            $exceptionMessage,
-            []
-        );
     }
 
     /**
@@ -136,20 +117,7 @@ class ResilientGenerationTest extends MftfTestCase
     public function testGenerateAllSuites()
     {
         $testManifest = TestManifestFactory::makeManifest('', []);
-
-        // Validate exception is thrown
-        $exceptionMessage = '/'
-            . preg_quote(
-                'Failed to generate tests for suite "PartialGenerateForIncludeSuite"'
-            )
-            . '/';
-        $this->assertExceptionRegex(
-            \Exception::class,
-            [$exceptionMessage],
-            function () use ($testManifest) {
-                SuiteGenerator::getInstance()->generateAllSuites($testManifest);
-            }
-        );
+        SuiteGenerator::getInstance()->generateAllSuites($testManifest);
 
         foreach (SuiteTestReferences::$data as $groupName => $expectedContents) {
             if (substr($groupName, 0, 11) != 'NotGenerate') {
@@ -175,13 +143,6 @@ class ResilientGenerationTest extends MftfTestCase
                 $this->assertFalse(in_array($groupName, $dirContents));
             }
         }
-
-        // Validate log message
-        TestLoggingUtil::getInstance()->validateMockLogStatmentRegex(
-            'error',
-            $exceptionMessage,
-            []
-        );
     }
 
     /**

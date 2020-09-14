@@ -66,7 +66,6 @@ class RunTestFailedCommand extends BaseGenerateCommand
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -100,12 +99,8 @@ class RunTestFailedCommand extends BaseGenerateCommand
         $testConfiguration = $this->getFailedTestList();
 
         if ($testConfiguration === null) {
-            // no failed tests found
-            if ($this->cmdStatus) {
-                return 0;
-            } else {
-                return 1;
-            }
+            // no failed tests found, run is a success
+            return 0;
         }
 
         $command = $this->getApplication()->find('generate:tests');
@@ -155,11 +150,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
             $this->writeFailedTestToFile($test, $this->testsFailedFile);
         }
 
-        if ($returnCode == 0 && $this->cmdStatus) {
-            return 0;
-        } else {
-            return 1;
-        }
+        return $returnCode;
     }
 
     /**

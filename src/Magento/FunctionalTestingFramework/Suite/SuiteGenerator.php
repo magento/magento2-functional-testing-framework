@@ -16,6 +16,7 @@ use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
+use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Manifest\BaseTestManifest;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
@@ -91,18 +92,17 @@ class SuiteGenerator
      *
      * @param BaseTestManifest $testManifest
      * @return void
-     * @throws \Exception
+     * @throws FastFailException
      */
     public function generateAllSuites($testManifest)
     {
         $suites = $testManifest->getSuiteConfig();
 
-        $exceptionCollector = new ExceptionCollector();
         foreach ($suites as $suiteName => $suiteContent) {
             try {
                 if (empty($suiteContent)) {
                     LoggingUtil::getInstance()->getLogger(self::class)->notification(
-                        "Suite '" . $suiteName . "' contains no tests and won't be generated." . PHP_EOL,
+                        "NOTICE: Suite '" . $suiteName . "' contains no tests and won't be generated." . PHP_EOL,
                         [],
                         true
                     );
@@ -122,11 +122,8 @@ class SuiteGenerator
             } catch (FastFailException $e) {
                 throw $e;
             } catch (\Exception $e) {
-                $exceptionCollector->addError(self::class, self::class . ': ' . $e->getMessage());
             }
         }
-        // Report failure
-        $this->throwCollectedExceptions($exceptionCollector);
     }
 
     /**
@@ -218,6 +215,7 @@ class SuiteGenerator
                 DirSetupUtil::rmdirRecursive($fullPath);
             }
             $exceptionCollector->addError(self::class, $e->getMessage());
+            GenerationErrorHandler::getInstance()->addError('suite', $suiteName, self::class . ': ' . $e->getMessage());
         }
 
         $this->throwCollectedExceptions($exceptionCollector);

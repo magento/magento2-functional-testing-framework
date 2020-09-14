@@ -16,6 +16,7 @@ use Magento\FunctionalTestingFramework\Suite\Parsers\SuiteDataParser;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
+use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
 use Magento\FunctionalTestingFramework\Util\Manifest\DefaultTestManifest;
 use tests\unit\Util\MagentoTestCase;
 use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
@@ -179,13 +180,15 @@ class SuiteGeneratorTest extends MagentoTestCase
         $suiteConfig = ['Suite2' => ['Test1']];
         $manifest = TestManifestFactory::makeManifest('default', $suiteConfig);
 
-        // Set up Expected Exception
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessageMatches('(Suite: "Suite2" Tests: "Test1")');
-
         // parse and generate suite object with mocked data and manifest
         $mockSuiteGenerator = SuiteGenerator::getInstance();
         $mockSuiteGenerator->generateAllSuites($manifest);
+
+        // assert that no exception for generateAllSuites and suite generation error is stored in GenerationErrorHandler
+        $errMessage = 'Cannot reference tests which are not declared as part of suite (Suite: "Suite2" Tests: "Test1")';
+        TestLoggingUtil::getInstance()->validateMockLogStatement('error', $errMessage, []);
+        $suiteErrors = GenerationErrorHandler::getInstance()->getErrorsByType('suite');
+        $this->assertArrayHasKey('Suite2', $suiteErrors);
     }
 
     public function testNonExistentSuiteTestPair()
@@ -203,13 +206,15 @@ class SuiteGeneratorTest extends MagentoTestCase
         $suiteConfig = ['Suite3' => ['Test1']];
         $manifest = TestManifestFactory::makeManifest('default', $suiteConfig);
 
-        // Set up Expected Exception
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessageMatches('#Suite3 is not defined#');
-
         // parse and generate suite object with mocked data and manifest
         $mockSuiteGenerator = SuiteGenerator::getInstance();
         $mockSuiteGenerator->generateAllSuites($manifest);
+
+        // assert that no exception for generateAllSuites and suite generation error is stored in GenerationErrorHandler
+        $errMessage = 'Suite Suite3 is not defined in xml or is invalid.';
+        TestLoggingUtil::getInstance()->validateMockLogStatement('error', $errMessage, []);
+        $suiteErrors = GenerationErrorHandler::getInstance()->getErrorsByType('suite');
+        $this->assertArrayHasKey('Suite3', $suiteErrors);
     }
 
     /**
@@ -269,6 +274,14 @@ class SuiteGeneratorTest extends MagentoTestCase
         $property = new \ReflectionProperty(SuiteGenerator::class, 'groupClassGenerator');
         $property->setAccessible(true);
         $property->setValue($instance, $instance);
+    }
+
+    /**
+     * clean up function runs after each test
+     */
+    public function tearDown(): void
+    {
+        GenerationErrorHandler::getInstance()->reset();
     }
 
     /**
