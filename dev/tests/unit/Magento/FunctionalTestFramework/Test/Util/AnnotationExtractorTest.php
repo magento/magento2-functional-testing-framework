@@ -200,7 +200,9 @@ class AnnotationExtractorTest extends TestCase
 
         // assert that no exception for validateTestCaseIdTitleUniqueness
         // and validation error is stored in GenerationErrorHandler
-        $errorMessage = '/' . preg_quote("TestCaseId and Title pairs is not unique in Tests 'firstTest', 'secondTest'") . '/';
+        $errorMessage = '/'
+            . preg_quote("TestCaseId and Title pairs is not unique in Tests 'firstTest', 'secondTest'")
+            . '/';
         TestLoggingUtil::getInstance()->validateMockLogStatmentRegex('error', $errorMessage, []);
         $testErrors = GenerationErrorHandler::getInstance()->getErrorsByType('test');
         $this->assertArrayHasKey('firstTest', $testErrors);
