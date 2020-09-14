@@ -63,7 +63,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "tests\\": "dev/tests"
+            "tests\\unit\\": "dev/tests/unit"
         }
     },
     "scripts": {
