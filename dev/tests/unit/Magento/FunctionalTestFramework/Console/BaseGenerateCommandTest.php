@@ -188,13 +188,7 @@ class BaseGenerateCommandTest extends TestCase
         $property->setAccessible(true);
         $property->setValue($handler, $testArray);
 
-        AspectMock::double(
-            SuiteObjectHandler::class,
-            [
-                'initSuiteData' => '',
-                'parseSuccessful' => true,
-            ]
-        )->make();
+        AspectMock::double(SuiteObjectHandler::class, ['initSuiteData' => ''])->make();
         $handler = SuiteObjectHandler::getInstance();
         $property = new \ReflectionProperty(SuiteObjectHandler::class, 'suiteObjects');
         $property->setAccessible(true);
