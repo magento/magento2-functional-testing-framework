@@ -199,7 +199,10 @@ class AnnotationExtractor extends BaseObjectExtractor
                 $testArray = explode(',', $tests);
                 foreach ($testArray as $test) {
                     GenerationErrorHandler::getInstance()->addError(
-                        'test', trim($test, "' \t"), $message, true
+                        'test',
+                        trim($test, "' \t"),
+                        $message,
+                        true
                     );
                 }
             }
@@ -233,7 +236,10 @@ class AnnotationExtractor extends BaseObjectExtractor
                 $testArray = explode(',', $tests);
                 foreach ($testArray as $test) {
                     GenerationErrorHandler::getInstance()->addError(
-                        'test', trim($test, "' \t"), $message, true
+                        'test',
+                        trim($test, "' \t"),
+                        $message,
+                        true
                     );
                 }
             }
