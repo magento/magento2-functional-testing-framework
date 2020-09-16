@@ -108,7 +108,6 @@ class GenerationErrorHandler
      */
     public function printErrorSummary()
     {
-
         if (is_array(array_keys($this->errors))) {
             foreach (array_keys($this->errors) as $type) {
                 $totalErrors = count($this->getErrorsByType($type));
@@ -126,7 +125,7 @@ class GenerationErrorHandler
                         . strval($totalNotGenErrors)
                         . ' '
                         . ucfirst($type)
-                        . " failed to generate"
+                        . " failed to generate. See mftf.log for details."
                     );
                 }
                 if ($totalAnnotationErrors > 0) {
@@ -136,7 +135,7 @@ class GenerationErrorHandler
                         . strval($totalAnnotationErrors)
                         . ' '
                         . ucfirst($type)
-                        . " generated with annotation errors"
+                        . " generated with annotation errors. See mftf.log for details."
                     );
                 }
             }
