@@ -108,16 +108,37 @@ class GenerationErrorHandler
      */
     public function printErrorSummary()
     {
+
         if (is_array(array_keys($this->errors))) {
             foreach (array_keys($this->errors) as $type) {
-                print(
-                    PHP_EOL
-                    . 'ERROR: '
-                    . strval(count($this->getErrorsByType($type)))
-                    . ' '
-                    . ucfirst($type)
-                    . " failed to generate or generated but with annotation errors"
-                );
+                $totalErrors = count($this->getErrorsByType($type));
+                $totalAnnotationErrors = 0;
+                foreach ($this->getErrorsByType($type) as $entity => $error) {
+                    if ($error['generated'] == true) {
+                        $totalAnnotationErrors++;
+                    }
+                }
+                $totalNotGenErrors = $totalErrors - $totalAnnotationErrors;
+                if ($totalNotGenErrors > 0) {
+                    print(
+                        PHP_EOL
+                        . 'ERROR: '
+                        . strval($totalNotGenErrors)
+                        . ' '
+                        . ucfirst($type)
+                        . " failed to generate"
+                    );
+                }
+                if ($totalAnnotationErrors > 0) {
+                    print(
+                        PHP_EOL
+                        . 'ERROR: '
+                        . strval($totalAnnotationErrors)
+                        . ' '
+                        . ucfirst($type)
+                        . " generated with annotation errors"
+                    );
+                }
             }
             print(PHP_EOL);
         }
