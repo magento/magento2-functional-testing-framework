@@ -126,7 +126,12 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      */
     private function initSuiteData()
     {
-        $suiteDataParser = ObjectManagerFactory::getObjectManager()->create(SuiteDataParser::class);
+        try {
+            $suiteDataParser = ObjectManagerFactory::getObjectManager()->create(SuiteDataParser::class);
+        } catch (\Exception $e) {
+            throw new FastFailException("Suite Data Parser Error: " . $e->getMessage());
+        }
+
         $suiteObjectExtractor = new SuiteObjectExtractor();
         $this->suiteObjects = $suiteObjectExtractor->parseSuiteDataIntoObjects($suiteDataParser->readSuiteData());
     }

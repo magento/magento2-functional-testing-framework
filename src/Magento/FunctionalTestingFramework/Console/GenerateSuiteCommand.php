@@ -67,12 +67,14 @@ class GenerateSuiteCommand extends BaseGenerateCommand
 
         $suites = $input->getArgument('suites');
 
+        $generated = 0;
         foreach ($suites as $suite) {
             try {
                 SuiteGenerator::getInstance()->generateSuite($suite);
                 if ($output->isVerbose()) {
                     $output->writeLn("suite $suite generated");
                 }
+                $generated++;
             } catch (FastFailException $e) {
                 throw $e;
             } catch (\Exception $e) {
@@ -80,13 +82,20 @@ class GenerateSuiteCommand extends BaseGenerateCommand
         }
 
         if (empty(GenerationErrorHandler::getInstance()->getAllErrors())) {
-            $output->writeln("Suites Generated");
-            return 0;
+            if ($generated > 0) {
+                $output->writeln("Suites Generated");
+                return 0;
+            }
         } else {
             GenerationErrorHandler::getInstance()->printErrorSummary();
             GenerationErrorHandler::getInstance()->reset();
-            $output->writeln("Suites Generated (with failures)");
-            return 1;
+            if ($generated > 0) {
+                $output->writeln("Suites Generated (with errors)");
+                return 1;
+            }
         }
+
+        $output->writeln("No Suite Generated");
+        return 1;
     }
 }

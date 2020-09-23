@@ -169,7 +169,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
         } else {
             GenerationErrorHandler::getInstance()->printErrorSummary();
             GenerationErrorHandler::getInstance()->reset();
-            $output->writeln("Generate Tests Command Run (with failures)");
+            $output->writeln("Generate Tests Command Run (with errors)");
             return 1;
         }
     }

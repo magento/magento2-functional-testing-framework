@@ -113,7 +113,8 @@ class GenerationErrorHandler
                 $totalErrors = count($this->getErrorsByType($type));
                 $totalAnnotationErrors = 0;
                 foreach ($this->getErrorsByType($type) as $entity => $error) {
-                    if ($error['generated'] == true) {
+                    if ( (is_array($error['generated']) && $error['generated'][0] === true)
+                        || ($error['generated'] === true) ) {
                         $totalAnnotationErrors++;
                     }
                 }
@@ -125,7 +126,7 @@ class GenerationErrorHandler
                         . strval($totalNotGenErrors)
                         . ' '
                         . ucfirst($type)
-                        . " failed to generate. See mftf.log for details."
+                        . "(s) failed to generate. See mftf.log for details."
                     );
                 }
                 if ($totalAnnotationErrors > 0) {
@@ -135,7 +136,7 @@ class GenerationErrorHandler
                         . strval($totalAnnotationErrors)
                         . ' '
                         . ucfirst($type)
-                        . " generated with annotation errors. See mftf.log for details."
+                        . "(s) generated with annotation errors. See mftf.log for details."
                     );
                 }
             }

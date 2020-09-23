@@ -102,6 +102,7 @@ class TestObjectHandler implements ObjectHandlerInterface
      */
     public function getAllObjects()
     {
+        $errCount = 0;
         $testObjects = [];
         foreach ($this->tests as $testName => $test) {
             try {
@@ -109,21 +110,29 @@ class TestObjectHandler implements ObjectHandlerInterface
             } catch (FastFailException $exception) {
                 throw $exception;
             } catch (\Exception $exception) {
+                $errCount++;
                 LoggingUtil::getInstance()->getLogger(self::class)->error(
-                    "Unable to create test " . $testName . "\n" . $exception->getMessage()
+                    "Unable to extend test " . $testName . "\n" . $exception->getMessage()
                 );
-                if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
-                    print("ERROR: Unable to create test " . $testName . "\n" . $exception->getMessage());
-                }
                 if (MftfApplicationConfig::getConfig()->getPhase() != MftfApplicationConfig::EXECUTION_PHASE) {
                     GenerationErrorHandler::getInstance()->addError(
                         'test',
                         $testName,
-                        self::class . ': Unable to create test ' . $exception->getMessage()
+                        self::class . ': Unable to extend test ' . $exception->getMessage()
                     );
                 }
             }
         }
+
+        if ($errCount > 0
+            && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+            print(
+                "ERROR in TestObjectHandler::getAllObjects(): "
+                . strval($errCount)
+                . " Test(s) cannot to be extended. See mftf.log for details."
+            );
+        }
+
         return $testObjects;
     }
 
@@ -137,6 +146,7 @@ class TestObjectHandler implements ObjectHandlerInterface
      */
     public function getTestsByGroup($groupName)
     {
+        $errCount = 0;
         $relevantTests = [];
         foreach ($this->tests as $test) {
             try {
@@ -147,14 +157,12 @@ class TestObjectHandler implements ObjectHandlerInterface
             } catch (FastFailException $exception) {
                 throw $exception;
             } catch (\Exception $exception) {
+                $errCount++;
                 $message = "Unable to reference test "
                     . $test->getName()
                     . " for group {$groupName}\n"
                     . $exception->getMessage();
                 LoggingUtil::getInstance()->getLogger(self::class)->error($message);
-                if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
-                    print('ERROR: ' . $message);
-                }
                 if (MftfApplicationConfig::getConfig()->getPhase() != MftfApplicationConfig::EXECUTION_PHASE) {
                     GenerationErrorHandler::getInstance()->addError(
                         'test',
@@ -163,6 +171,15 @@ class TestObjectHandler implements ObjectHandlerInterface
                     );
                 }
             }
+        }
+
+        if ($errCount > 0
+            && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+            print(
+                "ERROR in TestObjectHandler::getTestsByGroup(): "
+                . strval($errCount)
+                . " Test(s) cannot be referenced for group {$groupName}. See mftf.log for details."
+            );
         }
 
         return $relevantTests;
@@ -194,15 +211,23 @@ class TestObjectHandler implements ObjectHandlerInterface
      */
     private function initTestData($validateAnnotations = true)
     {
-        $testDataParser = ObjectManagerFactory::getObjectManager()->create(TestDataParser::class);
-        $parsedTestArray = $testDataParser->readTestData();
+        $parserErrorMessage = null;
+        try {
+            $testDataParser = ObjectManagerFactory::getObjectManager()->create(TestDataParser::class);
+            $parsedTestArray = $testDataParser->readTestData();
+
+            if (!$parsedTestArray) {
+                $parserErrorMessage = "Could not parse any test in xml.";
+            }
+        } catch (\Exception $e) {
+            $parserErrorMessage = $e->getMessage();
+        }
+
+        if ($parserErrorMessage) {
+            throw new FastFailException("Test Data Parser Error: " . $parserErrorMessage);
+        }
 
         $testObjectExtractor = new TestObjectExtractor();
-
-        if (!$parsedTestArray) {
-            trigger_error("Could not parse any test in xml.", E_USER_NOTICE);
-            return;
-        }
 
         $testNameValidator = new NameValidationUtil();
         foreach ($parsedTestArray as $testName => $testData) {
