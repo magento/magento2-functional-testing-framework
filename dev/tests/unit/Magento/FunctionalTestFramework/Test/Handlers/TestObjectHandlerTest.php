@@ -118,8 +118,7 @@ class TestObjectHandlerTest extends MagentoTestCase
      */
     public function testGetTestWithFileName()
     {
-        $this->markTestIncomplete();
-        //TODO
+        $this->markTestIncomplete('TODO');
     }
 
     /**

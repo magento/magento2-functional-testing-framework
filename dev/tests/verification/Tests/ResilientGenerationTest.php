@@ -38,7 +38,10 @@ class ResilientGenerationTest extends MftfTestCase
         ],
         'NotGenerateHookAfterSuite' => [
             '/Suite NotGenerateHookAfterSuite is not defined in xml or is invalid./'
-        ]
+        ],
+        'NotGenerateEmptySuite' => [
+            '/Suite NotGenerateEmptySuite is not defined in xml or is invalid./'
+        ],
     ];
 
     /**
@@ -211,6 +214,34 @@ class ResilientGenerationTest extends MftfTestCase
             }
             TestLoggingUtil::getInstance()->validateMockLogStatmentRegex($type, $message, $context);
         }
+    }
+
+    /**
+     * Test generate an empty suite
+     */
+    public function testGenerateEmptySuites()
+    {
+        $groupName = 'NotGenerateEmptySuite';
+
+        // Validate exception is thrown
+        $this->assertExceptionRegex(
+            \Exception::class,
+            self::$exceptionGrpLogs[$groupName],
+            function () use ($groupName) {
+                SuiteGenerator::getInstance()->generateSuite($groupName);
+            }
+        );
+
+        // Validate suite is not generated
+        $dirContents = array_diff(scandir(self::GENERATE_RESULT_DIR), ['..', '.']);
+        $this->assertFalse(in_array($groupName, $dirContents));
+
+        // Validate log message
+        $type = 'error';
+        $message = self::$exceptionGrpLogs[$groupName][0];
+        $context = [];
+
+        TestLoggingUtil::getInstance()->validateMockLogStatmentRegex($type, $message, $context);
     }
 
     /**

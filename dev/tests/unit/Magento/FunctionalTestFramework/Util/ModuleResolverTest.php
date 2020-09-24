@@ -10,6 +10,7 @@ use AspectMock\Proxy\Verifier;
 use AspectMock\Test as AspectMock;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
@@ -777,7 +778,7 @@ class ModuleResolverTest extends MagentoTestCase
         $this->setMockResolverProperties($resolver, null, null);
 
         // Cannot Generate if no --force was passed in and no Admin Token is returned succesfully
-        $this->expectException(TestFrameworkException::class);
+        $this->expectException(FastFailException::class);
         $resolver->getModulesPath();
     }
 
@@ -816,7 +817,7 @@ class ModuleResolverTest extends MagentoTestCase
         $resolver = ModuleResolver::getInstance();
 
         // Expect exception
-        $this->expectException(TestFrameworkException::class);
+        $this->expectException(FastFailException::class);
         $resolver->getModulesPath();
     }
 
@@ -833,7 +834,7 @@ class ModuleResolverTest extends MagentoTestCase
         $resolver = ModuleResolver::getInstance();
 
         // Expect exception
-        $this->expectException(TestFrameworkException::class);
+        $this->expectException(FastFailException::class);
         $resolver->getModulesPath();
     }
 

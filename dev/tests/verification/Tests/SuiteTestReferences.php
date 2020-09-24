@@ -61,5 +61,7 @@ class SuiteTestReferences
             'DeprecationCheckDeprecatedTestCest.php',
             'DeprecationCheckTestCest.php'
         ],
+        'NotGenerateEmptySuite' => [
+        ],
     ];
 }

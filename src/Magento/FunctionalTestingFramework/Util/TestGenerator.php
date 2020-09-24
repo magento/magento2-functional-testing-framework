@@ -356,9 +356,14 @@ class TestGenerator
                     } catch (TestReferenceException $e) {
                         TestObjectHandler::getInstance()->sanitizeTests([$test->getName()]);
                         if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
-                            print("ERROR: {$test->getName()} will not be generated. Parent {$e->getMessage()} \n");
-                            LoggingUtil::getInstance()->getLogger(self::class)->error(
-                                "{$test->getName()} will not be generated. Parent does not exist."
+                            $errMessage = "{$test->getName()} will not be generated. "
+                                . "Parent test {$test->getParentName()} not defined in xml.";
+                            print("ERROR: {$errMessage}");
+                            LoggingUtil::getInstance()->getLogger(self::class)->error($errMessage);
+                            GenerationErrorHandler::getInstance()->addError(
+                                'test',
+                                $test->getName(),
+                                self::class . ': ' . $errMessage
                             );
                         }
                         continue;

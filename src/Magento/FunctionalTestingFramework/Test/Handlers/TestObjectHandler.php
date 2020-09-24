@@ -127,9 +127,9 @@ class TestObjectHandler implements ObjectHandlerInterface
         if ($errCount > 0
             && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
             print(
-                "ERROR in TestObjectHandler::getAllObjects(): "
+                "ERROR: "
                 . strval($errCount)
-                . " Test(s) cannot to be extended. See mftf.log for details."
+                . " Test(s) cannot to be extended in TestObjectHandler::getAllObjects(). See mftf.log for details."
             );
         }
 
@@ -176,9 +176,10 @@ class TestObjectHandler implements ObjectHandlerInterface
         if ($errCount > 0
             && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
             print(
-                "ERROR in TestObjectHandler::getTestsByGroup(): "
+                "ERROR: "
                 . strval($errCount)
-                . " Test(s) cannot be referenced for group {$groupName}. See mftf.log for details."
+                . " Test(s) cannot be referenced for group {$groupName} in TestObjectHandler::getTestsByGroup()."
+                . " See mftf.log for details."
             );
         }
 
@@ -204,10 +205,13 @@ class TestObjectHandler implements ObjectHandlerInterface
     /**
      * This method reads all Test.xml files into objects and stores them in an array for future access.
      *
+     * @param boolean $validateAnnotations
      * @return void
-     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      * @throws FastFailException
      * @throws TestFrameworkException
+     *
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function initTestData($validateAnnotations = true)
     {

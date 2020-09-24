@@ -44,6 +44,8 @@ class WebApiAuth
      * @param string $password
      * @return string
      * @throws FastFailException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public static function getAdminToken($username = null, $password = null)
     {

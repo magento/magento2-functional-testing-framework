@@ -51,7 +51,6 @@ class SuiteGeneratorTest extends MagentoTestCase
 
     /**
      * Tests generating a single suite given a set of parsed test data
-     * @throws \Exception
      */
     public function testGenerateSuite()
     {
@@ -87,7 +86,6 @@ class SuiteGeneratorTest extends MagentoTestCase
 
     /**
      * Tests generating all suites given a set of parsed test data
-     * @throws \Exception
      */
     public function testGenerateAllSuites()
     {
@@ -124,10 +122,16 @@ class SuiteGeneratorTest extends MagentoTestCase
 
     /**
      * Tests attempting to generate a suite with no included/excluded tests and no hooks
-     * @throws \Exception
      */
     public function testGenerateEmptySuite()
     {
+        $testDataArrayBuilder = new TestDataArrayBuilder();
+        $mockTestData = $testDataArrayBuilder
+            ->withName('test')
+            ->withAnnotations()
+            ->withTestActions()
+            ->build();
+
         $suiteDataArrayBuilder = new SuiteDataArrayBuilder();
         $mockData = $suiteDataArrayBuilder
             ->withName('basicTestSuite')
@@ -135,7 +139,6 @@ class SuiteGeneratorTest extends MagentoTestCase
         unset($mockData['suites']['basicTestSuite'][TestObjectExtractor::TEST_BEFORE_HOOK]);
         unset($mockData['suites']['basicTestSuite'][TestObjectExtractor::TEST_AFTER_HOOK]);
 
-        $mockTestData = null;
         $this->setMockTestAndSuiteParserOutput($mockTestData, $mockData);
 
         // set expected error message
@@ -146,6 +149,9 @@ class SuiteGeneratorTest extends MagentoTestCase
         $mockSuiteGenerator->generateSuite("basicTestSuite");
     }
 
+    /**
+     * Tests generating all suites with a suite containing invalid test reference
+     */
     public function testInvalidSuiteTestPair()
     {
         // Mock Suite1 => Test1 and Suite2 => Test2
@@ -191,6 +197,9 @@ class SuiteGeneratorTest extends MagentoTestCase
         $this->assertArrayHasKey('Suite2', $suiteErrors);
     }
 
+    /**
+     * Tests generating all suites with a non-existing suite
+     */
     public function testNonExistentSuiteTestPair()
     {
         $testDataArrayBuilder = new TestDataArrayBuilder();
@@ -221,6 +230,7 @@ class SuiteGeneratorTest extends MagentoTestCase
      * Function used to set mock for parser return and force init method to run between tests.
      *
      * @param array $testData
+     * @param array $suiteData
      * @throws \Exception
      */
     private function setMockTestAndSuiteParserOutput($testData, $suiteData)

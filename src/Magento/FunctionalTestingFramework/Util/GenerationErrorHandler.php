@@ -113,8 +113,8 @@ class GenerationErrorHandler
                 $totalErrors = count($this->getErrorsByType($type));
                 $totalAnnotationErrors = 0;
                 foreach ($this->getErrorsByType($type) as $entity => $error) {
-                    if ( (is_array($error['generated']) && $error['generated'][0] === true)
-                        || ($error['generated'] === true) ) {
+                    if ((is_array($error['generated']) && $error['generated'][0] === true)
+                        || ($error['generated'] === true)) {
                         $totalAnnotationErrors++;
                     }
                 }
