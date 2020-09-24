@@ -253,10 +253,10 @@ It also enables auto-completion in PhpStorm.
 #### Usage
 
 ```bash
-vendor/bin/mftf generate:urn-catalog [--force] [<path to the directory with misc.xml>]
+vendor/bin/mftf generate:urn-catalog [--force] [<path to misc.xml>]
 ```
 
-`misc.xml` is typically located in `<project root>/.idea/`.
+`misc.xml` is typically located at `<project root>/.idea/misc.xml`.
 
 #### Options
 
@@ -267,7 +267,7 @@ vendor/bin/mftf generate:urn-catalog [--force] [<path to the directory with misc
 #### Example
 
 ```bash
-vendor/bin/mftf generate:urn-catalog .idea/
+vendor/bin/mftf generate:urn-catalog .idea/misc.xml
 ```
 
 ### `reset`
