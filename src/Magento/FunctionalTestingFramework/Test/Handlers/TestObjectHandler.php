@@ -129,7 +129,7 @@ class TestObjectHandler implements ObjectHandlerInterface
             print(
                 "ERROR: "
                 . strval($errCount)
-                . " Test(s) cannot to be extended in TestObjectHandler::getAllObjects(). See mftf.log for details."
+                . " Test(s) cannot be extended in TestObjectHandler::getAllObjects(). See mftf.log for details."
             );
         }
 
