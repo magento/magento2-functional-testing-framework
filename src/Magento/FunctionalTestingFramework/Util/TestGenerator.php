@@ -358,7 +358,9 @@ class TestGenerator
                         if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
                             $errMessage = "{$test->getName()} will not be generated. "
                                 . "Parent test {$test->getParentName()} not defined in xml.";
-                            print("ERROR: {$errMessage}");
+                            if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
+                                print("ERROR: {$errMessage}");
+                            }
                             LoggingUtil::getInstance()->getLogger(self::class)->error($errMessage);
                             GenerationErrorHandler::getInstance()->addError(
                                 'test',

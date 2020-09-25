@@ -125,6 +125,7 @@ class TestObjectHandler implements ObjectHandlerInterface
         }
 
         if ($errCount > 0
+            && MftfApplicationConfig::getConfig()->verboseEnabled()
             && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
             print(
                 "ERROR: "
@@ -174,6 +175,7 @@ class TestObjectHandler implements ObjectHandlerInterface
         }
 
         if ($errCount > 0
+            && MftfApplicationConfig::getConfig()->verboseEnabled()
             && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
             print(
                 "ERROR: "
@@ -248,7 +250,8 @@ class TestObjectHandler implements ObjectHandlerInterface
                 LoggingUtil::getInstance()->getLogger(self::class)->error(
                     "Unable to parse test " . $testName . "\n" . $exception->getMessage()
                 );
-                if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+                if (MftfApplicationConfig::getConfig()->verboseEnabled()
+                    && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
                     print("ERROR: Unable to parse test " . $testName . "\n");
                 }
                 if (MftfApplicationConfig::getConfig()->getPhase() != MftfApplicationConfig::EXECUTION_PHASE) {

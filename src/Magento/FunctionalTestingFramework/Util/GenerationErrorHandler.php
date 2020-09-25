@@ -121,22 +121,22 @@ class GenerationErrorHandler
                 $totalNotGenErrors = $totalErrors - $totalAnnotationErrors;
                 if ($totalNotGenErrors > 0) {
                     print(
-                        PHP_EOL
-                        . 'ERROR: '
+                        'ERROR: '
                         . strval($totalNotGenErrors)
                         . ' '
                         . ucfirst($type)
                         . "(s) failed to generate. See mftf.log for details."
+                        . PHP_EOL
                     );
                 }
                 if ($totalAnnotationErrors > 0) {
                     print(
-                        PHP_EOL
-                        . 'ERROR: '
+                        'ERROR: '
                         . strval($totalAnnotationErrors)
                         . ' '
                         . ucfirst($type)
                         . "(s) generated with annotation errors. See mftf.log for details."
+                        . PHP_EOL
                     );
                 }
             }

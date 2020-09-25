@@ -205,7 +205,8 @@ class GenerateTestsCommand extends BaseGenerateCommand
                     LoggingUtil::getInstance()->getLogger(self::class)->error(
                         $message. PHP_EOL . $e->getMessage()
                     );
-                    if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+                    if (MftfApplicationConfig::getConfig()->verboseEnabled()
+                        && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
                         print($message . PHP_EOL);
                     }
                     if (MftfApplicationConfig::getConfig()->getPhase() != MftfApplicationConfig::EXECUTION_PHASE) {

@@ -193,7 +193,8 @@ class AnnotationExtractor extends BaseObjectExtractor
             foreach ($dupes as $storyTitle => $tests) {
                 $message = "Story and Title annotation pairs is not unique in Tests {$tests}\n";
                 LoggingUtil::getInstance()->getLogger(self::class)->error($message);
-                if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+                if (MftfApplicationConfig::getConfig()->verboseEnabled()
+                    && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
                     print('ERROR: ' . $message);
                 }
                 $testArray = explode(',', $tests);
@@ -230,7 +231,8 @@ class AnnotationExtractor extends BaseObjectExtractor
             foreach ($dupes as $newTitle => $tests) {
                 $message = "TestCaseId and Title pairs is not unique in Tests {$tests}\n";
                 LoggingUtil::getInstance()->getLogger(self::class)->error($message);
-                if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+                if (MftfApplicationConfig::getConfig()->verboseEnabled()
+                    && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
                     print('ERROR: ' . $message);
                 }
                 $testArray = explode(',', $tests);
