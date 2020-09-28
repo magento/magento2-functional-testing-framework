@@ -170,13 +170,13 @@ vendor/bin/mftf build:project
 If you use PhpStorm, generate a URN catalog:
 
 ```bash
-vendor/bin/mftf generate:urn-catalog .idea/
+vendor/bin/mftf generate:urn-catalog .idea/misc.xml
 ```
 
 If the file does not exist, add the `--force` option to create it:
 
 ```bash
-vendor/bin/mftf generate:urn-catalog --force .idea/
+vendor/bin/mftf generate:urn-catalog --force .idea/misc.xml
 ```
 
 See [`generate:urn-catalog`][] for more details.
