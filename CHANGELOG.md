@@ -1,7 +1,16 @@
 Magento Functional Testing Framework Changelog
 ================================================
+3.1.1
+---------
+
+* Traceability
+  * Removed `travis.yml` and replaced with `.github/workflows/main.yml`
+
+### Fixes
+Fixed issue with XPath locators for waits in MagentoPwaWebDriver.  
+
 3.1.0
-________
+---------
 
 ### Enhancements
 
