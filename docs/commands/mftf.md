@@ -91,12 +91,12 @@ For more details about `failed`, refer to [Reporting][].
 
 ## Error tolerance during generation
 
-Starting from version 3.2.0, MFTF will not fail right away when encounter generation errors.
-Instead MFTF will try to generate as many tests and suites as it can, log errors in `mftf.log` file and exit with non-zero generation status.
+Starting from version 3.2.0, MFTF will not fail right away when encountering generation errors.
+Instead, MFTF will generate as many tests and suites as it can, log errors to `mftf.log`, and exit with a non-zero generation status.
 
 Note:
-- Not all errors are tolerable at generation. For example, schema validation error, parser error, WebApi authentication error will still cause `hard` failure with no test or suite generated.
-- Error tolerance in generation is mean to help local test development and testing. You should only expect to run generated tests locally. You must fix all generation errors to use other framework functionalities, pass static checks and to deliver MFTF tests.
+- Not all errors are tolerable at generation. For example, schema validation errors, parser errors, and WebApi authentication errors will cause `hard` failures, with no tests or suites being generated.
+- Error tolerance in generation is meant to help local test development and testing and is expected to be run locally. All generation errors must be fixed in order to use other framework functionality, pass static checks, and to deliver MFTF tests.
 
 ## Reference
 
