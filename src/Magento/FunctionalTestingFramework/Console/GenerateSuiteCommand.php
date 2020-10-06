@@ -83,19 +83,18 @@ class GenerateSuiteCommand extends BaseGenerateCommand
 
         if (empty(GenerationErrorHandler::getInstance()->getAllErrors())) {
             if ($generated > 0) {
-                $output->writeln("Suites Generated");
+                $output->writeln("Suites Generated" . PHP_EOL);
                 return 0;
             }
         } else {
             GenerationErrorHandler::getInstance()->printErrorSummary();
-            GenerationErrorHandler::getInstance()->reset();
             if ($generated > 0) {
-                $output->writeln("Suites Generated (with errors)");
+                $output->writeln("Suites Generated (with errors)" . PHP_EOL);
                 return 1;
             }
         }
 
-        $output->writeln("No Suite Generated");
+        $output->writeln("No Suite Generated" . PHP_EOL);
         return 1;
     }
 }

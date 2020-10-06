@@ -355,19 +355,17 @@ class TestGenerator
                         TestObjectHandler::getInstance()->getObject($test->getParentName());
                     } catch (TestReferenceException $e) {
                         TestObjectHandler::getInstance()->sanitizeTests([$test->getName()]);
-                        if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
-                            $errMessage = "{$test->getName()} will not be generated. "
-                                . "Parent test {$test->getParentName()} not defined in xml.";
-                            if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-                                print("ERROR: {$errMessage}");
-                            }
-                            LoggingUtil::getInstance()->getLogger(self::class)->error($errMessage);
-                            GenerationErrorHandler::getInstance()->addError(
-                                'test',
-                                $test->getName(),
-                                self::class . ': ' . $errMessage
-                            );
+                        $errMessage = "{$test->getName()} will not be generated. "
+                            . "Parent test {$test->getParentName()} not defined in xml.";
+                        if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
+                            print("ERROR: {$errMessage}");
                         }
+                        LoggingUtil::getInstance()->getLogger(self::class)->error($errMessage);
+                        GenerationErrorHandler::getInstance()->addError(
+                            'test',
+                            $test->getName(),
+                            self::class . ': ' . $errMessage
+                        );
                         continue;
                     }
                 }
@@ -389,13 +387,11 @@ class TestGenerator
             } catch (FastFailException $e) {
                 throw $e;
             } catch (\Exception $e) {
-                if (MftfApplicationConfig::getConfig()->getPhase() != MftfApplicationConfig::EXECUTION_PHASE) {
-                    GenerationErrorHandler::getInstance()->addError(
-                        'test',
-                        $test->getName(),
-                        self::class . ': ' . $e->getMessage()
-                    );
-                }
+                GenerationErrorHandler::getInstance()->addError(
+                    'test',
+                    $test->getName(),
+                    self::class . ': ' . $e->getMessage()
+                );
                 LoggingUtil::getInstance()->getLogger(self::class)->error(
                     "Failed to generate {$test->getName()}"
                 );

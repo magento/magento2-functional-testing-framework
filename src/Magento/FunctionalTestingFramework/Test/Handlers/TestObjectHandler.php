@@ -114,13 +114,11 @@ class TestObjectHandler implements ObjectHandlerInterface
                 LoggingUtil::getInstance()->getLogger(self::class)->error(
                     "Unable to extend test " . $testName . "\n" . $exception->getMessage()
                 );
-                if (MftfApplicationConfig::getConfig()->getPhase() != MftfApplicationConfig::EXECUTION_PHASE) {
-                    GenerationErrorHandler::getInstance()->addError(
-                        'test',
-                        $testName,
-                        self::class . ': Unable to extend test ' . $exception->getMessage()
-                    );
-                }
+                GenerationErrorHandler::getInstance()->addError(
+                    'test',
+                    $testName,
+                    self::class . ': Unable to extend test ' . $exception->getMessage()
+                );
             }
         }
 
@@ -164,13 +162,12 @@ class TestObjectHandler implements ObjectHandlerInterface
                     . " for group {$groupName}\n"
                     . $exception->getMessage();
                 LoggingUtil::getInstance()->getLogger(self::class)->error($message);
-                if (MftfApplicationConfig::getConfig()->getPhase() != MftfApplicationConfig::EXECUTION_PHASE) {
-                    GenerationErrorHandler::getInstance()->addError(
-                        'test',
-                        $test->getName(),
-                        self::class . ': ' . $message
-                    );
-                }
+
+                GenerationErrorHandler::getInstance()->addError(
+                    'test',
+                    $test->getName(),
+                    self::class . ': ' . $message
+                );
             }
         }
 
@@ -254,13 +251,11 @@ class TestObjectHandler implements ObjectHandlerInterface
                     && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
                     print("ERROR: Unable to parse test " . $testName . "\n");
                 }
-                if (MftfApplicationConfig::getConfig()->getPhase() != MftfApplicationConfig::EXECUTION_PHASE) {
-                    GenerationErrorHandler::getInstance()->addError(
-                        'test',
-                        $testName,
-                        self::class . ': Unable to parse test ' . $exception->getMessage()
-                    );
-                }
+                GenerationErrorHandler::getInstance()->addError(
+                    'test',
+                    $testName,
+                    self::class . ': Unable to parse test ' . $exception->getMessage()
+                );
             }
         }
         $testNameValidator->summarize(NameValidationUtil::TEST_NAME);

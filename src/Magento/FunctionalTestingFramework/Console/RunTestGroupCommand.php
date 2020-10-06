@@ -10,6 +10,7 @@ namespace Magento\FunctionalTestingFramework\Console;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
+use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -80,6 +81,8 @@ class RunTestGroupCommand extends BaseGenerateCommand
             $allowSkipped
         );
 
+        $generationErrorCode = 0;
+
         if (!$skipGeneration) {
             $testConfiguration = $this->getGroupAndSuiteConfiguration($groups);
             $command = $this->getApplication()->find('generate:tests');
@@ -93,6 +96,10 @@ class RunTestGroupCommand extends BaseGenerateCommand
             ];
 
             $command->run(new ArrayInput($args), $output);
+
+            if (!empty(GenerationErrorHandler::getInstance()->getAllErrors())) {
+                $generationErrorCode = 1;
+            }
         }
 
         if ($this->pauseEnabled()) {
@@ -130,6 +137,6 @@ class RunTestGroupCommand extends BaseGenerateCommand
             }
             $exitCode = 0;
         }
-        return $exitCode;
+        return max($exitCode, $generationErrorCode);
     }
 }

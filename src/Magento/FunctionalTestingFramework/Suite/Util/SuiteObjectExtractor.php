@@ -109,13 +109,13 @@ class SuiteObjectExtractor extends BaseObjectExtractor
                     LoggingUtil::getInstance()->getLogger(self::class)->error(
                         "Unable to parse suite " . $parsedSuite[self::NAME] . ". Suite must not be empty."
                     );
-                    if (MftfApplicationConfig::getConfig()->getPhase() != MftfApplicationConfig::EXECUTION_PHASE) {
-                        GenerationErrorHandler::getInstance()->addError(
-                            'suite',
-                            $parsedSuite[self::NAME],
-                            self::class . ': ' . 'Suite must not be empty.'
-                        );
-                    }
+
+                    GenerationErrorHandler::getInstance()->addError(
+                        'suite',
+                        $parsedSuite[self::NAME],
+                        self::class . ': ' . 'Suite must not be empty.'
+                    );
+
                     continue;
                 };
 
@@ -130,14 +130,13 @@ class SuiteObjectExtractor extends BaseObjectExtractor
                         && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
                         print($includeMessage);
                     }
-                    if (MftfApplicationConfig::getConfig()->getPhase() != MftfApplicationConfig::EXECUTION_PHASE) {
-                        GenerationErrorHandler::getInstance()->addError(
-                            'suite',
-                            $parsedSuite[self::NAME],
-                            self::class . ': ' . $includeMessage,
-                            true
-                        );
-                    }
+
+                    GenerationErrorHandler::getInstance()->addError(
+                        'suite',
+                        $parsedSuite[self::NAME],
+                        self::class . ': ' . $includeMessage,
+                        true
+                    );
                 }
             } catch (FastFailException $e) {
                 throw $e;
@@ -149,13 +148,13 @@ class SuiteObjectExtractor extends BaseObjectExtractor
                     && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
                     print("ERROR: Unable to parse suite " . $parsedSuite[self::NAME] . "\n");
                 }
-                if (MftfApplicationConfig::getConfig()->getPhase() != MftfApplicationConfig::EXECUTION_PHASE) {
-                    GenerationErrorHandler::getInstance()->addError(
-                        'suite',
-                        $parsedSuite[self::NAME],
-                        self::class . ': Unable to parse suite ' . $e->getMessage()
-                    );
-                }
+
+                GenerationErrorHandler::getInstance()->addError(
+                    'suite',
+                    $parsedSuite[self::NAME],
+                    self::class . ': Unable to parse suite ' . $e->getMessage()
+                );
+
                 continue;
             }
 

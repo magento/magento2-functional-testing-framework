@@ -57,16 +57,14 @@ class GenerationErrorHandler
      */
     public function addError($type, $entityName, $message, $generated = false)
     {
-        if (MftfApplicationConfig::getConfig()->getPhase() != MftfApplicationConfig::EXECUTION_PHASE) {
-            $error[$entityName] = [
-                'message' => $message,
-                'generated' => $generated,
-            ];
-            if (isset($this->errors[$type])) {
-                $this->errors[$type] = array_merge_recursive($this->errors[$type], $error);
-            } else {
-                $this->errors[$type] = $error;
-            }
+        $error[$entityName] = [
+            'message' => $message,
+            'generated' => $generated,
+        ];
+        if (isset($this->errors[$type])) {
+            $this->errors[$type] = array_merge_recursive($this->errors[$type], $error);
+        } else {
+            $this->errors[$type] = $error;
         }
     }
 
@@ -108,28 +106,28 @@ class GenerationErrorHandler
      */
     public function printErrorSummary()
     {
-        if (is_array(array_keys($this->errors))) {
-            foreach (array_keys($this->errors) as $type) {
-                $totalErrors = count($this->getErrorsByType($type));
-                $totalAnnotationErrors = 0;
-                foreach ($this->getErrorsByType($type) as $entity => $error) {
-                    if ((is_array($error['generated']) && $error['generated'][0] === true)
-                        || ($error['generated'] === true)) {
-                        $totalAnnotationErrors++;
-                    }
+        foreach (array_keys($this->errors) as $type) {
+            $totalErrors = count($this->getErrorsByType($type));
+            $totalAnnotationErrors = 0;
+            foreach ($this->getErrorsByType($type) as $entity => $error) {
+                if ((is_array($error['generated']) && $error['generated'][0] === true)
+                    || ($error['generated'] === true)) {
+                    $totalAnnotationErrors++;
                 }
-                $totalNotGenErrors = $totalErrors - $totalAnnotationErrors;
-                if ($totalNotGenErrors > 0) {
-                    print(
-                        'ERROR: '
-                        . strval($totalNotGenErrors)
-                        . ' '
-                        . ucfirst($type)
-                        . "(s) failed to generate. See mftf.log for details."
-                        . PHP_EOL
-                    );
-                }
-                if ($totalAnnotationErrors > 0) {
+            }
+            $totalNotGenErrors = $totalErrors - $totalAnnotationErrors;
+            if ($totalNotGenErrors > 0) {
+                print(
+                    'ERROR: '
+                    . strval($totalNotGenErrors)
+                    . ' '
+                    . ucfirst($type)
+                    . "(s) failed to generate. See mftf.log for details."
+                    . PHP_EOL
+                );
+            }
+            if ($totalAnnotationErrors > 0) {
+                if ($type !== 'suite') {
                     print(
                         'ERROR: '
                         . strval($totalAnnotationErrors)
@@ -138,9 +136,18 @@ class GenerationErrorHandler
                         . "(s) generated with annotation errors. See mftf.log for details."
                         . PHP_EOL
                     );
+                } else {
+                    print(
+                        'ERROR:  '
+                        . strval($totalAnnotationErrors)
+                        . ' '
+                        . ucfirst($type)
+                        . "(s) has(have) tests with annotation errors. See mftf.log for details."
+                        . PHP_EOL
+                    );
                 }
             }
-            print(PHP_EOL);
         }
+        print(PHP_EOL);
     }
 }

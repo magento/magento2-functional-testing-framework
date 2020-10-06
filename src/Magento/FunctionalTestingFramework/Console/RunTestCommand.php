@@ -8,6 +8,8 @@ declare(strict_types = 1);
 namespace Magento\FunctionalTestingFramework\Console;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
+use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -86,6 +88,8 @@ class RunTestCommand extends BaseGenerateCommand
 
         $testConfiguration = $this->getTestAndSuiteConfiguration($tests);
 
+        $generationErrorCode = 0;
+
         if (!$skipGeneration) {
             $command = $this->getApplication()->find('generate:tests');
             $args = [
@@ -97,6 +101,10 @@ class RunTestCommand extends BaseGenerateCommand
                 '-v' => $verbose
             ];
             $command->run(new ArrayInput($args), $output);
+
+            if (!empty(GenerationErrorHandler::getInstance()->getAllErrors())) {
+                $generationErrorCode = 1;
+            }
         }
 
         $testConfigArray = json_decode($testConfiguration, true);
@@ -109,7 +117,7 @@ class RunTestCommand extends BaseGenerateCommand
             $this->runTestsInSuite($testConfigArray['suites'], $output);
         }
 
-        return $this->returnCode;
+        return max($this->returnCode, $generationErrorCode);
     }
 
     /**

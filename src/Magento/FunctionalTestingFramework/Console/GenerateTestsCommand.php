@@ -136,7 +136,12 @@ class GenerateTestsCommand extends BaseGenerateCommand
             $testManifest = TestManifestFactory::makeManifest($config, $testConfiguration['suites']);
 
             try {
-                TestGenerator::getInstance(null, $testConfiguration['tests'])->createAllTestFiles($testManifest);
+                if (empty($tests) || !empty($testConfiguration['tests'])) {
+                    // $testConfiguration['tests'] cannot be empty if $tests is not empty
+                    TestGenerator::getInstance(null, $testConfiguration['tests'])->createAllTestFiles($testManifest);
+                } elseif (empty($testConfiguration['suites'])) {
+                    throw new FastFailException('Invalid input');
+                }
             } catch (FastFailException $e) {
                 throw $e;
             } catch (\Exception $e) {
@@ -164,12 +169,11 @@ class GenerateTestsCommand extends BaseGenerateCommand
         }
 
         if (empty(GenerationErrorHandler::getInstance()->getAllErrors())) {
-            $output->writeln("Generate Tests Command Run");
+            $output->writeln("Generate Tests Command Run" . PHP_EOL);
             return 0;
         } else {
             GenerationErrorHandler::getInstance()->printErrorSummary();
-            GenerationErrorHandler::getInstance()->reset();
-            $output->writeln("Generate Tests Command Run (with errors)");
+            $output->writeln("Generate Tests Command Run (with errors)" . PHP_EOL);
             return 1;
         }
     }
@@ -200,18 +204,16 @@ class GenerateTestsCommand extends BaseGenerateCommand
             foreach ($testConfiguration['tests'] as $test) {
                 try {
                     $testObjects[$test] = TestObjectHandler::getInstance()->getObject($test);
-                } catch (TestReferenceException $e) {
-                    $message = "Unable to find test {$test} from test configuration";
-                    LoggingUtil::getInstance()->getLogger(self::class)->error(
-                        $message. PHP_EOL . $e->getMessage()
-                    );
+                } catch (FastFailException $e) {
+                    throw $e;
+                } catch (\Exception $e) {
+                    $message = "Unable to create test object {$test} from test configuration. " . $e->getMessage();
+                    LoggingUtil::getInstance()->getLogger(self::class)->error($message);
                     if (MftfApplicationConfig::getConfig()->verboseEnabled()
                         && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
-                        print($message . PHP_EOL);
+                        print($message);
                     }
-                    if (MftfApplicationConfig::getConfig()->getPhase() != MftfApplicationConfig::EXECUTION_PHASE) {
-                        GenerationErrorHandler::getInstance()->addError('test', $test, $message);
-                    }
+                    GenerationErrorHandler::getInstance()->addError('test', $test, $message);
                 }
             }
 
