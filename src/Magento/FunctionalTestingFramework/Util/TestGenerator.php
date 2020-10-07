@@ -357,15 +357,12 @@ class TestGenerator
                         TestObjectHandler::getInstance()->sanitizeTests([$test->getName()]);
                         $errMessage = "{$test->getName()} will not be generated. "
                             . "Parent test {$test->getParentName()} not defined in xml.";
+                        // There are tests extend from non-existing parent on purpose on certain Magento editions.
+                        // To keep backward compatibility, we will skip the test and continue
                         if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-                            print("ERROR: {$errMessage}");
+                            print("NOTICE: {$errMessage}");
                         }
-                        LoggingUtil::getInstance()->getLogger(self::class)->error($errMessage);
-                        GenerationErrorHandler::getInstance()->addError(
-                            'test',
-                            $test->getName(),
-                            self::class . ': ' . $errMessage
-                        );
+                        LoggingUtil::getInstance()->getLogger(self::class)->warn($errMessage);
                         continue;
                     }
                 }

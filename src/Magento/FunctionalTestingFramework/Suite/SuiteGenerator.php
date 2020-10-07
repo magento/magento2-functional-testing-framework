@@ -102,7 +102,7 @@ class SuiteGenerator
             try {
                 if (empty($suiteContent)) {
                     LoggingUtil::getInstance()->getLogger(self::class)->notification(
-                        "NOTICE: Suite '" . $suiteName . "' contains no tests and won't be generated." . PHP_EOL,
+                        "Suite '" . $suiteName . "' contains no tests and won't be generated.",
                         [],
                         true
                     );
@@ -182,7 +182,13 @@ class SuiteGenerator
 
             if (empty($relevantTests)) {
                 $exceptionCollector->reset();
-                throw new TestFrameworkException("No relevant test found for suite \"{$suiteName}\"");
+                // There are suites that include no test on purpose for certain Magento edition.
+                // To keep backward compatibility, we will return with no error.
+                // This might inevitably hide some suite errors that are resulted by real broken tests.
+                if (file_exists($fullPath)) {
+                    DirSetupUtil::rmdirRecursive($fullPath);
+                }
+                return;
             }
 
             try {
