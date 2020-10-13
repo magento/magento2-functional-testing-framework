@@ -243,6 +243,93 @@ class GenerationErrorHandlerTest extends MagentoTestCase
     }
 
     /**
+     * Test get all error messages
+     *
+     * @param string $expectedErrMessages
+     * @param array  $errors
+     * @dataProvider getAllErrorMessagesDataProvider
+     */
+    public function testGetAllErrorMessages($expectedErrMessages, $errors)
+    {
+        $handler = GenerationErrorHandler::getInstance();
+        $handler->reset();
+
+        $property = new \ReflectionProperty(GenerationErrorHandler::class, 'errors');
+        $property->setAccessible(true);
+        $property->setValue($handler, $errors);
+
+        // Assert getAllErrorMessages
+        $this->assertEquals($expectedErrMessages, GenerationErrorHandler::getInstance()->getAllErrorMessages());
+    }
+
+    /**
+     * Data provider for testGetAllErrorMessages()
+     *
+     * @return array
+     */
+    public function getAllErrorMessagesDataProvider()
+    {
+        return [
+            ['', []],
+            ['', [
+                    'test' => [],
+                    'suite' => [],
+                ]
+            ],
+            ['TestError1'
+                . PHP_EOL
+                . 'TestError2'
+                . PHP_EOL
+                . 'TestError3'
+                . PHP_EOL
+                . 'SuiteError1'
+                . PHP_EOL
+                . 'SuiteError2'
+                . PHP_EOL
+                . 'SuiteError3'
+                . PHP_EOL
+                . 'SuiteError4',
+                [
+                    'test' => [
+                        'Sameple1Test' => [
+                            'message' => [
+                                0 => 'TestError1',
+                                1 => 'TestError2'
+                            ],
+                            'generated' => [
+                                0 => false,
+                                1 => false
+                            ],
+                        ],
+                        'Sameple2Test' => [
+                            'message' => 'TestError3',
+                            'generated' => true,
+                        ],
+                    ],
+                    'suite' => [
+                        'Sameple1Suite' => [
+                            'message' => 'SuiteError1',
+                            'generated' => true,
+                        ],
+                        'Sameple2Suite' => [
+                            'message' => [
+                                0 => 'SuiteError2',
+                                1 => 'SuiteError3',
+                                2 => 'SuiteError4',
+                            ],
+                            'generated' => [
+                                0 => false,
+                                1 => true,
+                                2 => false,
+                            ],
+                        ],
+                    ],
+                ]
+            ],
+        ];
+    }
+
+    /**
      * Test reset
      */
     public function testResetError()

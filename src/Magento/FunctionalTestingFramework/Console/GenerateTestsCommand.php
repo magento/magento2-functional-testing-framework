@@ -140,7 +140,13 @@ class GenerateTestsCommand extends BaseGenerateCommand
                     // $testConfiguration['tests'] cannot be empty if $tests is not empty
                     TestGenerator::getInstance(null, $testConfiguration['tests'])->createAllTestFiles($testManifest);
                 } elseif (empty($testConfiguration['suites'])) {
-                    throw new FastFailException('Invalid input');
+                    throw new FastFailException(
+                        !empty(GenerationErrorHandler::getInstance()->getAllErrors())
+                            ?
+                            GenerationErrorHandler::getInstance()->getAllErrorMessages()
+                            :
+                            'Invalid input'
+                    );
                 }
             } catch (FastFailException $e) {
                 throw $e;

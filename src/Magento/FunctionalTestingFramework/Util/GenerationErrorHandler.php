@@ -79,6 +79,28 @@ class GenerationErrorHandler
     }
 
     /**
+     * Return all error message in a string
+     *
+     * @return string
+     */
+    public function getAllErrorMessages()
+    {
+        $errMessages = '';
+
+        foreach ($this->errors as $type => $errors) {
+            foreach ($errors as $error) {
+                if (is_array($error['message'])) {
+                    $errMessages .= (!empty($errMessages) ? PHP_EOL : '') . implode(PHP_EOL, $error['message']);
+                } else {
+                    $errMessages .= (!empty($errMessages) ? PHP_EOL : '') . $error['message'];
+                }
+            }
+        }
+
+        return $errMessages;
+    }
+
+    /**
      * Return errors for given type
      *
      * @param string $type
