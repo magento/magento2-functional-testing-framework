@@ -122,6 +122,68 @@ class AnnotationExtractorTest extends TestCase
         );
     }
 
+    /**
+     * Annotation extractor should throw warning when required annotations are empty
+     *
+     * @throws \Exception
+     */
+    public function testEmptyRequiredAnnotations()
+    {
+        // Test Data, missing title, description, and severity
+        $testAnnotations = [
+            "nodeName" => "annotations",
+            "features" => [
+                [
+                    "nodeName" => "features",
+                    "value" => ""
+                ]
+            ],
+            "stories" => [
+                [
+                    "nodeName" => "stories",
+                    "value" => "TestStories"
+                ]
+            ],
+            "title" => [
+                [
+                    "nodeName" => "title",
+                    "value" => " "
+                ]
+            ],
+            "description" => [
+                [
+                    "nodeName" => "description",
+                    "value" => "\t"
+                ]
+            ],
+            "severity" => [
+                [
+                    "nodeName" => "severity",
+                    "value" => ""
+                ]
+            ],
+            "group" => [
+                [
+                    "nodeName" => "group",
+                    "value" => "TestGroup"
+                ]
+            ],
+        ];
+        // Perform Test
+        $extractor = new AnnotationExtractor();
+        $returnedAnnotations = $extractor->extractAnnotations($testAnnotations, "testFileName");
+
+        // Asserts
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'warning',
+            'DEPRECATION: Test testFileName is missing required annotations.',
+            [
+                'testName' => 'testFileName',
+                'missingAnnotations' => "title, description, severity"
+            ]
+        );
+    }
+
     public function testTestCaseIdUniqueness()
     {
         // Test Data
