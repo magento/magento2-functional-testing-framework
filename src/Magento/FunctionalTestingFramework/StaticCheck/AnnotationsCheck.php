@@ -117,6 +117,8 @@ class AnnotationsCheck implements StaticCheckInterface
      *
      * @param TestObject $test
      * @return void
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     private function validateRequiredAnnotations($test)
     {
