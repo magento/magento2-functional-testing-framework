@@ -58,7 +58,8 @@ class AnnotationsCheckTest extends MagentoTestCase
 
         // mock test object
         $test = AspectMock::double(
-            TestObject::class, ['getAnnotations' => $annotations, 'getName' => 'AnnotationsCheckTest']
+            TestObject::class,
+            ['getAnnotations' => $annotations, 'getName' => 'AnnotationsCheckTest']
         )->make();
 
         $validateRequiredAnnotations = $this->staticCheckClass->getMethod('validateRequiredAnnotations');
@@ -100,7 +101,8 @@ class AnnotationsCheckTest extends MagentoTestCase
 
         // mock test object
         $test = AspectMock::double(
-            TestObject::class, ['getAnnotations' => $annotations, 'getName' => 'AnnotationsCheckTest']
+            TestObject::class,
+            ['getAnnotations' => $annotations, 'getName' => 'AnnotationsCheckTest']
         )->make();
 
         $validateRequiredAnnotations = $this->staticCheckClass->getMethod('validateRequiredAnnotations');
@@ -137,7 +139,8 @@ class AnnotationsCheckTest extends MagentoTestCase
 
         // mock test object
         $test = AspectMock::double(
-            TestObject::class, ['getAnnotations' => $annotations, 'getName' => 'AnnotationsCheckTest']
+            TestObject::class,
+            ['getAnnotations' => $annotations, 'getName' => 'AnnotationsCheckTest']
         )->make();
 
         $validateRequiredAnnotations = $this->staticCheckClass->getMethod('validateRequiredAnnotations');
@@ -178,7 +181,8 @@ class AnnotationsCheckTest extends MagentoTestCase
 
         // mock test object
         $test = AspectMock::double(
-            TestObject::class, ['getAnnotations' => $annotations, 'getName' => 'AnnotationsCheckTest']
+            TestObject::class,
+            ['getAnnotations' => $annotations, 'getName' => 'AnnotationsCheckTest']
         )->make();
 
         $validateRequiredAnnotations = $this->staticCheckClass->getMethod('validateRequiredAnnotations');
