@@ -89,6 +89,15 @@ vendor/bin/mftf run:failed
 This command cleans up the previously generated tests; generates and runs the tests listed in `dev/tests/acceptance/tests/_output/failed`.
 For more details about `failed`, refer to [Reporting][].
 
+## Error tolerance during generation
+
+Starting from version 3.2.0, MFTF will not fail right away when encountering generation errors.
+Instead, MFTF will generate as many tests and suites as it can, log errors to `mftf.log`, and exit with a non-zero generation status.
+
+Note:
+- Not all errors are tolerable at generation. For example, schema validation errors, parser errors, and WebApi authentication errors will cause `hard` failures, with no tests or suites being generated.
+- Error tolerance in generation is meant to help local test development and testing and is expected to be run locally. All generation errors must be fixed in order to use other framework functionality, pass static checks, and to deliver MFTF tests.
+
 ## Reference
 
 ### `build:project`

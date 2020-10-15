@@ -20,9 +20,16 @@ use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\ObjectHandlerUtil;
 use tests\unit\Util\TestDataArrayBuilder;
 use tests\unit\Util\MockModuleResolverBuilder;
+use tests\unit\Util\TestLoggingUtil;
+use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
 
 class TestObjectHandlerTest extends MagentoTestCase
 {
+    public function setUp(): void
+    {
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
+    }
+
     /**
      * Basic test to validate array => test object conversion.
      *
@@ -111,8 +118,7 @@ class TestObjectHandlerTest extends MagentoTestCase
      */
     public function testGetTestWithFileName()
     {
-        $this->markTestIncomplete();
-        //TODO
+        $this->markTestIncomplete('TODO');
     }
 
     /**
@@ -254,10 +260,13 @@ class TestObjectHandlerTest extends MagentoTestCase
         ObjectHandlerUtil::mockTestObjectHandlerWitData(array_merge($testOne, $testTwo));
 
         $toh = TestObjectHandler::getInstance();
-
-        $this->expectException(\Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException::class);
-        $this->expectExceptionMessage("Mftf Test can not extend from itself: " . "testOne");
         $toh->getAllObjects();
+
+        // assert that no exception for getAllObjects and test generation error is stored in GenerationErrorHandler
+        $errorMessage = '/' . preg_quote("Mftf Test can not extend from itself: " . "testOne") . '/';
+        TestLoggingUtil::getInstance()->validateMockLogStatmentRegex('error', $errorMessage, []);
+        $testErrors = GenerationErrorHandler::getInstance()->getErrorsByType('test');
+        $this->assertArrayHasKey('testOne', $testErrors);
     }
 
     /**
@@ -360,6 +369,8 @@ class TestObjectHandlerTest extends MagentoTestCase
      */
     public function tearDown(): void
     {
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
         AspectMock::clean();
+        parent::tearDownAfterClass();
     }
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="NotGenerateChildExtendedBadReferenceTest" extends="ParentExtendedTest">
+        <annotations>
+            <severity value="MINOR"/>
+            <title value="NotGenerateChildExtendedBadReferenceTest"/>
+            <features value="Child"/>
+            <stories value="Child"/>
+        </annotations>
+        <before>
+            <amOnPage url="/firstUrl" stepKey="firstBeforeAmOnPageKey" before="beforeAmOnPageKey"/>
+            <amOnPage url="/lastUrl" stepKey="lastBefore" after="beforeAmOnPageKey"/>
+        </before>
+        <comment stepKey="lastStepKey" userInput="Last Comment"/>
+        <comment stepKey="beforeBasicCommentWithNoData" userInput="{{N.N}}" before="basicCommentWithNoData"/>
+        <comment stepKey="afterBasicCommentWithNoData" userInput="After Comment" after="basicCommentWithNoData"/>
+    </test>
+</tests>

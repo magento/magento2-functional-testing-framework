@@ -9,15 +9,26 @@ namespace tests\unit\Magento\FunctionalTestFramework\Util;
 use AspectMock\Test as AspectMock;
 
 use Magento\FunctionalTestingFramework\Filter\FilterList;
+use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use tests\unit\Util\MagentoTestCase;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use tests\unit\Util\TestLoggingUtil;
+use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
 
 class TestGeneratorTest extends MagentoTestCase
 {
+    /**
+     * Before method functionality
+     */
+    public function setUp(): void
+    {
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
+    }
+
     /**
      * After method functionality
      *
@@ -26,6 +37,7 @@ class TestGeneratorTest extends MagentoTestCase
     public function tearDown(): void
     {
         AspectMock::clean();
+        GenerationErrorHandler::getInstance()->reset();
     }
 
     /**
@@ -41,15 +53,19 @@ class TestGeneratorTest extends MagentoTestCase
 
         $testObject = new TestObject("sampleTest", ["merge123" => $actionObject], [], [], "filename");
 
+        AspectMock::double(TestObjectHandler::class, ['initTestData' => '']);
+
         $testGeneratorObject = TestGenerator::getInstance("", ["sampleTest" => $testObject]);
 
         AspectMock::double(TestGenerator::class, ['loadAllTestObjects' => ["sampleTest" => $testObject]]);
 
-        $this->expectExceptionMessage("Could not resolve entity reference \"{{someEntity.entity}}\" " .
-            "in Action with stepKey \"fakeAction\".\n" .
-            "Exception occurred parsing action at StepKey \"fakeAction\" in Test \"sampleTest\"");
-
         $testGeneratorObject->createAllTestFiles(null, []);
+
+        // assert that no exception for createAllTestFiles and generation error is stored in GenerationErrorHandler
+        $errorMessage = '/' . preg_quote("Removed invalid test object sampleTest") . '/';
+        TestLoggingUtil::getInstance()->validateMockLogStatmentRegex('error', $errorMessage, []);
+        $testErrors = GenerationErrorHandler::getInstance()->getErrorsByType('test');
+        $this->assertArrayHasKey('sampleTest', $testErrors);
     }
 
     /**

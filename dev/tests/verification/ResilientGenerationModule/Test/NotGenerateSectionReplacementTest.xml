@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="NotGenerateSectionReplacementTest">
+        <click stepKey="selectorReplace" selector="{{SampleSectionN.simpleElement}}"/>
+        <click stepKey="selectorReplaceTimeout" selector="{{SampleSection.timeoutElementN}}"/>
+
+        <click stepKey="selectorReplaceOneParam" selector="{{SampleSection.oneParamElement('stringLiteral', 'N')}}"/>
+        <click stepKey="selectorReplaceTwoParam" selector="{{SampleSection.twoParamElement('stringLiteral1')}}"/>
+
+        <click stepKey="selectorReplaceThreeParamDataRef" selector="{{SampleSection.threeParamElement(simpleData.firstname, simpleDataN.lastname, simpleData.middlename)}}"/>
+        <click stepKey="selectorReplaceThreeParamOneDupeDataRef" selector="{{SampleSection.threeOneDuplicateParamElement(simpleData.firstname, simpleData.lastname, simpleData.Nmiddlename)}}"/>
+
+        <click stepKey="selectorReplaceOneParamVariable" selector="{{SampleSection.oneParamElement({$dataN})}}"/>
+
+        <click stepKey="selectorReplaceThreeParamMixed1" selector="{{SampleSection.threeParamElement('stringLiteral1', $createdData.Nfirstname$, simpleData.firstname)}}"/>
+        <click stepKey="selectorReplaceThreeParamMixed2" selector="{{SampleSection.threeParamElement('stringLiteral1', $NcreatedData.firstname$, {$data})}}"/>
+
+        <click stepKey="selectorReplaceTwoParamElements" selector="{{SampleSection.oneParamElement('1')}}{{SampleSectionN.oneParamElement('2')}}"/>
+        <click stepKey="selectorReplaceTwoParamMixedTypes" selector="{{SampleSection.oneParamElement('1')}}{{SampleSection.oneParamElementN({$data})}}"/>
+    </test>
+</tests>

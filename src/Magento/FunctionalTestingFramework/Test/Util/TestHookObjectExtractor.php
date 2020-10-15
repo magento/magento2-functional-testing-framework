@@ -6,6 +6,8 @@
 
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 
@@ -37,7 +39,8 @@ class TestHookObjectExtractor extends BaseObjectExtractor
      * @param string $hookType
      * @param array  $testHook
      * @return TestHookObject
-     * @throws \Exception
+     * @throws XmlException
+     * @throws TestReferenceException
      */
     public function extractHook($parentName, $hookType, $testHook)
     {

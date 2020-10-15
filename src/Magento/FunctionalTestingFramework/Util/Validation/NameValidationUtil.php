@@ -6,7 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Util\Validation;
 
-use Exception;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
@@ -84,7 +84,7 @@ class NameValidationUtil
      * @param string $str
      * @param string $type
      * @param string $filename
-     * @throws Exception
+     * @throws TestFrameworkException
      * @return void
      */
     public function validatePascalCase($str, $type, $filename = null)
@@ -112,7 +112,7 @@ class NameValidationUtil
      * @param string $str
      * @param string $type
      * @param string $filename
-     * @throws Exception
+     * @throws TestFrameworkException
      * @return void
      */
     public function validateCamelCase($str, $type, $filename = null)
@@ -140,7 +140,7 @@ class NameValidationUtil
      * @param string $str
      * @param string $type
      * @param string $filename
-     * @throws Exception
+     * @throws TestFrameworkException
      * @return void
      */
     public function validateAffixes($str, $type, $filename = null)
@@ -170,7 +170,7 @@ class NameValidationUtil
      * Outputs the number of validations detected by this instance.
      *
      * @param string $type
-     * @throws Exception
+     * @throws TestFrameworkException
      * @return void
      */
     public function summarize($type)
