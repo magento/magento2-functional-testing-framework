@@ -79,7 +79,7 @@ class AnnotationExtractor extends BaseObjectExtractor
             // Only transform severity annotation
             if ($annotationKey == "severity") {
                 $annotationObjects[$annotationKey] = $this->transformAllureSeverityToMagento(
-                    $annotationData[0]['value']
+                    trim($annotationData[0][self::ANNOTATION_VALUE])
                 );
                 continue;
             }
@@ -92,16 +92,17 @@ class AnnotationExtractor extends BaseObjectExtractor
             }
 
             foreach ($annotationData as $annotationValue) {
-                $annotationValues[] = $annotationValue[self::ANNOTATION_VALUE];
+                $annotationValues[] = trim($annotationValue[self::ANNOTATION_VALUE]);
             }
 
             $annotationObjects[$annotationKey] = $annotationValues;
         }
 
-        $this->addTestCaseIdToTitle($annotationObjects, $filename);
         if ($validateAnnotations) {
             $this->validateMissingAnnotations($annotationObjects, $filename);
         }
+
+        $this->addTestCaseIdToTitle($annotationObjects, $filename);
         $this->addStoryTitleToMap($annotationObjects, $filename);
 
         return $annotationObjects;
@@ -156,7 +157,9 @@ class AnnotationExtractor extends BaseObjectExtractor
         $missingAnnotations = [];
 
         foreach (self::REQUIRED_ANNOTATIONS as $REQUIRED_ANNOTATION) {
-            if (!array_key_exists($REQUIRED_ANNOTATION, $annotationObjects)) {
+            if (!array_key_exists($REQUIRED_ANNOTATION, $annotationObjects)
+                || !isset($annotationObjects[$REQUIRED_ANNOTATION][0])
+                || empty($annotationObjects[$REQUIRED_ANNOTATION][0])) {
                 $missingAnnotations[] = $REQUIRED_ANNOTATION;
             }
         }
@@ -258,7 +261,7 @@ class AnnotationExtractor extends BaseObjectExtractor
     public function validateSkippedIssues($issues, $filename)
     {
         foreach ($issues as $issueId) {
-            if (empty($issueId['value'])) {
+            if (empty(trim($issueId['value']))) {
                 $message = "issueId for skipped tests cannot be empty. Test: $filename";
                 throw new XmlException($message);
             }
