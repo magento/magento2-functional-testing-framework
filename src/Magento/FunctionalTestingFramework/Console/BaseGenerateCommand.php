@@ -36,6 +36,8 @@ class BaseGenerateCommand extends Command
     const CODECEPT_RUN = 'codecept:run';
     const CODECEPT_RUN_FUNCTIONAL = self::CODECEPT_RUN . ' functional ';
     const CODECEPT_RUN_OPTION_NO_EXIT = ' --no-exit ';
+    const FAILED_FILE = 'failed';
+    const FAILED_ALL_FILE = 'failed_all';
 
     /**
      * Enable pause()
@@ -45,11 +47,32 @@ class BaseGenerateCommand extends Command
     private $enablePause = null;
 
     /**
+     * Full path to '_output' dir
+     *
+     * @var string
+     */
+    private $testsOutputDir = null;
+
+    /**
+     * File handle for 'failed_all' file
+     *
+     * @var resource
+     */
+    private $fhFailedAll;
+
+    /**
      * Console output style
      *
      * @var SymfonyStyle
      */
     protected $ioStyle = null;
+
+    /**
+     * Full path to 'failed' file
+     *
+     * @var string
+     */
+    protected $testsFailedFile = null;
 
     /**
      * Configures the base command.
@@ -269,5 +292,94 @@ class BaseGenerateCommand extends Command
         $input = new StringInput($commandStr);
         $command = $this->getApplication()->find(self::CODECEPT_RUN);
         return $command->run($input, $output);
+    }
+
+    /**
+     * Return tests _output directory
+     *
+     * @return string
+     * @throws TestFrameworkException
+     */
+    protected function getTestsOutputDir()
+    {
+        if (!$this->testsOutputDir) {
+            $this->testsOutputDir = FilePathFormatter::format(TESTS_BP) .
+                "tests" .
+                DIRECTORY_SEPARATOR .
+                "_output" .
+                DIRECTORY_SEPARATOR;
+        }
+
+        return $this->testsOutputDir;
+    }
+
+    /**
+     * Initialize 'failed_all' file
+     *
+     * @return void
+     * @throws TestFrameworkException
+     */
+    protected function initializeFailedAllFile()
+    {
+        // Initialize 'failed_all' file
+        $allFailedFile = $this->getTestsOutputDir() . self::FAILED_ALL_FILE;
+        $this->fhFailedAll = fopen($allFailedFile, 'w+');
+    }
+
+    /**
+     * Appends content of file 'failed' to file 'failed_all'
+     *
+     * @return void
+     */
+    protected function appendRunFailed()
+    {
+        try {
+            if (!$this->testsFailedFile) {
+                $this->testsFailedFile = $this->getTestsOutputDir() . self::FAILED_FILE;
+            }
+
+            if (file_exists($this->testsFailedFile)) {
+                // Append 'failed' into 'failed_all'
+                $contents = file_get_contents($this->testsFailedFile);
+                if ($contents !== false && !empty($contents)) {
+                    fwrite($this->fhFailedAll, trim($contents) . PHP_EOL);
+                }
+            }
+        } catch (TestFrameworkException $e) {
+        }
+    }
+
+    /**
+     * Replace content of file 'failed' with content in file 'failed_all'
+     *
+     * @return void
+     */
+    protected function updateRunFailedWithFailedAll()
+    {
+        try {
+            if (!$this->testsFailedFile) {
+                $this->testsFailedFile = $this->getTestsOutputDir() . self::FAILED_FILE;
+            }
+
+            if (file_exists($this->getTestsOutputDir() . self::FAILED_ALL_FILE)) {
+                // Update 'failed' with content from 'failed_all'
+                $contents = file_get_contents($this->getTestsOutputDir() . self::FAILED_ALL_FILE);
+                if ($contents !== false && !empty($contents)) {
+                    if (file_exists($this->testsFailedFile)) {
+                        rename($this->testsFailedFile, $this->testsFailedFile . '.copy');
+                    }
+                    if (file_put_contents($this->testsFailedFile, $contents) === false
+                        && file_exists($this->testsFailedFile . '.copy')) {
+                        rename($this->testsFailedFile . '.copy', $this->testsFailedFile);
+                    }
+                    if (file_exists($this->testsFailedFile . '.copy')) {
+                        unlink($this->testsFailedFile . '.copy');
+                    }
+                }
+                fclose($this->fhFailedAll);
+                unlink($this->getTestsOutputDir() . self::FAILED_ALL_FILE);
+            }
+        } catch (TestFrameworkException $e) {
+        }
     }
 }
