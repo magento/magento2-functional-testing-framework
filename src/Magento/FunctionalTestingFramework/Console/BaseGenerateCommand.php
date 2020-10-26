@@ -353,6 +353,7 @@ class BaseGenerateCommand extends Command
      * Replace content of file 'failed' with content in file 'failed_all'
      *
      * @return void
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function updateRunFailedWithFailedAll()
     {
