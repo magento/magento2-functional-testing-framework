@@ -103,9 +103,6 @@ class RunTestGroupCommand extends BaseGenerateCommand
             }
         }
 
-        // Initialize `failed_all` file
-        $this->initializeFailedAllFile();
-
         if ($this->pauseEnabled()) {
             $commandString = self::CODECEPT_RUN_FUNCTIONAL . '--verbose --steps --debug';
         } else {
@@ -134,12 +131,12 @@ class RunTestGroupCommand extends BaseGenerateCommand
                 );
             }
 
-            // Append `failed` to `failed_all`
+            // Save failed tests
             $this->appendRunFailed();
         }
 
-        // Update `failed` with contents from `failed_all`
-        $this->updateRunFailedWithFailedAll();
+        // Add all failed tests in 'failed' file
+        $this->applyAllFailed();
 
         foreach ($returnCodes as $returnCode) {
             if ($returnCode != 0) {

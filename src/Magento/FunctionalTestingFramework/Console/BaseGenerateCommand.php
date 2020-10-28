@@ -54,11 +54,11 @@ class BaseGenerateCommand extends Command
     private $testsOutputDir = null;
 
     /**
-     * File handle for 'failed_all' file
+     *  String contains all 'failed' tests
      *
-     * @var resource
+     * @var string
      */
-    private $fhFailedAll;
+    private $allFailed;
 
     /**
      * Console output style
@@ -314,20 +314,7 @@ class BaseGenerateCommand extends Command
     }
 
     /**
-     * Initialize 'failed_all' file
-     *
-     * @return void
-     * @throws TestFrameworkException
-     */
-    protected function initializeFailedAllFile()
-    {
-        // Initialize 'failed_all' file
-        $allFailedFile = $this->getTestsOutputDir() . self::FAILED_ALL_FILE;
-        $this->fhFailedAll = fopen($allFailedFile, 'w+');
-    }
-
-    /**
-     * Appends content of file 'failed' to file 'failed_all'
+     * Save 'failed' tests
      *
      * @return void
      */
@@ -339,10 +326,10 @@ class BaseGenerateCommand extends Command
             }
 
             if (file_exists($this->testsFailedFile)) {
-                // Append 'failed' into 'failed_all'
+                // Save 'failed' tests
                 $contents = file_get_contents($this->testsFailedFile);
                 if ($contents !== false && !empty($contents)) {
-                    fwrite($this->fhFailedAll, trim($contents) . PHP_EOL);
+                    $this->allFailed .= trim($contents) . PHP_EOL;
                 }
             }
         } catch (TestFrameworkException $e) {
@@ -350,35 +337,30 @@ class BaseGenerateCommand extends Command
     }
 
     /**
-     * Replace content of file 'failed' with content in file 'failed_all'
+     * Apply 'allFailed' in 'failed' file
      *
      * @return void
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function updateRunFailedWithFailedAll()
+    protected function applyAllFailed()
     {
         try {
             if (!$this->testsFailedFile) {
                 $this->testsFailedFile = $this->getTestsOutputDir() . self::FAILED_FILE;
             }
 
-            if (file_exists($this->getTestsOutputDir() . self::FAILED_ALL_FILE)) {
+            if (!empty($this->allFailed)) {
                 // Update 'failed' with content from 'failed_all'
-                $contents = file_get_contents($this->getTestsOutputDir() . self::FAILED_ALL_FILE);
-                if ($contents !== false && !empty($contents)) {
-                    if (file_exists($this->testsFailedFile)) {
-                        rename($this->testsFailedFile, $this->testsFailedFile . '.copy');
-                    }
-                    if (file_put_contents($this->testsFailedFile, $contents) === false
-                        && file_exists($this->testsFailedFile . '.copy')) {
-                        rename($this->testsFailedFile . '.copy', $this->testsFailedFile);
-                    }
-                    if (file_exists($this->testsFailedFile . '.copy')) {
-                        unlink($this->testsFailedFile . '.copy');
-                    }
+                if (file_exists($this->testsFailedFile)) {
+                    rename($this->testsFailedFile, $this->testsFailedFile . '.copy');
                 }
-                fclose($this->fhFailedAll);
-                unlink($this->getTestsOutputDir() . self::FAILED_ALL_FILE);
+                if (file_put_contents($this->testsFailedFile, $this->allFailed) === false
+                    && file_exists($this->testsFailedFile . '.copy')) {
+                    rename($this->testsFailedFile . '.copy', $this->testsFailedFile);
+                }
+                if (file_exists($this->testsFailedFile . '.copy')) {
+                    unlink($this->testsFailedFile . '.copy');
+                }
             }
         } catch (TestFrameworkException $e) {
         }

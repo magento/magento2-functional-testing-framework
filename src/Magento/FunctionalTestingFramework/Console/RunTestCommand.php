@@ -109,9 +109,6 @@ class RunTestCommand extends BaseGenerateCommand
 
         $testConfigArray = json_decode($testConfiguration, true);
 
-        // Initialize `failed_all` file
-        $this->initializeFailedAllFile();
-
         if (isset($testConfigArray['tests'])) {
             $this->runTests($testConfigArray['tests'], $output);
         }
@@ -120,8 +117,8 @@ class RunTestCommand extends BaseGenerateCommand
             $this->runTestsInSuite($testConfigArray['suites'], $output);
         }
 
-        // Update `failed` with contents from `failed_all`
-        $this->updateRunFailedWithFailedAll();
+        // Add all failed tests in 'failed' file
+        $this->applyAllFailed();
 
         return max($this->returnCode, $generationErrorCode);
     }
@@ -168,7 +165,7 @@ class RunTestCommand extends BaseGenerateCommand
                 $this->returnCode = max($this->returnCode, $this->executeTestCommand($fullCommand, $output));
             }
 
-            // Append `failed` to `failed_all`
+            // Save failed tests
             $this->appendRunFailed();
         }
     }
@@ -206,7 +203,7 @@ class RunTestCommand extends BaseGenerateCommand
                 $this->returnCode = max($this->returnCode, $this->executeTestCommand($fullCommand, $output));
             }
 
-            // Append `failed` to `failed_all`
+            // Save failed tests
             $this->appendRunFailed();
         }
     }
