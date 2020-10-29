@@ -358,11 +358,11 @@ allure serve dev/tests/_output/allure-results/
 [install Allure]: https://github.com/allure-framework/allure2#download
 [java]: http://www.oracle.com/technetwork/java/javase/downloads/index.html
 [mftf tests]: introduction.html#mftf-tests
-[php]: https://devdocs.magento.com/guides/v2.3/install-gde/system-requirements-tech.html#php
+[php]: https://devdocs.magento.com/guides/v2.4/install-gde/system-requirements.html
 [PhpStorm]: https://www.jetbrains.com/phpstorm/
 [selenium server]: https://www.seleniumhq.org/download/
 [Set up a standalone MFTF]: #set-up-a-standalone-mftf
 [test suite]: suite.html
 [Find your version]: introduction.html#find-your-mftf-version
-[Installation Guide docroot]: https://devdocs.magento.com/guides/v2.3/install-gde/tutorials/change-docroot-to-pub.html
-[Magento Two-Factor Authentication (2FA) extension]: https://devdocs.magento.com/guides/v2.3/security/two-factor-authentication.html
+[Installation Guide docroot]: https://devdocs.magento.com/guides/v2.4/install-gde/tutorials/change-docroot-to-pub.html
+[Magento Two-Factor Authentication (2FA) extension]: https://devdocs.magento.com/guides/v2.4/security/two-factor-authentication.html
