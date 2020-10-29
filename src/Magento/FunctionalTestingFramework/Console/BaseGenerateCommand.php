@@ -36,6 +36,7 @@ class BaseGenerateCommand extends Command
     const CODECEPT_RUN = 'codecept:run';
     const CODECEPT_RUN_FUNCTIONAL = self::CODECEPT_RUN . ' functional ';
     const CODECEPT_RUN_OPTION_NO_EXIT = ' --no-exit ';
+    const FAILED_FILE = 'failed';
 
     /**
      * Enable pause()
@@ -45,11 +46,32 @@ class BaseGenerateCommand extends Command
     private $enablePause = null;
 
     /**
+     * Full path to '_output' dir
+     *
+     * @var string
+     */
+    private $testsOutputDir = null;
+
+    /**
+     *  String contains all 'failed' tests
+     *
+     * @var string
+     */
+    private $allFailed;
+
+    /**
      * Console output style
      *
      * @var SymfonyStyle
      */
     protected $ioStyle = null;
+
+    /**
+     * Full path to 'failed' file
+     *
+     * @var string
+     */
+    protected $testsFailedFile = null;
 
     /**
      * Configures the base command.
@@ -269,5 +291,77 @@ class BaseGenerateCommand extends Command
         $input = new StringInput($commandStr);
         $command = $this->getApplication()->find(self::CODECEPT_RUN);
         return $command->run($input, $output);
+    }
+
+    /**
+     * Return tests _output directory
+     *
+     * @return string
+     * @throws TestFrameworkException
+     */
+    protected function getTestsOutputDir()
+    {
+        if (!$this->testsOutputDir) {
+            $this->testsOutputDir = FilePathFormatter::format(TESTS_BP) .
+                "tests" .
+                DIRECTORY_SEPARATOR .
+                "_output" .
+                DIRECTORY_SEPARATOR;
+        }
+
+        return $this->testsOutputDir;
+    }
+
+    /**
+     * Save 'failed' tests
+     *
+     * @return void
+     */
+    protected function appendRunFailed()
+    {
+        try {
+            if (!$this->testsFailedFile) {
+                $this->testsFailedFile = $this->getTestsOutputDir() . self::FAILED_FILE;
+            }
+
+            if (file_exists($this->testsFailedFile)) {
+                // Save 'failed' tests
+                $contents = file_get_contents($this->testsFailedFile);
+                if ($contents !== false && !empty($contents)) {
+                    $this->allFailed .= trim($contents) . PHP_EOL;
+                }
+            }
+        } catch (TestFrameworkException $e) {
+        }
+    }
+
+    /**
+     * Apply 'allFailed' in 'failed' file
+     *
+     * @return void
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    protected function applyAllFailed()
+    {
+        try {
+            if (!$this->testsFailedFile) {
+                $this->testsFailedFile = $this->getTestsOutputDir() . self::FAILED_FILE;
+            }
+
+            if (!empty($this->allFailed)) {
+                // Update 'failed' with content from 'allFailed'
+                if (file_exists($this->testsFailedFile)) {
+                    rename($this->testsFailedFile, $this->testsFailedFile . '.copy');
+                }
+                if (file_put_contents($this->testsFailedFile, $this->allFailed) === false
+                    && file_exists($this->testsFailedFile . '.copy')) {
+                    rename($this->testsFailedFile . '.copy', $this->testsFailedFile);
+                }
+                if (file_exists($this->testsFailedFile . '.copy')) {
+                    unlink($this->testsFailedFile . '.copy');
+                }
+            }
+        } catch (TestFrameworkException $e) {
+        }
     }
 }

@@ -130,7 +130,13 @@ class RunTestGroupCommand extends BaseGenerateCommand
                     }
                 );
             }
+
+            // Save failed tests
+            $this->appendRunFailed();
         }
+
+        // Add all failed tests in 'failed' file
+        $this->applyAllFailed();
 
         foreach ($returnCodes as $returnCode) {
             if ($returnCode != 0) {

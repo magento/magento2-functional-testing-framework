@@ -117,6 +117,9 @@ class RunTestCommand extends BaseGenerateCommand
             $this->runTestsInSuite($testConfigArray['suites'], $output);
         }
 
+        // Add all failed tests in 'failed' file
+        $this->applyAllFailed();
+
         return max($this->returnCode, $generationErrorCode);
     }
 
@@ -161,6 +164,9 @@ class RunTestCommand extends BaseGenerateCommand
                 $fullCommand = $codeceptionCommand . $testsDirectory . $testName . ' --verbose --steps';
                 $this->returnCode = max($this->returnCode, $this->executeTestCommand($fullCommand, $output));
             }
+
+            // Save failed tests
+            $this->appendRunFailed();
         }
     }
 
@@ -196,6 +202,9 @@ class RunTestCommand extends BaseGenerateCommand
             } else {
                 $this->returnCode = max($this->returnCode, $this->executeTestCommand($fullCommand, $output));
             }
+
+            // Save failed tests
+            $this->appendRunFailed();
         }
     }
 

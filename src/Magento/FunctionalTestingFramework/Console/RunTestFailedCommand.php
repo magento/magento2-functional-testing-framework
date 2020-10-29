@@ -26,11 +26,6 @@ class RunTestFailedCommand extends BaseGenerateCommand
     /**
      * @var string
      */
-    private $testsFailedFile;
-
-    /**
-     * @var string
-     */
     private $testsReRunFile;
 
     /**
@@ -69,14 +64,8 @@ class RunTestFailedCommand extends BaseGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $testsOutputDir = FilePathFormatter::format(TESTS_BP) .
-            "tests" .
-            DIRECTORY_SEPARATOR .
-            "_output" .
-            DIRECTORY_SEPARATOR;
-
-        $this->testsFailedFile = $testsOutputDir . "failed";
-        $this->testsReRunFile = $testsOutputDir . "rerun_tests";
+        $this->testsFailedFile = $this->getTestsOutputDir() . self::FAILED_FILE;
+        $this->testsReRunFile = $this->getTestsOutputDir() . "rerun_tests";
         $this->testsManifestFile= FilePathFormatter::format(TESTS_MODULE_PATH) .
             "_generated" .
             DIRECTORY_SEPARATOR .
