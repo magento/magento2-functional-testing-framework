@@ -349,7 +349,7 @@ class BaseGenerateCommand extends Command
             }
 
             if (!empty($this->allFailed)) {
-                // Update 'failed' with content from 'failed_all'
+                // Update 'failed' with content from 'allFailed'
                 if (file_exists($this->testsFailedFile)) {
                     rename($this->testsFailedFile, $this->testsFailedFile . '.copy');
                 }
