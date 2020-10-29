@@ -37,7 +37,6 @@ class BaseGenerateCommand extends Command
     const CODECEPT_RUN_FUNCTIONAL = self::CODECEPT_RUN . ' functional ';
     const CODECEPT_RUN_OPTION_NO_EXIT = ' --no-exit ';
     const FAILED_FILE = 'failed';
-    const FAILED_ALL_FILE = 'failed_all';
 
     /**
      * Enable pause()
