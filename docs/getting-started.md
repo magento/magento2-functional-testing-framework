@@ -350,7 +350,7 @@ allure serve dev/tests/_output/allure-results/
 [install Allure]: https://github.com/allure-framework/allure2#download
 [java]: http://www.oracle.com/technetwork/java/javase/downloads/index.html
 [mftf tests]: introduction.html#mftf-tests
-[php]: https://devdocs.magento.com/guides/v2.3/install-gde/system-requirements-tech.html#php
+[php]: https://devdocs.magento.com/guides/v2.3/install-gde/system-requirements.html
 [PhpStorm]: https://www.jetbrains.com/phpstorm/
 [selenium server]: https://www.seleniumhq.org/download/
 [Set up a standalone MFTF]: #set-up-a-standalone-mftf
