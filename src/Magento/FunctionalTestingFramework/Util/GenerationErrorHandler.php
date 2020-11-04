@@ -164,7 +164,7 @@ class GenerationErrorHandler
                         . strval($totalAnnotationErrors)
                         . ' '
                         . ucfirst($type)
-                        . "(s) has(have) tests with annotation errors. See mftf.log for details."
+                        . "(s) has(have) tests with errors. See mftf.log for details."
                         . PHP_EOL
                     );
                 }

@@ -11,7 +11,7 @@ Magento Functional Testing Framework Changelog
     Addressed github issue [#276](https://github.com/magento/magento2-functional-testing-framework/issues/276).
     
 * Maintainability    
-  * Enhanced annotation static-check to include all required annotations.
+  * Updated annotation static-check to check all required annotations.
 
 ### Fixes
 
