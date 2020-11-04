@@ -7,7 +7,7 @@ Magento Functional Testing Framework Changelog
 ### Enhancements
 
 * Usability
-  * Introduced error tolerance during test and suite generation. See the [command page](./docs/commands/mftf.md#Error tolerance during generation) for details.
+  * Introduced error tolerance during test and suite generation. See the [command page](./docs/commands/mftf.md#error-tolerance-during-generation) for details.
     Addressed github issue [#276](https://github.com/magento/magento2-functional-testing-framework/issues/276).
     
 * Maintainability    
