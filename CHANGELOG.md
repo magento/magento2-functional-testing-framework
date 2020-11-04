@@ -15,7 +15,7 @@ Magento Functional Testing Framework Changelog
 
 ### Fixes
 
-* Fixed issue where CUSTOM_MODULE_PATHS env variable doesn't use all paths.
+* Fixed issue where CUSTOM_MODULE_PATHS env variable does not use all paths.
 * Fixed issue where run:test only records the last failed test in `failed` file.
 
 3.1.1
