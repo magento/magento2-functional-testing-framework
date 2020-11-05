@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Page\Objects\ElementObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
@@ -86,7 +87,9 @@ class TestObjectExtractor extends BaseObjectExtractor
      * @param array   $testData
      * @param boolean $validateAnnotations
      * @return TestObject
-     * @throws \Exception
+     * @throws TestReferenceException
+     * @throws XmlException
+     * @throws TestFrameworkException
      */
     public function extractTestData($testData, $validateAnnotations = true)
     {

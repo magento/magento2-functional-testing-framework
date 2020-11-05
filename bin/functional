@@ -7,5 +7,6 @@ echo "==============================="
 echo "   EXECUTE Functional Tests    "
 echo "==============================="
 bin/mftf build:project
+bin/mftf run:test DeprecatedDevDocsTest -f
 bin/mftf run:test DevDocsTest -f
 bin/mftf run:test FormatCurrencyTest -f

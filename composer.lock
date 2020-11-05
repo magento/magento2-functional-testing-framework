@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "278e33e2c7d183d0b7689b5a76127d29",
+    "content-hash": "3aaf16914c319f584eb5f6ce39bef11b",
     "packages": [
         {
             "name": "allure-framework/allure-codeception",
@@ -7126,6 +7126,7 @@
             ],
             "description": "FinderFacade is a convenience wrapper for Symfony's Finder component.",
             "homepage": "https://github.com/sebastianbergmann/finder-facade",
+            "abandoned": true,
             "time": "2020-02-08T06:07:58+00:00"
         },
         {
@@ -7470,6 +7471,5 @@
         "ext-json": "*",
         "ext-openssl": "*"
     },
-    "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "platform-dev": []
 }

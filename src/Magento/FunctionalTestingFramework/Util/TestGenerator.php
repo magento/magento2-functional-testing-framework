@@ -9,8 +9,10 @@ namespace Magento\FunctionalTestingFramework\Util;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Filter\FilterInterface;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
@@ -20,6 +22,7 @@ use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Util\BaseObjectExtractor;
+use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Manifest\BaseTestManifest;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
@@ -174,6 +177,9 @@ class TestGenerator
      *
      * @param array $testsToIgnore
      * @return array
+     * @throws TestReferenceException
+     * @throws TestFrameworkException
+     * @throws FastFailException
      */
     private function loadAllTestObjects($testsToIgnore)
     {
@@ -202,15 +208,16 @@ class TestGenerator
      * @param string $testPhp
      * @param string $filename
      * @return void
-     * @throws \Exception
+     * @throws TestFrameworkException
      */
     private function createCestFile(string $testPhp, string $filename)
     {
+        DirSetupUtil::createGroupDir($this->exportDirectory);
         $exportFilePath = $this->exportDirectory . DIRECTORY_SEPARATOR . $filename . ".php";
         $file = fopen($exportFilePath, 'w');
 
         if (!$file) {
-            throw new \Exception(sprintf('Could not open test file: "%s"', $exportFilePath));
+            throw new TestFrameworkException(sprintf('Could not open test file: "%s"', $exportFilePath));
         }
 
         fwrite($file, $testPhp);
@@ -224,8 +231,10 @@ class TestGenerator
      * @param BaseTestManifest $testManifest
      * @param array            $testsToIgnore
      * @return void
+     * @throws TestFrameworkException
+     * @throws XmlException
+     * @throws FastFailException
      * @throws TestReferenceException
-     * @throws \Exception
      */
     public function createAllTestFiles($testManifest = null, $testsToIgnore = null)
     {
@@ -320,6 +329,9 @@ class TestGenerator
      * @param BaseTestManifest $testManifest
      * @param array            $testsToIgnore
      * @return array
+     * @throws TestFrameworkException
+     * @throws TestReferenceException
+     * @throws FastFailException
      */
     private function assembleAllTestPhp($testManifest, array $testsToIgnore)
     {
@@ -333,27 +345,57 @@ class TestGenerator
         }
 
         foreach ($testObjects as $test) {
-            // Do not generate test if it is an extended test and parent does not exist
-            if ($test->isSkipped() && !empty($test->getParentName())) {
-                try {
-                    TestObjectHandler::getInstance()->getObject($test->getParentName());
-                } catch (TestReferenceException $e) {
-                    print("{$test->getName()} will not be generated. Parent {$e->getMessage()} \n");
-                    continue;
+            try {
+                // Reset flag for new test
+                $removeLastTest = false;
+
+                // Do not generate test if it is an extended test and parent does not exist
+                if ($test->isSkipped() && !empty($test->getParentName())) {
+                    try {
+                        TestObjectHandler::getInstance()->getObject($test->getParentName());
+                    } catch (TestReferenceException $e) {
+                        TestObjectHandler::getInstance()->sanitizeTests([$test->getName()]);
+                        $errMessage = "{$test->getName()} will not be generated. "
+                            . "Parent test {$test->getParentName()} not defined in xml.";
+                        // There are tests extend from non-existing parent on purpose on certain Magento editions.
+                        // To keep backward compatibility, we will skip the test and continue
+                        if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
+                            print("NOTICE: {$errMessage}");
+                        }
+                        LoggingUtil::getInstance()->getLogger(self::class)->warn($errMessage);
+                        continue;
+                    }
                 }
-            }
 
-            $this->debug("<comment>Start creating test: " . $test->getCodeceptionName() . "</comment>");
-            $php = $this->assembleTestPhp($test);
-            $cestPhpArray[] = [$test->getCodeceptionName(), $php];
+                $this->debug("<comment>Start creating test: " . $test->getCodeceptionName() . "</comment>");
+                $php = $this->assembleTestPhp($test);
+                $cestPhpArray[] = [$test->getCodeceptionName(), $php];
+                // Set flag in case something goes wrong
+                $removeLastTest = true;
 
-            $debugInformation = $test->getDebugInformation();
-            $this->debug($debugInformation);
-            $this->debug("<comment>Finish creating test: " . $test->getCodeceptionName() . "</comment>" . PHP_EOL);
+                $debugInformation = $test->getDebugInformation();
+                $this->debug($debugInformation);
+                $this->debug("<comment>Finish creating test: " . $test->getCodeceptionName() . "</comment>" . PHP_EOL);
 
-            //write to manifest here if manifest is not null
-            if ($testManifest != null) {
-                $testManifest->addTest($test);
+                // Write to manifest here if manifest is not null
+                if ($testManifest != null) {
+                    $testManifest->addTest($test);
+                }
+            } catch (FastFailException $e) {
+                throw $e;
+            } catch (\Exception $e) {
+                GenerationErrorHandler::getInstance()->addError(
+                    'test',
+                    $test->getName(),
+                    self::class . ': ' . $e->getMessage()
+                );
+                LoggingUtil::getInstance()->getLogger(self::class)->error(
+                    "Failed to generate {$test->getName()}"
+                );
+                if ($removeLastTest) {
+                    array_pop($cestPhpArray);
+                }
+                TestObjectHandler::getInstance()->sanitizeTests([$test->getName()]);
             }
         }
 

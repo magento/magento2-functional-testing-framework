@@ -117,6 +117,8 @@ class AnnotationsCheck implements StaticCheckInterface
      *
      * @param TestObject $test
      * @return void
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     private function validateRequiredAnnotations($test)
     {
@@ -124,22 +126,30 @@ class AnnotationsCheck implements StaticCheckInterface
         $missing = [];
 
         $stories = $annotations['stories'] ?? null;
-        if ($stories === null) {
+        if ($stories === null || !isset($stories[0]) || empty(trim($stories[0]))) {
             $missing[] = "stories";
         }
 
+        $testCaseId = "[NO TESTCASEID]";
+        if (isset($annotations['testCaseId'][0])) {
+            $testCaseId = trim($annotations['testCaseId'][0]);
+        }
+
         $title = $annotations['title'] ?? null;
-        if ($title === null) {
+        if ($title === null
+            || !isset($title[0])
+            || empty(trim($title[0]))
+            || empty(trim(substr(trim($title[0]), strlen($testCaseId . ': '))))) {
             $missing[] = "title";
         }
 
         $description = $annotations['description']['main'] ?? null;
-        if ($description === null) {
+        if ($description === null || empty(trim($description))) {
             $missing[] = "description";
         }
 
         $severity = $annotations['severity'] ?? null;
-        if ($severity === null) {
+        if ($severity === null || !isset($severity[0]) || empty(trim($severity[0]))) {
             $missing[] = "severity";
         }
 

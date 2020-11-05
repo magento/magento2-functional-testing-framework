@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="NotGeneratePageReplacementTest">
+        <createData entity="simpleData" stepKey="datakey"/>
+        <amOnPage stepKey="noParamPage" url="{{NoParamPageN.url}}"/>
+        <amOnPage stepKey="noParamPageN" url="{{NoParamPage.urlN}}"/>
+        <amOnPage stepKey="oneParamPageString" url="{{OneParamPage.url('StringLiteral', 'N')}}"/>
+        <amOnPage stepKey="oneParamPageData" url="{{OneParamPage.url(simpleDataN.firstname)}}"/>
+        <amOnPage stepKey="oneParamPagePersist" url="{{OneParamPage.url($datakey.firstnameN$)}}"/>
+        <amOnPage stepKey="twoParamPageString" url="{{TwoParamPage.url('StringLiteral1')}}"/>
+        <amOnPage stepKey="twoParamPageStringData" url="{{TwoParamPage.url(simpleData.firstnameN, 'StringLiteral2')}}"/>
+        <amOnPage stepKey="twoParamPageDataPersist" url="{{TwoParamPage.url(simpleData.firstname, $datakey.firstnameN$)}}"/>
+        <amOnPage stepKey="twoParamPagePersistString" url="{{TwoParamPage.url($datakey.firstnameN$, 'StringLiteral2')}}"/>
+    </test>
+</tests>

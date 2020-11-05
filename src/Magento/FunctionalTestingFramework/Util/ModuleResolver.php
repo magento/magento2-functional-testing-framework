@@ -747,7 +747,7 @@ class ModuleResolver
         }
 
         foreach (explode(',', $paths) as $path) {
-            $customModulePaths = [$this->findVendorAndModuleNameFromPath(trim($path)) => $path];
+            $customModulePaths[$this->findVendorAndModuleNameFromPath(trim($path))] = $path;
         }
 
         return $customModulePaths;

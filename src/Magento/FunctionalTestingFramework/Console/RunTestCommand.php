@@ -8,6 +8,8 @@ declare(strict_types = 1);
 namespace Magento\FunctionalTestingFramework\Console;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
+use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -86,6 +88,8 @@ class RunTestCommand extends BaseGenerateCommand
 
         $testConfiguration = $this->getTestAndSuiteConfiguration($tests);
 
+        $generationErrorCode = 0;
+
         if (!$skipGeneration) {
             $command = $this->getApplication()->find('generate:tests');
             $args = [
@@ -97,6 +101,10 @@ class RunTestCommand extends BaseGenerateCommand
                 '-v' => $verbose
             ];
             $command->run(new ArrayInput($args), $output);
+
+            if (!empty(GenerationErrorHandler::getInstance()->getAllErrors())) {
+                $generationErrorCode = 1;
+            }
         }
 
         $testConfigArray = json_decode($testConfiguration, true);
@@ -109,7 +117,10 @@ class RunTestCommand extends BaseGenerateCommand
             $this->runTestsInSuite($testConfigArray['suites'], $output);
         }
 
-        return $this->returnCode;
+        // Add all failed tests in 'failed' file
+        $this->applyAllFailed();
+
+        return max($this->returnCode, $generationErrorCode);
     }
 
     /**
@@ -153,6 +164,9 @@ class RunTestCommand extends BaseGenerateCommand
                 $fullCommand = $codeceptionCommand . $testsDirectory . $testName . ' --verbose --steps';
                 $this->returnCode = max($this->returnCode, $this->executeTestCommand($fullCommand, $output));
             }
+
+            // Save failed tests
+            $this->appendRunFailed();
         }
     }
 
@@ -188,6 +202,9 @@ class RunTestCommand extends BaseGenerateCommand
             } else {
                 $this->returnCode = max($this->returnCode, $this->executeTestCommand($fullCommand, $output));
             }
+
+            // Save failed tests
+            $this->appendRunFailed();
         }
     }
 

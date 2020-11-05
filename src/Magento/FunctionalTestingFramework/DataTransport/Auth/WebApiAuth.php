@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\DataTransport\Auth;
 
+use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Util\MftfGlobals;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlTransport;
@@ -42,7 +43,9 @@ class WebApiAuth
      * @param string $username
      * @param string $password
      * @return string
-     * @throws TestFrameworkException
+     * @throws FastFailException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public static function getAdminToken($username = null, $password = null)
     {
@@ -56,32 +59,37 @@ class WebApiAuth
                     'MAGENTO_ADMIN_USERNAME' => getenv('MAGENTO_ADMIN_USERNAME'),
                     'MAGENTO_ADMIN_PASSWORD' => getenv('MAGENTO_ADMIN_PASSWORD'),
                 ];
-            throw new TestFrameworkException($message, $context);
+            throw new FastFailException($message, $context);
         }
 
         if (isset(self::$adminAuthTokens[$login])) {
             return self::$adminAuthTokens[$login];
         }
 
-        $authUrl = MftfGlobals::getWebApiBaseUrl() . self::PATH_ADMIN_AUTH;
+        try {
+            $authUrl = MftfGlobals::getWebApiBaseUrl() . self::PATH_ADMIN_AUTH;
 
-        $data = [
-            'username' => $login,
-            'password' => $password
-        ];
+            $data = [
+                'username' => $login,
+                'password' => $password
+            ];
 
-        if (Tfa::isEnabled()) {
-            $authUrl = MftfGlobals::getWebApiBaseUrl() . Tfa::getProviderWebApiAuthEndpoint('google');
-            $data['otp'] = OTP::getOTP();
+            if (Tfa::isEnabled()) {
+                $authUrl = MftfGlobals::getWebApiBaseUrl() . Tfa::getProviderWebApiAuthEndpoint('google');
+                $data['otp'] = OTP::getOTP();
+            }
+
+            $transport = new CurlTransport();
+            $transport->write(
+                $authUrl,
+                json_encode($data, JSON_PRETTY_PRINT),
+                CurlInterface::POST,
+                self::$headers
+            );
+        } catch (TestFrameworkException $e) {
+            $message = "Cannot retrieve API token with credentials. Please check configurations in .env.\n";
+            throw new FastFailException($message . $e->getMessage(), $e->getContext());
         }
-
-        $transport = new CurlTransport();
-        $transport->write(
-            $authUrl,
-            json_encode($data, JSON_PRETTY_PRINT),
-            CurlInterface::POST,
-            self::$headers
-        );
 
         try {
             $response = $transport->read();
@@ -97,12 +105,16 @@ class WebApiAuth
             $errMessage = $e->getMessage();
         }
 
-        $message = 'Cannot retrieve API token with credentials. Please check the following credentials';
-        $message .= Tfa::isEnabled() ? ' and 2FA settings:' : ':' . PHP_EOL;
+        $message = 'Cannot retrieve API token with credentials. Please check the following configurations';
+        try {
+            // No exception will ever throw from here
+            $message .= Tfa::isEnabled() ? ' and 2FA settings:' : ':' . PHP_EOL;
+        } catch (TestFrameworkException $e) {
+        }
         $message .= "username: {$login}" . PHP_EOL;
         $message .= "password: {$password}" . PHP_EOL;
         $message .= $errMessage;
         $context = ['url' => $authUrl];
-        throw new TestFrameworkException($message, $context);
+        throw new FastFailException($message, $context);
     }
 }

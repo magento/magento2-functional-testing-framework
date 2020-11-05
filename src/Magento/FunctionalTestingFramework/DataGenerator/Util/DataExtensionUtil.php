@@ -52,8 +52,8 @@ class DataExtensionUtil
                 PHP_EOL
             );
         }
-        if (MftfApplicationConfig::getConfig()->verboseEnabled() &&
-            MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE) {
+        if (MftfApplicationConfig::getConfig()->verboseEnabled()
+            && MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE) {
             print("Extending Data: " . $parentEntity->getName() . " => " . $entityObject->getName() . PHP_EOL);
         }
 

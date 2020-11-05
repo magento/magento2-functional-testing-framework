@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\DataTransport;
 
+use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\MftfGlobals;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlInterface;
@@ -45,7 +46,7 @@ class WebApiExecutor implements CurlInterface
      * WebApiExecutor Constructor
      *
      * @param string $storeCode
-     * @throws TestFrameworkException
+     * @throws FastFailException
      */
     public function __construct($storeCode = null)
     {
@@ -58,7 +59,7 @@ class WebApiExecutor implements CurlInterface
      * Acquire and store the authorization token needed for REST requests
      *
      * @return void
-     * @throws TestFrameworkException
+     * @throws FastFailException
      */
     protected function authorize()
     {

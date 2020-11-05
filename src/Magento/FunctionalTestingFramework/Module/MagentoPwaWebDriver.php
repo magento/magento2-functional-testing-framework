@@ -63,12 +63,13 @@ class MagentoPwaWebDriver extends MagentoWebDriver
 
         // Determine what type of Selector is used.
         // Then use the correct JavaScript to locate the Element.
-        if (\Codeception\Util\Locator::isXPath($selector)) {
-            $this->waitForLoadingMaskToDisappear($timeout);
-            $this->waitForJS("return !document.evaluate(`$selector`, document);", $timeout);
-        } else {
+        if (\Codeception\Util\Locator::isCss($selector)) {
             $this->waitForLoadingMaskToDisappear($timeout);
             $this->waitForJS("return !document.querySelector(`$selector`);", $timeout);
+        } else {
+            $this->waitForLoadingMaskToDisappear($timeout);
+            $this->waitForJS("return !document.evaluate(`$selector`, document, null, 
+            XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;", $timeout);
         }
     }
 
@@ -84,15 +85,16 @@ class MagentoPwaWebDriver extends MagentoWebDriver
     public function waitForPwaElementVisible($selector, $timeout = null)
     {
         $timeout = $timeout ?? $this->_getConfig()['pageload_timeout'];
-        
+
         // Determine what type of Selector is used.
         // Then use the correct JavaScript to locate the Element.
-        if (\Codeception\Util\Locator::isXPath($selector)) {
-            $this->waitForLoadingMaskToDisappear($timeout);
-            $this->waitForJS("return !!document && !!document.evaluate(`$selector`, document);", $timeout);
-        } else {
+        if (\Codeception\Util\Locator::isCss($selector)) {
             $this->waitForLoadingMaskToDisappear($timeout);
             $this->waitForJS("return !!document && !!document.querySelector(`$selector`);", $timeout);
+        } else {
+            $this->waitForLoadingMaskToDisappear($timeout);
+            $this->waitForJS("return !!document && !!document.evaluate(`$selector`, document, null, 
+            XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;", $timeout);
         }
     }
 }

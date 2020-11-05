@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
@@ -32,7 +33,8 @@ class ObjectExtensionUtil
      *
      * @param TestObject $testObject
      * @return TestObject
-     * @throws TestReferenceException|XmlException
+     * @throws TestFrameworkException
+     * @throws XmlException
      */
     public function extendTest($testObject)
     {

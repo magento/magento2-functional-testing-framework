@@ -1,7 +1,34 @@
 Magento Functional Testing Framework Changelog
 ================================================
+
+3.2.0
+---------
+
+### Enhancements
+
+* Usability
+  * Introduced error tolerance during test and suite generation. See the [command page](./docs/commands/mftf.md#error-tolerance-during-generation) for details.
+    Addressed github issue [#276](https://github.com/magento/magento2-functional-testing-framework/issues/276).
+    
+* Maintainability    
+  * Updated annotation static-check to check all required annotations.
+
+### Fixes
+
+* Fixed issue where CUSTOM_MODULE_PATHS env variable does not use all paths.
+* Fixed issue where run:test only records the last failed test in `failed` file.
+
+3.1.1
+---------
+
+* Traceability
+  * Removed `travis.yml` and replaced with `.github/workflows/main.yml`
+
+### Fixes
+Fixed issue with XPath locators for waits in MagentoPwaWebDriver.  
+
 3.1.0
-________
+---------
 
 ### Enhancements
 

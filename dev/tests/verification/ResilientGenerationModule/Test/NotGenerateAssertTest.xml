@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="NotGenerateAssertTest">
+        <before>
+            <createData entity="ReplacementPerson" stepKey="createData1"/>
+        </before>
+        <createData entity="UniquePerson" stepKey="createData2"/>
+        <grabTextFrom selector=".copyright>span" stepKey="grabTextFrom1"/>
+
+        <!-- assert entity resolution -->
+        <assertEquals stepKey="assertEqualsEntity" message="pass">
+            <expectedResult type="string">{{simpleData.firstnameN}}</expectedResult>
+            <actualResult type="string">{{simpleData.lastname}}</actualResult>
+        </assertEquals>
+    </test>
+</tests>
