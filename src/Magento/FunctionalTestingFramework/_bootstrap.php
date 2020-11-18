@@ -77,6 +77,3 @@ defined('TESTS_MODULE_PATH') || define(
 
 // add the debug flag here
 $debugMode = $_ENV['MFTF_DEBUG'] ?? false;
-if (!(bool)$debugMode && extension_loaded('xdebug')) {
-    xdebug_disable();
-}
