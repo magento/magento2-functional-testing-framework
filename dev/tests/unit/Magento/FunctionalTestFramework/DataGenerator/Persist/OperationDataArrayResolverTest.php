@@ -477,7 +477,6 @@ class OperationDataArrayResolverTest extends MagentoTestCase
         $this->assertEquals($expectedResult, $result);
     }
 
-
     public function testExtendedWithRequiredEntity()
     {
         $entityDataObjectBuilder = new EntityDataObjectBuilder();
@@ -517,7 +516,12 @@ class OperationDataArrayResolverTest extends MagentoTestCase
             ->build();
 
         $operationResolver = new OperationDataArrayResolver();
-        $result = $operationResolver->resolveOperationDataArray($extEntityDataObject,[$subentityOpElement], "create", false);
+        $result = $operationResolver->resolveOperationDataArray(
+            $extEntityDataObject,
+            [$subentityOpElement],
+            "create",
+            false
+        );
 
         $expected = [
             "sub" => [
@@ -526,7 +530,6 @@ class OperationDataArrayResolverTest extends MagentoTestCase
         ];
 
         $this->assertEquals($expected, $result);
-
     }
     /**
      * After class functionality
