@@ -70,10 +70,3 @@ defined('TESTS_BP') || define('TESTS_BP', dirname(dirname(__DIR__)));
 
 $RELATIVE_TESTS_MODULE_PATH = '/tests/functional/tests/MFTF';
 defined('TESTS_MODULE_PATH') || define('TESTS_MODULE_PATH', realpath(TESTS_BP . $RELATIVE_TESTS_MODULE_PATH));
-
-
-// add the debug flag here
-$debug_mode = $_ENV['MFTF_DEBUG'] ?? false;
-if (!(bool)$debug_mode && extension_loaded('xdebug')) {
-    xdebug_disable();
-}
