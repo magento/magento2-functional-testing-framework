@@ -370,7 +370,7 @@ ENABLE_PAUSE=true
 
 ### REMOTE_STORAGE_AWSS3_DRIVER
 
-The remote storage driver, to enable AWS S3 use `aws-s3`
+The remote storage driver. To enable AWS S3, use `aws-s3`.
 
 Example:
 
