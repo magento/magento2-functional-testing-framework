@@ -420,7 +420,7 @@ REMOTE_STORAGE_AWSS3_ACCESS_KEY=MY_ACCESS_KEY
 
 ### REMOTE_STORAGE_AWSS3_SECRET_KEY
 
-The optional secret ket to access S3 bucket.
+The optional secret key to access S3 bucket.
 
 Example:
 
