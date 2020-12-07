@@ -8,12 +8,15 @@ declare(strict_types = 1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
+use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
@@ -21,9 +24,40 @@ use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/**
+ * Class BaseGenerateCommand
+ * @package Magento\FunctionalTestingFramework\Console
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class BaseGenerateCommand extends Command
 {
     const MFTF_NOTICES = "Placeholder text for MFTF notices\n";
+    const CODECEPT_RUN = 'codecept:run';
+    const CODECEPT_RUN_FUNCTIONAL = self::CODECEPT_RUN . ' functional ';
+    const CODECEPT_RUN_OPTION_NO_EXIT = ' --no-exit ';
+    const FAILED_FILE = 'failed';
+
+    /**
+     * Enable pause()
+     *
+     * @var boolean
+     */
+    private $enablePause = null;
+
+    /**
+     * Full path to '_output' dir
+     *
+     * @var string
+     */
+    private $testsOutputDir = null;
+
+    /**
+     *  String contains all 'failed' tests
+     *
+     * @var string
+     */
+    private $allFailed;
 
     /**
      * Console output style
@@ -31,6 +65,13 @@ class BaseGenerateCommand extends Command
      * @var SymfonyStyle
      */
     protected $ioStyle = null;
+
+    /**
+     * Full path to 'failed' file
+     *
+     * @var string
+     */
+    protected $testsFailedFile = null;
 
     /**
      * Configures the base command.
@@ -87,7 +128,7 @@ class BaseGenerateCommand extends Command
      * Returns an array of test configuration to be used as an argument for generation of tests
      * @param array $tests
      * @return false|string
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
+     * @throws FastFailException
      */
     protected function getTestAndSuiteConfiguration(array $tests)
     {
@@ -125,7 +166,8 @@ class BaseGenerateCommand extends Command
      * Returns an array of test configuration to be used as an argument for generation of tests
      * This function uses group or suite names for generation
      * @return false|string
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
+     * @throws FastFailException
+     * @throws TestFrameworkException
      */
     protected function getGroupAndSuiteConfiguration(array $groupOrSuiteNames)
     {
@@ -216,6 +258,110 @@ class BaseGenerateCommand extends Command
             $this->ioStyle->note(self::MFTF_NOTICES);
         } else {
             $output->writeln(self::MFTF_NOTICES);
+        }
+    }
+
+    /**
+     * Return if pause() is enabled
+     *
+     * @return boolean
+     */
+    protected function pauseEnabled()
+    {
+        if (null === $this->enablePause) {
+            if (getenv('ENABLE_PAUSE') === 'true') {
+                $this->enablePause = true;
+            } else {
+                $this->enablePause = false;
+            }
+        }
+        return $this->enablePause;
+    }
+
+    /**
+     * Runs the bin/mftf codecept:run command and returns exit code
+     *
+     * @param string          $commandStr
+     * @param OutputInterface $output
+     * @return integer
+     * @throws \Exception
+     */
+    protected function codeceptRunTest(string $commandStr, OutputInterface $output)
+    {
+        $input = new StringInput($commandStr);
+        $command = $this->getApplication()->find(self::CODECEPT_RUN);
+        return $command->run($input, $output);
+    }
+
+    /**
+     * Return tests _output directory
+     *
+     * @return string
+     * @throws TestFrameworkException
+     */
+    protected function getTestsOutputDir()
+    {
+        if (!$this->testsOutputDir) {
+            $this->testsOutputDir = FilePathFormatter::format(TESTS_BP) .
+                "tests" .
+                DIRECTORY_SEPARATOR .
+                "_output" .
+                DIRECTORY_SEPARATOR;
+        }
+
+        return $this->testsOutputDir;
+    }
+
+    /**
+     * Save 'failed' tests
+     *
+     * @return void
+     */
+    protected function appendRunFailed()
+    {
+        try {
+            if (!$this->testsFailedFile) {
+                $this->testsFailedFile = $this->getTestsOutputDir() . self::FAILED_FILE;
+            }
+
+            if (file_exists($this->testsFailedFile)) {
+                // Save 'failed' tests
+                $contents = file_get_contents($this->testsFailedFile);
+                if ($contents !== false && !empty($contents)) {
+                    $this->allFailed .= trim($contents) . PHP_EOL;
+                }
+            }
+        } catch (TestFrameworkException $e) {
+        }
+    }
+
+    /**
+     * Apply 'allFailed' in 'failed' file
+     *
+     * @return void
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    protected function applyAllFailed()
+    {
+        try {
+            if (!$this->testsFailedFile) {
+                $this->testsFailedFile = $this->getTestsOutputDir() . self::FAILED_FILE;
+            }
+
+            if (!empty($this->allFailed)) {
+                // Update 'failed' with content from 'allFailed'
+                if (file_exists($this->testsFailedFile)) {
+                    rename($this->testsFailedFile, $this->testsFailedFile . '.copy');
+                }
+                if (file_put_contents($this->testsFailedFile, $this->allFailed) === false
+                    && file_exists($this->testsFailedFile . '.copy')) {
+                    rename($this->testsFailedFile . '.copy', $this->testsFailedFile);
+                }
+                if (file_exists($this->testsFailedFile . '.copy')) {
+                    unlink($this->testsFailedFile . '.copy');
+                }
+            }
+        } catch (TestFrameworkException $e) {
         }
     }
 }

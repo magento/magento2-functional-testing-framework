@@ -93,7 +93,7 @@ class TestLoggingUtil extends Assert
         $records = $this->testLogHandler->getRecords();
         $record = $records[count($records)-1]; // we assume the latest record is what requires validation
         $this->assertEquals(strtoupper($type), $record['level_name']);
-        $this->assertRegExp($regex, $record['message']);
+        $this->assertMatchesRegularExpression($regex, $record['message']);
         $this->assertEquals($context, $record['context']);
     }
 

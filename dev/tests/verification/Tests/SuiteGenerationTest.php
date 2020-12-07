@@ -13,7 +13,6 @@ use Magento\FunctionalTestingFramework\Util\Manifest\DefaultTestManifest;
 use Magento\FunctionalTestingFramework\Util\Manifest\ParallelTestManifest;
 use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
-use PHPUnit\Util\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 use tests\unit\Util\TestLoggingUtil;
 use tests\util\MftfTestCase;
@@ -74,12 +73,7 @@ class SuiteGenerationTest extends MftfTestCase
     {
         $groupName = 'functionalSuite1';
 
-        $expectedContents = [
-           'additionalTestCest.php',
-           'additionalIncludeTest2Cest.php',
-           'IncludeTest2Cest.php',
-           'IncludeTestCest.php'
-        ];
+        $expectedContents = SuiteTestReferences::$data[$groupName];
 
         // Generate the Suite
         SuiteGenerator::getInstance()->generateSuite($groupName);
@@ -124,12 +118,7 @@ class SuiteGenerationTest extends MftfTestCase
             'functionalSuite1_3_G'
         ];
 
-        $expectedContents = [
-            'additionalTestCest.php',
-            'additionalIncludeTest2Cest.php',
-            'IncludeTest2Cest.php',
-            'IncludeTestCest.php'
-        ];
+        $expectedContents = SuiteTestReferences::$data[$groupName];
 
         //createParallelManifest
         /** @var ParallelTestManifest $parallelManifest */
@@ -175,9 +164,7 @@ class SuiteGenerationTest extends MftfTestCase
     {
         $groupName = 'functionalSuiteHooks';
 
-        $expectedContents = [
-            'IncludeTestCest.php'
-        ];
+        $expectedContents = SuiteTestReferences::$data[$groupName];
 
         // Generate the Suite
         SuiteGenerator::getInstance()->generateSuite($groupName);
@@ -235,12 +222,7 @@ class SuiteGenerationTest extends MftfTestCase
         //using functionalSuite2 to avoid directory caching
         $groupName = 'functionalSuite2';
 
-        $expectedContents = [
-            'additionalTestCest.php',
-            'additionalIncludeTest2Cest.php',
-            'IncludeTest2Cest.php',
-            'IncludeTestCest.php'
-        ];
+        $expectedContents = SuiteTestReferences::$data[$groupName];
 
         //createParallelManifest
         /** @var DefaultTestManifest $parallelManifest */
@@ -294,9 +276,7 @@ class SuiteGenerationTest extends MftfTestCase
     {
         $groupName = 'suiteExtends';
 
-        $expectedFileNames = [
-            'ExtendedChildTestInSuiteCest'
-        ];
+        $expectedFileNames = SuiteTestReferences::$data[$groupName];
 
         // Generate the Suite
         SuiteGenerator::getInstance()->generateSuite($groupName);
@@ -321,10 +301,12 @@ class SuiteGenerationTest extends MftfTestCase
         $dirContents = array_diff(scandir($suiteResultBaseDir), ['..', '.']);
 
         foreach ($expectedFileNames as $expectedFileName) {
-            $this->assertTrue(in_array($expectedFileName . ".php", $dirContents));
+            $this->assertTrue(in_array($expectedFileName, $dirContents));
             $this->assertFileEquals(
-                self::RESOURCES_PATH . DIRECTORY_SEPARATOR . $expectedFileName . ".txt",
-                $suiteResultBaseDir . $expectedFileName . ".php"
+                self::RESOURCES_PATH . DIRECTORY_SEPARATOR
+                    . substr($expectedFileName, 0, strlen($expectedFileName)-4)
+                    . ".txt",
+                $suiteResultBaseDir . $expectedFileName
             );
         }
     }
@@ -336,9 +318,64 @@ class SuiteGenerationTest extends MftfTestCase
     {
         $groupName = 'functionalSuiteWithComments';
 
-        $expectedContents = [
-            'IncludeTestCest.php'
-        ];
+        $expectedContents = SuiteTestReferences::$data[$groupName];
+
+        // Generate the Suite
+        SuiteGenerator::getInstance()->generateSuite($groupName);
+
+        // Validate log message and add group name for later deletion
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'info',
+            "suite generated",
+            ['suite' => $groupName, 'relative_path' => "_generated" . DIRECTORY_SEPARATOR . $groupName]
+        );
+        self::$TEST_GROUPS[] = $groupName;
+
+        // Validate Yaml file updated
+        $yml = Yaml::parse(file_get_contents(self::CONFIG_YML_FILE));
+        $this->assertArrayHasKey($groupName, $yml['groups']);
+
+        $suiteResultBaseDir = self::GENERATE_RESULT_DIR .
+            DIRECTORY_SEPARATOR .
+            $groupName .
+            DIRECTORY_SEPARATOR;
+
+        // Validate tests have been generated
+        $dirContents = array_diff(scandir($suiteResultBaseDir), ['..', '.']);
+
+        foreach ($expectedContents as $expectedFile) {
+            $this->assertTrue(in_array($expectedFile, $dirContents));
+        }
+
+        //assert group file created and contains correct contents
+        $groupFile = PROJECT_ROOT .
+            DIRECTORY_SEPARATOR .
+            "src" .
+            DIRECTORY_SEPARATOR .
+            "Magento" .
+            DIRECTORY_SEPARATOR .
+            "FunctionalTestingFramework" .
+            DIRECTORY_SEPARATOR .
+            "Group" .
+            DIRECTORY_SEPARATOR .
+            $groupName .
+            ".php";
+
+        $this->assertTrue(file_exists($groupFile));
+        $this->assertFileEquals(
+            self::RESOURCES_PATH . DIRECTORY_SEPARATOR . $groupName . ".txt",
+            $groupFile
+        );
+    }
+
+    /**
+     * Test suite generation with actions from different modules
+     */
+    public function testSuiteGenerationActionsInDifferentModules()
+    {
+        $groupName = 'ActionsInDifferentModulesSuite';
+
+        $expectedContents = SuiteTestReferences::$data[$groupName];
 
         // Generate the Suite
         SuiteGenerator::getInstance()->generateSuite($groupName);

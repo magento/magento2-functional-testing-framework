@@ -359,6 +359,15 @@ Global MFTF configuration for the default amount of time (in seconds) that a tes
 WAIT_TIMEOUT=30
 ```
 
+### ENABLE_PAUSE
+
+Enables the ability to pause test execution at any point, and enter an interactive shell where you can try commands in action.
+When pause is enabled, MFTF will generate pause() command in _failed() hook so that test will pause execution when failed. 
+
+```conf
+ENABLE_PAUSE=true
+```
+
 ### REMOTE_STORAGE_AWSS3_DRIVER
 
 The remote storage driver, to enable AWS S3 use `aws-s3`

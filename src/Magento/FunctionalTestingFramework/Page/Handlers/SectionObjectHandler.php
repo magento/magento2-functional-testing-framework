@@ -89,8 +89,8 @@ class SectionObjectHandler implements ObjectHandlerInterface
                     $elementDeprecated = $elementData[self::OBJ_DEPRECATED] ?? null;
                     if ($elementDeprecated !== null) {
                         LoggingUtil::getInstance()->getLogger(ElementObject::class)->deprecation(
-                            $elementDeprecated,
-                            ["elementName" => $elementName, "deprecatedElement" => $elementDeprecated]
+                            "The element '{$elementName}' is deprecated.",
+                            ["fileName" => $filename, "deprecatedMessage" => $elementDeprecated]
                         );
                     }
                     $elements[$elementName] = new ElementObject(

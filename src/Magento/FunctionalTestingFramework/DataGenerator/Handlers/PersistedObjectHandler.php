@@ -194,7 +194,8 @@ class PersistedObjectHandler
             $warnMsg .= "Please fix the invalid reference. This will result in fatal error in next major release.";
             //TODO: change this to throw an exception in next major release
             LoggingUtil::getInstance()->getLogger(PersistedObjectHandler::class)->warn($warnMsg);
-            if (MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE) {
+            if (MftfApplicationConfig::getConfig()->verboseEnabled()
+                && MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE) {
                 print("\n$warnMsg\n");
             }
         }

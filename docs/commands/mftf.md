@@ -89,6 +89,15 @@ vendor/bin/mftf run:failed
 This command cleans up the previously generated tests; generates and runs the tests listed in `dev/tests/acceptance/tests/_output/failed`.
 For more details about `failed`, refer to [Reporting][].
 
+## Error tolerance during generation
+
+Starting from version 3.2.0, MFTF will not fail right away when encountering generation errors.
+Instead, MFTF will generate as many tests and suites as it can, log errors to `mftf.log`, and exit with a non-zero generation status.
+
+Note:
+- Not all errors are tolerable at generation. For example, schema validation errors, parser errors, and WebApi authentication errors will cause `hard` failures, with no tests or suites being generated.
+- Error tolerance in generation is meant to help local test development and testing and is expected to be run locally. All generation errors must be fixed in order to use other framework functionality, pass static checks, and to deliver MFTF tests.
+
 ## Reference
 
 ### `build:project`
@@ -245,10 +254,10 @@ It also enables auto-completion in PhpStorm.
 #### Usage
 
 ```bash
-vendor/bin/mftf generate:urn-catalog [--force] [<path to the directory with misc.xml>]
+vendor/bin/mftf generate:urn-catalog [--force] [<path to misc.xml>]
 ```
 
-`misc.xml` is typically located in `<project root>/.idea/`.
+`misc.xml` is typically located at `<project root>/.idea/misc.xml`.
 
 #### Options
 
@@ -259,7 +268,7 @@ vendor/bin/mftf generate:urn-catalog [--force] [<path to the directory with misc
 #### Example
 
 ```bash
-vendor/bin/mftf generate:urn-catalog .idea/
+vendor/bin/mftf generate:urn-catalog .idea/misc.xml
 ```
 
 ### `reset`
@@ -449,7 +458,7 @@ vendor/bin/mftf static-checks [<names>]...
 
 | Option                | Description                                                                                               |
 |-----------------------|-----------------------------------------------------------------------------------------------------------|
-| `-p, --path` | Path to a MFTF test module to run "deprecatedEntityUsage" static check script. Option is ignored by other static check scripts.
+| `-p, --path` | Path to a MFTF test module to run "deprecatedEntityUsage" and "pauseActionUsage" static check scripts. Option is ignored by other static check scripts.
                 
 #### Examples
 
@@ -480,11 +489,19 @@ vendor/bin/mftf static-checks deprecatedEntityUsage
 ```
 
 ```bash
+vendor/bin/mftf static-checks pauseActionUsage
+```
+
+```bash
 vendor/bin/mftf static-checks annotations
 ```
 
 ```bash
 vendor/bin/mftf static-checks deprecatedEntityUsage -p path/to/mftf/test/module
+```
+
+```bash
+vendor/bin/mftf static-checks pauseActionUsage -p path/to/mftf/test/module
 ```
 
 ```bash
@@ -499,6 +516,7 @@ vendor/bin/mftf static-checks testDependencies actionGroupArguments
 |`actionGroupArguments` | Checks that action groups do not have unused arguments.|
 |`deprecatedEntityUsage`| Checks that deprecated test entities are not being referenced.|
 |`annotations`| Checks various details of test annotations, such as missing annotations or duplicate annotations.|
+|`pauseUsage`| Checks that pause action is not used in action groups, tests or suites.|
          
 #### Defining ruleset
 
@@ -558,6 +576,47 @@ To upgrade all test components inside the `Catalog` module:
 ```bash
 vendor/bin/mftf upgrade:tests /Users/user/magento2/app/code/Magento/Catalog/Test/Mftf/
 ```
+
+### `codecept:run`
+
+A MFTF wrapper command that invokes `vendor/bin/codecept run`. This command runs tests in functional suite. Tests must be generated before using this command.
+
+#### Usage
+
+See the [Run Command](https://codeception.com/docs/reference/Commands#Run).
+
+```bash
+vendor/bin/mftf codecept:run [<suite|test>] --[<option(s)>]
+```
+
+#### Examples
+
+```bash
+# Run all tests in functional suite
+vendor/bin/mftf codecept:run functional
+```
+
+```bash
+# Run all tests in functional suite with options
+vendor/bin/mftf codecept:run functional --verbose --steps --debug
+```
+
+```bash
+# Run one test
+vendor/bin/mftf codecept:run functional Magento/_generated/default/AdminCreateCmsPageTestCest.php --debug
+```
+
+```bash
+# Run all tests in default group
+vendor/bin/mftf codecept:run functional --verbose --steps -g default
+```
+
+<div class="bs-callout-warning">
+<p>
+Note: You may want to limit the usage of this Codeception command with arguments and options for "acceptance" only, since it is what's supported by MFTF. 
+When using this command, you should change "acceptance" to "functional" when referring to Codeception documentation.
+</p>
+</div>
 
 <!-- LINK DEFINITIONS -->
 

@@ -6,6 +6,7 @@
 namespace Magento\FunctionalTestingFramework\Config\Reader;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
@@ -240,7 +241,7 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
                         true
                     );
                 }
-                throw new \Exception("Schema validation errors found in xml file(s)" . $filename);
+                throw new FastFailException("Schema validation errors found in xml file(s)" . $filename);
             }
         }
     }

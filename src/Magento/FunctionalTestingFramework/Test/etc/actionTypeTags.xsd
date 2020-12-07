@@ -68,6 +68,12 @@
         </xs:choice>
     </xs:group>
 
+    <xs:group name="returnTypeTags">
+        <xs:choice>
+            <xs:group ref="returnTags"/>
+        </xs:choice>
+    </xs:group>
+
     <!-- Complex Types -->
 
     <xs:complexType name="failType">

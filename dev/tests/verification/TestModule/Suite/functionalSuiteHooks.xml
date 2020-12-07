@@ -13,10 +13,18 @@
         </include>
         <before>
             <amOnPage url="some.url" stepKey="before"/>
-            <createData entity="createThis" stepKey="create">
+            <createData entity="createEntityOne" stepKey="createOne">
                 <field key="someKey">dataHere</field>
             </createData>
-            <click stepKey="clickWithData" userInput="$create.data$"/>
+            <createData entity="createEntityTwo" stepKey="createTwo">
+                <requiredEntity createDataKey="createEntityOne"/>
+            </createData>
+            <createData entity="createEntityThree" stepKey="createThree"/>
+            <createData entity="createEntityFour" stepKey="createFour">
+                <requiredEntity createDataKey="createEntityTwo"/>
+                <requiredEntity createDataKey="createEntityThree"/>
+            </createData>
+            <click stepKey="clickWithData" userInput="$createTwo.data$"/>
             <actionGroup ref="actionGroupWithTwoArguments" stepKey="AC">
                 <argument name="somePerson" value="simpleData"/>
                 <argument name="anotherPerson" value="uniqueData"/>

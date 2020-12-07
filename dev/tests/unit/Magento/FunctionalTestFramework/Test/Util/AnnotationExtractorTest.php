@@ -12,6 +12,7 @@ use Monolog\Handler\TestHandler;
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 use tests\unit\Util\TestLoggingUtil;
+use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
 
 class AnnotationExtractorTest extends TestCase
 {
@@ -122,6 +123,68 @@ class AnnotationExtractorTest extends TestCase
         );
     }
 
+    /**
+     * Annotation extractor should throw warning when required annotations are empty
+     *
+     * @throws \Exception
+     */
+    public function testEmptyRequiredAnnotations()
+    {
+        // Test Data, missing title, description, and severity
+        $testAnnotations = [
+            "nodeName" => "annotations",
+            "features" => [
+                [
+                    "nodeName" => "features",
+                    "value" => ""
+                ]
+            ],
+            "stories" => [
+                [
+                    "nodeName" => "stories",
+                    "value" => "TestStories"
+                ]
+            ],
+            "title" => [
+                [
+                    "nodeName" => "title",
+                    "value" => " "
+                ]
+            ],
+            "description" => [
+                [
+                    "nodeName" => "description",
+                    "value" => "\t"
+                ]
+            ],
+            "severity" => [
+                [
+                    "nodeName" => "severity",
+                    "value" => ""
+                ]
+            ],
+            "group" => [
+                [
+                    "nodeName" => "group",
+                    "value" => "TestGroup"
+                ]
+            ],
+        ];
+        // Perform Test
+        $extractor = new AnnotationExtractor();
+        $returnedAnnotations = $extractor->extractAnnotations($testAnnotations, "testFileName");
+
+        // Asserts
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'warning',
+            'DEPRECATION: Test testFileName is missing required annotations.',
+            [
+                'testName' => 'testFileName',
+                'missingAnnotations' => "title, description, severity"
+            ]
+        );
+    }
+
     public function testTestCaseIdUniqueness()
     {
         // Test Data
@@ -195,14 +258,22 @@ class AnnotationExtractorTest extends TestCase
         $extractor = new AnnotationExtractor();
         $extractor->extractAnnotations($firstTestAnnotation, "firstTest");
         $extractor->extractAnnotations($secondTestannotation, "secondTest");
-
-        //Expect Exception
-        $this->expectException(\Magento\FunctionalTestingFramework\Exceptions\XmlException::class);
-        $this->expectExceptionMessage("TestCaseId and Title pairs must be unique:\n\n" .
-            "TestCaseId: 'MQE-0001' Title: 'TEST TITLE' in Tests 'firstTest', 'secondTest'");
-
-        //Trigger Exception
         $extractor->validateTestCaseIdTitleUniqueness();
+
+        // assert that no exception for validateTestCaseIdTitleUniqueness
+        // and validation error is stored in GenerationErrorHandler
+        $errorMessage = '/'
+            . preg_quote("TestCaseId and Title pairs is not unique in Tests 'firstTest', 'secondTest'")
+            . '/';
+        TestLoggingUtil::getInstance()->validateMockLogStatmentRegex('error', $errorMessage, []);
+        $testErrors = GenerationErrorHandler::getInstance()->getErrorsByType('test');
+        $this->assertArrayHasKey('firstTest', $testErrors);
+        $this->assertArrayHasKey('secondTest', $testErrors);
+    }
+
+    public function tearDown(): void
+    {
+        GenerationErrorHandler::getInstance()->reset();
     }
 
     /**

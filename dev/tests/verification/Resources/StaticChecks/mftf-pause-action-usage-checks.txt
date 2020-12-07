@@ -1,0 +1,30 @@
+
+File "/verification/PauseCheckModule/ActionGroup/ActionGroupWithMultiplePausesActionGroup.xml"
+contains pause action(s):
+		
+	 ActionGroupWithMultiplePausesActionGroup has pause action at stepKey(s): pauseAfterFillField1, pauseAfterFillField2, pauseAfterFillField3
+
+File "/verification/PauseCheckModule/ActionGroup/ActionGroupWithPauseActionGroup.xml"
+contains pause action(s):
+		
+	 ActionGroupWithPauseActionGroup has pause action at stepKey(s): pauseAfterFillField2
+
+File "/verification/PauseCheckModule/Test/TestWithMultiplePauseActionsTest.xml"
+contains pause action(s):
+		
+	 TestWithMultiplePauseActionsTest has pause action at stepKey(s): pauseBeforeAmOnPageKey, pauseAfterStep2, pauseAfterAmOnPageKey
+
+File "/verification/PauseCheckModule/Test/TestWithPauseActionTest.xml"
+contains pause action(s):
+		
+	 TestWithPauseActionTest has pause action at stepKey(s): pauseAfterStep3
+
+File "/verification/PauseCheckModule/Suite/suiteWithMultiplePauseActionsSuite.xml"
+contains pause action(s):
+		
+	 suiteWithMultiplePauseActionsSuite has pause action at stepKey(s): pauseCreate1, pauseFillAfter
+
+File "/verification/PauseCheckModule/Suite/suiteWithPauseActionSuite.xml"
+contains pause action(s):
+		
+	 suiteWithPauseActionSuite has pause action at stepKey(s): pauseSuite

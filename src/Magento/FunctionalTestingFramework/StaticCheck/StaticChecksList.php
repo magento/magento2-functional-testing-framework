@@ -17,6 +17,7 @@ use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 class StaticChecksList implements StaticCheckListInterface
 {
     const DEPRECATED_ENTITY_USAGE_CHECK_NAME = 'deprecatedEntityUsage';
+    const PAUSE_ACTION_USAGE_CHECK_NAME = 'pauseActionUsage';
     const STATIC_RESULTS = 'tests' . DIRECTORY_SEPARATOR .'_output' . DIRECTORY_SEPARATOR . 'static-results';
 
     /**
@@ -45,7 +46,8 @@ class StaticChecksList implements StaticCheckListInterface
             'testDependencies' => new TestDependencyCheck(),
             'actionGroupArguments' => new ActionGroupArgumentsCheck(),
             self::DEPRECATED_ENTITY_USAGE_CHECK_NAME => new DeprecatedEntityUsageCheck(),
-            'annotations' => new AnnotationsCheck()
+            'annotations' => new AnnotationsCheck(),
+            self::PAUSE_ACTION_USAGE_CHECK_NAME => new PauseActionUsageCheck()
         ] + $checks;
 
         // Static checks error files directory
@@ -68,5 +70,23 @@ class StaticChecksList implements StaticCheckListInterface
     public static function getErrorFilesPath()
     {
         return self::$errorFilesPath;
+    }
+
+    /**
+     * Return relative path to files for unit testing purposes.
+     * @param string $fileNames
+     * @return string
+     */
+    public static function getFilePath($fileNames)
+    {
+        if (!empty($fileNames)) {
+            $relativeFileNames = ltrim(
+                str_replace(MAGENTO_BP, '', $fileNames)
+            );
+            if (!empty($relativeFileNames)) {
+                return $relativeFileNames;
+            }
+        }
+        return $fileNames;
     }
 }

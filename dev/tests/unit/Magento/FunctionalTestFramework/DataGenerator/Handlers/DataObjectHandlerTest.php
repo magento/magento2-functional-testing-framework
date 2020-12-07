@@ -13,12 +13,22 @@ use Magento\FunctionalTestingFramework\DataGenerator\Parsers\DataProfileSchemaPa
 use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use tests\unit\Util\MagentoTestCase;
+use tests\unit\Util\ObjectHandlerUtil;
+use tests\unit\Util\TestLoggingUtil;
 
 /**
  * Class DataObjectHandlerTest
  */
 class DataObjectHandlerTest extends MagentoTestCase
 {
+    /**
+     * Setup method
+     */
+    public function setUp(): void
+    {
+        TestLoggingUtil::getInstance()->setMockLoggingUtil();
+    }
+
     // All tests share this array, feel free to add but be careful modifying or removing
     const PARSER_OUTPUT = [
         'entity' => [
@@ -40,6 +50,22 @@ class DataObjectHandlerTest extends MagentoTestCase
                         'value' => 'testValueTwo'
                     ]
                 ]
+            ],
+        ]
+    ];
+
+    const PARSER_OUTPUT_DEPRECATED = [
+        'entity' => [
+            'EntityOne' => [
+                'type' => 'testType',
+                'data' => [
+                    0 => [
+                        'key' => 'testKey',
+                        'value' => 'testValue'
+                    ]
+                ],
+                'deprecated' => "deprecation message",
+                'filename' => "filename.xml"
             ],
         ]
     ];
@@ -123,7 +149,7 @@ class DataObjectHandlerTest extends MagentoTestCase
      */
     public function testGetAllObjects()
     {
-        $this->setUpMockDataObjectHander(self::PARSER_OUTPUT);
+        ObjectHandlerUtil::mockDataObjectHandlerWithData(self::PARSER_OUTPUT);
 
         // Call the method under test
         $actual = DataObjectHandler::getInstance()->getAllObjects();
@@ -135,11 +161,29 @@ class DataObjectHandlerTest extends MagentoTestCase
     }
 
     /**
+     * test deprecated data object
+     */
+    public function testDeprecatedDataObject()
+    {
+        ObjectHandlerUtil::mockDataObjectHandlerWithData(self::PARSER_OUTPUT_DEPRECATED);
+
+        // Call the method under test
+        $actual = DataObjectHandler::getInstance()->getAllObjects();
+
+        //validate deprecation warning
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'warning',
+            "DEPRECATION: The data entity 'EntityOne' is deprecated.",
+            ["fileName" => "filename.xml", "deprecatedMessage" => "deprecation message"]
+        );
+    }
+
+    /**
      * getObject should return the expected data object if it exists
      */
     public function testGetObject()
     {
-        $this->setUpMockDataObjectHander(self::PARSER_OUTPUT);
+        ObjectHandlerUtil::mockDataObjectHandlerWithData(self::PARSER_OUTPUT);
 
         // Call the method under test
         $actual = DataObjectHandler::getInstance()->getObject('EntityOne');
@@ -154,7 +198,7 @@ class DataObjectHandlerTest extends MagentoTestCase
      */
     public function testGetObjectNull()
     {
-        $this->setUpMockDataObjectHander(self::PARSER_OUTPUT);
+        ObjectHandlerUtil::mockDataObjectHandlerWithData(self::PARSER_OUTPUT);
 
         $actual = DataObjectHandler::getInstance()->getObject('h953u789h0g73t521'); // doesnt exist
         $this->assertNull($actual);
@@ -165,7 +209,7 @@ class DataObjectHandlerTest extends MagentoTestCase
      */
     public function testGetAllObjectsWithDataExtends()
     {
-        $this->setUpMockDataObjectHander(self::PARSER_OUTPUT_WITH_EXTEND);
+        ObjectHandlerUtil::mockDataObjectHandlerWithData(self::PARSER_OUTPUT_WITH_EXTEND);
 
         // Call the method under test
         $actual = DataObjectHandler::getInstance()->getAllObjects();
@@ -189,7 +233,7 @@ class DataObjectHandlerTest extends MagentoTestCase
      */
     public function testGetObjectWithDataExtends()
     {
-        $this->setUpMockDataObjectHander(self::PARSER_OUTPUT_WITH_EXTEND);
+        ObjectHandlerUtil::mockDataObjectHandlerWithData(self::PARSER_OUTPUT_WITH_EXTEND);
 
         // Call the method under test
         $actual = DataObjectHandler::getInstance()->getObject('EntityTwo');
@@ -212,7 +256,7 @@ class DataObjectHandlerTest extends MagentoTestCase
      */
     public function testGetAllObjectsWithDataExtendsItself()
     {
-        $this->setUpMockDataObjectHander(self::PARSER_OUTPUT_WITH_EXTEND_INVALID);
+        ObjectHandlerUtil::mockDataObjectHandlerWithData(self::PARSER_OUTPUT_WITH_EXTEND_INVALID);
 
         $this->expectException(\Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException::class);
         $this->expectExceptionMessage(
@@ -229,7 +273,7 @@ class DataObjectHandlerTest extends MagentoTestCase
      */
     public function testGetObjectWithDataExtendsItself()
     {
-        $this->setUpMockDataObjectHander(self::PARSER_OUTPUT_WITH_EXTEND_INVALID);
+        ObjectHandlerUtil::mockDataObjectHandlerWithData(self::PARSER_OUTPUT_WITH_EXTEND_INVALID);
 
         $this->expectException(\Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException::class);
         $this->expectExceptionMessage(
@@ -244,29 +288,10 @@ class DataObjectHandlerTest extends MagentoTestCase
     }
 
     /**
-     * Set up everything required to mock DataObjectHander::getInstance()
-     * The first call to getInstance() uses these mocks to emulate the parser, initializing internal state
-     * according to the PARSER_OUTPUT value
-     *
-     * @param array $entityDataArray
+     * clean up function runs after all tests
      */
-    private function setUpMockDataObjectHander($entityDataArray)
+    public static function tearDownAfterClass(): void
     {
-        // Clear DataObjectHandler singleton if already set
-        $property = new \ReflectionProperty(DataObjectHandler::class, "INSTANCE");
-        $property->setAccessible(true);
-        $property->setValue(null);
-
-        $mockDataProfileSchemaParser = AspectMock::double(DataProfileSchemaParser::class, [
-            'readDataProfiles' => $entityDataArray
-        ])->make();
-
-        $mockObjectManager = AspectMock::double(ObjectManager::class, [
-            'create' => $mockDataProfileSchemaParser
-        ])->make();
-
-        AspectMock::double(ObjectManagerFactory::class, [
-            'getObjectManager' => $mockObjectManager
-        ]);
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 }

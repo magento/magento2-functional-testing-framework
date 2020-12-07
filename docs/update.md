@@ -39,7 +39,7 @@ Takes place when **first** digit of version number changes.
 
 ## After updating
 
-1. It is a good idea to regenerate your IDE Schema Definition catalog with `vendor/bin/mftf generate:urn-catalog .idea/`
+1. It is a good idea to regenerate your IDE Schema Definition catalog with `vendor/bin/mftf generate:urn-catalog .idea/misc.xml`
 1. Update your tests, including data, metadata and other resources. Check if they contain tags that are unsupported in the newer version.
 1. Remove the references to resources (ActionGroups, Sections, Tests) marked as deprecated.
 

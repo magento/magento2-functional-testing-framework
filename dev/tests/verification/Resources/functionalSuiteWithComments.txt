@@ -6,6 +6,11 @@ use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\Module\MagentoWebDriver;
+use Magento\FunctionalTestingFramework\Module\MagentoAssert;
+use Magento\FunctionalTestingFramework\Module\MagentoActionProxies;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Codeception\Lib\ModuleContainer;
+use Codeception\Module;
 
 /**
  * Group class is Codeception Extension which is allowed to handle to all internal events.
@@ -24,9 +29,15 @@ class functionalSuiteWithComments extends \Codeception\GroupObject
     private $currentTestRun = 0;
     private static $HOOK_EXECUTION_INIT = "\n/******** Beginning execution of functionalSuiteWithComments suite %s block ********/\n";
     private static $HOOK_EXECUTION_END = "\n/******** Execution of functionalSuiteWithComments suite %s block complete ********/\n";
+    /** @var MagentoWebDriver */
+    private $webDriver;
+    /** @var ModuleContainer */
+    private $moduleContainer;
 
     public function _before(\Codeception\Event\TestEvent $e)
     {
+        $this->webDriver = $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver');
+        $this->moduleContainer = $this->webDriver->getModuleContainer();
         // increment test count per execution
         $this->currentTestRun++;
         $this->executePreConditions();
@@ -37,43 +48,40 @@ class functionalSuiteWithComments extends \Codeception\GroupObject
         }
     }
 
-
     private function executePreConditions()
     {
         if ($this->currentTestRun == 1) {
             print sprintf(self::$HOOK_EXECUTION_INIT, "before");
 
-            /** @var MagentoWebDriver $webDriver */
-            $webDriver = $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver');
-
             try {
-                if ($webDriver->webDriver != null) {
-                    $webDriver->_restart();
+                if ($this->webDriver->webDriver != null) {
+                    $this->webDriver->_restart();
                 } else {
-                    $webDriver->_initializeSession();
+                    $this->webDriver->_initializeSession();
                 }
                 print("Comment in Before");
-                $webDriver->amOnPage("some.url"); // stepKey: before
+                $this->getModuleForAction("amOnPage")->amOnPage("some.url"); // stepKey: before
                 $createFields['someKey'] = "dataHere";
                 PersistedObjectHandler::getInstance()->createEntity(
                     "create",
                     "suite",
                     "createThis",
-                     $createFields
+                    [],
+                    $createFields
                 );
                 print("<click stepKey=\"comment with element\" userInput=\"helloworld\"/>");
-                $webDriver->click(PersistedObjectHandler::getInstance()->retrieveEntityField('create', 'data', 'suite')); // stepKey: clickWithData
+                $this->getModuleForAction("click")->click(PersistedObjectHandler::getInstance()->retrieveEntityField('create', 'data', 'suite')); // stepKey: clickWithData
                 print("Entering Action Group [AC] actionGroupWithTwoArguments");
-                $webDriver->see("John", msq("uniqueData") . "John"); // stepKey: seeFirstNameAC
+                $this->getModuleForAction("see")->see("John", msq("uniqueData") . "John"); // stepKey: seeFirstNameAC
                 print("Exiting Action Group [AC] actionGroupWithTwoArguments");
             } catch (\Exception $exception) {
                 $this->preconditionFailure = $exception->getMessage();
             }
 
             // reset configuration and close session
-            $webDriver->_resetConfig();
-            $webDriver->webDriver->close();
-            $webDriver->webDriver = null;
+            $this->webDriver->_resetConfig();
+            $this->webDriver->webDriver->close();
+            $this->webDriver->webDriver = null;
 
             print sprintf(self::$HOOK_EXECUTION_END, "before");
         }
@@ -84,14 +92,10 @@ class functionalSuiteWithComments extends \Codeception\GroupObject
         $this->executePostConditions($e);
     }
 
-
     private function executePostConditions(\Codeception\Event\TestEvent $e)
     {
         if ($this->currentTestRun == $this->testCount) {
             print sprintf(self::$HOOK_EXECUTION_INIT, "after");
-
-            /** @var MagentoWebDriver $webDriver */
-            $webDriver = $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver');
 
             try {
                 // Find out if Test in Suite failed, will cause potential failures in suite after
@@ -115,10 +119,10 @@ class functionalSuiteWithComments extends \Codeception\GroupObject
                         }
                     }
                 }
-                if ($webDriver->webDriver != null) {
-                    $webDriver->_restart();
+                if ($this->webDriver->webDriver != null) {
+                    $this->webDriver->_restart();
                 } else {
-                    $webDriver->_initializeSession();
+                    $this->webDriver->_initializeSession();
                 }
                 print("afterBlock");
             } catch (\Exception $exception) {
@@ -127,7 +131,7 @@ class functionalSuiteWithComments extends \Codeception\GroupObject
 
             PersistedObjectHandler::getInstance()->clearSuiteObjects();
 
-            $this->closeSession($webDriver);
+            $this->closeSession($this->webDriver);
 
             print sprintf(self::$HOOK_EXECUTION_END, "after");
         }
@@ -137,13 +141,12 @@ class functionalSuiteWithComments extends \Codeception\GroupObject
      * Close session method closes current session.
      * If config 'close_all_sessions' is set to 'true' all sessions will be closed.
      *
-     * @param MagentoWebDriver $webDriver
      * return void
      */
-    private function closeSession(MagentoWebDriver $webDriver): void
+    private function closeSession(): void
     {
-        $webDriverConfig = $webDriver->_getConfig();
-        $webDriver->_closeSession();
+        $webDriverConfig = $this->webDriver->_getConfig();
+        $this->webDriver->_closeSession();
         if (isset($webDriverConfig['close_all_sessions']) && $webDriverConfig['close_all_sessions'] === "true") {
             $wdHost = sprintf(
                 '%s://%s:%s%s',
@@ -158,5 +161,21 @@ class functionalSuiteWithComments extends \Codeception\GroupObject
                 $remoteWebDriver->quit();
             }
         }
+    }
+
+    /**
+     * Return the module for an action.
+     *
+     * @param string $action
+     * @return Module
+     * @throws \Exception
+     */
+    private function getModuleForAction($action)
+    {
+        $module = $this->moduleContainer->moduleForAction($action);
+        if ($module === null) {
+            throw new TestFrameworkException('Invalid action "' . $action . '"' . PHP_EOL);
+        }
+        return $module;
     }
 }
