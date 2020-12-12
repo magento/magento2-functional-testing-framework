@@ -408,26 +408,6 @@ Example:
 REMOTE_STORAGE_AWSS3_PREFIX=local
 ```
 
-### REMOTE_STORAGE_AWSS3_ACCESS_KEY
-
-The optional access key to access S3 bucket.
-
-Example:
-
-```conf
-REMOTE_STORAGE_AWSS3_ACCESS_KEY=MY_ACCESS_KEY
-```
-
-### REMOTE_STORAGE_AWSS3_SECRET_KEY
-
-The optional secret ket to access S3 bucket.
-
-Example:
-
-```conf
-REMOTE_STORAGE_AWSS3_SECRET_KEY=MY_SECRET_KEY
-```
-
 <!-- Link definitions -->
 
 [`MAGENTO_CLI_COMMAND_PATH`]: #magento_cli_command_path
