@@ -368,6 +368,46 @@ When pause is enabled, MFTF will generate pause() command in _failed() hook so t
 ENABLE_PAUSE=true
 ```
 
+### REMOTE_STORAGE_AWSS3_DRIVER
+
+The remote storage driver. To enable AWS S3, use `aws-s3`.
+
+Example:
+
+```conf
+REMOTE_STORAGE_AWSS3_DRIVER=aws-s3
+```
+
+### REMOTE_STORAGE_AWSS3_REGION
+
+The region of S3 bucket.
+
+Example:
+
+```conf
+REMOTE_STORAGE_AWSS3_REGION=us-west-2
+```
+
+### REMOTE_STORAGE_AWSS3_BUCKET
+
+The name of S3 bucket.
+
+Example:
+
+```conf
+REMOTE_STORAGE_AWSS3_BUCKET=my-test-bucket
+```
+
+### REMOTE_STORAGE_AWSS3_PREFIX
+
+The optional prefix inside S3 bucket.
+
+Example:
+
+```conf
+REMOTE_STORAGE_AWSS3_PREFIX=local
+```
+
 <!-- Link definitions -->
 
 [`MAGENTO_CLI_COMMAND_PATH`]: #magento_cli_command_path

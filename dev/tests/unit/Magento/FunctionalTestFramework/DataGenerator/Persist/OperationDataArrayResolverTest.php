@@ -477,6 +477,60 @@ class OperationDataArrayResolverTest extends MagentoTestCase
         $this->assertEquals($expectedResult, $result);
     }
 
+    public function testExtendedWithRequiredEntity()
+    {
+        $entityDataObjectBuilder = new EntityDataObjectBuilder();
+        $extEntityDataObject = $entityDataObjectBuilder
+            ->withName("extEntity")
+            ->withType("entity")
+            ->withLinkedEntities(["baseSubentity" => "subentity","extSubentity" => "subentity"])
+            ->build();
+
+        $mockDOHInstance = AspectMock::double(DataObjectHandler::class, ["getObject" => function ($name) {
+            $entityDataObjectBuilder = new EntityDataObjectBuilder();
+
+            if ($name == "baseSubentity") {
+                return $entityDataObjectBuilder
+                    ->withName("baseSubentity")
+                    ->withType("subentity")
+                    ->withDataFields(["subtest" => "BaseSubtest"])
+                    ->build();
+            }
+
+            if ($name == "extSubentity") {
+                return $entityDataObjectBuilder
+                    ->withName("extSubentity")
+                    ->withType("subentity")
+                    ->withDataFields(["subtest" => "ExtSubtest"])
+                    ->build();
+            }
+        }])->make();
+        AspectMock::double(DataObjectHandler::class, ['getInstance' => $mockDOHInstance]);
+
+        $subentityOpElementBuilder = new OperationElementBuilder();
+        $subentityOpElement = $subentityOpElementBuilder
+            ->withKey("sub")
+            ->withType("subentity")
+            ->withElementType("object")
+            ->withFields(["subtest" => "string"])
+            ->build();
+
+        $operationResolver = new OperationDataArrayResolver();
+        $result = $operationResolver->resolveOperationDataArray(
+            $extEntityDataObject,
+            [$subentityOpElement],
+            "create",
+            false
+        );
+
+        $expected = [
+            "sub" => [
+                "subtest" => "ExtSubtest"
+            ]
+        ];
+
+        $this->assertEquals($expected, $result);
+    }
     /**
      * After class functionality
      * @return void

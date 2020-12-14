@@ -245,10 +245,11 @@ class OperationDataArrayResolver
     private function resolveOperationObjectAndEntityData($entityObject, $operationElementValue)
     {
         if ($operationElementValue != $entityObject->getType()) {
-            // if we have a mismatch attempt to retrieve linked data and return just the first linkage
+            // if we have a mismatch attempt to retrieve linked data and return just the last linkage
+            // this enables overwriting of required entity fields
             $linkName = $entityObject->getLinkedEntitiesOfType($operationElementValue);
             if (!empty($linkName)) {
-                $linkName = $linkName[0];
+                $linkName = array_pop($linkName);
                 return DataObjectHandler::getInstance()->getObject($linkName);
             }
             return null;
