@@ -8,7 +8,7 @@ Magento Functional Testing Framework Changelog
 
 * Fixed issue that causes Magento bin/magento to fail when xdebug 3 is used. [GitHub Issue #808](https://github.com/magento/magento2-functional-testing-framework/issues/808)
 
-### GitHub Pull requests:
+### GitHub Pull Requests:
 
   * [#806](https://github.com/magento/magento2-functional-testing-framework/pull/806) -- Enable an extending entity to overwrite a requiredEntity binding
   * [#809](https://github.com/magento/magento2-functional-testing-framework/pull/809) -- Add MFTF documentation for AWS S3
@@ -65,7 +65,7 @@ Fixed issue with XPath locators for waits in MagentoPwaWebDriver.
 
 * Fixed issue with suite precondition failure for `createData` with required entity.
 
-### GitHub Issues/Pull requests:
+### GitHub Issues/Pull Requests:
 
   * [#547](https://github.com/magento/magento2-functional-testing-framework/pull/547) -- Fix invalid behavior of MAGENTO_BACKEND_BASE_URL
   * [#742](https://github.com/magento/magento2-functional-testing-framework/pull/742) -- Fix Waits In MagentoPwaWebDriver
