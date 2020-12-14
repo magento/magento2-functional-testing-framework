@@ -1,6 +1,18 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+3.2.1
+---------
+
+### Fixes
+
+* Fixed issue that causes Magento bin/magento to fail when xdebug 3 is used. [GitHub Issue #808](https://github.com/magento/magento2-functional-testing-framework/issues/808)
+
+### GitHub Pull requests:
+
+  * [#806](https://github.com/magento/magento2-functional-testing-framework/pull/806) -- Enable an extending entity to overwrite a requiredEntity binding
+  * [#809](https://github.com/magento/magento2-functional-testing-framework/pull/809) -- Add MFTF documentation for AWS S3
+
 3.2.0
 ---------
 
