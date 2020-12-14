@@ -100,17 +100,15 @@ class MftfApplicationConfig
 
         $this->phase = $phase;
         $this->verboseEnabled = $verboseEnabled;
-        if (isset($debugLevel) && !in_array(strtolower($debugLevel), self::MFTF_DEBUG_LEVEL)) {
+        if (!in_array(strtolower($debugLevel), self::MFTF_DEBUG_LEVEL)) {
             throw new TestFrameworkException("{$debugLevel} is not a debug level. Use 'DEFAULT' or 'DEVELOPER'");
         }
         switch (strtolower($debugLevel)) {
-            case self::LEVEL_DEVELOPER:
             case self::LEVEL_DEFAULT:
-                $this->debugLevel = $debugLevel;
+                $this->debugLevel = self::LEVEL_DEFAULT;
                 break;
-            case null:
+            default:
                 $this->debugLevel = self::LEVEL_DEVELOPER;
-                break;
         }
         $this->allowSkipped = $allowSkipped;
         $this->filterList = new FilterList($filters);
@@ -196,7 +194,7 @@ class MftfApplicationConfig
      */
     public function getDebugLevel()
     {
-        return $this->debugLevel ?? getenv('MFTF_DEBUG');
+        return $this->debugLevel;
     }
 
     /**

@@ -74,9 +74,3 @@ defined('TESTS_MODULE_PATH') || define(
     'TESTS_MODULE_PATH',
     realpath(TESTS_BP . $RELATIVE_TESTS_MODULE_PATH)
 );
-
-// add the debug flag here
-$debugMode = $_ENV['MFTF_DEBUG'] ?? false;
-if (!(bool)$debugMode && extension_loaded('xdebug')) {
-    xdebug_disable();
-}
