@@ -1,7 +1,17 @@
 Magento Functional Testing Framework Changelog
 ================================================
+2.6.6
+---------
+
+* Traceability
+  * Removed `travis.yml` and replaced with `.github/workflows/main.yml`
+  
+### Fixes
+* Fixed issue that causes Magento bin/magento to fail when xdebug 3 is used. [GitHub Issue #808](https://github.com/magento/magento2-functional-testing-framework/issues/808)
+
 2.6.5
 -----
+
 ### GitHub Issues/Pull requests:
 * [#547](https://github.com/magento/magento2-functional-testing-framework/pull/547) -- Fix invalid behavior of MAGENTO_BACKEND_BASE_URL
 
