@@ -194,7 +194,7 @@ class MftfApplicationConfig
      */
     public function getDebugLevel()
     {
-        return $this->debugLevel ?? getenv('MFTF_DEBUG');
+        return $this->debugLevel;
     }
 
     /**
