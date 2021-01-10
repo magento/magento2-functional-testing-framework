@@ -51,6 +51,8 @@ The following example shows a common test that gets text from a page and asserts
 
 ### assertElementContainsAttribute
 
+The `<assertElementContainsAttribute>` asserts that the selected html element contains and matches the expected value for the given attribute.
+
 Example:
 
 ```xml
@@ -92,7 +94,8 @@ It must be in typical array format like `[1,2,3,4,5]` or `[alpha, brontosaurus, 
 See [assertArrayHasKey docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertArrayHasKey)
 
 Attribute|Type|Use|Description
----|---|---|---`message`|string|optional|Text of informational message about a cause of failure.
+---|---|---|---
+`message`|string|optional|Text of informational message about a cause of failure.
 `stepKey`|string|required| A unique identifier of the text step.
 `before`|string|optional| `stepKey` of action that must be executed next.
 `after`|string|optional| `stepKey` of the preceding action.
@@ -123,6 +126,15 @@ Attribute|Type|Use|Description
 
 See [assertStringContainsString docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringContainsString).
 
+Example:
+
+```xml
+<assertStringContainsString stepKey="assertDropDownTierPriceTextProduct1">
+    <expectedResult type="string">Buy 5 for $5.00 each and save 50%</expectedResult>
+    <actualResult type="variable">DropDownTierPriceTextProduct1</actualResult>
+</assertStringContainsString>
+```
+
 Attribute|Type|Use|Description
 ---|---|---|---
 `message`|string|optional|Text describing the cause of the failure.
@@ -133,6 +145,15 @@ Attribute|Type|Use|Description
 ### assertStringContainsStringIgnoringCase
 
 See [assertStringContainsStringIgnoringCase docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringContainsStringIgnoringCase).
+
+Example:
+
+```xml
+<assertStringContainsStringIgnoringCase stepKey="verifyContentType">
+    <actualResult type="variable">grabContentType</actualResult>
+    <expectedResult type="string">{{image.extension}}</expectedResult>
+</assertStringContainsStringIgnoringCase>
+```
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -156,6 +177,14 @@ Attribute|Type|Use|Description
 
 See [assertEmpty docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertEmpty).
 
+Example:
+
+```xml
+<assertEmpty stepKey="assertSearchButtonEnabled">
+    <actualResult type="string">$grabSearchButtonAttribute</actualResult>
+</assertEmpty>
+```
+
 Attribute|Type|Use|Description
 ---|---|---|---
 `message`|string|optional|Text of informational message about a cause of failure.
@@ -166,6 +195,15 @@ Attribute|Type|Use|Description
 ### assertEquals
 
 See [assertEquals docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertEquals).
+
+Example:
+
+```xml
+<assertEquals message="ExpectedPrice" stepKey="assertBundleProductPrice">
+    <actualResult type="variable">grabProductPrice</actualResult>
+    <expectedResult type="string">$75.00</expectedResult>
+</assertEquals>
+```
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -245,6 +283,15 @@ Attribute|Type|Use|Description
 
 See [assertGreaterOrEquals docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertGreaterOrEquals).
 
+Example:
+
+```xml
+<assertGreaterOrEquals stepKey="checkStatusSortOrderAsc" after="getOrderStatusSecondRow">
+	<actualResult type="const">$getOrderStatusSecondRow</actualResult>
+	<expectedResult type="const">$getOrderStatusFirstRow</expectedResult>
+</assertGreaterOrEquals>
+```
+
 Attribute|Type|Use|Description
 ---|---|---|---
 `message`|string|optional|Text of informational message about a cause of failure.
@@ -256,6 +303,15 @@ Attribute|Type|Use|Description
 
 See [assertGreaterThan docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertGreaterThan).
 
+Example:
+
+```xml
+<assertGreaterThan stepKey="checkQuantityWasChanged">
+	<actualResult type="const">$grabEndQuantity</actualResult>
+	<expectedResult type="const">$grabStartQuantity</expectedResult>
+</assertGreaterThan>
+```
+
 Attribute|Type|Use|Description
 ---|---|---|---
 `message`|string|optional|Text of informational message about a cause of failure.
@@ -266,6 +322,15 @@ Attribute|Type|Use|Description
 ### assertGreaterThanOrEqual
 
 See [assertGreaterThanOrEqual docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertGreaterThanOrEqual).
+
+Example:
+
+```xml
+<assertGreaterThanOrEqual stepKey="checkStatusSortOrderAsc" after="getOrderStatusSecondRow">
+	<actualResult type="const">$getOrderStatusSecondRow</actualResult>
+	<expectedResult type="const">$getOrderStatusFirstRow</expectedResult>
+</assertGreaterThanOrEqual>
+```
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -300,6 +365,15 @@ Attribute|Type|Use|Description
 
 See [assertLessOrEquals docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertLessOrEquals).
 
+Example:
+
+```xml
+<assertLessOrEquals stepKey="checkHeightIsCorrect">
+    <actualResult type="variable">getImageHeight</actualResult>
+    <expectedResult type="variable">getSectionHeight</expectedResult>
+</assertLessOrEquals>
+```
+
 Attribute|Type|Use|Description
 ---|---|---|---
 `message`|string|optional|Text of informational message about a cause of failure.
@@ -310,6 +384,15 @@ Attribute|Type|Use|Description
 ### assertLessThan
 
 See [assertLessThan docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertLessThan).
+
+Example:
+
+```xml
+<assertLessThan stepKey="assertLessImages">
+    <expectedResult type="variable">initialImages</expectedResult>
+    <actualResult type="variable">newImages</actualResult>
+</assertLessThan>
+```
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -322,6 +405,15 @@ Attribute|Type|Use|Description
 
 See [assertLessThanOrEqual docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertLessThanOrEqual).
 
+Example:
+
+```xml
+<assertLessThanOrEqual stepKey="checkHeightIsCorrect">
+    <actualResult type="variable">getImageHeight</actualResult>
+    <expectedResult type="variable">getSectionHeight</expectedResult>
+</assertLessThanOrEqual>
+```
+
 Attribute|Type|Use|Description
 ---|---|---|---
 `message`|string|optional|Text of informational message about a cause of failure.
@@ -332,6 +424,15 @@ Attribute|Type|Use|Description
 ### assertNotContains
 
 See [assertNotContains docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotContains).
+
+Example:
+
+```xml
+<assertNotContains stepKey="assertCustomerGroupNotInOptions">
+    <actualResult type="variable">customerGroups</actualResult>
+    <expectedResult type="string">{{customerGroup.code}}</expectedResult>
+</assertNotContains>
+```
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -344,6 +445,15 @@ Attribute|Type|Use|Description
 
 See [assertStringNotContainsString docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringNotContainsString).
 
+Example:
+
+```xml
+<assertStringNotContainsString stepKey="checkoutAsGuest">
+    <expectedResult type="string">{{CaptchaData.checkoutAsGuest}}</expectedResult>
+    <actualResult type="variable">$formItems</actualResult>
+</assertStringNotContainsString>
+```
+
 Attribute|Type|Use|Description
 ---|---|---|---
 `message`|string|optional|Text of informational message about a cause of failure.
@@ -354,6 +464,15 @@ Attribute|Type|Use|Description
 ### assertStringContainsStringIgnoringCase
 
 See [assertStringNotContainsStringIgnoringCase docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringNotContainsStringIgnoringCase).
+
+Example:
+
+```xml
+<assertStringContainsStringIgnoringCase stepKey="verifyContentType">
+    <actualResult type="variable">grabContentType</actualResult>
+    <expectedResult type="string">{{image.extension}}</expectedResult>
+</assertStringContainsStringIgnoringCase>
+```
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -366,6 +485,14 @@ Attribute|Type|Use|Description
 
 See [assertNotEmpty docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotEmpty).
 
+Example:
+
+```xml
+<assertNotEmpty stepKey="checkSwatchFieldForAdmin">
+	<actualResult type="const">$grabSwatchForAdmin</actualResult>
+</assertNotEmpty>
+```
+
 Attribute|Type|Use|Description
 ---|---|---|---
 `message`|string|optional|Text of informational message about a cause of failure.
@@ -376,6 +503,15 @@ Attribute|Type|Use|Description
 ### assertNotEquals
 
 See [assertNotEquals docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotEquals).
+
+Example:
+
+```xml
+<assertNotEquals stepKey="assertNotEquals">
+	<actualResult type="string">{$grabTotalAfter}</actualResult>
+	<expectedResult type="string">{$grabTotalBefore}</expectedResult>
+</assertNotEquals>
+```
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -444,6 +580,15 @@ Attribute|Type|Use|Description
 
 See [assertNotRegExp docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotRegExp).
 
+Example:
+
+```xml
+<assertNotRegExp stepKey="simpleThumbnailIsNotDefault">
+	<actualResult type="const">$getSimpleProductThumbnail</actualResult>
+	<expectedResult type="const">'/placeholder\/thumbnail\.jpg/'</expectedResult>
+</assertNotRegExp>
+```
+
 Attribute|Type|Use|Description
 ---|---|---|---
 `message`|string|optional|Text of informational message about a cause of failure.
@@ -476,6 +621,15 @@ Attribute|Type|Use|Description
 ### assertRegExp
 
 See [assertRegExp docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertRegExp).
+
+Example:
+
+```xml
+<assertRegExp message="adminAnalyticsMetadata object is invalid" stepKey="validateadminAnalyticsMetadata">
+    <expectedResult type="string">#var\s+adminAnalyticsMetadata\s+=\s+{\s+("[\w_]+":\s+"[^"]*?",\s+)*?("[\w_]+":\s+"[^"]*?"\s+)};#s</expectedResult>
+    <actualResult type="variable">$pageSource</actualResult>
+</assertRegExp>
+```
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -530,7 +684,7 @@ Attribute|Type|Use|Description
 
 ### expectException
 
-See [expectException docs on codeception.com](http://codeception.com/docs/modules/WebDriver#expectException).
+See [expectException docs on codeception.com](https://codeception.com/docs/modules/Asserts#expectException).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -540,7 +694,7 @@ Attribute|Type|Use|Description
 
 ### fail
 
-See [fail docs on codeception.com](http://codeception.com/docs/modules/WebDriver#fail).
+See [fail docs on codeception.com](https://codeception.com/docs/modules/Asserts#fail).
 
 Attribute|Type|Use|Description
 ---|---|---|---
