@@ -48,7 +48,7 @@ class ObjectExtensionUtil
                     ["parent" => $testObject->getParentName(), "test" => $testObject->getName()]
                 );
             }
-            $skippedTest = $this->skipTest($testObject);
+            $skippedTest = $this->skipTest($testObject, 'ParentTestDoesNotExist');
             return $skippedTest;
         }
 
@@ -62,6 +62,11 @@ class ObjectExtensionUtil
         if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
             LoggingUtil::getInstance()->getLogger(ObjectExtensionUtil::class)
                 ->debug("extending test", ["parent" => $parentTest->getName(), "test" => $testObject->getName()]);
+        }
+
+        // Skip test if parent is skipped
+        if ($parentTest->isSkipped()) {
+            return $this->skipTest($testObject);
         }
 
         // Get steps for both the parent and the child tests
@@ -207,17 +212,19 @@ class ObjectExtensionUtil
      * This method returns a skipped form of the Test Object
      *
      * @param TestObject $testObject
+     * @param string     $skipReason
      * @return TestObject
      */
-    public function skipTest($testObject)
+    public function skipTest($testObject, $skipReason = null)
     {
         $annotations = $testObject->getAnnotations();
+        $skipReason = $skipReason ?? 'ParentTestIsSkipped';
 
         // Add skip to the group array if it doesn't already exist
         if (array_key_exists('skip', $annotations)) {
             return $testObject;
         } elseif (!array_key_exists('skip', $annotations)) {
-            $annotations['skip'] = ['issueId' => "ParentTestDoesNotExist"];
+            $annotations['skip'] = ['issueId' => $skipReason];
         }
 
         $skippedTest = new TestObject(
@@ -227,6 +234,10 @@ class ObjectExtensionUtil
             [],
             $testObject->getFilename(),
             $testObject->getParentName()
+        );
+
+        LoggingUtil::getInstance()->getLogger(ObjectExtensionUtil::class)->info(
+            "\nMQE-2463 LOGGING: {$testObject->getName()} is skipped due to {$skipReason}\n"
         );
 
         return $skippedTest;
