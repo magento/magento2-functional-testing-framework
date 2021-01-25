@@ -347,6 +347,41 @@ class ObjectExtensionUtilTest extends TestCase
     }
 
     /**
+     * Tests generating a test that extends a skipped parent test
+     *
+     * @throws \Exception
+     */
+    public function testExtendedTestSkippedParent()
+    {
+        $testDataArrayBuilder = new TestDataArrayBuilder();
+        $mockParentTest = $testDataArrayBuilder
+            ->withName('baseTest')
+            ->withAnnotations([
+                'skip' => ['nodeName' => 'skip', 'issueId' => [['nodeName' => 'issueId', 'value' => 'someIssue']]]
+            ])
+            ->build();
+
+        $testDataArrayBuilder->reset();
+        $mockExtendedTest = $testDataArrayBuilder
+            ->withName('extendTest')
+            ->withTestReference("baseTest")
+            ->build();
+
+        $mockTestData = array_merge($mockParentTest, $mockExtendedTest);
+        $this->setMockTestOutput($mockTestData);
+
+        // parse and generate test object with mocked data
+        TestObjectHandler::getInstance()->getObject('extendTest');
+
+        // validate log statement
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'debug',
+            "extendTest is skipped due to ParentTestIsSkipped",
+            []
+        );
+    }
+
+    /**
      * Function used to set mock for parser return and force init method to run between tests.
      *
      * @param array $testData

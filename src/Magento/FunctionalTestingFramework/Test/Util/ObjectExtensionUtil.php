@@ -42,13 +42,13 @@ class ObjectExtensionUtil
         try {
             $parentTest = TestObjectHandler::getInstance()->getObject($testObject->getParentName());
         } catch (TestReferenceException $error) {
+            $skippedTest = $this->skipTest($testObject, 'ParentTestDoesNotExist');
             if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
                 LoggingUtil::getInstance()->getLogger(ObjectExtensionUtil::class)->debug(
                     "parent test not defined. test will be skipped",
                     ["parent" => $testObject->getParentName(), "test" => $testObject->getName()]
                 );
             }
-            $skippedTest = $this->skipTest($testObject, 'ParentTestDoesNotExist');
             return $skippedTest;
         }
 
@@ -236,9 +236,11 @@ class ObjectExtensionUtil
             $testObject->getParentName()
         );
 
-        LoggingUtil::getInstance()->getLogger(ObjectExtensionUtil::class)->info(
-            "\nMQE-2463 LOGGING: {$testObject->getName()} is skipped due to {$skipReason}\n"
-        );
+        if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
+            LoggingUtil::getInstance()->getLogger(ObjectExtensionUtil::class)->debug(
+                "{$testObject->getName()} is skipped due to {$skipReason}"
+            );
+        }
 
         return $skippedTest;
     }
