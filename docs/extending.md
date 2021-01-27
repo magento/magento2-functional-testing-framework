@@ -17,7 +17,7 @@ Unlike merging, the parent test (or action group) will still exist after the tes
 
 <div class="bs-callout-warning" markdown="1">
 <br>
-Note: The extended test will be skipped if the parent test is not defined or is skipped.
+Note: The extended test will be skipped if the parent test is skipped.
 </div>
 
 ## Extending tests
