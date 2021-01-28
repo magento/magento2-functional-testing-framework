@@ -215,7 +215,7 @@ class RunTestCommand extends BaseGenerateCommand
      * @param OutputInterface $output
      * @return integer
      *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     private function executeTestCommand(string $command, OutputInterface $output)
     {

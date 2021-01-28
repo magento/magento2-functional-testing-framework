@@ -52,7 +52,7 @@ class RunTestGroupCommand extends BaseGenerateCommand
      * @return integer
      * @throws \Exception
      *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
