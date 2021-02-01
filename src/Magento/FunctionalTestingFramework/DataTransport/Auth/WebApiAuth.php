@@ -37,6 +37,13 @@ class WebApiAuth
     private static $adminAuthTokens = [];
 
     /**
+     * Timestamps of when admin user tokens were created.  They need to be refreshed every ~4 hours
+     *
+     * @var int[]
+     */
+    private static $adminAuthTokenTimestamps = [];
+
+    /**
      * Return the API token for an admin user
      * Use MAGENTO_ADMIN_USERNAME and MAGENTO_ADMIN_PASSWORD when $username and/or $password is/are omitted
      *
@@ -63,7 +70,12 @@ class WebApiAuth
         }
 
         if (isset(self::$adminAuthTokens[$login])) {
-            return self::$adminAuthTokens[$login];
+            $threeHours = 60 * 60 * 3;
+            $isTokenAboutToExpire = time() - self::$adminAuthTokenTimestamps[$login] > $threeHours;
+
+            if (!$isTokenAboutToExpire) {
+                return self::$adminAuthTokens[$login];
+            }
         }
 
         try {
@@ -97,6 +109,7 @@ class WebApiAuth
             $token = json_decode($response);
             if ($token !== null) {
                 self::$adminAuthTokens[$login] = $token;
+                self::$adminAuthTokenTimestamps[$login] = time();
                 return $token;
             }
             $errMessage = "Invalid response: {$response}";
