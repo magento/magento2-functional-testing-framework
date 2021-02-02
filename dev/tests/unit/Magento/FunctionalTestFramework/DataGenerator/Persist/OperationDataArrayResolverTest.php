@@ -41,7 +41,7 @@ class OperationDataArrayResolverTest extends MagentoTestCase
      * Before test functionality
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
@@ -481,7 +481,7 @@ class OperationDataArrayResolverTest extends MagentoTestCase
      * After class functionality
      * @return void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }

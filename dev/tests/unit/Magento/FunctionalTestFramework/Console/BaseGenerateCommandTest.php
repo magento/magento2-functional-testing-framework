@@ -15,7 +15,7 @@ use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 
 class BaseGenerateCommandTest extends TestCase
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         AspectMock::clean();
     }

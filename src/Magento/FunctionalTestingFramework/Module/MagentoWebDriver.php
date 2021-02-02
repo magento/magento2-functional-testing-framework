@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Module;
 
+use Codeception\Lib\Actor\Shared\Pause;
 use Codeception\Module\WebDriver;
 use Codeception\Test\Descriptor;
 use Codeception\TestInterface;
@@ -52,6 +53,7 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHan
 class MagentoWebDriver extends WebDriver
 {
     use AttachmentSupport;
+    use Pause;
 
     const MAGENTO_CRON_INTERVAL = 60;
     const MAGENTO_CRON_COMMAND = 'cron:run';
@@ -256,7 +258,7 @@ class MagentoWebDriver extends WebDriver
         $actualUrl = $this->webDriver->getCurrentURL();
         $comparison = "Expected: $needle\nActual: $actualUrl";
         AllureHelper::addAttachmentToCurrentStep($comparison, 'Comparison');
-        $this->assertNotContains($needle, $actualUrl);
+        $this->assertStringNotContainsString($needle, $actualUrl);
     }
 
     /**
@@ -325,7 +327,7 @@ class MagentoWebDriver extends WebDriver
         $actualUrl = $this->webDriver->getCurrentURL();
         $comparison = "Expected: $needle\nActual: $actualUrl";
         AllureHelper::addAttachmentToCurrentStep($comparison, 'Comparison');
-        $this->assertContains($needle, $actualUrl);
+        $this->assertStringContainsString($needle, $actualUrl);
     }
 
     /**
@@ -708,7 +710,7 @@ class MagentoWebDriver extends WebDriver
             // When an "attribute" is blank or null it returns "true" so we assert that "true" is present.
             $this->assertEquals($attributes, 'true');
         } else {
-            $this->assertContains($value, $attributes);
+            $this->assertStringContainsString($value, $attributes);
         }
     }
 
@@ -1092,5 +1094,26 @@ class MagentoWebDriver extends WebDriver
         $this->notifyCronFinished($cronGroups);
 
         return sprintf('%s (wait: %ss, execution: %ss)', $cronResult, $waitFor, round($timeEnd - $timeStart, 2));
+    }
+
+    /**
+     * Switch to another frame on the page by name, ID, CSS or XPath.
+     *
+     * @param string|null $locator
+     * @return void
+     * @throws \Exception
+     */
+    public function switchToIFrame($locator = null)
+    {
+        try {
+            parent::switchToIFrame($locator);
+        } catch (\Exception $e) {
+            $els = $this->_findElements("#$locator");
+            if (!count($els)) {
+                $this->debug('Failed to find locator by ID: ' . $e->getMessage());
+                throw new \Exception("IFrame with $locator was not found.");
+            }
+            $this->webDriver->switchTo()->frame($els[0]);
+        }
     }
 }

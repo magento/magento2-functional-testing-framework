@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['7.1', '7.2', '7.3']
+        php-versions: ['7.3']
     steps:
       - uses: actions/checkout@v2
 
@@ -53,7 +53,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['7.1', '7.2', '7.3']
+        php-versions: ['7.3']
     steps:
       - uses: actions/checkout@v2
 
@@ -85,7 +85,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['7.1', '7.2', '7.3']
+        php-versions: ['7.3']
     steps:
       - uses: actions/checkout@v2
 
@@ -94,8 +94,6 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           extensions: curl, dom, intl, json, openssl
-          coverage: none
-          if: ${{ matrix.php-versions >= 7.2 }}
 
       - name: Cache Composer packages
         id: composer-cache
@@ -119,7 +117,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['7.1', '7.2', '7.3']
+        php-versions: ['7.3']
 
     services:
       chrome:
@@ -150,3 +148,5 @@ jobs:
 
       - name: Run tests
         run: bin/functional
+
+

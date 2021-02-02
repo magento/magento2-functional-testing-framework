@@ -28,7 +28,7 @@ class DomTest extends MagentoTestCase
         new ActionGroupDom($sampleXml, 'dupeStepKeyTest.xml', $exceptionCollector);
 
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessageRegExp("/stepKey: key1 is used more than once. \(Parent: testName\)/");
+        $this->expectExceptionMessageMatches("/stepKey: key1 is used more than once. \(Parent: testName\)/");
         $exceptionCollector->throwException();
     }
 
@@ -49,7 +49,7 @@ class DomTest extends MagentoTestCase
         $exceptionCollector = new ExceptionCollector();
         new ActionGroupDom($sampleXml, 'dupeTestsTest.xml', $exceptionCollector);
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessageRegExp("/name: testName is used more than once./");
+        $this->expectExceptionMessageMatches("/name: testName is used more than once./");
         $exceptionCollector->throwException();
     }
 }

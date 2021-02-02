@@ -65,7 +65,7 @@ class ActionGroupDomTest extends MagentoTestCase
         $exceptionCollector = new ExceptionCollector();
         new ActionGroupDom($sampleXml, 'dupeNameActionGroup.xml', $exceptionCollector);
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessageRegExp("/name: actionGroupName is used more than once./");
+        $this->expectExceptionMessageMatches("/name: actionGroupName is used more than once./");
         $exceptionCollector->throwException();
     }
 }

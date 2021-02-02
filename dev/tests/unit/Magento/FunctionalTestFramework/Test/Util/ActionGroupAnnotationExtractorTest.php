@@ -16,7 +16,7 @@ class ActionGroupAnnotationExtractorTest extends TestCase
      * Before test functionality
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
@@ -91,7 +91,7 @@ class ActionGroupAnnotationExtractorTest extends TestCase
      * After class functionality
      * @return void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
