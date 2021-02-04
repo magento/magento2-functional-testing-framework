@@ -15,6 +15,11 @@ Specify needed variations for a parent object and produce a copy of the original
 Unlike merging, the parent test (or action group) will still exist after the test generation.
 </div>
 
+<div class="bs-callout-warning" markdown="1">
+<br>
+Note: The extended test will be skipped if the parent test is skipped.
+</div>
+
 ## Extending tests
 
 ### Update a test step
