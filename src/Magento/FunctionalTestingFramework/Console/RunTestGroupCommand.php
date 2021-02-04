@@ -51,7 +51,7 @@ class RunTestGroupCommand extends BaseGenerateCommand
      * @return integer
      * @throws \Exception
      *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

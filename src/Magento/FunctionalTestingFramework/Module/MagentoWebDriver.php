@@ -459,7 +459,9 @@ class MagentoWebDriver extends WebDriver
     public function formatMoney(float $money, $locale = 'en_US.UTF-8')
     {
         $this->mSetLocale(LC_MONETARY, $locale);
+        // @codingStandardsIgnoreStart
         $money = money_format('%.2n', $money);
+        // @codingStandardsIgnoreEnd
         $this->mResetLocale();
         $prefix = substr($money, 0, 1);
         $number = substr($money, 1);
