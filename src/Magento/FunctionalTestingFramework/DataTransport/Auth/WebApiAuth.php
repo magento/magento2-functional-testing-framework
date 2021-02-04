@@ -130,7 +130,7 @@ class WebApiAuth
      * Is there an existing WebAPI admin token for this login?
      *
      * @param string $login
-     * @return bool
+     * @return boolean
      */
     private static function hasExistingToken(string $login)
     {
