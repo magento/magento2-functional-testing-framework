@@ -70,8 +70,9 @@ class WebApiAuth
         }
 
         if (isset(self::$adminAuthTokens[$login])) {
-            $threeHours = 60 * 60 * 3;
-            $isTokenAboutToExpire = time() - self::$adminAuthTokenTimestamps[$login] > $threeHours;
+            $tokenLifetime = getenv('MAGENTO_ADMIN_WEBAPI_TOKEN_LIFETIME');
+
+            $isTokenAboutToExpire = $tokenLifetime && time() - self::$adminAuthTokenTimestamps[$login] > $tokenLifetime;
 
             if (!$isTokenAboutToExpire) {
                 return self::$adminAuthTokens[$login];
