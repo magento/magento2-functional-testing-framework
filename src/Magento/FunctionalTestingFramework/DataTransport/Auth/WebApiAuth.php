@@ -69,14 +69,8 @@ class WebApiAuth
             throw new FastFailException($message, $context);
         }
 
-        if (isset(self::$adminAuthTokens[$login])) {
-            $tokenLifetime = getenv('MAGENTO_ADMIN_WEBAPI_TOKEN_LIFETIME');
-
-            $isTokenAboutToExpire = $tokenLifetime && time() - self::$adminAuthTokenTimestamps[$login] > $tokenLifetime;
-
-            if (!$isTokenAboutToExpire) {
-                return self::$adminAuthTokens[$login];
-            }
+        if (self::hasExistingToken($login)) {
+            return self::$adminAuthTokens[$login];
         }
 
         try {
@@ -130,5 +124,24 @@ class WebApiAuth
         $message .= $errMessage;
         $context = ['url' => $authUrl];
         throw new FastFailException($message, $context);
+    }
+
+    /**
+     * Is there an existing WebAPI admin token for this login?
+     *
+     * @param string $login
+     * @return bool
+     */
+    private static function hasExistingToken(string $login)
+    {
+        if (!isset(self::$adminAuthTokens[$login])) {
+            return false;
+        }
+
+        $tokenLifetime = getenv('MAGENTO_ADMIN_WEBAPI_TOKEN_LIFETIME');
+
+        $isTokenExpired = $tokenLifetime && time() - self::$adminAuthTokenTimestamps[$login] > $tokenLifetime;
+
+        return !$isTokenExpired;
     }
 }
