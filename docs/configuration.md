@@ -408,6 +408,16 @@ Example:
 REMOTE_STORAGE_AWSS3_PREFIX=local
 ```
 
+### MAGENTO_ADMIN_WEBAPI_TOKEN_LIFETIME
+
+The lifetime (in seconds) of Magento Admin WebAPI token; if token is older than this value a refresh attempt will be made just before the next WebAPI call.
+
+Example:
+
+```conf
+MAGENTO_ADMIN_WEBAPI_TOKEN_LIFETIME=10800
+```
+
 <!-- Link definitions -->
 
 [`MAGENTO_CLI_COMMAND_PATH`]: #magento_cli_command_path
