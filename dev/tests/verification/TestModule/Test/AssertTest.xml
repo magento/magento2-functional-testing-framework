@@ -39,6 +39,10 @@
             <expectedResult type="string">ab</expectedResult>
             <actualResult type="const">['item1' => 'a', 'item2' => 'ab']</actualResult>
         </assertContains>
+        <assertContains stepKey="assertStringContainsString" message="pass">
+            <expectedResult type="string">ab</expectedResult>
+            <actualResult type="string">abcde</actualResult>
+        </assertContains>
         <assertCount stepKey="assertCount" message="pass">
             <expectedResult type="int">2</expectedResult>
             <actualResult type="const">['a', 'b']</actualResult>
@@ -103,11 +107,11 @@
             <expectedResult type="int">5</expectedResult>
             <actualResult type="int">2</actualResult>
         </assertLessThanOrEqual>
-        <assertNotContains stepKey="assertNotContains1" message="pass">
+        <assertNotContains stepKey="assertNotContains" message="pass">
             <expectedResult type="string">bc</expectedResult>
             <actualResult type="const">['item1' => 'a', 'item2' => 'ab']</actualResult>
         </assertNotContains>
-        <assertNotContains stepKey="assertNotContains2" message="pass">
+        <assertNotContains stepKey="assertStringNotContainsString" message="pass">
             <expectedResult type="string">bc</expectedResult>
             <actualResult type="variable">text</actualResult>
         </assertNotContains>
@@ -160,7 +164,8 @@
         <assertArrayHasKey stepKey="assertArrayHasKeyBackwardCompatible" expected="apple" expectedType="string" actual="['orange' => 2, 'apple' => 1]" actualType="const" message="pass"/>
         <assertArrayNotHasKey stepKey="assertArrayNotHasKeyBackwardCompatible" expected="kiwi" expectedType="string" actual="['orange' => 2, 'apple' => 1]" message="pass"/>
         <assertArraySubset stepKey="assertArraySubsetBackwardCompatible" expected="[1, 2]" actual="[1, 2, 3, 5]" message="pass"/>
-        <assertContains stepKey="assertContainsBackwardCompatible" expected="ab" expectedType="string" actual="['item1' => 'a', 'item2' => 'ab']" message="pass"/>
+        <assertContains stepKey="assertContains1BackwardCompatible" expected="ab" expectedType="string" actual="['item1' => 'a', 'item2' => 'ab']" message="pass"/>
+        <assertContains stepKey="assertContains2BackwardCompatible" expected="ab" expectedType="string" actual="abcde" actualType="string" message="pass"/>
         <assertCount stepKey="assertCountBackwardCompatible" expected="2" expectedType="int" actual="['a', 'b']" message="pass"/>
         <assertEmpty stepKey="assertEmptyBackwardCompatible" actual="[]" message="pass"/>
         <assertEquals stepKey="assertEquals1BackwardCompatible" expected="text" expectedType="variable" actual="Copyright © 2013-2017 Magento, Inc. All rights reserved." actualType="string" message="pass"/>

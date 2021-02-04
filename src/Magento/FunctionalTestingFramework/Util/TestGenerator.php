@@ -63,6 +63,23 @@ class TestGenerator
     const MFTF_3_O_0_DEPRECATION_MESSAGE = ' is DEPRECATED and will be removed in MFTF 3.0.0.';
 
     /**
+     * PHPUnit 9 Assert Equal Types
+     */
+    const ASSERT_EQUAL_TYPES = [
+        'array',
+        'bool',
+        'float',
+        'int',
+        'numeric',
+        'object',
+        'resource',
+        'string',
+        'scalar',
+        'callable',
+        'iterable',
+    ];
+
+    /**
      * Actor name for AcceptanceTest
      *
      * @var string
@@ -1011,6 +1028,7 @@ class TestGenerator
                     break;
                 case "selectOption":
                 case "unselectOption":
+                case "seeNumberOfElements":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
                         $actionObject,
@@ -1190,15 +1208,6 @@ class TestGenerator
                 case "seeOptionIsSelected":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $selector, $input);
                     break;
-                case "seeNumberOfElements":
-                    $testSteps .= $this->wrapFunctionCall(
-                        $actor,
-                        $actionObject,
-                        $selector,
-                        $input,
-                        $parameterArray
-                    );
-                    break;
                 case "seeInPageSource":
                 case "dontSeeInPageSource":
                 case "seeInSource":
@@ -1219,14 +1228,67 @@ class TestGenerator
                     );
                     break;
                 case "assertEquals":
+                    if (isset($assertDelta)) {
+                        $replaceType = 'assertEqualsWithDelta';
+                        call_user_func(\Closure::bind(
+                            function () use ($actionObject, $replaceType) {
+                                $actionObject->type = $replaceType;
+                            },
+                            null,
+                            $actionObject
+                        ));
+                        $testSteps .= $this->wrapFunctionCall(
+                            $actor,
+                            $actionObject,
+                            $assertExpected,
+                            $assertActual,
+                            $assertDelta,
+                            $assertMessage
+                        );
+                    } else {
+                        $testSteps .= $this->wrapFunctionCall(
+                            $actor,
+                            $actionObject,
+                            $assertExpected,
+                            $assertActual,
+                            $assertMessage
+                        );
+                    }
+                    break;
+                case "assertNotEquals":
+                    if (isset($assertDelta)) {
+                        $replaceType = 'assertNotEqualsWithDelta';
+                        call_user_func(\Closure::bind(
+                            function () use ($actionObject, $replaceType) {
+                                $actionObject->type = $replaceType;
+                            },
+                            null,
+                            $actionObject
+                        ));
+                        $testSteps .= $this->wrapFunctionCall(
+                            $actor,
+                            $actionObject,
+                            $assertExpected,
+                            $assertActual,
+                            $assertDelta,
+                            $assertMessage
+                        );
+                    } else {
+                        $testSteps .= $this->wrapFunctionCall(
+                            $actor,
+                            $actionObject,
+                            $assertExpected,
+                            $assertActual,
+                            $assertMessage
+                        );
+                    }
+                    break;
                 case "assertGreaterOrEquals":
                 case "assertGreaterThan":
                 case "assertGreaterThanOrEqual":
-                case "assertInternalType":
                 case "assertLessOrEquals":
                 case "assertLessThan":
                 case "assertLessThanOrEqual":
-                case "assertNotEquals":
                 case "assertInstanceOf":
                 case "assertNotInstanceOf":
                 case "assertNotRegExp":
@@ -1238,8 +1300,6 @@ class TestGenerator
                 case "assertArrayHasKey":
                 case "assertArrayNotHasKey":
                 case "assertCount":
-                case "assertContains":
-                case "assertNotContains":
                 case "expectException":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
@@ -1248,6 +1308,67 @@ class TestGenerator
                         $assertActual,
                         $assertMessage,
                         $assertDelta
+                    );
+                    break;
+                case "assertContains":
+                    if ((substr(trim($assertActual), 0, 1) !== '[')
+                        || (substr(trim($assertActual), -1, 1) !== ']')) {
+                        $replaceType = 'assertStringContainsString';
+                        call_user_func(\Closure::bind(
+                            function () use ($actionObject, $replaceType) {
+                                $actionObject->type = $replaceType;
+                            },
+                            null,
+                            $actionObject
+                        ));
+                    }
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $assertExpected,
+                        $assertActual,
+                        $assertMessage
+                    );
+                    break;
+                case "assertNotContains":
+                    if ((substr(trim($assertActual), 0, 1) !== '[')
+                        || (substr(trim($assertActual), -1, 1) !== ']')) {
+                        $replaceType = 'assertStringNotContainsString';
+                        call_user_func(\Closure::bind(
+                            function () use ($actionObject, $replaceType) {
+                                $actionObject->type = $replaceType;
+                            },
+                            null,
+                            $actionObject
+                        ));
+                    }
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $assertExpected,
+                        $assertActual,
+                        $assertMessage
+                    );
+                    break;
+                case "assertInternalType":
+                    foreach (self::ASSERT_EQUAL_TYPES as $type) {
+                        if (stristr($assertExpected, $type) !== false) {
+                            $replaceType = 'assertIs' . ucfirst($type);
+                            call_user_func(\Closure::bind(
+                                function () use ($actionObject, $replaceType) {
+                                    $actionObject->type = $replaceType;
+                                },
+                                null,
+                                $actionObject
+                            ));
+                            break;
+                        }
+                    }
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $assertActual,
+                        $assertMessage
                     );
                     break;
                 case "assertElementContainsAttribute":

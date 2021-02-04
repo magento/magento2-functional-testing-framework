@@ -45,6 +45,7 @@ class AssertTestCest
 		$I->assertArrayNotHasKey("kiwi", ['orange' => 2, 'apple' => 1], "pass"); // stepKey: assertArrayNotHasKey
 		$I->assertArraySubset([1, 2], [1, 2, 3, 5], "pass"); // stepKey: assertArraySubset
 		$I->assertContains("ab", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertContains
+		$I->assertStringContainsString("ab", "abcde", "pass"); // stepKey: assertStringContainsString
 		$I->assertCount(2, ['a', 'b'], "pass"); // stepKey: assertCount
 		$I->assertEmpty([], "pass"); // stepKey: assertEmpty
 		$I->assertEquals($text, "Copyright © 2013-2017 Magento, Inc. All rights reserved.", "pass"); // stepKey: assertEquals1
@@ -56,17 +57,17 @@ class AssertTestCest
 		$I->assertGreaterOrEquals(2, 5, "pass"); // stepKey: assertGreaterOrEquals
 		$I->assertGreaterThan(2, 5, "pass"); // stepKey: assertGreaterthan
 		$I->assertGreaterThanOrEqual(2, 5, "pass"); // stepKey: assertGreaterThanOrEqual
-		$I->assertInternalType("string", "xyz", "pass"); // stepKey: assertInternalType1
-		$I->assertInternalType("int", 21, "pass"); // stepKey: assertInternalType2
-		$I->assertInternalType("string", $text, "pass"); // stepKey: assertInternalType3
+		$I->assertIsString("xyz", "pass"); // stepKey: assertInternalType1
+		$I->assertIsInt(21, "pass"); // stepKey: assertInternalType2
+		$I->assertIsString($text, "pass"); // stepKey: assertInternalType3
 		$I->assertLessOrEquals(5, 2, "pass"); // stepKey: assertLessOrEquals
 		$I->assertLessThan(5, 2, "pass"); // stepKey: assertLessThan
 		$I->assertLessThanOrEqual(5, 2, "pass"); // stepKey: assertLessThanOrEquals
-		$I->assertNotContains("bc", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertNotContains1
-		$I->assertNotContains("bc", $text, "pass"); // stepKey: assertNotContains2
+		$I->assertNotContains("bc", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertNotContains
+		$I->assertStringNotContainsString("bc", $text, "pass"); // stepKey: assertStringNotContainsString
 		$I->assertNotEmpty([1, 2], "pass"); // stepKey: assertNotEmpty1
 		$I->assertNotEmpty($text, "pass"); // stepKey: assertNotEmpty2
-		$I->assertNotEquals(2, 5, "pass", 0); // stepKey: assertNotEquals
+		$I->assertNotEqualsWithDelta(2, 5, 0, "pass"); // stepKey: assertNotEquals
 		$I->assertNotNull("abc", "pass"); // stepKey: assertNotNull1
 		$I->assertNotNull($text, "pass"); // stepKey: assertNotNull2
 		$I->assertNotRegExp("/foo/", "bar", "pass"); // stepKey: assertNotRegExp
@@ -81,7 +82,8 @@ class AssertTestCest
 		$I->assertArrayHasKey("apple", ['orange' => 2, 'apple' => 1], "pass"); // stepKey: assertArrayHasKeyBackwardCompatible
 		$I->assertArrayNotHasKey("kiwi", ['orange' => 2, 'apple' => 1], "pass"); // stepKey: assertArrayNotHasKeyBackwardCompatible
 		$I->assertArraySubset([1, 2], [1, 2, 3, 5], "pass"); // stepKey: assertArraySubsetBackwardCompatible
-		$I->assertContains("ab", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertContainsBackwardCompatible
+		$I->assertContains("ab", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertContains1BackwardCompatible
+		$I->assertStringContainsString("ab", "abcde", "pass"); // stepKey: assertContains2BackwardCompatible
 		$I->assertCount(2, ['a', 'b'], "pass"); // stepKey: assertCountBackwardCompatible
 		$I->assertEmpty([], "pass"); // stepKey: assertEmptyBackwardCompatible
 		$I->assertEquals($text, "Copyright © 2013-2017 Magento, Inc. All rights reserved.", "pass"); // stepKey: assertEquals1BackwardCompatible
@@ -92,17 +94,17 @@ class AssertTestCest
 		$I->assertGreaterOrEquals(2, 5, "pass"); // stepKey: assertGreaterOrEqualsBackwardCompatible
 		$I->assertGreaterThan(2, 5, "pass"); // stepKey: assertGreaterThanBackwardCompatible
 		$I->assertGreaterThanOrEqual(2, 5, "pass"); // stepKey: assertGreaterThanOrEqualBackwardCompatible
-		$I->assertInternalType("string", "xyz", "pass"); // stepKey: assertInternalType1BackwardCompatible
-		$I->assertInternalType("int", 21, "pass"); // stepKey: assertInternalType2BackwardCompatible
-		$I->assertInternalType("string", $text, "pass"); // stepKey: assertInternalType3BackwardCompatible
+		$I->assertIsString("xyz", "pass"); // stepKey: assertInternalType1BackwardCompatible
+		$I->assertIsInt(21, "pass"); // stepKey: assertInternalType2BackwardCompatible
+		$I->assertIsString($text, "pass"); // stepKey: assertInternalType3BackwardCompatible
 		$I->assertLessOrEquals(5, 2, "pass"); // stepKey: assertLessOrEqualBackwardCompatibles
 		$I->assertLessThan(5, 2, "pass"); // stepKey: assertLessThanBackwardCompatible
 		$I->assertLessThanOrEqual(5, 2, "pass"); // stepKey: assertLessThanOrEqualBackwardCompatible
 		$I->assertNotContains("bc", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertNotContains1BackwardCompatible
-		$I->assertNotContains("bc", $text, "pass"); // stepKey: assertNotContains2BackwardCompatible
+		$I->assertStringNotContainsString("bc", $text, "pass"); // stepKey: assertNotContains2BackwardCompatible
 		$I->assertNotEmpty([1, 2], "pass"); // stepKey: assertNotEmpty1BackwardCompatible
 		$I->assertNotEmpty($text, "pass"); // stepKey: assertNotEmpty2BackwardCompatible
-		$I->assertNotEquals(2, 5, "pass", 0); // stepKey: assertNotEqualsBackwardCompatible
+		$I->assertNotEqualsWithDelta(2, 5, 0, "pass"); // stepKey: assertNotEqualsBackwardCompatible
 		$I->assertNotNull("abc", "pass"); // stepKey: assertNotNull1BackwardCompatible
 		$I->assertNotNull($text, "pass"); // stepKey: assertNotNull2BackwardCompatible
 		$I->assertNotRegExp("/foo/", "bar", "pass"); // stepKey: assertNotRegExpBackwardCompatible
