@@ -227,6 +227,57 @@ class SuiteGeneratorTest extends MagentoTestCase
     }
 
     /**
+     * Tests generating split suites for parallel test generation
+     */
+    public function testGenerateSplitSuiteFromTest()
+    {
+        $suiteDataArrayBuilder = new SuiteDataArrayBuilder();
+        $mockSuiteData = $suiteDataArrayBuilder
+            ->withName('mockSuite')
+            ->includeGroups(['group1'])
+            ->build();
+        $testDataArrayBuilder = new TestDataArrayBuilder();
+        $mockSimpleTest1 = $testDataArrayBuilder
+            ->withName('simpleTest1')
+            ->withAnnotations(['group' => [['value' => 'group1']]])
+            ->withTestReference("NonExistantTest")
+            ->withTestActions()
+            ->build();
+        $mockSimpleTest2 = $testDataArrayBuilder
+            ->withName('simpleTest2')
+            ->withAnnotations(['group' => [['value' => 'group1']]])
+            ->withTestActions()
+            ->build();
+        $mockSimpleTest3 = $testDataArrayBuilder
+            ->withName('simpleTest3')
+            ->withAnnotations(['group' => [['value' => 'group1']]])
+            ->withTestActions()
+            ->build();
+        $mockTestData = array_merge($mockSimpleTest1, $mockSimpleTest2, $mockSimpleTest3);
+        $this->setMockTestAndSuiteParserOutput($mockTestData, $mockSuiteData);
+
+        // Make manifest for split suites
+        $suiteConfig = [
+            'mockSuite' => [
+                'mockSuite_0_G' => ['simpleTest1', 'simpleTest2'],
+                'mockSuite_1_G' => ['simpleTest3'],
+            ],
+        ];
+        $manifest = TestManifestFactory::makeManifest('default', $suiteConfig);
+
+        // parse and generate suite object with mocked data and manifest
+        $mockSuiteGenerator = SuiteGenerator::getInstance();
+        $mockSuiteGenerator->generateAllSuites($manifest);
+
+        // assert last split suite group generated
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'info',
+            "suite generated",
+            ['suite' => 'mockSuite_1_G', 'relative_path' => "_generated" . DIRECTORY_SEPARATOR . "mockSuite_1_G"]
+        );
+    }
+
+    /**
      * Function used to set mock for parser return and force init method to run between tests.
      *
      * @param array $testData
