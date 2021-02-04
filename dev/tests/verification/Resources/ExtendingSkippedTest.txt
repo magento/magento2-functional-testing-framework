@@ -20,33 +20,6 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ExtendingSkippedTestCest
 {
 	/**
-	  * @param AcceptanceTester $I
-	  * @throws \Exception
-	  */
-	public function _before(AcceptanceTester $I)
-	{
-		$I->amOnPage("/beforeUrl"); // stepKey: beforeAmOnPageKey
-	}
-
-	/**
-	  * @param AcceptanceTester $I
-	  * @throws \Exception
-	  */
-	public function _after(AcceptanceTester $I)
-	{
-		$I->amOnPage("/afterUrl"); // stepKey: afterAmOnPageKey
-	}
-
-	/**
-	  * @param AcceptanceTester $I
-	  * @throws \Exception
-	  */
-	public function _failed(AcceptanceTester $I)
-	{
-		$I->saveScreenshot(); // stepKey: saveScreenshot
-	}
-
-	/**
 	 * @Severity(level = SeverityLevel::CRITICAL)
 	 * @Features({"TestModule"})
 	 * @Stories({"Child"})
@@ -55,9 +28,8 @@ class ExtendingSkippedTestCest
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function ExtendingSkippedTest(AcceptanceTester $I)
+	public function ExtendingSkippedTest(AcceptanceTester $I, \Codeception\Scenario $scenario)
 	{
-		$I->comment("text");
-		$I->comment("child");
+		$scenario->skip("This test is skipped due to the following issues:\nParentTestIsSkipped");
 	}
 }
