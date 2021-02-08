@@ -118,10 +118,10 @@ class SuiteGenerationTest extends MftfTestCase
         $groupName = 'functionalSuite1';
 
         $expectedGroups = [
-            'functionalSuite1_0',
-            'functionalSuite1_1',
-            'functionalSuite1_2',
-            'functionalSuite1_3'
+            'functionalSuite1_0_G',
+            'functionalSuite1_1_G',
+            'functionalSuite1_2_G',
+            'functionalSuite1_3_G'
         ];
 
         $expectedContents = [

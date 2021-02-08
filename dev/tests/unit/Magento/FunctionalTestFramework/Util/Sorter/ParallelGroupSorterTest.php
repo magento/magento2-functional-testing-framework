@@ -101,8 +101,8 @@ class ParallelGroupSorterTest extends MagentoTestCase
         $this->assertCount(5, $actualResult);
 
         $expectedResults =  [
-            1 => ['mockSuite1_0'],
-            2 => ['mockSuite1_1'],
+            1 => ['mockSuite1_0_G'],
+            2 => ['mockSuite1_1_G'],
             3 => ['test3'],
             4 => ['test2','test5', 'test4'],
             5 => ['test1'],
