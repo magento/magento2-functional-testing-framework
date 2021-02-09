@@ -14,7 +14,6 @@
             <xs:element type="assertElementContainsAttributeType" name="assertElementContainsAttribute" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertArrayHasKeyType" name="assertArrayHasKey" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertArrayNotHasKeyType" name="assertArrayNotHasKey" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="assertArraySubsetType" name="assertArraySubset" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertContainsType" name="assertContains" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertCountType" name="assertCount" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="assertEmptyType" name="assertEmpty" minOccurs="0" maxOccurs="unbounded"/>
@@ -168,25 +167,6 @@
         <xs:attribute ref="actual"/>
         <xs:attribute type="assertEnum" name="actualType" default="const"/>
         <xs:attribute ref="message"/>        
-        <xs:attributeGroup ref="commonActionAttributes"/>
-    </xs:complexType>
-
-    <xs:complexType name="assertArraySubsetType">
-        <xs:annotation>
-            <xs:documentation>
-                Asserts that given array contains a subset array.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:choice maxOccurs="unbounded">
-            <xs:element name="expectedResult" type="expectedResultType" minOccurs="0"/>
-            <xs:element name="actualResult" type="actualResultType" minOccurs="0"/>
-        </xs:choice>
-        <xs:attribute ref="expected"/>
-        <xs:attribute type="assertEnum" name="expectedType" default="const"/>
-        <xs:attribute ref="actual"/>
-        <xs:attribute type="assertEnum" name="actualType" default="const"/>
-        <xs:attribute ref="message"/>
-        <xs:attribute ref="strict"/>
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
 
@@ -759,6 +739,7 @@
             <xs:enumeration value="bool"/>
             <xs:enumeration value="string"/>
             <xs:enumeration value="variable"/>
+            <xs:enumeration value="arrayVariable"/>
             <xs:enumeration value="array"/>
             <xs:enumeration value="const"/>
         </xs:restriction>

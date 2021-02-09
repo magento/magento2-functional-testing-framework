@@ -138,7 +138,7 @@ class BasicFunctionalTestCest
 		$I->moveForward(); // stepKey: moveForwardKey1
 		$I->moveMouseOver(".functionalTestSelector"); // stepKey: moveMouseOverKey1
 		$I->openNewTab(); // stepKey: openNewTabKey1
-		$I->pauseExecution(); // stepKey: pauseExecutionKey1
+		$I->pause(); // stepKey: pauseExecutionKey1
 		$I->performOn("#selector", function(\WebDriverElement $el) {return $el->isDisplayed();}, 10); // stepKey: performOnKey1
 		$I->pressKey("#page", "a"); // stepKey: pressKey1
 		$I->pressKey("#page", ['ctrl', 'a'],'new'); // stepKey: pressKey2

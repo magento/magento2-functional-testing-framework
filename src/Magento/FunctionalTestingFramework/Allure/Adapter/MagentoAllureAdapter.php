@@ -12,8 +12,6 @@ use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
-use Yandex\Allure\Adapter\Model\Failure;
-use Yandex\Allure\Adapter\Model\Provider;
 use Yandex\Allure\Adapter\Model\Status;
 use Yandex\Allure\Adapter\Model\Step;
 use Yandex\Allure\Adapter\Allure;
@@ -21,6 +19,7 @@ use Yandex\Allure\Codeception\AllureCodeception;
 use Yandex\Allure\Adapter\Event\StepStartedEvent;
 use Yandex\Allure\Adapter\Event\StepFinishedEvent;
 use Yandex\Allure\Adapter\Event\StepFailedEvent;
+use Yandex\Allure\Adapter\Model\TestCase;
 use Yandex\Allure\Adapter\Event\TestCaseFailedEvent;
 use Yandex\Allure\Adapter\Event\TestCaseFinishedEvent;
 use Yandex\Allure\Adapter\Event\TestCaseBrokenEvent;
@@ -259,11 +258,8 @@ class MagentoAllureAdapter extends AllureCodeception
      */
     public function testEnd(TestEvent $testEvent)
     {
-        $test = $this->getLifecycle()->getTestCaseStorage()->get();
         // update testClass label to consolidate re-try reporting
-        $this->formatAllureTestClassName($test);
-        // Peek top of testCaseStorage to check of failure
-        $testFailed = $test->getFailure();
+        $this->formatAllureTestClassName($this->getLifecycle()->getTestCaseStorage()->get());
         // Pops top of stepStorage, need to add it back in after processing
         $rootStep = $this->getLifecycle()->getStepStorage()->pollLast();
         $formattedSteps = [];
@@ -271,7 +267,6 @@ class MagentoAllureAdapter extends AllureCodeception
 
         $actionGroupStepKey = null;
         foreach ($rootStep->getSteps() as $step) {
-            $this->removeAttachments($step, $testFailed);
             $stepKey = str_replace($actionGroupStepKey, '', $step->getName());
             if ($stepKey !== '[]' && $stepKey !== null) {
                 $step->setName($stepKey);
@@ -387,23 +382,6 @@ class MagentoAllureAdapter extends AllureCodeception
         }
 
         return $stepKey;
-    }
-
-    /**
-     * Removes attachments from step depending on MFTF configuration
-     * @param Step    $step
-     * @param Failure $testFailed
-     * @return void
-     */
-    private function removeAttachments($step, $testFailed)
-    {
-        //Remove Attachments if verbose flag is not true AND test did not fail
-        if (getenv('VERBOSE_ARTIFACTS') !== "true" && $testFailed === null) {
-            foreach ($step->getAttachments() as $index => $attachment) {
-                $step->removeAttachment($index);
-                unlink(Provider::getOutputDirectory() . DIRECTORY_SEPARATOR . $attachment->getSource());
-            }
-        }
     }
 
     /**

@@ -1311,8 +1311,10 @@ class TestGenerator
                     );
                     break;
                 case "assertContains":
-                    if ((substr(trim($assertActual), 0, 1) !== '[')
-                        || (substr(trim($assertActual), -1, 1) !== ']')) {
+                    if ((!isset($customActionAttributes['actualType'])
+                            || $customActionAttributes['actualType'] !== 'arrayVariable')
+                        && ((substr(trim($assertActual), 0, 1) !== '[')
+                            || (substr(trim($assertActual), -1, 1) !== ']'))) {
                         $replaceType = 'assertStringContainsString';
                         call_user_func(\Closure::bind(
                             function () use ($actionObject, $replaceType) {
@@ -1331,8 +1333,10 @@ class TestGenerator
                     );
                     break;
                 case "assertNotContains":
-                    if ((substr(trim($assertActual), 0, 1) !== '[')
-                        || (substr(trim($assertActual), -1, 1) !== ']')) {
+                    if ((!isset($customActionAttributes['actualType'])
+                            || $customActionAttributes['actualType'] !== 'arrayVariable')
+                        && ((substr(trim($assertActual), 0, 1) !== '[')
+                            || (substr(trim($assertActual), -1, 1) !== ']'))) {
                         $replaceType = 'assertStringNotContainsString';
                         call_user_func(\Closure::bind(
                             function () use ($actionObject, $replaceType) {
@@ -1398,16 +1402,6 @@ class TestGenerator
                         $actor,
                         $actionObject,
                         $assertActual,
-                        $assertMessage
-                    );
-                    break;
-                case "assertArraySubset":
-                    $testSteps .= $this->wrapFunctionCall(
-                        $actor,
-                        $actionObject,
-                        $assertExpected,
-                        $assertActual,
-                        $assertIsStrict,
                         $assertMessage
                     );
                     break;
@@ -1481,6 +1475,23 @@ class TestGenerator
                     break;
                 case "skipReadinessCheck":
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $customActionAttributes['state']);
+                    break;
+                case "pauseExecution":
+                    $replaceType = 'pause';
+                    call_user_func(\Closure::bind(
+                        function () use ($actionObject, $replaceType) {
+                            $actionObject->type = $replaceType;
+                        },
+                        null,
+                        $actionObject
+                    ));
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $selector,
+                        $input,
+                        $parameter
+                    );
                     break;
                 case "comment":
                     $input = $input === null ? strtr($value, ['$' => '\$', '{' => '\{', '}' => '\}']) : $input;
@@ -2166,6 +2177,7 @@ class TestGenerator
                 $this->validateParameterArray($value);
                 return $this->wrapParameterArray($this->addUniquenessToParamArray($value));
             case 'variable':
+            case 'arrayVariable':
                 return $this->addDollarSign($value);
         }
 
@@ -2251,6 +2263,7 @@ class TestGenerator
                     'url',
                     'userInput',
                     'variable',
+                    'arrayVariable',
                 ],
                 'excludes' => [
                     'dontSeeLink',
@@ -2261,7 +2274,8 @@ class TestGenerator
                 'attributes' => [
                     'userInput',
                     'parameterArray',
-                    'variable'
+                    'variable',
+                    'arrayVariable',
                 ],
                 'excludes' => [
                     'dontSeeCookie',
