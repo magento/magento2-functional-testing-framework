@@ -16,7 +16,7 @@
             <xs:element type="closeAdminNotificationType" name="closeAdminNotification" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="searchAndMultiSelectOptionType" name="searchAndMultiSelectOption" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="selectMultipleOptionsType" name="selectMultipleOptions" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="formatMoneyType" name="formatMoney" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="formatCurrencyType" name="formatCurrency" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="parseFloatType" name="parseFloat" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="mSetLocaleType" name="mSetLocale" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="mResetLocaleType" name="mResetLocale" minOccurs="0" maxOccurs="unbounded"/>
@@ -158,25 +158,29 @@
         <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
 
-    <xs:complexType name="formatMoneyType">
+    <xs:complexType name="formatCurrencyType">
         <xs:annotation>
             <xs:documentation>
-                Formats given input to given locale. Returns formatted string for test use.
+                Format input to specified currency according to the locale specified. Returns formatted string for test use.
+                Use NumberFormatter::formatCurrency(), see https://www.php.net/manual/en/numberformatter.formatcurrency.php
             </xs:documentation>
         </xs:annotation>
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute ref="userInput"/>
-                <xs:attribute type="xs:string" name="locale">
-                    <xs:annotation>
-                        <xs:documentation>
-                            Locale to format given input. Defaults to 'en_US.UTF-8' if nothing is given.
-                        </xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-                <xs:attributeGroup ref="commonActionAttributes"/>
-            </xs:extension>
-        </xs:simpleContent>
+        <xs:attribute type="xs:string" name="userInput" use="required"/>
+        <xs:attribute type="xs:string" name="locale" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    Locale in which the input would be formatted (e.g. en_US).
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="currency" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The 3-letter ISO 4217 currency code indicating the currency to use.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attributeGroup ref="commonActionAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="parseFloatType">

@@ -5,9 +5,8 @@
   * See COPYING.txt for license details.
   */
 -->
-
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="../../../../../src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="XmlDuplicateTest">
         <before>
             <acceptPopup stepKey="ap1"/>
@@ -88,8 +87,8 @@
             <executeJS function="1" stepKey="execJS2"/>
             <fillField stepKey="fill1"/>
             <fillField stepKey="fill21"/>
-            <formatMoney stepKey="frmtmoney1"/>
-            <formatMoney stepKey="frmtmoney12"/>
+            <formatCurrency userInput="1234.567890" locale="de_DE" currency="EUR" stepKey="frmtmoney1"/>
+            <formatCurrency userInput="1234.567890" locale="en_US" currency="EUR" stepKey="frmtmoney12"/>
             <getData entity="1" stepKey="getdata1"/>
             <getData entity="1" stepKey="getdata12"/>
             <grabAttributeFrom selector="1" stepKey="grabattribute1"/>
@@ -304,8 +303,8 @@
             <executeJS function="1" stepKey="execJS2"/>
             <fillField stepKey="fill1"/>
             <fillField stepKey="fill21"/>
-            <formatMoney stepKey="frmtmoney1"/>
-            <formatMoney stepKey="frmtmoney12"/>
+            <formatCurrency userInput="1234.567890" locale="de_DE" currency="EUR" stepKey="frmtmoney1"/>
+            <formatCurrency userInput="1234.567890" locale="en_US" currency="EUR" stepKey="frmtmoney12"/>
             <getData entity="1" stepKey="getdata1"/>
             <getData entity="1" stepKey="getdata12"/>
             <grabAttributeFrom selector="1" stepKey="grabattribute1"/>
@@ -519,8 +518,8 @@
         <executeJS function="1" stepKey="execJS2"/>
         <fillField stepKey="fill1"/>
         <fillField stepKey="fill21"/>
-        <formatMoney stepKey="frmtmoney1"/>
-        <formatMoney stepKey="frmtmoney12"/>
+        <formatCurrency userInput="1234.567890" locale="de_DE" currency="EUR" stepKey="frmtmoney1"/>
+        <formatCurrency userInput="1234.567890" locale="en_US" currency="EUR" stepKey="frmtmoney12"/>
         <getData entity="1" stepKey="getdata1"/>
         <getData entity="1" stepKey="getdata12"/>
         <grabAttributeFrom selector="1" stepKey="grabattribute1"/>

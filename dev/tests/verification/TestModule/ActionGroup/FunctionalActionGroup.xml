@@ -56,7 +56,7 @@
         <executeJS function="{$action3}" stepKey="action3"/>
         <magentoCLI command="{$action4}" arguments="&quot;stuffHere&quot;" stepKey="action4"/>
         <generateDate date="{$action5}" format="H:i:s" stepKey="action5"/>
-        <formatMoney userInput="{$action6}" stepKey="action6"/>
+        <formatCurrency userInput="{$action6}" locale="en_CA" currency="USD" stepKey="action6"/>
         <deleteData createDataKey="{$action7}" stepKey="action7"/>
         <getData entity="{$action8}" stepKey="action8"/>
         <updateData entity="{$action9}" stepKey="action9" createDataKey="1"/>
