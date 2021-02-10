@@ -1,6 +1,19 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+3.3.0
+---------
+
+### Enhancements
+
+* [#815](https://github.com/magento/magento2-functional-testing-framework/pull/815) -- Upgrade csharpru/vault-php to 4.1
+* [#817](https://github.com/magento/magento2-functional-testing-framework/pull/817) -- Add support for admin WebAPI token refresh
+
+### Fixes
+
+* Fixed test generation error in a split suite group (--config=parallel) to allow generation of subsequent groups.
+* Fixed an issue where test extends from a skipped parent is not properly skipped.
+
 3.2.1
 ---------
 
