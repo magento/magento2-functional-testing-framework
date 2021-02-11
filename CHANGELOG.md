@@ -6,9 +6,13 @@ Magento Functional Testing Framework Changelog
 
 ### Enhancements
 
-* [#815](https://github.com/magento/magento2-functional-testing-framework/pull/815) -- Upgrade csharpru/vault-php to 4.1
-* [#817](https://github.com/magento/magento2-functional-testing-framework/pull/817) -- Add support for admin WebAPI token refresh
-
+* Usability
+  * [#817](https://github.com/magento/magento2-functional-testing-framework/pull/817) -- Add support for admin WebAPI token refresh
+    
+* Maintainability
+  * [#814](https://github.com/magento/magento2-functional-testing-framework/pull/814) -- Update dependencies in order to make mftf php8 compatible, fix running phpcpd
+  * [#815](https://github.com/magento/magento2-functional-testing-framework/pull/815) -- Upgrade csharpru/vault-php to 4.1  
+    
 ### Fixes
 
 * Fixed test generation error in a split suite group (--config=parallel) to allow generation of subsequent groups.
