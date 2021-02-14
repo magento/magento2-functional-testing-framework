@@ -15,7 +15,6 @@
         <createData entity="UniquePerson" stepKey="createData2"/>
         <grabTextFrom selector=".copyright>span" stepKey="grabTextFrom1"/>
 
-
         <!-- custom asserts -->
         <assertArrayIsSorted sortOrder="asc" stepKey="assertSorted1">
             <array>[1,2,3,4,5]</array>
@@ -66,6 +65,22 @@
             <expectedResult type="float">1.5</expectedResult>
             <actualResult type="variable">text</actualResult>
         </assertEquals>
+        <assertEquals stepKey="assertFloatTypeWithDelta" delta="0.1" message="pass">
+            <expectedResult type="float">1.55</expectedResult>
+            <actualResult type="float">1.56</actualResult>
+        </assertEquals>
+        <assertEquals stepKey="assertInt" message="pass">
+            <expectedResult type="int">2</expectedResult>
+            <actualResult type="variable">text</actualResult>
+        </assertEquals>
+        <assertEquals stepKey="assertBool" message="pass">
+            <expectedResult type="bool">true</expectedResult>
+            <actualResult type="variable">text</actualResult>
+        </assertEquals>
+        <assertEquals stepKey="assertArray" message="pass">
+            <expectedResult type="const">[1, 2]</expectedResult>
+            <actualResult type="arrayVariable">text</actualResult>
+        </assertEquals>
         <assertFalse stepKey="assertFalse1" message="pass">
             <actualResult type="bool">0</actualResult>
         </assertFalse>
@@ -98,6 +113,18 @@
         <assertInternalType stepKey="assertInternalType3" message="pass">
             <expectedResult type="string">string</expectedResult>
             <actualResult type="variable">text</actualResult>
+        </assertInternalType>
+        <assertInternalType stepKey="assertFloat" message="pass">
+            <expectedResult type="string">float</expectedResult>
+            <actualResult type="const">1.23</actualResult>
+        </assertInternalType>
+        <assertInternalType stepKey="assertBoolType" message="pass">
+            <expectedResult type="string">bool</expectedResult>
+            <actualResult type="const">true</actualResult>
+        </assertInternalType>
+        <assertInternalType stepKey="assertArrayType" message="pass">
+            <expectedResult type="string">array</expectedResult>
+            <actualResult type="const">[1,2]</actualResult>
         </assertInternalType>
         <assertLessOrEquals stepKey="assertLessOrEquals" message="pass">
             <expectedResult type="int">5</expectedResult>
@@ -133,7 +160,7 @@
         <assertNotEmpty stepKey="assertNotEmpty2" message="pass">
             <actualResult type="variable">text</actualResult>
         </assertNotEmpty>
-        <assertNotEquals stepKey="assertNotEquals" message="pass" delta="">
+        <assertNotEquals stepKey="assertNotEquals" message="pass" delta="1">
             <expectedResult type="int">2</expectedResult>
             <actualResult type="int">5</actualResult>
         </assertNotEquals>
@@ -183,6 +210,7 @@
         <assertEmpty stepKey="assertEmptyBackwardCompatible" actual="[]" message="pass"/>
         <assertEquals stepKey="assertEquals1BackwardCompatible" expected="text" expectedType="variable" actual="Copyright © 2013-2017 Magento, Inc. All rights reserved." actualType="string" message="pass"/>
         <assertEquals stepKey="assertEquals2BackwardCompatible" expected="Copyright © 2013-2017 Magento, Inc. All rights reserved." expectedType="string" actual="text" actualType="variable" message="pass"/>
+        <assertEquals stepKey="assertEquals3BackwardCompatible" expected="2" expectedType="int" actual="text" actualType="variable" delta="0.2" message="pass"/>
         <assertFalse stepKey="assertFalse1BackwardCompatible" actual="0" actualType="bool" message="pass"/>
         <assertFileNotExists stepKey="assertFileNotExists1BackwardCompatible" actual="/out.txt" actualType="string" message="pass"/>
         <assertFileNotExists stepKey="assertFileNotExists2BackwardCompatible" actual="$text" actualType="variable" message="pass"/>
@@ -190,8 +218,11 @@
         <assertGreaterThan stepKey="assertGreaterThanBackwardCompatible" expected="2" expectedType="int" actual="5" actualType="int" message="pass"/>
         <assertGreaterThanOrEqual stepKey="assertGreaterThanOrEqualBackwardCompatible" expected="2" expectedType="int" actual="5" actualType="int" message="pass"/>
         <assertInternalType stepKey="assertInternalType1BackwardCompatible" expected="string" expectedType="string" actual="xyz" actualType="string" message="pass"/>
-        <assertInternalType stepKey="assertInternalType2BackwardCompatible" expected="int" expectedType="string" actual="21" actualType="int" message="pass"/>
-        <assertInternalType stepKey="assertInternalType3BackwardCompatible" expected="string" expectedType="string" actual="$text" actualType="variable" message="pass"/>
+        <assertInternalType stepKey="assertInternalType2BackwardCompatible" expected="string" expectedType="string" actual="$text" actualType="variable" message="pass"/>
+        <assertInternalType stepKey="assertInternalType3BackwardCompatible" expected="int" expectedType="string" actual="21" actualType="int" message="pass"/>
+        <assertInternalType stepKey="assertInternalType4BackwardCompatible" expected="float" expectedType="string" actual="1.23" actualType="const" message="pass"/>
+        <assertInternalType stepKey="assertInternalType5BackwardCompatible" expected="bool" expectedType="string" actual="false" actualType="const" message="pass"/>
+        <assertInternalType stepKey="assertInternalType6BackwardCompatible" expected="array" expectedType="string" actual="[1,2]" actualType="const" message="pass"/>
         <assertLessOrEquals stepKey="assertLessOrEqualBackwardCompatibles" expected="5" expectedType="int" actual="2" actualType="int" message="pass"/>
         <assertLessThan stepKey="assertLessThanBackwardCompatible" expected="5" expectedType="int" actual="2" actualType="int" message="pass"/>
         <assertLessThanOrEqual stepKey="assertLessThanOrEqualBackwardCompatible" expected="5" expectedType="int" actual="2" actualType="int" message="pass"/>

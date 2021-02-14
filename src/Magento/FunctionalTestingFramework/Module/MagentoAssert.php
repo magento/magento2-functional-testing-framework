@@ -26,7 +26,7 @@ class MagentoAssert extends \Codeception\Module
     public function assertArrayIsSorted(array $data, $sortOrder = "asc")
     {
         $elementTotal = count($data);
-        $message = null;
+        $message = '';
 
         // If value can be converted to a date and it isn't 1.1 number (strtotime is overzealous)
         if (strtotime($data[0]) !== false && !is_numeric($data[0])) {

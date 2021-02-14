@@ -572,6 +572,7 @@ class TestGenerator
         $this->currentGenerationScope = $generationScope;
         $this->deprecationMessages = [];
 
+        /** @var $actionObject ActionObject */
         foreach ($actionObjects as $actionObject) {
             $this->deprecationMessages = array_merge($this->deprecationMessages, $actionObject->getDeprecatedUsages());
             $stepKey = $actionObject->getStepKey();
@@ -1229,14 +1230,7 @@ class TestGenerator
                     break;
                 case "assertEquals":
                     if (isset($assertDelta)) {
-                        $replaceType = 'assertEqualsWithDelta';
-                        call_user_func(\Closure::bind(
-                            function () use ($actionObject, $replaceType) {
-                                $actionObject->type = $replaceType;
-                            },
-                            null,
-                            $actionObject
-                        ));
+                        $actionObject->setType('assertEqualsWithDelta');
                         $testSteps .= $this->wrapFunctionCall(
                             $actor,
                             $actionObject,
@@ -1257,14 +1251,7 @@ class TestGenerator
                     break;
                 case "assertNotEquals":
                     if (isset($assertDelta)) {
-                        $replaceType = 'assertNotEqualsWithDelta';
-                        call_user_func(\Closure::bind(
-                            function () use ($actionObject, $replaceType) {
-                                $actionObject->type = $replaceType;
-                            },
-                            null,
-                            $actionObject
-                        ));
+                        $actionObject->setType('assertNotEqualsWithDelta');
                         $testSteps .= $this->wrapFunctionCall(
                             $actor,
                             $actionObject,
@@ -1315,14 +1302,7 @@ class TestGenerator
                             || $customActionAttributes['actualType'] !== 'arrayVariable')
                         && ((substr(trim($assertActual), 0, 1) !== '[')
                             || (substr(trim($assertActual), -1, 1) !== ']'))) {
-                        $replaceType = 'assertStringContainsString';
-                        call_user_func(\Closure::bind(
-                            function () use ($actionObject, $replaceType) {
-                                $actionObject->type = $replaceType;
-                            },
-                            null,
-                            $actionObject
-                        ));
+                        $actionObject->setType('assertStringContainsString');
                     }
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
@@ -1337,14 +1317,7 @@ class TestGenerator
                             || $customActionAttributes['actualType'] !== 'arrayVariable')
                         && ((substr(trim($assertActual), 0, 1) !== '[')
                             || (substr(trim($assertActual), -1, 1) !== ']'))) {
-                        $replaceType = 'assertStringNotContainsString';
-                        call_user_func(\Closure::bind(
-                            function () use ($actionObject, $replaceType) {
-                                $actionObject->type = $replaceType;
-                            },
-                            null,
-                            $actionObject
-                        ));
+                        $actionObject->setType('assertStringNotContainsString');
                     }
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
@@ -1357,14 +1330,7 @@ class TestGenerator
                 case "assertInternalType":
                     foreach (self::ASSERT_EQUAL_TYPES as $type) {
                         if (stristr($assertExpected, $type) !== false) {
-                            $replaceType = 'assertIs' . ucfirst($type);
-                            call_user_func(\Closure::bind(
-                                function () use ($actionObject, $replaceType) {
-                                    $actionObject->type = $replaceType;
-                                },
-                                null,
-                                $actionObject
-                            ));
+                            $actionObject->setType('assertIs' . ucfirst($type));
                             break;
                         }
                     }
@@ -1477,14 +1443,7 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $customActionAttributes['state']);
                     break;
                 case "pauseExecution":
-                    $replaceType = 'pause';
-                    call_user_func(\Closure::bind(
-                        function () use ($actionObject, $replaceType) {
-                            $actionObject->type = $replaceType;
-                        },
-                        null,
-                        $actionObject
-                    ));
+                    $actionObject->setType('pause');
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
                         $actionObject,
