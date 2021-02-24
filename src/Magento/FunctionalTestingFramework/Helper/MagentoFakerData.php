@@ -98,6 +98,8 @@ class MagentoFakerData extends \Codeception\Module
      * Get Content Page Data.
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function getContentPage()
     {

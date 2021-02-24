@@ -232,7 +232,7 @@ class ParallelGroupSorter
      *
      * E.g.
      * Input {suitename = 'sample', tests = ['test1' => 100,'test2' => 150, 'test3' => 300], linelimit = 275}
-     * Result { ['sample_01' => ['test3' => 300], 'sample_02' => ['test2' => 150, 'test1' => 100]] }
+     * Result { ['sample_01_G' => ['test3' => 300], 'sample_02_G' => ['test2' => 150, 'test1' => 100]] }
      *
      * @param string  $suiteName
      * @param array   $tests
@@ -252,8 +252,8 @@ class ParallelGroupSorter
             }
 
             $group = $this->createTestGroup($maxTime, $test, $size, $availableTests);
-            $splitSuites["{$suiteName}_${splitCount}"] = $group;
-            $this->addSuiteToConfig($suiteName, "{$suiteName}_${splitCount}", $group);
+            $splitSuites["{$suiteName}_${splitCount}_G"] = $group;
+            $this->addSuiteToConfig($suiteName, "{$suiteName}_${splitCount}_G", $group);
 
             $availableTests = array_diff_key($availableTests, $group);
             $splitCount++;

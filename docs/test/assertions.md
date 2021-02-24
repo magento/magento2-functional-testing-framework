@@ -89,7 +89,7 @@ It must be in typical array format like `[1,2,3,4,5]` or `[alpha, brontosaurus, 
 
 ### assertArrayHasKey
 
-See [assertArrayHasKey docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertArrayHasKey)
+See [assertArrayHasKey docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertArrayHasKey)
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -104,7 +104,7 @@ Attribute|Type|Use|Description
 
 ### assertArrayNotHasKey
 
-See [assertArrayNotHasKey docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertArrayNotHasKey).
+See [assertArrayNotHasKey docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertArrayNotHasKey).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -112,22 +112,6 @@ Attribute|Type|Use|Description
 `expectedType`|string|optional| A type of the expected result. Possible values: `const` (default), `int`, `float`, `bool`, `string`, `variable`, `array`.
 `actual`|string|required| A value of the actual result.
 `actualType`|string|optional| A type of the actual result. Possible values: `const` (default), `int`, `float`, `bool`, `string`, `variable`, `array`.
-`message`|string|optional|Text of informational message about a cause of failure.
-`stepKey`|string|required| A unique identifier of the text step.
-`before`|string|optional| `stepKey` of action that must be executed next.
-`after`|string|optional| `stepKey` of the preceding action.
-
-### assertArraySubset
-
-See [assertArraySubset docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertArraySubset).
-
-Attribute|Type|Use|Description
----|---|---|---
-`expected`|string|required| A value of the expected result.
-`expectedType`|string|optional| A type of the expected result. Possible values: `const` (default), `int`, `float`, `bool`, `string`, `variable`, `array`.
-`actual`|string|required| A value of the actual result.
-`actualType`|string|optional| A type of the actual result. Possible values: `const` (default), `int`, `float`, `bool`, `string`, `variable`, `array`.
-`strict`|boolean|optional|
 `message`|string|optional|Text of informational message about a cause of failure.
 `stepKey`|string|required| A unique identifier of the text step.
 `before`|string|optional| `stepKey` of action that must be executed next.
@@ -135,14 +119,15 @@ Attribute|Type|Use|Description
 
 ### assertContains
 
-See [assertContains docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertContains).
+See [assertContains docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertContains).
+MFTF will map and generate `assertContains` action to PHPUnit 9 compatible assertContains() or assertStringContainsString() accordingly.
 
 Attribute|Type|Use|Description
 ---|---|---|---
 `expected`|string|required| A value of the expected result.
 `expectedType`|string|optional| A type of the expected result. Possible values: `const` (default), `int`, `float`, `bool`, `string`, `variable`, `array`.
 `actual`|string|required| A value of the actual result.
-`actualType`|string|optional| A type of the actual result. Possible values: `const` (default), `int`, `float`, `bool`, `string`, `variable`, `array`.
+`actualType`|string|optional| A type of the actual result. Possible values: `const` (default), `int`, `float`, `bool`, `string`, `variable`, `array`, `arrayVariable`.
 `message`|string|optional|Text of informational message about a cause of failure.
 `stepKey`|string|required| A unique identifier of the text step.
 `before`|string|optional| `stepKey` of action that must be executed next.
@@ -150,7 +135,7 @@ Attribute|Type|Use|Description
 
 ### assertCount
 
-See [assertCount docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertCount).
+See [assertCount docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertCount).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -165,7 +150,7 @@ Attribute|Type|Use|Description
 
 ### assertEmpty
 
-See [assertEmpty docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertEmpty).
+See [assertEmpty docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertEmpty).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -178,7 +163,8 @@ Attribute|Type|Use|Description
 
 ### assertEquals
 
-See [assertEquals docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertEquals).
+See [assertEquals docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertEquals).
+MFTF will map and generate `assertEquals` action to PHPUnit 9 compatible assertEquals() or assertEqualsWithDelta() accordingly.
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -194,7 +180,7 @@ Attribute|Type|Use|Description
 
 ### assertFalse
 
-See [assertFalse docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertFalse).
+See [assertFalse docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertFalse).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -207,7 +193,7 @@ Attribute|Type|Use|Description
 
 ### assertFileExists
 
-See [assertFileExists docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertFileExists).
+See [assertFileExists docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertFileExists).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -220,7 +206,7 @@ Attribute|Type|Use|Description
 
 ### assertFileNotExists
 
-See [assertFileNotExists docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertFileNotExists).
+See [assertFileNotExists docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertFileNotExists).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -233,7 +219,7 @@ Attribute|Type|Use|Description
 
 ### assertGreaterOrEquals
 
-See [assertGreaterOrEquals docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertGreaterOrEquals).
+See [assertGreaterOrEquals docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertGreaterOrEquals).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -248,7 +234,7 @@ Attribute|Type|Use|Description
 
 ### assertGreaterThan
 
-See [assertGreaterThan docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertGreaterThan).
+See [assertGreaterThan docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertGreaterThan).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -263,7 +249,7 @@ Attribute|Type|Use|Description
 
 ### assertGreaterThanOrEqual
 
-See [assertGreaterThanOrEqual docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertGreaterThanOrEqual).
+See [assertGreaterThanOrEqual docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertGreaterThanOrEqual).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -278,7 +264,7 @@ Attribute|Type|Use|Description
 
 ### assertInstanceOf
 
-See [assertInstanceOf docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertInstanceOf).
+See [assertInstanceOf docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertInstanceOf).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -293,7 +279,8 @@ Attribute|Type|Use|Description
 
 ### assertInternalType
 
-See [assertInternalType docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertInternalType).
+See [assertInternalType docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertInternalType).
+MFTF will map and generate `assertInternalType` action to PHPUnit 9 compatible assertIsInt(), assertIsFloat(), assertIsBool(), assertIsString() or assertIsArray() accordingly.
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -308,7 +295,7 @@ Attribute|Type|Use|Description
 
 ### assertIsEmpty
 
-See [assertIsEmpty docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertIsEmpty).
+See [assertIsEmpty docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertIsEmpty).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -321,7 +308,7 @@ Attribute|Type|Use|Description
 
 ### assertLessOrEquals
 
-See [assertLessOrEquals docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertLessOrEquals).
+See [assertLessOrEquals docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertLessOrEquals).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -336,7 +323,7 @@ Attribute|Type|Use|Description
 
 ### assertLessThan
 
-See [assertLessThan docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertLessThan).
+See [assertLessThan docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertLessThan).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -351,7 +338,7 @@ Attribute|Type|Use|Description
 
 ### assertLessThanOrEqual
 
-See [assertLessThanOrEqual docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertLessThanOrEqual).
+See [assertLessThanOrEqual docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertLessThanOrEqual).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -366,14 +353,15 @@ Attribute|Type|Use|Description
 
 ### assertNotContains
 
-See [assertNotContains docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotContains).
+See [assertNotContains docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertNotContains).
+MFTF will map and generate `assertNotContains` action to PHPUnit 9 compatible assertNotContains() or assertStringNotContainsString() accordingly.
 
 Attribute|Type|Use|Description
 ---|---|---|---
 `expected`|string|required| A value of the expected result.
 `expectedType`|string|optional| A type of the expected result. Possible values: `const` (default), `int`, `float`, `bool`, `string`, `variable`, `array`.
 `actual`|string|required| A value of the actual result.
-`actualType`|string|optional| A type of the actual result. Possible values: `const` (default), `int`, `float`, `bool`, `string`, `variable`, `array`.
+`actualType`|string|optional| A type of the actual result. Possible values: `const` (default), `int`, `float`, `bool`, `string`, `variable`, `array`, `arrayVariable`.
 `message`|string|optional|Text of informational message about a cause of failure.
 `stepKey`|string|required| A unique identifier of the text step.
 `before`|string|optional| `stepKey` of action that must be executed next.
@@ -381,7 +369,7 @@ Attribute|Type|Use|Description
 
 ### assertNotEmpty
 
-See [assertNotEmpty docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotEmpty).
+See [assertNotEmpty docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertNotEmpty).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -394,7 +382,8 @@ Attribute|Type|Use|Description
 
 ### assertNotEquals
 
-See [assertNotEquals docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotEquals).
+See [assertNotEquals docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertNotEquals).
+MFTF will map and generate `assertNotEquals` action to PHPUnit 9 compatible assertNotEquals() or assertNotEqualsWithDelta() accordingly.
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -410,7 +399,7 @@ Attribute|Type|Use|Description
 
 ### assertNotInstanceOf
 
-See [assertNotInstanceOf docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotInstanceOf).
+See [assertNotInstanceOf docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertNotInstanceOf).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -425,7 +414,7 @@ Attribute|Type|Use|Description
 
 ### assertNotNull
 
-See [assertNotNull docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotNull).
+See [assertNotNull docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertNotNull).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -438,7 +427,7 @@ Attribute|Type|Use|Description
 
 ### assertNotRegExp
 
-See [assertNotRegExp docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotRegExp).
+See [assertNotRegExp docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertNotRegExp).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -453,7 +442,7 @@ Attribute|Type|Use|Description
 
 ### assertNotSame
 
-See [assertNotSame docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotSame).
+See [assertNotSame docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertNotSame).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -468,7 +457,7 @@ Attribute|Type|Use|Description
 
 ### assertNull
 
-See [assertNull docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNull).
+See [assertNull docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertNull).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -481,7 +470,7 @@ Attribute|Type|Use|Description
 
 ### assertRegExp
 
-See [assertRegExp docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertRegExp).
+See [assertRegExp docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertRegExp).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -496,7 +485,7 @@ Attribute|Type|Use|Description
 
 ### assertSame
 
-See [assertSame docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertSame).
+See [assertSame docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertSame).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -511,7 +500,7 @@ Attribute|Type|Use|Description
 
 ### assertStringStartsNotWith
 
-See [assertStringStartsNotWith docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringStartsNotWith).
+See [assertStringStartsNotWith docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertStringStartsNotWith).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -526,7 +515,7 @@ Attribute|Type|Use|Description
 
 ### assertStringStartsWith
 
-See [assertStringStartsWith docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringStartsWith).
+See [assertStringStartsWith docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertStringStartsWith).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -541,7 +530,7 @@ Attribute|Type|Use|Description
 
 ### assertTrue
 
-See [assertTrue docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertTrue).
+See [assertTrue docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/Asserts.md#assertTrue).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -554,7 +543,7 @@ Attribute|Type|Use|Description
 
 ### expectException
 
-See [expectException docs on codeception.com](http://codeception.com/docs/modules/WebDriver#expectException).
+See [expectException docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/WebDriver#expectException).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -568,7 +557,7 @@ Attribute|Type|Use|Description
 
 ### fail
 
-See [fail docs on codeception.com](http://codeception.com/docs/modules/WebDriver#fail).
+See [fail docs on codeception.com](https://github.com/Codeception/Codeception/blob/2.5/docs/modules/WebDriver#fail).
 
 Attribute|Type|Use|Description
 ---|---|---|---

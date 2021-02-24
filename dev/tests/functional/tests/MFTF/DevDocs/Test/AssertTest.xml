@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AssertTest">
+        <!-- custom asserts -->
+        <comment stepKey="customAsserts" userInput="custom asserts"/>
+        <assertArrayIsSorted sortOrder="asc" stepKey="assertSorted">
+            <array>[1,2,3,4,5]</array>
+        </assertArrayIsSorted>
+
+        <!-- asserts new format -->
+        <comment stepKey="assertsNewFormat" userInput="asserts new format"/>
+        <assertArrayHasKey stepKey="assertArrayHasKey" message="pass">
+            <expectedResult type="string">apple</expectedResult>
+            <actualResult type="const">['orange' => 2, 'apple' => 1]</actualResult>
+        </assertArrayHasKey>
+        <assertArrayNotHasKey stepKey="assertArrayNotHasKey" message="pass">
+            <expectedResult type="string">kiwi</expectedResult>
+            <actualResult type="const">['orange' => 2, 'apple' => 1]</actualResult>
+        </assertArrayNotHasKey>
+        <assertContains stepKey="assertContainsInArray" message="pass">
+            <expectedResult type="string">ab</expectedResult>
+            <actualResult type="const">['item1' => 'a', 'item2' => 'ab']</actualResult>
+        </assertContains>
+        <assertContains stepKey="assertContainsInString" message="pass">
+            <expectedResult type="string">ab</expectedResult>
+            <actualResult type="string">abcde</actualResult>
+        </assertContains>
+        <assertCount stepKey="assertCount" message="pass">
+            <expectedResult type="int">2</expectedResult>
+            <actualResult type="const">['a', 'b']</actualResult>
+        </assertCount>
+        <assertEmpty stepKey="assertEmpty" message="pass">
+            <actualResult type="const">[]</actualResult>
+        </assertEmpty>
+        <assertEquals stepKey="assertStringEqual" message="pass">
+            <expectedResult type="string">Copyright</expectedResult>
+            <actualResult type="string">Copyright</actualResult>
+        </assertEquals>
+        <assertEquals stepKey="assertFloatEqual" message="pass">
+            <expectedResult type="float">1.56</expectedResult>
+            <actualResult type="float">1.56</actualResult>
+        </assertEquals>
+        <assertEquals stepKey="assertFloatWithDeltaEqual" delta="0.1" message="pass">
+            <expectedResult type="float">1.55</expectedResult>
+            <actualResult type="float">1.56</actualResult>
+        </assertEquals>
+        <assertEquals stepKey="assertIntEqual" message="pass">
+            <expectedResult type="int">2</expectedResult>
+            <actualResult type="int">2</actualResult>
+        </assertEquals>
+        <assertEquals stepKey="assertBoolEqual" message="pass">
+            <expectedResult type="bool">true</expectedResult>
+            <actualResult type="const">true</actualResult>
+        </assertEquals>
+        <assertEquals stepKey="assertArrayEqual" message="pass">
+            <expectedResult type="const">[1, 2]</expectedResult>
+            <actualResult type="const">[1,2]</actualResult>
+        </assertEquals>
+        <assertFalse stepKey="assertFalse" message="pass">
+            <actualResult type="bool">0</actualResult>
+        </assertFalse>
+        <assertFileNotExists stepKey="assertFileNotExists1" message="pass">
+            <actualResult type="string">/out.txt</actualResult>
+        </assertFileNotExists>
+        <assertGreaterOrEquals stepKey="assertGreaterOrEquals" message="pass">
+            <expectedResult type="int">2</expectedResult>
+            <actualResult type="int">5</actualResult>
+        </assertGreaterOrEquals>
+        <assertGreaterThan stepKey="assertGreaterthan" message="pass">
+            <expectedResult type="int">2</expectedResult>
+            <actualResult type="int">5</actualResult>
+        </assertGreaterThan>
+        <assertGreaterThanOrEqual stepKey="assertGreaterThanOrEqual" message="pass">
+            <expectedResult type="int">2</expectedResult>
+            <actualResult type="int">5</actualResult>
+        </assertGreaterThanOrEqual>
+        <assertInternalType stepKey="assertStringType" message="pass">
+            <expectedResult type="string">string</expectedResult>
+            <actualResult type="string">xyz</actualResult>
+        </assertInternalType>
+        <assertInternalType stepKey="assertIntType" message="pass">
+            <expectedResult type="string">int</expectedResult>
+            <actualResult type="int">21</actualResult>
+        </assertInternalType>
+        <assertInternalType stepKey="assertFloatType" message="pass">
+            <expectedResult type="string">float</expectedResult>
+            <actualResult type="const">1.23</actualResult>
+        </assertInternalType>
+        <assertInternalType stepKey="assertBoolType" message="pass">
+            <expectedResult type="string">bool</expectedResult>
+            <actualResult type="const">true</actualResult>
+        </assertInternalType>
+        <assertInternalType stepKey="assertArrayType" message="pass">
+            <expectedResult type="string">array</expectedResult>
+            <actualResult type="const">[1,2]</actualResult>
+        </assertInternalType>
+        <assertLessOrEquals stepKey="assertLessOrEquals" message="pass">
+            <expectedResult type="int">5</expectedResult>
+            <actualResult type="int">2</actualResult>
+        </assertLessOrEquals>
+        <assertLessThan stepKey="assertLessThan" message="pass">
+            <expectedResult type="int">5</expectedResult>
+            <actualResult type="int">2</actualResult>
+        </assertLessThan>
+        <assertLessThanOrEqual stepKey="assertLessThanOrEquals" message="pass">
+            <expectedResult type="int">5</expectedResult>
+            <actualResult type="int">2</actualResult>
+        </assertLessThanOrEqual>
+        <assertNotContains stepKey="assertNotContainsInArray" message="pass">
+            <expectedResult type="string">bc</expectedResult>
+            <actualResult type="const">['item1' => 'a', 'item2' => 'ab']</actualResult>
+        </assertNotContains>
+        <assertNotContains stepKey="assertNotContainsInString" message="pass">
+            <expectedResult type="string">bc</expectedResult>
+            <actualResult type="string">text</actualResult>
+        </assertNotContains>
+        <assertNotEmpty stepKey="assertNotEmpty" message="pass">
+            <actualResult type="const">[1, 2]</actualResult>
+        </assertNotEmpty>
+        <assertNotEquals stepKey="assertNotEquals" message="pass" delta="">
+            <expectedResult type="int">2</expectedResult>
+            <actualResult type="int">5</actualResult>
+        </assertNotEquals>
+        <assertNotEquals stepKey="assertNotEqualsWithDelta" message="pass" delta="1">
+            <expectedResult type="int">2</expectedResult>
+            <actualResult type="int">5</actualResult>
+        </assertNotEquals>
+        <assertNotNull stepKey="assertNotNull" message="pass">
+            <actualResult type="string">abc</actualResult>
+        </assertNotNull>
+        <assertNotRegExp stepKey="assertNotRegExp" message="pass">
+            <expectedResult type="string">/foo/</expectedResult>
+            <actualResult type="string">bar</actualResult>
+        </assertNotRegExp>
+        <assertNotSame stepKey="assertNotSame" message="pass">
+            <expectedResult type="string">log</expectedResult>
+            <actualResult type="string">tag</actualResult>
+        </assertNotSame>
+        <assertRegExp stepKey="assertRegExp" message="pass">
+            <expectedResult type="string">/foo/</expectedResult>
+            <actualResult type="string">foo</actualResult>
+        </assertRegExp>
+        <assertSame stepKey="assertSame" message="pass">
+            <expectedResult type="string">bar</expectedResult>
+            <actualResult type="string">bar</actualResult>
+        </assertSame>
+        <assertStringStartsNotWith stepKey="assertStringStartsNotWith" message="pass">
+            <expectedResult type="string">a</expectedResult>
+            <actualResult type="string">banana</actualResult>
+        </assertStringStartsNotWith>
+        <assertStringStartsWith stepKey="assertStringStartsWith" message="pass">
+            <expectedResult type="string">a</expectedResult>
+            <actualResult type="string">apple</actualResult>
+        </assertStringStartsWith>
+        <assertTrue stepKey="assertTrue" message="pass">
+            <actualResult type="bool">1</actualResult>
+        </assertTrue>
+
+        <!-- asserts backward compatible -->
+        <comment stepKey="commentBackwardCompatible" userInput="asserts backward compatible"/>
+        <assertArrayHasKey stepKey="assertArrayHasKeyBackwardCompatible" expected="apple" expectedType="string" actual="['orange' => 2, 'apple' => 1]" actualType="const" message="pass"/>
+        <assertArrayNotHasKey stepKey="assertArrayNotHasKeyBackwardCompatible" expected="kiwi" expectedType="string" actual="['orange' => 2, 'apple' => 1]" message="pass"/>
+        <assertContains stepKey="assertContains1BackwardCompatible" expected="ab" expectedType="string" actual="['item1' => 'a', 'item2' => 'ab']" message="pass"/>
+        <assertContains stepKey="assertContains2BackwardCompatible" expected="ab" expectedType="string" actual="abcde" actualType="string" message="pass"/>
+        <assertCount stepKey="assertCountBackwardCompatible" expected="2" expectedType="int" actual="['a', 'b']" message="pass"/>
+        <assertEmpty stepKey="assertEmptyBackwardCompatible" actual="[]" message="pass"/>
+        <assertEquals stepKey="assertEquals1BackwardCompatible" expected="Copyright ©" expectedType="string" actual="Copyright ©" actualType="string" message="pass"/>
+        <assertEquals stepKey="assertEquals2BackwardCompatible" expected="2" expectedType="int" actual="2" actualType="int" message="pass"/>
+        <assertEquals stepKey="assertEquals3BackwardCompatible" expected="2.01" expectedType="float" actual="2.03" actualType="float" delta="0.1" message="pass"/>
+        <assertFalse stepKey="assertFalse1BackwardCompatible" actual="0" actualType="bool" message="pass"/>
+        <assertFileNotExists stepKey="assertFileNotExists1BackwardCompatible" actual="/out.txt" actualType="string" message="pass"/>
+        <assertGreaterOrEquals stepKey="assertGreaterOrEqualsBackwardCompatible" expected="2" expectedType="int" actual="5" actualType="int" message="pass"/>
+        <assertGreaterThan stepKey="assertGreaterThanBackwardCompatible" expected="2" expectedType="int" actual="5" actualType="int" message="pass"/>
+        <assertGreaterThanOrEqual stepKey="assertGreaterThanOrEqualBackwardCompatible" expected="2" expectedType="int" actual="5" actualType="int" message="pass"/>
+        <assertInternalType stepKey="assertInternalType1BackwardCompatible" expected="string" expectedType="string" actual="xyz" actualType="string" message="pass"/>
+        <assertInternalType stepKey="assertInternalType2BackwardCompatible" expected="int" expectedType="string" actual="21" actualType="int" message="pass"/>
+        <assertInternalType stepKey="assertInternalType3BackwardCompatible" expected="float" expectedType="string" actual="1.23" actualType="const" message="pass"/>
+        <assertInternalType stepKey="assertInternalType4BackwardCompatible" expected="bool" expectedType="string" actual="false" actualType="const" message="pass"/>
+        <assertInternalType stepKey="assertInternalType5BackwardCompatible" expected="array" expectedType="string" actual="[1,2]" actualType="const" message="pass"/>
+        <assertLessOrEquals stepKey="assertLessOrEqualBackwardCompatibles" expected="5" expectedType="int" actual="2" actualType="int" message="pass"/>
+        <assertLessThan stepKey="assertLessThanBackwardCompatible" expected="5" expectedType="int" actual="2" actualType="int" message="pass"/>
+        <assertLessThanOrEqual stepKey="assertLessThanOrEqualBackwardCompatible" expected="5" expectedType="int" actual="2" actualType="int" message="pass"/>
+        <assertNotContains stepKey="assertNotContains1BackwardCompatible" expected="bc" expectedType="string" actual="['item1' => 'a', 'item2' => 'ab']" message="pass"/>
+        <assertNotContains stepKey="assertNotContains2BackwardCompatible" expected="bc" expectedType="string" actual="text" actualType="string" message="pass"/>
+        <assertNotEmpty stepKey="assertNotEmpty1BackwardCompatible" actual="[1, 2]" message="pass"/>
+        <assertNotEquals stepKey="assertNotEqualsBackwardCompatible" expected="2" expectedType="int" actual="5" actualType="int" message="pass" delta=""/>
+        <assertNotNull stepKey="assertNotNull1BackwardCompatible" actual="abc" actualType="string" message="pass"/>
+        <assertNotRegExp stepKey="assertNotRegExpBackwardCompatible" expected="/foo/" expectedType="string" actual="bar" actualType="string" message="pass"/>
+        <assertNotSame stepKey="assertNotSameBackwardCompatible" expected="log" expectedType="string" actual="tag" actualType="string" message="pass"/>
+        <assertRegExp stepKey="assertRegExpBackwardCompatible" expected="/foo/" expectedType="string" actual="foo" actualType="string" message="pass"/>
+        <assertSame stepKey="assertSameBackwardCompatible" expected="bar" expectedType="string" actual="bar" actualType="string" message="pass"/>
+        <assertStringStartsNotWith stepKey="assertStringStartsNotWithBackwardCompatible" expected="a" expectedType="string" actual="banana" actualType="string" message="pass"/>
+        <assertStringStartsWith stepKey="assertStringStartsWithBackwardCompatible" expected="a" expectedType="string" actual="apple" actualType="string" message="pass"/>
+        <assertTrue stepKey="assertTrueBackwardCompatible" actual="1" actualType="bool" message="pass"/>
+    </test>
+</tests>

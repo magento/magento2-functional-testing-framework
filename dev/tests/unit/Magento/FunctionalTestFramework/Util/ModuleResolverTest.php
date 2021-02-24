@@ -25,7 +25,7 @@ class ModuleResolverTest extends MagentoTestCase
      * Before test functionality
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
@@ -34,7 +34,7 @@ class ModuleResolverTest extends MagentoTestCase
      * After class functionality
      * @return void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
@@ -57,7 +57,6 @@ class ModuleResolverTest extends MagentoTestCase
      */
     public function testGetModulePathsAggregate()
     {
-
         $this->mockForceGenerate(false);
         $this->setMockResolverClass(
             false,
@@ -874,7 +873,7 @@ class ModuleResolverTest extends MagentoTestCase
      * After method functionality
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         // re set env
         if (!isset($_ENV['MAGENTO_ADMIN_USERNAME'])) {

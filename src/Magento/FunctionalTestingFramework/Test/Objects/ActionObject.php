@@ -270,6 +270,17 @@ class ActionObject
     }
 
     /**
+     * Set the type. This can be used to override action type for test generation.
+     *
+     * @param string $overrideType
+     * @return void
+     */
+    public function setType($overrideType)
+    {
+        $this->type = $overrideType;
+    }
+
+    /**
      * Populate the resolved custom attributes array with lookup values for the following attributes:
      *   selector
      *   url

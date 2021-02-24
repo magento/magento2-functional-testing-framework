@@ -43,30 +43,41 @@ class AssertTestCest
 		$I->comment("asserts without variable replacement");
 		$I->assertArrayHasKey("apple", ['orange' => 2, 'apple' => 1], "pass"); // stepKey: assertArrayHasKey
 		$I->assertArrayNotHasKey("kiwi", ['orange' => 2, 'apple' => 1], "pass"); // stepKey: assertArrayNotHasKey
-		$I->assertArraySubset([1, 2], [1, 2, 3, 5], "pass"); // stepKey: assertArraySubset
 		$I->assertContains("ab", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertContains
+		$I->assertStringContainsString("ab", "abcde", "pass"); // stepKey: assertStringContainsString
+		$I->assertStringContainsString("ab", $var, "pass"); // stepKey: assertStringContainsStringVar
+		$I->assertContains("ab", $var, "pass"); // stepKey: assertContainsVar
 		$I->assertCount(2, ['a', 'b'], "pass"); // stepKey: assertCount
 		$I->assertEmpty([], "pass"); // stepKey: assertEmpty
 		$I->assertEquals($text, "Copyright © 2013-2017 Magento, Inc. All rights reserved.", "pass"); // stepKey: assertEquals1
 		$I->assertEquals("Copyright © 2013-2017 Magento, Inc. All rights reserved.", $text, "pass"); // stepKey: assertEquals2
 		$I->assertEquals(1.5, $text, "pass"); // stepKey: assertFloatTypeIsCorrect
+		$I->assertEqualsWithDelta(1.55, 1.56, 0.1, "pass"); // stepKey: assertFloatTypeWithDelta
+		$I->assertEquals(2, $text, "pass"); // stepKey: assertInt
+		$I->assertEquals(true, $text, "pass"); // stepKey: assertBool
+		$I->assertEquals([1, 2], $text, "pass"); // stepKey: assertArray
 		$I->assertFalse(false, "pass"); // stepKey: assertFalse1
 		$I->assertFileNotExists("/out.txt", "pass"); // stepKey: assertFileNotExists1
 		$I->assertFileNotExists($text, "pass"); // stepKey: assertFileNotExists2
 		$I->assertGreaterOrEquals(2, 5, "pass"); // stepKey: assertGreaterOrEquals
 		$I->assertGreaterThan(2, 5, "pass"); // stepKey: assertGreaterthan
 		$I->assertGreaterThanOrEqual(2, 5, "pass"); // stepKey: assertGreaterThanOrEqual
-		$I->assertInternalType("string", "xyz", "pass"); // stepKey: assertInternalType1
-		$I->assertInternalType("int", 21, "pass"); // stepKey: assertInternalType2
-		$I->assertInternalType("string", $text, "pass"); // stepKey: assertInternalType3
+		$I->assertIsString("xyz", "pass"); // stepKey: assertInternalType1
+		$I->assertIsInt(21, "pass"); // stepKey: assertInternalType2
+		$I->assertIsString($text, "pass"); // stepKey: assertInternalType3
+		$I->assertIsFloat(1.23, "pass"); // stepKey: assertFloat
+		$I->assertIsBool(true, "pass"); // stepKey: assertBoolType
+		$I->assertIsArray([1,2], "pass"); // stepKey: assertArrayType
 		$I->assertLessOrEquals(5, 2, "pass"); // stepKey: assertLessOrEquals
 		$I->assertLessThan(5, 2, "pass"); // stepKey: assertLessThan
 		$I->assertLessThanOrEqual(5, 2, "pass"); // stepKey: assertLessThanOrEquals
-		$I->assertNotContains("bc", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertNotContains1
-		$I->assertNotContains("bc", $text, "pass"); // stepKey: assertNotContains2
+		$I->assertNotContains("bc", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertNotContains
+		$I->assertStringNotContainsString("bc", "text", "pass"); // stepKey: assertStringNotContainsString
+		$I->assertNotContains("bc", $arrayVar, "pass"); // stepKey: assertNotContainsVar
+		$I->assertStringNotContainsString("bc", $var, "pass"); // stepKey: assertStringNotContainsStringVar
 		$I->assertNotEmpty([1, 2], "pass"); // stepKey: assertNotEmpty1
 		$I->assertNotEmpty($text, "pass"); // stepKey: assertNotEmpty2
-		$I->assertNotEquals(2, 5, "pass", 0); // stepKey: assertNotEquals
+		$I->assertNotEqualsWithDelta(2, 5, 1, "pass"); // stepKey: assertNotEquals
 		$I->assertNotNull("abc", "pass"); // stepKey: assertNotNull1
 		$I->assertNotNull($text, "pass"); // stepKey: assertNotNull2
 		$I->assertNotRegExp("/foo/", "bar", "pass"); // stepKey: assertNotRegExp
@@ -80,29 +91,37 @@ class AssertTestCest
 		$I->comment("asserts backward compatible");
 		$I->assertArrayHasKey("apple", ['orange' => 2, 'apple' => 1], "pass"); // stepKey: assertArrayHasKeyBackwardCompatible
 		$I->assertArrayNotHasKey("kiwi", ['orange' => 2, 'apple' => 1], "pass"); // stepKey: assertArrayNotHasKeyBackwardCompatible
-		$I->assertArraySubset([1, 2], [1, 2, 3, 5], "pass"); // stepKey: assertArraySubsetBackwardCompatible
-		$I->assertContains("ab", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertContainsBackwardCompatible
+		$I->assertContains("ab", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertContains1BackwardCompatible
+		$I->assertStringContainsString("ab", "abcde", "pass"); // stepKey: assertContains2BackwardCompatible
+		$I->assertStringContainsString("ab", $var, "pass"); // stepKey: assertContains3BackwardCompatible
+		$I->assertContains("ab", $arrayVar, "pass"); // stepKey: assertContains4BackwardCompatible
 		$I->assertCount(2, ['a', 'b'], "pass"); // stepKey: assertCountBackwardCompatible
 		$I->assertEmpty([], "pass"); // stepKey: assertEmptyBackwardCompatible
 		$I->assertEquals($text, "Copyright © 2013-2017 Magento, Inc. All rights reserved.", "pass"); // stepKey: assertEquals1BackwardCompatible
 		$I->assertEquals("Copyright © 2013-2017 Magento, Inc. All rights reserved.", $text, "pass"); // stepKey: assertEquals2BackwardCompatible
+		$I->assertEqualsWithDelta(2, $text, 0.2, "pass"); // stepKey: assertEquals3BackwardCompatible
 		$I->assertFalse(false, "pass"); // stepKey: assertFalse1BackwardCompatible
 		$I->assertFileNotExists("/out.txt", "pass"); // stepKey: assertFileNotExists1BackwardCompatible
 		$I->assertFileNotExists($text, "pass"); // stepKey: assertFileNotExists2BackwardCompatible
 		$I->assertGreaterOrEquals(2, 5, "pass"); // stepKey: assertGreaterOrEqualsBackwardCompatible
 		$I->assertGreaterThan(2, 5, "pass"); // stepKey: assertGreaterThanBackwardCompatible
 		$I->assertGreaterThanOrEqual(2, 5, "pass"); // stepKey: assertGreaterThanOrEqualBackwardCompatible
-		$I->assertInternalType("string", "xyz", "pass"); // stepKey: assertInternalType1BackwardCompatible
-		$I->assertInternalType("int", 21, "pass"); // stepKey: assertInternalType2BackwardCompatible
-		$I->assertInternalType("string", $text, "pass"); // stepKey: assertInternalType3BackwardCompatible
+		$I->assertIsString("xyz", "pass"); // stepKey: assertInternalType1BackwardCompatible
+		$I->assertIsString($text, "pass"); // stepKey: assertInternalType2BackwardCompatible
+		$I->assertIsInt(21, "pass"); // stepKey: assertInternalType3BackwardCompatible
+		$I->assertIsFloat(1.23, "pass"); // stepKey: assertInternalType4BackwardCompatible
+		$I->assertIsBool(false, "pass"); // stepKey: assertInternalType5BackwardCompatible
+		$I->assertIsArray([1,2], "pass"); // stepKey: assertInternalType6BackwardCompatible
 		$I->assertLessOrEquals(5, 2, "pass"); // stepKey: assertLessOrEqualBackwardCompatibles
 		$I->assertLessThan(5, 2, "pass"); // stepKey: assertLessThanBackwardCompatible
 		$I->assertLessThanOrEqual(5, 2, "pass"); // stepKey: assertLessThanOrEqualBackwardCompatible
 		$I->assertNotContains("bc", ['item1' => 'a', 'item2' => 'ab'], "pass"); // stepKey: assertNotContains1BackwardCompatible
-		$I->assertNotContains("bc", $text, "pass"); // stepKey: assertNotContains2BackwardCompatible
+		$I->assertStringNotContainsString("bc", "text", "pass"); // stepKey: assertNotContains2BackwardCompatible
+		$I->assertNotContains("bc", $arrayVar, "pass"); // stepKey: assertNotContains3BackwardCompatible
+		$I->assertStringNotContainsString("bc", $var, "pass"); // stepKey: assertNotContains4BackwardCompatible
 		$I->assertNotEmpty([1, 2], "pass"); // stepKey: assertNotEmpty1BackwardCompatible
 		$I->assertNotEmpty($text, "pass"); // stepKey: assertNotEmpty2BackwardCompatible
-		$I->assertNotEquals(2, 5, "pass", 0); // stepKey: assertNotEqualsBackwardCompatible
+		$I->assertNotEqualsWithDelta(2, 5, 0, "pass"); // stepKey: assertNotEqualsBackwardCompatible
 		$I->assertNotNull("abc", "pass"); // stepKey: assertNotNull1BackwardCompatible
 		$I->assertNotNull($text, "pass"); // stepKey: assertNotNull2BackwardCompatible
 		$I->assertNotRegExp("/foo/", "bar", "pass"); // stepKey: assertNotRegExpBackwardCompatible
@@ -126,8 +145,6 @@ class AssertTestCest
 		$I->assertEquals($I->retrieveEntityField('createData1', 'lastname', 'test'), $I->retrieveEntityField('createData1', 'lastname', 'test'), "pass"); // stepKey: assert5
 		$I->comment("array type that use created data");
 		$I->comment("array type that use created data");
-		$I->assertArraySubset([$I->retrieveEntityField('createData1', 'lastname', 'test'), $I->retrieveEntityField('createData1', 'firstname', 'test')], [$I->retrieveEntityField('createData1', 'lastname', 'test'), $I->retrieveEntityField('createData1', 'firstname', 'test'), "1"], "pass"); // stepKey: assert9
-		$I->assertArraySubset([$I->retrieveEntityField('createData2', 'firstname', 'test'), $I->retrieveEntityField('createData2', 'lastname', 'test')], [$I->retrieveEntityField('createData2', 'firstname', 'test'), $I->retrieveEntityField('createData2', 'lastname', 'test'), "1"], "pass"); // stepKey: assert10
 		$I->assertArrayHasKey("lastname", ['lastname' => $I->retrieveEntityField('createData1', 'lastname', 'test'), 'firstname' => $I->retrieveEntityField('createData1', 'firstname', 'test')], "pass"); // stepKey: assert3
 		$I->assertArrayHasKey("lastname", ['lastname' => $I->retrieveEntityField('createData2', 'lastname', 'test'), 'firstname' => $I->retrieveEntityField('createData2', 'firstname', 'test')], "pass"); // stepKey: assert4
 		$I->comment("this section can only be generated and cannot run");

@@ -214,7 +214,7 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
                 }
 
                 // Starts with a capital letter and ends with a fullstop.
-                $firstChar = $comment{0};
+                $firstChar = $comment[0];
                 if (strtoupper($firstChar) !== $firstChar) {
                     $error = '@throws tag comment must start with a capital letter';
                     $phpcsFile->addError($error, ($tag + 2), 'ThrowsNotCapital');
@@ -437,7 +437,7 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
                 }//end if
             }//end foreach
 
-            $suggestedType = implode($suggestedTypeNames, '|');
+            $suggestedType = implode('|', $suggestedTypeNames);
             if ($param['type'] !== $suggestedType) {
                 $error = 'Expected "%s" but found "%s" for parameter type';
                 $data  = array(

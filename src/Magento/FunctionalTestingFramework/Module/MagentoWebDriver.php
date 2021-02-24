@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Module;
 
+use Codeception\Lib\Actor\Shared\Pause;
 use Codeception\Module\WebDriver;
 use Codeception\Test\Descriptor;
 use Codeception\TestInterface;
@@ -48,10 +49,12 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHan
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class MagentoWebDriver extends WebDriver
 {
     use AttachmentSupport;
+    use Pause;
 
     const MAGENTO_CRON_INTERVAL = 60;
     const MAGENTO_CRON_COMMAND = 'cron:run';
@@ -256,7 +259,7 @@ class MagentoWebDriver extends WebDriver
         $actualUrl = $this->webDriver->getCurrentURL();
         $comparison = "Expected: $needle\nActual: $actualUrl";
         AllureHelper::addAttachmentToCurrentStep($comparison, 'Comparison');
-        $this->assertNotContains($needle, $actualUrl);
+        $this->assertStringNotContainsString($needle, $actualUrl);
     }
 
     /**
@@ -325,7 +328,7 @@ class MagentoWebDriver extends WebDriver
         $actualUrl = $this->webDriver->getCurrentURL();
         $comparison = "Expected: $needle\nActual: $actualUrl";
         AllureHelper::addAttachmentToCurrentStep($comparison, 'Comparison');
-        $this->assertContains($needle, $actualUrl);
+        $this->assertStringContainsString($needle, $actualUrl);
     }
 
     /**
@@ -450,19 +453,26 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * @param float  $money
+     * Format input to specified currency in locale specified
+     * @link https://php.net/manual/en/numberformatter.formatcurrency.php
+     *
+     * @param float  $value
      * @param string $locale
-     * @return array
+     * @param string $currency
+     * @return string
+     * @throws TestFrameworkException
      */
-    public function formatMoney(float $money, $locale = 'en_US.UTF-8')
+    public function formatCurrency(float $value, $locale, $currency)
     {
-        $this->mSetLocale(LC_MONETARY, $locale);
-        $money = money_format('%.2n', $money);
-        $this->mResetLocale();
-        $prefix = substr($money, 0, 1);
-        $number = substr($money, 1);
+        $formatter = \NumberFormatter::create($locale, \NumberFormatter::CURRENCY);
+        if ($formatter && !empty($formatter)) {
+            $result = $formatter->formatCurrency($value, $currency);
+            if ($result) {
+                return $result;
+            }
+        }
 
-        return ['prefix' => $prefix, 'number' => $number];
+        throw new TestFrameworkException('Invalid attributes used in formatCurrency.');
     }
 
     /**
@@ -708,7 +718,7 @@ class MagentoWebDriver extends WebDriver
             // When an "attribute" is blank or null it returns "true" so we assert that "true" is present.
             $this->assertEquals($attributes, 'true');
         } else {
-            $this->assertContains($value, $attributes);
+            $this->assertStringContainsString($value, $attributes);
         }
     }
 
@@ -856,8 +866,7 @@ class MagentoWebDriver extends WebDriver
      */
     public function amOnPage($page)
     {
-        (0 === strpos($page, 'http')) ? parent::amOnUrl($page) : parent::amOnPage($page);
-
+        parent::amOnPage($page);
         $this->waitForPageLoad();
     }
 
@@ -1092,5 +1101,26 @@ class MagentoWebDriver extends WebDriver
         $this->notifyCronFinished($cronGroups);
 
         return sprintf('%s (wait: %ss, execution: %ss)', $cronResult, $waitFor, round($timeEnd - $timeStart, 2));
+    }
+
+    /**
+     * Switch to another frame on the page by name, ID, CSS or XPath.
+     *
+     * @param string|null $locator
+     * @return void
+     * @throws \Exception
+     */
+    public function switchToIFrame($locator = null)
+    {
+        try {
+            parent::switchToIFrame($locator);
+        } catch (\Exception $e) {
+            $els = $this->_findElements("#$locator");
+            if (!count($els)) {
+                $this->debug('Failed to find locator by ID: ' . $e->getMessage());
+                throw new \Exception("IFrame with $locator was not found.");
+            }
+            $this->webDriver->switchTo()->frame($els[0]);
+        }
     }
 }

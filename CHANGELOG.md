@@ -1,5 +1,18 @@
 Magento Functional Testing Framework Changelog
 ================================================
+
+2.7.0
+---------
+
+* Maintainability
+   * Added support for PHP 7.4.
+   * Added support for PHPUnit 9.
+   * Dropped support for PHP 7.0, 7.1, 7.2.
+   * Removed action `formatMoney` and added `formatCurrency`. [See actions page for details](./docs/test/actions.md#formatcurrency)
+   * Updated in test generation to support PHPUnit 9 with the following assertion action changes: [See assertions page for details](./docs/test/assertions.md)
+      *  Removed the action `assertArraySubset`.
+      *  Added a new result type `arrayVariable`.
+    
 2.6.6
 ---------
 

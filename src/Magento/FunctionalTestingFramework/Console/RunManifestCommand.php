@@ -104,7 +104,7 @@ class RunManifestCommand extends Command
      * @param OutputInterface $output
      * @return void
      *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable) Need this because of the unused $type variable in the closure
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter) Need this because of the unused $type variable in the closure
      */
     private function runManifestLine(string $manifestLine, OutputInterface $output)
     {

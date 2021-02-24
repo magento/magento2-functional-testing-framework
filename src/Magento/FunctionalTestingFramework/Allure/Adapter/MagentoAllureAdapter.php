@@ -5,6 +5,8 @@
  */
 namespace Magento\FunctionalTestingFramework\Allure\Adapter;
 
+use Codeception\Codecept;
+use Codeception\Test\Cest;
 use Codeception\Step\Comment;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
@@ -12,16 +14,20 @@ use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Yandex\Allure\Adapter\Model\Status;
 use Yandex\Allure\Adapter\Model\Step;
+use Yandex\Allure\Adapter\Allure;
 use Yandex\Allure\Codeception\AllureCodeception;
 use Yandex\Allure\Adapter\Event\StepStartedEvent;
 use Yandex\Allure\Adapter\Event\StepFinishedEvent;
 use Yandex\Allure\Adapter\Event\StepFailedEvent;
+use Yandex\Allure\Adapter\Model\TestCase;
 use Yandex\Allure\Adapter\Event\TestCaseFailedEvent;
 use Yandex\Allure\Adapter\Event\TestCaseFinishedEvent;
 use Yandex\Allure\Adapter\Event\TestCaseBrokenEvent;
+use Yandex\Allure\Adapter\Event\AddAttachmentEvent;
 use Codeception\Event\FailEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\StepEvent;
+use Codeception\Event\TestEvent;
 
 /**
  * Class MagentoAllureAdapter
@@ -113,6 +119,7 @@ class MagentoAllureAdapter extends AllureCodeception
 
         // if we can't find this group in the generated suites we have to assume that the group was split for generation
         $groupNameSplit = explode("_", $group);
+        array_pop($groupNameSplit);
         array_pop($groupNameSplit);
         $originalName = implode("_", $groupNameSplit);
 
@@ -245,11 +252,14 @@ class MagentoAllureAdapter extends AllureCodeception
 
     /**
      * Override of parent method, polls stepStorage for testcase and formats it according to actionGroup nesting.
-     *
+     * @param TestEvent $testEvent
+     * @throws \Yandex\Allure\Adapter\AllureException
      * @return void
      */
-    public function testEnd()
+    public function testEnd(TestEvent $testEvent)
     {
+        // update testClass label to consolidate re-try reporting
+        $this->formatAllureTestClassName($this->getLifecycle()->getTestCaseStorage()->get());
         // Pops top of stepStorage, need to add it back in after processing
         $rootStep = $this->getLifecycle()->getStepStorage()->pollLast();
         $formattedSteps = [];
@@ -309,7 +319,26 @@ class MagentoAllureAdapter extends AllureCodeception
 
         $this->getLifecycle()->getStepStorage()->put($rootStep);
 
+        $this->addAttachmentEvent($testEvent);
+
         $this->getLifecycle()->fire(new TestCaseFinishedEvent());
+    }
+
+    /**
+     * Fire add attachment event
+     * @param TestEvent $testEvent
+     * @throws \Yandex\Allure\Adapter\AllureException
+     * @return void
+     */
+    private function addAttachmentEvent(TestEvent $testEvent)
+    {
+        // attachments supported since Codeception 3.0
+        if (version_compare(Codecept::VERSION, '3.0.0') > -1 && $testEvent->getTest() instanceof Cest) {
+            $artifacts = $testEvent->getTest()->getMetadata()->getReports();
+            foreach ($artifacts as $name => $artifact) {
+                Allure::lifecycle()->fire(new AddAttachmentEvent($artifact, $name, null));
+            }
+        }
     }
 
     /**
@@ -353,5 +382,44 @@ class MagentoAllureAdapter extends AllureCodeception
         }
 
         return $stepKey;
+    }
+
+    /**
+     * Format testClass label to consolidate re-try reporting for groups split for parallel execution
+     * @param TestCase $test
+     * @return void
+     */
+    private function formatAllureTestClassName($test)
+    {
+        if ($this->getGroup() !== null) {
+            foreach ($test->getLabels() as $name => $label) {
+                if ($label->getName() == 'testClass') {
+                    $originalTestClass = $this->sanitizeTestClassLabel($label->getValue());
+                    call_user_func(\Closure::bind(
+                        function () use ($label, $originalTestClass) {
+                            $label->value = $originalTestClass;
+                        },
+                        null,
+                        $label
+                    ));
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Function which sanitizes testClass label for split group runs
+     * @param string $testClass
+     * @return string
+     */
+    private function sanitizeTestClassLabel($testClass)
+    {
+        $originalTestClass = $testClass;
+        $originalGroupName = $this->sanitizeGroupName($this->getGroup());
+        if ($originalGroupName !== $this->getGroup()) {
+            $originalTestClass = str_replace($this->getGroup(), $originalGroupName, $testClass);
+        }
+        return $originalTestClass;
     }
 }
