@@ -1033,6 +1033,7 @@ Attribute|Type|Use|Description
 ```
 
 ### formatCurrency
+
 Format input to specified currency according to the locale specified. Returns formatted string for test use.
 Use NumberFormatter::formatCurrency(), see https://www.php.net/manual/en/numberformatter.formatcurrency.php
 
