@@ -21,7 +21,7 @@
         "codeception/module-asserts": "^1.1",
         "codeception/module-sequence": "^1.0",
         "codeception/module-webdriver": "^1.0",
-        "composer/composer": "^1.9",
+        "composer/composer": "^1.9|^2.0",
         "csharpru/vault-php": "^4.1.0",
         "csharpru/vault-php-guzzle6-transport": "^2.0",
         "hoa/console": "~3.0",
