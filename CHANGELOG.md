@@ -1,6 +1,14 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+3.4.0
+---------
+
+### Enhancements
+
+* Maintainability
+  * Added support for composer 2.
+    
 3.3.0
 ---------
 

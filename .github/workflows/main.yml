@@ -21,6 +21,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           extensions: curl, dom, intl, json, openssl
+          coverage: xdebug
 
       - name: Cache Composer packages
         id: composer-cache
@@ -40,7 +41,7 @@ jobs:
 
       - name: Monitor coverage
         if: github.event_name == 'pull_request'
-        uses: slavcodev/coverage-monitor-action@1.1.0
+        uses: slavcodev/coverage-monitor-action@1.2.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           clover_file: "clover.xml"
