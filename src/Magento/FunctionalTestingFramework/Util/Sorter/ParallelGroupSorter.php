@@ -5,7 +5,7 @@
  */
 namespace Magento\FunctionalTestingFramework\Util\Sorter;
 
-use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 
 class ParallelGroupSorter
@@ -26,19 +26,19 @@ class ParallelGroupSorter
     }
 
     /**
-     * Function which returns tests and suites split according to desired number of lines divded into groups.
+     * Function which returns tests and suites split according to desired number of lines divided into groups.
      *
      * @param array   $suiteConfiguration
      * @param array   $testNameToSize
      * @param integer $time
      * @return array
-     * @throws TestFrameworkException
+     * @throws FastFailException
      */
     public function getTestsGroupedBySize($suiteConfiguration, $testNameToSize, $time)
     {
         // we must have the lines argument in order to create the test groups
         if ($time == 0) {
-            throw new TestFrameworkException(
+            throw new FastFailException(
                 "Please provide the argument '--time' to the robo command in order to".
                 " generate grouped tests manifests for a parallel execution"
             );
@@ -73,6 +73,154 @@ class ParallelGroupSorter
         }
 
         return $testGroups;
+    }
+
+    /**
+     * Function which returns tests and suites split according to desired number of groups.
+     *
+     * @param array   $suiteConfiguration
+     * @param array   $testNameToSize
+     * @param integer $groupTotal
+     * @return array
+     * @throws FastFailException
+     */
+    public function getTestsGroupedByFixedGroupCount($suiteConfiguration, $testNameToSize, $groupTotal)
+    {
+        $suiteNameToTestSize = $this->getSuiteNameToTestSize($suiteConfiguration);
+        $suiteNameToSize = $this->getSuiteToSize($suiteNameToTestSize);
+
+        $minRequiredGroupCount = count($suiteNameToTestSize);
+        if (!empty($testNameToSize)) {
+            $minRequiredGroupCount += 1;
+        }
+
+        if ($groupTotal < $minRequiredGroupCount) {
+            throw new FastFailException(
+                "Invalid parameter 'groupTotal': must be greater than {$minRequiredGroupCount}\n"
+            );
+        }
+
+        // Calculate the minimum possible group time
+        $minGroupTime = ceil((array_sum($testNameToSize) + array_sum($suiteNameToSize)) / $groupTotal);
+
+        // Find maximum suite time
+        $maxSuiteTime = max($suiteNameToSize);
+
+        // Calculate 2 possible suite group times
+        $ceilSuiteGroupNumber = ceil($maxSuiteTime / $minGroupTime);
+        $ceilSuiteGroupTime = max(ceil($maxSuiteTime / $ceilSuiteGroupNumber), $minGroupTime);
+        $floorSuiteGroupNumber = floor($maxSuiteTime / $minGroupTime);
+        if ($floorSuiteGroupNumber != 0.0) {
+            $floorSuiteGroupTime = max(ceil($maxSuiteTime / $floorSuiteGroupNumber), $minGroupTime);
+        }
+
+        // Calculate test group time for ceiling
+        $ceilSuiteNameToGroupCount = $this->getSuiteNameToGroupCount($suiteNameToSize, $ceilSuiteGroupTime);
+        $ceilSuiteGroupTotal = array_sum($ceilSuiteNameToGroupCount);
+        $ceilTestGroupTotal = $groupTotal - $ceilSuiteGroupTotal;
+        $ceilTestGroupTime = ceil(array_sum($testNameToSize) / $ceilTestGroupTotal);
+        // Set suite group total to ceiling
+        $suiteNameToGroupCount = $ceilSuiteNameToGroupCount;
+
+        if (isset($floorSuiteGroupTime) && $ceilSuiteGroupTime != $floorSuiteGroupTime) {
+            // Calculate test group time for floor
+            $floorSuiteNameToGroupCount = $this->getSuiteNameToGroupCount($suiteNameToSize, $floorSuiteGroupTime);
+            $floorSuiteGroupTotal = array_sum($floorSuiteNameToGroupCount);
+            $floorTestGroupTotal = $groupTotal - $floorSuiteGroupTotal;
+            $floorTestGroupTime = ceil(array_sum($testNameToSize) / $floorTestGroupTotal);
+
+            // Choose the closer value between test group time and suite group time
+            $ceilDiff = abs($ceilTestGroupTime - $ceilSuiteGroupTime);
+            $floorDiff = abs($floorTestGroupTime - $floorSuiteGroupTime);
+            if ($ceilDiff > $floorDiff) {
+                // Adjust suite group total to floor
+                $suiteNameToGroupCount = $floorSuiteNameToGroupCount;
+            }
+        }
+
+        // Calculate test group total
+        $testGroupTotal = $groupTotal - array_sum($suiteNameToGroupCount);
+
+        // Split tests and suites
+        $testGroups = $this->splitTestsIntoGroups($testNameToSize, $testGroupTotal);
+        $testGroups = array_merge(
+            $testGroups,
+            $this->splitSuitesIntoGroups($suiteNameToTestSize, $suiteNameToGroupCount)
+        );
+
+        return $testGroups;
+    }
+
+    /**
+     * Return array contains suitename to number of groups to be split based on time.
+     *
+     * @param array   $suites
+     * @param integer $time
+     * @return array
+     */
+    private function getSuiteNameToGroupCount($suites, $time)
+    {
+        $suiteNameToGroupCount = [];
+        foreach ($suites as $suiteName => $suiteTime) {
+            if ($suiteTime <= $time) {
+                $suiteNameToGroupCount[$suiteName] = 1;
+            } else {
+                $suiteNameToGroupCount[$suiteName] = ceil($suiteTime/$time);
+            }
+        }
+        return $suiteNameToGroupCount;
+    }
+
+    /**
+     * Split tests into given number of groups.
+     *
+     * @param array   $tests
+     * @param integer $groupCnt
+     * @return array
+     */
+    private function splitTestsIntoGroups($tests, $groupCnt)
+    {
+        arsort($tests);
+        $groups = [];
+
+        $cnt = -1;
+        foreach ($tests as $test => $size) {
+            $cnt += 1;
+            $index = $cnt % (2 * $groupCnt);
+            if ($index <= $groupCnt - 1) {
+                $groups[$index][$test] = $size;
+            } else {
+                $groups[intval(2 * $groupCnt - 1 - $index)][$test] = $size;
+            }
+        }
+        return $groups;
+    }
+
+    /**
+     * Split suites into given number of groups.
+     *
+     * @param array $suiteNameToTestSize
+     * @param array $suiteNameToGroupCount
+     * @return array
+     */
+    private function splitSuitesIntoGroups($suiteNameToTestSize, $suiteNameToGroupCount)
+    {
+        $groups = [];
+        foreach ($suiteNameToTestSize as $suiteName => $suiteTests) {
+            $suiteCnt = $suiteNameToGroupCount[$suiteName];
+            if ($suiteCnt == 1) {
+                $groups[][$suiteName] = array_sum($suiteTests);
+                $this->addSuiteToConfig($suiteName, null, $suiteTests);
+            } elseif ($suiteCnt > 1) {
+                $suiteGroups = $this->splitTestsIntoGroups($suiteTests, $suiteCnt);
+                foreach ($suiteGroups as $index => $tests) {
+                    $newSuiteName = $suiteName . '_' . strval($index) . '_G';
+                    $groups[][$newSuiteName] = array_sum($tests);
+                    $this->addSuiteToConfig($suiteName, $newSuiteName, $tests);
+                }
+            }
+        }
+        return $groups;
     }
 
     /**

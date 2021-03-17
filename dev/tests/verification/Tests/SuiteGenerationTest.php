@@ -10,7 +10,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Suite\SuiteGenerator;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 use Magento\FunctionalTestingFramework\Util\Manifest\DefaultTestManifest;
-use Magento\FunctionalTestingFramework\Util\Manifest\ParallelTestManifest;
+use Magento\FunctionalTestingFramework\Util\Manifest\ParallelByTimeTestManifest;
 use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Symfony\Component\Yaml\Yaml;
@@ -121,7 +121,7 @@ class SuiteGenerationTest extends MftfTestCase
         $expectedContents = SuiteTestReferences::$data[$groupName];
 
         //createParallelManifest
-        /** @var ParallelTestManifest $parallelManifest */
+        /** @var ParallelByTimeTestManifest $parallelManifest */
         $parallelManifest = TestManifestFactory::makeManifest("parallel", ["functionalSuite1" => []]);
 
         // Generate the Suite
