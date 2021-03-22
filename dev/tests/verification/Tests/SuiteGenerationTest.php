@@ -122,7 +122,7 @@ class SuiteGenerationTest extends MftfTestCase
 
         //createParallelManifest
         /** @var ParallelByTimeTestManifest $parallelManifest */
-        $parallelManifest = TestManifestFactory::makeManifest("parallel", ["functionalSuite1" => []]);
+        $parallelManifest = TestManifestFactory::makeManifest("parallelByTime", ["functionalSuite1" => []]);
 
         // Generate the Suite
         $parallelManifest->createTestGroups(1);
