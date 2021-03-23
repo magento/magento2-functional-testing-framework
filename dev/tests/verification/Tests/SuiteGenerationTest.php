@@ -11,6 +11,7 @@ use Magento\FunctionalTestingFramework\Suite\SuiteGenerator;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 use Magento\FunctionalTestingFramework\Util\Manifest\DefaultTestManifest;
 use Magento\FunctionalTestingFramework\Util\Manifest\ParallelByTimeTestManifest;
+use Magento\FunctionalTestingFramework\Util\Manifest\ParallelByGroupTestManifest;
 use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Symfony\Component\Yaml\Yaml;
@@ -107,7 +108,7 @@ class SuiteGenerationTest extends MftfTestCase
     /**
      * Test generation of parallel suite groups
      */
-    public function testSuiteGenerationParallel()
+    public function testSuiteGenerationParallelByTime()
     {
         $groupName = 'functionalSuite1';
 
@@ -153,6 +154,57 @@ class SuiteGenerationTest extends MftfTestCase
 
             //Validate only one test has been added to each group since lines are set to 1
             $this->assertEquals(1, count($dirContents));
+            $this->assertContains(array_values($dirContents)[0], $expectedContents);
+        }
+    }
+
+    /**
+     * Test generation of parallel suite groups
+     */
+    public function testSuiteGenerationParallelByGroup()
+    {
+        $groupName = 'functionalSuite1';
+
+        $expectedGroups = [
+            'functionalSuite1_0_G',
+            'functionalSuite1_1_G',
+        ];
+
+        $expectedContents = SuiteTestReferences::$data[$groupName];
+
+        //createParallelManifest
+        /** @var ParallelByGroupTestManifest $parallelManifest */
+        $parallelManifest = TestManifestFactory::makeManifest("parallelByGroup", ["functionalSuite1" => []]);
+
+        // Generate the Suite
+        $parallelManifest->createTestGroups(2);
+        SuiteGenerator::getInstance()->generateAllSuites($parallelManifest);
+
+        // Validate log message (for final group) and add group name for later deletion
+        $expectedGroup = $expectedGroups[count($expectedGroups)-1] ;
+        TestLoggingUtil::getInstance()->validateMockLogStatement(
+            'info',
+            "suite generated",
+            ['suite' => $expectedGroup, 'relative_path' => "_generated" . DIRECTORY_SEPARATOR . $expectedGroup]
+        );
+
+        self::$TEST_GROUPS[] = $groupName;
+
+        // Validate Yaml file updated
+        $yml = Yaml::parse(file_get_contents(self::CONFIG_YML_FILE));
+        $this->assertEquals(array_intersect($expectedGroups, array_keys($yml['groups'])), $expectedGroups);
+
+        foreach ($expectedGroups as $expectedFolder) {
+            $suiteResultBaseDir = self::GENERATE_RESULT_DIR .
+                DIRECTORY_SEPARATOR .
+                $expectedFolder .
+                DIRECTORY_SEPARATOR;
+
+            // Validate tests have been generated
+            $dirContents = array_diff(scandir($suiteResultBaseDir), ['..', '.']);
+
+            //Validate two test has been added to each group since lines are set to 1
+            $this->assertEquals(2, count($dirContents));
             $this->assertContains(array_values($dirContents)[0], $expectedContents);
         }
     }
