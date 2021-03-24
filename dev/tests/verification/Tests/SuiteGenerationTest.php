@@ -490,6 +490,10 @@ class SuiteGenerationTest extends MftfTestCase
         $fileSystem->remove(
             self::CONFIG_YML_FILE
         );
+
+        $property = new \ReflectionProperty(DirSetupUtil::class, "DIR_CONTEXT");
+        $property->setAccessible(true);
+        $property->setValue([]);
     }
 
     /**

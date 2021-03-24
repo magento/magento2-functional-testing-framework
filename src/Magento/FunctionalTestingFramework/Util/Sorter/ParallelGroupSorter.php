@@ -122,9 +122,9 @@ class ParallelGroupSorter
     /**
      * Return suite's group counts from a group total
      *
-     * @param $suiteNameToSize
-     * @param $testNameToSize
-     * @param $groupTotal
+     * @param array   $suiteNameToSize
+     * @param array   $testNameToSize
+     * @param integer $groupTotal
      * @return array
      */
     private function getSuiteGroupCounts($suiteNameToSize, $testNameToSize, $groupTotal)
