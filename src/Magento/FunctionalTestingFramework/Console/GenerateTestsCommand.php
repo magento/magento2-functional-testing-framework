@@ -133,7 +133,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
         }
 
         if ($config === 'parallel') {
-            list($config, $configNumber) = $this->parseConfigureParalleOptions($time, $groups);
+            list($config, $configNumber) = $this->parseConfigParallelOptions($time, $groups);
         }
 
         // Remove previous GENERATED_DIR if --remove option is used
@@ -271,7 +271,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
      * @return array
      * @throws FastFailException
      */
-    private function parseConfigureParalleOptions($time, $groups)
+    private function parseConfigParallelOptions($time, $groups)
     {
         $config = null;
         $configNumber = null;
