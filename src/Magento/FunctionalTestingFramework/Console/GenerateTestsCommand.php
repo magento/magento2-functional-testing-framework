@@ -56,7 +56,6 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 'i',
                 InputOption::VALUE_REQUIRED,
                 'Used in combination with a parallel configuration, determines desired group size (in minutes)',
-                self::PARALLEL_DEFAULT_TIME
             )->addOption(
                 'groups',
                 'g',
@@ -97,7 +96,8 @@ class GenerateTestsCommand extends BaseGenerateCommand
         $config = $input->getOption('config');
         $json = $input->getOption('tests'); // for backward compatibility
         $force = $input->getOption('force');
-        $time = $input->getOption('time') * 60 * 1000; // convert from minutes to milliseconds
+        $time = $input->getOption('time');
+        //$time = $input->getOption('time') * 60 * 1000; // convert from minutes to milliseconds
         $groups = $input->getOption('groups');
         $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
         $remove = $input->getOption('remove');
@@ -132,25 +132,8 @@ class GenerateTestsCommand extends BaseGenerateCommand
             throw new TestFrameworkException("JSON could not be parsed: " . json_last_error_msg());
         }
 
-        $configNumber = null;
         if ($config === 'parallel') {
-            $config = 'parallelByTime';
-            if ($groups) {
-                $groups = $groups * 1;
-                $config = 'parallelByGroup';
-                if ($time !== self::PARALLEL_DEFAULT_TIME * 60 * 1000) {
-                    throw new TestFrameworkException(
-                        "'time' and 'groups' options are mutually exclusive, only one can be used at a time"
-                    );
-                }
-                if (!is_int($groups) || $groups <= 0) {
-                    throw new TestFrameworkException("'groups' option must be an integer and greater than 0");
-                }
-            } elseif ($time <= 0) {
-                throw new TestFrameworkException("'time' option cannot be less than or equal to 0");
-            }
-
-            $configNumber = $groups ?? $time;
+            list($config, $configNumber) = $this->parseConfigureParalleOptions($time, $groups);
         }
 
         // Remove previous GENERATED_DIR if --remove option is used
@@ -278,5 +261,52 @@ class GenerateTestsCommand extends BaseGenerateCommand
         ;
         $jsonTestConfiguration['suites'] = $testConfigArray['suites'] ?? null;
         return $jsonTestConfiguration;
+    }
+
+    /**
+     * Parse console command options --time and/or --groups and return config type and config number in an array
+     *
+     * @param mixed $time
+     * @param mixed $groups
+     * @return array
+     * @throws FastFailException
+     */
+    private function parseConfigureParalleOptions($time, $groups)
+    {
+        $config = null;
+        $configNumber = null;
+        if ($time !== null && $groups !== null) {
+            throw new FastFailException(
+                "'time' and 'groups' options are mutually exclusive. "
+                . "Only one can be specified for 'config parallel'"
+            );
+        } elseif ($time === null && $groups === null) {
+            $config = 'parallelByTime';
+            $configNumber = self::PARALLEL_DEFAULT_TIME * 60 * 1000; // convert from minutes to milliseconds
+        } elseif ($time) {
+            if (is_numeric($time)) {
+                $time = $time * 60 * 1000; // convert from minutes to milliseconds
+                if (is_int($time) && $time > 0) {
+                    $config = 'parallelByTime';
+                    $configNumber = $time;
+                }
+            }
+        } else {
+            if (is_numeric($groups)) {
+                $groups = $groups * 1;
+                if (is_int($groups) && $groups > 0) {
+                    $config = 'parallelByGroup';
+                    $configNumber = $groups;
+                }
+            }
+        }
+
+        if ($config && $configNumber) {
+            return [$config, $configNumber];
+        } elseif ($time) {
+            throw new FastFailException("'time' option must be an integer and greater than 0");
+        } else {
+            throw new FastFailException("'groups' option must be an integer and greater than 0");
+        }
     }
 }
