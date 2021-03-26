@@ -55,12 +55,16 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 'time',
                 'i',
                 InputOption::VALUE_REQUIRED,
-                'Used in combination with a parallel configuration, determines desired group size (in minutes)',
+                'Used in combination with a parallel configuration, determines desired group size (in minutes)'
+                . PHP_EOL . 'Option "--time" will be the default and the default value is '
+                . self::PARALLEL_DEFAULT_TIME
+                . ' when neither "--time" nor "--groups" is specified'
             )->addOption(
                 'groups',
                 'g',
                 InputOption::VALUE_REQUIRED,
                 'Used in combination with a parallel configuration, determines desired number of groups'
+                . PHP_EOL . 'Options "--time" and "--groups" are mutually exclusive and only one should be used'
             )->addOption(
                 'tests',
                 't',
@@ -283,27 +287,23 @@ class GenerateTestsCommand extends BaseGenerateCommand
         } elseif ($time === null && $groups === null) {
             $config = 'parallelByTime';
             $configNumber = self::PARALLEL_DEFAULT_TIME * 60 * 1000; // convert from minutes to milliseconds
-        } elseif ($time) {
-            if (is_numeric($time)) {
-                $time = $time * 60 * 1000; // convert from minutes to milliseconds
-                if (is_int($time) && $time > 0) {
-                    $config = 'parallelByTime';
-                    $configNumber = $time;
-                }
+        } elseif ($time !== null && is_numeric($time)) {
+            $time = $time * 60 * 1000; // convert from minutes to milliseconds
+            if (is_int($time) && $time > 0) {
+                $config = 'parallelByTime';
+                $configNumber = $time;
             }
-        } else {
-            if (is_numeric($groups)) {
-                $groups = $groups * 1;
-                if (is_int($groups) && $groups > 0) {
-                    $config = 'parallelByGroup';
-                    $configNumber = $groups;
-                }
+        } elseif ($groups !== null && is_numeric($groups)) {
+            $groups = $groups * 1;
+            if (is_int($groups) && $groups > 0) {
+                $config = 'parallelByGroup';
+                $configNumber = $groups;
             }
         }
 
         if ($config && $configNumber) {
             return [$config, $configNumber];
-        } elseif ($time) {
+        } elseif ($time !== null) {
             throw new FastFailException("'time' option must be an integer and greater than 0");
         } else {
             throw new FastFailException("'groups' option must be an integer and greater than 0");
