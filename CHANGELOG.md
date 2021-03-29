@@ -1,6 +1,12 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+2.7.1
+---------
+
+### Fixes
+* Added --no-sandbox chrome option in functional suite configuration.
+
 2.7.0
 ---------
 
