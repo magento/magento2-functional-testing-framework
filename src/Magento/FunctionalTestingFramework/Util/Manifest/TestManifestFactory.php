@@ -41,8 +41,11 @@ class TestManifestFactory
             case 'singleRun':
                 return new SingleRunTestManifest($suiteConfiguration, $testDirFullPath);
 
-            case 'parallel':
-                return new ParallelTestManifest($suiteConfiguration, $testDirFullPath);
+            case 'parallelByTime':
+                return new ParallelByTimeTestManifest($suiteConfiguration, $testDirFullPath);
+
+            case 'parallelByGroup':
+                return new ParallelByGroupTestManifest($suiteConfiguration, $testDirFullPath);
 
             default:
                 return new DefaultTestManifest($suiteConfiguration, $testDirFullPath);
