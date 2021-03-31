@@ -91,7 +91,7 @@ It must be in typical array format like `[1,2,3,4,5]` or `[alpha, brontosaurus, 
 
 ### assertArrayHasKey
 
-See [assertArrayHasKey docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertArrayHasKey)
+See [assertArrayHasKey docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertArrayHasKey)
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -102,7 +102,7 @@ Attribute|Type|Use|Description
 
 ### assertArrayNotHasKey
 
-See [assertArrayNotHasKey docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertArrayNotHasKey).
+See [assertArrayNotHasKey docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertArrayNotHasKey).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -113,7 +113,7 @@ Attribute|Type|Use|Description
 
 ### assertContains
 
-See [assertContains docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertContains).
+See [assertContains docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertContains).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -124,7 +124,7 @@ Attribute|Type|Use|Description
 
 ### assertStringContainsString
 
-See [assertStringContainsString docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringContainsString).
+See [assertStringContainsString docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertStringContainsString).
 
 Example:
 
@@ -144,7 +144,7 @@ Attribute|Type|Use|Description
 
 ### assertStringContainsStringIgnoringCase
 
-See [assertStringContainsStringIgnoringCase docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringContainsStringIgnoringCase).
+See [assertStringContainsStringIgnoringCase docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertStringContainsStringIgnoringCase).
 
 Example:
 
@@ -164,7 +164,7 @@ Attribute|Type|Use|Description
 
 ### assertCount
 
-See [assertCount docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertCount).
+See [assertCount docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertCount).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -175,7 +175,7 @@ Attribute|Type|Use|Description
 
 ### assertEmpty
 
-See [assertEmpty docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertEmpty).
+See [assertEmpty docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertEmpty).
 
 Example:
 
@@ -194,7 +194,7 @@ Attribute|Type|Use|Description
 
 ### assertEquals
 
-See [assertEquals docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertEquals).
+See [assertEquals docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertEquals).
 
 Example:
 
@@ -214,7 +214,7 @@ Attribute|Type|Use|Description
 
 ### assertEqualsWithDelta
 
-See [assertEqualsWithDelta docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertEqualsWithDelta).
+See [assertEqualsWithDelta docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertEqualsWithDelta).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -226,7 +226,7 @@ Attribute|Type|Use|Description
 
 ### assertEqualsCanonicalizing
 
-See [assertEqualsCanonicalizing docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertEqualsCanonicalizing).
+See [assertEqualsCanonicalizing docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertEqualsCanonicalizing).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -237,7 +237,7 @@ Attribute|Type|Use|Description
 
 ### assertEqualsIgnoringCase
 
-See [assertEqualsIgnoringCase docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertEqualsIgnoringCase).
+See [assertEqualsIgnoringCase docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertEqualsIgnoringCase).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -248,7 +248,7 @@ Attribute|Type|Use|Description
 
 ### assertFalse
 
-See [assertFalse docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertFalse).
+See [assertFalse docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertFalse).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -259,7 +259,7 @@ Attribute|Type|Use|Description
 
 ### assertFileExists
 
-See [assertFileExists docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertFileExists).
+See [assertFileExists docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertFileExists).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -270,7 +270,7 @@ Attribute|Type|Use|Description
 
 ### assertFileNotExists
 
-See [assertFileNotExists docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertFileNotExists).
+See [assertFileNotExists docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertFileNotExists).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -281,7 +281,7 @@ Attribute|Type|Use|Description
 
 ### assertGreaterOrEquals
 
-See [assertGreaterOrEquals docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertGreaterOrEquals).
+See [assertGreaterOrEquals docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertGreaterOrEquals).
 
 Example:
 
@@ -301,7 +301,7 @@ Attribute|Type|Use|Description
 
 ### assertGreaterThan
 
-See [assertGreaterThan docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertGreaterThan).
+See [assertGreaterThan docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertGreaterThan).
 
 Example:
 
@@ -321,7 +321,7 @@ Attribute|Type|Use|Description
 
 ### assertGreaterThanOrEqual
 
-See [assertGreaterThanOrEqual docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertGreaterThanOrEqual).
+See [assertGreaterThanOrEqual docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertGreaterThanOrEqual).
 
 Example:
 
@@ -341,7 +341,7 @@ Attribute|Type|Use|Description
 
 ### assertInstanceOf
 
-See [assertInstanceOf docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertInstanceOf).
+See [assertInstanceOf docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertInstanceOf).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -352,7 +352,7 @@ Attribute|Type|Use|Description
 
 ### assertIsEmpty
 
-See [assertIsEmpty docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertIsEmpty).
+See [assertIsEmpty docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertIsEmpty).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -363,7 +363,7 @@ Attribute|Type|Use|Description
 
 ### assertLessOrEquals
 
-See [assertLessOrEquals docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertLessOrEquals).
+See [assertLessOrEquals docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertLessOrEquals).
 
 Example:
 
@@ -383,7 +383,7 @@ Attribute|Type|Use|Description
 
 ### assertLessThan
 
-See [assertLessThan docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertLessThan).
+See [assertLessThan docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertLessThan).
 
 Example:
 
@@ -403,7 +403,7 @@ Attribute|Type|Use|Description
 
 ### assertLessThanOrEqual
 
-See [assertLessThanOrEqual docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertLessThanOrEqual).
+See [assertLessThanOrEqual docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertLessThanOrEqual).
 
 Example:
 
@@ -423,7 +423,7 @@ Attribute|Type|Use|Description
 
 ### assertNotContains
 
-See [assertNotContains docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotContains).
+See [assertNotContains docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertNotContains).
 
 Example:
 
@@ -443,7 +443,7 @@ Attribute|Type|Use|Description
 
 ### assertStringNotContainsString
 
-See [assertStringNotContainsString docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringNotContainsString).
+See [assertStringNotContainsString docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertStringNotContainsString).
 
 Example:
 
@@ -463,7 +463,7 @@ Attribute|Type|Use|Description
 
 ### assertStringContainsStringIgnoringCase
 
-See [assertStringNotContainsStringIgnoringCase docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringNotContainsStringIgnoringCase).
+See [assertStringNotContainsStringIgnoringCase docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertStringNotContainsStringIgnoringCase).
 
 Example:
 
@@ -483,7 +483,7 @@ Attribute|Type|Use|Description
 
 ### assertNotEmpty
 
-See [assertNotEmpty docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotEmpty).
+See [assertNotEmpty docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertNotEmpty).
 
 Example:
 
@@ -502,7 +502,7 @@ Attribute|Type|Use|Description
 
 ### assertNotEquals
 
-See [assertNotEquals docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotEquals).
+See [assertNotEquals docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertNotEquals).
 
 Example:
 
@@ -522,7 +522,7 @@ Attribute|Type|Use|Description
 
 ### assertNotEqualsWithDelta
 
-See [assertNotEqualsWithDelta docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotEqualsWithDelta).
+See [assertNotEqualsWithDelta docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertNotEqualsWithDelta).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -534,7 +534,7 @@ Attribute|Type|Use|Description
 
 ### assertNotEqualsCanonicalizing
 
-See [assertNotEqualsCanonicalizing docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotEqualsCanonicalizing).
+See [assertNotEqualsCanonicalizing docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertNotEqualsCanonicalizing).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -545,7 +545,7 @@ Attribute|Type|Use|Description
 
 ### assertNotEqualsIgnoringCase
 
-See [assertNotEqualsIgnoringCase docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotEqualsIgnoringCase).
+See [assertNotEqualsIgnoringCase docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertNotEqualsIgnoringCase).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -556,7 +556,7 @@ Attribute|Type|Use|Description
 
 ### assertNotInstanceOf
 
-See [assertNotInstanceOf docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotInstanceOf).
+See [assertNotInstanceOf docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertNotInstanceOf).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -567,7 +567,7 @@ Attribute|Type|Use|Description
 
 ### assertNotNull
 
-See [assertNotNull docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotNull).
+See [assertNotNull docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertNotNull).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -578,7 +578,7 @@ Attribute|Type|Use|Description
 
 ### assertNotRegExp
 
-See [assertNotRegExp docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotRegExp).
+See [assertNotRegExp docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertNotRegExp).
 
 Example:
 
@@ -598,7 +598,7 @@ Attribute|Type|Use|Description
 
 ### assertNotSame
 
-See [assertNotSame docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNotSame).
+See [assertNotSame docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertNotSame).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -609,7 +609,7 @@ Attribute|Type|Use|Description
 
 ### assertNull
 
-See [assertNull docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertNull).
+See [assertNull docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertNull).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -620,7 +620,7 @@ Attribute|Type|Use|Description
 
 ### assertRegExp
 
-See [assertRegExp docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertRegExp).
+See [assertRegExp docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertRegExp).
 
 Example:
 
@@ -640,7 +640,7 @@ Attribute|Type|Use|Description
 
 ### assertSame
 
-See [assertSame docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertSame).
+See [assertSame docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertSame).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -651,7 +651,7 @@ Attribute|Type|Use|Description
 
 ### assertStringStartsNotWith
 
-See [assertStringStartsNotWith docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringStartsNotWith).
+See [assertStringStartsNotWith docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertStringStartsNotWith).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -662,7 +662,7 @@ Attribute|Type|Use|Description
 
 ### assertStringStartsWith
 
-See [assertStringStartsWith docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertStringStartsWith).
+See [assertStringStartsWith docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertStringStartsWith).
 
 Attribute|Type|Use|Description
 ---|---|---|---
@@ -673,7 +673,7 @@ Attribute|Type|Use|Description
 
 ### assertTrue
 
-See [assertTrue docs on codeception.com](http://codeception.com/docs/modules/Asserts#assertTrue).
+See [assertTrue docs on codeception.com](https://codeception.com/docs/modules/Asserts#assertTrue).
 
 Attribute|Type|Use|Description
 ---|---|---|---
