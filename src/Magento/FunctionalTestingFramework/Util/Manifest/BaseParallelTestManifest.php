@@ -6,60 +6,53 @@
 
 namespace Magento\FunctionalTestingFramework\Util\Manifest;
 
-use Codeception\Suite;
 use Magento\Framework\Exception\RuntimeException;
-use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
-use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
-use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 use Magento\FunctionalTestingFramework\Util\Sorter\ParallelGroupSorter;
-use RecursiveArrayIterator;
-use RecursiveIteratorIterator;
 
-class ParallelTestManifest extends BaseTestManifest
+abstract class BaseParallelTestManifest extends BaseTestManifest
 {
-    const PARALLEL_CONFIG = 'parallel';
-
     /**
      * An associate array of test name to size of test.
      *
      * @var string[]
      */
-    private $testNameToSize = [];
+    protected $testNameToSize = [];
 
     /**
      * Class variable to store resulting group config.
      *
      * @var array
      */
-    private $testGroups;
+    protected $testGroups;
 
     /**
      * An instance of the group sorter which will take suites and tests organizing them to be run together.
      *
      * @var ParallelGroupSorter
      */
-    private $parallelGroupSorter;
+    protected $parallelGroupSorter;
 
     /**
      * Path to the directory that will contain all test group files
      *
      * @var string
      */
-    private $dirPath;
+    protected $dirPath;
 
     /**
-     * TestManifest constructor.
+     * BaseParallelTestManifest constructor.
      *
      * @param array  $suiteConfiguration
+     * @param string $runConfig
      * @param string $testPath
      */
-    public function __construct($suiteConfiguration, $testPath)
+    public function __construct($suiteConfiguration, $runConfig, $testPath)
     {
         $this->dirPath = dirname($testPath) . DIRECTORY_SEPARATOR . 'groups';
         $this->parallelGroupSorter = new ParallelGroupSorter();
-        parent::__construct($testPath, self::PARALLEL_CONFIG, $suiteConfiguration);
+        parent::__construct($testPath, $runConfig, $suiteConfiguration);
     }
 
     /**
@@ -74,22 +67,12 @@ class ParallelTestManifest extends BaseTestManifest
     }
 
     /**
-     * Function which generates test groups based on arg passed. The function builds groups using the args as an upper
-     * limit.
+     * Function which generates test groups based on arg passed.
      *
-     * @param integer $time
+     * @param integer $number
      * @return void
      */
-    public function createTestGroups($time)
-    {
-        $this->testGroups = $this->parallelGroupSorter->getTestsGroupedBySize(
-            $this->getSuiteConfig(),
-            $this->testNameToSize,
-            $time
-        );
-
-        $this->suiteConfiguration = $this->parallelGroupSorter->getResultingSuiteConfig();
-    }
+    abstract public function createTestGroups($number);
 
     /**
      * Function which generates the actual manifest once the relevant tests have been added to the array.
@@ -126,7 +109,7 @@ class ParallelTestManifest extends BaseTestManifest
      * @param array   $suites
      * @return void
      */
-    private function generateGroupFile($testGroup, $nodeNumber, $suites)
+    protected function generateGroupFile($testGroup, $nodeNumber, $suites)
     {
         foreach ($testGroup as $entryName => $testValue) {
             $fileResource = fopen($this->dirPath . DIRECTORY_SEPARATOR . "group{$nodeNumber}.txt", 'a');
@@ -149,7 +132,7 @@ class ParallelTestManifest extends BaseTestManifest
      * @param array $multiDimensionalSuites
      * @return array
      */
-    private function getFlattenedSuiteConfiguration($multiDimensionalSuites)
+    protected function getFlattenedSuiteConfiguration($multiDimensionalSuites)
     {
         $suites = [];
         foreach ($multiDimensionalSuites as $suiteName => $suiteContent) {

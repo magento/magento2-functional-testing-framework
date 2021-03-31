@@ -6,6 +6,8 @@
 namespace tests\util;
 
 use Magento\FunctionalTestingFramework\ObjectManager;
+use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
+use Magento\FunctionalTestingFramework\Suite\SuiteGenerator;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use PHPUnit\Framework\TestCase;
@@ -116,6 +118,16 @@ abstract class MftfTestCase extends TestCase
 
         // clear test object handler to force recollection of test data
         $property = new \ReflectionProperty(ObjectManager::class, 'instance');
+        $property->setAccessible(true);
+        $property->setValue(null);
+
+        // clear suite generator to force recollection of test data
+        $property = new \ReflectionProperty(SuiteGenerator::class, 'instance');
+        $property->setAccessible(true);
+        $property->setValue(null);
+
+        // clear suite object handler to force recollection of test data
+        $property = new \ReflectionProperty(SuiteObjectHandler::class, 'instance');
         $property->setAccessible(true);
         $property->setValue(null);
     }

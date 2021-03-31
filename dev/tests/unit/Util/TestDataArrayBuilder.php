@@ -233,6 +233,28 @@ class TestDataArrayBuilder
     }
 
     /**
+     * Reset data array builder
+     *
+     * @return void
+     */
+    public function reset()
+    {
+        // reset
+        $this->testName = 'testTest';
+        $this->filename = null;
+        $this->testActionBeforeName = 'testActionBefore';
+        $this->testActionAfterName = 'testActionAfter';
+        $this->testActionFailedName = 'testActionFailed';
+        $this->testActionType = 'testAction';
+        $this->annotations = [];
+        $this->beforeHook = [];
+        $this->afterHook = [];
+        $this->failedHook = [];
+        $this->testReference = null;
+        $this->testActions = [];
+    }
+
+    /**
      * Output the resulting test data array based on parameters set in the object
      *
      * @return array
