@@ -15,7 +15,7 @@
         "ext-intl": "*",
         "ext-json": "*",
         "ext-openssl": "*",
-        "allure-framework/allure-codeception": "~1.4.0",
+        "allure-framework/allure-codeception": "~1.5.0",
         "aws/aws-sdk-php": "^3.132",
         "codeception/codeception": "~4.1.4",
         "codeception/module-asserts": "^1.1",
