@@ -151,5 +151,13 @@ class AssertTestCest
 		$I->assertNotEqualsCanonicalizing(["5", "8", "7", "9"], ["1", "2", "3", "4"], "pass"); // stepKey: a4
 		$I->assertEqualsIgnoringCase("Cat", "cat", "pass"); // stepKey: a5
 		$I->assertNotEqualsIgnoringCase("Cat", "Dog", "pass"); // stepKey: a6
+		$I->comment("assertions.md examples");
+		$I->assertElementContainsAttribute(".admin__menu-overlay", "style", "color: #333;"); // stepKey: assertElementContainsAttribute
+		$I->assertStringContainsString("Buy 5 for $5.00 each and save 50%", $DropDownTierPriceTextProduct1); // stepKey: assertDropDownTierPriceTextProduct1
+		$I->assertEmpty("$grabSearchButtonAttribute"); // stepKey: assertSearchButtonEnabled
+		$I->assertGreaterThanOrEqual($getOrderStatusFirstRow, $getOrderStatusSecondRow); // stepKey: checkStatusSortOrderAsc
+		$I->assertNotEquals($grabTotalBefore, $grabTotalAfter); // stepKey: assertNotEqualsExample
+		$I->assertNotRegExp('/placeholder\/thumbnail\.jpg/', $getSimpleProductThumbnail); // stepKey: simpleThumbnailIsNotDefault
+		$I->assertRegExp("#var\s+adminAnalyticsMetadata\s+=\s+{\s+(\"[\w_]+\":\s+\"[^\"]*?\",\s+)*?(\"[\w_]+\":\s+\"[^\"]*?\"\s+)};#s", $pageSource, "adminAnalyticsMetadata object is invalid"); // stepKey: validateadminAnalyticsMetadata
 	}
 }
