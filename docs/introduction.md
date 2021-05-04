@@ -62,7 +62,7 @@ Test
 
 ## Use cases
 
--  Contributor: changes the core behaviour, fixing the annoing bug.
+-  Contributor: changes the core behaviour, fixing the annoying bug.
    He wants to have automated "supervisor" which is going to verify his work continuously across the stages of bug fixing. Finally, when fix is done - Functional Test is also proof of work done.
 -  Extension Developer: offers extension that changes core behaviour.
    He can easily write new tests to make sure that after enabling the feature, Magento behaves properly. Everything with just extending existing tests. As a result he don't need to write coverage from scratch.
