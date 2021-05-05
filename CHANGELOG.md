@@ -1,5 +1,12 @@
 Magento Functional Testing Framework Changelog
 ================================================
+3.5.1
+---------
+
+### GitHub Pull Requests:
+
+* [#825](https://github.com/magento/magento2-functional-testing-framework/pull/825) -- Update allure-codeception in order to support php8
+
 
 3.5.0
 ---------
