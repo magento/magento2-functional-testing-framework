@@ -1262,7 +1262,8 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
-                        $actionObject
+                        $actionObject,
+                        $input
                     );
                     break;
                 case "resizeWindow":
