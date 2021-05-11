@@ -35,4 +35,4 @@ modules:
             path: "%SELENIUM_PATH%"
             capabilities:
               chromeOptions:
-                args: ["--window-size=1280,1024", "--disable-extensions", "--enable-automation", "--disable-gpu", "--enable-Passthrough"]
+                args: ["--no-sandbox", "--window-size=1280,1024", "--disable-extensions", "--enable-automation", "--disable-gpu", "--enable-Passthrough"]
