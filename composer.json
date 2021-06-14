@@ -41,7 +41,7 @@
     "require-dev": {
         "brainmaestro/composer-git-hooks": "^2.3.1",
         "codacy/coverage": "^1.4",
-        "codeception/aspect-mock": "^4.0",
+        "codeception/aspect-mock": "^3.0",
         "php-coveralls/php-coveralls": "^2.2",
         "phpmd/phpmd": "^2.8.0",
         "phpunit/phpunit": "^9.0",

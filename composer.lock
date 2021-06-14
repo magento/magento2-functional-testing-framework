@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2497eb0016466f4c6e66135bd3e8d505",
+    "content-hash": "0bcf16196f2dc3921a3762ed173e56d3",
     "packages": [
         {
             "name": "allure-framework/allure-codeception",
@@ -7540,28 +7540,28 @@
         },
         {
             "name": "codeception/aspect-mock",
-            "version": "4.0.0",
+            "version": "3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/AspectMock.git",
-                "reference": "b8658c620400dce1d06b6cc1d5c9c19e6d2509c2"
+                "reference": "eef5e5e9ebd66c89d6184416e83851c354963e9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/AspectMock/zipball/b8658c620400dce1d06b6cc1d5c9c19e6d2509c2",
-                "reference": "b8658c620400dce1d06b6cc1d5c9c19e6d2509c2",
+                "url": "https://api.github.com/repos/Codeception/AspectMock/zipball/eef5e5e9ebd66c89d6184416e83851c354963e9c",
+                "reference": "eef5e5e9ebd66c89d6184416e83851c354963e9c",
                 "shasum": ""
             },
             "require": {
-                "goaop/framework": "^3.0",
-                "php": "^7.4",
-                "phpunit/phpunit": "^9.5",
-                "symfony/finder": ">=4.4 <6.0"
+                "goaop/framework": "^2.2.0",
+                "php": "^7.0",
+                "phpunit/phpunit": "> 6.0.0",
+                "symfony/finder": ">=2.4 <6.0"
             },
             "require-dev": {
-                "codeception/codeception": "^4.1",
-                "codeception/specify": "^1.4",
-                "codeception/verify": "^2.1"
+                "codeception/codeception": "^4.0",
+                "codeception/specify": "^1.0",
+                "codeception/verify": "^1.2"
             },
             "type": "library",
             "autoload": {
@@ -7582,9 +7582,9 @@
             "description": "Experimental Mocking Framework powered by Aspects",
             "support": {
                 "issues": "https://github.com/Codeception/AspectMock/issues",
-                "source": "https://github.com/Codeception/AspectMock/tree/4.0.0"
+                "source": "https://github.com/Codeception/AspectMock/tree/3.1.1"
             },
-            "time": "2021-04-16T19:07:56+00:00"
+            "time": "2021-04-10T19:47:51+00:00"
         },
         {
             "name": "doctrine/cache",
@@ -7757,35 +7757,33 @@
         },
         {
             "name": "goaop/framework",
-            "version": "3.0.0",
+            "version": "2.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/goaop/framework.git",
-                "reference": "596fcaefc18dfc4e3982b3ee552b0a3ceca9a8b1"
+                "reference": "19a6f2110c71aed99081ca23c359436b723a6cdf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/goaop/framework/zipball/596fcaefc18dfc4e3982b3ee552b0a3ceca9a8b1",
-                "reference": "596fcaefc18dfc4e3982b3ee552b0a3ceca9a8b1",
+                "url": "https://api.github.com/repos/goaop/framework/zipball/19a6f2110c71aed99081ca23c359436b723a6cdf",
+                "reference": "19a6f2110c71aed99081ca23c359436b723a6cdf",
                 "shasum": ""
             },
             "require": {
-                "doctrine/annotations": "^1.11.1",
-                "doctrine/cache": "^1.10",
-                "goaop/parser-reflection": "^3.0.1",
+                "doctrine/annotations": "^1.2.3",
+                "doctrine/cache": "^1.5",
+                "goaop/parser-reflection": "~2.0",
                 "jakubledl/dissect": "~1.0",
-                "laminas/laminas-code": "^4.0",
-                "php": "^7.4.0",
-                "symfony/finder": "^4.4|^5.1"
+                "php": "~7.0",
+                "symfony/finder": "^3.4|^4.2|^5.0"
             },
             "require-dev": {
-                "adlawson/vfs": "^0.12.1",
+                "adlawson/vfs": "^0.12",
                 "doctrine/orm": "^2.5",
-                "phpstan/phpstan": "^0.12.64",
-                "phpunit/phpunit": "^9.5",
-                "symfony/console": "^4.4|^5.1",
-                "symfony/filesystem": "^4.4|^5.1",
-                "symfony/process": "^4.4|^5.1",
+                "phpunit/phpunit": "^5.7",
+                "symfony/console": "^2.7|^3.0",
+                "symfony/filesystem": "^3.3",
+                "symfony/process": "^3.3",
                 "webmozart/glob": "^4.1"
             },
             "suggest": {
@@ -7797,7 +7795,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0-dev"
+                    "dev-master": "2.0-dev"
                 }
             },
             "autoload": {
@@ -7825,7 +7823,7 @@
             ],
             "support": {
                 "issues": "https://github.com/goaop/framework/issues",
-                "source": "https://github.com/goaop/framework/tree/3.0.0"
+                "source": "https://github.com/goaop/framework/tree/2.3.5"
             },
             "funding": [
                 {
@@ -7833,28 +7831,28 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-01-08T13:54:33+00:00"
+            "time": "2021-06-11T16:17:30+00:00"
         },
         {
             "name": "goaop/parser-reflection",
-            "version": "3.0.1",
+            "version": "2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/goaop/parser-reflection.git",
-                "reference": "c06ae32c4f5664dbd5829ab417485929eded0657"
+                "reference": "d4257ee557484ac886bee46bd41ebecb7c4bfa16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/goaop/parser-reflection/zipball/c06ae32c4f5664dbd5829ab417485929eded0657",
-                "reference": "c06ae32c4f5664dbd5829ab417485929eded0657",
+                "url": "https://api.github.com/repos/goaop/parser-reflection/zipball/d4257ee557484ac886bee46bd41ebecb7c4bfa16",
+                "reference": "d4257ee557484ac886bee46bd41ebecb7c4bfa16",
                 "shasum": ""
             },
             "require": {
                 "nikic/php-parser": "^4.0",
-                "php": ">=7.3"
+                "php": ">=7.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^7.0"
+                "phpunit/phpunit": "~4.0"
             },
             "type": "library",
             "extra": {
@@ -7886,9 +7884,9 @@
             "description": "Provides reflection information, based on raw source",
             "support": {
                 "issues": "https://github.com/goaop/parser-reflection/issues",
-                "source": "https://github.com/goaop/parser-reflection/tree/3.0.1"
+                "source": "https://github.com/goaop/parser-reflection/tree/2.x"
             },
-            "time": "2021-01-03T18:16:54+00:00"
+            "time": "2020-08-13T00:19:00+00:00"
         },
         {
             "name": "jakubledl/dissect",
@@ -7948,205 +7946,6 @@
                 "source": "https://github.com/jakubledl/dissect/tree/v1.0.1"
             },
             "time": "2013-01-29T21:29:14+00:00"
-        },
-        {
-            "name": "laminas/laminas-code",
-            "version": "4.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laminas/laminas-code.git",
-                "reference": "1beb4447f9efd26041eba7eff50614e798c353fd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-code/zipball/1beb4447f9efd26041eba7eff50614e798c353fd",
-                "reference": "1beb4447f9efd26041eba7eff50614e798c353fd",
-                "shasum": ""
-            },
-            "require": {
-                "laminas/laminas-eventmanager": "^3.3",
-                "php": "^7.4 || ~8.0.0"
-            },
-            "conflict": {
-                "phpspec/prophecy": "<1.9.0"
-            },
-            "replace": {
-                "zendframework/zend-code": "self.version"
-            },
-            "require-dev": {
-                "doctrine/annotations": "^1.10.4",
-                "ext-phar": "*",
-                "laminas/laminas-coding-standard": "^2.1.4",
-                "laminas/laminas-stdlib": "^3.3.0",
-                "phpunit/phpunit": "^9.4.2",
-                "psalm/plugin-phpunit": "^0.14.0",
-                "vimeo/psalm": "^4.3.1"
-            },
-            "suggest": {
-                "doctrine/annotations": "Doctrine\\Common\\Annotations >=1.0 for annotation features",
-                "laminas/laminas-stdlib": "Laminas\\Stdlib component",
-                "laminas/laminas-zendframework-bridge": "A bridge with Zend Framework"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Laminas\\Code\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Extensions to the PHP Reflection API, static code scanning, and code generation",
-            "homepage": "https://laminas.dev",
-            "keywords": [
-                "code",
-                "laminas",
-                "laminasframework"
-            ],
-            "support": {
-                "chat": "https://laminas.dev/chat",
-                "docs": "https://docs.laminas.dev/laminas-code/",
-                "forum": "https://discourse.laminas.dev",
-                "issues": "https://github.com/laminas/laminas-code/issues",
-                "rss": "https://github.com/laminas/laminas-code/releases.atom",
-                "source": "https://github.com/laminas/laminas-code"
-            },
-            "funding": [
-                {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
-                }
-            ],
-            "time": "2021-05-12T12:41:03+00:00"
-        },
-        {
-            "name": "laminas/laminas-eventmanager",
-            "version": "3.3.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laminas/laminas-eventmanager.git",
-                "reference": "966c859b67867b179fde1eff0cd38df51472ce4a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-eventmanager/zipball/966c859b67867b179fde1eff0cd38df51472ce4a",
-                "reference": "966c859b67867b179fde1eff0cd38df51472ce4a",
-                "shasum": ""
-            },
-            "require": {
-                "laminas/laminas-zendframework-bridge": "^1.0",
-                "php": "^7.3 || ^8.0"
-            },
-            "replace": {
-                "zendframework/zend-eventmanager": "^3.2.1"
-            },
-            "require-dev": {
-                "container-interop/container-interop": "^1.1",
-                "laminas/laminas-coding-standard": "~1.0.0",
-                "laminas/laminas-stdlib": "^2.7.3 || ^3.0",
-                "phpbench/phpbench": "^0.17.1",
-                "phpunit/phpunit": "^8.5.8"
-            },
-            "suggest": {
-                "container-interop/container-interop": "^1.1, to use the lazy listeners feature",
-                "laminas/laminas-stdlib": "^2.7.3 || ^3.0, to use the FilterChain feature"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Laminas\\EventManager\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Trigger and listen to events within a PHP application",
-            "homepage": "https://laminas.dev",
-            "keywords": [
-                "event",
-                "eventmanager",
-                "events",
-                "laminas"
-            ],
-            "support": {
-                "chat": "https://laminas.dev/chat",
-                "docs": "https://docs.laminas.dev/laminas-eventmanager/",
-                "forum": "https://discourse.laminas.dev",
-                "issues": "https://github.com/laminas/laminas-eventmanager/issues",
-                "rss": "https://github.com/laminas/laminas-eventmanager/releases.atom",
-                "source": "https://github.com/laminas/laminas-eventmanager"
-            },
-            "funding": [
-                {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
-                }
-            ],
-            "time": "2021-03-08T15:24:29+00:00"
-        },
-        {
-            "name": "laminas/laminas-zendframework-bridge",
-            "version": "1.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laminas/laminas-zendframework-bridge.git",
-                "reference": "6cccbddfcfc742eb02158d6137ca5687d92cee32"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-zendframework-bridge/zipball/6cccbddfcfc742eb02158d6137ca5687d92cee32",
-                "reference": "6cccbddfcfc742eb02158d6137ca5687d92cee32",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.3 || ^8.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^5.7 || ^6.5 || ^7.5 || ^8.1 || ^9.3",
-                "psalm/plugin-phpunit": "^0.15.1",
-                "squizlabs/php_codesniffer": "^3.5",
-                "vimeo/psalm": "^4.6"
-            },
-            "type": "library",
-            "extra": {
-                "laminas": {
-                    "module": "Laminas\\ZendFrameworkBridge"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/autoload.php"
-                ],
-                "psr-4": {
-                    "Laminas\\ZendFrameworkBridge\\": "src//"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Alias legacy ZF class names to Laminas Project equivalents.",
-            "keywords": [
-                "ZendFramework",
-                "autoloading",
-                "laminas",
-                "zf"
-            ],
-            "support": {
-                "forum": "https://discourse.laminas.dev/",
-                "issues": "https://github.com/laminas/laminas-zendframework-bridge/issues",
-                "rss": "https://github.com/laminas/laminas-zendframework-bridge/releases.atom",
-                "source": "https://github.com/laminas/laminas-zendframework-bridge"
-            },
-            "funding": [
-                {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
-                }
-            ],
-            "time": "2021-02-25T21:54:58+00:00"
         },
         {
             "name": "pdepend/pdepend",
