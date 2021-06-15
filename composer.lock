@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "465713023b0749c53f630e64d2413880",
+    "content-hash": "6703d4aff2c0f30efb681b320a9a2d2f",
     "packages": [
         {
             "name": "allure-framework/allure-codeception",
@@ -8047,52 +8047,6 @@
             "time": "2021-04-26T18:44:44+00:00"
         },
         {
-            "name": "rregeer/phpunit-coverage-check",
-            "version": "0.1.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/richardregeer/phpunit-coverage-check.git",
-                "reference": "330ae9318e0e60960cfb97c4a0459e3e4a3080e0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/richardregeer/phpunit-coverage-check/zipball/330ae9318e0e60960cfb97c4a0459e3e4a3080e0",
-                "reference": "330ae9318e0e60960cfb97c4a0459e3e4a3080e0",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.5.0"
-            },
-            "bin": [
-                "bin/coverage-check"
-            ],
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Richard Regeer",
-                    "email": "rich2309@gmail.com"
-                }
-            ],
-            "description": "Check the code coverage using the clover report of phpunit",
-            "keywords": [
-                "ci",
-                "code coverage",
-                "php",
-                "phpunit",
-                "testing",
-                "unittest"
-            ],
-            "support": {
-                "issues": "https://github.com/richardregeer/phpunit-coverage-check/issues",
-                "source": "https://github.com/richardregeer/phpunit-coverage-check/tree/master"
-            },
-            "time": "2018-07-29T13:27:58+00:00"
-        },
-        {
             "name": "sebastian/cli-parser",
             "version": "1.0.1",
             "source": {
@@ -8428,20 +8382,21 @@
         },
         {
             "name": "symfony/stopwatch",
-            "version": "v3.4.47",
+            "version": "v5.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/stopwatch.git",
-                "reference": "298b81faad4ce60e94466226b2abbb8c9bca7462"
+                "reference": "313d02f59d6543311865007e5ff4ace05b35ee65"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/stopwatch/zipball/298b81faad4ce60e94466226b2abbb8c9bca7462",
-                "reference": "298b81faad4ce60e94466226b2abbb8c9bca7462",
+                "url": "https://api.github.com/repos/symfony/stopwatch/zipball/313d02f59d6543311865007e5ff4ace05b35ee65",
+                "reference": "313d02f59d6543311865007e5ff4ace05b35ee65",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.5.9|>=7.0.8"
+                "php": ">=7.2.5",
+                "symfony/service-contracts": "^1.0|^2"
             },
             "type": "library",
             "autoload": {
@@ -8466,10 +8421,10 @@
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
-            "description": "Symfony Stopwatch Component",
+            "description": "Provides a way to profile code",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/stopwatch/tree/v3.4.47"
+                "source": "https://github.com/symfony/stopwatch/tree/v5.3.0"
             },
             "funding": [
                 {
@@ -8485,7 +8440,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-10-24T10:57:07+00:00"
+            "time": "2021-05-26T17:43:10+00:00"
         }
     ],
     "aliases": [],
