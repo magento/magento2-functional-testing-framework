@@ -3,11 +3,14 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace tests\unit\Magento\FunctionalTestFramework\Util;
 
 use AspectMock\Test as AspectMock;
 
+use Exception;
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Filter\FilterList;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
@@ -21,17 +24,12 @@ use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
 
 class TestGeneratorTest extends MagentoTestCase
 {
-    /**
-     * Before method functionality
-     */
     public function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
 
     /**
-     * After method functionality
-     *
      * @return void
      */
     public function tearDown(): void
@@ -41,9 +39,7 @@ class TestGeneratorTest extends MagentoTestCase
     }
 
     /**
-     * Basic test to check exceptions for incorrect entities.
-     *
-     * @throws \Exception
+     * @throws Exception
      */
     public function testEntityException()
     {
@@ -52,16 +48,18 @@ class TestGeneratorTest extends MagentoTestCase
         ]);
 
         $testObject = new TestObject("sampleTest", ["merge123" => $actionObject], [], [], "filename");
-
-        AspectMock::double(TestObjectHandler::class, ['initTestData' => '']);
+        $test = $this->createMock(TestObjectHandler::class);
+        $test->expects($this->once())->method('initTestData')->willReturn('');
 
         $testGeneratorObject = TestGenerator::getInstance("", ["sampleTest" => $testObject]);
 
-        AspectMock::double(TestGenerator::class, ['loadAllTestObjects' => ["sampleTest" => $testObject]]);
+        $test1 = $this->createMock(TestGenerator::class);
+        $test1->expects($this->once())->method('loadAllTestObjects')->willReturn([
+            'sampleTest' => $testObject
+        ]);
 
         $testGeneratorObject->createAllTestFiles(null, []);
 
-        // assert that no exception for createAllTestFiles and generation error is stored in GenerationErrorHandler
         $errorMessage = '/' . preg_quote("Removed invalid test object sampleTest") . '/';
         TestLoggingUtil::getInstance()->validateMockLogStatmentRegex('error', $errorMessage, []);
         $testErrors = GenerationErrorHandler::getInstance()->getErrorsByType('test');
@@ -69,9 +67,7 @@ class TestGeneratorTest extends MagentoTestCase
     }
 
     /**
-     * Tests that skipped tests do not have a fully generated body
-     *
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     * @throws TestReferenceException
      */
     public function testSkippedNoGeneration()
     {
@@ -91,14 +87,12 @@ class TestGeneratorTest extends MagentoTestCase
     }
 
     /**
-     * Tests that skipped tests have a fully generated body when --allowSkipped is passed in
-     *
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     * @throws TestReferenceException
      */
     public function testAllowSkipped()
     {
-        // Mock allowSkipped for TestGenerator
-        AspectMock::double(MftfApplicationConfig::class, ['allowSkipped' => true]);
+        $test = $this->createMock(MftfApplicationConfig::class);
+        $test->expects($this->once())->method('allowSkipped')->willReturn(true);
 
         $actionInput = 'fakeInput';
         $actionObject = new ActionObject('fakeAction', 'comment', [
@@ -128,17 +122,14 @@ class TestGeneratorTest extends MagentoTestCase
     }
 
     /**
-     * Tests that TestGenerator createAllTestFiles correctly filters based on severity
-     *
-     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     * @throws TestReferenceException
+     * @throws Exception
      */
     public function testFilter()
     {
-        // Mock filters for TestGenerator
-        AspectMock::double(
-            MftfApplicationConfig::class,
-            ['getFilterList' => new FilterList(['severity' => ["CRITICAL"]])]
-        );
+        $fileList = new FilterList(['severity' => ["CRITICAL"]]);
+        $test = $this->createMock(MftfApplicationConfig::class);
+        $test->expects($this->once())->method('getFilterList')->willReturn($fileList);
 
         $actionInput = 'fakeInput';
         $actionObject = new ActionObject('fakeAction', 'comment', [
@@ -161,18 +152,23 @@ class TestGeneratorTest extends MagentoTestCase
             [],
             "filename"
         );
-        AspectMock::double(TestGenerator::class, ['loadAllTestObjects' => ["sampleTest" => $test1, "test2" => $test2]]);
+        $test3 = $this->createMock(TestGenerator::class);
+        $test3->expects($this->once())->method('loadAllTestObjects')->willReturn([
+            'sampleTest' => $test1,
+            'test2' => $test2
+        ]);
 
-        // Mock createCestFile to return name of tests that testGenerator tried to create
         $generatedTests = [];
-        AspectMock::double(TestGenerator::class, ['createCestFile' => function ($arg1, $arg2) use (&$generatedTests) {
-            $generatedTests[$arg2] = true;
-        }]);
+        $test4 = $this->createMock(TestGenerator::class);
+        $test4->expects($this->once())->method('createCestFile')->willReturn([
+            function ($arg1, $arg2) use (&$generatedTests) {
+                $generatedTests[$arg2] = true;
+            }
+        ]);
 
         $testGeneratorObject = TestGenerator::getInstance("", ["sampleTest" => $test1, "test2" => $test2]);
         $testGeneratorObject->createAllTestFiles(null, []);
 
-        // Ensure Test1 was Generated but not Test 2
         $this->assertArrayHasKey('test1Cest', $generatedTests);
         $this->assertArrayNotHasKey('test2Cest', $generatedTests);
     }
