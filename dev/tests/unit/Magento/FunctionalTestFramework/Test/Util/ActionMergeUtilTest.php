@@ -5,7 +5,6 @@
  */
 namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
 
-use AspectMock\Test as AspectMock;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
@@ -110,8 +109,13 @@ class ActionMergeUtilTest extends MagentoTestCase
         $mockDataObject = new EntityDataObject($dataObjectName, $dataObjectType, $mockData, null, null, null);
 
         // Set up mock DataObject Handler
-        $mockDOHInstance = AspectMock::double(DataObjectHandler::class, ['getObject' => $mockDataObject])->make();
-        AspectMock::double(DataObjectHandler::class, ['getInstance' => $mockDOHInstance]);
+        $mockDOHInstance = $this->createMock(DataObjectHandler::class);
+        $mockDOHInstance->expects($this->any())
+            ->method('getObject')
+            ->willReturn($mockDataObject);
+        $property = new \ReflectionProperty(DataObjectHandler::class, 'INSTANCE');
+        $property->setAccessible(true);
+        $property->setValue($mockDOHInstance);
 
         // Create test object and action object
         $actionAttributes = [$userInputKey => $userInputValue];
