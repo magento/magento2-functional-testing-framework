@@ -7,13 +7,12 @@ namespace tests\unit\Magento\FunctionalTestFramework\Allure;
 
 use Magento\FunctionalTestingFramework\Allure\AllureHelper;
 use Magento\FunctionalTestingFramework\Allure\Event\AddUniqueAttachmentEvent;
+use PHPUnit\Framework\TestCase;
 use Yandex\Allure\Adapter\Allure;
-use Yandex\Allure\Adapter\Event\AddAttachmentEvent;
+use Yandex\Allure\Adapter\AllureException;
 use Yandex\Allure\Adapter\Event\StepFinishedEvent;
 use Yandex\Allure\Adapter\Event\StepStartedEvent;
 use Yandex\Allure\Adapter\Model\Attachment;
-use AspectMock\Test as AspectMock;
-use PHPUnit\Framework\TestCase;
 
 class AllureHelperTest extends TestCase
 {
@@ -25,12 +24,11 @@ class AllureHelperTest extends TestCase
     public function tearDown(): void
     {
         Allure::setDefaultLifecycle();
-        AspectMock::clean();
     }
 
     /**
-     * AddAtachmentToStep should add an attachment to the current step
-     * @throws \Yandex\Allure\Adapter\AllureException
+     * AddAttachmentToStep should add an attachment to the current step
+     * @throws AllureException
      */
     public function testAddAttachmentToStep()
     {
@@ -52,7 +50,7 @@ class AllureHelperTest extends TestCase
 
     /**
      * AddAttachmentToLastStep should add an attachment only to the last step
-     * @throws \Yandex\Allure\Adapter\AllureException
+     * @throws AllureException
      */
     public function testAddAttachmentToLastStep()
     {
@@ -88,13 +86,14 @@ class AllureHelperTest extends TestCase
 
     /**
      * AddAttachment actions should have files with different attachment names
-     * @throws \Yandex\Allure\Adapter\AllureException
+     * @throws AllureException
      */
     public function testAddAttachementUniqueName()
     {
-        $this->mockCopyFile();
         $expectedData = "string";
         $expectedCaption = "caption";
+
+        $this->mockCopyFile($expectedData, $expectedCaption);
 
         //Prepare Allure lifecycle
         Allure::lifecycle()->fire(new StepStartedEvent('firstStep'));
@@ -112,23 +111,26 @@ class AllureHelperTest extends TestCase
 
     /**
      * Mock entire attachment writing mechanisms
-     * @throws \Exception
      */
     public function mockAttachmentWriteEvent()
     {
-        AspectMock::double(AddUniqueAttachmentEvent::class, [
-            "getAttachmentFileName" => self::MOCK_FILENAME
-        ]);
+        $this->createMock(AddUniqueAttachmentEvent::class)
+            ->expects($this->any())
+            ->method('getAttachmentFileName')
+            ->willReturn(self::MOCK_FILENAME);
     }
 
     /**
      * Mock only file writing mechanism
-     * @throws \Exception
+     * @throws \ReflectionException
      */
-    public function mockCopyFile()
+    public function mockCopyFile(string $expectedData, string $expectedCaption)
     {
-        AspectMock::double(AddUniqueAttachmentEvent::class, [
-            "copyFile" => true
-        ]);
+        $addUniqueAttachmentEvent = new AddUniqueAttachmentEvent($expectedData, $expectedCaption);
+        $reflection = new \ReflectionClass(AddUniqueAttachmentEvent::class);
+        $reflectionMethod = $reflection->getMethod('copyFile');
+        $reflectionMethod->setAccessible(true);
+        $output = $reflectionMethod->invoke($addUniqueAttachmentEvent);
+        $this->assertEquals(true, $output);
     }
 }
