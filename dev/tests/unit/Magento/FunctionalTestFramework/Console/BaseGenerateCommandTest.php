@@ -5,7 +5,6 @@
  */
 namespace tests\unit\Magento\FunctionalTestFramework\Console;
 
-use AspectMock\Test as AspectMock;
 use PHPUnit\Framework\TestCase;
 use Magento\FunctionalTestingFramework\Console\BaseGenerateCommand;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
@@ -15,11 +14,6 @@ use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 
 class BaseGenerateCommandTest extends TestCase
 {
-    public function tearDown(): void
-    {
-        AspectMock::clean();
-    }
-
     public function testOneTestOneSuiteConfig()
     {
         $testOne = new TestObject('Test1', [], [], []);
@@ -182,13 +176,25 @@ class BaseGenerateCommandTest extends TestCase
      */
     public function mockHandlers($testArray, $suiteArray)
     {
-        AspectMock::double(TestObjectHandler::class, ['initTestData' => ''])->make();
+        $testObjectHandler = TestObjectHandler::getInstance();
+        $reflection = new \ReflectionClass(TestObjectHandler::class);
+        $reflectionMethod = $reflection->getMethod('initTestData');
+        $reflectionMethod->setAccessible(true);
+        $output = $reflectionMethod->invoke($testObjectHandler);
+        $this->assertEquals('', $output);
+
         $handler = TestObjectHandler::getInstance();
         $property = new \ReflectionProperty(TestObjectHandler::class, 'tests');
         $property->setAccessible(true);
         $property->setValue($handler, $testArray);
 
-        AspectMock::double(SuiteObjectHandler::class, ['initSuiteData' => ''])->make();
+        $suiteObjectHandler = SuiteObjectHandler::getInstance();
+        $reflection = new \ReflectionClass(SuiteObjectHandler::class);
+        $reflectionMethod = $reflection->getMethod('initSuiteData');
+        $reflectionMethod->setAccessible(true);
+        $output = $reflectionMethod->invoke($suiteObjectHandler);
+        $this->assertEquals('', $output);
+
         $handler = SuiteObjectHandler::getInstance();
         $property = new \ReflectionProperty(SuiteObjectHandler::class, 'suiteObjects');
         $property->setAccessible(true);
