@@ -210,7 +210,7 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
     {
         if (empty($content)) {
             if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-                LoggingUtil::getInstance()->getLogger(Filesystem::class)->warn(
+                LoggingUtil::getInstance()->getLogger(Filesystem::class)->warning(
                     "XML File is empty.",
                     ["File" => $fileName]
                 );

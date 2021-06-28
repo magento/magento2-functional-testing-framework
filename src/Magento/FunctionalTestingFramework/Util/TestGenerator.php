@@ -362,7 +362,7 @@ class TestGenerator
                         if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
                             print("NOTICE: {$errMessage}");
                         }
-                        LoggingUtil::getInstance()->getLogger(self::class)->warn($errMessage);
+                        LoggingUtil::getInstance()->getLogger(self::class)->warning($errMessage);
                         continue;
                     }
                 }

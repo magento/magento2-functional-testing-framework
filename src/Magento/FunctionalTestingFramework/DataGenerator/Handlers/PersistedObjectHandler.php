@@ -193,7 +193,7 @@ class PersistedObjectHandler
             $warnMsg = "Undefined field {$field} in entity object with a stepKey of {$stepKey}\n";
             $warnMsg .= "Please fix the invalid reference. This will result in fatal error in next major release.";
             //TODO: change this to throw an exception in next major release
-            LoggingUtil::getInstance()->getLogger(PersistedObjectHandler::class)->warn($warnMsg);
+            LoggingUtil::getInstance()->getLogger(PersistedObjectHandler::class)->warning($warnMsg);
             if (MftfApplicationConfig::getConfig()->verboseEnabled()
                 && MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE) {
                 print("\n$warnMsg\n");
