@@ -3,32 +3,27 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace tests\unit\Magento\FunctionalTestFramework\StaticCheck;
 
-use AspectMock\Test as AspectMock;
 use Magento\FunctionalTestingFramework\StaticCheck\AnnotationsCheck;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
-use tests\unit\Util\MagentoTestCase;
 use ReflectionClass;
+use tests\unit\Util\MagentoTestCase;
 
 class AnnotationsCheckTest extends MagentoTestCase
 {
     /** @var  AnnotationsCheck */
     private $staticCheck;
 
-    /** @var ReflectionClass*/
+    /** @var ReflectionClass */
     private $staticCheckClass;
 
     public function setUp(): void
     {
         $this->staticCheck = new AnnotationsCheck();
-        $this->staticCheckClass = new \ReflectionClass($this->staticCheck);
-    }
-
-    public function tearDown(): void
-    {
-        AspectMock::clean();
+        $this->staticCheckClass = new ReflectionClass($this->staticCheck);
     }
 
     public function testValidateRequiredAnnotationsNoError()
@@ -56,11 +51,9 @@ class AnnotationsCheckTest extends MagentoTestCase
         ];
         $expected = [];
 
-        // mock test object
-        $test = AspectMock::double(
-            TestObject::class,
-            ['getAnnotations' => $annotations, 'getName' => 'AnnotationsCheckTest']
-        )->make();
+        $test = $this->createMock(TestObject::class);
+
+        $test->expects($this->once())->method('getAnnotations')->willReturn($annotations);
 
         $validateRequiredAnnotations = $this->staticCheckClass->getMethod('validateRequiredAnnotations');
         $validateRequiredAnnotations->setAccessible(true);
@@ -99,11 +92,10 @@ class AnnotationsCheckTest extends MagentoTestCase
             ]
         ];
 
-        // mock test object
-        $test = AspectMock::double(
-            TestObject::class,
-            ['getAnnotations' => $annotations, 'getName' => 'AnnotationsCheckTest']
-        )->make();
+        $test = $this->createMock(TestObject::class);
+
+        $test->expects($this->once())->method('getAnnotations')->willReturn($annotations);
+        $test->expects($this->once())->method('getName')->willReturn('AnnotationsCheckTest');
 
         $validateRequiredAnnotations = $this->staticCheckClass->getMethod('validateRequiredAnnotations');
         $validateRequiredAnnotations->setAccessible(true);
@@ -137,11 +129,10 @@ class AnnotationsCheckTest extends MagentoTestCase
             ]
         ];
 
-        // mock test object
-        $test = AspectMock::double(
-            TestObject::class,
-            ['getAnnotations' => $annotations, 'getName' => 'AnnotationsCheckTest']
-        )->make();
+        $test = $this->createMock(TestObject::class);
+
+        $test->expects($this->once())->method('getAnnotations')->willReturn($annotations);
+        $test->expects($this->once())->method('getName')->willReturn('AnnotationsCheckTest');
 
         $validateRequiredAnnotations = $this->staticCheckClass->getMethod('validateRequiredAnnotations');
         $validateRequiredAnnotations->setAccessible(true);
@@ -179,11 +170,10 @@ class AnnotationsCheckTest extends MagentoTestCase
             ]
         ];
 
-        // mock test object
-        $test = AspectMock::double(
-            TestObject::class,
-            ['getAnnotations' => $annotations, 'getName' => 'AnnotationsCheckTest']
-        )->make();
+        $test = $this->createMock(TestObject::class);
+
+        $test->expects($this->once())->method('getAnnotations')->willReturn($annotations);
+        $test->expects($this->once())->method('getName')->willReturn('AnnotationsCheckTest');
 
         $validateRequiredAnnotations = $this->staticCheckClass->getMethod('validateRequiredAnnotations');
         $validateRequiredAnnotations->setAccessible(true);

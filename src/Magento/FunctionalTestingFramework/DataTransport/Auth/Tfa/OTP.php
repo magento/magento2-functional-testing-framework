@@ -20,42 +20,47 @@ class OTP
     /**
      * TOTP object
      *
-     * @var TOTP
+     * @var TOTP[]
      */
-    private static $totp = null;
+    private static $totps = [];
 
     /**
      * Return OTP for custom secret stored in `magento/tfa/OTP_SHARED_SECRET`
      *
+     * @param string|null $path
      * @return string
      * @throws TestFrameworkException
      */
-    public static function getOTP()
+    public static function getOTP($path = null)
     {
-        return self::create()->now();
+        if ($path === null) {
+            $path = self::OTP_SHARED_SECRET_PATH;
+        }
+        return self::create($path)->now();
     }
 
     /**
      * Create TOTP object
      *
+     * @param string $path
      * @return TOTP
      * @throws TestFrameworkException
      */
-    private static function create()
+    private static function create($path)
     {
-        if (self::$totp === null) {
+        if (!isset(self::$totps[$path])) {
             try {
                 // Get shared secret from Credential storage
-                $encryptedSecret = CredentialStore::getInstance()->getSecret(self::OTP_SHARED_SECRET_PATH);
+                $encryptedSecret = CredentialStore::getInstance()->getSecret($path);
                 $secret = CredentialStore::getInstance()->decryptSecretValue($encryptedSecret);
             } catch (TestFrameworkException $e) {
                 throw new TestFrameworkException('Unable to get OTP' . PHP_EOL . $e->getMessage());
             }
 
-            self::$totp = TOTP::create($secret);
-            self::$totp->setIssuer('MFTF');
-            self::$totp->setLabel('MFTF Testing');
+            self::$totps[$path] = TOTP::create($secret);
+            self::$totps[$path]->setIssuer('MFTF');
+            self::$totps[$path]->setLabel('MFTF Testing');
         }
-        return self::$totp;
+        return self::$totps[$path];
     }
 }

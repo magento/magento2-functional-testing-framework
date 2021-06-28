@@ -148,7 +148,7 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
         /** @var \Magento\FunctionalTestingFramework\Config\Dom $configMerger */
         $configMerger = null;
         $debugLevel = MftfApplicationConfig::getConfig()->getDebugLevel();
-        foreach ($fileList as $key => $content) {
+        foreach ($fileList as $content) {
             //check if file is empty and continue to next if it is
             if (!$this->verifyFileEmpty($content, $fileList->getFilename())) {
                 continue;
