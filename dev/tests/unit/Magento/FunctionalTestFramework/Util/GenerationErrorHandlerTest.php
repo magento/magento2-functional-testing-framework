@@ -3,10 +3,11 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace tests\unit\Magento\FunctionalTestFramework\Util;
 
-use AspectMock\Test as AspectMock;
+use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
 use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
@@ -21,10 +22,10 @@ class GenerationErrorHandlerTest extends MagentoTestCase
      */
     public function testGetDistinctErrors()
     {
-        AspectMock::double(
-            MftfApplicationConfig::class,
-            ['getPhase' => MftfApplicationConfig::GENERATION_PHASE]
-        );
+        $this->createMock(MftfApplicationConfig::class)
+            ->expects($this->once())
+            ->method('getPhase')
+            ->willReturn(MftfApplicationConfig::GENERATION_PHASE);
 
         $expectedAllErrors = [
             'test' => [
@@ -79,10 +80,10 @@ class GenerationErrorHandlerTest extends MagentoTestCase
      */
     public function testGetErrorsWithSameKey()
     {
-        AspectMock::double(
-            MftfApplicationConfig::class,
-            ['getPhase' => MftfApplicationConfig::GENERATION_PHASE]
-        );
+        $this->createMock(MftfApplicationConfig::class)
+            ->expects($this->once())
+            ->method('getPhase')
+            ->willReturn(MftfApplicationConfig::GENERATION_PHASE);
 
         $expectedAllErrors = [
             'test' => [
@@ -163,10 +164,10 @@ class GenerationErrorHandlerTest extends MagentoTestCase
      */
     public function testGetAllErrorsDuplicate()
     {
-        AspectMock::double(
-            MftfApplicationConfig::class,
-            ['getPhase' => MftfApplicationConfig::GENERATION_PHASE]
-        );
+        $this->createMock(MftfApplicationConfig::class)
+            ->expects($this->once())
+            ->method('getPhase')
+            ->willReturn(MftfApplicationConfig::GENERATION_PHASE);
 
         $expectedAllErrors = [
             'test' => [
@@ -254,7 +255,7 @@ class GenerationErrorHandlerTest extends MagentoTestCase
         $handler = GenerationErrorHandler::getInstance();
         $handler->reset();
 
-        $property = new \ReflectionProperty(GenerationErrorHandler::class, 'errors');
+        $property = new ReflectionProperty(GenerationErrorHandler::class, 'errors');
         $property->setAccessible(true);
         $property->setValue($handler, $errors);
 
@@ -334,10 +335,10 @@ class GenerationErrorHandlerTest extends MagentoTestCase
      */
     public function testResetError()
     {
-        AspectMock::double(
-            MftfApplicationConfig::class,
-            ['getPhase' => MftfApplicationConfig::GENERATION_PHASE]
-        );
+        $this->createMock(MftfApplicationConfig::class)
+            ->expects($this->once())
+            ->method('getPhase')
+            ->willReturn(MftfApplicationConfig::GENERATION_PHASE);
 
         GenerationErrorHandler::getInstance()->addError('something', 'some', 'error');
         GenerationErrorHandler::getInstance()->addError('otherthing', 'other', 'error');
@@ -353,7 +354,7 @@ class GenerationErrorHandlerTest extends MagentoTestCase
 
     public function tearDown(): void
     {
-        $property = new \ReflectionProperty(GenerationErrorHandler::class, 'instance');
+        $property = new ReflectionProperty(GenerationErrorHandler::class, 'instance');
         $property->setAccessible(true);
         $property->setValue(null);
     }
