@@ -23,7 +23,6 @@ class GenerationErrorHandlerTest extends MagentoTestCase
     public function testGetDistinctErrors()
     {
         $this->createMock(MftfApplicationConfig::class)
-            ->expects($this->once())
             ->method('getPhase')
             ->willReturn(MftfApplicationConfig::GENERATION_PHASE);
 
@@ -81,7 +80,6 @@ class GenerationErrorHandlerTest extends MagentoTestCase
     public function testGetErrorsWithSameKey()
     {
         $this->createMock(MftfApplicationConfig::class)
-            ->expects($this->once())
             ->method('getPhase')
             ->willReturn(MftfApplicationConfig::GENERATION_PHASE);
 
@@ -165,7 +163,6 @@ class GenerationErrorHandlerTest extends MagentoTestCase
     public function testGetAllErrorsDuplicate()
     {
         $this->createMock(MftfApplicationConfig::class)
-            ->expects($this->once())
             ->method('getPhase')
             ->willReturn(MftfApplicationConfig::GENERATION_PHASE);
 
@@ -336,7 +333,6 @@ class GenerationErrorHandlerTest extends MagentoTestCase
     public function testResetError()
     {
         $this->createMock(MftfApplicationConfig::class)
-            ->expects($this->once())
             ->method('getPhase')
             ->willReturn(MftfApplicationConfig::GENERATION_PHASE);
 
