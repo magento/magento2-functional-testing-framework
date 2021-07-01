@@ -21,14 +21,17 @@ class FileStorage extends BaseStorage
     private $secretData = [];
 
     /**
-     * FileStorage constructor
+     * Initialize secret data value which represents encrypted credentials
+     *
+     * @return void
      * @throws TestFrameworkException
      */
-    public function __construct()
+    private function initialize(): void
     {
-        parent::__construct();
-        $creds = $this->readInCredentialsFile();
-        $this->secretData = $this->encryptCredFileContents($creds);
+        if (!$this->secretData) {
+            $creds = $this->readInCredentialsFile();
+            $this->secretData = $this->encryptCredFileContents($creds);
+        }
     }
 
     /**
@@ -36,10 +39,12 @@ class FileStorage extends BaseStorage
      *
      * @param string $key
      * @return string|null
+     * @throws TestFrameworkException
      */
-    public function getEncryptedValue($key)
+    public function getEncryptedValue($key): ?string
     {
-        $value = null;
+        $this->initialize();
+
         // Check if secret is in cached array
         if (null !== ($value = parent::getEncryptedValue($key))) {
             return $value;
