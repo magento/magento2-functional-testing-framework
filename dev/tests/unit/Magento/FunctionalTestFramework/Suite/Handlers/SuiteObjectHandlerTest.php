@@ -23,6 +23,7 @@ class SuiteObjectHandlerTest extends MagentoTestCase
     /**
      * Tests basic parsing and accessors of suite object and suite object supporting classes.
      *
+     * @return void
      * @throws Exception
      */
     public function testGetSuiteObject(): void
@@ -81,6 +82,7 @@ class SuiteObjectHandlerTest extends MagentoTestCase
      * @param array $testData
      * @param array $suiteData
      *
+     * @return void
      * @throws Exception
      */
     private function setMockTestAndSuiteParserOutput(array $testData, array $suiteData): void
