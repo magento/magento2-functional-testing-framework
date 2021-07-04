@@ -3,32 +3,31 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
 
-use AspectMock\Proxy\Verifier;
-use AspectMock\Test as AspectMock;
-use Magento\FunctionalTestingFramework\ObjectManager\ObjectManager;
-use Magento\FunctionalTestingFramework\ObjectManagerFactory;
+use Exception;
+use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Parsers\ActionGroupDataParser;
 use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
-use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
-use Monolog\Handler\TestHandler;
-use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
+use tests\unit\Util\MockModuleResolverBuilder;
 use tests\unit\Util\TestDataArrayBuilder;
 use tests\unit\Util\TestLoggingUtil;
-use tests\unit\Util\MockModuleResolverBuilder;
 
 class ObjectExtensionUtilTest extends TestCase
 {
     /**
-     * Before test functionality
+     * Before test functionality.
+     *
      * @return void
+     * @throws Exception
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
         $resolverMock = new MockModuleResolverBuilder();
@@ -36,7 +35,8 @@ class ObjectExtensionUtilTest extends TestCase
     }
 
     /**
-     * After class functionality
+     * After class functionality.
+     *
      * @return void
      */
     public static function tearDownAfterClass(): void
@@ -45,10 +45,12 @@ class ObjectExtensionUtilTest extends TestCase
     }
 
     /**
-     * Tests generating a test that extends another test
-     * @throws \Exception
+     * Tests generating a test that extends another test.
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testGenerateExtendedTest()
+    public function testGenerateExtendedTest(): void
     {
         $mockActions = [
             "mockStep" => ["nodeName" => "mockNode", "stepKey" => "mockStep"]
@@ -86,10 +88,12 @@ class ObjectExtensionUtilTest extends TestCase
     }
 
     /**
-     * Tests generating a test that extends another test
-     * @throws \Exception
+     * Tests generating a test that extends another test.
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testGenerateExtendedWithHooks()
+    public function testGenerateExtendedWithHooks(): void
     {
         $mockBeforeHooks = [
             "beforeHookAction" => ["nodeName" => "mockNodeBefore", "stepKey" => "mockStepBefore"]
@@ -132,10 +136,12 @@ class ObjectExtensionUtilTest extends TestCase
     }
 
     /**
-     * Tests generating a test that extends another test
-     * @throws \Exception
+     * Tests generating a test that extends another test.
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testExtendedTestNoParent()
+    public function testExtendedTestNoParent(): void
     {
         $testDataArrayBuilder = new TestDataArrayBuilder();
         $mockExtendedTest = $testDataArrayBuilder
@@ -158,10 +164,12 @@ class ObjectExtensionUtilTest extends TestCase
     }
 
     /**
-     * Tests generating a test that extends another test
-     * @throws \Exception
+     * Tests generating a test that extends another test.
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testExtendingExtendedTest()
+    public function testExtendingExtendedTest(): void
     {
         $testDataArrayBuilder = new TestDataArrayBuilder();
         $mockParentTest = $testDataArrayBuilder
@@ -200,10 +208,12 @@ class ObjectExtensionUtilTest extends TestCase
     }
 
     /**
-     * Tests generating an action group that extends another action group
-     * @throws \Exception
+     * Tests generating an action group that extends another action group.
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testGenerateExtendedActionGroup()
+    public function testGenerateExtendedActionGroup(): void
     {
         $mockSimpleActionGroup = [
             "nodeName" => "actionGroup",
@@ -259,10 +269,12 @@ class ObjectExtensionUtilTest extends TestCase
     }
 
     /**
-     * Tests generating an action group that extends an action group that does not exist
-     * @throws \Exception
+     * Tests generating an action group that extends an action group that does not exist.
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testGenerateExtendedActionGroupNoParent()
+    public function testGenerateExtendedActionGroupNoParent(): void
     {
         $mockExtendedActionGroup = [
             "nodeName" => "actionGroup",
@@ -292,10 +304,12 @@ class ObjectExtensionUtilTest extends TestCase
     }
 
     /**
-     * Tests generating an action group that extends another action group that is already extended
-     * @throws \Exception
+     * Tests generating an action group that extends another action group that is already extended.
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testExtendingExtendedActionGroup()
+    public function testExtendingExtendedActionGroup(): void
     {
         $mockParentActionGroup = [
             "nodeName" => "actionGroup",
@@ -333,7 +347,7 @@ class ObjectExtensionUtilTest extends TestCase
         // parse and generate test object with mocked data
         try {
             ActionGroupObjectHandler::getInstance()->getObject('mockExtendedActionGroup');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // validate log statement
             TestLoggingUtil::getInstance()->validateMockLogStatement(
                 'error',
@@ -347,11 +361,12 @@ class ObjectExtensionUtilTest extends TestCase
     }
 
     /**
-     * Tests generating a test that extends a skipped parent test
+     * Tests generating a test that extends a skipped parent test.
      *
-     * @throws \Exception
+     * @return void
+     * @throws Exception
      */
-    public function testExtendedTestSkippedParent()
+    public function testExtendedTestSkippedParent(): void
     {
         $testDataArrayBuilder = new TestDataArrayBuilder();
         $mockParentTest = $testDataArrayBuilder
@@ -384,43 +399,55 @@ class ObjectExtensionUtilTest extends TestCase
     /**
      * Function used to set mock for parser return and force init method to run between tests.
      *
-     * @param array $testData
-     * @throws \Exception
+     * @param array|null $testData
+     * @param array|null $actionGroupData
+     *
+     * @return void
+     * @throws Exception
      */
-    private function setMockTestOutput($testData = null, $actionGroupData = null)
+    private function setMockTestOutput(array $testData = null, array $actionGroupData = null): void
     {
         // clear test object handler value to inject parsed content
-        $property = new \ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
+        $property = new ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
         $property->setAccessible(true);
         $property->setValue(null);
 
         // clear test object handler value to inject parsed content
-        $property = new \ReflectionProperty(ActionGroupObjectHandler::class, 'instance');
+        $property = new ReflectionProperty(ActionGroupObjectHandler::class, 'instance');
         $property->setAccessible(true);
         $property->setValue(null);
 
-        $mockDataParser = AspectMock::double(TestDataParser::class, ['readTestData' => $testData])->make();
-        $mockActionGroupParser = AspectMock::double(
-            ActionGroupDataParser::class,
-            ['readActionGroupData' => $actionGroupData]
-        )->make();
-        $instance = AspectMock::double(
-            ObjectManager::class,
-            [
-                'create' => function ($className) use (
-                    $mockDataParser,
-                    $mockActionGroupParser
-                ) {
-                    if ($className == TestDataParser::class) {
-                        return $mockDataParser;
+        $mockDataParser = $this->createMock(TestDataParser::class);
+        $mockDataParser
+            ->method('readTestData')
+            ->willReturn($testData);
+
+        $mockActionGroupParser = $this->createMock(ActionGroupDataParser::class);
+        $mockActionGroupParser
+            ->method('readActionGroupData')
+            ->willReturn($actionGroupData);
+
+        $instance = $this->createMock(ObjectManager::class);
+        $instance
+            ->method('create')
+            ->will(
+                $this->returnCallback(
+                    function ($className) use ($mockDataParser, $mockActionGroupParser) {
+                        if ($className === TestDataParser::class) {
+                            return $mockDataParser;
+                        }
+
+                        if ($className === ActionGroupDataParser::class) {
+                            return $mockActionGroupParser;
+                        }
+
+                        return null;
                     }
-                    if ($className == ActionGroupDataParser::class) {
-                        return $mockActionGroupParser;
-                    }
-                }
-            ]
-        )->make();
-        // bypass the private constructor
-        AspectMock::double(ObjectManagerFactory::class, ['getObjectManager' => $instance]);
+                )
+            );
+        // clear object manager value to inject expected instance
+        $property = new ReflectionProperty(ObjectManager::class, 'instance');
+        $property->setAccessible(true);
+        $property->setValue($instance);
     }
 }
