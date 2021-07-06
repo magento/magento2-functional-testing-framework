@@ -21,7 +21,9 @@ class CestFileCreatorUtil
     /**
      * CestFileCreatorUtil constructor.
      */
-    private function __construct(){}
+    private function __construct()
+    {
+    }
 
     /**
      * Get CestFileCreatorUtil instance.
@@ -41,9 +43,9 @@ class CestFileCreatorUtil
      * Create a single PHP file containing the $cestPhp using the $filename.
      * If the _generated directory doesn't exist it will be created.
      *
+     * @param string $filename
      * @param string $exportDirectory
      * @param string $testPhp
-     * @param string $filename
      *
      * @return void
      * @throws TestFrameworkException
