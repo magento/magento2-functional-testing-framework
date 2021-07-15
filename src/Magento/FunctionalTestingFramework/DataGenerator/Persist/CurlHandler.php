@@ -105,9 +105,9 @@ class CurlHandler
     /**
      * Get CurlHandler instance.
      *
-     * @param string $operation
+     * @param string           $operation
      * @param EntityDataObject $entityObject
-     * @param string|null $storeCode
+     * @param string|null      $storeCode
      *
      * @return CurlHandler
      */
