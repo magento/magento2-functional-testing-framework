@@ -3,18 +3,15 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace tests\unit\Magento\FunctionalTestFramework\DataGenerator\Handlers;
 
-use AspectMock\Test as AspectMock;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
+use Exception;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
-use Magento\FunctionalTestingFramework\DataGenerator\Parsers\DataProfileSchemaParser;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\CurlHandler;
-use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
-use Magento\FunctionalTestingFramework\ObjectManager;
-use Magento\FunctionalTestingFramework\ObjectManagerFactory;
+use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\ObjectHandlerUtil;
 use tests\unit\Util\TestLoggingUtil;
@@ -25,28 +22,31 @@ use tests\unit\Util\TestLoggingUtil;
 class PersistedObjectHandlerTest extends MagentoTestCase
 {
     /**
-     * Before test functionality
-     * @return void
+     * @inheritDoc
      */
     public function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
 
-    public function testCreateEntityWithNonExistingName()
+    /**
+     * Validate testCreateEntityWithNonExistingName.
+     *
+     * @return void
+     * @throws TestReferenceException
+     */
+    public function testCreateEntityWithNonExistingName(): void
     {
         // Test Data and Variables
-        $entityName = "InvalidEntity";
-        $entityStepKey = "StepKey";
+        $entityName = 'InvalidEntity';
+        $entityStepKey = 'StepKey';
         $scope = PersistedObjectHandler::TEST_SCOPE;
 
         $exceptionMessage = "Entity \"" . $entityName . "\" does not exist." .
             "\nException occurred executing action at StepKey \"" . $entityStepKey . "\"";
 
         $this->expectException(TestReferenceException::class);
-
         $this->expectExceptionMessage($exceptionMessage);
-
         $handler = PersistedObjectHandler::getInstance();
 
         // Call method
@@ -57,13 +57,19 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         );
     }
 
-    public function testCreateSimpleEntity()
+    /**
+     * Validate testCreateSimpleEntity.
+     *
+     * @return void
+     * @throws TestReferenceException
+     */
+    public function testCreateSimpleEntity(): void
     {
         // Test Data and Variables
-        $entityName = "EntityOne";
-        $entityStepKey = "StepKey";
-        $dataKey = "testKey";
-        $dataValue = "testValue";
+        $entityName = 'EntityOne';
+        $entityStepKey = 'StepKey';
+        $dataKey = 'testKey';
+        $dataValue = 'testValue';
         $scope = PersistedObjectHandler::TEST_SCOPE;
         $parserOutput = [
             'entity' => [
@@ -78,7 +84,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
                 ]
             ]
         ];
-        $jsonResponse =  "
+        $jsonResponse = "
             {
                \"" . strtolower($dataKey) . "\" : \"{$dataValue}\"
             }
@@ -100,13 +106,19 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         $this->assertEquals($dataValue, $persistedValue);
     }
 
-    public function testDeleteSimpleEntity()
+    /**
+     * Validate testDeleteSimpleEntity.
+     *
+     * @return void
+     * @throws TestReferenceException
+     */
+    public function testDeleteSimpleEntity(): void
     {
         // Test Data and Variables
-        $entityName = "EntityOne";
-        $entityStepKey = "StepKey";
-        $dataKey = "testKey";
-        $dataValue = "testValue";
+        $entityName = 'EntityOne';
+        $entityStepKey = 'StepKey';
+        $dataKey = 'testKey';
+        $dataValue = 'testValue';
         $scope = PersistedObjectHandler::TEST_SCOPE;
         $parserOutput = [
             'entity' => [
@@ -121,7 +133,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
                 ]
             ]
         ];
-        $jsonResponse =  "
+        $jsonResponse = "
             {
                \"" . strtolower($dataKey) . "\" : \"{$dataValue}\"
             }
@@ -148,13 +160,19 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         $this->addToAssertionCount(1);
     }
 
-    public function testGetSimpleEntity()
+    /**
+     * Validate testGetSimpleEntity.
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testGetSimpleEntity(): void
     {
         // Test Data and Variables
-        $entityName = "EntityOne";
-        $entityStepKey = "StepKey";
-        $dataKey = "testKey";
-        $dataValue = "testValue";
+        $entityName = 'EntityOne';
+        $entityStepKey = 'StepKey';
+        $dataKey = 'testKey';
+        $dataValue = 'testValue';
         $scope = PersistedObjectHandler::TEST_SCOPE;
         $parserOutput = [
             'entity' => [
@@ -169,7 +187,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
                 ]
             ]
         ];
-        $jsonResponse =  "
+        $jsonResponse = "
             {
                \"" . strtolower($dataKey) . "\" : \"{$dataValue}\"
             }
@@ -191,16 +209,22 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         $this->assertEquals($dataValue, $persistedValue);
     }
 
-    public function testUpdateSimpleEntity()
+    /**
+     * Validate testUpdateSimpleEntity.
+     *
+     * @return void
+     * @throws TestReferenceException
+     */
+    public function testUpdateSimpleEntity(): void
     {
-        $this->markTestSkipped("Potential Bug in DataPersistenceHandler class");
+        $this->markTestSkipped('Potential Bug in DataPersistenceHandler class');
         // Test Data and Variables
-        $entityName = "EntityOne";
-        $entityStepKey = "StepKey";
-        $dataKey = "testKey";
-        $dataValue = "testValue";
-        $updateName = "EntityTwo";
-        $updateValue = "newValue";
+        $entityName = 'EntityOne';
+        $entityStepKey = 'StepKey';
+        $dataKey = 'testKey';
+        $dataValue = 'testValue';
+        $updateName = 'EntityTwo';
+        $updateValue = 'newValue';
         $scope = PersistedObjectHandler::TEST_SCOPE;
         $parserOutput = [
             'entity' => [
@@ -224,7 +248,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
                 ]
             ]
         ];
-        $jsonResponse =  "
+        $jsonResponse = "
             {
                \"" . strtolower($dataKey) . "\" : \"{$dataValue}\"
             }
@@ -257,21 +281,27 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         $this->assertEquals($updateValue, $persistedValue);
     }
 
-    public function testRetrieveEntityAcrossScopes()
+    /**
+     * Validate testRetrieveEntityAcrossScopes.
+     *
+     * @return void
+     * @throws TestReferenceException
+     */
+    public function testRetrieveEntityAcrossScopes(): void
     {
         // Test Data and Variables
-        $entityNameOne = "EntityOne";
-        $entityStepKeyOne = "StepKeyOne";
-        $dataKeyOne = "testKeyOne";
-        $dataValueOne = "testValueOne";
-        $entityNameTwo = "EntityTwo";
-        $entityStepKeyTwo = "StepKeyTwo";
-        $dataKeyTwo = "testKeyTwo";
-        $dataValueTwo = "testValueTwo";
-        $entityNameThree = "EntityThree";
-        $entityStepKeyThree = "StepKeyThree";
-        $dataKeyThree = "testKeyThree";
-        $dataValueThree = "testValueThree";
+        $entityNameOne = 'EntityOne';
+        $entityStepKeyOne = 'StepKeyOne';
+        $dataKeyOne = 'testKeyOne';
+        $dataValueOne = 'testValueOne';
+        $entityNameTwo = 'EntityTwo';
+        $entityStepKeyTwo = 'StepKeyTwo';
+        $dataKeyTwo = 'testKeyTwo';
+        $dataValueTwo = 'testValueTwo';
+        $entityNameThree = 'EntityThree';
+        $entityStepKeyThree = 'StepKeyThree';
+        $dataKeyThree = 'testKeyThree';
+        $dataValueThree = 'testValueThree';
 
         $parserOutputOne = [
             'entity' => [
@@ -368,6 +398,8 @@ class PersistedObjectHandlerTest extends MagentoTestCase
     }
 
     /**
+     * Validate testRetrieveEntityValidField.
+     *
      * @param string $name
      * @param string $key
      * @param string $value
@@ -375,9 +407,18 @@ class PersistedObjectHandlerTest extends MagentoTestCase
      * @param string $scope
      * @param string $stepKey
      * @dataProvider entityDataProvider
+     *
+     * @return void
+     * @throws TestReferenceException
      */
-    public function testRetrieveEntityValidField($name, $key, $value, $type, $scope, $stepKey)
-    {
+    public function testRetrieveEntityValidField(
+        string $name,
+        string $key,
+        string $value,
+        string $type,
+        string $scope,
+        string $stepKey
+    ): void {
         $parserOutputOne = [
             'entity' => [
                 $name => [
@@ -411,6 +452,8 @@ class PersistedObjectHandlerTest extends MagentoTestCase
     }
 
     /**
+     * Validate testRetrieveEntityInValidField.
+     *
      * @param string $name
      * @param string $key
      * @param string $value
@@ -418,14 +461,21 @@ class PersistedObjectHandlerTest extends MagentoTestCase
      * @param string $scope
      * @param string $stepKey
      * @dataProvider entityDataProvider
+     *
+     * @return void
      * @throws TestReferenceException
-     * @throws TestFrameworkException
      */
-    public function testRetrieveEntityInValidField($name, $key, $value, $type, $scope, $stepKey)
-    {
-        $invalidDataKey = "invalidDataKey";
+    public function testRetrieveEntityInValidField(
+        string $name,
+        string $key,
+        string $value,
+        string $type,
+        string $scope,
+        string $stepKey
+    ): void {
+        $invalidDataKey = 'invalidDataKey';
         $warnMsg = "Undefined field {$invalidDataKey} in entity object with a stepKey of {$stepKey}\n";
-        $warnMsg .= "Please fix the invalid reference. This will result in fatal error in next major release.";
+        $warnMsg .= 'Please fix the invalid reference. This will result in fatal error in next major release.';
 
         $parserOutputOne = [
             'entity' => [
@@ -465,8 +515,10 @@ class PersistedObjectHandlerTest extends MagentoTestCase
 
     /**
      * Data provider for testRetrieveEntityField
+     *
+     * @return array
      */
-    public static function entityDataProvider()
+    public static function entityDataProvider(): array
     {
         return [
             ['Entity1', 'testKey1', 'testValue1', 'testType', PersistedObjectHandler::HOOK_SCOPE, 'StepKey1'],
@@ -475,20 +527,37 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         ];
     }
 
-    public function mockCurlHandler($response)
+    /**
+     * Create mock curl handler.
+     *
+     * @param string $response
+     * @throws Exception
+     */
+    public function mockCurlHandler(string $response): void
     {
-        AspectMock::double(CurlHandler::class, [
-            "__construct" => null,
-            "executeRequest" => $response,
-            "getRequestDataArray" => [],
-            "isContentTypeJson" => true
-        ]);
+        $mockCurlHandler = $this->createMock(CurlHandler::class);
+        $mockCurlHandler->expects($this->any())
+            ->method('executeRequest')
+            ->willReturn($response);
+        $mockCurlHandler->expects($this->once())
+            ->method('getRequestDataArray')
+            ->willReturn([]);
+        $mockCurlHandler->expects($this->once())
+            ->method('isContentTypeJson')
+            ->willReturn(true);
+
+        $property = new ReflectionProperty(CurlHandler::class, "INSTANCE");
+        $property->setAccessible(true);
+        $property->setValue($mockCurlHandler);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function tearDown(): void
     {
         // Clear out Singleton between tests
-        $property = new \ReflectionProperty(PersistedObjectHandler::class, "INSTANCE");
+        $property = new ReflectionProperty(PersistedObjectHandler::class, 'INSTANCE');
         $property->setAccessible(true);
         $property->setValue(null);
 
@@ -496,8 +565,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
     }
 
     /**
-     * After class functionality
-     * @return void
+     * @inheritDoc
      */
     public static function tearDownAfterClass(): void
     {

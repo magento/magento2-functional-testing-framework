@@ -64,6 +64,13 @@ class CurlHandler
     private $isJson;
 
     /**
+     * Singleton CurlHandler Instance.
+     *
+     * @var CurlHandler
+     */
+    private static $INSTANCE;
+
+    /**
      * Operation to Curl method mapping.
      *
      * @var array
@@ -82,7 +89,7 @@ class CurlHandler
      * @param EntityDataObject $entityObject
      * @param string           $storeCode
      */
-    public function __construct($operation, $entityObject, $storeCode = null)
+    private function __construct($operation, $entityObject, $storeCode = null)
     {
         $this->operation = $operation;
         $this->entityObject = $entityObject;
@@ -93,6 +100,27 @@ class CurlHandler
             $this->entityObject->getType()
         );
         $this->isJson = false;
+    }
+
+    /**
+     * Get CurlHandler instance.
+     *
+     * @param string $operation
+     * @param EntityDataObject $entityObject
+     * @param string|null $storeCode
+     *
+     * @return CurlHandler
+     */
+    public static function getInstance(
+        string $operation,
+        EntityDataObject $entityObject,
+        ?string $storeCode = null
+    ) {
+        if (self::$INSTANCE === null) {
+            return new self($operation, $entityObject, $storeCode);
+        }
+
+        return self::$INSTANCE;
     }
 
     /**
