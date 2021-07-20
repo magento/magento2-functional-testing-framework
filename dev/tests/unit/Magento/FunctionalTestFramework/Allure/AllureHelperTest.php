@@ -3,11 +3,14 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace tests\unit\Magento\FunctionalTestFramework\Allure;
 
 use Magento\FunctionalTestingFramework\Allure\AllureHelper;
 use Magento\FunctionalTestingFramework\Allure\Event\AddUniqueAttachmentEvent;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 use Yandex\Allure\Adapter\Allure;
 use Yandex\Allure\Adapter\AllureException;
 use Yandex\Allure\Adapter\Event\StepFinishedEvent;
@@ -16,25 +19,32 @@ use Yandex\Allure\Adapter\Model\Attachment;
 
 class AllureHelperTest extends TestCase
 {
-    const MOCK_FILENAME = 'filename';
+    private const MOCK_FILENAME = 'filename';
 
     /**
-     * Clear Allure Lifecycle
+     * Clear Allure Lifecycle.
+     *
+     * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         Allure::setDefaultLifecycle();
+        $instanceProperty = new ReflectionProperty(AddUniqueAttachmentEvent::class, 'instance');
+        $instanceProperty->setAccessible(true);
+        $instanceProperty->setValue(null);
     }
 
     /**
-     * AddAttachmentToStep should add an attachment to the current step
+     * The AddAttachmentToStep should add an attachment to the current step.
+     *
+     * @return void
      * @throws AllureException
      */
-    public function testAddAttachmentToStep()
+    public function testAddAttachmentToStep(): void
     {
-        $this->mockAttachmentWriteEvent();
-        $expectedData = "string";
-        $expectedCaption = "caption";
+        $expectedData = 'string';
+        $expectedCaption = 'caption';
+        $this->mockAttachmentWriteEvent($expectedData, $expectedCaption);
 
         //Prepare Allure lifecycle
         Allure::lifecycle()->fire(new StepStartedEvent('firstStep'));
@@ -49,14 +59,16 @@ class AllureHelperTest extends TestCase
     }
 
     /**
-     * AddAttachmentToLastStep should add an attachment only to the last step
+     * The AddAttachmentToLastStep should add an attachment only to the last step.
+     *
+     * @return void
      * @throws AllureException
      */
-    public function testAddAttachmentToLastStep()
+    public function testAddAttachmentToLastStep(): void
     {
-        $this->mockAttachmentWriteEvent();
-        $expectedData = "string";
-        $expectedCaption = "caption";
+        $expectedData = 'string';
+        $expectedCaption = 'caption';
+        $this->mockAttachmentWriteEvent($expectedData, $expectedCaption);
 
         //Prepare Allure lifecycle
         Allure::lifecycle()->fire(new StepStartedEvent('firstStep'));
@@ -85,14 +97,15 @@ class AllureHelperTest extends TestCase
     }
 
     /**
-     * AddAttachment actions should have files with different attachment names
+     * The AddAttachment actions should have files with different attachment names.
+     *
+     * @return void
      * @throws AllureException
      */
-    public function testAddAttachementUniqueName()
+    public function testAddAttachmentUniqueName(): void
     {
-        $expectedData = "string";
-        $expectedCaption = "caption";
-
+        $expectedData = 'string';
+        $expectedCaption = 'caption';
         $this->mockCopyFile($expectedData, $expectedCaption);
 
         //Prepare Allure lifecycle
@@ -110,27 +123,52 @@ class AllureHelperTest extends TestCase
     }
 
     /**
-     * Mock entire attachment writing mechanisms
+     * Mock entire attachment writing mechanisms.
+     *
+     * @param string $filePathOrContents
+     * @param string $caption
+     *
+     * @return void
      */
-    public function mockAttachmentWriteEvent()
+    private function mockAttachmentWriteEvent(string $filePathOrContents, string $caption): void
     {
-        $this->createMock(AddUniqueAttachmentEvent::class)
-            ->expects($this->any())
+        $mockInstance = $this->getMockBuilder(AddUniqueAttachmentEvent::class)
+            ->setConstructorArgs([$filePathOrContents, $caption])
+            ->disallowMockingUnknownTypes()
+            ->onlyMethods(['getAttachmentFileName'])
+            ->getMock();
+
+        $mockInstance
             ->method('getAttachmentFileName')
             ->willReturn(self::MOCK_FILENAME);
+
+        $instanceProperty = new ReflectionProperty(AddUniqueAttachmentEvent::class, 'instance');
+        $instanceProperty->setAccessible(true);
+        $instanceProperty->setValue($mockInstance, $mockInstance);
     }
 
     /**
-     * Mock only file writing mechanism
-     * @throws \ReflectionException
+     * Mock only file writing mechanism.
+     *
+     * @param string $filePathOrContents
+     * @param string $caption
+     *
+     * @return void
      */
-    public function mockCopyFile(string $expectedData, string $expectedCaption)
+    private function mockCopyFile(string $filePathOrContents, string $caption): void
     {
-        $addUniqueAttachmentEvent = new AddUniqueAttachmentEvent($expectedData, $expectedCaption);
-        $reflection = new \ReflectionClass(AddUniqueAttachmentEvent::class);
-        $reflectionMethod = $reflection->getMethod('copyFile');
-        $reflectionMethod->setAccessible(true);
-        $output = $reflectionMethod->invoke($addUniqueAttachmentEvent);
-        $this->assertEquals(true, $output);
+        $mockInstance = $this->getMockBuilder(AddUniqueAttachmentEvent::class)
+            ->setConstructorArgs([$filePathOrContents, $caption])
+            ->disallowMockingUnknownTypes()
+            ->onlyMethods(['copyFile'])
+            ->getMock();
+
+        $mockInstance
+            ->method('copyFile')
+            ->willReturn(true);
+
+        $instanceProperty = new ReflectionProperty(AddUniqueAttachmentEvent::class, 'instance');
+        $instanceProperty->setAccessible(true);
+        $instanceProperty->setValue($mockInstance, $mockInstance);
     }
 }

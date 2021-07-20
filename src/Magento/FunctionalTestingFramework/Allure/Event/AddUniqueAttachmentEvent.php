@@ -1,35 +1,63 @@
 <?php
-
 /**
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\FunctionalTestingFramework\Allure\Event;
 
 use Symfony\Component\Mime\MimeTypes;
 use Yandex\Allure\Adapter\AllureException;
 use Yandex\Allure\Adapter\Event\AddAttachmentEvent;
 
-const DEFAULT_FILE_EXTENSION = 'txt';
-const DEFAULT_MIME_TYPE = 'text/plain';
-
 class AddUniqueAttachmentEvent extends AddAttachmentEvent
 {
-    /**
-     * @var string
-     */
-    private $type;
+    private const DEFAULT_FILE_EXTENSION = 'txt';
+    private const DEFAULT_MIME_TYPE = 'text/plain';
 
     /**
-     * Near copy of parent function, added uniqid call for filename to prevent buggy allure behavior
-     * @param string $filePathOrContents
+     * @var AddUniqueAttachmentEvent|null
+     */
+    private static $instance;
+
+    /**
+     * An alternative way to instantiate an instance of this class. Used to mock this class object in unit tests.
+     *
+     * @param mixed       $filePathOrContents
+     * @param string      $caption
+     * @param string|null $type
+     *
+     * @return AddUniqueAttachmentEvent
+     */
+    public static function getInstance(
+        $filePathOrContents,
+        string $caption,
+        ?string $type = null
+    ): AddUniqueAttachmentEvent {
+        if (!self::$instance) {
+            self::$instance = new AddUniqueAttachmentEvent(
+                $filePathOrContents,
+                $caption,
+                $type
+            );
+        }
+        return self::$instance;
+    }
+
+    /**
+     * Near copy of parent function, added uniqid call for filename to prevent buggy allure behavior.
+     *
+     * @param mixed  $filePathOrContents
      * @param string $type
+     *
      * @return string
      * @throws AllureException
      */
-    public function getAttachmentFileName($filePathOrContents, $type)
+    public function getAttachmentFileName($filePathOrContents, $type): string
     {
         $filePath = $filePathOrContents;
+
         if (!file_exists($filePath) || !is_file($filePath)) {
             //Save contents to temporary file
             $filePath = tempnam(sys_get_temp_dir(), 'allure-attachment');
@@ -40,13 +68,11 @@ class AddUniqueAttachmentEvent extends AddAttachmentEvent
 
         if (!isset($type)) {
             $type = $this->guessFileMimeType($filePath);
-            $this->type = $type;
         }
-
         $fileExtension = $this->guessFileExtension($type);
-
         $fileSha1 = uniqid(sha1_file($filePath));
         $outputPath = parent::getOutputPath($fileSha1, $fileExtension);
+
         if (!$this->copyFile($filePath, $outputPath)) {
             throw new AllureException("Failed to copy attachment from $filePath to $outputPath.");
         }
@@ -56,51 +82,48 @@ class AddUniqueAttachmentEvent extends AddAttachmentEvent
 
     /**
      * Copies file from one path to another. Wrapper for mocking in unit test.
+     *
      * @param string $filePath
      * @param string $outputPath
+     *
      * @return boolean
      */
-    private function copyFile($filePath, $outputPath)
+    public function copyFile(string $filePath, string $outputPath): bool
     {
         return copy($filePath, $outputPath);
     }
 
     /**
-     * Copy of parent private function
+     * Copy of parent private function.
+     *
      * @param string $filePath
+     *
      * @return string
      */
-    private function guessFileMimeType($filePath)
+    private function guessFileMimeType(string $filePath): string
     {
         $type = MimeTypes::getDefault()->guessMimeType($filePath);
+
         if (!isset($type)) {
-            return DEFAULT_MIME_TYPE;
+            return self::DEFAULT_MIME_TYPE;
         }
         return $type;
     }
 
     /**
-     * Copy of parent private function
+     * Copy of parent private function.
+     *
      * @param string $mimeType
+     *
      * @return string
      */
-    private function guessFileExtension($mimeType)
+    private function guessFileExtension(string $mimeType): string
     {
         $candidate = MimeTypes::getDefault()->getExtensions($mimeType);
+
         if (empty($candidate)) {
-            return DEFAULT_FILE_EXTENSION;
+            return self::DEFAULT_FILE_EXTENSION;
         }
         return reset($candidate);
-    }
-
-    /**
-     * Copy of parent private function
-     * @param string $sha1
-     * @param string $extension
-     * @return string
-     */
-    public function getOutputFileName($sha1, $extension)
-    {
-        return $sha1 . '-attachment.' . $extension;
     }
 }
