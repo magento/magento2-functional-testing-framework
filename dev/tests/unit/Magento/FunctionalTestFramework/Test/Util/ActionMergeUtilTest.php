@@ -3,6 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
 
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
@@ -12,16 +14,18 @@ use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
+use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\TestLoggingUtil;
 
 class ActionMergeUtilTest extends MagentoTestCase
 {
     /**
-     * Before test functionality
+     * Before test functionality.
+     *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
@@ -30,8 +34,10 @@ class ActionMergeUtilTest extends MagentoTestCase
      * Test to validate actions are properly ordered during a merge.
      *
      * @return void
+     * @throws TestReferenceException
+     * @throws XmlException
      */
-    public function testResolveActionStepOrdering()
+    public function testResolveActionStepOrdering(): void
     {
         $actions = [];
         $actionsLength = 11;
@@ -45,7 +51,6 @@ class ActionMergeUtilTest extends MagentoTestCase
             $stepKey = 'stepKey'. $i;
             $type = 'testType';
             $actionAttributes = [];
-
             $actions[] = new ActionObject($stepKey, $type, $actionAttributes);
         }
 
@@ -92,8 +97,10 @@ class ActionMergeUtilTest extends MagentoTestCase
      * Test to validate action steps properly resolve entity data references.
      *
      * @return void
+     * @throws TestReferenceException
+     * @throws XmlException
      */
-    public function testResolveActionStepEntityData()
+    public function testResolveActionStepEntityData(): void
     {
         $dataObjectName = 'myObject';
         $dataObjectType = 'testObject';
@@ -110,40 +117,34 @@ class ActionMergeUtilTest extends MagentoTestCase
 
         // Set up mock DataObject Handler
         $mockDOHInstance = $this->createMock(DataObjectHandler::class);
-        $mockDOHInstance->expects($this->any())
+        $mockDOHInstance
+            ->expects($this->any())
             ->method('getObject')
             ->willReturn($mockDataObject);
-        $property = new \ReflectionProperty(DataObjectHandler::class, 'INSTANCE');
+        $property = new ReflectionProperty(DataObjectHandler::class, 'INSTANCE');
         $property->setAccessible(true);
-        $property->setValue($mockDOHInstance);
+        $property->setValue($mockDOHInstance, $mockDOHInstance);
 
         // Create test object and action object
         $actionAttributes = [$userInputKey => $userInputValue];
         $actions[$actionName] = new ActionObject($actionName, $actionType, $actionAttributes);
-
         $this->assertEquals($userInputValue, $actions[$actionName]->getCustomActionAttributes()[$userInputKey]);
 
         $mergeUtil = new ActionMergeUtil("test", "TestCase");
         $resolvedActions = $mergeUtil->resolveActionSteps($actions);
-
         $this->assertEquals($dataFieldValue, $resolvedActions[$actionName]->getCustomActionAttributes()[$userInputKey]);
     }
 
     /**
      * Verify that an XmlException is thrown when an action references a non-existant action.
      *
-     * @throws TestReferenceException
-     * @throws XmlException
      * @return void
-     */
-    /**
      * @throws TestReferenceException
      * @throws XmlException
      */
-    public function testNoActionException()
+    public function testNoActionException(): void
     {
         $actionObjects = [];
-
         $actionObjects[] = new ActionObject('actionKey1', 'bogusType', []);
         $actionObjects[] = new ActionObject(
             'actionKey2',
@@ -153,8 +154,7 @@ class ActionMergeUtilTest extends MagentoTestCase
             ActionObject::MERGE_ACTION_ORDER_BEFORE
         );
 
-        $this->expectException(\Magento\FunctionalTestingFramework\Exceptions\XmlException::class);
-
+        $this->expectException(XmlException::class);
         $actionMergeUtil = new ActionMergeUtil("actionMergeUtilTest", "TestCase");
         $actionMergeUtil->resolveActionSteps($actionObjects);
     }
@@ -162,11 +162,11 @@ class ActionMergeUtilTest extends MagentoTestCase
     /**
      * Verify that a <waitForPageLoad> action is added after actions that have a wait (timeout property).
      *
+     * @return void
      * @throws TestReferenceException
      * @throws XmlException
-     * @return void
      */
-    public function testInsertWait()
+    public function testInsertWait(): void
     {
         $actionObjectOne = new ActionObject('actionKey1', 'bogusType', []);
         $actionObjectOne->setTimeout(42);
@@ -189,10 +189,11 @@ class ActionMergeUtilTest extends MagentoTestCase
     /**
      * Verify that a <fillField> action is replaced by <fillSecretField> when secret _CREDS are referenced.
      *
+     * @return void
      * @throws TestReferenceException
      * @throws XmlException
      */
-    public function testValidFillFieldSecretFunction()
+    public function testValidFillFieldSecretFunction(): void
     {
         $actionObjectOne = new ActionObject(
             'actionKey1',
@@ -202,7 +203,6 @@ class ActionMergeUtilTest extends MagentoTestCase
         $actionObject = [$actionObjectOne];
 
         $actionMergeUtil = new ActionMergeUtil('actionMergeUtilTest', 'TestCase');
-
         $result = $actionMergeUtil->resolveActionSteps($actionObject);
 
         $expectedValue = new ActionObject(
@@ -216,10 +216,11 @@ class ActionMergeUtilTest extends MagentoTestCase
     /**
      * Verify that a <magentoCLI> action uses <magentoCLI> when secret _CREDS are referenced.
      *
+     * @return void
      * @throws TestReferenceException
      * @throws XmlException
      */
-    public function testValidMagentoCLISecretFunction()
+    public function testValidMagentoCLISecretFunction(): void
     {
         $actionObjectOne = new ActionObject(
             'actionKey1',
@@ -229,7 +230,6 @@ class ActionMergeUtilTest extends MagentoTestCase
         $actionObject = [$actionObjectOne];
 
         $actionMergeUtil = new ActionMergeUtil('actionMergeUtilTest', 'TestCase');
-
         $result = $actionMergeUtil->resolveActionSteps($actionObject);
 
         $expectedValue = new ActionObject(
@@ -243,10 +243,11 @@ class ActionMergeUtilTest extends MagentoTestCase
     /**
      * Verify that a <field> override in a <createData> action uses <field> when secret _CREDS are referenced.
      *
+     * @return void
      * @throws TestReferenceException
      * @throws XmlException
      */
-    public function testValidCreateDataSecretFunction()
+    public function testValidCreateDataSecretFunction(): void
     {
         $actionObjectOne = new ActionObject(
             'actionKey1',
@@ -256,7 +257,6 @@ class ActionMergeUtilTest extends MagentoTestCase
         $actionObject = [$actionObjectOne];
 
         $actionMergeUtil = new ActionMergeUtil('actionMergeUtilTest', 'TestCase');
-
         $result = $actionMergeUtil->resolveActionSteps($actionObject);
 
         $expectedValue = new ActionObject(
@@ -270,10 +270,11 @@ class ActionMergeUtilTest extends MagentoTestCase
     /**
      * Verify that a <click> action throws an exception when secret _CREDS are referenced.
      *
+     * @return void
      * @throws TestReferenceException
      * @throws XmlException
      */
-    public function testInvalidSecretFunctions()
+    public function testInvalidSecretFunctions(): void
     {
         $this->expectException(TestReferenceException::class);
         $this->expectExceptionMessage(
@@ -292,7 +293,8 @@ class ActionMergeUtilTest extends MagentoTestCase
     }
 
     /**
-     * After class functionality
+     * After class functionality.
+     *
      * @return void
      */
     public static function tearDownAfterClass(): void
