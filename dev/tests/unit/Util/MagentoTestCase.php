@@ -22,7 +22,6 @@ class MagentoTestCase extends TestCase
         // Should be used to clean AspectMock mocking before using PHPUnit mocking and Reflection.
         AspectMock::clean();
         parent::setUpBeforeClass();
-        parent::setUpBeforeClass();
     }
 
     /**
