@@ -19,6 +19,8 @@ class MagentoTestCase extends TestCase
         if (!self::fileExists(DOCS_OUTPUT_DIR)) {
             mkdir(DOCS_OUTPUT_DIR, 0755, true);
         }
+        // Should be used to clean AspectMock mocking before using PHPUnit mocking and Reflection.
+        AspectMock::clean();
         parent::setUpBeforeClass();
     }
 
