@@ -22,30 +22,6 @@ class AddUniqueAttachmentEvent extends AddAttachmentEvent
     private static $instance;
 
     /**
-     * An alternative way to instantiate an instance of this class. Used to mock this class object in unit tests.
-     *
-     * @param mixed       $filePathOrContents
-     * @param string      $caption
-     * @param string|null $type
-     *
-     * @return AddUniqueAttachmentEvent
-     */
-    public static function getInstance(
-        $filePathOrContents,
-        string $caption,
-        ?string $type = null
-    ): AddUniqueAttachmentEvent {
-        if (!self::$instance) {
-            self::$instance = new AddUniqueAttachmentEvent(
-                $filePathOrContents,
-                $caption,
-                $type
-            );
-        }
-        return self::$instance;
-    }
-
-    /**
      * Near copy of parent function, added uniqid call for filename to prevent buggy allure behavior.
      *
      * @param mixed  $filePathOrContents
@@ -91,6 +67,30 @@ class AddUniqueAttachmentEvent extends AddAttachmentEvent
     public function copyFile(string $filePath, string $outputPath): bool
     {
         return copy($filePath, $outputPath);
+    }
+
+    /**
+     * Unit test helper function.
+     *
+     * @param mixed       $filePathOrContents
+     * @param string      $caption
+     * @param string|null $type
+     *
+     * @return AddUniqueAttachmentEvent
+     */
+    public static function getInstance(
+        $filePathOrContents,
+        string $caption,
+        ?string $type = null
+    ): AddUniqueAttachmentEvent {
+        if (!self::$instance) {
+            self::$instance = new AddUniqueAttachmentEvent(
+                $filePathOrContents,
+                $caption,
+                $type
+            );
+        }
+        return self::$instance;
     }
 
     /**
