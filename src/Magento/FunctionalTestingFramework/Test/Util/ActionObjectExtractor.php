@@ -305,7 +305,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
         });
 
         foreach ($atRiskStepRef as $stepKey => $stepRefs) {
-            LoggingUtil::getInstance()->getLogger(ActionObjectExtractor::class)->warn(
+            LoggingUtil::getInstance()->getLogger(ActionObjectExtractor::class)->warning(
                 'multiple actions referencing step key',
                 ['test' => $testName, 'stepKey' => $stepKey, 'ref' => $stepRefs]
             );

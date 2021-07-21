@@ -585,7 +585,7 @@ class ModuleResolver
         } else {
             $warnMsg = 'Path: ' . $value . ' is ignored by ModuleResolver. ' . PHP_EOL . 'Path: ';
             $warnMsg .= $inArray[$index] . ' is set for Module: ' . $index . PHP_EOL;
-            LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->warn($warnMsg);
+            LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->warning($warnMsg);
         }
         return $outArray;
     }

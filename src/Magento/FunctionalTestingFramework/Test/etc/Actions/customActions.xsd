@@ -335,6 +335,7 @@
         </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
+                <xs:attribute ref="userInput"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
