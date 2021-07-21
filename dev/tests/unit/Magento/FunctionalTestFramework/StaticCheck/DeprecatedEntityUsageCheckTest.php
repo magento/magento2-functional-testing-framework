@@ -6,7 +6,6 @@
 
 namespace tests\unit\Magento\FunctionalTestFramework\StaticCheck;
 
-use AspectMock\Test as AspectMock;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\OperationDefinitionObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\Page\Objects\ElementObject;
@@ -32,11 +31,6 @@ class DeprecatedEntityUsageCheckTest extends MagentoTestCase
     {
         $this->staticCheck = new DeprecatedEntityUsageCheck();
         $this->staticCheckClass = new \ReflectionClass($this->staticCheck);
-    }
-
-    public function tearDown(): void
-    {
-        AspectMock::clean();
     }
 
     public function testInvalidPathOption()
