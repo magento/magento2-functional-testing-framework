@@ -3,13 +3,15 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace tests\unit\Magento\FunctionalTestFramework\DataGenerator\Persist;
 
-use AspectMock\Test as AspectMock;
+use Exception;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\OperationDefinitionObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\OperationDataArrayResolver;
-use Magento\FunctionalTestingFramework\Util\Iterator\AbstractIterator;
+use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\EntityDataObjectBuilder;
 use tests\unit\Util\OperationDefinitionBuilder;
@@ -18,27 +20,28 @@ use tests\unit\Util\TestLoggingUtil;
 
 class OperationDataArrayResolverTest extends MagentoTestCase
 {
-    const NESTED_METADATA_EXPECTED_RESULT = ["parentType" => [
-        "name" => "Hopper",
-        "address" => ["city" => "Hawkins", "state" => "Indiana", "zip" => 78758],
-        "isPrimary" => true,
-        "gpa" => 3.5678,
-        "phone" => 5555555
+    const NESTED_METADATA_EXPECTED_RESULT = ['parentType' => [
+        'name' => 'Hopper',
+        'address' => ['city' => 'Hawkins', 'state' => 'Indiana', 'zip' => 78758],
+        'isPrimary' => true,
+        'gpa' => 3.5678,
+        'phone' => 5555555
     ]];
 
-    const NESTED_METADATA_ARRAY_RESULT = ["parentType" => [
-        "name" => "Hopper",
-        "isPrimary" => true,
-        "gpa" => 3.5678,
-        "phone" => 5555555,
-        "address" => [
-            ["city" => "Hawkins", "state" => "Indiana", "zip" => 78758],
-            ["city" => "Austin", "state" => "Texas", "zip" => 78701],
+    const NESTED_METADATA_ARRAY_RESULT = ['parentType' => [
+        'name' => 'Hopper',
+        'isPrimary' => true,
+        'gpa' => 3.5678,
+        'phone' => 5555555,
+        'address' => [
+            ['city' => 'Hawkins', 'state' => 'Indiana', 'zip' => 78758],
+            ['city' => 'Austin', 'state' => 'Texas', 'zip' => 78701],
         ]
     ]];
 
     /**
      * Before test functionality
+     *
      * @return void
      */
     public function setUp(): void
@@ -54,8 +57,11 @@ class OperationDataArrayResolverTest extends MagentoTestCase
      *  <field>boolField</field>
      *  <field>doubleField</field>
      * </object>
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testBasicPrimitiveMetadataResolve()
+    public function testBasicPrimitiveMetadataResolve(): void
     {
         // set up data object
         $entityObjectBuilder = new EntityDataObjectBuilder();
@@ -74,11 +80,11 @@ class OperationDataArrayResolverTest extends MagentoTestCase
         );
 
         // assert on result
-        $expectedResult = ["testType" => [
-            "name" => "Hopper",
-            "gpa" => 3.5678,
-            "phone" => 5555555,
-            "isPrimary" => true
+        $expectedResult = ['testType' => [
+            'name' => 'Hopper',
+            'gpa' => 3.5678,
+            'phone' => 5555555,
+            'isPrimary' => true
         ]];
 
         $this->assertEquals($expectedResult, $result);
@@ -90,56 +96,54 @@ class OperationDataArrayResolverTest extends MagentoTestCase
      *  <field>someField</field>
      *  <field>objectRef</field>
      * </object>
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testNestedMetadataResolve()
+    public function testNestedMetadataResolve(): void
     {
         // set up data objects
         $entityDataObjBuilder = new EntityDataObjectBuilder();
         $parentDataObject = $entityDataObjBuilder
-            ->withName("parentObject")
-            ->withType("parentType")
+            ->withName('parentObject')
+            ->withType('parentType')
             ->withLinkedEntities(['childObject' => 'childType'])
             ->build();
 
         $childDataObject = $entityDataObjBuilder
-            ->withName("childObject")
-            ->withType("childType")
-            ->withDataFields(["city" => "Hawkins", "state" => "Indiana", "zip" => "78758"])
+            ->withName('childObject')
+            ->withType('childType')
+            ->withDataFields(['city' => 'Hawkins', 'state' => 'Indiana', 'zip' => '78758'])
             ->build();
 
         // mock data object handler
-        $mockDOHInstance = AspectMock::double(DataObjectHandler::class, ['getObject' => $childDataObject])->make();
-        AspectMock::double(DataObjectHandler::class, ['getInstance' => $mockDOHInstance]);
+        $this->mockDataObjectHandler($childDataObject);
 
         // set up metadata objects
         $parentOpElementBuilder = new OperationElementBuilder();
         $parentElement = $parentOpElementBuilder
-            ->withKey("parentType")
-            ->withType("parentType")
-            ->addFields(["address" => "childType"])
+            ->withKey('parentType')
+            ->withType('parentType')
+            ->addFields(['address' => 'childType'])
             ->build();
 
         $operationDefinitionBuilder = new OperationDefinitionBuilder();
         $childOperationDefinition = $operationDefinitionBuilder
-            ->withName("createChildType")
-            ->withOperation("create")
-            ->withType("childType")
+            ->withName('createChildType')
+            ->withOperation('create')
+            ->withType('childType')
             ->withMetadata([
-                "city" => "string",
-                "state" => "string",
-                "zip" => "integer"
+                'city' => 'string',
+                'state' => 'string',
+                'zip' => 'integer'
             ])->build();
 
         // mock meta data object handler
-        $mockDOHInstance = AspectMock::double(
-            OperationDefinitionObjectHandler::class,
-            ['getObject' => $childOperationDefinition]
-        )->make();
-        AspectMock::double(OperationDefinitionObjectHandler::class, ['getInstance' => $mockDOHInstance]);
+        $this->mockOperationDefinitionObjectHandler($childOperationDefinition);
 
         // resolve data object and metadata array
         $operationResolver = new OperationDataArrayResolver();
-        $result = $operationResolver->resolveOperationDataArray($parentDataObject, [$parentElement], "create", false);
+        $result = $operationResolver->resolveOperationDataArray($parentDataObject, [$parentElement], 'create', false);
 
         // assert on the result
         $this->assertEquals(self::NESTED_METADATA_EXPECTED_RESULT, $result);
@@ -153,45 +157,47 @@ class OperationDataArrayResolverTest extends MagentoTestCase
      *      <field>anotherField</field>
      *  </object>
      * </object>
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testNestedMetadata()
+    public function testNestedMetadata(): void
     {
         // set up data objects
         $entityDataObjectBuilder = new EntityDataObjectBuilder();
         $parentDataObject = $entityDataObjectBuilder
-            ->withName("parentObject")
-            ->withType("parentType")
+            ->withName('parentObject')
+            ->withType('parentType')
             ->withLinkedEntities(['childObject' => 'childType'])
             ->build();
 
         $childDataObject = $entityDataObjectBuilder
-            ->withName("childObject")
-            ->withType("childType")
-            ->withDataFields(["city" => "Hawkins", "state" => "Indiana", "zip" => "78758"])
+            ->withName('childObject')
+            ->withType('childType')
+            ->withDataFields(['city' => 'Hawkins', 'state' => 'Indiana', 'zip' => '78758'])
             ->build();
 
         // mock data object handler
-        $mockDOHInstance = AspectMock::double(DataObjectHandler::class, ['getObject' => $childDataObject])->make();
-        AspectMock::double(DataObjectHandler::class, ['getInstance' => $mockDOHInstance]);
+        $this->mockDataObjectHandler($childDataObject);
 
         // set up metadata objects
         $childOpElementBuilder = new OperationElementBuilder();
         $childElement = $childOpElementBuilder
-            ->withKey("address")
-            ->withType("childType")
-            ->withFields(["city" => "string", "state" => "string", "zip" => "integer"])
+            ->withKey('address')
+            ->withType('childType')
+            ->withFields(['city' => 'string', 'state' => 'string', 'zip' => 'integer'])
             ->build();
 
         $parentOpElementBuilder = new OperationElementBuilder();
         $parentElement = $parentOpElementBuilder
-            ->withKey("parentType")
-            ->withType("parentType")
-            ->addElements(["address" => $childElement])
+            ->withKey('parentType')
+            ->withType('parentType')
+            ->addElements(['address' => $childElement])
             ->build();
 
         // resolve data object and metadata array
         $operationResolver = new OperationDataArrayResolver();
-        $result = $operationResolver->resolveOperationDataArray($parentDataObject, [$parentElement], "create", false);
+        $result = $operationResolver->resolveOperationDataArray($parentDataObject, [$parentElement], 'create', false);
 
         // assert on the result
         $this->assertEquals(self::NESTED_METADATA_EXPECTED_RESULT, $result);
@@ -207,66 +213,69 @@ class OperationDataArrayResolverTest extends MagentoTestCase
      *   </object>
      *  </array
      * </object>
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testNestedMetadataArrayOfObjects()
+    public function testNestedMetadataArrayOfObjects(): void
     {
         // set up data objects
         $entityDataObjectBuilder = new EntityDataObjectBuilder();
         $parentDataObject = $entityDataObjectBuilder
-            ->withName("parentObject")
-            ->withType("parentType")
+            ->withName('parentObject')
+            ->withType('parentType')
             ->withLinkedEntities(['childObject1' => 'childType', 'childObject2' => 'childType'])
             ->build();
 
         // mock data object handler
-        $mockDOHInstance = AspectMock::double(DataObjectHandler::class, ["getObject" => function ($name) {
+        $callback = function ($name) {
             $entityDataObjectBuilder = new EntityDataObjectBuilder();
 
-            if ($name == "childObject1") {
+            if ($name === 'childObject1') {
                 return $entityDataObjectBuilder
-                    ->withName("childObject1")
-                    ->withType("childType")
-                    ->withDataFields(["city" => "Hawkins", "state" => "Indiana", "zip" => "78758"])
+                    ->withName('childObject1')
+                    ->withType('childType')
+                    ->withDataFields(['city' => 'Hawkins', 'state' => 'Indiana', 'zip' => '78758'])
                     ->build();
             }
 
-            if ($name == "childObject2") {
+            if ($name === 'childObject2') {
                 return $entityDataObjectBuilder
-                    ->withName("childObject2")
-                    ->withType("childType")
-                    ->withDataFields(["city" => "Austin", "state" => "Texas", "zip" => "78701"])
+                    ->withName('childObject2')
+                    ->withType('childType')
+                    ->withDataFields(['city' => 'Austin', 'state' => 'Texas', 'zip' => '78701'])
                     ->build();
             }
-        }])->make();
-        AspectMock::double(DataObjectHandler::class, ['getInstance' => $mockDOHInstance]);
+        };
+        $this->mockDataObjectHandler($callback);
 
         // set up metadata objects
         $childOpElementBuilder = new OperationElementBuilder();
         $childElement = $childOpElementBuilder
-            ->withKey("childType")
-            ->withType("childType")
-            ->withFields(["city" => "string", "state" => "string", "zip" => "integer"])
+            ->withKey('childType')
+            ->withType('childType')
+            ->withFields(['city' => 'string', 'state' => 'string', 'zip' => 'integer'])
             ->build();
 
         $arrayOpElementBuilder = new OperationElementBuilder();
         $arrayElement = $arrayOpElementBuilder
-            ->withKey("address")
-            ->withType("childType")
+            ->withKey('address')
+            ->withType('childType')
             ->withFields([])
             ->withElementType(OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY)
-            ->withNestedElements(["childType" => $childElement])
+            ->withNestedElements(['childType' => $childElement])
             ->build();
 
         $parentOpElementBuilder = new OperationElementBuilder();
         $parentElement = $parentOpElementBuilder
-            ->withKey("parentType")
-            ->withType("parentType")
-            ->addElements(["address" => $arrayElement])
+            ->withKey('parentType')
+            ->withType('parentType')
+            ->addElements(['address' => $arrayElement])
             ->build();
 
         // resolve data object and metadata array
         $operationResolver = new OperationDataArrayResolver();
-        $result = $operationResolver->resolveOperationDataArray($parentDataObject, [$parentElement], "create", false);
+        $result = $operationResolver->resolveOperationDataArray($parentDataObject, [$parentElement], 'create', false);
 
         // Do assert on result here
         $this->assertEquals(self::NESTED_METADATA_ARRAY_RESULT, $result);
@@ -280,44 +289,47 @@ class OperationDataArrayResolverTest extends MagentoTestCase
      *   <value>object</value>
      *  </array
      * </object>
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testNestedMetadataArrayOfValue()
+    public function testNestedMetadataArrayOfValue(): void
     {
         // set up data objects
         $entityDataObjectBuilder = new EntityDataObjectBuilder();
         $parentDataObject = $entityDataObjectBuilder
-            ->withName("parentObject")
-            ->withType("parentType")
+            ->withName('parentObject')
+            ->withType('parentType')
             ->withLinkedEntities(['childObject1' => 'childType', 'childObject2' => 'childType'])
             ->build();
 
-        // mock data object handler
-        $mockDOHInstance = AspectMock::double(DataObjectHandler::class, ["getObject" => function ($name) {
+        $callback = function ($name) {
             $entityDataObjectBuilder = new EntityDataObjectBuilder();
 
-            if ($name == "childObject1") {
+            if ($name == 'childObject1') {
                 return $entityDataObjectBuilder
-                    ->withName("childObject1")
-                    ->withType("childType")
-                    ->withDataFields(["city" => "Hawkins", "state" => "Indiana", "zip" => "78758"])
+                    ->withName('childObject1')
+                    ->withType('childType')
+                    ->withDataFields(['city' => 'Hawkins', 'state' => 'Indiana', 'zip' => '78758'])
                     ->build();
             };
 
-            if ($name == "childObject2") {
+            if ($name == 'childObject2') {
                 return $entityDataObjectBuilder
-                    ->withName("childObject2")
-                    ->withType("childType")
-                    ->withDataFields(["city" => "Austin", "state" => "Texas", "zip" => "78701"])
+                    ->withName('childObject2')
+                    ->withType('childType')
+                    ->withDataFields(['city' => 'Austin', 'state' => 'Texas', 'zip' => '78701'])
                     ->build();
             }
-        }])->make();
-        AspectMock::double(DataObjectHandler::class, ['getInstance' => $mockDOHInstance]);
+        };
+        // mock data object handler
+        $this->mockDataObjectHandler($callback);
 
         // set up metadata objects
         $arrayOpElementBuilder = new OperationElementBuilder();
         $arrayElement = $arrayOpElementBuilder
-            ->withKey("address")
-            ->withType("childType")
+            ->withKey('address')
+            ->withType('childType')
             ->withElementType(OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY)
             ->withNestedElements([])
             ->withFields([])
@@ -325,44 +337,39 @@ class OperationDataArrayResolverTest extends MagentoTestCase
 
         $parentOpElementBuilder = new OperationElementBuilder();
         $parentElement = $parentOpElementBuilder
-            ->withKey("parentType")
-            ->withType("parentType")
-            ->addElements(["address" => $arrayElement])
+            ->withKey('parentType')
+            ->withType('parentType')
+            ->addElements(['address' => $arrayElement])
             ->build();
 
         $operationDefinitionBuilder = new OperationDefinitionBuilder();
         $childOperationDefinition = $operationDefinitionBuilder
-            ->withName("createChildType")
-            ->withOperation("create")
-            ->withType("childType")
+            ->withName('createChildType')
+            ->withOperation('create')
+            ->withType('childType')
             ->withMetadata([
-                "city" => "string",
-                "state" => "string",
-                "zip" => "integer"
+                'city' => 'string',
+                'state' => 'string',
+                'zip' => 'integer'
             ])->build();
 
         // mock meta data object handler
-        $mockDOHInstance = AspectMock::double(
-            OperationDefinitionObjectHandler::class,
-            ['getObject' => $childOperationDefinition]
-        )->make();
-        AspectMock::double(OperationDefinitionObjectHandler::class, ['getInstance' => $mockDOHInstance]);
+        $this->mockOperationDefinitionObjectHandler($childOperationDefinition);
 
         // resolve data object and metadata array
         $operationResolver = new OperationDataArrayResolver();
-        $result = $operationResolver->resolveOperationDataArray($parentDataObject, [$parentElement], "create", false);
+        $result = $operationResolver->resolveOperationDataArray($parentDataObject, [$parentElement], 'create', false);
 
         // Do assert on result here
         $this->assertEquals(self::NESTED_METADATA_ARRAY_RESULT, $result);
     }
 
-    public function testNestedMetadataArrayOfDiverseObjects()
+    public function testNestedMetadataArrayOfDiverseObjects(): void
     {
-
         $entityDataObjBuilder = new EntityDataObjectBuilder();
         $parentDataObject = $entityDataObjBuilder
-            ->withName("parentObject")
-            ->withType("parentType")
+            ->withName('parentObject')
+            ->withType('parentType')
             ->withLinkedEntities(['child1Object' => 'childType1','child2Object' => 'childType2'])
             ->build();
 
@@ -378,22 +385,15 @@ class OperationDataArrayResolverTest extends MagentoTestCase
             ->withDataFields(['city' => 'Testcity 2','zip' => 54321,'state' => 'Teststate'])
             ->build();
 
-        $mockDOHInstance = AspectMock::double(
-            DataObjectHandler::class,
-            [
-                'getObject' => function ($name) use ($child1DataObject, $child2DataObject) {
-                    switch ($name) {
-                        case 'child1Object':
-                            return $child1DataObject;
-                        case 'child2Object':
-                            return $child2DataObject;
-                    }
-                }
-            ]
-        )->make();
-        AspectMock::double(DataObjectHandler::class, [
-            'getInstance' => $mockDOHInstance
-        ]);
+        $dataObjectCallback = function ($name) use ($child1DataObject, $child2DataObject) {
+            switch ($name) {
+                case 'child1Object':
+                    return $child1DataObject;
+                case 'child2Object':
+                    return $child2DataObject;
+            }
+        };
+        $this->mockDataObjectHandler($dataObjectCallback);
 
         $operationDefinitionBuilder = new OperationDefinitionBuilder();
         $child1OperationDefinition = $operationDefinitionBuilder
@@ -415,25 +415,15 @@ class OperationDataArrayResolverTest extends MagentoTestCase
                 'state' => 'string'
             ])->build();
 
-        $mockODOHInstance = AspectMock::double(
-            OperationDefinitionObjectHandler::class,
-            [
-                'getObject' => function ($name) use ($child1OperationDefinition, $child2OperationDefinition) {
-                    switch ($name) {
-                        case 'createchildType1':
-                            return $child1OperationDefinition;
-                        case 'createchildType2':
-                            return $child2OperationDefinition;
-                    }
-                }
-            ]
-        )->make();
-        AspectMock::double(
-            OperationDefinitionObjectHandler::class,
-            [
-                'getInstance' => $mockODOHInstance
-            ]
-        );
+        $operationObjectCallback = function ($name) use ($child1OperationDefinition, $child2OperationDefinition) {
+            switch ($name) {
+                case 'createchildType1':
+                    return $child1OperationDefinition;
+                case 'createchildType2':
+                    return $child2OperationDefinition;
+            }
+        };
+        $this->mockOperationDefinitionObjectHandler($operationObjectCallback);
 
         $arrayObElementBuilder = new OperationElementBuilder();
         $arrayElement = $arrayObElementBuilder
@@ -477,55 +467,55 @@ class OperationDataArrayResolverTest extends MagentoTestCase
         $this->assertEquals($expectedResult, $result);
     }
 
-    public function testExtendedWithRequiredEntity()
+    public function testExtendedWithRequiredEntity(): void
     {
         $entityDataObjectBuilder = new EntityDataObjectBuilder();
         $extEntityDataObject = $entityDataObjectBuilder
-            ->withName("extEntity")
-            ->withType("entity")
-            ->withLinkedEntities(["baseSubentity" => "subentity","extSubentity" => "subentity"])
+            ->withName('extEntity')
+            ->withType('entity')
+            ->withLinkedEntities(['baseSubentity' => 'subentity','extSubentity' => 'subentity'])
             ->build();
 
-        $mockDOHInstance = AspectMock::double(DataObjectHandler::class, ["getObject" => function ($name) {
+        $callback = function ($name) {
             $entityDataObjectBuilder = new EntityDataObjectBuilder();
 
-            if ($name == "baseSubentity") {
+            if ($name === 'baseSubentity') {
                 return $entityDataObjectBuilder
-                    ->withName("baseSubentity")
-                    ->withType("subentity")
-                    ->withDataFields(["subtest" => "BaseSubtest"])
+                    ->withName('baseSubentity')
+                    ->withType('subentity')
+                    ->withDataFields(['subtest' => 'BaseSubtest'])
                     ->build();
             }
 
-            if ($name == "extSubentity") {
+            if ($name === 'extSubentity') {
                 return $entityDataObjectBuilder
-                    ->withName("extSubentity")
-                    ->withType("subentity")
-                    ->withDataFields(["subtest" => "ExtSubtest"])
+                    ->withName('extSubentity')
+                    ->withType('subentity')
+                    ->withDataFields(['subtest' => 'ExtSubtest'])
                     ->build();
             }
-        }])->make();
-        AspectMock::double(DataObjectHandler::class, ['getInstance' => $mockDOHInstance]);
+        };
+        $this->mockDataObjectHandler($callback);
 
         $subentityOpElementBuilder = new OperationElementBuilder();
         $subentityOpElement = $subentityOpElementBuilder
-            ->withKey("sub")
-            ->withType("subentity")
-            ->withElementType("object")
-            ->withFields(["subtest" => "string"])
+            ->withKey('sub')
+            ->withType('subentity')
+            ->withElementType('object')
+            ->withFields(['subtest' => 'string'])
             ->build();
 
         $operationResolver = new OperationDataArrayResolver();
         $result = $operationResolver->resolveOperationDataArray(
             $extEntityDataObject,
             [$subentityOpElement],
-            "create",
+            'create',
             false
         );
 
         $expected = [
-            "sub" => [
-                "subtest" => "ExtSubtest"
+            'sub' => [
+                'subtest' => 'ExtSubtest'
             ]
         ];
 
@@ -533,10 +523,61 @@ class OperationDataArrayResolverTest extends MagentoTestCase
     }
     /**
      * After class functionality
+     *
      * @return void
      */
     public static function tearDownAfterClass(): void
     {
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
+    }
+
+    /**
+     * Set up mock DataObjectHandler
+     *
+     * @param $childDataObject
+     *
+     * @return void
+     */
+    private function mockDataObjectHandler($childDataObject): void
+    {
+        $instance = $this->createMock(DataObjectHandler::class);
+        if (is_callable($childDataObject)) {
+            $instance->expects($this->any())
+                ->method('getObject')
+                ->willReturnCallback($childDataObject);
+        } else {
+            $instance->expects($this->any())
+                ->method('getObject')
+                ->willReturn($childDataObject);
+        }
+
+        $property = new ReflectionProperty(DataObjectHandler::class, 'INSTANCE');
+        $property->setAccessible(true);
+        $property->setValue($instance);
+    }
+
+    /**
+     * Set up mock OperationDefinitionObjectHandler
+     *
+     * @param $childOperationDefinition
+     *
+     * @return void
+     */
+    private function mockOperationDefinitionObjectHandler($childOperationDefinition): void
+    {
+        $instance = $this->createPartialMock(OperationDefinitionObjectHandler::class, ['getObject']);
+        if (is_callable($childOperationDefinition)) {
+            $instance->expects($this->any())
+                ->method('getObject')
+                ->willReturnCallback($childOperationDefinition);
+        } else {
+            $instance->expects($this->any())
+                ->method('getObject')
+                ->willReturn($childOperationDefinition);
+        }
+
+        $property = new ReflectionProperty(OperationDefinitionObjectHandler::class, 'INSTANCE');
+        $property->setAccessible(true);
+        $property->setValue($instance);
     }
 }
