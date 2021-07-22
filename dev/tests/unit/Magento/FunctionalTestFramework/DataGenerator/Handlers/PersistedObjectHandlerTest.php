@@ -9,8 +9,13 @@ namespace tests\unit\Magento\FunctionalTestFramework\DataGenerator\Handlers;
 
 use Exception;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
+use Magento\FunctionalTestingFramework\DataGenerator\Parsers\DataProfileSchemaParser;
 use Magento\FunctionalTestingFramework\DataGenerator\Persist\CurlHandler;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\ObjectManager;
+use Magento\FunctionalTestingFramework\ObjectManagerFactory;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\ObjectHandlerUtil;
@@ -24,7 +29,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
     /**
      * @inheritDoc
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
@@ -90,9 +95,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
             }
         ";
 
-        // Mock Classes
-        ObjectHandlerUtil::mockDataObjectHandlerWithData($parserOutput);
-        $this->mockCurlHandler($jsonResponse);
+        $this->mockCurlHandler($jsonResponse, $parserOutput);
         $handler = PersistedObjectHandler::getInstance();
 
         // Call method
@@ -140,8 +143,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         ";
 
         // Mock Classes
-        ObjectHandlerUtil::mockDataObjectHandlerWithData($parserOutput);
-        $this->mockCurlHandler($jsonResponse);
+        $this->mockCurlHandler($jsonResponse, $parserOutput);
         $handler = PersistedObjectHandler::getInstance();
 
         // Call method
@@ -194,8 +196,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         ";
 
         // Mock Classes
-        ObjectHandlerUtil::mockDataObjectHandlerWithData($parserOutput);
-        $this->mockCurlHandler($jsonResponse);
+        $this->mockCurlHandler($jsonResponse, $parserOutput);
         $handler = PersistedObjectHandler::getInstance();
 
         // Call method
@@ -334,7 +335,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
                 ]
             ]
         ];
-        $jsonReponseOne = "
+        $jsonResponseOne = "
             {
                \"" . strtolower($dataKeyOne) . "\" : \"{$dataValueOne}\"
             }
@@ -353,22 +354,21 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         // Mock Classes and Create Entities
         $handler = PersistedObjectHandler::getInstance();
 
-        ObjectHandlerUtil::mockDataObjectHandlerWithData($parserOutputOne);
-        $this->mockCurlHandler($jsonReponseOne);
+        $this->mockCurlHandler($jsonResponseOne, $parserOutputOne);
         $handler->createEntity(
             $entityStepKeyOne,
             PersistedObjectHandler::TEST_SCOPE,
             $entityNameOne
         );
 
-        $this->mockCurlHandler($jsonReponseTwo);
+        $this->mockCurlHandler($jsonReponseTwo, $parserOutputOne);
         $handler->createEntity(
             $entityStepKeyTwo,
             PersistedObjectHandler::HOOK_SCOPE,
             $entityNameTwo
         );
 
-        $this->mockCurlHandler($jsonReponseThree);
+        $this->mockCurlHandler($jsonReponseThree, $parserOutputOne);
         $handler->createEntity(
             $entityStepKeyThree,
             PersistedObjectHandler::SUITE_SCOPE,
@@ -432,7 +432,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
                 ]
             ]
         ];
-        $jsonReponseOne = "
+        $jsonResponseOne = "
             {
                \"" . strtolower($key) . "\" : \"{$value}\"
             }
@@ -440,9 +440,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
 
         // Mock Classes and Create Entities
         $handler = PersistedObjectHandler::getInstance();
-
-        ObjectHandlerUtil::mockDataObjectHandlerWithData($parserOutputOne);
-        $this->mockCurlHandler($jsonReponseOne);
+        $this->mockCurlHandler($jsonResponseOne, $parserOutputOne);
         $handler->createEntity($stepKey, $scope, $name);
 
         // Call method
@@ -463,7 +461,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
      * @dataProvider entityDataProvider
      *
      * @return void
-     * @throws TestReferenceException
+     * @throws TestReferenceException|TestFrameworkException
      */
     public function testRetrieveEntityInValidField(
         string $name,
@@ -490,7 +488,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
                 ]
             ]
         ];
-        $jsonReponseOne = "
+        $jsonResponseOne = "
             {
                \"" . strtolower($key) . "\" : \"{$value}\"
             }
@@ -498,8 +496,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
 
         // Mock Classes and Create Entities
         $handler = PersistedObjectHandler::getInstance();
-        ObjectHandlerUtil::mockDataObjectHandlerWithData($parserOutputOne);
-        $this->mockCurlHandler($jsonReponseOne);
+        $this->mockCurlHandler($jsonResponseOne, $parserOutputOne);
         $handler->createEntity($stepKey, $scope, $name);
 
         // Call method
@@ -514,7 +511,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
     }
 
     /**
-     * Data provider for testRetrieveEntityField
+     * Data provider for testRetrieveEntityField.
      *
      * @return array
      */
@@ -531,45 +528,79 @@ class PersistedObjectHandlerTest extends MagentoTestCase
      * Create mock curl handler.
      *
      * @param string $response
-     * @throws Exception
+     * @param array $parserOutput
+     *
+     * @return void
      */
-    public function mockCurlHandler(string $response): void
+    public function mockCurlHandler(string $response, array $parserOutput): void
     {
-        $mockCurlHandler = $this->createMock(CurlHandler::class);
-        $mockCurlHandler->expects($this->any())
+        $dataObjectHandler = new ReflectionProperty(DataObjectHandler::class, 'INSTANCE');
+        $dataObjectHandler->setAccessible(true);
+        $dataObjectHandler->setValue(null);
+
+        $mockDataProfileSchemaParser = $this->createMock(DataProfileSchemaParser::class);
+        $mockDataProfileSchemaParser
+            ->method('readDataProfiles')
+            ->willReturn($parserOutput);
+
+        $curlHandler = $this->createMock(CurlHandler::class);
+        $curlHandler
             ->method('executeRequest')
             ->willReturn($response);
-        $mockCurlHandler->expects($this->once())
+        $curlHandler
             ->method('getRequestDataArray')
             ->willReturn([]);
-        $mockCurlHandler->expects($this->once())
+        $curlHandler
             ->method('isContentTypeJson')
             ->willReturn(true);
 
-        $property = new ReflectionProperty(CurlHandler::class, "INSTANCE");
-        $property->setAccessible(true);
-        $property->setValue($mockCurlHandler);
+        $objectManagerInstance = ObjectManagerFactory::getObjectManager();
+        $objectManagerMockInstance = $this->createMock(ObjectManager::class);
+        $objectManagerMockInstance->expects($this->any())
+            ->method('create')
+            ->will(
+                $this->returnCallback(
+                    function (
+                        string $class,
+                        array $arguments = []
+                    ) use ($curlHandler, $objectManagerInstance, $mockDataProfileSchemaParser)
+                    {
+                        if ($class === CurlHandler::class) {
+                            return $curlHandler;
+                        }
+
+                        if ($class === DataProfileSchemaParser::class) {
+                            return $mockDataProfileSchemaParser;
+                        }
+
+                        return $objectManagerInstance->create($class, $arguments);
+                    }
+                )
+            );
+
+        $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
+        $objectManagerProperty->setAccessible(true);
+        $objectManagerProperty->setValue($objectManagerMockInstance);
     }
 
     /**
-     * @inheritDoc
-     */
-    public function tearDown(): void
-    {
-        // Clear out Singleton between tests
-        $property = new ReflectionProperty(PersistedObjectHandler::class, 'INSTANCE');
-        $property->setAccessible(true);
-        $property->setValue(null);
-
-        parent::tearDown(); // TODO: Change the autogenerated stub
-    }
-
-    /**
-     * @inheritDoc
+     * After class functionality.
+     *
+     * @return void
      */
     public static function tearDownAfterClass(): void
     {
-        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
         parent::tearDownAfterClass();
+
+        // Clear out Singleton between tests
+        $property = new ReflectionProperty(PersistedObjectHandler::class, "INSTANCE");
+        $property->setAccessible(true);
+        $property->setValue(null);
+
+        $property = new ReflectionProperty(ObjectManager::class, 'instance');
+        $property->setAccessible(true);
+        $property->setValue(null);
+
+        TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 }
