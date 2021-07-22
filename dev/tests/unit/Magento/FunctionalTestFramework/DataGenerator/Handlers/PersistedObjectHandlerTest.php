@@ -538,8 +538,8 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         $dataObjectHandler->setAccessible(true);
         $dataObjectHandler->setValue(null);
 
-        $mockDataProfileSchemaParser = $this->createMock(DataProfileSchemaParser::class);
-        $mockDataProfileSchemaParser
+        $dataProfileSchemaParser = $this->createMock(DataProfileSchemaParser::class);
+        $dataProfileSchemaParser
             ->method('readDataProfiles')
             ->willReturn($parserOutput);
 
@@ -554,26 +554,22 @@ class PersistedObjectHandlerTest extends MagentoTestCase
             ->method('isContentTypeJson')
             ->willReturn(true);
 
-        $objectManagerInstance = ObjectManagerFactory::getObjectManager();
+        $objectManager = ObjectManagerFactory::getObjectManager();
         $objectManagerMockInstance = $this->createMock(ObjectManager::class);
         $objectManagerMockInstance->expects($this->any())
             ->method('create')
             ->will(
                 $this->returnCallback(
-                    function (
-                        string $class,
-                        array $arguments = []
-                    ) use ($curlHandler, $objectManagerInstance, $mockDataProfileSchemaParser)
-                    {
+                    function ($class, $arguments = []) use ($curlHandler, $objectManager, $dataProfileSchemaParser) {
                         if ($class === CurlHandler::class) {
                             return $curlHandler;
                         }
 
                         if ($class === DataProfileSchemaParser::class) {
-                            return $mockDataProfileSchemaParser;
+                            return $dataProfileSchemaParser;
                         }
 
-                        return $objectManagerInstance->create($class, $arguments);
+                        return $objectManager->create($class, $arguments);
                     }
                 )
             );
