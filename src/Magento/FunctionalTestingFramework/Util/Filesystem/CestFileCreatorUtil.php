@@ -30,10 +30,10 @@ class CestFileCreatorUtil
      *
      * @return CestFileCreatorUtil
      */
-    public static function getInstance()
+    public static function getInstance(): CestFileCreatorUtil
     {
-        if (self::$INSTANCE === null) {
-            return new self();
+        if (!self::$INSTANCE) {
+            self::$INSTANCE = new CestFileCreatorUtil();
         }
 
         return self::$INSTANCE;

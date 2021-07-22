@@ -8,25 +8,27 @@ declare(strict_types=1);
 namespace tests\unit\Magento\FunctionalTestFramework\Util;
 
 use Exception;
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Filter\FilterList;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Util\Filesystem\CestFileCreatorUtil;
+use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
+use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
-use Magento\FunctionalTestingFramework\Util\TestGenerator;
-use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use tests\unit\Util\TestLoggingUtil;
-use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
 
 class TestGeneratorTest extends MagentoTestCase
 {
     /**
      * Before method functionality.
+     *
+     * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
@@ -36,7 +38,7 @@ class TestGeneratorTest extends MagentoTestCase
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         GenerationErrorHandler::getInstance()->reset();
     }
@@ -53,12 +55,12 @@ class TestGeneratorTest extends MagentoTestCase
             'userInput' => '{{someEntity.entity}}'
         ]);
 
-        $testObject = new TestObject("sampleTest", ["merge123" => $actionObject], [], [], "filename");
-        $testGeneratorObject = TestGenerator::getInstance("", ["sampleTest" => $testObject]);
+        $testObject = new TestObject('sampleTest', ['merge123' => $actionObject], [], [], 'filename');
+        $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $testObject]);
         $testGeneratorObject->createAllTestFiles(null, []);
 
         // assert that no exception for createAllTestFiles and generation error is stored in GenerationErrorHandler
-        $errorMessage = '/' . preg_quote("Removed invalid test object sampleTest") . '/';
+        $errorMessage = '/' . preg_quote('Removed invalid test object sampleTest') . '/';
         TestLoggingUtil::getInstance()->validateMockLogStatmentRegex('error', $errorMessage, []);
         $testErrors = GenerationErrorHandler::getInstance()->getErrorsByType('test');
         $this->assertArrayHasKey('sampleTest', $testErrors);
@@ -78,9 +80,9 @@ class TestGeneratorTest extends MagentoTestCase
         ]);
 
         $annotations = ['skip' => ['issue']];
-        $testObject = new TestObject("sampleTest", ["merge123" => $actionObject], $annotations, [], "filename");
+        $testObject = new TestObject('sampleTest', ['merge123' => $actionObject], $annotations, [], 'filename');
 
-        $testGeneratorObject = TestGenerator::getInstance("", ["sampleTest" => $testObject]);
+        $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $testObject]);
         $output = $testGeneratorObject->assembleTestPhp($testObject);
 
         $this->assertStringContainsString('This test is skipped', $output);
@@ -97,7 +99,7 @@ class TestGeneratorTest extends MagentoTestCase
     {
         // Mock allowSkipped for TestGenerator
         $mockConfig = $this->createMock(MftfApplicationConfig::class);
-        $mockConfig->expects($this->any())
+        $mockConfig
             ->method('allowSkipped')
             ->willReturn(true);
 
@@ -115,16 +117,16 @@ class TestGeneratorTest extends MagentoTestCase
         ]);
 
         $annotations = ['skip' => ['issue']];
-        $beforeHook = new TestHookObject("before", "sampleTest", ['beforeAction' => $beforeActionObject]);
+        $beforeHook = new TestHookObject('before', 'sampleTest', ['beforeAction' => $beforeActionObject]);
         $testObject = new TestObject(
-            "sampleTest",
-            ["fakeAction" => $actionObject],
+            'sampleTest',
+            ['fakeAction' => $actionObject],
             $annotations,
-            ["before" => $beforeHook],
-            "filename"
+            ['before' => $beforeHook],
+            'filename'
         );
 
-        $testGeneratorObject = TestGenerator::getInstance("", ["sampleTest" => $testObject]);
+        $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $testObject]);
         $output = $testGeneratorObject->assembleTestPhp($testObject);
 
         $this->assertStringNotContainsString('This test is skipped', $output);
@@ -141,8 +143,10 @@ class TestGeneratorTest extends MagentoTestCase
     public function testFilter(): void
     {
         $mockConfig = $this->createMock(MftfApplicationConfig::class);
-        $fileList = new FilterList(['severity' => ["CRITICAL"]]);
-        $mockConfig->expects($this->once())->method('getFilterList')->willReturn($fileList);
+        $fileList = new FilterList(['severity' => ['CRITICAL']]);
+        $mockConfig
+            ->method('getFilterList')
+            ->willReturn($fileList);
 
         $property = new ReflectionProperty(MftfApplicationConfig::class, 'MFTF_APPLICATION_CONTEXT');
         $property->setAccessible(true);
@@ -156,24 +160,24 @@ class TestGeneratorTest extends MagentoTestCase
         $annotation1 = ['severity' => ['CRITICAL']];
         $annotation2 = ['severity' => ['MINOR']];
         $test1 = new TestObject(
-            "test1",
-            ["fakeAction" => $actionObject],
+            'test1',
+            ['fakeAction' => $actionObject],
             $annotation1,
             [],
-            "filename"
+            'filename'
         );
         $test2 = new TestObject(
-            "test2",
-            ["fakeAction" => $actionObject],
+            'test2',
+            ['fakeAction' => $actionObject],
             $annotation2,
             [],
-            "filename"
+            'filename'
         );
 
         // Mock createCestFile to return name of tests that testGenerator tried to create
         $generatedTests = [];
         $cestFileCreatorUtil = $this->createMock(CestFileCreatorUtil::class);
-        $cestFileCreatorUtil->expects($this->once())
+        $cestFileCreatorUtil
             ->method('create')
             ->will(
                 $this->returnCallback(
@@ -187,11 +191,27 @@ class TestGeneratorTest extends MagentoTestCase
         $property->setAccessible(true);
         $property->setValue($cestFileCreatorUtil);
 
-        $testGeneratorObject = TestGenerator::getInstance("", ["sampleTest" => $test1, "test2" => $test2]);
+        $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $test1, 'test2' => $test2]);
         $testGeneratorObject->createAllTestFiles();
 
         // Ensure Test1 was Generated but not Test 2
         $this->assertArrayHasKey('test1Cest', $generatedTests);
         $this->assertArrayNotHasKey('test2Cest', $generatedTests);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        $cestFileCreatorUtilInstance = new ReflectionProperty(CestFileCreatorUtil::class, 'INSTANCE');
+        $cestFileCreatorUtilInstance->setAccessible(true);
+        $cestFileCreatorUtilInstance->setValue(null);
+
+        $mftfAppConfigInstance = new ReflectionProperty(MftfApplicationConfig::class, 'MFTF_APPLICATION_CONTEXT');
+        $mftfAppConfigInstance->setAccessible(true);
+        $mftfAppConfigInstance->setValue(null);
     }
 }
