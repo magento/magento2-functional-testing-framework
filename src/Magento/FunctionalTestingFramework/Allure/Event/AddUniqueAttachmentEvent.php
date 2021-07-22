@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\FunctionalTestingFramework\Allure\Event;
 
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Symfony\Component\Mime\MimeTypes;
 use Yandex\Allure\Adapter\AllureException;
 use Yandex\Allure\Adapter\Event\AddAttachmentEvent;
@@ -57,19 +59,6 @@ class AddUniqueAttachmentEvent extends AddAttachmentEvent
     }
 
     /**
-     * Copies file from one path to another. Wrapper for mocking in unit test.
-     *
-     * @param string $filePath
-     * @param string $outputPath
-     *
-     * @return boolean
-     */
-    public function copyFile(string $filePath, string $outputPath): bool
-    {
-        return copy($filePath, $outputPath);
-    }
-
-    /**
      * Unit test helper function.
      *
      * @param mixed       $filePathOrContents
@@ -91,6 +80,23 @@ class AddUniqueAttachmentEvent extends AddAttachmentEvent
             );
         }
         return self::$instance;
+    }
+
+    /**
+     * Copies file from one path to another. Wrapper for mocking in unit test.
+     *
+     * @param string $filePath
+     * @param string $outputPath
+     *
+     * @return boolean
+     * @throws TestFrameworkException
+     */
+    private function copyFile(string $filePath, string $outputPath): bool
+    {
+        if (MftfApplicationConfig::getConfig()->getPhase() === MftfApplicationConfig::UNIT_TEST_PHASE) {
+            return true;
+        }
+        return copy($filePath, $outputPath);
     }
 
     /**

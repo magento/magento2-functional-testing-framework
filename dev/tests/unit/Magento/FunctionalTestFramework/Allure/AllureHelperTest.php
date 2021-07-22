@@ -106,7 +106,6 @@ class AllureHelperTest extends TestCase
     {
         $expectedData = 'string';
         $expectedCaption = 'caption';
-        $this->mockCopyFile($expectedData, $expectedCaption);
 
         //Prepare Allure lifecycle
         Allure::lifecycle()->fire(new StepStartedEvent('firstStep'));
@@ -141,31 +140,6 @@ class AllureHelperTest extends TestCase
         $mockInstance
             ->method('getAttachmentFileName')
             ->willReturn(self::MOCK_FILENAME);
-
-        $instanceProperty = new ReflectionProperty(AddUniqueAttachmentEvent::class, 'instance');
-        $instanceProperty->setAccessible(true);
-        $instanceProperty->setValue($mockInstance, $mockInstance);
-    }
-
-    /**
-     * Mock only file writing mechanism.
-     *
-     * @param string $filePathOrContents
-     * @param string $caption
-     *
-     * @return void
-     */
-    private function mockCopyFile(string $filePathOrContents, string $caption): void
-    {
-        $mockInstance = $this->getMockBuilder(AddUniqueAttachmentEvent::class)
-            ->setConstructorArgs([$filePathOrContents, $caption])
-            ->disallowMockingUnknownTypes()
-            ->onlyMethods(['copyFile'])
-            ->getMock();
-
-        $mockInstance
-            ->method('copyFile')
-            ->willReturn(true);
 
         $instanceProperty = new ReflectionProperty(AddUniqueAttachmentEvent::class, 'instance');
         $instanceProperty->setAccessible(true);
