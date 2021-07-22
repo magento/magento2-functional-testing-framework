@@ -53,7 +53,7 @@ class ModuleResolverService
     public static function getInstance()
     {
         if (self::$INSTANCE === null) {
-            return new self();
+            self::$INSTANCE = new ModuleResolverService();
         }
 
         return self::$INSTANCE;
