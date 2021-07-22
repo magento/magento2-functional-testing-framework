@@ -15,7 +15,6 @@ use Magento\FunctionalTestingFramework\Test\Parsers\ActionGroupDataParser;
 use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
-use tests\unit\Util\MockModuleResolverBuilder;
 use tests\unit\Util\TestDataArrayBuilder;
 use tests\unit\Util\TestLoggingUtil;
 
@@ -30,8 +29,6 @@ class ObjectExtensionUtilTest extends TestCase
     protected function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
-        $resolverMock = new MockModuleResolverBuilder();
-        $resolverMock->setup();
     }
 
     /**
@@ -53,7 +50,7 @@ class ObjectExtensionUtilTest extends TestCase
     public function testGenerateExtendedTest(): void
     {
         $mockActions = [
-            "mockStep" => ["nodeName" => "mockNode", "stepKey" => "mockStep"]
+            'mockStep' => ['nodeName' => 'mockNode', 'stepKey' => 'mockStep']
         ];
 
         $testDataArrayBuilder = new TestDataArrayBuilder();
@@ -66,7 +63,7 @@ class ObjectExtensionUtilTest extends TestCase
         $mockExtendedTest = $testDataArrayBuilder
             ->withName('extendedTest')
             ->withAnnotations(['title' => [['value' => 'extendedTest']]])
-            ->withTestReference("simpleTest")
+            ->withTestReference('simpleTest')
             ->build();
 
         $mockTestData = array_merge($mockSimpleTest, $mockExtendedTest);
@@ -83,8 +80,8 @@ class ObjectExtensionUtilTest extends TestCase
         );
 
         // assert that expected test is generated
-        $this->assertEquals($testObject->getParentName(), "simpleTest");
-        $this->assertArrayHasKey("mockStep", $testObject->getOrderedActions());
+        $this->assertEquals($testObject->getParentName(), 'simpleTest');
+        $this->assertArrayHasKey('mockStep', $testObject->getOrderedActions());
     }
 
     /**
@@ -96,10 +93,10 @@ class ObjectExtensionUtilTest extends TestCase
     public function testGenerateExtendedWithHooks(): void
     {
         $mockBeforeHooks = [
-            "beforeHookAction" => ["nodeName" => "mockNodeBefore", "stepKey" => "mockStepBefore"]
+            'beforeHookAction' => ['nodeName' => 'mockNodeBefore', 'stepKey' => 'mockStepBefore']
         ];
         $mockAfterHooks = [
-            "afterHookAction" => ["nodeName" => "mockNodeAfter", "stepKey" => "mockStepAfter"]
+            'afterHookAction' => ['nodeName' => 'mockNodeAfter', 'stepKey' => 'mockStepAfter']
         ];
 
         $testDataArrayBuilder = new TestDataArrayBuilder();
@@ -113,7 +110,7 @@ class ObjectExtensionUtilTest extends TestCase
         $mockExtendedTest = $testDataArrayBuilder
             ->withName('extendedTest')
             ->withAnnotations(['title' => [['value' => 'extendedTest']]])
-            ->withTestReference("simpleTest")
+            ->withTestReference('simpleTest')
             ->build();
 
         $mockTestData = array_merge($mockSimpleTest, $mockExtendedTest);
@@ -130,9 +127,9 @@ class ObjectExtensionUtilTest extends TestCase
         );
 
         // assert that expected test is generated
-        $this->assertEquals($testObject->getParentName(), "simpleTest");
-        $this->assertArrayHasKey("mockStepBefore", $testObject->getHooks()['before']->getActions());
-        $this->assertArrayHasKey("mockStepAfter", $testObject->getHooks()['after']->getActions());
+        $this->assertEquals($testObject->getParentName(), 'simpleTest');
+        $this->assertArrayHasKey('mockStepBefore', $testObject->getHooks()['before']->getActions());
+        $this->assertArrayHasKey('mockStepAfter', $testObject->getHooks()['after']->getActions());
     }
 
     /**
@@ -146,7 +143,7 @@ class ObjectExtensionUtilTest extends TestCase
         $testDataArrayBuilder = new TestDataArrayBuilder();
         $mockExtendedTest = $testDataArrayBuilder
             ->withName('extendedTest')
-            ->withTestReference("simpleTest")
+            ->withTestReference('simpleTest')
             ->build();
 
         $mockTestData = array_merge($mockExtendedTest);
@@ -158,7 +155,7 @@ class ObjectExtensionUtilTest extends TestCase
         // validate log statement
         TestLoggingUtil::getInstance()->validateMockLogStatement(
             'debug',
-            "parent test not defined. test will be skipped",
+            'parent test not defined. test will be skipped',
             ['parent' => 'simpleTest', 'test' => 'extendedTest']
         );
     }
@@ -181,19 +178,19 @@ class ObjectExtensionUtilTest extends TestCase
             ->withName('simpleTest')
             ->withAnnotations(['title' => [['value' => 'simpleTest']]])
             ->withTestActions()
-            ->withTestReference("anotherTest")
+            ->withTestReference('anotherTest')
             ->build();
 
         $mockExtendedTest = $testDataArrayBuilder
             ->withName('extendedTest')
             ->withAnnotations(['title' => [['value' => 'extendedTest']]])
-            ->withTestReference("simpleTest")
+            ->withTestReference('simpleTest')
             ->build();
 
         $mockTestData = array_merge($mockParentTest, $mockSimpleTest, $mockExtendedTest);
         $this->setMockTestOutput($mockTestData);
 
-        $this->expectExceptionMessage("Cannot extend a test that already extends another test. Test: simpleTest");
+        $this->expectExceptionMessage('Cannot extend a test that already extends another test. Test: simpleTest');
 
         // parse and generate test object with mocked data
         TestObjectHandler::getInstance()->getObject('extendedTest');
@@ -201,10 +198,10 @@ class ObjectExtensionUtilTest extends TestCase
         // validate log statement
         TestLoggingUtil::getInstance()->validateMockLogStatement(
             'debug',
-            "parent test not defined. test will be skipped",
+            'parent test not defined. test will be skipped',
             ['parent' => 'simpleTest', 'test' => 'extendedTest']
         );
-        $this->expectOutputString("Extending Test: anotherTest => simpleTest" . PHP_EOL);
+        $this->expectOutputString('Extending Test: anotherTest => simpleTest' . PHP_EOL);
     }
 
     /**
@@ -216,30 +213,30 @@ class ObjectExtensionUtilTest extends TestCase
     public function testGenerateExtendedActionGroup(): void
     {
         $mockSimpleActionGroup = [
-            "nodeName" => "actionGroup",
-            "name" => "mockSimpleActionGroup",
-            "filename" => "someFile",
-            "commentHere" => [
-                "nodeName" => "comment",
-                "selector" => "selector",
-                "stepKey" => "commentHere"
+            'nodeName' => 'actionGroup',
+            'name' => 'mockSimpleActionGroup',
+            'filename' => 'someFile',
+            'commentHere' => [
+                'nodeName' => 'comment',
+                'selector' => 'selector',
+                'stepKey' => 'commentHere'
             ],
-            "parentComment" => [
-                "nodeName" => "comment",
-                "selector" => "parentSelector",
-                "stepKey" => "parentComment"
+            'parentComment' => [
+                'nodeName' => 'comment',
+                'selector' => 'parentSelector',
+                'stepKey' => 'parentComment'
             ],
         ];
 
         $mockExtendedActionGroup = [
-            "nodeName" => "actionGroup",
-            "name" => "mockExtendedActionGroup",
-            "filename" => "someFile",
-            "extends" => "mockSimpleActionGroup",
-            "commentHere" => [
-                "nodeName" => "comment",
-                "selector" => "otherSelector",
-                "stepKey" => "commentHere"
+            'nodeName' => 'actionGroup',
+            'name' => 'mockExtendedActionGroup',
+            'filename' => 'someFile',
+            'extends' => 'mockSimpleActionGroup',
+            'commentHere' => [
+                'nodeName' => 'comment',
+                'selector' => 'otherSelector',
+                'stepKey' => 'commentHere'
             ],
         ];
 
@@ -262,10 +259,10 @@ class ObjectExtensionUtilTest extends TestCase
         );
 
         // assert that expected test is generated
-        $this->assertEquals("mockSimpleActionGroup", $actionGroupObject->getParentName());
+        $this->assertEquals('mockSimpleActionGroup', $actionGroupObject->getParentName());
         $actions = $actionGroupObject->getActions();
-        $this->assertEquals("otherSelector", $actions["commentHere"]->getCustomActionAttributes()["selector"]);
-        $this->assertEquals("parentSelector", $actions["parentComment"]->getCustomActionAttributes()["selector"]);
+        $this->assertEquals('otherSelector', $actions['commentHere']->getCustomActionAttributes()['selector']);
+        $this->assertEquals('parentSelector', $actions['parentComment']->getCustomActionAttributes()['selector']);
     }
 
     /**
@@ -277,14 +274,14 @@ class ObjectExtensionUtilTest extends TestCase
     public function testGenerateExtendedActionGroupNoParent(): void
     {
         $mockExtendedActionGroup = [
-            "nodeName" => "actionGroup",
-            "name" => "mockExtendedActionGroup",
-            "filename" => "someFile",
-            "extends" => "mockSimpleActionGroup",
-            "commentHere" => [
-                "nodeName" => "comment",
-                "selector" => "otherSelector",
-                "stepKey" => "commentHere"
+            'nodeName' => 'actionGroup',
+            'name' => 'mockExtendedActionGroup',
+            'filename' => 'someFile',
+            'extends' => 'mockSimpleActionGroup',
+            'commentHere' => [
+                'nodeName' => 'comment',
+                'selector' => 'otherSelector',
+                'stepKey' => 'commentHere'
             ],
         ];
 
@@ -296,7 +293,7 @@ class ObjectExtensionUtilTest extends TestCase
         $this->setMockTestOutput(null, $mockActionGroupData);
 
         $this->expectExceptionMessage(
-            "Parent Action Group mockSimpleActionGroup not defined for Test " . $mockExtendedActionGroup['name']
+            'Parent Action Group mockSimpleActionGroup not defined for Test ' . $mockExtendedActionGroup['name']
         );
 
         // parse and generate test object with mocked data
@@ -312,23 +309,23 @@ class ObjectExtensionUtilTest extends TestCase
     public function testExtendingExtendedActionGroup(): void
     {
         $mockParentActionGroup = [
-            "nodeName" => "actionGroup",
-            "name" => "mockParentActionGroup",
-            "filename" => "someFile"
+            'nodeName' => 'actionGroup',
+            'name' => 'mockParentActionGroup',
+            'filename' => 'someFile'
         ];
 
         $mockSimpleActionGroup = [
-            "nodeName" => "actionGroup",
-            "name" => "mockSimpleActionGroup",
-            "filename" => "someFile",
-            "extends" => "mockParentActionGroup",
+            'nodeName' => 'actionGroup',
+            'name' => 'mockSimpleActionGroup',
+            'filename' => 'someFile',
+            'extends' => 'mockParentActionGroup'
         ];
 
         $mockExtendedActionGroup = [
-            "nodeName" => "actionGroup",
-            "name" => "mockExtendedActionGroup",
-            "filename" => "someFile",
-            "extends" => "mockSimpleActionGroup",
+            'nodeName' => 'actionGroup',
+            'name' => 'mockExtendedActionGroup',
+            'filename' => 'someFile',
+            'extends' => 'mockSimpleActionGroup'
         ];
 
         $mockActionGroupData = [
@@ -341,22 +338,22 @@ class ObjectExtensionUtilTest extends TestCase
         $this->setMockTestOutput(null, $mockActionGroupData);
 
         $this->expectExceptionMessage(
-            "Cannot extend an action group that already extends another action group. " . $mockSimpleActionGroup['name']
+            'Cannot extend an action group that already extends another action group. ' . $mockSimpleActionGroup['name']
         );
 
         // parse and generate test object with mocked data
         try {
             ActionGroupObjectHandler::getInstance()->getObject('mockExtendedActionGroup');
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             // validate log statement
             TestLoggingUtil::getInstance()->validateMockLogStatement(
                 'error',
-                "Cannot extend an action group that already extends another action group. " .
+                'Cannot extend an action group that already extends another action group. ' .
                 $mockSimpleActionGroup['name'],
                 ['parent' => $mockSimpleActionGroup['name'], 'actionGroup' => $mockExtendedActionGroup['name']]
             );
 
-            throw $e;
+            throw $exception;
         }
     }
 
@@ -379,7 +376,7 @@ class ObjectExtensionUtilTest extends TestCase
         $testDataArrayBuilder->reset();
         $mockExtendedTest = $testDataArrayBuilder
             ->withName('extendTest')
-            ->withTestReference("baseTest")
+            ->withTestReference('baseTest')
             ->build();
 
         $mockTestData = array_merge($mockParentTest, $mockExtendedTest);
@@ -391,7 +388,7 @@ class ObjectExtensionUtilTest extends TestCase
         // validate log statement
         TestLoggingUtil::getInstance()->validateMockLogStatement(
             'debug',
-            "extendTest is skipped due to ParentTestIsSkipped",
+            'extendTest is skipped due to ParentTestIsSkipped',
             []
         );
     }
