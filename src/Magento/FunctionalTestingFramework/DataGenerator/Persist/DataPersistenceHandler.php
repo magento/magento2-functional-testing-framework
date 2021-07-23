@@ -89,7 +89,7 @@ class DataPersistenceHandler
         }
         $curlHandler = ObjectManagerFactory::getObjectManager()->create(
             CurlHandler::class,
-            ['create', $this->entityObject, $this->storeCode]
+            ['operation' => 'create', 'entityObject' => $this->entityObject, 'storeCode' => $this->storeCode]
         );
         $result = $curlHandler->executeRequest($this->dependentObjects);
         $this->setCreatedObject(
@@ -117,7 +117,7 @@ class DataPersistenceHandler
         $updateEntityObject = DataObjectHandler::getInstance()->getObject($updateDataName);
         $curlHandler = ObjectManagerFactory::getObjectManager()->create(
             CurlHandler::class,
-            ['update', $updateEntityObject, $this->storeCode]
+            ['operation' => 'update', 'entityObject' => $updateEntityObject, 'storeCode' => $this->storeCode]
         );
         $result = $curlHandler->executeRequest(array_merge($this->dependentObjects, [$this->createdObject]));
         $this->setCreatedObject(
@@ -143,7 +143,7 @@ class DataPersistenceHandler
         }
         $curlHandler = ObjectManagerFactory::getObjectManager()->create(
             CurlHandler::class,
-            ['get', $this->entityObject, $this->storeCode]
+            ['operation' => 'get', 'entityObject' => $this->entityObject, 'storeCode' => $this->storeCode]
         );
         $result = $curlHandler->executeRequest($this->dependentObjects);
         $this->setCreatedObject(
@@ -164,7 +164,7 @@ class DataPersistenceHandler
     {
         $curlHandler = ObjectManagerFactory::getObjectManager()->create(
             CurlHandler::class,
-            ['delete', $this->createdObject, $this->storeCode]
+            ['operation' => 'delete', 'entityObject' => $this->createdObject, 'storeCode' => $this->storeCode]
         );
 
         $curlHandler->executeRequest($this->dependentObjects);
