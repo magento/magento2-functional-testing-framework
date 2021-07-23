@@ -9,6 +9,7 @@ namespace tests\unit\Magento\FunctionalTestFramework\Allure;
 
 use Magento\FunctionalTestingFramework\Allure\AllureHelper;
 use Magento\FunctionalTestingFramework\Allure\Event\AddUniqueAttachmentEvent;
+use Magento\FunctionalTestingFramework\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 use Yandex\Allure\Adapter\Allure;
@@ -20,19 +21,6 @@ use Yandex\Allure\Adapter\Model\Attachment;
 class AllureHelperTest extends TestCase
 {
     private const MOCK_FILENAME = 'filename';
-
-    /**
-     * Clear Allure Lifecycle.
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-        Allure::setDefaultLifecycle();
-        $instanceProperty = new ReflectionProperty(AddUniqueAttachmentEvent::class, 'instance');
-        $instanceProperty->setAccessible(true);
-        $instanceProperty->setValue(null);
-    }
 
     /**
      * The AddAttachmentToStep should add an attachment to the current step.
@@ -122,6 +110,20 @@ class AllureHelperTest extends TestCase
     }
 
     /**
+     * Clear Allure Lifecycle.
+     *
+     * @return void
+     */
+    protected function tearDown(): void
+    {
+        Allure::setDefaultLifecycle();
+
+        $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
+        $objectManagerProperty->setAccessible(true);
+        $objectManagerProperty->setValue(null);
+    }
+
+    /**
      * Mock entire attachment writing mechanisms.
      *
      * @param string $filePathOrContents
@@ -141,8 +143,23 @@ class AllureHelperTest extends TestCase
             ->method('getAttachmentFileName')
             ->willReturn(self::MOCK_FILENAME);
 
-        $instanceProperty = new ReflectionProperty(AddUniqueAttachmentEvent::class, 'instance');
-        $instanceProperty->setAccessible(true);
-        $instanceProperty->setValue($mockInstance, $mockInstance);
+        $objectManagerMockInstance = $this->createMock(ObjectManager::class);
+        $objectManagerMockInstance
+            ->method('create')
+            ->will(
+                $this->returnCallback(
+                    function (string $class) use ($mockInstance) {
+                        if ($class === AddUniqueAttachmentEvent::class) {
+                            return $mockInstance;
+                        }
+
+                        return null;
+                    }
+                )
+            );
+
+        $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
+        $objectManagerProperty->setAccessible(true);
+        $objectManagerProperty->setValue($objectManagerMockInstance, $objectManagerMockInstance);
     }
 }

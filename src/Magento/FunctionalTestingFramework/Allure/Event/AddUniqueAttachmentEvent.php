@@ -19,11 +19,6 @@ class AddUniqueAttachmentEvent extends AddAttachmentEvent
     private const DEFAULT_MIME_TYPE = 'text/plain';
 
     /**
-     * @var AddUniqueAttachmentEvent|null
-     */
-    private static $instance;
-
-    /**
      * Near copy of parent function, added uniqid call for filename to prevent buggy allure behavior.
      *
      * @param mixed  $filePathOrContents
@@ -56,30 +51,6 @@ class AddUniqueAttachmentEvent extends AddAttachmentEvent
         }
 
         return $this->getOutputFileName($fileSha1, $fileExtension);
-    }
-
-    /**
-     * Unit test helper function.
-     *
-     * @param mixed       $filePathOrContents
-     * @param string      $caption
-     * @param string|null $type
-     *
-     * @return AddUniqueAttachmentEvent
-     */
-    public static function getInstance(
-        $filePathOrContents,
-        string $caption,
-        ?string $type = null
-    ): AddUniqueAttachmentEvent {
-        if (!self::$instance) {
-            self::$instance = new AddUniqueAttachmentEvent(
-                $filePathOrContents,
-                $caption,
-                $type
-            );
-        }
-        return self::$instance;
     }
 
     /**

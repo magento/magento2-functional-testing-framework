@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\FunctionalTestingFramework\Allure;
 
 use Magento\FunctionalTestingFramework\Allure\Event\AddUniqueAttachmentEvent;
+use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Yandex\Allure\Adapter\Allure;
 use Yandex\Allure\Adapter\AllureException;
 
@@ -24,7 +25,15 @@ class AllureHelper
      */
     public static function addAttachmentToCurrentStep($data, $caption): void
     {
-        Allure::lifecycle()->fire(AddUniqueAttachmentEvent::getInstance($data, $caption));
+        /** @var AddUniqueAttachmentEvent $event */
+        $event = ObjectManagerFactory::getObjectManager()->create(
+            AddUniqueAttachmentEvent::class,
+            [
+                'filePathOrContents' => $data,
+                'caption' => $caption
+            ]
+        );
+        Allure::lifecycle()->fire($event);
     }
 
     /**
@@ -45,8 +54,15 @@ class AllureHelper
             // Nothing to attach to; do not fire off allure event
             return;
         }
-        
-        $attachmentEvent = AddUniqueAttachmentEvent::getInstance($data, $caption);
+
+        /** @var AddUniqueAttachmentEvent $attachmentEvent */
+        $attachmentEvent = ObjectManagerFactory::getObjectManager()->create(
+            AddUniqueAttachmentEvent::class,
+            [
+                'filePathOrContents' => $data,
+                'caption' => $caption
+            ]
+        );
         $attachmentEvent->process($trueLastStep);
     }
 }
