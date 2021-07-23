@@ -346,18 +346,18 @@ class SuiteGenerator
 
     /**
      * Function which takes a string which is the desired output directory (under _generated) and an array of tests
-     * relevant to the suite to be generated. The function takes this information and creates a new instance of the test
-     * generator which is then called to create all the test files for the suite.
+     * relevant to the suite to be generated. The function takes this information and creates a new instance of the
+     * test generator which is then called to create all the test files for the suite.
      *
      * @param string $path
      * @param array  $tests
+     *
      * @return void
      * @throws TestReferenceException
      */
     private function generateRelevantGroupTests($path, $tests)
     {
-        $testGenerator = TestGenerator::getInstance($path, $tests);
-        $testGenerator->createAllTestFiles(null, []);
+        SuiteGeneratorService::getInstance()->generateRelevantGroupTests($path, $tests);
     }
 
     /**

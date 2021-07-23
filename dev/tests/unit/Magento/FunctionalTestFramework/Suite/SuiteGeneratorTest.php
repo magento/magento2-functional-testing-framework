@@ -31,7 +31,8 @@ use tests\unit\Util\TestLoggingUtil;
 class SuiteGeneratorTest extends MagentoTestCase
 {
     /**
-     * Before test functionality
+     * Before test functionality.
+     *
      * @return void
      */
     protected function setUp(): void
@@ -290,19 +291,27 @@ class SuiteGeneratorTest extends MagentoTestCase
      *
      * @param array $testData
      * @param array $suiteData
+     *
+     * @return void
      * @throws Exception
      */
     private function setMockTestAndSuiteParserOutput(array $testData, array $suiteData): void
     {
         $this->clearMockResolverProperties();
         $mockSuiteGeneratorService = $this->createMock(SuiteGeneratorService::class);
+        $mockVoidReturnCallback = function () {};// phpcs:ignore
+
         $mockSuiteGeneratorService
             ->method('clearPreviousSessionConfigEntries')
-            ->willReturn(null);
+            ->will($this->returnCallback($mockVoidReturnCallback));
 
         $mockSuiteGeneratorService
             ->method('appendEntriesToConfig')
-            ->willReturn(null);
+            ->will($this->returnCallback($mockVoidReturnCallback));
+
+        $mockSuiteGeneratorService
+            ->method('generateRelevantGroupTests')
+            ->will($this->returnCallback($mockVoidReturnCallback));
 
         $suiteGeneratorServiceProperty = new ReflectionProperty(SuiteGeneratorService::class, 'INSTANCE');
         $suiteGeneratorServiceProperty->setAccessible(true);
@@ -324,7 +333,6 @@ class SuiteGeneratorTest extends MagentoTestCase
             ->willReturn('namespace');
 
         $objectManager = ObjectManagerFactory::getObjectManager();
-
         $objectManagerMockInstance = $this->createMock(ObjectManager::class);
         $objectManagerMockInstance
             ->method('create')
