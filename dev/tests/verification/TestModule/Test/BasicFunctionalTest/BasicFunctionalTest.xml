@@ -69,6 +69,7 @@
         <generateDate date="Now" format="H:i:s" stepKey="generateDateKey"/>
         <generateDate date="Now" format="H:i:s" stepKey="generateDateKey2" timezone="UTC"/>
         <getOTP stepKey="getOtp"/>
+        <getOTP stepKey="getOtpWithInput" userInput="someInput"/>
         <grabAttributeFrom selector=".functionalTestSelector" userInput="someInput" stepKey="grabAttributeFromKey1" />
         <grabCookie userInput="grabCookieInput" parameterArray="['domain' => 'www.google.com']" stepKey="grabCookieKey1" />
         <grabFromCurrentUrl regex="/grabCurrentUrl" stepKey="grabFromCurrentUrlKey1" />
