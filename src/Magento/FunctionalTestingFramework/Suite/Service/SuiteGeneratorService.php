@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\FunctionalTestingFramework\Suite\Service;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Suite\SuiteGenerator;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Symfony\Component\Yaml\Yaml;
 
@@ -16,15 +17,6 @@ use Symfony\Component\Yaml\Yaml;
  */
 class SuiteGeneratorService
 {
-    const YAML_CODECEPTION_DIST_FILENAME = 'codeception.dist.yml';
-    const YAML_CODECEPTION_CONFIG_FILENAME = 'codeception.yml';
-    const YAML_GROUPS_TAG = 'groups';
-    const YAML_EXTENSIONS_TAG = 'extensions';
-    const YAML_ENABLED_TAG = 'enabled';
-    const YAML_COPYRIGHT_TEXT =
-        "# Copyright © Magento, Inc. All rights reserved.\n# See COPYING.txt for license details.\n";
-
-
     /**
      * Singleton SuiteGeneratorService Instance.
      *
@@ -65,56 +57,57 @@ class SuiteGeneratorService
         $ymlArray = self::getYamlFileContents();
         $newYmlArray = $ymlArray;
         // if the yaml entries haven't already been cleared
-        if (array_key_exists(self::YAML_EXTENSIONS_TAG, $ymlArray)) {
-            foreach ($ymlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG] as $key => $entry) {
+        if (array_key_exists(SuiteGenerator::YAML_EXTENSIONS_TAG, $ymlArray)) {
+            $ymlEntries = $ymlArray[SuiteGenerator::YAML_EXTENSIONS_TAG][SuiteGenerator::YAML_ENABLED_TAG];
+
+            foreach ($ymlEntries as $key => $entry) {
                 if (preg_match('/(Group\\\\.*)/', $entry)) {
-                    unset($newYmlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG][$key]);
+                    unset($newYmlArray[SuiteGenerator::YAML_EXTENSIONS_TAG][SuiteGenerator::YAML_ENABLED_TAG][$key]);
                 }
             }
 
             // needed for proper yml file generation based on indices
-            $newYmlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG] =
-                array_values($newYmlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG]);
+            $newYmlArray[SuiteGenerator::YAML_EXTENSIONS_TAG][SuiteGenerator::YAML_ENABLED_TAG] =
+                array_values($newYmlArray[SuiteGenerator::YAML_EXTENSIONS_TAG][SuiteGenerator::YAML_ENABLED_TAG]);
         }
 
-        if (array_key_exists(self::YAML_GROUPS_TAG, $newYmlArray)) {
-            unset($newYmlArray[self::YAML_GROUPS_TAG]);
+        if (array_key_exists(SuiteGenerator::YAML_GROUPS_TAG, $newYmlArray)) {
+            unset($newYmlArray[SuiteGenerator::YAML_GROUPS_TAG]);
         }
 
-        $ymlText = self::YAML_COPYRIGHT_TEXT . Yaml::dump($newYmlArray, 10);
-        file_put_contents(self::getYamlConfigFilePath() . self::YAML_CODECEPTION_CONFIG_FILENAME, $ymlText);
+        $ymlText = SuiteGenerator::YAML_COPYRIGHT_TEXT . Yaml::dump($newYmlArray, 10);
+        file_put_contents(self::getYamlConfigFilePath() . SuiteGenerator::YAML_CODECEPTION_CONFIG_FILENAME, $ymlText);
     }
-
 
     /**
      * Function which accepts a suite name and suite path and appends a new group entry to the codeception.yml.dist
      * file in order to register the set of tests as a new group. Also appends group object location if required
      * by suite.
      *
-     * @param string $suiteName
-     * @param string $suitePath
-     * @param string $groupNamespace
+     * @param string      $suiteName
+     * @param string      $suitePath
+     * @param string|null $groupNamespace
      *
      * @return void
      * @throws TestFrameworkException
      */
-    public function appendEntriesToConfig(string $suiteName, string $suitePath, string $groupNamespace)
+    public function appendEntriesToConfig(string $suiteName, string $suitePath, ?string $groupNamespace)
     {
         $relativeSuitePath = substr($suitePath, strlen(TESTS_BP));
         $relativeSuitePath = ltrim($relativeSuitePath, DIRECTORY_SEPARATOR);
         $ymlArray = self::getYamlFileContents();
 
-        if (!array_key_exists(self::YAML_GROUPS_TAG, $ymlArray)) {
-            $ymlArray[self::YAML_GROUPS_TAG]= [];
+        if (!array_key_exists(SuiteGenerator::YAML_GROUPS_TAG, $ymlArray)) {
+            $ymlArray[SuiteGenerator::YAML_GROUPS_TAG] = [];
         }
 
         if ($groupNamespace) {
-            $ymlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG][] = $groupNamespace;
+            $ymlArray[SuiteGenerator::YAML_EXTENSIONS_TAG][SuiteGenerator::YAML_ENABLED_TAG][] = $groupNamespace;
         }
 
-        $ymlArray[self::YAML_GROUPS_TAG][$suiteName] = [$relativeSuitePath];
-        $ymlText = self::YAML_COPYRIGHT_TEXT . Yaml::dump($ymlArray, 10);
-        file_put_contents(self::getYamlConfigFilePath() . self::YAML_CODECEPTION_CONFIG_FILENAME, $ymlText);
+        $ymlArray[SuiteGenerator::YAML_GROUPS_TAG][$suiteName] = [$relativeSuitePath];
+        $ymlText = SuiteGenerator::YAML_COPYRIGHT_TEXT . Yaml::dump($ymlArray, 10);
+        file_put_contents(self::getYamlConfigFilePath() . SuiteGenerator::YAML_CODECEPTION_CONFIG_FILENAME, $ymlText);
     }
 
     /**
@@ -125,8 +118,8 @@ class SuiteGeneratorService
      */
     private static function getYamlFileContents(): array
     {
-        $configYmlFile = self::getYamlConfigFilePath() . self::YAML_CODECEPTION_CONFIG_FILENAME;
-        $defaultConfigYmlFile = self::getYamlConfigFilePath() . self::YAML_CODECEPTION_DIST_FILENAME;
+        $configYmlFile = self::getYamlConfigFilePath() . SuiteGenerator::YAML_CODECEPTION_CONFIG_FILENAME;
+        $defaultConfigYmlFile = self::getYamlConfigFilePath() . SuiteGenerator::YAML_CODECEPTION_DIST_FILENAME;
         $ymlContents = null;
 
         if (file_exists($configYmlFile)) {

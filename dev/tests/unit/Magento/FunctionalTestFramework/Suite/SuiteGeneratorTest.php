@@ -330,7 +330,10 @@ class SuiteGeneratorTest extends MagentoTestCase
             ->method('create')
             ->will(
                 $this->returnCallback(
-                    function (string $class, array $arguments = []) use (
+                    function (
+                        string $class,
+                        array $arguments = []
+                    ) use (
                         $mockDataParser,
                         $mockSuiteDataParser,
                         $mockGroupClass,

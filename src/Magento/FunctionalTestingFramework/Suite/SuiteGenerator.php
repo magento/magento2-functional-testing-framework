@@ -29,6 +29,14 @@ use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
  */
 class SuiteGenerator
 {
+    const YAML_CODECEPTION_DIST_FILENAME = 'codeception.dist.yml';
+    const YAML_CODECEPTION_CONFIG_FILENAME = 'codeception.yml';
+    const YAML_GROUPS_TAG = 'groups';
+    const YAML_EXTENSIONS_TAG = 'extensions';
+    const YAML_ENABLED_TAG = 'enabled';
+    const YAML_COPYRIGHT_TEXT =
+        "# Copyright © Magento, Inc. All rights reserved.\n# See COPYING.txt for license details.\n";
+
     /**
      * Singelton Variable Instance.
      *
