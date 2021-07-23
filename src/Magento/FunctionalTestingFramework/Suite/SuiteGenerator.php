@@ -8,12 +8,12 @@ namespace Magento\FunctionalTestingFramework\Suite;
 
 use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
 use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
-use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Suite\Generators\GroupClassGenerator;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
+use Magento\FunctionalTestingFramework\Suite\Service\SuiteGeneratorService;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
@@ -21,7 +21,6 @@ use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Manifest\BaseTestManifest;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
-use Symfony\Component\Yaml\Yaml;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 
 /**
@@ -30,14 +29,6 @@ use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
  */
 class SuiteGenerator
 {
-    const YAML_CODECEPTION_DIST_FILENAME = 'codeception.dist.yml';
-    const YAML_CODECEPTION_CONFIG_FILENAME = 'codeception.yml';
-    const YAML_GROUPS_TAG = 'groups';
-    const YAML_EXTENSIONS_TAG = 'extensions';
-    const YAML_ENABLED_TAG = 'enabled';
-    const YAML_COPYRIGHT_TEXT =
-        "# Copyright © Magento, Inc. All rights reserved.\n# See COPYING.txt for license details.\n";
-
     /**
      * Singelton Variable Instance.
      *
@@ -268,7 +259,7 @@ class SuiteGenerator
             try {
                 $this->generateSuiteFromTest($suiteSplitName, $tests, $suiteName);
             } catch (FastFailException $e) {
-                    throw $e;
+                throw $e;
             } catch (\Exception $e) {
                 // There are suites that include tests that reference tests from other Magento editions
                 // To keep backward compatibility, we will catch such exceptions with no error.
@@ -331,21 +322,7 @@ class SuiteGenerator
      */
     private function appendEntriesToConfig($suiteName, $suitePath, $groupNamespace)
     {
-        $relativeSuitePath = substr($suitePath, strlen(TESTS_BP));
-        $relativeSuitePath = ltrim($relativeSuitePath, DIRECTORY_SEPARATOR);
-
-        $ymlArray = self::getYamlFileContents();
-        if (!array_key_exists(self::YAML_GROUPS_TAG, $ymlArray)) {
-            $ymlArray[self::YAML_GROUPS_TAG]= [];
-        }
-
-        if ($groupNamespace) {
-            $ymlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG][] = $groupNamespace;
-        }
-        $ymlArray[self::YAML_GROUPS_TAG][$suiteName] = [$relativeSuitePath];
-
-        $ymlText = self::YAML_COPYRIGHT_TEXT . Yaml::dump($ymlArray, 10);
-        file_put_contents(self::getYamlConfigFilePath() . self::YAML_CODECEPTION_CONFIG_FILENAME, $ymlText);
+        SuiteGeneratorService::getInstance()->appendEntriesToConfig($suiteName, $suitePath, $groupNamespace);
     }
 
     /**
@@ -356,27 +333,7 @@ class SuiteGenerator
      */
     private static function clearPreviousSessionConfigEntries()
     {
-        $ymlArray = self::getYamlFileContents();
-        $newYmlArray = $ymlArray;
-        // if the yaml entries haven't already been cleared
-        if (array_key_exists(self::YAML_EXTENSIONS_TAG, $ymlArray)) {
-            foreach ($ymlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG] as $key => $entry) {
-                if (preg_match('/(Group\\\\.*)/', $entry)) {
-                    unset($newYmlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG][$key]);
-                }
-            }
-
-            // needed for proper yml file generation based on indices
-            $newYmlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG] =
-                array_values($newYmlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG]);
-        }
-
-        if (array_key_exists(self::YAML_GROUPS_TAG, $newYmlArray)) {
-            unset($newYmlArray[self::YAML_GROUPS_TAG]);
-        }
-
-        $ymlText = self::YAML_COPYRIGHT_TEXT . Yaml::dump($newYmlArray, 10);
-        file_put_contents(self::getYamlConfigFilePath() . self::YAML_CODECEPTION_CONFIG_FILENAME, $ymlText);
+        SuiteGeneratorService::getInstance()->clearPreviousSessionConfigEntries();
     }
 
     /**
@@ -404,37 +361,6 @@ class SuiteGenerator
     {
         $groupFilePath = GroupClassGenerator::getGroupDirPath();
         array_map('unlink', glob("$groupFilePath*.php"));
-    }
-
-    /**
-     * Function to return contents of codeception.yml file for config changes.
-     *
-     * @return array
-     */
-    private static function getYamlFileContents()
-    {
-        $configYmlFile = self::getYamlConfigFilePath() . self::YAML_CODECEPTION_CONFIG_FILENAME;
-        $defaultConfigYmlFile = self::getYamlConfigFilePath() . self::YAML_CODECEPTION_DIST_FILENAME;
-
-        $ymlContents = null;
-        if (file_exists($configYmlFile)) {
-            $ymlContents = file_get_contents($configYmlFile);
-        } else {
-            $ymlContents = file_get_contents($defaultConfigYmlFile);
-        }
-
-        return Yaml::parse($ymlContents) ?? [];
-    }
-
-    /**
-     * Static getter for the Config yml filepath (as path cannot be stored in a const)
-     *
-     * @return string
-     * @throws TestFrameworkException
-     */
-    private static function getYamlConfigFilePath()
-    {
-        return FilePathFormatter::format(TESTS_BP);
     }
 
     /**
