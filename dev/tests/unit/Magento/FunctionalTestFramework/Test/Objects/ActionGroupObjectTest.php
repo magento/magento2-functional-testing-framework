@@ -3,10 +3,10 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace tests\unit\Magento\FunctionalTestFramework\Test\Objects;
 
-use AspectMock\Test as AspectMock;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
@@ -15,9 +15,10 @@ use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ArgumentObject;
-use tests\unit\Util\MagentoTestCase;
+use ReflectionProperty;
 use tests\unit\Util\ActionGroupObjectBuilder;
 use tests\unit\Util\EntityDataObjectBuilder;
+use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\TestLoggingUtil;
 
 class ActionGroupObjectTest extends MagentoTestCase
@@ -25,18 +26,22 @@ class ActionGroupObjectTest extends MagentoTestCase
     const ACTION_GROUP_MERGE_KEY = 'TestKey';
 
     /**
-     * Before test functionality
+     * Before test functionality.
+     *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
 
     /**
-     * Tests a string literal in an action group
+     * Tests a string literal in an action group.
+     *
+     * @return void
+     * @throws TestReferenceException
      */
-    public function testGetStepsWithDefaultCase()
+    public function testGetStepsWithDefaultCase(): void
     {
         $entity = (new EntityDataObjectBuilder())
             ->withDataFields(['field1' => 'testValue'])
@@ -48,9 +53,12 @@ class ActionGroupObjectTest extends MagentoTestCase
     }
 
     /**
-     * Tests a data reference in an action group, replaced by the user
+     * Tests a data reference in an action group, replaced by the user.
+     *
+     * @return void
+     * @throws TestReferenceException
      */
-    public function testGetStepsWithCustomArgs()
+    public function testGetStepsWithCustomArgs(): void
     {
         $this->setEntityObjectHandlerReturn(function ($entityName) {
             if ($entityName == "data2") {
@@ -87,8 +95,11 @@ class ActionGroupObjectTest extends MagentoTestCase
 
     /**
      * Tests a data reference in an action group replaced with a persisted reference.
+     *
+     * @return void
+     * @throws TestReferenceException
      */
-    public function testGetStepsWithPersistedArgs()
+    public function testGetStepsWithPersistedArgs(): void
     {
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{arg1.field2}}'])])
@@ -110,8 +121,11 @@ class ActionGroupObjectTest extends MagentoTestCase
 
     /**
      * Tests a data reference in an action group replaced with a data.field reference.
+     *
+     * @return void
+     * @throws TestReferenceException
      */
-    public function testGetStepsWithNoFieldArg()
+    public function testGetStepsWithNoFieldArg(): void
     {
         $this->setEntityObjectHandlerReturn(function ($entityName) {
             if ($entityName == "data2") {
@@ -130,8 +144,11 @@ class ActionGroupObjectTest extends MagentoTestCase
 
     /**
      * Tests a data reference in an action group resolved with its default state.
+     *
+     * @return void
+     * @throws TestReferenceException
      */
-    public function testGetStepsWithNoArgs()
+    public function testGetStepsWithNoArgs(): void
     {
         $this->setEntityObjectHandlerReturn(function ($entityName) {
             if ($entityName == "data1") {
@@ -149,8 +166,11 @@ class ActionGroupObjectTest extends MagentoTestCase
 
     /**
      * Tests a parameterized section reference in an action group resolved with user args.
+     *
+     * @return void
+     * @throws TestReferenceException
      */
-    public function testGetStepsWithParameterizedArg()
+    public function testGetStepsWithParameterizedArg(): void
     {
         // Mock Entity Object Handler
         $this->setEntityObjectHandlerReturn(function ($entityName) {
@@ -161,9 +181,14 @@ class ActionGroupObjectTest extends MagentoTestCase
         // mock the section object handler response
         $element = new ElementObject("element1", "textArea", ".selector {{var1}}", null, null, true);
         $section = new SectionObject("testSection", ["element1" => $element]);
+        $sectionInstance = $this->createMock(SectionObjectHandler::class);
+        $sectionInstance
+            ->method('getObject')
+            ->willReturn($section);
         // bypass the private constructor
-        $sectionInstance = AspectMock::double(SectionObjectHandler::class, ['getObject' => $section])->make();
-        AspectMock::double(SectionObjectHandler::class, ['getInstance' => $sectionInstance]);
+        $property = new ReflectionProperty(SectionObjectHandler::class, 'INSTANCE');
+        $property->setAccessible(true);
+        $property->setValue($sectionInstance);
 
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withActionObjects(
@@ -183,8 +208,11 @@ class ActionGroupObjectTest extends MagentoTestCase
 
     /**
      * Tests a parameterized section reference in an action group resolved with user simpleArgs.
+     *
+     * @return void
+     * @throws TestReferenceException
      */
-    public function testGetStepsWithParameterizedSimpleArg()
+    public function testGetStepsWithParameterizedSimpleArg(): void
     {
         // Mock Entity Object Handler
         $this->setEntityObjectHandlerReturn(function ($entityName) {
@@ -195,9 +223,15 @@ class ActionGroupObjectTest extends MagentoTestCase
         // mock the section object handler response
         $element = new ElementObject("element1", "textArea", ".selector {{var1}}", null, null, true);
         $section = new SectionObject("testSection", ["element1" => $element]);
+
+        $sectionInstance = $this->createMock(SectionObjectHandler::class);
+        $sectionInstance
+            ->method('getObject')
+            ->willReturn($section);
         // bypass the private constructor
-        $sectionInstance = AspectMock::double(SectionObjectHandler::class, ['getObject' => $section])->make();
-        AspectMock::double(SectionObjectHandler::class, ['getInstance' => $sectionInstance]);
+        $property = new ReflectionProperty(SectionObjectHandler::class, 'INSTANCE');
+        $property->setAccessible(true);
+        $property->setValue($sectionInstance);
 
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withActionObjects(
@@ -221,8 +255,11 @@ class ActionGroupObjectTest extends MagentoTestCase
 
     /**
      * Tests a data reference in an action group resolved with a persisted reference used in another function.
+     *
+     * @return void
+     * @throws TestReferenceException
      */
-    public function testGetStepsWithOuterScopePersistence()
+    public function testGetStepsWithOuterScopePersistence(): void
     {
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{arg1.field1}}'])])
@@ -235,8 +272,10 @@ class ActionGroupObjectTest extends MagentoTestCase
 
     /**
      * Tests an action group with mismatching args.
+     *
+     * @return void
      */
-    public function testExceptionOnMissingActions()
+    public function testExceptionOnMissingActions(): void
     {
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withArguments([new ArgumentObject('arg1', null, 'entity')])
@@ -249,8 +288,10 @@ class ActionGroupObjectTest extends MagentoTestCase
 
     /**
      * Tests an action group with missing args.
+     *
+     * @return void
      */
-    public function testExceptionOnMissingArguments()
+    public function testExceptionOnMissingArguments(): void
     {
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
             ->withArguments([new ArgumentObject('arg1', null, 'entity')])
@@ -262,10 +303,12 @@ class ActionGroupObjectTest extends MagentoTestCase
     }
 
     /**
-     * Tests the stepKey replacement with "stepKey + invocationKey" process filter
-     * Specific to actions that make it past a "require stepKey replacement" filter
+     * Tests the stepKey replacement with "stepKey + invocationKey" process filter.
+     * Specific to actions that make it past a "require stepKey replacement" filter.
+     *
+     * @return void
      */
-    public function testStepKeyReplacementFilteredIn()
+    public function testStepKeyReplacementFilteredIn(): void
     {
         $createStepKey = "createDataStepKey";
         $updateStepKey = "updateDataStepKey";
@@ -293,10 +336,12 @@ class ActionGroupObjectTest extends MagentoTestCase
     }
 
     /**
-     * Tests the stepKey replacement with "stepKey + invocationKey" process filter
-     * Specific to actions that make are removed by a "require stepKey replacement" filter
+     * Tests the stepKey replacement with "stepKey + invocationKey" process filter.
+     * Specific to actions that make are removed by a "require stepKey replacement" filter.
+     *
+     * @return void
      */
-    public function testStepKeyReplacementFilteredOut()
+    public function testStepKeyReplacementFilteredOut(): void
     {
         $clickStepKey = "clickStepKey";
         $fillFieldStepKey = "fillFieldStepKey";
@@ -322,13 +367,26 @@ class ActionGroupObjectTest extends MagentoTestCase
      * duration of a single test case.
      *
      * @param mixed $return
+     *
      * @return void
      */
-    private function setEntityObjectHandlerReturn($return)
+    private function setEntityObjectHandlerReturn($return): void
     {
-        $instance = AspectMock::double(DataObjectHandler::class, ['getObject' => $return])
-            ->make(); // bypass the private constructor
-        AspectMock::double(DataObjectHandler::class, ['getInstance' => $instance]);
+        $instance = $this->createMock(DataObjectHandler::class);
+
+        if (is_callable($return)) {
+            $instance
+                ->method('getObject')
+                ->will($this->returnCallback($return));
+        } else {
+            $instance
+                ->method('getObject')
+                ->willReturn($return);
+        }
+        // bypass the private constructor
+        $property = new ReflectionProperty(DataObjectHandler::class, 'INSTANCE');
+        $property->setAccessible(true);
+        $property->setValue($instance);
     }
 
     /**
@@ -337,11 +395,15 @@ class ActionGroupObjectTest extends MagentoTestCase
      *
      * @param array $actions
      * @param array $expectedValue
-     * @param string $expectedMergeKey
+     * @param string|null $expectedMergeKey
+     *
      * @return void
      */
-    private function assertOnMergeKeyAndActionValue($actions, $expectedValue, $expectedMergeKey = null)
-    {
+    private function assertOnMergeKeyAndActionValue(
+        array $actions,
+        array $expectedValue,
+        ?string $expectedMergeKey = null
+    ): void {
         $expectedMergeKey = $expectedMergeKey ??
             ActionGroupObjectBuilder::DEFAULT_ACTION_OBJECT_NAME . self::ACTION_GROUP_MERGE_KEY;
         $this->assertArrayHasKey($expectedMergeKey, $actions);
@@ -352,7 +414,8 @@ class ActionGroupObjectTest extends MagentoTestCase
     }
 
     /**
-     * After class functionality
+     * After class functionality.
+     *
      * @return void
      */
     public static function tearDownAfterClass(): void
