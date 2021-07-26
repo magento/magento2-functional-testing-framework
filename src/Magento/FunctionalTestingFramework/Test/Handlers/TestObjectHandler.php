@@ -45,6 +45,13 @@ class TestObjectHandler implements ObjectHandlerInterface
     private $tests = [];
 
     /**
+     * Check if initTestData method should be skipped during object initialization.
+     *
+     * @var boolean
+     */
+    private static $shouldSkipInitTestData = false;
+
+    /**
      * Instance of ObjectExtensionUtil class
      *
      * @var ObjectExtensionUtil
@@ -62,7 +69,10 @@ class TestObjectHandler implements ObjectHandlerInterface
     {
         if (!self::$testObjectHandler) {
             self::$testObjectHandler = new TestObjectHandler();
-            self::$testObjectHandler->initTestData($validateAnnotations);
+
+            if (!self::$shouldSkipInitTestData) {
+                self::$testObjectHandler->initTestData($validateAnnotations);
+            }
         }
 
         return self::$testObjectHandler;

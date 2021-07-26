@@ -3,12 +3,15 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace tests\unit\Magento\FunctionalTestFramework\Util;
 
+use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\Util\ModulePathExtractor;
+use Magento\FunctionalTestingFramework\Util\ModuleResolver;
+use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
-use tests\unit\Util\MockModuleResolverBuilder;
 
 class ModulePathExtractorTest extends MagentoTestCase
 {
@@ -36,8 +39,7 @@ class ModulePathExtractorTest extends MagentoTestCase
     {
         $mockPath = '/base/path/app/code/Magento/ModuleA/Test/Mftf/Test/SomeTest.xml';
 
-        $resolverMock = new MockModuleResolverBuilder();
-        $resolverMock->setup($this->mockTestModulePaths);
+        $this->mockModuleResolver($this->mockTestModulePaths);
         $extractor = new ModulePathExtractor();
         $this->assertEquals('ModuleA', $extractor->extractModuleName($mockPath));
     }
@@ -51,8 +53,7 @@ class ModulePathExtractorTest extends MagentoTestCase
     {
         $mockPath = '/base/path/app/code/VendorB/ModuleB/Test/Mftf/Test/SomeTest.xml';
 
-        $resolverMock = new MockModuleResolverBuilder();
-        $resolverMock->setup($this->mockTestModulePaths);
+        $this->mockModuleResolver($this->mockTestModulePaths);
         $extractor = new ModulePathExtractor();
         $this->assertEquals('VendorB', $extractor->getExtensionPath($mockPath));
     }
@@ -66,8 +67,7 @@ class ModulePathExtractorTest extends MagentoTestCase
     {
         $mockPath = '/base/path/dev/tests/acceptance/tests/functional/Magento/ModuleCTest/Test/SomeTest.xml';
 
-        $resolverMock = new MockModuleResolverBuilder();
-        $resolverMock->setup($this->mockTestModulePaths);
+        $this->mockModuleResolver($this->mockTestModulePaths);
         $extractor = new ModulePathExtractor();
         $this->assertEquals('ModuleC', $extractor->extractModuleName($mockPath));
     }
@@ -81,8 +81,7 @@ class ModulePathExtractorTest extends MagentoTestCase
     {
         $mockPath = '/base/path/dev/tests/acceptance/tests/functional/VendorD/ModuleDTest/Test/SomeTest.xml';
 
-        $resolverMock = new MockModuleResolverBuilder();
-        $resolverMock->setup($this->mockTestModulePaths);
+        $this->mockModuleResolver($this->mockTestModulePaths);
         $extractor = new ModulePathExtractor();
         $this->assertEquals('VendorD', $extractor->getExtensionPath($mockPath));
     }
@@ -96,8 +95,7 @@ class ModulePathExtractorTest extends MagentoTestCase
     {
         $mockPath = '/base/path/dev/tests/acceptance/tests/functional/FunctionalTest/SomeModuleE/Test/SomeTest.xml';
 
-        $resolverMock = new MockModuleResolverBuilder();
-        $resolverMock->setup($this->mockTestModulePaths);
+        $this->mockModuleResolver($this->mockTestModulePaths);
         $extractor = new ModulePathExtractor();
         $this->assertEquals('NO MODULE DETECTED', $extractor->extractModuleName($mockPath));
     }
@@ -111,8 +109,7 @@ class ModulePathExtractorTest extends MagentoTestCase
     {
         $mockPath = '/base/path/vendor/magento/module-modulef/Test/Mftf/Test/SomeTest.xml';
 
-        $resolverMock = new MockModuleResolverBuilder();
-        $resolverMock->setup($this->mockTestModulePaths);
+        $this->mockModuleResolver($this->mockTestModulePaths);
         $extractor = new ModulePathExtractor();
         $this->assertEquals('ModuleF', $extractor->extractModuleName($mockPath));
     }
@@ -126,9 +123,47 @@ class ModulePathExtractorTest extends MagentoTestCase
     {
         $mockPath = '/base/path/vendor/vendorg/module-moduleg-test/Test/SomeTest.xml';
 
-        $resolverMock = new MockModuleResolverBuilder();
-        $resolverMock->setup($this->mockTestModulePaths);
+        $this->mockModuleResolver($this->mockTestModulePaths);
         $extractor = new ModulePathExtractor();
         $this->assertEquals('VendorG', $extractor->getExtensionPath($mockPath));
+    }
+
+    /**
+     * Mock module resolver.
+     *
+     * @param array $paths
+     *
+     * @return void
+     */
+    private function mockModuleResolver(array $paths): void
+    {
+        $mockResolver = $this->createMock(ModuleResolver::class);
+        $mockResolver
+            ->method('getEnabledModules')
+            ->willReturn([]);
+
+        $objectManagerMockInstance = $this->createMock(ObjectManager::class);
+        $objectManagerMockInstance
+            ->method('create')
+            ->will(
+                $this->returnCallback(
+                    function ($class) use ($mockResolver) {
+                        if ($class === ModuleResolver::class) {
+                            return $mockResolver;
+                        }
+
+                        return null;
+                    }
+                )
+            );
+
+        $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
+        $objectManagerProperty->setAccessible(true);
+        $objectManagerProperty->setValue($objectManagerMockInstance);
+
+        $resolver = ModuleResolver::getInstance();
+        $property = new ReflectionProperty(ModuleResolver::class, 'enabledModuleNameAndPaths');
+        $property->setAccessible(true);
+        $property->setValue($resolver, $paths);
     }
 }

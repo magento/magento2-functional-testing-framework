@@ -11,6 +11,7 @@ use Exception;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Filter\FilterList;
+use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
@@ -31,6 +32,10 @@ class TestGeneratorTest extends MagentoTestCase
     protected function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
+        // Used to mock initTestData method running.
+        $shouldSkipInitTestDataProperty = new ReflectionProperty(TestObjectHandler::class, 'shouldSkipInitTestData');
+        $shouldSkipInitTestDataProperty->setAccessible(true);
+        $shouldSkipInitTestDataProperty->setValue(true);
     }
 
     /**
@@ -41,6 +46,10 @@ class TestGeneratorTest extends MagentoTestCase
     protected function tearDown(): void
     {
         GenerationErrorHandler::getInstance()->reset();
+
+        $shouldSkipInitTestDataProperty = new ReflectionProperty(TestObjectHandler::class, 'shouldSkipInitTestData');
+        $shouldSkipInitTestDataProperty->setAccessible(true);
+        $shouldSkipInitTestDataProperty->setValue(false);
     }
 
     /**
