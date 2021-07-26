@@ -3,114 +3,119 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
 
-use AspectMock\Proxy\Verifier;
-use AspectMock\Test as AspectMock;
+use Exception;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Util\AnnotationExtractor;
-use Monolog\Handler\TestHandler;
-use Monolog\Logger;
+use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
 use PHPUnit\Framework\TestCase;
 use tests\unit\Util\TestLoggingUtil;
-use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
 
+/**
+ * Class AnnotationExtractorTest
+ */
 class AnnotationExtractorTest extends TestCase
 {
     /**
-     * Before test functionality
-     * @return void
+     * @inheritDoc
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
 
     /**
-     * Annotation extractor takes in raw array and condenses it to expected format
+     * Annotation extractor takes in raw array and condenses it to expected format.
      *
-     * @throws \Exception
+     * @return void
+     * @throws Exception
      */
-    public function testExtractAnnotations()
+    public function testExtractAnnotations(): void
     {
         // Test Data
         $testAnnotations = [
-            "nodeName" => "annotations",
-            "features" => [
+            'nodeName' => 'annotations',
+            'features' => [
                 [
-                    "nodeName" => "features",
-                    "value" => "TestFeatures"
+                    'nodeName' => 'features',
+                    'value' => 'TestFeatures'
                 ]
             ],
-            "stories" => [
+            'stories' => [
                 [
-                    "nodeName" => "stories",
-                    "value" => "TestStories"
+                    'nodeName' => 'stories',
+                    'value' => 'TestStories'
                 ]
             ],
-            "description" => [
+            'description' => [
                 [
-                    "nodeName" => "description",
-                    "value" => "TestDescription"
+                    'nodeName' => 'description',
+                    'value' => 'TestDescription'
                 ]
             ],
-            "severity" => [
+            'severity' => [
                 [
-                    "nodeName" => "severity",
-                    "value" => "CRITICAL"
+                    'nodeName' => 'severity',
+                    'value' => 'CRITICAL'
                 ]
             ],
-            "group" => [
+            'group' => [
                 [
-                    "nodeName" => "group",
-                    "value" => "TestGroup"
+                    'nodeName' => 'group',
+                    'value' => 'TestGroup'
                 ]
             ],
         ];
         // Perform Test
         $extractor = new AnnotationExtractor();
-        $returnedAnnotations = $extractor->extractAnnotations($testAnnotations, "testFileName");
+        $returnedAnnotations = $extractor->extractAnnotations($testAnnotations, 'testFileName');
 
         // Asserts
 
-        $this->assertEquals("TestFeatures", $returnedAnnotations['features'][0]);
-        $this->assertEquals("TestStories", $returnedAnnotations['stories'][0]);
-        $this->assertEquals("TestDescription", $returnedAnnotations['description'][0]);
-        $this->assertEquals("CRITICAL", $returnedAnnotations['severity'][0]);
-        $this->assertEquals("TestGroup", $returnedAnnotations['group'][0]);
+        $this->assertEquals('TestFeatures', $returnedAnnotations['features'][0]);
+        $this->assertEquals('TestStories', $returnedAnnotations['stories'][0]);
+        $this->assertEquals('TestDescription', $returnedAnnotations['description'][0]);
+        $this->assertEquals('CRITICAL', $returnedAnnotations['severity'][0]);
+        $this->assertEquals('TestGroup', $returnedAnnotations['group'][0]);
     }
 
     /**
-     * Annotation extractor should throw warning when required annotations are missing
+     * Annotation extractor should throw warning when required annotations are missing.
      *
-     * @throws \Exception
+     * @return void
+     * @throws Exception
      */
-    public function testMissingAnnotations()
+    public function testMissingAnnotations(): void
     {
         // Test Data, missing title, description, and severity
         $testAnnotations = [
-            "nodeName" => "annotations",
-            "features" => [
+            'nodeName' => 'annotations',
+            'features' => [
                 [
-                    "nodeName" => "features",
-                    "value" => "TestFeatures"
+                    'nodeName' => 'features',
+                    'value' => 'TestFeatures'
                 ]
             ],
-            "stories" => [
+            'stories' => [
                 [
-                    "nodeName" => "stories",
-                    "value" => "TestStories"
+                    'nodeName' => 'stories',
+                    'value' => 'TestStories'
                 ]
             ],
-            "group" => [
+            'group' => [
                 [
-                    "nodeName" => "group",
-                    "value" => "TestGroup"
+                    'nodeName' => 'group',
+                    'value' => 'TestGroup'
                 ]
             ],
         ];
         // Perform Test
         $extractor = new AnnotationExtractor();
-        $returnedAnnotations = $extractor->extractAnnotations($testAnnotations, "testFileName");
+        $extractor->extractAnnotations($testAnnotations, 'testFileName');
 
         // Asserts
         TestLoggingUtil::getInstance()->validateMockLogStatement(
@@ -118,61 +123,62 @@ class AnnotationExtractorTest extends TestCase
             'DEPRECATION: Test testFileName is missing required annotations.',
             [
                 'testName' => 'testFileName',
-                'missingAnnotations' => "title, description, severity"
+                'missingAnnotations' => 'title, description, severity'
             ]
         );
     }
 
     /**
-     * Annotation extractor should throw warning when required annotations are empty
+     * Annotation extractor should throw warning when required annotations are empty.
      *
-     * @throws \Exception
+     * @return void
+     * @throws Exception
      */
-    public function testEmptyRequiredAnnotations()
+    public function testEmptyRequiredAnnotations(): void
     {
         // Test Data, missing title, description, and severity
         $testAnnotations = [
-            "nodeName" => "annotations",
-            "features" => [
+            'nodeName' => 'annotations',
+            'features' => [
                 [
-                    "nodeName" => "features",
-                    "value" => ""
+                    'nodeName' => 'features',
+                    'value' => ''
                 ]
             ],
-            "stories" => [
+            'stories' => [
                 [
-                    "nodeName" => "stories",
-                    "value" => "TestStories"
+                    'nodeName' => 'stories',
+                    'value' => 'TestStories'
                 ]
             ],
-            "title" => [
+            'title' => [
                 [
-                    "nodeName" => "title",
-                    "value" => " "
+                    'nodeName' => 'title',
+                    'value' => ' '
                 ]
             ],
-            "description" => [
+            'description' => [
                 [
-                    "nodeName" => "description",
-                    "value" => "\t"
+                    'nodeName' => 'description',
+                    'value' => "\t"
                 ]
             ],
-            "severity" => [
+            'severity' => [
                 [
-                    "nodeName" => "severity",
-                    "value" => ""
+                    'nodeName' => 'severity',
+                    'value' => ''
                 ]
             ],
-            "group" => [
+            'group' => [
                 [
-                    "nodeName" => "group",
-                    "value" => "TestGroup"
+                    'nodeName' => 'group',
+                    'value' => 'TestGroup'
                 ]
             ],
         ];
         // Perform Test
         $extractor = new AnnotationExtractor();
-        $returnedAnnotations = $extractor->extractAnnotations($testAnnotations, "testFileName");
+        $returnedAnnotations = $extractor->extractAnnotations($testAnnotations, 'testFileName');
 
         // Asserts
         TestLoggingUtil::getInstance()->validateMockLogStatement(
@@ -180,90 +186,96 @@ class AnnotationExtractorTest extends TestCase
             'DEPRECATION: Test testFileName is missing required annotations.',
             [
                 'testName' => 'testFileName',
-                'missingAnnotations' => "title, description, severity"
+                'missingAnnotations' => 'title, description, severity'
             ]
         );
     }
 
-    public function testTestCaseIdUniqueness()
+    /**
+     * Validate testTestCaseIdUniqueness.
+     *
+     * @return void
+     * @throws TestFrameworkException|XmlException
+     */
+    public function testTestCaseIdUniqueness(): void
     {
         // Test Data
         $firstTestAnnotation = [
-            "nodeName" => "annotations",
-            "features" => [
+            'nodeName' => 'annotations',
+            'features' => [
                 [
-                    "nodeName" => "features",
-                    "value" => "TestFeatures"
+                    'nodeName' => 'features',
+                    'value' => 'TestFeatures'
                 ]
             ],
-            "stories" => [
+            'stories' => [
                 [
-                    "nodeName" => "stories",
-                    "value" => "TestStories"
+                    'nodeName' => 'stories',
+                    'value' => 'TestStories'
                 ]
             ],
-            "title" => [
+            'title' => [
                 [
-                    "nodeName" => "title",
-                    "value" => "TEST TITLE"
+                    'nodeName' => 'title',
+                    'value' => 'TEST TITLE'
                 ]
             ],
-            "severity" => [
+            'severity' => [
                 [
-                    "nodeName" => "severity",
-                    "value" => "CRITICAL"
+                    'nodeName' => 'severity',
+                    'value' => 'CRITICAL'
                 ]
             ],
-            "testCaseId" => [
+            'testCaseId' => [
                 [
-                    "nodeName" => "testCaseId",
-                    "value" => "MQE-0001"
+                    'nodeName' => 'testCaseId',
+                    'value' => 'MQE-0001'
                 ]
             ],
         ];
         $secondTestannotation = [
-            "nodeName" => "annotations",
-            "features" => [
+            'nodeName' => 'annotations',
+            'features' => [
                 [
-                    "nodeName" => "features",
-                    "value" => "TestFeatures"
+                    'nodeName' => 'features',
+                    'value' => 'TestFeatures'
                 ]
             ],
-            "stories" => [
+            'stories' => [
                 [
-                    "nodeName" => "stories",
-                    "value" => "TestStories"
+                    'nodeName' => 'stories',
+                    'value' => 'TestStories'
                 ]
             ],
-            "title" => [
+            'title' => [
                 [
-                    "nodeName" => "title",
-                    "value" => "TEST TITLE"
+                    'nodeName' => 'title',
+                    'value' => 'TEST TITLE'
                 ]
             ],
-            "severity" => [
+            'severity' => [
                 [
-                    "nodeName" => "severity",
-                    "value" => "CRITICAL"
+                    'nodeName' => 'severity',
+                    'value' => 'CRITICAL'
                 ]
             ],
-            "testCaseId" => [
+            'testCaseId' => [
                 [
-                    "nodeName" => "testCaseId",
-                    "value" => "MQE-0001"
+                    'nodeName' => 'testCaseId',
+                    'value' => 'MQE-0001'
                 ]
             ],
         ];
         // Perform Test
         $extractor = new AnnotationExtractor();
-        $extractor->extractAnnotations($firstTestAnnotation, "firstTest");
-        $extractor->extractAnnotations($secondTestannotation, "secondTest");
+        $extractor->extractAnnotations($firstTestAnnotation, 'firstTest');
+        $extractor->extractAnnotations($secondTestannotation, 'secondTest');
         $extractor->validateTestCaseIdTitleUniqueness();
 
         // assert that no exception for validateTestCaseIdTitleUniqueness
         // and validation error is stored in GenerationErrorHandler
         $errorMessage = '/'
-            . preg_quote("TestCaseId and Title pairs is not unique in Tests 'firstTest', 'secondTest'")
+            . preg_quote('TestCaseId and Title pairs is not unique in Tests \'firstTest\', \'secondTest\'')
             . '/';
         TestLoggingUtil::getInstance()->validateMockLogStatmentRegex('error', $errorMessage, []);
         $testErrors = GenerationErrorHandler::getInstance()->getErrorsByType('test');
@@ -271,14 +283,16 @@ class AnnotationExtractorTest extends TestCase
         $this->assertArrayHasKey('secondTest', $testErrors);
     }
 
-    public function tearDown(): void
+    /**
+     * @inheritDoc
+     */
+    protected function tearDown(): void
     {
         GenerationErrorHandler::getInstance()->reset();
     }
 
     /**
-     * After class functionality
-     * @return void
+     * @inheritDoc
      */
     public static function tearDownAfterClass(): void
     {
