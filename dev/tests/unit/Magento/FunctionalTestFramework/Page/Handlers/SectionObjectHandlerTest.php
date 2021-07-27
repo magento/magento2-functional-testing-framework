@@ -3,45 +3,52 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace tests\unit\Magento\FunctionalTestFramework\Page\Handlers;
 
-use AspectMock\Test as AspectMock;
-use Magento\FunctionalTestingFramework\ObjectManager;
-use Magento\FunctionalTestingFramework\ObjectManagerFactory;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
-use Magento\FunctionalTestingFramework\XmlParser\SectionParser;
 use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\ObjectHandlerUtil;
 use tests\unit\Util\TestLoggingUtil;
 
+/**
+ * Class SectionObjectHandlerTest
+ */
 class SectionObjectHandlerTest extends MagentoTestCase
 {
     /**
-     * Setup method
+     * @inheritDoc
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
 
-    public function testGetSectionObject()
+    /**
+     * Validate testGetSectionObject.
+     *
+     * @return void
+     * @throws XmlException
+     */
+    public function testGetSectionObject(): void
     {
         $mockData = [
-            "testSection1" => [
-                "element" => [
-                    "testElement" => [
-                        "type" => "input",
-                        "selector" => "#element"
+            'testSection1' => [
+                'element' => [
+                    'testElement' => [
+                        'type' => 'input',
+                        'selector' => '#element'
                     ]
                 ]
             ],
 
-            "testSection2" => [
-                "element" => [
-                    "testElement" => [
-                        "type" => "input",
-                        "selector" => "#element"
+            'testSection2' => [
+                'element' => [
+                    'testElement' => [
+                        'type' => 'input',
+                        'selector' => '#element'
                     ]
                 ]
             ]
@@ -52,29 +59,35 @@ class SectionObjectHandlerTest extends MagentoTestCase
         // get sections
         $sectionHandler = SectionObjectHandler::getInstance();
         $sections = $sectionHandler->getAllObjects();
-        $section = $sectionHandler->getObject("testSection1");
-        $invalidSection = $sectionHandler->getObject("InvalidSection");
+        $sectionHandler->getObject('testSection1');
+        $invalidSection = $sectionHandler->getObject('InvalidSection');
 
         // perform asserts
         $this->assertCount(2, $sections);
-        $this->assertArrayHasKey("testSection1", $sections);
-        $this->assertArrayHasKey("testSection2", $sections);
+        $this->assertArrayHasKey('testSection1', $sections);
+        $this->assertArrayHasKey('testSection2', $sections);
         $this->assertNull($invalidSection);
     }
 
-    public function testDeprecatedSection()
+    /**
+     * Validate testDeprecatedSection.
+     *
+     * @return void
+     * @throws XmlException
+     */
+    public function testDeprecatedSection(): void
     {
         $mockData = [
-            "testSection1" => [
-                "element" => [
-                    "testElement" => [
-                        "type" => "input",
-                        "selector" => "#element",
-                        "deprecated" => "element deprecation message"
+            'testSection1' => [
+                'element' => [
+                    'testElement' => [
+                        'type' => 'input',
+                        'selector' => '#element',
+                        'deprecated' => 'element deprecation message'
                     ]
                 ],
-                "filename" => "filename.xml",
-                "deprecated" => "section deprecation message"
+                'filename' => 'filename.xml',
+                'deprecated' => 'section deprecation message'
             ]
         ];
 
@@ -82,18 +95,18 @@ class SectionObjectHandlerTest extends MagentoTestCase
 
         // get sections
         $sectionHandler = SectionObjectHandler::getInstance();
-        $section = $sectionHandler->getObject("testSection1");
+        $sectionHandler->getObject('testSection1');
 
         //validate deprecation warning
         TestLoggingUtil::getInstance()->validateMockLogStatement(
             'notice',
-            "NOTICE: 1 Section name violations detected. See mftf.log for details.",
+            'NOTICE: 1 Section name violations detected. See mftf.log for details.',
             []
         );
     }
 
     /**
-     * clean up function runs after all tests
+     * @inheritDoc
      */
     public static function tearDownAfterClass(): void
     {
