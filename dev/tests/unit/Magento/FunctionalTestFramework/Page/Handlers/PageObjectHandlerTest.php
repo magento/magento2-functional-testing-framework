@@ -150,8 +150,10 @@ class PageObjectHandlerTest extends MagentoTestCase
                     function (
                         string $class,
                         array $arguments = []
-                    ) use ($objectManager, $mockSectionParser) {
-
+                    ) use (
+                        $objectManager,
+                        $mockSectionParser
+                    ) {
                         if ($class === PageParser::class) {
                             return $mockSectionParser;
                         }
@@ -165,7 +167,6 @@ class PageObjectHandlerTest extends MagentoTestCase
         $property->setAccessible(true);
         $property->setValue($mockObjectManagerInstance);
     }
-
 
     /**
      * @inheritDoc

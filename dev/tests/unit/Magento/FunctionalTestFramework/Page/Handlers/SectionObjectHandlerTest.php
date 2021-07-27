@@ -135,8 +135,10 @@ class SectionObjectHandlerTest extends MagentoTestCase
                     function (
                         string $class,
                         array $arguments = []
-                    ) use ($objectManager, $mockSectionParser) {
-
+                    ) use (
+                        $objectManager,
+                        $mockSectionParser
+                    ) {
                         if ($class === SectionParser::class) {
                             return $mockSectionParser;
                         }

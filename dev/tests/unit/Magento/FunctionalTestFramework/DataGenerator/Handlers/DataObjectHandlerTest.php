@@ -340,8 +340,10 @@ class DataObjectHandlerTest extends MagentoTestCase
                     function (
                         string $class,
                         array $arguments = []
-                    ) use ($objectManager, $mockDataProfileSchemaParser) {
-
+                    ) use (
+                        $objectManager,
+                        $mockDataProfileSchemaParser
+                    ) {
                         if ($class === DataProfileSchemaParser::class) {
                             return $mockDataProfileSchemaParser;
                         }

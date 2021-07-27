@@ -500,8 +500,10 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
                     function (
                         string $class,
                         array $arguments = []
-                    ) use ($objectManager, $mockOperationParser) {
-
+                    ) use (
+                        $objectManager,
+                        $mockOperationParser
+                    ) {
                         if ($class === OperationDefinitionParser::class) {
                             return $mockOperationParser;
                         }

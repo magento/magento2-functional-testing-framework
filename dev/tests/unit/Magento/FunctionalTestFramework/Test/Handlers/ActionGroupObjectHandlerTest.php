@@ -116,8 +116,10 @@ class ActionGroupObjectHandlerTest extends MagentoTestCase
                     function (
                         string $class,
                         array $arguments = []
-                    ) use ($objectManager, $mockOperationParser) {
-
+                    ) use (
+                        $objectManager,
+                        $mockOperationParser
+                    ) {
                         if ($class === ActionGroupDataParser::class) {
                             return $mockOperationParser;
                         }

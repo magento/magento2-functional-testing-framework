@@ -283,7 +283,6 @@ class DeprecatedEntityUsageCheckTest extends MagentoTestCase
         $this->assertTrue($output);
     }
 
-
     /**
      * Create mock operation handler with data.
      *
@@ -314,8 +313,10 @@ class DeprecatedEntityUsageCheckTest extends MagentoTestCase
                     function (
                         string $class,
                         array $arguments = []
-                    ) use ($objectManager, $mockOperationParser) {
-
+                    ) use (
+                        $objectManager,
+                        $mockOperationParser
+                    ) {
                         if ($class === OperationDefinitionParser::class) {
                             return $mockOperationParser;
                         }
@@ -348,7 +349,6 @@ class DeprecatedEntityUsageCheckTest extends MagentoTestCase
         $objectManagerProperty->setAccessible(true);
         $objectManagerProperty->setValue(null);
     }
-
 
     /**
      * Invoke findViolatingReferences.
