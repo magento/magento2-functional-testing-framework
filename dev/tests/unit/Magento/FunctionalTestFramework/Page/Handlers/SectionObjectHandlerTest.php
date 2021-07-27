@@ -8,9 +8,12 @@ declare(strict_types=1);
 namespace tests\unit\Magento\FunctionalTestFramework\Page\Handlers;
 
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
+use Magento\FunctionalTestingFramework\ObjectManager;
+use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
+use Magento\FunctionalTestingFramework\XmlParser\SectionParser;
+use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
-use tests\unit\Util\ObjectHandlerUtil;
 use tests\unit\Util\TestLoggingUtil;
 
 /**
@@ -54,7 +57,7 @@ class SectionObjectHandlerTest extends MagentoTestCase
             ]
         ];
 
-        ObjectHandlerUtil::mockSectionObjectHandlerWithData($mockData);
+        $this->mockSectionObjectHandlerWithData($mockData);
 
         // get sections
         $sectionHandler = SectionObjectHandler::getInstance();
@@ -91,7 +94,7 @@ class SectionObjectHandlerTest extends MagentoTestCase
             ]
         ];
 
-        ObjectHandlerUtil::mockSectionObjectHandlerWithData($mockData);
+        $this->mockSectionObjectHandlerWithData($mockData);
 
         // get sections
         $sectionHandler = SectionObjectHandler::getInstance();
@@ -106,10 +109,63 @@ class SectionObjectHandlerTest extends MagentoTestCase
     }
 
     /**
+     * Create mock section object handler with data.
+     *
+     * @param array $mockData
+     *
+     * @return void
+     */
+    private function mockSectionObjectHandlerWithData(array $mockData): void
+    {
+        $sectionObjectHandlerProperty = new ReflectionProperty(SectionObjectHandler::class, "INSTANCE");
+        $sectionObjectHandlerProperty->setAccessible(true);
+        $sectionObjectHandlerProperty->setValue(null);
+
+        $mockSectionParser = $this->createMock(SectionParser::class);
+        $mockSectionParser
+            ->method('getData')
+            ->willReturn($mockData);
+
+        $objectManager = ObjectManagerFactory::getObjectManager();
+        $mockObjectManagerInstance = $this->createMock(ObjectManager::class);
+        $mockObjectManagerInstance
+            ->method('get')
+            ->will(
+                $this->returnCallback(
+                    function (
+                        string $class,
+                        array $arguments = []
+                    ) use ($objectManager, $mockSectionParser) {
+
+                        if ($class === SectionParser::class) {
+                            return $mockSectionParser;
+                        }
+
+                        return $objectManager->create($class, $arguments);
+                    }
+                )
+            );
+
+        $property = new ReflectionProperty(ObjectManager::class, 'instance');
+        $property->setAccessible(true);
+        $property->setValue($mockObjectManagerInstance);
+    }
+
+    /**
      * @inheritDoc
      */
     public static function tearDownAfterClass(): void
     {
+        parent::tearDownAfterClass();
+
+        $sectionObjectHandlerProperty = new ReflectionProperty(SectionObjectHandler::class, "INSTANCE");
+        $sectionObjectHandlerProperty->setAccessible(true);
+        $sectionObjectHandlerProperty->setValue(null);
+
+        $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
+        $objectManagerProperty->setAccessible(true);
+        $objectManagerProperty->setValue(null);
+
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 }

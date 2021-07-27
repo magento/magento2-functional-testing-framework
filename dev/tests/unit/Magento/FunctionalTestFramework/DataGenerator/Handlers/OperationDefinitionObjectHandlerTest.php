@@ -11,8 +11,11 @@ use Exception;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\OperationDefinitionObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\OperationDefinitionObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\OperationElement;
+use Magento\FunctionalTestingFramework\DataGenerator\Parsers\OperationDefinitionParser;
+use Magento\FunctionalTestingFramework\ObjectManager;
+use Magento\FunctionalTestingFramework\ObjectManagerFactory;
+use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
-use tests\unit\Util\ObjectHandlerUtil;
 use tests\unit\Util\TestLoggingUtil;
 
 /**
@@ -63,8 +66,8 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
                         OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => 'id',
                         OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => 'integer'
                     ],
-                ]
-            ],[
+                    ]
+                ],[
                 OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $dataType1,
                 OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $operationType2,
                 OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH => 'auth',
@@ -76,8 +79,8 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
                         OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => 'integer'
                     ],
                 ]
-            ]]];
-        ObjectHandlerUtil::mockOperationHandlerWithData($mockData);
+                ]]];
+        $this->mockOperationHandlerWithData($mockData);
 
         //Perform Assertions
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
@@ -120,7 +123,7 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
                 ],
                 OperationDefinitionObjectHandler::OBJ_DEPRECATED => 'deprecation message'
             ]]];
-        ObjectHandlerUtil::mockOperationHandlerWithData($mockData);
+        $this->mockOperationHandlerWithData($mockData);
 
         //Perform Assertions
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
@@ -274,7 +277,7 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
         );
 
         // Set up mocked data output
-        ObjectHandlerUtil::mockOperationHandlerWithData($mockData);
+        $this->mockOperationHandlerWithData($mockData);
 
         // Get Operation
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
@@ -382,7 +385,7 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
         );
 
         // Set up mocked data output
-        ObjectHandlerUtil::mockOperationHandlerWithData($mockData);
+        $this->mockOperationHandlerWithData($mockData);
 
         // Get Operation
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
@@ -456,7 +459,7 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
         );
 
         // Set up mocked data output
-        ObjectHandlerUtil::mockOperationHandlerWithData($mockData);
+        $this->mockOperationHandlerWithData($mockData);
 
         // get Operations
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
@@ -468,11 +471,68 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
     }
 
     /**
+     * Create mock operation handler with data.
+     *
+     * @param array $mockData
+     *
+     * @return void
+     */
+    private function mockOperationHandlerWithData(array $mockData): void
+    {
+        $operationDefinitionObjectHandlerProperty = new ReflectionProperty(
+            OperationDefinitionObjectHandler::class,
+            'INSTANCE'
+        );
+        $operationDefinitionObjectHandlerProperty->setAccessible(true);
+        $operationDefinitionObjectHandlerProperty->setValue(null);
+
+        $mockOperationParser = $this->createMock(OperationDefinitionParser::class);
+        $mockOperationParser
+            ->method('readOperationMetadata')
+            ->willReturn($mockData);
+
+        $objectManager = ObjectManagerFactory::getObjectManager();
+        $mockObjectManagerInstance = $this->createMock(ObjectManager::class);
+        $mockObjectManagerInstance
+            ->method('create')
+            ->will(
+                $this->returnCallback(
+                    function (
+                        string $class,
+                        array $arguments = []
+                    ) use ($objectManager, $mockOperationParser) {
+
+                        if ($class === OperationDefinitionParser::class) {
+                            return $mockOperationParser;
+                        }
+
+                        return $objectManager->create($class, $arguments);
+                    }
+                )
+            );
+
+        $property = new ReflectionProperty(ObjectManager::class, 'instance');
+        $property->setAccessible(true);
+        $property->setValue($mockObjectManagerInstance);
+    }
+
+    /**
      * @inheritDoc
      */
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
+
+        $operationDefinitionObjectHandlerProperty = new ReflectionProperty(
+            OperationDefinitionObjectHandler::class,
+            'INSTANCE'
+        );
+        $operationDefinitionObjectHandlerProperty->setAccessible(true);
+        $operationDefinitionObjectHandlerProperty->setValue(null);
+
+        $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
+        $objectManagerProperty->setAccessible(true);
+        $objectManagerProperty->setValue(null);
 
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }

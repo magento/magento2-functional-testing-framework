@@ -8,9 +8,12 @@ declare(strict_types=1);
 namespace tests\unit\Magento\FunctionalTestFramework\Page\Handlers;
 
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
+use Magento\FunctionalTestingFramework\ObjectManager;
+use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Page\Handlers\PageObjectHandler;
+use Magento\FunctionalTestingFramework\XmlParser\PageParser;
+use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
-use tests\unit\Util\ObjectHandlerUtil;
 use tests\unit\Util\TestLoggingUtil;
 
 /**
@@ -54,7 +57,7 @@ class PageObjectHandlerTest extends MagentoTestCase
                 'area' => 'test'
             ]];
 
-        ObjectHandlerUtil::mockPageObjectHandlerWithData($mockData);
+        $this->mockPageObjectHandlerWithData($mockData);
         $pageHandler = PageObjectHandler::getInstance();
         $pages = $pageHandler->getAllObjects();
         $pageHandler->getObject('testPage1');
@@ -84,7 +87,7 @@ class PageObjectHandlerTest extends MagentoTestCase
                 'area' => 'test'
             ]];
 
-        ObjectHandlerUtil::mockPageObjectHandlerWithData($mockData);
+        $this->mockPageObjectHandlerWithData($mockData);
         PageObjectHandler::getInstance()->getObject('testPage1');
 
         // Empty page has been read in and gotten without an exception being thrown.
@@ -110,7 +113,7 @@ class PageObjectHandlerTest extends MagentoTestCase
                 'filename' => 'filename.xml'
             ]];
 
-        ObjectHandlerUtil::mockPageObjectHandlerWithData($mockData);
+        $this->mockPageObjectHandlerWithData($mockData);
         PageObjectHandler::getInstance()->getObject('testPage1');
 
         TestLoggingUtil::getInstance()->validateMockLogStatement(
@@ -121,10 +124,64 @@ class PageObjectHandlerTest extends MagentoTestCase
     }
 
     /**
+     * Create mock page object handler with data.
+     *
+     * @param array $mockData
+     *
+     * @return void
+     */
+    private function mockPageObjectHandlerWithData(array $mockData): void
+    {
+        $pageObjectHandlerProperty = new ReflectionProperty(PageObjectHandler::class, 'INSTANCE');
+        $pageObjectHandlerProperty->setAccessible(true);
+        $pageObjectHandlerProperty->setValue(null);
+
+        $mockSectionParser =  $this->createMock(PageParser::class);
+        $mockSectionParser
+            ->method('getData')
+            ->willReturn($mockData);
+
+        $objectManager = ObjectManagerFactory::getObjectManager();
+        $mockObjectManagerInstance = $this->createMock(ObjectManager::class);
+        $mockObjectManagerInstance
+            ->method('get')
+            ->will(
+                $this->returnCallback(
+                    function (
+                        string $class,
+                        array $arguments = []
+                    ) use ($objectManager, $mockSectionParser) {
+
+                        if ($class === PageParser::class) {
+                            return $mockSectionParser;
+                        }
+
+                        return $objectManager->create($class, $arguments);
+                    }
+                )
+            );
+
+        $property = new ReflectionProperty(ObjectManager::class, 'instance');
+        $property->setAccessible(true);
+        $property->setValue($mockObjectManagerInstance);
+    }
+
+
+    /**
      * @inheritDoc
      */
     public static function tearDownAfterClass(): void
     {
+        parent::tearDownAfterClass();
+
+        $pageObjectHandlerProperty = new ReflectionProperty(PageObjectHandler::class, 'INSTANCE');
+        $pageObjectHandlerProperty->setAccessible(true);
+        $pageObjectHandlerProperty->setValue(null);
+
+        $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
+        $objectManagerProperty->setAccessible(true);
+        $objectManagerProperty->setValue(null);
+
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 }
