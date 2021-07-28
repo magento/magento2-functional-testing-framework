@@ -26,7 +26,7 @@ class FileStorage extends BaseStorage
      * @return void
      * @throws TestFrameworkException
      */
-    private function initialize(): void
+    public function initialize(): void
     {
         if (!$this->secretData) {
             $creds = $this->readInCredentialsFile();
