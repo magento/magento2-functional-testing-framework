@@ -12,7 +12,6 @@ use Magento\FunctionalTestingFramework\Util\ModuleResolver\ModuleResolverService
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
-use Magento\FunctionalTestingFramework\DataTransport\Auth\WebApiAuth;
 use \Magento\FunctionalTestingFramework\Util\ModuleResolver\AlphabeticSequenceSorter;
 use \Magento\FunctionalTestingFramework\Util\ModuleResolver\SequenceSorterInterface;
 
@@ -129,15 +128,6 @@ class ModuleResolver
     protected $sequenceSorter;
 
     /**
-     * List of module names that will be ignored.
-     *
-     * @var array
-     */
-    protected $moduleBlocklist = [
-        'SampleTests', 'SampleTemplates'
-    ];
-
-    /**
      * Get ModuleResolver instance.
      *
      * @return ModuleResolver
@@ -180,7 +170,7 @@ class ModuleResolver
             $this->printMagentoVersionInfo();
         }
 
-        $token = WebApiAuth::getAdminToken();
+        $token = ModuleResolverService::getInstance()->getAdminToken();
 
         $url = UrlFormatter::format(getenv('MAGENTO_BASE_URL')) . $this->moduleUrl;
 
@@ -516,24 +506,6 @@ class ModuleResolver
     }
 
     /**
-     * Takes a multidimensional array of module paths and flattens to return a one dimensional array of test paths
-     *
-     * @param array $modulePaths
-     * @return array
-     */
-    private function flattenAllModulePaths($modulePaths)
-    {
-        $it = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($modulePaths));
-        $resultArray = [];
-
-        foreach ($it as $value) {
-            $resultArray[] = $value;
-        }
-
-        return $resultArray;
-    }
-
-    /**
      * Executes a REST call to the supplied Magento Base Url for version information to display during generation
      *
      * @return void
@@ -569,66 +541,11 @@ class ModuleResolver
      *
      * @param array $modulesPath
      * @return string[]
+     * @throws TestFrameworkException
      */
     protected function applyCustomModuleMethods($modulesPath)
     {
-        $modulePathsResult = $this->removeBlocklistModules($modulesPath);
-        $customModulePaths = $this->getCustomModulePaths();
-
-        array_map(function ($key, $value) {
-            LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
-                "including custom module",
-                [$key => $value]
-            );
-        }, array_keys($customModulePaths), $customModulePaths);
-
-        if (!isset($this->enabledModuleNameAndPaths)) {
-            $this->enabledModuleNameAndPaths = array_merge($modulePathsResult, $customModulePaths);
-        }
-        return $this->flattenAllModulePaths(array_merge($modulePathsResult, $customModulePaths));
-    }
-
-    /**
-     * Remove blocklist modules from input module paths.
-     *
-     * @param array $modulePaths
-     * @return string[]
-     */
-    private function removeBlocklistModules($modulePaths)
-    {
-        $modulePathsResult = $modulePaths;
-        foreach ($modulePathsResult as $moduleName => $modulePath) {
-            // Remove module if it is in blocklist
-            if (in_array($moduleName, $this->getModuleBlocklist())) {
-                unset($modulePathsResult[$moduleName]);
-                LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
-                    "excluding module",
-                    ['module' => $moduleName]
-                );
-            }
-        }
-
-        return $modulePathsResult;
-    }
-
-    /**
-     * Returns an array of custom module paths defined by the user
-     *
-     * @return string[]
-     */
-    private function getCustomModulePaths()
-    {
-        return ModuleResolverService::getInstance()->getCustomModulePaths();
-    }
-
-    /**
-     * Getter for moduleBlocklist.
-     *
-     * @return string[]
-     */
-    private function getModuleBlocklist()
-    {
-        return $this->moduleBlocklist;
+        return ModuleResolverService::getInstance()->applyCustomModuleMethods($modulesPath);
     }
 
     /**
