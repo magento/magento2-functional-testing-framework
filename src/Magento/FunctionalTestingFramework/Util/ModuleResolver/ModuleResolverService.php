@@ -16,8 +16,6 @@ use Magento\FunctionalTestingFramework\Util\ComposerModuleResolver;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\ModuleResolver;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
-use RecursiveArrayIterator;
-use RecursiveIteratorIterator;
 
 class ModuleResolverService
 {
@@ -41,15 +39,6 @@ class ModuleResolverService
      * @var array
      */
     private $composerInstalledModulePaths = null;
-
-    /**
-     * List of module names that will be ignored.
-     *
-     * @var array
-     */
-    private static $moduleBlockList = [
-        'SampleTests', 'SampleTemplates'
-    ];
 
     /**
      * ModuleResolverService constructor.
@@ -334,16 +323,6 @@ class ModuleResolverService
     }
 
     /**
-     * Getter for moduleBlockList.
-     *
-     * @return string[]
-     */
-    private function getModuleBlockList(): array
-    {
-        return self::$moduleBlockList;
-    }
-
-    /**
      * Get admin token.
      *
      * @return string
@@ -352,76 +331,5 @@ class ModuleResolverService
     public function getAdminToken(): string
     {
         return WebApiAuth::getAdminToken();
-    }
-
-    /**
-     * A wrapping method for any custom logic which needs to be applied to the module list.
-     *
-     * @param array $modulesPath
-     *
-     * @return string[]
-     * @throws TestFrameworkException
-     */
-    public function applyCustomModuleMethods(array $modulesPath): array
-    {
-        $modulePathsResult = $this->removeBlockListModules($modulesPath);
-        $customModulePaths = $this->getCustomModulePaths();
-
-        array_map(function ($key, $value) {
-            LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
-                "including custom module",
-                [$key => $value]
-            );
-        }, array_keys($customModulePaths), $customModulePaths);
-
-        if (!isset($this->enabledModuleNameAndPaths)) {
-            $this->enabledModuleNameAndPaths = array_merge($modulePathsResult, $customModulePaths);
-        }
-        return $this->flattenAllModulePaths(array_merge($modulePathsResult, $customModulePaths));
-    }
-
-    /**
-     * Remove blockList modules from input module paths.
-     *
-     * @param array $modulePaths
-     *
-     * @return string[]
-     * @throws TestFrameworkException
-     */
-    private function removeBlockListModules(array $modulePaths): array
-    {
-        $modulePathsResult = $modulePaths;
-
-        foreach ($modulePathsResult as $moduleName => $modulePath) {
-            // Remove module if it is in blocklist
-            if (in_array($moduleName, $this->getModuleBlockList())) {
-                unset($modulePathsResult[$moduleName]);
-                LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
-                    "excluding module",
-                    ['module' => $moduleName]
-                );
-            }
-        }
-
-        return $modulePathsResult;
-    }
-
-    /**
-     * Takes a multidimensional array of module paths and flattens to return a one dimensional array of test paths.
-     *
-     * @param array $modulePaths
-     *
-     * @return array
-     */
-    private function flattenAllModulePaths(array $modulePaths): array
-    {
-        $it = new RecursiveIteratorIterator(new RecursiveArrayIterator($modulePaths));
-        $resultArray = [];
-
-        foreach ($it as $value) {
-            $resultArray[] = $value;
-        }
-
-        return $resultArray;
     }
 }

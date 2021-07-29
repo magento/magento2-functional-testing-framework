@@ -783,12 +783,7 @@ class ModuleResolverTest extends MagentoTestCase
     {
         // Set --force to false
         $this->mockForceGenerate(false);
-        $moduleResolverService = $this->createPartialMock(ModuleResolverService::class, ['applyCustomModuleMethods']);
-        $moduleResolverService
-            ->method('applyCustomModuleMethods')
-            ->willReturn(["example" . DIRECTORY_SEPARATOR . "paths"]);
 
-        $this->setMockResolverCreatorProperties($moduleResolverService);
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver);
 
@@ -893,9 +888,9 @@ class ModuleResolverTest extends MagentoTestCase
         $property->setAccessible(true);
         $property->setValue($instance, $mockModules);
 
-        $property = new ReflectionProperty(ModuleResolverService::class, 'moduleBlockList');
+        $property = new ReflectionProperty(ModuleResolver::class, 'moduleBlocklist');
         $property->setAccessible(true);
-        $property->setValue($mockBlockList);
+        $property->setValue($instance, $mockBlockList);
     }
 
     /**
