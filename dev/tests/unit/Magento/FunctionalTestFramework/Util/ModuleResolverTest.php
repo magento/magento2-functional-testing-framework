@@ -70,7 +70,8 @@ class ModuleResolverTest extends MagentoTestCase
         $this->mockForceGenerate(false);
 
         $moduleResolverService = $this->createPartialMock(
-            ModuleResolverService::class, ['getRegisteredModuleList', 'aggregateTestModulePaths']
+            ModuleResolverService::class,
+            ['getRegisteredModuleList', 'aggregateTestModulePaths']
         );
         $moduleResolverService->expects($this->any())
             ->method('getRegisteredModuleList')
@@ -136,7 +137,6 @@ class ModuleResolverTest extends MagentoTestCase
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, []);
         $this->assertEquals([], $resolver->getModulesPath());
-
 
         putenv("TESTS_MODULE_PATH=$origin");
     }
@@ -205,7 +205,8 @@ class ModuleResolverTest extends MagentoTestCase
         $this->mockForceGenerate(false);
 
         $moduleResolverService = $this->createPartialMock(
-            ModuleResolverService::class, ['getComposerJsonTestModulePaths']
+            ModuleResolverService::class,
+            ['getComposerJsonTestModulePaths']
         );
         $moduleResolverService
             ->expects($this->any())
@@ -303,7 +304,8 @@ class ModuleResolverTest extends MagentoTestCase
     {
         $this->mockForceGenerate(false);
         $moduleResolverService = $this->createPartialMock(
-            ModuleResolverService::class, ['getComposerInstalledTestModulePaths']
+            ModuleResolverService::class,
+            ['getComposerInstalledTestModulePaths']
         );
         $moduleResolverService->expects($this->any())
             ->method('getComposerInstalledTestModulePaths')
