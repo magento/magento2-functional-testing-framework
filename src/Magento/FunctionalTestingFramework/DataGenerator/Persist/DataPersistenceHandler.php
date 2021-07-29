@@ -9,6 +9,7 @@ namespace Magento\FunctionalTestingFramework\DataGenerator\Persist;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 
 /**
  * Class DataPersistenceHandler
@@ -86,7 +87,10 @@ class DataPersistenceHandler
         if (!empty($storeCode)) {
             $this->storeCode = $storeCode;
         }
-        $curlHandler = new CurlHandler('create', $this->entityObject, $this->storeCode);
+        $curlHandler = ObjectManagerFactory::getObjectManager()->create(
+            CurlHandler::class,
+            ['operation' => 'create', 'entityObject' => $this->entityObject, 'storeCode' => $this->storeCode]
+        );
         $result = $curlHandler->executeRequest($this->dependentObjects);
         $this->setCreatedObject(
             $result,
@@ -111,7 +115,10 @@ class DataPersistenceHandler
             $this->dependentObjects[] = $dependentObject->getCreatedObject();
         }
         $updateEntityObject = DataObjectHandler::getInstance()->getObject($updateDataName);
-        $curlHandler = new CurlHandler('update', $updateEntityObject, $this->storeCode);
+        $curlHandler = ObjectManagerFactory::getObjectManager()->create(
+            CurlHandler::class,
+            ['operation' => 'update', 'entityObject' => $updateEntityObject, 'storeCode' => $this->storeCode]
+        );
         $result = $curlHandler->executeRequest(array_merge($this->dependentObjects, [$this->createdObject]));
         $this->setCreatedObject(
             $result,
@@ -134,7 +141,10 @@ class DataPersistenceHandler
         if (!empty($storeCode)) {
             $this->storeCode = $storeCode;
         }
-        $curlHandler = new CurlHandler('get', $this->entityObject, $this->storeCode);
+        $curlHandler = ObjectManagerFactory::getObjectManager()->create(
+            CurlHandler::class,
+            ['operation' => 'get', 'entityObject' => $this->entityObject, 'storeCode' => $this->storeCode]
+        );
         $result = $curlHandler->executeRequest($this->dependentObjects);
         $this->setCreatedObject(
             $result,
@@ -152,7 +162,11 @@ class DataPersistenceHandler
      */
     public function deleteEntity()
     {
-        $curlHandler = new CurlHandler('delete', $this->createdObject, $this->storeCode);
+        $curlHandler = ObjectManagerFactory::getObjectManager()->create(
+            CurlHandler::class,
+            ['operation' => 'delete', 'entityObject' => $this->createdObject, 'storeCode' => $this->storeCode]
+        );
+
         $curlHandler->executeRequest($this->dependentObjects);
     }
 
