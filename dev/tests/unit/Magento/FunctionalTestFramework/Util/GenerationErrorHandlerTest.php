@@ -3,13 +3,13 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace tests\unit\Magento\FunctionalTestFramework\Util;
 
-use AspectMock\Test as AspectMock;
+use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
 use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
-use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 
 /**
  * Class GenerationErrorHandlerTest
@@ -19,13 +19,8 @@ class GenerationErrorHandlerTest extends MagentoTestCase
     /**
      * Test get errors when all errors are distinct
      */
-    public function testGetDistinctErrors()
+    public function testGetDistinctErrors():void
     {
-        AspectMock::double(
-            MftfApplicationConfig::class,
-            ['getPhase' => MftfApplicationConfig::GENERATION_PHASE]
-        );
-
         $expectedAllErrors = [
             'test' => [
                 'Sameple1Test' => [
@@ -77,13 +72,8 @@ class GenerationErrorHandlerTest extends MagentoTestCase
     /**
      * Test get errors when some errors have the same key
      */
-    public function testGetErrorsWithSameKey()
+    public function testGetErrorsWithSameKey(): void
     {
-        AspectMock::double(
-            MftfApplicationConfig::class,
-            ['getPhase' => MftfApplicationConfig::GENERATION_PHASE]
-        );
-
         $expectedAllErrors = [
             'test' => [
                 'Sameple1Test' => [
@@ -161,13 +151,8 @@ class GenerationErrorHandlerTest extends MagentoTestCase
     /**
      * Test get errors when some errors are duplicate
      */
-    public function testGetAllErrorsDuplicate()
+    public function testGetAllErrorsDuplicate(): void
     {
-        AspectMock::double(
-            MftfApplicationConfig::class,
-            ['getPhase' => MftfApplicationConfig::GENERATION_PHASE]
-        );
-
         $expectedAllErrors = [
             'test' => [
                 'Sameple1Test' => [
@@ -247,14 +232,16 @@ class GenerationErrorHandlerTest extends MagentoTestCase
      *
      * @param string $expectedErrMessages
      * @param array  $errors
+     *
+     * @return void
      * @dataProvider getAllErrorMessagesDataProvider
      */
-    public function testGetAllErrorMessages($expectedErrMessages, $errors)
+    public function testGetAllErrorMessages(string $expectedErrMessages, array $errors): void
     {
         $handler = GenerationErrorHandler::getInstance();
         $handler->reset();
 
-        $property = new \ReflectionProperty(GenerationErrorHandler::class, 'errors');
+        $property = new ReflectionProperty(GenerationErrorHandler::class, 'errors');
         $property->setAccessible(true);
         $property->setValue($handler, $errors);
 
@@ -267,7 +254,7 @@ class GenerationErrorHandlerTest extends MagentoTestCase
      *
      * @return array
      */
-    public function getAllErrorMessagesDataProvider()
+    public function getAllErrorMessagesDataProvider(): array
     {
         return [
             ['', []],
@@ -332,13 +319,8 @@ class GenerationErrorHandlerTest extends MagentoTestCase
     /**
      * Test reset
      */
-    public function testResetError()
+    public function testResetError(): void
     {
-        AspectMock::double(
-            MftfApplicationConfig::class,
-            ['getPhase' => MftfApplicationConfig::GENERATION_PHASE]
-        );
-
         GenerationErrorHandler::getInstance()->addError('something', 'some', 'error');
         GenerationErrorHandler::getInstance()->addError('otherthing', 'other', 'error');
         GenerationErrorHandler::getInstance()->reset();
@@ -351,9 +333,12 @@ class GenerationErrorHandlerTest extends MagentoTestCase
         $this->assertEquals([], GenerationErrorHandler::getInstance()->getErrorsByType('nothing'));
     }
 
+    /**
+     * @inheritdoc
+     */
     public function tearDown(): void
     {
-        $property = new \ReflectionProperty(GenerationErrorHandler::class, 'instance');
+        $property = new ReflectionProperty(GenerationErrorHandler::class, 'instance');
         $property->setAccessible(true);
         $property->setValue(null);
     }
