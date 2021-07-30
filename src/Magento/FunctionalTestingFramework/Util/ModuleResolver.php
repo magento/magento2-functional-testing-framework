@@ -214,6 +214,7 @@ class ModuleResolver
      *
      * @param boolean $verbosePath
      * @return array
+     * @throws TestFrameworkException
      */
     public function getModulesPath($verbosePath = false)
     {
@@ -226,7 +227,7 @@ class ModuleResolver
         }
 
         // Find test modules paths by searching patterns (Test/Mftf, etc)
-        $allModulePaths = $this->aggregateTestModulePaths();
+        $allModulePaths = ModuleResolverService::getInstance()->aggregateTestModulePaths();
 
         // Find test modules paths by searching test composer.json files
         $composerBasedModulePaths = $this->aggregateTestModulePathsFromComposerJson();
@@ -283,17 +284,6 @@ class ModuleResolver
     }
 
     /**
-     * Retrieves all module directories which might contain pertinent test code.
-     *
-     * @return array
-     * @throws TestFrameworkException
-     */
-    private function aggregateTestModulePaths()
-    {
-        return ModuleResolverService::getInstance()->aggregateTestModulePaths();
-    }
-
-    /**
      * Aggregate all code paths with test module composer json files
      *
      * @return array
@@ -317,18 +307,7 @@ class ModuleResolver
             $searchCodePaths[] = $modulePath;
         }
 
-        return $this->getComposerJsonTestModulePaths($searchCodePaths);
-    }
-
-    /**
-     * Retrieve all module code paths that have test module composer json files
-     *
-     * @param array $codePaths
-     * @return array
-     */
-    private function getComposerJsonTestModulePaths($codePaths)
-    {
-        return ModuleResolverService::getInstance()->getComposerJsonTestModulePaths($codePaths);
+        return ModuleResolverService::getInstance()->getComposerJsonTestModulePaths($searchCodePaths);
     }
 
     /**
@@ -342,18 +321,6 @@ class ModuleResolver
         $magentoBaseCodePath = MAGENTO_BP;
         $composerFile = $magentoBaseCodePath . DIRECTORY_SEPARATOR . 'composer.json';
 
-        return $this->getComposerInstalledTestModulePaths($composerFile);
-    }
-
-    /**
-     * Retrieve composer installed test module code paths
-     *
-     * @param string $composerFile
-     *
-     * @return array
-     */
-    private function getComposerInstalledTestModulePaths($composerFile)
-    {
         return ModuleResolverService::getInstance()->getComposerInstalledTestModulePaths($composerFile);
     }
 
@@ -495,7 +462,7 @@ class ModuleResolver
      */
     private function normalizeModuleNames($codePaths)
     {
-        $allComponents = $this->getRegisteredModuleList();
+        $allComponents = ModuleResolverService::getInstance()->getRegisteredModuleList();
         if (empty($allComponents)) {
             return $codePaths;
         }
@@ -571,7 +538,7 @@ class ModuleResolver
     protected function applyCustomModuleMethods($modulesPath)
     {
         $modulePathsResult = $this->removeBlocklistModules($modulesPath);
-        $customModulePaths = $this->getCustomModulePaths();
+        $customModulePaths = ModuleResolverService::getInstance()->getCustomModulePaths();
 
         array_map(function ($key, $value) {
             LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
@@ -610,16 +577,6 @@ class ModuleResolver
     }
 
     /**
-     * Returns an array of custom module paths defined by the user
-     *
-     * @return string[]
-     */
-    private function getCustomModulePaths()
-    {
-        return ModuleResolverService::getInstance()->getCustomModulePaths();
-    }
-
-    /**
      * Getter for moduleBlocklist.
      *
      * @return string[]
@@ -627,16 +584,6 @@ class ModuleResolver
     private function getModuleBlocklist()
     {
         return $this->moduleBlocklist;
-    }
-
-    /**
-     * Calls Magento method for determining registered modules.
-     *
-     * @return string[]
-     */
-    private function getRegisteredModuleList()
-    {
-        return ModuleResolverService::getInstance()->getRegisteredModuleList();
     }
 
     /**
