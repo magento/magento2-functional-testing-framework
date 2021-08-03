@@ -19,7 +19,7 @@ class MagentoTestCase extends TestCase
      */
     public static function setUpBeforeClass(): void
     {
-        if (!file_exists(DOCS_OUTPUT_DIR)) {
+        if (!self::fileExists(DOCS_OUTPUT_DIR)) {
             mkdir(DOCS_OUTPUT_DIR, 0755, true);
         }
 
