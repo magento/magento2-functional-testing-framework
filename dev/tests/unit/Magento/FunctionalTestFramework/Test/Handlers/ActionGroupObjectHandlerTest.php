@@ -3,28 +3,29 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace tests\unit\Magento\FunctionalTestFramework\Test\Handlers;
 
-use AspectMock\Test as AspectMock;
-
-use Go\Aop\Aspect;
-use Magento\FunctionalTestingFramework\ObjectManager;
-use Magento\FunctionalTestingFramework\ObjectManagerFactory;
+use Exception;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
-use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\ActionGroupArrayBuilder;
-use Magento\FunctionalTestingFramework\Test\Parsers\ActionGroupDataParser;
+use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\ObjectHandlerUtil;
 
+/**
+ * Class ActionGroupObjectHandlerTest
+ */
 class ActionGroupObjectHandlerTest extends MagentoTestCase
 {
     /**
-     * getObject should throw exception if test extends from itself
+     * Validate getObject should throw exception if test extends from itself.
      *
-     * @throws \Exception
+     * @return void
+     * @throws Exception
      */
-    public function testGetTestObjectWithInvalidExtends()
+    public function testGetTestObjectWithInvalidExtends(): void
     {
         // Set up action group data
         $nameOne = 'actionGroupOne';
@@ -39,15 +40,16 @@ class ActionGroupObjectHandlerTest extends MagentoTestCase
 
         $handler = ActionGroupObjectHandler::getInstance();
 
-        $this->expectException(\Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException::class);
-        $this->expectExceptionMessage("Mftf Action Group can not extend from itself: " . $nameOne);
+        $this->expectException(TestFrameworkException::class);
+        $this->expectExceptionMessage('Mftf Action Group can not extend from itself: ' . $nameOne);
         $handler->getObject('actionGroupOne');
     }
 
     /**
-     * getAllObjects should throw exception if test extends from itself
+     * Validate getAllObjects should throw exception if test extends from itself
      *
-     * @throws \Exception
+     * @return void
+     * @throws Exception
      */
     public function testGetAllTestObjectsWithInvalidExtends()
     {
@@ -80,8 +82,8 @@ class ActionGroupObjectHandlerTest extends MagentoTestCase
 
         $handler = ActionGroupObjectHandler::getInstance();
 
-        $this->expectException(\Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException::class);
-        $this->expectExceptionMessage("Mftf Action Group can not extend from itself: " . $nameOne);
+        $this->expectException(TestFrameworkException::class);
+        $this->expectExceptionMessage('Mftf Action Group can not extend from itself: ' . $nameOne);
         $handler->getAllObjects();
     }
 }
