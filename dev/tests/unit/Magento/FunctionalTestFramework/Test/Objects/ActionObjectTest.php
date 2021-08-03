@@ -3,21 +3,24 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace tests\unit\Magento\FunctionalTestFramework\Test\Objects;
 
-use AspectMock\Test as AspectMock;
+use Exception;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Page\Handlers\PageObjectHandler;
+use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
 use Magento\FunctionalTestingFramework\Page\Objects\ElementObject;
 use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
-use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
-use Magento\FunctionalTestingFramework\Page\Handlers\SectionObjectHandler;
 use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
-use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
-use tests\unit\Util\TestLoggingUtil;
+use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
+use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
+use tests\unit\Util\TestLoggingUtil;
 
 /**
  * Class ActionObjectTest
@@ -25,36 +28,45 @@ use tests\unit\Util\MagentoTestCase;
 class ActionObjectTest extends MagentoTestCase
 {
     /**
-     * Before test functionality
+     * Before test functionality.
+     *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
 
     /**
-     * The order offset should be 0 when the action is instantiated with 'before'
+     * The order offset should be 0 when the action is instantiated with 'before'.
+     *
+     * @return void
      */
-    public function testConstructOrderBefore()
+    public function testConstructOrderBefore(): void
     {
         $actionObject = new ActionObject('stepKey', 'type', [], null, 'before');
         $this->assertEquals(0, $actionObject->getOrderOffset());
     }
 
     /**
-     * The order offset should be 1 when the action is instantiated with 'after'
+     * The order offset should be 1 when the action is instantiated with 'after'.
+     *
+     * @return void
      */
-    public function testConstructOrderAfter()
+    public function testConstructOrderAfter(): void
     {
         $actionObject = new ActionObject('stepKey', 'type', [], null, 'after');
         $this->assertEquals(1, $actionObject->getOrderOffset());
     }
 
     /**
-     * {{Section.element}} should be replaced with #theElementSelector
+     * {{Section.element}} should be replaced with #theElementSelector.
+     *
+     * @return void
+     * @throws TestReferenceException
+     * @throws XmlException
      */
-    public function testResolveElementInSelector()
+    public function testResolveElementInSelector(): void
     {
         // Set up mocks
         $actionObject = new ActionObject('merge123', 'fillField', [
@@ -76,9 +88,13 @@ class ActionObjectTest extends MagentoTestCase
     }
 
     /**
-     * {{Section.element(param)}} should replace correctly with 'stringLiterals'
+     * {{Section.element(param)}} should replace correctly with 'stringLiterals'.
+     *
+     * @return void
+     * @throws TestReferenceException
+     * @throws XmlException
      */
-    public function testResolveSelectorWithOneStringLiteral()
+    public function testResolveSelectorWithOneStringLiteral(): void
     {
         $actionObject = new ActionObject('key123', 'fillField', [
             'selector' => "{{SectionObject.elementObject('stringliteral')}}",
@@ -99,9 +115,13 @@ class ActionObjectTest extends MagentoTestCase
     }
 
     /**
-     * {{Section.element(param)}} should replace correctly with {{data.key}} references
+     * {{Section.element(param)}} should replace correctly with {{data.key}} references.
+     *
+     * @return void
+     * @throws TestReferenceException
+     * @throws XmlException
      */
-    public function testResolveSelectorWithOneDataReference()
+    public function testResolveSelectorWithOneDataReference(): void
     {
         $actionObject = new ActionObject('key123', 'fillField', [
             'selector' => "{{SectionObject.elementObject(dataObject.key)}}",
@@ -128,9 +148,13 @@ class ActionObjectTest extends MagentoTestCase
     }
 
     /**
-     * {{Section.element(param)}} should replace correctly with $data.key$ references
+     * {{Section.element(param)}} should replace correctly with $data.key$ references.
+     *
+     * @return void
+     * @throws TestReferenceException
+     * @throws XmlException
      */
-    public function testResolveSelectorWithOnePersistedReference()
+    public function testResolveSelectorWithOnePersistedReference(): void
     {
         $actionObject = new ActionObject('key123', 'fillField', [
             'selector' => '{{SectionObject.elementObject($data.key$)}}',
@@ -154,8 +178,12 @@ class ActionObjectTest extends MagentoTestCase
 
     /**
      * {{Section.element(param1,param2,param3)}} should replace correctly with all 3 data types.
+     *
+     * @return void
+     * @throws TestReferenceException
+     * @throws XmlException
      */
-    public function testResolveSelectorWithManyParams()
+    public function testResolveSelectorWithManyParams(): void
     {
         $actionObject = new ActionObject('key123', 'fillField', [
             'selector' => "{{SectionObject.elementObject('stringLiteral', data.key, \$data.key\$)}}",
@@ -182,9 +210,13 @@ class ActionObjectTest extends MagentoTestCase
     }
 
     /**
-     * Timeout property on the ActionObject should be set if the ElementObject has a timeout
+     * Timeout property on the ActionObject should be set if the ElementObject has a timeout.
+     *
+     * @return void
+     * @throws TestReferenceException
+     * @throws XmlException
      */
-    public function testTimeoutFromElement()
+    public function testTimeoutFromElement(): void
     {
         // Set up mocks
         $actionObject = new ActionObject('merge123', 'click', [
@@ -201,20 +233,27 @@ class ActionObjectTest extends MagentoTestCase
     }
 
     /**
-     * {{PageObject.url}} should be replaced with someUrl.html
+     * {{PageObject.url}} should be replaced with someUrl.html.
      *
-     * @throws /Exception
+     * @return void
+     * @throws Exception
      */
-    public function testResolveUrl()
+    public function testResolveUrl(): void
     {
         // Set up mocks
         $actionObject = new ActionObject('merge123', 'amOnPage', [
             'url' => '{{PageObject.url}}'
         ]);
         $pageObject = new PageObject('PageObject', '/replacement/url.html', 'Test', [], false, "test");
-        $instance = AspectMock::double(PageObjectHandler::class, ['getObject' => $pageObject])
-            ->make(); // bypass the private constructor
-        AspectMock::double(PageObjectHandler::class, ['getInstance' => $instance]);
+
+        $instance = $this->createMock(PageObjectHandler::class);
+        $instance
+            ->method('getObject')
+            ->willReturn($pageObject);
+        // bypass the private constructor
+        $property = new ReflectionProperty(PageObjectHandler::class, 'INSTANCE');
+        $property->setAccessible(true);
+        $property->setValue($instance);
 
         // Call the method under test
         $actionObject->resolveReferences();
@@ -227,11 +266,12 @@ class ActionObjectTest extends MagentoTestCase
     }
 
     /**
-     * {{PageObject}} should not be replaced and should elicit a warning in console
+     * {{PageObject}} should not be replaced and should elicit a warning in console.
      *
-     * @throws /Exception
+     * @return void
+     * @throws Exception
      */
-    public function testResolveUrlWithNoAttribute()
+    public function testResolveUrlWithNoAttribute(): void
     {
         $this->expectException(TestReferenceException::class);
 
@@ -241,36 +281,51 @@ class ActionObjectTest extends MagentoTestCase
         ]);
         $pageObject = new PageObject('PageObject', '/replacement/url.html', 'Test', [], false, "test");
         $pageObjectList = ["PageObject" => $pageObject];
-        $instance = AspectMock::double(
-            PageObjectHandler::class,
-            ['getObject' => $pageObject, 'getAllObjects' => $pageObjectList]
-        )->make(); // bypass the private constructor
-        AspectMock::double(PageObjectHandler::class, ['getInstance' => $instance]);
+
+        $instance = $this->createMock(PageObjectHandler::class);
+        $instance
+            ->method('getObject')
+            ->willReturn($pageObject);
+        $instance
+            ->method('getAllObjects')
+            ->willReturn($pageObjectList);
+        // bypass the private constructor
+        $property = new ReflectionProperty(PageObjectHandler::class, 'INSTANCE');
+        $property->setAccessible(true);
+        $property->setValue($instance);
 
         // Call the method under test
         $actionObject->resolveReferences();
     }
 
     /**
-     * {{PageObject.url(param)}} should be replaced
+     * {{PageObject.url(param)}} should be replaced.
+     *
+     * @return void
      */
-    public function testResolveUrlWithOneParam()
+    public function testResolveUrlWithOneParam(): void
     {
         $this->markTestIncomplete('TODO');
     }
 
     /**
-     * {{PageObject.url(param1,param2,param3)}} should be replaced
+     * {{PageObject.url(param1,param2,param3)}} should be replaced.
+     *
+     * @return void
      */
-    public function testResolveUrlWithManyParams()
+    public function testResolveUrlWithManyParams(): void
     {
         $this->markTestIncomplete('TODO');
     }
 
     /**
-     * {{EntityDataObject.key}} should be replaced with someDataValue
+     * {{EntityDataObject.key}} should be replaced with someDataValue.
+     *
+     * @return void
+     * @throws TestReferenceException
+     * @throws XmlException
      */
-    public function testResolveDataInUserInput()
+    public function testResolveDataInUserInput(): void
     {
         // Set up mocks
         $actionObject = new ActionObject('merge123', 'fillField', [
@@ -294,9 +349,13 @@ class ActionObjectTest extends MagentoTestCase
     }
 
     /**
-     * {{EntityDataObject.values}} should be replaced with ["value1","value2"]
+     * {{EntityDataObject.values}} should be replaced with ["value1","value2"].
+     *
+     * @return void
+     * @throws TestReferenceException
+     * @throws XmlException
      */
-    public function testResolveArrayData()
+    public function testResolveArrayData(): void
     {
         // Set up mocks
         $actionObject = new ActionObject('merge123', 'fillField', [
@@ -325,8 +384,12 @@ class ActionObjectTest extends MagentoTestCase
 
     /**
      * Action object should throw an exception if a reference to a parameterized selector has too few given args.
+     *
+     * @return void
+     * @throws TestReferenceException
+     * @throws XmlException
      */
-    public function testTooFewArgumentException()
+    public function testTooFewArgumentException(): void
     {
         $this->expectException(TestReferenceException::class);
 
@@ -343,8 +406,12 @@ class ActionObjectTest extends MagentoTestCase
 
     /**
      * Action object should throw an exception if a reference to a parameterized selector has too many given args.
+     *
+     * @return void
+     * @throws TestReferenceException
+     * @throws XmlException
      */
-    public function testTooManyArgumentException()
+    public function testTooManyArgumentException(): void
     {
         $this->expectException(TestReferenceException::class);
 
@@ -361,8 +428,12 @@ class ActionObjectTest extends MagentoTestCase
 
     /**
      * Action object should throw an exception if the timezone provided is not valid.
+     *
+     * @return void
+     * @throws TestReferenceException
+     * @throws XmlException
      */
-    public function testInvalidTimezoneException()
+    public function testInvalidTimezoneException(): void
     {
         $this->expectException(TestReferenceException::class);
 
@@ -374,23 +445,50 @@ class ActionObjectTest extends MagentoTestCase
         $actionObject->resolveReferences();
     }
 
-    private function mockSectionHandlerWithElement($elementObject)
+    /**
+     * Mock section handler with the specified ElementObject.
+     *
+     * @param ElementObject $elementObject
+     *
+     * @return void
+     * @throws Exception
+     */
+    private function mockSectionHandlerWithElement(ElementObject $elementObject): void
     {
         $sectionObject = new SectionObject('SectionObject', ['elementObject' => $elementObject]);
-        $instance = AspectMock::double(SectionObjectHandler::class, ['getObject' => $sectionObject])
-            ->make(); // bypass the private constructor
-        AspectMock::double(SectionObjectHandler::class, ['getInstance' => $instance]);
-    }
-
-    private function mockDataHandlerWithData($dataObject)
-    {
-        $dataInstance = AspectMock::double(DataObjectHandler::class, ['getObject' => $dataObject])
-            ->make();
-        AspectMock::double(DataObjectHandler::class, ['getInstance' => $dataInstance]);
+        $instance = $this->createMock(SectionObjectHandler::class);
+        $instance
+            ->method('getObject')
+            ->willReturn($sectionObject);
+        // bypass the private constructor
+        $property = new ReflectionProperty(SectionObjectHandler::class, 'INSTANCE');
+        $property->setAccessible(true);
+        $property->setValue($instance);
     }
 
     /**
-     * After class functionality
+     * Mock data handler with the specified EntityDataObject.
+     *
+     * @param EntityDataObject $dataObject
+     *
+     * @return void
+     * @throws Exception
+     */
+    private function mockDataHandlerWithData(EntityDataObject $dataObject): void
+    {
+        $dataInstance = $this->createMock(DataObjectHandler::class);
+        $dataInstance
+            ->method('getObject')
+            ->willReturn($dataObject);
+        // bypass the private constructor
+        $property = new ReflectionProperty(DataObjectHandler::class, 'INSTANCE');
+        $property->setAccessible(true);
+        $property->setValue($dataInstance);
+    }
+
+    /**
+     * After class functionality.
+     *
      * @return void
      */
     public static function tearDownAfterClass(): void
