@@ -22,6 +22,7 @@ use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Util\BaseObjectExtractor;
+use Magento\FunctionalTestingFramework\Util\Filesystem\CestFileCreatorUtil;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Manifest\BaseTestManifest;
 use Magento\FunctionalTestingFramework\Test\Util\ActionObjectExtractor;
@@ -207,21 +208,13 @@ class TestGenerator
      *
      * @param string $testPhp
      * @param string $filename
+     *
      * @return void
      * @throws TestFrameworkException
      */
     private function createCestFile(string $testPhp, string $filename)
     {
-        DirSetupUtil::createGroupDir($this->exportDirectory);
-        $exportFilePath = $this->exportDirectory . DIRECTORY_SEPARATOR . $filename . ".php";
-        $file = fopen($exportFilePath, 'w');
-
-        if (!$file) {
-            throw new TestFrameworkException(sprintf('Could not open test file: "%s"', $exportFilePath));
-        }
-
-        fwrite($file, $testPhp);
-        fclose($file);
+        CestFileCreatorUtil::getInstance()->create($filename, $this->exportDirectory, $testPhp);
     }
 
     /**
@@ -362,7 +355,7 @@ class TestGenerator
                         if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
                             print("NOTICE: {$errMessage}");
                         }
-                        LoggingUtil::getInstance()->getLogger(self::class)->warn($errMessage);
+                        LoggingUtil::getInstance()->getLogger(self::class)->warning($errMessage);
                         continue;
                     }
                 }
@@ -1262,7 +1255,8 @@ class TestGenerator
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
                         $actor,
-                        $actionObject
+                        $actionObject,
+                        $input
                     );
                     break;
                 case "resizeWindow":

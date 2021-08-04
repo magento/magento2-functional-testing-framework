@@ -970,12 +970,13 @@ class MagentoWebDriver extends WebDriver
     /**
      * Return OTP based on a shared secret
      *
+     * @param string|null $secretsPath
      * @return string
      * @throws TestFrameworkException
      */
-    public function getOTP()
+    public function getOTP($secretsPath = null)
     {
-        return OTP::getOTP();
+        return OTP::getOTP($secretsPath);
     }
 
     /**
