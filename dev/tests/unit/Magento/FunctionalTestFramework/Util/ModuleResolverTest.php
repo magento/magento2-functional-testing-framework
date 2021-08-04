@@ -118,7 +118,6 @@ class ModuleResolverTest extends MagentoTestCase
         $moduleResolverService = $this->createPartialMock(ModuleResolverService::class, ['globRelevantPaths']);
         $moduleResolverService
             ->method('globRelevantPaths')
-            ->withConsecutive()
             ->will(
                 $this->returnCallback(
                     function ($codePath, $pattern) use ($modulePath) {
@@ -157,32 +156,42 @@ class ModuleResolverTest extends MagentoTestCase
         $this->mockForceGenerate(false);
         // Define the Module paths from default TESTS_MODULE_PATH
         $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
-
-        // Define the Module paths from app/code
-        $magentoBaseCodePath = MAGENTO_BP;
+        $invokedWithParams = $expectedParams = [
+            [
+                $modulePath,
+                ''
+            ],
+            [
+                MAGENTO_BP . '/vendor',
+                'Test/Mftf'
+            ],
+            [
+                MAGENTO_BP . '/app/code',
+                'Test/Mftf'
+            ]
+        ];
 
         $moduleResolverService = $this->createPartialMock(ModuleResolverService::class, ['globRelevantPaths']);
         $moduleResolverService
             ->method('globRelevantPaths')
-            ->withConsecutive()
             ->will(
                 $this->returnCallback(
-                    function ($codePath, $pattern) use ($modulePath, $magentoBaseCodePath) {
-                        if ($codePath === $modulePath && $pattern === '') {
-                            return [];
-                        }
+                    function ($codePath, $pattern) use (&$invokedWithParams, $expectedParams) {
+                        foreach ($expectedParams as $key => $parameter) {
+                            list($expectedCodePath, $expectedPattern) = $parameter;
 
-                        if ($codePath === $magentoBaseCodePath . '/vendor' && $pattern === 'Test/Mftf') {
-                            return [];
-                        }
+                            if ($codePath === $expectedCodePath && $pattern === $expectedPattern) {
+                                if (isset($invokedWithParams[$key])) {
+                                    unset($invokedWithParams[$key]);
+                                }
 
-                        if ($codePath === $magentoBaseCodePath . "/app/code" && $pattern === 'Test/Mftf') {
-                            return [];
+                                return [];
+                            }
                         }
 
                         $this->fail(sprintf(
-                            'Not expected parameter: \'%s\' when invoked method globRelevantPaths().',
-                            $modulePath
+                            'Not expected parameter: [%s] when invoked method globRelevantPaths().',
+                            $codePath . ';' . $pattern
                         ));
                     }
                 )
@@ -192,6 +201,16 @@ class ModuleResolverTest extends MagentoTestCase
         $resolver = ModuleResolver::getInstance();
         $this->setMockResolverProperties($resolver, null, []);
         $this->assertEquals([], $resolver->getModulesPath());
+
+        if ($invokedWithParams) {
+            $parameters = '';
+
+            foreach ($invokedWithParams as $parameter) {
+                $parameters .= sprintf('[%s]', implode(';', $parameter));
+            }
+
+            $this->fail('The method globRelevantPaths() was not called with expected parameters:' . $parameters);
+        }
     }
 
     /**
