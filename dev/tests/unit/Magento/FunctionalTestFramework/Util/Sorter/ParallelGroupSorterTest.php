@@ -64,7 +64,7 @@ class ParallelGroupSorterTest extends MagentoTestCase
     public function testTestsAndSuitesSplitByTime(): void
     {
         // mock tests for test object handler.
-        $this->createMockForTest(0);
+        $this->createMockForTest(0, [300, 275]);
 
         // create test to size array
         $sampleTestArray = [
@@ -421,17 +421,17 @@ class ParallelGroupSorterTest extends MagentoTestCase
      * Mock test object and test object handler.
      *
      * @param int $numberOfCalls
+     * @param array $actionCount
      *
      * @return void
      */
-    private function createMockForTest(int $numberOfCalls): void
+    private function createMockForTest(int $numberOfCalls, array $actionCount = [300, 275, 300, 275]): void
     {
         $mockTest1 = $this->createMock(TestObject::class);
         $mockTest1
             ->method('getEstimatedDuration')
             ->willReturnCallback(
-                function () use (&$numberOfCalls) {
-                    $actionCount = [300, 275, 300, 275];
+                function () use (&$numberOfCalls, $actionCount) {
                     $result = $actionCount[$numberOfCalls];
                     $numberOfCalls++;
 
