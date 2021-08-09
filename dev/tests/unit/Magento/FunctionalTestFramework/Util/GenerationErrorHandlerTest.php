@@ -10,7 +10,6 @@ namespace tests\unit\Magento\FunctionalTestFramework\Util;
 use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
 use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
-use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 
 /**
  * Class GenerationErrorHandlerTest
@@ -20,12 +19,8 @@ class GenerationErrorHandlerTest extends MagentoTestCase
     /**
      * Test get errors when all errors are distinct
      */
-    public function testGetDistinctErrors()
+    public function testGetDistinctErrors():void
     {
-        $this->createMock(MftfApplicationConfig::class)
-            ->method('getPhase')
-            ->willReturn(MftfApplicationConfig::GENERATION_PHASE);
-
         $expectedAllErrors = [
             'test' => [
                 'Sameple1Test' => [
@@ -77,12 +72,8 @@ class GenerationErrorHandlerTest extends MagentoTestCase
     /**
      * Test get errors when some errors have the same key
      */
-    public function testGetErrorsWithSameKey()
+    public function testGetErrorsWithSameKey(): void
     {
-        $this->createMock(MftfApplicationConfig::class)
-            ->method('getPhase')
-            ->willReturn(MftfApplicationConfig::GENERATION_PHASE);
-
         $expectedAllErrors = [
             'test' => [
                 'Sameple1Test' => [
@@ -160,12 +151,8 @@ class GenerationErrorHandlerTest extends MagentoTestCase
     /**
      * Test get errors when some errors are duplicate
      */
-    public function testGetAllErrorsDuplicate()
+    public function testGetAllErrorsDuplicate(): void
     {
-        $this->createMock(MftfApplicationConfig::class)
-            ->method('getPhase')
-            ->willReturn(MftfApplicationConfig::GENERATION_PHASE);
-
         $expectedAllErrors = [
             'test' => [
                 'Sameple1Test' => [
@@ -245,9 +232,11 @@ class GenerationErrorHandlerTest extends MagentoTestCase
      *
      * @param string $expectedErrMessages
      * @param array  $errors
+     *
+     * @return void
      * @dataProvider getAllErrorMessagesDataProvider
      */
-    public function testGetAllErrorMessages($expectedErrMessages, $errors)
+    public function testGetAllErrorMessages(string $expectedErrMessages, array $errors): void
     {
         $handler = GenerationErrorHandler::getInstance();
         $handler->reset();
@@ -265,7 +254,7 @@ class GenerationErrorHandlerTest extends MagentoTestCase
      *
      * @return array
      */
-    public function getAllErrorMessagesDataProvider()
+    public function getAllErrorMessagesDataProvider(): array
     {
         return [
             ['', []],
@@ -330,12 +319,8 @@ class GenerationErrorHandlerTest extends MagentoTestCase
     /**
      * Test reset
      */
-    public function testResetError()
+    public function testResetError(): void
     {
-        $this->createMock(MftfApplicationConfig::class)
-            ->method('getPhase')
-            ->willReturn(MftfApplicationConfig::GENERATION_PHASE);
-
         GenerationErrorHandler::getInstance()->addError('something', 'some', 'error');
         GenerationErrorHandler::getInstance()->addError('otherthing', 'other', 'error');
         GenerationErrorHandler::getInstance()->reset();
@@ -348,6 +333,9 @@ class GenerationErrorHandlerTest extends MagentoTestCase
         $this->assertEquals([], GenerationErrorHandler::getInstance()->getErrorsByType('nothing'));
     }
 
+    /**
+     * @inheritdoc
+     */
     public function tearDown(): void
     {
         $property = new ReflectionProperty(GenerationErrorHandler::class, 'instance');
