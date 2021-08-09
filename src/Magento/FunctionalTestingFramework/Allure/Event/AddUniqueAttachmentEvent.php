@@ -31,7 +31,7 @@ class AddUniqueAttachmentEvent extends AddAttachmentEvent
     {
         $filePath = $filePathOrContents;
 
-        if (!file_exists($filePath) || !is_file($filePath)) {
+        if (!is_string($filePath) || !file_exists($filePath) || !is_file($filePath)) {
             //Save contents to temporary file
             $filePath = tempnam(sys_get_temp_dir(), 'allure-attachment');
             if (!file_put_contents($filePath, $filePathOrContents)) {
