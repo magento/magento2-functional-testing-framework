@@ -11,11 +11,13 @@ use Exception;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Filter\FilterList;
+use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Util\Filesystem\CestFileCreatorUtil;
 use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
+use Magento\FunctionalTestingFramework\Util\ModuleResolver;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
@@ -23,6 +25,22 @@ use tests\unit\Util\TestLoggingUtil;
 
 class TestGeneratorTest extends MagentoTestCase
 {
+    /**
+     * @inheritdoc
+     */
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        $property = new ReflectionProperty(ObjectManager::class, 'instance');
+        $property->setAccessible(true);
+        $property->setValue(null);
+
+        $property = new ReflectionProperty(ModuleResolver::class, 'instance');
+        $property->setAccessible(true);
+        $property->setValue(null);
+    }
+
     /**
      * Before method functionality.
      *
