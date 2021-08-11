@@ -587,13 +587,13 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         parent::tearDownAfterClass();
 
         // Clear out Singleton between tests
-        $property = new ReflectionProperty(PersistedObjectHandler::class, "INSTANCE");
-        $property->setAccessible(true);
-        $property->setValue(null);
+        $persistedObjectHandlerProperty = new ReflectionProperty(PersistedObjectHandler::class, "INSTANCE");
+        $persistedObjectHandlerProperty->setAccessible(true);
+        $persistedObjectHandlerProperty->setValue(null);
 
-        $property = new ReflectionProperty(ObjectManager::class, 'instance');
-        $property->setAccessible(true);
-        $property->setValue(null);
+        $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
+        $objectManagerProperty->setAccessible(true);
+        $objectManagerProperty->setValue(null);
 
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
