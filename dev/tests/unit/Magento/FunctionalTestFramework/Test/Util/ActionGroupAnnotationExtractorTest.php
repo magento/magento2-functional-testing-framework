@@ -3,50 +3,54 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace tests\unit\Magento\FunctionalTestFramework\Test\Util;
 
-use AspectMock\Test as AspectMock;
+use Exception;
 use Magento\FunctionalTestingFramework\Test\Util\ActionGroupAnnotationExtractor;
 use PHPUnit\Framework\TestCase;
 use tests\unit\Util\TestLoggingUtil;
 
+/**
+ * Class ActionGroupAnnotationExtractorTest
+ */
 class ActionGroupAnnotationExtractorTest extends TestCase
 {
     /**
-     * Before test functionality
-     * @return void
+     * @inheritDoc
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
 
     /**
-     * Annotation extractor takes in raw array and condenses it to expected format
+     * Annotation extractor takes in raw array and condenses it to expected format.
      *
-     * @throws \Exception
+     * @return void
+     * @throws Exception
      */
-    public function testActionGroupExtractAnnotations()
+    public function testActionGroupExtractAnnotations(): void
     {
         // Test Data
         $actionGroupAnnotations = [
-            "nodeName" => "annotations",
-            "description" => [
-                "nodeName" => "description",
-                "value" => "someDescription"
+            'nodeName' => 'annotations',
+            'description' => [
+                'nodeName' => 'description',
+                'value' => 'someDescription'
             ]
         ];
         // Perform Test
         $extractor = new ActionGroupAnnotationExtractor();
-        $returnedAnnotations = $extractor->extractAnnotations($actionGroupAnnotations, "fileName");
+        $returnedAnnotations = $extractor->extractAnnotations($actionGroupAnnotations, 'fileName');
 
         // Asserts
-        $this->assertEquals("someDescription", $returnedAnnotations['description']);
+        $this->assertEquals('someDescription', $returnedAnnotations['description']);
     }
 
     /**
-     * After class functionality
-     * @return void
+     * @inheritDoc
      */
     public static function tearDownAfterClass(): void
     {

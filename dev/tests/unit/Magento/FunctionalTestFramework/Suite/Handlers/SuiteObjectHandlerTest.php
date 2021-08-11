@@ -3,32 +3,30 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace tests\unit\Magento\FunctionalTestFramework\Suite\Handlers;
 
-use AspectMock\Test as AspectMock;
-use Magento\FunctionalTestingFramework\ObjectManager\ObjectManager;
-use Magento\FunctionalTestingFramework\ObjectManagerFactory;
+use Exception;
+use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Suite\Parsers\SuiteDataParser;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
+use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\SuiteDataArrayBuilder;
 use tests\unit\Util\TestDataArrayBuilder;
-use tests\unit\Util\MockModuleResolverBuilder;
 
 class SuiteObjectHandlerTest extends MagentoTestCase
 {
-    public function setUp(): void
-    {
-        $resolverMock = new MockModuleResolverBuilder();
-        $resolverMock->setup();
-    }
-
     /**
-     * Tests basic parsing and accesors of suite object and suite object supporting classes
+     * Tests basic parsing and accessors of suite object and suite object supporting classes.
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testGetSuiteObject()
+    public function testGetSuiteObject(): void
     {
         $suiteDataArrayBuilder = new SuiteDataArrayBuilder();
         $mockData = $suiteDataArrayBuilder
@@ -82,35 +80,54 @@ class SuiteObjectHandlerTest extends MagentoTestCase
      * Function used to set mock for parser return and force init method to run between tests.
      *
      * @param array $testData
-     * @throws \Exception
+     * @param array $suiteData
+     *
+     * @return void
+     * @throws Exception
      */
-    private function setMockTestAndSuiteParserOutput($testData, $suiteData)
+    private function setMockTestAndSuiteParserOutput(array $testData, array $suiteData): void
     {
         // clear test object handler value to inject parsed content
-        $property = new \ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
+        $property = new ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
         $property->setAccessible(true);
         $property->setValue(null);
 
         // clear suite object handler value to inject parsed content
-        $property = new \ReflectionProperty(SuiteObjectHandler::class, 'instance');
+        $property = new ReflectionProperty(SuiteObjectHandler::class, 'instance');
         $property->setAccessible(true);
         $property->setValue(null);
 
-        $mockDataParser = AspectMock::double(TestDataParser::class, ['readTestData' => $testData])->make();
-        $mockSuiteDataParser = AspectMock::double(SuiteDataParser::class, ['readSuiteData' => $suiteData])->make();
-        $instance = AspectMock::double(
-            ObjectManager::class,
-            ['create' => function ($clazz) use ($mockDataParser, $mockSuiteDataParser) {
-                if ($clazz == TestDataParser::class) {
-                    return $mockDataParser;
-                }
+        $mockDataParser = $this->createMock(TestDataParser::class);
+        $mockDataParser
+            ->method('readTestData')
+            ->willReturn($testData);
 
-                if ($clazz == SuiteDataParser::class) {
-                    return $mockSuiteDataParser;
-                }
-            }]
-        )->make();
-        // bypass the private constructor
-        AspectMock::double(ObjectManagerFactory::class, ['getObjectManager' => $instance]);
+        $mockSuiteDataParser = $this->createMock(SuiteDataParser::class);
+        $mockSuiteDataParser
+            ->method('readSuiteData')
+            ->willReturn($suiteData);
+
+        $instance = $this->createMock(ObjectManager::class);
+        $instance
+            ->method('create')
+            ->will(
+                $this->returnCallback(
+                    function ($clazz) use ($mockDataParser, $mockSuiteDataParser) {
+                        if ($clazz == TestDataParser::class) {
+                            return $mockDataParser;
+                        }
+
+                        if ($clazz == SuiteDataParser::class) {
+                            return $mockSuiteDataParser;
+                        }
+
+                        return null;
+                    }
+                )
+            );
+
+        $property = new ReflectionProperty(ObjectManager::class, 'instance');
+        $property->setAccessible(true);
+        $property->setValue($instance);
     }
 }
