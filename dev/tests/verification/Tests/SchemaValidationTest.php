@@ -6,8 +6,8 @@
 namespace tests\verification\Tests;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use ReflectionProperty;
 use tests\util\MftfTestCase;
-use AspectMock\Test as AspectMock;
 
 class SchemaValidationTest extends MftfTestCase
 {
@@ -19,7 +19,10 @@ class SchemaValidationTest extends MftfTestCase
      */
     public function testInvalidTestSchema()
     {
-        AspectMock::double(MftfApplicationConfig::class, ['getDebugLevel' => MftfApplicationConfig::LEVEL_DEVELOPER]);
+        $property = new ReflectionProperty(MftfApplicationConfig::class, 'debugLevel');
+        $property->setAccessible(true);
+        $property->setValue(MftfApplicationConfig::LEVEL_DEVELOPER);
+
         $testFile = ['testFile.xml' => "<tests><test name='testName'><annotations>a</annotations></test></tests>"];
         $expectedError = TESTS_MODULE_PATH .
             DIRECTORY_SEPARATOR .
@@ -32,11 +35,12 @@ class SchemaValidationTest extends MftfTestCase
     }
 
     /**
-     * After method functionality
-     * @return void
+     * @inheritdoc
      */
     protected function tearDown(): void
     {
-        AspectMock::clean();
+        $property = new ReflectionProperty(MftfApplicationConfig::class, 'debugLevel');
+        $property->setAccessible(true);
+        $property->setValue(null);
     }
 }
