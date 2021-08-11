@@ -51,10 +51,6 @@ class TestGeneratorTest extends MagentoTestCase
     protected function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
-        // Used to mock initTestData method running.
-        $shouldSkipInitTestDataProperty = new ReflectionProperty(TestObjectHandler::class, 'shouldSkipInitTestData');
-        $shouldSkipInitTestDataProperty->setAccessible(true);
-        $shouldSkipInitTestDataProperty->setValue(true);
     }
 
     /**
@@ -65,10 +61,6 @@ class TestGeneratorTest extends MagentoTestCase
     protected function tearDown(): void
     {
         GenerationErrorHandler::getInstance()->reset();
-
-        $shouldSkipInitTestDataProperty = new ReflectionProperty(TestObjectHandler::class, 'shouldSkipInitTestData');
-        $shouldSkipInitTestDataProperty->setAccessible(true);
-        $shouldSkipInitTestDataProperty->setValue(false);
     }
 
     /**
