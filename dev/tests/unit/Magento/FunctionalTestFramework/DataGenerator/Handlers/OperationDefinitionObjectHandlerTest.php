@@ -11,8 +11,11 @@ use Exception;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\OperationDefinitionObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\OperationDefinitionObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\OperationElement;
+use Magento\FunctionalTestingFramework\DataGenerator\Parsers\OperationDefinitionParser;
+use Magento\FunctionalTestingFramework\ObjectManager;
+use Magento\FunctionalTestingFramework\ObjectManagerFactory;
+use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
-use tests\unit\Util\ObjectHandlerUtil;
 use tests\unit\Util\TestLoggingUtil;
 
 /**
@@ -51,33 +54,37 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
          *          has field
          *              key=id, value=integer
          */
-        $mockData = [OperationDefinitionObjectHandler::ENTITY_OPERATION_ROOT_TAG => [
-            'testOperationName' => [
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $dataType1,
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $operationType1,
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH => 'auth',
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_URL => 'V1/Type1',
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_METHOD => 'POST',
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
-                    0 => [
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => 'id',
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => 'integer'
-                    ],
+        $mockData = [
+            OperationDefinitionObjectHandler::ENTITY_OPERATION_ROOT_TAG => [
+                'testOperationName' => [
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $dataType1,
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $operationType1,
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH => 'auth',
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_URL => 'V1/Type1',
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_METHOD => 'POST',
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
+                        0 => [
+                            OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => 'id',
+                            OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => 'integer'
+                        ],
+                    ]
+                ],
+                [
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $dataType1,
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $operationType2,
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH => 'auth',
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_URL => 'V1/Type1/{id}',
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_METHOD => 'PUT',
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
+                        0 => [
+                            OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => 'id',
+                            OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => 'integer'
+                        ],
+                    ]
                 ]
-            ],[
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $dataType1,
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $operationType2,
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH => 'auth',
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_URL => 'V1/Type1/{id}',
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_METHOD => 'PUT',
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
-                    0 => [
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => 'id',
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => 'integer'
-                    ],
-                ]
-            ]]];
-        ObjectHandlerUtil::mockOperationHandlerWithData($mockData);
+            ]
+        ];
+        $this->mockOperationHandlerWithData($mockData);
 
         //Perform Assertions
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
@@ -105,22 +112,25 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
          *          has field
          *              key=id, value=integer
          */
-        $mockData = [OperationDefinitionObjectHandler::ENTITY_OPERATION_ROOT_TAG => [
-            'testOperationName' => [
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $dataType1,
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $operationType1,
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH => 'auth',
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_URL => 'V1/Type1',
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_METHOD => 'POST',
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
-                    0 => [
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => 'id',
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => 'integer'
+        $mockData = [
+            OperationDefinitionObjectHandler::ENTITY_OPERATION_ROOT_TAG => [
+                'testOperationName' => [
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $dataType1,
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $operationType1,
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH => 'auth',
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_URL => 'V1/Type1',
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_METHOD => 'POST',
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
+                        0 => [
+                            OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => 'id',
+                            OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => 'integer'
+                        ],
                     ],
-                ],
-                OperationDefinitionObjectHandler::OBJ_DEPRECATED => 'deprecation message'
-            ]]];
-        ObjectHandlerUtil::mockOperationHandlerWithData($mockData);
+                    OperationDefinitionObjectHandler::OBJ_DEPRECATED => 'deprecation message'
+                ]
+            ]
+        ];
+        $this->mockOperationHandlerWithData($mockData);
 
         //Perform Assertions
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
@@ -187,53 +197,60 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
          *                  key active, value boolean
          *
          */
-        $mockData = [OperationDefinitionObjectHandler::ENTITY_OPERATION_ROOT_TAG => [
-            'testOperationName' => [
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $testDataTypeName1,
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $testOperationType,
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH => $testAuth,
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_URL => $testUrl,
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_METHOD => $testMethod,
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_SUCCESS_REGEX => $testSuccessRegex,
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_CONTENT_TYPE => [
-                    0 => [
-                        'value' => $testContentType
-                    ]
-                ],
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_HEADER => [
-                    0 => [
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_HEADER_PARAM => $testHeaderParam,
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_HEADER_VALUE => $testHeaderValue,
-                    ]
-                ],
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_URL_PARAM => [
-                    0 => [
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_URL_PARAM_KEY => 'testUrlParamKey',
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_URL_PARAM_VALUE => 'testUrlParamValue'
-                    ]
-                ],
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT => [
-                    0 => [
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT_KEY => $nestedObjectKey,
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $nestedObjectType,
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
-                            0 => [
-                                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => $nestedEntryKey1,
-                                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => $nestedEntryValue1
-                            ],
-                            1 => [
-                                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => $nestedEntryKey2,
-                                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => $nestedEntryValue2,
-                                OperationDefinitionObjectHandler::ENTITY_OPERATION_REQUIRED => $nestedEntryRequired2
-                            ],
-                            2 => [
-                                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => $nestedEntryKey3,
-                                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => $nestedEntryValue3
+        $mockData = [
+            OperationDefinitionObjectHandler::ENTITY_OPERATION_ROOT_TAG => [
+                'testOperationName' => [
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $testDataTypeName1,
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $testOperationType,
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH => $testAuth,
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_URL => $testUrl,
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_METHOD => $testMethod,
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_SUCCESS_REGEX => $testSuccessRegex,
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_CONTENT_TYPE => [
+                        0 => [
+                            'value' => $testContentType
+                        ]
+                    ],
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_HEADER => [
+                        0 => [
+                            OperationDefinitionObjectHandler::ENTITY_OPERATION_HEADER_PARAM => $testHeaderParam,
+                            OperationDefinitionObjectHandler::ENTITY_OPERATION_HEADER_VALUE => $testHeaderValue,
+                        ]
+                    ],
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_URL_PARAM => [
+                        0 => [
+                            OperationDefinitionObjectHandler::ENTITY_OPERATION_URL_PARAM_KEY => 'testUrlParamKey',
+                            OperationDefinitionObjectHandler::ENTITY_OPERATION_URL_PARAM_VALUE => 'testUrlParamValue'
+                        ]
+                    ],
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT => [
+                        0 => [
+                            OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT_KEY => $nestedObjectKey,
+                            OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $nestedObjectType,
+                            OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
+                                0 => [
+                                    OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => $nestedEntryKey1,
+                                    OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE =>
+                                        $nestedEntryValue1
+                                ],
+                                1 => [
+                                    OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => $nestedEntryKey2,
+                                    OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE =>
+                                        $nestedEntryValue2,
+                                    OperationDefinitionObjectHandler::ENTITY_OPERATION_REQUIRED =>
+                                        $nestedEntryRequired2
+                                ],
+                                2 => [
+                                    OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => $nestedEntryKey3,
+                                    OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE =>
+                                        $nestedEntryValue3
+                                ]
                             ]
                         ]
-                    ]
-                ],
-            ]]];
+                    ],
+                ]
+            ]
+        ];
         // Prepare objects to compare against
         $field = OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY;
         $expectedNestedField = new OperationElement(
@@ -274,7 +291,7 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
         );
 
         // Set up mocked data output
-        ObjectHandlerUtil::mockOperationHandlerWithData($mockData);
+        $this->mockOperationHandlerWithData($mockData);
 
         // Get Operation
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
@@ -323,32 +340,38 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
          *              objects with key = nestedObjectKey, type = nestedObjectType
          *                  has field with key = nestedFieldKey, value = string
          */
-        $mockData = [OperationDefinitionObjectHandler::ENTITY_OPERATION_ROOT_TAG => [
-            'testOperationName' => [
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $dataType1,
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $operationType1,
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH => 'auth',
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_URL => 'V1/Type1',
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_METHOD => 'POST',
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY => [
-                    0 => [
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT_KEY => $objectArrayKey,
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT => [
-                            0 => [
-                                OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT_KEY => $twiceNestedObjectKey,
-                                OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $twiceNestedObjectType,
-                                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
-                                    0 => [
-                                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY =>
-                                            $twiceNestedEntryKey,
-                                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE =>
-                                            $twiceNestedEntryValue
+        $mockData = [
+            OperationDefinitionObjectHandler::ENTITY_OPERATION_ROOT_TAG => [
+                'testOperationName' => [
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $dataType1,
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $operationType1,
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH => 'auth',
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_URL => 'V1/Type1',
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_METHOD => 'POST',
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY => [
+                        0 => [
+                            OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT_KEY => $objectArrayKey,
+                            OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT => [
+                                0 => [
+                                    OperationDefinitionObjectHandler::ENTITY_OPERATION_OBJECT_KEY =>
+                                        $twiceNestedObjectKey,
+                                    OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE =>
+                                        $twiceNestedObjectType,
+                                    OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
+                                        0 => [
+                                            OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY =>
+                                                $twiceNestedEntryKey,
+                                            OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE =>
+                                                $twiceNestedEntryValue
+                                        ]
                                     ]
                                 ]
                             ]
                         ]
                     ]
-                ]]]];
+                ]
+            ]
+        ];
         // Prepare Objects to compare against
         $twoLevelNestedMetadata = new OperationElement(
             $twiceNestedEntryKey,
@@ -382,7 +405,7 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
         );
 
         // Set up mocked data output
-        ObjectHandlerUtil::mockOperationHandlerWithData($mockData);
+        $this->mockOperationHandlerWithData($mockData);
 
         // Get Operation
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
@@ -415,28 +438,30 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
          *          has array key = arrayKey
          *              fields of value = string
          */
-        $mockData = [OperationDefinitionObjectHandler::ENTITY_OPERATION_ROOT_TAG => [
-            'testOperationName' => [
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $dataType,
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $operationType,
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
-                    0 => [
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => $entryKey,
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => $entryValue
-                    ]
-                ],
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY => [
-                    0 => [
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_KEY => $arrayKey,
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_VALUE => [
-                            0 => [
-                                OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => $arrayValue
+        $mockData = [
+            OperationDefinitionObjectHandler::ENTITY_OPERATION_ROOT_TAG => [
+                'testOperationName' => [
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $dataType,
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $operationType,
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
+                        0 => [
+                            OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => $entryKey,
+                            OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => $entryValue
+                        ]
+                    ],
+                    OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY => [
+                        0 => [
+                            OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_KEY => $arrayKey,
+                            OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY_VALUE => [
+                                0 => [
+                                    OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => $arrayValue
+                                ]
                             ]
                         ]
                     ]
                 ]
             ]
-        ]];
+        ];
         // Prepare Objects to assert against
         $entry = new OperationElement(
             $entryKey,
@@ -456,7 +481,7 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
         );
 
         // Set up mocked data output
-        ObjectHandlerUtil::mockOperationHandlerWithData($mockData);
+        $this->mockOperationHandlerWithData($mockData);
 
         // get Operations
         $operationDefinitionManager = OperationDefinitionObjectHandler::getInstance();
@@ -468,11 +493,70 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
     }
 
     /**
+     * Create mock operation handler with data.
+     *
+     * @param array $mockData
+     *
+     * @return void
+     */
+    private function mockOperationHandlerWithData(array $mockData): void
+    {
+        $operationDefinitionObjectHandlerProperty = new ReflectionProperty(
+            OperationDefinitionObjectHandler::class,
+            'INSTANCE'
+        );
+        $operationDefinitionObjectHandlerProperty->setAccessible(true);
+        $operationDefinitionObjectHandlerProperty->setValue(null);
+
+        $mockOperationParser = $this->createMock(OperationDefinitionParser::class);
+        $mockOperationParser
+            ->method('readOperationMetadata')
+            ->willReturn($mockData);
+
+        $objectManager = ObjectManagerFactory::getObjectManager();
+        $mockObjectManagerInstance = $this->createMock(ObjectManager::class);
+        $mockObjectManagerInstance
+            ->method('create')
+            ->will(
+                $this->returnCallback(
+                    function (
+                        string $class,
+                        array $arguments = []
+                    ) use (
+                        $objectManager,
+                        $mockOperationParser
+                    ) {
+                        if ($class === OperationDefinitionParser::class) {
+                            return $mockOperationParser;
+                        }
+
+                        return $objectManager->create($class, $arguments);
+                    }
+                )
+            );
+
+        $property = new ReflectionProperty(ObjectManager::class, 'instance');
+        $property->setAccessible(true);
+        $property->setValue($mockObjectManagerInstance);
+    }
+
+    /**
      * @inheritDoc
      */
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
+
+        $operationDefinitionObjectHandlerProperty = new ReflectionProperty(
+            OperationDefinitionObjectHandler::class,
+            'INSTANCE'
+        );
+        $operationDefinitionObjectHandlerProperty->setAccessible(true);
+        $operationDefinitionObjectHandlerProperty->setValue(null);
+
+        $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
+        $objectManagerProperty->setAccessible(true);
+        $objectManagerProperty->setValue(null);
 
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
