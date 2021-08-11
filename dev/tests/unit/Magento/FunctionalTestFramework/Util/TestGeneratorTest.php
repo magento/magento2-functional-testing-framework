@@ -11,19 +11,38 @@ use Exception;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Filter\FilterList;
+use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Util\Filesystem\CestFileCreatorUtil;
 use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
+use Magento\FunctionalTestingFramework\Util\ModuleResolver;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
+use ReflectionClass;
 use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\TestLoggingUtil;
 
 class TestGeneratorTest extends MagentoTestCase
 {
+    /**
+     * @inheritdoc
+     */
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        $property = new ReflectionProperty(ObjectManager::class, 'instance');
+        $property->setAccessible(true);
+        $property->setValue(null);
+
+        $property = new ReflectionProperty(ModuleResolver::class, 'instance');
+        $property->setAccessible(true);
+        $property->setValue(null);
+    }
+
     /**
      * Before method functionality.
      *
@@ -66,6 +85,8 @@ class TestGeneratorTest extends MagentoTestCase
 
         $testObject = new TestObject('sampleTest', ['merge123' => $actionObject], [], [], 'filename');
         $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $testObject]);
+        $this->mockTestObjectHandler();
+
         $testGeneratorObject->createAllTestFiles(null, []);
 
         // assert that no exception for createAllTestFiles and generation error is stored in GenerationErrorHandler
@@ -222,5 +243,25 @@ class TestGeneratorTest extends MagentoTestCase
         $mftfAppConfigInstance = new ReflectionProperty(MftfApplicationConfig::class, 'MFTF_APPLICATION_CONTEXT');
         $mftfAppConfigInstance->setAccessible(true);
         $mftfAppConfigInstance->setValue(null);
+
+        $property = new ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
+        $property->setAccessible(true);
+        $property->setValue(null);
+    }
+
+    /**
+     * Mock test object handler for test.
+     */
+    private function mockTestObjectHandler(): void
+    {
+        $testObjectHandlerClass = new ReflectionClass(TestObjectHandler::class);
+        $testObjectHandlerConstructor = $testObjectHandlerClass->getConstructor();
+        $testObjectHandlerConstructor->setAccessible(true);
+        $testObjectHandler = $testObjectHandlerClass->newInstanceWithoutConstructor();
+        $testObjectHandlerConstructor->invoke($testObjectHandler);
+
+        $property = new ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
+        $property->setAccessible(true);
+        $property->setValue($testObjectHandler);
     }
 }

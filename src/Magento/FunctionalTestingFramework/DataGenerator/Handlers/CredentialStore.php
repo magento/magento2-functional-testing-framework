@@ -221,11 +221,13 @@ class CredentialStore
      *
      * @return void
      */
-    private function initializeFileStorage()
+    private function initializeFileStorage(): void
     {
         // Initialize file storage
         try {
-            $this->credStorage[self::ARRAY_KEY_FOR_FILE]  = new FileStorage();
+            $fileStorage = new FileStorage();
+            $fileStorage->initialize();
+            $this->credStorage[self::ARRAY_KEY_FOR_FILE]  = $fileStorage;
         } catch (TestFrameworkException $e) {
             // Print error message in console
             print_r($e->getMessage());

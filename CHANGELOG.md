@@ -1,12 +1,29 @@
 Magento Functional Testing Framework Changelog
 ================================================
+3.6.0
+---------
+
+### Enhancements
+
+* Maintainability
+  * Updated composer dependencies to be PHP 8 compatible with the except of codeception/aspect-mock.
+    
+### GitHub Pull Requests:
+
+* [#830](https://github.com/magento/magento2-functional-testing-framework/pull/830) -- Add ability to configure multiple OTPs
+* [#832](https://github.com/magento/magento2-functional-testing-framework/pull/832) -- Updated monolog/monolog to ^2.2
+* [#833](https://github.com/magento/magento2-functional-testing-framework/pull/833) -- Removed usage of AspectMock in FilesystemTest
+* [#834](https://github.com/magento/magento2-functional-testing-framework/pull/834) -- Removed usage of AspectMock in AnnotationsCheckTest
+* [#838](https://github.com/magento/magento2-functional-testing-framework/pull/838) -- Removed usage of AspectMock in DeprecatedEntityUsageCheckTest
+* [#841](https://github.com/magento/magento2-functional-testing-framework/pull/841) -- Removed usage of AspectMock in GenerationErrorHandlerTest
+* [#854](https://github.com/magento/magento2-functional-testing-framework/pull/854) -- Updated "monolog" to the latest version 2.3.1
+
 3.5.1
 ---------
 
 ### GitHub Pull Requests:
 
 * [#825](https://github.com/magento/magento2-functional-testing-framework/pull/825) -- Update allure-codeception in order to support php8
-
 
 3.5.0
 ---------

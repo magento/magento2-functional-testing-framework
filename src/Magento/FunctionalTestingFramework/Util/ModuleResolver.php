@@ -8,10 +8,10 @@ namespace Magento\FunctionalTestingFramework\Util;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Util\ModuleResolver\ModuleResolverService;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
-use Magento\FunctionalTestingFramework\DataTransport\Auth\WebApiAuth;
 use \Magento\FunctionalTestingFramework\Util\ModuleResolver\AlphabeticSequenceSorter;
 use \Magento\FunctionalTestingFramework\Util\ModuleResolver\SequenceSorterInterface;
 
@@ -137,27 +137,6 @@ class ModuleResolver
     ];
 
     /**
-     * Registered module list in magento system under test
-     *
-     * @var array
-     */
-    private $registeredModuleList = [];
-
-    /**
-     * Composer json based test module paths
-     *
-     * @var array
-     */
-    private $composerJsonModulePaths = null;
-
-    /**
-     * Composer installed test module paths
-     *
-     * @var array
-     */
-    private $composerInstalledModulePaths = null;
-
-    /**
      * Get ModuleResolver instance.
      *
      * @return ModuleResolver
@@ -200,7 +179,7 @@ class ModuleResolver
             $this->printMagentoVersionInfo();
         }
 
-        $token = WebApiAuth::getAdminToken();
+        $token = ModuleResolverService::getInstance()->getAdminToken();
 
         $url = UrlFormatter::format(getenv('MAGENTO_BASE_URL')) . $this->moduleUrl;
 
@@ -235,6 +214,7 @@ class ModuleResolver
      *
      * @param boolean $verbosePath
      * @return array
+     * @throws TestFrameworkException
      */
     public function getModulesPath($verbosePath = false)
     {
@@ -247,7 +227,7 @@ class ModuleResolver
         }
 
         // Find test modules paths by searching patterns (Test/Mftf, etc)
-        $allModulePaths = $this->aggregateTestModulePaths();
+        $allModulePaths = ModuleResolverService::getInstance()->aggregateTestModulePaths();
 
         // Find test modules paths by searching test composer.json files
         $composerBasedModulePaths = $this->aggregateTestModulePathsFromComposerJson();
@@ -304,100 +284,6 @@ class ModuleResolver
     }
 
     /**
-     * Retrieves all module directories which might contain pertinent test code.
-     *
-     * @return array
-     * @throws TestFrameworkException
-     */
-    private function aggregateTestModulePaths()
-    {
-        $allModulePaths = [];
-
-        // Define the Module paths from magento bp
-        $magentoBaseCodePath = FilePathFormatter::format(MAGENTO_BP, false);
-
-        // Define the Module paths from default TESTS_MODULE_PATH
-        $modulePath = defined('TESTS_MODULE_PATH') ? TESTS_MODULE_PATH : TESTS_BP;
-        $modulePath = FilePathFormatter::format($modulePath, false);
-
-        // If $modulePath is DEV_TESTS path, we don't need to search by pattern
-        if (strpos($modulePath, self::DEV_TESTS) === false) {
-            $codePathsToPattern[$modulePath] = '';
-        }
-
-        $vendorCodePath = DIRECTORY_SEPARATOR . self::VENDOR;
-        $codePathsToPattern[$magentoBaseCodePath . $vendorCodePath] = self::TEST_MFTF_PATTERN;
-
-        $appCodePath = DIRECTORY_SEPARATOR . self::APP_CODE;
-        $codePathsToPattern[$magentoBaseCodePath . $appCodePath] = self::TEST_MFTF_PATTERN;
-
-        foreach ($codePathsToPattern as $codePath => $pattern) {
-            $allModulePaths = array_merge_recursive($allModulePaths, $this->globRelevantPaths($codePath, $pattern));
-        }
-
-        return $allModulePaths;
-    }
-
-    /**
-     * Function which takes a code path and a pattern and determines if there are any matching subdir paths. Matches
-     * are returned as an associative array keyed by basename (the last dir excluding pattern) to an array containing
-     * the matching path.
-     *
-     * @param string $testPath
-     * @param string $pattern
-     * @return array
-     */
-    private function globRelevantPaths($testPath, $pattern)
-    {
-        $modulePaths = [];
-        $relevantPaths = [];
-
-        if (file_exists($testPath)) {
-            $relevantPaths = $this->globRelevantWrapper($testPath, $pattern);
-        }
-
-        foreach ($relevantPaths as $codePath) {
-            // Reduce magento/app/code/Magento/AdminGws/<pattern> to magento/app/code/Magento/AdminGws to read symlink
-            // Symlinks must be resolved otherwise they will not match Magento's filepath to the module
-            $potentialSymlink = str_replace(DIRECTORY_SEPARATOR . $pattern, "", $codePath);
-            if (is_link($potentialSymlink)) {
-                $codePath = realpath($potentialSymlink) . DIRECTORY_SEPARATOR . $pattern;
-            }
-            $mainModName = basename(str_replace($pattern, '', $codePath));
-            $modulePaths[$codePath] = [$mainModName];
-
-            if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-                LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->debug(
-                    "including module",
-                    ['module' => $mainModName, 'path' => $codePath]
-                );
-            }
-        }
-
-        return $modulePaths;
-    }
-
-    /**
-     * Glob wrapper for globRelevantPaths function
-     *
-     * @param string $testPath
-     * @param string $pattern
-     * @return array
-     */
-    private static function globRelevantWrapper($testPath, $pattern)
-    {
-        if ($pattern == "") {
-            return glob($testPath . '*' . DIRECTORY_SEPARATOR . '*' . $pattern);
-        }
-        $subDirectory = "*" . DIRECTORY_SEPARATOR;
-        $directories = glob($testPath . $subDirectory . $pattern, GLOB_ONLYDIR);
-        foreach (glob($testPath . $subDirectory, GLOB_ONLYDIR) as $dir) {
-            $directories = array_merge_recursive($directories, self::globRelevantWrapper($dir, $pattern));
-        }
-        return $directories;
-    }
-
-    /**
      * Aggregate all code paths with test module composer json files
      *
      * @return array
@@ -421,30 +307,9 @@ class ModuleResolver
             $searchCodePaths[] = $modulePath;
         }
 
-        return $this->getComposerJsonTestModulePaths($searchCodePaths);
+        return ModuleResolverService::getInstance()->getComposerJsonTestModulePaths($searchCodePaths);
     }
 
-    /**
-     * Retrieve all module code paths that have test module composer json files
-     *
-     * @param array $codePaths
-     * @return array
-     */
-    private function getComposerJsonTestModulePaths($codePaths)
-    {
-        if (null !== $this->composerJsonModulePaths) {
-            return $this->composerJsonModulePaths;
-        }
-        try {
-            $this->composerJsonModulePaths = [];
-            $resolver = new ComposerModuleResolver();
-            $this->composerJsonModulePaths = $resolver->getTestModulesFromPaths($codePaths);
-        } catch (TestFrameworkException $e) {
-        }
-
-        return $this->composerJsonModulePaths;
-    }
-    
     /**
      * Aggregate all code paths with composer installed test modules
      *
@@ -456,28 +321,7 @@ class ModuleResolver
         $magentoBaseCodePath = MAGENTO_BP;
         $composerFile = $magentoBaseCodePath . DIRECTORY_SEPARATOR . 'composer.json';
 
-        return $this->getComposerInstalledTestModulePaths($composerFile);
-    }
-
-    /**
-     * Retrieve composer installed test module code paths
-     *
-     * @params string $composerFile
-     * @return array
-     */
-    private function getComposerInstalledTestModulePaths($composerFile)
-    {
-        if (null !== $this->composerInstalledModulePaths) {
-            return $this->composerInstalledModulePaths;
-        }
-        try {
-            $this->composerInstalledModulePaths = [];
-            $resolver = new ComposerModuleResolver();
-            $this->composerInstalledModulePaths = $resolver->getComposerInstalledTestModules($composerFile);
-        } catch (TestFrameworkException $e) {
-        }
-
-        return $this->composerInstalledModulePaths;
+        return ModuleResolverService::getInstance()->getComposerInstalledTestModulePaths($composerFile);
     }
 
     /**
@@ -618,7 +462,7 @@ class ModuleResolver
      */
     private function normalizeModuleNames($codePaths)
     {
-        $allComponents = $this->getRegisteredModuleList();
+        $allComponents = ModuleResolverService::getInstance()->getRegisteredModuleList();
         if (empty($allComponents)) {
             return $codePaths;
         }
@@ -694,7 +538,7 @@ class ModuleResolver
     protected function applyCustomModuleMethods($modulesPath)
     {
         $modulePathsResult = $this->removeBlocklistModules($modulesPath);
-        $customModulePaths = $this->getCustomModulePaths();
+        $customModulePaths = ModuleResolverService::getInstance()->getCustomModulePaths();
 
         array_map(function ($key, $value) {
             LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->info(
@@ -733,27 +577,6 @@ class ModuleResolver
     }
 
     /**
-     * Returns an array of custom module paths defined by the user
-     *
-     * @return string[]
-     */
-    private function getCustomModulePaths()
-    {
-        $customModulePaths = [];
-        $paths = getenv(self::CUSTOM_MODULE_PATHS);
-
-        if (!$paths) {
-            return $customModulePaths;
-        }
-
-        foreach (explode(',', $paths) as $path) {
-            $customModulePaths[$this->findVendorAndModuleNameFromPath(trim($path))] = $path;
-        }
-
-        return $customModulePaths;
-    }
-
-    /**
      * Getter for moduleBlocklist.
      *
      * @return string[]
@@ -761,50 +584,6 @@ class ModuleResolver
     private function getModuleBlocklist()
     {
         return $this->moduleBlocklist;
-    }
-
-    /**
-     * Calls Magento method for determining registered modules.
-     *
-     * @return string[]
-     */
-    private function getRegisteredModuleList()
-    {
-        if (!empty($this->registeredModuleList)) {
-            return $this->registeredModuleList;
-        }
-
-        if (array_key_exists('MAGENTO_BP', $_ENV)) {
-            $autoloadPath = realpath(MAGENTO_BP . "/app/autoload.php");
-            if ($autoloadPath) {
-                require_once($autoloadPath);
-            } else {
-                throw new TestFrameworkException("Magento app/autoload.php not found with given MAGENTO_BP:"
-                    . MAGENTO_BP);
-            }
-        }
-
-        try {
-            $allComponents = [];
-            if (!class_exists(self::REGISTRAR_CLASS)) {
-                throw new TestFrameworkException("Magento Installation not found when loading registered modules.\n");
-            }
-            $components = new \Magento\Framework\Component\ComponentRegistrar();
-            foreach (self::PATHS as $componentType) {
-                $allComponents = array_merge($allComponents, $components->getPaths($componentType));
-            }
-            array_walk($allComponents, function (&$value) {
-                // Magento stores component paths with unix DIRECTORY_SEPARATOR, need to stay uniform and convert
-                $value = realpath($value);
-                $value .= DIRECTORY_SEPARATOR . self::TEST_MFTF_PATTERN;
-            });
-            return $allComponents;
-        } catch (TestFrameworkException $e) {
-            LoggingUtil::getInstance()->getLogger(ModuleResolver::class)->warning(
-                "$e"
-            );
-        }
-        return [];
     }
 
     /**

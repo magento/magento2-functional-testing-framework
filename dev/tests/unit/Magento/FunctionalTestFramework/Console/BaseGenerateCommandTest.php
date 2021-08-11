@@ -3,24 +3,46 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace tests\unit\Magento\FunctionalTestFramework\Console;
 
-use AspectMock\Test as AspectMock;
-use PHPUnit\Framework\TestCase;
+use Exception;
 use Magento\FunctionalTestingFramework\Console\BaseGenerateCommand;
-use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
-use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
+use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
+use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
+use PHPUnit\Framework\TestCase;
+use ReflectionClass;
+use ReflectionException;
+use ReflectionProperty;
 
 class BaseGenerateCommandTest extends TestCase
 {
-    public function tearDown(): void
+    /**
+     * @inheritDoc
+     */
+    protected function tearDown(): void
     {
-        AspectMock::clean();
+        $handler = TestObjectHandler::getInstance();
+        $testsProperty = new ReflectionProperty(TestObjectHandler::class, 'tests');
+        $testsProperty->setAccessible(true);
+        $testsProperty->setValue($handler, []);
+        $testObjectHandlerProperty = new ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
+        $testObjectHandlerProperty->setAccessible(true);
+        $testObjectHandlerProperty->setValue($handler);
+
+        $handler = SuiteObjectHandler::getInstance();
+        $suiteObjectsProperty = new ReflectionProperty(SuiteObjectHandler::class, 'suiteObjects');
+        $suiteObjectsProperty->setAccessible(true);
+        $suiteObjectsProperty->setValue($handler, []);
+        $suiteObjectHandlerProperty = new ReflectionProperty(SuiteObjectHandler::class, 'instance');
+        $suiteObjectHandlerProperty->setAccessible(true);
+        $suiteObjectHandlerProperty->setValue($handler);
     }
 
-    public function testOneTestOneSuiteConfig()
+    public function testOneTestOneSuiteConfig(): void
     {
         $testOne = new TestObject('Test1', [], [], []);
         $suiteOne = new SuiteObject('Suite1', ['Test1' => $testOne], [], []);
@@ -35,7 +57,7 @@ class BaseGenerateCommandTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testOneTestTwoSuitesConfig()
+    public function testOneTestTwoSuitesConfig(): void
     {
         $testOne = new TestObject('Test1', [], [], []);
         $suiteOne = new SuiteObject('Suite1', ['Test1' => $testOne], [], []);
@@ -51,7 +73,7 @@ class BaseGenerateCommandTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testOneTestOneGroup()
+    public function testOneTestOneGroup(): void
     {
         $testOne = new TestObject('Test1', [], ['group' => ['Group1']], []);
 
@@ -65,7 +87,7 @@ class BaseGenerateCommandTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testThreeTestsTwoGroup()
+    public function testThreeTestsTwoGroup(): void
     {
         $testOne = new TestObject('Test1', [], ['group' => ['Group1']], []);
         $testTwo = new TestObject('Test2', [], ['group' => ['Group1']], []);
@@ -81,7 +103,7 @@ class BaseGenerateCommandTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testOneTestOneSuiteOneGroupConfig()
+    public function testOneTestOneSuiteOneGroupConfig(): void
     {
         $testOne = new TestObject('Test1', [], ['group' => ['Group1']], []);
         $suiteOne = new SuiteObject('Suite1', ['Test1' => $testOne], [], []);
@@ -96,7 +118,7 @@ class BaseGenerateCommandTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testTwoTestOneSuiteTwoGroupConfig()
+    public function testTwoTestOneSuiteTwoGroupConfig(): void
     {
         $testOne = new TestObject('Test1', [], ['group' => ['Group1']], []);
         $testTwo = new TestObject('Test2', [], ['group' => ['Group2']], []);
@@ -112,7 +134,7 @@ class BaseGenerateCommandTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testTwoTestTwoSuiteOneGroupConfig()
+    public function testTwoTestTwoSuiteOneGroupConfig(): void
     {
         $testOne = new TestObject('Test1', [], ['group' => ['Group1']], []);
         $testTwo = new TestObject('Test2', [], ['group' => ['Group1']], []);
@@ -131,10 +153,12 @@ class BaseGenerateCommandTest extends TestCase
 
     /**
      * Test specific usecase of a test that is in a group with the group being called along with the suite
-     * i.e. run:group Group1 Suite1
-     * @throws \Exception
+     * i.e. run:group Group1 Suite1.
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testThreeTestOneSuiteOneGroupMix()
+    public function testThreeTestOneSuiteOneGroupMix(): void
     {
         $testOne = new TestObject('Test1', [], [], []);
         $testTwo = new TestObject('Test2', [], [], []);
@@ -156,7 +180,7 @@ class BaseGenerateCommandTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testSuiteToTestSyntax()
+    public function testSuiteToTestSyntax(): void
     {
         $testOne = new TestObject('Test1', [], [], []);
         $suiteOne = new SuiteObject(
@@ -175,51 +199,82 @@ class BaseGenerateCommandTest extends TestCase
     }
 
     /**
-     * Mock handlers to skip parsing
+     * Mock handlers to skip parsing.
+     *
      * @param array $testArray
      * @param array $suiteArray
-     * @throws \Exception
+     *
+     * @return void
+     * @throws Exception
      */
-    public function mockHandlers($testArray, $suiteArray)
+    public function mockHandlers(array $testArray, array $suiteArray): void
     {
-        AspectMock::double(TestObjectHandler::class, ['initTestData' => ''])->make();
+        // bypass the initTestData method
+        $testObjectHandlerClass = new ReflectionClass(TestObjectHandler::class);
+        $constructor = $testObjectHandlerClass->getConstructor();
+        $constructor->setAccessible(true);
+        $testObjectHandlerObject = $testObjectHandlerClass->newInstanceWithoutConstructor();
+        $constructor->invoke($testObjectHandlerObject);
+
+        $testObjectHandlerProperty = new ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
+        $testObjectHandlerProperty->setAccessible(true);
+        $testObjectHandlerProperty->setValue($testObjectHandlerObject);
+
         $handler = TestObjectHandler::getInstance();
-        $property = new \ReflectionProperty(TestObjectHandler::class, 'tests');
+        $property = new ReflectionProperty(TestObjectHandler::class, 'tests');
         $property->setAccessible(true);
         $property->setValue($handler, $testArray);
 
-        AspectMock::double(SuiteObjectHandler::class, ['initSuiteData' => ''])->make();
+        // bypass the initTestData method
+        $suiteObjectHandlerClass = new ReflectionClass(SuiteObjectHandler::class);
+        $constructor = $suiteObjectHandlerClass->getConstructor();
+        $constructor->setAccessible(true);
+        $suiteObjectHandlerObject = $suiteObjectHandlerClass->newInstanceWithoutConstructor();
+        $constructor->invoke($suiteObjectHandlerObject);
+
+        $suiteObjectHandlerProperty = new ReflectionProperty(SuiteObjectHandler::class, 'instance');
+        $suiteObjectHandlerProperty->setAccessible(true);
+        $suiteObjectHandlerProperty->setValue($suiteObjectHandlerObject);
+
         $handler = SuiteObjectHandler::getInstance();
-        $property = new \ReflectionProperty(SuiteObjectHandler::class, 'suiteObjects');
+        $property = new ReflectionProperty(SuiteObjectHandler::class, 'suiteObjects');
         $property->setAccessible(true);
         $property->setValue($handler, $suiteArray);
     }
 
     /**
-     * Changes visibility and runs getTestAndSuiteConfiguration
+     * Changes visibility and runs getTestAndSuiteConfiguration.
+     *
      * @param array $testArray
+     *
      * @return string
+     * @throws ReflectionException
      */
-    public function callTestConfig($testArray)
+    public function callTestConfig(array $testArray): string
     {
         $command = new BaseGenerateCommand();
-        $class = new \ReflectionClass($command);
+        $class = new ReflectionClass($command);
         $method = $class->getMethod('getTestAndSuiteConfiguration');
         $method->setAccessible(true);
+
         return $method->invokeArgs($command, [$testArray]);
     }
 
     /**
-     * Changes visibility and runs getGroupAndSuiteConfiguration
+     * Changes visibility and runs getGroupAndSuiteConfiguration.
+     *
      * @param array $groupArray
+     *
      * @return string
+     * @throws ReflectionException
      */
-    public function callGroupConfig($groupArray)
+    public function callGroupConfig(array $groupArray): string
     {
         $command = new BaseGenerateCommand();
-        $class = new \ReflectionClass($command);
+        $class = new ReflectionClass($command);
         $method = $class->getMethod('getGroupAndSuiteConfiguration');
         $method->setAccessible(true);
+
         return $method->invokeArgs($command, [$groupArray]);
     }
 }
