@@ -19,9 +19,10 @@ class SchemaValidationTest extends MftfTestCase
      */
     public function testInvalidTestSchema()
     {
+        $config = MftfApplicationConfig::getConfig();
         $property = new ReflectionProperty(MftfApplicationConfig::class, 'debugLevel');
         $property->setAccessible(true);
-        $property->setValue(MftfApplicationConfig::LEVEL_DEVELOPER);
+        $property->setValue($config, MftfApplicationConfig::LEVEL_DEVELOPER);
 
         $testFile = ['testFile.xml' => "<tests><test name='testName'><annotations>a</annotations></test></tests>"];
         $expectedError = TESTS_MODULE_PATH .
@@ -39,8 +40,9 @@ class SchemaValidationTest extends MftfTestCase
      */
     protected function tearDown(): void
     {
+        $config = MftfApplicationConfig::getConfig();
         $property = new ReflectionProperty(MftfApplicationConfig::class, 'debugLevel');
         $property->setAccessible(true);
-        $property->setValue(null);
+        $property->setValue($config, MftfApplicationConfig::LEVEL_DEFAULT);
     }
 }
