@@ -5,11 +5,11 @@
  */
 namespace tests\verification\Tests;
 
-use AspectMock\Test as AspectMock;
+use Exception;
 use Magento\FunctionalTestingFramework\StaticCheck\PauseActionUsageCheck;
 use Magento\FunctionalTestingFramework\StaticCheck\StaticChecksList;
+use ReflectionProperty;
 use Symfony\Component\Console\Input\InputInterface;
-
 use tests\util\MftfStaticTestCase;
 
 class PauseActionStaticCheckTest extends MftfStaticTestCase
@@ -27,14 +27,17 @@ class PauseActionStaticCheckTest extends MftfStaticTestCase
     /**
      * test static-check PauseActionUsageCheck.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function testPauseActionUsageCheck()
     {
         $staticCheck = new PauseActionUsageCheck();
 
         $input = $this->mockInputInterface(self::TEST_MODULE_PATH);
-        AspectMock::double(StaticChecksList::class, ['getErrorFilesPath' => self::STATIC_RESULTS_DIR]);
+
+        $property = new ReflectionProperty(StaticChecksList::class, 'errorFilesPath');
+        $property->setAccessible(true);
+        $property->setValue(self::STATIC_RESULTS_DIR);
 
         /** @var InputInterface $input */
         $staticCheck->execute($input);
@@ -47,5 +50,15 @@ class PauseActionStaticCheckTest extends MftfStaticTestCase
             ".txt",
             self::LOG_FILE
         );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function tearDownAfterClass(): void
+    {
+        $property = new ReflectionProperty(StaticChecksList::class, 'errorFilesPath');
+        $property->setAccessible(true);
+        $property->setValue(null);
     }
 }
