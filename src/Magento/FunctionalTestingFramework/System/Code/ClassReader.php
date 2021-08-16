@@ -34,7 +34,7 @@ class ClassReader
                     $name = $parameter->getType() && !$parameter->getType()->isBuiltin()
                         ? new \ReflectionClass($parameter->getType()->getName())
                         : null;
-                        $result[$parameter->getName()] = [
+                    $result[$parameter->getName()] = [
                         $parameter->getName(),
                         $name !== null ? $name->getName() : null,
                         !$parameter->isOptional(),
