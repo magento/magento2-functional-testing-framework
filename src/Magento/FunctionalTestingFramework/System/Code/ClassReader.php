@@ -31,9 +31,12 @@ class ClassReader
             /** @var $parameter \ReflectionParameter */
             foreach ($method->getParameters() as $parameter) {
                 try {
-                    $result[$parameter->getName()] = [
+                    $name = $parameter->getType() && !$parameter->getType()->isBuiltin()
+                        ? new \ReflectionClass($parameter->getType()->getName())
+                        : null;
+                        $result[$parameter->getName()] = [
                         $parameter->getName(),
-                        ($parameter->getClass() !== null) ? $parameter->getClass()->getName() : null,
+                        $name !== null ? $name->getName() : null,
                         !$parameter->isOptional(),
                         $parameter->isOptional() ?
                             $parameter->isDefaultValueAvailable() ? $parameter->getDefaultValue() : null :
