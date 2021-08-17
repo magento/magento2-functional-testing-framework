@@ -24,9 +24,12 @@ class ClassReader implements ClassReaderInterface
             /** @var $parameter \ReflectionParameter */
             foreach ($constructor->getParameters() as $parameter) {
                 try {
+                    $name = $parameter->getType() && !$parameter->getType()->isBuiltin()
+                        ? new \ReflectionClass($parameter->getType()->getName())
+                        : null;
                     $result[] = [
                         $parameter->getName(),
-                        $parameter->getClass() !== null ? $parameter->getClass()->getName() : null,
+                        $name !== null ? $name->getName() : null,
                         !$parameter->isOptional(),
                         $parameter->isOptional()
                             ? ($parameter->isDefaultValueAvailable() ? $parameter->getDefaultValue() : null)

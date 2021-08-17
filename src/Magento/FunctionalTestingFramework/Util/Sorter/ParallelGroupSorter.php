@@ -215,16 +215,17 @@ class ParallelGroupSorter
     private function splitTestsIntoGroups($tests, $groupCnt)
     {
         // Reverse sort the test array by size
-        arsort($tests);
+        uasort($tests, function ($a, $b) {
+            return $a >= $b ? -1 : 1;
+        });
         $groups = array_fill(0, $groupCnt, []);
+        $sums = array_fill(0, $groupCnt, 0);
 
         foreach ($tests as $test => $size) {
-            for ($i = 0; $i < $groupCnt; $i++) {
-                $sums[$i] = array_sum($groups[$i]);
-            }
-            asort($sums);
             // Always add the next test to the group with the smallest sum
-            $groups[array_key_first($sums)][$test] = $size;
+            $key = array_search(min($sums), $sums);
+            $groups[$key][$test] = $size;
+            $sums[$key] += $size;
         }
         // Filter empty array
         return array_filter($groups);
