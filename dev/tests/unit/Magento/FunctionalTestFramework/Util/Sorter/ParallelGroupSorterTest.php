@@ -49,8 +49,8 @@ class ParallelGroupSorterTest extends MagentoTestCase
         $actualResult = $testSorter->getTestsGroupedBySize([], $sampleTestArray, 200);
         $this->assertCount(5, $actualResult);
 
-        foreach ($actualResult as $gropuNumber => $actualTests) {
-            $expectedTests = $expectedResult[$gropuNumber];
+        foreach ($actualResult as $groupNumber => $actualTests) {
+            $expectedTests = $expectedResult[$groupNumber];
             $this->assertEquals($expectedTests, array_keys($actualTests));
         }
     }
@@ -134,18 +134,18 @@ class ParallelGroupSorterTest extends MagentoTestCase
 
         $expectedResult = [
             1 => ['test2', 'test8'],
-            2 => ['test11', 'test9', 'test17', 'test19', 'test13'],
-            3 => ['test7', 'test18', 'test14', 'test21'],
-            4 => ['test6', 'test12', 'test20', 'test5', 'test10'],
-            5 => ['test1', 'test16', 'test4', 'test3', 'test15']
+            2 => ['test7', 'test18', 'test14', 'test21'],
+            3 => ['test6', 'test12', 'test20', 'test5', 'test10'],
+            4 => ['test1', 'test16', 'test4', 'test3', 'test15'],
+            5 => ['test11', 'test9', 'test17', 'test19', 'test13'],
         ];
 
         $testSorter = new ParallelGroupSorter();
         $actualResult = $testSorter->getTestsGroupedByFixedGroupCount([], $sampleTestArray, 5);
         $this->assertCount(5, $actualResult);
 
-        foreach ($actualResult as $gropuNumber => $actualTests) {
-            $expectedTests = $expectedResult[$gropuNumber];
+        foreach ($actualResult as $groupNumber => $actualTests) {
+            $expectedTests = $expectedResult[$groupNumber];
             $this->assertEquals($expectedTests, array_keys($actualTests));
         }
     }
@@ -178,8 +178,8 @@ class ParallelGroupSorterTest extends MagentoTestCase
         $actualResult = $testSorter->getTestsGroupedByFixedGroupCount([], $sampleTestArray, 10);
         $this->assertCount(5, $actualResult);
 
-        foreach ($actualResult as $gropuNumber => $actualTests) {
-            $expectedTests = $expectedResult[$gropuNumber];
+        foreach ($actualResult as $groupNumber => $actualTests) {
+            $expectedTests = $expectedResult[$groupNumber];
             $this->assertEquals($expectedTests, array_keys($actualTests));
         }
     }
@@ -208,8 +208,8 @@ class ParallelGroupSorterTest extends MagentoTestCase
         $actualResult = $testSorter->getTestsGroupedByFixedGroupCount([], $sampleTestArray, 1);
         $this->assertCount(1, $actualResult);
 
-        foreach ($actualResult as $gropuNumber => $actualTests) {
-            $expectedTests = $expectedResult[$gropuNumber];
+        foreach ($actualResult as $groupNumber => $actualTests) {
+            $expectedTests = $expectedResult[$groupNumber];
             $this->assertEquals($expectedTests, array_keys($actualTests));
         }
     }
@@ -274,14 +274,14 @@ class ParallelGroupSorterTest extends MagentoTestCase
         $this->assertCount(15, $actualResult);
 
         $expectedResults =  [
-            1 => ['test31', 'test8', 'test1'],
+            1 => ['test31', 'test3'],
             2 => ['test6', 'test5'],
             3 => ['test33', 'test17'],
             4 => ['test25', 'test32'],
             5 => ['test7', 'test22'],
             6 => ['test10', 'test30'],
             7 => ['test29', 'test12'],
-            8 => ['test13', 'test11', 'test3'],
+            8 => ['test13', 'test11', 'test8', 'test1'],
             9 => ['test21', 'test26', 'test14'],
             10 => ['test24', 'test27', 'test18'],
             11 => ['test9', 'test4', 'test23'],
