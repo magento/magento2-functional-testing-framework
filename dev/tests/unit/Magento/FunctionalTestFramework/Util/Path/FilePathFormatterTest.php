@@ -16,21 +16,29 @@ class FilePathFormatterTest extends MagentoTestCase
     /**
      * Test file format.
      *
-     * @param string $path
-     * @param bool $withTrailingSeparator
+     * @param string      $path
+     * @param bool|null   $withTrailingSeparator
      * @param string|null $expectedPath
      *
      * @return void
      * @throws TestFrameworkException
      * @dataProvider formatDataProvider
      */
-    public function testFormat(string $path, bool $withTrailingSeparator, ?string $expectedPath): void
+    public function testFormat(string $path, ?bool $withTrailingSeparator, ?string $expectedPath): void
     {
         if (null !== $expectedPath) {
+            if ($withTrailingSeparator === null) {
+                $this->assertEquals($expectedPath, FilePathFormatter::format($path));
+                return;
+            }
             $this->assertEquals($expectedPath, FilePathFormatter::format($path, $withTrailingSeparator));
         } else {
             // Assert no exception
-            FilePathFormatter::format($path, $withTrailingSeparator);
+            if ($withTrailingSeparator === null) {
+                FilePathFormatter::format($path);
+            } else {
+                FilePathFormatter::format($path, $withTrailingSeparator);
+            }
             $this->assertTrue(true);
         }
     }
@@ -38,17 +46,22 @@ class FilePathFormatterTest extends MagentoTestCase
     /**
      * Test file format with exception.
      *
-     * @param string $path
-     * @param bool $withTrailingSeparator
+     * @param string    $path
+     * @param bool|null $withTrailingSeparator
      *
      * @return void
      * @throws TestFrameworkException
      * @dataProvider formatExceptionDataProvider
      */
-    public function testFormatWithException(string $path, bool $withTrailingSeparator): void
+    public function testFormatWithException(string $path, ?bool $withTrailingSeparator): void
     {
         $this->expectException(TestFrameworkException::class);
         $this->expectExceptionMessage("Invalid or non-existing file: $path\n");
+
+        if ($withTrailingSeparator === null) {
+            FilePathFormatter::format($path);
+            return;
+        }
         FilePathFormatter::format($path, $withTrailingSeparator);
     }
 
@@ -63,14 +76,14 @@ class FilePathFormatterTest extends MagentoTestCase
         $path2 = $path1 . DIRECTORY_SEPARATOR;
 
         return [
-            [$path1, false, $path1],
+            [$path1, null, $path2],
             [$path1, false, $path1],
             [$path1, true, $path2],
-            [$path2, false, $path1],
+            [$path2, null, $path2],
             [$path2, false, $path1],
             [$path2, true, $path2],
-            [__DIR__. DIRECTORY_SEPARATOR . basename(__FILE__), false, __FILE__],
-            ['', false, null] // Empty string is valid
+            [__DIR__ . DIRECTORY_SEPARATOR . basename(__FILE__), null, __FILE__ . DIRECTORY_SEPARATOR],
+            ['', null, null] // Empty string is valid
         ];
     }
 
@@ -82,8 +95,8 @@ class FilePathFormatterTest extends MagentoTestCase
     public function formatExceptionDataProvider(): array
     {
         return [
-            ['abc', false],
-            ['X://some\dir/@', false]
+            ['abc', null],
+            ['X://some\dir/@', null]
         ];
     }
 }

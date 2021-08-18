@@ -17,14 +17,18 @@ class UrlFormatterTest extends MagentoTestCase
      * Test url format.
      *
      * @param string $path
-     * @param bool $withTrailingSeparator
+     * @param bool|null $withTrailingSeparator
      * @param string $expectedPath
      *
      * @return void
      * @dataProvider formatDataProvider
      */
-    public function testFormat(string $path, bool $withTrailingSeparator, string $expectedPath): void
+    public function testFormat(string $path, ?bool $withTrailingSeparator, string $expectedPath): void
     {
+        if ($withTrailingSeparator === null) {
+            $this->assertEquals($expectedPath, UrlFormatter::format($path));
+            return;
+        }
         $this->assertEquals($expectedPath, UrlFormatter::format($path, $withTrailingSeparator));
     }
 
@@ -32,15 +36,20 @@ class UrlFormatterTest extends MagentoTestCase
      * Test url format with exception.
      *
      * @param string $path
-     * @param bool $withTrailingSeparator
+     * @param bool|null $withTrailingSeparator
      *
      * @return void
      * @dataProvider formatExceptionDataProvider
      */
-    public function testFormatWithException(string $path, bool $withTrailingSeparator): void
+    public function testFormatWithException(string $path, ?bool $withTrailingSeparator): void
     {
         $this->expectException(TestFrameworkException::class);
         $this->expectExceptionMessage("Invalid url: $path\n");
+
+        if ($withTrailingSeparator === null) {
+            UrlFormatter::format($path);
+            return;
+        }
         UrlFormatter::format($path, $withTrailingSeparator);
     }
 
@@ -62,16 +71,16 @@ class UrlFormatterTest extends MagentoTestCase
         $url9 = 'http://www.google.com';
 
         return [
-            [$url1, false, $url1],
+            [$url1, null, $url2],
             [$url1, false, $url1],
             [$url1, true, $url2],
-            [$url2, false, $url1],
+            [$url2, null, $url2],
             [$url2, false, $url1],
             [$url2, true, $url2],
-            [$url3, false, $url3],
+            [$url3, null, $url4],
             [$url3, false, $url3],
             [$url3, true, $url4],
-            [$url4, false, $url3],
+            [$url4, null, $url4],
             [$url4, false, $url3],
             [$url4, true, $url4],
             [$url5, true, $url6],
@@ -91,7 +100,7 @@ class UrlFormatterTest extends MagentoTestCase
     public function formatExceptionDataProvider(): array
     {
         return [
-            ['', false]
+            ['', null]
         ];
     }
 }
