@@ -17,7 +17,7 @@ class NodePathMatcher
      * @param string $xpathSubject Example: '/some[@attr="value"]/static/ns:path'.
      * @return boolean
      */
-    public function match($pathPattern, $xpathSubject)
+    public function pathMatch($pathPattern, $xpathSubject)
     {
         $pathSubject = $this->simplifyXpath($xpathSubject);
         $pathPattern = '#^' . $pathPattern . '$#';

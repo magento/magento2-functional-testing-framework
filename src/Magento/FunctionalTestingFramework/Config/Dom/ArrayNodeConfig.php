@@ -64,7 +64,7 @@ class ArrayNodeConfig
     public function isNumericArray($nodeXpath)
     {
         foreach ($this->numericArrays as $pathPattern) {
-            if ($this->nodePathMatcher->match($pathPattern, $nodeXpath)) {
+            if ($this->nodePathMatcher->pathMatch($pathPattern, $nodeXpath)) {
                 return true;
             }
         }
@@ -84,7 +84,7 @@ class ArrayNodeConfig
         }
 
         foreach ($this->assocArrays as $pathPattern => $keyAttribute) {
-            if ($this->nodePathMatcher->match($pathPattern, $nodeXpath)) {
+            if ($this->nodePathMatcher->pathMatch($pathPattern, $nodeXpath)) {
                 return $keyAttribute;
             }
         }
