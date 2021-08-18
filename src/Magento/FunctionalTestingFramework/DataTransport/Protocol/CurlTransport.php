@@ -132,18 +132,18 @@ class CurlTransport implements CurlInterface
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_COOKIEFILE => '',
-            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_HTTPHEADER => is_object($headers) ? (array) $headers : $headers,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_SSL_VERIFYHOST => false,
         ];
         switch ($method) {
             case CurlInterface::POST:
                 $options[CURLOPT_POST] = true;
-                $options[CURLOPT_POSTFIELDS] = $body;
+                $options[CURLOPT_POSTFIELDS] = is_object($body) ? (array) $body : $body;
                 break;
             case CurlInterface::PUT:
                 $options[CURLOPT_CUSTOMREQUEST] = self::PUT;
-                $options[CURLOPT_POSTFIELDS] = $body;
+                $options[CURLOPT_POSTFIELDS] = is_object($body) ? (array) $body : $body;
                 break;
             case CurlInterface::DELETE:
                 $options[CURLOPT_CUSTOMREQUEST] = self::DELETE;
@@ -189,7 +189,10 @@ class CurlTransport implements CurlInterface
      */
     public function close()
     {
-        curl_close($this->getResource());
+        if (version_compare(PHP_VERSION, '8.0') < 0) {
+            // this function no longer has an effect in PHP 8.0, but it's required in earlier versions
+            curl_close($this->getResource());
+        }
         $this->resource = null;
     }
 
@@ -271,7 +274,11 @@ class CurlTransport implements CurlInterface
             $result[$key] = curl_multi_getcontent($handle);
             curl_multi_remove_handle($multiHandle, $handle);
         }
-        curl_multi_close($multiHandle);
+        if (version_compare(PHP_VERSION, '8.0') < 0) {
+            // this function no longer has an effect in PHP 8.0, but it's required in earlier versions
+            curl_multi_close($multiHandle);
+        }
+
         return $result;
     }
 
