@@ -146,7 +146,7 @@ class ParallelGroupSorter
         // Calculate test group time for ceiling
         $ceilSuiteNameToGroupCount = $this->getSuiteGroupCountFromGroupTime($suiteNameToTestSize, $ceilSuiteGroupTime);
         $ceilSuiteGroupTotal = array_sum($ceilSuiteNameToGroupCount);
-        $ceilTestGroupTotal = $groupTotal - $ceilSuiteGroupTotal;
+        $ceilTestGroupTotal = (int) $groupTotal - (int) $ceilSuiteGroupTotal;
 
         if ($ceilTestGroupTotal === 0) {
             $ceilTestGroupTime = 0;

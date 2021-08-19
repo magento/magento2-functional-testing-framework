@@ -290,7 +290,7 @@ class ActionObject
             $this->resolveUrlReference();
             $this->resolveDataInputReferences();
             $this->validateTimezoneAttribute();
-            if ($this->getType() === "deleteData") {
+            if ($this->getType() === 'deleteData') {
                 $this->validateMutuallyExclusiveAttributes(self::DELETE_DATA_MUTUAL_EXCLUSIVE_ATTRIBUTES);
             }
         }
@@ -697,7 +697,7 @@ class ActionObject
     {
         list(,$objField) = $this->stripAndSplitReference($match);
 
-        if (strpos($objField, '[') === true) {
+        if (strpos($objField, '[') !== false) {
             // Access <array>...</array>
             $parts = explode('[', $objField);
             $name = $parts[0];
