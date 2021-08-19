@@ -43,16 +43,16 @@ class ConfigSanitizerUtil
      */
     private static function sanitizeSeleniumEnvs($config)
     {
-        if ($config['protocol'] == '%SELENIUM_PROTOCOL%') {
+        if ($config['protocol'] === '%SELENIUM_PROTOCOL%') {
             $config['protocol'] = "http";
         }
-        if ($config['host'] == '%SELENIUM_HOST%') {
+        if ($config['host'] === '%SELENIUM_HOST%') {
             $config['host'] = "127.0.0.1";
         }
-        if ($config['port'] == '%SELENIUM_PORT%') {
+        if ($config['port'] === '%SELENIUM_PORT%') {
             $config['port'] = "4444";
         }
-        if ($config['path'] == '%SELENIUM_PATH%') {
+        if ($config['path'] === '%SELENIUM_PATH%') {
             $config['path'] = "/wd/hub";
         }
         return $config;

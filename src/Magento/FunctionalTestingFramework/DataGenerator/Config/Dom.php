@@ -84,7 +84,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
         $itemNodes = $dom->getElementsByTagName('item');
         /** @var \DOMElement $itemNode */
         foreach ($itemNodes as $itemKey => $itemNode) {
-            if ($itemNode->hasAttribute("name") == false) {
+            if ($itemNode->hasAttribute("name") === false) {
                 $itemNode->setAttribute("name", (string)$itemKey);
             }
         }

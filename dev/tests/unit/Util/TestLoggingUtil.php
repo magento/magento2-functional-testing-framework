@@ -40,7 +40,7 @@ class TestLoggingUtil extends TestCase
      */
     public static function getInstance(): TestLoggingUtil
     {
-        if (self::$instance == null) {
+        if (self::$instance === null) {
             self::$instance = new TestLoggingUtil();
         }
         return self::$instance;

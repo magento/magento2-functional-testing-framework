@@ -41,7 +41,7 @@ class Flat
         $attributes = $node->attributes ?: [];
         /** @var \DOMNode $attribute */
         foreach ($attributes as $attribute) {
-            if ($attribute->nodeType == XML_ATTRIBUTE_NODE) {
+            if ($attribute->nodeType === XML_ATTRIBUTE_NODE) {
                 $result[$attribute->nodeName] = $attribute->nodeValue;
             }
         }
@@ -77,7 +77,7 @@ class Flat
         $value = [];
         /** @var \DOMNode $node */
         foreach ($source->childNodes as $node) {
-            if ($node->nodeType == XML_ELEMENT_NODE) {
+            if ($node->nodeType === XML_ELEMENT_NODE) {
                 $nodeName = $node->nodeName;
                 $nodePath = $basePath . '/' . $nodeName;
 
@@ -107,8 +107,8 @@ class Flat
                 } else {
                     $value[$nodeName] = $nodeData;
                 }
-            } elseif ($node->nodeType == XML_CDATA_SECTION_NODE
-                || ($node->nodeType == XML_TEXT_NODE && trim($node->nodeValue) != '')
+            } elseif ($node->nodeType === XML_CDATA_SECTION_NODE
+                || ($node->nodeType === XML_TEXT_NODE && trim($node->nodeValue) !== '')
             ) {
                 $value = $node->nodeValue;
                 break;

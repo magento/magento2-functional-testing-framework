@@ -91,7 +91,7 @@ class Converter implements \Magento\FunctionalTestingFramework\Config\ConverterI
 
         foreach ($elements as $element) {
             if ($element instanceof \DOMElement) {
-                if ($element->getAttribute('remove') == 'true') {
+                if ($element->getAttribute('remove') === 'true') {
                     // Remove element
                     continue;
                 }
@@ -119,7 +119,7 @@ class Converter implements \Magento\FunctionalTestingFramework\Config\ConverterI
                 } elseif (!empty($elementData)) {
                     $result[$element->nodeName][] = $elementData;
                 }
-            } elseif ($element->nodeType == XML_TEXT_NODE && trim($element->nodeValue) != '') {
+            } elseif ($element->nodeType === XML_TEXT_NODE && trim($element->nodeValue) !== '') {
                 return ['value' => $element->nodeValue];
             }
         }
@@ -156,9 +156,9 @@ class Converter implements \Magento\FunctionalTestingFramework\Config\ConverterI
     protected function isKeyAttribute(\DOMElement $element, \DOMAttr $attribute)
     {
         if (isset($this->idAttributes[$element->nodeName])) {
-            return $attribute->name == $this->idAttributes[$element->nodeName];
+            return $attribute->name === $this->idAttributes[$element->nodeName];
         } else {
-            return $attribute->name == self::NAME_ATTRIBUTE;
+            return $attribute->name === self::NAME_ATTRIBUTE;
         }
     }
 
@@ -174,7 +174,7 @@ class Converter implements \Magento\FunctionalTestingFramework\Config\ConverterI
         if ($element->hasAttributes()) {
             /** @var \DomAttr $attribute */
             foreach ($element->attributes as $attribute) {
-                if (trim($attribute->nodeValue) != '' && !$this->isKeyAttribute($element, $attribute)) {
+                if (trim($attribute->nodeValue) !== '' && !$this->isKeyAttribute($element, $attribute)) {
                     $attributes[$attribute->nodeName] = $this->castNumeric($attribute->nodeValue);
                 }
             }

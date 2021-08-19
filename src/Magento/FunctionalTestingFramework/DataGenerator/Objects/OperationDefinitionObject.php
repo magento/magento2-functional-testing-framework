@@ -351,7 +351,7 @@ class OperationDefinitionObject
      */
     public function logDeprecated()
     {
-        if ($this->deprecated != null) {
+        if ($this->deprecated !== null) {
             LoggingUtil::getInstance()->getLogger(self::class)->deprecation(
                 $message = "The operation {$this->name} is deprecated.",
                 ["operationType" => $this->operation, "deprecatedMessage" => $this->deprecated],

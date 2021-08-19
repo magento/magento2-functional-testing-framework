@@ -98,7 +98,7 @@ class ArrayType implements InterpreterInterface
             $secondValue = intval($secondItem['sortOrder']);
         }
 
-        if ($firstValue == $secondValue) {
+        if ($firstValue === $secondValue) {
             // These keys reflect initial relative position of items.
             // Allows stable sort for items with equal 'sortOrder'
             return $firstItemKey < $secondItemKey ? -1 : 1;

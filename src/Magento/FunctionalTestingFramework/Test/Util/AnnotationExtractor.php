@@ -77,14 +77,14 @@ class AnnotationExtractor extends BaseObjectExtractor
             }
             $annotationValues = [];
             // Only transform severity annotation
-            if ($annotationKey == "severity") {
+            if ($annotationKey === "severity") {
                 $annotationObjects[$annotationKey] = $this->transformAllureSeverityToMagento(
                     trim($annotationData[0][self::ANNOTATION_VALUE])
                 );
                 continue;
             }
 
-            if ($annotationKey == "skip") {
+            if ($annotationKey === "skip") {
                 $annotationData = $annotationData['issueId'];
                 if ($validateAnnotations) {
                     $this->validateSkippedIssues($annotationData, $filename);
@@ -182,7 +182,7 @@ class AnnotationExtractor extends BaseObjectExtractor
      */
     public function validateStoryTitleUniqueness()
     {
-        if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::EXECUTION_PHASE) {
+        if (MftfApplicationConfig::getConfig()->getPhase() === MftfApplicationConfig::EXECUTION_PHASE) {
             return;
         }
 
@@ -197,7 +197,7 @@ class AnnotationExtractor extends BaseObjectExtractor
                 $message = "Story and Title annotation pairs is not unique in Tests {$tests}\n";
                 LoggingUtil::getInstance()->getLogger(self::class)->error($message);
                 if (MftfApplicationConfig::getConfig()->verboseEnabled()
-                    && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+                    && MftfApplicationConfig::getConfig()->getPhase() === MftfApplicationConfig::GENERATION_PHASE) {
                     print('ERROR: ' . $message);
                 }
                 $testArray = explode(',', $tests);
@@ -220,7 +220,7 @@ class AnnotationExtractor extends BaseObjectExtractor
      */
     public function validateTestCaseIdTitleUniqueness()
     {
-        if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::EXECUTION_PHASE) {
+        if (MftfApplicationConfig::getConfig()->getPhase() === MftfApplicationConfig::EXECUTION_PHASE) {
             return;
         }
 
@@ -235,7 +235,7 @@ class AnnotationExtractor extends BaseObjectExtractor
                 $message = "TestCaseId and Title pairs is not unique in Tests {$tests}\n";
                 LoggingUtil::getInstance()->getLogger(self::class)->error($message);
                 if (MftfApplicationConfig::getConfig()->verboseEnabled()
-                    && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+                    && MftfApplicationConfig::getConfig()->getPhase() === MftfApplicationConfig::GENERATION_PHASE) {
                     print('ERROR: ' . $message);
                 }
                 $testArray = explode(',', $tests);

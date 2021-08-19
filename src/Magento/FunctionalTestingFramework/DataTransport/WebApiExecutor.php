@@ -135,7 +135,7 @@ class WebApiExecutor implements CurlInterface
     protected function getFormattedUrl($resource)
     {
         $urlResult = MftfGlobals::getWebApiBaseUrl();
-        if ($this->storeCode != null) {
+        if ($this->storeCode !== null) {
             $urlResult .= $this->storeCode . '/';
         }
         $urlResult .= trim($resource, '/');

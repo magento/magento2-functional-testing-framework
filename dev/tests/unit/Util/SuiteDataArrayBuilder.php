@@ -181,7 +181,7 @@ class SuiteDataArrayBuilder
      */
     public function withAfterHook($afterHook = null)
     {
-        if ($afterHook == null) {
+        if ($afterHook === null) {
             $this->afterHook = [$this->testActionAfterName => [
                 ActionObjectExtractor::NODE_NAME => $this->testActionType,
                 ActionObjectExtractor::TEST_STEP_MERGE_KEY => $this->testActionAfterName
@@ -202,7 +202,7 @@ class SuiteDataArrayBuilder
      */
     public function withBeforeHook($beforeHook = null)
     {
-        if ($beforeHook == null) {
+        if ($beforeHook === null) {
             $this->beforeHook = [$this->testActionBeforeName => [
                 ActionObjectExtractor::NODE_NAME => $this->testActionType,
                 ActionObjectExtractor::TEST_STEP_MERGE_KEY => $this->testActionBeforeName

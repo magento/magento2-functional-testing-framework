@@ -206,7 +206,7 @@ class SuiteGenerator
             $this->appendEntriesToConfig($suiteName, $fullPath, $groupNamespace);
 
             if (MftfApplicationConfig::getConfig()->verboseEnabled()
-                && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+                && MftfApplicationConfig::getConfig()->getPhase() === MftfApplicationConfig::GENERATION_PHASE) {
                 print("suite {$suiteName} generated\n");
             }
             LoggingUtil::getInstance()->getLogger(self::class)->info(
@@ -304,7 +304,7 @@ class SuiteGenerator
         } else {
             $suiteObject = SuiteObjectHandler::getInstance()->getObject($suiteName);
             // we have to handle the case when there is a custom configuration for an existing suite.
-            if (count($suiteObject->getTests()) != count($tests)) {
+            if (count($suiteObject->getTests()) !== count($tests)) {
                 return $this->generateGroupFile($suiteName, $tests, $suiteName);
             }
         }

@@ -86,7 +86,7 @@ class RunManifestCommand extends Command
                 continue;
             }
 
-            if ($line == count($manifestFile) - 1) {
+            if ($line === count($manifestFile) - 1) {
                 $this->runManifestLine($manifestFile[$line], $output, true);
             } else {
                 $this->runManifestLine($manifestFile[$line], $output);

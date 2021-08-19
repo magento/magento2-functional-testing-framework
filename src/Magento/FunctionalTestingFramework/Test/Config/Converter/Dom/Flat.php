@@ -77,7 +77,7 @@ class Flat implements ConverterInterface
         $value = [];
         /** @var \DOMNode $node */
         foreach ($source->childNodes as $node) {
-            if ($node->nodeType == XML_ELEMENT_NODE) {
+            if ($node->nodeType === XML_ELEMENT_NODE) {
                 $nodeName = $node->nodeName;
                 $nodePath = $basePath . '/' . $nodeName;
                 $arrayKeyAttribute = $this->arrayNodeConfig->getAssocArrayKeyAttribute($nodePath);
@@ -90,7 +90,7 @@ class Flat implements ConverterInterface
                     );
                 }
 
-                if ($nodeName == self::REMOVE_ACTION) {
+                if ($nodeName === self::REMOVE_ACTION) {
                     // Check to see if the test extends for this remove action
                     $parentHookExtends = in_array($node->parentNode->nodeName, self::TEST_HOOKS)
                         && !empty($node->parentNode->parentNode->getAttribute('extends'));
@@ -121,12 +121,12 @@ class Flat implements ConverterInterface
                 } else {
                     $value[$nodeName] = $nodeData;
                 }
-            } elseif ($node->nodeType == XML_CDATA_SECTION_NODE
-                || ($node->nodeType == XML_TEXT_NODE && trim($node->nodeValue) != '')
+            } elseif ($node->nodeType === XML_CDATA_SECTION_NODE
+                || ($node->nodeType === XML_TEXT_NODE && trim($node->nodeValue) !== '')
             ) {
                 $value = $node->nodeValue;
                 break;
-            } elseif ($node->nodeType == XML_COMMENT_NODE &&
+            } elseif ($node->nodeType === XML_COMMENT_NODE &&
                 in_array($node->parentNode->nodeName, self::VALID_COMMENT_PARENT)) {
                 $uniqid = uniqid($node->nodeName);
                 $value[$uniqid] = [
@@ -163,7 +163,7 @@ class Flat implements ConverterInterface
         $attributes = $node->attributes ?: [];
         /** @var \DOMNode $attribute */
         foreach ($attributes as $attribute) {
-            if ($attribute->nodeType == XML_ATTRIBUTE_NODE) {
+            if ($attribute->nodeType === XML_ATTRIBUTE_NODE) {
                 $result[$attribute->nodeName] = $attribute->nodeValue;
             }
         }

@@ -170,10 +170,10 @@ class ActionMergeUtil
 
         foreach ($mergedSteps as $key => $mergedStep) {
             /**@var ActionObject $mergedStep**/
-            if ($mergedStep->getType() == ActionObjectExtractor::ACTION_GROUP_TAG) {
+            if ($mergedStep->getType() === ActionObjectExtractor::ACTION_GROUP_TAG) {
                 $actionGroupRef = $mergedStep->getCustomActionAttributes()[ActionObjectExtractor::ACTION_GROUP_REF];
                 $actionGroup = ActionGroupObjectHandler::getInstance()->getObject($actionGroupRef);
-                if ($actionGroup == null) {
+                if ($actionGroup === null) {
                     throw new TestReferenceException("Could not find ActionGroup by ref \"{$actionGroupRef}\"");
                 }
                 $args = $mergedStep->getCustomActionAttributes()[ActionObjectExtractor::ACTION_GROUP_ARGUMENTS] ?? null;

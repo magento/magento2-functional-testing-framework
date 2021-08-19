@@ -61,7 +61,7 @@ class ActionGroupObjectTest extends MagentoTestCase
     public function testGetStepsWithCustomArgs(): void
     {
         $this->setEntityObjectHandlerReturn(function ($entityName) {
-            if ($entityName == "data2") {
+            if ($entityName === 'data2') {
                 return (new EntityDataObjectBuilder())->withDataFields(['field2' => 'testValue2'])->build();
             }
         });
@@ -128,7 +128,7 @@ class ActionGroupObjectTest extends MagentoTestCase
     public function testGetStepsWithNoFieldArg(): void
     {
         $this->setEntityObjectHandlerReturn(function ($entityName) {
-            if ($entityName == "data2") {
+            if ($entityName === 'data2') {
                 return (new EntityDataObjectBuilder())->withDataFields(['field2' => 'testValue2'])->build();
             }
         });
@@ -151,7 +151,7 @@ class ActionGroupObjectTest extends MagentoTestCase
     public function testGetStepsWithNoArgs(): void
     {
         $this->setEntityObjectHandlerReturn(function ($entityName) {
-            if ($entityName == "data1") {
+            if ($entityName === 'data1') {
                 return (new EntityDataObjectBuilder())->withDataFields(['field1' => 'testValue'])->build();
             }
         });
@@ -174,7 +174,7 @@ class ActionGroupObjectTest extends MagentoTestCase
     {
         // Mock Entity Object Handler
         $this->setEntityObjectHandlerReturn(function ($entityName) {
-            if ($entityName == "data2") {
+            if ($entityName === 'data2') {
                 return (new EntityDataObjectBuilder())->withDataFields(['field2' => 'testValue2'])->build();
             }
         });
@@ -216,7 +216,7 @@ class ActionGroupObjectTest extends MagentoTestCase
     {
         // Mock Entity Object Handler
         $this->setEntityObjectHandlerReturn(function ($entityName) {
-            if ($entityName == "data2") {
+            if ($entityName === 'data2') {
                 return (new EntityDataObjectBuilder())->withDataFields(['field2' => 'testValue2'])->build();
             }
         });

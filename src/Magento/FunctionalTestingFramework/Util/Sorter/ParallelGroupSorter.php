@@ -37,7 +37,7 @@ class ParallelGroupSorter
     public function getTestsGroupedBySize($suiteConfiguration, $testNameToSize, $time)
     {
         // we must have the lines argument in order to create the test groups
-        if ($time == 0) {
+        if ($time === 0) {
             throw new FastFailException(
                 "Please provide the argument '--time' to the robo command in order to".
                 " generate grouped tests manifests for a parallel execution"
@@ -139,7 +139,7 @@ class ParallelGroupSorter
         $ceilSuiteGroupNumber = ceil($maxSuiteTime / $minGroupTime);
         $ceilSuiteGroupTime = max(ceil($maxSuiteTime / $ceilSuiteGroupNumber), $minGroupTime);
         $floorSuiteGroupNumber = floor($maxSuiteTime / $minGroupTime);
-        if ($floorSuiteGroupNumber != 0) {
+        if ($floorSuiteGroupNumber !== 0) {
             $floorSuiteGroupTime = max(ceil($maxSuiteTime / $floorSuiteGroupNumber), $minGroupTime);
         }
 
@@ -148,7 +148,7 @@ class ParallelGroupSorter
         $ceilSuiteGroupTotal = array_sum($ceilSuiteNameToGroupCount);
         $ceilTestGroupTotal = $groupTotal - $ceilSuiteGroupTotal;
 
-        if ($ceilTestGroupTotal == 0) {
+        if ($ceilTestGroupTotal === 0) {
             $ceilTestGroupTime = 0;
         } else {
             $ceilTestGroupTime = ceil(array_sum($testNameToSize) / $ceilTestGroupTotal);
@@ -157,7 +157,7 @@ class ParallelGroupSorter
         // Set suite group total to ceiling
         $suiteNameToGroupCount = $ceilSuiteNameToGroupCount;
 
-        if (isset($floorSuiteGroupTime) && $ceilSuiteGroupTime != $floorSuiteGroupTime) {
+        if (isset($floorSuiteGroupTime) && $ceilSuiteGroupTime !== $floorSuiteGroupTime) {
             // Calculate test group time for floor
             $floorSuiteNameToGroupCount = $this->getSuiteGroupCountFromGroupTime(
                 $suiteNameToTestSize,
@@ -165,7 +165,7 @@ class ParallelGroupSorter
             );
             $floorSuiteGroupTotal = array_sum($floorSuiteNameToGroupCount);
             $floorTestGroupTotal = $groupTotal - $floorSuiteGroupTotal;
-            if ($floorTestGroupTotal == 0) {
+            if ($floorTestGroupTotal === 0) {
                 $floorTestGroupTime = 0;
             } else {
                 $floorTestGroupTime = ceil(array_sum($testNameToSize) / $floorTestGroupTotal);
@@ -243,7 +243,7 @@ class ParallelGroupSorter
         $groups = [];
         foreach ($suiteNameToTestSize as $suiteName => $suiteTests) {
             $suiteCnt = $suiteNameToGroupCount[$suiteName];
-            if ($suiteCnt == 1) {
+            if ($suiteCnt === 1) {
                 $groups[][$suiteName] = array_sum($suiteTests);
                 $this->addSuiteToConfig($suiteName, null, $suiteTests);
             } elseif ($suiteCnt > 1) {
@@ -457,7 +457,7 @@ class ParallelGroupSorter
      */
     private function addSuiteToConfig($originalSuiteName, $newSuiteName, $tests)
     {
-        if ($newSuiteName == null) {
+        if ($newSuiteName === null) {
             $this->suiteConfig[$originalSuiteName] = array_keys($tests);
             return;
         }

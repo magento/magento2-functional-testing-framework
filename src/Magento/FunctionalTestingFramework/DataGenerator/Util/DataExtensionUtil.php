@@ -32,7 +32,7 @@ class DataExtensionUtil
     {
         // Check to see if the parent entity exists
         $parentEntity = DataObjectHandler::getInstance()->getObject($entityObject->getParentName());
-        if ($parentEntity == null) {
+        if ($parentEntity === null) {
             throw new XmlException(
                 "Parent Entity " .
                 $entityObject->getParentName() .
