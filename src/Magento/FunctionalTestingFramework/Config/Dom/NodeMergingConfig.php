@@ -44,7 +44,7 @@ class NodeMergingConfig
     public function getIdAttribute($nodeXpath)
     {
         foreach ($this->idAttributes as $pathPattern => $idAttribute) {
-            if ($this->nodePathMatcher->match($pathPattern, $nodeXpath)) {
+            if ($this->nodePathMatcher->pathMatch($pathPattern, $nodeXpath)) {
                 return $idAttribute;
             }
         }
