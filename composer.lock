@@ -62,12 +62,12 @@
             "version": "1.2.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/allure-framework/allure-php-commons.git",
+                "url": "https://github.com/allure-framework/allure-php-api.git",
                 "reference": "13ef45d83ce4f5ef70499ff87ed0c3d1c192ab80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/allure-framework/allure-php-commons/zipball/13ef45d83ce4f5ef70499ff87ed0c3d1c192ab80",
+                "url": "https://api.github.com/repos/allure-framework/allure-php-api/zipball/13ef45d83ce4f5ef70499ff87ed0c3d1c192ab80",
                 "reference": "13ef45d83ce4f5ef70499ff87ed0c3d1c192ab80",
                 "shasum": ""
             },
@@ -108,6 +108,11 @@
                 "php",
                 "report"
             ],
+            "support": {
+                "email": "allure@yandex-team.ru",
+                "issues": "https://github.com/allure-framework/allure-php-api/issues",
+                "source": "https://github.com/allure-framework/allure-php-api"
+            },
             "time": "2020-11-26T09:20:44+00:00"
         },
         {
@@ -6886,5 +6891,5 @@
         "ext-openssl": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.1.0"
 }
