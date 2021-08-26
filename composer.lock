@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9bec96d8a169a4286803657bbf61004c",
+    "content-hash": "4827eceed3051f9eb57bfb47aff974dc",
     "packages": [
         {
             "name": "allure-framework/allure-codeception",
@@ -1361,6 +1361,7 @@
                 "issues": "https://github.com/CSharpRU/vault-php-guzzle6-transport/issues",
                 "source": "https://github.com/CSharpRU/vault-php-guzzle6-transport/tree/master"
             },
+            "abandoned": true,
             "time": "2019-03-10T06:17:37+00:00"
         },
         {
