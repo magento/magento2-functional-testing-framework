@@ -1,5 +1,13 @@
 Magento Functional Testing Framework Changelog
 ================================================
+3.6.1
+---------
+
+### Enhancements
+
+* Maintainability
+  * Updated allure dependencies to pull package from new repo `allure-framework/allure-php-api`.
+
 3.6.0
 ---------
 
