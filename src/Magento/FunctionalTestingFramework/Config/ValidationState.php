@@ -37,6 +37,6 @@ class ValidationState implements ValidationStateInterface
      */
     public function isValidationRequired()
     {
-        return $this->appMode == 'developer'; // @todo
+        return $this->appMode === 'developer'; // @todo
     }
 }

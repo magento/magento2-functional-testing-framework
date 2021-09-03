@@ -207,7 +207,7 @@ class Dom
      */
     protected function isTextNode($node)
     {
-        return $node->childNodes->length == 1 && $node->childNodes->item(0) instanceof \DOMText;
+        return $node->childNodes->length === 1 && $node->childNodes->item(0) instanceof \DOMText;
     }
 
     /**
@@ -273,7 +273,7 @@ class Dom
         $node = null;
         if ($matchedNodes->length > 1) {
             throw new \Exception("More than one node matching the query: {$nodePath}");
-        } elseif ($matchedNodes->length == 1) {
+        } elseif ($matchedNodes->length === 1) {
             $node = $matchedNodes->item(0);
         }
         return $node;

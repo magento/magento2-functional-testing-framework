@@ -162,11 +162,11 @@ class ModuleResolverService
      */
     private static function globRelevantWrapper(string $testPath, string $pattern): array
     {
-        if ($pattern == "") {
+        if ($pattern === '') {
             return glob($testPath . '*' . DIRECTORY_SEPARATOR . '*' . $pattern);
         }
 
-        $subDirectory = "*" . DIRECTORY_SEPARATOR;
+        $subDirectory = '*' . DIRECTORY_SEPARATOR;
         $directories = glob($testPath . $subDirectory . $pattern, GLOB_ONLYDIR);
 
         foreach (glob($testPath . $subDirectory, GLOB_ONLYDIR) as $dir) {

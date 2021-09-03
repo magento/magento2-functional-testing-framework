@@ -66,7 +66,7 @@ class PageObjectHandler implements ObjectHandlerInterface
             $area = $pageData[self::AREA] ?? null;
             $url = $pageData[self::URL] ?? null;
 
-            if ($area == 'admin') {
+            if ($area === 'admin') {
                 $url = ltrim($url, "/");
             }
 

@@ -152,7 +152,7 @@ class GroupClassGenerator
             }
 
             // add these as vars to be created a class level in the template
-            if ($action->getType() == 'createData') {
+            if ($action->getType() === 'createData') {
                 $mustacheHookArray[self::MUSTACHE_VAR_TAG][] = [self::ENTITY_MERGE_KEY => $action->getStepKey()];
             }
 
@@ -213,7 +213,7 @@ class GroupClassGenerator
         $formattedStep = rtrim($formattedStep);
         foreach (self::REPLACEMENT_ACTIONS as $testAction => $replacement) {
             $testActionCall = "\${$actor}->{$testAction}";
-            if (substr($formattedStep, 0, strlen($testActionCall)) == $testActionCall) {
+            if (substr($formattedStep, 0, strlen($testActionCall)) === $testActionCall) {
                 $resultingStep = str_replace($testActionCall, $replacement, $formattedStep);
                 $actionEntries[] = ['action' => $resultingStep];
             } else {
@@ -278,7 +278,7 @@ class GroupClassGenerator
                 continue;
             }
 
-            if ($attribute[ActionObjectExtractor::NODE_NAME] == 'requiredEntity') {
+            if ($attribute[ActionObjectExtractor::NODE_NAME] === 'requiredEntity') {
                 $requiredEntities[] = [self::ENTITY_NAME_TAG => $attribute[TestGenerator::REQUIRED_ENTITY_REFERENCE]];
             }
         }

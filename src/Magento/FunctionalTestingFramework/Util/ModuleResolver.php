@@ -156,7 +156,7 @@ class ModuleResolver
     {
         $objectManager = \Magento\FunctionalTestingFramework\ObjectManagerFactory::getObjectManager();
 
-        if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::UNIT_TEST_PHASE) {
+        if (MftfApplicationConfig::getConfig()->getPhase() === MftfApplicationConfig::UNIT_TEST_PHASE) {
             $this->sequenceSorter = $objectManager->get(AlphabeticSequenceSorter::class);
         } else {
             $this->sequenceSorter = $objectManager->get(SequenceSorterInterface::class);
@@ -175,7 +175,7 @@ class ModuleResolver
             return $this->enabledModules;
         }
 
-        if (MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+        if (MftfApplicationConfig::getConfig()->getPhase() === MftfApplicationConfig::GENERATION_PHASE) {
             $this->printMagentoVersionInfo();
         }
 
@@ -338,8 +338,8 @@ class ModuleResolver
         // Filter array by enabled modules
         foreach ($objectArray as $path => $modules) {
             if (!array_diff($modules, $filterArray)
-                || (count($modules) == 1 && isset($this->knownDirectories[$modules[0]]))) {
-                if (count($modules) == 1) {
+                || (count($modules) === 1 && isset($this->knownDirectories[$modules[0]]))) {
+                if (count($modules) === 1) {
                     $oneToOneArray[$path] = $modules[0];
                 } else {
                     $oneToManyArray[$path] = $modules;

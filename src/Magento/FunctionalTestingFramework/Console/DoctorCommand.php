@@ -190,7 +190,7 @@ class DoctorCommand extends Command
 
         // Disable MagentoWebDriver to avoid conflicts
         foreach ($settings['modules']['enabled'] as $index => $module) {
-            if ($module == $magentoWebDriver) {
+            if ($module === $magentoWebDriver) {
                 unset($settings['modules']['enabled'][$index]);
                 break;
             }

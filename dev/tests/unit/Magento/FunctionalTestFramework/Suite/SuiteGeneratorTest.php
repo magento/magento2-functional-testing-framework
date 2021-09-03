@@ -347,13 +347,13 @@ class SuiteGeneratorTest extends MagentoTestCase
                         $mockGroupClass,
                         $objectManager
                     ) {
-                        if ($class == TestDataParser::class) {
+                        if ($class === TestDataParser::class) {
                             return $mockDataParser;
                         }
-                        if ($class == SuiteDataParser::class) {
+                        if ($class === SuiteDataParser::class) {
                             return $mockSuiteDataParser;
                         }
-                        if ($class == GroupClassGenerator::class) {
+                        if ($class === GroupClassGenerator::class) {
                             return $mockGroupClass;
                         }
 
