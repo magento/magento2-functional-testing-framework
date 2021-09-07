@@ -157,7 +157,7 @@ class TestDependencyCheck implements StaticCheckInterface
             $this->allEntities = [];
             $moduleName = $this->getModuleName($filePath);
             // Not a module, is either dev/tests/acceptance or loose folder with test materials
-            if ($moduleName == null) {
+            if ($moduleName === null) {
                 continue;
             }
 
@@ -219,7 +219,7 @@ class TestDependencyCheck implements StaticCheckInterface
         foreach ($modulesReferencedInTest as $entityName => $files) {
             $valid = false;
             foreach ($files as $module) {
-                if (array_key_exists($module, $moduleDependencies) || $module == $currentModule) {
+                if (array_key_exists($module, $moduleDependencies) || $module === $currentModule) {
                     $valid = true;
                     break;
                 }

@@ -18,7 +18,7 @@ if (!empty($_POST['token']) && !empty($_POST['command'])) {
 
     // Token returned will be null if the token we passed in is invalid
     $tokenFromMagento = $tokenModel->loadByToken($tokenPassedIn)->getToken();
-    if (!empty($tokenFromMagento) && ($tokenFromMagento == $tokenPassedIn)) {
+    if (!empty($tokenFromMagento) && ($tokenFromMagento === $tokenPassedIn)) {
         $php = PHP_BINDIR ? PHP_BINDIR . '/php' : 'php';
         $magentoBinary = $php . ' -f ../../../../bin/magento';
         $valid = validateCommand($magentoBinary, $command);
@@ -52,7 +52,7 @@ if (!empty($_POST['token']) && !empty($_POST['command'])) {
 
             $exitCode = $process->getExitCode();
 
-            if ($exitCode == 0 || $idleTimeout) {
+            if ($process->isSuccessful() || $idleTimeout) {
                 http_response_code(202);
             } else {
                 http_response_code(500);

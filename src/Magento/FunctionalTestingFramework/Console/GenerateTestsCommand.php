@@ -231,7 +231,8 @@ class GenerateTestsCommand extends BaseGenerateCommand
                     $message = "Unable to create test object {$test} from test configuration. " . $e->getMessage();
                     LoggingUtil::getInstance()->getLogger(self::class)->error($message);
                     if (MftfApplicationConfig::getConfig()->verboseEnabled()
-                        && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+                        && MftfApplicationConfig::getConfig()->getPhase() === MftfApplicationConfig::GENERATION_PHASE
+                    ) {
                         print($message);
                     }
                     GenerationErrorHandler::getInstance()->addError('test', $test, $message);

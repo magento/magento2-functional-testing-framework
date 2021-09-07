@@ -50,7 +50,7 @@ class ComposerInstall extends AbstractComposer
     {
         /** @var CompletePackageInterface $package */
         foreach ($this->getLocker()->getLockedRepository()->getPackages() as $package) {
-            if (($package->getName() == $packageName) && ($package->getType() == $packageType)) {
+            if (($package->getName() === $packageName) && ($package->getType() === $packageType)) {
                 return true;
             }
         }
@@ -67,7 +67,7 @@ class ComposerInstall extends AbstractComposer
         $packages = [];
         /** @var CompletePackageInterface $package */
         foreach ($this->getLocker()->getLockedRepository()->getPackages() as $package) {
-            if ($package->getType() == self::TEST_MODULE_PACKAGE_TYPE) {
+            if ($package->getType() === self::TEST_MODULE_PACKAGE_TYPE) {
                 $packages[$package->getName()] = [
                     self::PACKAGE_NAME => $package->getName(),
                     self::PACKAGE_TYPE => $package->getType(),

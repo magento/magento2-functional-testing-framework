@@ -123,7 +123,7 @@ class ResilientGenerationTest extends MftfTestCase
         SuiteGenerator::getInstance()->generateAllSuites($testManifest);
 
         foreach (SuiteTestReferences::$data as $groupName => $expectedContents) {
-            if (substr($groupName, 0, 11) != 'NotGenerate') {
+            if (substr($groupName, 0, 11) !== 'NotGenerate') {
                 // Validate Yaml file updated
                 $yml = Yaml::parse(file_get_contents(self::CONFIG_YML_FILE));
                 $this->assertArrayHasKey($groupName, $yml['groups']);
@@ -175,7 +175,7 @@ class ResilientGenerationTest extends MftfTestCase
                 );
             }
 
-            if (substr($groupName, 0, 11) != 'NotGenerate') {
+            if (substr($groupName, 0, 11) !== 'NotGenerate') {
                 // Validate Yaml file updated
                 $yml = Yaml::parse(file_get_contents(self::CONFIG_YML_FILE));
                 $this->assertArrayHasKey($groupName, $yml['groups']);
@@ -199,7 +199,7 @@ class ResilientGenerationTest extends MftfTestCase
             }
 
             // Validate log message
-            if (substr($groupName, 0, 11) != 'NotGenerate'
+            if (substr($groupName, 0, 11) !== 'NotGenerate'
                 && !in_array($groupName, array_keys(self::$exceptionGrpLogs))) {
                 $type = 'info';
                 $message = '/suite generated/';

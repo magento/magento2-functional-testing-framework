@@ -108,7 +108,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
         for ($i = 0; $i < count($testManifestList); $i++) {
             if ($this->pauseEnabled()) {
                 $codeceptionCommand = self::CODECEPT_RUN_FUNCTIONAL . $testManifestList[$i] . ' --debug ';
-                if ($i != count($testManifestList) - 1) {
+                if ($i !== count($testManifestList) - 1) {
                     $codeceptionCommand .= self::CODECEPT_RUN_OPTION_NO_EXIT;
                 }
                 $returnCode = $this->codeceptRunTest($codeceptionCommand, $output);
@@ -161,7 +161,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
                     $testName = explode(":", $testInfo[count($testInfo) - 1])[1];
                     $suiteName = $testInfo[count($testInfo) - 2];
 
-                    if ($suiteName == self::DEFAULT_TEST_GROUP) {
+                    if ($suiteName === self::DEFAULT_TEST_GROUP) {
                         array_push($failedTestDetails['tests'], $testName);
                     } else {
                         $suiteName = $this->sanitizeSuiteName($suiteName);
@@ -195,7 +195,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
     private function sanitizeSuiteName($suiteName)
     {
         $suiteNameArray = explode("_", $suiteName);
-        if (array_pop($suiteNameArray) == 'G') {
+        if (array_pop($suiteNameArray) === 'G') {
             if (is_numeric(array_pop($suiteNameArray))) {
                 $suiteName = implode("_", $suiteNameArray);
             }

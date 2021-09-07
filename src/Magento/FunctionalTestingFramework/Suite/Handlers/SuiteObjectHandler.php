@@ -62,7 +62,7 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      */
     public static function getInstance(): ObjectHandlerInterface
     {
-        if (self::$instance == null) {
+        if (self::$instance === null) {
             self::$instance = new SuiteObjectHandler();
             self::$instance->initSuiteData();
         }

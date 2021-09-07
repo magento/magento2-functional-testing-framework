@@ -75,9 +75,9 @@ class ElementObject
      */
     public function __construct($name, $type, $selector, $locatorFunction, $timeout, $parameterized, $deprecated = null)
     {
-        if ($selector != null && $locatorFunction != null) {
+        if ($selector !== null && $locatorFunction !== null) {
             throw new XmlException("Element '{$name}' cannot have both a selector and a locatorFunction.");
-        } elseif ($selector == null && $locatorFunction == null) {
+        } elseif ($selector === null && $locatorFunction === null) {
             throw new XmlException("Element '{$name}' must have either a selector or a locatorFunction.'");
         }
 
@@ -160,11 +160,11 @@ class ElementObject
      */
     public function getTimeout()
     {
-        if ($this->timeout == ElementObject::DEFAULT_TIMEOUT_SYMBOL) {
+        if ($this->timeout === ElementObject::DEFAULT_TIMEOUT_SYMBOL) {
             return null;
         }
 
-        return (int)$this->timeout;
+        return (int) $this->timeout;
     }
 
     /**

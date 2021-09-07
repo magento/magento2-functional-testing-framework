@@ -306,7 +306,7 @@ class OperationDataArrayResolverTest extends MagentoTestCase
         $callback = function ($name) {
             $entityDataObjectBuilder = new EntityDataObjectBuilder();
 
-            if ($name == 'childObject1') {
+            if ($name === 'childObject1') {
                 return $entityDataObjectBuilder
                     ->withName('childObject1')
                     ->withType('childType')
@@ -314,7 +314,7 @@ class OperationDataArrayResolverTest extends MagentoTestCase
                     ->build();
             };
 
-            if ($name == 'childObject2') {
+            if ($name === 'childObject2') {
                 return $entityDataObjectBuilder
                     ->withName('childObject2')
                     ->withType('childType')

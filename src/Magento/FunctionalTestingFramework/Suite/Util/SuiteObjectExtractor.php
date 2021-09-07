@@ -92,7 +92,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
                 $includeTests = $include['objects'] ?? [];
                 $stepError = $include['status'] ?? 0;
                 $includeMessage = '';
-                if ($stepError != 0) {
+                if ($stepError !== 0) {
                     $includeMessage = "ERROR: " . strval($stepError) . " test(s) not included for suite "
                         . $parsedSuite[self::NAME];
                 }
@@ -127,7 +127,8 @@ class SuiteObjectExtractor extends BaseObjectExtractor
                 if (!empty($includeMessage)) {
                     LoggingUtil::getInstance()->getLogger(self::class)->error($includeMessage);
                     if (MftfApplicationConfig::getConfig()->verboseEnabled()
-                        && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+                        && MftfApplicationConfig::getConfig()->getPhase() === MftfApplicationConfig::GENERATION_PHASE
+                    ) {
                         print($includeMessage);
                     }
 
@@ -145,7 +146,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
                     "Unable to parse suite " . $parsedSuite[self::NAME] . "\n" . $e->getMessage()
                 );
                 if (MftfApplicationConfig::getConfig()->verboseEnabled()
-                    && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+                    && MftfApplicationConfig::getConfig()->getPhase() === MftfApplicationConfig::GENERATION_PHASE) {
                     print("ERROR: Unable to parse suite " . $parsedSuite[self::NAME] . "\n");
                 }
 
@@ -183,7 +184,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
     {
         //check if name used is using special char or the "default" reserved name
         NameValidationUtil::validateName($parsedSuite[self::NAME], 'Suite');
-        if ($parsedSuite[self::NAME] == 'default') {
+        if ($parsedSuite[self::NAME] === 'default') {
             throw new FastFailException("A Suite can not have the name \"default\"");
         }
 
@@ -235,7 +236,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
             $suiteHooks[TestObjectExtractor::TEST_AFTER_HOOK] = $hookObject;
         }
 
-        if (count($suiteHooks) == 1) {
+        if (count($suiteHooks) === 1) {
             throw new XmlException(sprintf(
                 "Suites that contain hooks must contain both a 'before' and an 'after' hook. Suite: \"%s\"",
                 $parsedSuite[self::NAME]
@@ -254,7 +255,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      */
     private function isSuiteEmpty($suiteHooks, $includeTests, $excludeTests)
     {
-        $noHooks = count($suiteHooks) == 0 ||
+        $noHooks = count($suiteHooks) === 0 ||
             (
                 empty($suiteHooks['before']->getActions()) &&
                 empty($suiteHooks['after']->getActions())

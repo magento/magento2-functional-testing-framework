@@ -48,7 +48,7 @@ class ComposerModuleResolver
             return $this->installedTestModules;
         }
 
-        if (!file_exists($rootComposerFile) || basename($rootComposerFile, '.json') != 'composer') {
+        if (!file_exists($rootComposerFile) || basename($rootComposerFile, '.json') !== 'composer') {
             throw new TestFrameworkException("Invalid root composer json file: {$rootComposerFile}");
         }
 
@@ -168,7 +168,7 @@ class ComposerModuleResolver
                     self::findComposerJsonFilesAtDepth($dir, $depth-1)
                 );
             }
-        } elseif ($depth == 0) {
+        } elseif ($depth === 0) {
             $jsonFileList = glob($directory . $jsonPattern);
             if ($jsonFileList === false) {
                 $jsonFileList = [];

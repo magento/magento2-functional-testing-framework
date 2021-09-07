@@ -222,7 +222,7 @@ class MagentoWebDriver extends WebDriver
     public function _getCurrentUri()
     {
         $url = $this->webDriver->getCurrentURL();
-        if ($url == 'about:blank') {
+        if ($url === 'about:blank') {
             throw new ModuleException($this, 'Current url is blank, no page was opened');
         }
 
@@ -509,7 +509,7 @@ class MagentoWebDriver extends WebDriver
      */
     public function mSetLocale(int $category, $locale)
     {
-        if (self::$localeAll[$category] == $locale) {
+        if (self::$localeAll[$category] === $locale) {
             return;
         }
         foreach (self::$localeAll as $c => $l) {
@@ -849,7 +849,7 @@ class MagentoWebDriver extends WebDriver
             }
         }
 
-        if ($this->current_test == null) {
+        if ($this->current_test === null) {
             throw new \RuntimeException("Suite condition failure: \n" . $fail->getMessage());
         }
 
@@ -869,7 +869,7 @@ class MagentoWebDriver extends WebDriver
     public function saveScreenshot()
     {
         $testDescription = "unknown." . uniqid();
-        if ($this->current_test != null) {
+        if ($this->current_test !== null) {
             $testDescription = Descriptor::getTestSignature($this->current_test);
         }
 

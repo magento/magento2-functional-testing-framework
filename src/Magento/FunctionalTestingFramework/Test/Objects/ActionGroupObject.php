@@ -239,7 +239,7 @@ class ActionGroupObject
                 $action->getStepKey() . ucfirst($actionReferenceKey),
                 $action->getType(),
                 array_replace_recursive($resolvedActionAttributes, $newActionAttributes),
-                $action->getLinkedAction() == null ? null : $action->getLinkedAction() . ucfirst($actionReferenceKey),
+                $action->getLinkedAction() === null ? null : $action->getLinkedAction() . ucfirst($actionReferenceKey),
                 $orderOffset,
                 [self::ACTION_GROUP_ORIGIN_NAME => $this->name,
                     self::ACTION_GROUP_ORIGIN_TEST_REF => $actionReferenceKey],
@@ -531,7 +531,7 @@ class ActionGroupObject
         $matchedArgument = array_filter(
             $argumentList,
             function ($e) use ($name) {
-                return $e->getName() == $name;
+                return $e->getName() === $name;
             }
         );
         if (isset(array_values($matchedArgument)[0])) {

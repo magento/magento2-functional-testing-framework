@@ -371,7 +371,7 @@ class TestGenerator
                 $this->debug("<comment>Finish creating test: " . $test->getCodeceptionName() . "</comment>" . PHP_EOL);
 
                 // Write to manifest here if manifest is not null
-                if ($testManifest != null) {
+                if ($testManifest !== null) {
                     $testManifest->addTest($test);
                 }
             } catch (FastFailException $e) {
@@ -460,7 +460,7 @@ class TestGenerator
 
         foreach ($annotationsObject as $annotationType => $annotationName) {
             //Remove conditional and output useCaseId upon completion of MQE-588
-            if ($annotationType == "useCaseId") {
+            if ($annotationType === 'useCaseId') {
                 continue;
             }
             if (!$isMethod) {
@@ -752,7 +752,7 @@ class TestGenerator
                 $time = $time ?? ActionObject::getDefaultWaitTimeout();
             }
 
-            if (isset($customActionAttributes['parameterArray']) && $actionObject->getType() != 'pressKey') {
+            if (isset($customActionAttributes['parameterArray']) && $actionObject->getType() !== 'pressKey') {
                 // validate the param array is in the correct format
                 $this->validateParameterArray($customActionAttributes['parameterArray']);
 
@@ -799,7 +799,7 @@ class TestGenerator
                     $function = trim($function, '"');
                 }
                 // turn $javaVariable => \$javaVariable but not {$mftfVariable}
-                if ($actionObject->getType() == "executeJS") {
+                if ($actionObject->getType() === "executeJS") {
                     $function = preg_replace('/(?<!{)(\$[A-Za-z._]+)(?![A-z.]*+\$)/', '\\\\$1', $function);
                 }
             }
@@ -905,7 +905,7 @@ class TestGenerator
 
                     $requiredEntityKeys = [];
                     foreach ($actionObject->getCustomActionAttributes() as $actionAttribute) {
-                        if (is_array($actionAttribute) && $actionAttribute['nodeName'] == 'requiredEntity') {
+                        if (is_array($actionAttribute) && $actionAttribute['nodeName'] === 'requiredEntity') {
                             //append ActionGroup if provided
                             $requiredEntityActionGroup = $actionAttribute['actionGroup'] ?? null;
                             $requiredEntityKeys[] = $actionAttribute['createDataKey'] . $requiredEntityActionGroup;
@@ -977,7 +977,7 @@ class TestGenerator
                     // Build array of requiredEntities
                     $requiredEntityKeys = [];
                     foreach ($actionObject->getCustomActionAttributes() as $actionAttribute) {
-                        if (is_array($actionAttribute) && $actionAttribute['nodeName'] == 'requiredEntity') {
+                        if (is_array($actionAttribute) && $actionAttribute['nodeName'] === 'requiredEntity') {
                             //append ActionGroup if provided
                             $requiredEntityActionGroup = $actionAttribute['actionGroup'] ?? null;
                             $requiredEntityKeys[] = $actionAttribute['createDataKey'] . $requiredEntityActionGroup;
@@ -1012,7 +1012,7 @@ class TestGenerator
                     // Build array of requiredEntities
                     $requiredEntityKeys = [];
                     foreach ($actionObject->getCustomActionAttributes() as $actionAttribute) {
-                        if (is_array($actionAttribute) && $actionAttribute['nodeName'] == 'requiredEntity') {
+                        if (is_array($actionAttribute) && $actionAttribute['nodeName'] === 'requiredEntity') {
                             $requiredEntityActionGroup = $actionAttribute['actionGroup'] ?? null;
                             $requiredEntityKeys[] = $actionAttribute['createDataKey'] . $requiredEntityActionGroup;
                         }
@@ -1587,7 +1587,7 @@ class TestGenerator
             $replacement = null;
             $delimiter = '$';
             $variable = $this->stripAndSplitReference($match, $delimiter);
-            if (count($variable) != 2) {
+            if (count($variable) !== 2) {
                 throw new \Exception(
                     "Invalid Persisted Entity Reference: {$match}.
                 Test persisted entity references must follow {$delimiter}entityStepKey.field{$delimiter} format."
@@ -1639,7 +1639,7 @@ class TestGenerator
      */
     private function resolveStepKeyReferences($input, $actionGroupOrigin, $matchAll = false)
     {
-        if ($actionGroupOrigin == null) {
+        if ($actionGroupOrigin === null) {
             return $input;
         }
         $output = $input;
@@ -1701,7 +1701,7 @@ class TestGenerator
         foreach ($allArguments as $argument) {
             $argument = trim($argument);
 
-            if ($argument[0] == self::ARRAY_WRAP_OPEN) {
+            if ($argument[0] === self::ARRAY_WRAP_OPEN) {
                 $replacement = $this->wrapParameterArray($this->addUniquenessToParamArray($argument));
             } elseif (is_numeric($argument)) {
                 $replacement = $argument;
@@ -1948,7 +1948,7 @@ class TestGenerator
      */
     private function wrapWithDoubleQuotes($input)
     {
-        if ($input == null) {
+        if ($input === null) {
             return '';
         }
         //Only replace &quot; with \" so that it doesn't break outer string.

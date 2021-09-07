@@ -72,7 +72,7 @@ class ModulePathExtractor
     private function splitKeyForParts($key)
     {
         $parts = explode(self::SPLIT_DELIMITER, $key);
-        return count($parts) == 2 ? $parts : [];
+        return count($parts) === 2 ? $parts : [];
     }
 
     /**
@@ -90,7 +90,7 @@ class ModulePathExtractor
         }
 
         foreach ($this->testModulePaths as $key => $value) {
-            if (substr($path, 0, strlen($value)) == $value) {
+            if (substr($path, 0, strlen($value)) === $value) {
                 return $key;
             }
         }

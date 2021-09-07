@@ -113,11 +113,11 @@ class SuiteObjectHandlerTest extends MagentoTestCase
             ->will(
                 $this->returnCallback(
                     function ($clazz) use ($mockDataParser, $mockSuiteDataParser) {
-                        if ($clazz == TestDataParser::class) {
+                        if ($clazz === TestDataParser::class) {
                             return $mockDataParser;
                         }
 
-                        if ($clazz == SuiteDataParser::class) {
+                        if ($clazz === SuiteDataParser::class) {
                             return $mockSuiteDataParser;
                         }
 

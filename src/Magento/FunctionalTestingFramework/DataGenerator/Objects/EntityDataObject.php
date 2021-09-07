@@ -233,7 +233,7 @@ class EntityDataObject
                 $this->data[$name_lower],
                 $this->name . '.' . $name
             );
-            if (null === $uniquenessData || $uniquenessFormat == self::NO_UNIQUE_PROCESS) {
+            if (null === $uniquenessData || $uniquenessFormat === self::NO_UNIQUE_PROCESS) {
                 return $this->data[$name_lower];
             }
             return $this->formatUniqueData($name_lower, $uniquenessData, $uniquenessFormat);
@@ -276,7 +276,7 @@ class EntityDataObject
         switch ($uniqueDataFormat) {
             case self::SUITE_UNIQUE_VALUE:
                 $this->checkUniquenessFunctionExists(self::SUITE_UNIQUE_FUNCTION, $uniqueDataFormat);
-                if ($uniqueData == 'prefix') {
+                if ($uniqueData === 'prefix') {
                     return msqs($this->getName()) . $this->data[$name];
                 } else { // $uniData == 'suffix'
                     return $this->data[$name] . msqs($this->getName());
@@ -284,21 +284,21 @@ class EntityDataObject
                 break;
             case self::CEST_UNIQUE_VALUE:
                 $this->checkUniquenessFunctionExists(self::CEST_UNIQUE_FUNCTION, $uniqueDataFormat);
-                if ($uniqueData == 'prefix') {
+                if ($uniqueData === 'prefix') {
                     return msq($this->getName()) . $this->data[$name];
                 } else { // $uniqueData == 'suffix'
                     return $this->data[$name] . msq($this->getName());
                 }
                 break;
             case self::SUITE_UNIQUE_NOTATION:
-                if ($uniqueData == 'prefix') {
+                if ($uniqueData === 'prefix') {
                     return self::SUITE_UNIQUE_FUNCTION . '("' . $this->getName() . '")' . $this->data[$name];
                 } else { // $uniqueData == 'suffix'
                     return $this->data[$name] . self::SUITE_UNIQUE_FUNCTION . '("' . $this->getName() . '")';
                 }
                 break;
             case self::CEST_UNIQUE_NOTATION:
-                if ($uniqueData == 'prefix') {
+                if ($uniqueData === 'prefix') {
                     return self::CEST_UNIQUE_FUNCTION . '("' . $this->getName() . '")' . $this->data[$name];
                 } else { // $uniqueData == 'suffix'
                     return $this->data[$name] . self::CEST_UNIQUE_FUNCTION . '("' . $this->getName() . '")';
@@ -358,7 +358,7 @@ class EntityDataObject
         $groupedArray = [];
 
         foreach ($this->linkedEntities as $entityName => $entityType) {
-            if ($entityType == $type) {
+            if ($entityType === $type) {
                 $groupedArray[] = $entityName;
             }
         }

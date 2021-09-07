@@ -65,10 +65,10 @@ class DuplicateNodeValidationUtil
 
         $withoutDuplicates = array_unique($keyValues);
 
-        if (count($withoutDuplicates) != count($keyValues)) {
+        if (count($withoutDuplicates) !== count($keyValues)) {
             $duplicates = array_diff_assoc($keyValues, $withoutDuplicates);
             $keyError = "";
-            foreach ($duplicates as $duplicateKey => $duplicateValue) {
+            foreach ($duplicates as $duplicateValue) {
                 $keyError .= "\t{$this->uniqueKey}: {$duplicateValue} is used more than once.";
                 if ($parentKey !== null) {
                     $keyError .=" (Parent: {$parentKey})";

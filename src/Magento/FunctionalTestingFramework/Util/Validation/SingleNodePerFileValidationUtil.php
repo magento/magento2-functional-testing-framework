@@ -43,7 +43,7 @@ class SingleNodePerFileValidationUtil
     {
         $tagNodes = $dom->getElementsByTagName($tag);
         $count = $tagNodes->length;
-        if ($count == 1) {
+        if ($count === 1) {
             return;
         }
 
