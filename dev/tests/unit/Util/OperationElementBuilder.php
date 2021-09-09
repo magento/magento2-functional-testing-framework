@@ -20,7 +20,8 @@ class OperationElementBuilder
         'name' => 'string',
         'gpa' => 'number',
         'phone' => 'integer',
-        'isPrimary' => 'boolean'
+        'isPrimary' => 'boolean',
+        'empty_string' => 'string'
     ];
 
     /**

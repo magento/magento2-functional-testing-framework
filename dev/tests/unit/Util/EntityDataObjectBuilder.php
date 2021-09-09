@@ -18,7 +18,8 @@ class EntityDataObjectBuilder
         "name" => "Hopper",
         "gpa" => "3.5678",
         "phone" => "5555555",
-        "isprimary" => "true"
+        "isprimary" => "true",
+        "empty_string" => ""
     ];
 
     /**
