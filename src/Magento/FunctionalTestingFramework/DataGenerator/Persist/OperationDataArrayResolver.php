@@ -403,7 +403,7 @@ class OperationDataArrayResolver
         // If data was defined at all, attempt to put it into operation data array
         // If data was not defined, and element is required, throw exception
         // If no data is defined, don't input defaults per primitive into operation data array
-        if ($elementData !== null) {
+        if ($elementData !== null && $elementData !== '') {
             if (array_key_exists($operationElement->getKey(), $entityObject->getUniquenessData())) {
                 $uniqueData = $entityObject->getUniquenessDataByName($operationElement->getKey());
                 if ($uniqueData === 'suffix') {
