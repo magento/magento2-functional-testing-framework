@@ -119,7 +119,7 @@ class Console extends \Codeception\Subscriber\Console
         }
 
         $metaStep = $e->getStep()->getMetaStep();
-        if ($metaStep and $this->metaStep != $metaStep) {
+        if ($metaStep and $this->metaStep !== $metaStep) {
             $this->message(' ' . $metaStep->getPrefix())
                 ->style('bold')
                 ->append($metaStep->__toString())
@@ -158,7 +158,7 @@ class Console extends \Codeception\Subscriber\Console
      */
     private function printStepKeys(Step $step)
     {
-        if ($step instanceof Comment and $step->__toString() == '') {
+        if ($step instanceof Comment and $step->__toString() === '') {
             return; // don't print empty comments
         }
 

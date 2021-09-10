@@ -159,7 +159,7 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
                 } else {
                     $configMerger->merge($content);
                 }
-                if (strcasecmp($debugLevel, MftfApplicationConfig::LEVEL_DEVELOPER) == 0) {
+                if (strcasecmp($debugLevel, MftfApplicationConfig::LEVEL_DEVELOPER) === 0) {
                     $this->validateSchema($configMerger, $fileList->getFilename());
                 }
             } catch (\Magento\FunctionalTestingFramework\Config\Dom\ValidationException $e) {

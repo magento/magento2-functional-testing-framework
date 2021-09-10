@@ -84,7 +84,8 @@ class Factory extends \Magento\FunctionalTestingFramework\ObjectManager\Factory\
     {
         $type = get_class($object);
         $parameters = $this->classReader->getParameters($type, $method);
-        if ($parameters == null) {
+
+        if ($parameters === null) {
             return [];
         }
 
@@ -227,7 +228,8 @@ class Factory extends \Magento\FunctionalTestingFramework\ObjectManager\Factory\
     {
         $instanceType = $this->config->getInstanceType($requestedType);
         $parameters = $this->definitions->getParameters($instanceType);
-        if ($parameters == null) {
+
+        if ($parameters === null) {
             return new $instanceType();
         }
         if (isset($this->creationStack[$requestedType])) {

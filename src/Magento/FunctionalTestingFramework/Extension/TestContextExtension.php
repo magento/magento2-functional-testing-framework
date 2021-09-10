@@ -72,7 +72,10 @@ class TestContextExtension extends BaseExtension
                 CURLOPT_URL => getenv('MAGENTO_BASE_URL') . "/test.php?test=" . $this->currentTest,
             ]);
             curl_exec($cURLConnection);
-            curl_close($cURLConnection);
+            if (version_compare(PHP_VERSION, '8.0') < 0) {
+                // this function no longer has an effect in PHP 8.0, but it's required in earlier versions
+                curl_close($cURLConnection);
+            }
         }
 
         PersistedObjectHandler::getInstance()->clearHookObjects();
@@ -100,7 +103,7 @@ class TestContextExtension extends BaseExtension
         // check for errors in all test hooks and attach in allure
         if (!empty($testResultObject->errors())) {
             foreach ($testResultObject->errors() as $error) {
-                if ($error->failedTest()->getTestMethod() == $cest->getTestMethod()) {
+                if ($error->failedTest()->getTestMethod() === $cest->getTestMethod()) {
                     $this->attachExceptionToAllure($error->thrownException(), $cest->getTestMethod());
                 }
             }
@@ -109,7 +112,7 @@ class TestContextExtension extends BaseExtension
         // check for failures in all test hooks and attach in allure
         if (!empty($testResultObject->failures())) {
             foreach ($testResultObject->failures() as $failure) {
-                if ($failure->failedTest()->getTestMethod() == $cest->getTestMethod()) {
+                if ($failure->failedTest()->getTestMethod() === $cest->getTestMethod()) {
                     $this->attachExceptionToAllure($failure->thrownException(), $cest->getTestMethod());
                 }
             }
@@ -128,7 +131,7 @@ class TestContextExtension extends BaseExtension
     {
         foreach ($trace as $entry) {
             $traceClass = $entry["class"] ?? null;
-            if (strpos($traceClass, $class) != 0) {
+            if (strpos($traceClass, $class) !== 0) {
                 return $entry["function"];
             }
         }
@@ -257,7 +260,7 @@ class TestContextExtension extends BaseExtension
     protected function localizePath($path)
     {
         $root = realpath($this->getRootDir()) . DIRECTORY_SEPARATOR;
-        if (substr($path, 0, strlen($root)) == $root) {
+        if (substr($path, 0, strlen($root)) === $root) {
             return substr($path, strlen($root));
         }
         return $path;

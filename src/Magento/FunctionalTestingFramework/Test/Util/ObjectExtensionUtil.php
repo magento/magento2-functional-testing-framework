@@ -98,7 +98,7 @@ class ObjectExtensionUtil
     {
         // Check to see if the parent action group exists
         $parentActionGroup = ActionGroupObjectHandler::getInstance()->getObject($actionGroupObject->getParentName());
-        if ($parentActionGroup == null) {
+        if ($parentActionGroup === null) {
             throw new XmlException(
                 "Parent Action Group " .
                 $actionGroupObject->getParentName() .
@@ -200,7 +200,7 @@ class ObjectExtensionUtil
 
         // remove actions merged that are of type 'remove'
         foreach ($actions as $actionName => $actionData) {
-            if ($actionData->getType() != "remove") {
+            if ($actionData->getType() !== 'remove') {
                 $cleanedActions[$actionName] = $actionData;
             }
         }

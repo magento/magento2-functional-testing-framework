@@ -135,7 +135,7 @@ class MftfApplicationConfig
         $allowSkipped = false,
         $filters = []
     ) {
-        if (self::$MFTF_APPLICATION_CONTEXT == null) {
+        if (self::$MFTF_APPLICATION_CONTEXT === null) {
             self::$MFTF_APPLICATION_CONTEXT =
                 new MftfApplicationConfig(
                     $forceGenerate,
@@ -159,7 +159,7 @@ class MftfApplicationConfig
         // TODO explicitly set this with AcceptanceTester or MagentoWebDriver
         // during execution we cannot guarantee the use of the robofile so we return the default application config,
         // we don't want to set the application context in case the user explicitly does so at a later time.
-        if (self::$MFTF_APPLICATION_CONTEXT == null) {
+        if (self::$MFTF_APPLICATION_CONTEXT === null) {
             return new MftfApplicationConfig();
         }
 

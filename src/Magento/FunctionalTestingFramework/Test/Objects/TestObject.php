@@ -174,7 +174,7 @@ class TestObject
      */
     public function getCodeceptionName()
     {
-        if (strpos($this->name, 'Cest') && substr($this->name, -4) == 'Cest') {
+        if (strpos($this->name, 'Cest') && substr($this->name, -4) === 'Cest') {
             return $this->name;
         }
 

@@ -3,23 +3,26 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace tests\unit\Magento\FunctionalTestFramework\Util\Sorter;
 
-use AspectMock\Test as AspectMock;
 use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
-use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
-use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Util\Sorter\ParallelGroupSorter;
+use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
 
 class ParallelGroupSorterTest extends MagentoTestCase
 {
     /**
-     * Test a basic sort of available tests based on size
+     * Test a basic sort of available tests based on size.
+     *
+     * @return void
+     * @throws FastFailException
      */
-    public function testBasicTestsSplitByTime()
+    public function testBasicTestsSplitByTime(): void
     {
         $sampleTestArray = [
             'test1' => 100,
@@ -44,41 +47,24 @@ class ParallelGroupSorterTest extends MagentoTestCase
 
         $testSorter = new ParallelGroupSorter();
         $actualResult = $testSorter->getTestsGroupedBySize([], $sampleTestArray, 200);
-
         $this->assertCount(5, $actualResult);
 
-        foreach ($actualResult as $gropuNumber => $actualTests) {
-            $expectedTests = $expectedResult[$gropuNumber];
+        foreach ($actualResult as $groupNumber => $actualTests) {
+            $expectedTests = $expectedResult[$groupNumber];
             $this->assertEquals($expectedTests, array_keys($actualTests));
         }
     }
 
     /**
-     * Test a sort of both tests and a suite which is larger than the given line limitation
+     * Test a sort of both tests and a suite which is larger than the given line limitation.
+     *
+     * @return void
+     * @throws FastFailException
      */
-    public function testTestsAndSuitesSplitByTime()
+    public function testTestsAndSuitesSplitByTime(): void
     {
         // mock tests for test object handler.
-        $numberOfCalls = 0;
-        $mockTest1 = AspectMock::double(
-            TestObject::class,
-            ['getEstimatedDuration' => function () use (&$numberOfCalls) {
-                $actionCount = [300, 275];
-                $result = $actionCount[$numberOfCalls];
-                $numberOfCalls++;
-
-                return $result;
-            }]
-        )->make();
-
-        $mockHandler = AspectMock::double(
-            TestObjectHandler::class,
-            ['getObject' => function () use ($mockTest1) {
-                    return $mockTest1;
-            }]
-        )->make();
-
-        AspectMock::double(TestObjectHandler::class, ['getInstance' => $mockHandler])->make();
+        $this->createMockForTest(0, [300, 275]);
 
         // create test to size array
         $sampleTestArray = [
@@ -115,9 +101,12 @@ class ParallelGroupSorterTest extends MagentoTestCase
     }
 
     /**
-     * Test splitting tests based on a fixed group number
+     * Test splitting tests based on a fixed group number.
+     *
+     * @return void
+     * @throws FastFailException
      */
-    public function testBasicTestsSplitByGroup()
+    public function testBasicTestsSplitByGroup(): void
     {
         $sampleTestArray = [
             'test1' => 100,
@@ -140,39 +129,41 @@ class ParallelGroupSorterTest extends MagentoTestCase
             'test18' => 34,
             'test19' => 45,
             'test20' => 58,
-            'test21' => 9,
+            'test21' => 9
         ];
 
         $expectedResult = [
             1 => ['test2', 'test8'],
-            2 => ['test11', 'test9', 'test17', 'test19', 'test13'],
-            3 => ['test7', 'test18', 'test14', 'test21'],
-            4 => ['test6', 'test12', 'test20', 'test5', 'test10'],
-            5 => ['test1', 'test16', 'test4', 'test3', 'test15']
+            2 => ['test7', 'test18', 'test14', 'test21'],
+            3 => ['test6', 'test12', 'test20', 'test5', 'test10'],
+            4 => ['test1', 'test16', 'test4', 'test3', 'test15'],
+            5 => ['test11', 'test9', 'test17', 'test19', 'test13'],
         ];
 
         $testSorter = new ParallelGroupSorter();
         $actualResult = $testSorter->getTestsGroupedByFixedGroupCount([], $sampleTestArray, 5);
-
         $this->assertCount(5, $actualResult);
 
-        foreach ($actualResult as $gropuNumber => $actualTests) {
-            $expectedTests = $expectedResult[$gropuNumber];
+        foreach ($actualResult as $groupNumber => $actualTests) {
+            $expectedTests = $expectedResult[$groupNumber];
             $this->assertEquals($expectedTests, array_keys($actualTests));
         }
     }
 
     /**
-     * Test splitting tests based a group number bigger than ever needed
+     * Test splitting tests based a group number bigger than ever needed.
+     *
+     * @return void
+     * @throws FastFailException
      */
-    public function testBasicTestsSplitByBigGroupNumber()
+    public function testBasicTestsSplitByBigGroupNumber(): void
     {
         $sampleTestArray = [
             'test1' => 100,
             'test2' => 300,
             'test3' => 50,
             'test4' => 60,
-            'test5' => 25,
+            'test5' => 25
         ];
 
         $expectedResult = [
@@ -185,19 +176,21 @@ class ParallelGroupSorterTest extends MagentoTestCase
 
         $testSorter = new ParallelGroupSorter();
         $actualResult = $testSorter->getTestsGroupedByFixedGroupCount([], $sampleTestArray, 10);
-
         $this->assertCount(5, $actualResult);
 
-        foreach ($actualResult as $gropuNumber => $actualTests) {
-            $expectedTests = $expectedResult[$gropuNumber];
+        foreach ($actualResult as $groupNumber => $actualTests) {
+            $expectedTests = $expectedResult[$groupNumber];
             $this->assertEquals($expectedTests, array_keys($actualTests));
         }
     }
 
     /**
-     * Test splitting tests based a minimum group number
+     * Test splitting tests based a minimum group number.
+     *
+     * @return void
+     * @throws FastFailException
      */
-    public function testBasicTestsSplitByMinGroupNumber()
+    public function testBasicTestsSplitByMinGroupNumber(): void
     {
         $sampleTestArray = [
             'test1' => 100,
@@ -213,41 +206,24 @@ class ParallelGroupSorterTest extends MagentoTestCase
 
         $testSorter = new ParallelGroupSorter();
         $actualResult = $testSorter->getTestsGroupedByFixedGroupCount([], $sampleTestArray, 1);
-
         $this->assertCount(1, $actualResult);
 
-        foreach ($actualResult as $gropuNumber => $actualTests) {
-            $expectedTests = $expectedResult[$gropuNumber];
+        foreach ($actualResult as $groupNumber => $actualTests) {
+            $expectedTests = $expectedResult[$groupNumber];
             $this->assertEquals($expectedTests, array_keys($actualTests));
         }
     }
 
     /**
-     * Test splitting tests and suites based on a fixed group number
+     * Test splitting tests and suites based on a fixed group number.
+     *
+     * @return void
+     * @throws FastFailException
      */
-    public function testTestsAndSuitesSplitByGroup()
+    public function testTestsAndSuitesSplitByGroup(): void
     {
         // mock tests for test object handler.
-        $numberOfCalls = 0;
-        $mockTest1 = AspectMock::double(
-            TestObject::class,
-            ['getEstimatedDuration' => function () use (&$numberOfCalls) {
-                $actionCount = [300, 275, 300, 275];
-                $result = $actionCount[$numberOfCalls];
-                $numberOfCalls++;
-
-                return $result;
-            }]
-        )->make();
-
-        $mockHandler = AspectMock::double(
-            TestObjectHandler::class,
-            ['getObject' => function () use ($mockTest1) {
-                return $mockTest1;
-            }]
-        )->make();
-
-        AspectMock::double(TestObjectHandler::class, ['getInstance' => $mockHandler])->make();
+        $this->createMockForTest(0);
 
         // create test to size array
         $sampleTestArray = [
@@ -283,7 +259,7 @@ class ParallelGroupSorterTest extends MagentoTestCase
             'test30' => 93,
             'test31' => 330,
             'test32' => 85,
-            'test33' => 291,
+            'test33' => 291
         ];
 
         // create mock suite references
@@ -294,26 +270,25 @@ class ParallelGroupSorterTest extends MagentoTestCase
         // perform sort
         $testSorter = new ParallelGroupSorter();
         $actualResult = $testSorter->getTestsGroupedByFixedGroupCount($sampleSuiteArray, $sampleTestArray, 15);
-
         // verify the resulting groups
         $this->assertCount(15, $actualResult);
 
         $expectedResults =  [
-            1 => ['test31', 'test8', 'test1'],
+            1 => ['test31', 'test3'],
             2 => ['test6', 'test5'],
             3 => ['test33', 'test17'],
             4 => ['test25', 'test32'],
             5 => ['test7', 'test22'],
             6 => ['test10', 'test30'],
             7 => ['test29', 'test12'],
-            8 => ['test13', 'test11', 'test3'],
+            8 => ['test13', 'test11', 'test8', 'test1'],
             9 => ['test21', 'test26', 'test14'],
             10 => ['test24', 'test27', 'test18'],
             11 => ['test9', 'test4', 'test23'],
             12 => ['test28', 'test2', 'test15'],
             13 => ['test19', 'test16', 'test20'],
             14 => ['mockSuite1_0_G'],
-            15 => ['mockSuite1_1_G'],
+            15 => ['mockSuite1_1_G']
         ];
 
         foreach ($actualResult as $groupNum => $group) {
@@ -322,37 +297,21 @@ class ParallelGroupSorterTest extends MagentoTestCase
     }
 
     /**
-     * Test splitting tests and suites based a group number bigger than ever needed
+     * Test splitting tests and suites based a group number bigger than ever needed.
+     *
+     * @return void
+     * @throws FastFailException
      */
-    public function testTestsAndSuitesSplitByBigGroupNumber()
+    public function testTestsAndSuitesSplitByBigGroupNumber(): void
     {
         // mock tests for test object handler.
-        $numberOfCalls = 0;
-        $mockTest1 = AspectMock::double(
-            TestObject::class,
-            ['getEstimatedDuration' => function () use (&$numberOfCalls) {
-                $actionCount = [300, 275, 300, 275];
-                $result = $actionCount[$numberOfCalls];
-                $numberOfCalls++;
-
-                return $result;
-            }]
-        )->make();
-
-        $mockHandler = AspectMock::double(
-            TestObjectHandler::class,
-            ['getObject' => function () use ($mockTest1) {
-                return $mockTest1;
-            }]
-        )->make();
-
-        AspectMock::double(TestObjectHandler::class, ['getInstance' => $mockHandler])->make();
+        $this->createMockForTest(0);
 
         // create test to size array
         $sampleTestArray = [
             'test1' => 275,
             'test2' => 190,
-            'test3' => 200,
+            'test3' => 200
         ];
 
         // create mock suite references
@@ -363,7 +322,6 @@ class ParallelGroupSorterTest extends MagentoTestCase
         // perform sort
         $testSorter = new ParallelGroupSorter();
         $actualResult = $testSorter->getTestsGroupedByFixedGroupCount($sampleSuiteArray, $sampleTestArray, 10);
-
         // verify the resulting groups
         $this->assertCount(5, $actualResult);
 
@@ -381,37 +339,21 @@ class ParallelGroupSorterTest extends MagentoTestCase
     }
 
     /**
-     * Test splitting tests and suites based a minimum group number
+     * Test splitting tests and suites based a minimum group number.
+     *
+     * @return void
+     * @throws FastFailException
      */
-    public function testTestsAndSuitesSplitByMinGroupNumber()
+    public function testTestsAndSuitesSplitByMinGroupNumber(): void
     {
         // mock tests for test object handler.
-        $numberOfCalls = 0;
-        $mockTest1 = AspectMock::double(
-            TestObject::class,
-            ['getEstimatedDuration' => function () use (&$numberOfCalls) {
-                $actionCount = [300, 275, 300, 275];
-                $result = $actionCount[$numberOfCalls];
-                $numberOfCalls++;
-
-                return $result;
-            }]
-        )->make();
-
-        $mockHandler = AspectMock::double(
-            TestObjectHandler::class,
-            ['getObject' => function () use ($mockTest1) {
-                return $mockTest1;
-            }]
-        )->make();
-
-        AspectMock::double(TestObjectHandler::class, ['getInstance' => $mockHandler])->make();
+        $this->createMockForTest(0);
 
         // create test to size array
         $sampleTestArray = [
             'test1' => 1,
             'test2' => 125,
-            'test3' => 35,
+            'test3' => 35
         ];
 
         // create mock suite references
@@ -422,14 +364,13 @@ class ParallelGroupSorterTest extends MagentoTestCase
         // perform sort
         $testSorter = new ParallelGroupSorter();
         $actualResult = $testSorter->getTestsGroupedByFixedGroupCount($sampleSuiteArray, $sampleTestArray, 3);
-
         // verify the resulting groups
         $this->assertCount(3, $actualResult);
 
         $expectedResults =  [
             1 => ['test2', 'test3', 'test1'],
             2 => ['mockSuite1_0_G'],
-            3 => ['mockSuite1_1_G'],
+            3 => ['mockSuite1_1_G']
         ];
 
         foreach ($actualResult as $groupNum => $group) {
@@ -438,39 +379,21 @@ class ParallelGroupSorterTest extends MagentoTestCase
     }
 
     /**
-     * Test splitting tests and suites with invalid group number
+     * Test splitting tests and suites with invalid group number.
+     *
+     * @return void
      */
-    public function testTestsAndSuitesSplitByInvalidGroupNumber()
+    public function testTestsAndSuitesSplitByInvalidGroupNumber(): void
     {
         // mock tests for test object handler.
-        $numberOfCalls = 0;
-        $mockTest1 = AspectMock::double(
-            TestObject::class,
-            ['getEstimatedDuration' => function () use (&$numberOfCalls) {
-                $actionCount = [300, 275, 300, 275];
-                $result = $actionCount[$numberOfCalls];
-                $numberOfCalls++;
-
-                return $result;
-            }]
-        )->make();
-
-        $mockHandler = AspectMock::double(
-            TestObjectHandler::class,
-            ['getObject' => function () use ($mockTest1) {
-                return $mockTest1;
-            }]
-        )->make();
-
-        AspectMock::double(TestObjectHandler::class, ['getInstance' => $mockHandler])->make();
+        $this->createMockForTest(0);
 
         // create test to size array
         $sampleTestArray = [
             'test1' => 1,
             'test2' => 125,
-            'test3' => 35,
+            'test3' => 35
         ];
-
         // create mock suite references
         $sampleSuiteArray = [
             'mockSuite1' => ['mockTest1', 'mockTest2']
@@ -482,5 +405,47 @@ class ParallelGroupSorterTest extends MagentoTestCase
         // perform sort
         $testSorter = new ParallelGroupSorter();
         $testSorter->getTestsGroupedByFixedGroupCount($sampleSuiteArray, $sampleTestArray, 1);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function tearDownAfterClass(): void
+    {
+        $instanceProperty = new ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
+        $instanceProperty->setAccessible(true);
+        $instanceProperty->setValue(null);
+    }
+
+    /**
+     * Mock test object and test object handler.
+     *
+     * @param int $numberOfCalls
+     * @param array $actionCount
+     *
+     * @return void
+     */
+    private function createMockForTest(int $numberOfCalls, array $actionCount = [300, 275, 300, 275]): void
+    {
+        $mockTest1 = $this->createMock(TestObject::class);
+        $mockTest1
+            ->method('getEstimatedDuration')
+            ->willReturnCallback(
+                function () use (&$numberOfCalls, $actionCount) {
+                    $result = $actionCount[$numberOfCalls];
+                    $numberOfCalls++;
+
+                    return $result;
+                }
+            );
+
+        $mockHandler = $this->createMock(TestObjectHandler::class);
+        $mockHandler
+            ->method('getObject')
+            ->willReturn($mockTest1);
+
+        $instanceProperty = new ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
+        $instanceProperty->setAccessible(true);
+        $instanceProperty->setValue($mockHandler, $mockHandler);
     }
 }

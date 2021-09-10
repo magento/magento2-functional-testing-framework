@@ -78,7 +78,7 @@ class OperationDataArrayResolver
         self::incrementSequence($entityObject->getName());
 
         foreach ($operationMetadata as $operationElement) {
-            if ($operationElement->getType() == OperationElementExtractor::OPERATION_OBJECT_OBJ_NAME) {
+            if ($operationElement->getType() === OperationElementExtractor::OPERATION_OBJECT_OBJ_NAME) {
                 $entityObj = $this->resolveOperationObjectAndEntityData($entityObject, $operationElement->getValue());
                 if (null === $entityObj && $operationElement->isRequired()) {
                     throw new \Exception(sprintf(
@@ -189,13 +189,13 @@ class OperationDataArrayResolver
             EntityDataObject::CEST_UNIQUE_VALUE
         );
 
-        if ($elementData == null && $entityObject->getVarReference($operationKey) != null) {
+        if ($elementData === null && $entityObject->getVarReference($operationKey) !== null) {
             list($type, $field) = explode(
                 DataObjectHandler::_SEPARATOR,
                 $entityObject->getVarReference($operationKey)
             );
 
-            if ($operationElementType == OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY) {
+            if ($operationElementType === OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY) {
                 $elementDatas = [];
                 $entities = $this->getDependentEntitiesOfType($type);
                 foreach ($entities as $entity) {
@@ -224,7 +224,7 @@ class OperationDataArrayResolver
         $entitiesOfType = [];
 
         foreach ($this->dependentEntities as $dependentEntity) {
-            if ($dependentEntity->getType() == $type) {
+            if ($dependentEntity->getType() === $type) {
                 $entitiesOfType[] = $dependentEntity;
             }
         }
@@ -244,7 +244,7 @@ class OperationDataArrayResolver
      */
     private function resolveOperationObjectAndEntityData($entityObject, $operationElementValue)
     {
-        if ($operationElementValue != $entityObject->getType()) {
+        if ($operationElementValue !== $entityObject->getType()) {
             // if we have a mismatch attempt to retrieve linked data and return just the last linkage
             // this enables overwriting of required entity fields
             $linkName = $entityObject->getLinkedEntitiesOfType($operationElementValue);
@@ -275,7 +275,7 @@ class OperationDataArrayResolver
         // in array case
         if (!is_array($operationElement->getValue())
             && !empty($operationElement->getNestedOperationElement($operationElement->getValue()))
-            && $operationElement->getType() == OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY
+            && $operationElement->getType() === OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY
         ) {
             $operationSubArray = $this->resolveOperationDataArray(
                 $linkedEntityObj,
@@ -403,7 +403,7 @@ class OperationDataArrayResolver
         // If data was defined at all, attempt to put it into operation data array
         // If data was not defined, and element is required, throw exception
         // If no data is defined, don't input defaults per primitive into operation data array
-        if ($elementData != null) {
+        if ($elementData !== null && $elementData !== '') {
             if (array_key_exists($operationElement->getKey(), $entityObject->getUniquenessData())) {
                 $uniqueData = $entityObject->getUniquenessDataByName($operationElement->getKey());
                 if ($uniqueData === 'suffix') {
@@ -449,7 +449,7 @@ class OperationDataArrayResolver
         $entityNamesOfType = $entityObject->getLinkedEntitiesOfType($operationElementType);
 
         // If an element is required by metadata, but was not provided in the entity, throw an exception
-        if ($operationElement->isRequired() && $entityNamesOfType == null) {
+        if ($operationElement->isRequired() && $entityNamesOfType === null) {
             throw new \Exception(sprintf(
                 self::EXCEPTION_REQUIRED_DATA,
                 $operationElement->getType(),
@@ -476,7 +476,7 @@ class OperationDataArrayResolver
                 }
             }
 
-            if ($operationElement->getType() == OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY) {
+            if ($operationElement->getType() === OperationDefinitionObjectHandler::ENTITY_OPERATION_ARRAY) {
                 $operationDataArray[$operationElement->getKey()][] = $operationDataSubArray;
             } else {
                 $operationDataArray[$operationElement->getKey()] = $operationDataSubArray;

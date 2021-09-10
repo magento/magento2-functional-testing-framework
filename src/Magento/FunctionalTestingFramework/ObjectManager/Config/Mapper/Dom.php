@@ -54,7 +54,7 @@ class Dom implements \Magento\FunctionalTestingFramework\Config\ConverterInterfa
         $output = [];
         /** @var \DOMNode $node */
         foreach ($config->documentElement->childNodes as $node) {
-            if ($node->nodeType != XML_ELEMENT_NODE) {
+            if ($node->nodeType !== XML_ELEMENT_NODE) {
                 continue;
             }
             switch ($node->nodeName) {
@@ -73,7 +73,7 @@ class Dom implements \Magento\FunctionalTestingFramework\Config\ConverterInterfa
                     if ($typeNodeShared) {
                         $typeData['shared'] = $this->booleanUtils->toBoolean($typeNodeShared->nodeValue);
                     }
-                    if ($node->nodeName == 'virtualType') {
+                    if ($node->nodeName === 'virtualType') {
                         $attributeType = $typeNodeAttributes->getNamedItem('type');
                         // attribute type is required for virtual type only in merged configuration
                         if ($attributeType) {
@@ -102,14 +102,14 @@ class Dom implements \Magento\FunctionalTestingFramework\Config\ConverterInterfa
 
         foreach ($node->childNodes as $typeChildNode) {
             /** @var \DOMNode $typeChildNode */
-            if ($typeChildNode->nodeType != XML_ELEMENT_NODE) {
+            if ($typeChildNode->nodeType !== XML_ELEMENT_NODE) {
                 continue;
             }
             switch ($typeChildNode->nodeName) {
                 case 'arguments':
                     /** @var \DOMNode $argumentNode */
                     foreach ($typeChildNode->childNodes as $argumentNode) {
-                        if ($argumentNode->nodeType != XML_ELEMENT_NODE) {
+                        if ($argumentNode->nodeType !== XML_ELEMENT_NODE) {
                             continue;
                         }
                         $argumentName = $argumentNode->attributes->getNamedItem('name')->nodeValue;

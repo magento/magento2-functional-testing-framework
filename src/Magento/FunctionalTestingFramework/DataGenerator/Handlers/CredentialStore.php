@@ -58,7 +58,7 @@ class CredentialStore
      */
     public static function getInstance()
     {
-        if (self::$INSTANCE == null) {
+        if (self::$INSTANCE === null) {
             self::$INSTANCE = new CredentialStore();
         }
 
@@ -162,13 +162,13 @@ class CredentialStore
         $exceptionMessage = "\n";
         foreach ($this->exceptionContexts->getErrors() as $type => $exceptions) {
             $exceptionMessage .= "\nException from ";
-            if ($type == self::ARRAY_KEY_FOR_FILE) {
+            if ($type === self::ARRAY_KEY_FOR_FILE) {
                 $exceptionMessage .= "File Storage: \n";
             }
-            if ($type == self::ARRAY_KEY_FOR_VAULT) {
+            if ($type === self::ARRAY_KEY_FOR_VAULT) {
                 $exceptionMessage .= "Vault Storage: \n";
             }
-            if ($type == self::ARRAY_KEY_FOR_AWS_SECRETS_MANAGER) {
+            if ($type === self::ARRAY_KEY_FOR_AWS_SECRETS_MANAGER) {
                 $exceptionMessage .= "AWS Secrets Manager Storage: \n";
             }
 
@@ -221,11 +221,13 @@ class CredentialStore
      *
      * @return void
      */
-    private function initializeFileStorage()
+    private function initializeFileStorage(): void
     {
         // Initialize file storage
         try {
-            $this->credStorage[self::ARRAY_KEY_FOR_FILE]  = new FileStorage();
+            $fileStorage = new FileStorage();
+            $fileStorage->initialize();
+            $this->credStorage[self::ARRAY_KEY_FOR_FILE]  = $fileStorage;
         } catch (TestFrameworkException $e) {
             // Print error message in console
             print_r($e->getMessage());

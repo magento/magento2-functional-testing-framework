@@ -319,8 +319,8 @@ class DataObjectHandler implements ObjectHandlerInterface
      */
     private function extendDataObject($dataObject)
     {
-        if ($dataObject->getParentName() != null) {
-            if ($dataObject->getParentName() == $dataObject->getName()) {
+        if ($dataObject->getParentName() !== null) {
+            if ($dataObject->getParentName() === $dataObject->getName()) {
                 throw new TestFrameworkException("Mftf Data can not extend from itself: " . $dataObject->getName());
             }
             return $this->extendUtil->extendEntity($dataObject);

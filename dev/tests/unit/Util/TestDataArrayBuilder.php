@@ -109,7 +109,7 @@ class TestDataArrayBuilder
      */
     public function withAnnotations($annotations = null)
     {
-        if ($annotations == null) {
+        if ($annotations === null) {
             $this->annotations = ['group' => [['value' => 'test']]];
         } else {
             $this->annotations = $annotations;
@@ -126,7 +126,7 @@ class TestDataArrayBuilder
      */
     public function withBeforeHook($beforeHook = null)
     {
-        if ($beforeHook == null) {
+        if ($beforeHook === null) {
             $this->beforeHook = [$this->testActionBeforeName => [
                 ActionObjectExtractor::NODE_NAME => $this->testActionType,
                 ActionObjectExtractor::TEST_STEP_MERGE_KEY => $this->testActionBeforeName
@@ -146,7 +146,7 @@ class TestDataArrayBuilder
      */
     public function withAfterHook($afterHook = null)
     {
-        if ($afterHook == null) {
+        if ($afterHook === null) {
             $this->afterHook = [$this->testActionAfterName => [
                     ActionObjectExtractor::NODE_NAME => $this->testActionType,
                     ActionObjectExtractor::TEST_STEP_MERGE_KEY => $this->testActionAfterName
@@ -167,7 +167,7 @@ class TestDataArrayBuilder
      */
     public function withFailedHook($failedHook = null)
     {
-        if ($failedHook == null) {
+        if ($failedHook === null) {
             $this->failedHook = [$this->testActionFailedName => [
                 ActionObjectExtractor::NODE_NAME => $this->testActionType,
                 ActionObjectExtractor::TEST_STEP_MERGE_KEY => $this->testActionFailedName
@@ -188,7 +188,7 @@ class TestDataArrayBuilder
      */
     public function withTestActions($actions = null)
     {
-        if ($actions == null) {
+        if ($actions === null) {
             $this->testActions = [$this->testTestActionName => [
                 ActionObjectExtractor::NODE_NAME => $this->testActionType,
                 ActionObjectExtractor::TEST_STEP_MERGE_KEY => $this->testTestActionName
@@ -207,7 +207,7 @@ class TestDataArrayBuilder
      */
     public function withFileName($filename = null)
     {
-        if ($filename == null) {
+        if ($filename === null) {
             $this->filename =
                 "/magento2-functional-testing-framework/dev/tests/verification/TestModule/Test/BasicFunctionalTest.xml";
         } else {

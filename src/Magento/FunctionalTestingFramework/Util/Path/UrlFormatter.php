@@ -3,6 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace Magento\FunctionalTestingFramework\Util\Path;
 
@@ -11,14 +12,15 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 class UrlFormatter implements FormatterInterface
 {
     /**
-     * Return formatted url path from input string
+     * Return formatted url path from input string.
      *
      * @param string  $url
      * @param boolean $withTrailingSeparator
+     *
      * @return string
      * @throws TestFrameworkException
      */
-    public static function format($url, $withTrailingSeparator = true)
+    public static function format(string $url, bool $withTrailingSeparator = true): string
     {
         $sanitizedUrl = rtrim($url, '/');
 
@@ -47,12 +49,13 @@ class UrlFormatter implements FormatterInterface
     }
 
     /**
-     * Try to build missing url scheme and host
+     * Try to build missing url scheme and host.
      *
      * @param string $url
+     *
      * @return string
      */
-    private static function buildUrl($url)
+    private static function buildUrl(string $url): string
     {
         $urlParts = parse_url($url);
 
@@ -76,32 +79,42 @@ class UrlFormatter implements FormatterInterface
     /**
      * Returns url from $parts given, used with parse_url output for convenience.
      * This only exists because of deprecation of http_build_url, which does the exact same thing as the code below.
+     *
      * @param array $parts
+     *
      * @return string
      */
-    private static function merge(array $parts)
+    private static function merge(array $parts): string
     {
         $get = function ($key) use ($parts) {
-            return isset($parts[$key]) ? $parts[$key] : null;
+            return $parts[$key] ?? '';
         };
 
-        $pass      = $get('pass');
-        $user      = $get('user');
-        $userinfo  = $pass !== null ? "$user:$pass" : $user;
-        $port      = $get('port');
-        $scheme    = $get('scheme');
-        $query     = $get('query');
-        $fragment  = $get('fragment');
-        $authority =
-            ($userinfo !== null ? "$userinfo@" : '') .
-            $get('host') .
-            ($port ? ":$port" : '');
+        $pass = $get('pass');
+        $user = $get('user');
+        $userinfo = $pass !== '' ? "$user:$pass" : $user;
+        $port = $get('port');
+        $scheme = $get('scheme');
+        $query = $get('query');
+        $fragment = $get('fragment');
+        $authority = ($userinfo !== '' ? "$userinfo@" : '') . $get('host') . ($port ? ":$port" : '');
 
-        return
-            (strlen($scheme) ? "$scheme:" : '') .
-            (strlen($authority) ? "//$authority" : '') .
-            $get('path') .
-            (strlen($query) ? "?$query" : '') .
-            (strlen($fragment) ? "#$fragment" : '');
+        return str_replace(
+            [
+                '%scheme',
+                '%authority',
+                '%path',
+                '%query',
+                '%fragment'
+            ],
+            [
+                strlen($scheme) ? "$scheme:" : '',
+                strlen($authority) ? "//$authority" : '',
+                $get('path'),
+                strlen($query) ? "?$query" : '',
+                strlen($fragment) ? "#$fragment" : ''
+            ],
+            '%scheme%authority%path%query%fragment'
+        );
     }
 }

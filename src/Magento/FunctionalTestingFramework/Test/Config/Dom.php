@@ -173,7 +173,7 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\MftfDom
         $childNodes = $testNode->childNodes;
         $previousStepKey = $insertKey;
         $actionInsertType = ActionObject::MERGE_ACTION_ORDER_AFTER;
-        if ($insertType == self::TEST_MERGE_POINTER_BEFORE) {
+        if ($insertType === self::TEST_MERGE_POINTER_BEFORE) {
             $actionInsertType = ActionObject::MERGE_ACTION_ORDER_BEFORE;
         }
         for ($i = 0; $i < $childNodes->length; $i++) {

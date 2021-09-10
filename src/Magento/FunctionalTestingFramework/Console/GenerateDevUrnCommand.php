@@ -61,10 +61,10 @@ class GenerateDevUrnCommand extends Command
     {
         $miscXmlFilePath = $input->getArgument(self::IDE_FILE_PATH_ARGUMENT);
         $miscXmlFile = realpath($miscXmlFilePath);
-        $force = $input->getOption('force');
+        $force = (bool) $input->getOption('force');
 
         if ($miscXmlFile === false) {
-            if ($force == true) {
+            if ($force === true) {
                 // create file and refresh realpath
                 $xml = "<project version=\"4\"/>";
                 file_put_contents($miscXmlFilePath, $xml);

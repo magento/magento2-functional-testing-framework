@@ -3,11 +3,13 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace tests\unit\Magento\FunctionalTestFramework\Test\Handlers;
 
-use AspectMock\Test as AspectMock;
-
+use Exception;
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
@@ -16,16 +18,22 @@ use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Parsers\TestDataParser;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
-use tests\unit\Util\MagentoTestCase;
-use tests\unit\Util\ObjectHandlerUtil;
-use tests\unit\Util\TestDataArrayBuilder;
-use tests\unit\Util\MockModuleResolverBuilder;
-use tests\unit\Util\TestLoggingUtil;
 use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
+use Magento\FunctionalTestingFramework\Util\ModuleResolver;
+use ReflectionProperty;
+use tests\unit\Util\MagentoTestCase;
+use tests\unit\Util\TestDataArrayBuilder;
+use tests\unit\Util\TestLoggingUtil;
 
 class TestObjectHandlerTest extends MagentoTestCase
 {
-    public function setUp(): void
+    /**
+     * Before test functionality.
+     *
+     * @return void
+     * @throws Exception
+     */
+    protected function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
@@ -33,9 +41,10 @@ class TestObjectHandlerTest extends MagentoTestCase
     /**
      * Basic test to validate array => test object conversion.
      *
-     * @throws \Exception
+     * @return void
+     * @throws Exception
      */
-    public function testGetTestObject()
+    public function testGetTestObject(): void
     {
         // set up mock data
         $testDataArrayBuilder = new TestDataArrayBuilder();
@@ -47,13 +56,10 @@ class TestObjectHandlerTest extends MagentoTestCase
             ->withTestActions()
             ->build();
 
-        $resolverMock = new MockModuleResolverBuilder();
-        $resolverMock->setup();
-        ObjectHandlerUtil::mockTestObjectHandlerWitData($mockData);
+        $this->mockTestObjectHandler($mockData);
 
         // run object handler method
         $toh = TestObjectHandler::getInstance();
-        $mockConfig = AspectMock::double(TestObjectHandler::class, ['initTestData' => false]);
         $actualTestObject = $toh->getObject($testDataArrayBuilder->testName);
 
         // perform asserts
@@ -114,9 +120,11 @@ class TestObjectHandlerTest extends MagentoTestCase
     }
 
     /**
-     * Tests basic getting of a test that has a fileName
+     * Tests basic getting of a test that has a fileName.
+     *
+     * @return void
      */
-    public function testGetTestWithFileName()
+    public function testGetTestWithFileName(): void
     {
         $this->markTestIncomplete('TODO');
     }
@@ -124,9 +132,10 @@ class TestObjectHandlerTest extends MagentoTestCase
     /**
      * Tests the function used to get a series of relevant tests by group.
      *
-     * @throws \Exception
+     * @return void
+     * @throws Exception
      */
-    public function testGetTestsByGroup()
+    public function testGetTestsByGroup(): void
     {
         // set up mock data with Exclude Test
         $includeTest = (new TestDataArrayBuilder())
@@ -140,9 +149,7 @@ class TestObjectHandlerTest extends MagentoTestCase
             ->withTestActions()
             ->build();
 
-        $resolverMock = new MockModuleResolverBuilder();
-        $resolverMock->setup();
-        ObjectHandlerUtil::mockTestObjectHandlerWitData(array_merge($includeTest, $excludeTest));
+        $this->mockTestObjectHandler(array_merge($includeTest, $excludeTest));
 
         // execute test method
         $toh = TestObjectHandler::getInstance();
@@ -155,11 +162,12 @@ class TestObjectHandlerTest extends MagentoTestCase
     }
 
     /**
-     * Tests the function used to parse and determine a test's Module (used in allure Features annotation)
+     * Tests the function used to parse and determine a test's Module (used in allure Features annotation).
      *
-     * @throws \Exception
+     * @return void
+     * @throws Exception
      */
-    public function testGetTestWithModuleName()
+    public function testGetTestWithModuleName(): void
     {
         // set up Test Data
         $moduleExpected = "SomeModuleName";
@@ -188,10 +196,8 @@ class TestObjectHandlerTest extends MagentoTestCase
             ->withFileName($file)
             ->build();
 
-        $resolverMock = new MockModuleResolverBuilder();
-        $resolverMock->setup(['Vendor_' . $moduleExpected => $filepath]);
+        $this->mockTestObjectHandler($mockData, ['Vendor_' . $moduleExpected => $filepath]);
 
-        ObjectHandlerUtil::mockTestObjectHandlerWitData($mockData);
         // Execute Test Method
         $toh = TestObjectHandler::getInstance();
         $actualTestObject = $toh->getObject($testDataArrayBuilder->testName);
@@ -201,11 +207,12 @@ class TestObjectHandlerTest extends MagentoTestCase
     }
 
     /**
-     * getObject should throw exception if test extends from itself
+     * getObject should throw exception if test extends from itself.
      *
-     * @throws \Exception
+     * @return void
+     * @throws Exception
      */
-    public function testGetTestObjectWithInvalidExtends()
+    public function testGetTestObjectWithInvalidExtends(): void
     {
         // set up Test Data
         $testOne = (new TestDataArrayBuilder())
@@ -217,24 +224,23 @@ class TestObjectHandlerTest extends MagentoTestCase
             ->withBeforeHook()
             ->withTestActions()
             ->build();
-        $resolverMock = new MockModuleResolverBuilder();
-        $resolverMock->setup();
-        ObjectHandlerUtil::mockTestObjectHandlerWitData($testOne);
+
+        $this->mockTestObjectHandler($testOne);
 
         $toh = TestObjectHandler::getInstance();
-
-        $this->expectException(\Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException::class);
+        $this->expectException(TestFrameworkException::class);
         $this->expectExceptionMessage("Mftf Test can not extend from itself: " . "testOne");
 
         $toh->getObject('testOne');
     }
 
     /**
-     * getAllObjects should throw exception if test extends from itself
+     * getAllObjects should throw exception if test extends from itself.
      *
-     * @throws \Exception
+     * @return void
+     * @throws Exception
      */
-    public function testGetAllTestObjectsWithInvalidExtends()
+    public function testGetAllTestObjectsWithInvalidExtends(): void
     {
         // set up Test Data
         $testOne = (new TestDataArrayBuilder())
@@ -255,9 +261,7 @@ class TestObjectHandlerTest extends MagentoTestCase
             ->withTestActions()
             ->build();
 
-        $resolverMock = new MockModuleResolverBuilder();
-        $resolverMock->setup();
-        ObjectHandlerUtil::mockTestObjectHandlerWitData(array_merge($testOne, $testTwo));
+        $this->mockTestObjectHandler(array_merge($testOne, $testTwo));
 
         $toh = TestObjectHandler::getInstance();
         $toh->getAllObjects();
@@ -270,11 +274,12 @@ class TestObjectHandlerTest extends MagentoTestCase
     }
 
     /**
-     * Validate test object when ENABLE_PAUSE is set to true
+     * Validate test object when ENABLE_PAUSE is set to true.
      *
-     * @throws \Exception
+     * @return void
+     * @throws Exception
      */
-    public function testGetTestObjectWhenEnablePause()
+    public function testGetTestObjectWhenEnablePause(): void
     {
         // set up mock data
         putenv('ENABLE_PAUSE=true');
@@ -287,13 +292,10 @@ class TestObjectHandlerTest extends MagentoTestCase
             ->withTestActions()
             ->build();
 
-        $resolverMock = new MockModuleResolverBuilder();
-        $resolverMock->setup();
-        ObjectHandlerUtil::mockTestObjectHandlerWitData($mockData);
+        $this->mockTestObjectHandler($mockData);
 
         // run object handler method
         $toh = TestObjectHandler::getInstance();
-        $mockConfig = AspectMock::double(TestObjectHandler::class, ['initTestData' => false]);
         $actualTestObject = $toh->getObject($testDataArrayBuilder->testName);
 
         // perform asserts
@@ -363,14 +365,86 @@ class TestObjectHandlerTest extends MagentoTestCase
     }
 
     /**
-     * After method functionality
+     * After method functionality.
      *
      * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
-        AspectMock::clean();
         parent::tearDownAfterClass();
+    }
+
+    /**
+     * Mock test object handler.
+     *
+     * @param array $data
+     * @param array|null $paths
+     *
+     * @return void
+     */
+    private function mockTestObjectHandler(array $data, ?array $paths = null): void
+    {
+        if (!$paths) {
+            $paths = ['Magento_Module' => '/base/path/some/other/path/Magento/Module'];
+        }
+        // clear test object handler value to inject parsed content
+        $property = new ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
+        $property->setAccessible(true);
+        $property->setValue(null);
+
+        $mockDataParser = $this->createMock(TestDataParser::class);
+        $mockDataParser
+            ->method('readTestData')
+            ->willReturn($data);
+
+        $mockConfig = $this->createMock(MftfApplicationConfig::class);
+        $mockConfig
+            ->method('forceGenerateEnabled')
+            ->willReturn(false);
+
+        $mockResolver = $this->createMock(ModuleResolver::class);
+        $mockResolver
+            ->method('getEnabledModules')
+            ->willReturn([]);
+
+        $objectManager = ObjectManagerFactory::getObjectManager();
+        $objectManagerMockInstance = $this->createMock(ObjectManager::class);
+        $objectManagerMockInstance
+            ->method('create')
+            ->will(
+                $this->returnCallback(
+                    function (
+                        $class,
+                        $arguments = []
+                    ) use (
+                        $objectManager,
+                        $mockDataParser,
+                        $mockConfig,
+                        $mockResolver
+                    ) {
+                        if ($class === TestDataParser::class) {
+                            return $mockDataParser;
+                        }
+                        if ($class === MftfApplicationConfig::class) {
+                            return $mockConfig;
+                        }
+                        if ($class === ModuleResolver::class) {
+                            return $mockResolver;
+                        }
+
+                        return $objectManager->create($class, $arguments);
+                    }
+                )
+            );
+
+        $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
+        $objectManagerProperty->setAccessible(true);
+        $objectManagerProperty->setValue($objectManagerMockInstance);
+
+        $resolver = ModuleResolver::getInstance();
+        $property = new ReflectionProperty(ModuleResolver::class, 'enabledModuleNameAndPaths');
+        $property->setAccessible(true);
+        $property->setValue($resolver, $paths);
     }
 }

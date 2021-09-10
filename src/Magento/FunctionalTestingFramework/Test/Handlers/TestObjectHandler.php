@@ -124,7 +124,7 @@ class TestObjectHandler implements ObjectHandlerInterface
 
         if ($errCount > 0
             && MftfApplicationConfig::getConfig()->verboseEnabled()
-            && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+            && MftfApplicationConfig::getConfig()->getPhase() === MftfApplicationConfig::GENERATION_PHASE) {
             print(
                 "ERROR: "
                 . strval($errCount)
@@ -173,7 +173,7 @@ class TestObjectHandler implements ObjectHandlerInterface
 
         if ($errCount > 0
             && MftfApplicationConfig::getConfig()->verboseEnabled()
-            && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+            && MftfApplicationConfig::getConfig()->getPhase() === MftfApplicationConfig::GENERATION_PHASE) {
             print(
                 "ERROR: "
                 . strval($errCount)
@@ -248,7 +248,7 @@ class TestObjectHandler implements ObjectHandlerInterface
                     "Unable to parse test " . $testName . "\n" . $exception->getMessage()
                 );
                 if (MftfApplicationConfig::getConfig()->verboseEnabled()
-                    && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+                    && MftfApplicationConfig::getConfig()->getPhase() === MftfApplicationConfig::GENERATION_PHASE) {
                     print("ERROR: Unable to parse test " . $testName . "\n");
                 }
                 GenerationErrorHandler::getInstance()->addError(
@@ -276,7 +276,7 @@ class TestObjectHandler implements ObjectHandlerInterface
     private function extendTest($testObject)
     {
         if ($testObject->getParentName() !== null) {
-            if ($testObject->getParentName() == $testObject->getName()) {
+            if ($testObject->getParentName() === $testObject->getName()) {
                 throw new TestFrameworkException(
                     "Mftf Test can not extend from itself: " . $testObject->getName()
                 );
