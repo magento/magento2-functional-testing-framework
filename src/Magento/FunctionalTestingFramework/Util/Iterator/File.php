@@ -58,7 +58,7 @@ class File extends AbstractIterator
      *
      * @return boolean
      */
-    protected function isValid()
+    protected function isValid() : bool
     {
         return true;
     }
