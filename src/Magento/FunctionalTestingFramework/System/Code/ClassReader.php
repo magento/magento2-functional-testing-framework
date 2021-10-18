@@ -20,6 +20,7 @@ class ClassReader
      * @param string $method
      * @return array|null
      * @throws \ReflectionException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getParameters($className, $method)
     {
@@ -31,8 +32,9 @@ class ClassReader
             /** @var $parameter \ReflectionParameter */
             foreach ($method->getParameters() as $parameter) {
                 try {
-                    $name = $parameter->getType() && !$parameter->getType()->isBuiltin()
-                        ? new \ReflectionClass($parameter->getType()->getName())
+                    $paramType = $parameter->getType();
+                    $name = ($paramType && method_exists($paramType, 'isBuiltin') && !$paramType->isBuiltin())
+                        ? new \ReflectionClass($paramType->getName())
                         : null;
                     $result[$parameter->getName()] = [
                         $parameter->getName(),
