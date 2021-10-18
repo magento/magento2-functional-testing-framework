@@ -1040,6 +1040,12 @@ class MagentoWebDriver extends WebDriver
      */
     public function pause($pauseOnFail = false)
     {
+        if (\Composer\InstalledVersions::isInstalled('hoa/console') === false) {
+            $message = "<pause /> action is unavailable." . PHP_EOL;
+            $message .= "Please install `hoa/console` via \"composer require hoa/console\"" . PHP_EOL;
+            print($message);
+            return;
+        }
         if (!\Codeception\Util\Debug::isEnabled()) {
             return;
         }

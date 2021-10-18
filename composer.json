@@ -46,6 +46,9 @@
         "sebastian/phpcpd": "~6.0.0",
         "squizlabs/php_codesniffer": "~3.6.0"
     },
+    "suggest": {
+        "hoa/console": "Enables <pause /> action and interactive console functionality"
+    },
     "autoload": {
         "files": ["src/Magento/FunctionalTestingFramework/_bootstrap.php"],
         "psr-4": {
