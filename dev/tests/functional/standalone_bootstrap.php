@@ -20,8 +20,12 @@ defined('ENV_FILE_PATH') || define('ENV_FILE_PATH', $envFilePath);
 
 //Load constants from .env file
 if (file_exists(ENV_FILE_PATH . '.env')) {
-    $env = new \Dotenv\Loader(ENV_FILE_PATH . '.env');
-    $env->load();
+    $env = new \Symfony\Component\Dotenv\Dotenv();
+    if (function_exists('putenv')) {
+        $env->usePutenv();
+    }
+    $env->populate($env->parse(file_get_contents(ENV_FILE_PATH . '.env'), ENV_FILE_PATH . '.env'), true);
+
 
     foreach ($_ENV as $key => $var) {
         defined($key) || define($key, $var);
@@ -42,19 +46,20 @@ if (file_exists(ENV_FILE_PATH . '.env')) {
         'MAGENTO_CLI_COMMAND_PATH',
         'dev/tests/acceptance/utils/command.php'
     );
-    $env->setEnvironmentVariable('MAGENTO_CLI_COMMAND_PATH', MAGENTO_CLI_COMMAND_PATH);
-
     defined('MAGENTO_CLI_COMMAND_PARAMETER') || define('MAGENTO_CLI_COMMAND_PARAMETER', 'command');
-    $env->setEnvironmentVariable('MAGENTO_CLI_COMMAND_PARAMETER', MAGENTO_CLI_COMMAND_PARAMETER);
-
     defined('DEFAULT_TIMEZONE') || define('DEFAULT_TIMEZONE', 'America/Los_Angeles');
-    $env->setEnvironmentVariable('DEFAULT_TIMEZONE', DEFAULT_TIMEZONE);
-
     defined('WAIT_TIMEOUT') || define('WAIT_TIMEOUT', 30);
-    $env->setEnvironmentVariable('WAIT_TIMEOUT', WAIT_TIMEOUT);
-
     defined('VERBOSE_ARTIFACTS') || define('VERBOSE_ARTIFACTS', false);
-    $env->setEnvironmentVariable('VERBOSE_ARTIFACTS', VERBOSE_ARTIFACTS);
+    $env->populate(
+        [
+            'MAGENTO_CLI_COMMAND_PATH' => MAGENTO_CLI_COMMAND_PATH,
+            'MAGENTO_CLI_COMMAND_PARAMETER' => MAGENTO_CLI_COMMAND_PARAMETER,
+            'DEFAULT_TIMEZONE' => DEFAULT_TIMEZONE,
+            'WAIT_TIMEOUT' => WAIT_TIMEOUT,
+            'VERBOSE_ARTIFACTS' => VERBOSE_ARTIFACTS,
+        ],
+        true
+    );
 
     try {
         new DateTimeZone(DEFAULT_TIMEZONE);
