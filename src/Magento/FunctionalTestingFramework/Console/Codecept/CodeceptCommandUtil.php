@@ -23,6 +23,7 @@ class CodeceptCommandUtil
      */
     private $cwd = null;
 
+    // @codingStandardsIgnoreStart
     /**
      * Setup Codeception
      *
@@ -39,6 +40,7 @@ class CodeceptCommandUtil
             return $input->setTokens($tokens);
         }, null, ArgvInput::class);
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * Save Codeception working directory
