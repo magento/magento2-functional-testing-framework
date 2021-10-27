@@ -14,7 +14,7 @@
     "ticketTracker": {
         "functionalJiraQueue": {
             "projectKey": "MQE",
-            "component": ""
+            "component": "Framework - MFTF"
         },
         "securityJiraQueue": {
             "projectKey": "MAGREQ",
