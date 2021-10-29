@@ -340,7 +340,7 @@ class MagentoWebDriver extends WebDriver
         $actualUrl = $this->webDriver->getCurrentURL();
         $comparison = "Expected: $needle\nActual: $actualUrl";
         AllureHelper::addAttachmentToCurrentStep($comparison, 'Comparison');
-        $this->assertStringContainsString($needle, $actualUrl);
+        $this->assertStringContainsString($needle, urldecode($actualUrl));
     }
 
     /**
