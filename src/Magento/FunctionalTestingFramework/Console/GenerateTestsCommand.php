@@ -78,7 +78,8 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 . '<info>Template:</info> <filterName>:<filterValue>' . PHP_EOL
                 . '<info>Existing filter types:</info> severity.' . PHP_EOL
                 . '<info>Existing severity values:</info> BLOCKER, CRITICAL, MAJOR, AVERAGE, MINOR.' . PHP_EOL
-                . '<info>Example:</info> --filter=severity:CRITICAL' . PHP_EOL
+                . '<info>Example:</info> --filter=severity:CRITICAL'
+                . ' --filter=includeGroup:customer --filter=excludeGroup:customerAnalytics' . PHP_EOL
             );
 
         parent::configure();
