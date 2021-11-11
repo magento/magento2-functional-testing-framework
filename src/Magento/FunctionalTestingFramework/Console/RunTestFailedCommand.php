@@ -26,11 +26,6 @@ class RunTestFailedCommand extends BaseGenerateCommand
     /**
      * @var string
      */
-    private $testsReRunFile;
-
-    /**
-     * @var string
-     */
     private $testsManifestFile;
 
     /**
@@ -64,44 +59,10 @@ class RunTestFailedCommand extends BaseGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->testsFailedFile = $this->getTestsOutputDir() . self::FAILED_FILE;
-        $this->testsReRunFile = $this->getTestsOutputDir() . "rerun_tests";
         $this->testsManifestFile= FilePathFormatter::format(TESTS_MODULE_PATH) .
             "_generated" .
             DIRECTORY_SEPARATOR .
             "testManifest.txt";
-
-        $force = $input->getOption('force');
-        $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
-        $allowSkipped = $input->getOption('allow-skipped');
-        $verbose = $output->isVerbose();
-
-        // Create Mftf Configuration
-        MftfApplicationConfig::create(
-            $force,
-            MftfApplicationConfig::EXECUTION_PHASE,
-            $verbose,
-            $debug,
-            $allowSkipped
-        );
-
-        $testConfiguration = $this->getFailedTestList();
-
-        if ($testConfiguration === null) {
-            // no failed tests found, run is a success
-            return 0;
-        }
-
-        $command = $this->getApplication()->find('generate:tests');
-        $args = [
-            '--tests' => $testConfiguration,
-            '--force' => $force,
-            '--remove' => true,
-            '--debug' => $debug,
-            '--allow-skipped' => $allowSkipped,
-            '-v' => $verbose
-        ];
-        $command->run(new ArrayInput($args), $output);
 
         $testManifestList = $this->readTestManifestFile();
         $returnCode = 0;
@@ -140,67 +101,6 @@ class RunTestFailedCommand extends BaseGenerateCommand
         }
 
         return $returnCode;
-    }
-
-    /**
-     * Returns a json string of tests that failed on the last run
-     *
-     * @return string
-     */
-    private function getFailedTestList()
-    {
-        $failedTestDetails = ['tests' => [], 'suites' => []];
-
-        if (realpath($this->testsFailedFile)) {
-            $testList = $this->readFailedTestFile($this->testsFailedFile);
-
-            foreach ($testList as $test) {
-                if (!empty($test)) {
-                    $this->writeFailedTestToFile($test, $this->testsReRunFile);
-                    $testInfo = explode(DIRECTORY_SEPARATOR, $test);
-                    $testName = explode(":", $testInfo[count($testInfo) - 1])[1];
-                    $suiteName = $testInfo[count($testInfo) - 2];
-
-                    if ($suiteName === self::DEFAULT_TEST_GROUP) {
-                        array_push($failedTestDetails['tests'], $testName);
-                    } else {
-                        $suiteName = $this->sanitizeSuiteName($suiteName);
-                        $failedTestDetails['suites'] = array_merge_recursive(
-                            $failedTestDetails['suites'],
-                            [$suiteName => [$testName]]
-                        );
-                    }
-                }
-            }
-        }
-        if (empty($failedTestDetails['tests']) & empty($failedTestDetails['suites'])) {
-            return null;
-        }
-        if (empty($failedTestDetails['tests'])) {
-            $failedTestDetails['tests'] = null;
-        }
-        if (empty($failedTestDetails['suites'])) {
-            $failedTestDetails['suites'] = null;
-        }
-        $testConfigurationJson = json_encode($failedTestDetails);
-        return $testConfigurationJson;
-    }
-
-    /**
-     * Trim potential suite_parallel_0_G to suite_parallel
-     *
-     * @param string $suiteName
-     * @return string
-     */
-    private function sanitizeSuiteName($suiteName)
-    {
-        $suiteNameArray = explode("_", $suiteName);
-        if (array_pop($suiteNameArray) === 'G') {
-            if (is_numeric(array_pop($suiteNameArray))) {
-                $suiteName = implode("_", $suiteNameArray);
-            }
-        }
-        return $suiteName;
     }
 
     /**

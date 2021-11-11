@@ -20,3 +20,4 @@ dev/tests/docs/*
 dev/tests/_output
 dev/tests/functional.suite.yml
 /v2/
+dev/.credentials.example
