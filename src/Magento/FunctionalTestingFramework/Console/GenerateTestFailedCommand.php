@@ -29,11 +29,6 @@ class GenerateTestFailedCommand extends BaseGenerateCommand
     private $testsReRunFile;
 
     /**
-     * @var array
-     */
-    private $failedList = [];
-
-    /**
      * Configures the current command.
      *
      * @return void
